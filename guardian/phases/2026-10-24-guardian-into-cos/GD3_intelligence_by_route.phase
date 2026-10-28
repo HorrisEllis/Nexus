@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD3_intelligence_by_route
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD3_intelligence_by_route
+context: pipeline phase GD3_intelligence_by_route of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD3_intelligence_by_route (backend) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325041
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325041
+lastSeenAt: 1792877325041
+fingerprint: null
+payload:
+  id: GD3_intelligence_by_route
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - guardian/lib/dispatcher.js
+    - guardian/server.js
+    - guardian/lib/ncp.js
+    - intelligence/server.js
+  depends_on:
+    - GD_D2_stateful_capabilities_by_route
+    - GD2_primitives_to_the_kernel
+  blocks: []
+  spec: null
+  graph: 5c95d3441f3bc536

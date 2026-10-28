@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF7_axiom_8_7
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF7_axiom_8_7
+context: pipeline phase SF7_axiom_8_7 of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF7_axiom_8_7 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792879042047
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879042047
+lastSeenAt: 1792879042047
+fingerprint: null
+payload:
+  id: SF7_axiom_8_7
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/AXIOMS-v3.1.md
+    - loom/scanners/phasemap-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4377807aac3193e3

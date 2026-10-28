@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD0_dead_edges
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD0_dead_edges
+context: pipeline phase GD0_dead_edges of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD0_dead_edges (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325037
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325037
+lastSeenAt: 1792877325037
+fingerprint: null
+payload:
+  id: GD0_dead_edges
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: foundation
+  status: DONE 0.60.240 — guardian lost its edges to cockpit/ and meta/
+  files:
+    - guardian/server.js
+    - guardian/lib/gap-hunter.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 19e37f31cb7ce62c

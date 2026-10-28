@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GS6_update_notice:1d54722ef89351a1
+type: graph
+id: phase:GS6_update_notice:1d54722ef89351a1
+context: dependency graph of phase GS6_update_notice
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677725
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677725
+lastSeenAt: 1792787677725
+fingerprint: null
+payload:
+  for: GS6_update_notice
+  kind: phase
+  repo: null
+  hash: 1d54722ef89351a1
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

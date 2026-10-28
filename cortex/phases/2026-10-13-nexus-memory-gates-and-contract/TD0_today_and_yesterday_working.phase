@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::TD0_today_and_yesterday_working
+type: phase
+id: docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::TD0_today_and_yesterday_working
+context: >-
+  pipeline phase TD0_today_and_yesterday_working of
+  docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+intent: null
+summary: TD0_today_and_yesterday_working (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677422
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677422
+lastSeenAt: 1792787677422
+fingerprint: null
+payload:
+  id: TD0_today_and_yesterday_working
+  map: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 91e91c8146a1148c

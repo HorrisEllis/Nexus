@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD15_no_website_can_drive_nexus
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD15_no_website_can_drive_nexus
+context: pipeline phase SD15_no_website_can_drive_nexus of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD15_no_website_can_drive_nexus (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477483
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477483
+lastSeenAt: 1792822477483
+fingerprint: null
+payload:
+  id: SD15_no_website_can_drive_nexus
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/server.js
+    - idearium/api/index.js
+    - copilot/server.js
+    - cortex/boot.js
+    - versionium/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b50befd0bf62c343

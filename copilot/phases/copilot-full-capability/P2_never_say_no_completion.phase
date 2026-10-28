@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-full-capability-phasemap.spec::P2_never_say_no_completion
+type: phase
+id: docs_copilot-full-capability-phasemap.spec::P2_never_say_no_completion
+context: pipeline phase P2_never_say_no_completion of docs/copilot-full-capability-phasemap.spec
+intent: null
+summary: P2_never_say_no_completion (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678159
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678159
+lastSeenAt: 1792787678159
+fingerprint: null
+payload:
+  id: P2_never_say_no_completion
+  map: docs/copilot-full-capability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/server.js
+    - copilot/stream-digest.js
+    - lib/stream-digest.js
+    - copilot/capability-extend.js
+    - copilot/adaptive-fulfillment.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b53237e38ad335da

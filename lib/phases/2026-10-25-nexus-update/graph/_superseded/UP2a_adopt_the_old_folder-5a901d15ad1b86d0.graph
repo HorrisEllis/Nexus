@@ -1,0 +1,79 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UP2a_adopt_the_old_folder:5a901d15ad1b86d0
+type: graph
+id: phase:UP2a_adopt_the_old_folder:5a901d15ad1b86d0
+context: dependency graph of phase UP2a_adopt_the_old_folder
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792967429649
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792967429649
+lastSeenAt: 1792967429649
+fingerprint: null
+payload:
+  for: UP2a_adopt_the_old_folder
+  kind: phase
+  repo: null
+  hash: 5a901d15ad1b86d0
+  nodes:
+    - path: lib/nexus-update.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/update.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/nexus-releases.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus-update.js
+      to: lib/nexus-releases.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/update.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: lib/nexus-update.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+    dependents: []
+    upstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D1_how_an_update_lands
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D2_who_applies
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D3_runtime_data
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): UP2_apply_and_rollback · all upstream 5'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+        kind: declared

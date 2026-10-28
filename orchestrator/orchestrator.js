@@ -130,7 +130,7 @@ const { buildIntentMap } = require('./lib/intent-map');  // Gap 2: intent-map en
 // §3.1 load order is law — all imports declared before any logic runs.
 let BootSequence, _bootSystems, createCFRLedger, spawnChild;
 try { ({ BootSequence } = require('../lib/boot-sequence')); } catch(e) { console.warn('[orchestrator] boot-sequence not found:', e.message); BootSequence = null; }
-try { ({ _bootSystems } = require('../cli/boot-systems')); } catch(e) { console.warn('[orchestrator] boot-systems not found:', e.message); _bootSystems = null; }
+try { ({ _bootSystems } = require('../lib/cli/boot-systems')); } catch(e) { console.warn('[orchestrator] boot-systems not found:', e.message); _bootSystems = null; }
 // §CFR-WIRE-01: orchestrator now runs the CFR-Ω ledger (sigma/delta/field on
 // every ledgerWrite) instead of the plain event-ledger. ledgerWrite() below is
 // already the single funnel point, so this is a drop-in swap — same .record()/
@@ -145,10 +145,10 @@ let gapField;
 try { gapField = require('../lib/gap-field'); } catch (e) { console.warn('[orchestrator] gap-field not found:', e.message); gapField = null; }
 
 // ── NEXUS INTERCONNECT LAYER ──────────────────────────────────────────────────
-const nexusBus       = (() => { try { return require('../nexus/nexus-bus');           } catch(e) { console.warn('[orc] nexus-bus:',e.message); return null; } })();
-const nexusQuery     = (() => { try { return require('../nexus/nexus-query');         } catch(e) { return null; } })();
-const nexusKnowledge = (() => { try { return require('../nexus/nexus-knowledge');     } catch(e) { return null; } })();
-const nexusCFR       = (() => { try { return require('../nexus/nexus-cfr-influence'); } catch(e) { return null; } })();
+const nexusBus       = (() => { try { return require('../lib/nexus/nexus-bus');           } catch(e) { console.warn('[orc] nexus-bus:',e.message); return null; } })();
+const nexusQuery     = (() => { try { return require('../lib/nexus/nexus-query');         } catch(e) { return null; } })();
+const nexusKnowledge = (() => { try { return require('../lib/nexus/nexus-knowledge');     } catch(e) { return null; } })();
+const nexusCFR       = (() => { try { return require('../lib/nexus/nexus-cfr-influence'); } catch(e) { return null; } })();
 const nexusHealLoop  = (() => { try { return require('../diagnostic/lib/heal-loop');     } catch(e) { return null; } })();
 try { ({ spawn: spawnChild } = require('child_process')); } catch(e) { spawnChild = null; }
 
@@ -158,7 +158,7 @@ const PORT    = parseInt(process.env.ORCHESTRATOR_PORT || '9000');
 // lib/pulse.js is optional — if it doesn't exist yet, pulse is a no-op.
 let _orchPulse = null;
 try {
-  const { createPulse } = require('./lib/pulse');
+  const { createPulse } = require('../lib/pulse.js');   // 0.60.236 moved to the kernel (orchestrator/lib/pulse.js re-exports it)
   // Pulse is started after server binds (in server.listen callback)
   module._createPulse = createPulse;
 } catch(_) {
@@ -166,7 +166,7 @@ try {
 }
 // §BUGFIX 2026-08-23 — ROOT was __dirname, correct only because
 // orchestrator.js sat at repo root. Used in 19 real places throughout
-// this file (path.join(ROOT, 'ui'), path.join(ROOT, 'cli', ...), etc.)
+// this file (path.join(ROOT, 'lib', 'ui'), path.join(ROOT, 'cli', ...), etc.)
 // as if it meant "the repo root," not "wherever this file lives" — the
 // two were the same thing before this file moved into orchestrator/,
 // and would have silently diverged for every one of those 19 real call
@@ -174,7 +174,7 @@ try {
 // individually: ROOT now explicitly means repo root, correct regardless
 // of which folder this file itself lives in.
 const ROOT    = path.join(__dirname, '..');
-const UI_ROOT = path.join(ROOT, 'ui');
+const UI_ROOT = path.join(ROOT, 'lib', 'ui');
 
 // ── System registry ───────────────────────────────────────────────────────────
 const SYS = {
@@ -798,11 +798,11 @@ const SYSTEM_LOCAL_UI_DIRS = [
   // guardian UI absorbed into main nexus UI — no separate guardian/ui
   { system:'cortex',       dir: path.join(ROOT,'cortex','ui') },
   { system:'idearium',     dir: path.join(ROOT,'idearium','ui') },
-  { system:'nexus',        dir: path.join(ROOT,'ui') },
-  { system:'emerge',       dir: path.join(ROOT,'ui') },        // emerge IDE ui lives at root ui/
-  { system:'orchestrator', dir: path.join(ROOT,'ui','orchestrator') },
-  { system:'explorer',     dir: path.join(ROOT,'ui') },  // contract-explorer + contract-renderer
-  { system:'diagnostic',   dir: path.join(ROOT,'ui','diagnostics') },  // §HOTSWAP-03
+  { system:'nexus',        dir: path.join(ROOT, 'lib', 'ui') },
+  { system:'emerge',       dir: path.join(ROOT, 'lib', 'ui') },        // emerge IDE ui lives at root ui/
+  { system:'orchestrator', dir: path.join(ROOT, 'lib', 'ui', 'orchestrator') },
+  { system:'explorer',     dir: path.join(ROOT, 'lib', 'ui') },  // contract-explorer + contract-renderer
+  { system:'diagnostic',   dir: path.join(ROOT, 'lib', 'ui', 'diagnostics') },  // §HOTSWAP-03
   // §BUGFIX 2026-07-02: was 'ui','diagnostic' (singular) — that folder is
   // empty. The real diagnostic UI, with a real index.html, lives at
   // ui/diagnostics (plural). GET /ui/diagnostic was serving nothing.
@@ -907,6 +907,17 @@ const server = http.createServer(async (req, res) => {
   const rest  = seg.slice(2).join('/');
   const M     = req.method;
   const QS    = u.searchParams;
+
+  // §0.60.251 AE1 — the automation engine lives here now (it is the platform's; each system is sovereign). Its /automation/*
+  // door is served from the orchestrator; Clear Glass and every other system reach it by this port, never by a require.
+  if (top === 'automation') {
+    let raw = ''; try { for await (const c of req) raw += c; } catch (_) {}
+    let body = {}; try { body = raw ? JSON.parse(raw) : {}; } catch (_) {}
+    let out; try { out = await require('./automation/index.js').handle({ method: M, url: req.url, body, headers: req.headers, rawBody: raw }); }
+    catch (e) { out = { status: 500, body: { ok: false, error: e.message } }; }
+    res.writeHead((out && out.status) || 200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify((out && out.body) || {}));
+  }
 
   // ── Root UI — TV-shell is the homepage (explicit, repeated request —
   // diagnostics and the ALK-GL/spotlight/channel-switching home were both
@@ -1188,7 +1199,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
 
   // ── /api/contract — Unified Interaction Contract ──────────────────────────
   if (u.pathname === '/api/contract' && M === 'GET') {    try {
-      const { getVersionedContract } = require('../contracts/nexus-interaction-contract');
+      const { getVersionedContract } = require('../lib/contracts/nexus-interaction-contract');
       const version = u.searchParams?.get('version') || null;
       const contract = getVersionedContract(version);
       if (!contract) return json(res, 404, { ok:false, error:`contract version not found: ${version}` });
@@ -1197,11 +1208,11 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
   }
   if (u.pathname.startsWith('/api/contract/') && M === 'GET') {
     try {
-      const { getVersionedContract } = require('../contracts/nexus-interaction-contract');
+      const { getVersionedContract } = require('../lib/contracts/nexus-interaction-contract');
       const seg = u.pathname.split('/');
       const system = seg[3];
       if (system === 'snapshots') {
-        const { listSnapshots } = require('../contracts/nexus-interaction-contract');
+        const { listSnapshots } = require('../lib/contracts/nexus-interaction-contract');
         return json(res, 200, { ok:true, snapshots: listSnapshots() });
       }
       const contract = getVersionedContract();
@@ -1212,7 +1223,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
   }
   if (u.pathname === '/api/contract/validate' && M === 'POST') {
     try {
-      const { validateRequestAt, getVersionedContract } = require('../contracts/nexus-interaction-contract');
+      const { validateRequestAt, getVersionedContract } = require('../lib/contracts/nexus-interaction-contract');
       const body = await readBody(req);
       // Use snapshot-bound validation — deterministic
       const current = getVersionedContract();
@@ -1427,7 +1438,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     if (systemId === 'orchestrator') {
       try {
         const hs = require('./lib/contract-handshake');
-        const { getVersionedContract } = require('../contracts/nexus-interaction-contract');
+        const { getVersionedContract } = require('../lib/contracts/nexus-interaction-contract');
         const full = getVersionedContract();
         const orchContract = full?.systems?.orchestrator || full;
         const crypto = require('crypto');
@@ -1564,7 +1575,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
   // All watched by fs.watch — changes take effect within 500ms
   if (top === 'auth') {
     let _auth;
-    try { _auth = require('../auth/index'); } catch(e) {
+    try { _auth = require('./auth/index'); } catch(e) {
       return json(res, 503, { ok: false, error: 'auth module unavailable: ' + e.message });
     }
 
@@ -1667,7 +1678,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
   // GET /api/meta/classify  — ALK perception of current system state
   // GET /api/meta/gaps?text= — run Liminal gap detection on text
   if (top === 'api' && sub === 'meta') {
-    const meta = (() => { try { return require('../meta'); } catch(_) { return null; } })();
+    const meta = (() => { try { return require('../lib/meta'); } catch(_) { return null; } })();
     if (!meta) return json(res, 503, { ok:false, error:'meta layer not loaded' });
 
     if (M === 'GET' && !rest) {
@@ -3115,15 +3126,15 @@ server.listen(PORT, BIND_HOST, async () => {
 // ── Auth module init + hotswap ────────────────────────────────────────────────
 // auth/index.js, auth/policy.json, auth/clients/*.pub all watched live
 try {
-  const _authMod = require('../auth/index');
+  const _authMod = require('./auth/index');
   _authMod.init();
   // Watch auth/index.js itself for hotswap
-  const _authFile = require.resolve('../auth/index');
+  const _authFile = require.resolve('./auth/index');
   require('../lib/safe-watch.js').watch(_authFile, () => {
     setTimeout(() => {
       try {
         delete require.cache[_authFile];
-        const fresh = require('../auth/index');
+        const fresh = require('./auth/index');
         fresh.init();
         broadcast('orchestrator.auth.hotswapped', { ts: Date.now() });
         console.log('[auth] module hotswapped');
@@ -3162,7 +3173,7 @@ try {
       // here instead of trusting closure scope across a 2600-line file.
       const VERSION = require('../lib/version').services.orchestrator;
       const spawn = spawnChild;
-      const cliScript = path.join(ROOT, 'cli', 'nexus-repl.js');
+      const cliScript = path.join(ROOT, 'lib', 'cli', 'nexus-repl.js');
       const args = [cliScript, '--repl', `--port=${PORT}`];
       const terminals = [
         ['cmd',    ['/c','start','cmd','/k','node',...args]],

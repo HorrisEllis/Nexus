@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-macro-node-recording-phasemap.spec::MR3b_guide_and_hotkey_toast
+type: phase
+id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR3b_guide_and_hotkey_toast
+context: pipeline phase MR3b_guide_and_hotkey_toast of docs/2026-10-15-macro-node-recording-phasemap.spec
+intent: null
+summary: MR3b_guide_and_hotkey_toast (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677589
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677589
+lastSeenAt: 1792787677589
+fingerprint: null
+payload:
+  id: MR3b_guide_and_hotkey_toast
+  map: docs/2026-10-15-macro-node-recording-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT-0.60.58
+  files:
+    - clear-glass/renderer/settings/sections/macros.js
+    - clear-glass/renderer/browser.js
+    - clear-glass/src/options/store.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c7090557628cbfe8

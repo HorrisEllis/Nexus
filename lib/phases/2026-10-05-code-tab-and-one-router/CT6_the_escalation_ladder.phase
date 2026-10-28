@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT6_the_escalation_ladder
+type: phase
+id: docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT6_the_escalation_ladder
+context: pipeline phase CT6_the_escalation_ladder of docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+intent: null
+summary: CT6_the_escalation_ladder (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677012
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677012
+lastSeenAt: 1792787677012
+fingerprint: null
+payload:
+  id: CT6_the_escalation_ladder
+  map: docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - lib/agent-tools/index.js
+    - copilot/tool-runtime.js
+    - copilot/server.js
+    - lib/repo-agent.js
+    - idearium/api/index.js
+    - idearium/lib/config-core.cjs
+  depends_on:
+    - CT2_it_learns_and_switches
+  blocks: []
+  spec: null
+  graph: efb8afe9cf9edd48

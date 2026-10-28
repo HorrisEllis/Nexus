@@ -1,0 +1,256 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UP3_upload_routes_and_commands:482f723155e730e0
+type: graph
+id: phase:UP3_upload_routes_and_commands:482f723155e730e0
+context: dependency graph of phase UP3_upload_routes_and_commands
+intent: null
+summary: 27 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677952
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677952
+lastSeenAt: 1792787677952
+fingerprint: null
+payload:
+  for: UP3_upload_routes_and_commands
+  kind: phase
+  repo: null
+  hash: 482f723155e730e0
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/test-upload-placement.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: service/idearium-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-projects-overview.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-carve.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-undo-any-change.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/core/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: intelligence/spatial/lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/core/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-projects-overview.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-repo-carve.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-undo-any-change.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      fromSystem: service
+      toSystem: idearium
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP1_placement_tool
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP2_learned_placements
+    dependents:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP4_upload_ui
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP5_registry_wires_on_apply
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP6_model_for_the_unplaced
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM5_tools_routes_commands
+    upstream:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP1_placement_tool
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP2_learned_placements
+    downstream:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM5_tools_routes_commands
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM6_nerve_feel
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM7_live_injected_map
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM8_page_map_panel
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP4_upload_ui
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP5_registry_wires_on_apply
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP6_model_for_the_unplaced
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP4_upload_ui
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP5_registry_wires_on_apply
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM5_tools_routes_commands
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (2): UP1_placement_tool, UP2_learned_placements'
+      - >-
+        needed by (4): UP4_upload_ui, UP5_registry_wires_on_apply, UP6_model_for_the_unplaced,
+        PM5_tools_routes_commands · all downstream 7 · finishing it unlocks UP4_upload_ui,
+        UP5_registry_wires_on_apply, PM5_tools_routes_commands
+    edges:
+      - from: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP1_placement_tool
+        kind: declared
+      - from: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP2_learned_placements
+        kind: declared

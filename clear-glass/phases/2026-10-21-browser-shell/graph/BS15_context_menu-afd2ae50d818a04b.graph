@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792502099145
+exported_at: 1792787678027
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792502099145
-lastSeenAt: 1792502099145
+firstSeenAt: 1792787678027
+lastSeenAt: 1792787678027
 fingerprint: null
 payload:
   for: BS15_context_menu
@@ -152,7 +152,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 2527b07c5dc17a5a
     layer: 2
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
@@ -172,8 +171,11 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 2527b07c5dc17a5a · layer 2
+      - layer 2
       - 'depends on (1): BS8_design_system · all upstream 2'
       - >-
         needed by (2): BS18_chrome_context_menus, BS19_ctx_point_from_page · finishing it unlocks
         BS18_chrome_context_menus, BS19_ctx_point_from_page
+    edges:
+      - from: docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+        kind: declared

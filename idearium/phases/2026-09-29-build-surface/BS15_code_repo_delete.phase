@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS15_code_repo_delete
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS15_code_repo_delete
+context: pipeline phase BS15_code_repo_delete of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS15_code_repo_delete (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476540
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476540
+lastSeenAt: 1792822476540
+fingerprint: null
+payload:
+  id: BS15_code_repo_delete
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - lib/repo-hat.js
+    - lib/cos-bridge.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 068a129d7d06e9e3

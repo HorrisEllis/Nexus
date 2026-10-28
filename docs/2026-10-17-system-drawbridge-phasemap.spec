@@ -116,6 +116,7 @@ spec:
         into a MISMATCH or UNREACHABLE system is refused with why.
     DB6_move_the_crossings:
       status: OPEN
+      depends_on: [SV7_intelligence_cos_cortex]   # 2026-10-24: cut into SV0–SV7 (docs/2026-10-23-cos-spine-phasemap.spec addendum (b))
       does: >-
         The crossings move to the drawbridge one system pair at a time, largest first, each move lowering the DB1 baseline.
         The debugging systems go first, because he asked for them: intelligence (cfr, rfr2, sigma) and diagnostic (friction,
@@ -248,7 +249,7 @@ spec:
         A system declares in its registry which of its events a person should see (toasts: [{ event, level, text }]). The UI
         toasts what the registry says instead of a list in app.js, so the UI holds no knowledge of its own (disposable).
     DB16_a_registry_for_each_system:
-      status: OPEN
+      status: "PARTLY BUILT 0.60.229 — drafted for the systems with none (0.60.231, Idearium's 15 only: orchestrator, cos, components; lib/registry-draft.js; <system>/registry-components.draft.json); OPEN: his acceptance, system by system"
       does: >-
         A registry drafted for every system that has none (cos, nexus, warp, orchestrator, meta, siso, cli, cockpit,
         diagnostic, auth, mesh; then remote-desktop, emergence, jaa, erosmancer, sentinel, security) from its source: the
@@ -414,3 +415,241 @@ spec:
         the spec: lib/drawbridge.js over the system's own registry-components.js and contracts/handshake.js, lib/tunnel.js with
         the three tunnels, sandbox.json read by COS at create. The catalog regenerated from it, as genesis's is.
       proof: "a system scaffolded from the fork refuses an undeclared crossing with a receipt and crosses each tunnel after the handshake (tests/sandbox.test.js in the skeleton passes)"
+
+  # ── ADDENDUM 2026-10-24 (g) — one registry at every level of recursion; COS agnostic; autopilot to the orchestrator ──
+  # Context: RF2 had just put every folder inside one of the 15 systems, and the census showed 2 of 14 sovereign. The coder was
+  # reporting how Nexus now starts (npm run start:all → lib/nexus/autopilot.js) when he wrote:
+  # James, 2026-10-24: "what about moving autopilot ot the porchastrator folder?
+  # remember that nexus uses a component registry for each incremement. so nexus root, then each system, as the event bus interaction
+  # contract component registry as the spine for wiring each level of recursion.
+  # then cos will use the same registry, same with the ui floating on top, with handshake verification and an event ledger.
+  # that makes each system, able to be load balanced, throttled, paused, rewound, despawned, build, created,etc. immense leverage. cos
+  # is agnostic"
+  # Before it, his own words this extends: addendum (a) 2026-10-17 "interaction contract and event bus and queue and dependancy and
+  # wiring harness and spine … cos is the isolated compartment for each system using the regisry as a drawbridge"; DB7 "ui floats ontop".
+  addendum_g:
+    decided:
+      - "One registry shape at every level of recursion: Nexus root → each system → its components. At each level the registry is
+        the event bus, the interaction contract and the component registry together, and it is the spine that wires that level to the
+        one below (his words)."
+      - "COS uses the same registry and nothing else, so COS is agnostic: it knows a registry, not a system (his words)."
+      - "The UI floats on top of the same registry, with handshake verification and an event ledger (his words; DB7, DB12)."
+      - "What it buys, in his words: each system can be load balanced, throttled, paused, rewound, despawned, built and created."
+    reading_to_confirm: >-
+      The coder's reading, to confirm: "for each incremement" = for each level of nesting (root, system, component), one schema for
+      all of them, so the same code reads any level. "build, created" = COS scaffolds a new system from the registry template
+      (DB11/DB20) and builds it, the same as any other.
+    autopilot_reading: >-
+      "what about moving autopilot ot the porchastrator folder?" was asked as a question; the coder's recommendation is yes, as
+      orchestrator/autopilot.js. Autopilot is the supervisor that starts and restarts every system, which is orchestration. One
+      constraint: autopilot also restarts the orchestrator's server, so it stays its own process. A folder is not a process: it moves
+      in the tree, and still runs beside the server, not inside it. COS keeps finding old releases (lib/nexus/autopilot.js,
+      nexus/autopilot.js) through runtime.js entryOf. To confirm.
+    found_2026_10_24:
+      registries: "11 of the 15 systems have registry-components.js (architect, clear-glass, copilot, cortex, diagnostic, guardian,
+        idearium, intelligence, loom, ollama, versionium). None for orchestrator, components, cos, core (lib), and none for Nexus's root."
+      merged_view: "lib/system-registry.js merges autopilot's ALL_KERNELS, diagnostic's SYSTEMS and version.js modules (read-only);
+        lib/drawbridge-registry.js registryOf/graph reads each system's registry (DB9)."
+      lifecycle: "cos/spec/cos-spine.spec: spawn/despawn/balance of compartments (process-runner), pause/resume/checkpoint/rewind
+        (cos/workspace/vm-control.js), 'a person's acts or a rule he set; an agent may read and propose'. Not found: throttle,
+        load balancing beyond the spec's spawn-and-balance."
+  phases_added_g:
+    DB21_one_registry_schema_every_level:
+      status: OPEN
+      depends_on: [DB16_a_registry_for_each_system, DB9_every_repo_generates_its_registry]
+      files: [loom/templates/registry-level.spec, lib/registry-level.js, tests/modules/test-registry-level.test.js]
+      does: >-
+        One schema for a registry at any level: level (root | system | component), id, its children (each a registry of the next
+        level), the events it emits and accepts (the bus), the routes and commands it offers (the contract), its components and their
+        wires (the registry), and its lifecycle (which verbs it supports). lib/registry-level.js reads and validates any level and walks
+        the tree. The existing registry-components.js files are read as the system level unchanged (§8.6).
+      proof: "the 11 existing system registries validate as level 'system'; a component registry validates as 'component'; one walk from the root reaches every system"
+    DB22_the_root_and_the_missing_four:
+      status: OPEN
+      depends_on: [DB21_one_registry_schema_every_level]
+      files: [registry-components.js, orchestrator/registry-components.js, components/registry-components.js, cos/registry-components.js, lib/registry-components.js]
+      does: "Nexus's root registry (its children are the 15 systems) and registries for orchestrator, components, cos and core, written from what each does today (§0.1)."
+      proof: "the walk from the root reaches all 15; each new registry's routes are served (loom's declared ≠ served scanners)"
+    DB23_autopilot_to_the_orchestrator:
+      status: OPEN
+      depends_on: []
+      files: [orchestrator/autopilot.js, lib/nexus/autopilot.js, package.json, cos/app/runtime.js, lib/nexus-self/systems.js]
+      does: >-
+        lib/nexus/autopilot.js → orchestrator/autopilot.js through the refactor tool (lib/architecture-apply.js), still its own
+        process. package.json scripts and COS's entryOf learn the new path, keeping the old ones for installed releases.
+      proof: "npm run start:all boots every system from orchestrator/autopilot.js; a COS release with the old path still starts"
+    DB24_cos_reads_only_the_registry:
+      status: OPEN
+      depends_on: [DB22_the_root_and_the_missing_four, DB11_cos_compartment_per_system]
+      files: [cos/manager.js, cos/kernel.js, cos/compartment/process-runner.js]
+      does: >-
+        COS learns what to run from the registry walk alone (no list of Nexus's systems in COS): each system-level registry is a
+        compartment, its lifecycle verbs are what COS may do to it. A registry COS has never seen runs the same way (agnostic).
+      proof: "a fixture registry tree with a fake system COS has never seen is spawned, health-checked and despawned"
+    DB25_the_lifecycle_verbs:
+      status: OPEN
+      depends_on: [DB24_cos_reads_only_the_registry]
+      files: [cos/manager.js, cos/workspace/vm-control.js, cos/compartment/process-runner.js, idearium/cli/route-commands.js]
+      does: >-
+        Each verb a registry declares, for any system, through one route and one command row: create, build, spawn, despawn, pause,
+        resume, rewind (vm-control's checkpoints), throttle (a rate cap on its routes at the drawbridge) and balance (more than one
+        instance behind its registry). Each act is a person's or a rule he set (cos-spine.spec), on the event ledger.
+      proof: "each verb on a fixture system: the act, its ledger row, and the state after; an agent's call is a proposal, not the act"
+    DB26_the_ui_floats_on_the_registry:
+      status: OPEN
+      depends_on: [DB25_the_lifecycle_verbs, DB12_the_ui_handshake]
+      files: [idearium/ui/desktop.html, idearium/ui/js/registry-view.js]
+      does: "A view built only from the registry walk and the event ledger: every level, its state, its verbs. It shakes hands first (DB12)."
+      proof: "driven in Clear Glass: the tree shows; a verb runs and its ledger row appears; an undeclared call is refused and shown"
+  build_order_g: [DB23, DB21, DB22, DB24, DB25, DB26]
+
+# ── The addenda below were written on brave-cori (claude/brave-cori-eczug1) and ported to main at 0.60.247 (BCR2, his "Port it
+# phase-by-phase"), unchanged (§0.3). Their version numbers are that line's. RF2 on main did its own folds, so where they describe folds,
+# docs/2026-10-24-fifteen-systems-migration-phasemap.spec says what main did. Their DB16 drafts arrive with the DB16 port.
+## ADDENDUM 2026-10-24 (0.60.229) — DB16 drafted; the way to sovereign, measured
+James, 2026-10-24: "then we need to resume the component registery for each system, get the mall sovereign, then cos phases to migrate." · to
+the choice "1 registries per system (DB16), COS first … 2 specs via local models": "1"
+- **Built:** lib/registry-draft.js draft / missing / text. Each draft comes from the tree only: the routes its interaction-contract.json
+  declares (lib/route-contract-check.js holds those to the code), its event-taxonomy.js pointed at (the one truth for its event names, ET1),
+  the literal event names it emits and handles, the files other systems reach into today (DB1: each is a capability that needs a route,
+  DB6), and its own way out by blocker (data, primitive, capability). Written for all 16 systems with none as
+  <system>/registry-components.draft.json. GET /api/system/registry-drafts, GET /api/system/registry/:system/draft, `system drafts`.
+- **Decided by the axioms (REVERSIBILITY, USER_AUTONOMY: drafts are his to accept):** a draft is JSON under its own name. lib/system-registry.js,
+  lib/system-nodes.js and others take any <system>/registry-components.js as declared, so a draft under that name would have been in force
+  before he accepted it (the first try did that, caught before commit). JSON because siso is an ES module package and a CommonJS draft broke
+  there. Accepting one: it becomes the system's registry-components.js and the system goes onto loom's SYSTEMS list.
+- **Measured (sovereignty census, lib/system-boundary.js):** no system is sovereign today. With no way out at all (their own registry, bus,
+  handshake and compartment are what is left): auth, erosmancer, jaa, mesh, remote-desktop, security, sentinel, siso. COS: 5 ways out (1 data,
+  cos/manager.js → cortex/memory/jaa-db.js; 4 primitives into siso/warp), 39 of its files reached into by others (cos/host/index.js by four
+  systems). Orchestrator 38 ways out, cli 20, meta 12, emergence 9, nexus 8.
+- **No screen yet:** the drafts are on a route and a command; the UI is deferred, said.
+- **Found, not this change's:** test-system-boundary SB-06/SB-08 fail on the committed tree too — three crossings not in the baseline
+  (idearium/repo/roadmap-import.js → loom/scanners/phasemap-map.js since 0.60.199; lib/phase-dag.js → the same; lib/verify-first.js →
+  cos/testenv/run-target.js). Reported.
+
+## ADDENDUM 2026-10-24 (0.60.230) — his decision: eight folders are not systems
+James, 2026-10-24, reading the coder's "auth, erosmancer, jaa, mesh, remote-desktop, security, sentinel and siso already reach into no other
+system" (0.60.229's report, which counted them as the systems closest to sovereign): "Aren't systems. They should have been dealt with already"
+- **His decision:** those eight are not systems. His axiom §5.9 already said so ("a primitive with none of these [state, lifecycle,
+  persistence, execution] is not a system", docs/2026-10-17-decisions-by-the-axioms.spec); the census (lib/system-boundary.js) never
+  applied it, and DB16 drafted registries for them. That cost: eight drafts and a wrong "closest to sovereign" list in 0.60.229.
+- **What it changed:** lib/system-boundary.js FOLDED, each one's home read from who uses it — auth → orchestrator (its only user,
+  orchestrator/orchestrator.js), mesh → guardian (guardian/routes/mesh.js), jaa → guardian (its schema is "Guardian v8 — Schema"), siso → the
+  kernel (a primitive cos, emerge and idearium use; PRIMITIVES already said so); erosmancer, remote-desktop, security, sentinel → parked
+  (nothing requires them; a use of one is reported as parkedUses, never hidden). Their files count as their home's; they are never listed
+  as systems; their eight drafts were withdrawn (generated output, regenerable: nothing lost).
+- **The same mistake one level down, decided by the axioms (§5.9; DB16's open question, the coder's reading, to confirm):** the parts of
+  other systems (contracts, hooks, service, components, architecture-spec, seams) and the faces (ui, tablet) were listed as "sovereign".
+  lib/system-boundary.js PARTS: still scanned (crossings into hooks/ are real edges), never in the sovereignty list. lib/registry-draft.js
+  reads the same lists (one truth).
+- **"They should have been dealt with already" — what is left, to confirm:** the table only counts them right. Dealing with them means
+  moving each into its home (DB17: auth/ into orchestrator/, mesh/ and jaa/ into guardian/, siso/ beside the kernel) and archiving the parked
+  four (§0.3: archive, not delete). The coder's reading is that he wants that done; erosmancer (231 files, its own OS spec) may be his own
+  project rather than parked code — his to say.
+- **Found and fixed on the way:** 0.60.229 put the drafts' route case between `case 'system.registry':` and `case 'system.registry.one':`,
+  so GET /api/system/registry answered with the drafts instead of the dependency graph (test-drawbridge-registry SR-07). Moved; guarded.
+- **Measured now:** 20 systems; none sovereign. Fewest ways out: cockpit 1 (data), warp 1, emerge 4, cos 4 (1 data, 3 primitive into warp/core).
+
+## ADDENDUM 2026-10-24 (0.60.231) — the systems are Idearium's 15
+James, 2026-10-24, after 0.60.230 counted 20 systems: "15 systems. only the ones with a .spec in the directory. all the systems in idearium"
+- **His decision:** the systems are exactly Idearium's list, lib/nexus-self/systems.js SYSTEMS: orchestrator, cortex, guardian, idearium,
+  architect, diagnostic, intelligence, ollama-bridge (ollama/), versionium, copilot, loom, clear-glass, components, cos, core (the kernel,
+  lib/). It supersedes 0.60.230's count of 20, and the coder's reading that put components among the parts (both kept here, §0.3).
+- **What it changed:** lib/system-boundary.js realSystems() reads that list; the sovereignty census lists only those 14 folders (core is the
+  kernel) and names every other folder with code as unhomed, with who uses it: warp, nexus, meta, emerge, hooks, cockpit, cli,
+  architecture-spec, contracts, emergence, seams, service, tablet, ui. The scan itself is unchanged (a require into warp/ is still a real edge,
+  and the ratchet's baseline still holds it). lib/registry-draft.js drafts only for those 15: orchestrator, cos, components; the six drafts
+  for cli, cockpit, emergence, meta, nexus, warp withdrawn (generated, regenerable).
+- **His ".spec in the directory", checked:** 13 of the 15 have one in their folder (<system>/spec/*.spec). components has none; core has no
+  folder of its own (lib/; docs/lib.spec exists). Said, not decided: components is on his list without a spec.
+- **What is left for the unhomed:** each needs a home (moved into the system that uses it, DB17) or to be archived; the census lists their
+  users, so the home is read from the evidence, as 0.60.230 did for the eight. warp is used by ten folders (it is the primitive the
+  census's PRIMITIVES already names), nexus by eleven.
+
+## ADDENDUM 2026-10-24 (0.60.232) — "Archive."
+James, 2026-10-24: "Archive." — his answer to the coder's "1. Home or archive the unhomed folders … Your erosmancer question is still open."
+- **The coder's reading (to confirm):** archive what is not a system and is not needed. By the axioms (REVERSIBILITY, §1.2 nothing fails
+  silently), a folder that live code still uses cannot be archived without breaking it; it needs a home instead. Each candidate was checked
+  for requires, paths named by name (spawned, served, read), workspaces and tests.
+- **Archived** to _archive/2026-10-24-not-systems/ (git mv; a README says why and how to restore): remote-desktop, security (the top-level
+  e2e-channel and signaling-envelope), emergence (with its own suites; tests/modules/test-emergence-and-warp-suites.test.js keeps WARP's).
+- **Not archived, his to decide:** erosmancer (Clear Glass starts ErosmancerOS from erosmancer/erosmancer-os, his "erosmanceros to start
+  with clearglass"; an npm workspace) and sentinel (cli/sentinel.js and two tests use it). **Kept, live:** service (the Idearium UI tells him
+  to start node service/idearium-service.js), tablet (two tests read its pages), seams (tests/brutal.test.js requires it), ui (served), and
+  the used unhomed folders (warp, nexus, meta, emerge, cli, cockpit, hooks, contracts, architecture-spec): each needs a home, not the archive.
+- **A regression of 0.60.230, found and fixed:** test-cos-compartment-template CT-03/CT-04 used sentinel as the sovereign example; 0.60.230
+  made sentinel not a system and the test was not run then (it passed at 0.60.229). The example is now components (of his 15, the one that
+  requires nothing in another system). CT-07 fails as it did at 0.60.229 (the ratchet's three crossings).
+
+## ADDENDUM 2026-10-24 (0.60.233) — erosmancer moved into Clear Glass
+James, 2026-10-24: "move erosmancer to either clearglass or guardian"
+- **Which, decided by the evidence (§0.1):** Clear Glass. It starts ErosmancerOS (clear-glass/src/eros/supervisor.js), wires it
+  (clear-glass/wire/nexus-wire.js), drives its input and runs its workbench; no Guardian file uses it.
+- **Moved (git mv):** erosmancer/erosmancer-os → clear-glass/erosmancer-os; erosmancer/spec/erosmancer.spec → clear-glass/erosmancer-os/spec/.
+  Every live path updated (the supervisor, the wire, the macro tool, five tests, two loom maps, the npm workspace and lock, the README,
+  the atlases, the spec registry); history (CHANGELOGs, version lines, older maps) left as written. lib/system-boundary.js FOLDED no longer
+  needs an entry for it. Clear Glass's electron-builder config excludes it from the app.
+- **Left:** sentinel, still parked (its CLI and two tests).
+
+## ADDENDUM 2026-10-24 (0.60.234) — Sentinel archived
+James, 2026-10-24: "I'm not sure what Sentinel is, dude. Is that, like, tell me, I don't think that got mixed in to this project." The coder
+read docs/nexus-sentinel.spec and its history: his 2026-07-24 plan (quoted three times in it) to merge four diagnostic surfaces into one
+diagnostic-and-repair authority; only S1 was built (a contract whose routes were declared and never served, and cli/sentinel.js); its job is
+the diagnostic system's now (one of his 15; the healer joined it in 0.60.136). The coder recommended archiving it. He: "Yeah archive it."
+- Archived (git mv) to _archive/2026-10-24-not-systems/sentinel/: the folder, cli/sentinel.js, tests/modules/test-sentinel-cli.js (out of
+  both run-all lists, said there), and test-adversarial-sim's AS-004..AS-006 (they tested that CLI). The spec stays in docs/, addended.
+- Found: test-sovereign-systems SV-08 used sentinel as its sovereign example; 0.60.230 broke it and it was not run then (the second test
+  that change broke, after CT-03/04). Now components. Every test touching the census is being run (CHANGELOG-0.60.234.md).
+
+## ADDENDUM 2026-10-24 (0.60.236) — sovereign: components, ollama, cos (DB6 begun)
+James, 2026-10-24: "We need the systems sovereign."
+- **warp counts with the kernel** (lib/system-boundary.js FOLDED warp: 'lib'), as siso does: nine systems use warp/core, so inside idearium or
+  guardian (his earlier "warp would probably be idearium or guardian") every one would depend on that system and none could be sovereign.
+  Decided by his axioms for his goal; to confirm. The folder has not moved.
+- **The pulse moved to the kernel** (DB17): orchestrator/lib/pulse.js → lib/pulse.js (node built-ins only), the old path a one-line
+  re-export; cortex/boot.js, idearium/api, clear-glass/wire/nexus-wire.js, nexus/nexus-connect.js and orchestrator.js require lib/pulse.js.
+  Cortex, idearium and Clear Glass no longer reach into orchestrator for a heartbeat.
+- **ollama sovereign:** its one way out was nexus/nexus-connect.js startHeartbeat, which only handed off to the pulse; it takes the pulse
+  from the kernel.
+- **cos sovereign:** its one way out was cortex/memory/jaa-db.js's JaaDB class (a compartment's own store). CompartmentManager takes
+  openStore(dir) from whoever boots it, as it already takes jaaDB; without one it says so and uses the shared store (it fell back silently).
+- **Measured now:** sovereign components, ollama, cos. Next fewest ways out: loom 5 (3 data — cortex's jaa-db; 1 primitive — nexus-connect;
+  1 capability — ollama-client), architect 6, clear-glass 9. The two files most systems still reach for: cortex/memory/jaa-db.js (data) and
+  nexus/nexus-connect.js (it is not a pure primitive: it lazily requires intelligence/lattice; moving it into the kernel as it stands would
+  be an upward crossing, so it needs its lattice use cut first).
+
+## ADDENDUM 2026-10-24 — emerge, read in depth: a language whose modules are sovereign by construction
+James, 2026-10-24, after the coder proposed splitting the shared store (cortex/memory/jaa-db.js) by a table → owner map: "Look at emerge.
+Deeply Custom"
+- **What emerge is (read, §0.1).** Two things.
+  - The Emergence language. emerge/emerge.spec is its grammar: 6 root types, 7 axioms (NO_SILENT_DROP, RECORD_IS_TRUTH,
+    GRAMMAR_APPLIES_TO_ITSELF …), 45 domains covering nearly all of Nexus (jaa: table, schema, migrate, ledger; identity: systemid,
+    componentid; persistence; network; agent; contract; raid; cortex …). emerge-kernel.js reads the grammar, gates tokens by signal/noise
+    (SNR), parses compartment / invariant / signal / gap / law / loop / whatif / ledger / output, and boots compartments (Co → I → In → O →
+    Co). emerge-codegen-v2.js compiles a .eg program into a CommonJS module.
+  - The spec compiler (emerge/compiler/: kg-builder, invariants, T0/T1 scaffolding with no model, T2, pipeline) — what every .spec in Nexus
+    is compiled with.
+- **The finding.** A module compiled from Emergence is sovereign by construction: it requires only the SISO primitive and crypto; its
+  store and bus are given to it (init({ bus, jaa })); it declares the tables it owns (JAA_TABLES) and writes its own event_log; its routes,
+  handlers and intervals are declared. That is the shape the store split needs, written in his language instead of a JS map.
+- **Gaps, said.** No .eg program exists in the tree (0 files). The kernel's parser is indent-and-token based and the codegen is
+  pattern-based (v2 lists its own fixes). emerge is not on Idearium's list of 15 (it is unhomed), and 0.60.231's list put it among the
+  folders that "can be archived"; his "Deeply Custom" is read by the coder as: keep it, it is his (to confirm).
+- **Proposed (to confirm):** the store split is declared in Emergence. Each system gets <system>/<system>.eg declaring its compartment, the
+  tables it owns, its ledger and its routes; the codegen emits its store module; the table → owner map is compiled from those
+  declarations (one truth), and a table another system writes is reached through the owner's declared route. Pilot: loom (its last three
+  ways out are all data).
+
+## ADDENDUM 2026-10-24 (0.60.237) — emerge is a system, warp folded into it; the language is not a crossing
+James, 2026-10-24: "okay warp and emerge. / spec compiler, ide, and idearium". Supersedes 0.60.236's FOLDED warp → lib (kept above, §0.3).
+lib/nexus-self/systems.js gains emerge (dirs emerge, warp); lib/system-boundary.js FOLDED warp → emerge, and LANGUAGE (warp/core, dispatch,
+plugins, index.js; emerge/core) makes a use of the runtime kind 'language': not ratcheted, not a sovereignty blocker (EW_D2, by his axioms).
+Map: docs/2026-10-24-emerge-warp-system-phasemap.spec.
+
+## ADDENDUM 2026-10-24 (0.60.242) — the census has two blind spots; the wall covers them
+Found when Loom ran in its compartment behind cos/compartment/boundary.js (docs/2026-10-24-loom-into-cos-phasemap.spec LM4):
+1. A system's use of lib/ is never a crossing, but lib/ itself reaches into systems (241 upward edges). A system that loads lib/gap-field.js
+   loaded Cortex's store with it.
+2. A require whose path is built at run time (``require(`../hooks/${system}.hooks.js`)``) is not read by the scanner.
+The wall sees both, because it judges every require as Node resolves it. So a compartment move runs audit first, then enforce. The census
+stays the ratchet; the wall is the proof.

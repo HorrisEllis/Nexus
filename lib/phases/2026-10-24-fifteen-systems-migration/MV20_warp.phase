@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV20_warp
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV20_warp
+context: pipeline phase MV20_warp of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV20_warp (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792821071293
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792821071293
+lastSeenAt: 1792821071293
+fingerprint: null
+payload:
+  id: MV20_warp
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - warp/
+    - lib/warp/
+  depends_on:
+    - MV18_emerge
+  blocks: []
+  spec: null
+  graph: 96570ff299b75c60

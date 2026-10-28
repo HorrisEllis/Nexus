@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D5_new
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D5_new
+context: >-
+  pipeline phase D5_new of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: D5_new (?) — 15 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753898
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753898
+lastSeenAt: 1792841753898
+fingerprint: null
+payload:
+  id: D5_new
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/server.js
+    - intelligence/index.js
+    - tests/modules/test-intelligence-faculties-move.js
+    - tests/modules/test-intelligence-organs-move.js
+    - cortex/boot.js
+    - intelligence/cfr/ledger.js
+    - lib/agent-tools/tools/faculty/faculty-tools.js
+    - intelligence/field-provider.js
+    - lib/contracts/nexus-interaction-contract.js
+    - orchestrator/lib/mcp-server.js
+    - copilot/recursive-diagnose.js
+    - copilot/lib/copilot-context.js
+    - lib/agent-tools/tools/query/query-intelligence.js
+    - lib/agent-tools/tools/query/nexus-status.js
+    - lib/agent-tools/tools/diagnostic/nexus-heal.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0f7172d2ea3b1ab4

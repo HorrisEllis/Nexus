@@ -1,0 +1,123 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SN3_measured_by_rfr2:047cb3a9913f3f85
+type: graph
+id: phase:SN3_measured_by_rfr2:047cb3a9913f3f85
+context: dependency graph of phase SN3_measured_by_rfr2
+intent: null
+summary: 11 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755180
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755180
+lastSeenAt: 1792841755180
+fingerprint: null
+payload:
+  for: SN3_measured_by_rfr2
+  kind: phase
+  repo: null
+  hash: 047cb3a9913f3f85
+  nodes:
+    - path: intelligence/rfr2/delta/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/sigma/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/time/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/clip/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/context/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/kernel/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/emerge/core/history.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-rfr2-cjs.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/rfr2/identity/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/lazy/index.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: intelligence/rfr2/delta/index.js
+      to: intelligence/rfr2/identity/index.js
+      kind: requires
+    - from: intelligence/rfr2/delta/index.js
+      to: intelligence/rfr2/lazy/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/delta/index.js
+      kind: requires
+    - from: intelligence/rfr2/context/index.js
+      to: intelligence/rfr2/delta/index.js
+      kind: requires
+    - from: intelligence/rfr2/index.js
+      to: intelligence/rfr2/delta/index.js
+      kind: requires
+    - from: tests/modules/test-rfr2-cjs.js
+      to: intelligence/rfr2/delta/index.js
+      kind: requires
+    - from: intelligence/rfr2/kernel/index.js
+      to: intelligence/rfr2/time/index.js
+      kind: requires
+    - from: lib/emerge/core/history.js
+      to: intelligence/rfr2/time/index.js
+      kind: requires
+  crossings:
+    - from: lib/emerge/core/history.js
+      to: intelligence/rfr2/time/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN2_run_in_parallel
+    dependents:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN4_benchmarks_teach
+    upstream:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN2_run_in_parallel
+    downstream:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN4_benchmarks_teach
+    blockedBy:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN2_run_in_parallel
+    unlocks:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN4_benchmarks_teach
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by SN2_run_in_parallel
+      - 'depends on (1): SN2_run_in_parallel · all upstream 3'
+      - 'needed by (1): SN4_benchmarks_teach · finishing it unlocks SN4_benchmarks_teach'
+    edges:
+      - from: docs/2026-10-10-snapshot-compartments-phasemap.spec::SN2_run_in_parallel
+        kind: declared

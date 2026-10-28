@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+context: pipeline phase M0_map of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: M0_map (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676351
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676351
+lastSeenAt: 1792787676351
+fingerprint: null
+payload:
+  id: M0_map
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+    - docs/SPEC-REGISTRY.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8ffcfde00fa30d75

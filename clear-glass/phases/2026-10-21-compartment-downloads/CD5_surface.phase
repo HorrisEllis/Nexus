@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-21-compartment-downloads-phasemap.spec::CD5_surface
 context: pipeline phase CD5_surface of docs/2026-10-21-compartment-downloads-phasemap.spec
 intent: null
-summary: CD5_surface (surface) — 5 file(s)
+summary: CD5_surface (surface) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792481794295
+exported_at: 1792787678036
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792481794295
-lastSeenAt: 1792481794295
+firstSeenAt: 1792787678036
+lastSeenAt: 1792787678036
 fingerprint: null
 payload:
   id: CD5_surface
@@ -24,10 +24,9 @@ payload:
     - clear-glass/src/ipc/bridge.js
     - idearium/cli/route-commands.js
     - lib/agent-tools/tools/clear-glass/net.js
-    - clear-glass/renderer/settings/sections/network.js
   depends_on:
     - CD4_kill_on_disconnect
   blocks:
     - MOD-CDL-SURFACE
   spec: clear-glass/spec/compartment-downloads.spec
-  graph: 182f083bae4413ca
+  graph: 925d52606c535ce8

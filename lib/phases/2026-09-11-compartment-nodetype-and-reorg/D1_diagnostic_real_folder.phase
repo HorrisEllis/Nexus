@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+context: >-
+  pipeline phase D1_diagnostic_real_folder of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: D1_diagnostic_real_folder (?) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1792877948879
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877948879
+lastSeenAt: 1792877948879
+fingerprint: null
+payload:
+  id: D1_diagnostic_real_folder
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/index.js
+    - cortex/gap-finder/index.js
+    - architect/service.js
+    - docs/diagnostic.spec
+    - lib/nexus/nexus-connect.js
+    - diagnostic/nexus-diagnostic.js
+    - guardian/lib/gap-hunter.js
+    - lib/system-check.js
+    - diagnostic/lib/diagnostic-contract.js
+    - lib/diagnostic-causal.js
+    - lib/gap-relay.js
+    - lib/file-integrity.js
+    - lib/system-registry.js
+  depends_on:
+    - T1_extend_system_scaffold
+  blocks: []
+  spec: null
+  graph: b11859a8693bc56e

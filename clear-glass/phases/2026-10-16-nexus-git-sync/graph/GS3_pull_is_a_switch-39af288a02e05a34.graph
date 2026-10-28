@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GS3_pull_is_a_switch:39af288a02e05a34
+type: graph
+id: phase:GS3_pull_is_a_switch:39af288a02e05a34
+context: dependency graph of phase GS3_pull_is_a_switch
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677723
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677723
+lastSeenAt: 1792787677723
+fingerprint: null
+payload:
+  for: GS3_pull_is_a_switch
+  kind: phase
+  repo: null
+  hash: 39af288a02e05a34
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-16-nexus-git-sync-phasemap.spec::GS2_nexus_as_a_repo
+    dependents: []
+    upstream:
+      - docs/2026-10-16-nexus-git-sync-phasemap.spec::GS1_commands
+      - docs/2026-10-16-nexus-git-sync-phasemap.spec::GS2_nexus_as_a_repo
+    downstream: []
+    blockedBy:
+      - docs/2026-10-16-nexus-git-sync-phasemap.spec::GS2_nexus_as_a_repo
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by GS2_nexus_as_a_repo
+      - 'depends on (1): GS2_nexus_as_a_repo · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-16-nexus-git-sync-phasemap.spec::GS2_nexus_as_a_repo
+        kind: declared

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS17_cockpit_home
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS17_cockpit_home
+context: pipeline phase CS17_cockpit_home of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS17_cockpit_home (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792876203196
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203196
+lastSeenAt: 1792876203196
+fingerprint: null
+payload:
+  id: CS17_cockpit_home
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/cockpit
+    - lib/ui/brainos
+    - copilot/cli.js
+    - guardian/server.js
+  depends_on:
+    - CS12_the_mover_is_proven
+    - CS_D10_cockpit_home
+  blocks: []
+  spec: null
+  graph: 47c63ccf65666f8b

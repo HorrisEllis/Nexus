@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::IN5_architect_mirrors_the_registry
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::IN5_architect_mirrors_the_registry
+context: >-
+  pipeline phase IN5_architect_mirrors_the_registry of
+  docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: IN5_architect_mirrors_the_registry (interface) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792879045541
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879045541
+lastSeenAt: 1792879045541
+fingerprint: null
+payload:
+  id: IN5_architect_mirrors_the_registry
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: interface
+  status: OPEN
+  files:
+    - architect/service.js
+  depends_on:
+    - IN3_registry_is_the_spine
+  blocks: []
+  spec: null
+  graph: ce1f179c949b7789

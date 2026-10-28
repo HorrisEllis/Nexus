@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS16_erosmancer_os:d73ddc7a83fb0945
+type: graph
+id: phase:CS16_erosmancer_os:d73ddc7a83fb0945
+context: dependency graph of phase CS16_erosmancer_os
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792876203195
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203195
+lastSeenAt: 1792876203195
+fingerprint: null
+payload:
+  for: CS16_erosmancer_os
+  kind: phase
+  repo: null
+  hash: d73ddc7a83fb0945
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+    dependents: []
+    upstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+    downstream: []
+    blockedBy:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by CS12_the_mover_is_proven
+      - 'depends on (1): CS12_the_mover_is_proven'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+        kind: declared

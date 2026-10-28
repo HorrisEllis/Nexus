@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N28_live_run_findings
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N28_live_run_findings
+context: pipeline phase N28_live_run_findings of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N28_live_run_findings (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676299
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676299
+lastSeenAt: 1792787676299
+fingerprint: null
+payload:
+  id: N28_live_run_findings
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/cos-bridge.js
+    - idearium/repo/nexus-self.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fbb9ca7ade269a9e

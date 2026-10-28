@@ -317,6 +317,9 @@ try {
     const first = rows.find(r => r.startedBy) || rows[0];
     return first ? { phase: first.phase || null, map: first.map || null, title: first.title || null, startedBy: first.startedBy || null } : null;
   });
+  // 0.60.223 SL1 — a change that lands may close its run's phase; one that is undone reopens it (lib/phase-close.js)
+  _require('../../lib/repo-inject.js').setOnSettled((n) => (n.status === 'reverted' ? _reopenFor(n) : _closeRun(_require('../../lib/phase-close.js').runOfInject(n), { trigger: `applied ${n.path}` }))
+    .catch((e) => _closeLog(n.repoUuid, 'phase.close-failed', `${n.path}: the close check failed`, e.message)));   // §1.2 said, never silent
   RV.setOnCommit(({ repoUuid, commitId, message, provenance }) => _emitLedger('idearium.version.commit', { repoUuid, commitId, message, by: provenance.by, changelog: provenance.changelog || [], causedBy: (provenance.refs || [])[0] || null }));
   if (!process.env.NEXUS_TEST_SANDBOX) {   // APV4 — what postDurable buffered while a system was down (failure modes too) goes when it answers
     const t = setInterval(() => { _nexusClient.drainBuffer().then(r => { if (r && r.drained) _ledgerOut.drained += r.drained; }).catch(() => {}); }, 60000);
@@ -771,14 +774,199 @@ async function _phaseMapStart(repo, opts = {}) {
   return { ok: true, job: { running: true, startedAt: job.startedAt, maps: maps.length } };
 }
 
-async function _phaseSetStatus(repo, { map, phase, status, force = false, reason = '' }) {
+// 0.60.222 SL0 — what can be built now over Nexus's maps (repo null) or one repo's (lib/build-queue.js, with the census and flights);
+// shared by GET …/phases/next and the loop (SL4)
+async function _queueFor(repo) {
+  const BQ = _require('../../lib/build-queue.js'), C = _require('../../lib/phase-census.js'), FD = _require('../../lib/flight-data.js');
+  let maps, root, repos;
+  if (!repo) {
+    root = _require('../../lib/nexus-self/systems.js').ROOT;
+    maps = fs.readdirSync(path.join(root, 'docs')).filter(f => f.endsWith('-phasemap.spec')).map(f => ({ path: `docs/${f}`, text: fs.readFileSync(path.join(root, 'docs', f), 'utf8') }));
+    repos = getRepoLayer().list({}).filter(r => r.nexusSelf);
+  } else {
+    const PH = await import('../repo/phases.js');
+    const m = PH.mapsFor({ repo, repoDir: _repoDiskDir(repo.uuid) });
+    root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(repo.uuid);   // a Nexus system's phases are judged in Nexus's tree
+    maps = (m.maps || []).map(x => ({ path: x.path, text: x.text || '' }));
+    repos = [repo];
+  }
+  let census = null, censusWhy = null;
+  try { census = C.census({ root, system: null, maps }); } catch (e) { censusWhy = e.message; }
+  const flights = [];
+  for (const r of repos) { try { for (const f of FD.summary(_phaseRows(r.uuid)).flights || []) if (f.map && f.phase) flights.push({ key: `${f.map}::${f.phase}`, verdict: f.verdict, landed: !!f.landed, ended: f.ended || 0 }); } catch (_) {} }
+  flights.sort((a, b) => (a.ended || 0) - (b.ended || 0));
+  const r = BQ.queue({ maps, census, flights });
+  if (censusWhy) (r.said = r.said || []).push(`census failed: ${censusWhy}`);
+  return r;
+}
+
+// 0.60.225 SL5 — James, 2026-10-24: "yes do it." (to B: a proven change lands by itself in his project repos, Nexus stays review).
+// A proven run's proposals are applied when his rule allows each one (lib/trust-rule.js allows); every one says why, landed or not.
+// apply() keeps its own guards (an agent's change that regresses a test is refused). Undo is the change's revert.
+function _trust() { const T = _require('../../lib/trust-rule.js'); T.setStore({ load: () => loadTable('idearium_trust_rules'), append: (r) => appendRow('idearium_trust_rules', r) }); return T; }
+// §GV2 0.60.257 — James, 2026-10-26: "the gate doesn't wait for me to accept it or not before it fails." His verdict on a run RAID held
+// for him (awaiting-verdict). accept: a proven row in his words, the run's proposals land (approved by him), the phase closes, RAID's
+// queue row passes. reject: the run's changes are reverted (proposed ones rejected, applied ones reverted), unproven in his words,
+// RAID's queue row fails. Map: docs/2026-10-26-gate-waits-for-verdict-phasemap.spec (GV_D2).
+async function _phaseVerdict(repo, { runId, accept, words = '' } = {}, who = 'person') {
+  const PC = _require('../../lib/phase-close.js'), RI = _require('../../lib/repo-inject.js');
+  const b = runId ? PC.baseRun(String(runId)) : null;
+  if (!b) return { ok: false, error: 'runId required' };
+  const rows = loadTable('idearium_phase_runs').filter(r => r && PC.baseRun(r.runId || '') === b && (r.repoUuid || r.targetRepo) === repo.uuid);
+  const held = rows.filter(r => r.state === 'awaiting-verdict').pop();
+  if (!held) return { ok: false, status: 404, error: `run ${b} is not waiting for a verdict` };
+  if (rows.some(r => (r.ts || 0) > (held.ts || 0) && ['proven', 'unproven', 'verdict-rejected'].includes(r.state))) return { ok: false, status: 409, error: `run ${b} already has a verdict` };
+  if (typeof accept !== 'boolean') return { ok: false, error: 'accept: true or false' };
+  const base = { runId: b, repoUuid: repo.uuid, map: held.map || null, phase: held.phase || null };
+  const said = String(words || '').slice(0, 2000);
+  const mine = PC.injectsOf(b, RI.list(null, { limit: 100000 }));
+  const CI = _require('../../cortex/core/raid/contract-intake.js');
+  let raid = null;
+  if (accept) {
+    let landed = 0; const refused = [];
+    for (const n of mine.filter(n => n.status === 'proposed' || n.status === 'staged')) {
+      const r = await Promise.resolve(RI.apply(n.uuid, { layer: getRepoLayer(), approvedBy: `${who} (verdict)` }));
+      if (r && r.ok) landed++; else refused.push(`${n.path}: ${((r && r.errors) || ['refused']).join('; ')}`);
+    }
+    appendRow('idearium_phase_runs', { uuid: `${b}-proof-proven`, ...base, runId: `${b}-proof`, buildRunId: b, state: 'proven', snapshot: held.snapshot || null,
+      proof: { met: 0, total: 0, byPerson: { who, words: said }, strength: { ran: 0, filesOnly: false, byPerson: true } }, note: `accepted by ${who}${said ? `: "${said}"` : ''}`, ts: Date.now() });
+    getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'proven', byPerson: who });
+    if (held.raidQueueId) raid = CI.reportExternalOutcome(held.raidQueueId, { status: 'pass', verdict: `accepted by ${who}${said ? `: ${said}` : ''}` });
+    _closeLog(repo.uuid, 'phase.verdict.accepted', `${held.phase || b} accepted by ${who}`, said || null);
+    let close = null; try { close = await _closeRun(b, { trigger: 'verdict' }); } catch (e) { close = { error: e.message }; }
+    return { ok: true, accepted: true, runId: b, landed, refused, close, raid };
+  }
+  let reverted = 0; const kept = [];
+  for (const n of mine) {
+    try {
+      if (n.status === 'proposed' || n.status === 'staged') { RI.reject(n.uuid, { reason: `rejected by ${who}${said ? `: ${said}` : ''}` }); reverted++; }
+      else if (n.status === 'applied') { const r = await Promise.resolve(RI.revert(n.uuid, { layer: getRepoLayer() })); if (r && r.ok !== false && !r.error) reverted++; else kept.push(`${n.path}: ${(r && (r.error || (r.errors || []).join('; '))) || 'not reverted'}`); }
+    } catch (e) { kept.push(`${n.path}: ${e.message}`); }
+  }
+  appendRow('idearium_phase_runs', { uuid: `${b}-verdict-rejected`, ...base, state: 'verdict-rejected', snapshot: held.snapshot || null, error: `rejected by ${who}${said ? `: "${said}"` : ''}`, ts: Date.now() });
+  appendRow('idearium_phase_runs', { uuid: `${b}-proof-unproven`, ...base, runId: `${b}-proof`, buildRunId: b, state: 'unproven', snapshot: held.snapshot || null, error: `rejected by ${who}${said ? `: "${said}"` : ''}`, ts: Date.now() });
+  getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'unproven', byPerson: who });
+  if (held.raidQueueId) raid = CI.reportExternalOutcome(held.raidQueueId, { status: 'fail', verdict: `rejected by ${who}${said ? `: ${said}` : ''}` });
+  _closeLog(repo.uuid, 'phase.verdict.rejected', `${held.phase || b} rejected by ${who}`, said || null);
+  return { ok: true, accepted: false, runId: b, reverted, kept, raid };
+}
+
+async function _landByRule(runId) {
+  const PC = _require('../../lib/phase-close.js'), RI = _require('../../lib/repo-inject.js'), T = _trust();
+  const run = _runOf(runId);
+  if (!run || !run.proven) return { landed: 0, asked: 0, why: 'not proven' };
+  const mine = PC.injectsOf(run.runId, RI.list(null, { limit: 100000 })).filter(n => n.status === 'proposed');
+  let landed = 0, asked = 0; const whys = [];
+  for (const n of mine) {
+    const repo = getRepoLayer().get(n.repoUuid);
+    const a = T.allows({ repo, change: n, run });
+    if (!a.lands) { asked++; whys.push(`${n.path}: ${a.why}`); continue; }
+    const r = await Promise.resolve(RI.apply(n.uuid, { layer: getRepoLayer(), approvedBy: `trust-rule:${T.get(n.repoUuid).rule}` }));
+    if (r && r.ok) { landed++; _closeLog(n.repoUuid, 'inject.landed-by-rule', `${n.path} landed by his rule`, a.why); }
+    else { asked++; whys.push(`${n.path}: apply refused: ${((r && r.errors) || []).join('; ')}`); }
+  }
+  return { landed, asked, why: whys.slice(0, 3).join(' · ') || (mine.length ? 'all landed' : 'no proposal left') };
+}
+
+// 0.60.225 SL4 — the loop (idearium/lib/autobuild.js): its effects, given to it as deps
+function _loopRunState(runId) {
+  const RW = _require('../../lib/run-watch.js'), PC = _require('../../lib/phase-close.js');
+  const b = PC.baseRun(runId);
+  const runs = RW.runsOf(loadTable('idearium_phase_runs').filter(r => r && PC.baseRun(r.runId) === b));
+  const build = runs.get(b), proof = runs.get(`${b}-proof`);
+  const run = _runOf(b);
+  if (!build) return { final: false, state: 'not found yet', proven: false };
+  if (proof && RW.isFinal(proof)) return { final: true, state: proof.last.state, proven: !!(run && run.proven) };
+  if (build.last.state === 'awaiting-verdict') return { final: true, state: 'awaiting-verdict', proven: false };   // §GV2 0.60.257 held for his verdict: the loop moves on, the phase waits for him
+  const failed = ['failed', 'refused', 'stalled', 'cancelled', 'contract-incomplete', 'unproven'];
+  if (RW.isFinal(build) && (failed.includes(build.last.state) || Date.now() - (build.last.ts || 0) > 30 * 60000)) return { final: true, state: build.last.state, proven: !!(run && run.proven) };
+  return { final: false, state: (proof && proof.last.state) || build.last.state, proven: false };
+}
+async function _loopDeps() {
+  const AB = await import('../lib/autobuild.js');
+  return { AB, deps: {
+    load: () => loadTable('idearium_loops'), save: (l) => appendRow('idearium_loops', l), now: () => Date.now(),
+    queue: (r) => _queueFor(getRepoLayer().get(r.uuid)),
+    build: async (r, e) => { const repo = getRepoLayer().get(r.uuid); const st = AB.status(r.uuid, { deps: { load: () => loadTable('idearium_loops') } });
+      const b = await _phaseBuild(repo, _repoDiskDir(repo.uuid), { map: e.map, phase: e.id, startedBy: { who: `loop:${st ? st.loopId : '?'}`, whence: 'system' } });
+      return b.ok ? { ok: true, runId: b.data && b.data.runId } : { ok: false, error: b.error || `refused (${b.status || '?'})` }; },
+    runState: _loopRunState, land: _landByRule, close: (runId) => _closeRun(runId, { trigger: 'loop' }),
+    emit: (type, payload) => { getIdeaOS().emit(type, payload); _emitLedger(type, payload); },   // 0.60.256: the loop names its events in full (idearium.loop.*), so the contract check reads them
+  } };
+}
+let _loopTicking = false;
+async function _loopTick() {
+  if (_loopTicking) return []; _loopTicking = true;
+  try {
+    const { AB, deps } = await _loopDeps();
+    const last = new Map(); for (const l of loadTable('idearium_loops')) if (l && (!last.has(l.repoUuid) || (l.at || 0) >= (last.get(l.repoUuid).at || 0))) last.set(l.repoUuid, l);
+    const out = [];
+    for (const l of last.values()) if (l.state === 'running') {
+      try { const r = await AB.step(l, deps); out.push(r); if (r.outcome !== 'waiting' && r.outcome !== 'stopped') _closeLog(l.repoUuid, `loop.${r.outcome}`, `loop ${l.loopId}: ${r.outcome}${r.key ? ` ${r.key.split('::').pop()}` : ''}`, r.why); if (r.outcome === 'stopped') _closeLog(l.repoUuid, 'loop.stopped', `loop ${l.loopId} stopped`, r.why); }
+      catch (e) { _closeLog(l.repoUuid, 'loop.step-failed', `loop ${l.loopId}: a step failed`, e.message); }
+    }
+    return out;
+  } finally { _loopTicking = false; }
+}
+
+// 0.60.223 SL1 — James, 2026-10-23: "contiue getting idearium building phases". Nothing marked a phase done, so a proven run left its
+// phase open and DG1 refused everything after it. _closeRun is called when a run's proof row says proven and whenever one of its changes
+// is applied; it closes the phase only when the run is proven AND every change of it is applied (lib/phase-close.js landed). The close
+// goes through the one status writer and is kept in idearium_phase_closes (append-only; a reopen is a newer row), never as a run state:
+// a run row's state is the run's own (the watchdog and the flights read it). Each close and reopen is on the activity log and the ledger.
+function _runOf(runId) {
+  const PC = _require('../../lib/phase-close.js'); const b = PC.baseRun(runId);
+  const rows = loadTable('idearium_phase_runs').filter(r => r && PC.baseRun(r.runId) === b);
+  if (!rows.length) return null;
+  const first = rows.find(r => r.map && r.phase) || rows[0];
+  const proof = [...rows].reverse().find(r => r.state === 'proven');
+  const last = rows.reduce((x, y) => ((y.ts || 0) >= (x.ts || 0) ? y : x), rows[0]);
+  return { runId: b, repoUuid: first.repoUuid, map: first.map, phase: first.phase, proven: !!proof, state: last.state, snapshot: (proof || first).snapshot || null,
+    strength: proof && proof.proof && proof.proof.strength || null };   // 0.60.226 what the proof ran (idearium/repo/proof-run.js proofStrength)
+}
+function _closeLog(repoUuid, kind, title, detail) {
+  try { _require('../../lib/activity-log/compartment.js').record({ compartment: repoUuid, kind, status: kind.split('.').pop(), actor: 'idearium', ts: Date.now(), title, detail: detail || null }); } catch (_) {}
+}
+async function _closeRun(runId, { trigger = '' } = {}) {
+  const PC = _require('../../lib/phase-close.js');
+  const run = runId ? _runOf(runId) : null;
+  if (!run || !run.map || !run.phase) return { closed: false, why: 'no phase run' };
+  const repo = getRepoLayer().get(run.repoUuid);
+  if (!repo) return { closed: false, why: `repo ${run.repoUuid} not found` };
+  let version = null; try { version = _require('../../lib/release-version.js').current().version; } catch (_) {}
+  const r = await PC.closeIfLanded({ repo, run, injects: _require('../../lib/repo-inject.js').list(null, { limit: 100000 }), setStatus: _phaseSetStatus, version, closes: loadTable('idearium_phase_closes') });
+  if (r.closed) {
+    appendRow('idearium_phase_closes', { uuid: `close-${run.runId}-${r.record.at}`, ...r.record, trigger });
+    getIdeaOS().emit('idearium.phase.closed', { ...r.record, trigger });
+    _emitLedger('idearium.phase.closed', { repoUuid: run.repoUuid, map: run.map, phase: run.phase, runId: run.runId, version });
+    _closeLog(run.repoUuid, 'phase.closed', `${run.phase} closed — ${r.record.note}`, `${r.why} (${trigger})`);
+  } else if (r.refused || /refused/.test(r.why || '')) _closeLog(run.repoUuid, 'phase.close-refused', `${run.phase} not closed`, r.why);   // §1.2 said
+  return r;
+}
+async function _reopenFor(n) {
+  const PC = _require('../../lib/phase-close.js');
+  const closes = loadTable('idearium_phase_closes');
+  const c = closes.filter(x => x && PC.baseRun(x.runId) === PC.runOfInject(n)).pop();
+  const repo = c ? getRepoLayer().get(c.repoUuid) : null;
+  if (!repo) return { reopened: false, why: 'no close for this change' };
+  const r = await PC.reopenIfUndone({ repo, inject: n, setStatus: _phaseSetStatus, closes });
+  if (r.reopened) {
+    appendRow('idearium_phase_closes', { uuid: `reopen-${r.record.runId}-${r.record.reopenedAt}`, ...r.record });
+    getIdeaOS().emit('idearium.phase.reopened', r.record);
+    _emitLedger('idearium.phase.reopened', { repoUuid: r.record.repoUuid, map: r.record.map, phase: r.record.phase, runId: r.record.runId, inject: n.uuid });
+    _closeLog(r.record.repoUuid, 'phase.reopened', `${r.record.phase} reopened`, r.why);
+  } else if (/refused/.test(r.why || '')) _closeLog(repo.uuid, 'phase.reopen-refused', `${c.phase} not reopened`, r.why);
+  return r;
+}
+
+async function _phaseSetStatus(repo, { map, phase, status, force = false, reason = '', note = '' }) {
   const PH = await import('../repo/phases.js');
   const { setPhaseStatus, RoadmapError } = await import('../repo/roadmap.js');
   const { maps, scope, snapshot } = PH.mapsFor({ repo, repoDir: _repoDiskDir(repo.uuid) });
   const found = maps.find(m => m.path === map);
   if (!found) return { ok: false, status: 404, error: `no phasemap ${map} in this repo` };
   let edit;
-  try { edit = setPhaseStatus({ text: found.text, mapName: map.split('/').pop().replace(/\.spec$/, ''), phaseId: phase, status, force }); }
+  try { edit = setPhaseStatus({ text: found.text, mapName: map.split('/').pop().replace(/\.spec$/, ''), phaseId: phase, status, force, note }); }
   catch (e) {
     if (e instanceof RoadmapError) {
       const code = e.code === 'NOT_FOUND' ? 404 : e.code === 'DEPS_INCOMPLETE' ? 409 : e.code === 'ROUNDTRIP_FAILED' ? 422 : 400;
@@ -825,6 +1013,12 @@ function _emitLedger(type, payload = {}) {
 // ladder and was thrown away. A delivered path counts as the expected one when it is the expected path under the map's own root folder
 // (the first segment of a nested map's path), or under exactly one top-level folder when the expected path has a folder of its own —
 // never a bare file-name match, so a stray index.js elsewhere is still not the file.
+// §0.60.230 SL10 — what repo-inject refused in a reply (an unsafe path, an unclosed fence, code that does not parse) is the cause of a file
+// that "did not come back"; it was dropped, so a syntax error and an empty reply ended with the same words
+function _refusedWhy(r) {
+  const ref = ((r && r.injects && r.injects.refused) || []).map(x => x && x.reason).filter(Boolean);
+  return ref.length ? ` — refused: ${[...new Set(ref)].slice(0, 3).join('; ')}`.slice(0, 400) : '';
+}
 function _underMapRoot(mapPath, expected, delivered) {
   const want = new Set(expected || []);
   const root = String(mapPath || '').includes('/') ? `${String(mapPath).split('/')[0]}/` : null;
@@ -836,12 +1030,19 @@ function _underMapRoot(mapPath, expected, delivered) {
     return want.has(rest) && (p.startsWith(root || '\0') || rest.includes('/')) ? rest : p;
   });
 }
-async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, startedBy = null }) {
+async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, rebuild = false, startedBy = null }) {
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
   const node = view.phases.find(p => p.map === map && p.phase_key === phase);
   if (!node) return { ok: false, status: 404, error: `no phase ${phase} in ${map}` };
-  if (node.status === 'complete') return { ok: false, status: 409, error: `${phase} is already complete`, extra: { code: 'ALREADY_COMPLETE' } };
+  // §0.60.226 SL7 — SL1 closes a proven phase, so every later build of it (resume, replan, retry) was refused here and the pipeline's own
+  // suites went red. Building a complete phase again is allowed only when asked for (rebuild: true), said on every row of the run.
+  const rebuilding = node.status === 'complete' && rebuild === true;
+  if (node.status === 'complete' && !rebuilding) return { ok: false, status: 409, error: `${phase} is already complete — to build it again, ask for it (rebuild: true, \`--rebuild\`)`, extra: { code: 'ALREADY_COMPLETE', remedy: 'rebuild: true' } };
+  // §0.60.225 NF1 — his run, 2026-10-23: RF2 (a root finding, "Not phases" in its own map) was sent to Gemini as a phase; it
+  // read guardian/config.js and lib/data-home.js (already fixed by DF1/DL3), changed nothing, and wrote a spec. A decision or a
+  // finding has nothing to build; anyway does not override this (it overrides an open dependency, not what the entry is).
+  if (node.kind === 'decision' || node.kind === 'finding') return { ok: false, status: 409, error: `not built: ${phase} is a ${node.kind} recorded in ${map}, not a phase to build`, extra: { code: 'NOT_A_PHASE', kind: node.kind } };
   const { maps, scope } = PH.mapsFor({ repo, repoDir: dir });
   const mapText = (maps.find(m => m.path === map) || {}).text || '';
   // §0.60.125 DG1 — James chose "Refuse, say why": a phase whose depends_on are still open (a decision not taken, a phase
@@ -856,7 +1057,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // DAG of every phasemap of this repo (lib/phase-dag.js): a phase in a cycle, or whose depends_on names no phase anywhere, is not
   // built (anyway: true overrides, said). Its slice (upstream, downstream, layer, critical path, unlocks, file conflicts) goes on
   // its graph below, so the run rows, the node and the agent see where the phase sits in the whole.
-  let dagSlice = null;
+  let dagSlice = null, dagOverride = null;
   try {
     const PD = _require('../../lib/phase-dag.js');
     const mappedBy = {}; for (const p of view.phases || []) if (p.mapped) mappedBy[`${p.map}::${p.phase_key}`] = p.mapped;
@@ -864,11 +1065,42 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     dagSlice = PD.slice(dag, `${map}::${phase}`);
     const probs = PD.problems(dag, `${map}::${phase}`).filter(x => !/is not in any phasemap/.test(x));
     if (probs.length && !anyway) return { ok: false, status: 409, error: `not built: ${phase} — ${probs.join('; ')}`, extra: { code: 'DAG_INVALID', problems: probs, dag: dagSlice } };
+    if (probs.length) dagOverride = probs;   // §0.60.230 SL10 — built anyway past DAG_INVALID: said on every row of the run (DG3's "said on the run" was not)
   } catch (e) { dagSlice = { error: `the DAG could not be built: ${e.message}` }; }
   // §0.60.147 DG2 — James, 2026-10-18: "each phase, has to have a dependany graph before executing." The graph (lib/phase-graph.js)
   // is assembled from the phase's mapping (MP1), DG1's view of its depends_on and the boundary census's systems; with none, the
   // phase is not built (no override: his "has to have"), and the refusal says how to give it one. With one, it is written as a
   // file before anything runs, and its hash goes on every row of the run.
+  // §0.60.228 SL8 — James, 2026-10-23: "agent needs to map dependancies if nexus cant map one." A phase MP1 could not place (no declared
+  // files, nothing in its words) is mapped by the repo's agent before DG2 would refuse it: one phase, MP4's brief, every file and edge
+  // checked by code (inside the repo, existing or in an existing folder; a depends_on that resolves and closes no cycle), kept per phase
+  // text so the next build asks nothing. Its depends_on are claims (agent:<by>, NC0): on the graph and the run, not a refusal (DG1 gates
+  // what the map declares). Nothing that fails the checks is used: then DG2 refuses NO_GRAPH, with what the agent answered.
+  let agentMap = null;
+  if (!(node.mapped && (node.mapped.files || []).length)) {
+    try {
+      const PMx = await import('../repo/phase-mapping.js');
+      const PFx = _require('../../lib/phase-files.js'), PDx = _require('../../lib/phase-dag.js');
+      const nexusScope = scope.source === 'nexus';
+      const aroot = nexusScope ? _require('../../lib/nexus-self/systems.js').ROOT : dir;
+      const isFile = (p) => { try { return !!aroot && fs.statSync(path.join(aroot, p)).isFile(); } catch (_) { return false; } };
+      const isDir = (p) => { try { return !!aroot && fs.statSync(path.join(aroot, p)).isDirectory(); } catch (_) { return false; } };
+      const ph = PFx.phasesOf(mapText, map).find(p => p.id === phase);
+      const ids = new Map(); for (const p of view.phases) { const k = `${p.map}::${p.phase_key}`; if (!ids.has(p.phase_key)) ids.set(p.phase_key, []); ids.get(p.phase_key).push(k); }
+      const resolveDep = (d) => { const id = PDx.refKey(d, (t) => ids.has(t)); const ks = id ? ids.get(id) || [] : []; return ks.find(k => k.startsWith(`${map}::`)) || (ks.length === 1 ? ks[0] : null); };
+      const down = new Set((dagSlice && dagSlice.downstream) || []);
+      const depChoices = view.phases.filter(p => p.map === map && p.phase_key !== phase && !p.kind).map(p => ({ id: p.phase_key, does: p.name || p.title })).slice(0, 60);
+      let folders = []; try { folders = fs.readdirSync(aroot, { withFileTypes: true }).filter(d => d.isDirectory() && !/^(\.|node_modules$|data$)/.test(d.name)).map(d => d.name); } catch (_) {}
+      const store = PMx.fileStore(path.join(IDEARIUM_DATA_DIR, 'phase-mapping', `${repo.uuid}.agent-maps.json`));
+      const r = ph ? await PMx.mapOne({ phase: ph, store, repoName: repo.name, folders, depChoices, exists: isFile, dirExists: isDir, resolveDep, wouldCycle: (k) => down.has(k),
+        ask: (prompt) => _agentAsk(prompt, { channel: 'idearium-phase-map', sessionId: `phase-map-${repo.uuid}`, kind: 'map:phase-files' }) }) : { ok: false, why: `${phase} not found in its map text` };
+      agentMap = { ok: !!r.ok, asked: !!r.asked, why: r.why, by: r.mapping ? r.mapping.by : null, files: r.mapping ? r.mapping.files.map(f => f.path) : [], dependsOn: r.mapping ? r.mapping.dependsOn : [], refused: r.mapping ? r.mapping.refused : [] };
+      if (r.ok) {
+        let env = null; try { if (aroot) env = _require('../../lib/phase-map-auto.js').envFromTree(aroot); } catch (_) { env = null; }
+        node.mapped = PMx.mapped(r.mapping, { phase: ph, env });
+      }
+    } catch (e) { agentMap = { ok: false, asked: false, why: `the agent mapping could not run: ${e.message}` }; }
+  }
   let phaseGraph = null;
   try {
     const PG = _require('../../lib/phase-graph.js');
@@ -878,7 +1110,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   } catch (e) { phaseGraph = { ready: false, missing: [`the graph could not be built: ${e.message}`], remedy: null }; }
   if (phaseGraph && dagSlice) phaseGraph.dag = dagSlice;   // §0.60.172 DG3 — the phase's place in the whole
   if (!phaseGraph.ready) {
-    return { ok: false, status: 409, error: `not built: ${phase} has no dependency graph — ${phaseGraph.missing.join('; ')}${phaseGraph.remedy ? `. ${phaseGraph.remedy}` : ''}`, extra: { code: 'NO_GRAPH', missing: phaseGraph.missing, remedy: phaseGraph.remedy } };
+    const am = agentMap && !agentMap.ok ? [`the agent could not map it: ${agentMap.why}`] : [];   // §0.60.228 SL8 — what the agent answered, said
+    return { ok: false, status: 409, error: `not built: ${phase} has no dependency graph — ${[...phaseGraph.missing, ...am].join('; ')}${phaseGraph.remedy ? `. ${phaseGraph.remedy}` : ''}`, extra: { code: 'NO_GRAPH', missing: [...phaseGraph.missing, ...am], remedy: phaseGraph.remedy, ...(agentMap ? { agentMap } : {}) } };
   }
   let phaseGraphFile = null;
   try {
@@ -922,8 +1155,11 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   const runStartTs = Date.now();
   const runId = `phrun-${runStartTs.toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
   const base = { runId, repoUuid: repo.uuid, targetRepo: target.uuid, map, phase, phaseUuid: node.uuid, title: node.title,
+    ...(rebuilding ? { rebuild: true } : {}),   // §0.60.226 SL7 — a complete phase built again, on request
+    ...(agentMap && agentMap.ok ? { mappedBy: { by: agentMap.by, asked: agentMap.asked, files: agentMap.files, dependsOn: agentMap.dependsOn } } : {}),   // §0.60.228 SL8 — the graph came from the agent's checked mapping
     startedBy: startedBy || { who: 'unknown', whence: 'unknown' },   // 0.60.188 RC7 — who started this run, on every row
-    ...(depsGate && depsGate.open.length ? { depsOverride: depsGate.open.map(o => o.key) } : {}),   // §0.60.125 DG1 — built anyway: what was still open, on every row
+    ...(depsGate && depsGate.open.length ? { depsOverride: depsGate.open.map(o => o.key) } : {}),
+    ...(dagOverride ? { dagOverride } : {}),   // §0.60.230 SL10 — built anyway past a cycle or a dangling depends_on: which   // §0.60.125 DG1 — built anyway: what was still open, on every row
     graphHash: phaseGraph.hash, graphFile: phaseGraphFile ? path.relative(IDEARIUM_DATA_DIR, phaseGraphFile).replace(/\\/g, '/') : null };   // §0.60.147 DG2 — the graph it was built against
   _emitLedger('idearium.phase.run.started', { runId, repoUuid: repo.uuid, map, phase, title: node.title || null, startedBy: base.startedBy, causedBy: base.startedBy.who });   // 0.60.190 APV4
 
@@ -975,7 +1211,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // (2) active (a map that will not take the edit is reported, not fatal)
   let statusNote = null;
   if (node.status !== 'active') {
-    const st = await _phaseSetStatus(repo, { map, phase, status: 'active', force: true, reason: `phase ${phase} build started (${runId})` });
+    const st = await _phaseSetStatus(repo, { map, phase, status: 'active', force: true, reason: `phase ${phase} build started (${runId})${rebuilding ? ' — built again on request' : ''}` });
     if (!st.ok) statusNote = st.error;
   }
   const depsDone = view.phases.filter(p => node.depends_on.includes(p.uuid) && p.status === 'complete').map(p => p.phase_key);
@@ -1243,6 +1479,22 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       if (state !== 'replied') SH.drop(shadow);
       else { const got = SH.settle(shadow, { files: _underMapRoot(map, files, ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean)) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
     }
+    // §0.60.230 SL10 — a reply that did not bring back the brick's file but wrote others (the right code under a wrong path) left each of
+    // them proposed in the review queue, once per attempt (3 identical proposals for one failed brick), or in auto mode written to disk.
+    // The brick never asked for them and its reply failed: a proposal is rejected, an applied one reverted, each with its reason —
+    // kept in the record, never deleted (REVERSIBILITY, §0.3); applied again by hand if he wants one.
+    let strays = null;
+    if (absent) {
+      const want = new Set(files);
+      const RIs = _require('../../lib/repo-inject.js');
+      const why = `the reply to ${session} did not bring back ${absent.join(', ')}; this file was not asked for by the brick`;
+      for (const it of (r.injects && r.injects.injects) || []) {
+        const pth = it.path || it.file; if (!pth || want.has(pth) || want.has(_underMapRoot(map, files, [pth])[0]) || !it.uuid) continue;
+        let done = null;
+        try { done = it.status === 'applied' ? RIs.revert(it.uuid, { layer: getRepoLayer(), force: true }) : RIs.reject(it.uuid, { reason: why }); } catch (e) { done = { ok: false, errors: [e.message] }; }
+        (strays = strays || []).push({ path: pth, inject: it.uuid, undone: done && done.ok ? (it.status === 'applied' ? 'reverted' : 'rejected') : `not undone: ${((done && done.errors) || []).join('; ')}` });
+      }
+    }
     // §0.39.355 PB2 — James: "it needs to actually build it". A build whose reply changed no file (nothing written,
     // staged or proposed, by a fenced block or a code_edit / code_write / code_batch call) did not build: incomplete,
     // so the ladder climbs instead of ending on prose.
@@ -1256,8 +1508,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     }
     // §0.60.145 TL2a — every job of this gate so far has now been judged: never reused again
     try { _require('../../lib/gate-context.js').handled(target.uuid, gateKey, { by: session, state }); } catch (_) {}
-    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(ck || {}), ...(reused ? { reused } : {}), ...(gateNote ? { gateContext: gateNote.length } : {}), ...(absent ? { absent } : {}), ...(unchanged ? { unchanged: true } : {}), ...(missingExports ? { missingExports } : {}), ...(verifyWhy ? { expectFailed: true } : {}),
-      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : verifyWhy ? verifyWhy.slice(0, 900) : missingExports && missingExports.length ? `${files[0]} came back without ${missingExports.join(', ')} — the plan says it exports ${missingExports.length === 1 ? 'it' : 'them'}` : null)),
+    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(ck || {}), ...(reused ? { reused } : {}), ...(gateNote ? { gateContext: gateNote.length } : {}), ...(absent ? { absent } : {}), ...(strays ? { strays } : {}), ...(unchanged ? { unchanged: true } : {}), ...(missingExports ? { missingExports } : {}), ...(verifyWhy ? { expectFailed: true } : {}),
+      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}${_refusedWhy(r)}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : verifyWhy ? verifyWhy.slice(0, 900) : missingExports && missingExports.length ? `${files[0]} came back without ${missingExports.join(', ')} — the plan says it exports ${missingExports.length === 1 ? 'it' : 'them'}` : null)),
       // 0.60.27 — with no ladder a failed reply that does not name its agent was recorded with no provider (found by AG1a's
       // count: one failed call missing). The call's own agent is known: the backend it was sent to.
       provider: (rg && rg.provider) || (r && (r.providerUsed || r.provider)) || (dp && (dp.provider || (dp.backend === 'ollama' && dp.model ? `ollama:${dp.model}` : dp.backend))) || null,
@@ -1458,7 +1710,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
               const VF0 = _require('../../lib/verify-first.js');
               const codeFiles = ((plan.order && plan.order.length) ? plan.order : plan.files.map(f => f.path)).filter(p => p !== testPath);
               let allPass = codeFiles.length > 0;
-              for (const f of codeFiles) { const v = await VF0.check({ root: _diskDir, file: f, plan, testPath }); if (v.verdict !== 'pass') { allPass = false; break; } }
+              for (const f of codeFiles) { const v = await VF0.check({ root: _diskDir, file: f, plan, testPath, runTarget: _require('../../cos/testenv/index.js').runTarget }); if (v.verdict !== 'pass') { allPass = false; break; } }
               if (allPass) existingTest = fs.readFileSync(t, 'utf8');
             }
           } catch (_) { existingTest = null; }
@@ -1520,7 +1772,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const _root = _repoDiskDir(target.uuid);
       const _tp = (plan.testFirst && plan.testFirst.path) || _require('../../lib/test-first.js').pathFor(plan, phase);
       let vf = null;
-      try { vf = await VF.check({ root: _root, file, plan, testPath: _tp }); } catch (e) { vf = { verdict: 'missing', checks: [{ name: 'verify-first', ok: false, why: e.message }] }; }
+      try { vf = await VF.check({ root: _root, file, plan, testPath: _tp, runTarget: _require('../../cos/testenv/index.js').runTarget }); } catch (e) { vf = { verdict: 'missing', checks: [{ name: 'verify-first', ok: false, why: e.message }] }; }
       appendRow('idearium_phase_runs', { uuid: `${runId}-c${ck.chunk}-vf`, ...base, ...ck, state: vf.verdict === 'pass' ? 'verified' : 'verify-first', verdict: vf.verdict, snapshot: commitId,
         checks: vf.checks, note: vf.verdict === 'pass' ? `${file} meets its conditions as it is — no agent asked` : vf.verdict === 'missing' ? `${file} is new — built` : `${file} ${vf.verdict}: ${(vf.checks || []).filter(c => c.ok === false).map(c => c.name).join(', ') || 'no test to prove it'}`, error: null, ts: Date.now() });
       if (vf.verdict === 'pass') {
@@ -1560,7 +1812,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const mapBase = map.split('/').pop().replace(/\.spec$/, '');
     const file = contractFile;
     fs.mkdirSync(path.dirname(file), { recursive: true });
-    const inputs = root && fs.existsSync(path.join(root, map)) ? [{ id: 'phasemap', path: map, note: 'the phase as its map writes it' }] : [];
+    const inputs = root && fs.existsSync(path.join(root, map)) ? [{ id: 'phasemap', path: map, phase, note: 'the phase as its map writes it (its own block, its status lines left out: SL7)' }] : [];
     let onDisk = false; try { onDisk = _require('../../lib/repo-inject.js').getMode(target.uuid) !== 'review'; } catch (_) {}
     const built = whole ? CA.fromWholePhase({ id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || '', inputs, message })   // §BR1 — no file named: the whole phase, one brick
       : CA.fromPhasePlan(plan, { id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || plan.intent || '', inputs, onDisk, root, phaseHash });
@@ -1656,7 +1908,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       if (!gate.parent) {
         const VF = _require('../../lib/verify-first.js'), CB = _require('../../lib/coder-brief.js');
         const tp = (plan.testFirst && plan.testFirst.path) || _require('../../lib/test-first.js').pathFor(plan, phase);
-        try { vfr = await VF.check({ root, file: f, plan, testPath: tp }); } catch (e) { vfr = { verdict: 'missing', checks: [{ name: 'verify-first', ok: false, why: e.message }] }; }
+        try { vfr = await VF.check({ root, file: f, plan, testPath: tp, runTarget: _require('../../cos/testenv/index.js').runTarget }); } catch (e) { vfr = { verdict: 'missing', checks: [{ name: 'verify-first', ok: false, why: e.message }] }; }
         appendRow('idearium_phase_runs', { uuid: `${runId}-${gate.id}-vf-${Date.now().toString(36)}`, ...base, ...ck, state: vfr.verdict === 'pass' ? 'verified' : 'verify-first', verdict: vfr.verdict, checks: vfr.checks, snapshot: commitId,
           note: vfr.verdict === 'pass' ? `${f} meets its conditions as it is — no agent asked` : vfr.verdict === 'missing' ? `${f} is new — built` : `${f} ${vfr.verdict}: ${(vfr.checks || []).filter(c => c.ok === false).map(c => c.name).join(', ') || 'no test to prove it'}`, error: null, ts: Date.now() });
         if (vfr.verdict === 'pass') {
@@ -1688,6 +1940,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const integrate = async () => {
       const pr = await _provePhase({ target, base, commitId, mapText, phase, message, generated, dispatch: { backend: lastDp.backend || null, agent: lastDp.agent || null, provider: lastDp.provider || null, ...(lastDp.model ? { model: lastDp.model } : {}) }, since: runStartTs });
       const st = pr && pr.state, run = pr && pr.run;
+      // §GV2 0.60.257 — James, 2026-10-26: "the gate doesn't wait for me to accept it or not before it fails." Nothing here can check
+      // this phase (no conditions, no files, none generated): RAID holds the gate for his verdict instead of failing it three times
+      if (st === 'no-proof') return { awaitsPerson: true, agent: 'proof-run', why: `nothing in Nexus can check this phase (${(pr && pr.source) || 'no conditions'}) — accept it or reject it`,
+        evidence: { 'phase.integrated': 'awaiting his verdict' } };
       return { ok: st === 'proven', agent: 'proof-run', evidence: { 'phase.integrated': st === 'proven' ? `met ${run.met}/${run.total}` : `${st || 'unproven'}${run ? ` ${run.met}/${run.total}` : ''}` } };
     };
     const save = () => { try { CG.save(file, L); } catch (e) { console.warn(`[idearium] contract save ${file}: ${e.message}`); } };
@@ -1743,6 +1999,13 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     }
     const res = viaRaid.result;
     const au = CA.audit(p, { root });
+    if (viaRaid.status === 'awaiting') {   // §GV2 — held for his verdict (POST /api/repos/:uuid/phases/verdict), never failed
+      const why = (viaRaid.awaiting || []).map(g => g.why).join('; ');
+      appendRow('idearium_phase_runs', { uuid: `${runId}-awaiting-verdict`, ...cbase, state: 'awaiting-verdict', snapshot: commitId, raidQueueId: viaRaid.queueId, error: why,
+        audit: { bricks: au.bricks, gates: au.gates, rounds: res.rounds }, ts: Date.now() });
+      getIdeaOS().emit('idearium.repo.phase.run', { ...cbase, state: 'awaiting-verdict', snapshot: commitId });
+      return { r: null, state: 'awaiting', absent: null, dp: lastDp, contracted: true };
+    }
     const state = res.complete ? 'contract-complete' : 'contract-incomplete';
     // §CR1 0.60.164 — James: "the component registry is vital for each project becuase its the spine that makes components
     // dumb." The contract build path never joined the component store, so a contract-built project had no registry/spine.
@@ -1838,7 +2101,7 @@ async function _autoRetry(info, kind, note) {
   catch (e) { return { ok: false, error: e.message }; }
 }
 async function _watchRuns() {
-  const mins = Number(_cfg('repos.stall_minutes', 10));
+  const mins = Number(_cfg('repos.stall_minutes', 20));   // §SL4 0.60.225 was 10: a claude-code attempt may run 15 min (lib/repo-agent.js), so a working one was called stalled
   if (!(mins > 0)) return [];
   const RW = _require('../../lib/run-watch.js');
   const st = RW.stalled(loadTable('idearium_phase_runs'), { stallMs: mins * 60 * 1000 });
@@ -1976,7 +2239,7 @@ async function _provePhase({ target, base, commitId, mapText, phase, message, di
   if (!conditions.length) {
     appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-no-proof`, ...pbase, state: 'no-proof', snapshot: commitId, error: `not proven: ${source} — add conditions: [{ says, check }] to the phase`, ts: Date.now() });
     getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'no-proof' });
-    return { state: 'no-proof' };
+    return { state: 'no-proof', source };
   }
   let max = 2; try { const v = Number(getIdeariumValue('repos.proof_attempts')); if (v >= 1 && v <= 10) max = Math.floor(v); } catch (_) {}
   const RA = _require('../../lib/repo-agent.js');
@@ -2016,9 +2279,10 @@ ${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}`
     }
     run = { ...r.run, against: { ...against, ...(size ? { leverage: CH.leverage({ ...size, met: r.run.met }) } : {}) } };
     if (run.verdict === 'ready') {
-      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, ...run.against, proof: { met: run.met, total: run.total, report: run.files && run.files.report }, ts: Date.now() });
+      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, ...run.against, proof: { met: run.met, total: run.total, report: run.files && run.files.report, strength: run.strength || null }, ts: Date.now() });
       getIdeaOS().emit('idearium.phase.proven', { ...pbase, attempt, met: run.met, total: run.total, report: run.files && run.files.report });
       getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'proven' });
+      _landByRule(base.runId).then(() => _closeRun(base.runId, { trigger: 'proven' })).catch((e) => _closeLog(base.repoUuid, 'phase.close-failed', `${phase}: the land/close check failed`, e.message));   // §SL5 0.60.225 his rule first, then the close   // §SL1 0.60.223 — closes now if its changes are already on disk (auto mode)
       // §0.39.362 CH5 — a proven phase moves the compartment: its end state is checked again (with what is proposed)
       if (charter.endState.length) _charterCheck(target.uuid, { cause: base.runId }).catch(e => console.warn(`[idearium] end-state check after ${base.runId}: ${e.message}`));
       return { state: 'proven', attempt, run };
@@ -3152,12 +3416,21 @@ const ROUTE_CAP = {
   'routing.agents':   CAPS.READ_IDEAS,
   'ollama.check':     CAPS.READ_IDEAS, 'ollama.check.ask': CAPS.WRITE_IDEAS,   // §CT4
   'repo.agent.route': CAPS.READ_IDEAS,   // §CT3
+  'repo.agent.gate': CAPS.READ_IDEAS,    // §CG3 — a dry read (gathers context, records nothing)
+  'repo.flow': CAPS.READ_IDEAS,          // §BX2 — the repo's FlowGraph (phases+DAG, runs, mesh), read-only
+  'flow.mesh': CAPS.READ_IDEAS,          // §BX2 — the live agent mesh from Clear Glass, read-only
+  'automation.list': CAPS.READ_IDEAS,    // §AU1 — the union of automations across the six sources, read-only
+  'automation.run': CAPS.WRITE_IDEAS,    // §AU1 — run one automation through its source (an action)
   'repo.thread': CAPS.READ_IDEAS,   // §RS9
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
   'repo.agent.feed': CAPS.READ_IDEAS,   // §0.60.143 TL1b
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
+  'phases.next': CAPS.READ_IDEAS, 'repo.phases.next': CAPS.READ_IDEAS,   // §SL0 — reads only
+  'repo.phases.closes': CAPS.READ_IDEAS,   // §SL1 — reads only
+  'repo.loop': CAPS.READ_IDEAS, 'trust.get': CAPS.READ_IDEAS,
+  'repo.phases.verdict': CAPS.WRITE_IDEAS,   // §GV2 0.60.257 his verdict   // §SL4/SL5 — reads only
   'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
   'repo.changes': CAPS.READ_IDEAS, 'repo.change.get': CAPS.READ_IDEAS,   // §FR1 0.60.114 — reads only: one record per change
   'repo.flight': CAPS.READ_IDEAS, 'repo.flight.get': CAPS.READ_IDEAS, 'repo.failures': CAPS.READ_IDEAS, 'repo.failure.get': CAPS.READ_IDEAS,   // §FMR3 0.60.146 reads only
@@ -3174,6 +3447,8 @@ const ROUTE_CAP = {
   'system.drawbridge': CAPS.READ_IDEAS,   // 0.60.126 DB1 — the crossings between systems, and the ratchet
   'system.homes': CAPS.READ_IDEAS,   // 0.60.129 DB17
   'system.sovereign': CAPS.READ_IDEAS,   // 0.60.133 IM1
+  'system.tables': CAPS.READ_IDEAS,   // 0.60.250 SV1 — which system writes and reads which table of the shared store
+  'update.check': CAPS.READ_IDEAS, 'update.history': CAPS.READ_IDEAS, 'update.apply': CAPS.ADMIN, 'update.rollback': CAPS.ADMIN, 'update.restart': CAPS.ADMIN, 'update.policy.get': CAPS.READ_IDEAS, 'update.policy.set': CAPS.ADMIN, 'update.auto': CAPS.READ_IDEAS,   // 0.60.252 UP3 — changing Nexus's own code is an admin act
   'system.shape': CAPS.READ_IDEAS,   // 0.60.138 IM5
   'system.nodes': CAPS.READ_IDEAS,   // 0.60.130 P33a
   'system.nodes.list': CAPS.READ_IDEAS,   // 0.60.157 GM4
@@ -3181,6 +3456,7 @@ const ROUTE_CAP = {
   'context.find': CAPS.READ_IDEAS, 'repo.context.find': CAPS.READ_IDEAS, 'context.sources': CAPS.READ_IDEAS,   // 0.60.156 GM5 — reads only
   'lattice.neighbours': CAPS.READ_IDEAS,   // 0.60.157 GM4 — reads only
   'system.tunnel': CAPS.READ_IDEAS, 'system.tunnel.one': CAPS.READ_IDEAS, 'system.heartbeat': CAPS.READ_IDEAS,   // 0.60.128 DB13/DB14
+  'system.registry.drafts': CAPS.READ_IDEAS, 'system.registry.draft': CAPS.READ_IDEAS,   // 0.60.229 DB16 — reads only
   'system.registry': CAPS.READ_IDEAS, 'system.registry.one': CAPS.READ_IDEAS, 'system.registry.settle': CAPS.WRITE_IDEAS,   // 0.60.127 DB9/DB10
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
   'accounts.chain': CAPS.READ_IDEAS, 'accounts.chain.set': CAPS.ADMIN, 'accounts.rest': CAPS.ADMIN,   // 0.60.25 account fallback chain
@@ -3471,6 +3747,15 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','drawbridge'], 'system.drawbridge'],   // 0.60.126 DB1 — every require() that crosses a system boundary; ?new=1 the ratchet's drift only
     ['GET',    ['api','system','homes'], 'system.homes'],
     ['GET',    ['api','system','sovereign'], 'system.sovereign'],
+    ['GET',    ['api','system','tables'], 'system.tables'],
+    ['GET',    ['api','update'], 'update.check'],                   // 0.60.252 UP3 — what is newer on GitHub, his words per release (?fetch=0 reads what was last fetched)
+    ['GET',    ['api','update','history'], 'update.history'],
+    ['POST',   ['api','update','apply'], 'update.apply'],           // {confirm:true} — fast-forward, data collisions archived, npm install if the lockfile changed
+    ['POST',   ['api','update','rollback'], 'update.rollback'],     // {confirm:true} — back to the commit the last update came from
+    ['POST',   ['api','update','restart'], 'update.restart'],
+    ['GET',    ['api','update','policy'], 'update.policy.get'],       // 0.60.254 UP8 — auto | notify | off, and how often
+    ['POST',   ['api','update','policy'], 'update.policy.set'],
+    ['GET',    ['api','update','auto'], 'update.auto'],               // what the last automatic check did       // {system} — the person's Restart on the Updates page, through the supervisor (NC2's call)
     ['GET',    ['api','system','shape'], 'system.shape'],   // 0.60.138 — does each system match genesis: every role, its own file, the kernel, or missing (?system=)   // 0.60.133 IM1 — which systems are sovereign, and what stands in each one's way (?system=)
     ['GET',    ['api','data','home'], 'data.home.list'],                 // 0.60.207 DL2 — every system: where its data lives, what still waits in the root data/
     ['GET',    ['api','data','home',':system'], 'data.home.get'],        // 0.60.207 DL2 — one system: its record and each file's plan
@@ -3483,6 +3768,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','heartbeat'], 'system.heartbeat'],   // 0.60.128 DB14 — every system asked over its health route: up, degraded, down
     ['GET',    ['api','system','registry'], 'system.registry'],   // 0.60.127 DB9 — every system and the crossings between them: the dependency graph
     ['GET',    ['api','system','registry',':system'], 'system.registry.one'],   // 0.60.127 DB9/DB10 — one system's generated registry: declared, observed, negative space
+    ['GET',    ['api','system','registry-drafts'], 'system.registry.drafts'],   // 0.60.229 DB16 — every system with no registry: its draft from the tree, and how far from sovereign
+    ['GET',    ['api','system','registry',':system','draft'], 'system.registry.draft'],   // 0.60.229 DB16 — one system's draft (lib/registry-draft.js), not in force
     ['POST',   ['api','system','registry',':system','settle'], 'system.registry.settle'],   // 0.60.127 DB10 — the shadow settled: each absence a gap
     ['POST',   ['api','system','lean'],   'system.lean.set'],    // 0.60.20 — { on } stops/starts the held services now and saves it
     ['POST',   ['api','repos',    ':uuid','system',':op'],  'repo.system.control'],      // §0.39.372 NC2 — restart | stop | start, through the supervisor
@@ -3526,7 +3813,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','ledger','out'],                                 'ledger.out'],            // 0.60.190 APV4 what Idearium sent to the orchestrator's ledger
     ['GET',    ['api','repos',    ':uuid','releases'],                 'repo.releases.list'],
     ['POST',   ['api','repos',    ':uuid','releases'],                 'repo.releases.create'],     // { version?, quote?, notes? }
-    ['GET',    ['api','phases','census'],                              'phases.census'],            // 0.60.188 CNS1 ?system=idearium — every phase judged against its evidence
+    ['GET',    ['api','phases','census'],                              'phases.census'],
+    ['GET',    ['api','phases','next'],                                'phases.next'],              // §SL0 0.60.222 what can be built now, and why the rest cannot (lib/build-queue.js)
+    ['GET',    ['api','repos',':uuid','phases','next'],                'repo.phases.next'],            // §SL0 0.60.222 the same, over one repo's maps
     ['GET',    ['api','releases'],                                     'releases.list'],            // ?repository=nexus (default)
     ['POST',   ['api','releases','sync'],                              'releases.sync'],             // { all: true } → every release's commits
     ['GET',    ['api','releases','changes'],                           'releases.changes'],          // §0.60.72 RN2 ?since=0.60.47 · &write=1
@@ -3563,6 +3852,18 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','specs','compile'],       'repo.specs.compile'],     // 0.60.67 SF4 — a spec's T0/T1 files as proposed .inject nodes
     ['GET',    ['api','repos',    ':uuid','phases','map'],          'repo.phases.map.status'],
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
+    ['GET',    ['api','repos',    ':uuid','phases','closes'],       'repo.phases.closes'],   // §SL1 0.60.223 the phases its runs closed (and reopened)
+    ['POST',   ['api','repos',    ':uuid','phases','close'],        'repo.phases.close'],    // §SL1 0.60.223 check one run again: closes its phase if proven and landed
+    ['POST',   ['api','repos',    ':uuid','phases','evidence'],     'repo.phases.evidence'], // §SL2 0.60.224 done by evidence: its own tests run; dry run unless apply
+    ['POST',   ['api','repos',    ':uuid','phases','groom'],        'repo.phases.groom'],    // §SL3 0.60.227 the DAG groomed: proposals from MP1 + DG3; dry run unless apply
+    ['GET',    ['api','repos',    ':uuid','phases','nodes'],        'repo.phases.nodes'],    // §SL9 0.60.229 every phase's .phase node, per owner system: written, missing, stale
+    ['POST',   ['api','repos',    ':uuid','phases','verdict'],      'repo.phases.verdict'],  // §GV2 0.60.257 his accept / reject of a phase nothing could check
+    ['GET',    ['api','repos',    ':uuid','loop'],                  'repo.loop'],            // §SL4 0.60.225 the loop's state
+    ['POST',   ['api','repos',    ':uuid','loop','start'],          'repo.loop.start'],      // §SL4 0.60.225 { budget: { phases, minutes } }
+    ['POST',   ['api','repos',    ':uuid','loop','stop'],           'repo.loop.stop'],
+    ['POST',   ['api','repos',    ':uuid','loop','step'],           'repo.loop.step'],       // §SL4 one step now (the minute tick does the same)
+    ['GET',    ['api','trust-rule'],                                'trust.get'],            // §SL5 0.60.225 his rule: what lands without him
+    ['POST',   ['api','trust-rule'],                                'trust.set'],            // §SL5 0.60.225 set it: his words required
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['GET',    ['api','repos',    ':uuid','roadmaps'],              'repo.roadmaps'],          // 0.60.199 SD17 — the project's own roadmaps, and whether each is imported
     ['POST',   ['api','repos',    ':uuid','roadmaps','import'],     'repo.roadmaps.import'],   // 0.60.199 SD17 — one imported as a Nexus phasemap beside it
@@ -3604,6 +3905,11 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','agent'],           'repo.agent.status'],
     ['POST',   ['api','repos',    ':uuid','agent','prompt'],  'repo.agent.prompt'],
     ['GET',    ['api','repos',    ':uuid','agent','route'],   'repo.agent.route'],   // §CT3 — which model copilot's door would choose
+    ['POST',   ['api','repos',    ':uuid','agent','gate'],    'repo.agent.gate'],    // §CG3 — the confidence gate's decision for a message, without dispatching
+    ['GET',    ['api','repos',    ':uuid','flow'],            'repo.flow'],          // §BX2 — BrainOS FlowGraph for this repo (phases+DAG, runs, mesh)
+    ['GET',    ['api','flow','mesh'],                         'flow.mesh'],          // §BX2 — the live agent mesh (Clear Glass :7704), repo-independent
+    ['GET',    ['api','automation'],                          'automation.list'],    // §AU1 — the union of automations across the six sources
+    ['POST',   ['api','automation','run'],                    'automation.run'],     // §AU1 — run one automation through its source
     ['POST',   ['api','repos',    ':uuid','agent','tool-event'], 'repo.agent.tool.event'],   // §CT8 — copilot reports each tool call live
     ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
     ['GET',    ['api','repos',    ':uuid','tasks'],  'repo.tasks'],      // §0.39.366 — everything the agent wearing this repo's hat is doing, and did
@@ -5733,6 +6039,17 @@ async function handle(req, res, route, query, body) {
     }
     case 'ledger.out':   // 0.60.190 APV4 — sent, buffered (orchestrator down), failed, drained, the last error
       return ok(res, { ..._ledgerOut, target: 'orchestrator POST /api/ledger' });
+    // §SL0 0.60.222 — James, 2026-10-23: "we need this to work so it can start building itself." What can be built now, in order, and
+    // why every other open phase cannot (lib/build-queue.js over the DAG, the census and the flights). Nexus's own maps, or a repo's.
+    case 'phases.next':
+    case 'repo.phases.next': {
+      let repo = null;
+      if (action === 'repo.phases.next') { repo = getRepoLayer().get(params.uuid); if (!repo) return err(res, 404, `repo not found: ${params.uuid}`); }
+      const r = await _queueFor(repo);
+      const limit = Math.max(1, Math.min(2000, parseInt(query.limit, 10) || 50));
+      const group = query.group ? String(query.group) : null;
+      return ok(res, { ...r, queue: r.queue.slice(0, limit), blocked: (group ? r.blocked.filter(b => b.group === group) : r.blocked).slice(0, group ? 2000 : limit), lines: _require('../../lib/build-queue.js').lines(r) });
+    }
     case 'phases.census': {
       // 0.60.188 CNS1 — every phase of Nexus's maps judged against commits, releases, files and proof (lib/phase-census.js); the
       // per-phase evidence stays in the answer so the UI and agents can show why a verdict was given
@@ -5822,6 +6139,32 @@ async function handle(req, res, route, query, body) {
       const SB = _require('../../lib/system-boundary.js');
       return ok(res, SB.sovereignty({ root: path.dirname(_require.resolve('../../package.json')), system: (query && query.system) || null }));
     }
+    // 0.60.252 UP3 — James, 2026-10-25: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using
+    // github?" · "first one but the second one needs to be the end state" (git now, COS later). lib/nexus-update.js; restarting stays his.
+    case 'update.check': { const U = _require('../../lib/nexus-update.js'); const r = U.check({ fetch: !(query && query.fetch === '0') }); res.writeHead(200, { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r)); }
+    case 'update.policy.get': { const U = _require('../../lib/nexus-update.js'); return ok(res, U.getPolicy({})); }
+    case 'update.policy.set': { const U = _require('../../lib/nexus-update.js'); const r = U.setPolicy({ policy: body && body.policy, everyHours: body && body.everyHours }); if (!r.ok) return err(res, 400, r.error); return ok(res, r); }
+    case 'update.auto': { const U = _require('../../lib/nexus-update.js'); return ok(res, { policy: U.getPolicy({}), last: U.autoState({}) }); }
+    case 'update.restart': {   // the person's button (UP_D2): each supervised process of that system, restarted by autopilot
+      const sys = String((body && body.system) || '').trim();
+      if (!/^[a-z][a-z0-9-]*$/.test(sys)) return err(res, 400, 'system required, e.g. "clear-glass"');
+      let st = null; try { st = await _nexusClient.get('autopilot', '/status', { timeout: 4000 }); } catch (e) { return err(res, 502, `the supervisor (autopilot) is not answering: ${e.message}`); }
+      const names = st && st.kernels ? Object.keys(st.kernels).filter(k => k === sys || k.startsWith(`${sys}-`)) : [];
+      if (!names.length) return ok(res, { system: sys, restarted: [], note: `${sys} has no process of its own — it is code the other systems load: restart Nexus (npm run start:all) to load it` });
+      const out = [];
+      for (const k of names) { let r; try { r = await _nexusClient.post('autopilot', `/control/${encodeURIComponent(k)}/restart`, {}, { timeout: 8000 }); } catch (e) { r = { ok: false, error: e.message }; } out.push({ process: k, ok: !!(r && r.ok), status: r && r.status, error: r && r.ok ? null : (r && r.error) || 'no answer' }); }
+      return ok(res, { system: sys, restarted: out });
+    }
+    case 'update.history': { const U = _require('../../lib/nexus-update.js'); return ok(res, { history: U.history({}) }); }
+    case 'update.apply': case 'update.rollback': {
+      const U = _require('../../lib/nexus-update.js');
+      const r = (action === 'update.apply' ? U.apply : U.rollback)({ confirm: !!(body && body.confirm === true), by: (body && body.by === 'agent') ? 'agent' : 'person' });
+      res.writeHead(r.ok ? 200 : (r.needsConfirm ? 428 : 409), { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r));
+    }
+    case 'system.tables': {   // 0.60.250 SV1 — James: "i want to get each system soveriegn and inside a cos compartment". Evidence only.
+      const SB = _require('../../lib/system-boundary.js');
+      return ok(res, SB.tables({ root: path.dirname(_require.resolve('../../package.json')), system: (query && query.system) || null }));
+    }
     case 'system.homes': {   // 0.60.129 DB17 — James: "all system relevant files should stay with the system."
       const SB = _require('../../lib/system-boundary.js');
       const h = SB.homes({ root: path.dirname(_require.resolve('../../package.json')) });
@@ -5840,6 +6183,17 @@ async function handle(req, res, route, query, body) {
       const t = SYS.tunnel(String(params.name || ''), { commands: SPEC });
       if (!t.ok) return err(res, 404, t.error);
       return ok(res, { ...t, heartbeat: await SYS.heartbeat(t.name) });
+    }
+    case 'system.registry.drafts': case 'system.registry.draft': {
+      // 0.60.229 DB16 — a draft is built fresh from the tree each time; whether it is written (<system>/registry-components.draft.json) and
+      // accepted (renamed to registry-components.js) is said, so the answer is never a stale copy
+      const RD = _require('../../lib/registry-draft.js');
+      const root = path.dirname(_require.resolve('../../package.json'));
+      const one = (sys) => { const d = RD.draft(sys, { root }); return { ...d, written: fs.existsSync(path.join(root, sys, 'registry-components.draft.json')), accepted: fs.existsSync(path.join(root, sys, 'registry-components.js')) }; };
+      if (action === 'system.registry.draft') { try { return ok(res, one(String(params.system || ''))); } catch (e) { return err(res, 404, e.message); } }
+      const list = RD.missing({ root }).map(one).map(d => ({ system: d.systemId, routes: d.components.length, taxonomy: d.events.taxonomy || null, declaredEvents: d.events.declared || 0, emits: d.events.emits.length, handles: d.events.handles.length, reachedInto: d.reached_into.length, sovereign: d.sovereignty && d.sovereignty.sovereign, out: d.sovereignty && d.sovereignty.out, blockers: d.sovereignty && d.sovereignty.blockers, written: d.written, said: d.said }));
+      list.sort((a, b) => (a.out - b.out) || (a.reachedInto - b.reachedInto) || a.system.localeCompare(b.system));
+      return ok(res, { systems: list, order: 'lowest friction first: fewest ways out, then fewest files others reach into (CS_D7)' });
     }
     case 'system.registry':
     case 'system.registry.one':
@@ -7663,6 +8017,48 @@ async function handle(req, res, route, query, body) {
       return ok(res, r);
     }
 
+    // §BX2 0.60.248 — James, 2026-09-11: "brainos needs to be the entire ui for agent orchestration" · 2026-10-24: "What about
+    // BrainOS?" The FlowGraph for this repo: its phases and their DAG, the runs moving through them, and Clear Glass's live agent
+    // mesh — one screen (flow-canvas.js) to watch and steer a build next to its code. Each source best-effort; a source that is
+    // down leaves its part empty and is named in sources[] (§1.2), the rest still draws.
+    case 'repo.flow': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const FS = await import('../lib/flow-sources.js');   // ESM sibling (idearium is type:module)
+      return ok(res, await FS.flowFor({ repo, repoDir: _repoDiskDir(params.uuid) }));
+    }
+    case 'flow.mesh': {
+      const FS = await import('../lib/flow-sources.js');
+      return ok(res, await FS.mesh());
+    }
+
+    // §AU1 0.60.249 — James: "copilot system, ollama, lib folder, clearglass, idearium, and brainos have automation" ·
+    // "Clearglass automation, and macros, continue." The neutral union over all six (lib/automation-registry.js): one door
+    // to list what each present source holds and to run one, recording it under its source. An absent source is named, not
+    // faked (§1.2); the one real engine is Clear Glass, the rest are drivers/views of it, and the registry says so.
+    case 'automation.list': {
+      const AR = _require('../../lib/automation-registry.js');
+      return ok(res, await AR.list({ source: query.source || null }));
+    }
+    case 'automation.run': {
+      const AR = _require('../../lib/automation-registry.js');
+      if (!body.source || !body.id) return err(res, 400, 'source and id are required');
+      return ok(res, await AR.run(String(body.source), String(body.id), { vars: body.vars || {} }));
+    }
+
+    // §CG3 0.60.240 — James: "before an agent does anything. if confidence is lower than 75%, context must be obtained …
+    // ask user last." The gate's decision for a message WITHOUT dispatching: what context an agent would gather before it
+    // acts (worksurface, dependencies, found context), the pre-send confidence, and whether it would reach the 75% floor
+    // or need to ask. A dry read — it records no prereq gaps. The Code tab (CG4) shows this before the docked agent answers.
+    case 'repo.agent.gate': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!body.message || !String(body.message).trim()) return err(res, 400, 'message is required');
+      const RA = _require('../../lib/repo-agent.js');
+      const r = await RA.gateFor({ repo, repoDir: await _agentDir(params.uuid), message: body.message });
+      return ok(res, r);   // { ok, proceed, confident, confidence, threshold, steps, context, prereqs } or { ok:false, error }
+    }
+
     // §CT3 0.39.349 — James: "the code tab the agent tab, work surface". The docked agent shows the model copilot's door
     // would choose for this repo's agent (or that Settings pins a provider, so the door is not asked), and the other hops.
     case 'repo.agent.route': {
@@ -8970,6 +9366,123 @@ async function handle(req, res, route, query, body) {
       const runs = _phaseRuns(params.uuid);
       return ok(res, { repoUuid: params.uuid, runs: query.phase ? runs.filter(r => r.phase === query.phase) : runs });
     }
+    case 'repo.phases.closes': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const PC = _require('../../lib/phase-close.js');
+      const last = new Map();   // the newest row per run: a reopen is a newer row (append-only)
+      for (const c of loadTable('idearium_phase_closes')) if (c && c.repoUuid === repo.uuid) { const k = PC.baseRun(c.runId); const t = c.reopenedAt || c.at || 0; if (!last.has(k) || t >= (last.get(k).reopenedAt || last.get(k).at || 0)) last.set(k, c); }
+      const closes = [...last.values()].sort((a, b) => (b.reopenedAt || b.at || 0) - (a.reopenedAt || a.at || 0));
+      return ok(res, { closes, open: closes.filter(c => !c.reopenedAt).length, reopened: closes.filter(c => c.reopenedAt).length });
+    }
+    case 'repo.phases.evidence': {
+      // 0.60.224 SL2 — the open phases whose every file exists, judged by their own tests (lib/phase-close.js byEvidence). A dry run
+      // unless { apply: true }; each close goes through the one status writer and is kept beside SL1's (kind 'evidence').
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const PC = _require('../../lib/phase-close.js'), DAG = _require('../../lib/phase-dag.js');
+      const PH = await import('../repo/phases.js');
+      const m = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) });
+      const root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(params.uuid);
+      const b = body || {};
+      const maps = (m.maps || []).filter(x => !b.map || x.path === b.map).map(x => ({ path: x.path, text: x.text || '' }));
+      const phases = Object.values(DAG.build(maps, {}).nodes).filter(n => !n.done && !n.decision).map(n => ({ key: n.key, map: n.map, id: n.id, files: n.files }));
+      const apply = b.apply === true;
+      const r = await PC.byEvidence({ phases, root, repo, dryRun: !apply, setStatus: apply ? _phaseSetStatus : null, limit: Math.max(1, Math.min(500, parseInt(b.limit, 10) || 10)) });
+      for (const c of r.closed) {
+        appendRow('idearium_phase_closes', { uuid: `close-${c.runId}-${c.at}`, ...c, trigger: 'evidence' });
+        getIdeaOS().emit('idearium.phase.closed', { ...c, trigger: 'evidence' });
+        _closeLog(repo.uuid, 'phase.closed', `${c.phase} closed — ${c.note}`, c.why);
+      }
+      return ok(res, { ...r, ran: r.ran.map(x => ({ file: x.file, passed: x.passed, timedOut: !!x.timedOut, ms: x.ms, tail: x.passed ? undefined : x.tail })) });
+    }
+    case 'repo.phases.nodes': {
+      // 0.60.229 SL9 — James, 2026-10-23: "decompose the phases into .phase with the dependancy graph per phase node. then move them into the
+      // repsective systems". The nodes are written by the compile step (node lib/emerge/compiler/phase-specs.js --all), committed with the code;
+      // this reads what is written, through lib only (idearium → emerge would be a new crossing, DG2): the nodes per owner system, the
+      // phases of the maps with no node yet, and nodes whose phase is in no map any more.
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const PH = await import('../repo/phases.js');
+      const NEx = _require('../../lib/node-export.js'), PDx = _require('../../lib/phase-dag.js');
+      const m = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) });
+      const root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(params.uuid);
+      const want = new Set(); const dag = PDx.build((m.maps || []).map(x => ({ path: x.path, text: x.text || '' })));
+      for (const n of Object.values(dag.nodes)) if (!n.decision && !n.finding) want.add(n.key);
+      const have = new Map(), bySystem = {};
+      let tops = []; try { tops = fs.readdirSync(root, { withFileTypes: true }).filter(d => d.isDirectory() && !/^(\.|node_modules$|_archive$|data$)/.test(d.name)).map(d => d.name); } catch (_) {}
+      for (const t of tops) {
+        const pd = path.join(root, t, 'phases'); if (!fs.existsSync(pd)) continue;
+        for (const md of fs.readdirSync(pd, { withFileTypes: true })) {
+          if (!md.isDirectory() || md.name.startsWith('_')) continue;
+          for (const f of fs.readdirSync(path.join(pd, md.name)).filter(x => x.endsWith('.phase'))) {
+            let pl = null; try { pl = NEx.fromYaml(fs.readFileSync(path.join(pd, md.name, f), 'utf8')).payload; } catch (_) { continue; }
+            have.set(`${pl.map}::${pl.id}`, `${t}/phases/${md.name}/${f}`); bySystem[t] = (bySystem[t] || 0) + 1;
+          }
+        }
+      }
+      const missing = [...want].filter(k => !have.has(k)).sort(), stale = [...have.keys()].filter(k => !want.has(k)).sort();
+      return ok(res, { nodes: have.size, phases: want.size, bySystem, missing: missing.slice(0, 200), missingCount: missing.length, stale: stale.map(k => ({ key: k, file: have.get(k) })).slice(0, 200), staleCount: stale.length,
+        remedy: missing.length || stale.length ? 'write them: node lib/emerge/compiler/phase-specs.js --all (the compile step; the nodes are committed with the code)' : null });
+    }
+    case 'repo.phases.groom': {
+      // 0.60.227 SL3 — James, 2026-10-23: "need to do something about the dependancy graph." lib/phase-groom.js: files from a phase's own
+      // words, depends_on from shared files and same-file order (never closing a cycle), and what needs a person. A dry run unless
+      // { apply: true }; applied, the map edits go through the one map writer (_phaseWriteMany: the apply gate for Nexus, a repo version
+      // for a project), only keys a phase lacks are added (lib/phase-files.js applyTo).
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const G = _require('../../lib/phase-groom.js');
+      const PH = await import('../repo/phases.js');
+      const m = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) });
+      const root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(params.uuid);
+      const b = body || {};
+      const maps = (m.maps || []).filter(x => !b.map || x.path === b.map).map(x => ({ path: x.path, text: x.text || '' }));
+      if (!maps.length) return err(res, 404, 'this repo has no phasemaps');
+      const r = G.groom({ maps, root });
+      const a = G.apply({ maps, proposals: r.proposals });
+      let written = null;
+      if (b.apply === true && a.changes.length) {
+        const w = await _phaseWriteMany(repo, m.scope, a.changes.map(c => ({ path: c.path, content: c.content })), m.snapshot, `phases groomed (SL3): ${r.stats.files} given files from their own words, ${r.stats.deps} a depends_on`);
+        if (!w || !w.ok) return err(res, (w && w.status) || 500, `not written: ${(w && w.error) || 'the write failed'}`);
+        written = { maps: a.changes.length, files: a.changes.reduce((x, c) => x + c.files, 0), deps: a.changes.reduce((x, c) => x + c.deps, 0), via: w.via || null };
+        getIdeaOS().emit('idearium.repo.phases.groomed', { repoUuid: repo.uuid, ...written });
+      }
+      return ok(res, { dryRun: !written, stats: r.stats, lines: G.lines(r), proposals: r.proposals.slice(0, parseInt(b.limit, 10) || 200),
+        forAPerson: r.forAPerson.filter(x => b.all || x.kind !== 'unplaced').slice(0, 300), pending: { maps: a.changes.length }, refused: a.refused, written });
+    }
+    case 'repo.phases.verdict': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const r = await _phaseVerdict(repo, body || {}, _starter(req, body).who);
+      return r.ok ? ok(res, r) : err(res, r.status || 400, r.error);
+    }
+    case 'repo.loop': case 'repo.loop.start': case 'repo.loop.stop': case 'repo.loop.step': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const { AB, deps } = await _loopDeps();
+      if (action === 'repo.loop.start') {
+        try { const l = AB.start({ repo, budget: (body && body.budget) || {}, by: _starter(req, body).who, deps }); _closeLog(repo.uuid, 'loop.started', `loop ${l.loopId} started`, `budget: ${l.budget.phases} phase(s), ${l.budget.minutes} min`); const r = await AB.step(l, deps); return ok(res, { loop: r.loop, first: { outcome: r.outcome, key: r.key || null, why: r.why }, trust: _trust().get(repo.uuid) }); }
+        catch (e) { return e.code === 'LOOP_RUNNING' ? err(res, 409, e.message, { code: e.code, loop: e.loop }) : err(res, 500, e.message); }
+      }
+      if (action === 'repo.loop.stop') { const l = AB.stop(repo, { why: (body && body.why) || `stopped by ${_starter(req, body).who}`, deps }); if (l) _closeLog(repo.uuid, 'loop.stopped', `loop ${l.loopId} stopped`, l.stopWhy); return ok(res, { loop: l }); }
+      if (action === 'repo.loop.step') { const cur = AB.status(repo.uuid, { deps }); const r = await AB.step(cur, deps); return ok(res, { loop: r.loop, outcome: r.outcome, key: r.key || null, why: r.why }); }
+      return ok(res, { loop: AB.status(repo.uuid, { deps }), trust: _trust().get(repo.uuid) });
+    }
+    case 'trust.get': return ok(res, { rule: _trust().get(query.repo || null), rules: _require('../../lib/trust-rule.js').RULES });
+    case 'trust.set': {
+      try { const T = _trust(); const r = T.set({ repo: (body && body.repo) || '*', rule: body && body.rule, kept: (body && body.kept) || [], words: body && body.words, context: (body && body.context) || null, by: _starter(req, body).who }); return ok(res, { rule: r }); }
+      catch (e) { return err(res, 400, e.message); }
+    }
+    case 'repo.phases.close': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const runId = body && String(body.runId || '').trim();
+      if (!runId) return err(res, 400, 'runId is required');
+      const run = _runOf(runId);
+      if (!run || run.repoUuid !== repo.uuid) return err(res, 404, `no run ${runId} in this repo`);
+      return ok(res, await _closeRun(runId, { trigger: 'asked' }));
+    }
     case 'repo.phases.status': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -9018,7 +9531,12 @@ async function handle(req, res, route, query, body) {
       if (!pick) return err(res, found.length ? 400 : 404, found.length ? `this repo has ${found.length} roadmaps — name one (dir): ${found.map(r => r.dir || '.').join(', ')}` : 'no roadmap in this repo (phases.json, roadmap.json, PHASEMAP.md or ROADMAP.md)', { code: found.length ? 'WHICH_ROADMAP' : 'NO_ROADMAP' });
       if (pick.imported && body.replace !== true) return err(res, 409, `${pick.target} already exists — imported before; replace:true imports it again over it (the old one stays in the repo's versions)`, { code: 'EXISTS', map: pick.target });
       let im;
-      try { im = RIm.importRoadmap({ json: readOf(pick.json), md: readOf(pick.md), name: pick.target.split('/').pop().replace(/\.spec$/, ''), source: { json: pick.json, md: pick.md } }); }
+      // §SD17b 0.60.221 — the evidence a phased spec is read with: the repo's own files (a phase whose changelog's added files all exist is
+      // done) and the README beside it or at the root (its "Project status" table is the project's own record of what is done)
+      const fileSet = new Set((repo.files || []).map(f => String(f.path).replace(/\\/g, '/')));
+      const readmes = [...new Set([`${pick.dir ? `${pick.dir}/` : ''}README.md`, 'README.md'])].map(p => ({ path: p, text: readOf(p) })).filter(t => t.text);
+      try { im = RIm.importRoadmap({ json: readOf(pick.json), md: readOf(pick.md), name: pick.target.split('/').pop().replace(/\.spec$/, ''), source: { json: pick.json, md: pick.md },
+        exists: (p) => fileSet.has(`${pick.dir ? `${pick.dir}/` : ''}${p}`) || fileSet.has(p), statusTables: readmes }); }
       catch (e) { if (e instanceof RIm.RoadmapImportError) return err(res, 400, e.message, { code: e.code }); throw e; }
       const w = await _phaseWrite(repo, scope, pick.target, im.text, snapshot, `import roadmap ${[pick.json, pick.md].filter(Boolean).join(' + ')}`);
       if (!w.ok) return err(res, w.status || 500, w.error, { code: w.code || 'WRITE_FAILED' });
@@ -9213,7 +9731,7 @@ async function handle(req, res, route, query, body) {
         if (hits.length !== 1) return err(res, hits.length ? 409 : 404, hits.length ? `${phase} is in ${hits.length} phasemaps — name one: ${hits.map(h => h.map).join(', ')}` : `no phase ${phase} in this repo`);
         map = hits[0].map;
       }
-      const r = await _phaseBuild(repo, dir, { startedBy: _starter(req, body), map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true, anyway: body.anyway === true });
+      const r = await _phaseBuild(repo, dir, { startedBy: _starter(req, body), map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true, anyway: body.anyway === true, rebuild: body.rebuild === true });
       if (!r.ok) return err(res, r.status, r.error, r.extra);
       return ok(res, r.data);
     }
@@ -10428,7 +10946,7 @@ function _startBuildQueuePoller(port) {
   tick(); // real, immediate first pass — don't wait a full interval before resuming work that was already pending when this boot started
   console.log(`[idearium/build-queue] real, periodic queue drain started — every ${BUILD_QUEUE_POLL_MS}ms`);
   // 0.60.21 — the run watchdog: every minute, a run with no new step for repos.stall_minutes is closed and retried once
-  setInterval(() => { _watchRuns().catch(e => console.warn(`[idearium/run-watch] ${e.message}`)); }, 60000).unref?.();
+  setInterval(() => { _watchRuns().catch(e => console.warn(`[idearium/run-watch] ${e.message}`)).then(() => _loopTick()).catch(e => console.warn(`[idearium/loop] ${e.message}`)); }, 60000).unref?.();   // §SL4 0.60.225 every running loop steps on the same minute
   return timer; // real handle — lets a caller (or a test) stop this poller; startAPI() itself never needs to
 }
 
@@ -10627,7 +11145,7 @@ export function startAPI() {
 
     // §0.39.279 — the standalone pages beside the app: the repo desktop viewer and the settings console. A fixed list,
     // not a directory listing — nothing else under ui/ is served as a page.
-    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html' || cleanUrl === '/architect.html' || cleanUrl === '/login.html' || cleanUrl === '/ui-editor.html')) {   // §0.60.122 UE1 the UI editor   // §0.58.0 IA3 the sign-in page   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void · §0.39.298 AR2 the architect
+    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html' || cleanUrl === '/architect.html' || cleanUrl === '/login.html' || cleanUrl === '/ui-editor.html' || cleanUrl === '/update.html')) {   // §0.60.252 UP4 the Updates page ·   // §0.60.122 UE1 the UI editor   // §0.58.0 IA3 the sign-in page   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void · §0.39.298 AR2 the architect
       try {
         const { readFileSync, existsSync } = await import('fs');
         const { join, dirname } = await import('path');
@@ -10818,7 +11336,7 @@ export function startAPI() {
         // (not local to this closure) so a real shutdown path — cortex's
         // own migration found it has none either, a separate, pre-
         // existing gap, not fixed here — has something real to call.
-        _pulseClient = _require('../../orchestrator/lib/pulse.js').createPulse({
+        _pulseClient = _require('../../lib/pulse.js').createPulse({
           systemId: 'idearium', port: PORT,
           onOffline: () => console.warn('[idearium] orchestrator unreachable — pulse will keep retrying'),
           onOnline:  ({ latency }) => console.log(`[idearium] orchestrator back online, latency=${latency}ms`),

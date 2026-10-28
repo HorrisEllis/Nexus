@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB35_the_index_is_there_when_the_agent_asks
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB35_the_index_is_there_when_the_agent_asks
+context: >-
+  pipeline phase SB35_the_index_is_there_when_the_agent_asks of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB35_the_index_is_there_when_the_agent_asks (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477124
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477124
+lastSeenAt: 1792822477124
+fingerprint: null
+payload:
+  id: SB35_the_index_is_there_when_the_agent_asks
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/jaa-store.js
+    - idearium/lib/db.js
+    - idearium/repo/nexus-self.js
+    - idearium/api/index.js
+    - lib/repo-agent.js
+  depends_on:
+    - SB34_context_is_the_code_tab_the_graphs_and_memory
+  blocks: []
+  spec: null
+  graph: c2428cb3904555ae

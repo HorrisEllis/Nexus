@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-automatic-tracking-phasemap.spec::KT1_observations_on_a_semantic_tree
+type: phase
+id: docs_2026-10-15-automatic-tracking-phasemap.spec::KT1_observations_on_a_semantic_tree
+context: >-
+  pipeline phase KT1_observations_on_a_semantic_tree of
+  docs/2026-10-15-automatic-tracking-phasemap.spec
+intent: null
+summary: KT1_observations_on_a_semantic_tree (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677460
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677460
+lastSeenAt: 1792787677460
+fingerprint: null
+payload:
+  id: KT1_observations_on_a_semantic_tree
+  map: docs/2026-10-15-automatic-tracking-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN (added 2026-10-15, see addendum)
+  files:
+    - lib/knowledge-tree.js
+    - lib/code-intel/cards.js
+    - lib/component-store.js
+    - lib/atlas-generate.js
+  depends_on:
+    - GT2_each_gate_tags_and_reports
+  blocks: []
+  spec: null
+  graph: 3bef71197a9bf793

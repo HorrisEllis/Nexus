@@ -1,0 +1,175 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P30_provider_ping_delta:81b879ff6f24b8b2
+type: graph
+id: phase:P30_provider_ping_delta:81b879ff6f24b8b2
+context: dependency graph of phase P30_provider_ping_delta
+intent: null
+summary: 16 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675929
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675929
+lastSeenAt: 1792787675929
+fingerprint: null
+payload:
+  for: P30_provider_ping_delta
+  kind: phase
+  repo: null
+  hash: 81b879ff6f24b8b2
+  nodes:
+    - path: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: guardian/api-dispatch.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/node-schemas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/node-registry.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/lib/domain-nodes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/node-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-pipeline-nodes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/node-export-idea-tagged-query.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/node-schemas-split.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/chat-logger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/api-dispatch.js
+      to: lib/chat-logger.js
+      kind: requires
+    - from: guardian/api-dispatch.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: guardian/api-dispatch.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: lib/node-schemas.js
+      to: lib/node-export.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: guardian/api-dispatch.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: intelligence/lib/domain-nodes.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/modules/test-pipeline-nodes.test.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/node-export-idea-tagged-query.test.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/node-schemas-split.test.js
+      to: lib/node-schemas.js
+      kind: requires
+  crossings:
+    - from: guardian/api-dispatch.js
+      to: cortex/core/raid/index.js
+      fromSystem: guardian
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: guardian/api-dispatch.js
+      to: intelligence/liminal/index.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: guardian/api-dispatch.js
+      fromSystem: orchestrator
+      toSystem: guardian
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P26_unify_conversation_logging
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P19_dynamic_nodes_via_causal_graph
+    dependents: []
+    upstream:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P19_dynamic_nodes_via_causal_graph
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P23_guardian_job_durability
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P26_unify_conversation_logging
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P3_per_system_node_schemas
+    downstream: []
+    blockedBy:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P26_unify_conversation_logging
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P19_dynamic_nodes_via_causal_graph
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by P26_unify_conversation_logging, P19_dynamic_nodes_via_causal_graph
+      - >-
+        depends on (2): P26_unify_conversation_logging, P19_dynamic_nodes_via_causal_graph · all
+        upstream 4
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P26_unify_conversation_logging
+        kind: inferred
+      - from: docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P19_dynamic_nodes_via_causal_graph
+        kind: inferred

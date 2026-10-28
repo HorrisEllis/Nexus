@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-live-mind-phasemap.spec::P3_diagnostic_kernel
+type: phase
+id: docs_nexus-live-mind-phasemap.spec::P3_diagnostic_kernel
+context: pipeline phase P3_diagnostic_kernel of docs/nexus-live-mind-phasemap.spec
+intent: null
+summary: P3_diagnostic_kernel (?) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792878423990
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878423990
+lastSeenAt: 1792878423990
+fingerprint: null
+payload:
+  id: P3_diagnostic_kernel
+  map: docs/nexus-live-mind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/gap-finder/index.js
+    - cortex/boot.js
+    - lib/gap-field.js
+    - tests/modules/test-gap-field.js
+    - lib/diagnostic-causal.js
+    - copilot/lib/user-model.js
+    - idearium/lib/event-ledger.cjs
+    - intelligence/relational-field.js
+    - diagnostic/nexus-diagnostic.js
+    - copilot/lib/nexus-awareness.js
+  depends_on:
+    - P1_nervous_system_live
+    - P2_snapshot_on_sigma
+  blocks: []
+  spec: null
+  graph: 4b7c72062c86e2e4

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N23_ollama_first_build_then_agent_review
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N23_ollama_first_build_then_agent_review
+context: >-
+  pipeline phase N23_ollama_first_build_then_agent_review of
+  docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N23_ollama_first_build_then_agent_review (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792879043233
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879043233
+lastSeenAt: 1792879043233
+fingerprint: null
+payload:
+  id: N23_ollama_first_build_then_agent_review
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-agent.js
+    - idearium/api/build-surface.js
+    - ollama/lib/ollama-client.js
+    - lib/ollama-activity.js
+    - lib/seam/adapters/warp-cascade.js
+  depends_on:
+    - N21_no_empty_generation_event_gates
+  blocks: []
+  spec: null
+  graph: 442b450b20554c92

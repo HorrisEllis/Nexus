@@ -1284,7 +1284,12 @@ async function main() {
   const key = sub ? `${cmd}.${sub}` : cmd;
   // §0.39.374 — James: "Everything needs to be available as commands." The table of idearium/cli/route-commands.js, one
   // runner for every row (resolve the repo, call the running Idearium or another Nexus system, print; --json raw)
+  // §0.60.230 SL10 — the route table overwrote the hand-written `repo.plan`, whose `--dry --file <spec>` form plans a spec file with no repo
+  // and no server; the route row needs a repo, so that form printed its usage (test-plan-lands PL-31, red on main). The file form goes
+  // to the hand-written handler; every other form to the route row.
+  const _planDryFile = COMMANDS['repo.plan'];
   Object.assign(COMMANDS, makeRouteCommands({ api: _localApi, findRepo: _findRepo, shortRepo, die, header, port: IDEARIUM_PORT, c: { sky, mint, amber, coral, violet, bold, dim, gray } }));
+  if (_planDryFile) { const _planRoute = COMMANDS['repo.plan']; COMMANDS['repo.plan'] = (os, args) => (args && args.flags && args.flags.dry && typeof args.flags.file === 'string' ? _planDryFile(os, args) : _planRoute(os, args)); }
   const handler = COMMANDS[key];
 
   if (!handler) die(`unknown command: ${key}\nRun: idearium help`);

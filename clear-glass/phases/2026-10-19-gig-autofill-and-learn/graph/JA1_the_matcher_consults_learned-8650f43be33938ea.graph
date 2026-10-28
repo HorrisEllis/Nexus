@@ -1,0 +1,139 @@
+envelope: 1
+uuid: nexus-export-graph-phase:JA1_the_matcher_consults_learned:8650f43be33938ea
+type: graph
+id: phase:JA1_the_matcher_consults_learned:8650f43be33938ea
+context: dependency graph of phase JA1_the_matcher_consults_learned
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792814522028
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814522028
+lastSeenAt: 1792814522028
+fingerprint: null
+payload:
+  for: JA1_the_matcher_consults_learned
+  kind: phase
+  repo: null
+  hash: 8650f43be33938ea
+  nodes:
+    - path: clear-glass/src/autofill/matcher.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/learn-pick.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/gates/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/clear-glass-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learn-pick.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learn-save.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learned.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/autofill/learn-pick.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/proposal.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/store.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/proposal.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/learn-pick.js
+      kind: requires
+    - from: clear-glass/src/autofill/learn-pick.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/gates/index.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/screen-qa/detector.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/clear-glass-autofill.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/test-autofill-learn-pick.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/test-autofill-learn-save.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/test-autofill-learned.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA0c_the_learned_map_is_per_site
+    dependents:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA2_a_pick_is_saved_per_site
+    upstream:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA0c_the_learned_map_is_per_site
+    downstream:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA2_a_pick_is_saved_per_site
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA3_the_picker_on_a_miss
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA4_the_learn_loop_ui
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA5_the_pick_is_also_a_macro
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA2_a_pick_is_saved_per_site
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): GA0c_the_learned_map_is_per_site'
+      - >-
+        needed by (1): JA2_a_pick_is_saved_per_site · all downstream 4 · finishing it unlocks
+        JA2_a_pick_is_saved_per_site
+    edges:
+      - from: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA0c_the_learned_map_is_per_site
+        kind: declared

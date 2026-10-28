@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N1:3390cee61d2ebd05
+type: graph
+id: phase:N1:3390cee61d2ebd05
+context: dependency graph of phase N1
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676004
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676004
+lastSeenAt: 1792787676004
+fingerprint: null
+payload:
+  for: N1
+  kind: phase
+  repo: null
+  hash: 3390cee61d2ebd05
+  nodes:
+    - path: idearium/ui/index.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+    upstream: []
+    downstream:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): R1 · finishing it unlocks R1'
+    edges: []

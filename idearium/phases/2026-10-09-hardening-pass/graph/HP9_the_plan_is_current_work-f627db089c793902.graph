@@ -1,0 +1,104 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HP9_the_plan_is_current_work:f627db089c793902
+type: graph
+id: phase:HP9_the_plan_is_current_work:f627db089c793902
+context: dependency graph of phase HP9_the_plan_is_current_work
+intent: null
+summary: 9 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677137
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677137
+lastSeenAt: 1792787677137
+fingerprint: null
+payload:
+  for: HP9_the_plan_is_current_work
+  kind: phase
+  repo: null
+  hash: f627db089c793902
+  nodes:
+    - path: idearium/repo/build-plan.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/plan-panel.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/repo/source-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: idearium/repo/roadmap.js
+      to: idearium/repo/source-files.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/build-plan.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP10_the_work_surface_in_view
+    upstream: []
+    downstream:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP10_the_work_surface_in_view
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP10_the_work_surface_in_view
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): HP10_the_work_surface_in_view · finishing it unlocks
+        HP10_the_work_surface_in_view
+    edges: []

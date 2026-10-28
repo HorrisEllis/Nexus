@@ -257,3 +257,6 @@ async function run(opts = {}) {
 }
 
 module.exports = { capabilities, run, runVm, runProcess, missingRuntimes, GUEST_MOUNT, GUEST_PATH };
+// 0.60.244 SV0 — COS's process sandbox for one test, offered through this door (idearium already crosses here), so core's verify-first
+// is handed a runner instead of reaching into COS's folder for it. Lazy: run-target.js requires this file.
+Object.defineProperty(module.exports, 'runTarget', { enumerable: true, get: () => require('./run-target.js').runTarget });

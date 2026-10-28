@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB45_skeletons_grey_until_coded
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB45_skeletons_grey_until_coded
+context: >-
+  pipeline phase SB45_skeletons_grey_until_coded of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB45_skeletons_grey_until_coded (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676937
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676937
+lastSeenAt: 1792787676937
+fingerprint: null
+payload:
+  id: SB45_skeletons_grey_until_coded
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/file-state.js
+    - idearium/api/build-surface.js
+    - idearium/ui/js/file-manage.js
+    - idearium/ui/index.html
+    - idearium/ui/css/code-surface.css
+    - idearium/spec-engine/index.js
+  depends_on:
+    - SB44_phases_are_chunked_then_coded
+  blocks: []
+  spec: null
+  graph: a6b4f44b25b6f1db

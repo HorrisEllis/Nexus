@@ -159,12 +159,14 @@ class LoomAgentSuite {
   async generateWithOllama(system, prompt, { model = 'mistral:7b-instruct-q4_K_M', timeoutMs = 120000 } = {}) {
     // §0.43.0 OR1 — the one door first (ollama/lib/ollama-client.js: streamed, continued when cut, recorded on the tape);
     // the direct HTTP below stays only for this package run standalone, without the Nexus tree around it
-    let OC = null; try { OC = require('../../ollama/lib/ollama-client.js'); } catch (_) {}
-    if (OC) {
-      try {
-        const text = await OC.callOllamaRaw(model, prompt, null, Math.min(timeoutMs, 120000), 'loom/agent-suite', { system, temperature: 0.3 });
-        return String(text || '').trim() ? { ok: true, text: String(text) } : { ok: false, error: `${model} returned an empty reply` };
-      } catch (e) { return { ok: false, error: e.message, code: e.code }; }
+    // 0.60.241 LM1 — through the kernel's ollama port (the bridge's POST /api/generate), not ollama-client loaded into Loom's process
+    // (a crossing a COS compartment cannot hold). Only when the bridge is not answering does the direct path below run, and it says so.
+    let OP = null; try { OP = require('../../lib/ollama-port.js'); } catch (_) {}
+    if (OP) {
+      const r = await OP.generate({ model, prompt, system, temperature: 0.3, timeoutMs: Math.min(timeoutMs, 120000), caller: 'loom/agent-suite' });
+      if (r.ok) return String(r.text || '').trim() ? { ok: true, text: String(r.text) } : { ok: false, error: `${model} returned an empty reply` };
+      if (!r.unreachable) return { ok: false, error: r.error, code: r.code };
+      console.warn(`[loom/agent-suite] ${r.error}: asking the Ollama daemon directly (standalone path, not on the bridge's tape)`);
     }
     return new Promise((resolve) => {
       // §0.39.266 — num_ctx sized to the prompt; the call recorded (lib/ollama-activity.js)

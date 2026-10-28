@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX2_sequential_event_queue
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX2_sequential_event_queue
+context: >-
+  pipeline phase TX2_sequential_event_queue of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX2_sequential_event_queue (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756302
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756302
+lastSeenAt: 1792841756302
+fingerprint: null
+payload:
+  id: TX2_sequential_event_queue
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/error-log.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8fc03d6ccb85d1f5

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::UI0_the_stations_agree
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::UI0_the_stations_agree
+context: pipeline phase UI0_the_stations_agree of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: UI0_the_stations_agree (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676593
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676593
+lastSeenAt: 1792787676593
+fingerprint: null
+payload:
+  id: UI0_the_stations_agree
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/architect.html
+    - idearium/ui/workshop.html
+    - idearium/ui/spec-library.html
+    - idearium/ui/settings.html
+    - idearium/ui/index.html
+    - idearium/ui/css/void-theme.css
+  depends_on:
+    - EM0_ground
+  blocks: []
+  spec: null
+  graph: 70ddba11613a1584

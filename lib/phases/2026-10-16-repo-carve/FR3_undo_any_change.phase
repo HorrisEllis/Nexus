@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-repo-carve-phasemap.spec::FR3_undo_any_change
+type: phase
+id: docs_2026-10-16-repo-carve-phasemap.spec::FR3_undo_any_change
+context: pipeline phase FR3_undo_any_change of docs/2026-10-16-repo-carve-phasemap.spec
+intent: null
+summary: FR3_undo_any_change (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677747
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677747
+lastSeenAt: 1792787677747
+fingerprint: null
+payload:
+  id: FR3_undo_any_change
+  map: docs/2026-10-16-repo-carve-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.117 — test-undo-any-change 6/6 (UN-06 the Undo button in Clear Glass)"'
+  files:
+    - lib/repo-inject.js
+    - versionium/lib/text-diff.js
+    - versionium/lib/merge3.js
+    - cortex/core/raid/contract-gates.js
+    - lib/repo-git.js
+    - tests/modules/test-mcob-file-versioning.js
+    - idearium/ui/js/repo-versions.js
+    - lib/repo-versions.js
+  depends_on:
+    - FR1_one_record_per_change
+  blocks: []
+  spec: null
+  graph: c20f74a0da0c1f4c

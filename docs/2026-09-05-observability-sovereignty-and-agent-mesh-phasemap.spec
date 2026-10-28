@@ -1835,3 +1835,10 @@ spec:
       date: 2026-09-05
       summary: "Initial phasemap — full session capture, mapping only, no code touched."
       versioniumCommitId: null
+
+## ADDENDUM 2026-10-23 (0.60.225 NF1) — root_findings are not phases, and the build now knows it
+# James, 2026-10-23: "confused" (screenshot: RF2 DONE in runs, FAILED contract-incomplete in Tasks; Gemini answered
+# "spec/RF2-shared-data-directory-crash.spec"). RF1–RF4 above are findings, as this map's own header for the block says. RF2's fix
+# already shipped (DF1, then DL3 in 0.60.208: guardian/config.js uses lib/data-home.js). loom read RF2 as a pending phase, and
+# Idearium sent it to Gemini, which had nothing to build. Since 0.60.225 loom marks root_findings entries kind 'finding', the DAG
+# holds them closed, and the build refuses them (409 NOT_A_PHASE). Nothing in this map was edited above this line (§0.3).

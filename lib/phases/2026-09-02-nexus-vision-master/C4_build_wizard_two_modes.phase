@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::C4_build_wizard_two_modes
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::C4_build_wizard_two_modes
+context: pipeline phase C4_build_wizard_two_modes of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: C4_build_wizard_two_modes (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675622
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675622
+lastSeenAt: 1792787675622
+fingerprint: null
+payload:
+  id: C4_build_wizard_two_modes
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/end-state.js
+  depends_on:
+    - C1_copilot_spec_wizard
+  blocks: []
+  spec: null
+  graph: 9a05d43747e1ddbd

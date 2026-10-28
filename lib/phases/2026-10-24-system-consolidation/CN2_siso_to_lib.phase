@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-system-consolidation-phasemap.spec::CN2_siso_to_lib
+type: phase
+id: docs_2026-10-24-system-consolidation-phasemap.spec::CN2_siso_to_lib
+context: pipeline phase CN2_siso_to_lib of docs/2026-10-24-system-consolidation-phasemap.spec
+intent: null
+summary: CN2_siso_to_lib (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325058
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325058
+lastSeenAt: 1792877325058
+fingerprint: null
+payload:
+  id: CN2_siso_to_lib
+  map: docs/2026-10-24-system-consolidation-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/siso
+  depends_on:
+    - CN0_the_rule_in_force
+  blocks: []
+  spec: null
+  graph: 128bd306c74618f2

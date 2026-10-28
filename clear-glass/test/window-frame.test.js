@@ -11,7 +11,9 @@ t('WF-04 the app theme is set to dark', () => { const nt = {}; assert.ok(F.setAp
 t('WF-05 the compartment handler gives a non-idearium popup the dark options, and an idearium page its own', () => {
   let h; const contents = { getType: () => 'window', setWindowOpenHandler: (f) => { h = f; }, on() {} };
   assert.ok(C.attach(contents));
-  assert.strictEqual(h({ url: 'https://accounts.google.com/', features: '' }).overrideBrowserWindowOptions.backgroundColor, '#08080d');
+  // §GF1 0.60.258 — a site's popup is a Glass frame (createWindow) where Electron has BaseWindow; the dark options are its fallback
+  const pop = h({ url: 'https://accounts.google.com/', features: '' });
+  assert.ok(typeof pop.createWindow === 'function' || pop.overrideBrowserWindowOptions.backgroundColor === '#08080d');
   assert.strictEqual(h({ url: 'http://127.0.0.1:4800/settings.html', features: '' }).overrideBrowserWindowOptions.frame, false);
 });
 // the window census: a `new BrowserWindow(` outside this list must be added here with a reason, not left on Electron's light default

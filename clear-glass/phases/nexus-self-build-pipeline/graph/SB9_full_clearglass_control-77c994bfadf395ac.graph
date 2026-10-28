@@ -1,0 +1,261 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB9_full_clearglass_control:77c994bfadf395ac
+type: graph
+id: phase:SB9_full_clearglass_control:77c994bfadf395ac
+context: dependency graph of phase SB9_full_clearglass_control
+intent: null
+summary: 36 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678303
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678303
+lastSeenAt: 1792787678303
+fingerprint: null
+payload:
+  for: SB9_full_clearglass_control
+  kind: phase
+  repo: null
+  hash: 77c994bfadf395ac
+  nodes:
+    - path: clear-glass/renderer/copilot-cli.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/routes.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/glass-host/main.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/gates/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/session-hub.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/agent-system/submit.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/browser-action.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/agent-tools/tools/browser/browser-action.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/seam/watchdog-gates.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/adapter.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/intake-bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/network/install.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/plugins/host.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: lib/clear-glass-stream-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/copilot-adversarial-wire.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/copilot-handshake-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/driver/page-resolver.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: copilot/config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/copilot-context.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/expectation-watcher.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/inject-config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/recursive-diagnose.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/blueprint-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/dom/archaeology.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/config.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/inject-config.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/blueprint-index.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/copilot-context.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/recursive-diagnose.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/expectation-watcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-wire.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-handshake-dispatch.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: clear-glass/seam/watchdog-gates.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/downloads/adapter.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/downloads/intake-bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/network/install.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/plugins/host.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+  crossings:
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

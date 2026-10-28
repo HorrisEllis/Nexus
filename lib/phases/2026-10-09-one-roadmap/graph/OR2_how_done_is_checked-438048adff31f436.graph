@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OR2_how_done_is_checked:438048adff31f436
+type: graph
+id: phase:OR2_how_done_is_checked:438048adff31f436
+context: dependency graph of phase OR2_how_done_is_checked
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677182
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677182
+lastSeenAt: 1792787677182
+fingerprint: null
+payload:
+  for: OR2_how_done_is_checked
+  kind: phase
+  repo: null
+  hash: 438048adff31f436
+  nodes:
+    - path: docs/2026-10-09-one-roadmap-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
+    dependents: []
+    upstream:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): OR0_the_census'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
+        kind: declared

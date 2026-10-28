@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-routing-fidelity-phasemap.spec::RR5_clearglass_accounts_and_features
+type: phase
+id: docs_raid-routing-fidelity-phasemap.spec::RR5_clearglass_accounts_and_features
+context: pipeline phase RR5_clearglass_accounts_and_features of docs/raid-routing-fidelity-phasemap.spec
+intent: null
+summary: RR5_clearglass_accounts_and_features (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678315
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678315
+lastSeenAt: 1792787678315
+fingerprint: null
+payload:
+  id: RR5_clearglass_accounts_and_features
+  map: docs/raid-routing-fidelity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/copilot-awareness-routing-phasemap.spec
+    - lib/account-registry.js
+  depends_on:
+    - RR3_per_agent_config_in_cortex
+  blocks: []
+  spec: null
+  graph: 022fe3f3a22c597f

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::PC4_a_procedure_per_kind
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::PC4_a_procedure_per_kind
+context: pipeline phase PC4_a_procedure_per_kind of docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: PC4_a_procedure_per_kind (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677800
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677800
+lastSeenAt: 1792787677800
+fingerprint: null
+payload:
+  id: PC4_a_procedure_per_kind
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-procedures.js
+    - lib/pipeline-routing.js
+  depends_on:
+    - PC1_the_point_first
+  blocks: []
+  spec: null
+  graph: 6ad550aea45b1805

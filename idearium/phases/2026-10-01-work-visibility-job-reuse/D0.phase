@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-work-visibility-job-reuse-phasemap.spec::D0
+type: phase
+id: docs_2026-10-01-work-visibility-job-reuse-phasemap.spec::D0
+context: pipeline phase D0 of docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+intent: null
+summary: D0 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476777
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476777
+lastSeenAt: 1792822476777
+fingerprint: null
+payload:
+  id: D0
+  map: docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/ui/js/file-versions.js
+    - idearium/ui/index.html
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9d3915eec49d61ad

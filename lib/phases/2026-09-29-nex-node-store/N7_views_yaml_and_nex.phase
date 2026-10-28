@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
+context: pipeline phase N7_views_yaml_and_nex of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N7_views_yaml_and_nex (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676248
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676248
+lastSeenAt: 1792787676248
+fingerprint: null
+payload:
+  id: N7_views_yaml_and_nex
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/views.js
+  depends_on:
+    - N4_kinds_record_ledger_ring_blob
+    - N5_kinds_edge_and_lattice
+    - N6_time
+  blocks: []
+  spec: null
+  graph: d19115c9bdab18db

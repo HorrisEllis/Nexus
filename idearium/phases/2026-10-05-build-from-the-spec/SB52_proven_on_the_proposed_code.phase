@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB52_proven_on_the_proposed_code
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB52_proven_on_the_proposed_code
+context: >-
+  pipeline phase SB52_proven_on_the_proposed_code of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB52_proven_on_the_proposed_code (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477173
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477173
+lastSeenAt: 1792822477173
+fingerprint: null
+payload:
+  id: SB52_proven_on_the_proposed_code
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/proof-overlay.js
+    - idearium/api/index.js
+    - idearium/repo/build-plan.js
+    - idearium/ui/js/plan-panel.js
+  depends_on:
+    - SB51_a_phase_built_in_chunks
+  blocks: []
+  spec: null
+  graph: 78cfe7c733ed23ee

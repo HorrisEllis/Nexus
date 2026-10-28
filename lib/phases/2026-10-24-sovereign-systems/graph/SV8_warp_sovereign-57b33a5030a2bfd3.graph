@@ -1,0 +1,59 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV8_warp_sovereign:57b33a5030a2bfd3
+type: graph
+id: phase:SV8_warp_sovereign:57b33a5030a2bfd3
+context: dependency graph of phase SV8_warp_sovereign
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792877682585
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682585
+lastSeenAt: 1792877682585
+fingerprint: null
+payload:
+  for: SV8_warp_sovereign
+  kind: phase
+  repo: null
+  hash: 57b33a5030a2bfd3
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS19_warp_the_system
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
+    dependents: []
+    upstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D11_warp_is_a_system
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS18_one_copy_of_the_primitives
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS19_warp_the_system
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV2_core_files_go_home
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS19_warp_the_system
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 7 · blocked by CS19_warp_the_system, SV7_intelligence_cos_cortex
+      - 'depends on (2): CS19_warp_the_system, SV7_intelligence_cos_cortex · all upstream 12'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-sovereign-systems-phasemap.spec::CS19_warp_the_system
+        kind: declared
+      - from: docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
+        kind: declared

@@ -34,7 +34,7 @@ async function test(id, desc, fn) {
 // real tree for the duration of the test, then remove it — read-only
 // everywhere else, and the planted dir name can never collide with a real
 // system (uuid suffix).
-const { _handleLedgerRead } = require('../../nexus/autopilot.js');
+const { _handleLedgerRead } = require('../../lib/nexus/autopilot.js');
 const REPO_LEDGER = path.join(__dirname, '../../data/ledger');
 const SYS = `t1test-${Date.now()}`;
 const HOOK = 'unit.hook.name';
@@ -137,7 +137,7 @@ const GET = (p) => new Promise((resolve) => {
     });
 
     await test('T1-012', "UI LAWS: tablet/index.html honors the spec's connection + decoupling laws", async () => {
-      const html = fs.readFileSync(path.join(__dirname, '../../tablet/index.html'), 'utf8');
+      const html = fs.readFileSync(path.join(__dirname, '..', '..', 'cos', 'tablet', 'index.html'), 'utf8');
       assert.ok(html.includes("get('port') || 7799"), 'must default to autopilot :7799 — the single endpoint');
       assert.ok(!/374[89]|3750|9000|7705/.test(html), 'must contain ZERO per-system ports — no hardcoded topology, that is the exact hard-pointer problem the connection law exists to prevent');
       assert.ok(!/(localStorage|sessionStorage)\s*[.\[]/.test(html), 'must own no persistent state (§5.12) — comment mentions fine, CALLS are not');

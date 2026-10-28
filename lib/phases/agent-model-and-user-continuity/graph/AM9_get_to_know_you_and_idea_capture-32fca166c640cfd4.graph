@@ -1,0 +1,268 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AM9_get_to_know_you_and_idea_capture:32fca166c640cfd4
+type: graph
+id: phase:AM9_get_to_know_you_and_idea_capture:32fca166c640cfd4
+context: dependency graph of phase AM9_get_to_know_you_and_idea_capture
+intent: null
+summary: 28 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678115
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678115
+lastSeenAt: 1792787678115
+fingerprint: null
+payload:
+  for: AM9_get_to_know_you_and_idea_capture
+  kind: phase
+  repo: null
+  hash: 32fca166c640cfd4
+  nodes:
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/personas.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/agent-system/contracts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/governance/propose-idea.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/propose-idea.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/idea-provenance.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/autonomy-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-system/submit.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-map.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/clear-glass-stream-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/copilot-adversarial-wire.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/copilot-handshake-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/intuition.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/copilot-context.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/expectation-watcher.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/inject-config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/recursive-diagnose.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/blueprint-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/config.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/inject-config.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/blueprint-index.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/copilot-context.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/recursive-diagnose.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/expectation-watcher.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/intuition.js
+      kind: requires
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-wire.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-handshake-dispatch.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/personas.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/personas.js
+      kind: requires
+    - from: lib/agent-system/submit.js
+      to: lib/agent-system/contracts.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-map.js
+      to: lib/agent-system/contracts.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: lib/idea-provenance.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/governance/propose-idea.js
+      kind: requires
+  crossings:
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/personas.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM4_full_user_continuity
+    dependents: []
+    upstream:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM4_full_user_continuity
+    downstream: []
+    blockedBy:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM4_full_user_continuity
+    unlocks: []
+    conflicts:
+      - with: docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
+        files:
+          - lib/agent-system/contracts.js
+      - with: docs/agent-model-and-user-continuity-phasemap.spec::AM3_open_ended_grounded_conversation
+        files:
+          - cortex/personas.js
+      - with: docs/agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
+        files:
+          - lib/agent-system/contracts.js
+          - cortex/push-recall.js
+      - with: docs/agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+        files:
+          - lib/agent-system/contracts.js
+          - cortex/push-recall.js
+      - with: docs/agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+        files:
+          - cortex/push-recall.js
+      - with: docs/agent-model-and-user-continuity-phasemap.spec::AM10_thinking_partner_rename_and_ui_builder
+        files:
+          - copilot/server.js
+          - cortex/push-recall.js
+    dangling: []
+    lines:
+      - layer 1 · blocked by AM4_full_user_continuity
+      - 'depends on (1): AM4_full_user_continuity'
+      - 'needed by (0): —'
+      - >-
+        same files as AM1_per_agent_learned_model with no order between them:
+        lib/agent-system/contracts.js
+      - >-
+        same files as AM3_open_ended_grounded_conversation with no order between them:
+        cortex/personas.js
+      - >-
+        same files as AM5_ambiguity_triggered_pull with no order between them:
+        lib/agent-system/contracts.js, cortex/push-recall.js
+      - >-
+        same files as AM6_perplexity_confidence_loop with no order between them:
+        lib/agent-system/contracts.js, cortex/push-recall.js
+      - >-
+        same files as AM7_agent_switch_continuity_and_chat_recall with no order between them:
+        cortex/push-recall.js
+      - … and 1 more phases sharing its files without an order
+    edges:
+      - from: docs/agent-model-and-user-continuity-phasemap.spec::AM4_full_user_continuity
+        kind: declared

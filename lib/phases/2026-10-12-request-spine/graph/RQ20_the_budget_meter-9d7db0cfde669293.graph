@@ -1,0 +1,149 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ20_the_budget_meter:9d7db0cfde669293
+type: graph
+id: phase:RQ20_the_budget_meter:9d7db0cfde669293
+context: dependency graph of phase RQ20_the_budget_meter
+intent: null
+summary: 13 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677376
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677376
+lastSeenAt: 1792787677376
+fingerprint: null
+payload:
+  for: RQ20_the_budget_meter
+  kind: phase
+  repo: null
+  hash: 9d7db0cfde669293
+  nodes:
+    - path: docs/2026-10-09-one-model-engine-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: lib/pipeline-routing.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-record.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/model-door.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-model-fit-ladder.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/lib/job-retry.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/router.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/agent-record.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-model-fit-ladder.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+  crossings:
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
+    dependents: []
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ10_anchors_and_the_diff_reconciled
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ11_spec_and_registry_reconciled
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ12_the_phase_dag
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ13_the_work_surface_and_provenance
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ2_the_generation_failure_vocabulary_and_index
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ3_repair_with_the_checks_own_words
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ4_escalate_on_the_checks_and_keep_the_lesson
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ5_the_small_model_baseline
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ8_the_gap_is_a_question
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+    downstream: []
+    blockedBy:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 7 · blocked by RQ14_the_spine_end_to_end
+      - 'depends on (1): RQ14_the_spine_end_to_end · all upstream 15'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
+        kind: declared

@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS21_the_registry_at_every_level:9c777082884fa69e
+type: graph
+id: phase:CS21_the_registry_at_every_level:9c777082884fa69e
+context: dependency graph of phase CS21_the_registry_at_every_level
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792876203200
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203200
+lastSeenAt: 1792876203200
+fingerprint: null
+payload:
+  for: CS21_the_registry_at_every_level
+  kind: phase
+  repo: null
+  hash: 9c777082884fa69e
+  nodes:
+    - path: lib/registry-level.js
+      role: changes
+      exists: false
+      system: lib
+    - path: registry-components.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS19_warp_the_system
+    dependents: []
+    upstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS18_one_copy_of_the_primitives
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS19_warp_the_system
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D11_warp_is_a_system
+    downstream: []
+    blockedBy:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS19_warp_the_system
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by CS19_warp_the_system
+      - 'depends on (1): CS19_warp_the_system · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS19_warp_the_system
+        kind: declared

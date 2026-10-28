@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P23_guardian_job_durability
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P23_guardian_job_durability
+context: >-
+  pipeline phase P23_guardian_job_durability of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P23_guardian_job_durability (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792874368079
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874368079
+lastSeenAt: 1792874368079
+fingerprint: null
+payload:
+  id: P23_guardian_job_durability
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/ncp-handler.js
+    - architect/schemas/index.js
+    - clear-glass/renderer/site-profile-groups.js
+    - clear-glass/schemas/index.js
+    - lib/repo-agent.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0f4b4484fac98841

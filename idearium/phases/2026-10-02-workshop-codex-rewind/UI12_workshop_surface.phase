@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-workshop-codex-rewind-phasemap.spec::UI12_workshop_surface
+type: phase
+id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::UI12_workshop_surface
+context: pipeline phase UI12_workshop_surface of docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+intent: null
+summary: UI12_workshop_surface (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676771
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676771
+lastSeenAt: 1792787676771
+fingerprint: null
+payload:
+  id: UI12_workshop_surface
+  map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/workshop.html
+    - idearium/ui/js/app.js
+    - idearium/ui/index.html
+  depends_on:
+    - SW1_spec_workshop
+    - AR2_architect_in_the_workshop
+    - BP1_destroy_and_rebuild_blueprint
+    - PL1_one_entry_point
+  blocks: []
+  spec: null
+  graph: 005dd01e2ba96ba8

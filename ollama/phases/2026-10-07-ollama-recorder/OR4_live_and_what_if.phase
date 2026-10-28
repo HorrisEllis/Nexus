@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-ollama-recorder-phasemap.spec::OR4_live_and_what_if
+type: phase
+id: docs_2026-10-07-ollama-recorder-phasemap.spec::OR4_live_and_what_if
+context: pipeline phase OR4_live_and_what_if of docs/2026-10-07-ollama-recorder-phasemap.spec
+intent: null
+summary: OR4_live_and_what_if (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677099
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677099
+lastSeenAt: 1792787677099
+fingerprint: null
+payload:
+  id: OR4_live_and_what_if
+  map: docs/2026-10-07-ollama-recorder-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7005c50c7012704b

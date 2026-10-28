@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-sovereign-systems-phasemap.spec::CS18_one_copy_of_the_primitives
+type: phase
+id: docs_2026-10-24-sovereign-systems-phasemap.spec::CS18_one_copy_of_the_primitives
+context: pipeline phase CS18_one_copy_of_the_primitives of docs/2026-10-24-sovereign-systems-phasemap.spec
+intent: null
+summary: CS18_one_copy_of_the_primitives (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682567
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682567
+lastSeenAt: 1792877682567
+fingerprint: null
+payload:
+  id: CS18_one_copy_of_the_primitives
+  map: docs/2026-10-24-sovereign-systems-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/siso
+    - lib/siso/core
+    - lib/warp/core
+    - lib/emerge/siso
+  depends_on:
+    - CS12_the_mover_is_proven
+  blocks: []
+  spec: null
+  graph: 7a1fc84961c46038

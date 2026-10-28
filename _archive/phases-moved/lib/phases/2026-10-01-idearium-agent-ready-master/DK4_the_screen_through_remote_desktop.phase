@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DK4_the_screen_through_remote_desktop
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DK4_the_screen_through_remote_desktop
+context: >-
+  pipeline phase DK4_the_screen_through_remote_desktop of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: DK4_the_screen_through_remote_desktop (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676428
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676428
+lastSeenAt: 1792787676428
+fingerprint: null
+payload:
+  id: DK4_the_screen_through_remote_desktop
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/desktop.html
+    - cos/testenv/provision.js
+  depends_on:
+    - DK2_desktop_setup_popup
+  blocks: []
+  spec: null
+  graph: 068dbdde9fe76e51

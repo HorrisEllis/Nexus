@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AR5_repo_architect_on_the_canvas:c7fee44243c248cf
+type: graph
+id: phase:AR5_repo_architect_on_the_canvas:c7fee44243c248cf
+context: dependency graph of phase AR5_repo_architect_on_the_canvas
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676766
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676766
+lastSeenAt: 1792787676766
+fingerprint: null
+payload:
+  for: AR5_repo_architect_on_the_canvas
+  kind: phase
+  repo: null
+  hash: c7fee44243c248cf
+  nodes:
+    - path: idearium/ui/index.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
+    dependents: []
+    upstream:
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR2_architect_in_the_workshop
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::CX0_codex_component_store
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW1_spec_workshop
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): AR3_one_architect_canvas · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
+        kind: declared

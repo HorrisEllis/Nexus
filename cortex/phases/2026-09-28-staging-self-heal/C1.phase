@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-staging-self-heal-phasemap.spec::C1
+type: phase
+id: docs_2026-09-28-staging-self-heal-phasemap.spec::C1
+context: pipeline phase C1 of docs/2026-09-28-staging-self-heal-phasemap.spec
+intent: null
+summary: C1 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676170
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676170
+lastSeenAt: 1792787676170
+fingerprint: null
+payload:
+  id: C1
+  map: docs/2026-09-28-staging-self-heal-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/self-heal/failure-mode-forensics.js
+    - intelligence/causal/compound.js
+  depends_on:
+    - C0
+  blocks: []
+  spec: null
+  graph: 54047179b286c733

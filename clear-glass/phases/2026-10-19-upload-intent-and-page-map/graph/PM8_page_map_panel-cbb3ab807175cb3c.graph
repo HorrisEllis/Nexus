@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PM8_page_map_panel:cbb3ab807175cb3c
+type: graph
+id: phase:PM8_page_map_panel:cbb3ab807175cb3c
+context: dependency graph of phase PM8_page_map_panel
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677959
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677959
+lastSeenAt: 1792787677959
+fingerprint: null
+payload:
+  for: PM8_page_map_panel
+  kind: phase
+  repo: null
+  hash: cbb3ab807175cb3c
+  nodes:
+    - path: clear-glass/renderer/browser.css
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/browser.html
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/page-map-panel.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM5_tools_routes_commands
+    dependents: []
+    upstream:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM1_blocks
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM2_index_and_chunks
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM3_synthesized_map_that_learns
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM4_intent_to_targets
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM5_tools_routes_commands
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP1_placement_tool
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP2_learned_placements
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP3_upload_routes_and_commands
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5
+      - 'depends on (1): PM5_tools_routes_commands · all upstream 8'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM5_tools_routes_commands
+        kind: declared

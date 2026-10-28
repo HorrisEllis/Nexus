@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+type: phase
+id: docs_2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+context: pipeline phase SL0_what_can_be_built_now of docs/2026-10-23-self-building-loop-phasemap.spec
+intent: null
+summary: SL0_what_can_be_built_now (library) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478443
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478443
+lastSeenAt: 1792822478443
+fingerprint: null
+payload:
+  id: SL0_what_can_be_built_now
+  map: docs/2026-10-23-self-building-loop-phasemap.spec
+  repo: null
+  layer: library
+  status: >-
+    DONE 0.60.222 — test-build-queue 6/6 (BQ-05 in Clear Glass); over Nexus 1183 open, 170 can be
+    built now
+  files:
+    - lib/build-queue.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/phases.js
+    - tests/modules/test-build-queue.test.js
+  depends_on: []
+  blocks:
+    - MOD-SL-QUEUE
+  spec: docs/self-building-loop.spec
+  graph: eb2acda9c8595faf

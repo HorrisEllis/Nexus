@@ -1,0 +1,280 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CL1_the_picked_agent_is_opened:2855aac9d5b559af
+type: graph
+id: phase:CL1_the_picked_agent_is_opened:2855aac9d5b559af
+context: dependency graph of phase CL1_the_picked_agent_is_opened
+intent: null
+summary: 29 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792874371327
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371327
+lastSeenAt: 1792874371327
+fingerprint: null
+payload:
+  for: CL1_the_picked_agent_is_opened
+  kind: phase
+  repo: null
+  hash: 2855aac9d5b559af
+  nodes:
+    - path: copilot/lifeline.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: guardian/ask.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: tests/modules/test-copilot-any-agent.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/reword.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/recursive-diagnose.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/query/ambiguity-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/clear-glass-stream-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/copilot-confidence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/lifeline-fluid-routing.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-lifeline-ollama-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/lifeline-contracts.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/routing-ir.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/lifeline.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: cortex/core/raid/routing-ir.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/lib/lifeline-contracts.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/event-types.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/lib/reword.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/recursive-diagnose.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/ambiguity-pull.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: tests/modules/copilot-confidence.test.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: tests/modules/lifeline-fluid-routing.test.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: tests/modules/test-lifeline-ollama-dispatch.test.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      kind: requires
+  crossings:
+    - from: copilot/lifeline.js
+      to: cortex/core/raid/routing-ir.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lifeline.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: copilot/lifeline.js
+      fromSystem: cortex
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: cortex/core/raid/officiator.js
+      to: copilot/lifeline.js
+      fromSystem: cortex
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/query/ambiguity-pull.js
+      to: copilot/lifeline.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::D1_open_or_refuse
+    dependents:
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::CL2_a_pick_never_falls_back_in_silence
+    upstream:
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::D1_open_or_refuse
+    downstream:
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::CL2_a_pick_never_falls_back_in_silence
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::CL3_any_agent_as_the_copilot
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::CL4_each_reply_under_its_question_labelled_true
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::CL2_a_pick_never_falls_back_in_silence
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): D1_open_or_refuse'
+      - >-
+        needed by (1): CL2_a_pick_never_falls_back_in_silence · all downstream 3 · finishing it
+        unlocks CL2_a_pick_never_falls_back_in_silence
+    edges:
+      - from: docs/2026-10-24-copilot-any-agent-phasemap.spec::D1_open_or_refuse
+        kind: declared

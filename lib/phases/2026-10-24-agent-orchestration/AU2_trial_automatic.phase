@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-agent-orchestration-phasemap.spec::AU2_trial_automatic
+type: phase
+id: docs_2026-10-24-agent-orchestration-phasemap.spec::AU2_trial_automatic
+context: pipeline phase AU2_trial_automatic of docs/2026-10-24-agent-orchestration-phasemap.spec
+intent: null
+summary: AU2_trial_automatic (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792940185298
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792940185298
+lastSeenAt: 1792940185298
+fingerprint: null
+payload:
+  id: AU2_trial_automatic
+  map: docs/2026-10-24-agent-orchestration-phasemap.spec
+  repo: null
+  layer: integration
+  status: >-
+    DONE (harness) 0.60.247 — the deploy step built and proven; the live multi-provider run is his
+    (needs Clear Glass agents up)
+  files:
+    - docs/framework-trial/trial.js
+    - tests/modules/test-framework-trial-deploy.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 067c1238dcbac3d2

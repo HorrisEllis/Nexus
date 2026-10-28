@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+context: pipeline phase DB16_a_registry_for_each_system of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB16_a_registry_for_each_system (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755867
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755867
+lastSeenAt: 1792841755867
+fingerprint: null
+payload:
+  id: DB16_a_registry_for_each_system
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/architecture.js
+    - lib/system-registry.js
+    - lib/node-export.js
+    - lib/system-nodes.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 956abeef324b7587

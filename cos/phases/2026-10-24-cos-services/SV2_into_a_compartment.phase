@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
+type: phase
+id: docs_2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
+context: pipeline phase SV2_into_a_compartment of docs/2026-10-24-cos-services-phasemap.spec
+intent: null
+summary: SV2_into_a_compartment (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792879719120
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879719120
+lastSeenAt: 1792879719120
+fingerprint: null
+payload:
+  id: SV2_into_a_compartment
+  map: docs/2026-10-24-cos-services-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cos/services/deploy.js
+    - cos/compartment/process-runner.js
+  depends_on:
+    - SV1_a_stack_per_root
+  blocks:
+    - MOD-SV-DEPLOY
+  spec: cos/spec/cos-services.spec
+  graph: 1ac6b641e0f7e6aa

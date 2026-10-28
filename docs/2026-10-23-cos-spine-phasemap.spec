@@ -54,6 +54,39 @@ decisions:
     chosen: "caps are applied by the OS or the hypervisor and read back; what cannot be enforced is said"
     by: "his axioms §1.2, §0.1; the 'hook in' reading above is to confirm"
 
+  # ── 2026-10-24, his answers (see the ADDENDUM at the end for the context) ──
+  CS_D9_cli_inside_nexus:
+    chosen: "lib/cli → lib/nexus/cli"
+    by: "his, 2026-10-24: \"yes to inside.\" (asked: lib/nexus/cli, or keep lib/cli)"
+  CS_D10_cockpit_home:
+    status: "OPEN, to confirm"
+    asked_back: "his, 2026-10-24: \"cockpit becomes brainos?\" (asked: its name inside idearium, cockpit or forge-ide)"
+    readings: >-
+      The coder's two readings: (a) cockpit's back end (forge-ide per its own spec: cli, core, live, pipeline) becomes BrainOS's back end,
+      under BrainOS's UI (lib/ui/brainos, "the ui floating on top"); (b) the folder is renamed brainos. He asked it as a question, so it waits
+      on his answer.
+  CS_D11_warp_is_a_system:
+    chosen: "emerge integrates with warp, and the two are one system (the 16th): warp"
+    by: "his, 2026-10-24: \"yes move emerge and integrate with warp and make it as system.\" Supersedes CN_D2 (\"1. moved to lib?\", warp as a lib primitive) by his later word; CN_D2 is kept (§0.3)."
+    reading_to_confirm: >-
+      The coder's reading, by his axioms (DB0a primitives are kernel; DB0b only routes between systems): a system is reached by route, but
+      Event/Gate/Stream/StreamLog are used in-process by every system. So one copy of those primitives stays in core (lib/siso, from the four
+      copies), and the warp system is warp's dispatch, crystallizer and benchmarks with emerge's runtime (core/, chunk/, codegen, kernel). Its
+      name: "warp" (the coder's). To confirm.
+  CS_D12_spec_compiler_and_ide_to_idearium:
+    chosen: "emerge's spec compiler (lib/emerge/compiler, SPEC_COMPILER.spec) and its IDE (emerge-ide.js) move to idearium"
+    by: "his, 2026-10-24: \"the nspeccompiler and ide can move to idearium\""
+  CS_D13_changelogs_to_versionium:
+    chosen: "the 442 CHANGELOG-*.md move to versionium"
+    by: "his, 2026-10-24: \"versionium\" (asked: docs/changelogs, the coder's recommendation, or versionium). The coder's recommendation was docs; his call is versionium."
+    design_by_the_axioms: >-
+      Core must not reach into a system (the ratchet refuses it). So the release tooling that is version work moves with them: lib/release-notes.js,
+      lib/nexus-releases.js, lib/release-version.js, lib/checks/ck-253-versions.js and scripts/release-zip.js. Core's censuses
+      (lib/phase-census.js, lib/spec-census.js, lib/context-atlas.js, lib/readme-generate.js) read them through versionium's route.
+  CS_D14_autopilot_to_orchestrator:
+    chosen: "lib/nexus/autopilot.js → orchestrator/autopilot.js, still its own process"
+    by: "his question, 2026-10-24: \"what about moving autopilot ot the porchastrator folder?\"; the coder recommended yes. Recorded as DB23 in the drawbridge map; phased here."
+
 phases:
 
   CS1_a_version_is_a_system_state:
@@ -112,7 +145,7 @@ phases:
     layer: foundation
     status: OPEN
     depends_on: [CS_D7_sovereign_first, COSA3_run_and_supervise]
-    files: [cos/spine/boot.js, cos/app/runtime.js, nexus/autopilot.js, cos/compartment/process-runner.js]
+    files: [cos/spine/boot.js, cos/app/runtime.js, lib/nexus/autopilot.js, cos/compartment/process-runner.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-BOOT]
     does: >-
@@ -137,7 +170,7 @@ phases:
     layer: integration
     status: OPEN
     depends_on: [CS1_a_version_is_a_system_state, CS4_every_system_a_compartment, CS_D3_the_spec_rebuilds_the_system]
-    files: [cos/spine/rebuild.js, cos/spine/version.js, cos/workspace/index.js, emerge/compiler/kg-builder.js, emerge/compiler/phase-specs.js]
+    files: [cos/spine/rebuild.js, cos/spine/version.js, cos/workspace/index.js, lib/emerge/compiler/kg-builder.js, lib/emerge/compiler/phase-specs.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-REBUILD]
     does: >-
@@ -288,3 +321,78 @@ phases:
 # load balancer).
 # The order in this map is now: CS4a (COS boots alone, Cortex core; no code moves) → per system, lowest friction first: DB6 → DB16/DB4/DB5 →
 # DB11 → CS4 (open on demand) → IM6 → CS11 (RAID in the exe) → CS7 (balance through RAID).
+
+# ## ADDENDUM 2026-10-24 (c) — the phases mapped here on 2026-10-24 moved to their own map (nothing lost, §0.3)
+# His 2026-10-24 directions were recorded here: the placement moves CS12–CS21, and each system sovereign and in its compartment,
+# SV0–SV8. This map is tied to cos/spec/cos-spine.spec, and every phase in it must build modules of that spec
+# (tests/modules/test-substrate-spec.test.js SS-02). Those phases build other things, so SS-02 went red on main
+# (0.60.244, the coder's miss). They now live, word for word, in docs/2026-10-24-sovereign-systems-phasemap.spec. His answers
+# CS_D9–CS_D14 stay above in decisions: they are answers about COS, not phases. DB6 still ends at SV7, and CS4 still waits on DB6.
+
+# ── From brave-cori, merged 2026-10-26 (0.60.255): the addenda below were written there, at its numbering, unchanged (§0.3).
+
+## ADDENDUM 2026-10-24 — what the anonymousservers NEXUS kernel offers COS (mapped, not built)
+James, 2026-10-24, uploading anonymousservers-nexus-4-12.zip: "look at this for cos"
+- **What it is (read, §0.1):** "NEXUS — Sovereign Self-Hosting Platform" (anonymousservers.info, 0.1.0): a kernel, nexus.js (641 lines),
+  supervising 27 engine definitions (dns, smtp, tls, proxy, firewall, …; 23 described in its README) as separate Node processes talking
+  newline-JSON over stdin/stdout, through an engine SDK (engines/_engine.js). The hosting engines are that product, not COS.
+- **What COS takes from it, each into the phase that owns it (the coder's reading of "for cos"; to confirm which first):**
+  - **Windows process discovery** (its killOrphans): PowerShell `Get-CimInstance Win32_Process` first, wmic as the fallback, because
+    Windows 11 removed wmic. Nexus's nexus/autopilot.js:769 uses wmic alone, which is why per-system memory snapshots come back empty on
+    his Windows PC (lib/pressure-window.js already reports that gap). Feeds CS5_caps_per_compartment (caps need the numbers). Smallest,
+    and fixes something live.
+  - **Restart with backoff** (its spawnEngine): 1 s doubling to 30 s, a restart count kept. cos/compartment/process-runner.js detects a
+    crash loop and emits WATCHDOG.PROCESS_CRASH_LOOP but never restarts. → MOD-CS-SUPERVISE (CS4_every_system_a_compartment).
+  - **Addressed delivery that says when it cannot deliver** (its handleIPC `to`): the sender gets `route:error` naming the target and the
+    intended message instead of a silent drop. → MOD-CS-BRIDGE's error path (CS3_the_registry_is_the_bridge).
+  - **Broadcast with the sender excluded and a hop limit (4)**, so a handler that rebroadcasts cannot ping-pong. → DB4_one_bus_per_system.
+  - **The handler guard** (engines/_engine.js dispatch): a throwing handler is logged, the process keeps serving (its comment: one bad line
+    in a status:ping handler caused an endless restart loop). → the compartment SDK side of CS4.
+  - **Port claims to the kernel** (port:claim → the proxy is told): what CS4's "a system already running is adopted by its port" needs.
+- **Not taken, by the axioms:** its db:query / db:update / db:delete build a function from a string carried in the IPC message
+  (`new Function('r', 'return (' + payload.gate + ')(r)')`): any process on the channel runs code in the kernel. COS's bridge sends only
+  what a contract declares (CS3), and never evaluates a string as code.
+- **The upload** stays his; it is read, not copied into the tree (each idea above cites the file and function it came from).
+
+## ADDENDUM 2026-10-24 — his correction: the engines themselves, as Nexus's networking backend (SV0–SV4)
+James, 2026-10-24: "im saying for web servers, dns, firewall, email smtp, like integrating into deployable. i want to use those engines for
+test env, web servers, etc all of them" · "this is all the networking backend for anything needed netwroking wise"
+- **His correction of the coder's reading** (the addendum above said "the hosting engines are that product, not COS"; kept, §0.3): the
+  engines themselves come in, all of them, as services COS deploys, and as the networking backend for anything in Nexus that needs it.
+- **Spec first (his 2026-10-20 rule):** cos/spec/cos-services.spec (MOD-SV-KERNEL, -SDK, -ENGINES, -STACK, -DEPLOY, -ROUTE, -DOORS; compiles
+  at full depth). Its phases SV0–SV4 are in their own map, docs/2026-10-24-cos-services-phasemap.spec (one spec, one map: the convention
+  tests/modules/test-substrate-spec.test.js SS-02 holds); SV3 depends on this map's CS3.
+- **Decided by the axioms:** where it lives — cos/services/anonymous/ (code belongs to the system it serves; the stacks are COS's). How many
+  run — one kernel per root, so each compartment or test environment has its own stack (his platform already reads everything from
+  NEXUS_ROOT). What is off by default — the engines that reach past their own root (firewall's host rules and UPnP, tunnel, peer, relay,
+  autodns, registrar, ssh), on only where he allows them for a stack (USER_AUTONOMY: what touches his machine and network is his).
+- **Found in the upload, said:** its conf/ holds live secrets (a DKIM private key, a 128-character jwtSecret, a 64-character billing
+  encryptionKey, a peer identity). None comes into the tree; each stack writes its own. If that conf was ever used on a live server, those
+  keys should be rotated.
+- **Open, to map against what it replaces (not a phase yet):** Nexus's networking that already exists — Clear Glass's net posture and
+  transports (clear-glass/src/net, docs/2026-10-15-clear-glass-network-posture-phasemap.spec), the TLS layer (docs/2026-10-16-tls-layer-phasemap.spec,
+  clear-glass/tls-helper). Each moves onto these services as its own phase once SV1 runs; nothing is replaced silently.
+
+## ADDENDUM 2026-10-24 — his point: in COS, a boundary is physical
+James, 2026-10-24, after the systems-sovereign work and emerge + warp: "Oh, and just think, once it's merged with COS, those fucking
+boundaries, they're not, it's not coupling after that. There's no coupling after that."
+The coder's reading: once each system runs in its own compartment, reaching into another system's code stops being a habit to police and
+becomes impossible, because the folder is not there. What remains is coupling through contracts (routes, events, .job/.response, the command
+table): explicit, versioned and checkable, the kind the design wants. Two things a compartment does not remove by itself: the shared data
+store (cortex/memory/jaa-db.js, which has to split, IM6) and a contract's shape (if one changes, every caller feels it). That is why CS_D7
+holds: a system goes into COS only once it is sovereign.
+
+## ADDENDUM 2026-10-24 — his direction: boundaries only, until COS can be integrated
+James, 2026-10-24, shown what is left (clutter clean-up, sovereignty, the COS migration, the CB agent fixes, and the genesis self-heal system and
+the COS distro still to map): "just don't, we don't need to do anything that's not, more, like, redefining those boundaries, right? Like, the
+diagnostic and self-heal system is not important right now. Like, we'll do that after. I just want to get this, just get to the point where
+COS becomes, like where we could get to the point where we could integrate COS, and then the Nexus would become immensely fucking easier to
+manage and more powerful."
+Decided (his): until COS can be integrated, the work is the boundaries only:
+1. the EW moves (emerge + warp, the compiler and the IDE to Idearium);
+2. homing or archiving the folders that are not systems;
+3. the data store split (cortex/memory/jaa-db.js);
+4. the remaining ways out, system by system;
+5. then the COS spine phases.
+Deferred by him (kept, not dropped): the genesis diagnostic and self-heal system, the COS Linux distro, and the README split. The CB fixes
+are not boundary work, so they are deferred too; the coder will flag one if it starts blocking the boundary work (to confirm).

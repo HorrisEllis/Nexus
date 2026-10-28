@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::CX0_codex_component_store
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::CX0_codex_component_store
+context: >-
+  pipeline phase CX0_codex_component_store of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: CX0_codex_component_store (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676735
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676735
+lastSeenAt: 1792787676735
+fingerprint: null
+payload:
+  id: CX0_codex_component_store
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/component-store.js
+  depends_on:
+    - EM0_ground
+  blocks: []
+  spec: null
+  graph: a475e453d53efd69

@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB4b_nexus_recall_tool:0850a81b6d5d8bbf
+type: graph
+id: phase:TB4b_nexus_recall_tool:0850a81b6d5d8bbf
+context: dependency graph of phase TB4b_nexus_recall_tool
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677672
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677672
+lastSeenAt: 1792787677672
+fingerprint: null
+payload:
+  for: TB4b_nexus_recall_tool
+  kind: phase
+  repo: null
+  hash: 0850a81b6d5d8bbf
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
+    dependents: []
+    upstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB0_decisions
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
+    downstream: []
+    blockedBy:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by TB3a_tool_calls_saved
+      - 'depends on (1): TB3a_tool_calls_saved · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
+        kind: declared

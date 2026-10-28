@@ -11,7 +11,7 @@ spec:
       Trust state: VERIFIED / DEGRADED / MISMATCH / UNREACHABLE.
 
   files:
-    - path: "contracts/nexus-interaction-contract.js"
+    - path: "lib/contracts/nexus-interaction-contract.js"
       description: >
         The master contract. Describes the full system — all services,
         all routes, all events, all schemas.

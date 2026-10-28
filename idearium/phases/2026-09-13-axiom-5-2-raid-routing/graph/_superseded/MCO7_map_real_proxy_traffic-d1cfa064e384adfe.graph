@@ -1,0 +1,279 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MCO7_map_real_proxy_traffic:d1cfa064e384adfe
+type: graph
+id: phase:MCO7_map_real_proxy_traffic:d1cfa064e384adfe
+context: dependency graph of phase MCO7_map_real_proxy_traffic
+intent: null
+summary: 30 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822476315
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476315
+lastSeenAt: 1792822476315
+fingerprint: null
+payload:
+  for: MCO7_map_real_proxy_traffic
+  kind: phase
+  repo: null
+  hash: d1cfa064e384adfe
+  nodes:
+    - path: architect/service.js
+      role: changes
+      exists: true
+      system: architect
+    - path: cortex/core/raid/contract-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/compiler-bridge.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/chunk-dispatch.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-projects-overview.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-carve.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cli/boot-systems.js
+      role: uses
+      exists: true
+      system: cli
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/boot-sequence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: nexus/nexus-cfr-influence.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: nexus/nexus-knowledge.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: nexus/nexus-query.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: orchestrator/event-taxonomy.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/intent-map.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/intent-map.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/boot-sequence.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: cli/boot-systems.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-query.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-knowledge.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-cfr-influence.js
+      kind: requires
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-projects-overview.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-repo-carve.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: orchestrator/orchestrator.js
+      to: cli/boot-systems.js
+      fromSystem: orchestrator
+      toSystem: cli
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-bus.js
+      fromSystem: orchestrator
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-query.js
+      fromSystem: orchestrator
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-knowledge.js
+      fromSystem: orchestrator
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-cfr-influence.js
+      fromSystem: orchestrator
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: cli
+      toSystem: orchestrator
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO8_wire_the_honest_subset
+    upstream: []
+    downstream:
+      - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO12_architect_remaining_routes
+      - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO8_wire_the_honest_subset
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO8_wire_the_honest_subset
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): MCO8_wire_the_honest_subset · all downstream 2 · finishing it unlocks
+        MCO8_wire_the_honest_subset
+    edges: []

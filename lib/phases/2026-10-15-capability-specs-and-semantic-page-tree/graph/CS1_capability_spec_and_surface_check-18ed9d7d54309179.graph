@@ -1,0 +1,128 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS1_capability_spec_and_surface_check:18ed9d7d54309179
+type: graph
+id: phase:CS1_capability_spec_and_surface_check:18ed9d7d54309179
+context: dependency graph of phase CS1_capability_spec_and_surface_check
+intent: null
+summary: 11 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877162914
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877162914
+lastSeenAt: 1792877162914
+fingerprint: null
+payload:
+  for: CS1_capability_spec_and_surface_check
+  kind: phase
+  repo: null
+  hash: 18ed9d7d54309179
+  nodes:
+    - path: lib/capability-spec.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/code-intel/decls.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/lib/spec-drift.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/checks/ck-254-surface.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/code-intel/chunker.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: intelligence/gap/predicate.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/capability-spec.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: lib/checks/ck-254-surface.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: lib/system-boundary.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+    - from: lib/code-intel/chunker.js
+      to: lib/code-intel/decls.js
+      kind: requires
+  crossings:
+    - from: orchestrator/lib/spec-drift.js
+      to: intelligence/gap/predicate.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS2_spec_the_unspecced
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS3_feature_starts_as_a_spec
+    upstream: []
+    downstream:
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS2_spec_the_unspecced
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS3_feature_starts_as_a_spec
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS2_spec_the_unspecced
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS3_feature_starts_as_a_spec
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): CS2_spec_the_unspecced, CS3_feature_starts_as_a_spec · finishing it unlocks
+        CS2_spec_the_unspecced, CS3_feature_starts_as_a_spec
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP17_hold_primitive
+type: phase
+id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP17_hold_primitive
+context: pipeline phase NP17_hold_primitive of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+intent: null
+summary: NP17_hold_primitive (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677491
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677491
+lastSeenAt: 1792787677491
+fingerprint: null
+payload:
+  id: NP17_hold_primitive
+  map: docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - NP15_kill_switch
+  blocks: []
+  spec: null
+  graph: 114f488ecf1e98c4

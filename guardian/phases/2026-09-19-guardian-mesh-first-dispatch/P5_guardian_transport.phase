@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P5_guardian_transport
+type: phase
+id: docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P5_guardian_transport
+context: pipeline phase P5_guardian_transport of docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+intent: null
+summary: P5_guardian_transport (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675981
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675981
+lastSeenAt: 1792787675981
+fingerprint: null
+payload:
+  id: P5_guardian_transport
+  map: docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/mesh-transport.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ff368c143d948ffb

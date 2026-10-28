@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RN0_the_renderer_as_a_cos_window:4a9bc7c74df8a2b0
+type: graph
+id: phase:RN0_the_renderer_as_a_cos_window:4a9bc7c74df8a2b0
+context: dependency graph of phase RN0_the_renderer_as_a_cos_window
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677327
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677327
+lastSeenAt: 1792787677327
+fingerprint: null
+payload:
+  for: RN0_the_renderer_as_a_cos_window
+  kind: phase
+  repo: null
+  hash: 4a9bc7c74df8a2b0
+  nodes:
+    - path: clear-glass/renderer/browser.html
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/cos-theme.css
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/library.html
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/settings.html
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB0_the_webview_session_proved
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+    downstream: []
+    blockedBy:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by TB1_a_tab_is_its_own_webview
+      - 'depends on (1): TB1_a_tab_is_its_own_webview · all upstream 2'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+        kind: inferred

@@ -61,11 +61,13 @@ async function main() {
     assert.strictEqual(b2.match.ref, 'store:tide.blueprint@1.0.0', JSON.stringify(b2.candidates));
     // exact id
     const { session: s3 } = AR.makeSession({ title: 'x' });
-    add(s3, { name: 'auth', id: 'nexus.auth' });
-    assert.strictEqual(AR.analyse(s3, idx).components[0].match.ref, 'loom:nexus.auth');
+    add(s3, { name: 'auth', id: 'nexus.orchestrator.auth' });   // 0.60.241 RF2: auth/ moved into orchestrator/ (ids follow paths)
+    assert.strictEqual(AR.analyse(s3, idx).components[0].match.ref, 'loom:nexus.orchestrator.auth');
     assert.ok(AR.search(idx, 'spec engine').some(r => /spec-engine/.test(r.id)), 'search finds by words');
     assert.deepStrictEqual(AR.search(idx, ''), []);
-    assert.strictEqual(AR.lookup(idx, 'loom:nexus.auth').id, 'nexus.auth'); assert.strictEqual(AR.lookup(idx, 'nexus.auth').id, 'nexus.auth');
+    assert.strictEqual(AR.lookup(idx, 'loom:nexus.orchestrator.auth').id, 'nexus.orchestrator.auth');
+    // an id saved before the move still finds the component (lib/nexus-self/systems.js movedId)
+    assert.strictEqual(AR.lookup(idx, 'loom:nexus.auth').id, 'nexus.orchestrator.auth'); assert.strictEqual(AR.lookup(idx, 'nexus.auth').id, 'nexus.orchestrator.auth');
     assert.strictEqual(AR.lookup(idx, 'store:nope@1'), null);
   });
 
@@ -89,7 +91,7 @@ async function main() {
     assert.match(a.gaps.find(g => g.kind === 'cycle').say, /Loop one → Loop two → Loop one/);
     assert.match(a.gaps.find(g => g.kind === 'layer').say, /Upside down \(data\) depends on Garden page \(interface\)/);
     assert.strictEqual(a.components.find(c => c.id === 'loop-one').level, null, 'a cycle is unplaced');
-    assert.deepStrictEqual(a.components.find(c => c.id === 'planner-route').external.map(x => x.ref), ['loom:nexus.auth'], 'an existing dependency resolves outside');
+    assert.deepStrictEqual(a.components.find(c => c.id === 'planner-route').external.map(x => x.ref), ['loom:nexus.orchestrator.auth'], 'an existing dependency resolves outside (an id from before RF2 follows its move)');
     assert.strictEqual(a.stats.gaps, 4); assert.strictEqual(a.stats.components, 8);
   });
 
@@ -101,7 +103,7 @@ async function main() {
     assert.ok(AR.editComponent(s, { id: 'ledger-thing', decision: 'reuse' }).error, 'reuse needs a ref');
     AR.editComponent(s, { id: 'ledger-thing', decision: 'reuse', use: 'loom:nexus.auth' });
     let a = AR.analyse(s, idx);
-    assert.strictEqual(a.components[1].status, 'reuse'); assert.strictEqual(a.components[1].match.ref, 'loom:nexus.auth');
+    assert.strictEqual(a.components[1].status, 'reuse'); assert.strictEqual(a.components[1].match.ref, 'loom:nexus.orchestrator.auth');
     AR.editComponent(s, { id: 'blueprint', decision: 'new' });
     a = AR.analyse(s, idx);
     assert.strictEqual(a.components[0].status, 'new', 'new is new, whatever matches');

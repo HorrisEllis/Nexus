@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-warp-verification-phasemap.spec::P11_diagnose_and_repair_on_prompt
+type: phase
+id: docs_raid-warp-verification-phasemap.spec::P11_diagnose_and_repair_on_prompt
+context: pipeline phase P11_diagnose_and_repair_on_prompt of docs/raid-warp-verification-phasemap.spec
+intent: null
+summary: P11_diagnose_and_repair_on_prompt (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678330
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678330
+lastSeenAt: 1792787678330
+fingerprint: null
+payload:
+  id: P11_diagnose_and_repair_on_prompt
+  map: docs/raid-warp-verification-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/net/qbittorrent.js
+    - clear-glass/src/providers/registry.js
+    - cortex/core/raid/index.js
+    - lib/execution-pipeline.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fd9f03d8e2ba0434

@@ -44,7 +44,10 @@ function repo({ code = TITLE_OK, test = TEST } = {}) {
 }
 
 (async () => {
-  const VF = require(path.join(ROOT, 'lib/verify-first.js'));
+  const VF0 = require(path.join(ROOT, 'lib/verify-first.js'));
+  // 0.60.244 SV0: the caller hands verify-first COS's runner (idearium does the same); verify-first no longer reaches into COS
+  const RUN = require(path.join(ROOT, 'cos/testenv/index.js')).runTarget;
+  const VF = { ...VF0, check: (o) => VF0.check({ runTarget: RUN, ...o }) };
   const CB = require(path.join(ROOT, 'lib/coder-brief.js'));
   const SM = require(path.join(ROOT, 'lib/agent-self-model.js'));
   const PR = require(path.join(ROOT, 'lib/pipeline-routing.js'));
@@ -136,14 +139,14 @@ function repo({ code = TITLE_OK, test = TEST } = {}) {
 
   await test('VF-05', 'the build is wired: verify-first, the brief, gemini preference, an existing test reused', async () => {
     const src = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
-    const iVF = src.indexOf("VF.check({ root: _root, file, plan, testPath: _tp })"), iClimb = src.indexOf('attempt: makeAttempt({ msg: _msg');
+    const iVF = src.indexOf("VF.check({ root: _root, file, plan, testPath: _tp, runTarget:"), iClimb = src.indexOf('attempt: makeAttempt({ msg: _msg');
     assert.ok(iVF > 0 && iClimb > iVF, 'verify-first runs before the coder ladder');
     assert.ok(/if \(vf\.verdict === 'pass'\) \{[\s\S]{0,300}continue;/.test(src), 'a passing file is not sent to an agent');
     assert.ok(src.includes('CB.compose({'), 'the brief is composed');
     assert.ok(src.includes('rungs = PRt.preferFirst(co.rungs, policy)'), 'gemini preference applied after the learned order');
     assert.ok(/existingTest != null\) got = \{ code: existingTest/.test(src), 'an existing test is reused');
     // the contract path (the default build path, routing.contract_build) does the same per brick
-    assert.ok(src.includes("vfr = await VF.check({ root, file: f, plan, testPath: tp })") && src.includes("agent: 'verify-first'"), 'contract bricks are verified first');
+    assert.ok(src.includes("vfr = await VF.check({ root, file: f, plan, testPath: tp, runTarget: _require('../../cos/testenv/index.js').runTarget })") && src.includes("agent: 'verify-first'"), 'contract bricks are verified first');
     assert.ok(src.includes('order = PRt.preferFirst(order, policy)') && src.includes('msg: msgV'), 'contract bricks get the brief and the preference');
   });
 

@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV10_remote_desktop:1245b5713748f8a7
+type: graph
+id: phase:MV10_remote_desktop:1245b5713748f8a7
+context: dependency graph of phase MV10_remote_desktop
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792821071279
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792821071279
+lastSeenAt: 1792821071279
+fingerprint: null
+payload:
+  for: MV10_remote_desktop
+  kind: phase
+  repo: null
+  hash: 1245b5713748f8a7
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

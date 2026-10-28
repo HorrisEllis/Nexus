@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-agent-drones-phasemap.spec::DR2_route
+type: phase
+id: docs_2026-10-25-agent-drones-phasemap.spec::DR2_route
+context: pipeline phase DR2_route of docs/2026-10-25-agent-drones-phasemap.spec
+intent: null
+summary: DR2_route (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792963020112
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792963020112
+lastSeenAt: 1792963020112
+fingerprint: null
+payload:
+  id: DR2_route
+  map: docs/2026-10-25-agent-drones-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - orchestrator/drones/index.js
+    - orchestrator/orchestrator.js
+  depends_on:
+    - DR1_the_drone_contract_and_router
+  blocks: []
+  spec: null
+  graph: 4caa9f1b20a31782

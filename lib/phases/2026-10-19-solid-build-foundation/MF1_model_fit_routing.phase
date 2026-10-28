@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+type: phase
+id: docs_2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+context: pipeline phase MF1_model_fit_routing of docs/2026-10-19-solid-build-foundation-phasemap.spec
+intent: null
+summary: MF1_model_fit_routing (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756026
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756026
+lastSeenAt: 1792841756026
+fingerprint: null
+payload:
+  id: MF1_model_fit_routing
+  map: docs/2026-10-19-solid-build-foundation-phasemap.spec
+  repo: null
+  layer: foundation
+  status: BUILT 2026-10-19 (0.60.163)
+  files:
+    - lib/pipeline-routing.js
+    - lib/resource-monitor.js
+  depends_on: []
+  blocks:
+    - '"model_fit"'
+  spec: null
+  graph: b9bc0c93e9f9d779

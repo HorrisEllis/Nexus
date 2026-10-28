@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::PC5_control_when_he_chooses
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::PC5_control_when_he_chooses
+context: pipeline phase PC5_control_when_he_chooses of docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: PC5_control_when_he_chooses (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478127
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478127
+lastSeenAt: 1792822478127
+fingerprint: null
+payload:
+  id: PC5_control_when_he_chooses
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-inject.js
+    - idearium/api/index.js
+    - idearium/ui/js/code-dock.js
+  depends_on:
+    - PC1_the_point_first
+  blocks: []
+  spec: null
+  graph: c8e1abb9c6651522

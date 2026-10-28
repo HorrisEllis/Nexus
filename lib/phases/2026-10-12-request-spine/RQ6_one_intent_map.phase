@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+context: pipeline phase RQ6_one_intent_map of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ6_one_intent_map (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755271
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755271
+lastSeenAt: 1792841755271
+fingerprint: null
+payload:
+  id: RQ6_one_intent_map
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/intent-classifier.js
+    - copilot/intents.js
+    - orchestrator/lib/intent-map.js
+    - cos/foundation/intent.js
+  depends_on:
+    - RQ0_the_inventory_proved
+  blocks: []
+  spec: null
+  graph: 5236f2ba62af3caf

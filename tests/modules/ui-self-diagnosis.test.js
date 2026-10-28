@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('assert');
 const { createExpectationWatcher, DEFAULT_EXPECTATIONS } = require('../../copilot/lib/expectation-watcher.js');
-const bus = require('../../nexus/nexus-bus.js');
+const bus = require('../../lib/nexus/nexus-bus.js');
 let passed=0,failed=0;
 async function test(id,d,fn){try{await fn();console.log(`  ✓ ${id} ${d}`);passed++;}catch(e){console.error(`  ✗ ${id} ${d}\n    ${e.message}`);failed++;}}
 

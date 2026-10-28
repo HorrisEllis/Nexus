@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS18_sync_ci_theme:58d5e571901660d4
+type: graph
+id: phase:BS18_sync_ci_theme:58d5e571901660d4
+context: dependency graph of phase BS18_sync_ci_theme
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676217
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676217
+lastSeenAt: 1792787676217
+fingerprint: null
+payload:
+  for: BS18_sync_ci_theme
+  kind: phase
+  repo: null
+  hash: 58d5e571901660d4
+  nodes:
+    - path: idearium/ui/index.html
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+    dependents:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    upstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+      - docs/2026-09-29-build-surface-phasemap.spec::BS2_file_states
+      - docs/2026-09-29-build-surface-phasemap.spec::BS3_baseline_deviation
+      - docs/2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+      - docs/2026-09-29-build-surface-phasemap.spec::BS5_spec_to_phasemap
+      - docs/2026-09-29-build-surface-phasemap.spec::BS6_build_plan
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+      - docs/2026-09-29-build-surface-phasemap.spec::BS9_spec_and_phase_build_ui
+    downstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 8
+      - 'depends on (1): BS11_plan_panel · all upstream 8'
+      - 'needed by (1): BS12_release · finishing it unlocks BS12_release'
+    edges:
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+        kind: inferred

@@ -6,7 +6,7 @@ let passed = 0, failed = 0;
 const _tests = [];
 function test(id, desc, fn) { _tests.push({ id, desc, fn }); }
 
-const { _phasePlan, _pollHealth, ALL_KERNELS } = require('../../nexus/autopilot.js');
+const { _phasePlan, _pollHealth, ALL_KERNELS } = require('../../lib/nexus/autopilot.js');
 
 test('T-001', 'phase plan groups kernels by ascending phase', () => {
   const plan = _phasePlan([

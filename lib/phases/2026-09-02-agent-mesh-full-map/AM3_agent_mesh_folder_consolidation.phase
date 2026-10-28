@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-agent-mesh-full-map-phasemap.spec::AM3_agent_mesh_folder_consolidation
+type: phase
+id: docs_2026-09-02-agent-mesh-full-map-phasemap.spec::AM3_agent_mesh_folder_consolidation
+context: >-
+  pipeline phase AM3_agent_mesh_folder_consolidation of
+  docs/2026-09-02-agent-mesh-full-map-phasemap.spec
+intent: null
+summary: AM3_agent_mesh_folder_consolidation (?) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753497
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753497
+lastSeenAt: 1792841753497
+fingerprint: null
+payload:
+  id: AM3_agent_mesh_folder_consolidation
+  map: docs/2026-09-02-agent-mesh-full-map-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/ui/home/areas/agent-suite.js
+    - lib/tool-forge.js
+    - clear-glass/src/mesh/agent-mesh.js
+    - lib/agent-tools/tools/identity/hat-forge.js
+    - lib/hat-forge.js
+    - lib/hat-seed.js
+    - lib/intent-classifier.js
+    - lib/agent-tools/tools/identity/intent-hat.js
+    - lib/agent-router.js
+    - lib/account-registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5ed8f87ae9176e2e

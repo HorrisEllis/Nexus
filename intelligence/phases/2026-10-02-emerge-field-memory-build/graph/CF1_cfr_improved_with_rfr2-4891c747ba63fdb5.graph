@@ -1,0 +1,239 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CF1_cfr_improved_with_rfr2:4891c747ba63fdb5
+type: graph
+id: phase:CF1_cfr_improved_with_rfr2:4891c747ba63fdb5
+context: dependency graph of phase CF1_cfr_improved_with_rfr2
+intent: null
+summary: 21 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754427
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754427
+lastSeenAt: 1792841754427
+fingerprint: null
+payload:
+  for: CF1_cfr_improved_with_rfr2
+  kind: phase
+  repo: null
+  hash: 4891c747ba63fdb5
+  nodes:
+    - path: intelligence/cfr/contract-verifier.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/delta.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/graph.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/sigma.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: cortex/memory/causal-lookup.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: intelligence/alk/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/compound.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/cli/cfr-debug.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/cfr-graph-component-distance.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mastermind-fractals.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/raid-fitness-real-terms.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/system-lattice.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-adversarial-sim.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/causal/compound.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/cfr/ledger.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/cfr/ledger.js
+      to: intelligence/causal/compound.js
+      kind: requires
+    - from: intelligence/cfr/sigma.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: cortex/memory/causal-lookup.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/alk/index.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/causal/compound.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/cfr/index.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: tests/modules/cfr-graph-component-distance.test.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: tests/modules/mastermind-fractals.test.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: tests/modules/raid-fitness-real-terms.test.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: tests/modules/system-lattice.test.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: tests/modules/test-adversarial-sim.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+  crossings:
+    - from: intelligence/cfr/ledger.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: cortex/memory/causal-lookup.js
+      to: intelligence/cfr/graph.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/graph.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB4_the_emergence_loop_builds
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LN1_lenses_on_the_canvas
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR6_contradictions_held
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+    unlocks:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by EM2_warp_his_own
+      - 'depends on (2): EM1_emerge_core, EM2_warp_his_own · all upstream 5'
+      - >-
+        needed by (9): RF1_relational_field, MR2_vector_space_for_the_field, MR4_field_memory,
+        MR7_recipes, MR9_liminal_on_the_agents, MR11_rewind_the_mind, CB1_cfr_build_logic,
+        CB3_the_causal_spec_block, FM1_mining_failure_modes · all downstream 25 · finishing it
+        unlocks RF1_relational_field, MR9_liminal_on_the_agents, FM1_mining_failure_modes
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+        kind: declared

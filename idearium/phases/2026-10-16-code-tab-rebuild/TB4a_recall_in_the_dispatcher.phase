@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB4a_recall_in_the_dispatcher
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB4a_recall_in_the_dispatcher
+context: pipeline phase TB4a_recall_in_the_dispatcher of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB4a_recall_in_the_dispatcher (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677671
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677671
+lastSeenAt: 1792787677671
+fingerprint: null
+payload:
+  id: TB4a_recall_in_the_dispatcher
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TB3a_tool_calls_saved
+  blocks: []
+  spec: null
+  graph: 9adab27152f90da2

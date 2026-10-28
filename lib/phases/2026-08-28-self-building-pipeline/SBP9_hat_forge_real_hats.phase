@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP9_hat_forge_real_hats
+type: phase
+id: docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP9_hat_forge_real_hats
+context: pipeline phase SBP9_hat_forge_real_hats of docs/2026-08-28-self-building-pipeline-phasemap.spec
+intent: null
+summary: SBP9_hat_forge_real_hats (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675481
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675481
+lastSeenAt: 1792787675481
+fingerprint: null
+payload:
+  id: SBP9_hat_forge_real_hats
+  map: docs/2026-08-28-self-building-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/hat-forge.js
+    - architect/schemas/index.js
+    - clear-glass/renderer/settings/sections/mesh.js
+    - clear-glass/renderer/shell/agents.js
+    - lib/agent-tools/tools/identity/hat-forge.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7d6322a91f58a6d6

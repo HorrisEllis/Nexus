@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
+context: >-
+  pipeline phase ET5_loom_event_taxonomy_map of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: ET5_loom_event_taxonomy_map (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792879042181
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879042181
+lastSeenAt: 1792879042181
+fingerprint: null
+payload:
+  id: ET5_loom_event_taxonomy_map
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/phasemap-map.js
+    - architect/schemas/index.js
+    - clear-glass/schemas/index.js
+    - copilot/schemas/index.js
+    - loom/scanners/event-taxonomy-map.js
+  depends_on:
+    - ET2_guardian_event_taxonomy
+    - ET3_clearglass_event_taxonomy
+    - ET4_orchestrator_autopilot_event_taxonomy
+  blocks: []
+  spec: null
+  graph: eaee2d4907c9df36

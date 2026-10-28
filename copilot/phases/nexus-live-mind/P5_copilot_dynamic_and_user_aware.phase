@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-live-mind-phasemap.spec::P5_copilot_dynamic_and_user_aware
+type: phase
+id: docs_nexus-live-mind-phasemap.spec::P5_copilot_dynamic_and_user_aware
+context: pipeline phase P5_copilot_dynamic_and_user_aware of docs/nexus-live-mind-phasemap.spec
+intent: null
+summary: P5_copilot_dynamic_and_user_aware (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678263
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678263
+lastSeenAt: 1792787678263
+fingerprint: null
+payload:
+  id: P5_copilot_dynamic_and_user_aware
+  map: docs/nexus-live-mind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/user-model.js
+  depends_on:
+    - P4_copilot_awareness
+  blocks: []
+  spec: null
+  graph: c4de9a7b4031461d

@@ -47,7 +47,7 @@ function updatePressures(nodes, wires, sigma) {
 }
 
 // ── Real hooks/index.js data ──────────────────────────────────────────────
-const hooks  = require(require('path').join(__dirname, '..', '..', 'hooks/index.js'));
+const hooks  = require(require('path').join(__dirname, '..', '..', 'lib', 'hooks', 'index.js'));
 const raw    = hooks.allHooks();
 const REAL_WIRES = filterWires(raw.filter(w => w.type === 'event-bus' || w.type === 'stream'));
 

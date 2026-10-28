@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-guardian-cos-expansion-phasemap.spec::GA2_diagnostic_system_depth
+type: phase
+id: docs_copilot-guardian-cos-expansion-phasemap.spec::GA2_diagnostic_system_depth
+context: pipeline phase GA2_diagnostic_system_depth of docs/copilot-guardian-cos-expansion-phasemap.spec
+intent: null
+summary: GA2_diagnostic_system_depth (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678173
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678173
+lastSeenAt: 1792787678173
+fingerprint: null
+payload:
+  id: GA2_diagnostic_system_depth
+  map: docs/copilot-guardian-cos-expansion-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/diagnostic-report.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9e9318bacd6bb0d1

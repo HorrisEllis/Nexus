@@ -1,0 +1,285 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ17_observe_by_request:cfbad94be99e9081
+type: graph
+id: phase:RQ17_observe_by_request:cfbad94be99e9081
+context: dependency graph of phase RQ17_observe_by_request
+intent: null
+summary: 28 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792820507407
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820507407
+lastSeenAt: 1792820507407
+fingerprint: null
+payload:
+  for: RQ17_observe_by_request
+  kind: phase
+  repo: null
+  hash: cfbad94be99e9081
+  nodes:
+    - path: docs/2026-10-05-failure-reproduction-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/component-ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin.js
+      role: changes
+      exists: false
+      system: lib
+    - path: copilot/lib/person-model/index.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cos/kernel.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: diagnostic/lib/diagnostic-contract.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/lib/ncp-handler.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/cfr/sigma.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/predicate.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/query/ambiguity-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: lib/component-ledger.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-store.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: copilot/lib/person-model/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: cos/kernel.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/lib/diagnostic-contract.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/cfr/sigma.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/ambiguity-pull.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: lib/component-registry.js
+      to: lib/component-ledger.js
+      kind: requires
+  crossings:
+    - from: lib/component-ledger.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/component-ledger.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+    dependents:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ16_hypotheses_in_parallel
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+    downstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ16_hypotheses_in_parallel
+    blockedBy:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ2_the_generation_failure_vocabulary_and_index
+        files:
+          - lib/component-ledger.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ13_the_work_surface_and_provenance
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ25_progress_is_evidence_not_activity
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ26_comparison_and_drift_on_real_signals
+        files:
+          - lib/component-ledger.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ27_the_reasoning_half_gets_its_home
+        files:
+          - idearium/cli/route-commands.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by RQ6_one_intent_map
+      - 'depends on (1): RQ6_one_intent_map · all upstream 2'
+      - 'needed by (1): RQ16_hypotheses_in_parallel'
+      - >-
+        same files as RQ2_the_generation_failure_vocabulary_and_index with no order between them:
+        lib/component-ledger.js
+      - >-
+        same files as RQ13_the_work_surface_and_provenance with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as RQ25_progress_is_evidence_not_activity with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as RQ26_comparison_and_drift_on_real_signals with no order between them:
+        lib/component-ledger.js
+      - >-
+        same files as RQ27_the_reasoning_half_gets_its_home with no order between them:
+        idearium/cli/route-commands.js
+    edges:
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+        kind: declared

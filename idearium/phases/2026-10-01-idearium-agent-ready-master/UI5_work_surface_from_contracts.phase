@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI5_work_surface_from_contracts
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI5_work_surface_from_contracts
+context: >-
+  pipeline phase UI5_work_surface_from_contracts of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: UI5_work_surface_from_contracts (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676449
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676449
+lastSeenAt: 1792787676449
+fingerprint: null
+payload:
+  id: UI5_work_surface_from_contracts
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c718624c129a0cae

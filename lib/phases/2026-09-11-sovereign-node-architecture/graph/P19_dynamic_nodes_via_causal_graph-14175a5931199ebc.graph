@@ -1,0 +1,116 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P19_dynamic_nodes_via_causal_graph:14175a5931199ebc
+type: graph
+id: phase:P19_dynamic_nodes_via_causal_graph:14175a5931199ebc
+context: dependency graph of phase P19_dynamic_nodes_via_causal_graph
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675906
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675906
+lastSeenAt: 1792787675906
+fingerprint: null
+payload:
+  for: P19_dynamic_nodes_via_causal_graph
+  kind: phase
+  repo: null
+  hash: 14175a5931199ebc
+  nodes:
+    - path: lib/node-schemas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/node-registry.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/lib/domain-nodes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/node-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-pipeline-nodes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/node-export-idea-tagged-query.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/node-schemas-split.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/node-schemas.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: intelligence/lib/domain-nodes.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/modules/test-pipeline-nodes.test.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/node-export-idea-tagged-query.test.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/node-schemas-split.test.js
+      to: lib/node-schemas.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P3_per_system_node_schemas
+    dependents:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P34_nodes_in_the_lattice
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P30_provider_ping_delta
+    upstream:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P3_per_system_node_schemas
+    downstream:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P30_provider_ping_delta
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P34_nodes_in_the_lattice
+    blockedBy:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P3_per_system_node_schemas
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by P3_per_system_node_schemas
+      - 'depends on (1): P3_per_system_node_schemas'
+      - 'needed by (2): P34_nodes_in_the_lattice, P30_provider_ping_delta'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P3_per_system_node_schemas
+        kind: inferred

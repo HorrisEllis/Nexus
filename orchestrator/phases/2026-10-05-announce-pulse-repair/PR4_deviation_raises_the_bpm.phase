@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-announce-pulse-repair-phasemap.spec::PR4_deviation_raises_the_bpm
+type: phase
+id: docs_2026-10-05-announce-pulse-repair-phasemap.spec::PR4_deviation_raises_the_bpm
+context: pipeline phase PR4_deviation_raises_the_bpm of docs/2026-10-05-announce-pulse-repair-phasemap.spec
+intent: null
+summary: PR4_deviation_raises_the_bpm (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792878421645
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878421645
+lastSeenAt: 1792878421645
+fingerprint: null
+payload:
+  id: PR4_deviation_raises_the_bpm
+  map: docs/2026-10-05-announce-pulse-repair-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/lib/pulse.js
+    - orchestrator/orchestrator.js
+  depends_on:
+    - PR3_negative_space_for_missed_heartbeats
+  blocks: []
+  spec: null
+  graph: da494594252936c1

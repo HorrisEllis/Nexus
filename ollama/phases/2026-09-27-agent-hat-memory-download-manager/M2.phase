@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M2
+type: phase
+id: docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M2
+context: pipeline phase M2 of docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+intent: null
+summary: M2 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753977
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753977
+lastSeenAt: 1792841753977
+fingerprint: null
+payload:
+  id: M2
+  map: docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ollama/routes/jobs.js
+    - ollama/lib/dispatch.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a9e9ec15b4a7af21

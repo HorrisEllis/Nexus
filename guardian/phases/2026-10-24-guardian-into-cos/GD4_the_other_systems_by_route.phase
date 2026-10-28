@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD4_the_other_systems_by_route
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD4_the_other_systems_by_route
+context: pipeline phase GD4_the_other_systems_by_route of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD4_the_other_systems_by_route (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325042
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325042
+lastSeenAt: 1792877325042
+fingerprint: null
+payload:
+  id: GD4_the_other_systems_by_route
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - guardian/lib/dispatcher.js
+    - guardian/routes/autonomous-loop.js
+    - guardian/cli.js
+    - guardian/server.js
+    - cortex/boot.js
+  depends_on:
+    - GD_D2_stateful_capabilities_by_route
+  blocks: []
+  spec: null
+  graph: 8fc2b02c9e160339

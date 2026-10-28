@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DOD1_fully_autonomous:e5fd79a1162932ba
+type: graph
+id: phase:DOD1_fully_autonomous:e5fd79a1162932ba
+context: dependency graph of phase DOD1_fully_autonomous
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675469
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675469
+lastSeenAt: 1792787675469
+fingerprint: null
+payload:
+  for: DOD1_fully_autonomous
+  kind: phase
+  repo: null
+  hash: e5fd79a1162932ba
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

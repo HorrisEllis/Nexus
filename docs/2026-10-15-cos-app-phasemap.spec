@@ -291,3 +291,15 @@ addendum_e:
 #     open questions for him, only if the axioms do not settle them: one-way (disk → Idearium) or both ways; on demand or
 #     watched.
 #     order (his rule): backend, route, command, UI, in one phase.
+
+## ADDENDUM 2026-10-25 (0.60.252, UP) — the co-pilot's update tool; COS is its end state
+James, 2026-10-25: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?" Asked how
+an update should land (git clone, through COS, or zip side by side), he said: "first one but the second one needs to be the end state".
+- **Built (docs/2026-10-25-nexus-update-phasemap.spec UP1–UP4):** `lib/nexus-update.js`, one interface over drivers. The `git` driver
+  is built.
+- **Tool:** `nexus.update.tool` is on the co-pilot hat. The routes are `/api/update*`, the rows `update …`, and the page
+  idearium/ui/update.html.
+- **The COS driver is UP5 (OPEN).** When the install is a COS store version, `detect` already names it, and says this tool is not wired
+  to it yet. The tool will then ask COSA7 to fetch into the inbox, and COSA4/COSA13 switch with a snapshot and rollback.
+  - The tool, its rows and its page stay the same.
+  - It waits on COS's Windows build being verified, and on him running Nexus from the COS app.

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+type: phase
+id: docs_2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+context: pipeline phase LM1_ollama_through_its_bridge of docs/2026-10-24-loom-into-cos-phasemap.spec
+intent: null
+summary: LM1_ollama_through_its_bridge (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792879045932
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879045932
+lastSeenAt: 1792879045932
+fingerprint: null
+payload:
+  id: LM1_ollama_through_its_bridge
+  map: docs/2026-10-24-loom-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: DONE 0.60.241 — POST /api/generate + lib/ollama-port.js; test-loom-into-cos LI-01/02
+  files:
+    - ollama/routes/generate.js
+    - ollama/server.js
+    - lib/ollama-port.js
+    - loom/agent-suite/index.js
+    - tests/modules/test-ollama-port.test.js
+  depends_on:
+    - LM_D1_ollama_through_its_bridge
+  blocks: []
+  spec: null
+  graph: b2b1898bb2f27492

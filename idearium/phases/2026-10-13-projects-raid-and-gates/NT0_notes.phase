@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::NT0_notes
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::NT0_notes
+context: pipeline phase NT0_notes of docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: NT0_notes (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477709
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477709
+lastSeenAt: 1792822477709
+fingerprint: null
+payload:
+  id: NT0_notes
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-notes.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/repo-notes.js
+    - idearium/ui/index.html
+    - lib/context-atlas.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 380b9b53aef77846

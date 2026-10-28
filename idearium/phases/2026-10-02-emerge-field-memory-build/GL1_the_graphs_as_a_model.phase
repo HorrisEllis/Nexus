@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+context: >-
+  pipeline phase GL1_the_graphs_as_a_model of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: GL1_the_graphs_as_a_model (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676723
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676723
+lastSeenAt: 1792787676723
+fingerprint: null
+payload:
+  id: GL1_the_graphs_as_a_model
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - RF1_relational_field
+    - MR7_recipes
+    - FM1_mining_failure_modes
+  blocks: []
+  spec: null
+  graph: 590458d74b8d9a0a

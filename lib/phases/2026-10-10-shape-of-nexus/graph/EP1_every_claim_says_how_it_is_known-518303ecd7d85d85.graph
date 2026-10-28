@@ -1,0 +1,111 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EP1_every_claim_says_how_it_is_known:518303ecd7d85d85
+type: graph
+id: phase:EP1_every_claim_says_how_it_is_known:518303ecd7d85d85
+context: dependency graph of phase EP1_every_claim_says_how_it_is_known
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677273
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677273
+lastSeenAt: 1792787677273
+fingerprint: null
+payload:
+  for: EP1_every_claim_says_how_it_is_known
+  kind: phase
+  repo: null
+  hash: 518303ecd7d85d85
+  nodes:
+    - path: lib/node-schemas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/node-registry.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/lib/domain-nodes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/node-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-pipeline-nodes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/node-export-idea-tagged-query.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/node-schemas-split.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/node-schemas.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: intelligence/lib/domain-nodes.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/modules/test-pipeline-nodes.test.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/node-export-idea-tagged-query.test.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/node-schemas-split.test.js
+      to: lib/node-schemas.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::EP2_cos_is_the_empirical_layer
+    upstream: []
+    downstream:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::EP2_cos_is_the_empirical_layer
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::EP2_cos_is_the_empirical_layer
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): EP2_cos_is_the_empirical_layer · finishing it unlocks
+        EP2_cos_is_the_empirical_layer
+    edges: []

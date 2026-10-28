@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL31_architect_block_canvas_component_swap:5361bbb7f4319623
+type: graph
+id: phase:BL31_architect_block_canvas_component_swap:5361bbb7f4319623
+context: dependency graph of phase BL31_architect_block_canvas_component_swap
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675445
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675445
+lastSeenAt: 1792787675445
+fingerprint: null
+payload:
+  for: BL31_architect_block_canvas_component_swap
+  kind: phase
+  repo: null
+  hash: 5361bbb7f4319623
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-08-23-backlog-phasemap.spec::BL30_registry_components_drift_audit
+    dependents: []
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL30_registry_components_drift_audit
+    downstream: []
+    blockedBy:
+      - docs/2026-08-23-backlog-phasemap.spec::BL30_registry_components_drift_audit
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by BL30_registry_components_drift_audit
+      - 'depends on (1): BL30_registry_components_drift_audit'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL30_registry_components_drift_audit
+        kind: declared

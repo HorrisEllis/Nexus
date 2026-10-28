@@ -1,0 +1,195 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SD16_a_plan_step_never_proposes_code:14382525cda19096
+type: graph
+id: phase:SD16_a_plan_step_never_proposes_code:14382525cda19096
+context: dependency graph of phase SD16_a_plan_step_never_proposes_code
+intent: null
+summary: 20 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792874369870
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874369870
+lastSeenAt: 1792874369870
+fingerprint: null
+payload:
+  for: SD16_a_plan_step_never_proposes_code
+  kind: phase
+  repo: null
+  hash: 14382525cda19096
+  nodes:
+    - path: idearium/api/build-surface.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-agent-confidence-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-agent-provider.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/testenv/environment.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: uses
+      exists: true
+      system: cos
+    - path: idearium/repo/build-plan.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/deviation.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/file-state.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/work-surface.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/snapshot-files.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/file-state.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/deviation.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/environment.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/setup-job.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/spec-plan.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/shadow.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/work-surface.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/build-plan.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/api/build-surface.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-agent-confidence-gate.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-repo-agent-provider.js
+      to: lib/repo-agent.js
+      kind: requires
+  crossings:
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/environment.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/setup-job.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-10-idearium-solid-phasemap.spec::SD9_claude_code_inside_idearium
+        files:
+          - lib/repo-agent.js
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - 'same files as SD9_claude_code_inside_idearium with no order between them: lib/repo-agent.js'
+    edges: []

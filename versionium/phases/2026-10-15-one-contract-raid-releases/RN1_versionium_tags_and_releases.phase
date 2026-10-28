@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-one-contract-raid-releases-phasemap.spec::RN1_versionium_tags_and_releases
+type: phase
+id: docs_2026-10-15-one-contract-raid-releases-phasemap.spec::RN1_versionium_tags_and_releases
+context: >-
+  pipeline phase RN1_versionium_tags_and_releases of
+  docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+intent: null
+summary: RN1_versionium_tags_and_releases (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477918
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477918
+lastSeenAt: 1792822477918
+fingerprint: null
+payload:
+  id: RN1_versionium_tags_and_releases
+  map: docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - versionium/lib/engine.js
+    - versionium/routes/versionium.js
+    - lib/release-version.js
+    - idearium/api/index.js
+  depends_on:
+    - GS1_a_snapshot_per_gate_rewind_and_compare
+  blocks: []
+  spec: null
+  graph: cffd1fc32193f1ce

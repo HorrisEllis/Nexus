@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP7_agent_suite_lives_in_clearglass
+type: phase
+id: docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP7_agent_suite_lives_in_clearglass
+context: >-
+  pipeline phase SBP7_agent_suite_lives_in_clearglass of
+  docs/2026-08-28-self-building-pipeline-phasemap.spec
+intent: null
+summary: SBP7_agent_suite_lives_in_clearglass (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675478
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675478
+lastSeenAt: 1792787675478
+fingerprint: null
+payload:
+  id: SBP7_agent_suite_lives_in_clearglass
+  map: docs/2026-08-28-self-building-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/mesh/agent-mesh.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 48087c2a9f893bf5

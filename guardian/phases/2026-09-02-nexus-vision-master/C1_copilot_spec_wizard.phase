@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::C1_copilot_spec_wizard
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::C1_copilot_spec_wizard
+context: pipeline phase C1_copilot_spec_wizard of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: C1_copilot_spec_wizard (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675613
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675613
+lastSeenAt: 1792787675613
+fingerprint: null
+payload:
+  id: C1_copilot_spec_wizard
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: df6cd6e5900b6ad4

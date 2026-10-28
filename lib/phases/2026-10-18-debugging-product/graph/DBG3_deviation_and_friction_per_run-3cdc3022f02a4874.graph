@@ -1,0 +1,272 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DBG3_deviation_and_friction_per_run:3cdc3022f02a4874
+type: graph
+id: phase:DBG3_deviation_and_friction_per_run:3cdc3022f02a4874
+context: dependency graph of phase DBG3_deviation_and_friction_per_run
+intent: null
+summary: 29 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677858
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677858
+lastSeenAt: 1792787677858
+fingerprint: null
+payload:
+  for: DBG3_deviation_and_friction_per_run
+  kind: phase
+  repo: null
+  hash: 3cdc3022f02a4874
+  nodes:
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: lib/debug-case.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/expectation-tests.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: changes
+      exists: true
+      system: lib
+    - path: diagnostic/cli.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/lib/ncp-handler.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/flight-data.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: ollama/lib/dispatch.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: tests/modules/nexus-seam.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-build-verify.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-expectation-tests.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: diagnostic/lib/wire-integrity.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/contract-verifier.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ico.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/phase-faults.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/expectation-tests.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/data-home.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ico.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/lib/wire-integrity.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/phase-faults.js
+      kind: requires
+    - from: lib/flight-data.js
+      to: lib/phase-faults.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/phase-faults.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: lib/seam/index.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: lib/seam/queue.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: tests/modules/nexus-seam.test.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: tests/modules/test-build-verify.test.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: tests/modules/test-expectation-tests.test.js
+      to: lib/expectation-tests.js
+      kind: requires
+    - from: diagnostic/cli.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+  crossings:
+    - from: lib/phase-faults.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      fromSystem: diagnostic
+      toSystem: loom
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+    dependents:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG6_cases_crystallize
+    upstream:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG0a_synchronized_ids
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG1_the_key
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+    downstream:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG6_cases_crystallize
+    blockedBy:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by DBG2_the_case
+      - 'depends on (1): DBG2_the_case · all upstream 3'
+      - 'needed by (1): DBG6_cases_crystallize'
+    edges:
+      - from: docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+        kind: declared

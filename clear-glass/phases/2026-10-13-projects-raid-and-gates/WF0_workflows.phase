@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::WF0_workflows
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::WF0_workflows
+context: pipeline phase WF0_workflows of docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: WF0_workflows (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677453
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677453
+lastSeenAt: 1792787677453
+fingerprint: null
+payload:
+  id: WF0_workflows
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/automation/nodes.js
+    - clear-glass/src/automation/steps.js
+    - clear-glass/src/driver/glass.js
+    - idearium/repo/proof-run.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 974d9c5ead887971

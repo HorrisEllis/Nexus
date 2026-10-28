@@ -11,6 +11,8 @@ data/economy/
 # 0.60.143 TL1b — lib/work-journal.js: each agent reply as it streams (state, never code)
 data/work/
 idearium/data/projects/
+# runtime state (the data-home move report), written by idearium at start; never committed
+idearium/data/.home.json
 idearium/data/specs/
 idearium/data/nodes/
 idearium/data/node-index/
@@ -28,3 +30,11 @@ copilot/data/worksets/
 guardian/data/nodes/*/_ledger.jsonl
 # test-boot-log-fixes BL7 leaves a ledger store per run here: test residue, not code
 data/ledger-store/bl7-*/
+
+# 0.60.252 UP2 — the update tool's history and the data files an update set aside: his state, never committed
+data/update/
+_archive/update/
+# 0.60.235 SV0 — a stack's state is never code: the kernel run without SERVICES_ROOT would write these beside itself
+cos/services/anonymous/state/
+cos/services/anonymous/conf/
+cos/services/anonymous/logs/

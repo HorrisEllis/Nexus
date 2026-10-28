@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ5_the_small_model_baseline
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ5_the_small_model_baseline
+context: pipeline phase RQ5_the_small_model_baseline of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ5_the_small_model_baseline (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677350
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677350
+lastSeenAt: 1792787677350
+fingerprint: null
+payload:
+  id: RQ5_the_small_model_baseline
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tests/sim/loop.js
+  depends_on:
+    - RQ4_escalate_on_the_checks_and_keep_the_lesson
+  blocks: []
+  spec: null
+  graph: 4c70d01e0d9a89a3

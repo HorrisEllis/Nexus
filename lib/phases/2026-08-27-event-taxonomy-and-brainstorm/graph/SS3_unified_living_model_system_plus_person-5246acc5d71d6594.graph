@@ -1,0 +1,261 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SS3_unified_living_model_system_plus_person:5246acc5d71d6594
+type: graph
+id: phase:SS3_unified_living_model_system_plus_person:5246acc5d71d6594
+context: dependency graph of phase SS3_unified_living_model_system_plus_person
+intent: null
+summary: 23 node(s), 8 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792879042197
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879042197
+lastSeenAt: 1792879042197
+fingerprint: null
+payload:
+  for: SS3_unified_living_model_system_plus_person
+  kind: phase
+  repo: null
+  hash: 5246acc5d71d6594
+  nodes:
+    - path: copilot/lib/user-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: lib/user-model.js
+      role: changes
+      exists: false
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: copilot/lib/autonomy-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/phase-files.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/test/phasemap-map.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/generate-atlases.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-loom-phasemap-status.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phasemap-parse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/lib/store.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: loom/scanners/phasemap-map.js
+      to: lib/phasemap-parse.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: loom/lib/store.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: loom/test/phasemap-map.test.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: scripts/generate-atlases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: tests/modules/test-loom-phasemap-status.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/user-model.js
+      kind: requires
+  crossings:
+    - from: copilot/lib/user-model.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/nexus-system-standardization-phasemap.spec::SS1_system_manifest
+    dependents: []
+    upstream:
+      - docs/nexus-system-standardization-phasemap.spec::SS0_clear_clutter
+      - docs/nexus-system-standardization-phasemap.spec::SS1_system_manifest
+    downstream: []
+    blockedBy:
+      - docs/nexus-system-standardization-phasemap.spec::SS1_system_manifest
+    unlocks: []
+    conflicts:
+      - with: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
+        files:
+          - loom/scanners/phasemap-map.js
+      - with: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET6_sigma_gates_on_taxonomy
+        files:
+          - loom/scanners/phasemap-map.js
+      - with: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR6_copilot_as_agent_chat_model
+        files:
+          - lib/user-model.js
+          - copilot/lib/user-model.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by SS1_system_manifest
+      - 'depends on (1): SS1_system_manifest · all upstream 2'
+      - 'needed by (0): —'
+      - >-
+        same files as ET5_loom_event_taxonomy_map with no order between them:
+        loom/scanners/phasemap-map.js
+      - >-
+        same files as ET6_sigma_gates_on_taxonomy with no order between them:
+        loom/scanners/phasemap-map.js
+      - >-
+        same files as BR6_copilot_as_agent_chat_model with no order between them: lib/user-model.js,
+        copilot/lib/user-model.js
+    edges:
+      - from: docs/nexus-system-standardization-phasemap.spec::SS1_system_manifest
+        kind: declared

@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF3_chat_history_panel_wrong_url:fc0dad959f17616a
+type: graph
+id: phase:SF3_chat_history_panel_wrong_url:fc0dad959f17616a
+context: dependency graph of phase SF3_chat_history_panel_wrong_url
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792877678862
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877678862
+lastSeenAt: 1792877678862
+fingerprint: null
+payload:
+  for: SF3_chat_history_panel_wrong_url
+  kind: phase
+  repo: null
+  hash: fc0dad959f17616a
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

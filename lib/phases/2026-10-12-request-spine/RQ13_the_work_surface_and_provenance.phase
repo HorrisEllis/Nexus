@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ13_the_work_surface_and_provenance
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ13_the_work_surface_and_provenance
+context: pipeline phase RQ13_the_work_surface_and_provenance of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ13_the_work_surface_and_provenance (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792878422529
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878422529
+lastSeenAt: 1792878422529
+fingerprint: null
+payload:
+  id: RQ13_the_work_surface_and_provenance
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-intake.js
+    - idearium/repo/work-surface.js
+    - lib/provenance-query.js
+    - idearium/cli/route-commands.js
+    - lib/agent-tools/tools/nexus/command.js
+  depends_on:
+    - RQ9_the_chunked_contract
+    - RQ10_anchors_and_the_diff_reconciled
+  blocks: []
+  spec: null
+  graph: bb5e5e05897a3408

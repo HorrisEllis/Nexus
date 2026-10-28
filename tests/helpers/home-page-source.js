@@ -11,7 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const ROOT = path.resolve(__dirname, '..', '..');
-const INDEX = path.join(ROOT, 'ui/home/index.html');
+const INDEX = path.join(ROOT, 'lib', 'ui', 'home', 'index.html');
 
 function homeLinks(html) {
   const re = /<(?:script[^>]*\ssrc|link[^>]*\shref)="(\/ui\/home\/[^"]+)"/g;

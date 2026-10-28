@@ -359,6 +359,10 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     deleteProfile: (id)           => ipcRenderer.invoke('autofill:profile:delete', { id }),
     detect: (profileId, agentId)  => ipcRenderer.invoke('autofill:detect', { profileId, agentId }),
     fill:   (profileId, agentId, minConfidence, vars) => ipcRenderer.invoke('autofill:fill', { profileId, agentId, minConfidence, vars }),
+    // §JA3/JA4 — the element picker on a field the fill could not place; what was learned per site, and its Forget (src/autofill/learn-pick.js)
+    pick:    (payload)          => ipcRenderer.invoke('autofill:pick', payload),
+    learned: (url)              => ipcRenderer.invoke('autofill:learned', { url }),
+    forget:  (url, fieldKey)    => ipcRenderer.invoke('autofill:forget', { url, fieldKey }),
     // §0.39.265 — cover letters / Upwork & Fiverr proposals (src/autofill/proposal.js)
     proposal: (payload)   => ipcRenderer.invoke('autofill:proposal', payload),
     readPage: (agentId)   => ipcRenderer.invoke('autofill:readPage', { agentId }),
@@ -369,6 +373,9 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     gigAssign: (d) => ipcRenderer.invoke('autofill:gig:assign', d),   // 0.60.222 — teach a gig part the element he picked
     gigPage:   (agentId) => ipcRenderer.invoke('autofill:gig:page', { agentId }),          // 0.60.224
     gigSaveRecording: (d) => ipcRenderer.invoke('autofill:gig:saveRecording', d),         // 0.60.224 — his choices → the page's macro
+    exportAll: ()                            => ipcRenderer.invoke('autofill:export'),                   // §AT2 0.60.256 the .autofill file: { text, filename, counts }
+    importAll: (text)                        => ipcRenderer.invoke('autofill:import', { text }),         // merges; keeps what it replaced
+    importUndo: ()                           => ipcRenderer.invoke('autofill:import:undo'),
     gigImport: (text)                        => ipcRenderer.invoke('autofill:gig:import', { text }),
     gigFile: (gig)                           => ipcRenderer.invoke('autofill:gig:file', { gig }),        // the gig as a .gig (YAML) file: { text, filename }
     gigTemplate: ()                          => ipcRenderer.invoke('autofill:gig:file', { template: true }),   // an empty .gig to fill in   // a .gig.json file's text -> the gig, checked against Fiverr's limits

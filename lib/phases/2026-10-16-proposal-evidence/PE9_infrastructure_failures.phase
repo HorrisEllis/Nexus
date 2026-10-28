@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-proposal-evidence-phasemap.spec::PE9_infrastructure_failures
+type: phase
+id: docs_2026-10-16-proposal-evidence-phasemap.spec::PE9_infrastructure_failures
+context: pipeline phase PE9_infrastructure_failures of docs/2026-10-16-proposal-evidence-phasemap.spec
+intent: null
+summary: PE9_infrastructure_failures (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677734
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677734
+lastSeenAt: 1792787677734
+fingerprint: null
+payload:
+  id: PE9_infrastructure_failures
+  map: docs/2026-10-16-proposal-evidence-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-16-repo-carve-phasemap.spec
+    - lib/proposal-evidence.js
+    - lib/repo-inject.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fbe72f5dec0e8cfb

@@ -65,8 +65,12 @@ class ContextManager {
     // Request header injection — Firefox header order and values
     // (through requestHook: a second onBeforeSendHeaders here used to replace applyCspBypass's localhost one — 2026-10-16)
     requestHook(ses, 'fingerprint-profile', (details, requestHeaders) => {
+      // §HC2 0.60.260 — the LIVE profile: this hook closed over the first one, so a switch (switchFingerprint, the engine identity)
+      // changed navigator.userAgent but every request still went out as the old persona
+      const live = (this.contexts.get(id) || {}).profile || profile;
+      if (live.engine) return { ...requestHeaders, 'User-Agent': live.ua };   // the engine's own identity: the request as Chromium sends it
       const headers = { ...requestHeaders };
-      const accept = profile.accept;
+      const accept = live.accept || profile.accept;
       const isNav  = details.resourceType === 'mainFrame' || details.resourceType === 'subFrame';
       const set    = isNav ? accept.navigation : accept.fetch;
 
@@ -76,10 +80,10 @@ class ContextManager {
       }
 
       // Override User-Agent always
-      headers['User-Agent'] = profile.ua;
+      headers['User-Agent'] = live.ua;
       // 2026-10-16 — a Firefox persona sends no client hints: Chromium's Sec-CH-UA beside a Firefox UA, on every site, was
       // a Chromium saying it is Firefox (Google's sign-in reads exactly that). James: "do everything you can to prevent that"
-      if (/\bFirefox\//.test(profile.ua)) for (const k of Object.keys(headers)) if (/^sec-ch-ua/i.test(k)) delete headers[k];
+      if (/\bFirefox\//.test(live.ua)) for (const k of Object.keys(headers)) if (/^sec-ch-ua/i.test(k)) delete headers[k];
 
       return headers;
     });
@@ -125,6 +129,7 @@ class ContextManager {
       uuid:     uuidv4(),
       profile,
       session:  ses,
+      partition,   // §HC2 0.60.260 — said, as a compartment's context already says it
       health:   { score: 100, errors: 0, requests: 0, lastCheck: Date.now() },
       createdAt: Date.now(),
       url:      url || 'about:blank',
@@ -223,11 +228,41 @@ class ContextManager {
     return this.contexts.get(agentId)?.session || null;
   }
 
+  // §HC2 0.60.260 — James, 2026-10-26: "i can't get passed this. can you help? do everything you can, find out why and help." A human
+  // check (Fiverr's Press & Hold) reads a Firefox persona on a Chromium engine as a bot. On such a page the tab's session tells the truth:
+  // the engine's own user agent and headers, client hints as Chromium sends them, and Chromium's own TLS (not the Firefox layer).
+  // It never answers the check: the person does (contexts/human-check.js).
+  async useEngineIdentity(agentId, { reason = 'human-check' } = {}) {
+    const ctx = this.contexts.get(agentId);
+    if (!ctx) return { ok: false, error: `no context ${agentId}` };
+    if (ctx.profile && ctx.profile.engine) return { ok: true, agentId, already: true, ua: ctx.profile.ua };
+    const ua = require('./human-check').engineUserAgent(session);
+    if (!ua) return { ok: false, error: 'the engine user agent is unknown' };
+    ctx.session.setUserAgent(ua);
+    this._pagesUa(ctx.session, ua);   // a page already open keeps the UA it was made with (found under xvfb): each one is told too
+    ctx.profile = { ...(ctx.profile || {}), ua, engine: true };
+    ctx.fpMode = 'engine';
+    try { ctx.session.setCertificateVerifyProc(null); } catch (_) {}   // Chromium's own certificate checks again (TLS3 trusted the Firefox layer's CA)
+    if (!ctx.compartment) { try { require('../net/service').service().register(`persist:agent-${agentId}`, ctx.session, { provider: null, caller: 'person-tab', firefox: false }).catch(() => {}); } catch (_) {} }
+    this.sse.emit('context.fp.switched', { agentId, mode: 'engine', ua, reason, ts: Date.now() });
+    return { ok: true, agentId, mode: 'engine', ua };
+  }
+
+  /** every open page on a session takes the new user agent (Electron gives a webContents its UA when it is made) */
+  _pagesUa(ses, ua) {
+    try { for (const w of require('electron').webContents.getAllWebContents()) if (!w.isDestroyed() && w.session === ses) w.setUserAgent(ua); } catch (_) {}
+  }
+
+  /** the context whose session a webContents runs on (a tab's <webview> shares its window's partition) */
+  contextForSession(ses) { for (const c of this.contexts.values()) if (c.session === ses) return c; return null; }
+
   // ── Fingerprint mode switching ─────────────────────────────────────────
   // Called via 'context.fp.switch' gate
   // modes: 'firefox' | 'chrome' | 'safari' | 'edge'
   async switchFingerprint({ agentId, mode = 'firefox', options = {} }) {
+    if (mode === 'engine') return this.useEngineIdentity(agentId, { reason: options.reason || 'asked' });   // §HC2
     const ctx = await this.ensureContext(agentId);
+    if (ctx.profile && ctx.profile.engine && options.reason && /^hostile:/.test(options.reason)) return { agentId, mode: 'engine', refused: 'this tab tells a human check the truth; a persona would fail it again' };
     // SF3 — a compartment keeps the engine's own identity; a persona on it would be a Chromium claiming to be something else, over Tor
     if (ctx.compartment) return { agentId, mode: 'chromium', ua: ctx.session.getUserAgent(), refused: 'a routed (Snowflake) window keeps its ordinary Chromium identity' };
 
@@ -243,6 +278,7 @@ class ContextManager {
     }
 
     ctx.session.setUserAgent(profile.ua);
+    this._pagesUa(ctx.session, profile.ua);   // §HC2 0.60.260 — before, an open page kept its old UA after a switch
     ctx.profile = profile;
     ctx.fpMode  = mode;
 

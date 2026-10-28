@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AR1_architecture_spec:8cd719427be6e25f
+type: graph
+id: phase:AR1_architecture_spec:8cd719427be6e25f
+context: dependency graph of phase AR1_architecture_spec
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676546
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676546
+lastSeenAt: 1792787676546
+fingerprint: null
+payload:
+  for: AR1_architecture_spec
+  kind: phase
+  repo: null
+  hash: 8cd719427be6e25f
+  nodes:
+    - path: docs/architecture-spec/architecture-spec.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::GN1_genesis
+    dependents:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG9_release
+    upstream:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::GN1_genesis
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RC1_registry_block
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RC2_registry_as_nodes
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG0_map
+    downstream:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG9_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG9_release
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4
+      - 'depends on (1): GN1_genesis · all upstream 4'
+      - 'needed by (1): RG9_release · finishing it unlocks RG9_release'
+    edges:
+      - from: docs/2026-10-01-routing-registry-genesis-phasemap.spec::GN1_genesis
+        kind: declared

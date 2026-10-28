@@ -1,0 +1,185 @@
+envelope: 1
+uuid: nexus-export-graph-phase:R1_ui_dir_redirect:2635438fe347f665
+type: graph
+id: phase:R1_ui_dir_redirect:2635438fe347f665
+context: dependency graph of phase R1_ui_dir_redirect
+intent: null
+summary: 14 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676049
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676049
+lastSeenAt: 1792787676049
+fingerprint: null
+payload:
+  for: R1_ui_dir_redirect
+  kind: phase
+  repo: null
+  hash: 2635438fe347f665
+  nodes:
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cli/boot-systems.js
+      role: uses
+      exists: true
+      system: cli
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/boot-sequence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: nexus/nexus-cfr-influence.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: nexus/nexus-knowledge.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: nexus/nexus-query.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: orchestrator/event-taxonomy.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/intent-map.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/intent-map.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/boot-sequence.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: cli/boot-systems.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-query.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-knowledge.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-cfr-influence.js
+      kind: requires
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+  crossings:
+    - from: orchestrator/orchestrator.js
+      to: cli/boot-systems.js
+      fromSystem: orchestrator
+      toSystem: cli
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-bus.js
+      fromSystem: orchestrator
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-query.js
+      fromSystem: orchestrator
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-knowledge.js
+      fromSystem: orchestrator
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-cfr-influence.js
+      fromSystem: orchestrator
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: cli
+      toSystem: orchestrator
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::V1_versionium_proxies
+    upstream: []
+    downstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::V1_versionium_proxies
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::V1_versionium_proxies
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): Z1_release, V1_versionium_proxies · finishing it unlocks Z1_release,
+        V1_versionium_proxies
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

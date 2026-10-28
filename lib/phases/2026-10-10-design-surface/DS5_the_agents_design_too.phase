@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-design-surface-phasemap.spec::DS5_the_agents_design_too
+type: phase
+id: docs_2026-10-10-design-surface-phasemap.spec::DS5_the_agents_design_too
+context: pipeline phase DS5_the_agents_design_too of docs/2026-10-10-design-surface-phasemap.spec
+intent: null
+summary: DS5_the_agents_design_too (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677200
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677200
+lastSeenAt: 1792787677200
+fingerprint: null
+payload:
+  id: DS5_the_agents_design_too
+  map: docs/2026-10-10-design-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/index.js
+  depends_on:
+    - DS2_pick_and_edit_any_page
+  blocks: []
+  spec: null
+  graph: 1fd7bef8de2d374a

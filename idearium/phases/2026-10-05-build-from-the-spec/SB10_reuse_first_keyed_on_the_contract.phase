@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB10_reuse_first_keyed_on_the_contract
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB10_reuse_first_keyed_on_the_contract
+context: >-
+  pipeline phase SB10_reuse_first_keyed_on_the_contract of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB10_reuse_first_keyed_on_the_contract (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754658
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754658
+lastSeenAt: 1792841754658
+fingerprint: null
+payload:
+  id: SB10_reuse_first_keyed_on_the_contract
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+    - idearium/api/index.js
+    - lib/component-store.js
+  depends_on:
+    - SB9_the_spec_is_a_spec_file
+  blocks: []
+  spec: null
+  graph: c81776c5a4930011

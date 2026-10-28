@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::CG1_process_manager_in_settings
+type: phase
+id: docs_2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::CG1_process_manager_in_settings
+context: >-
+  pipeline phase CG1_process_manager_in_settings of
+  docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec
+intent: null
+summary: CG1_process_manager_in_settings (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675739
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675739
+lastSeenAt: 1792787675739
+fingerprint: null
+payload:
+  id: CG1_process_manager_in_settings
+  map: docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/tools/process-monitor.html
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fb5aa1a99a71129f

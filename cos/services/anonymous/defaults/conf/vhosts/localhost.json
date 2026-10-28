@@ -1,0 +1,12 @@
+{
+  "hostname": "localhost",
+  "root": "/home/claude/build/nexus/sites/root/public",
+  "stack": "static",
+  "index": [
+    "index.html",
+    "index.htm",
+    "index.php"
+  ],
+  "listing": false,
+  "php": false
+}

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::I1
+type: phase
+id: docs_2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::I1
+context: pipeline phase I1 of docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec
+intent: null
+summary: I1 (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476389
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476389
+lastSeenAt: 1792822476389
+fingerprint: null
+payload:
+  id: I1
+  map: docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/testenv/installer.js
+    - lib/cos-run.js
+    - idearium/api/index.js
+    - idearium/ui/js/app.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 647d5aac3c7988e9

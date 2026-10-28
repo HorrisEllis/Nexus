@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO7_map_real_proxy_traffic
+type: phase
+id: docs_2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO7_map_real_proxy_traffic
+context: pipeline phase MCO7_map_real_proxy_traffic of docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec
+intent: null
+summary: MCO7_map_real_proxy_traffic (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753866
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753866
+lastSeenAt: 1792841753866
+fingerprint: null
+payload:
+  id: MCO7_map_real_proxy_traffic
+  map: docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE 2026-09-13."'
+  files:
+    - orchestrator/orchestrator.js
+    - idearium/api/index.js
+    - architect/service.js
+    - idearium/compiler-bridge.js
+    - cortex/core/raid/contract-intake.js
+    - idearium/spec-engine/chunk-dispatch.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d82bd59ca7ae7386

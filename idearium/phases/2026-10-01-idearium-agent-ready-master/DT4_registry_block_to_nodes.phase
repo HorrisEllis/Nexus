@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4_registry_block_to_nodes
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4_registry_block_to_nodes
+context: >-
+  pipeline phase DT4_registry_block_to_nodes of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: DT4_registry_block_to_nodes (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754271
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754271
+lastSeenAt: 1792841754271
+fingerprint: null
+payload:
+  id: DT4_registry_block_to_nodes
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+    - idearium/repo/architecture.js
+  depends_on:
+    - DT1_persistence_census
+  blocks: []
+  spec: null
+  graph: a2d9e36027d4ff30

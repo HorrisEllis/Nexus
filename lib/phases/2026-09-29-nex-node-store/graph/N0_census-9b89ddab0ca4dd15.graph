@@ -1,0 +1,63 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N0_census:9b89ddab0ca4dd15
+type: graph
+id: phase:N0_census:9b89ddab0ca4dd15
+context: dependency graph of phase N0_census
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676231
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676231
+lastSeenAt: 1792787676231
+fingerprint: null
+payload:
+  for: N0_census
+  kind: phase
+  repo: null
+  hash: 9b89ddab0ca4dd15
+  nodes:
+    - path: docs/nexstore-type-catalogue.yaml
+      role: changes
+      exists: true
+      system: null
+    - path: lib/nexstore/census.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexstore/writers.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexstore/census.js
+      to: lib/nexstore/writers.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N2_types_and_gates
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N18_hardcode_census
+    upstream: []
+    downstream:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N18_hardcode_census
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N24_no_json_yaml_node_types_only
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N2_types_and_gates
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N2_types_and_gates
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N18_hardcode_census
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): N2_types_and_gates, N18_hardcode_census · all downstream 3 · finishing it
+        unlocks N2_types_and_gates, N18_hardcode_census
+    edges: []

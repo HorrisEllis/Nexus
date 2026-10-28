@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV19_emergence:9bfed80265b79410
+type: graph
+id: phase:MV19_emergence:9bfed80265b79410
+context: dependency graph of phase MV19_emergence
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792821071291
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792821071291
+lastSeenAt: 1792821071291
+fingerprint: null
+payload:
+  for: MV19_emergence
+  kind: phase
+  repo: null
+  hash: 9bfed80265b79410
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV20_warp
+    dependents: []
+    upstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV15_siso
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV18_emerge
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV20_warp
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV20_warp
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by MV20_warp
+      - 'depends on (1): MV20_warp · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV20_warp
+        kind: declared

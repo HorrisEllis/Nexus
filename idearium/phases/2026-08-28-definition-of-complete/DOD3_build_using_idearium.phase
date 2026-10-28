@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-definition-of-complete-phasemap.spec::DOD3_build_using_idearium
+type: phase
+id: docs_2026-08-28-definition-of-complete-phasemap.spec::DOD3_build_using_idearium
+context: pipeline phase DOD3_build_using_idearium of docs/2026-08-28-definition-of-complete-phasemap.spec
+intent: null
+summary: DOD3_build_using_idearium (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792822475848
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822475848
+lastSeenAt: 1792822475848
+fingerprint: null
+payload:
+  id: DOD3_build_using_idearium
+  map: docs/2026-08-28-definition-of-complete-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2c5d5dfc92a15b2a

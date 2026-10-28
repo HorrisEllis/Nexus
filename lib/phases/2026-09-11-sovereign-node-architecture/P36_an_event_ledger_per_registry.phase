@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P36_an_event_ledger_per_registry
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P36_an_event_ledger_per_registry
+context: >-
+  pipeline phase P36_an_event_ledger_per_registry of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P36_an_event_ledger_per_registry (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753859
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753859
+lastSeenAt: 1792841753859
+fingerprint: null
+payload:
+  id: P36_an_event_ledger_per_registry
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/component-ledger.js
+  depends_on:
+    - P8_per_system_component_registry
+  blocks: []
+  spec: null
+  graph: b044fa62a99368e1

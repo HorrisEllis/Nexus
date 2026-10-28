@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
+context: >-
+  pipeline phase IL2_library_spec_into_the_pipeline of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: IL2_library_spec_into_the_pipeline (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476756
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476756
+lastSeenAt: 1792822476756
+fingerprint: null
+payload:
+  id: IL2_library_spec_into_the_pipeline
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/spec-library-import.js
+    - idearium/api/index.js
+    - idearium/cli/index.js
+    - idearium/ui/spec-library.html
+    - idearium/ui/js/app.js
+  depends_on:
+    - IL1_spec_library_as_ideas
+  blocks: []
+  spec: null
+  graph: 5e3e3e4f9dd9cb11

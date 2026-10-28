@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-infrastructure-migration-phasemap.spec::IM4_the_kernel_boundary
+type: phase
+id: docs_2026-10-17-infrastructure-migration-phasemap.spec::IM4_the_kernel_boundary
+context: pipeline phase IM4_the_kernel_boundary of docs/2026-10-17-infrastructure-migration-phasemap.spec
+intent: null
+summary: IM4_the_kernel_boundary (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792879045362
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879045362
+lastSeenAt: 1792879045362
+fingerprint: null
+payload:
+  id: IM4_the_kernel_boundary
+  map: docs/2026-10-17-infrastructure-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/memory/jaa-db.js
+  depends_on:
+    - IM0d_lib_is_the_kernel
+  blocks: []
+  spec: null
+  graph: 2f05c2a43310d080

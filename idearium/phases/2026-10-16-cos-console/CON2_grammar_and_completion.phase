@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-cos-console-phasemap.spec::CON2_grammar_and_completion
+type: phase
+id: docs_2026-10-16-cos-console-phasemap.spec::CON2_grammar_and_completion
+context: pipeline phase CON2_grammar_and_completion of docs/2026-10-16-cos-console-phasemap.spec
+intent: null
+summary: CON2_grammar_and_completion (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792820507795
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820507795
+lastSeenAt: 1792820507795
+fingerprint: null
+payload:
+  id: CON2_grammar_and_completion
+  map: docs/2026-10-16-cos-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+  depends_on:
+    - CON1_one_door_client
+  blocks: []
+  spec: null
+  graph: 762c2205a20307d8

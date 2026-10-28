@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P7_hostile_verify_and_ship
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P7_hostile_verify_and_ship
+context: >-
+  pipeline phase P7_hostile_verify_and_ship of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: P7_hostile_verify_and_ship (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753897
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753897
+lastSeenAt: 1792841753897
+fingerprint: null
+payload:
+  id: P7_hostile_verify_and_ship
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/index.js
+    - intelligence/field-provider.js
+    - intelligence/cfr/field.js
+    - lib/agent-tools/tools/query/ambiguity-pull.js
+  depends_on:
+    - P5_retire_second_runtime
+    - P6_versionium_residue
+  blocks: []
+  spec: null
+  graph: b8797560b7a0342a

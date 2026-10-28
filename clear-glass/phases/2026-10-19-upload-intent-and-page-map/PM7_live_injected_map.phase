@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::PM7_live_injected_map
+type: phase
+id: docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::PM7_live_injected_map
+context: pipeline phase PM7_live_injected_map of docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+intent: null
+summary: PM7_live_injected_map (interface) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677959
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677959
+lastSeenAt: 1792787677959
+fingerprint: null
+payload:
+  id: PM7_live_injected_map
+  map: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+  repo: null
+  layer: interface
+  status: DONE 0.60.175
+  files:
+    - clear-glass/src/page/page-session.js
+    - clear-glass/src/driver/index.js
+    - clear-glass/src/main/index.js
+  depends_on:
+    - PM6_nerve_feel
+  blocks: []
+  spec: null
+  graph: 0026f5b7f1346993

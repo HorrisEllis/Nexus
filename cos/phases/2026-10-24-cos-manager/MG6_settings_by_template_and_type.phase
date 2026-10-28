@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG6_settings_by_template_and_type
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG6_settings_by_template_and_type
+context: pipeline phase MG6_settings_by_template_and_type of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG6_settings_by_template_and_type (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792880100859
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100859
+lastSeenAt: 1792880100859
+fingerprint: null
+payload:
+  id: MG6_settings_by_template_and_type
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/settings.js
+  depends_on:
+    - MG0b_the_full_spec
+    - AS1_one_resolver_global_then_repo
+  blocks: []
+  spec: null
+  graph: f0cc6fb8f4a34069

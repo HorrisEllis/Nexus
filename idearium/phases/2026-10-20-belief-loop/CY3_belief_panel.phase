@@ -7,11 +7,11 @@ intent: null
 summary: CY3_belief_panel (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792456303360
+exported_at: 1792822478326
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303360
-lastSeenAt: 1792456303360
+firstSeenAt: 1792822478326
+lastSeenAt: 1792822478326
 fingerprint: null
 payload:
   id: CY3_belief_panel
@@ -31,4 +31,4 @@ payload:
   blocks:
     - MOD-BELIEF-PANEL
   spec: docs/belief-loop.spec
-  graph: e6a09dc8b785fe0e
+  graph: 15e237754c465dd9

@@ -1,0 +1,203 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OS2_images_downloaded_and_kept_current:7a1fb496219ebe9e
+type: graph
+id: phase:OS2_images_downloaded_and_kept_current:7a1fb496219ebe9e
+context: dependency graph of phase OS2_images_downloaded_and_kept_current
+intent: null
+summary: 19 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677019
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677019
+lastSeenAt: 1792787677019
+fingerprint: null
+payload:
+  for: OS2_images_downloaded_and_kept_current
+  kind: phase
+  repo: null
+  hash: 7a1fb496219ebe9e
+  nodes:
+    - path: clear-glass/src/driver/glass.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cos/testenv/installer.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/provision.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/runtime/run.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/build-verify.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-agent-live.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-canvas-compartments.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-code-dock.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-code-surface-state.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-code-tab-merge.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-code-tab.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/compartment/guest-agent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/testenv/provision.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/guest-agent.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/runtime/run.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: lib/build-verify.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: tests/modules/test-agent-live.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-canvas-compartments.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-code-dock.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-code-surface-state.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-code-tab-merge.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-code-tab.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: cos/testenv/installer.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/build-verify.js
+      to: cos/testenv/installer.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/installer.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
+    dependents:
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP1_android_build_compartment
+      - docs/2026-10-05-cos-machines-phasemap.spec::SU1_the_setup_asks_the_os_and_its_version
+    upstream:
+      - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
+      - docs/2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
+    downstream:
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP1_android_build_compartment
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP2_test_on_the_android_compartment
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP3_release_like_an_enterprise
+      - docs/2026-10-05-cos-machines-phasemap.spec::SU1_the_setup_asks_the_os_and_its_version
+      - docs/2026-10-05-cos-machines-phasemap.spec::SU2_every_language_and_the_repos_own_dependencies
+    blockedBy:
+      - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
+    unlocks:
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP1_android_build_compartment
+      - docs/2026-10-05-cos-machines-phasemap.spec::SU1_the_setup_asks_the_os_and_its_version
+    conflicts:
+      - with: docs/2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
+        files:
+          - cos/testenv/provision.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by OS1_compartments_as_operating_systems
+      - 'depends on (1): OS1_compartments_as_operating_systems · all upstream 2'
+      - >-
+        needed by (2): AP1_android_build_compartment, SU1_the_setup_asks_the_os_and_its_version ·
+        all downstream 5 · finishing it unlocks AP1_android_build_compartment,
+        SU1_the_setup_asks_the_os_and_its_version
+      - 'same files as EL1_electron_compiler with no order between them: cos/testenv/provision.js'
+    edges:
+      - from: docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
+        kind: declared

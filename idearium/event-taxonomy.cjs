@@ -146,6 +146,10 @@ module.exports = Object.freeze({
   IDEARIUM_REPO_HAT_REFRESHED: { description: "A repo's hat was refreshed with its current chunks.", payloadShape: ["repoUuid", "chunkCount"], severity: 'info' },
   IDEARIUM_REPO_HAT_REVOKED: { description: "A repo's hat was revoked.", payloadShape: ["repoUuid", "name"], severity: 'notable' },
   IDEARIUM_REPO_AGENT_FEED: { description: "An event from Guardian was fed to a repo's agent.", payloadShape: ["repoUuid", "event", "guardianTs"], severity: 'info' },
+  // 0.60.255 (from brave-cori 0.60.225 SL4) — the self-building loop (idearium/lib/autobuild.js); declared 0.60.256 (EC-05)
+  IDEARIUM_LOOP_STARTED: { description: 'The self-building loop started on a repo, with its budget (phases, minutes) and who started it.', payloadShape: ['repo', 'loopId', 'budget', 'by'], severity: 'notable' },
+  IDEARIUM_LOOP_STEP: { description: 'One step of the loop: a phase built, landed, closed, skipped or waited on, and why.', payloadShape: ['repo', 'loopId', 'key', 'outcome', 'why'], severity: 'info' },
+  IDEARIUM_LOOP_STOPPED: { description: 'The loop stopped: its budget, three misses in a row, nothing left, or a person.', payloadShape: ['repo', 'loopId', 'why'], severity: 'notable' },
   IDEARIUM_REPO_PHASES_MAPPED: { description: "A repo's phases were mapped to its code (the map job finished); how many were applied.", payloadShape: ["repoUuid", "line", "applied"], severity: 'info' },
   IDEARIUM_REPO_EXPANDED: { description: "A skeleton repo grew from its spec: components slotted in, a phasemap written, their code files planned as pending chunks.", payloadShape: ["repoUuid", "feature", "components", "phasemap", "phases", "snapshot"], severity: 'notable' },   // 0.39.360 SB42
   IDEARIUM_REPO_AGENT_TOOL: { description: "A repo agent's tool call changed state (started, done, failed) — one row on the Agent tab's tool list.", payloadShape: ["repoUuid", "session", "name", "state", "args", "iteration", "error", "at"], severity: 'info' },

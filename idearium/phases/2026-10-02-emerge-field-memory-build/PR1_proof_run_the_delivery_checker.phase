@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+context: >-
+  pipeline phase PR1_proof_run_the_delivery_checker of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: PR1_proof_run_the_delivery_checker (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476915
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476915
+lastSeenAt: 1792822476915
+fingerprint: null
+payload:
+  id: PR1_proof_run_the_delivery_checker
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/proof-run.js
+    - idearium/event-taxonomy.cjs
+    - idearium/api/index.js
+    - idearium/cli/index.js
+    - lib/shadow.js
+  depends_on:
+    - EM0_ground
+  blocks: []
+  spec: null
+  graph: 94675a76922873de

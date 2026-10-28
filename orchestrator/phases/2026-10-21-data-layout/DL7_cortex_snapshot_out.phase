@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-21-data-layout-phasemap.spec::DL7_cortex_snapshot_out
 context: pipeline phase DL7_cortex_snapshot_out of docs/2026-10-21-data-layout-phasemap.spec
 intent: null
-summary: DL7_cortex_snapshot_out (integration) — 8 file(s)
+summary: DL7_cortex_snapshot_out (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792478240951
+exported_at: 1792841756168
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792478240951
-lastSeenAt: 1792478240951
+firstSeenAt: 1792841756168
+lastSeenAt: 1792841756168
 fingerprint: null
 payload:
   id: DL7_cortex_snapshot_out
@@ -24,13 +24,9 @@ payload:
     - guardian/server.js
     - orchestrator/orchestrator.js
     - orchestrator/lib/autonomous-loop.js
-    - orchestrator/lib/request-handler.js
-    - hooks/cortex.hooks.js
-    - cli/nexus-repl-descriptors.js
-    - ui/home/areas/rewind.js
   depends_on:
     - DL6_cortex_server
   blocks:
     - MOD-SNAPSHOT-SHIM
   spec: docs/data-layout.spec
-  graph: af1c908b9a84788d
+  graph: ca2714bccb2c5ef5

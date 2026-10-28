@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB5_tab_shell
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB5_tab_shell
+context: pipeline phase TB5_tab_shell of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB5_tab_shell (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677663
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677663
+lastSeenAt: 1792787677663
+fingerprint: null
+payload:
+  id: TB5_tab_shell
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/code-surface.js
+  depends_on:
+    - TB1_read_model_per_tab
+  blocks: []
+  spec: null
+  graph: 45459c6b9780f0d9

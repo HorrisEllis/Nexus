@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-26-inline-autofill-ui-phasemap.spec::AF1_active_profile_and_fill_one
+type: phase
+id: docs_2026-10-26-inline-autofill-ui-phasemap.spec::AF1_active_profile_and_fill_one
+context: pipeline phase AF1_active_profile_and_fill_one of docs/2026-10-26-inline-autofill-ui-phasemap.spec
+intent: null
+summary: AF1_active_profile_and_fill_one (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792992982692
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992982692
+lastSeenAt: 1792992982692
+fingerprint: null
+payload:
+  id: AF1_active_profile_and_fill_one
+  map: docs/2026-10-26-inline-autofill-ui-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/store.js
+    - clear-glass/src/autofill/matcher.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fb88baabfed1fce8

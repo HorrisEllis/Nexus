@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP5_odd_files_round_trip
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP5_odd_files_round_trip
+context: pipeline phase HP5_odd_files_round_trip of docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP5_odd_files_round_trip (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677129
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677129
+lastSeenAt: 1792787677129
+fingerprint: null
+payload:
+  id: HP5_odd_files_round_trip
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/spec-document.js
+    - tests/modules/test-spec-document.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a3b1cad180508350

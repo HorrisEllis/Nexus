@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::CP2_copilot_learning_memory
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CP2_copilot_learning_memory
+context: pipeline phase CP2_copilot_learning_memory of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: CP2_copilot_learning_memory (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675702
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675702
+lastSeenAt: 1792787675702
+fingerprint: null
+payload:
+  id: CP2_copilot_learning_memory
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/stream-digest.js
+    - lib/stream-digest.js
+    - clear-glass/src/mesh/agent-mesh.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a6a813f538df0a06

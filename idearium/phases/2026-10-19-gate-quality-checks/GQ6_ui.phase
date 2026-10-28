@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gate-quality-checks-phasemap.spec::GQ6_ui
+type: phase
+id: docs_2026-10-19-gate-quality-checks-phasemap.spec::GQ6_ui
+context: pipeline phase GQ6_ui of docs/2026-10-19-gate-quality-checks-phasemap.spec
+intent: null
+summary: GQ6_ui (ui) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677882
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677882
+lastSeenAt: 1792787677882
+fingerprint: null
+payload:
+  id: GQ6_ui
+  map: docs/2026-10-19-gate-quality-checks-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - idearium/ui/js/plan-panel.js
+  depends_on:
+    - GQ5_command
+  blocks:
+    - '"quality_ui"'
+  spec: null
+  graph: 60394e9276084fea

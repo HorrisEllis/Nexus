@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP5_the_cos_driver
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP5_the_cos_driver
+context: pipeline phase UP5_the_cos_driver of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP5_the_cos_driver (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793015698412
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793015698412
+lastSeenAt: 1793015698412
+fingerprint: null
+payload:
+  id: UP5_the_cos_driver
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-update.js
+    - lib/cos-bridge.js
+  depends_on:
+    - UP4_the_tool_on_the_hats_and_the_page
+  blocks: []
+  spec: null
+  graph: bd1b49ced4abad2f

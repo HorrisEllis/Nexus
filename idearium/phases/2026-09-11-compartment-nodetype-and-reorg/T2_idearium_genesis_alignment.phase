@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T2_idearium_genesis_alignment
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T2_idearium_genesis_alignment
+context: >-
+  pipeline phase T2_idearium_genesis_alignment of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: T2_idearium_genesis_alignment (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675822
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675822
+lastSeenAt: 1792787675822
+fingerprint: null
+payload:
+  id: T2_idearium_genesis_alignment
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/templates/genesis.spec
+  depends_on:
+    - T3_warp_replaces_siso
+  blocks: []
+  spec: null
+  graph: 155669da42eb09b4

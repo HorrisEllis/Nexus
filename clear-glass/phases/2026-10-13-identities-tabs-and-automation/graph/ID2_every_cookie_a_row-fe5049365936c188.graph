@@ -1,0 +1,88 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ID2_every_cookie_a_row:fe5049365936c188
+type: graph
+id: phase:ID2_every_cookie_a_row:fe5049365936c188
+context: dependency graph of phase ID2_every_cookie_a_row
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677401
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677401
+lastSeenAt: 1792787677401
+fingerprint: null
+payload:
+  for: ID2_every_cookie_a_row
+  kind: phase
+  repo: null
+  hash: fe5049365936c188
+  nodes:
+    - path: clear-glass/src/cookies/table.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/cookies/vault.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/session-hub.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/security/vault-key.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/cookies/vault.js
+      to: clear-glass/src/security/vault-key.js
+      kind: requires
+    - from: clear-glass/src/cookies/vault.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: clear-glass/src/cookies/session-hub.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID1_identities
+    dependents: []
+    upstream:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID0_signed_in_where_he_signs_in
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID1_identities
+    downstream: []
+    blockedBy:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID1_identities
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by ID1_identities
+      - 'depends on (1): ID1_identities · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID1_identities
+        kind: declared

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N27_history_import_from_700_zips
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N27_history_import_from_700_zips
+context: pipeline phase N27_history_import_from_700_zips of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N27_history_import_from_700_zips (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754184
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754184
+lastSeenAt: 1792841754184
+fingerprint: null
+payload:
+  id: N27_history_import_from_700_zips
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cli/import-history.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f601689d7b388779

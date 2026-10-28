@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-full-capability-phasemap.spec::P11_nexus_help_tool
+type: phase
+id: docs_copilot-full-capability-phasemap.spec::P11_nexus_help_tool
+context: pipeline phase P11_nexus_help_tool of docs/copilot-full-capability-phasemap.spec
+intent: null
+summary: P11_nexus_help_tool (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792879046080
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879046080
+lastSeenAt: 1792879046080
+fingerprint: null
+payload:
+  id: P11_nexus_help_tool
+  map: docs/copilot-full-capability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/nexus-awareness.js
+    - lib/agent-tools/tool-guide.js
+    - copilot/capability-extend.js
+    - copilot/adaptive-fulfillment.js
+    - clear-glass/src/driver/url-listener.js
+    - loom/scanners/phasemap-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2baed4cdae084023

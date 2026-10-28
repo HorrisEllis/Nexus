@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-system-consolidation-phasemap.spec::CN10_leftovers_named
+type: phase
+id: docs_2026-10-24-system-consolidation-phasemap.spec::CN10_leftovers_named
+context: pipeline phase CN10_leftovers_named of docs/2026-10-24-system-consolidation-phasemap.spec
+intent: null
+summary: CN10_leftovers_named (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792878423776
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878423776
+lastSeenAt: 1792878423776
+fingerprint: null
+payload:
+  id: CN10_leftovers_named
+  map: docs/2026-10-24-system-consolidation-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/system-boundary.js
+  depends_on:
+    - CN0_the_rule_in_force
+  blocks: []
+  spec: null
+  graph: 512488fd2ce2b1d6

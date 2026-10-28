@@ -1,0 +1,168 @@
+envelope: 1
+uuid: nexus-export-graph-phase:COSA14_versionium_record:5390299903c72853
+type: graph
+id: phase:COSA14_versionium_record:5390299903c72853
+context: dependency graph of phase COSA14_versionium_record
+intent: null
+summary: 19 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755523
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755523
+lastSeenAt: 1792841755523
+fingerprint: null
+payload:
+  for: COSA14_versionium_record
+  kind: phase
+  repo: null
+  hash: 5390299903c72853
+  nodes:
+    - path: cos/app/app-update.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/version.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/lib/projects-folder.cjs
+      role: changes
+      exists: false
+      system: idearium
+    - path: lib/release-version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: scripts/build-cos-app.js
+      role: changes
+      exists: true
+      system: null
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/app/controller.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/store.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-253-versions.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-releases.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-app-build.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-self-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/contracts/SYSTEM-CONTRACTS.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/version.js
+      to: lib/contracts/SYSTEM-CONTRACTS.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/version.js
+      kind: requires
+    - from: tests/modules/test-cos-app-build.test.js
+      to: cos/app/version.js
+      kind: requires
+    - from: tests/modules/test-cos-app-self-update.test.js
+      to: cos/app/version.js
+      kind: requires
+    - from: cos/app/store.js
+      to: lib/release-version.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/release-version.js
+      kind: requires
+    - from: lib/checks/ck-253-versions.js
+      to: lib/release-version.js
+      kind: requires
+    - from: lib/nexus-releases.js
+      to: lib/release-version.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA13_auto_update
+    dependents: []
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA13_auto_update
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA4_switch_and_rollback
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA13_auto_update
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by COSA9_idearium_sync, COSA13_auto_update
+      - 'depends on (2): COSA9_idearium_sync, COSA13_auto_update · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+        kind: declared
+      - from: docs/2026-10-15-cos-app-phasemap.spec::COSA13_auto_update
+        kind: declared

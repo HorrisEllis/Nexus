@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL12_nexus_heal_loop_to_diagnostic
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL12_nexus_heal_loop_to_diagnostic
+context: pipeline phase BL12_nexus_heal_loop_to_diagnostic of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL12_nexus_heal_loop_to_diagnostic (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822701751
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822701751
+lastSeenAt: 1792822701751
+fingerprint: null
+payload:
+  id: BL12_nexus_heal_loop_to_diagnostic
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/diagnostic-phase-map.spec
+    - diagnostic/nexus-diagnostic.js
+    - lib/nexus-config.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4f389d7509036062

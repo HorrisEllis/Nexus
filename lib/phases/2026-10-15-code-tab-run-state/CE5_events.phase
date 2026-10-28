@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-code-tab-run-state-phasemap.spec::CE5_events
+type: phase
+id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CE5_events
+context: pipeline phase CE5_events of docs/2026-10-15-code-tab-run-state-phasemap.spec
+intent: null
+summary: CE5_events (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755487
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755487
+lastSeenAt: 1792841755487
+fingerprint: null
+payload:
+  id: CE5_events
+  map: docs/2026-10-15-code-tab-run-state-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.50 (tests/modules/test-run-state.test.js)
+  files:
+    - idearium/event-taxonomy.cjs
+    - lib/event-contract-check.js
+    - lib/run-state.js
+  depends_on:
+    - CE1_the_run_state
+    - CE3_reply_on_task_gate
+  blocks: []
+  spec: null
+  graph: 3b6ec442f6076f34

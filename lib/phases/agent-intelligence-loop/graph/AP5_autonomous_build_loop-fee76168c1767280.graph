@@ -1,0 +1,279 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AP5_autonomous_build_loop:fee76168c1767280
+type: graph
+id: phase:AP5_autonomous_build_loop:fee76168c1767280
+context: dependency graph of phase AP5_autonomous_build_loop
+intent: null
+summary: 30 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678098
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678098
+lastSeenAt: 1792787678098
+fingerprint: null
+payload:
+  for: AP5_autonomous_build_loop
+  kind: phase
+  repo: null
+  hash: fee76168c1767280
+  nodes:
+    - path: copilot/lib/self-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/agent-pull.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/chunk-service.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/scanners/capability-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/copilot-identity.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/hat-forge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/switch-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/chains.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/command-builder.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/connections.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/constant-autonomy.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/scheduler.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/triggers.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: copilot/lib/intent-learning.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/nexus-awareness.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/browser/browser-action.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/chunker/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gemini-toolbox/agent-contracts.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/reflection.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-pull.js
+      to: lib/gemini-toolbox/agent-contracts.js
+      kind: requires
+    - from: lib/tool-index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/reflection.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/nexus-awareness.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/intent-learning.js
+      kind: requires
+    - from: lib/chunk-service.js
+      to: lib/chunker/index.js
+      kind: requires
+    - from: lib/chains.js
+      to: lib/agent-pull.js
+      kind: requires
+    - from: lib/scheduler.js
+      to: lib/agent-pull.js
+      kind: requires
+    - from: lib/triggers.js
+      to: lib/agent-pull.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/command-builder.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/copilot-identity.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/switch-agent.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/connections.js
+      to: copilot/lib/self-model.js
+      kind: requires
+  crossings:
+    - from: lib/tool-index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/identity/copilot-identity.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/identity/switch-agent.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/connections.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/agent-intelligence-loop-phasemap.spec::AP1_pull_toolbox
+      - docs/agent-intelligence-loop-phasemap.spec::AP2_agent_events_to_intelligence
+      - docs/agent-intelligence-loop-phasemap.spec::AP3_strategy_dynamic_db
+      - docs/agent-intelligence-loop-phasemap.spec::AP4_intelligence_optimizes
+    dependents: []
+    upstream:
+      - docs/agent-intelligence-loop-phasemap.spec::AP1_pull_toolbox
+      - docs/agent-intelligence-loop-phasemap.spec::AP2_agent_events_to_intelligence
+      - docs/agent-intelligence-loop-phasemap.spec::AP3_strategy_dynamic_db
+      - docs/agent-intelligence-loop-phasemap.spec::AP4_intelligence_optimizes
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4
+      - >-
+        depends on (4): AP1_pull_toolbox, AP2_agent_events_to_intelligence, AP3_strategy_dynamic_db,
+        AP4_intelligence_optimizes
+      - 'needed by (0): —'
+    edges:
+      - from: docs/agent-intelligence-loop-phasemap.spec::AP1_pull_toolbox
+        kind: declared
+      - from: docs/agent-intelligence-loop-phasemap.spec::AP2_agent_events_to_intelligence
+        kind: declared
+      - from: docs/agent-intelligence-loop-phasemap.spec::AP3_strategy_dynamic_db
+        kind: declared
+      - from: docs/agent-intelligence-loop-phasemap.spec::AP4_intelligence_optimizes
+        kind: declared

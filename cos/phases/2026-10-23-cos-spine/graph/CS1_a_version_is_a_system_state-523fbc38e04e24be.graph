@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792757382207
+exported_at: 1792880100794
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382207
-lastSeenAt: 1792757382207
+firstSeenAt: 1792880100794
+lastSeenAt: 1792880100794
 fingerprint: null
 payload:
   for: CS1_a_version_is_a_system_state
@@ -196,7 +196,6 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 3351ce8a7e938b5b
     layer: 1
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
@@ -204,6 +203,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
       - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
     upstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
     downstream:
@@ -212,6 +212,10 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
     unlocks: []
@@ -224,14 +228,17 @@ payload:
           - cos/compartment/qemu-runtime.js
     dangling: []
     lines:
-      - DAG 3351ce8a7e938b5b · layer 1 · blocked by CS_D2_a_version_is_the_whole_state
+      - layer 1 · blocked by CS_D2_a_version_is_the_whole_state
       - 'depends on (1): CS_D2_a_version_is_the_whole_state'
       - >-
-        needed by (3): CS2_test_every_version, CS6_rebuild_from_the_spec,
-        CS9_every_project_a_compartment · all downstream 5
+        needed by (4): CS2_test_every_version, CS6_rebuild_from_the_spec,
+        CS9_every_project_a_compartment, MG3_the_state_manager · all downstream 9
       - >-
         same files as CS3_the_registry_is_the_bridge with no order between them:
         idearium/repo/snapshot.js
       - >-
         same files as CS5_caps_per_compartment with no order between them:
         cos/compartment/qemu-runtime.js
+    edges:
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
+        kind: declared

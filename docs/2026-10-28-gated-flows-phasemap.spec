@@ -154,3 +154,9 @@ James, 2026-10-28: "continue" · "like none of the autofill works" · "use it fo
 - "creating macros": a recording on an editor page is kept as 'fiverr <page>' (gig-pages.pageMacroSteps: no navigation, a wait_for before
   each click, his buttons left out by their text) and replayed by every fill of that page. A recorded checkbox is a check with a state.
   browser_action names check / select / choose / pointer (the first part of FG4). Correcting a failed step with a pick is still to build.
+
+## ADDENDUM 2026-10-28 (0.60.265) — this map's releases renumbered
+James, 2026-10-28: "no patch file. unless idearium can run it. like i can drag it into the versionium tab and import". Merging main in (to make
+a change pack he can drop on his Nexus), main already had its own 0.60.221–0.60.224 and went up to 0.60.260. The releases named above as
+0.60.221, 0.60.222, 0.60.223 and 0.60.224 are 0.60.261, 0.60.262, 0.60.263 and 0.60.264; their changelogs say so. The text above is kept as
+written (§0.3).

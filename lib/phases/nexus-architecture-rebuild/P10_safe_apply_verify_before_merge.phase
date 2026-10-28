@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P10_safe_apply_verify_before_merge
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P10_safe_apply_verify_before_merge
+context: pipeline phase P10_safe_apply_verify_before_merge of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P10_safe_apply_verify_before_merge (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678244
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678244
+lastSeenAt: 1792787678244
+fingerprint: null
+payload:
+  id: P10_safe_apply_verify_before_merge
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/safe-apply.js
+    - cos/playground/branch.js
+    - cos/playground/sandbox.js
+    - lib/agent-tools/tools/safe-apply.js
+    - lib/agent-tools/tools/execution/safe-apply.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 321a65ed784d8a03

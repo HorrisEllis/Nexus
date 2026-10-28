@@ -1,0 +1,173 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AW3_the_field_hears_the_lifecycle:e1deb2d5dd156ebc
+type: graph
+id: phase:AW3_the_field_hears_the_lifecycle:e1deb2d5dd156ebc
+context: dependency graph of phase AW3_the_field_hears_the_lifecycle
+intent: null
+summary: 13 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755142
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755142
+lastSeenAt: 1792841755142
+fingerprint: null
+payload:
+  for: AW3_the_field_hears_the_lifecycle
+  kind: phase
+  repo: null
+  hash: e1deb2d5dd156ebc
+  nodes:
+    - path: guardian/event-taxonomy.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: intelligence/cfr/field.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: copilot/diagnostics.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/movement-map.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/cfr/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/field-provider.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/lattice/associative-lattice.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/cli/cfr-debug.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/sigma-writer.js
+      role: used-by
+      exists: true
+      system: orchestrator
+  edges:
+    - from: copilot/diagnostics.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: copilot/movement-map.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: intelligence/cfr/index.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: intelligence/cfr/ledger.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: intelligence/field-provider.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: intelligence/lattice/associative-lattice.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: orchestrator/lib/sigma-writer.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+  crossings:
+    - from: copilot/diagnostics.js
+      to: intelligence/cfr/field.js
+      fromSystem: copilot
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: copilot/movement-map.js
+      to: intelligence/cfr/field.js
+      fromSystem: copilot
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/field.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/nexus/autopilot.js
+      to: intelligence/cfr/field.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: orchestrator/lib/sigma-writer.js
+      to: intelligence/cfr/field.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-10-self-awareness-phasemap.spec::AW2_every_call_says_who_asked
+    dependents:
+      - docs/2026-10-10-self-awareness-phasemap.spec::AW4_the_door_reads_the_lattice
+    upstream:
+      - docs/2026-10-10-self-awareness-phasemap.spec::AW0_no_guessed_causes
+      - docs/2026-10-10-self-awareness-phasemap.spec::AW1_guardian_reflected_in_nodes
+      - docs/2026-10-10-self-awareness-phasemap.spec::AW2_every_call_says_who_asked
+    downstream:
+      - docs/2026-10-10-self-awareness-phasemap.spec::AW4_the_door_reads_the_lattice
+      - docs/2026-10-10-self-awareness-phasemap.spec::AW5_its_own_face
+    blockedBy:
+      - docs/2026-10-10-self-awareness-phasemap.spec::AW2_every_call_says_who_asked
+    unlocks:
+      - docs/2026-10-10-self-awareness-phasemap.spec::AW4_the_door_reads_the_lattice
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by AW2_every_call_says_who_asked
+      - 'depends on (1): AW2_every_call_says_who_asked · all upstream 3'
+      - >-
+        needed by (1): AW4_the_door_reads_the_lattice · all downstream 2 · finishing it unlocks
+        AW4_the_door_reads_the_lattice
+    edges:
+      - from: docs/2026-10-10-self-awareness-phasemap.spec::AW2_every_call_says_who_asked
+        kind: declared

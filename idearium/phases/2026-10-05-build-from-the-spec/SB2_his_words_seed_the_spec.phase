@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB2_his_words_seed_the_spec
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB2_his_words_seed_the_spec
+context: pipeline phase SB2_his_words_seed_the_spec of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB2_his_words_seed_the_spec (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754634
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754634
+lastSeenAt: 1792841754634
+fingerprint: null
+payload:
+  id: SB2_his_words_seed_the_spec
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+    - idearium/repo/index.js
+    - idearium/api/index.js
+  depends_on:
+    - SB1_templates_are_the_default_frame
+  blocks: []
+  spec: null
+  graph: 300c2c85f224f44c

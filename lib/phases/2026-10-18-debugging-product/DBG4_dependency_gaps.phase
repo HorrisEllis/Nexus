@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-debugging-product-phasemap.spec::DBG4_dependency_gaps
+type: phase
+id: docs_2026-10-18-debugging-product-phasemap.spec::DBG4_dependency_gaps
+context: pipeline phase DBG4_dependency_gaps of docs/2026-10-18-debugging-product-phasemap.spec
+intent: null
+summary: DBG4_dependency_gaps (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792787920837
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787920837
+lastSeenAt: 1792787920837
+fingerprint: null
+payload:
+  id: DBG4_dependency_gaps
+  map: docs/2026-10-18-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/dep-gaps.js
+    - lib/component-store.js
+    - lib/repo-carve.js
+    - lib/test-first.js
+    - lib/code-intel/decls.js
+    - lib/phase-deps-gate.js
+    - loom/scanners/wiring-gaps.js
+    - loom/scanners/dangling-report.js
+    - lib/gap-field.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - DBG0b_dependencies_map_gaps
+  blocks: []
+  spec: null
+  graph: 1cbb2701c89b4f58

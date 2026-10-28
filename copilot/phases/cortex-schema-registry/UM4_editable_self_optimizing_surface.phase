@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_cortex-schema-registry-phasemap.spec::UM4_editable_self_optimizing_surface
+type: phase
+id: docs_cortex-schema-registry-phasemap.spec::UM4_editable_self_optimizing_surface
+context: pipeline phase UM4_editable_self_optimizing_surface of docs/cortex-schema-registry-phasemap.spec
+intent: null
+summary: UM4_editable_self_optimizing_surface (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678194
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678194
+lastSeenAt: 1792787678194
+fingerprint: null
+payload:
+  id: UM4_editable_self_optimizing_surface
+  map: docs/cortex-schema-registry-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/user-model.js
+    - lib/schema-registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9c4c844e8246ac7c

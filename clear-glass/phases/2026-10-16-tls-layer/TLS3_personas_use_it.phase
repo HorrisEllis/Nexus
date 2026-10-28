@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-tls-layer-phasemap.spec::TLS3_personas_use_it
+type: phase
+id: docs_2026-10-16-tls-layer-phasemap.spec::TLS3_personas_use_it
+context: pipeline phase TLS3_personas_use_it of docs/2026-10-16-tls-layer-phasemap.spec
+intent: null
+summary: TLS3_personas_use_it (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677759
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677759
+lastSeenAt: 1792787677759
+fingerprint: null
+payload:
+  id: TLS3_personas_use_it
+  map: docs/2026-10-16-tls-layer-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.109
+  files:
+    - clear-glass/src/net/policy.js
+    - clear-glass/src/net/service.js
+    - clear-glass/src/contexts/manager.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 01945ef6a6f43e3f

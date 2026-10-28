@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV4_inputs_are_history
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV4_inputs_are_history
+context: pipeline phase PV4_inputs_are_history of docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: PV4_inputs_are_history (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792874369961
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874369961
+lastSeenAt: 1792874369961
+fingerprint: null
+payload:
+  id: PV4_inputs_are_history
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-agent.js
+    - lib/agent-memory.js
+    - lib/context-atlas.js
+  depends_on:
+    - PV3_input_nodes
+  blocks: []
+  spec: null
+  graph: 61a7ba43fedc1cab

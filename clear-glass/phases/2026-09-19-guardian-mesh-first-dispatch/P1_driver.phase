@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P1_driver
+type: phase
+id: docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P1_driver
+context: pipeline phase P1_driver of docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+intent: null
+summary: P1_driver (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675979
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675979
+lastSeenAt: 1792787675979
+fingerprint: null
+payload:
+  id: P1_driver
+  map: docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ca4c42738e1cad5b

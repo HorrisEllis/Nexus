@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-self-build-pipeline-phasemap.spec::SB8_tool_agnosticism_and_new_tool_flow
+type: phase
+id: docs_nexus-self-build-pipeline-phasemap.spec::SB8_tool_agnosticism_and_new_tool_flow
+context: >-
+  pipeline phase SB8_tool_agnosticism_and_new_tool_flow of
+  docs/nexus-self-build-pipeline-phasemap.spec
+intent: null
+summary: SB8_tool_agnosticism_and_new_tool_flow (?) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792878424047
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878424047
+lastSeenAt: 1792878424047
+fingerprint: null
+payload:
+  id: SB8_tool_agnosticism_and_new_tool_flow
+  map: docs/nexus-self-build-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-system/contracts.js
+    - copilot/module-builder.js
+    - lib/contract-queue.js
+    - lib/agent-tools/tools/schedule-task.js
+    - lib/tool-index.js
+    - lib/gemini-toolbox/agent-contracts.js
+    - copilot/axiom-manager.js
+    - lib/system-control.js
+    - lib/constant-autonomy.js
+    - lib/agent-tools/tools/governance/schedule-task.js
+  depends_on:
+    - SB6_contract_type_schemas_and_toolbox_directory
+  blocks: []
+  spec: null
+  graph: f47027c888e993d0

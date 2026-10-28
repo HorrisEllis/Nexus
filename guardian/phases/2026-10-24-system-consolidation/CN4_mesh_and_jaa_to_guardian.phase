@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-system-consolidation-phasemap.spec::CN4_mesh_and_jaa_to_guardian
+type: phase
+id: docs_2026-10-24-system-consolidation-phasemap.spec::CN4_mesh_and_jaa_to_guardian
+context: pipeline phase CN4_mesh_and_jaa_to_guardian of docs/2026-10-24-system-consolidation-phasemap.spec
+intent: null
+summary: CN4_mesh_and_jaa_to_guardian (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325063
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325063
+lastSeenAt: 1792877325063
+fingerprint: null
+payload:
+  id: CN4_mesh_and_jaa_to_guardian
+  map: docs/2026-10-24-system-consolidation-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - guardian/mesh
+    - guardian/jaa
+  depends_on:
+    - CN0_the_rule_in_force
+  blocks: []
+  spec: null
+  graph: d55c6b0973b7152d

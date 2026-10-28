@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+context: >-
+  pipeline phase CP1_copilot_drives_idearium_and_talks_to_its_agents of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: CP1_copilot_drives_idearium_and_talks_to_its_agents (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676432
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676432
+lastSeenAt: 1792787676432
+fingerprint: null
+payload:
+  id: CP1_copilot_drives_idearium_and_talks_to_its_agents
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/index.js
+    - lib/agent-tools/tool-guide.js
+    - clear-glass/src/copilot/verbs.js
+    - copilot/server.js
+    - idearium/api/index.js
+    - lib/repo-agent.js
+  depends_on:
+    - IL2_library_spec_into_the_pipeline
+    - PV4_cli_and_ui
+    - CX1_context_cascade
+  blocks: []
+  spec: null
+  graph: 9573fd740fb5af49

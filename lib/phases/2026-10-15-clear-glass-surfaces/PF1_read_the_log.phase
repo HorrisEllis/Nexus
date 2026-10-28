@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-surfaces-phasemap.spec::PF1_read_the_log
+type: phase
+id: docs_2026-10-15-clear-glass-surfaces-phasemap.spec::PF1_read_the_log
+context: pipeline phase PF1_read_the_log of docs/2026-10-15-clear-glass-surfaces-phasemap.spec
+intent: null
+summary: PF1_read_the_log (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677495
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677495
+lastSeenAt: 1792787677495
+fingerprint: null
+payload:
+  id: PF1_read_the_log
+  map: docs/2026-10-15-clear-glass-surfaces-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/PROOF-OF-COMPETENCY.md
+    - clear-glass/src/ipc/bridge.js
+    - idearium/cli/route-commands.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5490f29c2a420c27

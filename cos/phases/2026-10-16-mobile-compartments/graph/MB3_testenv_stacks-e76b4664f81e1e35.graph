@@ -1,0 +1,106 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MB3_testenv_stacks:e76b4664f81e1e35
+type: graph
+id: phase:MB3_testenv_stacks:e76b4664f81e1e35
+context: dependency graph of phase MB3_testenv_stacks
+intent: null
+summary: 9 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677718
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677718
+lastSeenAt: 1792787677718
+fingerprint: null
+payload:
+  for: MB3_testenv_stacks
+  kind: phase
+  repo: null
+  hash: e76b4664f81e1e35
+  nodes:
+    - path: cos/testenv/detect.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/checks/ck-248-toolchain.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cos/testenv/environment.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/check-catalogue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/step-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-language-checks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-step-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: cos/testenv/environment.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: lib/check-catalogue.js
+      to: lib/checks/ck-248-toolchain.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/checks/ck-248-toolchain.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: lib/checks/ck-248-toolchain.js
+      kind: requires
+    - from: tests/modules/test-language-checks.test.js
+      to: lib/checks/ck-248-toolchain.js
+      kind: requires
+    - from: tests/modules/test-step-gate.test.js
+      to: lib/checks/ck-248-toolchain.js
+      kind: requires
+  crossings:
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-16-mobile-compartments-phasemap.spec::MB5_language_checks
+    upstream: []
+    downstream:
+      - docs/2026-10-16-mobile-compartments-phasemap.spec::MB5_language_checks
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-16-mobile-compartments-phasemap.spec::MB5_language_checks
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): MB5_language_checks · finishing it unlocks MB5_language_checks'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

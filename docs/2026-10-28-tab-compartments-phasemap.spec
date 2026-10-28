@@ -110,3 +110,9 @@ renderer/browser.js opens it with _tabs.newTab, in the window's session. A sized
 James, 2026-10-28: "continue get it working". A page in a bare window (an earlier pop-out, a provider window) has no tab strip, so TC3's
 "a tab of the window it is in" had nowhere to go. attach(contents, { openTab }) sends it to the main window ('default') as a tab. Sized
 popups are unchanged. This is TC4's first part, without the Dock button. Proof: test-fiverr-works FW-02.
+
+## ADDENDUM 2026-10-28 (0.60.265) — this map's releases renumbered
+James, 2026-10-28: "no patch file. unless idearium can run it. like i can drag it into the versionium tab and import". Merging main in (to make
+a change pack he can drop on his Nexus), main already had its own 0.60.221–0.60.224 and went up to 0.60.260. The releases named above as
+0.60.221, 0.60.222, 0.60.223 and 0.60.224 are 0.60.261, 0.60.262, 0.60.263 and 0.60.264; their changelogs say so. The text above is kept as
+written (§0.3).

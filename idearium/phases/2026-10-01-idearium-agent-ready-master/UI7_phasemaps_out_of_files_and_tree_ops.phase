@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI7_phasemaps_out_of_files_and_tree_ops
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI7_phasemaps_out_of_files_and_tree_ops
+context: >-
+  pipeline phase UI7_phasemaps_out_of_files_and_tree_ops of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: UI7_phasemaps_out_of_files_and_tree_ops (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676467
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676467
+lastSeenAt: 1792787676467
+fingerprint: null
+payload:
+  id: UI7_phasemaps_out_of_files_and_tree_ops
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+    - idearium/repo/phases.js
+  depends_on:
+    - RM1_registry_driven_moves
+  blocks: []
+  spec: null
+  graph: 44303ff60d0f06bc

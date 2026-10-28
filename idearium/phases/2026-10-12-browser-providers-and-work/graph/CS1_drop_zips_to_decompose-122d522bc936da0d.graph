@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS1_drop_zips_to_decompose:122d522bc936da0d
+type: graph
+id: phase:CS1_drop_zips_to_decompose:122d522bc936da0d
+context: dependency graph of phase CS1_drop_zips_to_decompose
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677330
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677330
+lastSeenAt: 1792787677330
+fingerprint: null
+payload:
+  for: CS1_drop_zips_to_decompose
+  kind: phase
+  repo: null
+  hash: 122d522bc936da0d
+  nodes:
+    - path: idearium/ui/index.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/components-panel.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): CS0_projects_decomposed_into_components · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
+        kind: declared

@@ -221,7 +221,7 @@ spec:
       status: "DONE 2026-09-27 — built in 0.39.271."
       depends_on: [C1]
       closes: [M8]
-      files: [lib/system-nodes.js, cli/nodes.js, orchestrator/orchestrator.js]
+      files: [lib/system-nodes.js, lib/cli/nodes.js, orchestrator/orchestrator.js]
     X2_guardian_hat_agent:
       name: >-
         Guardian hosts .hat and .agent — every forged hat and every repo agent written to

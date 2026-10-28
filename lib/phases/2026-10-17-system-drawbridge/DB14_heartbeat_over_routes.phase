@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB14_heartbeat_over_routes
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB14_heartbeat_over_routes
+context: pipeline phase DB14_heartbeat_over_routes of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB14_heartbeat_over_routes (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755863
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755863
+lastSeenAt: 1792841755863
+fingerprint: null
+payload:
+  id: DB14_heartbeat_over_routes
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/heartbeat.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1fd349ac8ccad766

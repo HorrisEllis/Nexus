@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-heal-nodes-phasemap.spec::HL4_the_heal_ledger
+type: phase
+id: docs_2026-10-07-heal-nodes-phasemap.spec::HL4_the_heal_ledger
+context: pipeline phase HL4_the_heal_ledger of docs/2026-10-07-heal-nodes-phasemap.spec
+intent: null
+summary: HL4_the_heal_ledger (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677085
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677085
+lastSeenAt: 1792787677085
+fingerprint: null
+payload:
+  id: HL4_the_heal_ledger
+  map: docs/2026-10-07-heal-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4d7fa995a99f7a73

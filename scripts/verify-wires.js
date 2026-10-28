@@ -138,7 +138,7 @@ function containsPath(rel, routePath, surface) {
  * Output is CANDIDATES for confirmation, never a verdict.
  */
 function reverseScan() {
-  const h = require(path.join(ROOT, 'hooks/index.js'));
+  const h = require(path.join(ROOT, 'lib', 'hooks', 'index.js'));
   const declared = new Set(h.allHooks().map(x => x.config?.path).filter(Boolean));
 
   // Real matching styles found across these servers.
@@ -185,7 +185,7 @@ function reverseScan() {
 }
 
 function main() {
-  const h = require(path.join(ROOT, 'hooks/index.js'));
+  const h = require(path.join(ROOT, 'lib', 'hooks', 'index.js'));
   // §FIXED 2026-07-09 — the forward scan checked EVERY hook for an
   // implementation, including ones explicitly marked `status: "planned"`.
   // A planned hook declares an intent, not an existence claim (§1.1);

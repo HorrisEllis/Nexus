@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-verified-primitives-phasemap.spec::VP7_the_settings_tab_in_categories
+type: phase
+id: docs_2026-10-05-verified-primitives-phasemap.spec::VP7_the_settings_tab_in_categories
+context: >-
+  pipeline phase VP7_the_settings_tab_in_categories of
+  docs/2026-10-05-verified-primitives-phasemap.spec
+intent: null
+summary: VP7_the_settings_tab_in_categories (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677059
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677059
+lastSeenAt: 1792787677059
+fingerprint: null
+payload:
+  id: VP7_the_settings_tab_in_categories
+  map: docs/2026-10-05-verified-primitives-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/repo-settings.js
+    - idearium/ui/js/app.js
+    - idearium/ui/js/repo-environment.js
+    - idearium/ui/settings.html
+    - idearium/ui/index.html
+  depends_on:
+    - VP0_map_and_atlas
+  blocks: []
+  spec: null
+  graph: bde114aa4d10f923

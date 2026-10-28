@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP3_apply_to_electron
+type: phase
+id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP3_apply_to_electron
+context: pipeline phase NP3_apply_to_electron of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+intent: null
+summary: NP3_apply_to_electron (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677478
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677478
+lastSeenAt: 1792787677478
+fingerprint: null
+payload:
+  id: NP3_apply_to_electron
+  map: docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+  repo: null
+  layer: null
+  status: PARTIAL-BUILT-0.60.60
+  files:
+    - clear-glass/src/net/apply.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b7c76e01e263d382

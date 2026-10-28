@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+context: >-
+  pipeline phase DF1_guardian_own_data_folder of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: DF1_guardian_own_data_folder (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792877321782
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877321782
+lastSeenAt: 1792877321782
+fingerprint: null
+payload:
+  id: DF1_guardian_own_data_folder
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/config.js
+    - guardian/server.js
+    - copilot/lib/self-model.js
+    - lib/agent-tools/tools/clear-glass/dom-archaeology.js
+    - clear-glass/src/mesh/agent-mesh.js
+    - run-all.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7a5af45b677d4f86

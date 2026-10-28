@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CN3_auth_to_orchestrator:1d74a76a9199aa1e
+type: graph
+id: phase:CN3_auth_to_orchestrator:1d74a76a9199aa1e
+context: dependency graph of phase CN3_auth_to_orchestrator
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792877325059
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325059
+lastSeenAt: 1792877325059
+fingerprint: null
+payload:
+  for: CN3_auth_to_orchestrator
+  kind: phase
+  repo: null
+  hash: 1d74a76a9199aa1e
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+    dependents:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+    upstream:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D1_what_is_a_system
+    downstream:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+    blockedBy:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by CN0_the_rule_in_force
+      - 'depends on (1): CN0_the_rule_in_force · all upstream 2'
+      - 'needed by (1): CN11_version_and_record'
+    edges:
+      - from: docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+        kind: declared

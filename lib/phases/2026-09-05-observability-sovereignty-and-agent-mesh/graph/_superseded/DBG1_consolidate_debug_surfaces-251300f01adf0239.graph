@@ -1,0 +1,133 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DBG1_consolidate_debug_surfaces:251300f01adf0239
+type: graph
+id: phase:DBG1_consolidate_debug_surfaces:251300f01adf0239
+context: dependency graph of phase DBG1_consolidate_debug_surfaces
+intent: null
+summary: 9 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675779
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675779
+lastSeenAt: 1792787675779
+fingerprint: null
+payload:
+  for: DBG1_consolidate_debug_surfaces
+  kind: phase
+  repo: null
+  hash: 251300f01adf0239
+  nodes:
+    - path: cli/cfr-debug.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/diagnose.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/sentinel.js
+      role: changes
+      exists: true
+      system: cli
+    - path: intelligence/cfr/contract-verifier.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/delta.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/graph.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/sigma.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: nexus/nexus-connect.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/delta.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: cli/diagnose.js
+      to: nexus/nexus-connect.js
+      kind: requires
+  crossings:
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/field.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/sigma.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/delta.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/graph.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/diagnose.js
+      to: nexus/nexus-connect.js
+      fromSystem: cli
+      toSystem: nexus
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF7_three_disconnected_debug_surfaces
+    dependents: []
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF7_three_disconnected_debug_surfaces
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): RF7_three_disconnected_debug_surfaces'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF7_three_disconnected_debug_surfaces
+        kind: inferred

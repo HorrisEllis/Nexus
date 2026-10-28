@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:A2:fc6a51b24eaf102b
+type: graph
+id: phase:A2:fc6a51b24eaf102b
+context: dependency graph of phase A2
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676004
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676004
+lastSeenAt: 1792787676004
+fingerprint: null
+payload:
+  for: A2
+  kind: phase
+  repo: null
+  hash: fc6a51b24eaf102b
+  nodes:
+    - path: tests/modules/test-nexus-atlas-refs.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-nexus-atlas-refs.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::A1
+    dependents:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+    upstream:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::A1
+    downstream:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): A1'
+      - 'needed by (1): R1 · finishing it unlocks R1'
+    edges:
+      - from: docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::A1
+        kind: declared

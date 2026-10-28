@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-announce-pulse-repair-phasemap.spec::PR2_the_diagnostic_listens_not_polls
+type: phase
+id: docs_2026-10-05-announce-pulse-repair-phasemap.spec::PR2_the_diagnostic_listens_not_polls
+context: >-
+  pipeline phase PR2_the_diagnostic_listens_not_polls of
+  docs/2026-10-05-announce-pulse-repair-phasemap.spec
+intent: null
+summary: PR2_the_diagnostic_listens_not_polls (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676775
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676775
+lastSeenAt: 1792787676775
+fingerprint: null
+payload:
+  id: PR2_the_diagnostic_listens_not_polls
+  map: docs/2026-10-05-announce-pulse-repair-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/nexus-diagnostic.js
+    - lib/pulse-listener.js
+  depends_on:
+    - PR1_the_announced_registry_is_the_list
+  blocks: []
+  spec: null
+  graph: aa9c34277977a16e

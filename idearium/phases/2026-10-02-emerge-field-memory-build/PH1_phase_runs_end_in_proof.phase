@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+context: >-
+  pipeline phase PH1_phase_runs_end_in_proof of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: PH1_phase_runs_end_in_proof (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476939
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476939
+lastSeenAt: 1792822476939
+fingerprint: null
+payload:
+  id: PH1_phase_runs_end_in_proof
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/repo/proof-run.js
+    - lib/chunk-build-orchestrator.js
+    - lib/repo-agent.js
+  depends_on:
+    - PR1_proof_run_the_delivery_checker
+  blocks: []
+  spec: null
+  graph: 7dca2582c1470864

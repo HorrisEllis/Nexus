@@ -1,0 +1,261 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N2:03d814e87979bfea
+type: graph
+id: phase:N2:03d814e87979bfea
+context: dependency graph of phase N2
+intent: null
+summary: 28 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676011
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676011
+lastSeenAt: 1792787676011
+fingerprint: null
+payload:
+  for: N2
+  kind: phase
+  repo: null
+  hash: 03d814e87979bfea
+  nodes:
+    - path: copilot/lib/reword.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-prompt-blocks.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/clear-glass-stream-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/copilot-adversarial-wire.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/copilot-handshake-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-tools-and-graph.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-build-context.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/intuition.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/copilot-context.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/expectation-watcher.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/inject-config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/recursive-diagnose.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/blueprint-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/config.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/inject-config.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/blueprint-index.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/copilot-context.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/recursive-diagnose.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/expectation-watcher.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/intuition.js
+      kind: requires
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-wire.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-handshake-dispatch.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-prompt-blocks.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-prompt-blocks.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: lib/repo-prompt-blocks.js
+      kind: requires
+    - from: tests/modules/test-agent-tools-and-graph.test.js
+      to: lib/repo-prompt-blocks.js
+      kind: requires
+    - from: tests/modules/test-build-context.test.js
+      to: lib/repo-prompt-blocks.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/repo-agent.js
+      kind: requires
+  crossings:
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+    dependents:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N24_no_json_yaml_node_types_only
+    upstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+    downstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::X1
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N10_migration
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N11_adopters
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N12_ui
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N13_release
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N15_contract_history
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N16_settings_without_iframes
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N17_data_migration_to_owning_systems
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N21_no_empty_generation_event_gates
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N22_shadow_and_negative_space_reasoning
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N23_ollama_first_build_then_agent_review
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N24_no_json_yaml_node_types_only
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N4_kinds_record_ledger_ring_blob
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N6_time
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N9_cli
+    blockedBy:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+    unlocks:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by N1
+      - 'depends on (1): N1'
+      - >-
+        needed by (3): T1, N3_projection_and_indexes, N24_no_json_yaml_node_types_only · all
+        downstream 21 · finishing it unlocks N3_projection_and_indexes
+    edges:
+      - from: docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+        kind: declared

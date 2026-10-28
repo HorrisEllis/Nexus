@@ -1,0 +1,139 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P1_schema_table_in_cortex:7a45c9928b49cec7
+type: graph
+id: phase:P1_schema_table_in_cortex:7a45c9928b49cec7
+context: dependency graph of phase P1_schema_table_in_cortex
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756379
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756379
+lastSeenAt: 1792841756379
+fingerprint: null
+payload:
+  for: P1_schema_table_in_cortex
+  kind: phase
+  repo: null
+  hash: 7a45c9928b49cec7
+  nodes:
+    - path: lib/contracts/SYSTEM-CONTRACTS.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexstore/types.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/axioms.node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/bottlenecks.node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/deltas.node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/divergent.node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/edges.node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/events.node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/faults.node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/gaps.node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/interaction-contracts.node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/ledgers.node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/systems.node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Axiom.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexstore/types.js
+      to: lib/warp/core/Axiom.js
+      kind: requires
+    - from: lib/contracts/SYSTEM-CONTRACTS.js
+      to: lib/contracts/nodes/axioms.node.js
+      kind: requires
+    - from: lib/contracts/SYSTEM-CONTRACTS.js
+      to: lib/contracts/nodes/systems.node.js
+      kind: requires
+    - from: lib/contracts/SYSTEM-CONTRACTS.js
+      to: lib/contracts/nodes/events.node.js
+      kind: requires
+    - from: lib/contracts/SYSTEM-CONTRACTS.js
+      to: lib/contracts/nodes/gaps.node.js
+      kind: requires
+    - from: lib/contracts/SYSTEM-CONTRACTS.js
+      to: lib/contracts/nodes/faults.node.js
+      kind: requires
+    - from: lib/contracts/SYSTEM-CONTRACTS.js
+      to: lib/contracts/nodes/edges.node.js
+      kind: requires
+    - from: lib/contracts/SYSTEM-CONTRACTS.js
+      to: lib/contracts/nodes/deltas.node.js
+      kind: requires
+    - from: lib/contracts/SYSTEM-CONTRACTS.js
+      to: lib/contracts/nodes/divergent.node.js
+      kind: requires
+    - from: lib/contracts/SYSTEM-CONTRACTS.js
+      to: lib/contracts/nodes/bottlenecks.node.js
+      kind: requires
+    - from: lib/contracts/SYSTEM-CONTRACTS.js
+      to: lib/contracts/nodes/ledgers.node.js
+      kind: requires
+    - from: lib/contracts/SYSTEM-CONTRACTS.js
+      to: lib/contracts/nodes/interaction-contracts.node.js
+      kind: requires
+    - from: lib/version.js
+      to: lib/contracts/SYSTEM-CONTRACTS.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

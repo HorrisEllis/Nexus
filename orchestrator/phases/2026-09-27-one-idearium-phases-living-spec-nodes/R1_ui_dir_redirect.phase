@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::R1_ui_dir_redirect
+type: phase
+id: docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::R1_ui_dir_redirect
+context: >-
+  pipeline phase R1_ui_dir_redirect of
+  docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+intent: null
+summary: R1_ui_dir_redirect (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753995
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753995
+lastSeenAt: 1792841753995
+fingerprint: null
+payload:
+  id: R1_ui_dir_redirect
+  map: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/orchestrator.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f426fdbac71fe35b

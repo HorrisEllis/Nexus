@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW5_agents_are_copilot
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW5_agents_are_copilot
+context: pipeline phase GW5_agents_are_copilot of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW5_agents_are_copilot (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792820507629
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820507629
+lastSeenAt: 1792820507629
+fingerprint: null
+payload:
+  id: GW5_agents_are_copilot
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+    - copilot/lib/capabilities.js
+    - lib/repo-agent.js
+  depends_on:
+    - GW1_the_baton
+  blocks: []
+  spec: null
+  graph: a8082de2026469af

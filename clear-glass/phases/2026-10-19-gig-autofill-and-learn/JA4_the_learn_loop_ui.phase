@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::JA4_the_learn_loop_ui
+type: phase
+id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::JA4_the_learn_loop_ui
+context: pipeline phase JA4_the_learn_loop_ui of docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+intent: null
+summary: JA4_the_learn_loop_ui (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792814522033
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814522033
+lastSeenAt: 1792814522033
+fingerprint: null
+payload:
+  id: JA4_the_learn_loop_ui
+  map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/learn-pick.js
+    - clear-glass/src/autofill/matcher.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/preload/index.js
+    - clear-glass/src/copilot/tools.js
+    - clear-glass/src/copilot/bridge.js
+    - idearium/cli/route-commands.js
+    - clear-glass/renderer/settings/sections/autofill.js
+    - clear-glass/renderer/settings/sections/autofill.css
+  depends_on:
+    - JA3_the_picker_on_a_miss
+  blocks: []
+  spec: null
+  graph: bf671d3ddbd3bbcc

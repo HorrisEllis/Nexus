@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-gating-census-phasemap.spec::L1_primitives_no_decision
+type: phase
+id: docs_2026-10-18-gating-census-phasemap.spec::L1_primitives_no_decision
+context: pipeline phase L1_primitives_no_decision of docs/2026-10-18-gating-census-phasemap.spec
+intent: null
+summary: L1_primitives_no_decision (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792820508005
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820508005
+lastSeenAt: 1792820508005
+fingerprint: null
+payload:
+  id: L1_primitives_no_decision
+  map: docs/2026-10-18-gating-census-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/context-stream.js
+    - lib/context-sources.js
+    - intelligence/lattice/node-lattice.js
+    - loom/scanners/source-map.js
+    - idearium/cli/route-commands.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: af2037ec4c7c7ccd

@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
 context: pipeline phase CY0_one_crystal_schema of docs/2026-10-20-belief-loop-phasemap.spec
 intent: null
-summary: CY0_one_crystal_schema (foundation) — 4 file(s)
+summary: CY0_one_crystal_schema (foundation) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792456303338
+exported_at: 1792841756073
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303338
-lastSeenAt: 1792456303338
+firstSeenAt: 1792841756073
+lastSeenAt: 1792841756073
 fingerprint: null
 payload:
   id: CY0_one_crystal_schema
@@ -21,11 +21,10 @@ payload:
   status: OPEN
   files:
     - lib/crystal.js
-    - lib/node-schemas/schema.crystal
-    - meta/crystal-lattice.js
+    - lib/meta/crystal-lattice.js
     - intelligence/liminal-space/index.js
   depends_on: []
   blocks:
     - MOD-CRYSTAL
   spec: docs/belief-loop.spec
-  graph: 6952ccb2f43c4c04
+  graph: 81657527b04b462b

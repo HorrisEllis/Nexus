@@ -1,0 +1,82 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CA5_intent_routing:3a5f0d9163ea6078
+type: graph
+id: phase:CA5_intent_routing:3a5f0d9163ea6078
+context: dependency graph of phase CA5_intent_routing
+intent: null
+summary: 4 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678152
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678152
+lastSeenAt: 1792787678152
+fingerprint: null
+payload:
+  for: CA5_intent_routing
+  kind: phase
+  repo: null
+  hash: 3a5f0d9163ea6078
+  nodes:
+    - path: cortex/core/raid/routing-ir.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/nexus-client.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: cortex/core/raid/routing-ir.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: cortex/core/raid/routing-ir.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/routing-ir.js
+      kind: requires
+  crossings:
+    - from: copilot/lifeline.js
+      to: cortex/core/raid/routing-ir.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/routing-ir.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/copilot-awareness-routing-phasemap.spec::CA7_clearglass_multi_account
+    upstream: []
+    downstream:
+      - docs/copilot-awareness-routing-phasemap.spec::CA7_clearglass_multi_account
+    blockedBy: []
+    unlocks:
+      - docs/copilot-awareness-routing-phasemap.spec::CA7_clearglass_multi_account
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): CA7_clearglass_multi_account · finishing it unlocks
+        CA7_clearglass_multi_account
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

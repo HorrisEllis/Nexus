@@ -83,16 +83,63 @@ test('SV-07 an unreachable intelligence is said, never faked', async () => {
 });
 test('SV-08 the census: which systems are sovereign, and each blocker named (data / primitive / capability), on the route and the command', async () => {
   const SB = require('../../lib/system-boundary.js');
-  assert.deepStrictEqual(['cortex/memory/jaa-db.js', 'nexus/nexus-bus.js', 'intelligence/cfr/field.js'].map(SB.blockerOf), ['data', 'primitive', 'capability']);
+  assert.deepStrictEqual(['cortex/memory/jaa-db.js', 'lib/nexus/nexus-bus.js', 'intelligence/cfr/field.js'].map(SB.blockerOf), ['data', 'primitive', 'capability']);
   const r = SB.sovereignty({ root: REPO });
-  assert.ok(r.sovereign.includes('sentinel') && !r.sovereign.includes('nexus-healer'), 'nexus-healer is no system of its own now');
+  // 0.60.241 RF2: sentinel/ moved into lib/ (the kernel), so it is no system of its own now; components stays sovereign
+  assert.ok(r.sovereign.includes('components') && !r.sovereign.includes('sentinel') && !r.sovereign.includes('nexus-healer'), 'nexus-healer and sentinel are no systems of their own now');
   const one = SB.sovereignty({ root: REPO, system: 'versionium' }).systems[0];
   assert.ok(!one.sovereign && one.list && one.list.data.length === one.blockers.data, JSON.stringify(one.blockers));
-  const g = await quiet(async () => { const api = await import(path.join(REPO, 'idearium/api/index.js')); return api._route('GET', '/api/system/sovereign?system=sentinel'); });
+  const g = await quiet(async () => { const api = await import(path.join(REPO, 'idearium/api/index.js')); return api._route('GET', '/api/system/sovereign?system=components'); });
   const d = g.json.data || g.json;
   assert.strictEqual(g.status, 200); assert.strictEqual(d.systems[0].sovereign, true);
   const { SPEC } = require('../../idearium/cli/route-commands.js');
   assert.strictEqual(SPEC.find(x => x.key === 'system.sovereign').req({ args: ['cos'], flags: {} }).path, '/api/system/sovereign?system=cos');
+});
+
+// 0.60.244 SV0 — James: "i want to get each system soveriegn and inside a cos compartment". Sovereign is his CS_D7 both ways, and a
+// require written in a comment is no crossing (intelligence/alk/index.js:122 had counted as one).
+test('SV-09 the census tells the truth: a commented require is no crossing; sovereign means both ways; the step on his road', () => {
+  const SB = require('../../lib/system-boundary.js');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sv9-'));
+  const w = (f, t) => { fs.mkdirSync(path.dirname(path.join(root, f)), { recursive: true }); fs.writeFileSync(path.join(root, f), t); };
+  w('b/x.js', 'module.exports = 1;\n');
+  w('a/index.js', "// this used to require('../b/x.js') — a comment, not a crossing\n/* require('../b/x.js') */\nmodule.exports = 0;\n");   // known limit, said: require('…') text inside a string still counts (a real require's argument is a string too)
+  w('c/index.js', "module.exports = require('../b/x.js');\n");
+  w('lib/k.js', "module.exports = require('../a/index.js');\n");
+  w('a/registry-components.js', 'module.exports = [];\n');
+  w('b/registry-components.js', 'module.exports = [];\n'); w('b/compartment.json', '{}');
+  const by = Object.fromEntries(SB.sovereignty({ root }).systems.map(r => [r.system, r]));
+  assert.strictEqual(by.a.out, 0, 'a\'s two mentions of b are a line comment and a block comment');
+  assert.ok(!by.a.sovereign && by.a.inFrom.core === 1 && by.a.step === 'crossings', 'core loads a, so a is not sovereign yet');
+  assert.ok(!by.b.sovereign && by.b.outClean && by.b.inFrom.systems === 1, 'c loads b: b loads nothing, and still is not sovereign');
+  assert.ok(!by.c.sovereign && by.c.out === 1);
+  w('c/index.js', 'module.exports = 2;\n');
+  const b2 = SB.sovereignty({ root, system: 'b' }).systems[0];
+  assert.ok(b2.sovereign && b2.step === 'ready' && b2.registry && b2.compartment, JSON.stringify(b2));
+  const c2 = SB.sovereignty({ root, system: 'c' }).systems[0];
+  assert.ok(c2.sovereign && c2.step === 'registry', 'c is sovereign; its next step is its registry');
+});
+
+// 0.60.250 SV1 (census only) — which system writes and reads which table of the shared store; evidence, never a decision
+test('SV-10 the table census: writers and readers per table, the owner the evidence names, contested said, a constant read, a comment not', async () => {
+  const SB = require('../../lib/system-boundary.js');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sv10-'));
+  const w = (f, t) => { fs.mkdirSync(path.dirname(path.join(root, f)), { recursive: true }); fs.writeFileSync(path.join(root, f), t); };
+  w('cortex/memory/jaa-db.js', 'module.exports = {};\n');
+  w('a/x.js', "const { jaaDB } = require('../cortex/memory/jaa-db');\nconst T = 'a_runs';\njaaDB.insert(T, {});\njaaDB.insert('shared', {});\n// jaaDB.insert('ghost', {})\n");
+  w('b/y.js', "const db = require('../cortex/memory/jaa-db.js').jaaDB;\ndb.query('a_runs');\ndb.upsert('shared', {});\n");
+  w('lib/k.js', "const { jaaDB } = require('../cortex/memory/jaa-db');\njaaDB.update('core_only', {}, {});\n");
+  const r = SB.tables({ root }); const by = Object.fromEntries(r.tables.map(t => [t.table, t]));
+  assert.deepStrictEqual([by.a_runs.status, by.a_runs.owner, by.a_runs.readers], ['one writer', 'a', ['b']], 'a table named by a constant is read');
+  assert.deepStrictEqual([by.shared.status, by.shared.owner, by.shared.writers], ['contested', null, ['a', 'b']], 'two writers: contested, no owner guessed');
+  assert.deepStrictEqual([by.core_only.status, by.core_only.owner], ['only core writes', null]);
+  assert.ok(!by.ghost, 'a call in a comment is not counted');
+  assert.strictEqual(SB.tables({ root, system: 'b' }).tables.length, 2);
+  const { SPEC } = require('../../idearium/cli/route-commands.js');
+  assert.strictEqual(SPEC.find(x => x.key === 'system.tables').req({ args: ['loom'], flags: {} }).path, '/api/system/tables?system=loom');
+  const g = await quiet(async () => { const api = await import(path.join(REPO, 'idearium/api/index.js')); return api._route('GET', '/api/system/tables?system=loom'); });
+  const d = g.json.data || g.json;
+  assert.strictEqual(g.status, 200); assert.ok(d.ok && Array.isArray(d.tables) && d.summary.tables > 0, JSON.stringify(d).slice(0, 200));
 });
 
 (async () => {

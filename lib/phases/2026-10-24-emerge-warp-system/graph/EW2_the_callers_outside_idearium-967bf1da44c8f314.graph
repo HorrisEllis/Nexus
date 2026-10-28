@@ -1,0 +1,270 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EW2_the_callers_outside_idearium:967bf1da44c8f314
+type: graph
+id: phase:EW2_the_callers_outside_idearium:967bf1da44c8f314
+context: dependency graph of phase EW2_the_callers_outside_idearium
+intent: null
+summary: 32 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877324976
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877324976
+lastSeenAt: 1792877324976
+fingerprint: null
+payload:
+  for: EW2_the_callers_outside_idearium
+  kind: phase
+  repo: null
+  hash: 967bf1da44c8f314
+  nodes:
+    - path: copilot/module-builder.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/build-pipeline.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/spec-compiler-port.js
+      role: changes
+      exists: false
+      system: lib
+    - path: tests/modules/test-spec-compiler-port.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/faculty/faculty-tools.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/execution-pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-prompt-blocks.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/step-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/t2-gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/file-tree-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/build-pipeline.js
+      to: lib/emerge/compiler/t2-gate.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: lib/file-tree-plan.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: lib/emerge/compiler/index.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: lib/execution-pipeline.js
+      to: lib/build-pipeline.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: lib/repo-prompt-blocks.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/module-builder.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D1_compiler_and_ide_with_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW1_emerge_and_warp_one_system
+    dependents:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+    upstream:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW1_emerge_and_warp_one_system
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D0_emerge_and_warp_one_system
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D1_compiler_and_ide_with_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D2_the_runtime_is_not_a_crossing
+    downstream:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW5_the_registry_with_wires
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - >-
+        depends on (2): EW_D1_compiler_and_ide_with_idearium, EW1_emerge_and_warp_one_system · all
+        upstream 4
+      - >-
+        needed by (1): EW3_the_spec_compiler_into_idearium · all downstream 3 · finishing it unlocks
+        EW3_the_spec_compiler_into_idearium
+    edges:
+      - from: docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D1_compiler_and_ide_with_idearium
+        kind: declared
+      - from: docs/2026-10-24-emerge-warp-system-phasemap.spec::EW1_emerge_and_warp_one_system
+        kind: declared

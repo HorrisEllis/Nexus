@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-spec-foundation-model-phasemap.spec::SF3_evidence_not_claims
+type: phase
+id: docs_2026-10-15-spec-foundation-model-phasemap.spec::SF3_evidence_not_claims
+context: pipeline phase SF3_evidence_not_claims of docs/2026-10-15-spec-foundation-model-phasemap.spec
+intent: null
+summary: SF3_evidence_not_claims (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677624
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677624
+lastSeenAt: 1792787677624
+fingerprint: null
+payload:
+  id: SF3_evidence_not_claims
+  map: docs/2026-10-15-spec-foundation-model-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - SF2_state_and_gate
+  blocks: []
+  spec: null
+  graph: 2b678b0269fe99ed

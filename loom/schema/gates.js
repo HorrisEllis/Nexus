@@ -12,7 +12,7 @@
  * registry state, which is what the Axioms in axioms.js are for —
  * Axiom.check explicitly receives streamState, Gate.transform does not).
  */
-const { Gate, Event } = require('../../warp/core');
+const { Gate, Event } = require('../../lib/warp/core');
 const {
   COMPONENT_SCHEMA, SEAM_SCHEMA, HOOK_SCHEMA, WIRE_SCHEMA, CONCERN_SCHEMA, KNOWN_HOOK_TYPES,
 } = require('./definitions');

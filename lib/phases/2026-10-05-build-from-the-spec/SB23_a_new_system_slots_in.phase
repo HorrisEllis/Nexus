@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB23_a_new_system_slots_in
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB23_a_new_system_slots_in
+context: pipeline phase SB23_a_new_system_slots_in of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB23_a_new_system_slots_in (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792878421770
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878421770
+lastSeenAt: 1792878421770
+fingerprint: null
+payload:
+  id: SB23_a_new_system_slots_in
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-self/systems.js
+    - lib/nexus/autopilot.js
+    - orchestrator/orchestrator.config.json
+    - loom/scanners/spec-map.js
+    - loom/templates/system-scaffold.js
+  depends_on:
+    - SB22_every_component_capability_command_events_as_nodes
+    - SB21_deterministic_parts_grow_with_the_system
+  blocks: []
+  spec: null
+  graph: 353a1fff178a0591

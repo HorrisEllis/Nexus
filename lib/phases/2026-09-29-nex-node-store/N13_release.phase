@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N13_release
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N13_release
+context: pipeline phase N13_release of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N13_release (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754163
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754163
+lastSeenAt: 1792841754163
+fingerprint: null
+payload:
+  id: N13_release
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/version.js
+  depends_on:
+    - N11_adopters
+    - N12_ui
+  blocks: []
+  spec: null
+  graph: 2c63272235760d22

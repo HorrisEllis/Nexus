@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-pipeline-root-causes-phasemap.spec::RC6_unowned_ollama_load
+type: phase
+id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::RC6_unowned_ollama_load
+context: pipeline phase RC6_unowned_ollama_load of docs/2026-10-19-pipeline-root-causes-phasemap.spec
+intent: null
+summary: RC6_unowned_ollama_load (foundation) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677935
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677935
+lastSeenAt: 1792787677935
+fingerprint: null
+payload:
+  id: RC6_unowned_ollama_load
+  map: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+  repo: null
+  layer: foundation
+  status: DONE 0.60.187 (see the addendum at the end)
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 67b8e7d0ffd6cf9d

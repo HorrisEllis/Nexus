@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+context: pipeline phase MG7_automation_macros_and_hats of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG7_automation_macros_and_hats (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792880100860
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100860
+lastSeenAt: 1792880100860
+fingerprint: null
+payload:
+  id: MG7_automation_macros_and_hats
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/macros.js
+    - lib/hat-seed.js
+  depends_on:
+    - MG3_the_state_manager
+    - CS10_hats_bound_to_the_compartment
+    - CON8_nexus_server_hook
+  blocks: []
+  spec: null
+  graph: a30d0a389948e0ff

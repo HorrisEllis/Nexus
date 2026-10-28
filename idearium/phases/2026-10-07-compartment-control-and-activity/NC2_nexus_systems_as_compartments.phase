@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-compartment-control-and-activity-phasemap.spec::NC2_nexus_systems_as_compartments
+type: phase
+id: docs_2026-10-07-compartment-control-and-activity-phasemap.spec::NC2_nexus_systems_as_compartments
+context: >-
+  pipeline phase NC2_nexus_systems_as_compartments of
+  docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+intent: null
+summary: NC2_nexus_systems_as_compartments (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477293
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477293
+lastSeenAt: 1792822477293
+fingerprint: null
+payload:
+  id: NC2_nexus_systems_as_compartments
+  map: docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/nexus-self.js
+  depends_on:
+    - AL1_activity_log
+  blocks: []
+  spec: null
+  graph: 66a08f2bde3cdc9e

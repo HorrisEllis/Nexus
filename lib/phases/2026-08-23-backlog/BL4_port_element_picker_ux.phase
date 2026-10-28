@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL4_port_element_picker_ux
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL4_port_element_picker_ux
+context: pipeline phase BL4_port_element_picker_ux of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL4_port_element_picker_ux (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675400
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675400
+lastSeenAt: 1792787675400
+fingerprint: null
+payload:
+  id: BL4_port_element_picker_ux
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/browser/browser-action.js
+  depends_on:
+    - BL2_guardian_zip_mining_report
+  blocks: []
+  spec: null
+  graph: 8f7a989bfea93b3a

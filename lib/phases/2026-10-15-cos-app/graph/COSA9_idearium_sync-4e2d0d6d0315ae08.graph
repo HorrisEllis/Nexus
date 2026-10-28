@@ -1,0 +1,340 @@
+envelope: 1
+uuid: nexus-export-graph-phase:COSA9_idearium_sync:4e2d0d6d0315ae08
+type: graph
+id: phase:COSA9_idearium_sync:4e2d0d6d0315ae08
+context: dependency graph of phase COSA9_idearium_sync
+intent: null
+summary: 39 node(s), 9 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755518
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755518
+lastSeenAt: 1792841755518
+fingerprint: null
+payload:
+  for: COSA9_idearium_sync
+  kind: phase
+  repo: null
+  hash: 4e2d0d6d0315ae08
+  nodes:
+    - path: cos/app/switch.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/workspace/vm-control.js
+      role: changes
+      exists: true
+      system: cos
+    - path: docs/2026-10-15-pipeline-focus-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/lib/projects.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/projects.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/repo-notes.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/cos-bridge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/history-import-job.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/project-decompose.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-notes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/zip-ingest.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/import-checks.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/opportunity/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-nexus-atlas-and-glass.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-inject-approval.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/advance-work-phase.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/cli/commands/destroy.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/cli/commands/intent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/intent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: idearium/lib/data-dir.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/zip.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/repo-notes.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/zip-ingest.js
+      to: lib/zip.js
+      kind: requires
+    - from: lib/nexus-self/store.js
+      to: idearium/lib/data-dir.cjs
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/advance-work-phase.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/destroy.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/foundation/intent.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/intent.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: cos/workspace/vm-control.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-notes.js
+      kind: requires
+    - from: lib/import-checks.js
+      to: lib/repo-notes.js
+      kind: requires
+    - from: lib/opportunity/index.js
+      to: lib/zip-ingest.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/nexus-self/apply.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/nexus-self/inject-gate.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: tests/modules/test-nexus-atlas-and-glass.test.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: tests/modules/test-nexus-inject-approval.test.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: lib/nexus-self/store.js
+      kind: requires
+  crossings:
+    - from: lib/repo-notes.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/nexus-self/store.js
+      to: idearium/lib/data-dir.cjs
+      fromSystem: lib
+      toSystem: idearium
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/create.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/advance-work-phase.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/destroy.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/foundation/intent.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/intent.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/workspace/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+    dependents:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA10_compartment_window
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA11_nested_tree
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+    downstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA10_compartment_window
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA11_nested_tree
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
+      - docs/2026-10-16-cos-console-phasemap.spec::CON3_system_controls
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA10_compartment_window
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · ready
+      - 'depends on (2): COSA1_version_store_and_import, COSA3_run_and_supervise · all upstream 3'
+      - >-
+        needed by (3): COSA10_compartment_window, COSA11_nested_tree, COSA14_versionium_record · all
+        downstream 4 · finishing it unlocks COSA10_compartment_window
+    edges:
+      - from: docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+        kind: declared
+      - from: docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+        kind: declared

@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-workshop-codex-rewind-phasemap.spec::AR2_architect_in_the_workshop
+type: phase
+id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::AR2_architect_in_the_workshop
+context: >-
+  pipeline phase AR2_architect_in_the_workshop of
+  docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+intent: null
+summary: AR2_architect_in_the_workshop (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476978
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476978
+lastSeenAt: 1792822476978
+fingerprint: null
+payload:
+  id: AR2_architect_in_the_workshop
+  map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/architect.js
+    - idearium/ui/architect.html
+    - idearium/api/index.js
+    - idearium/cli/index.js
+    - idearium/ui/workshop.html
+    - loom/maps/one-idearium-map.js
+    - loom/data/registry.json
+  depends_on:
+    - SW1_spec_workshop
+    - CX0_codex_component_store
+  blocks: []
+  spec: null
+  graph: 60f26485d18c4707

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB6_files_changes_plans_cos_tabs
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB6_files_changes_plans_cos_tabs
+context: pipeline phase TB6_files_changes_plans_cos_tabs of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB6_files_changes_plans_cos_tabs (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677664
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677664
+lastSeenAt: 1792787677664
+fingerprint: null
+payload:
+  id: TB6_files_changes_plans_cos_tabs
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TB5_tab_shell
+  blocks: []
+  spec: null
+  graph: 53d029fe85983028

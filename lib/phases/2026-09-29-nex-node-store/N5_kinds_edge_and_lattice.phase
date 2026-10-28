@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
+context: pipeline phase N5_kinds_edge_and_lattice of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N5_kinds_edge_and_lattice (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676243
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676243
+lastSeenAt: 1792787676243
+fingerprint: null
+payload:
+  id: N5_kinds_edge_and_lattice
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/kinds/edge.js
+    - lib/nexstore/kinds/lattice.js
+    - lib/nexstore/graph.js
+  depends_on:
+    - N3_projection_and_indexes
+  blocks: []
+  spec: null
+  graph: be77dec312fae18a

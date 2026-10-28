@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P5_retire_second_runtime
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P5_retire_second_runtime
+context: >-
+  pipeline phase P5_retire_second_runtime of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: P5_retire_second_runtime (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792878420505
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878420505
+lastSeenAt: 1792878420505
+fingerprint: null
+payload:
+  id: P5_retire_second_runtime
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/boot.js
+    - copilot/lib/user-model.js
+    - cortex/core/raid/index.js
+    - cortex/core/raid/router.js
+  depends_on:
+    - P4_repoint_callers
+  blocks: []
+  spec: null
+  graph: 7b3f1f5c375ecf1f

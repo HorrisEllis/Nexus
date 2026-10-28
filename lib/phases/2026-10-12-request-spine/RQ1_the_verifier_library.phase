@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+context: pipeline phase RQ1_the_verifier_library of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ1_the_verifier_library (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755261
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755261
+lastSeenAt: 1792841755261
+fingerprint: null
+payload:
+  id: RQ1_the_verifier_library
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/chunk-verify.js
+    - lib/phase-plan.js
+    - lib/seam/axioms.js
+    - cos/runtime/run.js
+    - lib/code-edit.js
+  depends_on:
+    - RQ0_the_inventory_proved
+  blocks: []
+  spec: null
+  graph: d04faabcd5728f10

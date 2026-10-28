@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-self-build-pipeline-phasemap.spec::SB9_full_clearglass_control
+type: phase
+id: docs_nexus-self-build-pipeline-phasemap.spec::SB9_full_clearglass_control
+context: pipeline phase SB9_full_clearglass_control of docs/nexus-self-build-pipeline-phasemap.spec
+intent: null
+summary: SB9_full_clearglass_control (?) — 12 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678303
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678303
+lastSeenAt: 1792787678303
+fingerprint: null
+payload:
+  id: SB9_full_clearglass_control
+  map: docs/nexus-self-build-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/dom/archaeology.js
+    - lib/agent-tools/tools/browser-action.js
+    - copilot/server.js
+    - lib/agent-system/submit.js
+    - clear-glass/renderer/guardian-picker.js
+    - clear-glass/src/core/bus.js
+    - clear-glass/test/session-hub.test.js
+    - clear-glass/src/gates/index.js
+    - clear-glass/renderer/copilot-cli.js
+    - clear-glass/src/automation/routes.js
+    - clear-glass/src/driver/glass-host/main.js
+    - lib/agent-tools/tools/browser/browser-action.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 77c994bfadf395ac

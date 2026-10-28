@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::CL1_commands_declared_by_their_system
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::CL1_commands_declared_by_their_system
+context: >-
+  pipeline phase CL1_commands_declared_by_their_system of
+  docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: CL1_commands_declared_by_their_system (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754863
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754863
+lastSeenAt: 1792841754863
+fingerprint: null
+payload:
+  id: CL1_commands_declared_by_their_system
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/command-registry.js
+    - idearium/cli/index.js
+    - cos/cli/index.js
+    - copilot/cli.js
+    - lib/cli/nexus.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4c68a98014727ba7

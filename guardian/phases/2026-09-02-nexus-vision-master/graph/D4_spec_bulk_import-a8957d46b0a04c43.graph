@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:D4_spec_bulk_import:a8957d46b0a04c43
+type: graph
+id: phase:D4_spec_bulk_import:a8957d46b0a04c43
+context: dependency graph of phase D4_spec_bulk_import
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675633
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675633
+lastSeenAt: 1792787675633
+fingerprint: null
+payload:
+  for: D4_spec_bulk_import
+  kind: phase
+  repo: null
+  hash: a8957d46b0a04c43
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::C1_copilot_spec_wizard
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B2_chunk_contract_chaining
+    dependents: []
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B2_chunk_contract_chaining
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::C1_copilot_spec_wizard
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+    downstream: []
+    blockedBy:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::C1_copilot_spec_wizard
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B2_chunk_contract_chaining
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by C1_copilot_spec_wizard, B2_chunk_contract_chaining
+      - 'depends on (2): C1_copilot_spec_wizard, B2_chunk_contract_chaining · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::C1_copilot_spec_wizard
+        kind: declared
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::B2_chunk_contract_chaining
+        kind: declared

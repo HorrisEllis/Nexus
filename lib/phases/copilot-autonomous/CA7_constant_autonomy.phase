@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-autonomous-phasemap.spec::CA7_constant_autonomy
+type: phase
+id: docs_copilot-autonomous-phasemap.spec::CA7_constant_autonomy
+context: pipeline phase CA7_constant_autonomy of docs/copilot-autonomous-phasemap.spec
+intent: null
+summary: CA7_constant_autonomy (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756328
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756328
+lastSeenAt: 1792841756328
+fingerprint: null
+payload:
+  id: CA7_constant_autonomy
+  map: docs/copilot-autonomous-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/constant-autonomy.js
+    - clear-glass/renderer/library/sections/macros.js
+    - clear-glass/renderer/page-map-panel.js
+    - clear-glass/renderer/shell/menus.js
+    - lib/case-library.js
+    - lib/tool-index.js
+    - lib/compartment-engine.js
+    - lib/execution-pipeline.js
+    - lib/integrity-revert.js
+    - intelligence/relational-field.js
+    - loom/maps/observability-map.js
+  depends_on:
+    - CA1_scheduler
+    - CA2_triggers_conditions
+    - CA6_self_building_commands
+  blocks: []
+  spec: null
+  graph: 3d9bc5ba933dfd1f

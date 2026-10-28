@@ -130,7 +130,7 @@ async function registerErosWithNexus() {
 // systemId+port pair per call, matching how orchestrator's own real
 // SYSTEM_REGISTRY tracks each systemId independently.
 function _startHeartbeat() {
-  const { createPulse } = require('../../orchestrator/lib/pulse.js');
+  const { createPulse } = require('../../lib/pulse.js');
   const wirePulse = createPulse({ systemId: 'nexus-wire', port: WIRE_PORT, orchPort: NEXUS_ORCH_PORT });
   const erosPulse = createPulse({ systemId: 'erosmancer-os', port: EROS_PORT, orchPort: NEXUS_ORCH_PORT });
   return { wirePulse, erosPulse };

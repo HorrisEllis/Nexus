@@ -25,7 +25,7 @@
  * ever reaching claude/deepseek/gemini.
  */
 const assert = require('assert');
-const { runCascade } = require('../../warp/dispatch/cascade.js');
+const { runCascade } = require('../../lib/warp/dispatch/cascade.js');
 const { providersFor } = require('../../lib/seam/adapters/warp-cascade.js');
 const fs = require('fs');
 const path = require('path');

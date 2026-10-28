@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB7_runs_tab
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB7_runs_tab
+context: pipeline phase TB7_runs_tab of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB7_runs_tab (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677665
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677665
+lastSeenAt: 1792787677665
+fingerprint: null
+payload:
+  id: TB7_runs_tab
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/mesh/route-graph.js
+  depends_on:
+    - TB5_tab_shell
+    - TB3_close_the_persistence_gaps
+  blocks: []
+  spec: null
+  graph: 56ae3f6835f01b06

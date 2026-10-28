@@ -1,0 +1,142 @@
+envelope: 1
+uuid: nexus-export-graph-phase:COSA6_the_exe:6de6d4ad67498fc0
+type: graph
+id: phase:COSA6_the_exe:6de6d4ad67498fc0
+context: dependency graph of phase COSA6_the_exe
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792880099949
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880099949
+lastSeenAt: 1792880099949
+fingerprint: null
+payload:
+  for: COSA6_the_exe
+  kind: phase
+  repo: null
+  hash: 6de6d4ad67498fc0
+  nodes:
+    - path: .github/workflows/cos-app.yml
+      role: changes
+      exists: true
+      system: null
+    - path: cos/app/controller.js
+      role: changes
+      exists: true
+      system: cos
+    - path: scripts/build-cos-app.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/app/desktop/main.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-app-build.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-self-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-ui.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/app/app-update.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/settings.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/store.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/switch.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/version.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/app/controller.js
+      to: cos/app/store.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/settings.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/switch.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/app-update.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/version.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: tests/modules/test-cos-app-self-update.test.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: tests/modules/test-cos-app-ui.test.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: tests/modules/test-cos-app-update.test.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: tests/modules/test-cos-app-build.test.js
+      to: scripts/build-cos-app.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+    dependents:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA10_compartment_window
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA12_vmware_window
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+    downstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA10_compartment_window
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA11_nested_tree
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA12_vmware_window
+      - docs/2026-10-16-cos-console-phasemap.spec::CON3_system_controls
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA12_vmware_window
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): COSA1_version_store_and_import'
+      - >-
+        needed by (2): COSA10_compartment_window, COSA12_vmware_window · all downstream 5 ·
+        finishing it unlocks COSA12_vmware_window
+    edges:
+      - from: docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+        kind: declared

@@ -1,0 +1,110 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR13_copilot_chat_ui:5f3ef7718c4d1a74
+type: graph
+id: phase:SR13_copilot_chat_ui:5f3ef7718c4d1a74
+context: dependency graph of phase SR13_copilot_chat_ui
+intent: null
+summary: 9 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753676
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753676
+lastSeenAt: 1792841753676
+fingerprint: null
+payload:
+  for: SR13_copilot_chat_ui
+  kind: phase
+  repo: null
+  hash: 5f3ef7718c4d1a74
+  nodes:
+    - path: lib/loom-map.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/module-builder.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/component-ledger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/schema/driver.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/loom-map.js
+      to: loom/schema/driver.js
+      kind: requires
+    - from: lib/loom-map.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: lib/loom-map.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/loom-map.js
+      kind: requires
+  crossings:
+    - from: lib/loom-map.js
+      to: loom/schema/driver.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::VM1_versionium_owns_loom_map_sync
+    dependents: []
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::VM1_versionium_owns_loom_map_sync
+    downstream: []
+    blockedBy:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::VM1_versionium_owns_loom_map_sync
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by VM1_versionium_owns_loom_map_sync
+      - 'depends on (1): VM1_versionium_owns_loom_map_sync'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::VM1_versionium_owns_loom_map_sync
+        kind: inferred

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
+context: pipeline phase PV2_repair_feedback of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PV2_repair_feedback (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754356
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754356
+lastSeenAt: 1792841754356
+fingerprint: null
+payload:
+  id: PV2_repair_feedback
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+    - idearium/api/index.js
+  depends_on:
+    - PV1_verify
+  blocks: []
+  spec: null
+  graph: 4359b5a38a916bb3

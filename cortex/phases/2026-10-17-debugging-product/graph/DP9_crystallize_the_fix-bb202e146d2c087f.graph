@@ -1,0 +1,92 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DP9_crystallize_the_fix:bb202e146d2c087f
+type: graph
+id: phase:DP9_crystallize_the_fix:bb202e146d2c087f
+context: dependency graph of phase DP9_crystallize_the_fix
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677770
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677770
+lastSeenAt: 1792787677770
+fingerprint: null
+payload:
+  for: DP9_crystallize_the_fix
+  kind: phase
+  repo: null
+  hash: bb202e146d2c087f
+  nodes:
+    - path: cortex/memory/fix-map.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: diagnostic/lib/case.js
+      role: changes
+      exists: false
+      system: diagnostic
+    - path: cortex/memory/bep-lookup.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/failure-report.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: cortex/memory/fix-map.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/memory/bep-lookup.js
+      to: cortex/memory/fix-map.js
+      kind: requires
+    - from: cortex/push-recall.js
+      to: cortex/memory/fix-map.js
+      kind: requires
+    - from: cortex/self-heal/failure-report.js
+      to: cortex/memory/fix-map.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/memory/fix-map.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP8_a_proven_fix
+    dependents: []
+    upstream:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP0d_one_gap_door
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP2_one_gap_door
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP4_every_ledger_into_rfr2
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP5_the_case
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP6_reproduce_in_cos
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP8_a_proven_fix
+    downstream: []
+    blockedBy:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP8_a_proven_fix
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by DP8_a_proven_fix
+      - 'depends on (1): DP8_a_proven_fix · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-17-debugging-product-phasemap.spec::DP8_a_proven_fix
+        kind: declared

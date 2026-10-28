@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-awareness-routing-phasemap.spec::CA7_clearglass_multi_account
+type: phase
+id: docs_copilot-awareness-routing-phasemap.spec::CA7_clearglass_multi_account
+context: pipeline phase CA7_clearglass_multi_account of docs/copilot-awareness-routing-phasemap.spec
+intent: null
+summary: CA7_clearglass_multi_account (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678153
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678153
+lastSeenAt: 1792787678153
+fingerprint: null
+payload:
+  id: CA7_clearglass_multi_account
+  map: docs/copilot-awareness-routing-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/settings.html
+    - lib/account-registry.js
+    - cortex/core/raid/routing-ir.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: efcdff2b11c0d466

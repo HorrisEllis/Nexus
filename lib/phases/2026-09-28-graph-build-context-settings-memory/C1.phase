@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::C1
+type: phase
+id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::C1
+context: pipeline phase C1 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+intent: null
+summary: C1 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792874368404
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874368404
+lastSeenAt: 1792874368404
+fingerprint: null
+payload:
+  id: C1
+  map: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/warp-build-dispatch.js
+    - lib/repo-agent.js
+  depends_on:
+    - C0
+  blocks: []
+  spec: null
+  graph: 7d10f2f9697d4092

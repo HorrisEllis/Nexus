@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-system-consolidation-phasemap.spec::CN9_archive_the_non_systems
+type: phase
+id: docs_2026-10-24-system-consolidation-phasemap.spec::CN9_archive_the_non_systems
+context: pipeline phase CN9_archive_the_non_systems of docs/2026-10-24-system-consolidation-phasemap.spec
+intent: null
+summary: CN9_archive_the_non_systems (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325068
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325068
+lastSeenAt: 1792877325068
+fingerprint: null
+payload:
+  id: CN9_archive_the_non_systems
+  map: docs/2026-10-24-system-consolidation-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - _archive/2026-10-24-not-systems
+  depends_on:
+    - CN0_the_rule_in_force
+  blocks: []
+  spec: null
+  graph: 71a90857dd114940

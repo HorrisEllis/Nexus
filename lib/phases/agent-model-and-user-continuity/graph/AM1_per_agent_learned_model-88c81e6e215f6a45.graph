@@ -1,0 +1,201 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AM1_per_agent_learned_model:88c81e6e215f6a45
+type: graph
+id: phase:AM1_per_agent_learned_model:88c81e6e215f6a45
+context: dependency graph of phase AM1_per_agent_learned_model
+intent: null
+summary: 21 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756282
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756282
+lastSeenAt: 1792841756282
+fingerprint: null
+payload:
+  for: AM1_per_agent_learned_model
+  kind: phase
+  repo: null
+  hash: 88c81e6e215f6a45
+  nodes:
+    - path: copilot/lib/lifeline-contracts.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/agent-model.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-system/contracts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-system/submit.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/contracts/nexus-interaction-contract.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/lib/agent-model-nodes.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp-handler.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-map.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/command-builder.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/constant-autonomy.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-capability.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-system/submit.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/tool-index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/lifeline-contracts.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/agent-system/contracts.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/agent-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-model.js
+      to: lib/agent-capability.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/command-builder.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/lib/lifeline-contracts.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-map.js
+      to: lib/agent-system/contracts.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/contracts/nexus-interaction-contract.js
+      kind: requires
+    - from: guardian/lib/agent-model-nodes.js
+      to: lib/agent-model.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-model.js
+      kind: requires
+  crossings:
+    - from: lib/agent-system/submit.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/tool-index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM2_incident_debrief
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM8_lifeline_as_general_channel_and_reasoning_upgrade
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
+    upstream: []
+    downstream:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM10_thinking_partner_rename_and_ui_builder
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM2_incident_debrief
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM3_open_ended_grounded_conversation
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM8_lifeline_as_general_channel_and_reasoning_upgrade
+    blockedBy: []
+    unlocks:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM2_incident_debrief
+    conflicts:
+      - with: docs/agent-model-and-user-continuity-phasemap.spec::AM9_get_to_know_you_and_idea_capture
+        files:
+          - lib/agent-system/contracts.js
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (4): AM2_incident_debrief, AM6_perplexity_confidence_loop,
+        AM8_lifeline_as_general_channel_and_reasoning_upgrade, AM5_ambiguity_triggered_pull · all
+        downstream 7 · finishing it unlocks AM2_incident_debrief
+      - >-
+        same files as AM9_get_to_know_you_and_idea_capture with no order between them:
+        lib/agent-system/contracts.js
+    edges: []

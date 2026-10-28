@@ -1,0 +1,189 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB6_contract_type_schemas_and_toolbox_directory:ade0ba60167bcdb8
+type: graph
+id: phase:SB6_contract_type_schemas_and_toolbox_directory:ade0ba60167bcdb8
+context: dependency graph of phase SB6_contract_type_schemas_and_toolbox_directory
+intent: null
+summary: 19 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792879719508
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879719508
+lastSeenAt: 1792879719508
+fingerprint: null
+payload:
+  for: SB6_contract_type_schemas_and_toolbox_directory
+  kind: phase
+  repo: null
+  hash: ade0ba60167bcdb8
+  nodes:
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/lifeline-contracts.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/gap-finder/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/command-builder.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/constant-autonomy.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/diagnostic-causal.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/tool-index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/diagnostic-causal.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/command-builder.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: copilot/lib/lifeline-contracts.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/gap-finder/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: lib/gap-field.js
+      kind: requires
+  crossings:
+    - from: lib/tool-index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+    dependents:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB8_tool_agnosticism_and_new_tool_flow
+    upstream:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+    downstream:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB8_tool_agnosticism_and_new_tool_flow
+    blockedBy: []
+    unlocks:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB8_tool_agnosticism_and_new_tool_flow
+    conflicts:
+      - with: docs/nexus-self-build-pipeline-phasemap.spec::SB2_universal_file_parse
+        files:
+          - lib/tool-index.js
+      - with: docs/nexus-self-build-pipeline-phasemap.spec::SB3_guided_build_loop
+        files:
+          - lib/gap-field.js
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): SB1_schema_extension'
+      - >-
+        needed by (1): SB8_tool_agnosticism_and_new_tool_flow · finishing it unlocks
+        SB8_tool_agnosticism_and_new_tool_flow
+      - 'same files as SB2_universal_file_parse with no order between them: lib/tool-index.js'
+      - 'same files as SB3_guided_build_loop with no order between them: lib/gap-field.js'
+    edges:
+      - from: docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+        kind: declared

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+context: pipeline phase GW16_parallel_branches_benchmark of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW16_parallel_branches_benchmark (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677573
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677573
+lastSeenAt: 1792787677573
+fingerprint: null
+payload:
+  id: GW16_parallel_branches_benchmark
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/shadow-space.js
+    - cortex/core/raid/contract-adapters.js
+    - lib/model-door.js
+  depends_on:
+    - GW14_copy_in_diff_out
+    - GW15_every_file_tested
+    - GW0g_parallel_limit
+  blocks: []
+  spec: null
+  graph: 7496bd8f1af2a364

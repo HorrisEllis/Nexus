@@ -44,5 +44,5 @@ spec:
       use_case: "Vector embedding trigger (already implemented as onJaaInsert)"
 
   files:
-    - path: "hooks/"
+    - path: "lib/hooks/"
       description: "Hook registry and default hook implementations"

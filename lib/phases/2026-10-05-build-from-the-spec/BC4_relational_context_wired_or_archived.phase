@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::BC4_relational_context_wired_or_archived
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::BC4_relational_context_wired_or_archived
+context: >-
+  pipeline phase BC4_relational_context_wired_or_archived of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: BC4_relational_context_wired_or_archived (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676859
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676859
+lastSeenAt: 1792787676859
+fingerprint: null
+payload:
+  id: BC4_relational_context_wired_or_archived
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/relational-context.js
+    - lib/build-context.js
+    - lib/registry-harness.js
+  depends_on:
+    - BC1_build_context
+  blocks: []
+  spec: null
+  graph: 13b633faec59fe77

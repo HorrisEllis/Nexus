@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP8_policy_on_the_page
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP8_policy_on_the_page
+context: pipeline phase UP8_policy_on_the_page of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP8_policy_on_the_page (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792973890117
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792973890117
+lastSeenAt: 1792973890117
+fingerprint: null
+payload:
+  id: UP8_policy_on_the_page
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/update.html
+    - tests/modules/test-nexus-update.test.js
+  depends_on:
+    - UP7_autopilot_keeps_it_current
+  blocks: []
+  spec: null
+  graph: d5be20af828f3075

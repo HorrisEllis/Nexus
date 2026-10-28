@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-plan-sidebar-phasemap.spec::PS1_context_recorded
+type: phase
+id: docs_2026-10-16-plan-sidebar-phasemap.spec::PS1_context_recorded
+context: pipeline phase PS1_context_recorded of docs/2026-10-16-plan-sidebar-phasemap.spec
+intent: null
+summary: PS1_context_recorded (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478045
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478045
+lastSeenAt: 1792822478045
+fingerprint: null
+payload:
+  id: PS1_context_recorded
+  map: docs/2026-10-16-plan-sidebar-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.107
+  files:
+    - lib/economy/tokens.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d021d698da4d1307

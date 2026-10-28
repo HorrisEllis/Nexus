@@ -1,0 +1,266 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AS1_one_resolver_global_then_repo:79966d7b9996bf52
+type: graph
+id: phase:AS1_one_resolver_global_then_repo:79966d7b9996bf52
+context: dependency graph of phase AS1_one_resolver_global_then_repo
+intent: null
+summary: 29 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792880100924
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100924
+lastSeenAt: 1792880100924
+fingerprint: null
+payload:
+  for: AS1_one_resolver_global_then_repo
+  kind: phase
+  repo: null
+  hash: 79966d7b9996bf52
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/settings.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-settings.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-confidence-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-agent-provider.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/idearium/code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/tool-layers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/repo-agent.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/idearium/code.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/nexus/tool-layers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tool-guide.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/context-prereqs.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-agent-confidence-gate.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-repo-agent-provider.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0d_layers
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG6_settings_by_template_and_type
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH3_sync_per_compartment
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS2_each_provider_its_own_profile
+    upstream:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0d_layers
+    downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG6_settings_by_template_and_type
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS2_each_provider_its_own_profile
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH3_sync_per_compartment
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH4_the_link_as_an_injection_method
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS2_each_provider_its_own_profile
+    conflicts:
+      - with: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH1_a_compartment_gets_its_github_repo
+        files:
+          - idearium/api/index.js
+          - idearium/cli/route-commands.js
+      - with: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH5_a_github_agent_tool
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH6_send_a_requested_file
+        files:
+          - lib/repo-agent.js
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): GC0d_layers'
+      - >-
+        needed by (3): MG6_settings_by_template_and_type, GH3_sync_per_compartment,
+        AS2_each_provider_its_own_profile · all downstream 5 · finishing it unlocks
+        AS2_each_provider_its_own_profile
+      - >-
+        same files as GH1_a_compartment_gets_its_github_repo with no order between them:
+        idearium/api/index.js, idearium/cli/route-commands.js
+      - >-
+        same files as GH5_a_github_agent_tool with no order between them:
+        idearium/cli/route-commands.js
+      - 'same files as GH6_send_a_requested_file with no order between them: lib/repo-agent.js'
+    edges:
+      - from: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0d_layers
+        kind: declared

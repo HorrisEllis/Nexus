@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::JB6_the_application_ledger
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::JB6_the_application_ledger
+context: >-
+  pipeline phase JB6_the_application_ledger of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: JB6_the_application_ledger (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792814553943
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814553943
+lastSeenAt: 1792814553943
+fingerprint: null
+payload:
+  id: JB6_the_application_ledger
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/store.js
+  depends_on:
+    - JB4_resume_import
+  blocks: []
+  spec: null
+  graph: c7beddcbfaae4371

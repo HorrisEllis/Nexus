@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MCO-E_roadmap_ui:2258bb8a5d931465
+type: graph
+id: phase:MCO-E_roadmap_ui:2258bb8a5d931465
+context: dependency graph of phase MCO-E_roadmap_ui
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678205
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678205
+lastSeenAt: 1792787678205
+fingerprint: null
+payload:
+  for: MCO-E_roadmap_ui
+  kind: phase
+  repo: null
+  hash: 2258bb8a5d931465
+  nodes:
+    - path: idearium/spec-engine/manifest/graph.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/compiler-t0.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/manifest/wire-check.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/spec-engine/compiler-t0.js
+      to: idearium/spec-engine/manifest/graph.js
+      kind: requires
+    - from: idearium/spec-engine/manifest/wire-check.js
+      to: idearium/spec-engine/manifest/graph.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-A_schemas
+    dependents: []
+    upstream:
+      - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-A_schemas
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): MCO-A_schemas'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-A_schemas
+        kind: declared

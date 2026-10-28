@@ -155,7 +155,7 @@ function rewind(uuid, { reason = 'user-initiated rewind' } = {}) {
 
   // Emit REVERT on nexus-bus
   try {
-    const bus = require('../../nexus/nexus-bus');
+    const bus = require('../../lib/nexus/nexus-bus');
     bus.emit('ALK_REVERT', {
       rewindUuid:   rewindNode.uuid,
       originalUuid: uuid,

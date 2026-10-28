@@ -7,7 +7,7 @@ const fs = require('fs'), path = require('path');
 const { JSDOM } = require('jsdom');
 let pass = 0;
 const t = async (n, fn) => { await fn(); pass++; console.log(`  ✓ ${n}`); };
-const UI = path.join(__dirname, '../../ui/brainos-float');
+const UI = path.join(__dirname, '..', '..', 'lib', 'ui', 'brainos-float');
 
 (async () => {
   const dom = new JSDOM('<body></body>', { runScripts: 'outside-only', url: 'http://127.0.0.1:9000/ui/brainos-float/' });

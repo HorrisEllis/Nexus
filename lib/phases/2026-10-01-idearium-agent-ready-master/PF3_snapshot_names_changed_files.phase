@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF3_snapshot_names_changed_files
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF3_snapshot_names_changed_files
+context: >-
+  pipeline phase PF3_snapshot_names_changed_files of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PF3_snapshot_names_changed_files (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476657
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476657
+lastSeenAt: 1792822476657
+fingerprint: null
+payload:
+  id: PF3_snapshot_names_changed_files
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-self/store.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5c83a76653dd564b

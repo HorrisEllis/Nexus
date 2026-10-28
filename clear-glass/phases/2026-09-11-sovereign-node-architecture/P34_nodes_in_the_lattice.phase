@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P34_nodes_in_the_lattice
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P34_nodes_in_the_lattice
+context: >-
+  pipeline phase P34_nodes_in_the_lattice of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P34_nodes_in_the_lattice (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675932
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675932
+lastSeenAt: 1792787675932
+fingerprint: null
+payload:
+  id: P34_nodes_in_the_lattice
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P33_every_system_runs_its_node_registry
+    - P19_dynamic_nodes_via_causal_graph
+  blocks: []
+  spec: null
+  graph: 2e02ff3713ff6e57

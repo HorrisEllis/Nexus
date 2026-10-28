@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ17_observe_by_request
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ17_observe_by_request
+context: pipeline phase RQ17_observe_by_request of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ17_observe_by_request (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755298
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755298
+lastSeenAt: 1792841755298
+fingerprint: null
+payload:
+  id: RQ17_observe_by_request
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/component-ledger.js
+    - lib/ledger-fanin.js
+    - idearium/cli/route-commands.js
+    - docs/2026-10-05-failure-reproduction-phasemap.spec
+  depends_on:
+    - RQ6_one_intent_map
+  blocks: []
+  spec: null
+  graph: e5cd9330d7d8fd85

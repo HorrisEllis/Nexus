@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X4_command_index_spec
+type: phase
+id: docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X4_command_index_spec
+context: >-
+  pipeline phase X4_command_index_spec of
+  docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+intent: null
+summary: X4_command_index_spec (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676066
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676066
+lastSeenAt: 1792787676066
+fingerprint: null
+payload:
+  id: X4_command_index_spec
+  map: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/command-index-per-system.spec
+  depends_on:
+    - X1_system_nodes
+  blocks: []
+  spec: null
+  graph: f0c28b0337bbaf38

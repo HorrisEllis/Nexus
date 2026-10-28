@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV17_ui:6dbe966341e443fd
+type: graph
+id: phase:MV17_ui:6dbe966341e443fd
+context: dependency graph of phase MV17_ui
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792821071289
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792821071289
+lastSeenAt: 1792821071289
+fingerprint: null
+payload:
+  for: MV17_ui
+  kind: phase
+  repo: null
+  hash: 6dbe966341e443fd
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

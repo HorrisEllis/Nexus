@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP7_autopilot_keeps_it_current
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP7_autopilot_keeps_it_current
+context: pipeline phase UP7_autopilot_keeps_it_current of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP7_autopilot_keeps_it_current (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792973890115
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792973890115
+lastSeenAt: 1792973890115
+fingerprint: null
+payload:
+  id: UP7_autopilot_keeps_it_current
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-update.js
+    - lib/nexus/autopilot.js
+  depends_on:
+    - UP6_attach_in_place
+  blocks: []
+  spec: null
+  graph: 1953e005843f391f

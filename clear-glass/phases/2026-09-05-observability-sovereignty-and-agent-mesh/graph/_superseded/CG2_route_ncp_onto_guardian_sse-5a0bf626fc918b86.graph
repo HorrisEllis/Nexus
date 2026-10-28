@@ -1,0 +1,254 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CG2_route_ncp_onto_guardian_sse:5a0bf626fc918b86
+type: graph
+id: phase:CG2_route_ncp_onto_guardian_sse:5a0bf626fc918b86
+context: dependency graph of phase CG2_route_ncp_onto_guardian_sse
+intent: null
+summary: 28 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675755
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675755
+lastSeenAt: 1792787675755
+fingerprint: null
+payload:
+  for: CG2_route_ncp_onto_guardian_sse
+  kind: phase
+  repo: null
+  hash: 5a0bf626fc918b86
+  nodes:
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/session-hub.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: clear-glass/seam/watchdog-gates.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/adapter.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/intake-bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/network/install.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/plugins/host.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/plugins/permission-adapter.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/plugins/webrequest-adapter.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/sse/server.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/siso/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/session-hub.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/account-switch.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/core/bus.js
+      to: clear-glass/siso/index.js
+      kind: requires
+    - from: clear-glass/test/session-hub.test.js
+      to: clear-glass/src/cookies/session-hub.js
+      kind: requires
+    - from: clear-glass/test/session-hub.test.js
+      to: clear-glass/src/providers/account-switch.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: clear-glass/seam/watchdog-gates.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/downloads/adapter.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/downloads/intake-bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/network/install.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/plugins/host.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/plugins/permission-adapter.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/plugins/webrequest-adapter.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/sse/server.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+  crossings:
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG1_ncp_events_real
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded
+    dependents:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG1_ncp_events_real
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded
+    downstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::BR2_brainos_controls_agents
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA2_dispatch_outcome_events
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RP1_repository_per_system
+    blockedBy:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG1_ncp_events_real
+    unlocks:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by CG1_ncp_events_real
+      - 'depends on (2): CG1_ncp_events_real, RF5_agent_registry_is_hardcoded · all upstream 3'
+      - >-
+        needed by (1): DF1_guardian_own_data_folder · all downstream 5 · finishing it unlocks
+        DF1_guardian_own_data_folder
+    edges:
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG1_ncp_events_real
+        kind: inferred
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded
+        kind: inferred

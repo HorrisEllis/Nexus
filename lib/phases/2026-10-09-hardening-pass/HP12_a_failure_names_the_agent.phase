@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP12_a_failure_names_the_agent
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP12_a_failure_names_the_agent
+context: pipeline phase HP12_a_failure_names_the_agent of docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP12_a_failure_names_the_agent (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792874369721
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874369721
+lastSeenAt: 1792874369721
+fingerprint: null
+payload:
+  id: HP12_a_failure_names_the_agent
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-agent.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c40eccb16d168a47

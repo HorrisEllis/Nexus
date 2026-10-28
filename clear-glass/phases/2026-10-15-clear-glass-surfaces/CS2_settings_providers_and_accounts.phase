@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-surfaces-phasemap.spec::CS2_settings_providers_and_accounts
+type: phase
+id: docs_2026-10-15-clear-glass-surfaces-phasemap.spec::CS2_settings_providers_and_accounts
+context: >-
+  pipeline phase CS2_settings_providers_and_accounts of
+  docs/2026-10-15-clear-glass-surfaces-phasemap.spec
+intent: null
+summary: CS2_settings_providers_and_accounts (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677498
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677498
+lastSeenAt: 1792787677498
+fingerprint: null
+payload:
+  id: CS2_settings_providers_and_accounts
+  map: docs/2026-10-15-clear-glass-surfaces-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/settings/sections/providers.js
+    - clear-glass/renderer/settings/sections/accounts.js
+    - clear-glass/renderer/settings/settings.html
+  depends_on:
+    - CS1_one_popup_frame
+  blocks: []
+  spec: null
+  graph: 377b41fc576de436

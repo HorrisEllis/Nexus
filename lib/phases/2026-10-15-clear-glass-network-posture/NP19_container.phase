@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP19_container
+type: phase
+id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP19_container
+context: pipeline phase NP19_container of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+intent: null
+summary: NP19_container (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677494
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677494
+lastSeenAt: 1792787677494
+fingerprint: null
+payload:
+  id: NP19_container
+  map: docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-21-snowflake-compartment-phasemap.spec
+    - clear-glass/spec/snowflake.spec
+  depends_on:
+    - NP1_compartment
+  blocks: []
+  spec: null
+  graph: ec54a18411dad545

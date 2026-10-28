@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL23_ncp_providers_start_verification
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL23_ncp_providers_start_verification
+context: pipeline phase BL23_ncp_providers_start_verification of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL23_ncp_providers_start_verification (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792878419806
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878419806
+lastSeenAt: 1792878419806
+fingerprint: null
+payload:
+  id: BL23_ncp_providers_start_verification
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/browser.js
+    - clear-glass/src/bookmarks/browser.js
+    - clear-glass/src/adblock/lists.js
+    - clear-glass/src/page/nexus-chat.js
+    - clear-glass/wire/nexus-wire.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f46b4a973fb8c1ac

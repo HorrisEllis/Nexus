@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+context: pipeline phase SB16_genesis_nodes_domain of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB16_genesis_nodes_domain (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676864
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676864
+lastSeenAt: 1792787676864
+fingerprint: null
+payload:
+  id: SB16_genesis_nodes_domain
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/templates/genesis.spec
+  depends_on:
+    - SB0_map
+  blocks: []
+  spec: null
+  graph: c9ee88ad2a876a14

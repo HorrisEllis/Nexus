@@ -1,0 +1,257 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TX9_build_contract_file_dir:48550b9ad89cc05c
+type: graph
+id: phase:TX9_build_contract_file_dir:48550b9ad89cc05c
+context: dependency graph of phase TX9_build_contract_file_dir
+intent: null
+summary: 32 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877952685
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877952685
+lastSeenAt: 1792877952685
+fingerprint: null
+payload:
+  for: TX9_build_contract_file_dir
+  kind: phase
+  repo: null
+  hash: 48550b9ad89cc05c
+  nodes:
+    - path: clear-glass/renderer/copilot-cli.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/library/sections/accounts.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/selector-check.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: copilot/module-builder.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: emerge/consumer.js
+      role: changes
+      exists: false
+      system: emerge
+    - path: intelligence/rfr2/context/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/contract-queue.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/grammar-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/autofill/learn-pick.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/cli.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: intelligence/consumer.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/clip/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/faculty/faculty-tools.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/contract-poller.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-adversarial-sim.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-contract-queue-hardening.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-rfr2-cjs.js
+      role: used-by
+      exists: true
+      system: null
+    - path: versionium/lib/engine.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: copilot/axiom-manager.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/descriptor-projector.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/rfr2/adapter-sandbox/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/compress/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/delta/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/kernel/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/module-builder.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: copilot/axiom-manager.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: copilot/lib/descriptor-projector.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/emerge/compiler/pipeline.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/event-types.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/rfr2/context/index.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: intelligence/rfr2/context/index.js
+      to: intelligence/rfr2/compress/index.js
+      kind: requires
+    - from: intelligence/rfr2/context/index.js
+      to: intelligence/rfr2/delta/index.js
+      kind: requires
+    - from: intelligence/rfr2/context/index.js
+      to: intelligence/rfr2/adapter-sandbox/index.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: clear-glass/src/autofill/learn-pick.js
+      to: clear-glass/renderer/selector-check.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/context/index.js
+      kind: requires
+    - from: intelligence/rfr2/index.js
+      to: intelligence/rfr2/context/index.js
+      kind: requires
+    - from: tests/modules/test-rfr2-cjs.js
+      to: intelligence/rfr2/context/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/context/index.js
+      kind: requires
+    - from: intelligence/consumer.js
+      to: lib/contract-queue.js
+      kind: requires
+    - from: orchestrator/lib/contract-poller.js
+      to: lib/contract-queue.js
+      kind: requires
+    - from: tests/modules/test-adversarial-sim.js
+      to: lib/contract-queue.js
+      kind: requires
+    - from: tests/modules/test-contract-queue-hardening.js
+      to: lib/contract-queue.js
+      kind: requires
+    - from: copilot/cli.js
+      to: lib/grammar-engine.js
+      kind: requires
+  crossings:
+    - from: copilot/module-builder.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/module-builder.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/context/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

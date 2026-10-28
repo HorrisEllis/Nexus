@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::MEM3_timestamps_everywhere
+type: phase
+id: docs_2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::MEM3_timestamps_everywhere
+context: >-
+  pipeline phase MEM3_timestamps_everywhere of
+  docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec
+intent: null
+summary: MEM3_timestamps_everywhere (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675744
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675744
+lastSeenAt: 1792787675744
+fingerprint: null
+payload:
+  id: MEM3_timestamps_everywhere
+  map: docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/lib/spec-drift.js
+    - scripts/confirm-build.mjs
+    - cos/host/system-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3782812ddfa09005

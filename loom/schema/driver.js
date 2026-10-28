@@ -25,8 +25,8 @@
  * so there is no double-effect, only a double-computation of a pure
  * function. No warp/core file is modified to make this work.
  */
-const { Stream, StreamLog } = require('../../warp/core');
-const { Event } = require('../../warp/core');
+const { Stream, StreamLog } = require('../../lib/warp/core');
+const { Event } = require('../../lib/warp/core');
 const { LoomRegistry } = require('./registry');
 const { makeLoomAxioms } = require('./axioms');
 const {

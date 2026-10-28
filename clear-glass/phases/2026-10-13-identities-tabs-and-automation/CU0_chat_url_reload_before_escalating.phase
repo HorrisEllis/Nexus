@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::CU0_chat_url_reload_before_escalating
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::CU0_chat_url_reload_before_escalating
+context: >-
+  pipeline phase CU0_chat_url_reload_before_escalating of
+  docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: CU0_chat_url_reload_before_escalating (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677408
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677408
+lastSeenAt: 1792787677408
+fingerprint: null
+payload:
+  id: CU0_chat_url_reload_before_escalating
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/mesh/dom-transport.js
+    - clear-glass/src/mesh/page/agent-page.js
+    - clear-glass/src/mesh/agent-mesh.js
+    - guardian/lib/dispatch-ladder.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d7b06cef88a5d5b8

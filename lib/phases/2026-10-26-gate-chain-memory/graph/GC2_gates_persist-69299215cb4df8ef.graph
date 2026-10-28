@@ -1,0 +1,86 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GC2_gates_persist:69299215cb4df8ef
+type: graph
+id: phase:GC2_gates_persist:69299215cb4df8ef
+context: dependency graph of phase GC2_gates_persist
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792991449194
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792991449194
+lastSeenAt: 1792991449194
+fingerprint: null
+payload:
+  for: GC2_gates_persist
+  kind: phase
+  repo: null
+  hash: 69299215cb4df8ef
+  nodes:
+    - path: lib/gate-context.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/context-sources.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/work-journal.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/gate-context.js
+      to: lib/work-journal.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/gate-context.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/gate-context.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC1_the_chain
+    dependents:
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC4_route_and_command
+    upstream:
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC1_the_chain
+    downstream:
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC4_route_and_command
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC5_the_chain_ui
+    blockedBy:
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC1_the_chain
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by GC1_the_chain
+      - 'depends on (1): GC1_the_chain'
+      - 'needed by (1): GC4_route_and_command · all downstream 2'
+    edges:
+      - from: docs/2026-10-26-gate-chain-memory-phasemap.spec::GC1_the_chain
+        kind: declared

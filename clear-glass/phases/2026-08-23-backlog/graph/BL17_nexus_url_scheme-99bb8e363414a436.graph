@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL17_nexus_url_scheme:99bb8e363414a436
+type: graph
+id: phase:BL17_nexus_url_scheme:99bb8e363414a436
+context: dependency graph of phase BL17_nexus_url_scheme
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675428
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675428
+lastSeenAt: 1792787675428
+fingerprint: null
+payload:
+  for: BL17_nexus_url_scheme
+  kind: phase
+  repo: null
+  hash: 99bb8e363414a436
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-08-23-backlog-phasemap.spec::BL18_tools_per_url
+    upstream: []
+    downstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL18_tools_per_url
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-23-backlog-phasemap.spec::BL18_tools_per_url
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): BL18_tools_per_url · finishing it unlocks BL18_tools_per_url'
+    edges: []

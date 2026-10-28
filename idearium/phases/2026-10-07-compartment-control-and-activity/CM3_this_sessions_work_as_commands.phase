@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-compartment-control-and-activity-phasemap.spec::CM3_this_sessions_work_as_commands
+type: phase
+id: docs_2026-10-07-compartment-control-and-activity-phasemap.spec::CM3_this_sessions_work_as_commands
+context: >-
+  pipeline phase CM3_this_sessions_work_as_commands of
+  docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+intent: null
+summary: CM3_this_sessions_work_as_commands (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477298
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477298
+lastSeenAt: 1792822477298
+fingerprint: null
+payload:
+  id: CM3_this_sessions_work_as_commands
+  map: docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+    - idearium/api/index.js
+    - cortex/boot.js
+    - cortex/memory/table-compactor.js
+    - ollama/routes/tape.js
+    - lib/ollama-tape.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 833d2e75f114aa67

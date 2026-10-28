@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+context: pipeline phase EM1_emerge_core of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: EM1_emerge_core (?) — 12 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754419
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754419
+lastSeenAt: 1792841754419
+fingerprint: null
+payload:
+  id: EM1_emerge_core
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/emerge/core/field.js
+    - lib/emerge/core/constraint.js
+    - lib/emerge/core/transition.js
+    - lib/emerge/core/observation.js
+    - lib/emerge/core/lens.js
+    - lib/emerge/core/gap.js
+    - lib/emerge/core/history.js
+    - lib/emerge/core/level.js
+    - lib/emerge/core/budget.js
+    - lib/emerge/core/seed.js
+    - lib/emerge/core/index.js
+    - lib/emerge/spec/emerge-core.spec
+  depends_on:
+    - EM0_ground
+    - EV0_contracts_for_every_system
+  blocks: []
+  spec: null
+  graph: 3081873fda6fe4b1

@@ -1,0 +1,137 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P2_snapshot_on_sigma:e9c2e2af02f2273e
+type: graph
+id: phase:P2_snapshot_on_sigma:e9c2e2af02f2273e
+context: dependency graph of phase P2_snapshot_on_sigma
+intent: null
+summary: 11 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678261
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678261
+lastSeenAt: 1792787678261
+fingerprint: null
+payload:
+  for: P2_snapshot_on_sigma
+  kind: phase
+  repo: null
+  hash: e9c2e2af02f2273e
+  nodes:
+    - path: intelligence/relational-field.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/snapshot-trigger.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/replay-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/diagnostic-causal.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/integrity-revert.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/boot.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/rfr2-bridge.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/relational-field.js
+      to: lib/rfr2-bridge.js
+      kind: requires
+    - from: lib/replay-engine.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/diagnostic-causal.js
+      to: intelligence/snapshot-trigger.js
+      kind: requires
+    - from: lib/ledger-fanin/boot.js
+      to: intelligence/snapshot-trigger.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: lib/integrity-revert.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: lib/replay-engine.js
+      kind: requires
+  crossings:
+    - from: lib/replay-engine.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/diagnostic-causal.js
+      to: intelligence/snapshot-trigger.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/ledger-fanin/boot.js
+      to: intelligence/snapshot-trigger.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/nexus-live-mind-phasemap.spec::P1_nervous_system_live
+    dependents:
+      - docs/nexus-live-mind-phasemap.spec::P3_diagnostic_kernel
+    upstream:
+      - docs/nexus-live-mind-phasemap.spec::P1_nervous_system_live
+    downstream:
+      - docs/nexus-live-mind-phasemap.spec::P3_diagnostic_kernel
+      - docs/nexus-live-mind-phasemap.spec::P4_copilot_awareness
+      - docs/nexus-live-mind-phasemap.spec::P5_copilot_dynamic_and_user_aware
+      - docs/nexus-live-mind-phasemap.spec::P6_copilot_programmable
+    blockedBy: []
+    unlocks:
+      - docs/nexus-live-mind-phasemap.spec::P3_diagnostic_kernel
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): P1_nervous_system_live'
+      - >-
+        needed by (1): P3_diagnostic_kernel · all downstream 4 · finishing it unlocks
+        P3_diagnostic_kernel
+    edges:
+      - from: docs/nexus-live-mind-phasemap.spec::P1_nervous_system_live
+        kind: declared

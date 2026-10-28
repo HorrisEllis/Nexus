@@ -21,7 +21,7 @@ async function main() {
   console.log('\ntest-run-pipeline\n');
   const RA = require(path.join(ROOT, 'lib', 'repo-agent.js'));
   const RS = require(path.join(ROOT, 'lib', 'run-state.js'));
-  const bus = require(path.join(ROOT, 'nexus', 'nexus-bus.js'));
+  const bus = require(path.join(ROOT, 'lib', 'nexus', 'nexus-bus.js'));
   const api = await import(path.join(ROOT, 'idearium', 'api', 'index.js'));
   const layer = api.getRepoLayer();
   const seen = []; for (const t of ['run.started', 'run.resumed', 'run.finished', 'run.lost', 'run.fallback']) bus.on(t, () => seen.push(t));

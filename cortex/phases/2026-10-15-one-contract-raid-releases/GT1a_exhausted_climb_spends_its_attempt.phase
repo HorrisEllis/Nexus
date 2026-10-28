@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-one-contract-raid-releases-phasemap.spec::GT1a_exhausted_climb_spends_its_attempt
+type: phase
+id: docs_2026-10-15-one-contract-raid-releases-phasemap.spec::GT1a_exhausted_climb_spends_its_attempt
+context: >-
+  pipeline phase GT1a_exhausted_climb_spends_its_attempt of
+  docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+intent: null
+summary: GT1a_exhausted_climb_spends_its_attempt (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477911
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477911
+lastSeenAt: 1792822477911
+fingerprint: null
+payload:
+  id: GT1a_exhausted_climb_spends_its_attempt
+  map: docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-gates.js
+    - cortex/core/raid/contract-adapters.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 58ea4664b2b176b8

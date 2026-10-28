@@ -268,7 +268,7 @@ spec:
         RAID and the door can choose it by name.
       proof: "a guardian /command job with provider claude-code answers through the CLI and lands a .response node; no tab is opened"
     PV1_providers_read_from_nodes:
-      depends_on: [PV0_claude_code_is_a_guardian_provider]   # mapped from the files they share: PV0_claude_code_is_a_guardian_provider (lib/agent-providers.js)
+      depends_on: []   # 2026-10-23 SL3: was [PV0_claude_code_is_a_guardian_provider], written by MP4 (0.60.29) from a shared file (lib/agent-providers.js); PV0's own authored depends_on names PV1, so the two closed a cycle. An inferred edge never overrides an authored one (§0.1); kept here, not lost (§0.3).
       layer: library
       systems: [guardian, core, clear-glass]
       component: guardian.agent-facts

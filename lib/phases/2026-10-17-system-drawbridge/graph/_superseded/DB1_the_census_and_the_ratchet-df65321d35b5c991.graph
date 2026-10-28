@@ -1,0 +1,137 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DB1_the_census_and_the_ratchet:df65321d35b5c991
+type: graph
+id: phase:DB1_the_census_and_the_ratchet:df65321d35b5c991
+context: dependency graph of phase DB1_the_census_and_the_ratchet
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755833
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755833
+lastSeenAt: 1792841755833
+fingerprint: null
+payload:
+  for: DB1_the_census_and_the_ratchet
+  kind: phase
+  repo: null
+  hash: df65321d35b5c991
+  nodes:
+    - path: lib/system-boundary.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/maps/run-state-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/drawbridge-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/bootstrap.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: loom/maps/declare-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: loom/maps/run-state-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/run-state-map.js
+      to: loom/maps/declare-map.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/run-state-map.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB17_files_stay_with_their_system
+    upstream: []
+    downstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB17_files_stay_with_their_system
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB17_files_stay_with_their_system
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): DB17_files_stay_with_their_system · finishing it unlocks
+        DB17_files_stay_with_their_system
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

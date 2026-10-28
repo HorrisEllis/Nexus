@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P20_intelligence_reads_present_not_oldest
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P20_intelligence_reads_present_not_oldest
+context: >-
+  pipeline phase P20_intelligence_reads_present_not_oldest of
+  docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P20_intelligence_reads_present_not_oldest (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792879046197
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879046197
+lastSeenAt: 1792879046197
+fingerprint: null
+payload:
+  id: P20_intelligence_reads_present_not_oldest
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/settings/core.js
+    - cos/remote-desktop/bridge-os-core/bridge-sngate/index.js
+    - idearium/architecture-spec/registry/api.js
+    - architect/service.js
+    - cortex/core/raid/context-synthesis.js
+    - guardian/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e173292c72d1139e

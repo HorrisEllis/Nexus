@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-self-build-pipeline-phasemap.spec::SB7_compartments_as_sessions
+type: phase
+id: docs_nexus-self-build-pipeline-phasemap.spec::SB7_compartments_as_sessions
+context: pipeline phase SB7_compartments_as_sessions of docs/nexus-self-build-pipeline-phasemap.spec
+intent: null
+summary: SB7_compartments_as_sessions (?) — 15 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756503
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756503
+lastSeenAt: 1792841756503
+fingerprint: null
+payload:
+  id: SB7_compartments_as_sessions
+  map: docs/nexus-self-build-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/host/index.js
+    - lib/emergence.js
+    - lib/loom-map.js
+    - lib/scheduler.js
+    - lib/component-ledger.js
+    - lib/agent-tools/tools/cos-compartment.js
+    - cos/cli/commands/create.js
+    - lib/cos-bridge.js
+    - lib/uid/normalize.js
+    - loom/templates/cos-compartment.js
+    - cos/cli/commands/destroy.js
+    - cos/cli/commands/list.js
+    - lib/cli/clear-idearium.js
+    - lib/end-state.js
+    - lib/agent-tools/tools/sandbox/cos-compartment.js
+  depends_on:
+    - SB1_schema_extension
+  blocks: []
+  spec: null
+  graph: 1d6cdd8bacad34a4

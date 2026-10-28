@@ -1,0 +1,69 @@
+# Clear Glass gig file (clearglass.gig/1) — load it in Settings → Autofill → Gig, or in the gig panel.
+format: clearglass.gig/1
+platform: fiverr
+title: I will write automated tests for your Node.js or JavaScript project
+category: Programming & Tech
+subcategory: QA & Review
+tags:
+  - unit testing
+  - node.js
+  - test automation
+  - qa
+  - javascript
+description: >-
+  Afraid every change might break something? I write automated tests that catch it first, so you can
+  change your code with confidence.
+
+
+  My own project has hundreds of test suites, run on every change. I write tests that check what the
+  code is supposed to do, including the ways it can fail, not just the happy path.
+
+
+  What you get:
+
+  - Tests for your most important code paths and edge cases
+
+  - A one-command test run, with a clear pass and fail report
+
+  - A list of bugs the tests found, with how to reproduce each
+
+  - Optional: tests running automatically on GitHub
+
+
+  How it works: tell me what your project does and what scares you most about changing it. I start
+  there, show you the first tests running, and build out from that.
+
+
+  Works with plain Node.js, Jest, Mocha or Node's built-in test runner.
+packages:
+  basic:
+    name: Starter Tests
+    description: Tests for one module or feature, with a run command.
+    deliveryDays: 2
+    revisions: 1
+    price: 50
+  standard:
+    name: Core Coverage
+    description: Tests for your main features and failure cases, plus a bug list.
+    deliveryDays: 5
+    revisions: 2
+    price: 150
+  premium:
+    name: Full Test Setup
+    description: Broad coverage, CI on GitHub, and a guide to adding tests.
+    deliveryDays: 9
+    revisions: 3
+    price: 350
+faq:
+  - question: Which test tools do you use?
+    answer: Whatever your project already uses. If none, Node's built-in test runner or Jest.
+  - question: Will you fix the bugs you find?
+    answer: I list them with steps to reproduce. Fixing them can be added to the order.
+  - question: Do you need my whole codebase?
+    answer: Yes, or the part to be tested, with how to run it.
+requirements:
+  - What does your project do, and which part are you most worried about breaking?
+  - Who will use it, and on what? (Windows, Mac, a server; one person or a team)
+  - What must it always do, and what must it never do?
+  - How will you check that it is done? (the test you will run, or what you will look at)
+  - Please share any files, examples, access or data I need to start.

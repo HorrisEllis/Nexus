@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB13_each_component_chunked
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB13_each_component_chunked
+context: pipeline phase SB13_each_component_chunked of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB13_each_component_chunked (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477044
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477044
+lastSeenAt: 1792822477044
+fingerprint: null
+payload:
+  id: SB13_each_component_chunked
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/spec-engine/index.js
+  depends_on:
+    - SB12_the_registry_is_the_component_list
+  blocks: []
+  spec: null
+  graph: a7f05c3faf77d8cf

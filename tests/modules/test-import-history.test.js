@@ -14,7 +14,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 const ROOT = path.join(__dirname, '../..');
 const Zip = require(path.join(ROOT, 'lib', 'zip.js'));
-const IH = require(path.join(ROOT, 'cli', 'import-history.js'));
+const IH = require(path.join(ROOT, 'lib', 'cli', 'import-history.js'));
 
 let pass = 0, fail = 0;
 function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } else { fail++; console.log(`  ✗ ${n}${d ? ` — ${d}` : ''}`); } }

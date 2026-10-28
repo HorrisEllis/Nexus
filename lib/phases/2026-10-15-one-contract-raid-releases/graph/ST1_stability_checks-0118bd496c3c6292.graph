@@ -1,0 +1,258 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ST1_stability_checks:0118bd496c3c6292
+type: graph
+id: phase:ST1_stability_checks:0118bd496c3c6292
+context: dependency graph of phase ST1_stability_checks
+intent: null
+summary: 32 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755616
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755616
+lastSeenAt: 1792841755616
+fingerprint: null
+payload:
+  for: ST1_stability_checks
+  kind: phase
+  repo: null
+  hash: 0118bd496c3c6292
+  nodes:
+    - path: cortex/contract/index.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/ui/js/repo-versions.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/replay-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-history.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-versions.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/snapshot-trigger.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/proposal-evidence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-inject-screen.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-inject-approval.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-proposal-evidence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/pipeline.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/change-entry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cli/import-history.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-edit.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/import-checks.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/zip.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/repo-versions.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/repo-versions.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/repo-history.js
+      to: lib/code-edit.js
+      kind: requires
+    - from: lib/repo-history.js
+      to: lib/zip.js
+      kind: requires
+    - from: lib/repo-history.js
+      to: lib/cli/import-history.js
+      kind: requires
+    - from: lib/repo-history.js
+      to: lib/import-checks.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/nexus-self/inject-gate.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/change-entry.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: cortex/contract/index.js
+      kind: requires
+    - from: tests/pipeline.test.js
+      to: cortex/contract/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-inject-screen.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-nexus-inject-approval.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-proposal-evidence.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: intelligence/snapshot-trigger.js
+      to: lib/replay-engine.js
+      kind: requires
+  crossings:
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::FR1_failure_reports
+    dependents: []
+    upstream:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::FR1_failure_reports
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GT1a_exhausted_climb_spends_its_attempt
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD0_raid_runs_the_contract
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::FR1_failure_reports
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by FR1_failure_reports
+      - 'depends on (1): FR1_failure_reports · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-one-contract-raid-releases-phasemap.spec::FR1_failure_reports
+        kind: declared

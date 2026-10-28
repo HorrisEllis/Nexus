@@ -1,0 +1,92 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GS3_domains_and_version:be7633a1c9ac3502
+type: graph
+id: phase:GS3_domains_and_version:be7633a1c9ac3502
+context: dependency graph of phase GS3_domains_and_version
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677704
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677704
+lastSeenAt: 1792787677704
+fingerprint: null
+payload:
+  for: GS3_domains_and_version
+  kind: phase
+  repo: null
+  hash: be7633a1c9ac3502
+  nodes:
+    - path: clear-glass/src/contexts/google-signin.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/fingerprint/firefox-version.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/fingerprint/engine.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/semantic-tree.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/google-signin.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/contexts/session-headers.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/contexts/google-signin.js
+      to: clear-glass/src/contexts/session-headers.js
+      kind: requires
+    - from: clear-glass/src/fingerprint/engine.js
+      to: clear-glass/src/fingerprint/firefox-version.js
+      kind: requires
+    - from: clear-glass/test/google-signin.test.js
+      to: clear-glass/src/fingerprint/firefox-version.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: clear-glass/src/page/semantic-tree.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-16-google-signin-phasemap.spec::GS1_present_as_firefox_on_google_signin
+    dependents:
+      - docs/2026-10-16-google-signin-phasemap.spec::GS4_page_without_a_debugger
+    upstream:
+      - docs/2026-10-16-google-signin-phasemap.spec::GS1_present_as_firefox_on_google_signin
+    downstream:
+      - docs/2026-10-16-google-signin-phasemap.spec::GS4_page_without_a_debugger
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-16-google-signin-phasemap.spec::GS4_page_without_a_debugger
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): GS1_present_as_firefox_on_google_signin'
+      - >-
+        needed by (1): GS4_page_without_a_debugger · finishing it unlocks
+        GS4_page_without_a_debugger
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-16-google-signin-phasemap.spec::GS1_present_as_firefox_on_google_signin
+        kind: inferred

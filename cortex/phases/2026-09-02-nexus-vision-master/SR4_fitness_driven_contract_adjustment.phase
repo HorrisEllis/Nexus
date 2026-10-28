@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::SR4_fitness_driven_contract_adjustment
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR4_fitness_driven_contract_adjustment
+context: >-
+  pipeline phase SR4_fitness_driven_contract_adjustment of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: SR4_fitness_driven_contract_adjustment (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792877948697
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877948697
+lastSeenAt: 1792877948697
+fingerprint: null
+payload:
+  id: SR4_fitness_driven_contract_adjustment
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/index.js
+  depends_on:
+    - B1_full_build_contract_schema
+  blocks: []
+  spec: null
+  graph: 420b6debf9d2e647

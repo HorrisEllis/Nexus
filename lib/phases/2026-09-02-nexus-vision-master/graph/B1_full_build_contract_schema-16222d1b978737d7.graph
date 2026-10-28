@@ -1,0 +1,312 @@
+envelope: 1
+uuid: nexus-export-graph-phase:B1_full_build_contract_schema:16222d1b978737d7
+type: graph
+id: phase:B1_full_build_contract_schema:16222d1b978737d7
+context: dependency graph of phase B1_full_build_contract_schema
+intent: null
+summary: 31 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792878420013
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878420013
+lastSeenAt: 1792878420013
+fingerprint: null
+payload:
+  for: B1_full_build_contract_schema
+  kind: phase
+  repo: null
+  hash: 16222d1b978737d7
+  nodes:
+    - path: cortex/core/raid/contract-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: docs/AXIOMS-v3.1.md
+      role: changes
+      exists: true
+      system: null
+    - path: lib/account-identity-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/end-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/intent-classifier.js
+      role: changes
+      exists: true
+      system: lib
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/worker.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: scripts/mco5-one-real-job.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/mco6-ic9-kill-and-restart.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/contract-intake-dependency-graph.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/contract-intake-tangible-file.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mco19-clearglass-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-boundary.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/event-taxonomy.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-intent-contract.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contract-repo-provision.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/meta/adversary-suite.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/contract-repo-provision.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/event-taxonomy.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-boundary.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/agent-intent-contract.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/worker.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco5-one-real-job.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco6-ic9-kill-and-restart.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/contract-intake-dependency-graph.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/contract-intake-tangible-file.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/mco19-clearglass-dispatch.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+    dependents:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B2_chunk_contract_chaining
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::V9_precommit_gate_for_raid_contracts
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR4_fitness_driven_contract_adjustment
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR8_deterministic_claude_replication
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR9_autonomous_self_build_end_state
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR10_iterative_prompt_optimization_loop
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM7_agent_suite_welcome_ui
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+    downstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM10_ollama_models_in_mesh
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM11_per_agent_tasks_automation
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM7_agent_suite_welcome_ui
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM9_per_account_sub_agents
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B2_chunk_contract_chaining
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::CP2_copilot_learning_memory
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::D4_spec_bulk_import
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::G1_guardian_agents_folder
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR10_iterative_prompt_optimization_loop
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR4_fitness_driven_contract_adjustment
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR8_deterministic_claude_replication
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR9_autonomous_self_build_end_state
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::V9_precommit_gate_for_raid_contracts
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::WF1_workflow_automation_engine
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::WF3_cockpit_ui_shell
+    blockedBy:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+    unlocks:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B2_chunk_contract_chaining
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::V9_precommit_gate_for_raid_contracts
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR4_fitness_driven_contract_adjustment
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR8_deterministic_claude_replication
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR9_autonomous_self_build_end_state
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR10_iterative_prompt_optimization_loop
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by T1_tool_listing_command
+      - 'depends on (1): T1_tool_listing_command'
+      - >-
+        needed by (7): B2_chunk_contract_chaining, V9_precommit_gate_for_raid_contracts,
+        SR4_fitness_driven_contract_adjustment, SR8_deterministic_claude_replication,
+        SR9_autonomous_self_build_end_state, SR10_iterative_prompt_optimization_loop,
+        AM7_agent_suite_welcome_ui · all downstream 15 · finishing it unlocks
+        B2_chunk_contract_chaining, V9_precommit_gate_for_raid_contracts,
+        SR4_fitness_driven_contract_adjustment, SR8_deterministic_claude_replication,
+        SR9_autonomous_self_build_end_state, SR10_iterative_prompt_optimization_loop
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+        kind: inferred

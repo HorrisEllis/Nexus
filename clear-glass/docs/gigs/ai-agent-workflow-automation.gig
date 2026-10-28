@@ -1,0 +1,76 @@
+# Clear Glass gig file (clearglass.gig/1) — load it in Settings → Autofill → Gig, or in the gig panel.
+format: clearglass.gig/1
+platform: fiverr
+title: I will build an AI agent workflow that automates your repetitive work
+category: Programming & Tech
+subcategory: AI Development
+tags:
+  - ai agent
+  - automation
+  - chatgpt
+  - claude
+  - workflow
+description: >-
+  Repeating the same steps every day? I build AI agent workflows that do them for you, and that
+  check their own work before you see it.
+
+
+  I run my own multi-agent system: it routes each task to Claude, ChatGPT, Gemini or a local model,
+  retries the ones that fail, and refuses to call a job done until a test passes. You get the same
+  discipline at the size you need.
+
+
+  What I can build:
+
+  - A workflow that reads, sorts, drafts or summarises (email, documents, data)
+
+  - An agent that uses your tools through an API or a browser
+
+  - A local model fallback, so it keeps working when a service is down
+
+  - Logs that show what the agent did and why
+
+
+  How it works: you describe the finished result and how you'll check it. I write that down first as
+  a short spec, build to it, and show it passing.
+
+
+  Nothing is sent, posted or deleted without the rule you set.
+packages:
+  basic:
+    name: One Agent Task
+    description: One automated task with one AI provider, a run guide and a demo.
+    deliveryDays: 3
+    revisions: 1
+    price: 60
+  standard:
+    name: Multi-Step Workflow
+    description: A workflow of up to 4 steps, with checks between steps and a log.
+    deliveryDays: 6
+    revisions: 2
+    price: 180
+  premium:
+    name: Agent System
+    description: Several agents, routing and fallback across providers, tests and a spec.
+    deliveryDays: 12
+    revisions: 3
+    price: 450
+faq:
+  - question: Which AI providers can you use?
+    answer: >-
+      Claude, ChatGPT, Gemini, DeepSeek and local models through Ollama. You pay for any API keys; I
+      set them up with you.
+  - question: How do I know it works?
+    answer: >-
+      Every job has a check we agree on first. I show it passing before delivery, and you get the
+      test to run yourself.
+  - question: Can it run without the internet?
+    answer: >-
+      Parts can, on a local model, if your computer can run one. I will tell you up front what to
+      expect.
+requirements:
+  - What should the workflow do from start to finish? Describe one real example of the task.
+  - Who will use it, and on what? (Windows, Mac, a server; one person or a team)
+  - What must it always do, and what must it never do?
+  - How will you check that it is done? (the test you will run, or what you will look at)
+  - Please share any files, examples, access or data I need to start.

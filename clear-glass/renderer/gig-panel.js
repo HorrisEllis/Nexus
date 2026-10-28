@@ -81,7 +81,7 @@
     try { await navigator.clipboard.writeText(String(text)); } catch (_) { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
     if (btn) { const t = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = t; }, 1200); }
   }
-  // A gig is one .gig.json file: save it, edit or share it, load it back. Loading runs the same limits as a written gig.
+  // A gig is one .gig file: save it, edit or share it, load it back (an old .gig.json still loads). Loading runs the same limits as a written gig.
   $('gig-import').addEventListener('click', () => $('gig-file').click());
   $('gig-file').addEventListener('change', async (ev) => {
     const f = ev.target.files && ev.target.files[0]; ev.target.value = '';
@@ -96,7 +96,7 @@
   // 2026-10-12 — saved as a .gig (YAML, readable and editable); the template is an empty one to fill in
   const _download = (r) => {
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([r.text], { type: 'text/yaml' })); a.download = r.filename; a.click();
+    a.href = URL.createObjectURL(new Blob([r.text], { type: 'application/octet-stream' })); a.download = r.filename; a.click();   // §AT4 nothing adds an extension
     setTimeout(() => URL.revokeObjectURL(a.href), 5000);
     return a.download;
   };

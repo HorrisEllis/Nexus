@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-solid-build-foundation-phasemap.spec::GQ2_brick_gate_runs_the_test
+type: phase
+id: docs_2026-10-19-solid-build-foundation-phasemap.spec::GQ2_brick_gate_runs_the_test
+context: >-
+  pipeline phase GQ2_brick_gate_runs_the_test of
+  docs/2026-10-19-solid-build-foundation-phasemap.spec
+intent: null
+summary: GQ2_brick_gate_runs_the_test (api) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478286
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478286
+lastSeenAt: 1792822478286
+fingerprint: null
+payload:
+  id: GQ2_brick_gate_runs_the_test
+  map: docs/2026-10-19-solid-build-foundation-phasemap.spec
+  repo: null
+  layer: api
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - cortex/core/raid/contract-adapters.js
+  depends_on:
+    - GQ1_quality_stream
+    - GQ3_brick_tests
+    - DC1_dynamic_chunk_at_plan
+  blocks:
+    - '"brick_gate_quality"'
+  spec: null
+  graph: 49aea393264a386d

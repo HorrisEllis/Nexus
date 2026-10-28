@@ -1,0 +1,305 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM5_the_ways_in:c1e1983fe6a5fe52
+type: graph
+id: phase:LM5_the_ways_in:c1e1983fe6a5fe52
+context: dependency graph of phase LM5_the_ways_in
+intent: null
+summary: 43 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792879045936
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879045936
+lastSeenAt: 1792879045936
+fingerprint: null
+payload:
+  for: LM5_the_ways_in
+  kind: phase
+  repo: null
+  hash: c1e1983fe6a5fe52
+  nodes:
+    - path: architect/service.js
+      role: changes
+      exists: true
+      system: architect
+    - path: copilot/diagnostics.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/compartment/process-runner.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/repo/nexus-self.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-build-loop.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/cos-compartment.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/cos-bridge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-connect.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/ollama-port.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/pulse.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/ui/home/areas/agent-suite.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/lib/store.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/server.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/templates/cos-compartment.js
+      role: changes
+      exists: true
+      system: loom
+    - path: ollama/routes/generate.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: clear-glass/wire/nexus-wire.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/healer/api/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/agents/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: loom/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/lib/changelog.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/scanners/phasemap-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: ollama/server.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: orchestrator/lib/pulse.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/agent-chat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/self-repair.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/capability-spec.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/end-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/lib/http-utils.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/ollama-client.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/state.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: ollama/routes/generate.js
+      to: ollama/lib/http-utils.js
+      kind: requires
+    - from: ollama/routes/generate.js
+      to: ollama/lib/state.js
+      kind: requires
+    - from: ollama/routes/generate.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: lib/ollama-port.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/system-store.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/agent-chat.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/end-state.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/agent-tools/tools/sandbox/self-repair.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/system-boundary.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: clear-glass/wire/nexus-wire.js
+      to: lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/pulse.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/pulse.js
+      kind: requires
+    - from: ollama/server.js
+      to: lib/pulse.js
+      kind: requires
+    - from: orchestrator/lib/pulse.js
+      to: lib/pulse.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/pulse.js
+      kind: requires
+    - from: loom/agent-suite/index.js
+      to: lib/ollama-port.js
+      kind: requires
+    - from: loom/lib/changelog.js
+      to: loom/lib/store.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: loom/lib/store.js
+      kind: requires
+    - from: diagnostic/healer/api/index.js
+      to: lib/system-store.js
+      kind: requires
+    - from: guardian/agents/index.js
+      to: lib/system-store.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-store.js
+      kind: requires
+  crossings:
+    - from: lib/cos-bridge.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/create.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+    dependents: []
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · ready
+      - 'depends on (1): LM4_the_seal_and_into_its_compartment · all upstream 7'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+        kind: declared

@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+type: phase
+id: docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+context: pipeline phase X1 of docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+intent: null
+summary: X1 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676038
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676038
+lastSeenAt: 1792787676038
+fingerprint: null
+payload:
+  id: X1
+  map: docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+    - loom/maps/agent-memory-map.js
+  depends_on:
+    - O1
+    - O2
+    - O3
+    - H1
+    - H2
+    - H3
+    - H4
+    - G1
+    - G2
+    - G3
+    - G4
+    - G5
+    - M1
+    - M2
+    - M3
+    - M4
+    - M5
+  blocks: []
+  spec: null
+  graph: 3523be12dc3e544d

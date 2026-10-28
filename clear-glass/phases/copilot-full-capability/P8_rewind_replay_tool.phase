@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-full-capability-phasemap.spec::P8_rewind_replay_tool
+type: phase
+id: docs_copilot-full-capability-phasemap.spec::P8_rewind_replay_tool
+context: pipeline phase P8_rewind_replay_tool of docs/copilot-full-capability-phasemap.spec
+intent: null
+summary: P8_rewind_replay_tool (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678165
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678165
+lastSeenAt: 1792787678165
+fingerprint: null
+payload:
+  id: P8_rewind_replay_tool
+  map: docs/copilot-full-capability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/rewind/engine.js
+    - clear-glass/src/driver/url-listener.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ad52bfced684ea88

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP2a_adopt_the_old_folder
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP2a_adopt_the_old_folder
+context: pipeline phase UP2a_adopt_the_old_folder of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP2a_adopt_the_old_folder (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793015698407
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793015698407
+lastSeenAt: 1793015698407
+fingerprint: null
+payload:
+  id: UP2a_adopt_the_old_folder
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-update.js
+  depends_on:
+    - UP2_apply_and_rollback
+  blocks: []
+  spec: null
+  graph: 04c786756ed4bad5

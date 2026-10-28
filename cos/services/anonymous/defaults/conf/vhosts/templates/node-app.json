@@ -1,0 +1,17 @@
+{
+  "$template": "node-app",
+  "label": "Node.js application",
+  "description": "A Node process supervised by the platform, with the web server proxying to it.",
+  "stack": "node",
+  "php": false,
+  "proxyPort": null,
+  "portStrategy": "auto",
+  "process": {
+    "install": "npm install",
+    "build": "npm run build",
+    "start": "npm start",
+    "restartOnCrash": true,
+    "logTo": "logs/webserver-{hostname}.log"
+  },
+  "provisions": ["documentRoot", "processEntry", "portAssignment", "tlsCertificate", "proxyRoute", "dnsRecord"]
+}

@@ -18,8 +18,8 @@ const page = (css) => `<!doctype html><html><head><style>${css}</style><style>bo
 (async () => {
   const b = await P.glass.chromium.launch();
   const pg = await b.newPage();
-  for (const css of ['ui/tv-shell/tv-shell.css', 'ui/home/areas/shell.css']) {
-    const src = P.read(css) + (css.includes('home') ? P.read('ui/home/areas/rewind.css') : '');
+  for (const css of ['lib/ui/tv-shell/tv-shell.css', 'lib/ui/home/areas/shell.css']) {
+    const src = P.read(css) + (css.includes('home') ? P.read('lib/ui/home/areas/rewind.css') : '');
     await pg.route('https://shell.local/**', r => r.fulfill({ status: 200, contentType: 'text/html', body: page(src) }));
     await pg.goto(`https://shell.local/${css.replace(/\W/g, '-')}`);
     const r = await pg.evaluate(() => {

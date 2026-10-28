@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
+type: phase
+id: docs_2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
+context: pipeline phase SF4_the_listener of docs/2026-10-15-spec-foundation-model-phasemap.spec
+intent: null
+summary: SF4_the_listener (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755632
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755632
+lastSeenAt: 1792841755632
+fingerprint: null
+payload:
+  id: SF4_the_listener
+  map: docs/2026-10-15-spec-foundation-model-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/run-state.js
+    - clear-glass/src/downloads/chat-ledger.js
+    - lib/gig-ledger.js
+  depends_on:
+    - SF2_state_and_gate
+  blocks: []
+  spec: null
+  graph: 12450e757df15576

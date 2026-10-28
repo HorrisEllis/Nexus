@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MK4_per_node_watchdog:46b398d19337394e
+type: graph
+id: phase:MK4_per_node_watchdog:46b398d19337394e
+context: dependency graph of phase MK4_per_node_watchdog
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792992204325
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992204325
+lastSeenAt: 1792992204325
+fingerprint: null
+payload:
+  for: MK4_per_node_watchdog
+  kind: phase
+  repo: null
+  hash: 46b398d19337394e
+  nodes:
+    - path: diagnostic/watchdog.js
+      role: changes
+      exists: false
+      system: diagnostic
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

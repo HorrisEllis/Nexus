@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB38_prerequisites_the_questions_first
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB38_prerequisites_the_questions_first
+context: >-
+  pipeline phase SB38_prerequisites_the_questions_first of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB38_prerequisites_the_questions_first (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792874369358
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874369358
+lastSeenAt: 1792874369358
+fingerprint: null
+payload:
+  id: SB38_prerequisites_the_questions_first
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/context-prereqs.js
+    - lib/repo-agent.js
+    - lib/repo-prompt-blocks.js
+  depends_on:
+    - SB37_the_working_set_signal_to_noise
+  blocks: []
+  spec: null
+  graph: fe80d59ea2cc6acf

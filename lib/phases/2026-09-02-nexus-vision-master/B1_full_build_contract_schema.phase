@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+context: pipeline phase B1_full_build_contract_schema of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: B1_full_build_contract_schema (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792878420013
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878420013
+lastSeenAt: 1792878420013
+fingerprint: null
+payload:
+  id: B1_full_build_contract_schema
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-intake.js
+    - docs/AXIOMS-v3.1.md
+    - lib/account-identity-index.js
+    - lib/intent-classifier.js
+    - lib/agent-tools/tools/identity/hat-forge.js
+    - lib/hat-forge.js
+    - lib/end-state.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 16222d1b978737d7

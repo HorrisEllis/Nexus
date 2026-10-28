@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-registry-harness-and-stability-phasemap.spec::S3
+type: phase
+id: docs_2026-09-27-registry-harness-and-stability-phasemap.spec::S3
+context: pipeline phase S3 of docs/2026-09-27-registry-harness-and-stability-phasemap.spec
+intent: null
+summary: S3 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476445
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476445
+lastSeenAt: 1792822476445
+fingerprint: null
+payload:
+  id: S3
+  map: docs/2026-09-27-registry-harness-and-stability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/index.js
+    - idearium/repo/nexus-self.js
+    - idearium/spec-engine/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 985bc267d1aa1096

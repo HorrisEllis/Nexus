@@ -1,0 +1,259 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB1_toolbox:34de6cfb5f9c9649
+type: graph
+id: phase:TB1_toolbox:34de6cfb5f9c9649
+context: dependency graph of phase TB1_toolbox
+intent: null
+summary: 27 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822478225
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478225
+lastSeenAt: 1792822478225
+fingerprint: null
+payload:
+  for: TB1_toolbox
+  kind: phase
+  repo: null
+  hash: 34de6cfb5f9c9649
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/repo-toolbox.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-projects-overview.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-carve.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-undo-any-change.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/core/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: intelligence/spatial/lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/core/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-projects-overview.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-repo-carve.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-undo-any-change.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-19-idearium-control-phasemap.spec::FM2_stores_in_the_files_tab
+    dependents:
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR3_graph_query_surface
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH3_chunk_inspector
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW3_gate_panel
+    upstream:
+      - docs/2026-10-19-idearium-control-phasemap.spec::FM1_file_manager
+      - docs/2026-10-19-idearium-control-phasemap.spec::FM2_stores_in_the_files_tab
+      - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+    downstream:
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH3_chunk_inspector
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR3_graph_query_surface
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW3_gate_panel
+    blockedBy:
+      - docs/2026-10-19-idearium-control-phasemap.spec::FM2_stores_in_the_files_tab
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-19-idearium-control-phasemap.spec::PC1_phase_controls
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-19-idearium-control-phasemap.spec::VS1_versions_in_the_surface
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-19-idearium-control-phasemap.spec::IX1_everything_linked
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-19-idearium-control-phasemap.spec::IM2_promote_to_phase
+        files:
+          - idearium/api/index.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by FM2_stores_in_the_files_tab
+      - 'depends on (1): FM2_stores_in_the_files_tab · all upstream 3'
+      - >-
+        needed by (4): CY3_belief_panel, GR3_graph_query_surface, CH3_chunk_inspector,
+        GW3_gate_panel · all downstream 5
+      - 'same files as PC1_phase_controls with no order between them: idearium/api/index.js'
+      - 'same files as VS1_versions_in_the_surface with no order between them: idearium/api/index.js'
+      - 'same files as IX1_everything_linked with no order between them: idearium/api/index.js'
+      - 'same files as IM2_promote_to_phase with no order between them: idearium/api/index.js'
+    edges:
+      - from: docs/2026-10-19-idearium-control-phasemap.spec::FM2_stores_in_the_files_tab
+        kind: declared

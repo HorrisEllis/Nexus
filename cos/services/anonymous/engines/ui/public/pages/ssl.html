@@ -1,0 +1,13 @@
+<div class="card">
+  <div class="card-title">Certificates</div>
+  <div id="ssl-certs"></div>
+</div>
+<div class="card">
+  <div class="card-title">Request a certificate</div>
+  <div class="frow c2">
+    <div><label for="ssl-domain">Domain</label><input id="ssl-domain" placeholder="example.com"></div>
+    <div style="display:flex;align-items:flex-end"><button onclick="panel.issueCert()">Request</button></div>
+  </div>
+  <div id="ssl-result" style="font-size:13px;margin-top:8px"></div>
+  <div class="hint">Issuance needs port 80 reachable from the internet for the ACME challenge.</div>
+</div>

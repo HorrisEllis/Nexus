@@ -1,0 +1,71 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HP13_the_failure_is_put_at_the_right_gate:17395f231ced9d63
+type: graph
+id: phase:HP13_the_failure_is_put_at_the_right_gate:17395f231ced9d63
+context: dependency graph of phase HP13_the_failure_is_put_at_the_right_gate
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677143
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677143
+lastSeenAt: 1792787677143
+fingerprint: null
+payload:
+  for: HP13_the_failure_is_put_at_the_right_gate
+  kind: phase
+  repo: null
+  hash: 17395f231ced9d63
+  nodes:
+    - path: guardian/lib/gate-trail.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: guardian/server.js
+      to: guardian/lib/gate-trail.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/lib/gate-trail.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+    upstream: []
+    downstream:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP15_a_typed_prompt_is_never_sent_again
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP16_a_job_nobody_waits_for_is_not_sent_later
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP21_the_economy_holding_a_job_is_said
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP22_a_missing_tab_is_not_a_login_wall
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): HP19_the_simulator_stays,
+        HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds · all downstream 7 · finishing it
+        unlocks HP19_the_simulator_stays, HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+    edges: []

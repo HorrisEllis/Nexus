@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL15_agent_tools_tree_restructure
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL15_agent_tools_tree_restructure
+context: pipeline phase BL15_agent_tools_tree_restructure of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL15_agent_tools_tree_restructure (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675422
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675422
+lastSeenAt: 1792787675422
+fingerprint: null
+payload:
+  id: BL15_agent_tools_tree_restructure
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/identity/hat-forge.js
+    - lib/hat-forge.js
+    - lib/hat-seed.js
+    - lib/tool-forge.js
+    - lib/agent-tools/tools/governance/tool-config.js
+    - lib/tool-config.js
+    - lib/tool-index.js
+    - lib/agent-tools/tools/browser/browser-action.js
+    - lib/agent-tools/tools/sandbox/rewind-replay.js
+  depends_on:
+    - BL0_macro_system
+  blocks: []
+  spec: null
+  graph: 8c572d92803d3fae

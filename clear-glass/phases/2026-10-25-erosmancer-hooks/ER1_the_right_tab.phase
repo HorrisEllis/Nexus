@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-erosmancer-hooks-phasemap.spec::ER1_the_right_tab
+type: phase
+id: docs_2026-10-25-erosmancer-hooks-phasemap.spec::ER1_the_right_tab
+context: pipeline phase ER1_the_right_tab of docs/2026-10-25-erosmancer-hooks-phasemap.spec
+intent: null
+summary: ER1_the_right_tab (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792973193741
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792973193741
+lastSeenAt: 1792973193741
+fingerprint: null
+payload:
+  id: ER1_the_right_tab
+  map: docs/2026-10-25-erosmancer-hooks-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/eros/tab-match.js
+    - clear-glass/src/main/index.js
+  depends_on:
+    - ER_D2_the_right_tab_or_none
+  blocks: []
+  spec: null
+  graph: df7ca7ebec793fd1

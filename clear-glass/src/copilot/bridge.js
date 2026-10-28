@@ -99,21 +99,24 @@ class CoPilotBridge {
   // §BUILT 2026-09-26 — per-call route (backend/agent/hat) from the CLI or
   // settings; see src/copilot/hat.js for why the hat is composed per call
   // instead of switching copilot's global agent.
-  _route({ backend, agent, hat } = {}) {
+  _route({ backend, agent, hat, model } = {}) {
     const s = this.settings.get();
     const b = ['ollama', 'copilot', 'guardian', 'claude-code'].includes(backend) ? backend : (s.copilotBackend || 'copilot');   // 0.59.14 claude-code
     return { backend: b, agent: b === 'guardian' ? (agent || s.copilotAgent || 'claude') : undefined,
+      // §0.60.231 CL3 — an Ollama model he picked (/copilot ollama:<model>); and strict: every pick but 'copilot' answers or says why (CL2)
+      ...(b === 'ollama' && typeof model === 'string' && model.trim() ? { model: model.trim() } : {}),
+      strict: b !== 'copilot',
       hat: typeof hat === 'boolean' ? hat : s.copilotWearHat !== false };
   }
 
-  async send({ message, agentId = 'default', domContext, systemExtra, requestId, backend, agent, hat, noDom, autoContext = false, picks = [], pickedAt = 0, force = {}, pageUrl = '', partition = '' }) {
+  async send({ message, agentId = 'default', domContext, systemExtra, requestId, backend, agent, hat, model, noDom, autoContext = false, picks = [], pickedAt = 0, force = {}, pageUrl = '', partition = '' }) {
     const msgId = requestId || randomUUID();
     // §0.60.216 SP2 — the page's site: its own Co-pilot agent when none was picked; mesh off there → Co-pilot answers without the page
     let siteNote = null;
     const site = pageUrl ? require('../site-settings/readers').meshAgent(pageUrl) : null;
     if (site && !site.enabled) { noDom = true; autoContext = false; domContext = null; picks = []; siteNote = `Co-pilot does not read ${new URL(pageUrl).origin}: its site settings turn the agent mesh off there (mesh.enabled)`; }
     else if (site && site.agent && !agent && !backend) agent = site.agent;
-    const route = this._route({ backend, agent, hat });
+    const route = this._route({ backend, agent, hat, model });
     this.sse.emit('copilot.thinking', { msgId, agentId, route, ts: Date.now() });
 
     // BS12 (0.60.182) — James: "migrated into copilot so he does it automatically when he needs it". With autoContext the caller sends
@@ -194,6 +197,14 @@ class CoPilotBridge {
         return { text: said.text, commands: [], results: [], executed: true, msgId, route: { ...route, modelUsed: 'nexus' } };
       }
     }
+    // §AD3 0.60.251 — "fill this in for me", "pick github", "record a macro": the engine runs, no model (his "Deterministic first")
+    const job = this._driver && this.settings.get().copilotJobVerbs !== false ? (V.fillIntent(message) || V.pickIntent(message) || V.recordIntent(message) || V.updateIntent(message)) : null;
+    if (job) {
+      const text = await this._runJobVerb(job, agentId, pageUrl);
+      if (remember) this._remember(agentId, 'assistant', text, { via: 'autofill' });
+      this.sse.emit('copilot.response', { msgId, agentId, text, commands: [], modelUsed: 'autofill', ts: Date.now() });
+      return { text, commands: [], results: [], executed: true, msgId, route: { ...route, modelUsed: 'autofill' } };
+    }
     const intent = this._driver ? (V.archiveImportIntent(message) || V.browseIntent(message)) : null;   // §0.39.283 N30 — the archive drop box first
     // §0.59.6 — "what do you see" / "it's on the screen" (alone, or after "visit x.com"): the tab is read, not guessed at
     if (this._driver && !intent && V.screenIntent(message)) {
@@ -216,6 +227,10 @@ class CoPilotBridge {
     }
 
     const result = await this._ask({ message, agentId, domContext, systemExtra, msgId, route });
+    if (result.failed) {   // §0.60.231 CL2 — said as a failure, with who was asked and why
+      this.sse.emit('copilot.response', { msgId, agentId, text: '', error: result.error, modelUsed: result.modelUsed || null, ts: Date.now() });
+      return { ok: false, error: result.error, text: '', commands: [], results: [], executed: false, msgId, route: { ...route, modelUsed: result.modelUsed || null } };
+    }
 
     let text       = result.text || '';
     let commands   = this._parseCommands(text);
@@ -294,6 +309,21 @@ class CoPilotBridge {
     return { ok: true, command, result, ...seen };
   }
 
+  // §AD3 0.60.251 — one of the job verbs (verbs.js fillIntent/pickIntent/recordIntent), run through the same tools the model
+  // would call. On a Fiverr gig editor a fill is the gig fill (GA1); anywhere else it is the application/form fill (JA1–JA5).
+  async _runJobVerb(job, agentId, pageUrl = '') {
+    const V = require('./verbs.js');
+    let url = pageUrl;
+    if (!url) { try { const u = await this._driver.exec({ action: 'getUrl', agentId }); url = (u && (u.url || u.result)) || ''; } catch (_) {} }
+    const action = job.kind === 'fill' ? (V.isGigEditor(url) ? 'autofill.gig' : 'autofill.fill') : job.kind === 'pick' ? 'autofill.pick' : job.kind === 'update' ? 'update.check' : `macro.${job.kind}`;
+    const j = { ...job, gig: action === 'autofill.gig' };
+    let r;
+    try { r = await this._executeCommand({ action, agentId, ...(job.fieldType ? { fieldType: job.fieldType } : {}), ...(job.name ? { name: job.name } : {}) }, agentId); }
+    catch (e) { r = { ok: false, error: e.message }; }
+    this.postEvent('copilot.job.verb', { kind: job.kind, action, ok: !!r && !r.error && r.ok !== false, url: url || null });
+    return V.describeJob(j, r);
+  }
+
   // §0.59.6 — what the tab shows now: title, url, the interaction field's targets as text (shared with _browse)
   async _read(agentId, url = '', verb = 'On screen:') {
     let title = '', here = url, map = '';
@@ -338,10 +368,30 @@ class CoPilotBridge {
     if (action === 'readPage' || action === 'page.read') return this._ipcPost('/cli/page/read', { agentId: aid, maxText: cmd.maxText });
     // §GA1 0.60.161 — "fill this in for me" on a Fiverr gig page: run the engine, do not chat
     if (action === 'autofill.gig') return this._ipcPost('/cli/autofill/gig/autofill', { agentId: aid, offer: cmd.offer || '', profileId: cmd.profileId || null, minConfidence: cmd.minConfidence || 'medium' });
+    if (action === 'autofill.pick') return this._ipcPost('/cli/autofill/pick', { agentId: aid, fieldType: cmd.fieldType || '', profileId: cmd.profileId || null, label: cmd.label || null }, 5 * 60000);
+    if (action === 'autofill.learned') return this._ipcGet(`/cli/autofill/learned${cmd.url ? `?url=${encodeURIComponent(cmd.url)}` : ''}`);
+    if (action === 'autofill.forget') return this._ipcPost('/cli/autofill/forget', { url: cmd.url || '', fieldKey: cmd.fieldKey || '' });
+    if (action === 'autofill.export') return this._ipcGet('/cli/autofill/export');   // §AT2 0.60.256
+    if (action === 'autofill.import') return cmd.undo === true || cmd.undo === 'true' ? this._ipcPost('/cli/autofill/import/undo', {}) : this._ipcPost('/cli/autofill/import', { text: String(cmd.text || ''), by: 'copilot' });
+    if (action === 'autofill.learn') return this._ipcPost('/cli/autofill/learn', { agentId: aid, fieldKey: cmd.fieldKey || '', fieldType: cmd.fieldType || '', url: cmd.url || null });
+    // §AD3 0.60.251 — the general application fill and macros, each to the route the panel's IPC handler shares
+    if (action === 'autofill.profiles') return this._ipcGet('/cli/autofill/profiles');
+    if (action === 'autofill.detect') return this._ipcPost('/cli/autofill/detect', { agentId: aid, profileId: cmd.profileId || null });
+    if (action === 'autofill.fill') return this._ipcPost('/cli/autofill/fill', { agentId: aid, profileId: cmd.profileId || null, minConfidence: cmd.minConfidence || 'medium', vars: cmd.vars || undefined });
+    if (action === 'eros.open') return this._ipcPost('/cli/eros/open', { url: cmd.url, via: cmd.via || (cmd.accountId ? 'account' : 'plain'), accountId: cmd.accountId || null }, 120000);   // §ER2
+    if (action === 'eros.tabs') return this._ipcGet('/cli/eros/tabs');
+    if (action === 'macro.list') return this._ipcGet('/cli/macros');
+    if (action === 'macro.get') return this._ipcGet(`/cli/macros/${encodeURIComponent(cmd.name || '')}`);
+    if (action === 'macro.run') return this._ipcPost(`/cli/macros/${encodeURIComponent(cmd.name || '')}/run`, { agentId: aid, params: cmd.params || {}, skipSnapshot: !!cmd.skipSnapshot }, 5 * 60000);
+    if (action === 'macro.create') return this._ipcPost('/cli/macros', { name: cmd.name, steps: cmd.steps, urlPattern: cmd.urlPattern, params: cmd.params, description: cmd.description, profile: cmd.profile });
+    if (action === 'macro.delete') return this._ipcDelete(`/cli/macros/${encodeURIComponent(cmd.name || '')}`);
+    if (action === 'macro.record.start') return this._ipcPost('/cli/macros/record/start', { agentId: aid, name: cmd.name || null });
+    if (action === 'macro.record.stop') return this._ipcPost('/cli/macros/record/stop', { agentId: aid });
+    if (action === 'macro.record.status') return this._ipcGet(`/cli/macros/record/status?agentId=${encodeURIComponent(aid)}`);
     if (action === 'invoke' || action === 'ipc') return this._ipcPost('/cli/invoke', { channel: cmd.channel, args: cmd.args, agentId: aid });
     if (action === 'channels') return this._ipcGet(`/cli/invoke${cmd.query ? `?q=${encodeURIComponent(cmd.query)}` : ''}`);
-    if (/^(opportunity|context|learned)\./.test(action) || /\.tool$/.test(action)) {
-      const map = { opportunity: 'nexus.opportunity.tool', context: 'nexus.context.tool', learned: 'clearglass.learned.tool' };
+    if (/^(opportunity|context|learned|update)\./.test(action) || /\.tool$/.test(action)) {
+      const map = { opportunity: 'nexus.opportunity.tool', context: 'nexus.context.tool', learned: 'clearglass.learned.tool', update: 'nexus.update.tool' };   // §UP4 0.60.252 update
       const [ns, sub] = action.split('.');
       const { action: _a, agentId: _id, ...args } = cmd;
       return this._runAgentTool(map[ns] || action, map[ns] ? { action: sub, ...args } : args, aid);
@@ -497,9 +547,21 @@ class CoPilotBridge {
     const r = await this._httpGetBridge(`http://127.0.0.1:${this._ipcPort()}${p}`, 15000);
     try { return JSON.parse(r.body); } catch (_) { return { ok: false, error: `bad reply from ${p}` }; }
   }
-  async _ipcPost(p, body) {
-    const r = await this._httpPostBridge(`http://127.0.0.1:${this._ipcPort()}${p}`, body, 60000);
+  async _ipcPost(p, body, timeoutMs = 60000) {   // §JA3 — a pick waits on the person, so its caller passes a longer wait
+    const r = await this._httpPostBridge(`http://127.0.0.1:${this._ipcPort()}${p}`, body, timeoutMs);
     try { return JSON.parse(r.body); } catch (_) { return { ok: false, error: `bad reply from ${p}` }; }
+  }
+  // §AD3 0.60.251 — macro.delete is DELETE /cli/macros/:name
+  _ipcDelete(p, timeoutMs = 15000) {
+    return new Promise((resolve) => {
+      const req = require('http').request({ hostname: '127.0.0.1', port: this._ipcPort(), path: p, method: 'DELETE', timeout: timeoutMs }, (r) => {
+        let buf = ''; r.on('data', c => buf += c);
+        r.on('end', () => { try { resolve(JSON.parse(buf)); } catch (_) { resolve({ ok: false, error: `bad reply from ${p}` }); } });
+      });
+      req.on('error', (e) => resolve({ ok: false, error: `Clear Glass :${this._ipcPort()} unreachable: ${e.message}` }));
+      req.on('timeout', () => { req.destroy(); resolve({ ok: false, error: `${p} timed out` }); });
+      req.end();
+    });
   }
 
   // ── Map action name to SISO bus event ────────────────────────────────
@@ -625,8 +687,13 @@ ${toolsPrompt}${domSection}`;
       backend:     route.backend,
       provider:    route.backend === 'guardian' ? route.agent : route.backend,
       agent:       route.agent,
-    }, Number(s.copilotTimeoutMs) || 60000);
+      ...(route.model ? { model: route.model } : {}),   // §0.60.231 CL3
+      // §0.60.231 CL1 — a Guardian pick may have to open its tab first (spawn, sign-in restored, then the reply): it gets 3 minutes
+      ...(route.backend === 'guardian' ? { timeoutMs: Math.max(Number(s.copilotTimeoutMs) || 60000, 180000) - 5000 } : {}),
+    }, route.backend === 'guardian' ? Math.max(Number(s.copilotTimeoutMs) || 60000, 180000) : (Number(s.copilotTimeoutMs) || 60000));
     const data = result?.response || result || {};
+    // §0.60.231 CL2 — a pick that could not answer comes back as copilot's failure with its reason; it was read as an empty reply
+    if (data.ok === false && !String(data.text || '').trim()) return { text: '', failed: true, error: data.error || data.reason || 'no answer', modelUsed: data.modelUsed || null };
     return {
       text:          data.text || data.response || '',
       modelUsed:     data.modelUsed || data.provider_used || 'nexus',
@@ -645,20 +712,22 @@ ${toolsPrompt}${domSection}`;
     if (!direct && s.useCortex !== false) {
       try {
         const r = await this._callNexusCopilot({ message, agentId, domContext, systemExtra, msgId, route, followUp });
-        return { ...r, via: 'copilot' };
+        return { ...r, via: r.failed ? 'none' : 'copilot' };   // §0.60.231 CL2 — copilot answered for the pick: its failure is the answer, not a cue to ask another model
       } catch (err) {
         tried.push(`copilot :${s.copilotPort || 3750} — ${err.message}`);
         console.warn(`[${new Date().toISOString()}] [clear-glass/src/copilot/bridge.js] [CoPilot] copilot unreachable, going direct:`, err.message);
       }
     }
     // a follow-up round (tool results) stays on the backend that answered the first round
-    const order = direct ? [direct] : (route.backend === 'guardian' ? ['guardian', 'ollama'] : ['ollama', 'guardian']);
+    // §0.60.231 CL2 — a pick stays on its own backend when copilot is down too; only 'copilot' (copilot decides) tries one then the other
+    const order = direct ? [direct] : route.strict && route.backend !== 'claude-code' ? [route.backend === 'guardian' ? 'guardian' : 'ollama']
+      : (route.backend === 'guardian' ? ['guardian', 'ollama'] : ['ollama', 'guardian']);
     const system = (await this._buildCgContext(agentId, followUp ? null : domContext)) + (systemExtra ? '\n\n' + systemExtra : '');
     for (const b of order) {
       try {
         const r = b === 'ollama'
-          ? await this._callOllamaDirect({ system, message, timeoutMs: Number(s.copilotTimeoutMs) || 60000 })
-          : await this._callGuardianDirect({ system, message, agent: route.agent || s.copilotAgent || 'claude', sessionId: agentId, timeoutMs: Number(s.copilotTimeoutMs) || 60000 });
+          ? await this._callOllamaDirect({ system, message, timeoutMs: Number(s.copilotTimeoutMs) || 60000, model: route.model || null })
+          : await this._callGuardianDirect({ system, message, agent: route.agent || s.copilotAgent || 'claude', sessionId: agentId, timeoutMs: route.strict ? Math.max(Number(s.copilotTimeoutMs) || 60000, 180000) : (Number(s.copilotTimeoutMs) || 60000) });   // CL1 — time for its tab to open
         return { ...r, via: b, direct: b };
       } catch (err) { tried.push(`${b === 'ollama' ? 'ollama' : `guardian :${s.guardianPort || 7820} (${route.agent || s.copilotAgent || 'claude'})`} — ${err.message}`); }
     }
@@ -688,9 +757,9 @@ ${toolsPrompt}${domSection}`;
 
   // Ollama directly — the shared runtime every NEXUS system uses (ollama/ollama-runtime.js), model from the
   // Clear Glass setting copilotOllamaModel or ollama/config.js's DEFAULT_MODEL.
-  _callOllamaDirect({ system, message, timeoutMs = 60000 }) {
+  _callOllamaDirect({ system, message, timeoutMs = 60000, model: picked = null }) {
     const rt = require('../../../ollama/ollama-runtime.js');
-    const model = this.settings.get().copilotOllamaModel || rt.DEFAULT_MODEL;
+    const model = picked || this.settings.get().copilotOllamaModel || rt.DEFAULT_MODEL;   // §0.60.231 CL3 — the model he picked first
     return new Promise((resolve, reject) => {
       let text = '', done = false;
       const timer = setTimeout(() => { if (!done) { done = true; reject(new Error(`no reply in ${Math.round(timeoutMs / 1000)}s`)); } }, timeoutMs);

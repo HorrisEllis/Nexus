@@ -1,0 +1,73 @@
+# Clear Glass gig file (clearglass.gig/1) — load it in Settings → Autofill → Gig, or in the gig panel.
+format: clearglass.gig/1
+platform: fiverr
+title: I will set up a private local AI on your PC with Ollama, no cloud
+category: Programming & Tech
+subcategory: AI Development
+tags:
+  - ollama
+  - local llm
+  - private ai
+  - ai setup
+  - offline ai
+description: >-
+  Want AI that runs on your own computer, with your data never leaving it? I set up Ollama with the
+  right models for your machine and your work, and show you how to use it.
+
+
+  I run local models every day as part of my own AI system, routed beside cloud models, so I know
+  which models fit which hardware and which jobs.
+
+
+  What you get:
+
+  - Ollama installed and tested on your Windows, Mac or Linux machine
+
+  - Models picked for your RAM and graphics card, and for your task (writing, code, documents)
+
+  - A simple chat interface, or a script that uses it from your own tools
+
+  - A short guide: how to start it, switch models and keep it updated
+
+
+  How it works: we start with what you want it for and what your computer has. I set it up remotely
+  or with step-by-step instructions, then we test it together on a real task.
+
+
+  Private by design: nothing goes to a cloud service unless you ask for it.
+packages:
+  basic:
+    name: Install and Test
+    description: Ollama and one model installed, tested, with a short guide.
+    deliveryDays: 1
+    revisions: 1
+    price: 40
+  standard:
+    name: Tuned for Your Work
+    description: Models chosen for your tasks, a chat interface and a guide.
+    deliveryDays: 3
+    revisions: 2
+    price: 100
+  premium:
+    name: Local AI in Your Tools
+    description: A script or small app that uses your local model in your workflow.
+    deliveryDays: 6
+    revisions: 3
+    price: 250
+faq:
+  - question: Will it run on my computer?
+    answer: >-
+      Send me your RAM, graphics card and operating system. I will tell you honestly which models
+      will run well before you order.
+  - question: Is it really private?
+    answer: >-
+      Yes. The models run on your machine. Nothing is sent online unless you add a cloud service
+      yourself.
+  - question: Do you need remote access?
+    answer: Not required. I can guide you step by step, or connect remotely if you prefer.
+requirements:
+  - What do you want the local AI to help with? (writing, code, documents, something else)
+  - Who will use it, and on what? (Windows, Mac, a server; one person or a team)
+  - What must it always do, and what must it never do?
+  - How will you check that it is done? (the test you will run, or what you will look at)
+  - Please share any files, examples, access or data I need to start.

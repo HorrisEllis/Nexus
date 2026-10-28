@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET6_sigma_gates_on_taxonomy
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET6_sigma_gates_on_taxonomy
+context: >-
+  pipeline phase ET6_sigma_gates_on_taxonomy of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: ET6_sigma_gates_on_taxonomy (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792879042183
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879042183
+lastSeenAt: 1792879042183
+fingerprint: null
+payload:
+  id: ET6_sigma_gates_on_taxonomy
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/phasemap-map.js
+    - architect/schemas/index.js
+    - clear-glass/schemas/index.js
+    - copilot/schemas/index.js
+    - lib/agent-chat.js
+    - lib/agent-system/contracts.js
+    - lib/gemini-toolbox/agent-contracts.js
+  depends_on:
+    - ET5_loom_event_taxonomy_map
+  blocks: []
+  spec: null
+  graph: ca903cf5ec312805

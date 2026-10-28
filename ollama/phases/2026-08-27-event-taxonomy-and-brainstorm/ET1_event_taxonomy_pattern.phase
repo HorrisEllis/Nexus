@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
+context: >-
+  pipeline phase ET1_event_taxonomy_pattern of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: ET1_event_taxonomy_pattern (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753380
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753380
+lastSeenAt: 1792841753380
+fingerprint: null
+payload:
+  id: ET1_event_taxonomy_pattern
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ollama/config.js
+    - intelligence/config.js
+    - cortex/self-heal/fault-taxonomy.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 367aaf313ab4bd4e

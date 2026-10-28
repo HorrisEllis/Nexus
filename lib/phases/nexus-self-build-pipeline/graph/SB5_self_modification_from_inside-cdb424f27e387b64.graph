@@ -1,0 +1,102 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB5_self_modification_from_inside:cdb424f27e387b64
+type: graph
+id: phase:SB5_self_modification_from_inside:cdb424f27e387b64
+context: dependency graph of phase SB5_self_modification_from_inside
+intent: null
+summary: 6 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678298
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678298
+lastSeenAt: 1792787678298
+fingerprint: null
+payload:
+  for: SB5_self_modification_from_inside
+  kind: phase
+  repo: null
+  hash: cdb424f27e387b64
+  nodes:
+    - path: lib/autonomous-repair.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/repair-on-prompt.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/triggers.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/autonomous-repair.js
+      to: copilot/repair-on-prompt.js
+      kind: requires
+    - from: lib/autonomous-repair.js
+      to: lib/triggers.js
+      kind: requires
+    - from: lib/autonomous-repair.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/autonomous-repair.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/autonomous-repair.js
+      kind: requires
+  crossings:
+    - from: lib/autonomous-repair.js
+      to: copilot/repair-on-prompt.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/autonomous-repair.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB3_guided_build_loop
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB4_decision_lattice_wiring
+    dependents: []
+    upstream:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB2_universal_file_parse
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB3_guided_build_loop
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB4_decision_lattice_wiring
+    downstream: []
+    blockedBy:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB3_guided_build_loop
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB4_decision_lattice_wiring
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by SB3_guided_build_loop, SB4_decision_lattice_wiring
+      - 'depends on (2): SB3_guided_build_loop, SB4_decision_lattice_wiring · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/nexus-self-build-pipeline-phasemap.spec::SB3_guided_build_loop
+        kind: declared
+      - from: docs/nexus-self-build-pipeline-phasemap.spec::SB4_decision_lattice_wiring
+        kind: declared

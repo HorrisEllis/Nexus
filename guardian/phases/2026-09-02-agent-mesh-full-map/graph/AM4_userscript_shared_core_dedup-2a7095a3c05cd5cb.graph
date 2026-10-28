@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AM4_userscript_shared_core_dedup:2a7095a3c05cd5cb
+type: graph
+id: phase:AM4_userscript_shared_core_dedup:2a7095a3c05cd5cb
+context: dependency graph of phase AM4_userscript_shared_core_dedup
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675575
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675575
+lastSeenAt: 1792787675575
+fingerprint: null
+payload:
+  for: AM4_userscript_shared_core_dedup
+  kind: phase
+  repo: null
+  hash: 2a7095a3c05cd5cb
+  nodes:
+    - path: guardian/nexus-hey-claude.user.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/userscript-chatgpt.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/userscript-claude.js
+      role: changes
+      exists: true
+      system: guardian
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

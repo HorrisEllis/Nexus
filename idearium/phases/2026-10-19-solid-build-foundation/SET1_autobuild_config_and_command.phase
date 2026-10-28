@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-solid-build-foundation-phasemap.spec::SET1_autobuild_config_and_command
+type: phase
+id: docs_2026-10-19-solid-build-foundation-phasemap.spec::SET1_autobuild_config_and_command
+context: >-
+  pipeline phase SET1_autobuild_config_and_command of
+  docs/2026-10-19-solid-build-foundation-phasemap.spec
+intent: null
+summary: SET1_autobuild_config_and_command (cli) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792820508098
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820508098
+lastSeenAt: 1792820508098
+fingerprint: null
+payload:
+  id: SET1_autobuild_config_and_command
+  map: docs/2026-10-19-solid-build-foundation-phasemap.spec
+  repo: null
+  layer: cli
+  status: OPEN
+  files:
+    - idearium/lib/config-core.cjs
+    - idearium/cli/route-commands.js
+  depends_on:
+    - AB1_autobuild_loop_and_resume
+  blocks:
+    - '"autobuild_config"'
+  spec: null
+  graph: 44c884e599eb17d4

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_loom-phasemap-section-phasemap.spec::LP2_split_by_system
+type: phase
+id: docs_loom-phasemap-section-phasemap.spec::LP2_split_by_system
+context: pipeline phase LP2_split_by_system of docs/loom-phasemap-section-phasemap.spec
+intent: null
+summary: LP2_split_by_system (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792879046159
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879046159
+lastSeenAt: 1792879046159
+fingerprint: null
+payload:
+  id: LP2_split_by_system
+  map: docs/loom-phasemap-section-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/event-taxonomy-map.js
+    - loom/scanners/phasemap-map.js
+  depends_on:
+    - LP1_phasemap_scanner
+  blocks: []
+  spec: null
+  graph: 7288b80b5c296f93

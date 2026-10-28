@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB14_reuse_compounds
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB14_reuse_compounds
+context: pipeline phase SB14_reuse_compounds of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB14_reuse_compounds (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676842
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676842
+lastSeenAt: 1792787676842
+fingerprint: null
+payload:
+  id: SB14_reuse_compounds
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/component-store.js
+    - idearium/lib/architect.js
+    - idearium/repo/proof-run.js
+  depends_on:
+    - SB13_each_component_chunked
+    - SB6_hundreds_of_specs
+  blocks: []
+  spec: null
+  graph: b122c110a18dd51b

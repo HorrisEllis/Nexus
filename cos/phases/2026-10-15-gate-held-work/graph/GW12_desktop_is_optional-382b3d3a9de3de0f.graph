@@ -1,0 +1,117 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GW12_desktop_is_optional:382b3d3a9de3de0f
+type: graph
+id: phase:GW12_desktop_is_optional:382b3d3a9de3de0f
+context: dependency graph of phase GW12_desktop_is_optional
+intent: null
+summary: 9 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677566
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677566
+lastSeenAt: 1792787677566
+fingerprint: null
+payload:
+  for: GW12_desktop_is_optional
+  kind: phase
+  repo: null
+  hash: 382b3d3a9de3de0f
+  nodes:
+    - path: cos/testenv/detect.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/environment.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/provision.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/compartment/guest-agent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/testenv/provision.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/guest-agent.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/environment.js
+      kind: requires
+  crossings:
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/environment.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+        files:
+          - cos/testenv/provision.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+        files:
+          - cos/testenv/provision.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW15_every_file_tested
+        files:
+          - cos/testenv/detect.js
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - 'same files as GW13_the_sandbox_door with no order between them: cos/testenv/provision.js'
+      - 'same files as GW14_copy_in_diff_out with no order between them: cos/testenv/provision.js'
+      - 'same files as GW15_every_file_tested with no order between them: cos/testenv/detect.js'
+    edges: []

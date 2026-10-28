@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM20_atlas_schema_and_deterministic_seed
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM20_atlas_schema_and_deterministic_seed
+context: >-
+  pipeline phase LM20_atlas_schema_and_deterministic_seed of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM20_atlas_schema_and_deterministic_seed (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792879042307
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879042307
+lastSeenAt: 1792879042307
+fingerprint: null
+payload:
+  id: LM20_atlas_schema_and_deterministic_seed
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/capability-map.js
+    - loom/scanners/event-taxonomy-map.js
+    - loom/scanners/phasemap-map.js
+    - loom/scanners/source-map.js
+    - loom/scanners/spec-map.js
+    - loom/scanners/wiring-gaps.js
+    - loom/scanners/dangling-report.js
+  depends_on:
+    - LM18_atlas_map_each_system_first
+  blocks: []
+  spec: null
+  graph: d5ff96f2115bebb3

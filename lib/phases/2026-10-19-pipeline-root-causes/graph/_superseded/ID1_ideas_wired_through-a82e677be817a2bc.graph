@@ -1,0 +1,268 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ID1_ideas_wired_through:a82e677be817a2bc
+type: graph
+id: phase:ID1_ideas_wired_through:a82e677be817a2bc
+context: dependency graph of phase ID1_ideas_wired_through
+intent: null
+summary: 34 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792875541916
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875541916
+lastSeenAt: 1792875541916
+fingerprint: null
+payload:
+  for: ID1_ideas_wired_through
+  kind: phase
+  repo: null
+  hash: a82e677be817a2bc
+  nodes:
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: docs/2026-10-21-brainos-into-idearium-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: guardian/lib/chat-transcripts.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/path-guard.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-dag.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/work-funnel.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: tests/sp5-title.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: diagnostic/cli.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/server.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/proposal-evidence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-inject-screen.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-inject-approval.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-pipeline-root-causes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-proposal-evidence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/change-entry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-versions.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/work-funnel.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: lib/work-funnel.js
+      to: lib/context-prereqs.js
+      kind: requires
+    - from: lib/work-funnel.js
+      to: lib/phase-files.js
+      kind: requires
+    - from: lib/work-funnel.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/nexus-self/inject-gate.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/change-entry.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/work-funnel.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-inject-screen.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-nexus-inject-approval.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-proposal-evidence.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-pipeline-root-causes.test.js
+      to: lib/path-guard.js
+      kind: requires
+    - from: diagnostic/cli.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+    - from: diagnostic/server.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+  crossings:
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+    dependents: []
+    upstream:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-19-pipeline-root-causes-phasemap.spec::UI3_ideas_and_notes_as_one
+        files:
+          - lib/work-funnel.js
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (1): VF1_verify_first · all upstream 2'
+      - 'needed by (0): —'
+      - 'same files as UI3_ideas_and_notes_as_one with no order between them: lib/work-funnel.js'
+    edges:
+      - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+        kind: declared

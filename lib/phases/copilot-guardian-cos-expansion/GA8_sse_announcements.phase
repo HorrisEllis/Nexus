@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-guardian-cos-expansion-phasemap.spec::GA8_sse_announcements
+type: phase
+id: docs_copilot-guardian-cos-expansion-phasemap.spec::GA8_sse_announcements
+context: pipeline phase GA8_sse_announcements of docs/copilot-guardian-cos-expansion-phasemap.spec
+intent: null
+summary: GA8_sse_announcements (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792879046095
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879046095
+lastSeenAt: 1792879046095
+fingerprint: null
+payload:
+  id: GA8_sse_announcements
+  map: docs/copilot-guardian-cos-expansion-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus/nexus-connect.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8ca22b37a3743413

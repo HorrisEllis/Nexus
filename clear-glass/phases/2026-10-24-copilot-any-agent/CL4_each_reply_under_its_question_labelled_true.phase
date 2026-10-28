@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-copilot-any-agent-phasemap.spec::CL4_each_reply_under_its_question_labelled_true
+type: phase
+id: docs_2026-10-24-copilot-any-agent-phasemap.spec::CL4_each_reply_under_its_question_labelled_true
+context: >-
+  pipeline phase CL4_each_reply_under_its_question_labelled_true of
+  docs/2026-10-24-copilot-any-agent-phasemap.spec
+intent: null
+summary: CL4_each_reply_under_its_question_labelled_true (ui) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371334
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371334
+lastSeenAt: 1792874371334
+fingerprint: null
+payload:
+  id: CL4_each_reply_under_its_question_labelled_true
+  map: docs/2026-10-24-copilot-any-agent-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - clear-glass/renderer/float-cli.js
+    - tests/modules/test-copilot-any-agent.test.js
+  depends_on:
+    - CL3_any_agent_as_the_copilot
+  blocks:
+    - MOD-CA-REPLY
+  spec: clear-glass/spec/copilot-any-agent.spec
+  graph: 6c77a5692d79d17f

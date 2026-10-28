@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
+context: pipeline phase UP1_check_and_plan of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP1_check_and_plan (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793015698403
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793015698403
+lastSeenAt: 1793015698403
+fingerprint: null
+payload:
+  id: UP1_check_and_plan
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-update.js
+  depends_on:
+    - UP_D1_how_an_update_lands
+  blocks: []
+  spec: null
+  graph: 25e139be0d7f1b63

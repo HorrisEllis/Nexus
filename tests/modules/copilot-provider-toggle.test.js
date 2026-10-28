@@ -138,7 +138,7 @@ test('T-012', "/api/prompt's real lifeline.route() call actually passes resolved
 });
 
 test('T-013', "ui/tv-shell/menu.js sends the real, current toggle/dropdown state on every /api/prompt call, not a hardcoded or missing value", () => {
-  const menuSrc = fs.readFileSync(path.join(ROOT, 'ui/tv-shell/menu.js'), 'utf8');
+  const menuSrc = fs.readFileSync(path.join(ROOT, 'lib', 'ui', 'tv-shell', 'menu.js'), 'utf8');
   const idx = menuSrc.indexOf('_copilotPrompt');
   const block = menuSrc.slice(idx, idx + 1200);
   assert.ok(/const provider = _backend === 'guardian' \? _agent : _backend;/.test(block));
@@ -147,7 +147,7 @@ test('T-013', "ui/tv-shell/menu.js sends the real, current toggle/dropdown state
 });
 
 test('T-014', "menu.js's /backend and /agent are real, event-driven CLI commands — James: 'make them event driven command line based, since they're commands'", () => {
-  const menuSrc = fs.readFileSync(path.join(ROOT, 'ui/tv-shell/menu.js'), 'utf8');
+  const menuSrc = fs.readFileSync(path.join(ROOT, 'lib', 'ui', 'tv-shell', 'menu.js'), 'utf8');
   assert.ok(/\/backend\\s\+\(ollama\|copilot\|guardian\)/.test(menuSrc.replace(/\\\\/g, '\\')) || /\^\\\/backend/.test(menuSrc));
   assert.ok(/function setBackend/.test(menuSrc));
   assert.ok(/function setAgent/.test(menuSrc));
@@ -190,14 +190,14 @@ test('T-018', 'a failed direct dispatch fails honestly (502, real error) — nev
 });
 
 test('T-019', 'menu.js sends backend and agent explicitly on every _copilotPrompt call, activating the real bypass when toggled away from copilot', () => {
-  const menuSrc = fs.readFileSync(path.join(ROOT, 'ui/tv-shell/menu.js'), 'utf8');
+  const menuSrc = fs.readFileSync(path.join(ROOT, 'lib', 'ui', 'tv-shell', 'menu.js'), 'utf8');
   const idx = menuSrc.indexOf('_copilotPrompt');
   const block = menuSrc.slice(idx, idx + 1200);
   assert.ok(/backend:\s*_backend/.test(block));
 });
 
 test('T-020', "the real /tell command exists and deliberately sends provider WITHOUT backend — James: 'Tell <provider> prompt uses lifeline' — so it flows through the existing, unchanged lifeline-routed path, not the new bypass", () => {
-  const menuSrc = fs.readFileSync(path.join(ROOT, 'ui/tv-shell/menu.js'), 'utf8');
+  const menuSrc = fs.readFileSync(path.join(ROOT, 'lib', 'ui', 'tv-shell', 'menu.js'), 'utf8');
   const idx = menuSrc.indexOf('tellMatch');
   assert.ok(idx > -1, 'expected a real /tell command handler');
   const block = menuSrc.slice(idx, idx + 700);

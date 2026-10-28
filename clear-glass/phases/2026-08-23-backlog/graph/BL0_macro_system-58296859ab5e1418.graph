@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL0_macro_system:58296859ab5e1418
+type: graph
+id: phase:BL0_macro_system:58296859ab5e1418
+context: dependency graph of phase BL0_macro_system
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792822475731
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822475731
+lastSeenAt: 1792822475731
+fingerprint: null
+payload:
+  for: BL0_macro_system
+  kind: phase
+  repo: null
+  hash: 58296859ab5e1418
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-08-23-backlog-phasemap.spec::BL1_macro_erosmancer_integration
+      - docs/2026-08-23-backlog-phasemap.spec::BL6_captcha_detection
+      - docs/2026-08-23-backlog-phasemap.spec::BL15_agent_tools_tree_restructure
+    upstream: []
+    downstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL15_agent_tools_tree_restructure
+      - docs/2026-08-23-backlog-phasemap.spec::BL1_macro_erosmancer_integration
+      - docs/2026-08-23-backlog-phasemap.spec::BL23_ncp_providers_start_verification
+      - docs/2026-08-23-backlog-phasemap.spec::BL29_tab_context_menu_move_to_background
+      - docs/2026-08-23-backlog-phasemap.spec::BL6_captcha_detection
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-23-backlog-phasemap.spec::BL1_macro_erosmancer_integration
+      - docs/2026-08-23-backlog-phasemap.spec::BL6_captcha_detection
+      - docs/2026-08-23-backlog-phasemap.spec::BL15_agent_tools_tree_restructure
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (3): BL1_macro_erosmancer_integration, BL6_captcha_detection,
+        BL15_agent_tools_tree_restructure · all downstream 5 · finishing it unlocks
+        BL1_macro_erosmancer_integration, BL6_captcha_detection, BL15_agent_tools_tree_restructure
+    edges: []

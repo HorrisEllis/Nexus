@@ -1,0 +1,117 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HP19_the_simulator_stays:68d2133829f37a8f
+type: graph
+id: phase:HP19_the_simulator_stays:68d2133829f37a8f
+context: dependency graph of phase HP19_the_simulator_stays
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677151
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677151
+lastSeenAt: 1792787677151
+fingerprint: null
+payload:
+  for: HP19_the_simulator_stays
+  kind: phase
+  repo: null
+  hash: 68d2133829f37a8f
+  nodes:
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/sim/fake-tab.js
+      role: changes
+      exists: true
+      system: null
+    - path: guardian/ask.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatcher.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/gate-trail.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/model-door.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/lib/gate-trail.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/ask.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/model-door.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/economy/ledger.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP13_the_failure_is_put_at_the_right_gate
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP15_a_typed_prompt_is_never_sent_again
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP16_a_job_nobody_waits_for_is_not_sent_later
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP18_auto_tries_agents_with_a_tab_first
+    dependents: []
+    upstream:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP13_the_failure_is_put_at_the_right_gate
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP15_a_typed_prompt_is_never_sent_again
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP16_a_job_nobody_waits_for_is_not_sent_later
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP18_auto_tries_agents_with_a_tab_first
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5
+      - >-
+        depends on (6): HP13_the_failure_is_put_at_the_right_gate,
+        HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds,
+        HP15_a_typed_prompt_is_never_sent_again, HP16_a_job_nobody_waits_for_is_not_sent_later,
+        HP17_no_tab_is_said_in_seconds, HP18_auto_tries_agents_with_a_tab_first
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-09-hardening-pass-phasemap.spec::HP13_the_failure_is_put_at_the_right_gate
+        kind: declared
+      - from: docs/2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+        kind: declared
+      - from: docs/2026-10-09-hardening-pass-phasemap.spec::HP15_a_typed_prompt_is_never_sent_again
+        kind: declared
+      - from: docs/2026-10-09-hardening-pass-phasemap.spec::HP16_a_job_nobody_waits_for_is_not_sent_later
+        kind: declared
+      - from: docs/2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
+        kind: declared
+      - from: docs/2026-10-09-hardening-pass-phasemap.spec::HP18_auto_tries_agents_with_a_tab_first
+        kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303350
+exported_at: 1792787677972
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303350
-lastSeenAt: 1792456303350
+firstSeenAt: 1792787677972
+lastSeenAt: 1792787677972
 fingerprint: null
 payload:
   for: EW1_evidence_record_and_weights
@@ -27,7 +27,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 5
     deps:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
@@ -66,11 +65,14 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - >-
-        DAG 7583ffef0c495b95 · layer 5 · ON THE CRITICAL PATH · blocked by GW1_gate_primitive,
-        PV1_provenance_on_every_claim
+      - layer 5 · blocked by GW1_gate_primitive, PV1_provenance_on_every_claim
       - 'depends on (2): GW1_gate_primitive, PV1_provenance_on_every_claim · all upstream 11'
       - >-
         needed by (3): CF1_confidence_from_evidence, RA1_root_cause_through_provenance,
         XD1_cross_domain_verification · all downstream 9 · finishing it unlocks
         CF1_confidence_from_evidence
+    edges:
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+        kind: declared
+      - from: docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+        kind: declared

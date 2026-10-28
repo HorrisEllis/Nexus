@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD18_mastermind_ready
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD18_mastermind_ready
+context: pipeline phase SD18_mastermind_ready of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD18_mastermind_ready (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477488
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477488
+lastSeenAt: 1792822477488
+fingerprint: null
+payload:
+  id: SD18_mastermind_ready
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/zip-ingest.js
+    - idearium/api/index.js
+    - idearium/repo/roadmap-import.js
+    - idearium/repo/proof-run.js
+    - lib/import-checks.js
+  depends_on:
+    - SD17_an_imported_project_continues
+  blocks: []
+  spec: null
+  graph: 6e60122522d0e684

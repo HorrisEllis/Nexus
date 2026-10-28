@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CN1_warp_to_lib:e36094a8a766011c
+type: graph
+id: phase:CN1_warp_to_lib:e36094a8a766011c
+context: dependency graph of phase CN1_warp_to_lib
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792877325057
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325057
+lastSeenAt: 1792877325057
+fingerprint: null
+payload:
+  for: CN1_warp_to_lib
+  kind: phase
+  repo: null
+  hash: e36094a8a766011c
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D2_warp_home
+    dependents:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+    upstream:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D1_what_is_a_system
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D2_warp_home
+    downstream:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+    blockedBy:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by CN0_the_rule_in_force
+      - 'depends on (2): CN0_the_rule_in_force, CN_D2_warp_home · all upstream 3'
+      - 'needed by (1): CN11_version_and_record'
+    edges:
+      - from: docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+        kind: declared
+      - from: docs/2026-10-24-system-consolidation-phasemap.spec::CN_D2_warp_home
+        kind: declared

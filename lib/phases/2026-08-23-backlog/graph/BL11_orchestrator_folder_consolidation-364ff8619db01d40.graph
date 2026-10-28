@@ -1,0 +1,302 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL11_orchestrator_folder_consolidation:364ff8619db01d40
+type: graph
+id: phase:BL11_orchestrator_folder_consolidation:364ff8619db01d40
+context: dependency graph of phase BL11_orchestrator_folder_consolidation
+intent: null
+summary: 43 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753343
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753343
+lastSeenAt: 1792841753343
+fingerprint: null
+payload:
+  for: BL11_orchestrator_folder_consolidation
+  kind: phase
+  repo: null
+  hash: 364ff8619db01d40
+  nodes:
+    - path: clear-glass/fix-orchestrator.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/page-resolver.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/policy.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cos/archetype/components/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/runtime/syntax-check.cjs
+      role: changes
+      exists: true
+      system: cos
+    - path: data/registry.json
+      role: changes
+      exists: false
+      system: null
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: intelligence/cfr/contract-verifier.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/cli/nexus-repl.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/contracts/SYSTEM-CONTRACTS.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/file-integrity.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-config.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-check.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/uid/component-map.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: scripts/verify-boot.js
+      role: changes
+      exists: true
+      system: null
+    - path: scripts/verify-wires.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/diagnostic-fixes.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/nexus-full-audit.js
+      role: changes
+      exists: true
+      system: null
+    - path: diagnostic/lib/heal-loop.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/diagnostic/system-priority.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/integrity-revert.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-manifest.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/uid/config-schema.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/uid/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/uid/normalize.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/intent-map.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: lib/boot-sequence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cli/boot-systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/event-taxonomy.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/intent-map.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/mcp-server.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: tests/helpers/home-page-source.js
+      role: uses
+      exists: true
+      system: null
+  edges:
+    - from: lib/system-check.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: lib/system-check.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/system-check.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: tests/nexus-full-audit.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: tests/nexus-full-audit.js
+      to: tests/helpers/home-page-source.js
+      kind: requires
+    - from: tests/nexus-full-audit.js
+      to: orchestrator/lib/mcp-server.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/intent-map.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/boot-sequence.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/cli/boot-systems.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/system-priority.js
+      to: lib/system-check.js
+      kind: requires
+    - from: lib/integrity-revert.js
+      to: lib/file-integrity.js
+      kind: requires
+    - from: lib/uid/config-schema.js
+      to: lib/uid/component-map.js
+      kind: requires
+    - from: lib/uid/index.js
+      to: lib/uid/component-map.js
+      kind: requires
+    - from: lib/uid/normalize.js
+      to: lib/uid/component-map.js
+      kind: requires
+    - from: orchestrator/lib/intent-map.js
+      to: lib/uid/component-map.js
+      kind: requires
+    - from: diagnostic/lib/heal-loop.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/system-manifest.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+  crossings:
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-08-23-backlog-phasemap.spec::BL7_emerge_files_to_emerge_folder
+    dependents:
+      - docs/2026-08-23-backlog-phasemap.spec::BL12_nexus_heal_loop_to_diagnostic
+      - docs/2026-08-23-backlog-phasemap.spec::BL16_per_server_configs
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL7_emerge_files_to_emerge_folder
+    downstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL12_nexus_heal_loop_to_diagnostic
+      - docs/2026-08-23-backlog-phasemap.spec::BL16_per_server_configs
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-23-backlog-phasemap.spec::BL12_nexus_heal_loop_to_diagnostic
+      - docs/2026-08-23-backlog-phasemap.spec::BL16_per_server_configs
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): BL7_emerge_files_to_emerge_folder'
+      - >-
+        needed by (2): BL12_nexus_heal_loop_to_diagnostic, BL16_per_server_configs · finishing it
+        unlocks BL12_nexus_heal_loop_to_diagnostic, BL16_per_server_configs
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL7_emerge_files_to_emerge_folder
+        kind: inferred

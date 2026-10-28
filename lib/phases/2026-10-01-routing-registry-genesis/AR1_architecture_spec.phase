@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-routing-registry-genesis-phasemap.spec::AR1_architecture_spec
+type: phase
+id: docs_2026-10-01-routing-registry-genesis-phasemap.spec::AR1_architecture_spec
+context: pipeline phase AR1_architecture_spec of docs/2026-10-01-routing-registry-genesis-phasemap.spec
+intent: null
+summary: AR1_architecture_spec (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676546
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676546
+lastSeenAt: 1792787676546
+fingerprint: null
+payload:
+  id: AR1_architecture_spec
+  map: docs/2026-10-01-routing-registry-genesis-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/architecture-spec/architecture-spec.spec
+  depends_on:
+    - GN1_genesis
+  blocks: []
+  spec: null
+  graph: 8cd719427be6e25f

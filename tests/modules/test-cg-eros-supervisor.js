@@ -67,7 +67,7 @@ async function main() {
   check('the wire serves the supervisor\'s status and a start/reconnect', /'\/eros-supervisor'/.test(MAIN) && /'\/eros-supervisor\/start'/.test(MAIN));
   const SET = fs.readFileSync(path.join(ROOT, 'clear-glass', 'renderer', 'settings', 'sections', 'eros.js'), 'utf8');
   check('Settings → ErosmancerOS shows who started it, offers Start, and defaults to Clear Glass\'s real DevTools port (not 9222)', /\/eros-supervisor/.test(SET) && /Start ErosmancerOS/.test(SET) && /sup\.cdpPort\) \|\| 9333/.test(SET) && !/value: 9222/.test(SET));
-  const TYPES = fs.readFileSync(path.join(ROOT, 'erosmancer', 'erosmancer-os', 'src', 'types', 'index.ts'), 'utf8');
+  const TYPES = fs.readFileSync(path.join(ROOT, 'clear-glass', 'erosmancer', 'erosmancer-os', 'src', 'types', 'index.ts'), 'utf8');
   const dc = TYPES.slice(TYPES.indexOf('export const DEFAULT_CONFIG'), TYPES.indexOf('export const BEHAVIOR_DEFAULTS'));
   check('ErosmancerOS DEFAULT_CONFIG carries routing, behavior and observer (connect crashed without them)', /routing: \{\s*defaultLevel/.test(dc) && /behavior: \{/.test(dc) && /observer: \{/.test(dc));
 

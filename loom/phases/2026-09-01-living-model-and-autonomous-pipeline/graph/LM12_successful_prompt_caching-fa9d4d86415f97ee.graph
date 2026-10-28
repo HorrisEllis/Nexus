@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM12_successful_prompt_caching:fa9d4d86415f97ee
+type: graph
+id: phase:LM12_successful_prompt_caching:fa9d4d86415f97ee
+context: dependency graph of phase LM12_successful_prompt_caching
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675547
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675547
+lastSeenAt: 1792787675547
+fingerprint: null
+payload:
+  for: LM12_successful_prompt_caching
+  kind: phase
+  repo: null
+  hash: fa9d4d86415f97ee
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

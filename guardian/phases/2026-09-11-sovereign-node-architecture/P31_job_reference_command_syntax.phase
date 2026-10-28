@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P31_job_reference_command_syntax
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P31_job_reference_command_syntax
+context: >-
+  pipeline phase P31_job_reference_command_syntax of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P31_job_reference_command_syntax (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675921
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675921
+lastSeenAt: 1792787675921
+fingerprint: null
+payload:
+  id: P31_job_reference_command_syntax
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/provider-routing.js
+    - guardian/cli.js
+    - lib/node-export.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 05330631270dac6a

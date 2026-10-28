@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R6_living_documentation
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R6_living_documentation
+context: pipeline phase R6_living_documentation of docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R6_living_documentation (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756550
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756550
+lastSeenAt: 1792841756550
+fingerprint: null
+payload:
+  id: R6_living_documentation
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/doc-generator.js
+    - lib/version.js
+  depends_on:
+    - R4_loom_ledger_awareness
+    - R5_loom_visual_map
+  blocks: []
+  spec: null
+  graph: 94e5e48703f360b7

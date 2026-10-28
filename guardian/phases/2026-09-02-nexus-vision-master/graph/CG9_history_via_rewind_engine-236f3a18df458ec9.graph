@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CG9_history_via_rewind_engine:236f3a18df458ec9
+type: graph
+id: phase:CG9_history_via_rewind_engine:236f3a18df458ec9
+context: dependency graph of phase CG9_history_via_rewind_engine
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675673
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675673
+lastSeenAt: 1792787675673
+fingerprint: null
+payload:
+  for: CG9_history_via_rewind_engine
+  kind: phase
+  repo: null
+  hash: 236f3a18df458ec9
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

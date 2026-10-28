@@ -58,6 +58,7 @@ function stub({ lastGig = null, dom = fakeDom(), copilot = null, profiles = [{ i
     _seen: () => stored,
   };
   for (const m of ['_gigAutofill', '_gigFill', '_gigDraft', '_fiverrProfileId']) s[m] = IpcBridge.prototype[m].bind(s);
+  s._humanCheckGate = async () => ({ pass: true });   // §HC3's gate (0.60.265: the gate has its own tests; here no check is on the page)
   return s;
 }
 

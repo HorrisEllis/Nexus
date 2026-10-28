@@ -1,0 +1,327 @@
+envelope: 1
+uuid: nexus-export-graph-phase:R2_real_snapshot_rollback:b4af0c3b6772dee3
+type: graph
+id: phase:R2_real_snapshot_rollback:b4af0c3b6772dee3
+context: dependency graph of phase R2_real_snapshot_rollback
+intent: null
+summary: 40 node(s), 8 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678336
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678336
+lastSeenAt: 1792787678336
+fingerprint: null
+payload:
+  for: R2_real_snapshot_rollback
+  kind: phase
+  repo: null
+  hash: b4af0c3b6772dee3
+  nodes:
+    - path: architecture-spec/registry/api.js
+      role: changes
+      exists: true
+      system: architecture-spec
+    - path: clear-glass/renderer/settings/core.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/workset.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/repair-on-prompt.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/cortex-v2.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/snapshot/index.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/app/settings.js
+      role: changes
+      exists: true
+      system: cos
+    - path: docs/versionium.spec
+      role: changes
+      exists: true
+      system: null
+    - path: intelligence/alk/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/compartment-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/economy/store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/file-integrity.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/replay-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ui/tv-shell/index.html
+      role: changes
+      exists: true
+      system: ui
+    - path: versionium/lib/snapshot.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/snapshot-trigger.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/integrity-revert.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/self-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/snapshot-integrity.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-snapshot-migration.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/pipeline.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: hooks/index.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: orchestrator/lib/pulse.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: lib/replay-engine.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: hooks/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: guardian/server.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: lib/self-build-loop.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: orchestrator/lib/autonomous-loop.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: tests/modules/snapshot-integrity.test.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: tests/modules/test-versionium-snapshot-migration.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: tests/pipeline.test.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: intelligence/snapshot-trigger.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: lib/integrity-revert.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/file-integrity.js
+      kind: requires
+  crossings:
+    - from: lib/replay-engine.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: cortex
+      toSystem: orchestrator
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: nexus/nexus-bus.js
+      fromSystem: cortex
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: hooks/index.js
+      fromSystem: cortex
+      toSystem: hooks
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: cortex/snapshot/index.js
+      fromSystem: guardian
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/self-build-loop.js
+      to: cortex/snapshot/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: orchestrator/lib/autonomous-loop.js
+      to: cortex/snapshot/index.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: orchestrator/lib/request-handler.js
+      to: cortex/snapshot/index.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R7_fault_taxonomy_reconnection
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R10_relational_context_and_reuse
+    upstream: []
+    downstream:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R10_relational_context_and_reuse
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R7_fault_taxonomy_reconnection
+    blockedBy: []
+    unlocks:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R7_fault_taxonomy_reconnection
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R10_relational_context_and_reuse
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): R7_fault_taxonomy_reconnection, R10_relational_context_and_reuse · finishing
+        it unlocks R7_fault_taxonomy_reconnection, R10_relational_context_and_reuse
+    edges: []

@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH2_every_system_states_its_expectations
+type: phase
+id: docs_2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH2_every_system_states_its_expectations
+context: >-
+  pipeline phase DH2_every_system_states_its_expectations of
+  docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec
+intent: null
+summary: DH2_every_system_states_its_expectations (?) — 15 file(s)
+system: idearium
+tags: []
+exported_at: 1792820687073
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820687073
+lastSeenAt: 1792820687073
+fingerprint: null
+payload:
+  id: DH2_every_system_states_its_expectations
+  map: docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/spec/orchestrator.spec
+    - cortex/spec/cortex.spec
+    - guardian/spec/guardian.spec
+    - idearium/spec/idearium.spec
+    - architect/spec/architect.spec
+    - diagnostic/spec/diagnostic.spec
+    - intelligence/spec/intelligence.spec
+    - ollama/spec/ollama.spec
+    - versionium/spec/versionium.spec
+    - copilot/spec/copilot.spec
+    - loom/spec/loom.spec
+    - clear-glass/spec/clear-glass.spec
+    - components/spec/components.spec
+    - cos/spec/cos.spec
+    - lib/spec/core.spec
+  depends_on:
+    - DH1_the_expected_behavior_schema
+    - DH0b_libraries_are_expected_not_beating
+  blocks: []
+  spec: null
+  graph: b0d99e22ff786e68

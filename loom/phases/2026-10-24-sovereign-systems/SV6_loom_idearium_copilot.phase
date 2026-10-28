@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
+type: phase
+id: docs_2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
+context: pipeline phase SV6_loom_idearium_copilot of docs/2026-10-24-sovereign-systems-phasemap.spec
+intent: null
+summary: SV6_loom_idearium_copilot (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682581
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682581
+lastSeenAt: 1792877682581
+fingerprint: null
+payload:
+  id: SV6_loom_idearium_copilot
+  map: docs/2026-10-24-sovereign-systems-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom
+    - idearium
+    - copilot
+  depends_on:
+    - SV5_clear_glass_guardian_orchestrator
+  blocks: []
+  spec: null
+  graph: 69df415153eb66e5

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P14_per_system_living_gap_index
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P14_per_system_living_gap_index
+context: >-
+  pipeline phase P14_per_system_living_gap_index of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P14_per_system_living_gap_index (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675902
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675902
+lastSeenAt: 1792787675902
+fingerprint: null
+payload:
+  id: P14_per_system_living_gap_index
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9458a22e955dc98a

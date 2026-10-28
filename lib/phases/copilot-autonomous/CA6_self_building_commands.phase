@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-autonomous-phasemap.spec::CA6_self_building_commands
+type: phase
+id: docs_copilot-autonomous-phasemap.spec::CA6_self_building_commands
+context: pipeline phase CA6_self_building_commands of docs/copilot-autonomous-phasemap.spec
+intent: null
+summary: CA6_self_building_commands (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678145
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678145
+lastSeenAt: 1792787678145
+fingerprint: null
+payload:
+  id: CA6_self_building_commands
+  map: docs/copilot-autonomous-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/command-builder.js
+    - copilot/lib/capabilities.js
+    - lib/tool-index.js
+    - cos/cli/commands/run.js
+    - loom/scanners/capability-map.js
+    - loom/maps/observability-map.js
+  depends_on:
+    - CA1_scheduler
+    - CA3_pipeline_chains
+  blocks: []
+  spec: null
+  graph: 4fc1ad9fd3f90dd6

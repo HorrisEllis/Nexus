@@ -40,7 +40,7 @@
 'use strict';
 
 const { jaaDB, uid } = require('../cortex/memory/jaa-db');
-const bus = require('../nexus/nexus-bus');
+const bus = require('../lib/nexus/nexus-bus');
 const domainNodes = require('./lib/domain-nodes.js');
 
 const MODULE_ID = 'cortex/intelligence';
@@ -344,6 +344,31 @@ function _classifySystem(source) {
   return null; // a real source that doesn't match a known system — honest, not forced into a wrong bucket
 }
 
+// §BUILT 2026-10-24 — James: "b, tighten the crystallizer threshold." The
+// event-level base-rate lift the crystallizer never had. Pure and module-level
+// so it is unit-testable without feeding timed events. Given two event types
+// with in-window frequencies freqA/freqB over a window spanning spanMs, and the
+// co-occurrence rule's own windowMs, how many co-occurrences would pure CHANCE
+// produce? Under independence each A event has ~ freqB*(windowMs/spanMs) chance
+// of a later in-window B partner; summed over freqA events that is
+// freqA*freqB*(windowMs/spanMs). The fraction is capped at 1 — once the whole
+// stream fits inside one window (a boot storm: 500 events in <5s) every pair is
+// trivially "in window" and timing carries NO information, so expected →
+// freqA*freqB and lift → ~1 (correctly refusing to call a burst an invariant).
+// observed/expected is the lift: >1 means the pair co-occurs more than base
+// rate predicts. _scanMetaPatterns' own comment (§1.5) calls this event-level
+// lift "the honest one" it could not compute from the persisted table (it holds
+// only pattern-level participation, a coarser proxy, and runs a META_SCAN_MS
+// AFTER crystallisation). So it belongs HERE: upstream, at the gate, as the
+// framework (docs/innovation-toolkit.framework) demands — "intuition must be
+// regulated and grounded", not crystallised first and filtered later.
+function _coOccurrenceLift({ freqA, freqB, observed, spanMs, windowMs }) {
+  if (!freqA || !freqB || !observed) return 0;
+  const fraction = spanMs > 0 ? Math.min(1, windowMs / spanMs) : 1; // no/tiny span: whole stream in one window, timing is uninformative
+  const expected = freqA * freqB * fraction;
+  return expected > 0 ? observed / expected : 0;
+}
+
 async function _scanPatterns() {
   try {
     const now = Date.now();
@@ -388,6 +413,7 @@ async function _scanPatterns() {
     // pair of events is counted exactly once across overlapping windows.
     const WINDOW_MS = 5000;
     const coOccur = {};
+    const coOccurWindow = {}; // §BUILT 2026-10-24 — FULL-window co-occurrence tally (no cursor gate), for the base-rate lift ONLY. coOccur below is cursor-gated so `count` accumulates across scans; the lift must compare like with like — a full-window observed count against full-window frequencies (_typeFrequency) — or a cumulative count divided by a windowed frequency drifts upward forever and eventually crystallises everything, the very inflation this gate exists to stop.
     const coOccurSystems = {}; // §BUILT 2026-08-18 — parallel map, key -> {systemA, systemB, crossSystem}
     for (let i = 0; i < events.length; i++) {
       const a = events[i];
@@ -395,8 +421,9 @@ async function _scanPatterns() {
         const b = events[j];
         if (!a.ts || !b.ts) continue;
         if (b.ts - a.ts > WINDOW_MS) break;
-        if (b.ts <= _patternScanCursor) continue; // already counted by a prior scan
         const key = [a.type, b.type].sort().join('::');
+        coOccurWindow[key] = (coOccurWindow[key] || 0) + 1; // full window, both old and new — the lift's drift-free numerator
+        if (b.ts <= _patternScanCursor) continue; // already counted by a prior scan
         coOccur[key] = (coOccur[key] || 0) + 1;
         // §BUILT 2026-08-18 — real, minimal addition: track whether this
         // pair's two real events came from different systems. Doesn't
@@ -522,7 +549,41 @@ async function _scanPatterns() {
       .slice(0, 5);
 
     // ── Crystallise patterns ──────────────────────────────────────────────────
-    // A pattern is crystallised when it has occurred > 3 times with consistent conditions
+    // A pattern crystallises when it has occurred past its count floor AND beats
+    // base rate AND is not a known noise type (§BUILT 2026-10-24, the gate below)
+    // — otherwise it is held as a hypothesis, kept and counted, promoted when it
+    // earns it. The bare count floor alone let a pair latch crystallised at
+    // count 3 (15% confidence) and the lift/noise brake only caught it a
+    // META_SCAN_MS later; this moves the brake upstream of the latch.
+    const _spanMs = (() => {
+      const first = events[0]?.ts, last = events[events.length - 1]?.ts;
+      return (first && last) ? Math.abs(first - last) : 0;
+    })();
+    const CRYSTALLIZE_LIFT_MIN = 1.5; // observed ≥1.5× chance expectation — the same bar _scanMetaPatterns uses downstream (LIFT_THRESHOLD)
+    // The lift reads the FULL-window co-occurrence count (coOccurWindow) over the
+    // FULL-window frequencies (_typeFrequency) — both current, same window — so
+    // it is a clean, drift-free ratio independent of how the cumulative `count`
+    // has grown across scans. The cumulative count drives the latch/floor only.
+    function _liftOf(typeA, typeB) {
+      const key = [typeA, typeB].sort().join('::');
+      return _coOccurrenceLift({
+        freqA: _typeFrequency[typeA] || 0, freqB: _typeFrequency[typeB] || 0,
+        observed: coOccurWindow[key] || 0, spanMs: _spanMs, windowMs: WINDOW_MS,
+      });
+    }
+    // §FRAMEWORK (docs/innovation-toolkit.framework) — "intuition must be
+    // regulated and grounded"; James's "once twice three times it is a pattern"
+    // is kept as the count floor (cumulative), but three co-occurrences of two
+    // LOUD types is coincidence, not an invariant — so a real base-rate test now
+    // joins it. A type already flagged a structural noise source can never
+    // crystallise a new pairing (it would read "100% confidence, fires with
+    // everything"). `cumulativeCount` is the accumulated total (the floor/latch);
+    // the lift is measured over the current window (drift-free, above).
+    function _groundedCrystallise(typeA, typeB, cumulativeCount) {
+      return cumulativeCount >= _crystallizeThreshold(typeA, typeB)
+        && _liftOf(typeA, typeB) >= CRYSTALLIZE_LIFT_MIN
+        && !_knownNoiseTypes.has(typeA) && !_knownNoiseTypes.has(typeB);
+    }
     const newPatterns = [];
     const announcements = []; // patterns that JUST crossed into crystallised this scan
 
@@ -550,6 +611,7 @@ async function _scanPatterns() {
       // from the parallel map built during the co-occurrence scan above.
       const sysInfo = coOccurSystems[pair] || { systemA: null, systemB: null, crossSystem: false };
       if (!existing) {
+        const grounded = _groundedCrystallise(typeA, typeB, count);
         newPatterns.push({
           uuid:        uid(),
           signature:   pair,
@@ -558,11 +620,13 @@ async function _scanPatterns() {
           systemA:     sysInfo.systemA, systemB: sysInfo.systemB, crossSystem: sysInfo.crossSystem,
           count,
           confidence:  Math.min(1, count / 20),
+          lift:        Math.round(_liftOf(typeA, typeB) * 100) / 100,
           description: sysInfo.crossSystem
             ? `"${typeA}" (${sysInfo.systemA}) and "${typeB}" (${sysInfo.systemB}) co-occur within 5s across two real systems — ${count} observations`
             : `"${typeA}" and "${typeB}" co-occur within 5s — ${count} observations`,
           actionable:  count >= 5,
-          crystallised:count >= _crystallizeThreshold(typeA, typeB),
+          crystallised: grounded,
+          status:       grounded ? 'crystallised' : 'hypothesis', // §2026-10-24 — held, not latched, until it beats base rate
           noiseTainted,
           source:      MODULE_ID,
           ts:          now,
@@ -570,12 +634,14 @@ async function _scanPatterns() {
       } else {
         const newCount = (existing.count || 0) + count;
         const wasCrystallised = !!existing.crystallised;
-        const nowCrystallised = wasCrystallised || newCount >= _crystallizeThreshold(typeA, typeB); // monotonic latch, real adaptive bar
+        const nowCrystallised = wasCrystallised || _groundedCrystallise(typeA, typeB, newCount); // monotonic latch, now gated on base-rate lift
         const patch = {
           count:       newCount,
           confidence:  Math.min(1, newCount / 20),
+          lift:        Math.round(_liftOf(typeA, typeB) * 100) / 100,
           actionable:  newCount >= 5,
           crystallised: nowCrystallised,
+          status:       nowCrystallised ? 'crystallised' : 'hypothesis',
           noiseTainted,
           description: `"${typeA}" and "${typeB}" co-occur within 5s — ${newCount} observations`,
           ts:          now,
@@ -1383,8 +1449,12 @@ function getContext({ intent = '', command = '', provider = '' } = {}) {
     }));
 
   // 3. Active crystallised patterns relevant to this request
+  // §2026-10-24 — a co-occurrence held as a hypothesis (cleared the count floor
+  // but not the base-rate lift) must not feed context as if it were grounded,
+  // even when its count-derived confidence reads ≥0.6. Rows without a status
+  // (precursor/bottleneck/older rows) are unaffected.
   const patterns = _patternIndex
-    .filter(p => p.crystallised || p.confidence >= 0.6)
+    .filter(p => p.crystallised || (p.confidence >= 0.6 && p.status !== 'hypothesis'))
     .slice(0, 5)
     .map(p => ({
       patternType:  p.patternType,
@@ -1593,6 +1663,7 @@ module.exports = {
   getLoomMap: () => _loomMap,
   getComponentFailureMap: () => _componentFailureMap,
   _scanPatterns,     // exported for direct testing (intelligence.test.js pins this)
+  _coOccurrenceLift, // exported for direct testing — the base-rate crystallisation gate (§2026-10-24)
   _scanMetaPatterns, // exported for direct testing
   _scanFailures,     // exported for direct testing
   _syncLoomMap,      // exported for direct testing

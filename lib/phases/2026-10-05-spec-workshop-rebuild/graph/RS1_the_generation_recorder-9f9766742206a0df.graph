@@ -1,0 +1,169 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RS1_the_generation_recorder:9f9766742206a0df
+type: graph
+id: phase:RS1_the_generation_recorder:9f9766742206a0df
+context: dependency graph of phase RS1_the_generation_recorder
+intent: null
+summary: 18 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754942
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754942
+lastSeenAt: 1792841754942
+fingerprint: null
+payload:
+  for: RS1_the_generation_recorder
+  kind: phase
+  repo: null
+  hash: 9f9766742206a0df
+  nodes:
+    - path: intelligence/rfr2/clip/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/generation-recorder.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/warp/core/Engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: diagnostic/lib/pulse-watch.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: intelligence/rfr2/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/warp/core/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-rfr2-cjs.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/rfr2/causality/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/compress/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/context/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/delta/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/identity/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/kernel/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/sigma/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/version-gate/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/warp/core/Expectation.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Link.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/warp/core/Engine.js
+      to: lib/warp/core/Link.js
+      kind: requires
+    - from: lib/warp/core/Engine.js
+      to: lib/warp/core/Expectation.js
+      kind: requires
+    - from: lib/warp/core/Engine.js
+      to: lib/warp/core/Ledger.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/identity/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/compress/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/context/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/delta/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/version-gate/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/sigma/index.js
+      kind: requires
+    - from: diagnostic/lib/pulse-watch.js
+      to: lib/warp/core/Engine.js
+      kind: requires
+    - from: lib/warp/core/index.js
+      to: lib/warp/core/Engine.js
+      kind: requires
+    - from: intelligence/rfr2/index.js
+      to: intelligence/rfr2/clip/index.js
+      kind: requires
+    - from: tests/modules/test-rfr2-cjs.js
+      to: intelligence/rfr2/clip/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS2_replay_rewind_branch
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
+    upstream: []
+    downstream:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS11_workshop_and_phases_one_surface
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS2_replay_rewind_branch
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS5_the_template_picker
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS7_architect_and_blueprint_stations
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS8_what_converges_becomes_deterministic
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS2_replay_rewind_branch
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): RS2_replay_rewind_branch, RS4_the_pipeline_on_warp2 · all downstream 7 ·
+        finishing it unlocks RS2_replay_rewind_branch, RS4_the_pipeline_on_warp2
+    edges: []

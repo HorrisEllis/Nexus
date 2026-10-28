@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV17_ui
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV17_ui
+context: pipeline phase MV17_ui of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV17_ui (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792821071289
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792821071289
+lastSeenAt: 1792821071289
+fingerprint: null
+payload:
+  id: MV17_ui
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ui/
+    - lib/ui/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6dbe966341e443fd

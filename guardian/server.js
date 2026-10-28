@@ -423,7 +423,7 @@ const HTTP_PORT     = config.HTTP_PORT;
 const ORCH_PORT     = config.ORCH_PORT;
 
 // nexus-connect: unified cross-system I/O with §1.2 gating
-const nc = (() => { try { return require('../nexus/nexus-connect'); } catch(_) { return null; } })();
+const nc = (() => { try { return require('../lib/nexus/nexus-connect'); } catch(_) { return null; } })();
 function _postLedger(system, type, payload) {
   if (nc) nc.postLedger(system, type, payload).catch(() => {});
 }
@@ -919,7 +919,7 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
     // §0.60.131 P33b — Guardian onto the shared node registry (lib/node-registry.js): the same per-file rules its own
     // guardian/lib/node-registry.js had, now indexed into guardian/data/node-index (its OWN store; the old one wrote the
     // central cortex store) and announced on the bus. guardian/lib/node-registry.js is kept (test-node-index.js uses it).
-    try { require('../lib/node-registry.js').startForSystem('guardian', { bus: require('../nexus/nexus-bus.js'), delayMs: 0 }); } catch (e) { console.warn(`[guardian] node registry did not start (non-fatal): ${e.message}`); }
+    try { require('../lib/node-registry.js').startForSystem('guardian', { bus: require('../lib/nexus/nexus-bus.js'), delayMs: 0 }); } catch (e) { console.warn(`[guardian] node registry did not start (non-fatal): ${e.message}`); }
   }, 3000);
   // Mesh subsystem relocated 2026-09-03 to clear-glass/src/network/
   // (James: "DNS/firewall/crypto/host-rotation/reverse-proxy maybe
@@ -936,7 +936,7 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
   // every pipeline trigger path (run_pipeline/run_chain/run_closed_loop)
   // already emits to — not a second, guardian-local event path.
   try {
-    require('../lib/self-build-loop.js').install(require('../nexus/nexus-bus.js'));
+    require('../lib/self-build-loop.js').install(require('../lib/nexus/nexus-bus.js'));
   } catch (err) {
     console.warn('[guardian] self-build-loop install failed:', err.message);
   }
@@ -972,7 +972,7 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
   }
 
   const { BootSequence } = require('../lib/boot-sequence');
-  const nc2 = require('../nexus/nexus-connect');
+  const nc2 = require('../lib/nexus/nexus-connect');
 
   // §BUGFIX 2026-07-04: was a hardcoded '3.6.1' here, independent of
   // lib/version.js's registry — sourcing from it directly now.
@@ -1802,10 +1802,9 @@ function handleExtendedRoutes(req, res, url, method) {
 
   // ── Forge health ──────────────────────────────────────────────────────────
   if (url.pathname === '/forge/health' && method === 'GET') {
-    const forge = require('../cockpit/forge');
-    forge.healthCheck()
-      .then(h => pRes(res, 200, { ok: true, forge: h }))
-      .catch(e => pRes(res, 200, { ok: false, error: e.message }));
+    // 0.60.240 GD0 (docs/2026-10-24-guardian-into-cos-phasemap.spec) — cockpit/forge is not in the tree, so this route only ever threw;
+    // said plainly instead (§1.2), and Guardian no longer reaches into cockpit/
+    pRes(res, 200, { ok: false, error: 'forge is not part of Nexus any more: cockpit/forge is not in the tree' });
     return;
   }
 
@@ -3051,8 +3050,10 @@ function handleExtendedRoutes(req, res, url, method) {
         return;
       }
 
-      // RAID gate — building touches the filesystem
-      const approval = raid._approveTool('guardian.build', 'emerge-compiler',
+      // RAID gate — building touches the filesystem. §0.60.242 GD1 (BCR2): through RAID's port — Cortex's one RAID, not a
+      // copy loaded here — which also fixes a latent bug on main: `raid` was never defined in this async handler, so /build
+      // threw a ReferenceError the moment it was hit. The port fails closed (unreachable → not approved, with the reason).
+      const approval = await require('../lib/raid-port.js').approveTool('guardian.build', 'emerge-compiler',
         { action:'build', proof:body.proof });
       if (!approval.approved) {
         pRes(res, 403, { ok:false, denied:true, reason:approval.reason });
@@ -3060,7 +3061,7 @@ function handleExtendedRoutes(req, res, url, method) {
       }
 
       try {
-        const t2 = require('../emerge/compiler/t2-gate');
+        const t2 = require('../lib/emerge/compiler/t2-gate');
         const outDir = outputDir || require('path').join(require('path').dirname(require.main?.filename || __dirname), 'output', name || 'build-' + Date.now());
 
         // If specText provided, write to temp file
@@ -3200,7 +3201,7 @@ function handleExtendedRoutes(req, res, url, method) {
   }
 
   if (method === 'POST' && url.pathname === '/api/intake') {
-    bodyJ(req).then(body => {
+    bodyJ(req).then(async body => {   // 0.60.246 GD1 (BCR2, from brave-cori): async, for RAID's queue through its port
       const intake = require('../lib/intake.js');
       // §AGENT-MESH-ARTIFACTS 2026-09-02 — real correlation, not fabricated:
       // if the caller (clear-glass's download-capture.js) didn't supply a
@@ -3215,8 +3216,8 @@ function handleExtendedRoutes(req, res, url, method) {
       let raidQueueId = null;
       if (jobId) {
         try {
-          const raid = require('../cortex/core/raid/contract-intake.js');
-          const match = raid.listQueue().find(r => r.dispatchedJobId === jobId);
+          // 0.60.246 GD1 (BCR2) — RAID's contract queue through its port (Cortex's route), not Cortex's table loaded here
+          const match = (await require('../lib/raid-port.js').listQueue({ n: 500 })).find(r => r.dispatchedJobId === jobId);
           if (match) raidQueueId = match.uuid;
         } catch (_) { /* RAID module load failure is real and honest here — leave null */ }
       }
@@ -3294,6 +3295,7 @@ function handleExtendedRoutes(req, res, url, method) {
         // the request body. Forwarded now; askSync itself still needs
         // its own patch to pass this through to createJob (see ask.js).
         agentId:   body.agentId || undefined,
+        openTab:   body.openTab === true,   // §0.60.231 CL1 — a person's pick: open the agent's tab and wait, never refuse it for being closed
         sessionId: typeof body.sessionId === 'string' ? body.sessionId : undefined,   // §0.60.50 CE4
         // 0.39.265 — the meaning, when `prompt` is copilot's reworded variant; and whether a finished twin may answer
         canonical: typeof body.canonical === 'string' ? body.canonical : undefined,
@@ -3478,8 +3480,8 @@ function handleExtendedRoutes(req, res, url, method) {
           // 'forge' is the right fit — already in every provider's
           // contract, no new vocabulary needed.
           try {
-            const raid = require('../cortex/core/raid');
-            const approval = raid._approveTool(body.source || 'unknown', specText.slice(0, 200), { action: 'forge', proof: body.proof });
+            // §0.60.242 GD1 (BCR2) — RAID through its port (Cortex's one RAID), fails closed with the reason
+            const approval = await require('../lib/raid-port.js').approveTool(body.source || 'unknown', specText.slice(0, 200), { action: 'forge', proof: body.proof });
             if (!approval.approved) {
               pRes(res, 403, { ok: false, error: `RAID denied SEAM queue creation: ${approval.reason}` });
               return;
@@ -3550,34 +3552,28 @@ function handleExtendedRoutes(req, res, url, method) {
       // §RAID + §P97: if no explicit provider, let RAID decide (LAW_I: Ollama first)
       // CFR sigma floor is consulted — chaotic regime deprioritises slower providers.
       if (!_rawProvider || _rawProvider === 'auto') {
-        try {
-          const _raid = require('../cortex/core/raid/index');
-          const _prompt = body.prompt || parsed.prompt || '';
-          // §P97: read CFR field state for sigma-aware routing
-          let _cfrCtx = {};
-          try {
-            const _cfrInfl = require('../nexus/nexus-cfr-influence');
-            _cfrCtx = { sigmaFloor: _cfrInfl.getSigmaFloor?.() || 0,
-                        regime: _cfrInfl.getState?.()?.regime || 'stable' };
-          } catch(_) {}
-          // §BUG FIXED 2026-07-07 — this called `_raid.decide(...)`, which
-          // does not exist: RAID exports `_decide`, and its signature is
-          // _decide(call, health, weights) where call is
-          // {prompt, context:{cfrRegime, cfrSigmaFloor}} — not
-          // (prompt, {preferredAgent, cfrCtx}). Because the call sat inside
-          // the try/catch below, it threw silently on EVERY raw dispatch and
-          // fell through to the 'chatgpt' fallback. RAID has therefore never
-          // actually routed a raw job in Guardian, and the
-          // `[guardian] RAID → ...` log line below has never once printed.
-          // Found while wiring /api/copilot/prompt, which reused this same
-          // broken call.
-          // §0.60.3 — with the health it read (it passed none: every agent counted offline, so 'auto' was always claude)
-          await _raid.ready();
-          const _decision = _raid._decide({ prompt: _prompt, context: { cfrRegime: _cfrCtx.regime, cfrSigmaFloor: _cfrCtx.sigmaFloor } }, _raid._health, _raid._weights);
+        // 0.60.240 GD1 (docs/2026-10-24-guardian-into-cos-phasemap.spec) — Cortex's RAID decides, through its port: it was loaded here
+        // and run with this process's own health and weights, a second RAID that never saw what Cortex learned. Cortex's decide applies
+        // its own CFR field, so Guardian no longer reads nexus-cfr-influence for it. The history of this call is kept:
+        // §BUG FIXED 2026-07-07 — this called `_raid.decide(...)`, which
+        // does not exist: RAID exports `_decide`, and its signature is
+        // _decide(call, health, weights) where call is
+        // {prompt, context:{cfrRegime, cfrSigmaFloor}} — not
+        // (prompt, {preferredAgent, cfrCtx}). Because the call sat inside
+        // the try/catch below, it threw silently on EVERY raw dispatch and
+        // fell through to the 'chatgpt' fallback. RAID has therefore never
+        // actually routed a raw job in Guardian, and the
+        // `[guardian] RAID → ...` log line below has never once printed.
+        // Found while wiring /api/copilot/prompt, which reused this same
+        // broken call.
+        // §0.60.3 — with the health it read (it passed none: every agent counted offline, so 'auto' was always claude)
+        const _decision = await require('../lib/raid-port.js').decide(body.prompt || parsed.prompt || '');
+        if (_decision && _decision.agent) {
           _rawProvider = _decision.agent;
-          console.log(`[guardian] RAID → ${_rawProvider} (${_decision.reason}) σfloor:${_cfrCtx.sigmaFloor}`);
-        } catch(_) {
-          _rawProvider = 'chatgpt'; // RAID not started — fallback
+          console.log(`[guardian] RAID → ${_rawProvider} (${_decision.reason || 'no reason given'})`);
+        } else {
+          _rawProvider = 'chatgpt';   // the fallback it always had, now said
+          console.warn(`[guardian] RAID gave no agent (${(_decision && _decision.error) || 'no answer'}); falling back to chatgpt`);
         }
       }
 
@@ -3605,13 +3601,12 @@ function handleExtendedRoutes(req, res, url, method) {
       // explicit .spec path already uses — not a second implementation.
       if (_shouldEnforceChunking(provider, prompt.length + content.length)) {
         try {
-          const raid = require('../cortex/core/raid');
           // Same RAID approval gate the explicit .spec path already
           // requires (§FIX 2026-06-21's own reasoning: the constraint
           // layer applies "regardless of how the target was chosen") —
           // this path chooses the target automatically by size, but the
           // same gate still has to hold.
-          const approval = raid._approveTool(body.source || 'unknown', (prompt + content).slice(0, 200), { action: 'forge', proof: body.proof });
+          const approval = await require('../lib/raid-port.js').approveTool(body.source || 'unknown', (prompt + content).slice(0, 200), { action: 'forge', proof: body.proof });   // 0.60.246 GD1 (BCR2)
           if (!approval.approved) {
             pRes(res, 403, { ok: false, error: `RAID denied automatic chunking: ${approval.reason}` });
             return;
@@ -3660,8 +3655,7 @@ function handleExtendedRoutes(req, res, url, method) {
       // denies 'forge' by design (gating this with the wrong action name
       // would have silently broken copilot's own basic dispatch).
       try {
-        const raid = require('../cortex/core/raid');
-        const approval = raid._approveTool(body.source || 'unknown', (prompt + content).slice(0, 200), { action: 'chat', proof: body.proof });
+        const approval = await require('../lib/raid-port.js').approveTool(body.source || 'unknown', (prompt + content).slice(0, 200), { action: 'chat', proof: body.proof });   // 0.60.246 GD1 (BCR2)
         if (!approval.approved) {
           pRes(res, 403, { ok: false, error: `RAID denied dispatch: ${approval.reason}` });
           return;
@@ -3727,8 +3721,8 @@ function handleExtendedRoutes(req, res, url, method) {
   // Cockpit
   if (method==='GET' && (url.pathname==='/'||url.pathname==='/cockpit'||url.pathname==='/cockpit/')) {
     // Serve from root /ui/guardian/index.html (sovereign UI source of truth)
-    const forgeIdePath = require('path').join(__dirname, '..', 'ui', 'guardian', 'index.html');
-    const cockpitPath  = require('path').join(__dirname, '..', 'ui', 'home', 'index.html');
+    const forgeIdePath = require('path').join(__dirname, '..', 'lib', 'ui', 'guardian', 'index.html');
+    const cockpitPath  = require('path').join(__dirname, '..', 'lib', 'ui', 'home', 'index.html');
     const cockpitHtml  = require('fs').existsSync(forgeIdePath)
       ? require('fs').readFileSync(forgeIdePath, 'utf8')
       : require('fs').existsSync(cockpitPath)
@@ -3751,7 +3745,7 @@ function handleExtendedRoutes(req, res, url, method) {
 
   // Static UI assets
   if (method==='GET' && url.pathname.startsWith('/ui/')) {
-    const assetPath = require('path').join(__dirname, '..', url.pathname);
+    const assetPath = require('path').join(__dirname, '..', 'lib', url.pathname);   // 0.60.241 RF2: ui/ moved into lib/ui/; the URL stays /ui/…
     try {
       const data = require('fs').readFileSync(assetPath);
       const ext = require('path').extname(url.pathname);

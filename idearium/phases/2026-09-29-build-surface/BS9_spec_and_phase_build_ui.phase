@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS9_spec_and_phase_build_ui
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS9_spec_and_phase_build_ui
+context: pipeline phase BS9_spec_and_phase_build_ui of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS9_spec_and_phase_build_ui (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676204
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676204
+lastSeenAt: 1792787676204
+fingerprint: null
+payload:
+  id: BS9_spec_and_phase_build_ui
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/living-spec.js
+    - idearium/ui/js/phases.js
+  depends_on:
+    - BS7_api
+  blocks: []
+  spec: null
+  graph: 1dcee63c429e1ed4

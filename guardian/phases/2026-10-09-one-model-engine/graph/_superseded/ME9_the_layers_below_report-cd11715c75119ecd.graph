@@ -1,0 +1,269 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ME9_the_layers_below_report:cd11715c75119ecd
+type: graph
+id: phase:ME9_the_layers_below_report:cd11715c75119ecd
+context: dependency graph of phase ME9_the_layers_below_report
+intent: null
+summary: 30 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677170
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677170
+lastSeenAt: 1792787677170
+fingerprint: null
+payload:
+  for: ME9_the_layers_below_report
+  kind: phase
+  repo: null
+  hash: cd11715c75119ecd
+  nodes:
+    - path: clear-glass/src/providers/host.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: guardian/lib/dispatch-ladder.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatcher.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/economy-guard.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/job-retry.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: ollama/lib/dispatch.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/jobs.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/pipeline-routing.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/dispatcher-ping-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/dispatcher-stale-socket.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-dispatch-ladder.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-wake.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-mesh-chat-reload.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/clear-glass-bridge.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/chat-transcripts.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatch-pool.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/profile-lanes.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-login.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-routing.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/lib/model-inventory.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/dispatch-pool.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/profile-lanes.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/chat-transcripts.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/clear-glass-bridge.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-login.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: guardian/lib/economy-guard.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-ping-gate.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-stale-socket.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+    - from: tests/modules/test-guardian-dispatch-ladder.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+    - from: tests/modules/test-guardian-wake.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+    - from: tests/modules/test-mesh-chat-reload.test.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/dispatcher.js
+      to: cortex/core/raid/index.js
+      fromSystem: guardian
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      fromSystem: guardian
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: guardian/lib/dispatcher.js
+      to: intelligence/alk/index.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
+    dependents:
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME10_nested_ladders_folded
+    upstream:
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME0_the_inventory_proved
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME2_caller_policy
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
+    downstream:
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME10_nested_ladders_folded
+    blockedBy:
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by ME1_one_failure_list, ME3_one_engine_one_budget
+      - 'depends on (2): ME1_one_failure_list, ME3_one_engine_one_budget · all upstream 4'
+      - 'needed by (1): ME10_nested_ladders_folded'
+    edges:
+      - from: docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+        kind: declared
+      - from: docs/2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
+        kind: declared

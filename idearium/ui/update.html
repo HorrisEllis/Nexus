@@ -1,0 +1,136 @@
+<!doctype html>
+<!--
+  idearium/ui/update.html — the Updates page (0.60.252, UP4 of docs/2026-10-25-nexus-update-phasemap.spec).
+  James, 2026-10-25: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?"
+  · "first one but the second one needs to be the end state" (git now, COS later).
+  What is newer on GitHub, his own words for each release in between, Update and Roll back (each asks first), and Restart for each
+  system the update changed — the person's buttons; the co-pilot's tool (nexus.update.tool) never restarts. Opened by /update in
+  Idearium's CLI. Backend: GET /api/update, POST /api/update/apply|rollback|restart, GET /api/update/history.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="js/access-guard.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Update Nexus</title>
+<style>
+  :root { color-scheme: dark; --bg:#07090e; --bg1:#0b0f18; --bg2:#0f1520; --b1:rgba(56,189,248,.14); --b2:rgba(56,189,248,.28);
+    --sky:#38bdf8; --mint:#34d399; --amber:#fbbf24; --coral:#f87171; --text:#c4d4ee; --text2:#607898;
+    --mono:'IBM Plex Mono', ui-monospace, monospace; --sans:'IBM Plex Sans', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font: 13px/1.5 var(--sans); }
+  body { padding-top: var(--chrome-h, 0px); }
+  main { max-width: 960px; margin: 0 auto; padding: 26px 24px 40px; display: flex; flex-direction: column; gap: 16px; }
+  .kicker { font: 600 10px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--sky); }
+  h1 { margin: 6px 0 4px; font: 600 20px/1.2 var(--sans); }
+  .lead { color: var(--text2); margin: 0; }
+  .card { border: 1px solid var(--b1); border-radius: 14px; background: linear-gradient(180deg, var(--bg2), var(--bg1)); padding: 16px 18px; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .big { font: 600 16px/1.3 var(--mono); }
+  .tag { font: 11px var(--mono); padding: 2px 8px; border-radius: 999px; border: 1px solid var(--b1); color: var(--text2); }
+  .tag.ok { color: var(--mint); border-color: var(--mint); } .tag.warn { color: var(--amber); border-color: var(--amber); } .tag.bad { color: var(--coral); border-color: var(--coral); }
+  button { padding: 8px 14px; border-radius: 9px; border: 1px solid var(--b1); background: rgba(255,255,255,.02); color: var(--text); font: 600 11.5px/1 var(--mono); cursor: pointer; }
+  button:hover { border-color: var(--b2); } button:disabled { opacity: .45; cursor: default; }
+  button.primary { background: linear-gradient(180deg, #38bdf8, #0ea5e9); border-color: transparent; color: #04111c; }
+  .rel { padding: 8px 0; border-top: 1px solid var(--b1); } .rel:first-child { border-top: 0; }
+  .rel .v { font: 600 12px var(--mono); color: var(--sky); } .rel .q { color: var(--text); } .rel .q.none { color: var(--text2); font-style: italic; }
+  .d { font: 12px var(--mono); color: var(--text2); } .warnline { color: var(--amber); } .badline { color: var(--coral); } .okline { color: var(--mint); }
+  #msg:empty { display: none; }
+</style>
+</head>
+<body>
+<script src="js/window-chrome.js" data-kind="update" data-title="Update Nexus"></script>
+<main>
+  <div><div class="kicker">Nexus · updates</div><h1>Update Nexus from GitHub</h1>
+    <p class="lead">What is newer on GitHub, in your own words for each release. Update and Roll back each ask first; your changed data files are copied to <code>_archive/update/</code> before anything is replaced.</p></div>
+  <div class="card" id="state"><div class="d">checking GitHub…</div></div>
+  <div class="card" id="msg"></div>
+  <div class="card" id="releases" hidden></div>
+  <div class="card" id="auto"></div>
+  <div class="card" id="history"></div>
+</main>
+<script>
+'use strict';
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+async function api(path, opts = {}) {
+  const r = await fetch(path, { headers: { 'Content-Type': 'application/json' }, ...opts });
+  return r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
+}
+const post = (path, body) => api(path, { method: 'POST', body: JSON.stringify(body || {}) });
+let LAST = null;
+
+function say(html) { $('msg').innerHTML = html; }
+function restartButtons(systems) {
+  if (!systems || !systems.length) return '';
+  return `<div class="row" style="margin-top:8px"><span class="d">restart:</span>${systems.map(s => `<button data-restart="${esc(s)}">↻ ${esc(s)}</button>`).join('')}</div>
+    <div class="d">A change to lib/ or the autopilot needs the whole Nexus restarted (npm run start:all).</div>`;
+}
+
+async function check(fetchIt = true) {
+  $('state').innerHTML = '<div class="d">checking GitHub…</div>';
+  const d = await api(`/api/update${fetchIt ? '' : '?fetch=0'}`); LAST = d;
+  if (d.ok === false) { $('state').innerHTML = `<div class="row"><span class="tag ${d.driver === 'folder' || d.driver === 'cos' ? 'warn' : 'bad'}">${esc(d.driver || 'error')}</span><span class="big">${esc(d.current || '')}</span></div><div class="warnline" style="margin-top:6px">${esc(d.error)}</div>`; $('releases').hidden = true; return; }
+  const blocks = (d.plan && d.plan.blocks) || [], arch = (d.plan && d.plan.archive) || [];
+  $('state').innerHTML = `<div class="row"><span class="big">${esc(d.current)}</span><span class="d">→</span><span class="big">${esc(d.latest)}</span>
+      <span class="tag ${d.upToDate ? 'ok' : 'warn'}">${d.upToDate ? 'up to date' : `${d.behind} commit(s) behind`}</span>${d.ahead ? `<span class="tag bad">${d.ahead} local commit(s)</span>` : ''}
+      <span style="flex:1"></span><button id="b-check">Check again</button>
+      <button class="primary" id="b-apply" ${d.upToDate || d.can || blocks.length ? 'disabled' : ''}>Update to ${esc(d.latest)}</button></div>
+    ${d.systems && d.systems.length ? `<div class="d" style="margin-top:8px">changes: ${esc(d.systems.join(', '))}${d.lockChanged ? ' · package-lock.json (npm install runs)' : ''}</div>` : ''}
+    ${arch.length ? `<div class="d">sets aside first: ${arch.length} data file(s) you changed that the update also changes</div>` : ''}
+    ${blocks.length ? `<div class="warnline">refuses: your edits to ${esc(blocks.map(b => b.file).slice(0, 8).join(', '))} — commit or set them aside first</div>` : ''}
+    ${d.can && !d.upToDate ? `<div class="warnline">${esc(d.can)}</div>` : ''}`;
+  const rel = d.releases || [];
+  $('releases').hidden = !rel.length;
+  $('releases').innerHTML = `<div class="kicker" style="margin-bottom:6px">what it brings · ${rel.length} release(s)</div>` + rel.map(r => `<div class="rel"><div class="v">${esc(r.version)}</div><div class="q ${r.quote ? '' : 'none'}">${r.quote ? `“${esc(r.quote)}”` : 'no quote in its version line'}</div></div>`).join('');
+}
+
+// §UP8 0.60.254 — James: "should be automatic". The policy, and what the last automatic check did
+async function auto() {
+  const d = await api('/api/update/auto'); const p = (d && d.policy) || { policy: 'auto', everyHours: 6 }; const l = d && d.last;
+  $('auto').innerHTML = `<div class="row"><div class="kicker" style="flex:1">automatic updates</div>
+      <select id="pol">${['auto', 'notify', 'off'].map(v => `<option value="${v}" ${v === p.policy ? 'selected' : ''}>${v === 'auto' ? 'auto — when idle' : v === 'notify' ? 'notify — tell me only' : 'off'}</option>`).join('')}</select></div>
+    <div class="d">checks GitHub every ${esc(p.everyHours)} h; auto updates only when Nexus is idle, then restarts what changed — never Clear Glass while you use it</div>
+    ${l ? `<div class="d">last check ${esc(String(l.at).slice(0, 16).replace('T', ' '))}: <b>${esc(l.action)}</b>${l.to ? ` → ${esc(l.to)}` : l.latest ? ` (${esc(l.latest)} on GitHub)` : ''}${l.error || l.why ? ` — ${esc(l.error || [].concat(l.why).join('; '))}` : ''}${(l.waitForHim || []).length ? ' · restart Clear Glass when you are not using it' : ''}</div>` : '<div class="d">no automatic check yet (the first runs 2 minutes after Nexus starts)</div>'}`;
+}
+document.addEventListener('change', async (e) => {
+  if (e.target.id !== 'pol') return;
+  const r = await post('/api/update/policy', { policy: e.target.value });
+  say(r.ok === false ? `<div class="badline">${esc(r.error)}</div>` : `<div class="okline">automatic updates: ${esc(r.policy)}</div>`); auto();
+});
+
+async function history() {
+  const d = await api('/api/update/history'); const l = (d && d.history) || [];
+  const last = l[0];
+  $('history').innerHTML = `<div class="row"><div class="kicker" style="flex:1">history</div>${last && last.kind === 'update' ? '<button id="b-rollback">Roll back the last update</button>' : ''}</div>` +
+    (l.length ? l.slice(0, 20).map(r => `<div class="d">${esc(r.at.slice(0, 16).replace('T', ' '))} · ${esc(r.kind)} ${esc(r.from.version)} → ${esc(r.to.version)} · by ${esc(r.by)}${(r.archived || []).length ? ` · ${r.archived.length} set aside in ${esc(r.archivedTo)}` : ''}${r.npm && r.npm.ran ? ` · npm install ${r.npm.ok ? 'ok' : 'FAILED'}` : ''}</div>`).join('') : '<div class="d">no updates yet</div>');
+}
+
+document.addEventListener('click', async (e) => {
+  const t = e.target.closest('button'); if (!t) return;
+  if (t.id === 'b-check') return check(true);
+  if (t.id === 'b-apply') {
+    if (!confirm(`Update Nexus ${LAST.current} → ${LAST.latest}?\n\nIt fast-forwards to GitHub's main${LAST.lockChanged ? ', runs npm install' : ''}, and copies any of your data files it replaces to _archive/update/ first. Roll back is one click after.`)) return;
+    t.disabled = true; say('<div class="d">updating… (npm install can take a few minutes)</div>');
+    const r = await post('/api/update/apply', { confirm: true });
+    say(r.ok ? (r.action === 'none' ? `<div class="okline">${esc(r.why)}</div>` : `<div class="okline">${esc(r.from.version)} → ${esc(r.to.version)}${(r.archived || []).length ? ` · ${r.archived.length} data file(s) set aside in ${esc(r.archivedTo)}` : ''}</div>${r.npm && r.npm.ran && !r.npm.ok ? `<div class="badline">npm install failed: ${esc(r.npm.error)}</div>` : ''}${restartButtons(r.restart && r.restart.systems)}`) : `<div class="badline">${esc(r.error)}</div>`);
+    await check(false); return history();
+  }
+  if (t.id === 'b-rollback') {
+    if (!confirm('Roll back the last update? Nexus goes back to the commit it came from.')) return;
+    const r = await post('/api/update/rollback', { confirm: true });
+    say(r.ok ? `<div class="okline">rolled back ${esc(r.from.version)} → ${esc(r.to.version)}</div>${r.note ? `<div class="d">${esc(r.note)}</div>` : ''}${restartButtons(r.restart && r.restart.systems)}` : `<div class="badline">${esc(r.error)}</div>`);
+    await check(false); return history();
+  }
+  if (t.dataset.restart) {
+    t.disabled = true;
+    const r = await post('/api/update/restart', { system: t.dataset.restart });
+    t.textContent = r.ok ? (r.restarted.length ? `✓ ${t.dataset.restart}` : `${t.dataset.restart}: whole restart`) : `✗ ${t.dataset.restart}`;
+    if (r.note) say($('msg').innerHTML + `<div class="d">${esc(r.note)}</div>`);
+    if (!r.ok) say($('msg').innerHTML + `<div class="badline">${esc(r.error)}</div>`);
+  }
+});
+check(true); history(); auto();
+</script>
+</body>
+</html>

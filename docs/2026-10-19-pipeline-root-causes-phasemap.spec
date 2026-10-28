@@ -163,7 +163,7 @@ phases:
     status: "BUILT 0.60.208 — test-guardian-own-data GD-01..05: data blockers 3 → 0; no code names data/guardian"
     depends_on: [RC1_watchers_never_kill_a_kernel]
     axioms: [§5.9, §5.10, "ONE_WRITER_PER_STORE"]
-    files: [lib/system-store.js, lib/data-home.js, guardian/agents/index.js, guardian/ask.js, guardian/lib/ncp.js, cortex/boot.js, guardian/config.js, guardian/server.js, guardian/lib/jobs.js, guardian/lib/account-routing.js, guardian/lib/agent-registry.js, guardian/artifact-upload.js, lib/seam/queue.js, service/guardian-service.js, cli/clear-idearium.js, cli/diagnose.js, cli/session.js, contracts/nodes/ledgers.node.js, contracts/nodes/systems.node.js, diagnostic/nexus-diagnostic.js]
+    files: [lib/system-store.js, lib/data-home.js, guardian/agents/index.js, guardian/ask.js, guardian/lib/ncp.js, cortex/boot.js, guardian/config.js, guardian/server.js, guardian/lib/jobs.js, guardian/lib/account-routing.js, guardian/lib/agent-registry.js, guardian/artifact-upload.js, lib/seam/queue.js, service/guardian-service.js, lib/cli/clear-idearium.js, lib/cli/diagnose.js, lib/cli/session.js, lib/contracts/nodes/ledgers.node.js, lib/contracts/nodes/systems.node.js, diagnostic/nexus-diagnostic.js]
     does: >-
       His: "each system has a jaa database … the server.js uses it to manage data". lib/system-store.js already exists (0.60.133)
       and is used by one module. Move one system home end to end first — Guardian, since he named it as the model and it already

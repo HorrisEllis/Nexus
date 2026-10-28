@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
+context: >-
+  pipeline phase P33_every_system_runs_its_node_registry of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P33_every_system_runs_its_node_registry (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476303
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476303
+lastSeenAt: 1792822476303
+fingerprint: null
+payload:
+  id: P33_every_system_runs_its_node_registry
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/node-registry.js
+    - docs/2026-10-17-system-drawbridge-phasemap.spec
+    - guardian/lib/node-registry.js
+    - lib/system-nodes.js
+    - guardian/jaa-store.js
+    - lib/jaa-store.js
+    - cos/remote-desktop/bridge-os-core/bridge-core/registry/index.js
+    - cos/archetype/nexus-system/lib/node-index.js
+    - lib/node-index.js
+  depends_on:
+    - P3_per_system_node_schemas
+    - P5_data_folder_completion
+  blocks: []
+  spec: null
+  graph: e35fe116fff586c0

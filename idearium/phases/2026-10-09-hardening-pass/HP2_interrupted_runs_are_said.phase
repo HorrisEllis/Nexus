@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP2_interrupted_runs_are_said
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP2_interrupted_runs_are_said
+context: pipeline phase HP2_interrupted_runs_are_said of docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP2_interrupted_runs_are_said (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477345
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477345
+lastSeenAt: 1792822477345
+fingerprint: null
+payload:
+  id: HP2_interrupted_runs_are_said
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/repo/run-reconcile.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b96b9f387e779f40

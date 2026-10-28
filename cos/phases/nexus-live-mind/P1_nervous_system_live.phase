@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-live-mind-phasemap.spec::P1_nervous_system_live
+type: phase
+id: docs_nexus-live-mind-phasemap.spec::P1_nervous_system_live
+context: pipeline phase P1_nervous_system_live of docs/nexus-live-mind-phasemap.spec
+intent: null
+summary: P1_nervous_system_live (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756452
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756452
+lastSeenAt: 1792841756452
+fingerprint: null
+payload:
+  id: P1_nervous_system_live
+  map: docs/nexus-live-mind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/self-heal/failure-intake.js
+    - cos/archetype/eravos-domains/music/core/music-theory.js
+    - cos/archetype/genesis-catalog.js
+    - lib/ledger-fanin/index.js
+    - lib/component-ledger.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b1293841f49f4324

@@ -1,0 +1,85 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SI1_no_userscript_on_a_signin_page:2f46b42eac190048
+type: graph
+id: phase:SI1_no_userscript_on_a_signin_page:2f46b42eac190048
+context: dependency graph of phase SI1_no_userscript_on_a_signin_page
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792965241166
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792965241166
+lastSeenAt: 1792965241166
+fingerprint: null
+payload:
+  for: SI1_no_userscript_on_a_signin_page
+  kind: phase
+  repo: null
+  hash: 2f46b42eac190048
+  nodes:
+    - path: clear-glass/src/providers/host.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/page/semantic-tree.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/download-capture.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/gm-shim.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/providers/host.js
+      to: clear-glass/src/providers/registry.js
+      kind: requires
+    - from: clear-glass/src/providers/host.js
+      to: clear-glass/src/providers/gm-shim.js
+      kind: requires
+    - from: clear-glass/src/providers/host.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/providers/host.js
+      to: clear-glass/src/providers/download-capture.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/providers/host.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: clear-glass/src/providers/host.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

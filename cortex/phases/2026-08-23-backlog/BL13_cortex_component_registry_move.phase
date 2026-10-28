@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL13_cortex_component_registry_move
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL13_cortex_component_registry_move
+context: pipeline phase BL13_cortex_component_registry_move of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL13_cortex_component_registry_move (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792878419781
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878419781
+lastSeenAt: 1792878419781
+fingerprint: null
+payload:
+  id: BL13_cortex_component_registry_move
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/boot.js
+    - guardian/server.js
+    - loom/server.js
+    - copilot/server.js
+    - lib/component-registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 69352d02760cb12f

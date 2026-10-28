@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL16_per_server_configs
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL16_per_server_configs
+context: pipeline phase BL16_per_server_configs of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL16_per_server_configs (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753354
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753354
+lastSeenAt: 1792841753354
+fingerprint: null
+payload:
+  id: BL16_per_server_configs
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/config.js
+    - intelligence/index.js
+    - lib/uid/component-map.js
+    - idearium/config.js
+    - ollama/config.js
+    - lib/emerge/emerge-ide.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: eb95d8399507051f

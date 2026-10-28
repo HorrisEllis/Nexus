@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P0_place_spec_compiler:816ab40bc00d49c5
+type: graph
+id: phase:P0_place_spec_compiler:816ab40bc00d49c5
+context: dependency graph of phase P0_place_spec_compiler
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675948
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675948
+lastSeenAt: 1792787675948
+fingerprint: null
+payload:
+  for: P0_place_spec_compiler
+  kind: phase
+  repo: null
+  hash: 816ab40bc00d49c5
+  nodes:
+    - path: docs/spec-compiler.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-solid-build-foundation-phasemap.spec::GQ3_brick_tests
+type: phase
+id: docs_2026-10-19-solid-build-foundation-phasemap.spec::GQ3_brick_tests
+context: pipeline phase GQ3_brick_tests of docs/2026-10-19-solid-build-foundation-phasemap.spec
+intent: null
+summary: GQ3_brick_tests (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677945
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677945
+lastSeenAt: 1792787677945
+fingerprint: null
+payload:
+  id: GQ3_brick_tests
+  map: docs/2026-10-19-solid-build-foundation-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/brick-tests.js
+  depends_on:
+    - GQ1_quality_stream
+  blocks:
+    - '"brick_tests"'
+  spec: null
+  graph: 3769b79e631ed6e6

@@ -1,0 +1,72 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV3_on_the_cos_bus:8645e14e12bfdd42
+type: graph
+id: phase:SV3_on_the_cos_bus:8645e14e12bfdd42
+context: dependency graph of phase SV3_on_the_cos_bus
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877682468
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682468
+lastSeenAt: 1792877682468
+fingerprint: null
+payload:
+  for: SV3_on_the_cos_bus
+  kind: phase
+  repo: null
+  hash: 8645e14e12bfdd42
+  nodes:
+    - path: cos/services/route.js
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+    dependents: []
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
+      - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
+      - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 8 · blocked by SV1_a_stack_per_root, CS3_the_registry_is_the_bridge
+      - 'depends on (2): SV1_a_stack_per_root, CS3_the_registry_is_the_bridge · all upstream 21'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+        kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792502100066
+exported_at: 1792787678051
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792502100066
-lastSeenAt: 1792502100066
+firstSeenAt: 1792787678051
+lastSeenAt: 1792787678051
 fingerprint: null
 payload:
   for: SF2_bridge_sources
@@ -41,7 +41,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 2527b07c5dc17a5a
     layer: 0
     deps: []
     dependents:
@@ -65,8 +64,9 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 2527b07c5dc17a5a · layer 0
+      - layer 0
       - 'depends on (0): —'
       - >-
         needed by (3): SF1_honest_detection, SF6_surface, SF7_bridge_automatic · all downstream 7 ·
         finishing it unlocks SF1_honest_detection, SF6_surface, SF7_bridge_automatic
+    edges: []

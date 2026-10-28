@@ -1,0 +1,56 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UI9_plan_and_work_surface_panels:6013a07a8ca625f2
+type: graph
+id: phase:UI9_plan_and_work_surface_panels:6013a07a8ca625f2
+context: dependency graph of phase UI9_plan_and_work_surface_panels
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676479
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676479
+lastSeenAt: 1792787676479
+fingerprint: null
+payload:
+  for: UI9_plan_and_work_surface_panels
+  kind: phase
+  repo: null
+  hash: 6013a07a8ca625f2
+  nodes:
+    - path: idearium/ui/js/plan-panel.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/work-surface.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI2_desktop_environment_menu
+        files:
+          - idearium/ui/css/
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI11_nav_and_look_restored
+        files:
+          - idearium/ui/css/
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+      - 'same files as UI2_desktop_environment_menu with no order between them: idearium/ui/css/'
+      - 'same files as UI11_nav_and_look_restored with no order between them: idearium/ui/css/'
+    edges: []

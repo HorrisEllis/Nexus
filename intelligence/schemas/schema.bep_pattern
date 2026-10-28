@@ -67,6 +67,20 @@ payload:
       type: number
       required: false
       description: real 0..1, count-derived, not independently modeled — co-occurrence shape only
+    lift:
+      type: number
+      required: false
+      description: >-
+        real event-level base-rate lift — observed co-occurrences ÷ chance expectation (freqA·freqB·window/span),
+        computed at the crystallisation gate (§2026-10-24, intelligence/index.js _coOccurrenceLift). >1 means the
+        pair co-occurs more than base rate predicts. Co-occurrence/cross_system_causal shape only.
+    status:
+      type: string
+      required: false
+      description: >-
+        'crystallised' | 'hypothesis' — a co-occurrence that cleared the count floor but not the base-rate lift bar
+        (CRYSTALLIZE_LIFT_MIN) is HELD as a hypothesis (crystallised:false): kept, written and counted (§0.3 lose
+        nothing), promoted to crystallised only when it later beats chance. Co-occurrence/cross_system_causal shape only.
     description:
       type: string
       required: true

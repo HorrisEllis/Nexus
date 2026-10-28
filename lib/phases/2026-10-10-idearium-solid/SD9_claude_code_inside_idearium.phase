@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD9_claude_code_inside_idearium
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD9_claude_code_inside_idearium
+context: pipeline phase SD9_claude_code_inside_idearium of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD9_claude_code_inside_idearium (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792874369854
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874369854
+lastSeenAt: 1792874369854
+fingerprint: null
+payload:
+  id: SD9_claude_code_inside_idearium
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/claude-code-backend.js
+    - lib/repo-agent.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6760b96b54a10390

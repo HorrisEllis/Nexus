@@ -1,0 +1,159 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CN0_the_rule_in_force:a386abe25c196471
+type: graph
+id: phase:CN0_the_rule_in_force:a386abe25c196471
+context: dependency graph of phase CN0_the_rule_in_force
+intent: null
+summary: 12 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877325056
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325056
+lastSeenAt: 1792877325056
+fingerprint: null
+payload:
+  for: CN0_the_rule_in_force
+  kind: phase
+  repo: null
+  hash: a386abe25c196471
+  nodes:
+    - path: lib/system-boundary.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-system-boundary.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/drawbridge-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/cli/route-commands.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/capability-spec.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/system-boundary.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-boundary.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D1_what_is_a_system
+    dependents:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN1_warp_to_lib
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN2_siso_to_lib
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN3_auth_to_orchestrator
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN4_mesh_and_jaa_to_guardian
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN5_emerge_home
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN6_cockpit_to_idearium
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN7_cli_to_nexus
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN8_erosmancer_to_clear_glass
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN9_archive_the_non_systems
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN10_leftovers_named
+    upstream:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D1_what_is_a_system
+    downstream:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN10_leftovers_named
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN1_warp_to_lib
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN2_siso_to_lib
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN3_auth_to_orchestrator
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN4_mesh_and_jaa_to_guardian
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN5_emerge_home
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN6_cockpit_to_idearium
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN7_cli_to_nexus
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN8_erosmancer_to_clear_glass
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN9_archive_the_non_systems
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN1_warp_to_lib
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN2_siso_to_lib
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN3_auth_to_orchestrator
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN4_mesh_and_jaa_to_guardian
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN5_emerge_home
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN6_cockpit_to_idearium
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN7_cli_to_nexus
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN8_erosmancer_to_clear_glass
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN9_archive_the_non_systems
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN10_leftovers_named
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): CN_D1_what_is_a_system'
+      - >-
+        needed by (10): CN1_warp_to_lib, CN2_siso_to_lib, CN3_auth_to_orchestrator,
+        CN4_mesh_and_jaa_to_guardian, CN5_emerge_home, CN6_cockpit_to_idearium, CN7_cli_to_nexus,
+        CN8_erosmancer_to_clear_glass, CN9_archive_the_non_systems, CN10_leftovers_named · all
+        downstream 11 · finishing it unlocks CN1_warp_to_lib, CN2_siso_to_lib,
+        CN3_auth_to_orchestrator, CN4_mesh_and_jaa_to_guardian, CN5_emerge_home,
+        CN6_cockpit_to_idearium, CN7_cli_to_nexus, CN8_erosmancer_to_clear_glass,
+        CN9_archive_the_non_systems, CN10_leftovers_named
+    edges:
+      - from: docs/2026-10-24-system-consolidation-phasemap.spec::CN_D1_what_is_a_system
+        kind: declared

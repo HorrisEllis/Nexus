@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-repo-compartment-and-rich-dispatch-phasemap.spec::RS1_repo_settings_sections
+type: phase
+id: docs_nexus-repo-compartment-and-rich-dispatch-phasemap.spec::RS1_repo_settings_sections
+context: >-
+  pipeline phase RS1_repo_settings_sections of
+  docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
+intent: null
+summary: RS1_repo_settings_sections (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678278
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678278
+lastSeenAt: 1792787678278
+fingerprint: null
+payload:
+  id: RS1_repo_settings_sections
+  map: docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 06ec8dbcca479409

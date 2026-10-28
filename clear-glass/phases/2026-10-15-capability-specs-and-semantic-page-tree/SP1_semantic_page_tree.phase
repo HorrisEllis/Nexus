@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP1_semantic_page_tree
+type: phase
+id: docs_2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP1_semantic_page_tree
+context: >-
+  pipeline phase SP1_semantic_page_tree of
+  docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec
+intent: null
+summary: SP1_semantic_page_tree (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677469
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677469
+lastSeenAt: 1792787677469
+fingerprint: null
+payload:
+  id: SP1_semantic_page_tree
+  map: docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE (0.60.49; the CDP path awaits a run in Clear Glass on James's machine)
+  files:
+    - clear-glass/src/page/semantic-tree.js
+    - clear-glass/src/page/reader.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8a8b6900ce74fa3b

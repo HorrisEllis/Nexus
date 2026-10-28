@@ -164,7 +164,7 @@ spec:
       component: lib.repo-history
       status: "DONE — 0.60.7 (cli/import-history.js scanZip/orderScans reused; clearglass-gig-import's two zips became two versions in order)"
       james: '"past, present and future"'
-      files: [lib/history-import-job.js, cli/import-history.js]
+      files: [lib/history-import-job.js, lib/cli/import-history.js]
       does: >-
         The N30 archive importer (built for Nexus's own archives) for any project: several zips of one project (MASTERMIND
         v0.1.x, nexus 4.x) are ordered by their version and become one repo's history, one commit per zip, dry run first.
@@ -252,7 +252,7 @@ spec:
         parse become the repo's Phases; plain specs become proposed phases (spec-plan derive) for him to accept (MX1).
       proof: "ERAVOS's specs appear in its Spec and Phases tabs; one accepted becomes a buildable phase"
     PL6_global_links_seen:
-      depends_on: [RF0_architecture_read]   # mapped from the files they share: RF0_architecture_read (lib/project-decompose.js)
+      depends_on: []   # 2026-10-23 SL3: was [RF0_architecture_read], written by MP4 (0.60.29) from a shared file (lib/project-decompose.js); RF0's own authored depends_on names PL6, so the two closed a cycle. An inferred edge never overrides an authored one (§0.1); kept here, not lost (§0.3).
       layer: library
       systems: [core]
       component: lib.component-store
@@ -387,3 +387,27 @@ spec:
 # (applied one phase at a time, every step a version) is its demo. Built: docs/2026-10-16-repo-carve-phasemap.spec CV1, which copies
 # a part of Nexus into its own Idearium repo with everything it requires. The flight_recorder preset needs 217 files across 15
 # systems (loom, warp, guardian and emerge come along through requires): that report is RF0's first real input (CV2).
+
+# ## ADDENDUM 2026-10-24 (0.60.234): RF0 + RF1 built — the refactor tool reads and proposes; first input: the 15 systems
+# James, 2026-10-24: "need to make the refactor tool from the phgases. so we can make each system sovereignfor the cos migratoin" ·
+# "15 systems. the rest of the folders need to migrate." (his 2026-10-05: "There is only 15 systems. Not 27. Any system that's in idearium
+# is a system, nothing more.") Decision A (proposal engine, 2026-10-16) is what was built: lib/architecture-migrate.js
+#   read() RF0 — the 15 systems (lib/nexus-self/systems.js) and every top-level folder the boundary census counts outside them, with who
+#     uses it and what it uses (lib/system-boundary.js scan, the same crossings the ratchet counts)
+#   propose() RF1 — a home per folder by his axioms (code belongs to the system it serves; shared code is kernel): R1 one system uses it →
+#     that system; R2 lib/ or two systems → core (lib/<dir>/); R3 nothing uses it and it uses one place (not lib/) → there; R4 no evidence →
+#     unplaced, to confirm, never guessed. bottom-up dependsOn.
+#   phasemap() — the proposal as docs/2026-10-24-fifteen-systems-migration-phasemap.spec (22 folders, DAG-clean; 13 placed, 9 to confirm)
+# Doors: `node lib/architecture-migrate.js [--write f] [--json]`, row `system migrate`. Read only — nothing moved. Test
+# tests/modules/test-architecture-migrate.test.js 3/3. Narrowed from RF0's original scope (a repo's whole component architecture) to the
+# question he asked today (top-level folders → the 15 systems); the component-level read stays open in RF0. RF2 (apply, one phase at a
+# time, staged and undoable) is next, after the 9 homes are confirmed.
+
+# ## ADDENDUM 2026-10-24 (0.60.236): RF2 applied — batch 1
+# James, 2026-10-24: "yes start rf2, security goes with remote desktop". lib/architecture-apply.js applies one proposed move at a time:
+# plan (moves + only the provable rewrites), apply (git mv; baseline file names renamed), check (parse, resolve, no new crossing), one
+# commit or a rollback. Batch 1: jaa, seams retired (_archive/2026-10-24-retired-systems/); service split into guardian, cortex, idearium
+# (live launchers — not retired); auth → orchestrator; mesh → guardian; architecture-spec → idearium; erosmancer → clear-glass; security,
+# remote-desktop, tablet → cos (his). The census's systems: 36 → 27. RF2's original plan (stage through lib/code-edit.js injects on
+# repo-<uuid>@staging) is for a repo inside Idearium; for Nexus's own tree git is the staging: one commit per move, `git revert` undoes it.
+# Remaining: cockpit, contracts, hooks, meta, sentinel, siso, ui, emerge, emergence, warp, nexus, cli → lib/.

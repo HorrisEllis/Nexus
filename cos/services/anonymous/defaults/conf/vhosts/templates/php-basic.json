@@ -1,0 +1,17 @@
+{
+  "$template": "php-basic",
+  "label": "PHP with .htaccess",
+  "description": "PHP executed through php-cgi, with Apache-style .htaccess rules honoured per directory.",
+  "stack": "php",
+  "php": true,
+  "index": ["index.php", "index.html"],
+  "listing": false,
+  "htaccess": true,
+  "requires": {
+    "binary": "php-cgi",
+    "windows": "php-cgi.exe on PATH, or C:\\php\\php-cgi.exe",
+    "linux": "install php-cgi with your package manager",
+    "ifMissing": "Site returns 500 on .php requests until PHP is installed."
+  },
+  "provisions": ["documentRoot", "tlsCertificate", "proxyRoute", "dnsRecord"]
+}

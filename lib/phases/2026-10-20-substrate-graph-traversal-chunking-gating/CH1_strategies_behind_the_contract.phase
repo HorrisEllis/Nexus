@@ -6,14 +6,14 @@ context: >-
   pipeline phase CH1_strategies_behind_the_contract of
   docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
 intent: null
-summary: CH1_strategies_behind_the_contract (library) — 5 file(s)
+summary: CH1_strategies_behind_the_contract (library) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792456416768
+exported_at: 1792787677988
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416768
-lastSeenAt: 1792456416768
+firstSeenAt: 1792787677988
+lastSeenAt: 1792787677988
 fingerprint: null
 payload:
   id: CH1_strategies_behind_the_contract
@@ -26,7 +26,6 @@ payload:
     - lib/code-intel/chunker.js
     - lib/chunker/index.js
     - clear-glass/src/page/page-map.js
-    - cortex/core/raid/contract-adapters.js
   depends_on:
     - CH0_chunk_census_and_contract
     - AD1_adapter_contract

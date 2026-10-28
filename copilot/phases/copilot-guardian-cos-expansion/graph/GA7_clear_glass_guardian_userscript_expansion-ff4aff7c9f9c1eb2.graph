@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GA7_clear_glass_guardian_userscript_expansion:ff4aff7c9f9c1eb2
+type: graph
+id: phase:GA7_clear_glass_guardian_userscript_expansion:ff4aff7c9f9c1eb2
+context: dependency graph of phase GA7_clear_glass_guardian_userscript_expansion
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787678177
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678177
+lastSeenAt: 1792787678177
+fingerprint: null
+payload:
+  for: GA7_clear_glass_guardian_userscript_expansion
+  kind: phase
+  repo: null
+  hash: ff4aff7c9f9c1eb2
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/copilot-guardian-cos-expansion-phasemap.spec::GA3_guardian_userscript_capability_wiring
+    dependents: []
+    upstream:
+      - docs/copilot-guardian-cos-expansion-phasemap.spec::GA1_guardian_nexus_reconciliation
+      - docs/copilot-guardian-cos-expansion-phasemap.spec::GA3_guardian_userscript_capability_wiring
+    downstream: []
+    blockedBy:
+      - docs/copilot-guardian-cos-expansion-phasemap.spec::GA3_guardian_userscript_capability_wiring
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by GA3_guardian_userscript_capability_wiring
+      - 'depends on (1): GA3_guardian_userscript_capability_wiring · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/copilot-guardian-cos-expansion-phasemap.spec::GA3_guardian_userscript_capability_wiring
+        kind: declared

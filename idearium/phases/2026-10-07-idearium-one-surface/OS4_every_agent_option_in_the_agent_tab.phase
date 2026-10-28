@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-idearium-one-surface-phasemap.spec::OS4_every_agent_option_in_the_agent_tab
+type: phase
+id: docs_2026-10-07-idearium-one-surface-phasemap.spec::OS4_every_agent_option_in_the_agent_tab
+context: >-
+  pipeline phase OS4_every_agent_option_in_the_agent_tab of
+  docs/2026-10-07-idearium-one-surface-phasemap.spec
+intent: null
+summary: OS4_every_agent_option_in_the_agent_tab (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677090
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677090
+lastSeenAt: 1792787677090
+fingerprint: null
+payload:
+  id: OS4_every_agent_option_in_the_agent_tab
+  map: docs/2026-10-07-idearium-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e7ab294fffd58bff

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB3_the_drawbridge
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB3_the_drawbridge
+context: pipeline phase DB3_the_drawbridge of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB3_the_drawbridge (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677810
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677810
+lastSeenAt: 1792787677810
+fingerprint: null
+payload:
+  id: DB3_the_drawbridge
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/drawbridge.js
+    - lib/handoff.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 05dd7de14e589723

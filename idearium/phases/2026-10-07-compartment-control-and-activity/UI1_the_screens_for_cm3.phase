@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-compartment-control-and-activity-phasemap.spec::UI1_the_screens_for_cm3
+type: phase
+id: docs_2026-10-07-compartment-control-and-activity-phasemap.spec::UI1_the_screens_for_cm3
+context: >-
+  pipeline phase UI1_the_screens_for_cm3 of
+  docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+intent: null
+summary: UI1_the_screens_for_cm3 (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477300
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477300
+lastSeenAt: 1792822477300
+fingerprint: null
+payload:
+  id: UI1_the_screens_for_cm3
+  map: docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/repo-drawer-views.js
+    - idearium/ui/js/repo-tasks.js
+    - idearium/ui/css/repo-tasks.css
+    - idearium/api/index.js
+    - ollama/lib/tape.js
+    - ollama/routes/tape.js
+    - ollama/lib/command-index.js
+    - lib/repo-agent.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c3991e54ba34f121

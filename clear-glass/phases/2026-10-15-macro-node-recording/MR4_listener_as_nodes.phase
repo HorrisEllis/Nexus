@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-macro-node-recording-phasemap.spec::MR4_listener_as_nodes
+type: phase
+id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR4_listener_as_nodes
+context: pipeline phase MR4_listener_as_nodes of docs/2026-10-15-macro-node-recording-phasemap.spec
+intent: null
+summary: MR4_listener_as_nodes (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677590
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677590
+lastSeenAt: 1792787677590
+fingerprint: null
+payload:
+  id: MR4_listener_as_nodes
+  map: docs/2026-10-15-macro-node-recording-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 92f8747119b47a89

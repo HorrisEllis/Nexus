@@ -97,7 +97,37 @@ function _refHash(ref, root) {
   if (!ref.path || !fs.existsSync(fp)) return null;
   let buf = fs.readFileSync(fp);
   if (Array.isArray(ref.lines)) buf = Buffer.from(buf.toString('utf8').split('\n').slice(ref.lines[0] - 1, ref.lines[1]).join('\n'));
+  else if (ref.phase) { const blk = phaseBlock(buf.toString('utf8'), ref.phase); if (blk !== null) buf = Buffer.from(blk); }
   return sha(buf);
+}
+
+/**
+ * phaseBlock(text, id) → the phase's own block in its map, without its status lines; null when the id is not there.
+ * §0.60.226 SL7 — a contract's input was the whole phasemap, so the pipeline's own status writes (SL1's 'DONE …', the build's
+ * 'active', status_previous kept above them) and any edit to another phase in the same map STALEd every brick, and a resumed
+ * build re-sent every file (test-contract-phase-build CP-03). A ref { path, phase } hashes only what the phase says it is.
+ * Found by its key line (not by line numbers, which shift when status_previous is inserted); a status key and its continuation
+ * lines (deeper indent), and comment lines (the writer's `# roadmap edit`), are left out.
+ */
+function phaseBlock(text, id) {
+  const lines = String(text).split('\n');
+  const esc = String(id).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const at = lines.findIndex(l => new RegExp(`^\\s{2,6}${esc}:`).test(l));
+  if (at < 0) return null;
+  const ind = lines[at].match(/^\s*/)[0].length;
+  const out = [lines[at].replace(/:\s*\{.*$/, ':')];
+  let skip = -1;
+  for (let i = at + 1; i < lines.length; i++) {
+    const l = lines[i];
+    if (l.trim() && l.match(/^\s*/)[0].length <= ind) break;
+    const li = l.match(/^\s*/)[0].length;
+    if (skip >= 0 && (!l.trim() || li > skip)) continue;
+    skip = -1;
+    if (/^\s+(status|status_previous):/.test(l)) { skip = li; continue; }
+    if (/^\s*#/.test(l)) continue;   // a `# roadmap edit` comment the status writer leaves above the status
+    out.push(l);
+  }
+  return out.join('\n').replace(/\s+$/, '');
 }
 
 function _order(gates) {
@@ -591,6 +621,10 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
   // 0.60.18 EX0a — James: "the scheduler must distinguish a failed task from a task that has no available executor. The
   // latter should be reported as blocked or unsupported, not repeatedly retried or incorrectly marked complete."
   const noExecutor = new Map();   // gate → why nothing here can run it: set aside, said, never retried in a loop, never FAILED
+  // §GV1 0.60.257 — James, 2026-10-26: "the gate doesn't wait for me to accept it or not before it fails." A gate whose executor says
+  // nothing here can check its result ({ awaitsPerson }) waits for his verdict: READY, no retry spent, never FAILED, returned as awaiting
+  const persons = new Map();
+  const awaiting = () => [...persons].map(([id, why]) => ({ id, why, person: true }));
   const limit = (p.failure && p.failure.retry_limit) || 3;
   const aside = () => [...noExecutor].map(([id, why]) => ({ id, why, unsupported: true }));
   for (let round = 1; round <= maxRounds; round++) {
@@ -598,10 +632,10 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
     // READY or STALE runs; a FAILED brick with work to do and retries left runs again (recovery)
     const ready = ev.gates.filter(g => g.status === 'READY' || g.status === 'STALE' || (g.status === 'FAILED' && ((p.state.gates[g.id] || {}).attempts || 0) < limit && (p.gates || []).find(x => x.id === g.id).run))
       .map(g => (p.gates || []).find(x => x.id === g.id));
-    const runnable = ready.filter(g => !noExecutor.has(g.id) && (g.run || !(g.pass_when || []).some(c => c && c.evidence && !(p.state.evidence || {})[c.evidence])));
+    const runnable = ready.filter(g => !noExecutor.has(g.id) && !persons.has(g.id) && (g.run || !(g.pass_when || []).some(c => c && c.evidence && !(p.state.evidence || {})[c.evidence])));
     if (!runnable.length) {
-      return { rounds: round - 1, log, complete: ev.complete, why: ev.why, blocked: aside(),
-        waiting: ready.filter(g => !runnable.includes(g) && !noExecutor.has(g.id)).map(g => ({ id: g.id, why: 'waits on evidence a person or agent records' })) };
+      return { rounds: round - 1, log, complete: ev.complete, why: ev.why, blocked: aside(), awaiting: awaiting(),
+        waiting: ready.filter(g => !runnable.includes(g) && !noExecutor.has(g.id) && !persons.has(g.id)).map(g => ({ id: g.id, why: 'waits on evidence a person or agent records' })) };
     }
     for (let i = 0; i < runnable.length; i += concurrency) {
       await Promise.all(runnable.slice(i, i + concurrency).map(async (g) => {
@@ -655,6 +689,16 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
           catch (e) { out = { ok: false, error: e.message }; }
           lastOut = out;
           if (out && out.unsupported) { setAside(`unsupported: ${out.why || `nothing can run this ${kind} work`}`); return; }
+          if (out && out.awaitsPerson) {   // §GV1 — his verdict, not a failure
+            const why = String(out.why || 'nothing here can check this result: it waits for a person');
+            p.state.gates[g.id].status = before && before !== 'RUNNING' ? before : 'READY';
+            persons.set(g.id, why);
+            for (const [k, v] of Object.entries(out.evidence || {})) if (v != null) record(p, k, typeof v === 'string' ? v : JSON.stringify(v), { by: `scheduler:${kind}` });
+            record(p, `${g.id}.awaiting`, why, { by: `scheduler:${kind}` });
+            log.push({ round, gate: g.id, status: 'AWAITING', reasons: [why] });
+            onEvent({ gate: g.id, status: 'AWAITING', round, why });
+            return;
+          }
           if (out && out.decompose) {
             // its pieces are its actions (a file brick's steps); refs it shares with every brick are not pieces of it
             if ((g.actions || []).length < 2 && !(g.children || []).length) {
@@ -747,11 +791,11 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
     const stuck = (p.gates || []).filter(g => { const s = p.state.gates[g.id] || {}; return s.status === 'FAILED' && (s.attempts || 0) >= limit; });
     const e1 = evaluate(p, { root });
     const more = e1.gates.some(g => (g.status === 'READY' || g.status === 'STALE') && !noExecutor.has(g.id));
-    if (stuck.length && !more) return { rounds: round, log, complete: e1.complete, why: e1.why, failed: stuck.map(g => g.id), blocked: aside() };
+    if (stuck.length && !more) return { rounds: round, log, complete: e1.complete, why: e1.why, awaiting: awaiting(), failed: stuck.map(g => g.id), blocked: aside() };
   }
   const e3 = evaluate(p, { root });
-  return { rounds: maxRounds, log, complete: e3.complete, why: e3.why, blocked: aside() };
+  return { rounds: maxRounds, log, complete: e3.complete, why: e3.why, blocked: aside(), awaiting: awaiting() };
 }
 
-module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, holds, verifyOutcome, check, packet, scaffold, record, checkCondition, compare, unitsOf, depthOf,
+module.exports = { VERSION, STATES, phaseBlock, load, save, validate, evaluate, completion, holds, verifyOutcome, check, packet, scaffold, record, checkCondition, compare, unitsOf, depthOf,
   packetTokens, Boundaries, shouldSplit, split, schedule, assess, classifyFailure, FAILURE_CLASSES };

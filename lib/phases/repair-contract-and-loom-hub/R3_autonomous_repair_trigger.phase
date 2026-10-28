@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R3_autonomous_repair_trigger
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R3_autonomous_repair_trigger
+context: pipeline phase R3_autonomous_repair_trigger of docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R3_autonomous_repair_trigger (?) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678337
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678337
+lastSeenAt: 1792787678337
+fingerprint: null
+payload:
+  id: R3_autonomous_repair_trigger
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/autonomous-repair.js
+    - copilot/repair-on-prompt.js
+    - lib/triggers.js
+    - clear-glass/src/net/qbittorrent.js
+    - clear-glass/src/providers/registry.js
+    - cortex/core/raid/index.js
+    - idearium/api/build-surface.js
+    - tests/sim/loop.js
+    - lib/constant-autonomy.js
+    - lib/gap-field.js
+  depends_on:
+    - R1_repair_contract_schema
+    - R2
+  blocks: []
+  spec: null
+  graph: 4f6cbfa55d7722d6

@@ -1,0 +1,213 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF17_intelligence_system_all_4_phases:8f00a4235b63cc7b
+type: graph
+id: phase:SF17_intelligence_system_all_4_phases:8f00a4235b63cc7b
+context: dependency graph of phase SF17_intelligence_system_all_4_phases
+intent: null
+summary: 21 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675378
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675378
+lastSeenAt: 1792787675378
+fingerprint: null
+payload:
+  for: SF17_intelligence_system_all_4_phases
+  kind: phase
+  repo: null
+  hash: 8f00a4235b63cc7b
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: intelligence/snapshot-trigger.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/spec/intelligence.spec
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/baseline.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/snapshot-trigger.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/diagnostic-causal.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/boot.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: service/cortex-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: hooks/index.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: orchestrator/lib/pulse.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: hooks/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: service/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+    - from: lib/diagnostic-causal.js
+      to: intelligence/snapshot-trigger.js
+      kind: requires
+    - from: lib/ledger-fanin/boot.js
+      to: intelligence/snapshot-trigger.js
+      kind: requires
+  crossings:
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: cortex
+      toSystem: orchestrator
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: nexus/nexus-bus.js
+      fromSystem: cortex
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: hooks/index.js
+      fromSystem: cortex
+      toSystem: hooks
+      kind: system
+      known: true
+    - from: service/cortex-service.js
+      to: cortex/boot.js
+      fromSystem: service
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/diagnostic-causal.js
+      to: intelligence/snapshot-trigger.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/ledger-fanin/boot.js
+      to: intelligence/snapshot-trigger.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-08-22-session-full-phasemap.spec::SF18_intelligence_becomes_a_real_system
+    upstream: []
+    downstream:
+      - docs/2026-08-22-session-full-phasemap.spec::SF18_intelligence_becomes_a_real_system
+      - docs/2026-08-22-session-full-phasemap.spec::SF19_loom_registry_never_auto_synced
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-22-session-full-phasemap.spec::SF18_intelligence_becomes_a_real_system
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): SF18_intelligence_becomes_a_real_system · all downstream 2 · finishing it
+        unlocks SF18_intelligence_becomes_a_real_system
+    edges: []

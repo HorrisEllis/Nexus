@@ -1,0 +1,43 @@
+<div class="card">
+  <div class="card-title">PHP support</div>
+  <div id="php-status" style="font-size:13px"></div>
+</div>
+
+<div class="actions" style="margin-bottom:16px">
+  <button onclick="panel.showAddSite()">Add site</button>
+</div>
+
+<div class="card" id="site-add" style="display:none">
+  <div class="card-title">New site</div>
+  <div class="frow c2">
+    <div><label for="site-hostname">Hostname</label><input id="site-hostname" placeholder="blog.example.com"></div>
+    <div><label for="site-stack">Stack</label>
+      <select id="site-stack">
+        <option value="static">Static — HTML, CSS, JS</option>
+        <option value="php">PHP — with .htaccess support</option>
+        <option value="node">Node.js — proxied to a port</option>
+        <option value="python">Python WSGI — proxied to a port</option>
+        <option value="wordpress">WordPress — full install</option>
+        <option value="proxy">Reverse proxy — existing backend</option>
+      </select></div>
+  </div>
+  <div class="frow c3">
+    <div><label for="site-root">Document root</label><input id="site-root" placeholder="leave blank for default"></div>
+    <div><label for="site-proxy-port">Proxy port</label><input id="site-proxy-port" type="number" placeholder="3001"></div>
+    <div><label for="site-index">Index files</label><input id="site-index" value="index.html,index.php"></div>
+  </div>
+  <div class="frow c2">
+    <div><label for="site-listing">Directory listing</label>
+      <select id="site-listing"><option value="false">Off</option><option value="true">On</option></select></div>
+  </div>
+  <div class="actions">
+    <button onclick="panel.addSite()">Create site</button>
+    <button class="sec" onclick="panel.hideAddSite()">Cancel</button>
+  </div>
+  <div id="site-add-progress" style="display:none;margin-top:16px">
+    <div class="bar"><i id="site-add-bar"></i></div>
+    <div id="site-add-steps" style="font-size:12px;margin-top:8px"></div>
+  </div>
+</div>
+
+<div id="sites-list"></div>

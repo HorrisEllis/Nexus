@@ -7,11 +7,11 @@ intent: null
 summary: RA0_rca_says_what_it_does (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792456303336
+exported_at: 1792841756072
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303336
-lastSeenAt: 1792456303336
+firstSeenAt: 1792841756072
+lastSeenAt: 1792841756072
 fingerprint: null
 payload:
   id: RA0_rca_says_what_it_does
@@ -26,4 +26,4 @@ payload:
   blocks:
     - MOD-RCA-HONEST
   spec: docs/belief-loop.spec
-  graph: a63f882b1b3c07af
+  graph: 317774385ec8c06d

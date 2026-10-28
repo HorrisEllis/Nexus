@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+context: pipeline phase IN3_registry_is_the_spine of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: IN3_registry_is_the_spine (library) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677901
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677901
+lastSeenAt: 1792787677901
+fingerprint: null
+payload:
+  id: IN3_registry_is_the_spine
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/component-registry.js
+    - lib/project-registry.js
+    - lib/component-store.js
+    - loom/bootstrap.js
+  depends_on:
+    - IN0_baseline
+  blocks: []
+  spec: null
+  graph: e420e3cd3dcadc6d

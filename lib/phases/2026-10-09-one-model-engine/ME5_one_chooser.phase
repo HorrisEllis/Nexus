@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME5_one_chooser
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME5_one_chooser
+context: pipeline phase ME5_one_chooser of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME5_one_chooser (?) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1792877950652
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877950652
+lastSeenAt: 1792877950652
+fingerprint: null
+payload:
+  id: ME5_one_chooser
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/index.js
+    - cortex/core/raid/snr-filter.js
+    - lib/pipeline-routing.js
+    - lib/model-door.js
+    - cortex/core/raid/routing-ir.js
+    - lib/agent-router.js
+    - copilot/lifeline.js
+    - copilot/server.js
+    - lib/agent-providers.js
+    - lib/seam/adapters/warp-cascade.js
+    - guardian/lib/provider-routing.js
+    - clear-glass/src/mesh/agent-mesh.js
+    - idearium/spec-engine/chunk-dispatch.js
+  depends_on:
+    - ME3_one_engine_one_budget
+  blocks: []
+  spec: null
+  graph: aa25b14f82941050

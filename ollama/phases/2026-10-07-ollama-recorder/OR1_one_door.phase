@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-ollama-recorder-phasemap.spec::OR1_one_door
+type: phase
+id: docs_2026-10-07-ollama-recorder-phasemap.spec::OR1_one_door
+context: pipeline phase OR1_one_door of docs/2026-10-07-ollama-recorder-phasemap.spec
+intent: null
+summary: OR1_one_door (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792879044327
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879044327
+lastSeenAt: 1792879044327
+fingerprint: null
+payload:
+  id: OR1_one_door
+  map: docs/2026-10-07-ollama-recorder-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ollama/lib/ollama-client.js
+    - cortex/boot.js
+    - guardian/server.js
+    - lib/ui/home/areas/agent-suite.js
+    - ollama/ollama-runtime.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ace797d8c5a4354d

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-30-interaction-contract-context-phasemap.spec::IC10_diagnostic_own_real_system_structure
+type: phase
+id: docs_2026-08-30-interaction-contract-context-phasemap.spec::IC10_diagnostic_own_real_system_structure
+context: >-
+  pipeline phase IC10_diagnostic_own_real_system_structure of
+  docs/2026-08-30-interaction-contract-context-phasemap.spec
+intent: null
+summary: IC10_diagnostic_own_real_system_structure (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792822701873
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822701873
+lastSeenAt: 1792822701873
+fingerprint: null
+payload:
+  id: IC10_diagnostic_own_real_system_structure
+  map: docs/2026-08-30-interaction-contract-context-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/server.js
+    - copilot/server.js
+    - ollama/server.js
+    - diagnostic/nexus-diagnostic.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ae8bcbb062cc4b81

@@ -10,7 +10,7 @@ const { declareMap } = require('./declare-map');
 const I = (rel) => idFor(rel);
 
 const FILES = [
-  ['lib/run-state.js',   I('lib/run-state.js'),   [I('lib/node-export.js'), I('nexus/nexus-bus.js')]],
+  ['lib/run-state.js',   I('lib/run-state.js'),   [I('lib/node-export.js'), I('lib/nexus/nexus-bus.js')]],
   ['lib/reply-kind.js',  I('lib/reply-kind.js'),  [I('lib/step-gate.js')]],
   ['lib/gig-ledger.js',  I('lib/gig-ledger.js'),  []],   // §0.60.53 PF0
   ['lib/checks/ck-248-toolchain.js', I('lib/checks/ck-248-toolchain.js'), []],   // §0.60.77 MB5: 18 languages, each by its own parser; selfTest/coverage/checkText
@@ -35,7 +35,7 @@ const FILES = [
   ['scripts/build-cos-app.js', I('scripts/build-cos-app.js'), [I('cos/app/controller.js'), I('lib/zip.js')]],
   ['cos/app/cli.js', I('cos/app/cli.js'), [I('cos/app/store.js'), I('cos/app/runtime.js'), I('cos/app/switch.js')]],
   ['clear-glass/src/macros/recorder-script.js', I('clear-glass/src/macros/recorder-script.js'), []],   // §0.60.57 MR1
-  ['clear-glass/src/macros/live-recording.js', I('clear-glass/src/macros/live-recording.js'), [I('clear-glass/src/macros/recorder-script.js'), I('clear-glass/src/macros/recording.js'), I('clear-glass/src/automation/nodes.js')]],
+  ['clear-glass/src/macros/live-recording.js', I('clear-glass/src/macros/live-recording.js'), [I('clear-glass/src/macros/recorder-script.js'), I('clear-glass/src/macros/recording.js'), I('lib/automation-nodes.js')]],
   ['clear-glass/src/net/policy.js', I('clear-glass/src/net/policy.js'), []],   // §0.60.60 NP2
   ['clear-glass/src/net/transport-host.js', I('clear-glass/src/net/transport-host.js'), []],   // §0.60.60 NP1
   ['clear-glass/src/net/service.js', I('clear-glass/src/net/service.js'), [I('clear-glass/src/net/policy.js'), I('clear-glass/src/net/transport-host.js')]],
@@ -94,14 +94,21 @@ const FILES = [
   ['clear-glass/src/fingerprint/firefox-version.js', I('clear-glass/src/fingerprint/firefox-version.js'), []],   // §0.60.108 GS3: the Firefox version from Mozilla's calendar
   ['clear-glass/src/preload/google-signin.js', I('clear-glass/src/preload/google-signin.js'), []],   // §0.60.108 GS4: the sign-in page reads as Firefox, no debugger   // §0.60.106 GS1: Google's sign-in as Firefox, consistently
   ['clear-glass/src/tls/helper.js', I('clear-glass/src/tls/helper.js'), []],   // §0.60.109 TLS2: runs cg-tls-helper (clear-glass/tls-helper, Go + uTLS); its CA trust for personas
-  ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('nexus/nexus-bus.js')]],
+  ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('lib/nexus/nexus-bus.js')]],
   ['lib/repo-procedures.js', I('lib/repo-procedures.js'), [I('lib/node-export.js'), I('lib/run-state.js'), I('idearium/lib/data-dir.cjs')]],   // §0.60.118 DK1: .procedure files, replayed through an injected tool runner
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
   ['lib/system-boundary.js', I('lib/system-boundary.js'), []],
+  // §0.60.234 RF0/RF1 — the refactor tool (James: "need to make the refactor tool from the phgases. so we can make each system sovereign…"):
+  // reads the 15 systems (nexus-self/systems.js) and every require that crosses a folder (system-boundary scan), proposes homes as a phasemap
+  ['lib/architecture-migrate.js', I('lib/architecture-migrate.js'), [I('lib/system-boundary.js'), I('lib/nexus-self/systems.js')]],
   ['lib/data-home.js', I('lib/data-home.js'), [I('lib/system-registry.js'), I('lib/data-clearup.js'), I('lib/test-sandbox.js'), I('lib/version.js')]],   // §0.60.207 DL2 one resolver; each system brings its own data home at boot
   ['lib/data-clearup.js', I('lib/data-clearup.js'), []],   // §0.60.177 DL0/DL1 census + clear-up tool; its rules are docs/data-layout.spec ownership: (read at run time, not a require)
-  ['emerge/compiler/phase-specs.js', I('emerge/compiler/phase-specs.js'), [I('emerge/compiler/kg-builder.js'), I('lib/phase-dag.js'), I('lib/phase-graph.js'), I('lib/phase-map-auto.js'), I('lib/pipeline-nodes.js'), I('lib/phase-plan.js')]],   // §0.60.176 PS1 each phase specced again: .phase + .graph (dag slice) beside its owner
+  ['lib/emerge/compiler/phase-specs.js', I('lib/emerge/compiler/phase-specs.js'), [I('lib/emerge/compiler/kg-builder.js'), I('lib/phase-dag.js'), I('lib/phase-graph.js'), I('lib/phase-map-auto.js'), I('lib/pipeline-nodes.js'), I('lib/phase-plan.js')]],   // §0.60.176 PS1 each phase specced again: .phase + .graph (dag slice) beside its owner
+  ['lib/ollama-port.js', I('lib/ollama-port.js'), [I('lib/nexus-self/systems.js')]],   // 0.60.241 LM1 the kernel's door to the ollama bridge (in-process when provided, else POST /api/generate)
+  ['ollama/routes/generate.js', I('ollama/routes/generate.js'), [I('ollama/lib/ollama-client.js'), I('ollama/lib/state.js'), I('ollama/lib/http-utils.js')]],   // 0.60.241 LM1 POST /api/generate
+  ['loom/lib/store.js', I('loom/lib/store.js'), [I('lib/system-store.js')]],   // 0.60.241 LM2 Loom's own store: hooks, hook_bindings, loom_changelog, phasemap_history
+  ['cos/compartment/boundary.js', I('cos/compartment/boundary.js'), []],   // 0.60.242 LM4 the wall: a require outside the compartment's allowed paths refused
   ['lib/upload-placement.js', I('lib/upload-placement.js'), []],   // §0.60.173 UP1/UP2 a zip's files placed against a repo (strip, exists, same bytes, folders, intent, his learned rules); requires/requiredBy
   ['idearium/ui/js/upload-intent.js', I('idearium/ui/js/upload-intent.js'), [I('idearium/ui/js/code-tab-panels.js')]],   // §0.60.173 UP4 the Code tab's upload panel (page globals: CX, _cxPaintPanel, api)
   ['lib/phase-dag.js', I('lib/phase-dag.js'), [I('loom/scanners/phasemap-map.js')]],   // §0.60.172 DG3 the whole DAG of every phasemap
@@ -110,6 +117,13 @@ const FILES = [
   ['lib/agent-self-model.js', I('lib/agent-self-model.js'), []],   // §0.60.171 SM1 each agent's model of itself; interrogation → proposals
   ['lib/safe-watch.js', I('lib/safe-watch.js'), []],   // §0.60.170 RC1: an fs.watch whose async EPERM cannot take the process down; re-arms
   ['lib/phase-census.js', I('lib/phase-census.js'), [I('lib/phase-dag.js')]],
+  ['lib/build-queue.js', I('lib/build-queue.js'), [I('lib/phase-dag.js')]],
+  ['lib/phase-groom.js', I('lib/phase-groom.js'), [I('lib/phase-dag.js'), I('lib/phase-files.js'), I('lib/phase-map-auto.js')]],   // 0.60.227 SL3 the DAG groomed: proposals from MP1 + DG3, for a person what needs a choice
+  ['lib/phase-close.js', I('lib/phase-close.js'), [I('lib/test-map.js')]],   // 0.60.223 SL1 closes a proven, landed phase; 0.60.224 SL2 byEvidence (its own tests, through lib/test-map.js)   // 0.60.223 SL1 a proven, landed phase closes itself; a revert reopens it (the writer is passed in)   // 0.60.222 SL0 what can be built now, and why every other open phase cannot
+  ['lib/trust-rule.js', I('lib/trust-rule.js'), []],   // 0.60.225 SL5 (from brave-cori) his rule for what lands without him
+  ['lib/registry-draft.js', I('lib/registry-draft.js'), [I('lib/system-boundary.js')]],   // 0.60.229 DB16 (from brave-cori) a registry drafted for every system with none
+  ['cos/services/anonymous/nexus.js', I('cos/services/anonymous/nexus.js'), []],   // 0.60.235 SV0 his engines' kernel in COS (spawns engines/<name>.js by name, newline-JSON IPC)
+  ['idearium/lib/autobuild.js', I('idearium/lib/autobuild.js'), []],   // 0.60.225 SL4 (from brave-cori) the loop: a state machine, every effect a dep
   ['lib/change-entry.js', I('lib/change-entry.js'), [I('lib/nexus-self/inject-gate.js')]],
   ['lib/chat-ledger-client.js', I('lib/chat-ledger-client.js'), []],   // 0.60.192 Clear Glass's live chat ledgers read through its routes (:7702), never its code   // 0.60.190 APV1 an approved change's change-log entry (it rides on its Versionium commit)   // 0.60.188 CNS1 every phase judged against its evidence (commits, releases, files, proof)
   ['lib/path-guard.js', I('lib/path-guard.js'), []],   // §0.60.170 RC4: a file name from an agent's reply is checked (chat label, cut short, prose) before it is written
@@ -125,12 +139,27 @@ const FILES = [
   ['idearium/ui/js/code-dock.js', I('idearium/ui/js/code-dock.js'), [I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/repo-tasks.js'), I('idearium/ui/js/plan-panel.js')]],   // §0.60.118 DK2: the dock — _wsCard, _rtTree/_rtRow, _ppContext reused (page globals)
 ];
 const CONSUMERS = [
-  [I('emerge/compiler/phase-specs.js'), I('emerge/compiler/kg-builder.js'), '§0.60.176 PS1 specIds(): what a spec declares, through emerge\'s own knowledge-graph build'],
-  [I('emerge/compiler/phase-specs.js'), I('lib/phase-dag.js'), '§0.60.176 PS1 the whole DAG and each phase\'s slice'],
-  [I('emerge/compiler/phase-specs.js'), I('lib/phase-graph.js'), '§0.60.176 PS1 graphFor(): files with roles and crossings'],
-  [I('emerge/compiler/phase-specs.js'), I('lib/phase-map-auto.js'), '§0.60.176 PS1 mapPhase() over envFromTree()'],
-  [I('emerge/compiler/phase-specs.js'), I('lib/pipeline-nodes.js'), '§0.60.176 PS1 phaseNode / graphNode (graphNode now keeps the dag slice)'],
-  [I('emerge/compiler/phase-specs.js'), I('lib/phase-plan.js'), '§0.60.176 PS1 targetSystem(): the owner of each phase'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/emerge/compiler/kg-builder.js'), '§0.60.176 PS1 specIds(): what a spec declares, through emerge\'s own knowledge-graph build'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/phase-dag.js'), '§0.60.176 PS1 the whole DAG and each phase\'s slice'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/phase-graph.js'), '§0.60.176 PS1 graphFor(): files with roles and crossings'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/phase-map-auto.js'), '§0.60.176 PS1 mapPhase() over envFromTree()'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/pipeline-nodes.js'), '§0.60.176 PS1 phaseNode / graphNode (graphNode now keeps the dag slice)'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/phase-plan.js'), '§0.60.176 PS1 targetSystem(): the owner of each phase'],
+  [I('ollama/server.js'), I('ollama/routes/generate.js'), '0.60.241 LM1 mounted with the other route modules'],
+  [I('ollama/server.js'), I('lib/ollama-port.js'), '0.60.241 LM1 provide(): callOllamaRaw in-process'],
+  [I('lib/ollama-port.js'), I('ollama/server.js'), '0.60.241 LM1 over HTTP: POST /api/generate (not a require)'],
+  [I('loom/agent-suite/index.js'), I('lib/ollama-port.js'), '0.60.241 LM1 generateWithOllama through the bridge (was ollama-client in-process)'],
+  [I('loom/server.js'), I('loom/lib/store.js'), '0.60.241 LM2 the hook registry on Loom\'s own store; GET /api/phasemap/history'],
+  [I('loom/lib/changelog.js'), I('loom/lib/store.js'), '0.60.241 LM2 loom_changelog'],
+  [I('loom/scanners/phasemap-map.js'), I('loom/lib/store.js'), '0.60.241 LM2 phasemap_history'],
+  [I('loom/server.js'), I('lib/pulse.js'), '0.60.241 LM0 the heartbeat (was nexus-connect startHeartbeat)'],
+  [I('architect/service.js'), I('loom/server.js'), '0.60.241 LM3 the hook read view over HTTP: GET /api/hooks, /:id, /validate, /graph (not a require)'],
+  [I('lib/agent-build-loop.js'), I('loom/server.js'), '0.60.241 LM3 introspect(): GET /api/phasemap/history (not a require)'],
+  [I('cos/compartment/process-runner.js'), I('cos/compartment/boundary.js'), '0.60.242 LM4 preloaded (node --require) when the env carries COS_BOUNDARY (not a require)'],
+  [I('loom/templates/cos-compartment.js'), I('lib/cos-bridge.js'), '0.60.242 LM4 moveIn: getCompartment, createCompartment, setRuntime, start, processOf'],
+  [I('loom/templates/cos-compartment.js'), I('lib/system-boundary.js'), '0.60.242 LM4 boundaryFor: FOLDED, KERNEL, LANGUAGE_PATHS (the census\'s list)'],
+  [I('lib/gap-field.js'), I('cortex/boot.js'), '0.60.242 LM4 reportAsync / openGapsAsync over HTTP: POST /api/gap-field/report, GET /api/gap-field/open (not a require)'],
+  [I('cortex/boot.js'), I('lib/gap-field.js'), '0.60.242 LM4 provideLocal(); the two routes run report() / openGaps()'],
   [I('idearium/api/index.js'), I('lib/upload-placement.js'), '§0.60.173 UP3 repo.uploads.{create,list,get,answer}: plan → needs-you; his answer → repo-inject propose/apply (text) and writeSourceBytes (binaries); learn()'],
   [I('idearium/api/index.js'), I('lib/zip-ingest.js'), '§0.60.173 UP3 the uploaded zip read with the importer\'s own bounds (project-import.config ZIP)'],
   [I('idearium/api/index.js'), I('lib/repo-inject.js'), '§0.60.173 UP3 an upload\'s text files land through propose() and apply() — the one door'],
@@ -141,6 +170,51 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/coder-brief.js'), '§0.60.171 CB1 compose() is the brief of every file/brick sent to a coder'],
   [I('idearium/api/index.js'), I('lib/pipeline-routing.js'), '§0.60.171 CB2 preferFirst() after the learned order (both build paths)'],
   [I('idearium/api/index.js'), I('lib/phase-census.js'), '0.60.188 CNS1 GET /api/phases/census'],
+  [I('idearium/api/index.js'), I('lib/build-queue.js'), '0.60.222 SL0 GET /api/phases/next and /api/repos/:uuid/phases/next (with the census and the flights)'],
+  [I('idearium/api/index.js'), I('lib/flight-data.js'), '0.60.222 SL0 the flights a held phase is judged by'],
+  [I('idearium/cli/route-commands.js'), I('lib/build-queue.js'), '0.60.222 SL0 `phases next` and `repo next` through the route'],
+  [I('idearium/api/index.js'), I('lib/phase-close.js'), '0.60.223 SL1 _closeRun (on the proof row and on each applied change) and _reopenFor (on a revert), through _phaseSetStatus; repo.phases.close / closes'],
+  [I('lib/repo-inject.js'), I('idearium/api/index.js'), '0.60.223 SL1 setOnSettled: each applied or reverted change is told to the closer (registered by idearium, called on the next tick)'],
+  [I('idearium/api/index.js'), I('idearium/repo/roadmap.js'), '0.60.223 SL1 setPhaseStatus note: "DONE <date>. <version> — proven by run <id>, on snapshot <s>"'],
+  [I('idearium/api/index.js'), I('lib/phase-dag.js'), '0.60.224 SL2 repo.phases.evidence: the open phases of the repo\'s maps'],
+  [I('idearium/ui/js/phases.js'), I('idearium/api/index.js'), '0.60.224 SL2 the rail\'s "done by evidence?" → POST …/phases/evidence (dry run; close asks first)'],
+  [I('idearium/api/index.js'), I('idearium/lib/autobuild.js'), '0.60.225 SL4 _loopDeps (queue, _phaseBuild, _loopRunState, _landByRule, _closeRun), _loopTick on the watchdog minute, repo.loop routes'],
+  // §GV 0.60.257 — James, 2026-10-26: "the gate doesn't wait for me to accept it or not before it fails."
+  [I('idearium/api/index.js'), I('cortex/core/raid/contract-intake.js'), '0.60.257 GV2 integrate answers awaitsPerson on no-proof; runContract status awaiting → the awaiting-verdict row; _phaseVerdict → reportExternalOutcome'],
+  [I('cortex/core/raid/contract-intake.js'), I('cortex/core/raid/contract-gates.js'), '0.60.257 GV1 schedule returns awaiting (a gate held for a person, never FAILED)'],
+  [I('idearium/api/index.js'), I('lib/repo-inject.js'), '0.60.257 GV2 _phaseVerdict: accept applies the run\'s proposals (approvedBy him); reject rejects / reverts them'],
+  [I('idearium/ui/js/repo-tasks.js'), I('idearium/api/index.js'), '0.60.257 GV3 rtVerdict → POST /api/repos/:uuid/phases/verdict'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '0.60.257 GV3 `repo verdict <repo> <runId> accept|reject` → /phases/verdict'],
+  [I('lib/repo-activity.js'), I('lib/run-watch.js'), '0.60.257 GV2 awaiting-verdict: a task waiting on him; run-watch WAITING, never stalled'],
+  [I('idearium/api/index.js'), I('lib/trust-rule.js'), '0.60.225 SL5 _landByRule: a proven run\'s proposals applied when his rule allows; trust.get / trust.set'],
+  [I('idearium/api/index.js'), I('lib/build-queue.js'), '0.60.225 _queueFor: shared by …/phases/next and the loop'],
+  [I('idearium/cli/route-commands.js'), I('idearium/lib/autobuild.js'), '0.60.225 SL4 `repo loop <repo> [start|stop|step]`'],
+  [I('idearium/cli/route-commands.js'), I('lib/trust-rule.js'), '0.60.225 SL5 `trust`'],
+  [I('idearium/ui/js/phases.js'), I('idearium/lib/autobuild.js'), '0.60.225 SL4 the rail\'s loop: start (asks) / stop, built, closed, skipped; his rule in his words'],
+  [I('idearium/api/index.js'), I('lib/registry-draft.js'), '0.60.229 DB16 GET /api/system/registry-drafts and /api/system/registry/:system/draft'],
+  [I('idearium/cli/route-commands.js'), I('lib/registry-draft.js'), '0.60.229 DB16 `system drafts [<system>]`'],
+  [I('idearium/cli/route-commands.js'), I('lib/phase-close.js'), '0.60.223 SL1 `repo close <repo> <runId>` and `repo closes <repo>` through the route'],
+  [I('idearium/ui/js/phases.js'), I('lib/phase-close.js'), '0.60.223 SL1 the phase panel\'s "closed by" / "reopened" through GET …/phases/closes'],
+  [I('idearium/ui/js/phases.js'), I('lib/build-queue.js'), '0.60.222 SL0 the rail\'s "can be built now" through GET …/phases/next'],
+  [I('idearium/api/index.js'), I('lib/phase-groom.js'), '0.60.227 SL3 repo.phases.groom: a dry run, apply through _phaseWriteMany'],
+  [I('idearium/api/index.js'), I('idearium/repo/phase-mapping.js'), '0.60.228 SL8 _phaseBuild: mapOne when MP1 placed nothing (before DG2), mapped() into the graph; the kept mappings per repo'],
+  [I('idearium/repo/phase-mapping.js'), I('lib/phase-files.js'), '0.60.228 SL8 brief({ deps }) and parseAnswer (files and depends_on) for one phase'],
+  [I('idearium/repo/phase-mapping.js'), I('lib/phase-map-auto.js'), '0.60.228 SL8 mapped(): the agent\'s existing files get their requires and consumers through mapPhase'],
+  [I('idearium/ui/js/plan-panel.js'), I('idearium/repo/build-plan.js'), '0.60.228 SL8/SL7 a run\'s "mapped by" and "built again on request" through historyOf'],
+  [I('idearium/cli/route-commands.js'), I('lib/phase-groom.js'), '0.60.227 SL3 `repo groom <repo> [--apply]` through the route'],
+  [I('idearium/ui/js/phases.js'), I('lib/phase-groom.js'), '0.60.227 SL3 the rail\'s "groom the graph" through POST …/phases/groom'],
+  [I('lib/phase-deps-gate.js'), I('lib/phase-dag.js'), '0.60.227 SL3 refKey/items/decisionsOf: one depends_on reader; DG1 reads every phase as the DAG does'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/phase-dag.js'), '0.60.229 SL9 writeAll/checkAll: one DAG, parsePhasemap through lib (no emerge → loom crossing)'],
+  [I('lib/phase-deps-gate.js'), I('lib/phase-dag.js'), '0.60.229 parsePhasemap: DG1 reads loom\'s parser through the DAG (the SL3 lib → loom crossing designed out)'],
+  [I('idearium/api/index.js'), I('lib/node-export.js'), '0.60.229 SL9 repo.phases.nodes reads the written .phase nodes (no idearium → emerge crossing)'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '0.60.229 SL9 `repo nodes <repo>` through GET …/phases/nodes'],
+  [I('idearium/ui/js/phases.js'), I('idearium/api/index.js'), '0.60.229 SL9 the rail\'s "phase nodes" through GET …/phases/nodes'],
+  [I('idearium/api/index.js'), I('lib/repo-inject.js'), '0.60.230 SL10 a failed brick\'s stray files: reject (proposed) or revert (applied), each with why; _refusedWhy carries fromReply\'s refusals into the run'],
+  [I('idearium/ui/js/plan-panel.js'), I('cortex/core/raid/contract-adapters.js'), '0.60.230 SL10 the contract audit\'s per-brick failure (why it did not pass), shown on the run'],
+  [I('idearium/cli/index.js'), I('idearium/repo/spec-plan.js'), '0.60.230 SL10 `repo plan --dry --file <spec>` reaches its handler again (the route row had shadowed it)'],
+  [I('lib/phase-graph.js'), I('lib/phase-dag.js'), '0.60.227 SL3 refKey: a depends_on item read as its phase id'],
+  [I('idearium/repo/phase-mapping.js'), I('lib/phase-dag.js'), '0.60.227 SL3 no inferred depends_on is written that would close a cycle'],
+  [I('idearium/api/index.js'), I('cortex/core/raid/contract-gates.js'), '0.60.226 SL7 a phase\'s contract input is its own block (phaseBlock): status writes do not stale its bricks'],
   [I('lib/work-journal.js'), I('lib/chat-ledger-client.js'), '0.60.192 _chat(): the contract ledger\'s reply text from the chat ledger (it pointed at :7701, the SSE port)'],
   [I('guardian/lib/chat-transcripts.js'), I('lib/chat-ledger-client.js'), '0.60.192 ledgerReplyFor(): the reply recovery\'s last source — his download manager\'s live chat ledger'],
   [I('lib/repo-inject.js'), I('lib/change-entry.js'), '0.60.190 APV2 an approved/reverted inject\'s entry, noted on its commit or queued for the gate\'s sync commit'],
@@ -155,11 +229,11 @@ const CONSUMERS = [
   [I('lib/node-index-watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('lib/queue.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 the input folder watcher'],
   [I('lib/ico.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
-  [I('auth/index.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 policy and client-key watchers'],
-  [I('architecture-spec/registry/watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
+  [I('orchestrator/auth/index.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 policy and client-key watchers'],
+  [I('idearium/architecture-spec/registry/watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('cos/foundation/file-browser.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('diagnostic/nexus-diagnostic.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 the ledger folder watcher'],
-  [I('emerge/emerge-kernel.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
+  [I('lib/emerge/emerge-kernel.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('idearium/repo/watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 (ESM import) the drop folder watcher'],
   [I('lib/repo-inject.js'), I('lib/path-guard.js'), '§0.60.170 RC4 propose(): check(path, { exists }) before anything else; a change is kept as pathNote'],
   [I('lib/pipeline-nodes.js'), I('lib/node-export.js'), '§0.60.170 RC3 writeNode names the file with fileIdOf (Windows-safe)'],
@@ -294,24 +368,24 @@ const CONSUMERS = [
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 installSiteReaders(): the resolver the features read; runMacroAsPerson refuses a site whose macros are off'],
   [I('clear-glass/src/main/index.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 on a page load: workflowsAllowed (page.visited), macrosOnLoad (autoRun), resumeMode'],
   [I('clear-glass/src/main/index.js'), I('clear-glass/src/rewind/resume.js'), '§0.60.216 SP2 resumeScript(mode) run on did-finish-load where the site keeps its place'],
-  [I('clear-glass/src/driver/index.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 driverPolicy: an agent refused a site that says no; the site's navigate / wait timeouts'],
+  [I('clear-glass/src/driver/index.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 driverPolicy: an agent refused a site that says no; the site\'s navigate / wait timeouts'],
   [I('clear-glass/src/passwords/service.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 passwordPolicy: offer never, autofill, the account that signs in'],
-  [I('clear-glass/src/autofill/matcher.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 autofillFor: off for the site, or the site's profile'],
-  [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 meshAgent: the site's Co-pilot agent; mesh off → no page read'],
+  [I('clear-glass/src/autofill/matcher.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 autofillFor: off for the site, or the site\'s profile'],
+  [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 meshAgent: the site\'s Co-pilot agent; mesh off → no page read'],
   [I('clear-glass/src/options/store.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 guardianPolicy: findListenersForUrl empty where Guardian does not listen'],
   [I('clear-glass/src/downloads/chat-ledger.js'), I('clear-glass/src/site-settings/readers.js'), '§0.60.216 SP2 guardianPolicy: no ledger where chat capture is off'],
   [I('clear-glass/src/main/passwords-wiring.js'), I('clear-glass/src/passwords/service.js'), '§0.60.216 SP2 autofillLogin(origin): the one login to fill without asking'],
-  [I('clear-glass/src/ipc/agent-routes.js'), I('clear-glass/src/driver/index.js'), '§0.60.216 SP2 POST /cli/driver marks its calls by: 'agent''],
-  [I('clear-glass/renderer/browser.js'), I('clear-glass/renderer/site-profile-groups.js'), '§0.60.217 SP3 the toolbar's Site Settings popup: this tab's site, each change written at once'],
-  [I('clear-glass/renderer/settings/sections/sites.js'), I('clear-glass/renderer/site-profile-groups.js'), '§0.60.217 SP3 Settings › Sites: the Edit dialog's Features, written on Save'],
+  [I('clear-glass/src/ipc/agent-routes.js'), I('clear-glass/src/driver/index.js'), '§0.60.216 SP2 POST /cli/driver marks its calls by: \'agent\''],
+  [I('clear-glass/renderer/browser.js'), I('clear-glass/renderer/site-profile-groups.js'), '§0.60.217 SP3 the toolbar\'s Site Settings popup: this tab\'s site, each change written at once'],
+  [I('clear-glass/renderer/settings/sections/sites.js'), I('clear-glass/renderer/site-profile-groups.js'), '§0.60.217 SP3 Settings › Sites: the Edit dialog\'s Features, written on Save'],
   [I('clear-glass/renderer/site-profile-groups.js'), I('clear-glass/src/preload/index.js'), '§0.60.217 SP3 ClearGlass.siteProfile get/set/clear/keys → site-profile:* (IPC, not a require)'],
   [I('clear-glass/renderer/settings/sections/driver.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 options.set({ driver }) via IPC options:set; bounds from siteProfile.keys()'],
   [I('clear-glass/renderer/settings/sections/guardian.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 options.set({ guardian | listenerDecay }) via IPC options:set'],
   [I('clear-glass/renderer/settings/sections/mesh.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 "When a task fails": options.set({ mesh: { retriesPerStrategy | backoffMs } })'],
   [I('clear-glass/src/mesh/agent-mesh.js'), I('clear-glass/src/options/store.js'), '§0.60.218 SP4 drainSettings(this.accounts) at each failure: mesh.retriesPerStrategy, mesh.backoffMs'],
-  [I('clear-glass/src/main/index.js'), I('clear-glass/src/processes/index.js'), '§0.60.219 SP5 processes() over windows / bgTabs / closeBackgroundTab; bus.on('*') feeds activity(); a site page's load is a nav line'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/processes/index.js'), '§0.60.219 SP5 processes() over windows / bgTabs / closeBackgroundTab; bus.on(\'*\') feeds activity(); a site page\'s load is a nav line'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/processes/index.js'), '§0.60.219 SP5 processes:list/end, activity:recent; GET /cli/processes, /cli/activity; POST /cli/processes/end 403; macro runs into the activity'],
-  [I('clear-glass/src/ipc/handler-registry.js'), I('clear-glass/src/ipc/bridge.js'), '§0.60.219 DENIED processes:end, site-profile:set/clear (his, not an agent's through /cli/invoke)'],
+  [I('clear-glass/src/ipc/handler-registry.js'), I('clear-glass/src/ipc/bridge.js'), '§0.60.219 DENIED processes:end, site-profile:set/clear (his, not an agent\'s through /cli/invoke)'],
   [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '§0.60.219 site, glass processes, glass activity → /cli/site-profile, /cli/processes, /cli/activity (HTTP)'],
   [I('clear-glass/renderer/processes.js'), I('clear-glass/src/preload/index.js'), '§0.60.220 SP6 ClearGlass.processes list/end/activity, window.closeProcesses (IPC)'],
   [I('clear-glass/src/main/index.js'), I('clear-glass/renderer/processes.js'), '§0.60.220 SP6 openProcessesWindow() loads processes.html; cg.processes (Shift+Esc) opens it'],
@@ -343,7 +417,7 @@ const CONSUMERS = [
   [I('guardian/artifact-upload.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/input'],
   [I('lib/seam/queue.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/seam-artifacts'],
   [I('service/guardian-service.js'), I('lib/data-home.js'), '§0.60.208 DL3 atBoot before it creates any folder; pid, ledger, queue under guardian/data'],
-  [I('cli/clear-idearium.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/jobs'],
+  [I('lib/cli/clear-idearium.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/jobs'],
   [I('lib/ledger-writer.js'), I('lib/data-home.js'), '§0.60.208 DL3 a rewired system (REWIRED) writes in its own folder'],
   [I('lib/cortex-write.js'), I('lib/data-home.js'), '§0.60.208 DL3 a rewired system buffers in its own folder; the drain reads both'],
   [I('versionium/config.js'), I('lib/data-home.js'), '§0.60.209 DL3 DATA_DIR = versionium/data'],

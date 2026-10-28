@@ -42,7 +42,7 @@ const get = (port, p) => new Promise((res, rej) => http.get({ hostname: '127.0.0
   });
 
   await test('CFA-002', 'nexus-cfr-influence runs its real poll against that route WITHOUT tension (previously skipped every poll)', async () => {
-    const infl = require(path.join(ROOT, 'nexus/nexus-cfr-influence.js'));
+    const infl = require(path.join(ROOT, 'lib', 'nexus', 'nexus-cfr-influence.js'));
     const bus = { emit() {}, setSigmaFloor() {} };
     infl.init({ bus, pollMs: 40 });
     for (let i = 0; i < 40 && !infl.getState().lastInfluenceAt; i++) await sleep(50);
@@ -55,7 +55,7 @@ const get = (port, p) => new Promise((res, rej) => http.get({ hostname: '127.0.0
   });
 
   await test('CFA-003', 'influence() still acts on a real tension when one is supplied (branches kept, just guarded)', () => {
-    const infl = require(path.join(ROOT, 'nexus/nexus-cfr-influence.js'));
+    const infl = require(path.join(ROOT, 'lib', 'nexus', 'nexus-cfr-influence.js'));
     infl.init({ bus: { emit() {}, setSigmaFloor() {} }, pollMs: 1e9 });
     infl.influence({ tension: 0.9, coherence: 0.8, friction: 0.1, entropy: 0.1, resonance: 0.4 });
     const floor = infl.getSigmaFloor();

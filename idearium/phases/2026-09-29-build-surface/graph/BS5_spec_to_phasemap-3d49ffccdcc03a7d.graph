@@ -1,0 +1,122 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS5_spec_to_phasemap:3d49ffccdcc03a7d
+type: graph
+id: phase:BS5_spec_to_phasemap:3d49ffccdcc03a7d
+context: dependency graph of phase BS5_spec_to_phasemap
+intent: null
+summary: 9 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676198
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676198
+lastSeenAt: 1792787676198
+fingerprint: null
+payload:
+  for: BS5_spec_to_phasemap
+  kind: phase
+  repo: null
+  hash: 3d49ffccdcc03a7d
+  nodes:
+    - path: idearium/repo/spec-plan.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/test-build-surface.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-pipeline-nodes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/spec-document.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: tests/modules/test-build-surface.api.js
+      role: uses
+      exists: true
+      system: null
+  edges:
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: lib/spec-document.js
+      kind: requires
+    - from: tests/modules/test-build-surface.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: tests/modules/test-build-surface.test.js
+      to: tests/modules/test-build-surface.api.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/spec-plan.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/repo/spec-plan.js
+      kind: requires
+    - from: tests/modules/test-pipeline-nodes.test.js
+      to: idearium/repo/spec-plan.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+    dependents:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS6_build_plan
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+    upstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS2_file_states
+      - docs/2026-09-29-build-surface-phasemap.spec::BS3_baseline_deviation
+      - docs/2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+    downstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS10_settings_and_environment_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+      - docs/2026-09-29-build-surface-phasemap.spec::BS18_sync_ci_theme
+      - docs/2026-09-29-build-surface-phasemap.spec::BS6_build_plan
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+      - docs/2026-09-29-build-surface-phasemap.spec::BS8_files_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS9_spec_and_phase_build_ui
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS6_build_plan
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): BS4_environment_check · all upstream 3'
+      - >-
+        needed by (2): BS6_build_plan, BS7_api · all downstream 8 · finishing it unlocks
+        BS6_build_plan, BS7_api
+    edges:
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+        kind: inferred

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO8_wire_the_honest_subset
+type: phase
+id: docs_2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO8_wire_the_honest_subset
+context: pipeline phase MCO8_wire_the_honest_subset of docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec
+intent: null
+summary: MCO8_wire_the_honest_subset (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792879042825
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879042825
+lastSeenAt: 1792879042825
+fingerprint: null
+payload:
+  id: MCO8_wire_the_honest_subset
+  map: docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec
+  repo: null
+  layer: null
+  status: '"PARTIAL 2026-09-13 — 2 of the identified candidate routes'
+  files:
+    - cortex/core/raid/contract-boundary.js
+    - architect/service.js
+    - idearium/api/index.js
+    - cortex/core/raid/contract-intake.js
+    - idearium/compiler-bridge.js
+  depends_on:
+    - MCO7_map_real_proxy_traffic
+  blocks: []
+  spec: null
+  graph: 69befadacd233980

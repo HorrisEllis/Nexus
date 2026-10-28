@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS11_workshop_and_phases_one_surface
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS11_workshop_and_phases_one_surface
+context: >-
+  pipeline phase RS11_workshop_and_phases_one_surface of
+  docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS11_workshop_and_phases_one_surface (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677051
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677051
+lastSeenAt: 1792787677051
+fingerprint: null
+payload:
+  id: RS11_workshop_and_phases_one_surface
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/workshop.html
+    - idearium/ui/js/spec-editor.js
+    - idearium/ui/js/phases.js
+  depends_on:
+    - RS6_the_workshop_as_the_editor
+    - RS10_the_phases_tab_rebuilt
+  blocks: []
+  spec: null
+  graph: 0c60b2ce6d21565f

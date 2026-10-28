@@ -1,0 +1,129 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB7_human_tabs_never_spoofed:4e31472027e2ef56
+type: graph
+id: phase:TB7_human_tabs_never_spoofed:4e31472027e2ef56
+context: dependency graph of phase TB7_human_tabs_never_spoofed
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677296
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677296
+lastSeenAt: 1792787677296
+fingerprint: null
+payload:
+  for: TB7_human_tabs_never_spoofed
+  kind: phase
+  repo: null
+  hash: 4e31472027e2ef56
+  nodes:
+    - path: clear-glass/src/contexts/manager.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/session-headers.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/fingerprint/engine.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/google-signin.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/bus.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/google-signin.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/fingerprint/firefox-version.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/compartment.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/tls/helper.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/net/compartment.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/tls/helper.js
+      kind: requires
+    - from: clear-glass/src/fingerprint/engine.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/fingerprint/engine.js
+      to: clear-glass/src/fingerprint/firefox-version.js
+      kind: requires
+    - from: clear-glass/src/contexts/session-headers.js
+      to: clear-glass/src/providers/registry.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/manager.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/contexts/manager.js
+      kind: requires
+    - from: clear-glass/test/bus.test.js
+      to: clear-glass/src/fingerprint/engine.js
+      kind: requires
+    - from: clear-glass/test/google-signin.test.js
+      to: clear-glass/src/fingerprint/engine.js
+      kind: requires
+    - from: clear-glass/src/contexts/google-signin.js
+      to: clear-glass/src/contexts/session-headers.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

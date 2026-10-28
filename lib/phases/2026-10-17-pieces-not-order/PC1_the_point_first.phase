@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::PC1_the_point_first
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::PC1_the_point_first
+context: pipeline phase PC1_the_point_first of docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: PC1_the_point_first (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755817
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755817
+lastSeenAt: 1792841755817
+fingerprint: null
+payload:
+  id: PC1_the_point_first
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/phase-plan.js
+    - cortex/core/raid/contract-adapters.js
+  depends_on:
+    - PC0b_first_kinds
+    - PC0c_who_cuts
+  blocks: []
+  spec: null
+  graph: 9eca658277fa4aeb

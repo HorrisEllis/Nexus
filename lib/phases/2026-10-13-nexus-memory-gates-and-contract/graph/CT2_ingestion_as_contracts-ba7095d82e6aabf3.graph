@@ -1,0 +1,132 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CT2_ingestion_as_contracts:ba7095d82e6aabf3
+type: graph
+id: phase:CT2_ingestion_as_contracts:ba7095d82e6aabf3
+context: dependency graph of phase CT2_ingestion_as_contracts
+intent: null
+summary: 10 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677423
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677423
+lastSeenAt: 1792787677423
+fingerprint: null
+payload:
+  for: CT2_ingestion_as_contracts
+  kind: phase
+  repo: null
+  hash: ba7095d82e6aabf3
+  nodes:
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/import-checks.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/core/raid/contract-adapters.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-history.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/runtime/run.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/repo-notes.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/import-checks.js
+      to: cos/runtime/run.js
+      kind: requires
+    - from: lib/import-checks.js
+      to: lib/repo-notes.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/import-checks.js
+      kind: requires
+    - from: lib/repo-history.js
+      to: lib/import-checks.js
+      kind: requires
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+  crossings:
+    - from: lib/import-checks.js
+      to: cos/runtime/run.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT1_dynamic_chunking
+    dependents: []
+    upstream:
+      - docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT0_the_contract_is_a_reference
+      - docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT1_dynamic_chunking
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::EX0_executors_he_already_built
+        files:
+          - cortex/core/raid/contract-gates.js
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (1): CT1_dynamic_chunking · all upstream 2'
+      - 'needed by (0): —'
+      - >-
+        same files as EX0_executors_he_already_built with no order between them:
+        cortex/core/raid/contract-gates.js
+    edges:
+      - from: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT1_dynamic_chunking
+        kind: declared

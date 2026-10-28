@@ -79,10 +79,13 @@ test('T-007', 'architect reads the CANONICAL hook store, not a private one (§10
   // The 269-vs-230 divergence: architect built its HookRegistry on
   // createJAA(DATA_DIR) — its own private store — so it reported a stale hook
   // count nothing else could see. The read view must read what loom writes.
-  assert.ok(/cortex\/memory\/jaa-db/.test(archSrc),
-    'architect must require the canonical jaa-db for its hook registry');
-  assert.ok(/new HookRegistry\(\{\s*jaa:\s*hookJaa/.test(archSrc),
-    'architect HookRegistry must be constructed with the canonical store, not its local jaa');
+  // 0.60.241 LM3 (docs/2026-10-24-loom-into-cos-phasemap.spec) — James, 2026-10-24: "Do it." (Loom first, into its compartment). The
+  // canonical store became Loom's own (loom/data/jaa, LM2), so "read what loom writes" now means Loom's routes: still one truth, and no
+  // reach into another system's data. The earlier pins (architect requires cortex/memory/jaa-db; new HookRegistry({ jaa: hookJaa })) are
+  // superseded by these, kept in this note (§0.3).
+  assert.ok(!/cortex\/memory\/jaa-db/.test(archSrc.replace(/\/\/.*$/gm, '')), 'architect reads no hook store, Cortex\'s or its own');
+  assert.ok(!/new HookRegistry\(/.test(archSrc.replace(/\/\/.*$/gm, '')), 'no second registry in architect');
+  assert.ok(/LOOM_URL/.test(archSrc) && /_loomGet\(`\/api\/hooks/.test(archSrc), 'the read view is Loom\'s routes');
 });
 
 test('T-008', 'loom /health reports the registry it owns (§12.6)', () => {

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP3_routes_and_rows
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP3_routes_and_rows
+context: pipeline phase UP3_routes_and_rows of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP3_routes_and_rows (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792967338919
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792967338919
+lastSeenAt: 1792967338919
+fingerprint: null
+payload:
+  id: UP3_routes_and_rows
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - UP2_apply_and_rollback
+  blocks: []
+  spec: null
+  graph: 4ab3bfd424319fe8

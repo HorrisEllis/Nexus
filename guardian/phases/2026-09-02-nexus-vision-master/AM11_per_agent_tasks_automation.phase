@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::AM11_per_agent_tasks_automation
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::AM11_per_agent_tasks_automation
+context: >-
+  pipeline phase AM11_per_agent_tasks_automation of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: AM11_per_agent_tasks_automation (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675648
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675648
+lastSeenAt: 1792787675648
+fingerprint: null
+payload:
+  id: AM11_per_agent_tasks_automation
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/tool-runtime.js
+    - guardian/tool-runtime.js
+    - clear-glass/src/mesh/agent-mesh.js
+    - guardian/lib/agent-registry.js
+  depends_on:
+    - AM7_agent_suite_welcome_ui
+  blocks: []
+  spec: null
+  graph: 7883cb15f206e4d3

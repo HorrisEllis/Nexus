@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P8_ui_as_copilot_tools:34bbffc617747a9c
+type: graph
+id: phase:P8_ui_as_copilot_tools:34bbffc617747a9c
+context: dependency graph of phase P8_ui_as_copilot_tools
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787678328
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678328
+lastSeenAt: 1792787678328
+fingerprint: null
+payload:
+  for: P8_ui_as_copilot_tools
+  kind: phase
+  repo: null
+  hash: 34bbffc617747a9c
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

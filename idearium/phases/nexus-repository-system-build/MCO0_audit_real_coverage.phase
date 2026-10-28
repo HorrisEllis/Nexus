@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-repository-system-build-phasemap.spec::MCO0_audit_real_coverage
+type: phase
+id: docs_nexus-repository-system-build-phasemap.spec::MCO0_audit_real_coverage
+context: pipeline phase MCO0_audit_real_coverage of docs/nexus-repository-system-build-phasemap.spec
+intent: null
+summary: MCO0_audit_real_coverage (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756481
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756481
+lastSeenAt: 1792841756481
+fingerprint: null
+payload:
+  id: MCO0_audit_real_coverage
+  map: docs/nexus-repository-system-build-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE 2026-09-15."'
+  files:
+    - idearium/repo/index.js
+    - idearium/agent-suite/index.js
+    - idearium/repo/import-pipeline.js
+    - lib/ui/home/areas/agent-suite.js
+    - scripts/precommit-check.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2f526d1ded4fee66

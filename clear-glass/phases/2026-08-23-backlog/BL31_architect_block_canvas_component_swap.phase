@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL31_architect_block_canvas_component_swap
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL31_architect_block_canvas_component_swap
+context: pipeline phase BL31_architect_block_canvas_component_swap of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL31_architect_block_canvas_component_swap (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675445
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675445
+lastSeenAt: 1792787675445
+fingerprint: null
+payload:
+  id: BL31_architect_block_canvas_component_swap
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - BL30_registry_components_drift_audit
+  blocks: []
+  spec: null
+  graph: 5361bbb7f4319623

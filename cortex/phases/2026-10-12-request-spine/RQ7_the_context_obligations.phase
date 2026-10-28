@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+context: pipeline phase RQ7_the_context_obligations of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ7_the_context_obligations (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677354
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677354
+lastSeenAt: 1792787677354
+fingerprint: null
+payload:
+  id: RQ7_the_context_obligations
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/obligations.js
+    - cortex/core/raid/context-synthesis.js
+    - cortex/core/raid/context-gate.js
+    - lib/registry-harness.js
+    - lib/context-atlas.js
+    - lib/build-context.js
+    - cortex/registry-components.js
+  depends_on:
+    - RQ6_one_intent_map
+    - RQ1_the_verifier_library
+  blocks: []
+  spec: null
+  graph: 31e6486efe8a56e7

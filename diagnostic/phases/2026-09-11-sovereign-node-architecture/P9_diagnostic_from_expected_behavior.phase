@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P9_diagnostic_from_expected_behavior
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P9_diagnostic_from_expected_behavior
+context: >-
+  pipeline phase P9_diagnostic_from_expected_behavior of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P9_diagnostic_from_expected_behavior (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792822702257
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822702257
+lastSeenAt: 1792822702257
+fingerprint: null
+payload:
+  id: P9_diagnostic_from_expected_behavior
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/nexus-diagnostic.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fb61bdb4e85f32ec

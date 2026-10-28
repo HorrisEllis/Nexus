@@ -66,7 +66,7 @@ spec:
       status: "DONE (0.39.342) — lib/pulse-watch.js announce/expect; the diagnostic adopts a system that announces itself (SYSTEMS gains it and a baseline monitor, no file edited). Expected: the diagnostic's declared non-optional systems — autopilot's kernel list (lib/nexus-self/systems.js) is the better source, not yet read."
       james: '"need the systems to anounce themselves. that way i can add new systems automatically."'
       depends_on: []
-      files: [orchestrator/orchestrator.js, nexus/autopilot.js, lib/expected-systems.js]
+      files: [orchestrator/orchestrator.js, lib/nexus/autopilot.js, lib/expected-systems.js]
       does: >-
         The list of systems is what has announced (orchestrator's registry: id, port, interval, health) plus what
         autopilot started (the expected set). A new system that calls createPulse is watched from its first beat, with
@@ -91,7 +91,7 @@ spec:
       status: "DONE (0.39.342) — each beat a WARP 2 link expecting the next within interval × 1.5; a broken expectation is a gap naming the system and its last beat; a late beat recovers it; never-announced after a 60 s boot grace; the ledger rotated past 20000 entries. Found end to end and fixed: what broke during another system's beat was dropped."
       james: '"have the diagnostic system. use negative space reasoning for missed heartbeats."'
       depends_on: [PR2_the_diagnostic_listens_not_polls]
-      files: [lib/pulse-listener.js, warp/core/Engine.js]
+      files: [lib/pulse-listener.js, lib/warp/core/Engine.js]
       does: >-
         Each beat is a WARP 2 link; each beat declares the next as an expectation (within the system's own interval
         plus grace). A broken expectation is a gap naming the system, its last beat and its last known state — the
@@ -115,7 +115,7 @@ spec:
       status: OPEN
       james: '"we need to make that a real system, with the ability to actual repair nexus."'
       depends_on: [PR3_negative_space_for_missed_heartbeats]
-      files: [nexus/autopilot.js, diagnostic/nexus-heal-loop.js, lib/shadow-space.js]
+      files: [lib/nexus/autopilot.js, diagnostic/nexus-heal-loop.js, lib/shadow-space.js]
       does: >-
         A gap from a missed heartbeat is repaired: (1) probe once; (2) restart through autopilot (a new POST
         /restart/:name — kill and respawn, under its circuit breaker); (3) the repair is proven only by the system's next

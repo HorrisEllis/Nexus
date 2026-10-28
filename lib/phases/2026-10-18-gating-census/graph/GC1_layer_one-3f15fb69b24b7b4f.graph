@@ -1,0 +1,282 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GC1_layer_one:3f15fb69b24b7b4f
+type: graph
+id: phase:GC1_layer_one:3f15fb69b24b7b4f
+context: dependency graph of phase GC1_layer_one
+intent: null
+summary: 30 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792820508010
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820508010
+lastSeenAt: 1792820508010
+fingerprint: null
+payload:
+  for: GC1_layer_one
+  kind: phase
+  repo: null
+  hash: 3f15fb69b24b7b4f
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/lattice/node-lattice.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/check-catalogue.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/context-sources.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/context-stream.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/scanners/source-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/diagnostic/loom-scan.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/self-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/bootstrap.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/agent-memory-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/build-context-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/build-surface-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/chat-ledger-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/compartment-activity-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/checks/ck-230-shadow.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gate-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/context-stream.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/gate-context.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: lib/check-catalogue.js
+      to: lib/checks/ck-230-shadow.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/context-stream.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/lattice/node-lattice.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/self-build-loop.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/agent-memory-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/build-context-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/build-surface-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/chat-ledger-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/compartment-activity-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/self-build-loop.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-18-gating-census-phasemap.spec::GC0_the_census
+    dependents: []
+    upstream:
+      - docs/2026-10-18-gating-census-phasemap.spec::GC0_the_census
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-18-gating-census-phasemap.spec::L1_primitives_no_decision
+        files:
+          - lib/context-stream.js
+          - lib/context-sources.js
+          - intelligence/lattice/node-lattice.js
+          - loom/scanners/source-map.js
+          - idearium/cli/route-commands.js
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): GC0_the_census'
+      - 'needed by (0): —'
+      - >-
+        same files as L1_primitives_no_decision with no order between them: lib/context-stream.js,
+        lib/context-sources.js, intelligence/lattice/node-lattice.js, loom/scanners/source-map.js,
+        idearium/cli/route-commands.js
+    edges:
+      - from: docs/2026-10-18-gating-census-phasemap.spec::GC0_the_census
+        kind: declared

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::B5_port_3753_collision
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::B5_port_3753_collision
+context: >-
+  pipeline phase B5_port_3753_collision of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: B5_port_3753_collision (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753887
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753887
+lastSeenAt: 1792841753887
+fingerprint: null
+payload:
+  id: B5_port_3753_collision
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/config.js
+    - orchestrator/orchestrator.config.json
+    - diagnostic/nexus-diagnostic.js
+    - lib/uid/component-map.js
+    - lib/cli/nexus-repl.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9440f35a365841f9

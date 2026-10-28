@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-clear-glass-agent-doors-phasemap.spec::SI1_no_userscript_on_a_signin_page
+type: phase
+id: docs_2026-10-25-clear-glass-agent-doors-phasemap.spec::SI1_no_userscript_on_a_signin_page
+context: >-
+  pipeline phase SI1_no_userscript_on_a_signin_page of
+  docs/2026-10-25-clear-glass-agent-doors-phasemap.spec
+intent: null
+summary: SI1_no_userscript_on_a_signin_page (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792965241166
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792965241166
+lastSeenAt: 1792965241166
+fingerprint: null
+payload:
+  id: SI1_no_userscript_on_a_signin_page
+  map: docs/2026-10-25-clear-glass-agent-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/providers/host.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2f46b42eac190048

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-work-visibility-job-reuse-phasemap.spec::J4
+type: phase
+id: docs_2026-10-01-work-visibility-job-reuse-phasemap.spec::J4
+context: pipeline phase J4 of docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+intent: null
+summary: J4 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754396
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754396
+lastSeenAt: 1792841754396
+fingerprint: null
+payload:
+  id: J4
+  map: docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/component-store.js
+    - idearium/spec-engine/warp-build-dispatch.js
+    - guardian/lib/jobs.js
+  depends_on:
+    - J1
+  blocks: []
+  spec: null
+  graph: 2a2e74951949b0ce

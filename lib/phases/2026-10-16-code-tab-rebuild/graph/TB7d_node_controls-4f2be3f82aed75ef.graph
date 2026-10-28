@@ -1,0 +1,259 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB7d_node_controls:4f2be3f82aed75ef
+type: graph
+id: phase:TB7d_node_controls:4f2be3f82aed75ef
+context: dependency graph of phase TB7d_node_controls
+intent: null
+summary: 28 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677669
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677669
+lastSeenAt: 1792787677669
+fingerprint: null
+payload:
+  for: TB7d_node_controls
+  kind: phase
+  repo: null
+  hash: 4f2be3f82aed75ef
+  nodes:
+    - path: lib/agent-tools/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-call-listener.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/ask.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/tool-runtime.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/framework-builder.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/generate-tool-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/loom/harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/tool-layers.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/user-guide-generator.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/diagnostic/diagnose.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/move-data.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/run-command.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/run-pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/query-intelligence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/read-file.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/tool-config.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-tools/index.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-config.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/event-types.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/query/read-file.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/execution/run-command.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/diagnostic/diagnose.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/execution/move-data.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/execution/run-pipeline.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/query/query-intelligence.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/tool-runtime.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: intelligence/framework-builder.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/generate-tool-nodes.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/tool-guide.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/loom/harness.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/tool-layers.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/user-guide-generator.js
+      to: lib/agent-tools/index.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/agent-tools/index.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7c_graph_and_zoom
+    dependents: []
+    upstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB0_decisions
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB5_tab_shell
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7a_edges_recorded
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7c_graph_and_zoom
+    downstream: []
+    blockedBy:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7c_graph_and_zoom
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB8_proof_and_wiring
+        files:
+          - lib/run-state.js
+      - with: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
+        files:
+          - lib/agent-tools/tool-call-listener.js
+      - with: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4c_measure
+        files:
+          - lib/run-state.js
+    dangling: []
+    lines:
+      - layer 5 · blocked by TB7c_graph_and_zoom
+      - 'depends on (1): TB7c_graph_and_zoom · all upstream 6'
+      - 'needed by (0): —'
+      - 'same files as TB8_proof_and_wiring with no order between them: lib/run-state.js'
+      - >-
+        same files as TB3a_tool_calls_saved with no order between them:
+        lib/agent-tools/tool-call-listener.js
+      - 'same files as TB4c_measure with no order between them: lib/run-state.js'
+    edges:
+      - from: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7c_graph_and_zoom
+        kind: declared

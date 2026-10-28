@@ -1,0 +1,163 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FM2_a_failure_is_a_clip:4b57a227ef13b6f5
+type: graph
+id: phase:FM2_a_failure_is_a_clip:4b57a227ef13b6f5
+context: dependency graph of phase FM2_a_failure_is_a_clip
+intent: null
+summary: 16 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754926
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754926
+lastSeenAt: 1792841754926
+fingerprint: null
+payload:
+  for: FM2_a_failure_is_a_clip
+  kind: phase
+  repo: null
+  hash: 4b57a227ef13b6f5
+  nodes:
+    - path: intelligence/cfr/contract-verifier.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/clip/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/failure-macro.js
+      role: changes
+      exists: false
+      system: lib
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: intelligence/cfr/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/cli/cfr-debug.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-rfr2-cjs.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/rfr2/causality/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/compress/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/context/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/delta/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/identity/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/kernel/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/sigma/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/version-gate/index.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/identity/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/compress/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/context/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/delta/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/version-gate/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/sigma/index.js
+      kind: requires
+    - from: intelligence/rfr2/index.js
+      to: intelligence/rfr2/clip/index.js
+      kind: requires
+    - from: tests/modules/test-rfr2-cjs.js
+      to: intelligence/rfr2/clip/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: intelligence/cfr/index.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+  crossings:
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM1_every_ledger_into_rfr2
+    dependents:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM3_run_it_in_cos
+    upstream:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM1_every_ledger_into_rfr2
+    downstream:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM3_run_it_in_cos
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM4_the_report
+    blockedBy:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM1_every_ledger_into_rfr2
+    unlocks:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM3_run_it_in_cos
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by FM1_every_ledger_into_rfr2
+      - 'depends on (1): FM1_every_ledger_into_rfr2'
+      - 'needed by (1): FM3_run_it_in_cos · all downstream 2 · finishing it unlocks FM3_run_it_in_cos'
+    edges:
+      - from: docs/2026-10-05-failure-reproduction-phasemap.spec::FM1_every_ledger_into_rfr2
+        kind: declared

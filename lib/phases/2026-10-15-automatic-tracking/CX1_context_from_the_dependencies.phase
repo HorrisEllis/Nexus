@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-automatic-tracking-phasemap.spec::CX1_context_from_the_dependencies
+type: phase
+id: docs_2026-10-15-automatic-tracking-phasemap.spec::CX1_context_from_the_dependencies
+context: >-
+  pipeline phase CX1_context_from_the_dependencies of
+  docs/2026-10-15-automatic-tracking-phasemap.spec
+intent: null
+summary: CX1_context_from_the_dependencies (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677461
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677461
+lastSeenAt: 1792787677461
+fingerprint: null
+payload:
+  id: CX1_context_from_the_dependencies
+  map: docs/2026-10-15-automatic-tracking-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/contract-context.js
+    - cortex/core/raid/contract-adapters.js
+  depends_on:
+    - KT1_observations_on_a_semantic_tree
+  blocks: []
+  spec: null
+  graph: 7fa78ba0b9bcd675

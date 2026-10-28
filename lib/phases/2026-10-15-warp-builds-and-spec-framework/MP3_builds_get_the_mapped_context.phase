@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP3_builds_get_the_mapped_context
+type: phase
+id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP3_builds_get_the_mapped_context
+context: >-
+  pipeline phase MP3_builds_get_the_mapped_context of
+  docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+intent: null
+summary: MP3_builds_get_the_mapped_context (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477960
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477960
+lastSeenAt: 1792822477960
+fingerprint: null
+payload:
+  id: MP3_builds_get_the_mapped_context
+  map: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE (0.60.66 — phase builds; the chat Agent tab still finds context with tools)
+  files:
+    - idearium/api/index.js
+    - lib/repo-prompt-blocks.js
+    - lib/phase-map-auto.js
+    - tests/modules/test-chunked-phase-build.test.js
+  depends_on:
+    - MP2_automatic_in_every_repo
+    - SF1_intent_blocks
+  blocks: []
+  spec: null
+  graph: ea105d5b59c94356

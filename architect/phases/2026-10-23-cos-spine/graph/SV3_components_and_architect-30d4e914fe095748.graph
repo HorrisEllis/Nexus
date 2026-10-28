@@ -1,0 +1,180 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV3_components_and_architect:30d4e914fe095748
+type: graph
+id: phase:SV3_components_and_architect:30d4e914fe095748
+context: dependency graph of phase SV3_components_and_architect
+intent: null
+summary: 15 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877163825
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877163825
+lastSeenAt: 1792877163825
+fingerprint: null
+payload:
+  for: SV3_components_and_architect
+  kind: phase
+  repo: null
+  hash: 30d4e914fe095748
+  nodes:
+    - path: architect/compartment.json
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/service.js
+      role: changes
+      exists: true
+      system: architect
+    - path: components/compartment.json
+      role: changes
+      exists: false
+      system: components
+    - path: architect/compile-route.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/config.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/registry-components.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/src/spec/Blueprint.js
+      role: uses
+      exists: true
+      system: architect
+    - path: cortex/core/raid/contract-intake.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hook-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-connect.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: architect/service.js
+      to: lib/data-home.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/hook-registry.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/src/spec/Blueprint.js
+      kind: requires
+    - from: architect/service.js
+      to: intelligence/cfr/index.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/compile-route.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/config.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/registry-components.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: architect/service.js
+      to: intelligence/alk/index.js
+      kind: requires
+  crossings:
+    - from: architect/service.js
+      to: intelligence/cfr/index.js
+      fromSystem: architect
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: intelligence/alk/index.js
+      fromSystem: architect
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
+    dependents:
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV4_ollama_versionium_diagnostic
+    upstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV0_the_census_tells_the_truth
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
+    downstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV4_ollama_versionium_diagnostic
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV7_intelligence_cos_cortex
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV8_warp_sovereign
+    blockedBy:
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by SV1_every_table_has_one_owner
+      - 'depends on (1): SV1_every_table_has_one_owner · all upstream 2'
+      - 'needed by (1): SV4_ollama_versionium_diagnostic · all downstream 14'
+    edges:
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
+        kind: declared

@@ -761,7 +761,7 @@ spec:
       james: '"okay but i want that to be the default. then each new system can slot into nexus automatically. right?"'
       overlaps: "SB20 (each system owns its own), SB21 (derived parts generated), lib/system-nodes.js (.system nodes)"
       depends_on: [SB22_every_component_capability_command_events_as_nodes, SB21_deterministic_parts_grow_with_the_system]
-      files: [lib/nexus-self/systems.js, nexus/autopilot.js, orchestrator/orchestrator.config.json, loom/scanners/spec-map.js, loom/templates/system-scaffold.js]
+      files: [lib/nexus-self/systems.js, lib/nexus/autopilot.js, orchestrator/orchestrator.config.json, loom/scanners/spec-map.js, loom/templates/system-scaffold.js]
       does: >-
         The coder's reading: each system declares itself in its own folder — a shipped system declaration (name, entry,
         port, boot phase, spec, components, node types, heartbeat), its .system node made from the source, not from

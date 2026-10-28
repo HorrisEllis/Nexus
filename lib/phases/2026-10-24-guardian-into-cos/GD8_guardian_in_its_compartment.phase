@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
+context: pipeline phase GD8_guardian_in_its_compartment of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD8_guardian_in_its_compartment (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792879719182
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879719182
+lastSeenAt: 1792879719182
+fingerprint: null
+payload:
+  id: GD8_guardian_in_its_compartment
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - service/guardian-service.js
+    - cos/compartment/process-runner.js
+  depends_on:
+    - GD7_the_bus_and_connect
+    - CS3_the_registry_is_the_bridge
+  blocks: []
+  spec: null
+  graph: 098cfd8256f9bc54

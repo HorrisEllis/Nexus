@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-durable-work-timeline-phasemap.spec::TL2_resume_at_boot
+type: phase
+id: docs_2026-10-16-durable-work-timeline-phasemap.spec::TL2_resume_at_boot
+context: pipeline phase TL2_resume_at_boot of docs/2026-10-16-durable-work-timeline-phasemap.spec
+intent: null
+summary: TL2_resume_at_boot (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755697
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755697
+lastSeenAt: 1792841755697
+fingerprint: null
+payload:
+  id: TL2_resume_at_boot
+  map: docs/2026-10-16-durable-work-timeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/work-journal.js
+    - idearium/spec-engine/index.js
+    - idearium/api/index.js
+    - lib/run-state.js
+  depends_on:
+    - TL1_chunks_land_as_they_arrive
+  blocks: []
+  spec: null
+  graph: e9e923dadb4d62be

@@ -103,7 +103,7 @@ phases:
       not fixed: it is unused.
   GS7_no_debugger_on_signin:
     status: BUILT 0.60.108
-    files: [erosmancer/erosmancer-os/src/bridge/index.ts, clear-glass/src/page/semantic-tree.js]
+    files: [clear-glass/erosmancer/erosmancer-os/src/bridge/index.ts, clear-glass/src/page/semantic-tree.js]
     does: >-
       ErosmancerOS refuses to attach to a tab on Google's sign-in (Target.getTargetInfo first). When an attached tab
       navigates into sign-in (Target.targetInfoChanged), it detaches and emits tab:detached. The semantic-tree reader
@@ -115,3 +115,13 @@ open:
   - "Still not proven against Google live. His next sign-in is the test; a refusal is logged by name."
   - "The TLS proxy's double-TLS defect for every other host: unused today; fix or archive it is his call."
   - "Clear Glass keeps --remote-debugging-port 9333 (ErosmancerOS needs it); no session attaches to sign-in pages now."
+
+## ADDENDUM 2026-10-25 (0.60.251, SI1) — the ChatGPT sign-in page is left alone
+James, 2026-10-25: "not letting me sign in." He sent his autopilot log with it.
+- **The evidence:** his log shows ChatGPT, not Google: Apple's sign-in, and `chatgpt.com/auth/login?next=%2F` loaded at 21:45:19, :22,
+  :25 and :29. Each load was followed by the userscript's injection, an NCP connect, a "wall" report and a disconnect.
+- **The change:** `clear-glass/src/providers/host.js` `_inject` does not run on a sign-in path (`isSigninPage`). The userscript goes in
+  on the next page, once he is signed in.
+- **To confirm on his next sign-in:** the listener that reloaded the page after each report was not found. If the page still reloads,
+  the log shows "on its sign-in page … the userscript waits", with no NCP lines between loads.
+- Map: docs/2026-10-25-clear-glass-agent-doors-phasemap.spec (SI1).

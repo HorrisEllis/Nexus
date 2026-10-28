@@ -41,7 +41,7 @@ const FILES = [
     ['nexus.cortex.jaa-db']],
   ['tablet/homepage.html',         'nexus.tablet.homepage',
     ['nexus.copilot.diagnostics']],   // fetches copilot /api/prompt (diagnostics) + autopilot :7799
-  ['tablet/map3d.html',            'nexus.tablet.map3d',
+  ['cos/tablet/map3d.html',            'nexus.tablet.map3d',
     ['nexus.copilot.diagnostics']],   // renders report.movement + report.bottlenecks
   ['intelligence/relational-field.js', 'nexus.intelligence.relational-field',
     ['nexus.lib.rfr2-bridge', 'nexus.intelligence.mastermind']],  // RFR2 wired into intelligence (causality + sigma) — §2026-08-22 moved from cortex/intelligence/ per intelligence.spec
@@ -169,7 +169,7 @@ const FILES = [
     ['nexus.intelligence', 'nexus.intelligence.relational-field', 'nexus.intelligence.baseline', 'nexus.intelligence.snapshot-trigger', 'nexus.lib.ledger-fanin']],  // autopilot boot — wire+verify the whole intelligence substrate
   ['lib/ledger-fanin/boot.js',    'nexus.lib.ledger-fanin.boot',
     ['nexus.lib.ledger-fanin', 'nexus.lib.activity-log']],  // P1 — subscribes intelligence/autopilot/copilot/logging to the fan-in at boot  // subscribes the fan-in → persists all activity + errors to cortex  // the unified event fan-in — every system emits, every consumer subscribes once
-  ['ui/agents/gemini/code-suite.html', 'nexus.ui.gemini.code-suite',
+  ['lib/ui/agents/gemini/code-suite.html', 'nexus.ui.gemini.code-suite',
     ['nexus.lib.gemini-toolbox.routes']],  // the code suite UI → toolbox over HTTP
 ];
 

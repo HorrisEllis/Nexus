@@ -326,7 +326,7 @@ spec:
     - id: MOD-BX-RETIRE
       name: brainos-retire
       uuid: nexus-bx-retire-v1-0000-2026-1021-001
-      path: ui/brainos/index.html
+      path: lib/ui/brainos/index.html
       phase: BX9_retire
       map: docs/2026-10-21-brainos-into-idearium-phasemap.spec
       description: >-

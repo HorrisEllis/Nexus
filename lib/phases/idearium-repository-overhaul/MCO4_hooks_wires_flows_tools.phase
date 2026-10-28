@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_idearium-repository-overhaul-phasemap.spec::MCO4_hooks_wires_flows_tools
+type: phase
+id: docs_idearium-repository-overhaul-phasemap.spec::MCO4_hooks_wires_flows_tools
+context: pipeline phase MCO4_hooks_wires_flows_tools of docs/idearium-repository-overhaul-phasemap.spec
+intent: null
+summary: MCO4_hooks_wires_flows_tools (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756408
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756408
+lastSeenAt: 1792841756408
+fingerprint: null
+payload:
+  id: MCO4_hooks_wires_flows_tools
+  map: docs/idearium-repository-overhaul-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    'FOLDED — into nexus-repository-system-build MCO4 (the same phase, two maps) (declutter
+    2026-10-09)'
+  files:
+    - lib/ui/home/areas/agent-suite.js
+    - idearium/repo/import-pipeline.js
+  depends_on:
+    - MCO1_graph_layer
+  blocks: []
+  spec: null
+  graph: cc4c6a57854d135d

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV21_nexus
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV21_nexus
+context: pipeline phase MV21_nexus of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV21_nexus (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792821071294
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792821071294
+lastSeenAt: 1792821071294
+fingerprint: null
+payload:
+  id: MV21_nexus
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - nexus/
+    - lib/nexus/
+  depends_on:
+    - MV22_cli
+    - MV20_warp
+  blocks: []
+  spec: null
+  graph: 71489a565b05f8bb

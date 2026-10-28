@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::AM10_ollama_models_in_mesh
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::AM10_ollama_models_in_mesh
+context: pipeline phase AM10_ollama_models_in_mesh of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: AM10_ollama_models_in_mesh (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675645
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675645
+lastSeenAt: 1792787675645
+fingerprint: null
+payload:
+  id: AM10_ollama_models_in_mesh
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/hat-seed-ollama-personalities.js
+    - clear-glass/src/mesh/agent-mesh.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 096f5e7ddf0d6aa1

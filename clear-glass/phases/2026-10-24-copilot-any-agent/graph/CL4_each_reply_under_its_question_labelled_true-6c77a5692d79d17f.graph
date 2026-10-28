@@ -1,0 +1,56 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CL4_each_reply_under_its_question_labelled_true:6c77a5692d79d17f
+type: graph
+id: phase:CL4_each_reply_under_its_question_labelled_true:6c77a5692d79d17f
+context: dependency graph of phase CL4_each_reply_under_its_question_labelled_true
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792874371333
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371333
+lastSeenAt: 1792874371333
+fingerprint: null
+payload:
+  for: CL4_each_reply_under_its_question_labelled_true
+  kind: phase
+  repo: null
+  hash: 6c77a5692d79d17f
+  nodes:
+    - path: clear-glass/renderer/float-cli.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-copilot-any-agent.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::CL3_any_agent_as_the_copilot
+    dependents: []
+    upstream:
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::CL1_the_picked_agent_is_opened
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::CL2_a_pick_never_falls_back_in_silence
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::CL3_any_agent_as_the_copilot
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::D1_open_or_refuse
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::D2_fallback
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-copilot-any-agent-phasemap.spec::CL3_any_agent_as_the_copilot
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by CL3_any_agent_as_the_copilot
+      - 'depends on (1): CL3_any_agent_as_the_copilot · all upstream 5'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-copilot-any-agent-phasemap.spec::CL3_any_agent_as_the_copilot
+        kind: declared

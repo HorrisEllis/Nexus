@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT4_ollama_checked_on_his_machine
+type: phase
+id: docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT4_ollama_checked_on_his_machine
+context: >-
+  pipeline phase CT4_ollama_checked_on_his_machine of
+  docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+intent: null
+summary: CT4_ollama_checked_on_his_machine (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477230
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477230
+lastSeenAt: 1792822477230
+fingerprint: null
+payload:
+  id: CT4_ollama_checked_on_his_machine
+  map: docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/ui/js/repo-settings.js
+  depends_on:
+    - CT1_one_door_for_models
+  blocks: []
+  spec: null
+  graph: 07b280ffbe298899

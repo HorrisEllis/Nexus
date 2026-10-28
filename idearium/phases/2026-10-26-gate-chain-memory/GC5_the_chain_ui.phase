@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-26-gate-chain-memory-phasemap.spec::GC5_the_chain_ui
+type: phase
+id: docs_2026-10-26-gate-chain-memory-phasemap.spec::GC5_the_chain_ui
+context: pipeline phase GC5_the_chain_ui of docs/2026-10-26-gate-chain-memory-phasemap.spec
+intent: null
+summary: GC5_the_chain_ui (ui) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792991449202
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792991449202
+lastSeenAt: 1792991449202
+fingerprint: null
+payload:
+  id: GC5_the_chain_ui
+  map: docs/2026-10-26-gate-chain-memory-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - idearium/ui/js/gate-chain-panel.js
+  depends_on:
+    - GC4_route_and_command
+  blocks: []
+  spec: null
+  graph: cf34c98f9ba1512c

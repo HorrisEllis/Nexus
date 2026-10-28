@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-self-building-loop-phasemap.spec::SL5_when_a_proven_change_lands_alone
+type: phase
+id: docs_2026-10-23-self-building-loop-phasemap.spec::SL5_when_a_proven_change_lands_alone
+context: >-
+  pipeline phase SL5_when_a_proven_change_lands_alone of
+  docs/2026-10-23-self-building-loop-phasemap.spec
+intent: null
+summary: SL5_when_a_proven_change_lands_alone (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792775550208
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792775550208
+lastSeenAt: 1792775550208
+fingerprint: null
+payload:
+  id: SL5_when_a_proven_change_lands_alone
+  map: docs/2026-10-23-self-building-loop-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN-DECISION
+  files:
+    - lib/repo-inject.js
+    - lib/trust-rule.js
+  depends_on:
+    - SL1_a_proven_phase_closes_itself
+  blocks:
+    - MOD-SL-TRUST
+  spec: docs/self-building-loop.spec
+  graph: 379b566ca6597dd5

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP2_automatic_in_every_repo
+type: phase
+id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP2_automatic_in_every_repo
+context: >-
+  pipeline phase MP2_automatic_in_every_repo of
+  docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+intent: null
+summary: MP2_automatic_in_every_repo (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477959
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477959
+lastSeenAt: 1792822477959
+fingerprint: null
+payload:
+  id: MP2_automatic_in_every_repo
+  map: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE (0.60.65)
+  files:
+    - idearium/repo/phases.js
+    - idearium/api/index.js
+    - idearium/ui/js/phases.js
+    - loom/maps/build-surface-map.js
+    - loom/maps/one-idearium-map.js
+  depends_on:
+    - MP1_nexus_maps_every_phase
+  blocks: []
+  spec: null
+  graph: 8a644e8e18b1f8aa

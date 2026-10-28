@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP1_nexus_maps_every_phase
+type: phase
+id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP1_nexus_maps_every_phase
+context: >-
+  pipeline phase MP1_nexus_maps_every_phase of
+  docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+intent: null
+summary: MP1_nexus_maps_every_phase (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755647
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755647
+lastSeenAt: 1792841755647
+fingerprint: null
+payload:
+  id: MP1_nexus_maps_every_phase
+  map: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE (0.60.65)
+  files:
+    - lib/phase-map-auto.js
+    - lib/phase-files.js
+    - tests/modules/test-phase-map-auto.test.js
+  depends_on:
+    - PT2_phases_tagged_by_system_repo
+  blocks: []
+  spec: null
+  graph: cfef434e859393c2

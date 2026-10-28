@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW6_the_intelligence_system_on_every_gate
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW6_the_intelligence_system_on_every_gate
+context: >-
+  pipeline phase GW6_the_intelligence_system_on_every_gate of
+  docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW6_the_intelligence_system_on_every_gate (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677554
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677554
+lastSeenAt: 1792787677554
+fingerprint: null
+payload:
+  id: GW6_the_intelligence_system_on_every_gate
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/adaptive-fulfillment.js
+    - cortex/self-heal/fault-taxonomy.js
+    - lib/phase-faults.js
+    - lib/fault-log.js
+  depends_on:
+    - GW3_a_contract_is_traced
+  blocks: []
+  spec: null
+  graph: 88688bb77b7d9ade

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
+context: >-
+  pipeline phase SB42_a_repo_expands_from_its_spec of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB42_a_repo_expands_from_its_spec (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477140
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477140
+lastSeenAt: 1792822477140
+fingerprint: null
+payload:
+  id: SB42_a_repo_expands_from_its_spec
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-expand.js
+    - lib/file-tree-plan.js
+    - idearium/api/index.js
+  depends_on:
+    - SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
+  blocks: []
+  spec: null
+  graph: ec1b9907273648f1

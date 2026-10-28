@@ -1,0 +1,63 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DB14_heartbeat_over_routes:1fd349ac8ccad766
+type: graph
+id: phase:DB14_heartbeat_over_routes:1fd349ac8ccad766
+context: dependency graph of phase DB14_heartbeat_over_routes
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755863
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755863
+lastSeenAt: 1792841755863
+fingerprint: null
+payload:
+  for: DB14_heartbeat_over_routes
+  kind: phase
+  repo: null
+  hash: 1fd349ac8ccad766
+  nodes:
+    - path: lib/heartbeat.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-connect.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus/nexus-connect.js
+      to: lib/heartbeat.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+    dependents: []
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+    downstream: []
+    blockedBy:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by DB12_the_ui_handshake
+      - 'depends on (1): DB12_the_ui_handshake · all upstream 8'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+        kind: inferred

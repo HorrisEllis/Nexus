@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-self-awareness-phasemap.spec::AW0_no_guessed_causes
+type: phase
+id: docs_2026-10-10-self-awareness-phasemap.spec::AW0_no_guessed_causes
+context: pipeline phase AW0_no_guessed_causes of docs/2026-10-10-self-awareness-phasemap.spec
+intent: null
+summary: AW0_no_guessed_causes (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755139
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755139
+lastSeenAt: 1792841755139
+fingerprint: null
+payload:
+  id: AW0_no_guessed_causes
+  map: docs/2026-10-10-self-awareness-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/cfr/graph.js
+    - intelligence/cfr/ledger.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8719fe713edc6ce7

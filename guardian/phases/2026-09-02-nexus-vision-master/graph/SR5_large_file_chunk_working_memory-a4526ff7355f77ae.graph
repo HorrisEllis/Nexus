@@ -1,0 +1,232 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR5_large_file_chunk_working_memory:a4526ff7355f77ae
+type: graph
+id: phase:SR5_large_file_chunk_working_memory:a4526ff7355f77ae
+context: dependency graph of phase SR5_large_file_chunk_working_memory
+intent: null
+summary: 26 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753660
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753660
+lastSeenAt: 1792841753660
+fingerprint: null
+payload:
+  for: SR5_large_file_chunk_working_memory
+  kind: phase
+  repo: null
+  hash: a4526ff7355f77ae
+  nodes:
+    - path: guardian/lib/ncp-handler.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/vector-memory.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/chat-logger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cli/semantic-dedup.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-builder.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-sources.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/semantic-dedup.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-vector-memory-embed-check.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/response-sink.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-identity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-model.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/chat-logger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/introspect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/local-vector-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: guardian/lib/ncp-handler.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/introspect.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/chat-logger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-identity.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-model.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: lib/local-vector-index.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp-handler.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/chat-logger.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/cli/semantic-dedup.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/context-builder.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/semantic-dedup.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: tests/modules/test-vector-memory-embed-check.test.js
+      to: lib/vector-memory.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/ncp-handler.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      fromSystem: lib
+      toSystem: ollama
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR7_token_reduction_toolkit
+    upstream: []
+    downstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR7_token_reduction_toolkit
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR7_token_reduction_toolkit
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): SR7_token_reduction_toolkit · finishing it unlocks
+        SR7_token_reduction_toolkit
+    edges: []

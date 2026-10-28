@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-debugging-product-phasemap.spec::DP11_the_product_boundary
+type: phase
+id: docs_2026-10-17-debugging-product-phasemap.spec::DP11_the_product_boundary
+context: pipeline phase DP11_the_product_boundary of docs/2026-10-17-debugging-product-phasemap.spec
+intent: null
+summary: DP11_the_product_boundary (?) — 19 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755779
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755779
+lastSeenAt: 1792841755779
+fingerprint: null
+payload:
+  id: DP11_the_product_boundary
+  map: docs/2026-10-17-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/import-pipeline.js
+    - lib/code-intel/cards.js
+    - lib/run-state.js
+    - lib/node-export.js
+    - lib/change-record.js
+    - loom/scanners/dangling-report.js
+    - idearium/repo/architecture.js
+    - lib/drawbridge-registry.js
+    - lib/system-boundary.js
+    - loom/scanners/wiring-gaps.js
+    - lib/code-intel/decls.js
+    - lib/repo-carve.js
+    - cortex/core/raid/contract-gates.js
+    - lib/repo-inject.js
+    - lib/component-ledger.js
+    - lib/agent-tools/tools/diagnostic/stub-finder.js
+    - loom/scanners/stub-finder.js
+    - lib/agent-tools/tools/diagnostic/mock-data-finder.js
+    - loom/scanners/mock-data-finder.js
+  depends_on:
+    - DP0a_one_product_or_two
+  blocks: []
+  spec: null
+  graph: df7c7dcdd1ab6a91

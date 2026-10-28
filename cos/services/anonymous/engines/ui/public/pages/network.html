@@ -1,0 +1,15 @@
+<div class="grid3" id="adns-stats"></div>
+<div class="card">
+  <div class="card-title">Keep records current</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:12px">
+    If your connection has a changing IP address, Auto DNS rewrites your A records
+    whenever it moves.</p>
+  <div class="actions"><button onclick="panel.forceDnsPush()">Push records now</button></div>
+</div>
+<div class="card">
+  <div class="card-title">Router port forwarding</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:12px">
+    Asks your router over UPnP to forward the ports the platform needs: 80, 443, 53, 587 and 2525.</p>
+  <div class="actions"><button class="sec" onclick="panel.upnpOpen()">Forward ports</button></div>
+  <div id="upnp-result" style="margin-top:12px;font-size:13px"></div>
+</div>

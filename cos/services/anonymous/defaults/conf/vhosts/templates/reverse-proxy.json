@@ -1,0 +1,11 @@
+{
+  "$template": "reverse-proxy",
+  "label": "Reverse proxy",
+  "description": "Terminates TLS and forwards to a backend already listening on this machine.",
+  "stack": "proxy",
+  "php": false,
+  "proxyPort": null,
+  "portStrategy": "manual",
+  "forwardHeaders": ["X-Forwarded-For", "X-Forwarded-Proto", "X-Forwarded-Host"],
+  "provisions": ["tlsCertificate", "proxyRoute", "dnsRecord"]
+}

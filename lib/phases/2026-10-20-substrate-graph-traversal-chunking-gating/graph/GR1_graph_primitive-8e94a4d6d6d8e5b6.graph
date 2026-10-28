@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456416759
+exported_at: 1792787677982
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416759
-lastSeenAt: 1792456416759
+firstSeenAt: 1792787677982
+lastSeenAt: 1792787677982
 fingerprint: null
 payload:
   for: GR1_graph_primitive
@@ -27,7 +27,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 3
     deps:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
@@ -84,9 +83,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - >-
-        DAG 7583ffef0c495b95 · layer 3 · ON THE CRITICAL PATH · blocked by GR0_graph_census,
-        NC1_neutral_core_boundary, NM1_one_name_per_file
+      - layer 3 · blocked by GR0_graph_census, NC1_neutral_core_boundary, NM1_one_name_per_file
       - >-
         depends on (3): GR0_graph_census, NC1_neutral_core_boundary, NM1_one_name_per_file · all
         upstream 5
@@ -94,3 +91,10 @@ payload:
         needed by (6): IV1_invariant_kinds, PV1_provenance_on_every_claim, GR2_graph_views,
         TV1_traversal_primitive, CH0_chunk_census_and_contract, GW1_gate_primitive · all downstream
         27 · finishing it unlocks TV1_traversal_primitive, CH0_chunk_census_and_contract
+    edges:
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+        kind: declared
+      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+        kind: declared
+      - from: docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+        kind: declared

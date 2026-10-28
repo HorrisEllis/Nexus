@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP5_leak_test
+type: phase
+id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP5_leak_test
+context: pipeline phase NP5_leak_test of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+intent: null
+summary: NP5_leak_test (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677480
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677480
+lastSeenAt: 1792787677480
+fingerprint: null
+payload:
+  id: NP5_leak_test
+  map: docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-21-compartment-downloads-phasemap.spec
+    - clear-glass/spec/compartment-downloads.spec
+    - clear-glass/src/net/https-only.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d8d86049fe3ea73a

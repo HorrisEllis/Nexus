@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+context: pipeline phase DT2_failure_mode_field of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: DT2_failure_mode_field (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754267
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754267
+lastSeenAt: 1792841754267
+fingerprint: null
+payload:
+  id: DT2_failure_mode_field
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/fault-log.js
+    - lib/pipeline-routing.js
+    - idearium/spec-engine/index.js
+    - idearium/spec-engine/chunk-dispatch.js
+  depends_on:
+    - DT1_persistence_census
+  blocks: []
+  spec: null
+  graph: c38e4f371f3f72ad
