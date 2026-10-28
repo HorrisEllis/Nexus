@@ -699,6 +699,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   // §SELECTOR-ASSIGN 0.39.251 — a pick on a provider page is offered as that
   // provider's reply / input / send selector (renderer/selector-assign/).
   window.CGSelectorAssign?.mount({ cg, wv, notify: (m) => addMsg('assistant', m) });
+  window.CGSiteKeyBar?.mount({ cg });   // 0.60.275 KB3 — "Bind a key" after a pick
 
   pickerBtn.addEventListener('click', async () => {
     pickerActive = !pickerActive;
@@ -780,6 +781,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
         apiUrl:  pickerRoute?.value === 'api' ? (pickerApiUrl?.value || '') : undefined,
       });
       window.CGSelectorAssign?.offer({ xpath: pick.xpath, url: pick.url || wv.getURL() });
+      window.CGSiteKeyBar?.offer({ xpath: pick.xpath, url: pick.url || wv.getURL() });   // 0.60.275 KB3 — elements to keys, per site
     } else if (e.channel === 'dom:event') {
       // Live MutationObserver stream — forward straight through, no local
       // UI cost (this can fire many times a second on a busy page).

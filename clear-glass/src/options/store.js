@@ -786,6 +786,21 @@ class NexusOptions {
     return this.getShortcuts();
   }
 
+  // 0.60.275 KB2 — James: "any way you can add all of that to the keybindings. like elements to keys, per site?" (src/shortcuts/site-keys.js)
+  getSiteKeys() { return { ...(this.data.siteKeys || {}) }; }
+  setSiteKey(url, accel, binding) {
+    const r = require('../shortcuts/site-keys').bind(this.data.siteKeys || {}, url, accel, binding);
+    if (r.error) return { error: r.error };
+    this.data = { ...this.data, siteKeys: r.map }; this._persist();
+    return { ok: true, origin: r.origin, accel: r.accel, binding: r.binding, siteKeys: this.getSiteKeys() };
+  }
+  removeSiteKey(url, accel) {
+    const r = require('../shortcuts/site-keys').unbind(this.data.siteKeys || {}, url, accel);
+    if (r.error) return { error: r.error };
+    this.data = { ...this.data, siteKeys: r.map }; this._persist();
+    return { ok: true, origin: r.origin, accel: r.accel, siteKeys: this.getSiteKeys() };
+  }
+
   resetShortcuts() {
     this.data = { ...this.data, shortcuts: {} };
     this._persist();

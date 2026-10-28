@@ -1,7 +1,7 @@
-/* renderer/settings/sections/about.css — Settings › About (0.60.269) */
-.ab-ver { font-variant-numeric: tabular-nums; }
-.ab-ok { color: #6ee7a0; }
-.ab-new { color: #f6c860; font-weight: 600; }
-.ab-bad { color: #ff7a8a; }
-.ab-dim { color: var(--text-dim, #8a93a8); }
-.ab-when { font-size: 11px; padding: 6px 14px 10px; }
+/* renderer/settings/sections/about.css — Settings › About (0.60.269). Scoped to body[data-area="about"] (0.60.275: it was not — UF-03). */
+body[data-area="about"] .ab-ver { font-variant-numeric: tabular-nums; }
+body[data-area="about"] .ab-ok { color: #6ee7a0; }
+body[data-area="about"] .ab-new { color: #f6c860; font-weight: 600; }
+body[data-area="about"] .ab-bad { color: #ff7a8a; }
+body[data-area="about"] .ab-dim { color: var(--text-dim, #8a93a8); }
+body[data-area="about"] .ab-when { font-size: 11px; padding: 6px 14px 10px; }

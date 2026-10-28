@@ -179,3 +179,36 @@ from its file the first time). The built-in pick stays as the fallback, said. Pr
 # FG2: an option is scrolled within its list (pointer scroll:'within'), with one direct click when the pointer's click does not take
 #   (clickedBy 'page'), and it is still read back.
 # Proof: test-site-a11y-and-dropdowns 3/3; SA-03 fails on 0.60.272.
+
+# ADDENDUM 2026-10-28 (0.60.275) — KB1–KB3: dropdowns that wait and use the keyboard; keys bound to elements, per site
+# James, 2026-10-28, with a screenshot of the gig's Scope & Pricing (BASIC "6 DAYS DELIVERY", STANDARD and PREMIUM still "DELIVERY TIME"):
+#   "the drop downs. it needs to wait for the system. it keeps freezing. and then, opens the drop down, doesn't click. could always try arrows,
+#   or a number. any way you can add all of that to the keybindings. like elements to keys, per site?"
+# Decided by his axioms: §8.6 reuse (the shortcut catcher in main, the element picker, ClearDriver choose and pressKey; no second key system),
+# §1.2 nothing silent (each try said in the result; a site key that fails is logged with the key and the site), REVERSIBILITY (a site key is
+# removed in Settings or `glass keys unbind`).
+#
+#  KB1_choose_waits_and_keys:
+#    status: BUILT 0.60.275
+#    depends_on: [FG2_dropdown_choose, FG_D2_choice_is_read_back]
+#    files: [clear-glass/src/driver/index.js, tests/modules/test-dropdown-keys.test.js, tests/modules/test-fiverr-pace.test.js]
+#    does: >-
+#      waits until the page answers fast before each step (_waitResponsive); reads options until they hold still; opens again once if
+#      nothing appeared; a pick that does not show tries the arrows + Enter, then the number + Enter, then a direct click — each read back,
+#      said in `tried` and `clickedBy`. What is on screen before opening is kept in a page-side WeakSet, not an attribute on every element
+#      (the coder's reading of "it keeps freezing", to confirm on his machine: thousands of attribute writes per choose).
+#    proof: test-dropdown-keys 2/2 (options that ignore clicks; no attribute written on existing elements; a blocked page waited for)
+#
+#  KB2_site_keys:
+#    status: BUILT 0.60.275
+#    depends_on: [KB1_choose_waits_and_keys]
+#    files: [clear-glass/src/shortcuts/site-keys.js, clear-glass/src/options/store.js, clear-glass/src/main/index.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, idearium/cli/route-commands.js]
+#    does: a key on a site → click | choose | key | macro on an element (CSS or the picker's XPath); it wins over a global shortcut on that site only
+#    proof: test-site-keys SK-01..03
+#
+#  KB3_site_keys_ui:
+#    status: BUILT 0.60.275
+#    depends_on: [KB2_site_keys]
+#    files: [clear-glass/renderer/site-keys/bind-bar.js, clear-glass/renderer/site-keys/bind-bar.css, clear-glass/renderer/browser.js, clear-glass/renderer/browser.html, clear-glass/renderer/settings/sections/shortcuts.js, clear-glass/renderer/settings/sections/shortcuts.css]
+#    does: "Bind a key" after an element pick; Settings › Keyboard shortcuts › Keys on sites lists, adds and removes
+#    proof: test-site-keys SK-04, SK-05 (both in Clear Glass)

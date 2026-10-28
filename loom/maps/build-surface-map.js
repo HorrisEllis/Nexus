@@ -38,6 +38,13 @@ const FILES = [
   // 0.60.274 — the changelogs' home (versionium/changelogs); it requires nothing of ours. Its consumers (release-version, nexus-releases,
   // phase-census, spec-census, context-atlas, scripts/release-zip, idearium/api's releases.changelog) are plain requires the source scanner maps.
   ['lib/changelogs.js', I('lib/changelogs.js'), []],
+  ['clear-glass/src/shortcuts/site-keys.js', I('clear-glass/src/shortcuts/site-keys.js'), [   // 0.60.275 KB2 — keys bound to elements, per site
+    I('clear-glass/src/shortcuts/registry.js'),                // require — normalize, isSafe
+  ]],
+  ['clear-glass/renderer/site-keys/bind-bar.js', I('clear-glass/renderer/site-keys/bind-bar.js'), [   // 0.60.275 KB3 — "Bind a key" after a pick
+    I('clear-glass/renderer/browser.js'),                      // window.cg — mount({ cg }) and offer() after dom:pick-result
+    I('clear-glass/src/ipc/bridge.js'),                        // IPC siteKeys:set (through the preload's shortcuts.siteSet)
+  ]],
   ['clear-glass/src/page/state-diff.js', I('clear-glass/src/page/state-diff.js'), []],      // 0.60.221 FP4 — pure; first used 0.60.273
   ['clear-glass/src/about/index.js', I('clear-glass/src/about/index.js'), []],   // 0.60.269 — versions and the update check (fetch, no requires)
   ['clear-glass/renderer/settings/sections/about.js', I('clear-glass/renderer/settings/sections/about.js'), [   // 0.60.269 Settings › About

@@ -276,6 +276,10 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     set:      (accel, action)  => ipcRenderer.invoke('shortcuts:set', { accel, action }),
     remove:   (accel)          => ipcRenderer.invoke('shortcuts:remove', { accel }),
     reset:    ()               => ipcRenderer.invoke('shortcuts:reset'),
+    // 0.60.275 KB3 — keys bound to elements, per site
+    siteList:   ()                     => ipcRenderer.invoke('siteKeys:list'),
+    siteSet:    (url, accel, binding)  => ipcRenderer.invoke('siteKeys:set', { url, accel, binding }),
+    siteRemove: (url, accel)           => ipcRenderer.invoke('siteKeys:remove', { url, accel }),
     onAction: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('shortcut:action', f); return () => ipcRenderer.removeListener('shortcut:action', f); },
   },
 

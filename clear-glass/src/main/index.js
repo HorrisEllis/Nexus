@@ -2839,6 +2839,23 @@ function _runShortcut(action, accel, owner) {
   }
   if (owner) owner.win.webContents.send('shortcut:action', { action, accel });
 }
+// 0.60.275 KB2 — James, 2026-10-28: "any way you can add all of that to the keybindings. like elements to keys, per site?" A site key runs on the
+// page it was pressed in (wc:<id>) through ClearDriver as him: the element (an XPath from the picker is found on the page first), then its step.
+// A failure is said in the log with the key and the site, never silent.
+async function _runSiteKey(contents, b, accel) {
+  const SK = require('../shortcuts/site-keys');
+  const agentId = `wc:${contents.id}`, url = contents.getURL(), origin = SK.originOf(url);
+  try {
+    if (b.do === 'macro') { if (!ipcBridge) throw new Error('macros are not ready'); const r = await ipcBridge.runMacroAsPerson({ name: b.macro, agentId, url, by: `site key ${accel}` }); if (r && r.error) throw new Error(r.error); return; }
+    let sel = b.selector;
+    if (sel && SK.isXPath(sel)) {
+      const found = await contents.executeJavaScript(SK.markScript(sel), true);
+      if (!found) throw new Error(`the element is not on this page (${sel})`);
+      sel = SK.MARKED;
+    }
+    for (const st of SK.steps({ ...b, selector: sel })) await driver.exec({ agentId, by: 'person', ...st });
+  } catch (e) { console.warn(`[site-keys] ${accel} at ${origin} (${SK.describe(b)}) did not run: ${e.message}`); }
+}
 // §0.60.216 SP2 — James: "I need site specific settings for the autofill, macros, workflows …". A site's autoRun macros run when one of
 // its pages loads, as his own run (bridge.runMacroAsPerson), on that page (wc:<id>); once per page and minute, so a macro that reloads
 // the page does not run itself again. A failure is said in the log with the macro and the site.
@@ -2940,6 +2957,12 @@ app.on('web-contents-created', (_e, contents) => {
     if (!accel) return;
     const host = contents.hostWebContents || contents;
     if (settingsWin && !settingsWin.isDestroyed() && host === settingsWin.webContents) return;   // Settings records new shortcuts
+    // 0.60.275 KB2 — a key bound to an element on this site wins over a global shortcut, on this site's pages only
+    // (only an http(s) page has a site: Clear Glass's own screens never match)
+    {
+      let sk = null; try { sk = nexusOptions && nexusOptions.getSiteKeys ? require('../shortcuts/site-keys').lookup(nexusOptions.getSiteKeys(), contents.getURL(), accel) : null; } catch (_) {}
+      if (sk) { event.preventDefault(); _runSiteKey(contents, sk, accel); return; }
+    }
     let bindings;
     try { bindings = nexusOptions ? nexusOptions.getShortcuts().bindings : Shortcuts.DEFAULT_BINDINGS; } catch (_) { bindings = Shortcuts.DEFAULT_BINDINGS; }
     const action = bindings[accel];

@@ -1,0 +1,14 @@
+/* 0.60.275 KB3 — the "Bind a key" bar after an element pick; every rule under #cg-key-bind */
+#cg-key-bind { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 2147483000; width: min(760px, calc(100vw - 32px));
+  background: var(--panel, #15171c); color: var(--text, #e8e8ea); border: 1px solid var(--line, #2b2f38); border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.45); padding: 10px 12px; font: 13px/1.4 system-ui, sans-serif; }
+#cg-key-bind .kb-title { font-weight: 600; margin-bottom: 8px; }
+#cg-key-bind .kb-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+#cg-key-bind input, #cg-key-bind select { padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line, #2b2f38); background: transparent; color: inherit; font: inherit; min-width: 0; }
+#cg-key-bind select option { color: #111; }
+#cg-key-bind .kb-keys { width: 140px; text-align: center; }
+#cg-key-bind .kb-extra, #cg-key-bind .kb-label { flex: 1 1 140px; }
+#cg-key-bind button { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line, #2b2f38); background: var(--accent, #3b82f6); color: #fff; cursor: pointer; font: inherit; }
+#cg-key-bind .kb-x { background: transparent; color: inherit; padding: 6px 10px; }
+#cg-key-bind .kb-say { margin-top: 6px; min-height: 1em; font-size: 12px; }
+#cg-key-bind .kb-say.bad { color: #e5534b; } #cg-key-bind .kb-say.ok { color: #3fb950; }

@@ -412,6 +412,8 @@ const SUITES = [
   'test-autofill-chips.test.js',         // 0.60.267 AF3 — the page reader always there; a chip under each input
   'test-about-and-nodes.test.js',
   'test-run-log-fixes.test.js',
+  'test-dropdown-keys.test.js',           // 0.60.275 KB1 — dropdowns: wait for the page, arrows, the number
+  'test-site-keys.test.js',               // 0.60.275 KB2/KB3 — keys bound to elements, per site
   'test-changelogs-home.test.js',         // 0.60.274 — the changelogs in versionium/changelogs, read in Idearium
   'test-site-a11y-and-dropdowns.test.js', // 0.60.273 — the Tab switch per site; dropdown options scrolled within their list
   'test-nerve-pointer-stream.test.js',   // 0.60.272 — the virtual mouse acts in Ollama's live Nerve stream

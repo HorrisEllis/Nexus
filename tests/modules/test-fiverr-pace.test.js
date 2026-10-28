@@ -28,11 +28,13 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
     const log = []; let evals = 0;
     const self = Object.create(Driver.prototype);
     self._getWebContents = () => ({});
-    self._evalJs = async () => { evals++; if (evals === 1) return { n: 1, native: false, shown: '' }; if (evals === 2) { log.push('read'); return ['1 Day', '3 Days', '30 Days']; } return '3 Days'; };
+    // 0.60.275 — the options are read until they hold still (two reads), and the page is checked for responsiveness (stubbed here)
+    self._waitResponsive = async () => true;
+    self._evalJs = async (wc, code) => { evals++; if (evals === 1) return { n: 1, native: false, shown: '' }; if (/data-cg-opt/.test(code) && /fresh/.test(code)) { log.push('read'); return ['1 Day', '3 Days', '30 Days']; } return '3 Days'; };
     self._pointer = async (a, x) => { log.push('click:' + x.label); return { via: 'native' }; };
     self._sleep = async (ms) => { log.push('wait:' + Math.round(ms)); };
     const r = await self._choose('a', { column: 'BASIC', shows: 'DELIVERY TIME', option: '3', openWait: [700, 700], pickWait: [400, 400], settleWait: [500, 500] });
-    assert.deepStrictEqual(log, ['click:open BASIC', 'wait:700', 'read', 'wait:400', 'click:3 Days', 'wait:500']);
+    assert.deepStrictEqual(log, ['click:open BASIC', 'wait:700', 'read', 'wait:200', 'read', 'wait:400', 'click:3 Days', 'wait:500']);
     assert.strictEqual(r.option, '3 Days');
     assert.match(r.viaWhy, /not wired/);
   });
