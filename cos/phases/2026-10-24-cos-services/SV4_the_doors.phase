@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-services-phasemap.spec::SV4_the_doors
+type: phase
+id: docs_2026-10-24-cos-services-phasemap.spec::SV4_the_doors
+context: pipeline phase SV4_the_doors of docs/2026-10-24-cos-services-phasemap.spec
+intent: null
+summary: SV4_the_doors (ui) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682469
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682469
+lastSeenAt: 1792877682469
+fingerprint: null
+payload:
+  id: SV4_the_doors
+  map: docs/2026-10-24-cos-services-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - cos/services/doors.js
+    - idearium/cli/route-commands.js
+    - cos/app/desktop/spine.js
+  depends_on:
+    - SV1_a_stack_per_root
+    - SV2_into_a_compartment
+  blocks:
+    - MOD-SV-DOORS
+  spec: cos/spec/cos-services.spec
+  graph: 908dd5f1ffb6f46d

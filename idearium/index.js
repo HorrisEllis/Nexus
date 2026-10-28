@@ -18,7 +18,7 @@
  * §7.1  Dual ledger — Upgrade Ledger (truth) + Idea Ledger (cognition).
  */
 
-import { Event, Gate, Stream, StreamLog } from '../siso/core/index.js';
+import { Event, Gate, Stream, StreamLog } from '../lib/siso/core/index.js';
 import { registerCortexListeners } from './lib/cortex-listeners.js';
 import { createRequire } from 'module';
 import { randomUUID }    from 'crypto';

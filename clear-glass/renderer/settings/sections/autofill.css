@@ -32,3 +32,7 @@ body[data-area="autofill"] .af-gig-part textarea { width: 100%; min-height: 0; h
 body[data-area="autofill"] .af-gig-part .n { grid-column: 1; font-size: 11px; color: var(--ink-dim); }
 body[data-area="autofill"] .af-gig-part .n.over { color: var(--bad); }
 body[data-area="autofill"] .af-gig-warn { margin-top: 8px; font-size: 12px; color: var(--warn); }
+
+/* §JA4 0.60.231 — the Pick buttons for what a fill could not place, and the learned list's site headings */
+body[data-area="autofill"] .af-pick { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0; }
+body[data-area="autofill"] .af-site { padding: 10px 14px 4px; font-family: var(--mono); font-size: 12px; color: var(--ink-dim); }

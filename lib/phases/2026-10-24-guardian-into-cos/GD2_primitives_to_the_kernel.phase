@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD2_primitives_to_the_kernel
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD2_primitives_to_the_kernel
+context: pipeline phase GD2_primitives_to_the_kernel of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD2_primitives_to_the_kernel (foundation) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325040
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325040
+lastSeenAt: 1792877325040
+fingerprint: null
+payload:
+  id: GD2_primitives_to_the_kernel
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - lib/liminal.js
+    - lib/gap-hunter.js
+    - lib/baseline.js
+    - intelligence/liminal/index.js
+    - intelligence/gap/hunter.js
+    - intelligence/baseline.js
+    - guardian/api-dispatch.js
+    - guardian/lib/gap-hunter.js
+    - guardian/lib/ncp-handler.js
+    - guardian/server.js
+  depends_on:
+    - GD_D1_pure_primitives_to_the_kernel
+  blocks: []
+  spec: null
+  graph: 5140fb28b4f6c60b

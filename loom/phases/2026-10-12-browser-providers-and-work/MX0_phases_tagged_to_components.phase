@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::MX0_phases_tagged_to_components
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::MX0_phases_tagged_to_components
+context: >-
+  pipeline phase MX0_phases_tagged_to_components of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: MX0_phases_tagged_to_components (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792879044656
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879044656
+lastSeenAt: 1792879044656
+fingerprint: null
+payload:
+  id: MX0_phases_tagged_to_components
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/phasemap-map.js
+    - idearium/repo/roadmap.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b68e32fa2664d4d0

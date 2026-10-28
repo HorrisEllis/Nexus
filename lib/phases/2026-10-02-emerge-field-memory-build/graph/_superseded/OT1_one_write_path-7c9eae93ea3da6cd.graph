@@ -1,0 +1,228 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OT1_one_write_path:7c9eae93ea3da6cd
+type: graph
+id: phase:OT1_one_write_path:7c9eae93ea3da6cd
+context: dependency graph of phase OT1_one_write_path
+intent: null
+summary: 24 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676614
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676614
+lastSeenAt: 1792787676614
+fingerprint: null
+payload:
+  for: OT1_one_write_path
+  kind: phase
+  repo: null
+  hash: 7c9eae93ea3da6cd
+  nodes:
+    - path: cortex/memory/jaa-db.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: docs/nexstore-writers.yaml
+      role: changes
+      exists: true
+      system: null
+    - path: emerge/core/transition.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: lib/context-atlas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: clear-glass/test/copilot-cli.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cli/compact.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/routes/opportunity.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/query/context-atlas.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-sources.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-stream.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/readme-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cortex/memory/tiers.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/context-atlas.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: copilot/routes/opportunity.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/context-atlas.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/context-prereqs.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/context-stream.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/readme-generate.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: clear-glass/test/copilot-cli.test.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cli/compact.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+  crossings:
+    - from: lib/context-atlas.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: lib
+      toSystem: clear-glass
+      kind: upward
+      known: true
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: cli/compact.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: cli
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · blocked by RF1_relational_field
+      - 'depends on (1): RF1_relational_field · all upstream 7'
+      - 'needed by (2): MR4_field_memory, MR11_rewind_the_mind'
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+        kind: declared

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME0_the_inventory_proved
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME0_the_inventory_proved
+context: pipeline phase ME0_the_inventory_proved of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME0_the_inventory_proved (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677158
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677158
+lastSeenAt: 1792787677158
+fingerprint: null
+payload:
+  id: ME0_the_inventory_proved
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tests/modules/test-one-model-engine.test.js
+    - docs/2026-10-09-one-model-engine-phasemap.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9d64861419da9a7a

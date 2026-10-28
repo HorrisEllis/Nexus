@@ -1,0 +1,72 @@
+# Clear Glass gig file (clearglass.gig/1) — load it in Settings → Autofill → Gig, or in the gig panel.
+format: clearglass.gig/1
+platform: fiverr
+title: I will set up Claude Code or AI coding tools to build your project
+category: Programming & Tech
+subcategory: AI Development
+tags:
+  - claude code
+  - ai coding
+  - cursor
+  - ai assistant
+  - prompt rules
+description: >-
+  Using AI to code, but it keeps drifting, forgetting your rules or breaking things? I set it up so
+  it works the way a careful developer would.
+
+
+  I direct an AI coder every day on a large project, with written rules it must follow: map the work
+  before building, reuse what exists, prove every change with a test, and never fail silently. That
+  setup is what I build for you.
+
+
+  What you get:
+
+  - A project rules file (CLAUDE.md or similar) written for your codebase
+
+  - A short map of your project the AI reads first
+
+  - A build plan in phases the AI can follow one at a time
+
+  - Checks it runs before saying a change is done
+
+  - A walkthrough of how to direct it well
+
+
+  How it works: share your project and what you want the AI to build. I set it up, run one real task
+  with it, and show you the result.
+
+
+  Works with Claude Code, Cursor, and other AI coding tools.
+packages:
+  basic:
+    name: Rules File
+    description: A project rules file and a short project map for your AI tool.
+    deliveryDays: 2
+    revisions: 1
+    price: 60
+  standard:
+    name: Rules and Build Plan
+    description: Rules, project map, phased plan, and one task run with you.
+    deliveryDays: 4
+    revisions: 2
+    price: 150
+  premium:
+    name: Full AI Dev Setup
+    description: Rules, plan, test checks, automation and a live walkthrough.
+    deliveryDays: 7
+    revisions: 3
+    price: 350
+faq:
+  - question: Which AI tools do you support?
+    answer: Claude Code first, plus Cursor and similar tools that read project rules.
+  - question: Do I need a paid AI plan?
+    answer: Usually yes, for the AI tool itself. I will tell you what you need before you order.
+  - question: Will it work on an existing project?
+    answer: 'Yes. That is where it helps most: the AI learns your structure instead of guessing.'
+requirements:
+  - What is your project, and what do you want the AI to build or fix next?
+  - Who will use it, and on what? (Windows, Mac, a server; one person or a team)
+  - What must it always do, and what must it never do?
+  - How will you check that it is done? (the test you will run, or what you will look at)
+  - Please share any files, examples, access or data I need to start.

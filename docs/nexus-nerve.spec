@@ -58,7 +58,7 @@ spec:
         for a consumer like Nerve and never got one. That's the gap
         Nerve closes, not new ground.
     hooks_registry:
-      file:   hooks/index.js
+      file:   lib/hooks/index.js
       status: confirmed — real, unified query interface over
               hooks/*.hooks.js (10 systems: guardian, cortex,
               orchestrator, idearium, architect, bridge, emerge,
@@ -88,7 +88,7 @@ spec:
         three nodes render permanently "unknown" instead of "stale" —
         which is itself a more honest state per §1.2 than faking a pulse.
     act_layer_spotlight:
-      file:   ui/tv-shell/spotlight/spotlight.js
+      file:   lib/ui/tv-shell/spotlight/spotlight.js
       status: confirmed — real, 452 lines. `Spotlight.execute(ui)` at
               line 449 dispatches to `CP.executeUI(ui)`. An `EL` element
               registry exists at line 41. This is the only confirmed

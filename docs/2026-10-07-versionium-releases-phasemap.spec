@@ -109,7 +109,7 @@ spec:
       systems: [cortex, nexstore]
       status: MAPPED
       depends_on: [VR1_every_change_a_commit]
-      files: [lib/nexstore/record.js, meta/crystal-lattice.js, intelligence/spatial/system-lattice.js, cortex/cortex-v2.js]
+      files: [lib/nexstore/record.js, lib/meta/crystal-lattice.js, intelligence/spatial/system-lattice.js, cortex/cortex-v2.js]
       does: >-
         Cortex subscribes to the node store's log (one tap, like VR1's one hook) and keeps a typed provenance lattice:
         nodes = commits, proposals, activity rows, tasks, faults, phases, releases, files; edges = caused_by, by, touches,

@@ -18,7 +18,7 @@ const {
   getContract, getVersionedContract, getContractWithFallback,
   validateRequest, validateRequestAt, listSnapshots,
   STATIC_FALLBACK, SYSTEMS, PORTS, CONTRACT_VERSION,
-} = require(path.join(__dirname, '../../contracts/nexus-interaction-contract'));
+} = require(path.join(__dirname, '..', '..', 'lib', 'contracts', 'nexus-interaction-contract'));
 
 let passed = 0, failed = 0;
 const invariants = [];

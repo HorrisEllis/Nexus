@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-mobile-compartments-phasemap.spec::MB3_testenv_stacks
+type: phase
+id: docs_2026-10-16-mobile-compartments-phasemap.spec::MB3_testenv_stacks
+context: pipeline phase MB3_testenv_stacks of docs/2026-10-16-mobile-compartments-phasemap.spec
+intent: null
+summary: MB3_testenv_stacks (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677718
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677718
+lastSeenAt: 1792787677718
+fingerprint: null
+payload:
+  id: MB3_testenv_stacks
+  map: docs/2026-10-16-mobile-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/testenv/detect.js
+    - lib/checks/ck-248-toolchain.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e76b4664f81e1e35

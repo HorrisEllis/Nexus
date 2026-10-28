@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::T2_event_taxonomy_per_system
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::T2_event_taxonomy_per_system
+context: pipeline phase T2_event_taxonomy_per_system of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: T2_event_taxonomy_per_system (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753518
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753518
+lastSeenAt: 1792841753518
+fingerprint: null
+payload:
+  id: T2_event_taxonomy_per_system
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/event-taxonomy.js
+    - lib/event-taxonomy-pattern.js
+    - lib/grammar-engine.js
+    - lib/ledger-store.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 774d92eccad8ae63

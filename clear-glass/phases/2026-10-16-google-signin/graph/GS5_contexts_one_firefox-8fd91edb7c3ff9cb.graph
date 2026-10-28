@@ -1,0 +1,122 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GS5_contexts_one_firefox:8fd91edb7c3ff9cb
+type: graph
+id: phase:GS5_contexts_one_firefox:8fd91edb7c3ff9cb
+context: dependency graph of phase GS5_contexts_one_firefox
+intent: null
+summary: 12 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677707
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677707
+lastSeenAt: 1792787677707
+fingerprint: null
+payload:
+  for: GS5_contexts_one_firefox
+  kind: phase
+  repo: null
+  hash: 8fd91edb7c3ff9cb
+  nodes:
+    - path: clear-glass/src/contexts/manager.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/fingerprint/engine.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/bus.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/google-signin.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/contexts/session-headers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/fingerprint/firefox-version.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/compartment.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/tls/helper.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/fingerprint/engine.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/fingerprint/engine.js
+      to: clear-glass/src/fingerprint/firefox-version.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/contexts/session-headers.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/net/compartment.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/tls/helper.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/fingerprint/engine.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/fingerprint/engine.js
+      kind: requires
+    - from: clear-glass/test/bus.test.js
+      to: clear-glass/src/fingerprint/engine.js
+      kind: requires
+    - from: clear-glass/test/google-signin.test.js
+      to: clear-glass/src/fingerprint/engine.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-16-google-signin-phasemap.spec::GS2_request_hooks_compose
+    dependents: []
+    upstream:
+      - docs/2026-10-16-google-signin-phasemap.spec::GS2_request_hooks_compose
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): GS2_request_hooks_compose'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-16-google-signin-phasemap.spec::GS2_request_hooks_compose
+        kind: inferred

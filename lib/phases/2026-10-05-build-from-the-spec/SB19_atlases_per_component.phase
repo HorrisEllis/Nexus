@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB19_atlases_per_component
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB19_atlases_per_component
+context: pipeline phase SB19_atlases_per_component of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB19_atlases_per_component (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676871
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676871
+lastSeenAt: 1792787676871
+fingerprint: null
+payload:
+  id: SB19_atlases_per_component
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/atlas-generate.js
+    - lib/registry-harness.js
+  depends_on:
+    - SB17_the_system_template_is_complete
+  blocks: []
+  spec: null
+  graph: 9e59927620ffe280

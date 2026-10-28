@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::CL2_the_agent_tab_is_the_endpoint
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::CL2_the_agent_tab_is_the_endpoint
+context: pipeline phase CL2_the_agent_tab_is_the_endpoint of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: CL2_the_agent_tab_is_the_endpoint (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477188
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477188
+lastSeenAt: 1792822477188
+fingerprint: null
+payload:
+  id: CL2_the_agent_tab_is_the_endpoint
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+    - idearium/api/index.js
+  depends_on:
+    - CL1_commands_declared_by_their_system
+  blocks: []
+  spec: null
+  graph: 0470783f38f397ba

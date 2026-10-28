@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::ID3_bookmarks_carry_the_identity
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::ID3_bookmarks_carry_the_identity
+context: >-
+  pipeline phase ID3_bookmarks_carry_the_identity of
+  docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: ID3_bookmarks_carry_the_identity (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677402
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677402
+lastSeenAt: 1792787677402
+fingerprint: null
+payload:
+  id: ID3_bookmarks_carry_the_identity
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/bookmarks/store.js
+    - clear-glass/renderer/browser.js
+  depends_on:
+    - TB1_tab_is_a_view
+  blocks: []
+  spec: null
+  graph: fe345d2788c05a2e

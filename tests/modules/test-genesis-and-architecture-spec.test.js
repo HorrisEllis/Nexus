@@ -38,7 +38,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     const served = (spec.routes || []).every(r => {
       if (r.path.startsWith('/api/repos/:uuid/architecture')) return /\['(GET|POST)',\s*\['api','repos',\s*':uuid','architecture'\]/.test(idx);
       if (r.path.startsWith('/api/nodes')) return /sub === 'nodes'/.test(orch);
-      if (r.path.startsWith('/nodes') || r.path.startsWith('/config')) return /parts\[0\] === '(nodes|config)'/.test(read('architecture-spec/registry/api.js'));
+      if (r.path.startsWith('/nodes') || r.path.startsWith('/config')) return /parts\[0\] === '(nodes|config)'/.test(read('idearium/architecture-spec/registry/api.js'));
       return false;
     });
     check('GA-02 every event it emits is emitted by real code; every route it names is served', emitted && served, JSON.stringify({ emitted, served, routes: spec.routes.map(r => r.path) }));

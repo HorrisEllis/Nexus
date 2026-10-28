@@ -1,0 +1,19 @@
+<div class="grid3" id="storage-stats"></div>
+<div class="card">
+  <div class="card-title">Buckets</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Bucket</th><th>Objects</th><th>Access</th><th></th></tr></thead>
+      <tbody id="buckets-table"></tbody>
+    </table>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Create a bucket</div>
+  <div class="frow c3">
+    <div><label for="bucket-name">Name</label><input id="bucket-name" placeholder="backups"></div>
+    <div><label for="bucket-access">Access</label>
+      <select id="bucket-access"><option value="private">Private</option><option value="public">Public</option></select></div>
+    <div style="display:flex;align-items:flex-end"><button onclick="panel.createBucket()">Create</button></div>
+  </div>
+</div>

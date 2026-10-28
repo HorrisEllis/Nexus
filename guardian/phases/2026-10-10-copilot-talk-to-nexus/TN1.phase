@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN1
+type: phase
+id: docs_2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN1
+context: pipeline phase TN1 of docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec
+intent: null
+summary: TN1 (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477412
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477412
+lastSeenAt: 1792822477412
+fingerprint: null
+payload:
+  id: TN1
+  map: docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+    - architect/src/spec/Blueprint.js
+    - clear-glass/erosmancer/erosmancer-os/src/dispatcher/index.ts
+    - clear-glass/renderer/guardian-picker.js
+    - guardian/nexus-hey-claude.user.js
+    - guardian/userscript-chatgpt.js
+    - guardian/userscript-claude.js
+    - lib/listener-commands.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 32c7f9698ed2b970

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-guardian-cos-expansion-phasemap.spec::GA3_guardian_userscript_capability_wiring
+type: phase
+id: docs_copilot-guardian-cos-expansion-phasemap.spec::GA3_guardian_userscript_capability_wiring
+context: >-
+  pipeline phase GA3_guardian_userscript_capability_wiring of
+  docs/copilot-guardian-cos-expansion-phasemap.spec
+intent: null
+summary: GA3_guardian_userscript_capability_wiring (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678174
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678174
+lastSeenAt: 1792787678174
+fingerprint: null
+payload:
+  id: GA3_guardian_userscript_capability_wiring
+  map: docs/copilot-guardian-cos-expansion-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/intent-classifier.js
+    - lib/tool-index.js
+  depends_on:
+    - GA1_guardian_nexus_reconciliation
+  blocks: []
+  spec: null
+  graph: 378f86881837b81c

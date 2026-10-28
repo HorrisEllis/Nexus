@@ -1,0 +1,185 @@
+envelope: 1
+uuid: nexus-export-graph-phase:X1_system_nodes:f786be098cfe5731
+type: graph
+id: phase:X1_system_nodes:f786be098cfe5731
+context: dependency graph of phase X1_system_nodes
+intent: null
+summary: 19 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754009
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754009
+lastSeenAt: 1792841754009
+fingerprint: null
+payload:
+  for: X1_system_nodes
+  kind: phase
+  repo: null
+  hash: f786be098cfe5731
+  nodes:
+    - path: lib/cli/nodes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-nodes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-node-relations.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/boot-sequence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/event-taxonomy.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/intent-map.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: lib/system-nodes.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/repo-agent-node.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/node-registry.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/intent-map.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/boot-sequence.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/system-nodes.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: lib/system-nodes.js
+      kind: requires
+    - from: tests/modules/test-system-node-relations.test.js
+      to: lib/system-nodes.js
+      kind: requires
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+  crossings:
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::C1_copilot_contract
+    dependents:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X3_nodes_route
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X4_command_index_spec
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X2_guardian_hat_agent
+    upstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::C1_copilot_contract
+    downstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X2_guardian_hat_agent
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X3_nodes_route
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X4_command_index_spec
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X3_nodes_route
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X4_command_index_spec
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X2_guardian_hat_agent
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): C1_copilot_contract'
+      - >-
+        needed by (3): X3_nodes_route, X4_command_index_spec, X2_guardian_hat_agent · all downstream
+        4 · finishing it unlocks X3_nodes_route, X4_command_index_spec, X2_guardian_hat_agent
+    edges:
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::C1_copilot_contract
+        kind: declared

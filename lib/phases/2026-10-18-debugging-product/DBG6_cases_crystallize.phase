@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-debugging-product-phasemap.spec::DBG6_cases_crystallize
+type: phase
+id: docs_2026-10-18-debugging-product-phasemap.spec::DBG6_cases_crystallize
+context: pipeline phase DBG6_cases_crystallize of docs/2026-10-18-debugging-product-phasemap.spec
+intent: null
+summary: DBG6_cases_crystallize (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755905
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755905
+lastSeenAt: 1792841755905
+fingerprint: null
+payload:
+  id: DBG6_cases_crystallize
+  map: docs/2026-10-18-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/debug-case.js
+    - intelligence/index.js
+    - lib/fault-log.js
+  depends_on:
+    - DBG2_the_case
+    - DBG3_deviation_and_friction_per_run
+  blocks: []
+  spec: null
+  graph: 1a3964410566d4bd

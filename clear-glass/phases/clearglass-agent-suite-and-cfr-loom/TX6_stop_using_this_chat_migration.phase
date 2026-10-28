@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX6_stop_using_this_chat_migration
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX6_stop_using_this_chat_migration
+context: >-
+  pipeline phase TX6_stop_using_this_chat_migration of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX6_stop_using_this_chat_migration (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678127
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678127
+lastSeenAt: 1792787678127
+fingerprint: null
+payload:
+  id: TX6_stop_using_this_chat_migration
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TX4_provider_tab_tool_loop
+  blocks: []
+  spec: null
+  graph: 70835de8de91fd23

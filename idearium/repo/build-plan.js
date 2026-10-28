@@ -167,7 +167,10 @@ export function historyOf(rows = [], { maxRuns = 12, maxRows = 80 } = {}) {
     const proof = [...rs].reverse().find(r => /-proof$/.test(r.runId || ''));
     const agents = [...new Set(rs.map(r => r.provider || r.reviewer).filter(Boolean))];
     const starter = (rs.find(r => r.startedBy) || {}).startedBy || null;   // 0.60.188 RC7 — who started the run; an older row has none (said as such)
+    const rebuild = rs.some(r => r.rebuild);   // §0.60.226 SL7 — a complete phase built again on request
+    const mappedBy = (rs.find(r => r.mappedBy) || {}).mappedBy || null;   // §0.60.228 SL8 — the graph came from the agent's checked mapping
     return { runId, startedAt: rs[0].ts || null, endedAt: last.ts || null, end: proof ? proof.state : last.state, agents, startedBy: starter, total: rs.length,
+      ...(rebuild ? { rebuild: true } : {}), ...(mappedBy ? { mappedBy } : {}),
       cut: rs.length > maxRows ? rs.length - maxRows : 0,
       log: rs.slice(-maxRows).map(r => ({ ts: r.ts || null, state: r.state, part: /-review$/.test(r.runId || '') ? 'review' : /-proof$/.test(r.runId || '') ? 'proof' : null,
         provider: r.provider || r.reviewer || null, file: r.file || null, rung: r.rung || null, attempt: r.attempt || null,

@@ -1,0 +1,27 @@
+<div class="card">
+  <div class="card-title">OpenSSH server</div>
+  <div id="ssh-status" style="font-size:13px;margin-bottom:14px"></div>
+  <div class="actions">
+    <button class="sec" onclick="panel.sshRefresh()">Check status</button>
+    <button class="sec" onclick="panel.sshInstall()">Install</button>
+    <button class="sec" onclick="panel.sshStart()">Start</button>
+    <button class="sec" onclick="panel.sshStop()">Stop</button>
+  </div>
+  <div id="ssh-action-result" style="margin-top:12px;font-size:13px"></div>
+  <div class="hint">SSH and SFTP both come from the operating system's own OpenSSH server —
+    the platform manages it rather than reimplementing the protocol.</div>
+</div>
+
+<div class="card">
+  <div class="card-title">Authorised keys</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:12px">
+    Paste a public key to authorise it. Generate one with
+    <code>ssh-keygen -t ed25519</code> and paste the contents of the
+    <code>.pub</code> file — never the private key.</p>
+  <div class="frow">
+    <label for="ssh-pubkey">Public key</label>
+    <textarea id="ssh-pubkey" rows="3" placeholder="ssh-ed25519 AAAAC3Nz... you@machine"></textarea>
+  </div>
+  <div class="actions"><button onclick="panel.sshAddKey()">Authorise key</button></div>
+  <div id="ssh-keys" style="margin-top:16px"></div>
+</div>

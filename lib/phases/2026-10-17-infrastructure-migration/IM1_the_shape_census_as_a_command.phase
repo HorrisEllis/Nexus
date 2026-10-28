@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-infrastructure-migration-phasemap.spec::IM1_the_shape_census_as_a_command
+type: phase
+id: docs_2026-10-17-infrastructure-migration-phasemap.spec::IM1_the_shape_census_as_a_command
+context: >-
+  pipeline phase IM1_the_shape_census_as_a_command of
+  docs/2026-10-17-infrastructure-migration-phasemap.spec
+intent: null
+summary: IM1_the_shape_census_as_a_command (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792878423163
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878423163
+lastSeenAt: 1792878423163
+fingerprint: null
+payload:
+  id: IM1_the_shape_census_as_a_command
+  map: docs/2026-10-17-infrastructure-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/system-boundary.js
+    - lib/drawbridge-registry.js
+    - lib/system-registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 42f95c80f3b43862

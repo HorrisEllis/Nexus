@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ11_spec_and_registry_reconciled
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ11_spec_and_registry_reconciled
+context: pipeline phase RQ11_spec_and_registry_reconciled of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ11_spec_and_registry_reconciled (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677361
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677361
+lastSeenAt: 1792787677361
+fingerprint: null
+payload:
+  id: RQ11_spec_and_registry_reconciled
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/spec-map.js
+    - orchestrator/lib/spec-drift.js
+    - docs/SPEC-REGISTRY.spec
+    - lib/registry-plan.js
+  depends_on:
+    - RQ9_the_chunked_contract
+  blocks: []
+  spec: null
+  graph: ac250d713085c01a

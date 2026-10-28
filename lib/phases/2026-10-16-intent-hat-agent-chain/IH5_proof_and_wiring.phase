@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-intent-hat-agent-chain-phasemap.spec::IH5_proof_and_wiring
+type: phase
+id: docs_2026-10-16-intent-hat-agent-chain-phasemap.spec::IH5_proof_and_wiring
+context: pipeline phase IH5_proof_and_wiring of docs/2026-10-16-intent-hat-agent-chain-phasemap.spec
+intent: null
+summary: IH5_proof_and_wiring (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755716
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755716
+lastSeenAt: 1792841755716
+fingerprint: null
+payload:
+  id: IH5_proof_and_wiring
+  map: docs/2026-10-16-intent-hat-agent-chain-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tests/modules/test-intent-chain.test.js
+    - tests/modules/run-all.js
+    - loom/maps/observability-map.js
+    - lib/version.js
+  depends_on:
+    - IH1_intent_nodes_point_at_hats
+  blocks: []
+  spec: null
+  graph: 76e781a60ac0adce

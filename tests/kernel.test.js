@@ -14,7 +14,7 @@ const fs     = require('fs');
 const os     = require('os');
 
 // ── Load kernel ───────────────────────────────────────────────────────────────
-const KERNEL_PATH = path.resolve(__dirname, '../emerge/emerge-kernel.js');
+const KERNEL_PATH = path.resolve(__dirname, '..', 'lib', 'emerge', 'emerge-kernel.js');
 if (!fs.existsSync(KERNEL_PATH)) {
   console.error('[FATAL] emerge-kernel.js not found at', KERNEL_PATH);
   process.exit(1);
@@ -48,7 +48,7 @@ function section(name) {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function loadTestSpec() {
-  const specPath = path.resolve(__dirname, '../emerge/emerge.spec');
+  const specPath = path.resolve(__dirname, '..', 'lib', 'emerge', 'emerge.spec');
   if (fs.existsSync(specPath)) {
     loadSpec(specPath);
   }
@@ -775,7 +775,7 @@ if (fs.existsSync(IO_DIR)) {
 // ══════════════════════════════════════════════════════════════════════════════
 section('BLOCK 10 — EMERGE.SPEC INTEGRITY');
 
-const SPEC_PATH = path.resolve(__dirname, '../emerge/emerge.spec');
+const SPEC_PATH = path.resolve(__dirname, '..', 'lib', 'emerge', 'emerge.spec');
 
 test('emerge.spec: file exists (moved from repo root into emerge/, 2026-08-23)', () => {
   assert.ok(fs.existsSync(SPEC_PATH), `missing: ${SPEC_PATH}`);

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-idearium-atlas-phasemap.spec::A3
+type: phase
+id: docs_2026-09-27-idearium-atlas-phasemap.spec::A3
+context: pipeline phase A3 of docs/2026-09-27-idearium-atlas-phasemap.spec
+intent: null
+summary: A3 (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676046
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676046
+lastSeenAt: 1792787676046
+fingerprint: null
+payload:
+  id: A3
+  map: docs/2026-09-27-idearium-atlas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - A2
+  blocks: []
+  spec: null
+  graph: 45d18c7975a04b6f

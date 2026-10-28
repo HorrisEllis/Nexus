@@ -1,0 +1,237 @@
+envelope: 1
+uuid: nexus-export-graph-phase:COSA10_compartment_window:7f4574d718f9bfa8
+type: graph
+id: phase:COSA10_compartment_window:7f4574d718f9bfa8
+context: dependency graph of phase COSA10_compartment_window
+intent: null
+summary: 27 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792878422829
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878422829
+lastSeenAt: 1792878422829
+fingerprint: null
+payload:
+  for: COSA10_compartment_window
+  kind: phase
+  repo: null
+  hash: 7f4574d718f9bfa8
+  nodes:
+    - path: cos/app/switch.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/spec/cos.spec
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/repo/nexus-self.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/nexus-self/systems.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/app/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/controller.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/living-spec.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cos-app-switch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-atlas-and-glass.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-inject-approval.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-incremental.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-visible.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-specs-and-ideas-cleanup.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/app/runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/store.js
+      role: uses
+      exists: true
+      system: cos
+    - path: idearium/architecture-spec/registry/nexus-atlas-aggregate.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/db.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/graph.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/cos-bridge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-writer.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/zip-ingest.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: cos/app/switch.js
+      to: cos/app/store.js
+      kind: requires
+    - from: cos/app/switch.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/lib/db.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/zip-ingest.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/ledger-writer.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/architecture-spec/registry/nexus-atlas-aggregate.js
+      kind: requires
+    - from: cos/app/cli.js
+      to: cos/app/switch.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/switch.js
+      kind: requires
+    - from: tests/modules/test-cos-app-switch.test.js
+      to: cos/app/switch.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: tests/modules/test-nexus-atlas-and-glass.test.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: tests/modules/test-nexus-inject-approval.test.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-incremental.test.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-visible.test.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: tests/modules/test-nexus-specs-and-ideas-cleanup.test.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA6_the_exe
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+    dependents:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA11_nested_tree
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA6_the_exe
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+    downstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA11_nested_tree
+      - docs/2026-10-16-cos-console-phasemap.spec::CON3_system_controls
+    blockedBy:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by COSA9_idearium_sync
+      - 'depends on (2): COSA6_the_exe, COSA9_idearium_sync · all upstream 5'
+      - 'needed by (1): COSA11_nested_tree · all downstream 2'
+    edges:
+      - from: docs/2026-10-15-cos-app-phasemap.spec::COSA6_the_exe
+        kind: declared
+      - from: docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+        kind: declared

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-synthesis-zoom-versionium-phasemap.spec::AZ1_semantic_zoom
+type: phase
+id: docs_2026-10-02-synthesis-zoom-versionium-phasemap.spec::AZ1_semantic_zoom
+context: pipeline phase AZ1_semantic_zoom of docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec
+intent: null
+summary: AZ1_semantic_zoom (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676750
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676750
+lastSeenAt: 1792787676750
+fingerprint: null
+payload:
+  id: AZ1_semantic_zoom
+  map: docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/arch-canvas.js
+    - idearium/ui/css/arch-canvas.css
+    - idearium/ui/js/app.js
+  depends_on:
+    - AR3_one_architect_canvas
+  blocks: []
+  spec: null
+  graph: 4803c502f673ce60

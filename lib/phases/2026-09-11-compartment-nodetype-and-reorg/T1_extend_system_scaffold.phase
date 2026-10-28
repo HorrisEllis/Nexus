@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+context: >-
+  pipeline phase T1_extend_system_scaffold of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: T1_extend_system_scaffold (?) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1792877321866
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877321866
+lastSeenAt: 1792877321866
+fingerprint: null
+payload:
+  id: T1_extend_system_scaffold
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/templates/system-scaffold.js
+    - lib/event-taxonomy-pattern.js
+    - loom/test/system-scaffold.test.js
+    - cos/runtime/run.js
+    - cos/testenv/index.js
+    - guardian/api-dispatch.js
+    - cos/archetype/nexus-system/lib/modules.js
+    - intelligence/synthesis/index.js
+    - lib/ledger-writer.js
+    - lib/agent-tools/tools/clear-glass/command-index.js
+    - ollama/lib/command-index.js
+    - lib/tool-index.js
+    - loom/doc-generator.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d63ad9c6158207cc

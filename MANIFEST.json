@@ -45,12 +45,12 @@
   "siso": {
     "version": "1.0.0",
     "source": "canonical",
-    "path": "siso/"
+    "path": "lib/siso/"
   },
   "jaa": {
     "version": "1.0.0",
     "source": "canonical",
-    "path": "jaa/"
+    "path": "_archive/2026-10-24-retired-systems/jaa/"
   },
   "systems": {
     "orchestrator": {

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::R1_recall_to_lib
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::R1_recall_to_lib
+context: pipeline phase R1_recall_to_lib of docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: R1_recall_to_lib (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675838
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675838
+lastSeenAt: 1792787675838
+fingerprint: null
+payload:
+  id: R1_recall_to_lib
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/push-recall.js
+    - cortex/memory/bep-lookup.js
+    - cortex/memory/causal-lookup.js
+    - cortex/memory/fix-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 32458afe2804d0bc

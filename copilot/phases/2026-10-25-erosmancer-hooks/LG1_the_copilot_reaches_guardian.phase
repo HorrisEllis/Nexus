@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-erosmancer-hooks-phasemap.spec::LG1_the_copilot_reaches_guardian
+type: phase
+id: docs_2026-10-25-erosmancer-hooks-phasemap.spec::LG1_the_copilot_reaches_guardian
+context: pipeline phase LG1_the_copilot_reaches_guardian of docs/2026-10-25-erosmancer-hooks-phasemap.spec
+intent: null
+summary: LG1_the_copilot_reaches_guardian (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792973193749
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792973193749
+lastSeenAt: 1792973193749
+fingerprint: null
+payload:
+  id: LG1_the_copilot_reaches_guardian
+  map: docs/2026-10-25-erosmancer-hooks-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lifeline.js
+    - tests/modules/lifeline-fluid-routing.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 238cb172abd23d08

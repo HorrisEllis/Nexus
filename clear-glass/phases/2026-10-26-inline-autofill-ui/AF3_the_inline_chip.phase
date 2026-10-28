@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-26-inline-autofill-ui-phasemap.spec::AF3_the_inline_chip
+type: phase
+id: docs_2026-10-26-inline-autofill-ui-phasemap.spec::AF3_the_inline_chip
+context: pipeline phase AF3_the_inline_chip of docs/2026-10-26-inline-autofill-ui-phasemap.spec
+intent: null
+summary: AF3_the_inline_chip (ui) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792992982699
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992982699
+lastSeenAt: 1792992982699
+fingerprint: null
+payload:
+  id: AF3_the_inline_chip
+  map: docs/2026-10-26-inline-autofill-ui-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - clear-glass/renderer/autofill-inline.js
+  depends_on:
+    - AF1_active_profile_and_fill_one
+  blocks: []
+  spec: null
+  graph: ace78840eac819a4

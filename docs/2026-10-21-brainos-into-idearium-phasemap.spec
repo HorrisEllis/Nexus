@@ -124,13 +124,19 @@ phases:
 
   BX2_flow_sources:
     layer: library
-    status: PLANNED
+    status: DONE (core) 0.60.248 — flowFor + mesh + the routes + `repo flow` row; the /sse relay and the RAID-queue source remain
     depends_on: [BX1_census]
     files: [idearium/lib/flow-sources.js, idearium/api/index.js, idearium/cli/route-commands.js]
     spec: docs/brainos-in-idearium.spec
     blocks: [MOD-BX-SOURCES]
-    does: "The FlowGraph from the server: phases and DAG, runs, mesh agents and routes, RAID queue; Clear Glass's events relayed onto /sse; `flow` rows."
-    proof: phases and runs returned with Clear Glass down; each source's failure named
+    does: >-
+      DONE 0.60.248: idearium/lib/flow-sources.js flowFor({repo}) → FlowGraph { phases, dag, runs, agents, routes, edges, sources },
+      composing the repo's phases+DAG (managerView + phase-dag, the same gather GET …/phases/dag uses), runs (run-state), and Clear
+      Glass's mesh at :7704 (agent-mesh view + route-graph, server-side). Each source best-effort; a failure is NAMED in sources[],
+      never thrown — the screen draws whether or not Clear Glass is up. Routes GET /api/repos/:uuid/flow and /api/flow/mesh; command
+      row `repo flow <repo>`. REMAINS: the Clear Glass /sse relay (mesh.*/automation.* onto idearium's /sse, for live updates) and the
+      RAID-queue source (cortex :3748) — added when BX3 (the canvas) needs live motion.
+    proof: "tests/modules/test-flow-sources.test.js 5/5 — the FlowGraph shape returned with Clear Glass down, every source's failure named (§1.2)"
 
   BX3_flow_canvas:
     layer: surface
@@ -196,7 +202,7 @@ phases:
     layer: surface
     status: PLANNED
     depends_on: [BX0b_retire_brainos_page, BX6_pipeline_edit, BX7_automation, BX8_dock_panels]
-    files: [ui/brainos/index.html, clear-glass/src/main/index.js, tests/known-gaps.yaml, loom/maps/run-state-map.js]
+    files: [lib/ui/brainos/index.html, clear-glass/src/main/index.js, tests/known-gaps.yaml, loom/maps/run-state-map.js]
     spec: docs/brainos-in-idearium.spec
     blocks: [MOD-BX-RETIRE]
     does: "Per his BX0b: ui/brainos archived, the menu row opens Code → Flow, stale tests and contract replaced, loom wired."
@@ -206,7 +212,7 @@ phases:
     layer: surface
     status: PLANNED
     depends_on: [BX0c_float, BX2_flow_sources]
-    files: [clear-glass/src/providers/provider-widget.js, clear-glass/renderer/provider-widget.html, ui/brainos-float/brainos-float.js]
+    files: [clear-glass/src/providers/provider-widget.js, clear-glass/renderer/provider-widget.html, lib/ui/brainos-float/brainos-float.js]
     spec: docs/brainos-in-idearium.spec
     blocks: [MOD-BX-FLOAT]
     does: "His BX0c: a small widget on Clear Glass's provider pages, its contents following the provider (agent node and health, queue and job, account, userscript, route); the old float archived."

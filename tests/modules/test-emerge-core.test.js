@@ -12,7 +12,7 @@
  */
 const assert = require('assert');
 const path = require('path');
-const E = require(path.join(__dirname, '../../emerge/core'));
+const E = require(path.join(__dirname, '..', '..', 'lib', 'emerge', 'core'));
 
 let passed = 0, failed = 0;
 function test(id, desc, fn) {

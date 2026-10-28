@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::TR1_repo_derived_agentId_in_dispatch
+type: phase
+id: docs_2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::TR1_repo_derived_agentId_in_dispatch
+context: >-
+  pipeline phase TR1_repo_derived_agentId_in_dispatch of
+  docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec
+intent: null
+summary: TR1_repo_derived_agentId_in_dispatch (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792874368220
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874368220
+lastSeenAt: 1792874368220
+fingerprint: null
+payload:
+  id: TR1_repo_derived_agentId_in_dispatch
+  map: docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-agent.js
+    - copilot/server.js
+    - copilot/lifeline.js
+    - guardian/ask.js
+    - guardian/lib/dispatcher.js
+    - guardian/lib/ncp.js
+    - lib/ui/ncp.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 823dfc8e1113bdee

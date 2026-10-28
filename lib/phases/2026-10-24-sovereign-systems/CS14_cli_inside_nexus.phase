@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-sovereign-systems-phasemap.spec::CS14_cli_inside_nexus
+type: phase
+id: docs_2026-10-24-sovereign-systems-phasemap.spec::CS14_cli_inside_nexus
+context: pipeline phase CS14_cli_inside_nexus of docs/2026-10-24-sovereign-systems-phasemap.spec
+intent: null
+summary: CS14_cli_inside_nexus (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682546
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682546
+lastSeenAt: 1792877682546
+fingerprint: null
+payload:
+  id: CS14_cli_inside_nexus
+  map: docs/2026-10-24-sovereign-systems-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - package.json
+    - cos/app/shell.js
+  depends_on:
+    - CS12_the_mover_is_proven
+    - CS_D9_cli_inside_nexus
+  blocks: []
+  spec: null
+  graph: 07d735330fdd12d3

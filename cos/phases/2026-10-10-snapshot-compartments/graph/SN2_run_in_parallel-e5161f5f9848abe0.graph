@@ -1,0 +1,131 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SN2_run_in_parallel:e5161f5f9848abe0
+type: graph
+id: phase:SN2_run_in_parallel:e5161f5f9848abe0
+context: dependency graph of phase SN2_run_in_parallel
+intent: null
+summary: 12 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792880099573
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880099573
+lastSeenAt: 1792880099573
+fingerprint: null
+payload:
+  for: SN2_run_in_parallel
+  kind: phase
+  repo: null
+  hash: e5161f5f9848abe0
+  nodes:
+    - path: cos/playground/compare.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/playground/sandbox.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/parallel-dispatch.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cos/ci/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/branch.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/compare.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playground/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/agent-tools/tools/coordination/parallel-dispatch.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/foundation/axioms.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/playground/branch.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/playground/sandbox.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/playground/sandbox.js
+      to: cos/foundation/axioms.js
+      kind: requires
+    - from: cos/playground/sandbox.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: lib/agent-tools/tools/coordination/parallel-dispatch.js
+      to: lib/parallel-dispatch.js
+      kind: requires
+    - from: cos/ci/index.js
+      to: cos/playground/sandbox.js
+      kind: requires
+    - from: cos/cli/commands/branch.js
+      to: cos/playground/sandbox.js
+      kind: requires
+    - from: cos/playground/index.js
+      to: cos/playground/sandbox.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/playground/sandbox.js
+      kind: requires
+    - from: cos/cli/commands/compare.js
+      to: cos/playground/compare.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
+    dependents:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN3_measured_by_rfr2
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
+    upstream:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
+    downstream:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN3_measured_by_rfr2
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN4_benchmarks_teach
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+    blockedBy:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
+    unlocks:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN3_measured_by_rfr2
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by SN1_open_a_snapshot_as_a_compartment
+      - 'depends on (1): SN1_open_a_snapshot_as_a_compartment · all upstream 2'
+      - >-
+        needed by (2): SN3_measured_by_rfr2, MG3_the_state_manager · all downstream 6 · finishing it
+        unlocks SN3_measured_by_rfr2
+    edges:
+      - from: docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
+        kind: declared

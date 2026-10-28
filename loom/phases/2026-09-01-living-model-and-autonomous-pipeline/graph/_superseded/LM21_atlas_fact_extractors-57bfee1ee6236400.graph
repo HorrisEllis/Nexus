@@ -1,0 +1,289 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM21_atlas_fact_extractors:57bfee1ee6236400
+type: graph
+id: phase:LM21_atlas_fact_extractors:57bfee1ee6236400
+context: dependency graph of phase LM21_atlas_fact_extractors
+intent: null
+summary: 25 node(s), 11 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877160248
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877160248
+lastSeenAt: 1792877160248
+fingerprint: null
+payload:
+  for: LM21_atlas_fact_extractors
+  kind: phase
+  repo: null
+  hash: 57bfee1ee6236400
+  nodes:
+    - path: loom/scanners/capability-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/scanners/dangling-report.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/scanners/event-taxonomy-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/scanners/source-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/scanners/spec-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/scanners/wiring-gaps.js
+      role: changes
+      exists: true
+      system: loom
+    - path: copilot/lib/capabilities.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/tools/materialize-cli.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/diagnostic/loom-scan.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/diagnostic-causal.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/drawbridge-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/sigma-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/bootstrap.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phasemap-parse.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: loom/scanners/event-taxonomy-map.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: lib/phasemap-parse.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: loom/scanners/wiring-gaps.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: loom/scanners/wiring-gaps.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/capabilities.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: cortex/tools/materialize-cli.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/diagnostic-causal.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/sigma-gate.js
+      to: loom/scanners/event-taxonomy-map.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+  crossings:
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: loom
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lib/capabilities.js
+      to: loom/scanners/capability-map.js
+      fromSystem: copilot
+      toSystem: loom
+      kind: system
+      known: true
+    - from: copilot/lib/nexus-awareness.js
+      to: loom/scanners/capability-map.js
+      fromSystem: copilot
+      toSystem: loom
+      kind: system
+      known: true
+    - from: cortex/tools/materialize-cli.js
+      to: loom/scanners/capability-map.js
+      fromSystem: cortex
+      toSystem: loom
+      kind: system
+      known: true
+    - from: lib/agent-pull.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/diagnostic-causal.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/drawbridge-registry.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/sigma-gate.js
+      to: loom/scanners/event-taxonomy-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM19_atlas_spec_coverage_prerequisite
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM20_atlas_schema_and_deterministic_seed
+    dependents:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM22_atlas_structure_ledger
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM23_atlas_history_versions_calendar
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM24_atlas_prose_layer
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM25_atlas_living_update
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM26_atlas_completeness_and_release_gate
+    upstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM18_atlas_map_each_system_first
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM19_atlas_spec_coverage_prerequisite
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM20_atlas_schema_and_deterministic_seed
+    downstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM22_atlas_structure_ledger
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM23_atlas_history_versions_calendar
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM24_atlas_prose_layer
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM25_atlas_living_update
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM26_atlas_completeness_and_release_gate
+    blockedBy:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM19_atlas_spec_coverage_prerequisite
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM20_atlas_schema_and_deterministic_seed
+    unlocks:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM22_atlas_structure_ledger
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 2 · blocked by LM19_atlas_spec_coverage_prerequisite,
+        LM20_atlas_schema_and_deterministic_seed
+      - >-
+        depends on (2): LM19_atlas_spec_coverage_prerequisite,
+        LM20_atlas_schema_and_deterministic_seed · all upstream 4
+      - >-
+        needed by (5): LM22_atlas_structure_ledger, LM23_atlas_history_versions_calendar,
+        LM24_atlas_prose_layer, LM25_atlas_living_update, LM26_atlas_completeness_and_release_gate ·
+        finishing it unlocks LM22_atlas_structure_ledger
+    edges:
+      - from: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM19_atlas_spec_coverage_prerequisite
+        kind: declared
+      - from: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM20_atlas_schema_and_deterministic_seed
+        kind: declared

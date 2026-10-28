@@ -1,0 +1,215 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P20_intelligence_reads_present_not_oldest:6f8c46b31aff8ba3
+type: graph
+id: phase:P20_intelligence_reads_present_not_oldest:6f8c46b31aff8ba3
+context: dependency graph of phase P20_intelligence_reads_present_not_oldest
+intent: null
+summary: 25 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756448
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756448
+lastSeenAt: 1792841756448
+fingerprint: null
+payload:
+  for: P20_intelligence_reads_present_not_oldest
+  kind: phase
+  repo: null
+  hash: 6f8c46b31aff8ba3
+  nodes:
+    - path: architect/service.js
+      role: changes
+      exists: true
+      system: architect
+    - path: clear-glass/renderer/settings/core.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cortex/core/raid/context-synthesis.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/remote-desktop/bridge-os-core/bridge-sngate/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/architecture-spec/registry/api.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: cos/remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/remote-desktop/bridge-os-core/bridge-data/tests/test-data.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/remote-desktop/bridge-os-core/bridge-node/boot.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/remote-desktop/bridge-os-core/bridge-sngate/tests/test-sngate-deep.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/remote-desktop/bridge-os-core/bridge-sngate/tests/test-sngate.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: architect/compile-route.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/config.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/registry-components.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/src/spec/Blueprint.js
+      role: uses
+      exists: true
+      system: architect
+    - path: cortex/core/raid/contract-intake.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: idearium/architecture-spec/registry/watcher.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: intelligence/cfr/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hook-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-connect.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/architecture-spec/registry/api.js
+      to: idearium/architecture-spec/registry/watcher.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/data-home.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/hook-registry.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/src/spec/Blueprint.js
+      kind: requires
+    - from: architect/service.js
+      to: intelligence/cfr/index.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/compile-route.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/config.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/registry-components.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cos/remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js
+      to: cos/remote-desktop/bridge-os-core/bridge-sngate/index.js
+      kind: requires
+    - from: cos/remote-desktop/bridge-os-core/bridge-data/tests/test-data.js
+      to: cos/remote-desktop/bridge-os-core/bridge-sngate/index.js
+      kind: requires
+    - from: cos/remote-desktop/bridge-os-core/bridge-node/boot.js
+      to: cos/remote-desktop/bridge-os-core/bridge-sngate/index.js
+      kind: requires
+    - from: cos/remote-desktop/bridge-os-core/bridge-sngate/tests/test-sngate-deep.js
+      to: cos/remote-desktop/bridge-os-core/bridge-sngate/index.js
+      kind: requires
+    - from: cos/remote-desktop/bridge-os-core/bridge-sngate/tests/test-sngate.js
+      to: cos/remote-desktop/bridge-os-core/bridge-sngate/index.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+  crossings:
+    - from: architect/service.js
+      to: intelligence/cfr/index.js
+      fromSystem: architect
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

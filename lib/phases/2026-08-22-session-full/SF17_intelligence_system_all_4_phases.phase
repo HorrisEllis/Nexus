@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF17_intelligence_system_all_4_phases
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF17_intelligence_system_all_4_phases
+context: pipeline phase SF17_intelligence_system_all_4_phases of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF17_intelligence_system_all_4_phases (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792878419730
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878419730
+lastSeenAt: 1792878419730
+fingerprint: null
+payload:
+  id: SF17_intelligence_system_all_4_phases
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/baseline.js
+    - lib/snapshot-trigger.js
+    - intelligence/spec/intelligence.spec
+    - cortex/boot.js
+    - intelligence/snapshot-trigger.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f337813356001e4c

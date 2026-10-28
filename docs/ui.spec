@@ -20,7 +20,7 @@ spec:
         status: "replace"
         description: "Main landing — RESUME/BUILD/PROJECTS. Hardcoded routes."
 
-      - path: "ui/home/index.html"
+      - path: "lib/ui/home/index.html"
         lines: 5724
         status: "replace"
         description: "Home dashboard. Some panels broken."

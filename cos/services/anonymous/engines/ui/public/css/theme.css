@@ -1,0 +1,267 @@
+/* ============================================================================
+   NexusPanel — theme.css
+   anonymousservers.info
+
+   Two layers, painted once and never repainted:
+
+     .aurora   a saturated field of drifting colour, fixed behind everything
+     .gloss    a specular sheen + fine grain laid over the field
+
+   Everything else is glass floating on top. Panes are dark enough that data
+   stays legible, translucent enough that the field reads through them, and
+   each carries a 1px lit top edge so the light has a direction.
+
+   The colours are the platform's own status vocabulary — signal cyan for
+   traffic, healthy green for up, amber for pending, magenta for banned —
+   so the background is the same language as the badges sitting on it.
+   ========================================================================= */
+
+:root {
+  /* field */
+  --void:      #04060c;
+  --signal:    #00e5ff;
+  --transit:   #7b5cff;
+  --alert:     #ff2fb3;
+  --healthy:   #00ff9d;
+  --pending:   #ffb800;
+
+  /* glass */
+  --pane:      rgba(11, 16, 28, 0.62);
+  --pane-hi:   rgba(17, 24, 40, 0.74);
+  --pane-lift: rgba(24, 33, 54, 0.80);
+  --edge:      rgba(255, 255, 255, 0.10);
+  --edge-lit:  rgba(255, 255, 255, 0.28);
+  --edge-soft: rgba(255, 255, 255, 0.06);
+
+  /* ink */
+  --text:      #eaf1ff;
+  --dim:       #93a6c4;
+  --faint:     #5f708c;
+
+  /* semantic aliases kept from v1 so ported markup keeps working */
+  --bg:        var(--void);
+  --bg2:       var(--pane);
+  --bg3:       var(--pane-hi);
+  --bg4:       var(--pane-lift);
+  --border:    var(--edge);
+  --accent:    var(--signal);
+  --green:     var(--healthy);
+  --red:       var(--alert);
+  --yellow:    var(--pending);
+  --purple:    var(--transit);
+
+  --radius:    12px;
+  --radius-sm: 8px;
+  --nav:       232px;
+
+  --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'JetBrains Mono',
+          Consolas, 'Liberation Mono', monospace;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto,
+          'Helvetica Neue', sans-serif;
+
+  --blur: saturate(180%) blur(20px);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { background: var(--void); }
+
+body {
+  min-height: 100vh;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: var(--void);
+  overflow-x: hidden;
+}
+
+/* ── layer 1: the field ────────────────────────────────────────────────────
+   Four blobs on independent drifts. Each is a radial stop with a hard-ish
+   falloff so overlaps mix into new hues rather than washing out to grey.
+   Composited on their own layer; nothing above them repaints when they move. */
+
+.aurora {
+  position: fixed;
+  inset: -20vmax;
+  z-index: -2;
+  pointer-events: none;
+  background: var(--void);
+  contain: strict;
+}
+
+.aurora span {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.85;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.aurora .b1 {
+  width: 58vmax; height: 58vmax;
+  top: -6vmax; left: -4vmax;
+  background: radial-gradient(circle at 50% 50%,
+    var(--signal) 0%, rgba(0, 229, 255, 0.55) 42%, rgba(0, 229, 255, 0) 70%);
+  animation: drift1 34s ease-in-out infinite;
+}
+
+.aurora .b2 {
+  width: 52vmax; height: 52vmax;
+  top: 8vmax; right: -8vmax;
+  background: radial-gradient(circle at 50% 50%,
+    var(--transit) 0%, rgba(123, 92, 255, 0.55) 45%, rgba(123, 92, 255, 0) 72%);
+  animation: drift2 41s ease-in-out infinite;
+}
+
+.aurora .b3 {
+  width: 46vmax; height: 46vmax;
+  bottom: -10vmax; left: 18vmax;
+  background: radial-gradient(circle at 50% 50%,
+    var(--alert) 0%, rgba(255, 47, 179, 0.48) 44%, rgba(255, 47, 179, 0) 71%);
+  animation: drift3 47s ease-in-out infinite;
+}
+
+.aurora .b4 {
+  width: 40vmax; height: 40vmax;
+  bottom: 4vmax; right: 10vmax;
+  background: radial-gradient(circle at 50% 50%,
+    var(--healthy) 0%, rgba(0, 255, 157, 0.42) 46%, rgba(0, 255, 157, 0) 70%);
+  animation: drift4 38s ease-in-out infinite;
+}
+
+@keyframes drift1 {
+  0%,100% { transform: translate3d(0,0,0)            scale(1);    }
+  33%     { transform: translate3d(14vmax, 9vmax,0)  scale(1.18); }
+  66%     { transform: translate3d(5vmax, 20vmax,0)  scale(0.92); }
+}
+@keyframes drift2 {
+  0%,100% { transform: translate3d(0,0,0)             scale(1);    }
+  30%     { transform: translate3d(-16vmax, 12vmax,0) scale(1.12); }
+  70%     { transform: translate3d(-6vmax, -8vmax,0)  scale(0.88); }
+}
+@keyframes drift3 {
+  0%,100% { transform: translate3d(0,0,0)            scale(1);    }
+  40%     { transform: translate3d(18vmax,-14vmax,0) scale(1.22); }
+  75%     { transform: translate3d(-8vmax,-4vmax,0)  scale(0.95); }
+}
+@keyframes drift4 {
+  0%,100% { transform: translate3d(0,0,0)             scale(1);    }
+  35%     { transform: translate3d(-13vmax,-11vmax,0) scale(0.9);  }
+  68%     { transform: translate3d(-22vmax, 6vmax,0)  scale(1.15); }
+}
+
+/* ── layer 2: the gloss ────────────────────────────────────────────────────
+   A slow specular band raking across the field, a vignette to keep the edges
+   from blowing out, and a fine grain so the gradients don't band on wide
+   displays. This is the "glass over the top" — it sits above the aurora and
+   below every pane. */
+
+.gloss {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    /* raking highlight */
+    linear-gradient(115deg,
+      rgba(255,255,255,0)    30%,
+      rgba(255,255,255,0.07) 44%,
+      rgba(255,255,255,0.13) 50%,
+      rgba(255,255,255,0.05) 57%,
+      rgba(255,255,255,0)    70%),
+    /* vignette + settle to void at the bottom */
+    radial-gradient(120% 90% at 50% 0%,
+      rgba(4,6,12,0) 0%, rgba(4,6,12,0.35) 55%, rgba(4,6,12,0.78) 100%);
+  background-size: 320% 100%, 100% 100%;
+  animation: rake 26s linear infinite;
+  will-change: background-position;
+}
+
+/* Grain, as an SVG turbulence data URI — no asset request, no dependency. */
+.gloss::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+@keyframes rake {
+  0%   { background-position: 100% 0, 0 0; }
+  100% { background-position: -220% 0, 0 0; }
+}
+
+/* ── glass primitive ───────────────────────────────────────────────────────
+   Every pane in the panel is this. The ::before is the lit top edge — a
+   1px gradient that fades out toward the corners, which is what sells the
+   surface as a physical sheet rather than a translucent rectangle. */
+
+.glass {
+  position: relative;
+  background: var(--pane);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  box-shadow:
+    0 1px 0 0 rgba(255,255,255,0.05) inset,
+    0 8px 32px rgba(0,0,0,0.42),
+    0 1px 2px rgba(0,0,0,0.3);
+}
+
+.glass::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 12px; right: 12px;
+  height: 1px;
+  border-radius: 1px;
+  background: linear-gradient(90deg,
+    transparent, var(--edge-lit) 22%, var(--edge-lit) 78%, transparent);
+  pointer-events: none;
+}
+
+/* ── motion + contrast preferences ─────────────────────────────────────────
+   Reduced motion parks the field mid-drift rather than removing it: the
+   colour is information architecture, the movement is not. */
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora span { animation: none; }
+  .aurora .b1 { transform: translate3d(9vmax, 6vmax, 0)  scale(1.1); }
+  .aurora .b2 { transform: translate3d(-10vmax, 8vmax,0) scale(1.05); }
+  .aurora .b3 { transform: translate3d(11vmax,-9vmax,0)  scale(1.12); }
+  .aurora .b4 { transform: translate3d(-8vmax,-7vmax,0)  scale(0.95); }
+  .gloss { animation: none; background-position: 40% 0, 0 0; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Backdrop-filter is the one effect with no graceful degradation — without
+   it the panes read as flat translucent boxes over a busy field, which is
+   unreadable. Fall back to opaque panes. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --pane:      rgba(9, 13, 23, 0.94);
+    --pane-hi:   rgba(15, 21, 36, 0.96);
+    --pane-lift: rgba(22, 30, 49, 0.97);
+  }
+  .aurora span { opacity: 0.5; }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --pane:    rgba(6, 9, 17, 0.96);
+    --pane-hi: rgba(12, 17, 30, 0.97);
+    --edge:    rgba(255,255,255,0.22);
+    --dim:     #b6c6de;
+  }
+  .aurora span { opacity: 0.35; }
+}

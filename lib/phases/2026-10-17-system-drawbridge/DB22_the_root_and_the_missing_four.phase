@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB22_the_root_and_the_missing_four
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB22_the_root_and_the_missing_four
+context: >-
+  pipeline phase DB22_the_root_and_the_missing_four of
+  docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB22_the_root_and_the_missing_four (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792875541760
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875541760
+lastSeenAt: 1792875541760
+fingerprint: null
+payload:
+  id: DB22_the_root_and_the_missing_four
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - registry-components.js
+    - orchestrator/registry-components.js
+    - components/registry-components.js
+    - cos/registry-components.js
+    - lib/registry-components.js
+  depends_on:
+    - DB21_one_registry_schema_every_level
+  blocks: []
+  spec: null
+  graph: 79ee6cb9de3def15

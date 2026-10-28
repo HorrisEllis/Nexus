@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-access-phasemap.spec::IA0_the_door_checks_who_is_asking
+type: phase
+id: docs_2026-10-10-idearium-access-phasemap.spec::IA0_the_door_checks_who_is_asking
+context: pipeline phase IA0_the_door_checks_who_is_asking of docs/2026-10-10-idearium-access-phasemap.spec
+intent: null
+summary: IA0_the_door_checks_who_is_asking (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477431
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477431
+lastSeenAt: 1792822477431
+fingerprint: null
+payload:
+  id: IA0_the_door_checks_who_is_asking
+  map: docs/2026-10-10-idearium-access-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/access.cjs
+    - idearium/api/index.js
+    - idearium/lib/config-core.cjs
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5658b9c9c82b0b4d

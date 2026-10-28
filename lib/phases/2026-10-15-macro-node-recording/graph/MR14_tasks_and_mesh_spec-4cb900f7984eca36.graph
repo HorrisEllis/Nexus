@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MR14_tasks_and_mesh_spec:4cb900f7984eca36
+type: graph
+id: phase:MR14_tasks_and_mesh_spec:4cb900f7984eca36
+context: dependency graph of phase MR14_tasks_and_mesh_spec
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677597
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677597
+lastSeenAt: 1792787677597
+fingerprint: null
+payload:
+  for: MR14_tasks_and_mesh_spec
+  kind: phase
+  repo: null
+  hash: 4cb900f7984eca36
+  nodes:
+    - path: docs/clear-glass.spec
+      role: changes
+      exists: true
+      system: null
+    - path: docs/nexus-uri-clearglass-mesh-integration.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-macro-node-recording-phasemap.spec::MR6_macro_to_automation
+    dependents: []
+    upstream:
+      - docs/2026-10-15-macro-node-recording-phasemap.spec::MR6_macro_to_automation
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-macro-node-recording-phasemap.spec::MR6_macro_to_automation
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by MR6_macro_to_automation
+      - 'depends on (1): MR6_macro_to_automation'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-15-macro-node-recording-phasemap.spec::MR6_macro_to_automation
+        kind: inferred

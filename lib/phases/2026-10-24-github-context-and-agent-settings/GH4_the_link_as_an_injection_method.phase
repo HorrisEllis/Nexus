@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::GH4_the_link_as_an_injection_method
+type: phase
+id: docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::GH4_the_link_as_an_injection_method
+context: >-
+  pipeline phase GH4_the_link_as_an_injection_method of
+  docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+intent: null
+summary: GH4_the_link_as_an_injection_method (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371387
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371387
+lastSeenAt: 1792874371387
+fingerprint: null
+payload:
+  id: GH4_the_link_as_an_injection_method
+  map: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-agent.js
+    - lib/agent-providers.js
+  depends_on:
+    - GH3_sync_per_compartment
+    - AS2_each_provider_its_own_profile
+  blocks: []
+  spec: null
+  graph: b50190f50ed8fb2e

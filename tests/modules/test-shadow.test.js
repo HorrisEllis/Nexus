@@ -19,7 +19,7 @@ async function run() {
   console.log('\ntest-shadow\n');
   const SH = require(path.join(ROOT, 'lib', 'shadow.js'));
   const GF = require(path.join(ROOT, 'lib', 'gap-field.js'));
-  const bus = require(path.join(ROOT, 'nexus', 'nexus-bus.js'));
+  const bus = require(path.join(ROOT, 'lib', 'nexus', 'nexus-bus.js'));
   const { jaaDB } = require(path.join(ROOT, 'cortex', 'memory', 'jaa-db.js'));
   const seen = []; bus.on('shadow.settled', e => seen.push(e)); bus.on('shadow.declared', e => seen.push(e));
 

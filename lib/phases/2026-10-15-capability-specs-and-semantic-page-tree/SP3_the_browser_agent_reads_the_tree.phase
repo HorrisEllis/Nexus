@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP3_the_browser_agent_reads_the_tree
+type: phase
+id: docs_2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP3_the_browser_agent_reads_the_tree
+context: >-
+  pipeline phase SP3_the_browser_agent_reads_the_tree of
+  docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec
+intent: null
+summary: SP3_the_browser_agent_reads_the_tree (?) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792877162921
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877162921
+lastSeenAt: 1792877162921
+fingerprint: null
+payload:
+  id: SP3_the_browser_agent_reads_the_tree
+  map: docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-15-automatic-tracking-phasemap.spec
+    - lib/capability-spec.js
+    - lib/checks/ck-254-surface.js
+    - lib/spec/capability-spec.spec
+    - clear-glass/spec/semantic-tree.spec
+    - clear-glass/src/page/semantic-tree.js
+    - orchestrator/lib/spec-drift.js
+    - intelligence/gap/predicate.js
+    - lib/repo-git.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - SP1_semantic_page_tree
+  blocks: []
+  spec: null
+  graph: 4fefbe8b87d72df5

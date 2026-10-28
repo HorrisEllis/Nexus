@@ -1,0 +1,136 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RF1_migration_proposed_as_phases:37ed11040317ceba
+type: graph
+id: phase:RF1_migration_proposed_as_phases:37ed11040317ceba
+context: dependency graph of phase RF1_migration_proposed_as_phases
+intent: null
+summary: 11 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792820507496
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820507496
+lastSeenAt: 1792820507496
+fingerprint: null
+payload:
+  for: RF1_migration_proposed_as_phases
+  kind: phase
+  repo: null
+  hash: 37ed11040317ceba
+  nodes:
+    - path: idearium/repo/roadmap.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-architecture-migrate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/repo/source-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/architecture-migrate.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: idearium/repo/source-files.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: tests/modules/test-architecture-migrate.test.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RF0_architecture_read
+    dependents:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RF2_applied_one_phase_at_a_time
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL5_specs_become_the_roadmap
+    upstream:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::CK0_the_catalogue_written
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::CK1_the_catalogue_runs
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL0_his_projects_imported_for_real
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL1_many_projects_at_once
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL4_import_reports_what_is_broken
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL6_global_links_seen
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RF0_architecture_read
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::VM0_versionium_managed_per_repo
+    downstream:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL5_specs_become_the_roadmap
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RF2_applied_one_phase_at_a_time
+    blockedBy:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RF0_architecture_read
+    unlocks:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RF2_applied_one_phase_at_a_time
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL5_specs_become_the_roadmap
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by RF0_architecture_read
+      - 'depends on (1): RF0_architecture_read · all upstream 8'
+      - >-
+        needed by (2): RF2_applied_one_phase_at_a_time, PL5_specs_become_the_roadmap · finishing it
+        unlocks RF2_applied_one_phase_at_a_time, PL5_specs_become_the_roadmap
+    edges:
+      - from: docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RF0_architecture_read
+        kind: declared

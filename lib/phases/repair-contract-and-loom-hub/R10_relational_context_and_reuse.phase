@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R10_relational_context_and_reuse
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R10_relational_context_and_reuse
+context: pipeline phase R10_relational_context_and_reuse of docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R10_relational_context_and_reuse (?) — 14 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756555
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756555
+lastSeenAt: 1792841756555
+fingerprint: null
+payload:
+  id: R10_relational_context_and_reuse
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/relational-context.js
+    - lib/chunker/index.js
+    - lib/tool-index.js
+    - lib/component-ledger.js
+    - idearium/index.js
+    - lib/replay-engine.js
+    - cortex/snapshot/index.js
+    - loom/ui/index.html
+    - lib/gap-field.js
+    - lib/diagnostic-causal.js
+    - lib/agent-build-learning.js
+    - lib/stub-scanner.js
+    - lib/chunk-build-orchestrator.js
+    - intelligence/relational-field.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9bc7eb109a1d3f9a

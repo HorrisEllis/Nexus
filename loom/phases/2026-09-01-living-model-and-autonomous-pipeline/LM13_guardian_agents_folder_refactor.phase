@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM13_guardian_agents_folder_refactor
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM13_guardian_agents_folder_refactor
+context: >-
+  pipeline phase LM13_guardian_agents_folder_refactor of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM13_guardian_agents_folder_refactor (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675549
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675549
+lastSeenAt: 1792787675549
+fingerprint: null
+payload:
+  id: LM13_guardian_agents_folder_refactor
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - LM1_spec_as_living_model
+  blocks: []
+  spec: null
+  graph: 6ec05f2ae6a14f52

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
+type: phase
+id: docs_2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
+context: pipeline phase COSA14_versionium_record of docs/2026-10-15-cos-app-phasemap.spec
+intent: null
+summary: COSA14_versionium_record (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755523
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755523
+lastSeenAt: 1792841755523
+fingerprint: null
+payload:
+  id: COSA14_versionium_record
+  map: docs/2026-10-15-cos-app-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/app/version.js
+    - scripts/build-cos-app.js
+    - lib/release-version.js
+    - lib/version.js
+    - cos/app/app-update.js
+    - idearium/lib/projects-folder.cjs
+  depends_on:
+    - COSA9_idearium_sync
+    - COSA13_auto_update
+  blocks: []
+  spec: null
+  graph: 5390299903c72853

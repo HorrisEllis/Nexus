@@ -15,6 +15,10 @@
  *   RI-04  every door: the two command rows reach the routes; the Phases tab offers it (empty state and rail)
  *   RI-05  in Clear Glass: the real phases.js on a just-imported project with no phases shows "this project brought its own
  *          roadmap" and the rail's "roadmap not imported yet"; the button posts the import for that folder
+ *   RI-06..08  0.60.221 SD17b — James, 2026-10-23: "some work for my mentor. need a way to real the data. the phases, convert md to
+ *          spec." A phased SPEC.md (worker_clean's shape) and an ISSUES.md (core13's shape), cut down: phases with their goal,
+ *          changelog files, numbering as order, the Completed table and the README status table done, done by evidence; issues as
+ *          open items with their group, other projects' items not imported and said; the real API with the repo's files
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -52,6 +56,31 @@ const PHASEMAP_MD = [
   '     ├─ P3-UI lattice interface     ← highest value, unblocked by anything',
   '     └─ P11 compartments',
   '```', '',
+].join('\n');
+
+
+// §SD17b — worker_clean's SPEC.md shape (cut down) and its README's status table; core13's ISSUES.md shape (cut down)
+const PHASED_SPEC = [
+  '# GameMaster — Phased Development Specification', '',
+  '## Completed Phases (baseline for this spec)', '', '| Phase | Summary |', '|-------|---------|',
+  '| 1 | SISO core framework — events, gates, stream |', '| 2 | AI integration — AIGenerateGate |', '', '---', '',
+  '## Phase 3 — Frontend Restructure', '', '**Goal:** Split the monolithic `index.html` into a proper PHP/CSS/JS file structure.  ',
+  'Fix the inventory bug.', '', '### What to build', '- `index.php` — PHP entry point', '', '### Changelog.3', '```',
+  '[ADDED]   public/js/app.js', '[ADDED]   index.php', '[CHANGED] run_tests.php — registered', '[REMOVED] index.html (replaced)', '```', '',
+  '## Phase 4 — Inventory Panel', '', '**Goal:** Make the game UI richer.', '', '### Changelog.4', '```',
+  '[ADDED]   public/js/ui/inventory.js', '[CHANGED] index.php — two-column layout', '```', '',
+  '## Phase 5 — Save Slots', '', '**Goal:** Multiple named save slots.', '', '### Changelog.5', '```', '[ADDED]   src/Gates/SaveSlotGate.php', '```', '',
+  '## Cross-cutting rules (apply to every phase)', '', '1. Gates never throw.', '',
+].join('\n');
+const PHASED_README = ['# AI Game Master', '', '| Phase | Summary |', '|---|---|', '| 1 | SISO framework |', '| 2 | AI integration |',
+  '| 3.1 | Port to SISO core v10.0 — pure gates |', '| **3.2** | **SISO core 13.1.0** — the client rebuilt |', '', 'Text after.'].join('\n');
+const ISSUES_MD = [
+  '# Open issues', '', 'Open items only.', '', '## Kit (minor)', '',
+  '- A per-gate test is code: it can still print a correct-looking', '  "register:" line. Probably not worth it.',
+  '- lua/code/kit/census.lua reads the register line from the first', '  run only. Fix: check both.', '',
+  '## For consumers moving to core 13.0.0 (cross-project, not this project\'s work)', '', '- 13.1.0 moves the Lua reference: vendor `lua/code/core/`.', '',
+  '## Deception by trusted code (named, not fixed)', '', '- R3: rawset past a frozen table.', '',
+  '## Deferred', '', '- Dev notes §1 stays deferred.', '',
 ].join('\n');
 
 (async () => {
@@ -179,6 +208,62 @@ const PHASEMAP_MD = [
       assert.ok(/16 phases, 4 done · next P0 \(10 wait on it\)/.test(t0[0]) && t0[1] === 'ok', JSON.stringify(t0));
       assert.deepStrictEqual(errors, []);
     } finally { await browser.close(); }
+  });
+
+
+  await test('RI-06', 'a phased SPEC.md: each phase with its goal and changelog files, the numbering as order, the tables done, done by evidence', () => {
+    const M = RIm.parsePhasedSpecMd(PHASED_SPEC, { statusTables: [{ path: 'README.md', text: PHASED_README }] });
+    assert.deepStrictEqual(M.items.map(i => i.srcId), ['P1', 'P2', 'P3', 'P3-1', 'P3-2', 'P4', 'P5'], 'the README\'s 3.1 and 3.2 join in their place');
+    const p3 = M.items.find(i => i.srcId === 'P3');
+    assert.match(p3.goal, /^Split the monolithic `index.html`.*Fix the inventory bug\.$/);
+    assert.deepStrictEqual(p3.paths, ['index.php', 'public/js/app.js', 'run_tests.php'], 'build list then changelog; [REMOVED] is not a file to build');
+    assert.deepStrictEqual(p3.added, ['public/js/app.js', 'index.php']);
+    const have = new Set(['public/js/app.js', 'index.php', 'run_tests.php', 'public/js/ui/inventory.js']);
+    const im = RIm.importRoadmap({ md: PHASED_SPEC, name: 'roadmap-phasemap', source: { md: 'SPEC.md' }, exists: p => have.has(p), statusTables: [{ path: 'README.md', text: PHASED_README }] });
+    const st = Object.fromEntries(im.phases.map(p => [p.srcId, p.status]));
+    assert.deepStrictEqual(st, { P1: 'done', P2: 'done', P3: 'done', 'P3-1': 'done', 'P3-2': 'done', P4: 'done', P5: 'pending' }, 'P3 and P4 by their files, 3.x by the README');
+    assert.deepStrictEqual(im.next.map(n => n.srcId), ['P5']);
+    const p5 = im.phases.find(p => p.srcId === 'P5');
+    assert.deepStrictEqual(p5.dependsOn, [im.phases.find(p => p.srcId === 'P4').id]);
+    assert.match(p5.evidence[0], /SPEC\.md the phases are numbered in order: P4 → P5/);
+    assert.match(im.text, /named_in_source: \[src\/Gates\/SaveSlotGate\.php\]/);
+    assert.match(im.text, /source_shape: phased-spec/);
+    const back = L.parsePhasemapText(im.text, 'roadmap-phasemap');
+    assert.strictEqual(back.length, 7, 'loom reads it back');
+    const dag = DAG.build([{ path: 'roadmap-phasemap.spec', text: im.text }], {});
+    assert.deepStrictEqual([dag.cycles.length, dag.dangling.length], [0, 0]);
+  });
+
+  await test('RI-07', 'an ISSUES.md: each bullet an open item with its group; other projects\' items not imported and said; its own map', () => {
+    const M = RIm.parseIssuesMd(ISSUES_MD);
+    assert.deepStrictEqual(M.items.map(i => [i.srcId, i.subtitle, i.stateText]), [['IS1', 'Kit (minor)', 'open'], ['IS2', 'Kit (minor)', 'open'],
+      ['IS3', 'Deception by trusted code (named, not fixed)', 'named, not fixed (an accepted risk)'], ['IS4', 'Deferred', 'deferred']]);
+    assert.deepStrictEqual(M.items[1].paths, ['lua/code/kit/census.lua']);
+    assert.match(M.items[1].goal, /reads the register line from the first run only\. Fix: check both\.$/, 'continuation lines join the bullet');
+    assert.strictEqual(M.skipped.length, 1);
+    const im = RIm.importRoadmap({ md: ISSUES_MD, name: 'issues-phasemap', source: { md: 'doc/ISSUES.md' } });
+    assert.ok(im.said.some(w => /other projects' work: 1 item/.test(w)), im.said.join(' | '));
+    assert.strictEqual(L.parsePhasemapText(im.text, 'issues-phasemap').length, 4);
+    const found = RIm.findRoadmaps(['doc/SPEC.md', 'doc/ISSUES.md', 'SPEC.md', 'README.md', 'vendor/x/ROADMAP.md']);
+    assert.deepStrictEqual(found.map(f => [f.md, f.target, f.kind || null]), [['SPEC.md', 'roadmap-phasemap.spec', 'spec'], ['doc/ISSUES.md', 'doc/issues-phasemap.spec', 'issues'], ['doc/SPEC.md', 'doc/roadmap-phasemap.spec', 'spec']]);
+    const rk = RIm.rankRoadmaps(found.filter(f => f.dir === 'doc'), p => (p === 'doc/ISSUES.md' ? ISSUES_MD : '# core\n\n## Identity\n\nA contract spec, no phases.\n'));
+    assert.deepStrictEqual([rk.roadmaps.map(r => r.md), rk.ignored.map(i => i.files[0])], [['doc/ISSUES.md'], ['doc/SPEC.md']], 'a contract SPEC.md names no phase: left out, said');
+  });
+
+  await test('RI-08', 'through the API: a repo with a phased SPEC.md and its README imports with its own files as evidence', async () => {
+    const uuid = await quiet(async () => {
+      const w = (await R('POST', '/api/workshop', { from: { kind: 'blank' }, title: `GameMaster RI ${Date.now().toString(36)}` })).json.workshop;
+      await R('POST', `/api/workshop/${w.uuid}`, { sections: [{ id: 'purpose', body: 'A phased SPEC.md project.' }] });
+      return (await R('POST', `/api/workshop/${w.uuid}/save`, {})).json.repoUuid;
+    });
+    for (const [p, c] of [['SPEC.md', PHASED_SPEC], ['README.md', PHASED_README], ['public/js/app.js', '// app\n'], ['index.php', '<?php\n']]) {
+      const w = await R('POST', `/api/repos/${uuid}/file`, { path: p, content: c });
+      assert.ok(w.json && !w.json.error, JSON.stringify(w.json));
+    }
+    const im = (await R('POST', `/api/repos/${uuid}/roadmaps/import`, {})).json;
+    assert.ok(im && im.phases === 7, JSON.stringify(im).slice(0, 300));
+    assert.strictEqual(im.done, 5, 'P1, P2 (table), P3 (its added files exist), 3.1, 3.2 (README); P4 lacks inventory.js');
+    assert.strictEqual(im.next[0].srcId, 'P4');
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);

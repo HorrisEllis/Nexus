@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+context: pipeline phase GW13_the_sandbox_door of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW13_the_sandbox_door (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792820507645
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820507645
+lastSeenAt: 1792820507645
+fingerprint: null
+payload:
+  id: GW13_the_sandbox_door
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/testenv/provision.js
+    - cos/workspace/vm-control.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - GW3_a_contract_is_traced
+    - GW0e_sandbox_egress
+  blocks: []
+  spec: null
+  graph: 991f9175bf37d4ce

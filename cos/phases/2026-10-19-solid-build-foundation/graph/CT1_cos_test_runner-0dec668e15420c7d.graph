@@ -1,0 +1,89 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CT1_cos_test_runner:0dec668e15420c7d
+type: graph
+id: phase:CT1_cos_test_runner:0dec668e15420c7d
+context: dependency graph of phase CT1_cos_test_runner
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877163606
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877163606
+lastSeenAt: 1792877163606
+fingerprint: null
+payload:
+  for: CT1_cos_test_runner
+  kind: phase
+  repo: null
+  hash: 0dec668e15420c7d
+  nodes:
+    - path: cos/testenv/run-target.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-run-target.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/testenv/run-target.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/run-target.js
+      kind: requires
+    - from: tests/modules/test-cos-run-target.test.js
+      to: cos/testenv/run-target.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+    upstream: []
+    downstream:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::AB1_autobuild_loop_and_resume
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ2_brick_gate_runs_the_test
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ3_brick_tests
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ4_phase_gate_keeps_the_test
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET1_autobuild_config_and_command
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET2_autobuild_settings_ui
+      - docs/2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
+      - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+      - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+      - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
+      - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW3_gate_panel
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL4_the_loop
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): GQ1_quality_stream · all downstream 21 · finishing it unlocks
+        GQ1_quality_stream
+    edges: []

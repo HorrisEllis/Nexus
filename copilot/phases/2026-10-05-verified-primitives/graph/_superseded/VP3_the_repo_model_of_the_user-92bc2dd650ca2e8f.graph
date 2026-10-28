@@ -1,0 +1,229 @@
+envelope: 1
+uuid: nexus-export-graph-phase:VP3_the_repo_model_of_the_user:92bc2dd650ca2e8f
+type: graph
+id: phase:VP3_the_repo_model_of_the_user:92bc2dd650ca2e8f
+context: dependency graph of phase VP3_the_repo_model_of_the_user
+intent: null
+summary: 24 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677056
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677056
+lastSeenAt: 1792787677056
+fingerprint: null
+payload:
+  for: VP3_the_repo_model_of_the_user
+  kind: phase
+  repo: null
+  hash: 92bc2dd650ca2e8f
+  nodes:
+    - path: copilot/lib/person-model/index.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: intelligence/gap/hunter.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/repo-hat-memory.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/autonomy-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/routes/person-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/governance/ask-james.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-user-model-radiate.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/user-model.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/person-model/lattice.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: meta/confidence.js
+      role: uses
+      exists: true
+      system: meta
+  edges:
+    - from: copilot/lib/person-model/index.js
+      to: copilot/lib/person-model/lattice.js
+      kind: requires
+    - from: copilot/lib/person-model/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/person-model/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: intelligence/gap/hunter.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/gap/hunter.js
+      to: meta/confidence.js
+      kind: requires
+    - from: copilot/routes/person-model.js
+      to: copilot/lib/person-model/index.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/governance/ask-james.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: tests/modules/test-user-model-radiate.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: tests/modules/user-model.test.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+  crossings:
+    - from: copilot/lib/person-model/index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: intelligence/gap/hunter.js
+      to: meta/confidence.js
+      fromSystem: intelligence
+      toSystem: meta
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/governance/ask-james.js
+      to: copilot/lib/user-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: orchestrator/lib/request-handler.js
+      to: copilot/lib/user-model.js
+      fromSystem: orchestrator
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: copilot/lib/user-model.js
+      fromSystem: orchestrator
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-05-verified-primitives-phasemap.spec::VP0_map_and_atlas
+    dependents: []
+    upstream:
+      - docs/2026-10-05-verified-primitives-phasemap.spec::VP0_map_and_atlas
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): VP0_map_and_atlas'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-05-verified-primitives-phasemap.spec::VP0_map_and_atlas
+        kind: declared

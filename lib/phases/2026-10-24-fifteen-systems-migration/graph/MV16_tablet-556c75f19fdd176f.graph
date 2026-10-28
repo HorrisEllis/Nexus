@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV16_tablet:556c75f19fdd176f
+type: graph
+id: phase:MV16_tablet:556c75f19fdd176f
+context: dependency graph of phase MV16_tablet
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792821071288
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792821071288
+lastSeenAt: 1792821071288
+fingerprint: null
+payload:
+  for: MV16_tablet
+  kind: phase
+  repo: null
+  hash: 556c75f19fdd176f
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

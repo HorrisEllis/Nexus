@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OR3_his_decisions_applied:f52f9193180a26cb
+type: graph
+id: phase:OR3_his_decisions_applied:f52f9193180a26cb
+context: dependency graph of phase OR3_his_decisions_applied
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677184
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677184
+lastSeenAt: 1792787677184
+fingerprint: null
+payload:
+  for: OR3_his_decisions_applied
+  kind: phase
+  repo: null
+  hash: f52f9193180a26cb
+  nodes:
+    - path: docs/roadmap-triage.md
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR7_the_shelf_combed
+    upstream: []
+    downstream:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR7_the_shelf_combed
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR7_the_shelf_combed
+    conflicts: []
+    dangling:
+      - OR2
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): OR7_the_shelf_combed · finishing it unlocks OR7_the_shelf_combed'
+      - 'DANGLING depends_on: OR2'
+    edges: []

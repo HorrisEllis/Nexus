@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP6_attach_in_place
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP6_attach_in_place
+context: pipeline phase UP6_attach_in_place of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP6_attach_in_place (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792973890114
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792973890114
+lastSeenAt: 1792973890114
+fingerprint: null
+payload:
+  id: UP6_attach_in_place
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-update.js
+  depends_on:
+    - UP2a_adopt_the_old_folder
+    - UP_D4_automatic
+  blocks: []
+  spec: null
+  graph: bb5d7d13e8f508ad

@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IM6_cortex_unclumped:fd9d4833cc2172df
+type: graph
+id: phase:IM6_cortex_unclumped:fd9d4833cc2172df
+context: dependency graph of phase IM6_cortex_unclumped
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792880100296
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100296
+lastSeenAt: 1792880100296
+fingerprint: null
+payload:
+  for: IM6_cortex_unclumped
+  kind: phase
+  repo: null
+  hash: fd9d4833cc2172df
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+    upstream: []
+    downstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): CS11_raid_in_the_exe · all downstream 5'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

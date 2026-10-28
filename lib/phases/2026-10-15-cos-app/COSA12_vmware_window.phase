@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-cos-app-phasemap.spec::COSA12_vmware_window
+type: phase
+id: docs_2026-10-15-cos-app-phasemap.spec::COSA12_vmware_window
+context: pipeline phase COSA12_vmware_window of docs/2026-10-15-cos-app-phasemap.spec
+intent: null
+summary: COSA12_vmware_window (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677534
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677534
+lastSeenAt: 1792787677534
+fingerprint: null
+payload:
+  id: COSA12_vmware_window
+  map: docs/2026-10-15-cos-app-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/CLAUDE.md
+  depends_on:
+    - COSA6_the_exe
+  blocks: []
+  spec: null
+  graph: c348ed645b8dabb1

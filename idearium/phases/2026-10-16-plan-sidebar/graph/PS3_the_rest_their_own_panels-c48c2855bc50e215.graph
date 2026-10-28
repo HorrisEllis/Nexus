@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PS3_the_rest_their_own_panels:c48c2855bc50e215
+type: graph
+id: phase:PS3_the_rest_their_own_panels:c48c2855bc50e215
+context: dependency graph of phase PS3_the_rest_their_own_panels
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677727
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677727
+lastSeenAt: 1792787677727
+fingerprint: null
+payload:
+  for: PS3_the_rest_their_own_panels
+  kind: phase
+  repo: null
+  hash: c48c2855bc50e215
+  nodes:
+    - path: idearium/ui/js/code-tab-panels.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/plan-panel.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-16-plan-sidebar-phasemap.spec::PS2_plan_panel_three_cards
+    dependents: []
+    upstream:
+      - docs/2026-10-16-plan-sidebar-phasemap.spec::PS2_plan_panel_three_cards
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): PS2_plan_panel_three_cards'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-16-plan-sidebar-phasemap.spec::PS2_plan_panel_three_cards
+        kind: inferred

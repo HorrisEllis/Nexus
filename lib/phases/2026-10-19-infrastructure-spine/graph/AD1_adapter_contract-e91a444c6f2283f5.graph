@@ -1,0 +1,80 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AD1_adapter_contract:e91a444c6f2283f5
+type: graph
+id: phase:AD1_adapter_contract:e91a444c6f2283f5
+context: dependency graph of phase AD1_adapter_contract
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677907
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677907
+lastSeenAt: 1792787677907
+fingerprint: null
+payload:
+  for: AD1_adapter_contract
+  kind: phase
+  repo: null
+  hash: e91a444c6f2283f5
+  nodes:
+    - path: lib/adapters/contract.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+    dependents:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD3_python_adapter
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD4_documents_adapter
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+    upstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+    downstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD3_python_adapter
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD4_documents_adapter
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::FP1_feature_pilot
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NT1_neutrality_test
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+      - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+      - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH2_chunk_laws
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH3_chunk_inspector
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK2_learned_granularity
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR3_graph_query_surface
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW3_gate_panel
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV2_invariant_guided_traversal
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV3_traversal_as_context
+    blockedBy:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+    unlocks:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD3_python_adapter
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD4_documents_adapter
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by NC1_neutral_core_boundary
+      - 'depends on (1): NC1_neutral_core_boundary · all upstream 3'
+      - >-
+        needed by (5): AD2_javascript_adapter, AD3_python_adapter, AD4_documents_adapter,
+        GR2_graph_views, CH1_strategies_behind_the_contract · all downstream 19 · finishing it
+        unlocks AD2_javascript_adapter, AD3_python_adapter, AD4_documents_adapter
+    edges:
+      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+        kind: declared

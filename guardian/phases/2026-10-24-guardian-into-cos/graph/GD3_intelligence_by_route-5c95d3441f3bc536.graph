@@ -1,0 +1,258 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GD3_intelligence_by_route:5c95d3441f3bc536
+type: graph
+id: phase:GD3_intelligence_by_route:5c95d3441f3bc536
+context: dependency graph of phase GD3_intelligence_by_route
+intent: null
+summary: 28 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877325041
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325041
+lastSeenAt: 1792877325041
+fingerprint: null
+payload:
+  for: GD3_intelligence_by_route
+  kind: phase
+  repo: null
+  hash: 5c95d3441f3bc536
+  nodes:
+    - path: guardian/lib/dispatcher.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: intelligence/server.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/profile-lanes.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/dispatcher-ping-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/dispatcher-stale-socket.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/ncp-hostile-payload.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/ncp-dual-live-flap.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/ncp-race.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/clear-glass-bridge.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/chat-transcripts.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatch-pool.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/profile-lanes.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-login.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-routing.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/lib/model-inventory.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/dispatch-pool.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/profile-lanes.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/chat-transcripts.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/clear-glass-bridge.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-login.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-ping-gate.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-stale-socket.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/lib/profile-lanes.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: tests/modules/ncp-hostile-payload.test.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: tests/ncp-dual-live-flap.test.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: tests/ncp-race.test.js
+      to: guardian/lib/ncp.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      fromSystem: guardian
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: guardian/lib/dispatcher.js
+      to: intelligence/alk/index.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D2_stateful_capabilities_by_route
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD2_primitives_to_the_kernel
+    dependents: []
+    upstream:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD2_primitives_to_the_kernel
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D1_pure_primitives_to_the_kernel
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D2_stateful_capabilities_by_route
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD2_primitives_to_the_kernel
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD4_the_other_systems_by_route
+        files:
+          - guardian/lib/dispatcher.js
+          - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
+        files:
+          - guardian/server.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by GD2_primitives_to_the_kernel
+      - >-
+        depends on (2): GD_D2_stateful_capabilities_by_route, GD2_primitives_to_the_kernel · all
+        upstream 3
+      - 'needed by (0): —'
+      - >-
+        same files as GD4_the_other_systems_by_route with no order between them:
+        guardian/lib/dispatcher.js, guardian/server.js
+      - 'same files as GD7_the_bus_and_connect with no order between them: guardian/server.js'
+    edges:
+      - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D2_stateful_capabilities_by_route
+        kind: declared
+      - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD2_primitives_to_the_kernel
+        kind: declared

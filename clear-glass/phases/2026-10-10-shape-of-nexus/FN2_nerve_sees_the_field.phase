@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-shape-of-nexus-phasemap.spec::FN2_nerve_sees_the_field
+type: phase
+id: docs_2026-10-10-shape-of-nexus-phasemap.spec::FN2_nerve_sees_the_field
+context: pipeline phase FN2_nerve_sees_the_field of docs/2026-10-10-shape-of-nexus-phasemap.spec
+intent: null
+summary: FN2_nerve_sees_the_field (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755156
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755156
+lastSeenAt: 1792841755156
+fingerprint: null
+payload:
+  id: FN2_nerve_sees_the_field
+  map: docs/2026-10-10-shape-of-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/page/attention.js
+    - clear-glass/src/ipc/agent-routes.js
+    - clear-glass/src/driver/index.js
+    - lib/nerve/index.js
+  depends_on:
+    - FN1_the_field_as_commands
+  blocks: []
+  spec: null
+  graph: 918d9978fe8f2f7a

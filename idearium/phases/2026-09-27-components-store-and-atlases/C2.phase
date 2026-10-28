@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-components-store-and-atlases-phasemap.spec::C2
+type: phase
+id: docs_2026-09-27-components-store-and-atlases-phasemap.spec::C2
+context: pipeline phase C2 of docs/2026-09-27-components-store-and-atlases-phasemap.spec
+intent: null
+summary: C2 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476414
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476414
+lastSeenAt: 1792822476414
+fingerprint: null
+payload:
+  id: C2
+  map: docs/2026-09-27-components-store-and-atlases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - warp-build-dispatch.js
+  depends_on:
+    - C1
+  blocks: []
+  spec: null
+  graph: 475e009c5b37b3fa

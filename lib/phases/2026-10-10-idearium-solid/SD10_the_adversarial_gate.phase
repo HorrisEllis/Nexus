@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD10_the_adversarial_gate
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD10_the_adversarial_gate
+context: pipeline phase SD10_the_adversarial_gate of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD10_the_adversarial_gate (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755117
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755117
+lastSeenAt: 1792841755117
+fingerprint: null
+payload:
+  id: SD10_the_adversarial_gate
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/draft-review.js
+    - lib/compartment-engine.js
+    - copilot/lifeline.js
+    - lib/pipeline-routing.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 90a97abd6be590f4

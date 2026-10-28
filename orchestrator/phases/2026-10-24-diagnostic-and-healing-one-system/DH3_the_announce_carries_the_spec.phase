@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH3_the_announce_carries_the_spec
+type: phase
+id: docs_2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH3_the_announce_carries_the_spec
+context: >-
+  pipeline phase DH3_the_announce_carries_the_spec of
+  docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec
+intent: null
+summary: DH3_the_announce_carries_the_spec (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792878423676
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878423676
+lastSeenAt: 1792878423676
+fingerprint: null
+payload:
+  id: DH3_the_announce_carries_the_spec
+  map: docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/lib/pulse.js
+    - orchestrator/orchestrator.js
+    - diagnostic/lib/pulse-watch.js
+    - versionium/server.js
+    - loom/server.js
+    - ollama/server.js
+  depends_on:
+    - DH2_every_system_states_its_expectations
+  blocks: []
+  spec: null
+  graph: 21253d84316bdf6c

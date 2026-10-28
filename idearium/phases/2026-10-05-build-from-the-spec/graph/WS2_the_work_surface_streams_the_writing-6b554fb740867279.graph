@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:WS2_the_work_surface_streams_the_writing:6b554fb740867279
+type: graph
+id: phase:WS2_the_work_surface_streams_the_writing:6b554fb740867279
+context: dependency graph of phase WS2_the_work_surface_streams_the_writing
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676965
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676965
+lastSeenAt: 1792787676965
+fingerprint: null
+payload:
+  for: WS2_the_work_surface_streams_the_writing
+  kind: phase
+  repo: null
+  hash: 6b554fb740867279
+  nodes:
+    - path: idearium/ui/css/work-surface.css
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/work-surface.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

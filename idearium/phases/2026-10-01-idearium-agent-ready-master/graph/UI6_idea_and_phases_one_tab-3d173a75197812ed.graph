@@ -1,0 +1,86 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UI6_idea_and_phases_one_tab:3d173a75197812ed
+type: graph
+id: phase:UI6_idea_and_phases_one_tab:3d173a75197812ed
+context: dependency graph of phase UI6_idea_and_phases_one_tab
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676464
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676464
+lastSeenAt: 1792787676464
+fingerprint: null
+payload:
+  for: UI6_idea_and_phases_one_tab
+  kind: phase
+  repo: null
+  hash: 3d173a75197812ed
+  nodes:
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI1_history_and_save_in_manage
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI2_desktop_environment_menu
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI3_settings_tab_retheme_collapse
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI7_phasemaps_out_of_files_and_tree_ops
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI8_code_tab_is_code
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI11_nav_and_look_restored
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI10_debug_and_intelligence_one_tab
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::TP1_promote_to_spec_templates
+        files:
+          - idearium/ui/js/app.js
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+      - >-
+        same files as UI1_history_and_save_in_manage with no order between them:
+        idearium/ui/js/app.js
+      - 'same files as UI2_desktop_environment_menu with no order between them: idearium/ui/js/app.js'
+      - >-
+        same files as UI3_settings_tab_retheme_collapse with no order between them:
+        idearium/ui/js/app.js
+      - 'same files as BK1_blocked_is_actionable with no order between them: idearium/ui/js/app.js'
+      - >-
+        same files as UI7_phasemaps_out_of_files_and_tree_ops with no order between them:
+        idearium/ui/js/app.js
+      - … and 5 more phases sharing its files without an order
+    edges: []

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+context: >-
+  pipeline phase RD1_raid_complete_or_build of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: RD1_raid_complete_or_build (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792877949856
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877949856
+lastSeenAt: 1792877949856
+fingerprint: null
+payload:
+  id: RD1_raid_complete_or_build
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/capability-extend.js
+    - cortex/core/raid/index.js
+    - idearium/repo/proof-run.js
+  depends_on:
+    - PR1_proof_run_the_delivery_checker
+    - LB1_the_end_state_lab
+  blocks: []
+  spec: null
+  graph: d255ad09d055563a

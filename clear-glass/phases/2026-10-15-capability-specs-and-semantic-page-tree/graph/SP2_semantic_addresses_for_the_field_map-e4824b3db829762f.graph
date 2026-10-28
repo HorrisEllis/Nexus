@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SP2_semantic_addresses_for_the_field_map:e4824b3db829762f
+type: graph
+id: phase:SP2_semantic_addresses_for_the_field_map:e4824b3db829762f
+context: dependency graph of phase SP2_semantic_addresses_for_the_field_map
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677470
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677470
+lastSeenAt: 1792787677470
+fingerprint: null
+payload:
+  for: SP2_semantic_addresses_for_the_field_map
+  kind: phase
+  repo: null
+  hash: e4824b3db829762f
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP1_semantic_page_tree
+    dependents: []
+    upstream:
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP1_semantic_page_tree
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): SP1_semantic_page_tree'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP1_semantic_page_tree
+        kind: declared

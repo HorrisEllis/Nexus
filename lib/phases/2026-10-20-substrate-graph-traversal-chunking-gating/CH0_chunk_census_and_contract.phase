@@ -6,14 +6,14 @@ context: >-
   pipeline phase CH0_chunk_census_and_contract of
   docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
 intent: null
-summary: CH0_chunk_census_and_contract (foundation) — 2 file(s)
+summary: CH0_chunk_census_and_contract (foundation) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792456416767
+exported_at: 1792787677987
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416767
-lastSeenAt: 1792456416767
+firstSeenAt: 1792787677987
+lastSeenAt: 1792787677987
 fingerprint: null
 payload:
   id: CH0_chunk_census_and_contract
@@ -23,7 +23,6 @@ payload:
   status: OPEN
   files:
     - lib/core/chunk.js
-    - lib/node-schemas/schema.chunk
   depends_on:
     - GR1_graph_primitive
   blocks:

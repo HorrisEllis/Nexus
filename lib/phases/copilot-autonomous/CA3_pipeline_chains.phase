@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-autonomous-phasemap.spec::CA3_pipeline_chains
+type: phase
+id: docs_copilot-autonomous-phasemap.spec::CA3_pipeline_chains
+context: pipeline phase CA3_pipeline_chains of docs/copilot-autonomous-phasemap.spec
+intent: null
+summary: CA3_pipeline_chains (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678143
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678143
+lastSeenAt: 1792787678143
+fingerprint: null
+payload:
+  id: CA3_pipeline_chains
+  map: docs/copilot-autonomous-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/chains.js
+    - lib/execution-pipeline.js
+    - lib/agent-router.js
+    - lib/agent-pull.js
+  depends_on:
+    - CA1_scheduler
+    - CA2_triggers_conditions
+  blocks: []
+  spec: null
+  graph: c33bc76e820f40fa

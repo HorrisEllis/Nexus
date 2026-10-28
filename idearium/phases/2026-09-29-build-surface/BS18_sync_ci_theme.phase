@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS18_sync_ci_theme
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS18_sync_ci_theme
+context: pipeline phase BS18_sync_ci_theme of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS18_sync_ci_theme (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676217
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676217
+lastSeenAt: 1792787676217
+fingerprint: null
+payload:
+  id: BS18_sync_ci_theme
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/index.html
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 58d5e571901660d4

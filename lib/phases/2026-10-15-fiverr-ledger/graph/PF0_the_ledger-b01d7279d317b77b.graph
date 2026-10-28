@@ -1,0 +1,243 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PF0_the_ledger:b01d7279d317b77b
+type: graph
+id: phase:PF0_the_ledger:b01d7279d317b77b
+context: dependency graph of phase PF0_the_ledger
+intent: null
+summary: 30 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755524
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755524
+lastSeenAt: 1792841755524
+fingerprint: null
+payload:
+  for: PF0_the_ledger
+  kind: phase
+  repo: null
+  hash: b01d7279d317b77b
+  nodes:
+    - path: lib/gig-ledger-listener.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gig-ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/maps/run-state-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: tests/modules/test-gig-ledger.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/workset.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/foundation/constants.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/lib/code-artifact.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/data-dir.cjs
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/alk/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/chat-logger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/idearium/code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/tool-layers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/maps/declare-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/gig-ledger-listener.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/gig-ledger-listener.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: loom/maps/run-state-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/run-state-map.js
+      to: loom/maps/declare-map.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/idearium/code.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/nexus/tool-layers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tool-guide.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: clear-glass/src/mesh/automation-engine.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: copilot/lib/workset.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cos/foundation/constants.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: guardian/lib/code-artifact.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/lib/data-dir.cjs
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: intelligence/alk/index.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/chat-logger.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/component-store.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings:
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF1_the_sources
+    upstream: []
+    downstream:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF1_the_sources
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF2_the_slots_into_a_gig
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF3_the_screen
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF1_the_sources
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): PF1_the_sources · all downstream 3 · finishing it unlocks PF1_the_sources'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

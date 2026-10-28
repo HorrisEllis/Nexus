@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-versionium-releases-phasemap.spec::RN2_cortex_is_the_bookkeeper
+type: phase
+id: docs_2026-10-07-versionium-releases-phasemap.spec::RN2_cortex_is_the_bookkeeper
+context: pipeline phase RN2_cortex_is_the_bookkeeper of docs/2026-10-07-versionium-releases-phasemap.spec
+intent: null
+summary: RN2_cortex_is_the_bookkeeper (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755012
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755012
+lastSeenAt: 1792841755012
+fingerprint: null
+payload:
+  id: RN2_cortex_is_the_bookkeeper
+  map: docs/2026-10-07-versionium-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/version.js
+  depends_on:
+    - RN1_release_is_a_node_and_a_tag
+    - LT1_provenance_lattice
+  blocks: []
+  spec: null
+  graph: ce96f74583db38f9

@@ -1,0 +1,110 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AE5_ui_and_cleanup:64632511853f3cef
+type: graph
+id: phase:AE5_ui_and_cleanup:64632511853f3cef
+context: dependency graph of phase AE5_ui_and_cleanup
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792948743437
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792948743437
+lastSeenAt: 1792948743437
+fingerprint: null
+payload:
+  for: AE5_ui_and_cleanup
+  kind: phase
+  repo: null
+  hash: 64632511853f3cef
+  nodes:
+    - path: clear-glass/renderer/settings/sections/automation.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/routes.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/ui/brainos/brainos-automation.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/cron.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/from-macro.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/nodes.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/steps.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/templates.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/automation/routes.js
+      to: clear-glass/src/automation/steps.js
+      kind: requires
+    - from: clear-glass/src/automation/routes.js
+      to: clear-glass/src/automation/templates.js
+      kind: requires
+    - from: clear-glass/src/automation/routes.js
+      to: clear-glass/src/automation/nodes.js
+      kind: requires
+    - from: clear-glass/src/automation/routes.js
+      to: clear-glass/src/mesh/automation-engine.js
+      kind: requires
+    - from: clear-glass/src/automation/routes.js
+      to: clear-glass/src/automation/cron.js
+      kind: requires
+    - from: clear-glass/src/automation/routes.js
+      to: clear-glass/src/automation/from-macro.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/automation/routes.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+    dependents: []
+    upstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
+    downstream: []
+    blockedBy:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by AE4_repoint_the_registry
+      - 'depends on (1): AE4_repoint_the_registry · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+        kind: declared

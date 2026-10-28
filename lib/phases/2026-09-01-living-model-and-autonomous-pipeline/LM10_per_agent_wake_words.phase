@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM10_per_agent_wake_words
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM10_per_agent_wake_words
+context: >-
+  pipeline phase LM10_per_agent_wake_words of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM10_per_agent_wake_words (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675545
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675545
+lastSeenAt: 1792787675545
+fingerprint: null
+payload:
+  id: LM10_per_agent_wake_words
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-chat.js
+    - lib/agent-tools/tools/coordination/agent-chat.js
+  depends_on:
+    - LM9_deterministic_agent_switch_cli
+  blocks: []
+  spec: null
+  graph: 181848264f44d530

@@ -1,0 +1,249 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GH6_send_a_requested_file:ec838bf06969e8e4
+type: graph
+id: phase:GH6_send_a_requested_file:ec838bf06969e8e4
+context: dependency graph of phase GH6_send_a_requested_file
+intent: null
+summary: 27 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792874371396
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371396
+lastSeenAt: 1792874371396
+fingerprint: null
+payload:
+  for: GH6_send_a_requested_file
+  kind: phase
+  repo: null
+  hash: ec838bf06969e8e4
+  nodes:
+    - path: guardian/lib/dispatcher.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/agent-tools/tools/nexus/send-file.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/dispatcher-ping-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/dispatcher-stale-socket.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-confidence-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-agent-provider.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/idearium/code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/tool-layers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/repo-agent.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/idearium/code.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/nexus/tool-layers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tool-guide.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/context-prereqs.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-agent-confidence-gate.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-repo-agent-provider.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-ping-gate.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-stale-socket.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+  crossings:
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH5_a_github_agent_tool
+    dependents: []
+    upstream:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0a_one_github_repo_per_compartment
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0c_private_by_default
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH1_a_compartment_gets_its_github_repo
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH5_a_github_agent_tool
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH5_a_github_agent_tool
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH3_sync_per_compartment
+        files:
+          - lib/repo-agent.js
+      - with: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH4_the_link_as_an_injection_method
+        files:
+          - lib/repo-agent.js
+      - with: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
+        files:
+          - lib/repo-agent.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by GH5_a_github_agent_tool
+      - 'depends on (1): GH5_a_github_agent_tool · all upstream 4'
+      - 'needed by (0): —'
+      - 'same files as GH3_sync_per_compartment with no order between them: lib/repo-agent.js'
+      - >-
+        same files as GH4_the_link_as_an_injection_method with no order between them:
+        lib/repo-agent.js
+      - >-
+        same files as AS1_one_resolver_global_then_repo with no order between them:
+        lib/repo-agent.js
+    edges:
+      - from: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH5_a_github_agent_tool
+        kind: declared

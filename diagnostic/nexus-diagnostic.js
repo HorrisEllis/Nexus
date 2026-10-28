@@ -915,7 +915,7 @@ function startService() {
             system: name,
             friction: state.friction,
             sigma: state.sigma,
-            fix: `node cli/diagnose.js ${name}`,
+            fix: `node lib/cli/diagnose.js ${name}`,
           });
           console.log(`[diagnostic] ⚠  ${name} friction=${state.friction?.toFixed(3)} — logged`);
         }
@@ -976,7 +976,7 @@ function startService() {
     // Healthy when orchestrator is healthy and the file exists
     // §0.39.265 — the shell moved into its own folder (ui/forge-shell/); this
     // still looked for ui/forge-shell.html and warned "missing" on every boot.
-    const forgeFile = path.join(ROOT, 'ui', 'forge-shell', 'forge-shell.html');
+    const forgeFile = path.join(ROOT, 'lib', 'ui', 'forge-shell', 'forge-shell.html');
     const forgeShellExists = fs.existsSync(forgeFile);
     const orchState = systemState['orchestrator'] || {};
     const forgeHealthy = forgeShellExists && orchState.online;
@@ -1549,7 +1549,7 @@ function startService() {
         if (age > 300000) { // 5 min
           issues.push({ type: 'orphaned_pending', system: name, file: f,
             ageMs: age, severity: 'medium',
-            fix: `Run: node cli/diagnose.js ${name} or restart ${name} service` });
+            fix: `Run: node lib/cli/diagnose.js ${name} or restart ${name} service` });
         }
       }
     }
@@ -2569,7 +2569,7 @@ const _REGISTRY_PATHS = {
   cortex:       path.join(ROOT, 'cortex/registry-components.js'),
   guardian:     path.join(ROOT, 'guardian/registry-components.js'),
   architect:    path.join(ROOT, 'architect/registry-components.js'),
-  emerge:       path.join(ROOT, 'emerge/registry-components.js'),
+  emerge:       path.join(ROOT, 'lib', 'emerge', 'registry-components.js'),
   copilot:      path.join(ROOT, 'copilot/registry-components.js'),
   idearium:     path.join(ROOT, 'idearium/registry-components.js'),
   ollama:       path.join(ROOT, 'ollama/registry-components.js'),

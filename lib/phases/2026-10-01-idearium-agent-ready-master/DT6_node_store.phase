@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DT6_node_store
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DT6_node_store
+context: pipeline phase DT6_node_store of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: DT6_node_store (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676403
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676403
+lastSeenAt: 1792787676403
+fingerprint: null
+payload:
+  id: DT6_node_store
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-09-29-nex-node-store-phasemap.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 587b34312496b309

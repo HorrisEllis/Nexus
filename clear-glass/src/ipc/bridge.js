@@ -352,6 +352,18 @@ class IpcBridge {
       return { ok: true, agentId, url: u.href };
     };
     this.app.post('/cli/net/open', _netRoute((b) => this._netOpenVia(b.url)));
+    // §ER2 0.60.253 — James, 2026-10-25: "can you hook erosmanceros into snowflake, accounts manager, and the dom mutator." A page for
+    // ErosmancerOS, opened through the door that owns its session (via snowflake | account | plain), and which agent each Eros tab is.
+    this.app.post('/cli/eros/open', async (req, res) => {
+      if (typeof this.erosOpen !== 'function') return res.status(503).json({ ok: false, error: 'the ErosmancerOS wire is not wired into this Clear Glass' });
+      const b = req.body || {};
+      try { const r = await this.erosOpen({ url: b.url, via: b.via || (b.accountId ? 'account' : 'plain'), accountId: b.accountId || null }); res.status(r.ok ? 200 : 400).json(r); }
+      catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
+    this.app.get('/cli/eros/tabs', async (req, res) => {
+      if (typeof this.erosTabs !== 'function') return res.status(503).json({ ok: false, error: 'the ErosmancerOS wire is not wired into this Clear Glass' });
+      try { const r = await this.erosTabs(); res.status(r.ok ? 200 : 503).json(r); } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
     // §0.60.169 NP11 — the Snowflake plugin's menu row asks for this on the bus ('net.open'); the answer is a toast in the window that asked
     try {
       const { getBus, Event } = require('../core/bus.js');
@@ -576,7 +588,7 @@ class IpcBridge {
     // path would use, not a second implementation of either.
     this.app.post('/cli/autofill/detect', async (req, res) => {
       if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
-      try { res.json(await _autofillDetect(this.dom, this.autofillStore, { agentId: req.body?.agentId || 'default', profileId: req.body?.profileId })); }
+      try { const agentId = req.body?.agentId || 'default'; res.json(await _autofillDetect(this.dom, this.autofillStore, { agentId, profileId: req.body?.profileId, learned: this._learnedFields(agentId) })); }
       catch (e) { res.status(500).json({ error: e.message }); }
     });
     // §0.39.301 — the gig writer's second door (src/autofill/gig.js), same functions the autofill:gig* IPC uses.
@@ -603,10 +615,60 @@ class IpcBridge {
     this.app.post('/cli/autofill/fill', async (req, res) => {
       if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
       try {
+        const agentId = req.body?.agentId || 'default';
+        const hc = await this._humanCheckGate(agentId); if (!hc.pass) return res.status(409).json({ error: hc.why, ...hc });   // §HC3
         res.json(await _autofillFill(this.dom, this.autofillStore, {
-          agentId: req.body?.agentId || 'default', profileId: req.body?.profileId, minConfidence: req.body?.minConfidence || 'medium',
+          agentId, profileId: req.body?.profileId, minConfidence: req.body?.minConfidence || 'medium', learned: this._learnedFields(agentId),
+          vars: req.body?.vars,   // §AD2 0.60.251 — the IPC autofill:fill passes {{var}} values; this door dropped them
         }));
       } catch (e) { res.status(500).json({ error: e.message }); }
+    });
+    // §JA2 0.60.226 — James, 2026-10-23: "then the phases with the per site settings." Teach the autofill a field it missed:
+    // a picked field (its key = fieldKeysOf(el)[0]) → a fieldType, saved per-origin in site-settings. The fill path above reads
+    // it back (learned), so on this site the field fills every time. The pick itself is JA3 (the element picker); this is its home.
+    this.app.post('/cli/autofill/learn', async (req, res) => {
+      if (!this.siteSettings) return res.status(503).json({ error: 'siteSettings unavailable' });
+      const agentId = req.body?.agentId || 'default';
+      const url = req.body?.url || this._pageUrl(agentId);
+      // §JA3 — one save path: learn-pick.js saveLearned (the element pick below saves through it too)
+      const r = require('../autofill/learn-pick.js').saveLearned(this.siteSettings, url, req.body?.fieldKey, req.body?.fieldType);
+      if (!r.ok) return res.status(400).json({ error: r.error });
+      try { this.postEvent?.('autofill.learned', { origin: r.origin, fieldKey: r.fieldKey, fieldType: r.fieldType, ts: Date.now() }); } catch (_) {}
+      res.json(r);
+    });
+    // §JA3 0.60.230 — James, 2026-10-19: "if he doesn't understand, have the element picker popup for me to select the element for
+    // him. saves to per site settings ... and updates the autofill." · 2026-10-24: "ja3". The Guardian picker opens in the
+    // application's tab for one fieldType (a fill's needsPick.unplaced); he clicks the box; it is checked, saved per-site through
+    // saveLearned, and the page is filled again. Resolves when he picks or cancels.
+    // §JA4 0.60.231 — what was learned, per site, and its undo (§0.3 reversible): learn-pick.js listLearned / forgetLearned.
+    this.app.get('/cli/autofill/learned', (req, res) => {
+      if (!this.siteSettings) return res.status(503).json({ error: 'siteSettings unavailable' });
+      res.json({ ok: true, learned: require('../autofill/learn-pick.js').listLearned(this.siteSettings, req.query?.url || null) });
+    });
+    const forget = async (req, res) => {   // DELETE /cli/autofill/learned?url&fieldKey, and POST /cli/autofill/forget {url, fieldKey} (the co-pilot's door)
+      const r = await this._autofillForget(req.query?.url || req.body?.url, req.query?.fieldKey || req.body?.fieldKey);
+      res.status(r.ok ? 200 : (this.siteSettings ? 404 : 503)).json(r);
+    };
+    this.app.delete('/cli/autofill/learned', forget);
+    this.app.post('/cli/autofill/forget', forget);
+    // §AT2 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." The whole autofill data as one .autofill file
+    // (src/autofill/transfer.js): profiles, learned fields, the last gig. An import merges and keeps what it replaced; undo puts it back.
+    this.app.get('/cli/autofill/export', (req, res) => {
+      const r = this._autofillExport();
+      res.status(r.ok ? 200 : 503).json(r);
+    });
+    this.app.post('/cli/autofill/import', (req, res) => {
+      const r = this._autofillImport(req.body?.text, { by: req.body?.by || 'cli' });
+      res.status(r.ok ? 200 : (this.autofillStore ? 400 : 503)).json(r);
+    });
+    this.app.post('/cli/autofill/import/undo', (req, res) => {
+      const r = this._autofillImportUndo();
+      res.status(r.ok ? 200 : (this.autofillStore ? 404 : 503)).json(r);
+    });
+    this.app.post('/cli/autofill/pick', async (req, res) => {
+      if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
+      const r = await this._autofillPick(req.body || {});
+      res.status(r.ok || r.cancelled ? 200 : 400).json(r);
     });
 
     // §BUILT 2026-09-21 — James: "answering on screen questions." Backend
@@ -711,6 +773,14 @@ class IpcBridge {
         }));
       } catch (e) { res.status(500).json({ error: e.message }); }
     });
+    // §AD2 0.60.251 — create/delete and recording, the same methods the IPC macros:* handlers call (one implementation, a
+    // second door). A run stays on the route above (agents keep Guardian + RAID, 0.60.69).
+    const macroStatus = (r) => (r && (r.error || r.ok === false) ? (/not available|not wired/.test(r.error || '') ? 503 : 400) : 200);
+    this.app.post('/cli/macros', async (req, res) => { const r = await this._macroWrite('create', req.body || {}); res.status(macroStatus(r)).json(r); });
+    this.app.delete('/cli/macros/:name', async (req, res) => { const r = await this._macroWrite('delete', { name: req.params.name }); res.status(macroStatus(r)).json(r); });
+    this.app.post('/cli/macros/record/start', async (req, res) => { const r = await this._macroRecord('start', { agentId: req.body?.agentId || 'default', name: req.body?.name }); res.status(macroStatus(r)).json(r); });
+    this.app.post('/cli/macros/record/stop', async (req, res) => { const r = await this._macroRecord('stop', { agentId: req.body?.agentId || 'default' }); res.status(macroStatus(r)).json(r); });
+    this.app.get('/cli/macros/record/status', async (req, res) => { const r = await this._macroRecord('status', { agentId: req.query?.agentId || 'default' }); res.status(macroStatus(r)).json(r); });
 
     this.app.post('/cli/downloads/listeners', (req, res) => res.json(this.options?.registerDownloadListener(req.body) || { error: 'options unavailable' }));
     this.app.patch('/cli/downloads/listeners/:id', (req, res) => res.json(this.options?.updateDownloadListener(req.params.id, req.body) || { error: 'options unavailable' }));
@@ -1271,14 +1341,8 @@ class IpcBridge {
     // "a separate, larger piece" rather than a bare JSON textarea. create/
     // delete go through macro.js's OWN validation (real browser_action enum,
     // erosmancer targetUuid rule, profile set) — the UI never re-implements it.
-    ipcMain.handle('macros:create', async (e, d = {}) => {
-      if (!this.macroTool) return { error: 'macro tool not available' };
-      return this.macroTool.execute({ action: 'create', name: d.name, urlPattern: d.urlPattern, steps: d.steps, params: d.params, profile: d.profile || undefined, description: d.description });
-    });
-    ipcMain.handle('macros:delete', async (e, d = {}) => {
-      if (!this.macroTool) return { error: 'macro tool not available' };
-      return this.macroTool.execute({ action: 'delete', name: d.name });
-    });
+    ipcMain.handle('macros:create', async (e, d = {}) => this._macroWrite('create', d));
+    ipcMain.handle('macros:delete', async (e, d = {}) => this._macroWrite('delete', d));
     // §BUILT 2026-09-26 — record a macro from a real tab: the driver's
     // recorder captures, src/macros/recording.js turns it into steps the
     // builder opens pre-filled (passwords become a {{password}} parameter).
@@ -1287,7 +1351,7 @@ class IpcBridge {
     let _live = null;
     const live = () => _live || (_live = new (require('../macros/live-recording').LiveRecorder)({
       getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
-      dir: require('../mesh/automation-engine.js').NODES_DIR }));
+      dir: require('../../../lib/automation-nodes.js').NODES_DIR }));
     ipcMain.handle('macros:recordStart', async (e, { agentId, name } = {}) => {
       if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
       try { return await live().start({ agentId, name }); } catch (err) { return { ok: false, error: err.message }; }
@@ -1619,11 +1683,19 @@ class IpcBridge {
     ipcMain.handle('autofill:profile:delete', async (e, d) => this.autofillStore?.deleteProfile(d.id));
     ipcMain.handle('autofill:detect', async (e, { agentId = 'default', profileId } = {}) => {
       if (!this.dom || !this.autofillStore) return { error: 'autofill unavailable' };
-      return _autofillDetect(this.dom, this.autofillStore, { agentId, profileId });
+      return _autofillDetect(this.dom, this.autofillStore, { agentId, profileId, learned: this._learnedFields(agentId) });   // §JA3 — the panel's door reads the learned map too
     });
+    ipcMain.handle('autofill:pick', async (e, d = {}) => {   // §JA3 — the panel's Pick (JA4)
+      if (!this.dom || !this.autofillStore) return { ok: false, error: 'autofill unavailable' };
+      return this._autofillPick(d);
+    });
+    // §JA4 0.60.231 — the panel's "Fields it learned" list and its Forget
+    ipcMain.handle('autofill:learned', async (e, { url = null } = {}) => ({ ok: true, learned: require('../autofill/learn-pick.js').listLearned(this.siteSettings, url) }));
+    ipcMain.handle('autofill:forget', async (e, { url, fieldKey } = {}) => this._autofillForget(url, fieldKey));
     ipcMain.handle('autofill:fill', async (e, { agentId = 'default', profileId, minConfidence = 'medium', vars } = {}) => {
       if (!this.dom || !this.autofillStore) return { error: 'autofill unavailable' };
-      return _autofillFill(this.dom, this.autofillStore, { agentId, profileId, minConfidence, vars });
+      const hc = await this._humanCheckGate(agentId); if (!hc.pass) return { error: hc.why, ...hc };   // §HC3 the gate before a fill
+      return _autofillFill(this.dom, this.autofillStore, { agentId, profileId, minConfidence, vars, learned: this._learnedFields(agentId) });
     });
 
     // §0.39.265 — James: "expand the job application autofill … maybe add fiverr
@@ -1656,14 +1728,18 @@ class IpcBridge {
     ipcMain.handle('autofill:gig:fill', async (e, { gig, agentId = 'default', minConfidence = 'medium' } = {}) => this._gigFill({ gig, agentId, minConfidence }));
     ipcMain.handle('autofill:gig:assign', async (e, d = {}) => this._gigAssign(d));   // 0.60.222 — a picked element taught to a gig part
     ipcMain.handle('autofill:gig:autofill', async (e, p = {}) => this._gigAutofill(p));   // §GA1 — the co-pilot's one door
-    // 2026-10-12 — a gig FILE (.gig.json, the shape parseGig reads) → the same gig, held to Fiverr's limits like a written one.
+    // 2026-10-12 — a gig FILE (.gig, or an old .gig.json: the shapes parseGig reads) → the same gig, held to Fiverr's limits like a written one.
     // Reads and checks only: nothing is saved, typed or published.
     // 2026-10-12 — a gig as a .gig file (YAML, its limits written beside each field), or an empty template to fill in
     ipcMain.handle('autofill:gig:file', async (e, { gig = null, template = false } = {}) => {
       const G = require('../autofill/gig.js');
-      if (template || !gig) return { ok: true, ...G.gigTemplate() };
-      return { ok: true, ...G.gigFile(gig) };
+      // §AT4 0.60.256 — James, 2026-10-26: "fix it so its .gig not .gig.json." Whatever the name, it ends in .gig
+      const r = template || !gig ? G.gigTemplate() : G.gigFile(gig);
+      return { ok: true, ...r, filename: G.gigFilename(r.filename) };
     });
+    ipcMain.handle('autofill:export', async () => this._autofillExport());                                    // §AT2 the .autofill file
+    ipcMain.handle('autofill:import', async (e, { text } = {}) => this._autofillImport(text, { by: 'settings' }));
+    ipcMain.handle('autofill:import:undo', async () => this._autofillImportUndo());
     ipcMain.handle('autofill:gig:import', async (e, { text } = {}) => {
       const G = require('../autofill/gig.js');
       const r = G.parseGig(String(text == null ? '' : text).slice(0, 200000));
@@ -2038,6 +2114,84 @@ class IpcBridge {
     this.postEvent('autofill.gig.drafted', { profileId, title: r.gig.title, tags: r.gig.tags.length, packages: Object.keys(r.gig.packages).length, warnings: r.warnings.length, ts: Date.now() });
     return { ok: true, gig: r.gig, warnings: r.warnings, parts: G.gigParts(r.gig), text: G.gigText(r.gig) };
   }
+  // §JA3 0.60.230 — the pick, for the route and the IPC door: the tab the fill used (the dom bridge's), the picker, the save, a refill.
+  async _autofillPick({ agentId = 'default', fieldType, profileId = null, label = null, fill = true, minConfidence = 'medium' } = {}) {
+    let wc = null; try { wc = this.dom && this.dom._getWebContents(agentId); } catch (_) {}
+    const r = await require('../autofill/learn-pick.js').pickAndLearn({ wc, dom: this.dom, autofillStore: this.autofillStore, siteSettings: this.siteSettings,
+      fieldType, agentId, profileId, label, fill: fill !== false, minConfidence, ...this._autofillMacroDoor() });
+    if (r.ok) { try { this.postEvent?.('autofill.learned', { origin: r.origin, fieldKey: r.fieldKey, fieldType: r.fieldType, by: 'picker', ts: Date.now() }); } catch (_) {} }
+    return r;
+  }
+  // §JA5 0.60.232 — the pick's macro home: macro.js (the same tool every macro door uses) and the automation nodes folder its .macro goes in
+  // §AD2 0.60.251 — James, 2026-10-25: "need clearglass' fiverr, job application automation, autofill and macros working fully,
+  // including with the agents and copilot." Macro create/delete and recording had IPC handlers only; these two methods are what
+  // both the IPC macros:* handlers and the /cli/macros doors call, so a person, the co-pilot and an agent reach one implementation.
+  async _macroWrite(op, d = {}) {
+    if (!this.macroTool) return { error: 'macro tool not available' };
+    if (op === 'delete') return this.macroTool.execute({ action: 'delete', name: d.name });
+    return this.macroTool.execute({ action: 'create', name: d.name, urlPattern: d.urlPattern, steps: d.steps, params: d.params, profile: d.profile || undefined, description: d.description });
+  }
+
+  // One LiveRecorder (AD_D2): a recording the co-pilot starts can be stopped from the panel, and the reverse.
+  async _macroRecord(op, { agentId, name } = {}) {
+    if (op !== 'status' && !this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
+    try {
+      if (!this._liveRecorder) this._liveRecorder = new (require('../macros/live-recording').LiveRecorder)({
+        getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
+        dir: require('../mesh/automation-engine.js').NODES_DIR });
+      if (op === 'start') return await this._liveRecorder.start({ agentId, name });
+      if (op === 'stop') return await this._liveRecorder.stop(agentId);
+      if (op === 'status') return this._liveRecorder.status(agentId);
+      return { ok: false, error: `unknown record op "${op}" — start, status or stop` };
+    } catch (err) { return { ok: false, error: err.message }; }
+  }
+
+  _autofillMacroDoor() {
+    let nodesDir = null; try { nodesDir = require('../../../lib/automation-nodes.js').NODES_DIR; } catch (_) {}
+    return { macroTool: this.macroTool || null, nodesDir };
+  }
+  // §JA5 — forget, then rebuild the site's macro without that field (removed when nothing is left)
+  // §AT1/AT2 0.60.256 — the autofill data out and in (src/autofill/transfer.js); the import's undo is one JAA row
+  _autofillUndoRows() { const { JaaRows } = require('../storage/jaa'); return this._afUndo || (this._afUndo = new JaaRows('cg_autofill_import_undo', {})); }
+  _autofillExport() {
+    if (!this.autofillStore) return { ok: false, error: 'autofill unavailable' };
+    const r = require('../autofill/transfer.js').exportAll({ store: this.autofillStore, siteSettings: this.siteSettings || null });
+    if (r.ok) this.postEvent('autofill.exported', { ...r.counts, ts: Date.now() });
+    return r;
+  }
+  _autofillImport(text, { by = 'settings' } = {}) {
+    if (!this.autofillStore) return { ok: false, error: 'autofill unavailable' };
+    const r = require('../autofill/transfer.js').importAll({ store: this.autofillStore, siteSettings: this.siteSettings || null, text: String(text == null ? '' : text).slice(0, 5000000), undoRows: this._autofillUndoRows() });
+    if (r.ok) this.postEvent('autofill.imported', { ...r.counts, refused: r.refused.length, by, ts: Date.now() });
+    return r;
+  }
+  _autofillImportUndo() {
+    if (!this.autofillStore) return { ok: false, error: 'autofill unavailable' };
+    const r = require('../autofill/transfer.js').undoLast({ store: this.autofillStore, siteSettings: this.siteSettings || null, undoRows: this._autofillUndoRows() });
+    if (r.ok) this.postEvent('autofill.import.undone', { ...r.restored, ts: Date.now() });
+    return r;
+  }
+
+  async _autofillForget(url, fieldKey) {
+    const LP = require('../autofill/learn-pick.js');
+    const r = LP.forgetLearned(this.siteSettings, url, fieldKey);
+    if (!r.ok) return r;
+    try { this.postEvent?.('autofill.forgotten', { origin: r.origin, fieldKey: r.fieldKey, ts: Date.now() }); } catch (_) {}
+    const door = this._autofillMacroDoor();
+    if (door.macroTool) r.macro = await LP.saveMacro(door.macroTool, this.siteSettings, url, door);
+    return r;
+  }
+  // §JA2 0.60.226 — the page's url for a tab (for per-site learned fields), via the real driver as the gig path does.
+  _pageUrl(agentId = 'default') {
+    try { const wc = this.driver && this.driver._getWebContents(agentId); const u = wc && wc.getURL(); return u || null; } catch (_) { return null; }
+  }
+  // §JA2 — the learned field map ({ fieldKey → fieldType }) for the tab's origin, read from site-settings. Empty when none/unknown.
+  _learnedFields(agentId = 'default') {
+    try { const url = this._pageUrl(agentId); if (!url || !this.siteSettings) return null;
+      const m = require('../autofill/matcher.js').learnedFromSettings(this.siteSettings.getAllForOrigin(url));
+      return Object.keys(m).length ? m : null;
+    } catch (_) { return null; }
+  }
   // §GA1 0.60.161 — James, 2026-10-19: "yes." One door the co-pilot calls for "fill this in for me" on a Fiverr gig page, so it
   // runs the engine instead of chatting (the screenshot). Either, its choice (GA0a): a gig already written is used; else, given
   // an `offer`, one is written from the active Fiverr profile and kept; else a clear one-line ask comes back, never prose.
@@ -2070,6 +2224,18 @@ class IpcBridge {
     return (fiverr || (list.length === 1 ? list[0] : null) || null)?.id || null;
   }
   // Fill: types the matched parts into the gig editor open in a tab. Never saves, never publishes.
+  // §HC3 0.60.260 — James, 2026-10-26: "each step of the autofill can be gates." The first gate of every fill: a page asking for a human
+  // (Fiverr's Press & Hold, Cloudflare, a captcha) stops the fill and is handed to him (contexts/human-check.js); nothing presses or solves it.
+  async _humanCheckGate(agentId = 'default') {
+    const HC = require('../contexts/human-check');
+    let wc = null; try { wc = this.driver && this.driver._getWebContents(agentId); } catch (_) {}
+    if (!wc || (wc.isDestroyed && wc.isDestroyed())) return { pass: true, unchecked: 'no page found for the gate to read' };
+    let page = null; try { page = await wc.executeJavaScript(HC.detectScript, false); } catch (_) { return { pass: true, unchecked: 'the page could not be read' }; }
+    const g = HC.humanCheckGate(page);
+    if (!g.pass) this.postEvent('autofill.gate.human-check', { agentId, provider: g.provider, url: page && page.url, ts: Date.now() });
+    return g;
+  }
+
   async _gigFill({ gig, agentId = 'default', minConfidence = 'medium' } = {}) {
     if (!this.dom) return { error: 'dom bridge unavailable' };
     if (!gig || !gig.title) return { error: 'write the gig first' };

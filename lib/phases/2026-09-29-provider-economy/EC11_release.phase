@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-provider-economy-phasemap.spec::EC11_release
+type: phase
+id: docs_2026-09-29-provider-economy-phasemap.spec::EC11_release
+context: pipeline phase EC11_release of docs/2026-09-29-provider-economy-phasemap.spec
+intent: null
+summary: EC11_release (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754211
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754211
+lastSeenAt: 1792841754211
+fingerprint: null
+payload:
+  id: EC11_release
+  map: docs/2026-09-29-provider-economy-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/version.js
+    - CHANGELOG-0.39.281.md
+  depends_on:
+    - EC5_staging_by_economy
+    - EC6_guardian_enforcement
+    - EC7_router_in_builds
+    - EC8_economy_console
+    - EC9_input_path_in_editors
+    - EC10_eros_workbench
+  blocks: []
+  spec: null
+  graph: d13079374817a665

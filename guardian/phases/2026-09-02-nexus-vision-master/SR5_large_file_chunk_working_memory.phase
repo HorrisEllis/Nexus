@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::SR5_large_file_chunk_working_memory
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR5_large_file_chunk_working_memory
+context: >-
+  pipeline phase SR5_large_file_chunk_working_memory of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: SR5_large_file_chunk_working_memory (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753660
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753660
+lastSeenAt: 1792841753660
+fingerprint: null
+payload:
+  id: SR5_large_file_chunk_working_memory
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/ncp-handler.js
+    - lib/vector-memory.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a4526ff7355f77ae

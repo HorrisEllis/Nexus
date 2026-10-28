@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
+type: phase
+id: docs_2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
+context: pipeline phase EL1_electron_compiler of docs/2026-10-05-cos-machines-phasemap.spec
+intent: null
+summary: EL1_electron_compiler (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677024
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677024
+lastSeenAt: 1792787677024
+fingerprint: null
+payload:
+  id: EL1_electron_compiler
+  map: docs/2026-10-05-cos-machines-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/testenv/provision.js
+    - lib/cos-run.js
+  depends_on:
+    - OS1_compartments_as_operating_systems
+  blocks: []
+  spec: null
+  graph: 1d546cb97bd68077

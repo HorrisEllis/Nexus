@@ -1,0 +1,242 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PV0_claude_code_is_a_guardian_provider:700deffb992647b8
+type: graph
+id: phase:PV0_claude_code_is_a_guardian_provider:700deffb992647b8
+context: dependency graph of phase PV0_claude_code_is_a_guardian_provider
+intent: null
+summary: 27 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677298
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677298
+lastSeenAt: 1792787677298
+fingerprint: null
+payload:
+  for: PV0_claude_code_is_a_guardian_provider
+  kind: phase
+  repo: null
+  hash: 700deffb992647b8
+  nodes:
+    - path: guardian/lib/dispatcher.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/agent-providers.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/claude-code-backend.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/dispatcher-ping-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/dispatcher-stale-socket.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/clear-glass-bridge.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/chat-transcripts.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatch-pool.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/profile-lanes.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-login.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-routing.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tool-guide.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/lib/model-inventory.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/dispatch-pool.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/profile-lanes.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/chat-transcripts.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/clear-glass-bridge.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-login.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: lib/claude-code-backend.js
+      to: lib/agent-tools/tool-guide.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-ping-gate.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-stale-socket.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: lib/claude-code-backend.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/claude-code-backend.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/agent-suite/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/agent-providers.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/dispatcher.js
+      to: cortex/core/raid/index.js
+      fromSystem: guardian
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      fromSystem: guardian
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: guardian/lib/dispatcher.js
+      to: intelligence/alk/index.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV1_providers_read_from_nodes
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV1_providers_read_from_nodes
+    downstream: []
+    blockedBy:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV1_providers_read_from_nodes
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by PV1_providers_read_from_nodes
+      - 'depends on (1): PV1_providers_read_from_nodes'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV1_providers_read_from_nodes
+        kind: declared

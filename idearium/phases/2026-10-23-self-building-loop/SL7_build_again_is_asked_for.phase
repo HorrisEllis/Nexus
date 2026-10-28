@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-self-building-loop-phasemap.spec::SL7_build_again_is_asked_for
+type: phase
+id: docs_2026-10-23-self-building-loop-phasemap.spec::SL7_build_again_is_asked_for
+context: pipeline phase SL7_build_again_is_asked_for of docs/2026-10-23-self-building-loop-phasemap.spec
+intent: null
+summary: SL7_build_again_is_asked_for (integration) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478451
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478451
+lastSeenAt: 1792822478451
+fingerprint: null
+payload:
+  id: SL7_build_again_is_asked_for
+  map: docs/2026-10-23-self-building-loop-phasemap.spec
+  repo: null
+  layer: integration
+  status: >-
+    DONE 0.60.226 — test-contract-phase-build 14/14 (was 5/14), test-chunked-phase-build 16/16 (was
+    11/16)
+  files:
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/plan-panel.js
+    - idearium/ui/js/repo-tasks.js
+    - cortex/core/raid/contract-gates.js
+    - cortex/core/raid/contract-adapters.js
+    - tests/modules/test-contract-phase-build.test.js
+    - tests/modules/test-chunked-phase-build.test.js
+  depends_on:
+    - SL1_a_proven_phase_closes_itself
+  blocks:
+    - MOD-SL-REBUILD
+  spec: docs/self-building-loop.spec
+  graph: b4bfe731e603bdfb

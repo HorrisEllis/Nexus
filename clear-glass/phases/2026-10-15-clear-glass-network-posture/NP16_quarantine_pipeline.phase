@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP16_quarantine_pipeline
+type: phase
+id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP16_quarantine_pipeline
+context: >-
+  pipeline phase NP16_quarantine_pipeline of
+  docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+intent: null
+summary: NP16_quarantine_pipeline (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677490
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677490
+lastSeenAt: 1792787677490
+fingerprint: null
+payload:
+  id: NP16_quarantine_pipeline
+  map: docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - NP1_compartment
+    - NP9_cli_first
+  blocks: []
+  spec: null
+  graph: 36b6cda16caeb659

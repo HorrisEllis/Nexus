@@ -1,0 +1,279 @@
+envelope: 1
+uuid: nexus-export-graph-phase:D2_self_heal_migration:faec61e1a007112e
+type: graph
+id: phase:D2_self_heal_migration:faec61e1a007112e
+context: dependency graph of phase D2_self_heal_migration
+intent: null
+summary: 27 node(s), 9 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753777
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753777
+lastSeenAt: 1792841753777
+fingerprint: null
+payload:
+  for: D2_self_heal_migration
+  kind: phase
+  repo: null
+  hash: faec61e1a007112e
+  nodes:
+    - path: cortex/core/raid/contract-boundary.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/fault-taxonomy.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/worker.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/escalation.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/gap/predicate.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: tests/modules/test-diagnostic-heal-path.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-fault-taxonomy.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/event-taxonomy.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: idearium/spec-engine/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-intent-contract.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contract-repo-provision.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/meta/adversary-suite.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/self-heal/fault-taxonomy.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/contract-repo-provision.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/event-taxonomy.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/agent-intent-contract.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: cortex/self-heal/escalation.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: tests/modules/test-diagnostic-heal-path.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: tests/modules/test-fault-taxonomy.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/worker.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: guardian/server.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: idearium/spec-engine/index.js
+      fromSystem: cortex
+      toSystem: idearium
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: cortex/self-heal/fault-taxonomy.js
+      fromSystem: diagnostic
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: intelligence/gap/predicate.js
+      to: cortex/self-heal/fault-taxonomy.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: guardian
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+    dependents: []
+    upstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+    downstream: []
+    blockedBy:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by D1_diagnostic_real_folder
+      - 'depends on (1): D1_diagnostic_real_folder · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+        kind: declared

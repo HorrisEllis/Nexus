@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+context: pipeline phase DB12_the_ui_handshake of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB12_the_ui_handshake (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755859
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755859
+lastSeenAt: 1792841755859
+fingerprint: null
+payload:
+  id: DB12_the_ui_handshake
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/system-registry.js
+    - lib/drawbridge-registry.js
+    - lib/heartbeat.js
+    - idearium/ui/js/app.js
+    - lib/cos-bridge.js
+    - diagnostic/lib/pulse-watch.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 32fbf27eb7c532c8

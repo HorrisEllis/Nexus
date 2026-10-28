@@ -1,0 +1,123 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CD4_kill_on_disconnect:5cffcae8e1562525
+type: graph
+id: phase:CD4_kill_on_disconnect:5cffcae8e1562525
+context: dependency graph of phase CD4_kill_on_disconnect
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678035
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678035
+lastSeenAt: 1792787678035
+fingerprint: null
+payload:
+  for: CD4_kill_on_disconnect
+  kind: phase
+  repo: null
+  hash: 5cffcae8e1562525
+  nodes:
+    - path: clear-glass/src/net/kill-switch.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/plugins/snowflake/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/manager.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/policy.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/qbittorrent.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/quarantine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/transport-host.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/policy.js
+      kind: requires
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/transport-host.js
+      kind: requires
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/quarantine.js
+      kind: requires
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/qbittorrent.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/kill-switch.js
+      kind: requires
+    - from: clear-glass/plugins/snowflake/index.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD0_kill_default
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD2_quarantine_downloads
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+    dependents:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD5_surface
+    upstream:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD0_kill_default
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD0_magnet_client
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD2_quarantine_downloads
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+    downstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD5_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-21-compartment-downloads-phasemap.spec::CD5_surface
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - >-
+        depends on (3): CD0_kill_default, CD2_quarantine_downloads, CD3_verified_handoff · all
+        upstream 5
+      - 'needed by (1): CD5_surface · all downstream 2 · finishing it unlocks CD5_surface'
+    edges:
+      - from: docs/2026-10-21-compartment-downloads-phasemap.spec::CD0_kill_default
+        kind: declared
+      - from: docs/2026-10-21-compartment-downloads-phasemap.spec::CD2_quarantine_downloads
+        kind: declared
+      - from: docs/2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+        kind: declared

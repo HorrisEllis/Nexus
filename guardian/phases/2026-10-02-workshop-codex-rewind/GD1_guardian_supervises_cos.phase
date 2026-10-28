@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-workshop-codex-rewind-phasemap.spec::GD1_guardian_supervises_cos
+type: phase
+id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::GD1_guardian_supervises_cos
+context: pipeline phase GD1_guardian_supervises_cos of docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+intent: null
+summary: GD1_guardian_supervises_cos (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676768
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676768
+lastSeenAt: 1792787676768
+fingerprint: null
+payload:
+  id: GD1_guardian_supervises_cos
+  map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/cos-supervisor.js
+    - cos/workspace/index.js
+  depends_on:
+    - RW1_rewind_engine_vm_snapshots
+  blocks: []
+  spec: null
+  graph: 1d0485d9b5519bbc

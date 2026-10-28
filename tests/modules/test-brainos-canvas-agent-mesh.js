@@ -43,8 +43,8 @@ class FakeEl {
 
 function run() {
   global.document = { createElementNS: (ns, tag) => new FakeEl(tag) };
-  delete require.cache[require.resolve('../../ui/brainos/brainos-canvas.js')];
-  require('../../ui/brainos/brainos-canvas.js');
+  delete require.cache[require.resolve('../../lib/ui/brainos/brainos-canvas.js')];
+  require('../../lib/ui/brainos/brainos-canvas.js');
   const canvas = global.BrainOSCanvas;
 
   test('BCM-001', 'bridge is genuinely gone from the real system list', () => {

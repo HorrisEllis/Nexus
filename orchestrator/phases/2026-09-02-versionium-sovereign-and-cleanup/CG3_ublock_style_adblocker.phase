@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::CG3_ublock_style_adblocker
+type: phase
+id: docs_2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::CG3_ublock_style_adblocker
+context: >-
+  pipeline phase CG3_ublock_style_adblocker of
+  docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec
+intent: null
+summary: CG3_ublock_style_adblocker (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675741
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675741
+lastSeenAt: 1792787675741
+fingerprint: null
+payload:
+  id: CG3_ublock_style_adblocker
+  map: docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 303ef29f7a7e41db

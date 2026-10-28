@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gate-quality-checks-phasemap.spec::GQ3_brick_tests
+type: phase
+id: docs_2026-10-19-gate-quality-checks-phasemap.spec::GQ3_brick_tests
+context: pipeline phase GQ3_brick_tests of docs/2026-10-19-gate-quality-checks-phasemap.spec
+intent: null
+summary: GQ3_brick_tests (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677880
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677880
+lastSeenAt: 1792787677880
+fingerprint: null
+payload:
+  id: GQ3_brick_tests
+  map: docs/2026-10-19-gate-quality-checks-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/brick-tests.js
+  depends_on:
+    - GQ1_quality_stream
+  blocks:
+    - '"brick_tests"'
+  spec: null
+  graph: 7bb3b9e18cbc76b9

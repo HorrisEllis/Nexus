@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF3_chat_history_panel_wrong_url
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF3_chat_history_panel_wrong_url
+context: pipeline phase SF3_chat_history_panel_wrong_url of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF3_chat_history_panel_wrong_url (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792877678862
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877678862
+lastSeenAt: 1792877678862
+fingerprint: null
+payload:
+  id: SF3_chat_history_panel_wrong_url
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fc0dad959f17616a

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ23_acceptance_conditions_that_cannot_be_moved
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ23_acceptance_conditions_that_cannot_be_moved
+context: >-
+  pipeline phase RQ23_acceptance_conditions_that_cannot_be_moved of
+  docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ23_acceptance_conditions_that_cannot_be_moved (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792878422554
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878422554
+lastSeenAt: 1792878422554
+fingerprint: null
+payload:
+  id: RQ23_acceptance_conditions_that_cannot_be_moved
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/end-state.js
+    - lib/charter.js
+    - cos/foundation/intent.js
+    - cortex/core/raid/contract-intake.js
+    - idearium/repo/proof-run.js
+  depends_on:
+    - RQ9_the_chunked_contract
+    - RQ1_the_verifier_library
+  blocks: []
+  spec: null
+  graph: a7db71c7aaf4a6c9

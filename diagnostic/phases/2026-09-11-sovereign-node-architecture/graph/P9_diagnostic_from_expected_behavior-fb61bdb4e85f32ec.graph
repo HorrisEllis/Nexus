@@ -1,0 +1,172 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P9_diagnostic_from_expected_behavior:fb61bdb4e85f32ec
+type: graph
+id: phase:P9_diagnostic_from_expected_behavior:fb61bdb4e85f32ec
+context: dependency graph of phase P9_diagnostic_from_expected_behavior
+intent: null
+summary: 15 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822702257
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822702257
+lastSeenAt: 1792822702257
+fingerprint: null
+payload:
+  for: P9_diagnostic_from_expected_behavior
+  kind: phase
+  repo: null
+  hash: fb61bdb4e85f32ec
+  nodes:
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: diagnostic/cli.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/server.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/config.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: diagnostic/lib/wire-integrity.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/contract-verifier.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-engines.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ico.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/data-home.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ico.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/lib/wire-integrity.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/diagnostic-engines.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/config.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: diagnostic/cli.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+    - from: diagnostic/server.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+  crossings:
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      fromSystem: diagnostic
+      toSystem: loom
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

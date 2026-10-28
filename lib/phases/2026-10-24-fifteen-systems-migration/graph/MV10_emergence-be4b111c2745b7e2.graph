@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV10_emergence:be4b111c2745b7e2
+type: graph
+id: phase:MV10_emergence:be4b111c2745b7e2
+context: dependency graph of phase MV10_emergence
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792842797985
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792842797985
+lastSeenAt: 1792842797985
+fingerprint: null
+payload:
+  for: MV10_emergence
+  kind: phase
+  repo: null
+  hash: be4b111c2745b7e2
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV11_warp
+    dependents: []
+    upstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV11_warp
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV7_siso
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): MV11_warp · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV11_warp
+        kind: declared

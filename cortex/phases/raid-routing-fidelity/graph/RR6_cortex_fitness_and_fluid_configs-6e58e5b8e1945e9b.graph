@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RR6_cortex_fitness_and_fluid_configs:6e58e5b8e1945e9b
+type: graph
+id: phase:RR6_cortex_fitness_and_fluid_configs:6e58e5b8e1945e9b
+context: dependency graph of phase RR6_cortex_fitness_and_fluid_configs
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787678315
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678315
+lastSeenAt: 1792787678315
+fingerprint: null
+payload:
+  for: RR6_cortex_fitness_and_fluid_configs
+  kind: phase
+  repo: null
+  hash: 6e58e5b8e1945e9b
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/raid-routing-fidelity-phasemap.spec::RR3_per_agent_config_in_cortex
+      - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+    dependents: []
+    upstream:
+      - docs/raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
+      - docs/raid-routing-fidelity-phasemap.spec::RR2_contract_based_chunking
+      - docs/raid-routing-fidelity-phasemap.spec::RR3_per_agent_config_in_cortex
+      - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - >-
+        depends on (2): RR3_per_agent_config_in_cortex, RR4_governed_handshake_on_handoff · all
+        upstream 4
+      - 'needed by (0): —'
+    edges:
+      - from: docs/raid-routing-fidelity-phasemap.spec::RR3_per_agent_config_in_cortex
+        kind: declared
+      - from: docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+        kind: declared

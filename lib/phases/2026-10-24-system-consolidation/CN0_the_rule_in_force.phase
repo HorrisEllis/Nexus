@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+type: phase
+id: docs_2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+context: pipeline phase CN0_the_rule_in_force of docs/2026-10-24-system-consolidation-phasemap.spec
+intent: null
+summary: CN0_the_rule_in_force (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792878423764
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878423764
+lastSeenAt: 1792878423764
+fingerprint: null
+payload:
+  id: CN0_the_rule_in_force
+  map: docs/2026-10-24-system-consolidation-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/system-boundary.js
+    - tests/modules/test-system-boundary.test.js
+  depends_on:
+    - CN_D1_what_is_a_system
+  blocks: []
+  spec: null
+  graph: d9de6edfee97c779

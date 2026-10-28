@@ -1,0 +1,266 @@
+envelope: 1
+uuid: nexus-export-graph-phase:M1:f0b52b32e763c3af
+type: graph
+id: phase:M1:f0b52b32e763c3af
+context: dependency graph of phase M1
+intent: null
+summary: 27 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676086
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676086
+lastSeenAt: 1792787676086
+fingerprint: null
+payload:
+  for: M1
+  kind: phase
+  repo: null
+  hash: f0b52b32e763c3af
+  nodes:
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/memory/table-compactor.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/memory/tiers.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cli/compact.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cli/dedup.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/decay.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/clear-glass-stream-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/sigma-compaction.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/copilot-adversarial-wire.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/copilot-handshake-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sigma-compaction.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-table-compactor.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/intuition.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/copilot-context.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/expectation-watcher.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/inject-config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/recursive-diagnose.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/blueprint-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/config.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/inject-config.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/blueprint-index.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/copilot-context.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/recursive-diagnose.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/expectation-watcher.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/intuition.js
+      kind: requires
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-wire.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-handshake-dispatch.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: cli/compact.js
+      to: cortex/memory/table-compactor.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/table-compactor.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: cortex/memory/table-compactor.js
+      kind: requires
+    - from: tests/modules/test-table-compactor.js
+      to: cortex/memory/table-compactor.js
+      kind: requires
+    - from: cli/dedup.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: cortex/memory/decay.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: orchestrator/lib/sigma-compaction.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: tests/modules/test-sigma-compaction.js
+      to: cortex/memory/tiers.js
+      kind: requires
+  crossings:
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: cli/compact.js
+      to: cortex/memory/table-compactor.js
+      fromSystem: cli
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: cortex/memory/table-compactor.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: cli/dedup.js
+      to: cortex/memory/tiers.js
+      fromSystem: cli
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: orchestrator/lib/sigma-compaction.js
+      to: cortex/memory/tiers.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M0
+    dependents:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M6
+    upstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M0
+    downstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M3
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M6
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV2
+    blockedBy:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M0
+    unlocks:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M6
+    conflicts:
+      - with: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M5
+        files:
+          - copilot/server.js
+    dangling: []
+    lines:
+      - layer 1 · blocked by M0
+      - 'depends on (1): M0'
+      - 'needed by (3): SV2, M2, M6 · all downstream 4 · finishing it unlocks M6'
+      - 'same files as M5 with no order between them: copilot/server.js'
+    edges:
+      - from: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M0
+        kind: declared

@@ -24,8 +24,8 @@
  *   };
  *
  *   // 4. Run the CLI debugger:
- *   node cli/cfr-debug.js replay <ledger.jsonl>
- *   node cli/cfr-debug.js live   http://127.0.0.1:7820
+ *   node lib/cli/cfr-debug.js replay <ledger.jsonl>
+ *   node lib/cli/cfr-debug.js live   http://127.0.0.1:7820
  */
 
 module.exports = {

@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-observability-tablet-phasemap.spec::OB5_tablet_modules
+type: phase
+id: docs_nexus-observability-tablet-phasemap.spec::OB5_tablet_modules
+context: pipeline phase OB5_tablet_modules of docs/nexus-observability-tablet-phasemap.spec
+intent: null
+summary: OB5_tablet_modules (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478688
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478688
+lastSeenAt: 1792822478688
+fingerprint: null
+payload:
+  id: OB5_tablet_modules
+  map: docs/nexus-observability-tablet-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 56792031e4691191

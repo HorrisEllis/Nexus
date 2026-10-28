@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH5_diagnostic_heals
+type: phase
+id: docs_2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH5_diagnostic_heals
+context: >-
+  pipeline phase DH5_diagnostic_heals of
+  docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec
+intent: null
+summary: DH5_diagnostic_heals (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756249
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756249
+lastSeenAt: 1792841756249
+fingerprint: null
+payload:
+  id: DH5_diagnostic_heals
+  map: docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/lib/heal-loop.js
+    - diagnostic/nexus-diagnostic.js
+    - orchestrator/orchestrator.js
+    - lib/gap-relay.js
+  depends_on:
+    - DH4_diagnose_against_the_expectation
+    - DH0c_a_heal_is_proven_by_its_expectation
+  blocks: []
+  spec: null
+  graph: aa5dfededf7ad95a

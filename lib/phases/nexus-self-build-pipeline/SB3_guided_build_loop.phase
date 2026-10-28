@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-self-build-pipeline-phasemap.spec::SB3_guided_build_loop
+type: phase
+id: docs_nexus-self-build-pipeline-phasemap.spec::SB3_guided_build_loop
+context: pipeline phase SB3_guided_build_loop of docs/nexus-self-build-pipeline-phasemap.spec
+intent: null
+summary: SB3_guided_build_loop (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756497
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756497
+lastSeenAt: 1792841756497
+fingerprint: null
+payload:
+  id: SB3_guided_build_loop
+  map: docs/nexus-self-build-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/contracts/index.js
+    - lib/emergence.js
+    - lib/component-ledger.js
+    - lib/gap-field.js
+  depends_on:
+    - SB1_schema_extension
+    - SB2_universal_file_parse
+  blocks: []
+  spec: null
+  graph: 55227c9a64bbeaae

@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::C1_cli_per_system_split
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::C1_cli_per_system_split
+context: >-
+  pipeline phase C1_cli_per_system_split of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: C1_cli_per_system_split (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753781
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753781
+lastSeenAt: 1792841753781
+fingerprint: null
+payload:
+  id: C1_cli_per_system_split
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/cli/copilot-window.js
+    - lib/cli/cfr-debug.js
+    - lib/cli/boot-systems.js
+    - lib/cli/nexus-repl.js
+    - lib/cli/nexus-repl-descriptors.js
+    - lib/cli/nexus-movement.js
+    - lib/cli/run-supervised.js
+    - lib/cli/nexus-cli.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 674c8a2cfdc9ad11

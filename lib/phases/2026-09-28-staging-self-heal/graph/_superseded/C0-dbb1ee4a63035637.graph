@@ -1,0 +1,249 @@
+envelope: 1
+uuid: nexus-export-graph-phase:C0:dbb1ee4a63035637
+type: graph
+id: phase:C0:dbb1ee4a63035637
+context: dependency graph of phase C0
+intent: null
+summary: 28 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754101
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754101
+lastSeenAt: 1792841754101
+fingerprint: null
+payload:
+  for: C0
+  kind: phase
+  repo: null
+  hash: dbb1ee4a63035637
+  nodes:
+    - path: cortex/gap-finder/index.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: intelligence/server.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: copilot/lib/lifeline-contracts.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/diagnostic/system-priority.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/self-repair.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/boot-sequence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cli/boot-systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-causal.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/event-taxonomy.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/intent-map.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/diagnostic-causal.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/intent-map.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/boot-sequence.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/cli/boot-systems.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: copilot/lib/lifeline-contracts.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/system-priority.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/self-repair.js
+      to: lib/gap-field.js
+      kind: requires
+  crossings:
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    upstream: []
+    downstream:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C1
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (4): C1, L1, A1, X1 · all downstream 8 · finishing it unlocks C1'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

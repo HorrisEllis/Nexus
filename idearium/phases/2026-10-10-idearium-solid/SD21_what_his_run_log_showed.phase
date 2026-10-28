@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD21_what_his_run_log_showed
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD21_what_his_run_log_showed
+context: pipeline phase SD21_what_his_run_log_showed of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD21_what_his_run_log_showed (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477492
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477492
+lastSeenAt: 1792822477492
+fingerprint: null
+payload:
+  id: SD21_what_his_run_log_showed
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/adversarial.js
+    - guardian/server.js
+    - guardian/lib/provider-login.js
+    - lib/shadow.js
+    - idearium/repo/proof-run.js
+    - lib/repo-inject.js
+    - idearium/repo/nexus-self.js
+    - idearium/api/index.js
+  depends_on:
+    - SD20_a_starved_machine_does_not_spin
+  blocks: []
+  spec: null
+  graph: b49844a127559b4a

@@ -1,0 +1,224 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HP16_a_job_nobody_waits_for_is_not_sent_later:9529fd665023d5a5
+type: graph
+id: phase:HP16_a_job_nobody_waits_for_is_not_sent_later:9529fd665023d5a5
+context: dependency graph of phase HP16_a_job_nobody_waits_for_is_not_sent_later
+intent: null
+summary: 24 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877323518
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877323518
+lastSeenAt: 1792877323518
+fingerprint: null
+payload:
+  for: HP16_a_job_nobody_waits_for_is_not_sent_later
+  kind: phase
+  repo: null
+  hash: 9529fd665023d5a5
+  nodes:
+    - path: guardian/ask.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatcher.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/dispatcher-ping-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/dispatcher-stale-socket.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/clear-glass-bridge.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/account-routing.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/chat-transcripts.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatch-pool.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/profile-lanes.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-attention.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/lib/model-inventory.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: guardian/ask.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/lib/account-routing.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/lib/provider-attention.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/dispatch-pool.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/profile-lanes.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/chat-transcripts.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/clear-glass-bridge.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: guardian/ask.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/ask.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-ping-gate.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-stale-socket.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      fromSystem: guardian
+      toSystem: ollama
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP15_a_typed_prompt_is_never_sent_again
+    dependents:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP21_the_economy_holding_a_job_is_said
+    upstream:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP13_the_failure_is_put_at_the_right_gate
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP15_a_typed_prompt_is_never_sent_again
+    downstream:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP21_the_economy_holding_a_job_is_said
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP22_a_missing_tab_is_not_a_login_wall
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP21_the_economy_holding_a_job_is_said
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): HP15_a_typed_prompt_is_never_sent_again · all upstream 3'
+      - >-
+        needed by (3): HP17_no_tab_is_said_in_seconds, HP19_the_simulator_stays,
+        HP21_the_economy_holding_a_job_is_said · all downstream 4 · finishing it unlocks
+        HP17_no_tab_is_said_in_seconds, HP19_the_simulator_stays,
+        HP21_the_economy_holding_a_job_is_said
+    edges:
+      - from: docs/2026-10-09-hardening-pass-phasemap.spec::HP15_a_typed_prompt_is_never_sent_again
+        kind: inferred

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT1_dynamic_chunking
+type: phase
+id: docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT1_dynamic_chunking
+context: >-
+  pipeline phase CT1_dynamic_chunking of
+  docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+intent: null
+summary: CT1_dynamic_chunking (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677419
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677419
+lastSeenAt: 1792787677419
+fingerprint: null
+payload:
+  id: CT1_dynamic_chunking
+  map: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+  depends_on:
+    - CT0_the_contract_is_a_reference
+  blocks: []
+  spec: null
+  graph: f7d073f269227f58

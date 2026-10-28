@@ -1,0 +1,102 @@
+envelope: 1
+uuid: nexus-export-graph-phase:A1:678cef6eb0b005d6
+type: graph
+id: phase:A1:678cef6eb0b005d6
+context: dependency graph of phase A1
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676182
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676182
+lastSeenAt: 1792787676182
+fingerprint: null
+payload:
+  for: A1
+  kind: phase
+  repo: null
+  hash: 678cef6eb0b005d6
+  nodes:
+    - path: docs/SPEC-REGISTRY.spec
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-atlas-refs.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-nexus-atlas-refs.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S2
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S3
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+    dependents:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    upstream:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S2
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S3
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+    downstream:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    blockedBy:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S2
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S3
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 7 · blocked by S2, S3, S4, S5, S6, S7
+      - 'depends on (10): S0, S1, S2, S3, C0, C1, S4, S5, S6, S7'
+      - 'needed by (1): X1'
+    edges:
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S0
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S2
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S3
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::C0
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::C1
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+        kind: declared

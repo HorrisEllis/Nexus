@@ -1,0 +1,143 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DS6_one_module_contract_nested:3acef63147f4f671
+type: graph
+id: phase:DS6_one_module_contract_nested:3acef63147f4f671
+context: dependency graph of phase DS6_one_module_contract_nested
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755085
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755085
+lastSeenAt: 1792841755085
+fingerprint: null
+payload:
+  for: DS6_one_module_contract_nested
+  kind: phase
+  repo: null
+  hash: 3acef63147f4f671
+  nodes:
+    - path: eravos/ui/runtime/mod-factory.js
+      role: changes
+      exists: false
+      system: null
+    - path: lib/nexus-self/systems.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/living-spec.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/api/index.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/apply.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/inject-gate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/store.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS3_components_are_mods
+    dependents:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS7_tools_are_mods
+    upstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+      - docs/2026-10-10-design-surface-phasemap.spec::DS3_components_are_mods
+    downstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS7_tools_are_mods
+      - docs/2026-10-10-design-surface-phasemap.spec::DS8_the_registry_routes_the_ui_reflects
+    blockedBy:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS3_components_are_mods
+    unlocks:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS7_tools_are_mods
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by DS3_components_are_mods
+      - 'depends on (1): DS3_components_are_mods · all upstream 2'
+      - >-
+        needed by (1): DS7_tools_are_mods · all downstream 2 · finishing it unlocks
+        DS7_tools_are_mods
+    edges:
+      - from: docs/2026-10-10-design-surface-phasemap.spec::DS3_components_are_mods
+        kind: inferred

@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-self-building-loop-phasemap.spec::SL8_the_agent_maps_what_nexus_cannot
+type: phase
+id: docs_2026-10-23-self-building-loop-phasemap.spec::SL8_the_agent_maps_what_nexus_cannot
+context: >-
+  pipeline phase SL8_the_agent_maps_what_nexus_cannot of
+  docs/2026-10-23-self-building-loop-phasemap.spec
+intent: null
+summary: SL8_the_agent_maps_what_nexus_cannot (integration) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756219
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756219
+lastSeenAt: 1792841756219
+fingerprint: null
+payload:
+  id: SL8_the_agent_maps_what_nexus_cannot
+  map: docs/2026-10-23-self-building-loop-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.228 — test-agent-maps-phase 4/4 (AM-03 the real router with a scripted agent)
+  files:
+    - idearium/repo/phase-mapping.js
+    - lib/phase-files.js
+    - idearium/api/index.js
+    - idearium/repo/build-plan.js
+    - idearium/ui/js/plan-panel.js
+    - tests/modules/test-agent-maps-phase.test.js
+  depends_on:
+    - SL3_the_backlog_groomed
+    - SL7_build_again_is_asked_for
+  blocks:
+    - MOD-SL-AGENTMAP
+  spec: docs/self-building-loop.spec
+  graph: 2ab9caf20a5a7021

@@ -1,0 +1,301 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE1_the_compartment_machine:eb3bd9235c93618f
+type: graph
+id: phase:CE1_the_compartment_machine:eb3bd9235c93618f
+context: dependency graph of phase CE1_the_compartment_machine
+intent: null
+summary: 27 node(s), 8 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792880100408
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100408
+lastSeenAt: 1792880100408
+fingerprint: null
+payload:
+  for: CE1_the_compartment_machine
+  kind: phase
+  repo: null
+  hash: eb3bd9235c93618f
+  nodes:
+    - path: cos/compartment/qemu-runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/provision.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/cos-bridge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cos/cli/commands/vm.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/compartment/process-runner.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/vm-control.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/helpers/cos-mini-guest.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-vm-shell.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/cli/commands/advance-work-phase.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/cli/commands/destroy.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/cli/commands/intent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/guest-agent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/intent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/workspace/vm-control.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/compartment/qemu-runtime.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/guest-agent.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/advance-work-phase.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/destroy.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/foundation/intent.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/intent.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/workspace/vm-control.js
+      kind: requires
+    - from: cos/cli/commands/vm.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/vm-control.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/helpers/cos-mini-guest.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-vm-shell.test.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/cos-bridge.js
+      kind: requires
+  crossings:
+    - from: lib/cos-bridge.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/create.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/advance-work-phase.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/destroy.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/foundation/intent.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/intent.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/workspace/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/workspace/vm-control.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+    dependents:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
+    upstream:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+    downstream:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_bridge
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE5_the_guest_file_tree
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE6_the_code_tab
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE7_agents_and_commands
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+      - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
+    blockedBy:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+    unlocks:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by CE1a_cos_answers_on_a_route
+      - 'depends on (1): CE1a_cos_answers_on_a_route · all upstream 2'
+      - >-
+        needed by (2): CE2_the_shell_is_declared, MG8_the_factory · all downstream 23 · finishing it
+        unlocks CE2_the_shell_is_declared
+    edges:
+      - from: docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+        kind: declared

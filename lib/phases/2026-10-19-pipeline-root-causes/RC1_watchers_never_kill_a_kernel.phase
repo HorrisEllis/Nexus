@@ -6,14 +6,14 @@ context: >-
   pipeline phase RC1_watchers_never_kill_a_kernel of
   docs/2026-10-19-pipeline-root-causes-phasemap.spec
 intent: null
-summary: RC1_watchers_never_kill_a_kernel (foundation) — 13 file(s)
+summary: RC1_watchers_never_kill_a_kernel (foundation) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792653394688
+exported_at: 1792841755991
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394688
-lastSeenAt: 1792653394688
+firstSeenAt: 1792841755991
+lastSeenAt: 1792841755991
 fingerprint: null
 payload:
   id: RC1_watchers_never_kill_a_kernel
@@ -26,16 +26,7 @@ payload:
     - orchestrator/orchestrator.js
     - guardian/lib/node-registry.js
     - lib/node-registry.js
-    - lib/node-index-watcher.js
-    - lib/queue.js
-    - lib/ico.js
-    - auth/index.js
-    - architecture-spec/registry/watcher.js
-    - cos/foundation/file-browser.js
-    - diagnostic/nexus-diagnostic.js
-    - emerge/emerge-kernel.js
-    - idearium/repo/watcher.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 5363c8138bf6ff4a
+  graph: e0787e10195775d1

@@ -1,0 +1,241 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE10_lost_jobs_fall_back:077fff6ff3297765
+type: graph
+id: phase:CE10_lost_jobs_fall_back:077fff6ff3297765
+context: dependency graph of phase CE10_lost_jobs_fall_back
+intent: null
+summary: 27 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877324097
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877324097
+lastSeenAt: 1792877324097
+fingerprint: null
+payload:
+  for: CE10_lost_jobs_fall_back
+  kind: phase
+  repo: null
+  hash: 077fff6ff3297765
+  nodes:
+    - path: guardian/lib/dispatcher.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/job-retry.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/run-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/jobs.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/pipeline-routing.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/dispatcher-ping-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/dispatcher-stale-socket.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/clear-glass-bridge.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/chat-transcripts.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatch-pool.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/profile-lanes.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-login.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-routing.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/lib/model-inventory.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/dispatch-pool.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/profile-lanes.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/chat-transcripts.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/clear-glass-bridge.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-login.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: lib/run-state.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-ping-gate.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-stale-socket.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: lib/run-state.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/run-state.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/run-state.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      fromSystem: guardian
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: guardian/lib/dispatcher.js
+      to: intelligence/alk/index.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+    dependents: []
+    upstream:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): CE1_the_run_state'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+        kind: declared

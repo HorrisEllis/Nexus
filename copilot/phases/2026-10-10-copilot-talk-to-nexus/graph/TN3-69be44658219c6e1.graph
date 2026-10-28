@@ -1,0 +1,204 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TN3:69be44658219c6e1
+type: graph
+id: phase:TN3:69be44658219c6e1
+context: dependency graph of phase TN3
+intent: null
+summary: 21 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677190
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677190
+lastSeenAt: 1792787677190
+fingerprint: null
+payload:
+  for: TN3
+  kind: phase
+  repo: null
+  hash: 69be44658219c6e1
+  nodes:
+    - path: copilot/lib/nexus-ask.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/lib/nexus-awareness.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tools/query/nexus-help.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/clear-glass-stream-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/copilot-adversarial-wire.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/copilot-handshake-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/intuition.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/copilot-context.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/expectation-watcher.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/inject-config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/recursive-diagnose.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/blueprint-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/config.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/inject-config.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/blueprint-index.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/copilot-context.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/recursive-diagnose.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/expectation-watcher.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/intuition.js
+      kind: requires
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-wire.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-handshake-dispatch.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/nexus-awareness.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-help.js
+      to: copilot/lib/nexus-awareness.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: copilot/lib/nexus-ask.js
+      kind: requires
+  crossings:
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/query/nexus-help.js
+      to: copilot/lib/nexus-awareness.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: clear-glass/src/copilot/bridge.js
+      to: copilot/lib/nexus-ask.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN2
+    dependents:
+      - docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN4
+    upstream:
+      - docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN2
+    downstream:
+      - docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN4
+    blockedBy:
+      - docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN2
+    unlocks:
+      - docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN4
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by TN2
+      - 'depends on (1): TN2'
+      - 'needed by (1): TN4 · finishing it unlocks TN4'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN2
+        kind: inferred

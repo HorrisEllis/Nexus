@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+context: >-
+  pipeline phase SB17_the_system_template_is_complete of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB17_the_system_template_is_complete (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676866
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676866
+lastSeenAt: 1792787676866
+fingerprint: null
+payload:
+  id: SB17_the_system_template_is_complete
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/templates/architecture-spec.template.yaml
+    - docs/architecture-spec/architecture-spec.spec
+    - idearium/spec-engine/templates/genesis.spec
+  depends_on:
+    - SB16_genesis_nodes_domain
+  blocks: []
+  spec: null
+  graph: 3da27595c5dc5343

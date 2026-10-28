@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS1_capability_spec_and_surface_check
+type: phase
+id: docs_2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS1_capability_spec_and_surface_check
+context: >-
+  pipeline phase CS1_capability_spec_and_surface_check of
+  docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec
+intent: null
+summary: CS1_capability_spec_and_surface_check (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792877162914
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877162914
+lastSeenAt: 1792877162914
+fingerprint: null
+payload:
+  id: CS1_capability_spec_and_surface_check
+  map: docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE (0.60.49)
+  files:
+    - lib/capability-spec.js
+    - orchestrator/lib/spec-drift.js
+    - lib/code-intel/decls.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 18ed9d7d54309179

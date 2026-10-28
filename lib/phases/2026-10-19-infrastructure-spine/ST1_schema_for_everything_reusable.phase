@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::ST1_schema_for_everything_reusable
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::ST1_schema_for_everything_reusable
+context: >-
+  pipeline phase ST1_schema_for_everything_reusable of
+  docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: ST1_schema_for_everything_reusable (foundation) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677911
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677911
+lastSeenAt: 1792787677911
+fingerprint: null
+payload:
+  id: ST1_schema_for_everything_reusable
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - idearium/spec-engine/templates/genesis.spec
+  depends_on:
+    - IN0_baseline
+  blocks: []
+  spec: null
+  graph: 7d79572c6ac4587e

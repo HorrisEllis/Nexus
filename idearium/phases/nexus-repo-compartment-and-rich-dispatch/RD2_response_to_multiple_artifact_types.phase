@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-repo-compartment-and-rich-dispatch-phasemap.spec::RD2_response_to_multiple_artifact_types
+type: phase
+id: docs_nexus-repo-compartment-and-rich-dispatch-phasemap.spec::RD2_response_to_multiple_artifact_types
+context: >-
+  pipeline phase RD2_response_to_multiple_artifact_types of
+  docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
+intent: null
+summary: RD2_response_to_multiple_artifact_types (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478695
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478695
+lastSeenAt: 1792822478695
+fingerprint: null
+payload:
+  id: RD2_response_to_multiple_artifact_types
+  map: docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/architecture-spec/registry/phases.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a912e2588846f069

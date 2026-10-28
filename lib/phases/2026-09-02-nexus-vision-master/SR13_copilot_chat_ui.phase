@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::SR13_copilot_chat_ui
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR13_copilot_chat_ui
+context: pipeline phase SR13_copilot_chat_ui of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: SR13_copilot_chat_ui (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753676
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753676
+lastSeenAt: 1792841753676
+fingerprint: null
+payload:
+  id: SR13_copilot_chat_ui
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/loom-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5f3ef7718c4d1a74

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-idearium-one-surface-phasemap.spec::OS9_the_agent_is_in_the_code_tab
+type: phase
+id: docs_2026-10-07-idearium-one-surface-phasemap.spec::OS9_the_agent_is_in_the_code_tab
+context: >-
+  pipeline phase OS9_the_agent_is_in_the_code_tab of
+  docs/2026-10-07-idearium-one-surface-phasemap.spec
+intent: null
+summary: OS9_the_agent_is_in_the_code_tab (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677095
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677095
+lastSeenAt: 1792787677095
+fingerprint: null
+payload:
+  id: OS9_the_agent_is_in_the_code_tab
+  map: docs/2026-10-07-idearium-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+    - tests/modules/test-build-queue.test.js
+    - tests/modules/test-code-tab-merge.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b061d20cf1e09377

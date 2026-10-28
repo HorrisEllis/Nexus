@@ -269,7 +269,7 @@ function _defaultChecker() {
 }
 
 // every live window (electron's), for the popup check; a test passes its own
-function _allWindows() { try { return require('electron').BrowserWindow.getAllWindows(); } catch (_) { return []; } }
+function _allWindows() { let w = []; try { w = require('electron').BrowserWindow.getAllWindows(); } catch (_) {} try { w = w.concat(require('../main/glass-frame.js').all()); } catch (_) {} return w; }   // §GF1 0.60.258: Glass frames too
 
 function createAttentionHandler({ providerHost, assign, getProvider = null, accounts = () => null, checkerSource, pickerSource, signedOutWaitMs = 2500, log = () => {}, allWindows = _allWindows } = {}) {
   const guardianPicker = () => (pickerSource === undefined ? _guardianPicker() : pickerSource);

@@ -100,6 +100,101 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-24: "i want to use those engines for test env, web servers, etc all of them" · "this is all the networking backend for
+  anything needed netwroking wise"** (0.60.235)
+  - **Context:** he brought his own self-hosting platform (27 engines: web, DNS, firewall, SMTP, TLS …) to become Nexus's networking
+    layer.
+  - **What it shows:** reusing his own earlier work as infrastructure. Bringing it in found a code-execution hole: a login's handle could
+    run code in the kernel. It was closed without changing a byte of his engines. His shipped config held live keys; none of it came in.
+  - **Evidence:** `CHANGELOG-0.60.235.md`; `tests/modules/test-cos-services.test.js` 4/4; `cos/services/anonymous/UPSTREAM.sha256`.
+
+- **2026-10-24: "Archive."** (0.60.232)
+  - **Context:** the folders that turned out not to be systems.
+  - **What it shows:** decluttering by evidence. Three folders that nothing needed were archived with their history kept. Every
+    candidate was checked first for anything that still runs it. Two that are still wired in (ErosmancerOS starts with Clear Glass, and
+    sentinel's CLI) came back to him rather than being broken.
+  - **Evidence:** `CHANGELOG-0.60.232.md`; `_archive/2026-10-24-not-systems/README.md`.
+
+- **2026-10-24: "Aren't systems. They should have been dealt with already" · "15 systems. only the ones with a .spec in the directory. all
+  the systems in idearium"** (0.60.230, 0.60.231)
+  - **Context:** the coder's census counted 20, then 28, "systems", including folders that are libraries, schemas and parked code. Its
+    list of the "closest to sovereign" was folders that aren't systems at all.
+  - **What it shows:** he holds the architecture's definitions. In two lines he caught a wrong self-model and gave the exact rule (his
+    own list, with a spec for each), a rule his axiom §5.9 already implied. The census now matches the system's own registry of itself.
+  - **Evidence:** `CHANGELOG-0.60.230.md`, `CHANGELOG-0.60.231.md`; `tests/modules/test-registry-draft.test.js` RD-05, RD-06.
+
+- **2026-10-24: "then we need to resume the component registery for each system, get the mall sovereign, then cos phases to migrate."**
+  (0.60.229)
+  - **Context:** three steps in his order, registries, then sovereignty, then COS. He picked registries first over writing specs with
+    local models.
+  - **What it shows:** sequencing a migration by its preconditions. A system can't move into COS until it owns its data and declares
+    what it offers. He chose the step that unblocks the rest, and it costs no model calls. The drafts are proposals he accepts,
+    generated only from the tree.
+  - **Evidence:** `CHANGELOG-0.60.229.md`; `lib/registry-draft.js`; 16 `<system>/registry-components.draft.json`;
+    `tests/modules/test-registry-draft.test.js` 4/4.
+
+- **2026-10-24: "spec per component/capability/etc its in the specs. deocmpose all of the phases into .phase nodes including dag per
+  phase."** (0.60.227)
+  - **Context:** 2,046 phases across 166 maps, of which only 175 had been written as nodes.
+  - **What it shows:** making a large backlog machine-readable, and holding the work to his own rule. Every phase is now a node with its
+    place in the dependency graph. The measurement says plainly how far "spec first" reaches: 133 phases have a spec, and 1,107 open ones
+    do not. Writing every node also surfaced a parser fault that had silently replaced 11 real phases with notes about them.
+  - **Evidence:** `CHANGELOG-0.60.227.md`; `docs/2026-10-24-phase-nodes-spec-coverage.md`; `tests/modules/test-phase-specs.test.js` PS-05,
+    PS-06.
+
+- **2026-10-24: "This is a few days old. But does this help. A project that had auto built 5 phases"** (0.60.226)
+  - **Context:** the day the self-building loop was finished, he brought back a run of his own. Five phases were built automatically,
+    with an independent error report on what they actually were.
+  - **What it shows:** testing a system against its own past failures. His instinct to bring real evidence back to the builder found
+    a hole the new loop would have walked into: a phase marked READY on a file check that promised a test. Bringing a failure case
+    forward instead of only new features is a QA and verification skill.
+  - **Evidence:** `CHANGELOG-0.60.226.md`; `docs/2026-10-22-looking-glass-v0_4-error-report.md`; `tests/modules/test-phase-close.test.js`
+    PC-07 uses his SP5 proof as the fixture.
+
+- **2026-10-24: "yes do it."** (0.60.225)
+  - **Context:** three calls put to him with their options and the coder's recommendations: what may land without him (A, B or C),
+    which of the dry run's phases to close (the 2, all 107, or his picks), and whether to start the loop. He took the recommendations.
+  - **What it shows:** delegating with limits. He gave the system room to land its own proven work in his projects, while Nexus's
+    own code still waits for him. Undo stays one click, and a regressed test, a kept file or three misses in a row stop it. He chose
+    the 2 strongly evidenced closes over 107 weaker ones. Calibrated trust is a judgment skill: in a stranger's terms, he let
+    automation act where the evidence is strongest and kept a person on the core.
+  - **Evidence:** `CHANGELOG-0.60.225.md`; `lib/trust-rule.js` (DECIDED, his words and the options); `tests/modules/test-self-building-loop.test.js`
+    5/5. In LP-02, three chained phases build and close in order, and the one waiting on his decision is never built.
+
+- **2026-10-23: "next"** (0.60.224)
+  - **Context:** the self-building loop's third phase. The out-of-date backlog gets closed by evidence: a phase is done when its own
+    tests pass, with a dry run first.
+  - **What it shows:** a guard against coherent-looking false progress. The first rule, "any linked test", would have marked over a
+    hundred phases done on passes that prove nothing about them. The rule was narrowed by his axiom (truth over coherence) before
+    anything was written. The dry run now shows how much of "done" rests on a phase's own test (2 of 107) and how much on a test of its
+    files, and the choice to apply stays his.
+  - **Evidence:** `CHANGELOG-0.60.224.md`; `docs/2026-10-23-evidence-dry-run.md`; `tests/modules/test-evidence-close.test.js` 5/5.
+
+- **2026-10-23: "contiue getting idearium building phases"** (0.60.223)
+  - **Context:** the trace behind his "can it build itself" question found that nothing ever marked a phase done. A proven run left
+    its phase open, and everything after it stayed refused until he marked it by hand.
+  - **What it shows:** persistence on the hard part. He kept the work on the loop itself, not on features beside it, and the one
+    missing write is now there. It is guarded the way his rules ask: no close without the change on disk, and an undo reopens it.
+  - **Evidence:** `CHANGELOG-0.60.223.md`; `tests/modules/test-phase-close.test.js` 6/6. In PC-04 a proposed change waits, the same
+    change applied closes the map's phase with the run named, and reverting it reopens the phase.
+
+- **2026-10-23: "whats the most important? can you help me build, invent, innovate, ways for idearium to build phases, all of them, we
+  need this to work so it can start building itself."** (0.60.222)
+  - **Context:** 2077 phases across 166 maps, 1183 of them open. No way existed to ask which could be built now. Asked for the most
+    important thing, he chose the self-building loop over more features.
+  - **What it shows:** directing toward leverage. A system that knows what it can build next is the precondition for building itself.
+    His spec-first rule (2026-10-20) held here: the spec compiled before any code, and the code was checked against it.
+  - **Evidence:** `CHANGELOG-0.60.222.md`; `docs/self-building-loop.spec`; `tests/modules/test-build-queue.test.js` 6/6; the run over
+    Nexus's own maps: 170 of 1183 open phases buildable now, every other one with its reason.
+
+- **2026-10-23: "some work for my mentor. need a way to real the data. the phases, convert md to spec. just get nexus building itself"**
+  - **Context:** two real projects from his mentor, in PHP/JS and in four languages, each keeping its plan in its own
+    markdown shape. Idearium read neither.
+  - **What it shows:** using his own system on outside work. A tool built for one project (MASTERMIND's roadmap import)
+    now reads two more, from their own records, without a model: worker_clean's plan with its next phase found, and core13's
+    open issues.
+  - **Evidence:** `CHANGELOG-0.60.221.md`; `tests/modules/test-roadmap-import.test.js` RI-06..08.
+
 - **2026-10-21: "can you make a full adblocker ... migrate page zoom to the core of clearglass. moright click menu needs to be redone ... in
   relation to the mouse"** (0.60.183)
   - **Context:** the blocker was 16 hard-coded domains. Zoom lived in two places with different rules. The right-click menu had been
@@ -998,3 +1093,261 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - `tests/modules/test-site-profile`, `test-site-readers` (7, each feature's own code), `test-site-settings-ui`, `test-global-settings`,
     `test-processes` and `test-processes-ui`. The screens are driven in Clear Glass;
   - docs/2026-10-23-site-profile-processes-phasemap.spec SP1–SP6.
+
+---
+
+## 2026-10-24 — The framework, externalized, and proven as running code
+
+**His words (the framework, in his own framing):** "None of this is a determination of facts, nor is it poles planted
+deep into the earth like an immutable object. This is a toolbox, an externalization of an implicit process, a deep dive
+into my mind." Later: "emerge is its own coding language."
+
+**What was established:** his cognitive framework — THE INNOVATION TOOLKIT — is not aspirational theory. Its concepts are
+load-bearing code in a running system. The framework was preserved verbatim (method only; personal material removed at
+his request) and the correspondence to the code was traced, not asserted.
+
+- **Checkable, in this repository:**
+  - The framework itself: `docs/innovation-toolkit.framework`.
+  - "The liminal/interstitial space flattens overwhelm" → `intelligence/liminal-space/`.
+  - "Finding the gap… gaps become tools" → `emerge/compiler/gap-field-engine.js`.
+  - "Hostile verification: truth under hostility" → `lib/verify-first.js` and the proof gate.
+  - "Invariants are the skeleton" and the boundary "Drawbridge" (his evolved vocabulary, `Gate→Drawbridge`) →
+    `lib/system-boundary.js`.
+  - "Signal = alignment + fidelity + expansion" → the SNR gate in `orchestrator/orchestrator.js`.
+- **The skill this shows:** externalization to the point of executability. Most frameworks never survive contact with a
+  build; his compiled into a 15-system platform whose named parts are his named concepts.
+- **His part / the coder's part:** the framework, its concepts and vocabulary are his. The code that realizes them, and
+  the tracing of the correspondence, are the coder's.
+
+## 2026-10-24 — A build pipeline made solid, by spec and by hostile simulation
+
+**His words:** "can you decompose the phases into .phase with the dependancy graph per phase node… run deep and recursive
+simulations, of every possible failure mode, loop until we get a solid pipeline." · "need to do something about the
+dependancy graph." · "agent needs to map dependancies if nexus cant map one."
+
+**What was built (each phase mapped before code, each proven by a named test):**
+
+| Release | What it proves | Checkable |
+|---|---|---|
+| 0.60.225 (NF1) | A finding is not a phase: his "confused" traced to a root cause (a `root_findings:` entry offered as buildable work). | `CHANGELOG-0.60.225.md`; `tests/modules/test-root-findings-not-phases.test.js` 5/5 |
+| 0.60.226 (SL7) | Build-again is explicit; a contract hashes a phase's own block. | `CHANGELOG-0.60.226.md`; `test-contract-phase-build` **14/14 (was 5/14)**, `test-chunked-phase-build` **16/16 (was 11/16)** |
+| 0.60.227 (SL3) | The dependency graph made whole. | `CHANGELOG-0.60.227.md`; `test-phase-groom` 6/6; DG1 now checks **1156 of 1156** open phases; **3 cycles → 0**; `test-moce-roadmap` **43/43 (was 40/43)** |
+| 0.60.228 (SL8) | The agent maps what Nexus can't — checked by code, never trusted raw. | `CHANGELOG-0.60.228.md`; `test-agent-maps-phase` 4/4 (AM-03 on the real route) |
+| 0.60.229 (SL9) | Every phase a `.phase` node with its graph, beside its owner system. | `CHANGELOG-0.60.229.md`; `test-phase-nodes-all` 5/5; **1959** `.phase` nodes (`find . -name '*.phase'`); `node emerge/compiler/phase-specs.js --all --check` clean |
+| 0.60.230 (SL10) | The pipeline run through **25 failure modes**; **5 root causes** found and each fixed. | `CHANGELOG-0.60.230.md`; `test-pipeline-sim` 25/25, eight runs green |
+
+- **The skill this shows:** failure-mode thinking made literal (Maxim 5 — "every failure mode you find in simulation is a
+  problem you don't have to survive in reality"), and his own "deterministic first, then a model" routing applied to the
+  build itself (emerge as the compiler, the agent only for the gap it names).
+- **Honesty on the record:** the 0.60.229 proof table first claimed `phase-specs 4/4` while it was 3/4 at the commit; the
+  test was pinned to the new contract and the changelog corrected the same day (commit `db92ec5`). Hostile verification
+  applied to the coder's own output, not only the system's.
+- **His part / the coder's part:** the direction, the decisions (build-again is asked for; a pick never falls back in
+  silence; "the least amount of systems"), and the standard ("every phasemap phase needs extensive dag") are his. The
+  implementations, the tests, and the root-cause traces are the coder's.
+
+## 2026-10-24 — One framework, many systems (the constellation)
+
+**His words:** "should be the least amount of systems" · "15 systems. only the ones with a .spec in the directory. all
+the systems in idearium." · (handing over the body of work) "31 repos."
+
+**What was established:** a single externalized framework produced a shared spine — `warp` + `emergence` — reused and
+evolved across a brain-map OS (MASTERMIND), a couples dashboard (ERAVOS), a P2P mesh runtime (kern), a self-hosting
+platform (anonymousservers-nexus), a corvid-observation PWA (Raven/CorvidObs), and the self-building platform (Nexus) —
+plus a 26-spec rebuild corpus, across **31 repositories**.
+
+- **Checkable in this repository:** `docs/CONSTELLATION.md` (the inventory, state marked built/prepared); the consolidation
+  mapped as `docs/2026-10-24-system-consolidation-phasemap.spec` (DAG-clean, 12 phases, 0 problems), down to Idearium's 15
+  systems by his rule.
+- **Checkable in the repositories themselves** (not this one): `warp` — 43 tests; `emergence` — 221 tests (ERAVOS's
+  `MAP.md`, "the most complete, most tested thing"); the same `warp`/`emergence` lineage present in each.
+- **The skill this shows:** systems design repeated across domains from one set of primitives — the strongest single piece
+  of proof that the method is transferable, not a one-off.
+- **His part / the coder's part:** every system, idea and the framework are his. This session's part was to inventory,
+  map, and record them against verifiable evidence.
+
+### Numbers as of 2026-10-24 (this branch)
+| What | Number | How to check |
+|---|---|---|
+| Phasemaps | 168 | `ls docs/*-phasemap.spec \| wc -l` |
+| Test suites | 482 | `ls tests/modules/*.test.js \| wc -l` |
+| Phases decomposed to `.phase` nodes with their graphs | 1959 | `find . -name '*.phase' -not -path './node_modules/*' \| wc -l` |
+| Full-system specs that compile at depth (no BLACK node) | 18 | `node tests/modules/test-substrate-spec.test.js` |
+
+## 2026-10-24 — The crystallizer gate: his framework used to find and fix a flaw in his own system
+
+**His words:** "look at raid and the signal to noise section of the framework. look at the intelligence system. rfr2, my
+system hinking and my strcutrure intuition and analsys" · (then) "b, tighten the crystallizer threshold."
+
+**What was established:** the INNOVATION TOOLKIT framework (`docs/innovation-toolkit.framework`) is not decoration — it
+predicted, and then located, a real defect in the running intelligence system. The framework says *"intuition must be
+regulated and grounded"*; the crystallizer (`intelligence/index.js`) latched a co-occurrence as `crystallised` at count 3
+(15% confidence) and only applied the lift/noise regulator 3 minutes later, downstream. The fix moved the regulator
+upstream to the gate: a pattern is now **held as a hypothesis** until an event-level base-rate lift shows it beats chance.
+
+| Claim | Evidence a stranger can check |
+|---|---|
+| The framework named the flaw before the code was read | `docs/innovation-toolkit.framework` ("intuition must be regulated and grounded"; "analytical must have strict weighting") vs. the boot log's `135 co-patterns, 10 lift-confirmed signal` |
+| The fix is real and gated upstream | `intelligence/index.js` `_coOccurrenceLift` / `_groundedCrystallise`; `CHANGELOG-0.60.237.md`; `intelligence/spec/intelligence.spec` ADDENDUM 2026-10-24 |
+| It is proven, including the pure gate in isolation | `tests/modules/intelligence.test.js` **15/15** (D1/D2 hold a heartbeat pair as a hypothesis; F0–F5 prove the lift directly) |
+| A drift bug in the first cut was caught and fixed, not hidden | `CHANGELOG-0.60.237.md` "Drift found and fixed" (cumulative count ÷ windowed frequency → unbounded inflation; now a full-window ratio) |
+
+- **The skill this shows:** *using his own framework as a diagnostic instrument* — turning a philosophy of signal vs.
+  noise into a base-rate test in code — and **hostile verification applied to the coder's own fix** (the first
+  implementation reintroduced the very inflation it was meant to stop; it was found by its own test and corrected before
+  commit). Both are named skills in the framework (Maxim: "the more uncomfortable the truth, the bigger the gain").
+- **His part / the coder's part:** the framework, the signal-to-noise thesis, the structure/intuition/analysis model, and
+  the call to tighten the threshold are his. The base-rate derivation, the drift-bug catch, the tests, and the code are
+  the coder's.
+
+### 2026-10-24 — 0.60.225, 0.60.226, 0.60.230–0.60.232: an autofill that asks once, and remembers per site
+- **His words:** 2026-10-19: "if he doesn't understand, have the element picker popup for me to select the element for him. saves to
+  per site settings, and as a macro or automation and updates the autofill." · 2026-10-23: "make sure it works for these" (micro1,
+  Mercor, Turing, RemoExperts…) · "then the phases with the per site settings." · 2026-10-24: "ja3".
+- **Context:** The autofill matched fields by pattern only. A platform that labels a box oddly was missed on every visit, and
+  silently. His design closes that as a loop: when it misses, he points at the box once; the pick is saved for that site; the next
+  fill uses it. The coder built that design in three phases: the matcher reads the learned map (JA1), the pick is saved per site
+  (JA2), and the picker asks on a miss (JA3).
+- **What it shows:** human-in-the-loop design. A person is asked only where the machine is actually unsure. The answer is kept and
+  checked: a pick must name exactly one field on the page, or it is refused with the reason. A miss is reported, not hidden. One
+  instruction from him spans the matcher, the store, the picker and the agents' tools.
+- **Checkable:**
+  - `CHANGELOG-0.60.225.md`, `CHANGELOG-0.60.226.md`, `CHANGELOG-0.60.230.md`, `CHANGELOG-0.60.231.md`, `CHANGELOG-0.60.232.md`;
+  - `tests/modules/test-autofill-learned.test.js` (4), `test-autofill-learn-save.test.js` (3), `test-autofill-learn-pick.test.js` (5),
+    `test-autofill-learn-ui.test.js` (3, the screen driven in Clear Glass: Pick, the learned list, Forget),
+    `test-autofill-learn-macro.test.js` (5, the pick as a macro; one on a real page with the real dom mesh and selector-check);
+  - `docs/2026-10-19-gig-autofill-and-learn-phasemap.spec` JA1–JA5.
+  - His one sentence of 2026-10-19 named three homes for a pick: per-site settings, a macro or automation, and the autofill. All
+    three are built (JA2, JA5, JA1), each by reusing what Nexus had.
+
+  Every learned field can be seen and undone on screen (Forget), so a wrong pick costs one click.
+
+  Not yet shown: a fill on a live listing (his login).
+
+<!-- The entries below were written on brave-cori (claude/brave-cori-eczug1) and ported to main at 0.60.248 (his "Port it phase-by-phase"), unchanged. Their version numbers are that line's; on main the same work landed as GD1 0.60.246 and LM0–LM3 0.60.248. -->
+
+> **From brave-cori, merged 2026-10-26 (0.60.255).** The entries below were written on claude/brave-cori-eczug1, whose releases
+> reused the numbers 0.60.225–0.60.242. Their CHANGELOGs are kept in `_archive/2026-10-26-brave-cori-records/`, and their checks run on that
+> branch's tree (main moved emerge into lib/emerge and kept the .graph files). docs/2026-10-24-brave-cori-reconciliation.spec has the map.
+
+### 2026-10-24 — 0.60.237: "emerge, warp, and idearium merge?" → "okay warp and emerge."
+- **His words:** "Look at emerge. Deeply Custom" · "Either way it comes off the archive list." · "okay warp and emerge. / spec compiler, ide,
+  and idearium"
+- **Context:** Earlier the same day emerge was on his own archive list. He went back, read it, and took it off. He then asked about a
+  three-way merge. The coder's count showed nine systems using warp, which would all sit under Idearium. He chose the split the evidence
+  supported: the language and its runtime in one system, and the tools that build from specs with Idearium.
+- **Skill:** systems design. Revisiting his own archive call on reading the code, and then choosing the layering where the
+  dependencies point one way.
+- **Checkable:** `CHANGELOG-0.60.237.md`; `node -e "console.log(require('./lib/system-boundary.js').sovereignty({root:'.'}).sovereign)"` →
+  components, ollama, cos; `docs/2026-10-24-emerge-warp-system-phasemap.spec`.
+
+### 2026-10-24 — 0.60.238: ".phase/.graph should be one file i feel like?"
+- **His words:** ".phase/.graph should be one file i feel like?" · "need to keep at the sovereignty of each system"
+- **Context:** The coder had just reported the README overflowing from 4,195 phase nodes. He questioned the two-file layout itself rather
+  than the README. The count bore him out: the graphs were derived, duplicated on every edit, and kept nowhere else that mattered. Following
+  his sovereignty point, the coder also found that every node claimed to be Idearium's.
+- **Skill:** spotting a structural cause behind a symptom, and keeping the principle in view (a phase lives with its system).
+- **Checkable:** `CHANGELOG-0.60.238.md`; `git ls-files | grep -c '\.graph$'` gives 0 phase graphs; `tests/modules/test-phase-specs.test.js` PS-02, PS-07.
+
+### 2026-10-24 — 0.60.239: "we don't need to do anything that's not … redefining those boundaries"
+- **His words:** "spec compiler, ide, and idearium" · "I just want to get this, just get to the point where COS becomes, like where we could
+  get to the point where we could integrate COS, and then the Nexus would become immensely fucking easier to manage and more powerful."
+- **Context:** Shown everything left (sovereignty, the COS migration, agent fixes, a self-heal system and an OS still to design), he cut
+  scope to one thing, the boundaries, because they are what make COS possible. The compiler move followed: from another process, through
+  a route, it compiled its own spec.
+- **Skill:** prioritising. He sequenced by dependency (boundaries, then COS, then everything COS makes easier) instead of by appeal.
+- **Checkable:** `CHANGELOG-0.60.239.md`; `tests/modules/test-spec-compiler-port.test.js`; the closed list in `contracts/drawbridge-baseline.json`.
+
+### 2026-10-24 — 0.60.240: "maybe start with one at a time? like guardian?"
+- **His words:** "focus on just decoupling so we can get every system in a cos compartment. maybe start with one at a time? like guardian?"
+- **Context:** Facing twelve systems still coupled, he chose to go one at a time, and to start with Guardian, the system everything sends its
+  agent work through. Mapping Guardian's 33 crossings found that it ran a second copy of RAID inside itself. Removing it fixed three silent
+  defects, among them /build, which had never reached RAID.
+- **Skill:** incremental migration. Proving each system's isolation completely before the next keeps every step checkable. Decoupling
+  also surfaces hidden defects, because a copy that "works" in-process stops looking like it works once it has to go through a contract.
+- **Checkable:** `CHANGELOG-0.60.240.md`; `tests/modules/test-raid-port.test.js`; `docs/2026-10-24-guardian-into-cos-phasemap.spec` (census:).
+
+### 2026-10-24 — 0.60.241: "Isn't loom in a compartment already or clearglass?"
+- **His words:** "Isn't loom in a compartment already or clearglass?" · "Do it."
+- **Context:** Mid-way through Guardian, he asked whether a system was already in a compartment. The question turned up two facts: every
+  system's compartment is only a read-only mirror, and Loom was 5 requires from sovereign against Guardian's 20. He switched to Loom to
+  prove the path on the shortest case first. Loom then reached 0 ways out in one release, and the move also made a dead Architect route
+  work.
+- **Skill:** asking the question that changes the plan. Checking current state before continuing turned a long migration into a fast proof.
+- **Checkable:** `CHANGELOG-0.60.241.md`; `tests/modules/test-loom-into-cos.test.js` LI-04 (Loom reaches into no other system).
+
+### 2026-10-24 — 0.60.242: "There's no coupling after that." Made true.
+- **His words:** "once it's merged with COS, those fucking boundaries, they're not, it's not coupling after that. There's no coupling after
+  that." · "Do it."
+- **Context:** He had predicted that COS would end coupling. On reading COS, the coder found that compartments only recorded their
+  boundaries and enforced none. Building the wall he described as a property of COS (a require hook in COS's process runner) made Loom the
+  first system running isolated. On its first run, the wall found two couplings the static census could not see.
+- **Skill:** architectural foresight. His model of COS (a boundary that removes coupling by construction) was right, and building it took
+  a few dozen lines on primitives that already existed.
+- **Checkable:** \`CHANGELOG-0.60.242.md\`; \`tests/modules/test-loom-into-cos.test.js\` LI-05 (the wall) and LI-08 (Loom running inside it).
+
+### 2026-10-25 — 0.60.251: "working fully, including with the agents and copilot", and a log that pointed at the bug
+- **His words:** "need clearglass' fiverr, job application automation, autofill and macros working fully, including with the agents and
+  copilot." · "not letting me sign in." (pasted with his full autopilot log)
+- **Context:** Every unit test for the autofill, the gig fill and macros was green, yet he asked for it to work *with the agents*. Checking
+  that door showed the agents' named autofill tool had never completed a call (a Guardian job to a lane that does not exist). His log
+  then gave the evidence for two more defects: the ChatGPT tab reloaded its sign-in page every 3–4 s, and ErosmancerOS crashed on a
+  missing module.
+- **Skill:** specifying the acceptance condition. "Working fully, including with the agents" is the test that unit tests did not cover.
+  Reporting the failure with the full log let the sign-in loop be read from timestamps instead of guessed.
+- **Checkable:** `CHANGELOG-0.60.251.md`; `tests/modules/test-cg-agent-doors.test.js` AD-01 (the agents' tool against a real HTTP
+  server) and AD-06 (no injection on a sign-in page); `docs/2026-10-25-clear-glass-agent-doors-phasemap.spec` found:.
+
+### 2026-10-25 — 0.60.252: "first one but the second one needs to be the end state"
+- **His words:** "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?" · asked
+  how an update should land (a git clone, through COS, or a zip side by side): "first one but the second one needs to be the end state".
+- **Context:** He took the option that could ship that day (git) and named the robust one (COS) as the destination. That made the
+  coder build one update interface over drivers, so the COS driver drops in without changing the tool, its commands or its page. His
+  reminder that "copilot is meant to be a hat" put the tool on the hat, where any agent wearing it gets it, rather than on one window.
+- **Skill:** sequencing toward an end state. He chose the fastest path that does not foreclose the best one. It also kept the
+  architecture consistent with his own rule: a role is a hat, and capabilities follow the hat.
+- **Checkable:** `CHANGELOG-0.60.252.md`; `tests/modules/test-nexus-update.test.js` (9/9 on real git repos; UP-08 drives the page in
+  Clear Glass); `docs/2026-10-25-nexus-update-phasemap.spec` (UP_D1 quotes the choice; UP5 is the COS end state).
+
+### 2026-10-25 — 0.60.253: "its not hooked into guardian. look at idearium"
+- **His words:** "can you hook erosmanceros into snowflake, accounts manager, and the dom mutator." · then, from his own run: "its not hooked
+  into guardian. look at idearium".
+- **Context:** His co-pilot pane said "Both Ollama and Guardian are unavailable" while Guardian was up. He named the part of Nexus that does
+  work, Idearium, as the reference. That was the diagnosis: Idearium's repo agents reach Guardian because their dispatch makes Guardian open
+  a tab. The co-pilot's fallback refused whenever no tab was connected yet, which with lazy tabs is the normal state at the first ask. The
+  fix reused the door he had already decided on for a person's pick (CL1, openTab).
+- **Skill:** debugging by comparison. Pointing at a working path beside the broken one is the fastest route to a root cause, and it kept
+  the fix to reusing an existing mechanism rather than adding a new one.
+- **Checkable:** `CHANGELOG-0.60.253.md` (LG1); `tests/modules/lifeline-fluid-routing.test.js` T-006 / T-006b.
+
+### 2026-10-26 — 0.60.255: "merge that repo please. make sure we dont regenerate the files we moved, and archived."
+- **His words:** "Claude/brave cori eczug1. merge that repo please. make sure we dont regenerate the files we moved, and archived."
+- **Context:** Two lines of work had split two days earlier. Both numbered their releases 0.60.225 onward, and each moved folders its own
+  way. A plain merge of them conflicted on more than 4,000 paths, nearly all of them moved or generated files.
+- **The call:** he named the one constraint that made the merge safe: main's moves and archives win, and nothing generated is rewritten.
+  The 2,946 conflicts in those folders went to main's side mechanically. Hand resolution was left for the ~60 files with real work in them.
+  The loop, the trust rule, the proof-strength fix and the registry drafts all came in that way.
+- **Skill:** directing an integration. He set the invariant first, and the work followed from it.
+- **Checkable:** the merge commit (two parents, brave-cori's tip `c8739f48` among them); `CHANGELOG-0.60.255.md`;
+  `tests/modules/test-self-building-loop.test.js` 5/5; `tests/modules/test-registry-draft.test.js` 6/6;
+  `git ls-files '*.graph' | wc -l` unchanged from 0.60.254.
+
+### 2026-10-26 — 0.60.256: "i want to be able to import and export the data."
+- **His words:** "continue. look at autofill. i want to be able to import and export the data. have a download template button just the
+  fiverr gigs, also fix it so its .gig not .gig.json."
+- **Context:** Autofill held his profiles, the fields it learned per site and his gig, with no way to move them between installs, and the
+  one sample gig Clear Glass shipped was a `.gig.json`. He asked for a file in and out, a template for gigs only, and one file type.
+- **What it shows:** a product owner's scoping. He asked for a template for the one artefact a person writes by hand (a gig), not for
+  data an export already shows. He also held a format to one name, which made a duplicate visible, and it was archived.
+- **Checkable:** `CHANGELOG-0.60.256.md`; `tests/modules/test-autofill-transfer.test.js` 5/5 (undo restores what an import replaced);
+  `clear-glass/test/autofill-transfer-render.test.js`; `_archive/2026-10-26-gig-json/README.md`.
+
+### 2026-10-26 — 0.60.257: "the gate doesn't wait for me to accept it or not before it fails."
+- **His words:** "the gate doesn't wait for me to accept it or not before it fails. i want to be able to build nexus inside of nexus. need
+  nexus to use those gates. like raid or orchastrator."
+- **Context:** He was watching Nexus build one of its own phases. He saw the run fail in seconds, with no point at which he could weigh in.
+- **What it shows:** reading a failure from the outside. His one-line symptom matched what the trace found. The gate turned "nothing
+  here can check this" into "failed" and retried it three times in one second. He also named where the fix belonged, in RAID's gates.
+  The fix went there: a gate RAID holds for a person, not a side door in Idearium.
+- **Checkable:** `tests/modules/test-gate-waits-for-verdict.test.js` 5/5 (GV-01: one call, never FAILED, no self-heal);
+  `CHANGELOG-0.60.257.md`.

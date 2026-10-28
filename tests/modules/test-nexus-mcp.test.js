@@ -99,11 +99,11 @@ function session(env = {}) {
   });
 
   await test('MC-05', '`nexus mcp list` and `nexus mcp call`', async () => {
-    const l = spawnSync(process.execPath, [path.join(ROOT, 'cli/nexus.js'), 'mcp', 'list', '--json'], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
+    const l = spawnSync(process.execPath, [path.join(ROOT, 'lib', 'cli', 'nexus.js'), 'mcp', 'list', '--json'], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
     assert.ok(JSON.parse(l.stdout).some(t => t.name === 'nexus_loom_impact'));
-    const c = spawnSync(process.execPath, [path.join(ROOT, 'cli/nexus.js'), 'mcp', 'call', 'nexus_loom_impact', '--args={"query":"lib/component-store.js"}'], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
+    const c = spawnSync(process.execPath, [path.join(ROOT, 'lib', 'cli', 'nexus.js'), 'mcp', 'call', 'nexus_loom_impact', '--args={"query":"lib/component-store.js"}'], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
     assert.match(c.stdout, /nexus\.idearium\.api/);
-    const g = spawnSync(process.execPath, [path.join(ROOT, 'cli/nexus.js'), 'mcp', 'call', 'nexus_gaps'], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
+    const g = spawnSync(process.execPath, [path.join(ROOT, 'lib', 'cli', 'nexus.js'), 'mcp', 'call', 'nexus_gaps'], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
     assert.strictEqual(g.status, 1, 'a failed call exits 1'); assert.match(g.stdout + g.stderr, /not reachable/);
   });
 

@@ -1,0 +1,305 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SL3_the_backlog_groomed:d984c6d6901fa316
+type: graph
+id: phase:SL3_the_backlog_groomed:d984c6d6901fa316
+context: dependency graph of phase SL3_the_backlog_groomed
+intent: null
+summary: 35 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678083
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678083
+lastSeenAt: 1792787678083
+fingerprint: null
+payload:
+  for: SL3_the_backlog_groomed
+  kind: phase
+  repo: null
+  hash: d984c6d6901fa316
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/phase-mapping.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/phases.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/phase-dag.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-deps-gate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-groom.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: tests/modules/test-phase-groom.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap-import.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/build-queue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/work-funnel.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/code-intel/chunker.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/phase-groom.js
+      to: lib/phase-files.js
+      kind: requires
+    - from: lib/phase-map-auto.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/phase-map-auto.js
+      to: lib/code-intel/chunker.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: lib/work-funnel.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: lib/build-queue.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-census.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap-import.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+  crossings:
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: loom
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/roadmap-import.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: false
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+    dependents:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL8_the_agent_maps_what_nexus_cannot
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL9_every_phase_a_node
+    upstream:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+    downstream:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL10_the_pipeline_simulated
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL8_the_agent_maps_what_nexus_cannot
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL9_every_phase_a_node
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL8_the_agent_maps_what_nexus_cannot
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): SL0_what_can_be_built_now'
+      - >-
+        needed by (2): SL8_the_agent_maps_what_nexus_cannot, SL9_every_phase_a_node · all downstream
+        3 · finishing it unlocks SL8_the_agent_maps_what_nexus_cannot
+    edges:
+      - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+        kind: declared

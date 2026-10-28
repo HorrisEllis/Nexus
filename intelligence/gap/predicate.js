@@ -68,7 +68,7 @@ const SEVERITY_RANK = { low: 0, medium: 1, high: 2, critical: 3 };
 // ── Lazy deps ─────────────────────────────────────────────────────────────────
 let _jaa, _uid, _bus;
 function _getJAA()  { if (!_jaa)  try { ({ jaaDB: _jaa, uid: _uid } = require('../../cortex/memory/jaa-db')); } catch(_) {} return _jaa; }
-function _getBus()  { if (!_bus)  try { _bus = require('../../nexus/nexus-bus'); } catch(_) {} return _bus; }
+function _getBus()  { if (!_bus)  try { _bus = require('../../lib/nexus/nexus-bus'); } catch(_) {} return _bus; }
 function uid()      { return _uid?.() ?? crypto.randomUUID(); }
 
 // ── Predicate operations ───────────────────────────────────────────────────────

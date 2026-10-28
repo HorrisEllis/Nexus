@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X2_guardian_hat_agent
+type: phase
+id: docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X2_guardian_hat_agent
+context: >-
+  pipeline phase X2_guardian_hat_agent of
+  docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+intent: null
+summary: X2_guardian_hat_agent (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754010
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754010
+lastSeenAt: 1792841754010
+fingerprint: null
+payload:
+  id: X2_guardian_hat_agent
+  map: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/system-nodes.js
+    - guardian/lib/node-registry.js
+    - guardian/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e60ec8a64ed961f3

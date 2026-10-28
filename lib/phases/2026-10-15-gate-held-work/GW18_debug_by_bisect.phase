@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW18_debug_by_bisect
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW18_debug_by_bisect
+context: pipeline phase GW18_debug_by_bisect of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW18_debug_by_bisect (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792877163080
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877163080
+lastSeenAt: 1792877163080
+fingerprint: null
+payload:
+  id: GW18_debug_by_bisect
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/failure-macro.js
+    - lib/replay-engine.js
+    - versionium/lib/engine.js
+    - cos/testenv/index.js
+  depends_on:
+    - GW7_failure_macro_and_rewind
+    - GW11_a_snapshot_per_gate
+  blocks: []
+  spec: null
+  graph: dc62e611e9228240

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+context: pipeline phase R5_loom_visual_map of docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R5_loom_visual_map (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756550
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756550
+lastSeenAt: 1792841756550
+fingerprint: null
+payload:
+  id: R5_loom_visual_map
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/ui/index.html
+    - lib/consumer-registry.js
+    - lib/drawbridge-registry.js
+    - lib/emergence/components/idea-store/index.js
+  depends_on:
+    - R4_loom_ledger_awareness
+  blocks: []
+  spec: null
+  graph: 32a6c3adfcd1f248

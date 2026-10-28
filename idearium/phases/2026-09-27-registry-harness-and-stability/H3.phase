@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-registry-harness-and-stability-phasemap.spec::H3
+type: phase
+id: docs_2026-09-27-registry-harness-and-stability-phasemap.spec::H3
+context: pipeline phase H3 of docs/2026-09-27-registry-harness-and-stability-phasemap.spec
+intent: null
+summary: H3 (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676074
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676074
+lastSeenAt: 1792787676074
+fingerprint: null
+payload:
+  id: H3
+  map: docs/2026-09-27-registry-harness-and-stability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - H2
+  blocks: []
+  spec: null
+  graph: 017eb2a36885874c

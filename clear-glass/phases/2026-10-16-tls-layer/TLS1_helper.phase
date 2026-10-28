@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-tls-layer-phasemap.spec::TLS1_helper
+type: phase
+id: docs_2026-10-16-tls-layer-phasemap.spec::TLS1_helper
+context: pipeline phase TLS1_helper of docs/2026-10-16-tls-layer-phasemap.spec
+intent: null
+summary: TLS1_helper (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677756
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677756
+lastSeenAt: 1792787677756
+fingerprint: null
+payload:
+  id: TLS1_helper
+  map: docs/2026-10-16-tls-layer-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.109
+  files:
+    - clear-glass/tls-helper/build.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 65a76242b17b178d

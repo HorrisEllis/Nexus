@@ -1,0 +1,162 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UI7_phasemaps_out_of_files_and_tree_ops:44303ff60d0f06bc
+type: graph
+id: phase:UI7_phasemaps_out_of_files_and_tree_ops:44303ff60d0f06bc
+context: dependency graph of phase UI7_phasemaps_out_of_files_and_tree_ops
+intent: null
+summary: 10 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676467
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676467
+lastSeenAt: 1792787676467
+fingerprint: null
+payload:
+  for: UI7_phasemaps_out_of_files_and_tree_ops
+  kind: phase
+  repo: null
+  hash: 44303ff60d0f06bc
+  nodes:
+    - path: idearium/repo/phases.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: idearium/repo/phases.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/phases.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/phases.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::RM1_registry_driven_moves
+    dependents: []
+    upstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4_registry_block_to_nodes
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::RM1_registry_driven_moves
+    downstream: []
+    blockedBy:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::RM1_registry_driven_moves
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI1_history_and_save_in_manage
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI2_desktop_environment_menu
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI3_settings_tab_retheme_collapse
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
+        files:
+          - idearium/repo/phases.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI6_idea_and_phases_one_tab
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI8_code_tab_is_code
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI11_nav_and_look_restored
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI10_debug_and_intelligence_one_tab
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
+        files:
+          - idearium/ui/js/app.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::TP1_promote_to_spec_templates
+        files:
+          - idearium/ui/js/app.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by RM1_registry_driven_moves
+      - 'depends on (1): RM1_registry_driven_moves · all upstream 4'
+      - 'needed by (0): —'
+      - >-
+        same files as UI1_history_and_save_in_manage with no order between them:
+        idearium/ui/js/app.js
+      - 'same files as UI2_desktop_environment_menu with no order between them: idearium/ui/js/app.js'
+      - >-
+        same files as UI3_settings_tab_retheme_collapse with no order between them:
+        idearium/ui/js/app.js
+      - 'same files as BK1_blocked_is_actionable with no order between them: idearium/ui/js/app.js'
+      - >-
+        same files as BK2_phase_build_writes_code with no order between them:
+        idearium/repo/phases.js
+      - … and 6 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::RM1_registry_driven_moves
+        kind: declared

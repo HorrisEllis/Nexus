@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-gates-that-learn-and-priorities-phasemap.spec::PF1_profiles_hats_tabs
+type: phase
+id: docs_2026-10-13-gates-that-learn-and-priorities-phasemap.spec::PF1_profiles_hats_tabs
+context: >-
+  pipeline phase PF1_profiles_hats_tabs of
+  docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
+intent: null
+summary: PF1_profiles_hats_tabs (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677396
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677396
+lastSeenAt: 1792787677396
+fingerprint: null
+payload:
+  id: PF1_profiles_hats_tabs
+  map: docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/profile-lanes.js
+    - clear-glass/src/providers/profile-tabs.js
+    - clear-glass/src/cookies/session-hub.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 559a264e9111dce2

@@ -1,0 +1,123 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SL3_the_backlog_groomed:596ba88d3bb5ab0a
+type: graph
+id: phase:SL3_the_backlog_groomed:596ba88d3bb5ab0a
+context: dependency graph of phase SL3_the_backlog_groomed
+intent: null
+summary: 12 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792774371709
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792774371709
+lastSeenAt: 1792774371709
+fingerprint: null
+payload:
+  for: SL3_the_backlog_groomed
+  kind: phase
+  repo: null
+  hash: 596ba88d3bb5ab0a
+  nodes:
+    - path: lib/phase-dag.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-groom.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: changes
+      exists: true
+      system: lib
+    - path: emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/phase-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/work-funnel.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/code-intel/chunker.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/phase-map-auto.js
+      to: lib/phase-files.js
+      kind: requires
+    - from: lib/phase-map-auto.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/phase-map-auto.js
+      to: lib/code-intel/chunker.js
+      kind: requires
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: lib/work-funnel.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: lib/phase-census.js
+      to: lib/phase-dag.js
+      kind: requires
+  crossings:
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: false
+  ready: true
+  dag:
+    dagHash: 6577681f08a50367
+    layer: 1
+    deps:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+    dependents: []
+    upstream:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+    downstream: []
+    blockedBy:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 6577681f08a50367 · layer 1 · blocked by SL0_what_can_be_built_now
+      - 'depends on (1): SL0_what_can_be_built_now'
+      - 'needed by (0): —'

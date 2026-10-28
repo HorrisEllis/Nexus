@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-code-tab-run-state-phasemap.spec::CE9_the_panels
+type: phase
+id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CE9_the_panels
+context: pipeline phase CE9_the_panels of docs/2026-10-15-code-tab-run-state-phasemap.spec
+intent: null
+summary: CE9_the_panels (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677510
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677510
+lastSeenAt: 1792787677510
+fingerprint: null
+payload:
+  id: CE9_the_panels
+  map: docs/2026-10-15-code-tab-run-state-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    BUILT 0.60.82 (test-code-tab-merge MG-14, MG-15); the Clear Glass mesh mount not done (see
+    addendum (c))
+  files:
+    - idearium/ui/js/repo-tasks.js
+    - idearium/ui/js/repo-drawer-views.js
+    - idearium/ui/js/code-surface.js
+    - clear-glass/src/mesh/route-graph.js
+  depends_on:
+    - CE5_events
+    - CE4_reply_kind_and_tags
+  blocks: []
+  spec: null
+  graph: e21c35e06e99c19e

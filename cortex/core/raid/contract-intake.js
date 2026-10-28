@@ -57,7 +57,9 @@ function _resolveInputDir(system) {
   const fs = require('fs');
   // §0.39.282 — RAID_SYSTEMS_ROOT (the test sandbox sets it) instead of always the repo: tests wrote .contract files
   // into the real guardian/input/.
-  const dir = path.join(process.env.RAID_SYSTEMS_ROOT || path.join(__dirname, '../../../'), system, 'input');
+  // 0.60.247 — the system's folder by the one list (core's systems.js dirOf: emerge is lib/emerge since RF2), the same as lib/contract-queue.js
+  let home = system; try { home = require('../../../lib/nexus-self/systems.js').dirOf(system); } catch (_) {}
+  const dir = path.join(process.env.RAID_SYSTEMS_ROOT || path.join(__dirname, '../../../'), home, 'input');
   return fs.existsSync(dir) ? dir : null;
 }
 
@@ -256,6 +258,7 @@ const _raidLedger = createCFRLedger({
 
 const STATUS = Object.freeze({
   QUEUED: 'queued', RUNNING: 'running', PASS: 'pass', FAIL: 'fail', BLOCKED: 'blocked',
+  AWAITING: 'awaiting',   // §GV1 0.60.257 — a gate waits for a person's verdict (reportExternalOutcome settles it)
 });
 
 // §RR4 2026-08-30 — real, physical lifecycle-position tracker, separate
@@ -308,7 +311,7 @@ function _registerContractQaQc() {
   if (_qaqcRegistered) return;
   _qaqcRegistered = true;
   let realQaQc = null;
-  try { realQaQc = require('../../../meta/adversary-suite').runQAQC; } catch (_) { /* stays null — real checks just won't run */ }
+  try { realQaQc = require('../../../lib/meta/adversary-suite').runQAQC; } catch (_) { /* stays null — real checks just won't run */ }
 
   compartmentEngine._registerExtensions({
     qaqcLayer: async (compartment) => {
@@ -986,7 +989,7 @@ async function processNext(executor) {
   // they do not re-enter the ladder.
   if (finalStatus === STATUS.FAIL && queued.source !== 'self-heal') {
     try {
-      require('../../../nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
+      require('../../../lib/nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
         gapType: 'raid_contract_exhausted',
         gapUuid: queued.uuid,
         body: `RAID contract "${queued.title || queued.uuid}" (source: ${queued.source}) failed with no further retry/fallback available. verdict: ${resolved.trace_log?.find(t => t.event === 'QA_QC')?.data?.verdict ?? 'none'}`,
@@ -1140,7 +1143,7 @@ function _realAxiomRefs() {
   return _axiomRefsCache;
 }
 
-const WARP_PRIMITIVES = new Set(Object.keys(require('../../../warp/core')).filter(k => ['Event', 'Gate', 'Axiom', 'Stream', 'StreamLog'].includes(k)));
+const WARP_PRIMITIVES = new Set(Object.keys(require('../../../lib/warp/core')).filter(k => ['Event', 'Gate', 'Axiom', 'Stream', 'StreamLog'].includes(k)));
 
 /**
  * synthesizeContract(req) -> submitContract()'s own real result, or
@@ -1405,7 +1408,7 @@ function _tracker({ queueId, p, source, title, versioning, compartment, onEvent 
     const pr = progress(last);
     tell({ ...e, progress: pr });
     try { jaaDB.update(TABLE, queueId, { progress: pr, updatedAt: Date.now() }); } catch (err) { warn('progress not written on the queue row', err); }
-    try { require('../../../nexus/nexus-bus.js').emit('RAID_GATE_MOVED', { queueId, source, title, ...e, progress: pr }, { source: 'raid-contract-intake' }); } catch (err) { warn('RAID_GATE_MOVED not emitted', err); }
+    try { require('../../../lib/nexus/nexus-bus.js').emit('RAID_GATE_MOVED', { queueId, source, title, ...e, progress: pr }, { source: 'raid-contract-intake' }); } catch (err) { warn('RAID_GATE_MOVED not emitted', err); }
     if (compartment) {
       try {
         require('../../../lib/activity-log/compartment.js').record({ compartment, kind: 'gate', status: e.status === 'PASSED' ? 'ok' : e.status === 'FAILED' ? 'failed' : 'info',
@@ -1477,20 +1480,22 @@ async function runContract(input, { source = 'raid', intention = 'build', forAge
     .filter(id => ((p.state.gates || {})[id] || {}).status !== 'PASSED')
     .map(id => ({ id, class: ev[`${id}.class`] || null, why: (((p.state.gates || {})[id] || {}).reasons || []).slice(0, 2).join('; ') || null }));
   const blockedBricks = (res.blocked || []).map(b => ({ id: b.id, why: b.why }));
-  const status = res.complete ? STATUS.PASS : STATUS.FAIL;
-  const verdict = res.complete ? 'complete' : (res.why || []).slice(0, 4).join('; ');
+  // §GV1 0.60.257 — not complete only because a gate waits for a person: 'awaiting', no self-heal (nothing failed)
+  const awaitingGates = res.complete ? [] : (res.awaiting || []);
+  const status = res.complete ? STATUS.PASS : (awaitingGates.length && !failedBricks.length ? STATUS.AWAITING : STATUS.FAIL);
+  const verdict = res.complete ? 'complete' : status === STATUS.AWAITING ? `awaiting a person: ${awaitingGates.map(g => `${g.id} — ${g.why}`).join('; ')}` : (res.why || []).slice(0, 4).join('; ');
   try { jaaDB.update(TABLE, queueId, { status, stage: STAGE.OUTPUT_FOLDER, verdict, failedBricks, blockedBricks, rounds: res.rounds || 0, updatedAt: Date.now() }); } catch (_) {}
   _raidLedger.record(`raid.contract.v2.${status}`, { queueId, title: row.title, failedBricks, blockedBricks, rounds: res.rounds || 0 }, { source: 'raid', causedBy: queueId });
   if (status === STATUS.FAIL && source !== 'self-heal') {
     try {
-      require('../../../nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
+      require('../../../lib/nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
         gapType: 'raid_contract_exhausted', gapUuid: queueId,
         body: `RAID contract "${row.title}" (source: ${source}) did not complete: ${verdict}${failedBricks.length ? ` — failed: ${failedBricks.map(b => `${b.id}${b.class ? ` (${b.class})` : ''}`).join(', ')}` : ''}${blockedBricks.length ? ` — set aside: ${blockedBricks.map(b => b.id).join(', ')}` : ''}`,
         bricks: failedBricks, blocked: blockedBricks,
       }, { source: 'raid-contract-intake' });
     } catch (e) { console.warn(`[${MODULE_ID}] HEAL_REQUESTED not emitted for ${queueId}: ${e.message}`); }
   }
-  return { ok: status === STATUS.PASS, queueId, status, progress: tr.progress(null), result: res, audit, failedBricks, blockedBricks, approval: approval ? { approved: approval.approved !== false, reason: approval.reason || null } : null };
+  return { ok: status === STATUS.PASS, queueId, status, awaiting: awaitingGates, progress: tr.progress(null), result: res, audit, failedBricks, blockedBricks, approval: approval ? { approved: approval.approved !== false, reason: approval.reason || null } : null };
 }
 
 /**
@@ -1588,7 +1593,7 @@ function reconcileOnBoot() {
     _raidLedger.record('raid.contract.reconciled.escalated', { queueId: row.uuid, stage: row.stage, priorStatus: row.status }, { source: 'raid', causedBy: row.uuid });
     if (row.source !== 'self-heal') {
       try {
-        require('../../../nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
+        require('../../../lib/nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
           gapType: 'raid_contract_orphaned_at_boot',
           gapUuid: row.uuid,
           body: `RAID contract "${row.title || row.uuid}" (source: ${row.source}) was found at stage "${row.stage}" at boot with no real output — a prior process died mid-job.`,

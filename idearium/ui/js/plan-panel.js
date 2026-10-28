@@ -249,7 +249,7 @@ function _ppPlanned(l) {
   // 0.60.18 EX0f — the build as a contract: bricks, what resumed, what a changed input made stale; at the end the audit
   if (l.contractInfo) out.push(`<div class="pp-against">◇ contract — ${l.contractInfo.bricks} brick${l.contractInfo.bricks === 1 ? '' : 's'}, ${l.contractInfo.concurrency} at once${l.contractInfo.resumed ? ` · resumed: ${l.contractInfo.kept.length} kept${l.contractInfo.stale.length ? `, ${l.contractInfo.stale.length} stale (${escapeHtml(l.contractInfo.stale.join(', '))})` : ''}${l.contractInfo.reset.length ? `, ${l.contractInfo.reset.length} given new retries` : ''}` : ' · fresh'}</div>`);
   if (l.audit) out.push(`<details class="pp-reply"><summary>contract audit — ${l.audit.bricks.filter(b => b.status === 'PASSED').length}/${l.audit.bricks.length} bricks · ${l.audit.dependencies.length} dependencies · ${l.audit.checkpoints} checkpoints · ${l.audit.gates.length} gates${(l.audit.blocked || []).length ? ` · ${l.audit.blocked.length} blocked` : ''}</summary><pre>${escapeHtml([
-    ...l.audit.bricks.map(b => `${String(b.status).padEnd(7)} ${b.file || b.id}${b.commit ? `  · passed at ${String(b.commit).slice(0, 12)}` : ''}${b.class ? `  · ${b.class}` : ''}${b.rewound ? `  · rewound${b.rewound.to ? ` to ${String(b.rewound.to).slice(0, 12)}` : ''}${(b.rewound.files || []).length ? ` (${b.rewound.files.join(', ')})` : ''}` : ''}${b.agent ? `  · ${b.agent}` : ''}${b.attempts ? `  · ${b.attempts} attempt(s)` : ''}${b.verified ? `  · ${b.verified}` : ''}${b.blocked ? `  · ${b.blocked}` : ''}`),
+    ...l.audit.bricks.map(b => `${String(b.status).padEnd(7)} ${b.file || b.id}${b.commit ? `  · passed at ${String(b.commit).slice(0, 12)}` : ''}${b.class && !b.failure ? `  · ${b.class}` : ''}${b.failure ? `  · ${b.failure}` : ''}${b.rewound ? `  · rewound${b.rewound.to ? ` to ${String(b.rewound.to).slice(0, 12)}` : ''}${(b.rewound.files || []).length ? ` (${b.rewound.files.join(', ')})` : ''}` : ''}${b.agent ? `  · ${b.agent}` : ''}${b.attempts ? `  · ${b.attempts} attempt(s)` : ''}${b.verified ? `  · ${b.verified}` : ''}${b.blocked ? `  · ${b.blocked}` : ''}`),
     `\ndependencies:\n${l.audit.dependencies.map(e => `- ${e.from} → ${e.to}`).join('\n')}`,
     `\ngates:\n${l.audit.gates.map(g => `- ${g.id} (${g.type}) ${g.status}${(g.reasons || []).length ? ` — ${g.reasons.join('; ')}` : ''}`).join('\n')}`,
     (l.audit.splits || []).length ? `\nsplits:\n${l.audit.splits.map(x => `- ${x.gate} → ${x.into.join(', ')}`).join('\n')}` : '',
@@ -360,6 +360,8 @@ function _ppHistory(s) {
     const merged = byRun.get(r.runId);
     const dur = r.startedAt && r.endedAt ? _ppSpan(r.endedAt - r.startedAt) : '';
     return `<details class="pp-run"${(i === 0 && s.open) || PLANP.focus === r.runId ? ' open' : ''}><summary><span class="pp-led-t">${escapeHtml(_ppWhen(r.startedAt))}</span><span class="pp-led-s st-${escapeHtml(r.end)}">${escapeHtml(r.end)}</span><span class="pp-led-d">${r.startedBy ? `<span class="pp-by" title="who started this run — ${escapeHtml(r.startedBy.whence)}">by ${escapeHtml(r.startedBy.who)}</span> · ` : '<span class="pp-by" title="a run from before 0.60.188 did not record who started it">by ?</span> · '}${escapeHtml(r.agents.join(' → ') || 'no agent')}${dur ? ` · ${escapeHtml(dur)}` : ''} · ${r.total} row${r.total === 1 ? '' : 's'}</span><button class="pp-runctx" title="what this run's agent was given — the dock's Context panel" onclick="event.preventDefault();event.stopPropagation();ppFocusRun('${_ppQ(r.runId)}')">context</button></summary>
+      ${r.rebuild ? `<div class="pp-log-cut" title="the phase was complete; this run built it again because it was asked to (SL7)">built again on request</div>` : ''}
+      ${r.mappedBy ? `<div class="pp-log-cut" title="Nexus could not place this phase from its map or its words; its files${(r.mappedBy.dependsOn || []).length ? ' and depends_on' : ''} came from the agent's answer, each checked by code (SL8)">mapped by ${escapeHtml(r.mappedBy.by || 'the agent')}${r.mappedBy.asked ? '' : ' (kept from an earlier answer)'}: ${escapeHtml((r.mappedBy.files || []).join(', '))}${(r.mappedBy.dependsOn || []).length ? ` · depends on ${escapeHtml(r.mappedBy.dependsOn.map(k => String(k).split('::').pop()).join(', '))}` : ''}</div>` : ''}
       ${merged ? _ledgerHtml([merged]) : ''}
       <div class="pp-log">${r.cut ? `<div class="pp-log-cut">… ${r.cut} earlier row${r.cut === 1 ? '' : 's'} not shown</div>` : ''}${r.log.map(l => `<div class="pp-log-r st-${escapeHtml(l.state)}"><span class="pp-log-t">${escapeHtml(l.ts ? new Date(l.ts).toLocaleTimeString([], { hour12: false }) : '')}</span><span class="pp-log-s">${l.part ? `${escapeHtml(l.part)} · ` : ''}${escapeHtml(l.state)}${l.reused ? ' <b data-reused>↺ reused</b>' : ''}</span><span class="pp-log-f">${escapeHtml(l.file || '')}</span><span class="pp-log-a">${escapeHtml(l.provider || '')}${l.rung ? ` r${l.rung}` : ''}${l.attempt ? ` t${l.attempt}` : ''}</span><span class="pp-log-n">${escapeHtml(l.note || '')}</span></div>`).join('')}</div></details>`;
   }).join('') + (h.more ? `<div class="pp-log-cut">${h.more} older run${h.more === 1 ? '' : 's'} not shown — repo plan &lt;repo&gt; ${escapeHtml(s.key)} lists them</div>` : '');
@@ -464,12 +466,17 @@ function planToggle(key) { if (PLANP.open.has(key)) PLANP.open.delete(key); else
 // §0.60.147 DG2 — James, 2026-10-18: "each phase, has to have a dependany graph before executing." A build refused for having no
 // dependency graph is never offered "build anyway" (his "has to have"); the message says how to give the phase one.
 function _noGraphHeld(e) { const x = new Error(`no dependency graph — ${(e.detail.missing || []).join('; ')}${e.detail.remedy ? `. ${e.detail.remedy}` : ''}`); x.held = true; return x; }
+// §0.60.226 SL7 — a complete phase is built again only when asked: ask, and the run says it was on request
+async function _rebuildAsk(body, go) {
+  if (!confirm(`${body.phase} is already complete.\n\nBuild it again? The run records that it was built again on request.`)) { const x = new Error(`${body.phase} is complete — not built again`); x.held = true; throw x; }
+  return await go({ ...body, rebuild: true });
+}
 async function phaseBuildPost(uuid, body) {
   const go = (b) => api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ startedBy: 'person:ui', ...b }) }, 120000);   // 0.60.188 RC7
   try { return await go(body); }
   catch (e) {
     if (e.detail && e.detail.code === 'NO_GRAPH') throw _noGraphHeld(e);   // §0.60.147 DG2
-    if (!(e.detail && e.detail.code === 'DEPS_OPEN')) throw e;
+    if (!(e.detail && e.detail.code === 'DEPS_OPEN')) { if (e.detail && e.detail.code === 'ALREADY_COMPLETE') return _rebuildAsk(body, go); throw e; }   // §0.60.226 SL7
     const open = e.detail.open || [];
     const list = open.map(o => `• ${o.key} — ${o.kind === 'decision' ? `your decision, still ${o.status}${o.asked ? `: "${o.asked}"` : ''}` : `a phase not done yet (${o.status})`}`).join('\n');
     if (!confirm(`${body.phase} depends on what is still open:\n\n${list}\n\nBuild it anyway? The run records that it was built with these open.`)) {

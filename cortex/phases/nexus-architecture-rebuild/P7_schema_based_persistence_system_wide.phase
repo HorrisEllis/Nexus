@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P7_schema_based_persistence_system_wide
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P7_schema_based_persistence_system_wide
+context: >-
+  pipeline phase P7_schema_based_persistence_system_wide of
+  docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P7_schema_based_persistence_system_wide (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678241
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678241
+lastSeenAt: 1792787678241
+fingerprint: null
+payload:
+  id: P7_schema_based_persistence_system_wide
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/contract/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 553361839aed4212

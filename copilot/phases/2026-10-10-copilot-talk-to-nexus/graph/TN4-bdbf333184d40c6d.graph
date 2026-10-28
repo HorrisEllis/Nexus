@@ -1,0 +1,77 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TN4:bdbf333184d40c6d
+type: graph
+id: phase:TN4:bdbf333184d40c6d
+context: dependency graph of phase TN4
+intent: null
+summary: 4 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677191
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677191
+lastSeenAt: 1792787677191
+fingerprint: null
+payload:
+  for: TN4
+  kind: phase
+  repo: null
+  hash: bdbf333184d40c6d
+  nodes:
+    - path: copilot/lib/nexus-ask.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tools/nexus/command.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/lib/nexus-ask.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: copilot/lib/nexus-ask.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/nexus-ask.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/copilot/bridge.js
+      to: copilot/lib/nexus-ask.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN3
+    dependents: []
+    upstream:
+      - docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN2
+      - docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN3
+    downstream: []
+    blockedBy:
+      - docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN3
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by TN3
+      - 'depends on (1): TN3 · all upstream 2'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN3
+        kind: inferred

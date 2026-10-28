@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-idearium-control-phasemap.spec::IX1_everything_linked
+type: phase
+id: docs_2026-10-19-idearium-control-phasemap.spec::IX1_everything_linked
+context: pipeline phase IX1_everything_linked of docs/2026-10-19-idearium-control-phasemap.spec
+intent: null
+summary: IX1_everything_linked (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478227
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478227
+lastSeenAt: 1792822478227
+fingerprint: null
+payload:
+  id: IX1_everything_linked
+  map: docs/2026-10-19-idearium-control-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/link-index.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 936103a671e951e6

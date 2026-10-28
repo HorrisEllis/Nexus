@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::RD1_raid_commands
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::RD1_raid_commands
+context: pipeline phase RD1_raid_commands of docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: RD1_raid_commands (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792878422685
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878422685
+lastSeenAt: 1792878422685
+fingerprint: null
+payload:
+  id: RD1_raid_commands
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+    - cortex/boot.js
+    - cortex/core/raid/contract-intake.js
+  depends_on:
+    - RD0_raid_has_its_own_contract
+  blocks: []
+  spec: null
+  graph: 9a7fa88b2cd2219d

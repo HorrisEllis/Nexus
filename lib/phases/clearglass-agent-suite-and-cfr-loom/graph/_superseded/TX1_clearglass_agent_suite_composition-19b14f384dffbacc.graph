@@ -1,0 +1,191 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TX1_clearglass_agent_suite_composition:19b14f384dffbacc
+type: graph
+id: phase:TX1_clearglass_agent_suite_composition:19b14f384dffbacc
+context: dependency graph of phase TX1_clearglass_agent_suite_composition
+intent: null
+summary: 23 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678121
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678121
+lastSeenAt: 1792787678121
+fingerprint: null
+payload:
+  for: TX1_clearglass_agent_suite_composition
+  kind: phase
+  repo: null
+  hash: 19b14f384dffbacc
+  nodes:
+    - path: architect/schemas/index.js
+      role: changes
+      exists: true
+      system: architect
+    - path: clear-glass/renderer/settings/sections/mesh.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/shell/agents.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/account-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-router.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ui/home/areas/agent-suite.js
+      role: changes
+      exists: true
+      system: ui
+    - path: clear-glass/src/copilot/hat.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-build-learning.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-system/contracts.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/routing-config.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: copilot/lib/self-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: architect/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/account-registry.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/account-registry.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/agent-build-learning.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/agent-system/contracts.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/routing-config.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/seam/spec-parser.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/identity/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/copilot/hat.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/hat-forge.js
+      kind: requires
+  crossings:
+    - from: lib/account-registry.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX10_component_registry_discipline
+    upstream: []
+    downstream:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR1_callto_component_hotswap_catalog
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX10_component_registry_discipline
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): TX10_component_registry_discipline · all downstream 2'
+    edges: []

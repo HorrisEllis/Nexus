@@ -66,7 +66,7 @@ function _getJAA() {
 function uid() { return _uid?.() ?? crypto.randomUUID(); }
 function _getBus() {
   if (_bus) return _bus;
-  try { _bus = require('../../nexus/nexus-bus'); } catch (_) {}
+  try { _bus = require('../../lib/nexus/nexus-bus'); } catch (_) {}
   return _bus;
 }
 function _getLedger() {

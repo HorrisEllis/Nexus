@@ -1,0 +1,127 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL20_loom_map_becomes_real_visual_graph:762077890aeb5d5d
+type: graph
+id: phase:BL20_loom_map_becomes_real_visual_graph:762077890aeb5d5d
+context: dependency graph of phase BL20_loom_map_becomes_real_visual_graph
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675425
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675425
+lastSeenAt: 1792787675425
+fingerprint: null
+payload:
+  for: BL20_loom_map_becomes_real_visual_graph
+  kind: phase
+  repo: null
+  hash: 762077890aeb5d5d
+  nodes:
+    - path: loom/bootstrap.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/maps/accounts-authority-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/copilot-capability-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/cos-testenv-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/observability-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/raid-events-and-tools-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/session-2026-08-14-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/ui-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/warp-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/scanners/capability-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/scanners/spec-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: loom/bootstrap.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/warp-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/observability-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/copilot-capability-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/session-2026-08-14-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/ui-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/raid-events-and-tools-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/accounts-authority-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/spec-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/cos-testenv-map.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

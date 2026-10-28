@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R8_ui_diagnostic_surfaces_wired_together
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R8_ui_diagnostic_surfaces_wired_together
+context: >-
+  pipeline phase R8_ui_diagnostic_surfaces_wired_together of
+  docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R8_ui_diagnostic_surfaces_wired_together (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756553
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756553
+lastSeenAt: 1792841756553
+fingerprint: null
+payload:
+  id: R8_ui_diagnostic_surfaces_wired_together
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nerve-gap-bridge.js
+    - lib/nerve/index.js
+    - clear-glass/src/diagnostic/error-capture.js
+    - lib/nexus-config.js
+    - lib/repo-activity.js
+    - lib/gap-field.js
+    - copilot/lib/autonomy-router.js
+  depends_on:
+    - R1_repair_contract_schema
+  blocks: []
+  spec: null
+  graph: 0df5fa77d14e88f1

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+context: pipeline phase RC1_the_repo_main_chat of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: RC1_the_repo_main_chat (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476877
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476877
+lastSeenAt: 1792822476877
+fingerprint: null
+payload:
+  id: RC1_the_repo_main_chat
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/ui/js/app.js
+  depends_on:
+    - CB1_cfr_build_logic
+    - CB2_analysis_then_synthesis
+    - MR3_gap_driven_search
+  blocks: []
+  spec: null
+  graph: 3ca0fc1ae93f6ffe

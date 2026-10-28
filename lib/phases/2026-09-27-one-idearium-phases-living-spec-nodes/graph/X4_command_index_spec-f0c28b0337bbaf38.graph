@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:X4_command_index_spec:f0c28b0337bbaf38
+type: graph
+id: phase:X4_command_index_spec:f0c28b0337bbaf38
+context: dependency graph of phase X4_command_index_spec
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676066
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676066
+lastSeenAt: 1792787676066
+fingerprint: null
+payload:
+  for: X4_command_index_spec
+  kind: phase
+  repo: null
+  hash: f0c28b0337bbaf38
+  nodes:
+    - path: docs/command-index-per-system.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
+    dependents:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    upstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::C1_copilot_contract
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
+    downstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): X1_system_nodes · all upstream 2'
+      - 'needed by (1): Z1_release · finishing it unlocks Z1_release'
+    edges:
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
+        kind: declared

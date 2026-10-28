@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+context: pipeline phase MG0b_the_full_spec of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG0b_the_full_spec (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792880100852
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100852
+lastSeenAt: 1792880100852
+fingerprint: null
+payload:
+  id: MG0b_the_full_spec
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/spec/cos-manager.spec
+    - tests/modules/test-substrate-spec.test.js
+  depends_on:
+    - MG_D0_order
+  blocks: []
+  spec: null
+  graph: 034f46861c02f038

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::HG8_raid_phases_belong_to_cortex
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::HG8_raid_phases_belong_to_cortex
+context: pipeline phase HG8_raid_phases_belong_to_cortex of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: HG8_raid_phases_belong_to_cortex (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792878421928
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878421928
+lastSeenAt: 1792878421928
+fingerprint: null
+payload:
+  id: HG8_raid_phases_belong_to_cortex
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-self/systems.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fe0bfca24393ae60

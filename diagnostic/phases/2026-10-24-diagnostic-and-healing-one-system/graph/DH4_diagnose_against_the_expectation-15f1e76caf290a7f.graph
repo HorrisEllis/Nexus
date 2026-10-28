@@ -1,0 +1,194 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DH4_diagnose_against_the_expectation:15f1e76caf290a7f
+type: graph
+id: phase:DH4_diagnose_against_the_expectation:15f1e76caf290a7f
+context: dependency graph of phase DH4_diagnose_against_the_expectation
+intent: null
+summary: 17 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756248
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756248
+lastSeenAt: 1792841756248
+fingerprint: null
+payload:
+  for: DH4_diagnose_against_the_expectation
+  kind: phase
+  repo: null
+  hash: 15f1e76caf290a7f
+  nodes:
+    - path: diagnostic/lib/expectations.js
+      role: changes
+      exists: false
+      system: diagnostic
+    - path: diagnostic/lib/pulse-watch.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: diagnostic/cli.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/server.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/config.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: diagnostic/lib/wire-integrity.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/contract-verifier.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-engines.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ico.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: diagnostic/lib/pulse-watch.js
+      to: lib/warp/core/Engine.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/data-home.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ico.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/lib/wire-integrity.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/diagnostic-engines.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/config.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: diagnostic/cli.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+    - from: diagnostic/server.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+  crossings:
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      fromSystem: diagnostic
+      toSystem: loom
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH3_the_announce_carries_the_spec
+    dependents:
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH5_diagnostic_heals
+    upstream:
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH0a_expectation_lives_in_the_spec
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH0b_libraries_are_expected_not_beating
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH1_the_expected_behavior_schema
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH2_every_system_states_its_expectations
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH3_the_announce_carries_the_spec
+    downstream:
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH5_diagnostic_heals
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH6_seen_and_used
+    blockedBy:
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH3_the_announce_carries_the_spec
+    unlocks:
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH5_diagnostic_heals
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by DH3_the_announce_carries_the_spec
+      - 'depends on (1): DH3_the_announce_carries_the_spec · all upstream 5'
+      - >-
+        needed by (1): DH5_diagnostic_heals · all downstream 2 · finishing it unlocks
+        DH5_diagnostic_heals
+    edges:
+      - from: docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH3_the_announce_carries_the_spec
+        kind: declared

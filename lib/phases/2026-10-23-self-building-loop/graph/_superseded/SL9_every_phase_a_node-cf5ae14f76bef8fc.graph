@@ -1,0 +1,133 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SL9_every_phase_a_node:cf5ae14f76bef8fc
+type: graph
+id: phase:SL9_every_phase_a_node:cf5ae14f76bef8fc
+context: dependency graph of phase SL9_every_phase_a_node
+intent: null
+summary: 12 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678088
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678088
+lastSeenAt: 1792787678088
+fingerprint: null
+payload:
+  for: SL9_every_phase_a_node
+  kind: phase
+  repo: null
+  hash: cf5ae14f76bef8fc
+  nodes:
+    - path: emerge/compiler/phase-specs.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: tests/modules/test-phase-nodes-all.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: emerge/compiler/kg-builder.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-dag.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pipeline-nodes.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: emerge/compiler/phase-specs.js
+      to: emerge/compiler/kg-builder.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-files.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-graph.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/pipeline-nodes.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/node-export.js
+      kind: requires
+  crossings:
+    - from: emerge/compiler/phase-specs.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: emerge
+      toSystem: loom
+      kind: system
+      known: false
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::PS1_phase_specs
+    dependents: []
+    upstream:
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::PS1_phase_specs
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
+    downstream: []
+    blockedBy:
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::PS1_phase_specs
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by PS1_phase_specs
+      - 'depends on (2): SL3_the_backlog_groomed, PS1_phase_specs · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
+        kind: declared
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::PS1_phase_specs
+        kind: declared

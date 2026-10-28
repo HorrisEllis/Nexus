@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW17_friction_and_tension_per_file
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW17_friction_and_tension_per_file
+context: pipeline phase GW17_friction_and_tension_per_file of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW17_friction_and_tension_per_file (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755576
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755576
+lastSeenAt: 1792841755576
+fingerprint: null
+payload:
+  id: GW17_friction_and_tension_per_file
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/nexus-diagnostic.js
+    - intelligence/cfr/sigma.js
+    - intelligence/cfr/field.js
+    - lib/fault-log.js
+  depends_on:
+    - GW3_a_contract_is_traced
+  blocks: []
+  spec: null
+  graph: 71b12cf5e05c8f04

@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R2_real_snapshot_rollback
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R2_real_snapshot_rollback
+context: pipeline phase R2_real_snapshot_rollback of docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R2_real_snapshot_rollback (?) — 15 file(s)
+system: idearium
+tags: []
+exported_at: 1792878424103
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878424103
+lastSeenAt: 1792878424103
+fingerprint: null
+payload:
+  id: R2_real_snapshot_rollback
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/snapshot/index.js
+    - lib/replay-engine.js
+    - docs/versionium.spec
+    - lib/file-integrity.js
+    - cortex/boot.js
+    - clear-glass/renderer/settings/core.js
+    - cos/remote-desktop/bridge-os-core/bridge-sngate/index.js
+    - idearium/architecture-spec/registry/api.js
+    - versionium/lib/snapshot.js
+    - copilot/lib/workset.js
+    - cos/app/settings.js
+    - lib/economy/store.js
+    - copilot/repair-on-prompt.js
+    - lib/compartment-engine.js
+    - cortex/cortex-v2.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c4fe867c644ac31d

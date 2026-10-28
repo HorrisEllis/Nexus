@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::MEM2_ledger_folder_reorg
+type: phase
+id: docs_2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::MEM2_ledger_folder_reorg
+context: >-
+  pipeline phase MEM2_ledger_folder_reorg of
+  docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec
+intent: null
+summary: MEM2_ledger_folder_reorg (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675743
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675743
+lastSeenAt: 1792787675743
+fingerprint: null
+payload:
+  id: MEM2_ledger_folder_reorg
+  map: docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2338a73cb6de9f6f

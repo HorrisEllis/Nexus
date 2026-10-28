@@ -20,7 +20,7 @@
 //   /mesh/crypto/*   — Crypto Engine health
 //   /mesh/modules     — combined status of every mesh module
 
-const mesh = require('../../mesh/install.js');
+const mesh = require('../mesh/install.js');
 
 function handle(req, res, ctx) {
   const { method, url, pRes, bodyJ } = ctx;

@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P17_blueprint_builder_onto_canvas:c9dc8279be53da93
+type: graph
+id: phase:P17_blueprint_builder_onto_canvas:c9dc8279be53da93
+context: dependency graph of phase P17_blueprint_builder_onto_canvas
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787678252
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678252
+lastSeenAt: 1792787678252
+fingerprint: null
+payload:
+  for: P17_blueprint_builder_onto_canvas
+  kind: phase
+  repo: null
+  hash: c9dc8279be53da93
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    prose:
+      - P16"
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - 'depends_on written as prose, not a phase: "P16"" — name the phase it means'
+    edges: []

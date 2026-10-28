@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MCO-B_versionium_bridge:dc0a0680fdc16cf2
+type: graph
+id: phase:MCO-B_versionium_bridge:dc0a0680fdc16cf2
+context: dependency graph of phase MCO-B_versionium_bridge
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787678202
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678202
+lastSeenAt: 1792787678202
+fingerprint: null
+payload:
+  for: MCO-B_versionium_bridge
+  kind: phase
+  repo: null
+  hash: dc0a0680fdc16cf2
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-A_schemas
+    dependents:
+      - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-C_repo_materialize
+    upstream:
+      - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-A_schemas
+    downstream:
+      - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-C_repo_materialize
+      - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-D_zoom_subrepo
+      - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-G_cicd_ssh
+    blockedBy: []
+    unlocks:
+      - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-C_repo_materialize
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): MCO-A_schemas'
+      - >-
+        needed by (1): MCO-C_repo_materialize · all downstream 3 · finishing it unlocks
+        MCO-C_repo_materialize
+    edges:
+      - from: docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-A_schemas
+        kind: declared

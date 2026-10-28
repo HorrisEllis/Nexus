@@ -1,0 +1,131 @@
+envelope: 1
+uuid: nexus-export-graph-phase:VS2_diff_only_backups:536284767e3a671e
+type: graph
+id: phase:VS2_diff_only_backups:536284767e3a671e
+context: dependency graph of phase VS2_diff_only_backups
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677895
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677895
+lastSeenAt: 1792787677895
+fingerprint: null
+payload:
+  for: VS2_diff_only_backups
+  kind: phase
+  repo: null
+  hash: 536284767e3a671e
+  nodes:
+    - path: idearium/repo/snapshot.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/repo-versions.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/repo/architecture.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/repo-versions.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/repo-versions.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/verify-lazy.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/snapshot-files.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/architecture.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/index.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP4_wire_loom_and_selfheal_as_real_contract_sources
+type: phase
+id: docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP4_wire_loom_and_selfheal_as_real_contract_sources
+context: >-
+  pipeline phase SBP4_wire_loom_and_selfheal_as_real_contract_sources of
+  docs/2026-08-28-self-building-pipeline-phasemap.spec
+intent: null
+summary: SBP4_wire_loom_and_selfheal_as_real_contract_sources (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792878419874
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878419874
+lastSeenAt: 1792878419874
+fingerprint: null
+payload:
+  id: SBP4_wire_loom_and_selfheal_as_real_contract_sources
+  map: docs/2026-08-28-self-building-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-intake.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2a6bb974005845ae

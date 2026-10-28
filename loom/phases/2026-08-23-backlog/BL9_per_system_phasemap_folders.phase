@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL9_per_system_phasemap_folders
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL9_per_system_phasemap_folders
+context: pipeline phase BL9_per_system_phasemap_folders of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL9_per_system_phasemap_folders (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792879042115
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879042115
+lastSeenAt: 1792879042115
+fingerprint: null
+payload:
+  id: BL9_per_system_phasemap_folders
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/phasemap-map.js
+  depends_on:
+    - BL8_docs_consolidation
+  blocks: []
+  spec: null
+  graph: 5d282ca978eef080

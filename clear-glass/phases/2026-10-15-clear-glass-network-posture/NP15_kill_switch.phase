@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP15_kill_switch
+type: phase
+id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP15_kill_switch
+context: pipeline phase NP15_kill_switch of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+intent: null
+summary: NP15_kill_switch (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677489
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677489
+lastSeenAt: 1792787677489
+fingerprint: null
+payload:
+  id: NP15_kill_switch
+  map: docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - NP1_compartment
+    - NP3_apply_to_electron
+    - NP5_leak_test
+  blocks: []
+  spec: null
+  graph: bf2c7c8a892bc080

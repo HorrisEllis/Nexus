@@ -1,0 +1,119 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GM1_the_gate_record:7b2f7b374309d9af
+type: graph
+id: phase:GM1_the_gate_record:7b2f7b374309d9af
+context: dependency graph of phase GM1_the_gate_record
+intent: null
+summary: 7 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677866
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677866
+lastSeenAt: 1792787677866
+fingerprint: null
+payload:
+  for: GM1_the_gate_record
+  kind: phase
+  repo: null
+  hash: 7b2f7b374309d9af
+  nodes:
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/gate-record.js
+      role: changes
+      exists: false
+      system: cortex
+    - path: cortex/core/raid/contract-adapters.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM0a_the_precommit_compartment
+    dependents:
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM2_restarts_resume_from_records
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM3_the_fulfilled_contract_index
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM7_the_context_panel_per_gate
+    upstream:
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM0a_the_precommit_compartment
+    downstream:
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM2_restarts_resume_from_records
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM3_the_fulfilled_contract_index
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM6_crystallized_from_what_was_approved
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM7_the_context_panel_per_gate
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM8_agents_have_it
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM2_restarts_resume_from_records
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM3_the_fulfilled_contract_index
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM7_the_context_panel_per_gate
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): GM0a_the_precommit_compartment'
+      - >-
+        needed by (3): GM2_restarts_resume_from_records, GM3_the_fulfilled_contract_index,
+        GM7_the_context_panel_per_gate · all downstream 5 · finishing it unlocks
+        GM2_restarts_resume_from_records, GM3_the_fulfilled_contract_index,
+        GM7_the_context_panel_per_gate
+    edges:
+      - from: docs/2026-10-18-gate-memory-phasemap.spec::GM0a_the_precommit_compartment
+        kind: declared

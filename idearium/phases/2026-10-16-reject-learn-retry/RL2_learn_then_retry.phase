@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-reject-learn-retry-phasemap.spec::RL2_learn_then_retry
+type: phase
+id: docs_2026-10-16-reject-learn-retry-phasemap.spec::RL2_learn_then_retry
+context: pipeline phase RL2_learn_then_retry of docs/2026-10-16-reject-learn-retry-phasemap.spec
+intent: null
+summary: RL2_learn_then_retry (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478056
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478056
+lastSeenAt: 1792822478056
+fingerprint: null
+payload:
+  id: RL2_learn_then_retry
+  map: docs/2026-10-16-reject-learn-retry-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.105
+  files:
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e33fba3f258d9c82

@@ -306,9 +306,11 @@ phases:
 
   PS1_phase_specs:
     layer: library
-    status: OPEN
+    # roadmap edit 2026-10-24: OPEN -> DONE 2026-10-24. by evidence — test-phase-specs.test.js (its own), test-pipeline-nodes.test.js (linked), test-pipeline-root-causes.test.js (linked) (dry run 2026-10-23; James 2026-10-24: yes do it. )
+    status_previous: "OPEN"
+    status: "DONE 2026-10-24. by evidence — test-phase-specs.test.js (its own), test-pipeline-nodes.test.js (linked), test-pipeline-root-causes.test.js (linked) (dry run 2026-10-23; James 2026-10-24: yes do it. )"
     depends_on: []
-    files: [emerge/compiler/phase-specs.js, lib/pipeline-nodes.js, lib/node-schemas/schema.graph, tests/modules/test-phase-specs.test.js]
+    files: [lib/emerge/compiler/phase-specs.js, lib/pipeline-nodes.js, lib/node-schemas/schema.graph, tests/modules/test-phase-specs.test.js]
     spec: docs/substrate.spec
     blocks: [MOD-PHASE-SPECS]
     does: >-
@@ -328,3 +330,39 @@ lost. … specs, then phases then specced again with dag and related files for i
 The build contract is docs/substrate.spec (emerge module format; every module at specDepth 1.0). Each phase above now names `spec:` and the
 module ids it builds in `blocks:`. Each phase is specced again as <owner>/phases/2026-10-20-substrate-graph-traversal-chunking-gating/<phase>.phase and its
 graph/<phase>-<hash>.graph (related files with roles, crossings, the DAG slice), written by emerge/compiler/phase-specs.js.
+
+## ADDENDUM 2026-10-24 (0.60.227) — PS2: every phase decomposed
+James, 2026-10-24: "spec per component/capability/etc its in the specs. deocmpose all of the phases into .phase nodes including dag per phase."
+- emerge/compiler/phase-specs.js 1.1.0 writeAll / `--all`: PS1's write over every docs/*-phasemap.spec in one run. 2046 phases → 2046 .phase
+  and .graph (each graph carries the phase's slice of the whole DAG), beside each owning system. `--all --dry` derives without writing.
+- What it measured (docs/2026-10-24-phase-nodes-spec-coverage.md): 133 phases name their spec; 1107 open phases have none. His reading of
+  "spec per component" is that rule (docs/CLAUDE.md, 2026-10-20): the coverage table is the list of components still to spec, per system.
+  The coder's reading (to confirm): he asked for the decomposition now and the specs per component next, not 1107 specs in one pass.
+- Found: a later key with an already-defined phase id in the same map is a note, not a phase; the DAG read it last-wins and lost the real
+  phase (11 in 3 maps). The first definition wins in lib/phase-dag.js and in derive(), as idearium/repo/roadmap.js already reads it (its
+  duplicate_phase_id warning). Loom's parser still returns both (its consumers rely on the warning).
+- Kept, not deleted (§0.3): 2 .phase files left in an older owner's folder when their phase's files moved system (SL1, BX10).
+
+## ADDENDUM 2026-10-24 (0.60.228) — PS3: spec, phase and DAG bundled under one id
+James, 2026-10-24: "need to either update existing or create new ones. then we could have each .spec bundled with each .phase with each .dag.
+all with a id or uuid that matches them." · then: "only map if it's a good idea" (so no new map: this is PS1's work, recorded here).
+- emerge/compiler/phase-specs.js 1.2.0: bundleUuid, moduleIndex, specLinkOf; lib/pipeline-nodes.js phaseNode { uuid, specLink },
+  graphNode { phaseUuid }. The .phase is the bundle's head: its graph by hash, its spec and modules by their uuids (no third file per phase).
+- The link rule is decided by the axioms (TRUTH_OVER_COHERENCE; NC0's evidence rule): declared, or discovered by a file only one module
+  declares and at most 5 phases name; never a hub file. 157 phases linked; the coverage report has the rest.
+
+## ADDENDUM 2026-10-24 (0.60.238) — PS4: one file per phase, kept with the system that owns it
+James, 2026-10-24: ".phase/.graph should be one file i feel like?" · "need to keep at the sovereignty of each system"
+Context: his question came after the coder found the README overflowing from 4,195 phase nodes. Read as a direction, with his question mark;
+the coder agreed on the evidence:
+- the .graph is derived entirely from the phase;
+- every edit of a map wrote one more .graph beside the last (2,140 for 2,055 phases; EW1 had two with the same 21 nodes);
+- a run keeps its own copy of the graph it was built against (idearium/api/index.js, the run's node dir), so the tree's copies kept no
+  history git does not.
+This supersedes the handoff's PN1 layout (2026-10-19: graph/<phase>-<hash>.graph beside the .phase, kept in this map's PS1 entry, §0.3).
+- <owner>/phases/<map-id>/<phase>.phase now carries graph: { hash, nodes, edges, crossings, ready, dag } (lib/pipeline-nodes.js graphBody);
+  check() compares it and names a changed hash.
+- The envelope's system is the phase's owner. It said 'idearium' for every phase, including lib/'s and cos/'s.
+- A phase lives with its system only. When the owner changes, the old copy is moved (EW1 made 12 phases emerge's; their lib/ copies went).
+- Dropped as true duplicates, and reported: the 2,149 .graph files and the 12 moved copies (all in git history).
+- Proof: 2,056 .phase files and 0 .graph files in the tree; test-phase-specs 7/7, test-phase-specs-tag 7/7.

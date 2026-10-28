@@ -1,0 +1,59 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB5_tab_shell:45459c6b9780f0d9
+type: graph
+id: phase:TB5_tab_shell:45459c6b9780f0d9
+context: dependency graph of phase TB5_tab_shell
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677663
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677663
+lastSeenAt: 1792787677663
+fingerprint: null
+payload:
+  for: TB5_tab_shell
+  kind: phase
+  repo: null
+  hash: 45459c6b9780f0d9
+  nodes:
+    - path: idearium/ui/js/code-surface.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+    dependents:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB6_files_changes_plans_cos_tabs
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7_runs_tab
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7c_graph_and_zoom
+    upstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB0_decisions
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+    downstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB6_files_changes_plans_cos_tabs
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7_runs_tab
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7c_graph_and_zoom
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7d_node_controls
+    blockedBy:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+    unlocks:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB6_files_changes_plans_cos_tabs
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by TB1_read_model_per_tab
+      - 'depends on (1): TB1_read_model_per_tab · all upstream 2'
+      - >-
+        needed by (3): TB6_files_changes_plans_cos_tabs, TB7_runs_tab, TB7c_graph_and_zoom · all
+        downstream 4 · finishing it unlocks TB6_files_changes_plans_cos_tabs
+    edges:
+      - from: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+        kind: declared

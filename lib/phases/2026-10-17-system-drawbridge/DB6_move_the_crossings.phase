@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+context: pipeline phase DB6_move_the_crossings of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB6_move_the_crossings (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792876202780
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876202780
+lastSeenAt: 1792876202780
+fingerprint: null
+payload:
+  id: DB6_move_the_crossings
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-23-cos-spine-phasemap.spec
+    - docs/2026-10-15-gate-held-work-phasemap.spec
+  depends_on:
+    - SV7_intelligence_cos_cortex
+  blocks: []
+  spec: null
+  graph: a65b5aba74628e2f

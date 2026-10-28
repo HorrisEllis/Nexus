@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-30-interaction-contract-context-phasemap.spec::IC9_diagnostic_stall_detection_and_autofix
+type: phase
+id: docs_2026-08-30-interaction-contract-context-phasemap.spec::IC9_diagnostic_stall_detection_and_autofix
+context: >-
+  pipeline phase IC9_diagnostic_stall_detection_and_autofix of
+  docs/2026-08-30-interaction-contract-context-phasemap.spec
+intent: null
+summary: IC9_diagnostic_stall_detection_and_autofix (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792822701872
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822701872
+lastSeenAt: 1792822701872
+fingerprint: null
+payload:
+  id: IC9_diagnostic_stall_detection_and_autofix
+  map: docs/2026-08-30-interaction-contract-context-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - IC5_full_input_queue_output_qc_lifecycle
+  blocks: []
+  spec: null
+  graph: 13ed862cf85ae1ff

@@ -43,8 +43,8 @@ require.cache[require.resolve('../../cortex/memory/jaa-db')] = {
 // directly rather than reconstructing the format (see file header). Using
 // the real function here means a format drift in the real module would
 // actually be caught by both suites independently, not papered over.
-require.cache[require.resolve('../../meta/crystal-lattice')] = {
-  id: '../../meta/crystal-lattice', filename: '../../meta/crystal-lattice', loaded: true,
+require.cache[require.resolve('../../lib/meta/crystal-lattice')] = {
+  id: '../../lib/meta/crystal-lattice', filename: '../../lib/meta/crystal-lattice', loaded: true,
   exports: {
     _edgeKey: (from, to) => `${from}->${to}`,
   },

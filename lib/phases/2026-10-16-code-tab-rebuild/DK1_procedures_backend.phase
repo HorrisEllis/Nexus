@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::DK1_procedures_backend
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::DK1_procedures_backend
+context: pipeline phase DK1_procedures_backend of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: DK1_procedures_backend (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792874370563
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874370563
+lastSeenAt: 1792874370563
+fingerprint: null
+payload:
+  id: DK1_procedures_backend
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-procedures.js
+    - lib/repo-agent.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-repo-procedures.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cd1d85b7cc9d5a67

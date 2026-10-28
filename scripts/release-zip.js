@@ -33,7 +33,10 @@ function build({ out = path.join(ROOT, 'dist'), ref = 'HEAD', check = false, roo
   const vf = path.join(tmp, 'VERSION');
   fs.writeFileSync(vf, `${cur.version}\n`);
   const zip = path.join(out, cur.zipName);
-  execFileSync('git', ['archive', '--format=zip', `--add-file=${vf}`, '-o', zip, ref], { cwd: root, stdio: ['ignore', 'ignore', 'pipe'] });   // no --prefix: no folder
+  // 0.60.221 — a commit that tracks VERSION at its root already carries it (and --check holds it to the release): adding a second
+  // gave the zip two root VERSION files saying two versions
+  let tracked = false; try { execFileSync('git', ['cat-file', '-e', `${ref}:VERSION`], { cwd: root, stdio: 'ignore' }); tracked = true; } catch (_) {}
+  execFileSync('git', ['archive', '--format=zip', ...(tracked ? [] : [`--add-file=${vf}`]), '-o', zip, ref], { cwd: root, stdio: ['ignore', 'ignore', 'pipe'] });   // no --prefix: no folder
   fs.rmSync(tmp, { recursive: true, force: true });
   return { version: cur.version, tag: cur.tag, title: cur.title, zip, bytes: fs.statSync(zip).size, notes: fs.existsSync(path.join(root, `CHANGELOG-${cur.version}.md`)) ? `CHANGELOG-${cur.version}.md` : null };
 }

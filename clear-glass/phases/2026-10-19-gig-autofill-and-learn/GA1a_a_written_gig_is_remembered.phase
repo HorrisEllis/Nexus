@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA1a_a_written_gig_is_remembered
+type: phase
+id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA1a_a_written_gig_is_remembered
+context: >-
+  pipeline phase GA1a_a_written_gig_is_remembered of
+  docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+intent: null
+summary: GA1a_a_written_gig_is_remembered (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792814522020
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814522020
+lastSeenAt: 1792814522020
+fingerprint: null
+payload:
+  id: GA1a_a_written_gig_is_remembered
+  map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/store.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: dfa9db0a9ad9b3e7

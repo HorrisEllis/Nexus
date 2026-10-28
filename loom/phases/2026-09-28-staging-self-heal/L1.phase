@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-staging-self-heal-phasemap.spec::L1
+type: phase
+id: docs_2026-09-28-staging-self-heal-phasemap.spec::L1
+context: pipeline phase L1 of docs/2026-09-28-staging-self-heal-phasemap.spec
+intent: null
+summary: L1 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676180
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676180
+lastSeenAt: 1792787676180
+fingerprint: null
+payload:
+  id: L1
+  map: docs/2026-09-28-staging-self-heal-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/maps/staging-self-heal-map.js
+    - loom/bootstrap.js
+    - loom/registry-components.js
+  depends_on:
+    - S0
+    - S1
+    - S2
+    - S3
+    - C0
+    - C1
+    - S4
+    - S5
+    - S6
+    - S7
+  blocks: []
+  spec: null
+  graph: f9baab1fe72d6f56

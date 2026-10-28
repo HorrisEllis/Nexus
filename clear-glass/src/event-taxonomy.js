@@ -158,9 +158,28 @@ module.exports = Object.freeze({
   },
   // 2026-10-12 — his gig import (renderer/gig-panel.js, settings → Autofill): a gig file was loaded
   AUTOFILL_GIG_IMPORTED: {
-    description: 'A gig file (.gig or .gig.json) was loaded into the gig writer and held to Fiverr\'s limits; nothing was saved, typed or published.',
+    description: 'A gig file (.gig; an old .gig.json loads too) was loaded into the gig writer and held to Fiverr\'s limits; nothing was saved, typed or published.',
     payloadShape: ['title', 'warnings', 'ts'],
     severity: 'info',
+  },
+  // §HC 0.60.260 — James, 2026-10-26: "i can't get passed this." A human check met: the tab tells the truth, and fills stop at it
+  PAGE_HUMAN_CHECK: { description: "A person's tab met a human check (Press & Hold, Turnstile, a captcha): its session switched to the engine's own identity, the site remembered, the page reloaded once. Nothing presses or solves it.", payloadShape: ['provider', 'origin', 'switched', 'agentId', 'ts'], severity: 'notable' },
+  AUTOFILL_GATE_HUMAN_CHECK: { description: 'An autofill or gig fill stopped at its first gate: the page asks for a human. It is his to pass; nothing was typed.', payloadShape: ['agentId', 'provider', 'url', 'ts'], severity: 'notable' },
+  // §AT2 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." (src/autofill/transfer.js)
+  AUTOFILL_EXPORTED: {
+    description: 'The autofill data (profiles, learned fields, the last gig) was written out as one .autofill file for him to save.',
+    payloadShape: ['profiles', 'learned', 'gig', 'ts'],
+    severity: 'info',
+  },
+  AUTOFILL_IMPORTED: {
+    description: 'An .autofill file was merged in: profiles added or replaced (newer only), learned fields set, the gig taken; what it replaced was kept for undo.',
+    payloadShape: ['profilesAdded', 'profilesReplaced', 'profilesKept', 'learned', 'gig', 'refused', 'by', 'ts'],
+    severity: 'notable',
+  },
+  AUTOFILL_IMPORT_UNDONE: {
+    description: 'The last autofill import was undone: the profiles, the gig and the learned fields it replaced were put back.',
+    payloadShape: ['profiles', 'gig', 'learned', 'ts'],
+    severity: 'notable',
   },
   // §0.60.157 — emitted and never declared (test-event-contracts EC-05, red on main): the chat crawler (src/chats/crawler.js)
   // and the TLS layer's state (src/main/index.js); payloads read at the emit sites

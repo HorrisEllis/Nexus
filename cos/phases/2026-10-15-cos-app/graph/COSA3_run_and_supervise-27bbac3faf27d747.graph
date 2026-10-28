@@ -1,0 +1,127 @@
+envelope: 1
+uuid: nexus-export-graph-phase:COSA3_run_and_supervise:27bbac3faf27d747
+type: graph
+id: phase:COSA3_run_and_supervise:27bbac3faf27d747
+context: dependency graph of phase COSA3_run_and_supervise
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792880099945
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880099945
+lastSeenAt: 1792880099945
+fingerprint: null
+payload:
+  for: COSA3_run_and_supervise
+  kind: phase
+  repo: null
+  hash: 27bbac3faf27d747
+  nodes:
+    - path: cos/app/runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/controller.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/switch.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-app-runtime.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-switch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-ui.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: cos/app/cli.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/shell.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/switch.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-runtime.test.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-switch.test.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-ui.test.js
+      to: cos/app/runtime.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+    dependents:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA4_switch_and_rollback
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA8_other_projects
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+    downstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA10_compartment_window
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA11_nested_tree
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA13_auto_update
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA4_switch_and_rollback
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA8_other_projects
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+      - docs/2026-10-16-cos-console-phasemap.spec::CON3_system_controls
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA4_switch_and_rollback
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA8_other_projects
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): COSA2_runtime_and_dependencies · all upstream 2'
+      - >-
+        needed by (4): COSA4_switch_and_rollback, COSA8_other_projects, COSA9_idearium_sync,
+        CS4a_cos_boots_alone · all downstream 20 · finishing it unlocks COSA4_switch_and_rollback,
+        COSA8_other_projects, COSA9_idearium_sync
+    edges:
+      - from: docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+        kind: declared

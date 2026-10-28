@@ -1,6 +1,6 @@
 'use strict';
 const assert = require('assert');
-const { parseSideEffect, structuredSideEffects } = require('../hooks/side-effect-parser.js');
+const { parseSideEffect, structuredSideEffects } = require('../lib/hooks/side-effect-parser.js');
 const realStrings = require('/tmp/real_strings.json');
 
 let passed = 0, failed = 0;

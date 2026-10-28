@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB3_the_section_prompt_is_domain_agnostic
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB3_the_section_prompt_is_domain_agnostic
+context: >-
+  pipeline phase SB3_the_section_prompt_is_domain_agnostic of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB3_the_section_prompt_is_domain_agnostic (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754637
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754637
+lastSeenAt: 1792841754637
+fingerprint: null
+payload:
+  id: SB3_the_section_prompt_is_domain_agnostic
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+  depends_on:
+    - SB1_templates_are_the_default_frame
+  blocks: []
+  spec: null
+  graph: d9708daf58bb52e5

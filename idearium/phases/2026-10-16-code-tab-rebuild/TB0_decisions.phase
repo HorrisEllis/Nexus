@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB0_decisions
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB0_decisions
+context: pipeline phase TB0_decisions of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB0_decisions (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677658
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677658
+lastSeenAt: 1792787677658
+fingerprint: null
+payload:
+  id: TB0_decisions
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9af0f76e404926bf

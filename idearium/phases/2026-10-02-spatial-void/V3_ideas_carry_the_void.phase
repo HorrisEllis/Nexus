@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-spatial-void-phasemap.spec::V3_ideas_carry_the_void
+type: phase
+id: docs_2026-10-02-spatial-void-phasemap.spec::V3_ideas_carry_the_void
+context: pipeline phase V3_ideas_carry_the_void of docs/2026-10-02-spatial-void-phasemap.spec
+intent: null
+summary: V3_ideas_carry_the_void (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754582
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754582
+lastSeenAt: 1792841754582
+fingerprint: null
+payload:
+  id: V3_ideas_carry_the_void
+  map: docs/2026-10-02-spatial-void-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e10e16c0cc57f957

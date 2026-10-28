@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cos-machines-phasemap.spec::AP3_release_like_an_enterprise
+type: phase
+id: docs_2026-10-05-cos-machines-phasemap.spec::AP3_release_like_an_enterprise
+context: pipeline phase AP3_release_like_an_enterprise of docs/2026-10-05-cos-machines-phasemap.spec
+intent: null
+summary: AP3_release_like_an_enterprise (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677023
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677023
+lastSeenAt: 1792787677023
+fingerprint: null
+payload:
+  id: AP3_release_like_an_enterprise
+  map: docs/2026-10-05-cos-machines-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/testenv/environment.js
+    - lib/cos-run.js
+  depends_on:
+    - AP2_test_on_the_android_compartment
+  blocks: []
+  spec: null
+  graph: 84659775a8f5692d

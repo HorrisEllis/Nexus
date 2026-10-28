@@ -5,7 +5,7 @@ require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), path = require('path'), fs = require('fs'), os = require('os');
 const { JSDOM } = require(path.join(__dirname, '..', '..', 'node_modules', 'jsdom'));
 const ROOT = path.resolve(__dirname, '..', '..');
-const { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR, OUTPUT_DIR } = require(path.join(ROOT, 'clear-glass/src/mesh/automation-engine.js'));
+const { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR, OUTPUT_DIR } = require(path.join(ROOT, 'lib/automation/engine.js'));
 const Ports = require(path.join(ROOT, 'clear-glass/src/chats/ports.js')); const { Crawler } = require(path.join(ROOT, 'clear-glass/src/chats/crawler.js'));
 const { ChatCrawlService } = require(path.join(ROOT, 'clear-glass/src/chats/service.js')); const ledger = require(path.join(ROOT, 'clear-glass/src/downloads/chat-ledger.js'));
 const S = require(path.join(ROOT, 'lib/chat-crawl-settings.js'));

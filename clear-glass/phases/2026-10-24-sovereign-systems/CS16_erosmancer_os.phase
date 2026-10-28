@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-sovereign-systems-phasemap.spec::CS16_erosmancer_os
+type: phase
+id: docs_2026-10-24-sovereign-systems-phasemap.spec::CS16_erosmancer_os
+context: pipeline phase CS16_erosmancer_os of docs/2026-10-24-sovereign-systems-phasemap.spec
+intent: null
+summary: CS16_erosmancer_os (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682548
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682548
+lastSeenAt: 1792877682548
+fingerprint: null
+payload:
+  id: CS16_erosmancer_os
+  map: docs/2026-10-24-sovereign-systems-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/erosmancer
+    - clear-glass/erosmancer-os
+  depends_on:
+    - CS12_the_mover_is_proven
+  blocks: []
+  spec: null
+  graph: ad730a4671bfccf8

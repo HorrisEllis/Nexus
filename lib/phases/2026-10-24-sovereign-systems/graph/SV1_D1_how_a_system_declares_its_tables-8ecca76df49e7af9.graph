@@ -1,0 +1,85 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV1_D1_how_a_system_declares_its_tables:8ecca76df49e7af9
+type: graph
+id: phase:SV1_D1_how_a_system_declares_its_tables:8ecca76df49e7af9
+context: dependency graph of phase SV1_D1_how_a_system_declares_its_tables
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792881043794
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792881043794
+lastSeenAt: 1792881043794
+fingerprint: null
+payload:
+  for: SV1_D1_how_a_system_declares_its_tables
+  kind: phase
+  repo: null
+  hash: 8ecca76df49e7af9
+  nodes:
+    - path: lib/system-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: diagnostic/healer/api/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/agents/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: loom/lib/store.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/system-store.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: diagnostic/healer/api/index.js
+      to: lib/system-store.js
+      kind: requires
+    - from: guardian/agents/index.js
+      to: lib/system-store.js
+      kind: requires
+    - from: loom/lib/store.js
+      to: lib/system-store.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
+    dependents: []
+    upstream:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by SV1_every_table_has_one_owner
+      - 'depends on (1): SV1_every_table_has_one_owner · all upstream 2'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
+        kind: inferred

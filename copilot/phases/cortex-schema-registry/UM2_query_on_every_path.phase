@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_cortex-schema-registry-phasemap.spec::UM2_query_on_every_path
+type: phase
+id: docs_cortex-schema-registry-phasemap.spec::UM2_query_on_every_path
+context: pipeline phase UM2_query_on_every_path of docs/cortex-schema-registry-phasemap.spec
+intent: null
+summary: UM2_query_on_every_path (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678193
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678193
+lastSeenAt: 1792787678193
+fingerprint: null
+payload:
+  id: UM2_query_on_every_path
+  map: docs/cortex-schema-registry-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/user-model.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f64a1ce92571c43c

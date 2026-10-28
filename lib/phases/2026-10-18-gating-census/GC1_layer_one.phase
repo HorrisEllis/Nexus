@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-gating-census-phasemap.spec::GC1_layer_one
+type: phase
+id: docs_2026-10-18-gating-census-phasemap.spec::GC1_layer_one
+context: pipeline phase GC1_layer_one of docs/2026-10-18-gating-census-phasemap.spec
+intent: null
+summary: GC1_layer_one (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792820508010
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820508010
+lastSeenAt: 1792820508010
+fingerprint: null
+payload:
+  id: GC1_layer_one
+  map: docs/2026-10-18-gating-census-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/context-stream.js
+    - lib/context-sources.js
+    - intelligence/lattice/node-lattice.js
+    - loom/scanners/source-map.js
+    - idearium/cli/route-commands.js
+    - lib/check-catalogue.js
+  depends_on:
+    - GC0_the_census
+  blocks: []
+  spec: null
+  graph: 3f15fb69b24b7b4f

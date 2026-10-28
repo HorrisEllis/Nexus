@@ -88,7 +88,7 @@ function uid() { return _uid?.() ?? crypto.randomUUID(); }
 
 function _getBus() {
   if (_bus) return _bus;
-  try { _bus = require('../../nexus/nexus-bus'); } catch(_) {}
+  try { _bus = require('../../lib/nexus/nexus-bus'); } catch(_) {}
   return _bus;
 }
 function _getGrammar() {
@@ -444,7 +444,7 @@ async function _phaseB(req, ctx) {
         let _cfrSigmaFloor = 0;
         let _cfrRegime = 'stable';
         try {
-          const _cfrInfluence = require('../../nexus/nexus-cfr-influence');
+          const _cfrInfluence = require('../../lib/nexus/nexus-cfr-influence');
           _cfrSigmaFloor = _cfrInfluence.getSigmaFloor?.() || 0;
           _cfrRegime     = _cfrInfluence.getState?.()?.regime || 'stable';
         } catch(_) {}

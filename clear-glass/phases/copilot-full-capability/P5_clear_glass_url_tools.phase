@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-full-capability-phasemap.spec::P5_clear_glass_url_tools
+type: phase
+id: docs_copilot-full-capability-phasemap.spec::P5_clear_glass_url_tools
+context: pipeline phase P5_clear_glass_url_tools of docs/copilot-full-capability-phasemap.spec
+intent: null
+summary: P5_clear_glass_url_tools (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678162
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678162
+lastSeenAt: 1792787678162
+fingerprint: null
+payload:
+  id: P5_clear_glass_url_tools
+  map: docs/copilot-full-capability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/driver/url-listener.js
+    - lib/agent-tools/tools/browser/browser-action.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f149cbe6b2883fce

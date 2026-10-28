@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-repo-carve-phasemap.spec::FR8_branches_for_benchmarks
+type: phase
+id: docs_2026-10-16-repo-carve-phasemap.spec::FR8_branches_for_benchmarks
+context: pipeline phase FR8_branches_for_benchmarks of docs/2026-10-16-repo-carve-phasemap.spec
+intent: null
+summary: FR8_branches_for_benchmarks (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677752
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677752
+lastSeenAt: 1792787677752
+fingerprint: null
+payload:
+  id: FR8_branches_for_benchmarks
+  map: docs/2026-10-16-repo-carve-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-15-gate-held-work-phasemap.spec
+    - lib/shadow-space.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 802a9c769b0443fa

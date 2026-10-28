@@ -1,0 +1,98 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS3_clear_glass_users_as_plugins:65f150cb1b4a6789
+type: graph
+id: phase:CS3_clear_glass_users_as_plugins:65f150cb1b4a6789
+context: dependency graph of phase CS3_clear_glass_users_as_plugins
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677498
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677498
+lastSeenAt: 1792787677498
+fingerprint: null
+payload:
+  for: CS3_clear_glass_users_as_plugins
+  kind: phase
+  repo: null
+  hash: 65f150cb1b4a6789
+  nodes:
+    - path: clear-glass/src/plugins/host.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/gates/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/plugins/context-items.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/plugins/schema.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/toolbar/commands.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/warp-bus.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/plugins/host.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/plugins/host.js
+      to: clear-glass/src/gates/index.js
+      kind: requires
+    - from: clear-glass/src/plugins/host.js
+      to: clear-glass/src/plugins/schema.js
+      kind: requires
+    - from: clear-glass/src/plugins/host.js
+      to: lib/warp-bus.js
+      kind: requires
+    - from: clear-glass/src/plugins/host.js
+      to: clear-glass/src/toolbar/commands.js
+      kind: requires
+    - from: clear-glass/src/plugins/host.js
+      to: clear-glass/src/plugins/context-items.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/plugins/host.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS2_settings_providers_and_accounts
+    dependents: []
+    upstream:
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS1_one_popup_frame
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS2_settings_providers_and_accounts
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS2_settings_providers_and_accounts
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by CS2_settings_providers_and_accounts
+      - 'depends on (1): CS2_settings_providers_and_accounts · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS2_settings_providers_and_accounts
+        kind: declared

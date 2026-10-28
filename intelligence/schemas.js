@@ -35,6 +35,8 @@ const JAA_TABLES = {
       systemA: 'string|null', systemB: 'string|null', crossSystem: 'boolean',
       count: 'number — real, observed occurrence count',
       confidence: 'number 0..1 — count-derived, not independently modeled',
+      lift: 'number — real event-level base-rate lift (observed ÷ chance expectation) at the crystallisation gate (§2026-10-24)',
+      status: "'crystallised' | 'hypothesis' — held as a hypothesis until it beats base rate, then promoted (§2026-10-24)",
       description: 'string — real, human-readable summary, generated at write time',
       actionable: 'boolean', crystallised: 'boolean — crosses the real threshold for this pattern type',
       noiseTainted: 'boolean — real suppression flag, set when a pattern is statistically noise, not signal',

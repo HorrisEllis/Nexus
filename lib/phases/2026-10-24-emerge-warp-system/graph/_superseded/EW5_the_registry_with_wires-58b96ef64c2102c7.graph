@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EW5_the_registry_with_wires:58b96ef64c2102c7
+type: graph
+id: phase:EW5_the_registry_with_wires:58b96ef64c2102c7
+context: dependency graph of phase EW5_the_registry_with_wires
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877325001
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325001
+lastSeenAt: 1792877325001
+fingerprint: null
+payload:
+  for: EW5_the_registry_with_wires
+  kind: phase
+  repo: null
+  hash: 58b96ef64c2102c7
+  nodes:
+    - path: emerge/registry-components.js
+      role: changes
+      exists: false
+      system: null
+    - path: loom/maps/observability-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/bootstrap.js
+      role: used-by
+      exists: true
+      system: loom
+  edges:
+    - from: loom/bootstrap.js
+      to: loom/maps/observability-map.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+    dependents: []
+    upstream:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW1_emerge_and_warp_one_system
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW2_the_callers_outside_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D0_emerge_and_warp_one_system
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D1_compiler_and_ide_with_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D2_the_runtime_is_not_a_crossing
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by EW4_the_ide_into_idearium
+      - 'depends on (1): EW4_the_ide_into_idearium · all upstream 7'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+        kind: declared

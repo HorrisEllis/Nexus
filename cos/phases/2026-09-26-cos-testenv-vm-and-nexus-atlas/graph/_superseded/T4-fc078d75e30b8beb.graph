@@ -1,0 +1,157 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T4:fc078d75e30b8beb
+type: graph
+id: phase:T4:fc078d75e30b8beb
+context: dependency graph of phase T4
+intent: null
+summary: 12 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676000
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676000
+lastSeenAt: 1792787676000
+fingerprint: null
+payload:
+  for: T4
+  kind: phase
+  repo: null
+  hash: fc078d75e30b8beb
+  nodes:
+    - path: cos/testenv/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/provision.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/run-target.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/compartment/guest-agent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/playground/sandbox.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/tar.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/testenv/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/compartment/guest-agent.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/playground/sandbox.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/tar.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/testenv/run-target.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      kind: requires
+  crossings:
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: cos/testenv/index.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T1
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T2
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T3
+    dependents:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T6
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T7
+    upstream:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T1
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T2
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T3
+    downstream:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T6
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T7
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T6
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T7
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (3): T1, T2, T3'
+      - 'needed by (2): T6, T7 · all downstream 3 · finishing it unlocks T6, T7'
+    edges:
+      - from: docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T1
+        kind: declared
+      - from: docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T2
+        kind: declared
+      - from: docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T3
+        kind: declared

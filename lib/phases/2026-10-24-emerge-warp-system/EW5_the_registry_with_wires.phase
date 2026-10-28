@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-emerge-warp-system-phasemap.spec::EW5_the_registry_with_wires
+type: phase
+id: docs_2026-10-24-emerge-warp-system-phasemap.spec::EW5_the_registry_with_wires
+context: pipeline phase EW5_the_registry_with_wires of docs/2026-10-24-emerge-warp-system-phasemap.spec
+intent: null
+summary: EW5_the_registry_with_wires (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792878423687
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878423687
+lastSeenAt: 1792878423687
+fingerprint: null
+payload:
+  id: EW5_the_registry_with_wires
+  map: docs/2026-10-24-emerge-warp-system-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - emerge/registry-components.js
+    - loom/maps/observability-map.js
+  depends_on:
+    - EW4_the_ide_into_idearium
+  blocks: []
+  spec: docs/2026-10-17-system-drawbridge-phasemap.spec
+  graph: 58b96ef64c2102c7

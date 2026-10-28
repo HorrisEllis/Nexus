@@ -1,0 +1,155 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GM2_restarts_resume_from_records:27a685ab9a7031c5
+type: graph
+id: phase:GM2_restarts_resume_from_records:27a685ab9a7031c5
+context: dependency graph of phase GM2_restarts_resume_from_records
+intent: null
+summary: 17 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755913
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755913
+lastSeenAt: 1792841755913
+fingerprint: null
+payload:
+  for: GM2_restarts_resume_from_records
+  kind: phase
+  repo: null
+  hash: 27a685ab9a7031c5
+  nodes:
+    - path: cortex/core/raid/gate-record.js
+      role: changes
+      exists: false
+      system: cortex
+    - path: idearium/repo/run-reconcile.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/run-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/lib/response-sink.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/change-record.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gig-ledger-listener.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-procedures.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/bin/flight-recorder.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-gig-ledger.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/run-state.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/run-state.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: lib/run-state.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/run-state.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/run-state.js
+      kind: requires
+    - from: guardian/lib/response-sink.js
+      to: lib/run-state.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/change-record.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/gig-ledger-listener.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/repo-procedures.js
+      to: lib/run-state.js
+      kind: requires
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: lib/run-state.js
+      kind: requires
+    - from: tests/modules/test-gig-ledger.test.js
+      to: lib/run-state.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM1_the_gate_record
+    dependents: []
+    upstream:
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM0a_the_precommit_compartment
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM1_the_gate_record
+    downstream: []
+    blockedBy:
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM1_the_gate_record
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by GM1_the_gate_record
+      - 'depends on (1): GM1_the_gate_record · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-18-gate-memory-phasemap.spec::GM1_the_gate_record
+        kind: declared

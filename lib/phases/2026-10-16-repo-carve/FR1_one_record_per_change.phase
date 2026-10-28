@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-repo-carve-phasemap.spec::FR1_one_record_per_change
+type: phase
+id: docs_2026-10-16-repo-carve-phasemap.spec::FR1_one_record_per_change
+context: pipeline phase FR1_one_record_per_change of docs/2026-10-16-repo-carve-phasemap.spec
+intent: null
+summary: FR1_one_record_per_change (?) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677745
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677745
+lastSeenAt: 1792787677745
+fingerprint: null
+payload:
+  id: FR1_one_record_per_change
+  map: docs/2026-10-16-repo-carve-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.114 — test-change-record 6/6 (CR-06 the panel in Clear Glass)"'
+  files:
+    - lib/change-record.js
+    - lib/repo-inject.js
+    - lib/proposal-evidence.js
+    - lib/repo-versions.js
+    - lib/activity-log/compartment.js
+    - lib/repo-activity.js
+    - lib/run-state.js
+    - versionium/lib/causality.js
+    - idearium/ui/js/repo-versions.js
+    - versionium/lib/text-diff.js
+  depends_on:
+    - CV2_untangle_with_rf0
+  blocks: []
+  spec: null
+  graph: 969ecbecb227f561

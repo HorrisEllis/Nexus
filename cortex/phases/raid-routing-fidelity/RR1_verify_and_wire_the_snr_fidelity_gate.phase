@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
+type: phase
+id: docs_raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
+context: >-
+  pipeline phase RR1_verify_and_wire_the_snr_fidelity_gate of
+  docs/raid-routing-fidelity-phasemap.spec
+intent: null
+summary: RR1_verify_and_wire_the_snr_fidelity_gate (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792877952933
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877952933
+lastSeenAt: 1792877952933
+fingerprint: null
+payload:
+  id: RR1_verify_and_wire_the_snr_fidelity_gate
+  map: docs/raid-routing-fidelity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/snr-filter.js
+    - cortex/core/raid/index.js
+    - lib/seam/spec-parser.js
+    - lib/agent-router.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 353f28a6143e5fdd

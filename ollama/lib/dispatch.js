@@ -20,10 +20,10 @@ const config = require('../config.js');
 const { state, broadcast } = require('./state.js');
 const { callOllamaRaw } = require('./ollama-client.js');
 
-const { unifiedDispatch }      = require('../../warp/dispatch/index');
-const { runCascade }           = require('../../warp/dispatch/cascade');
-const { FlatFileCrystallizer } = require('../../warp/plugins/crystallizer-flatfile');
-const { PopulationStore }      = require('../../warp/dispatch/population');
+const { unifiedDispatch }      = require('../../lib/warp/dispatch/index');
+const { runCascade }           = require('../../lib/warp/dispatch/cascade');
+const { FlatFileCrystallizer } = require('../../lib/warp/plugins/crystallizer-flatfile');
+const { PopulationStore }      = require('../../lib/warp/dispatch/population');
 
 const crystallizer = new FlatFileCrystallizer({ path: path.join(config.DATA_DIR, 'warp-crystals.json') });
 const population    = new PopulationStore({ maxPerClass: 8 });
@@ -73,7 +73,7 @@ async function dispatchJob(job) {
   // §0.39.364 — a name without its tag ("deepseek-coder-v2") is resolved to the one installed tag it means
   let model = job.model || state.defaultModel;
   try { const MI = require('./model-inventory.js'); const m = await MI.resolve(model); if (m && m !== model) { job.modelAsked = model; model = m; job.model = m; } } catch (_) {}
-  const { Axiom } = require('../../warp/core/Axiom');
+  const { Axiom } = require('../../lib/warp/core/Axiom');
   const axioms = (job.axioms || []).map(a =>
     a instanceof Axiom ? a : new Axiom(a.id || `job.axiom.${Math.random()}`, { severity: a.severity || 'soft', check: a.check || (() => true) }));
 

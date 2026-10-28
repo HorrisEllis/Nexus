@@ -1,0 +1,260 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GW5_agents_are_copilot:a8082de2026469af
+type: graph
+id: phase:GW5_agents_are_copilot:a8082de2026469af
+context: dependency graph of phase GW5_agents_are_copilot
+intent: null
+summary: 27 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792820507629
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820507629
+lastSeenAt: 1792820507629
+fingerprint: null
+payload:
+  for: GW5_agents_are_copilot
+  kind: phase
+  repo: null
+  hash: a8082de2026469af
+  nodes:
+    - path: copilot/lib/capabilities.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/autonomy-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-shape.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-tunnel.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/capability-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/lib/capabilities.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-shape.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-tunnel.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/capabilities.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lib/capabilities.js
+      to: loom/scanners/capability-map.js
+      fromSystem: copilot
+      toSystem: loom
+      kind: system
+      known: true
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+    dependents:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW22_find_before_generate
+    upstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+    downstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW22_find_before_generate
+    blockedBy:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+        files:
+          - lib/repo-agent.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+        files:
+          - idearium/cli/route-commands.js
+    dangling: []
+    lines:
+      - layer 1 · blocked by GW1_the_baton
+      - 'depends on (1): GW1_the_baton'
+      - 'needed by (1): GW22_find_before_generate'
+      - 'same files as GW2_the_run_follows_the_gate with no order between them: lib/repo-agent.js'
+      - >-
+        same files as GW13_the_sandbox_door with no order between them:
+        idearium/cli/route-commands.js
+    edges:
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+        kind: declared

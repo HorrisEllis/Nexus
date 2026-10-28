@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP1_tool_index_hooked_to_living_model:ce14ab9b2c29744b
+type: graph
+id: phase:CP1_tool_index_hooked_to_living_model:ce14ab9b2c29744b
+context: dependency graph of phase CP1_tool_index_hooked_to_living_model
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792841753745
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753745
+lastSeenAt: 1792841753745
+fingerprint: null
+payload:
+  for: CP1_tool_index_hooked_to_living_model
+  kind: phase
+  repo: null
+  hash: ce14ab9b2c29744b
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::EVT1_commands_and_tools_emit_events
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::TC1_tools_get_real_contracts
+    dependents: []
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::EVT1_commands_and_tools_emit_events
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF6_tools_have_no_contracts
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::TC1_tools_get_real_contracts
+    downstream: []
+    blockedBy:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::EVT1_commands_and_tools_emit_events
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::TC1_tools_get_real_contracts
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by EVT1_commands_and_tools_emit_events, TC1_tools_get_real_contracts
+      - >-
+        depends on (2): EVT1_commands_and_tools_emit_events, TC1_tools_get_real_contracts · all
+        upstream 3
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::EVT1_commands_and_tools_emit_events
+        kind: declared
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::TC1_tools_get_real_contracts
+        kind: declared

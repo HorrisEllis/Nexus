@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P6_versionium_residue:16ec7c94e45a4c8c
+type: graph
+id: phase:P6_versionium_residue:16ec7c94e45a4c8c
+context: dependency graph of phase P6_versionium_residue
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675969
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675969
+lastSeenAt: 1792787675969
+fingerprint: null
+payload:
+  for: P6_versionium_residue
+  kind: phase
+  repo: null
+  hash: 16ec7c94e45a4c8c
+  nodes:
+    - path: cortex/cortex-v2.js
+      role: changes
+      exists: true
+      system: cortex
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P0_map
+    dependents:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P7_hostile_verify_and_ship
+    upstream:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P0_map
+    downstream:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D3_snapshot
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D5_new
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P7_hostile_verify_and_ship
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): P0_map'
+      - 'needed by (1): P7_hostile_verify_and_ship · all downstream 3'
+    edges:
+      - from: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P0_map
+        kind: declared

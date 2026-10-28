@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792595037298
+exported_at: 1792787678000
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792595037298
-lastSeenAt: 1792595037298
+firstSeenAt: 1792787678000
+lastSeenAt: 1792787678000
 fingerprint: null
 payload:
   for: APV1_change_entry
@@ -41,7 +41,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 035c035515349513
     layer: 1
     deps:
       - docs/2026-10-21-approval-chain-phasemap.spec::APV0_one_record
@@ -62,8 +61,11 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 035c035515349513 · layer 1
+      - layer 1
       - 'depends on (1): APV0_one_record'
       - >-
         needed by (2): APV2_commit_carries_it, APV5_wired_in_loom · all downstream 4 · finishing it
         unlocks APV2_commit_carries_it, APV5_wired_in_loom
+    edges:
+      - from: docs/2026-10-21-approval-chain-phasemap.spec::APV0_one_record
+        kind: declared

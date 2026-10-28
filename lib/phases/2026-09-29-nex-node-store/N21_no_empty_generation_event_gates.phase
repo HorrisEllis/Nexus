@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N21_no_empty_generation_event_gates
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N21_no_empty_generation_event_gates
+context: pipeline phase N21_no_empty_generation_event_gates of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N21_no_empty_generation_event_gates (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754174
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754174
+lastSeenAt: 1792841754174
+fingerprint: null
+payload:
+  id: N21_no_empty_generation_event_gates
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/step-gate.js
+    - lib/extract-code.js
+    - guardian/lib/code-artifact.js
+    - guardian/lib/response-sink.js
+    - state.js
+    - idearium/api/build-surface.js
+    - idearium/ui/js/plan-panel.js
+  depends_on:
+    - N14_failure_mode_field
+  blocks: []
+  spec: null
+  graph: 9f755007d15c9ede

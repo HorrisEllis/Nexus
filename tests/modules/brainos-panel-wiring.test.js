@@ -11,8 +11,8 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
-const JS = fs.readFileSync(path.join(__dirname, '../../ui/brainos/brainos-app.js'), 'utf8');
-const HTML = fs.readFileSync(path.join(__dirname, '../../ui/brainos/index.html'), 'utf8');
+const JS = fs.readFileSync(path.join(__dirname, '..', '..', 'lib', 'ui', 'brainos', 'brainos-app.js'), 'utf8');
+const HTML = fs.readFileSync(path.join(__dirname, '..', '..', 'lib', 'ui', 'brainos', 'index.html'), 'utf8');
 
 let passed = 0, failed = 0;
 function test(id, desc, fn) {

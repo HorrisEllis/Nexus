@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P13_roundtable_shared_council_chat
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P13_roundtable_shared_council_chat
+context: pipeline phase P13_roundtable_shared_council_chat of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P13_roundtable_shared_council_chat (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678247
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678247
+lastSeenAt: 1792787678247
+fingerprint: null
+payload:
+  id: P13_roundtable_shared_council_chat
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/roundtable.js
+    - lib/agent-council.js
+    - lib/agent-tools/tools/coordination/agent-council.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: bbfce2d577125626

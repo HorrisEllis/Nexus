@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-self-building-loop-phasemap.spec::SL9_every_phase_a_node
+type: phase
+id: docs_2026-10-23-self-building-loop-phasemap.spec::SL9_every_phase_a_node
+context: pipeline phase SL9_every_phase_a_node of docs/2026-10-23-self-building-loop-phasemap.spec
+intent: null
+summary: SL9_every_phase_a_node (library) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792877163851
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877163851
+lastSeenAt: 1792877163851
+fingerprint: null
+payload:
+  id: SL9_every_phase_a_node
+  map: docs/2026-10-23-self-building-loop-phasemap.spec
+  repo: null
+  layer: library
+  status: >-
+    DONE 0.60.229 — test-phase-nodes-all 5/5; 1939 phases written beside 14 owner systems, a second
+    pass writes nothing
+  files:
+    - lib/emerge/compiler/phase-specs.js
+    - lib/phase-dag.js
+    - lib/phase-deps-gate.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/phases.js
+    - tests/modules/test-phase-nodes-all.test.js
+  depends_on:
+    - SL3_the_backlog_groomed
+    - PS1_phase_specs
+  blocks:
+    - MOD-SL-NODES
+  spec: docs/self-building-loop.spec
+  graph: e52fc4da1922715e

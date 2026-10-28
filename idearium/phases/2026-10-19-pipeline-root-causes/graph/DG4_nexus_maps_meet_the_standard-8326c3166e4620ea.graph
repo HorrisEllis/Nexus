@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DG4_nexus_maps_meet_the_standard:8326c3166e4620ea
+type: graph
+id: phase:DG4_nexus_maps_meet_the_standard:8326c3166e4620ea
+context: dependency graph of phase DG4_nexus_maps_meet_the_standard
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677934
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677934
+lastSeenAt: 1792787677934
+fingerprint: null
+payload:
+  for: DG4_nexus_maps_meet_the_standard
+  kind: phase
+  repo: null
+  hash: 8326c3166e4620ea
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG3_the_whole_dag
+    dependents: []
+    upstream:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG3_the_whole_dag
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): DG3_the_whole_dag'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG3_the_whole_dag
+        kind: declared

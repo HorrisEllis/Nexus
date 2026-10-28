@@ -1,0 +1,94 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DOD6_respects_axioms:0f8fab7681fae1d5
+type: graph
+id: phase:DOD6_respects_axioms:0f8fab7681fae1d5
+context: dependency graph of phase DOD6_respects_axioms
+intent: null
+summary: 7 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675473
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675473
+lastSeenAt: 1792787675473
+fingerprint: null
+payload:
+  for: DOD6_respects_axioms
+  kind: phase
+  repo: null
+  hash: 0f8fab7681fae1d5
+  nodes:
+    - path: orchestrator/lib/spec-drift.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: scripts/precommit-check.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: intelligence/gap/predicate.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/capability-spec.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+  crossings:
+    - from: orchestrator/lib/spec-drift.js
+      to: intelligence/gap/predicate.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

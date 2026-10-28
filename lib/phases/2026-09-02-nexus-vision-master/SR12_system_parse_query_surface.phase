@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::SR12_system_parse_query_surface
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR12_system_parse_query_surface
+context: >-
+  pipeline phase SR12_system_parse_query_surface of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: SR12_system_parse_query_surface (?) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753674
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753674
+lastSeenAt: 1792841753674
+fingerprint: null
+payload:
+  id: SR12_system_parse_query_surface
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/query/nexus-map.js
+    - lib/agent-system/contracts.js
+    - lib/consumer-registry.js
+    - lib/drawbridge-registry.js
+    - lib/emergence/components/idea-store/index.js
+    - copilot/lib/lifeline-contracts.js
+    - lib/contracts/nexus-interaction-contract.js
+    - lib/agent-tools/tools/query/read-file.js
+    - lib/agent-tools/tools/query/search-files.js
+    - lib/agent-tools/tools/query/file-tree.js
+    - lib/agent-tools/tools/execution/safe-apply.js
+    - lib/safe-apply.js
+    - lib/agent-tools/tools/execution/run-command.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7e8fd7afa9e313d2

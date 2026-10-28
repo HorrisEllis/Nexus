@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+context: >-
+  pipeline phase CB3_the_causal_spec_block of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: CB3_the_causal_spec_block (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754482
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754482
+lastSeenAt: 1792841754482
+fingerprint: null
+payload:
+  id: CB3_the_causal_spec_block
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/blocks.yaml
+    - lib/emerge/compiler/index.js
+    - lib/emerge/compiler/emit.js
+    - intelligence/cfr/contract-verifier.js
+  depends_on:
+    - EM2_warp_his_own
+    - CF1_cfr_improved_with_rfr2
+  blocks: []
+  spec: null
+  graph: 7b89a19174263b23

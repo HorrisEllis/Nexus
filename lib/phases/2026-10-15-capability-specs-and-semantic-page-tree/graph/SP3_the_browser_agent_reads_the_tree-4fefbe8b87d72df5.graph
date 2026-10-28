@@ -1,0 +1,299 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SP3_the_browser_agent_reads_the_tree:4fefbe8b87d72df5
+type: graph
+id: phase:SP3_the_browser_agent_reads_the_tree:4fefbe8b87d72df5
+context: dependency graph of phase SP3_the_browser_agent_reads_the_tree
+intent: null
+summary: 34 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877162921
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877162921
+lastSeenAt: 1792877162921
+fingerprint: null
+payload:
+  for: SP3_the_browser_agent_reads_the_tree
+  kind: phase
+  repo: null
+  hash: 4fefbe8b87d72df5
+  nodes:
+    - path: clear-glass/spec/semantic-tree.spec
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/semantic-tree.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: docs/2026-10-15-automatic-tracking-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/gap/predicate.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/capability-spec.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/checks/ck-254-surface.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-git.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/spec/capability-spec.spec
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/lib/spec-drift.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/blocks.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/attention.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/host.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/google-signin.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/lib/ncp.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/gap/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/check-catalogue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: clear-glass/src/contexts/google-signin.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/fault-taxonomy.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/capability-spec.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: clear-glass/src/page/semantic-tree.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: lib/system-boundary.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: lib/check-catalogue.js
+      to: lib/checks/ck-254-surface.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/page/blocks.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/providers/attention.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/providers/host.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/test/google-signin.test.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: guardian/lib/ncp.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: intelligence/gap/index.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+  crossings:
+    - from: intelligence/gap/predicate.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: intelligence/gap/predicate.js
+      to: cortex/self-heal/fault-taxonomy.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/gap/predicate.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/lib/ncp.js
+      to: intelligence/gap/predicate.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP1_semantic_page_tree
+    dependents: []
+    upstream:
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP1_semantic_page_tree
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS2_spec_the_unspecced
+        files:
+          - orchestrator/lib/spec-drift.js
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): SP1_semantic_page_tree'
+      - 'needed by (0): —'
+      - >-
+        same files as CS2_spec_the_unspecced with no order between them:
+        orchestrator/lib/spec-drift.js
+    edges:
+      - from: docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP1_semantic_page_tree
+        kind: declared

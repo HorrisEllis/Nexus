@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
+context: pipeline phase R4_loom_ledger_awareness of docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R4_loom_ledger_awareness (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756549
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756549
+lastSeenAt: 1792841756549
+fingerprint: null
+payload:
+  id: R4_loom_ledger_awareness
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/component-ledger.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 062135e5d81eb31b

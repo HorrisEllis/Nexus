@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-system-consolidation-phasemap.spec::CN5_emerge_home
+type: phase
+id: docs_2026-10-24-system-consolidation-phasemap.spec::CN5_emerge_home
+context: pipeline phase CN5_emerge_home of docs/2026-10-24-system-consolidation-phasemap.spec
+intent: null
+summary: CN5_emerge_home (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325064
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325064
+lastSeenAt: 1792877325064
+fingerprint: null
+payload:
+  id: CN5_emerge_home
+  map: docs/2026-10-24-system-consolidation-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/emerge
+    - lib/emerge/compiler/phase-specs.js
+  depends_on:
+    - CN0_the_rule_in_force
+    - CN_D3_emerge_home
+  blocks: []
+  spec: null
+  graph: 9bf48b02a938eb34

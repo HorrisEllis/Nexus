@@ -1,0 +1,117 @@
+envelope: 1
+uuid: nexus-export-graph-phase:G4:45ac7ff9b3f272be
+type: graph
+id: phase:G4:45ac7ff9b3f272be
+context: dependency graph of phase G4
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676030
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676030
+lastSeenAt: 1792787676030
+fingerprint: null
+payload:
+  for: G4
+  kind: phase
+  repo: null
+  hash: 45ac7ff9b3f272be
+  nodes:
+    - path: lib/seam/queue.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/spec-engine/chunk-dispatch.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/seam/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/lib/cos-seam-artifact-staging.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/intake.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/cos-seam-parser.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/mode-reducer.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/seam/queue.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: lib/seam/queue.js
+      to: lib/seam/mode-reducer.js
+      kind: requires
+    - from: lib/seam/queue.js
+      to: lib/seam/cos-seam-parser.js
+      kind: requires
+    - from: lib/seam/queue.js
+      to: lib/data-home.js
+      kind: requires
+    - from: lib/seam/queue.js
+      to: lib/intake.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: lib/seam/index.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: tests/lib/cos-seam-artifact-staging.test.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: lib/seam/queue.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+    upstream: []
+    downstream:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): X1 · finishing it unlocks X1'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

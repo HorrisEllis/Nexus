@@ -33,7 +33,7 @@ const http = require('http');
 const { spawn, spawnSync } = require('child_process');
 
 const NEXUS_ROOT = path.resolve(__dirname, '..', '..', '..');
-const EROS_DIR = path.join(NEXUS_ROOT, 'erosmancer', 'erosmancer-os');
+const EROS_DIR = path.join(NEXUS_ROOT, 'clear-glass', 'erosmancer', 'erosmancer-os');
 const SERVER_TS = path.join(EROS_DIR, 'src', 'api', 'server.ts');
 
 function _health(port, timeoutMs = 1500) {

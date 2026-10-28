@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_idearium-repository-overhaul-phasemap.spec::MCO-C_repo_materialize
+type: phase
+id: docs_idearium-repository-overhaul-phasemap.spec::MCO-C_repo_materialize
+context: pipeline phase MCO-C_repo_materialize of docs/idearium-repository-overhaul-phasemap.spec
+intent: null
+summary: MCO-C_repo_materialize (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678217
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678217
+lastSeenAt: 1792787678217
+fingerprint: null
+payload:
+  id: MCO-C_repo_materialize
+  map: docs/idearium-repository-overhaul-phasemap.spec
+  repo: null
+  layer: null
+  status: '>'
+  files:
+    - idearium/repo/import-baseline.js
+    - idearium/repo/index.js
+  depends_on:
+    - MCO-B_versionium_bridge
+  blocks: []
+  spec: null
+  graph: a03f31b0a540144f

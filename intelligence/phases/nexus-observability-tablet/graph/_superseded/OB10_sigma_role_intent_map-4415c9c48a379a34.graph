@@ -1,0 +1,122 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OB10_sigma_role_intent_map:4415c9c48a379a34
+type: graph
+id: phase:OB10_sigma_role_intent_map:4415c9c48a379a34
+context: dependency graph of phase OB10_sigma_role_intent_map
+intent: null
+summary: 10 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678271
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678271
+lastSeenAt: 1792787678271
+fingerprint: null
+payload:
+  for: OB10_sigma_role_intent_map
+  kind: phase
+  repo: null
+  hash: 4415c9c48a379a34
+  nodes:
+    - path: intelligence/bda/pendulum.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/sigma.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: cli/cfr-debug.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: intelligence/bda/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/bda/kernel.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: orchestrator/lib/sigma-writer.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/cfr/sigma.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/bda/index.js
+      to: intelligence/bda/pendulum.js
+      kind: requires
+    - from: intelligence/bda/kernel.js
+      to: intelligence/bda/pendulum.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+    - from: intelligence/cfr/index.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+    - from: intelligence/cfr/ledger.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+    - from: orchestrator/lib/sigma-writer.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+  crossings:
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/sigma.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/core/raid/index.js
+      to: intelligence/cfr/sigma.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: orchestrator/lib/sigma-writer.js
+      to: intelligence/cfr/sigma.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

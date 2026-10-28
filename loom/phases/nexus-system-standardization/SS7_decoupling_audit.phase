@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-system-standardization-phasemap.spec::SS7_decoupling_audit
+type: phase
+id: docs_nexus-system-standardization-phasemap.spec::SS7_decoupling_audit
+context: pipeline phase SS7_decoupling_audit of docs/nexus-system-standardization-phasemap.spec
+intent: null
+summary: SS7_decoupling_audit (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678309
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678309
+lastSeenAt: 1792787678309
+fingerprint: null
+payload:
+  id: SS7_decoupling_audit
+  map: docs/nexus-system-standardization-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/closed-door.js
+  depends_on:
+    - SS3_event_driven_handshake_contracts
+    - SS4_full_logging_per_system
+    - SS5_diagnostics_reads_and_fixes
+    - SS6_dynamic_commands_and_cortex_data
+  blocks: []
+  spec: null
+  graph: 3a4d6d0780b5923e

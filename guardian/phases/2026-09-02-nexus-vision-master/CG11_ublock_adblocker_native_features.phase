@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::CG11_ublock_adblocker_native_features
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CG11_ublock_adblocker_native_features
+context: >-
+  pipeline phase CG11_ublock_adblocker_native_features of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: CG11_ublock_adblocker_native_features (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675677
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675677
+lastSeenAt: 1792787675677
+fingerprint: null
+payload:
+  id: CG11_ublock_adblocker_native_features
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fed21457aecdec12

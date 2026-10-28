@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BX10_float:718eb952045d7b89
+type: graph
+id: phase:BX10_float:718eb952045d7b89
+context: dependency graph of phase BX10_float
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678013
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678013
+lastSeenAt: 1792787678013
+fingerprint: null
+payload:
+  for: BX10_float
+  kind: phase
+  repo: null
+  hash: 718eb952045d7b89
+  nodes:
+    - path: clear-glass/renderer/provider-widget.html
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/providers/provider-widget.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: ui/brainos-float/brainos-float.js
+      role: changes
+      exists: true
+      system: ui
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0c_float
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+    dependents: []
+    upstream:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0a_where_it_lands
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0c_float
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX1_census
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+    downstream: []
+    blockedBy:
+      - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by BX2_flow_sources
+      - 'depends on (2): BX0c_float, BX2_flow_sources · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0c_float
+        kind: declared
+      - from: docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+        kind: declared

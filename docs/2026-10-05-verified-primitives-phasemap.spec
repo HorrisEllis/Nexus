@@ -99,7 +99,7 @@ spec:
       value: { score: 4, cost: M, for: [quality, safety], why: "another agent breaks it before he relies on it; only reproduced findings count" }
       status: OPEN
       depends_on: [VP1_confidence_from_evidence]
-      files: [lib/agent-council.js, copilot/lifeline.js, meta/adversary-suite.js]
+      files: [lib/agent-council.js, copilot/lifeline.js, lib/meta/adversary-suite.js]
       does: >-
         "lifeline can ask other agents. Adversarial agents." A built component is sent, through lifeline, to agents OTHER
         than the one that wrote it, each independently (agent-council's rule: none sees another's answer), asked to break

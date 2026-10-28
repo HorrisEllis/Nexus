@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-spec-foundation-model-phasemap.spec::SF5_hat_intent_injection
+type: phase
+id: docs_2026-10-15-spec-foundation-model-phasemap.spec::SF5_hat_intent_injection
+context: pipeline phase SF5_hat_intent_injection of docs/2026-10-15-spec-foundation-model-phasemap.spec
+intent: null
+summary: SF5_hat_intent_injection (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677625
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677625
+lastSeenAt: 1792787677625
+fingerprint: null
+payload:
+  id: SF5_hat_intent_injection
+  map: docs/2026-10-15-spec-foundation-model-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - SF4_the_listener
+  blocks: []
+  spec: null
+  graph: 10e5a79bbc7cf1e9

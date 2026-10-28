@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AF2_route_and_command:b22df6c54920ad92
+type: graph
+id: phase:AF2_route_and_command:b22df6c54920ad92
+context: dependency graph of phase AF2_route_and_command
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792992982696
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992982696
+lastSeenAt: 1792992982696
+fingerprint: null
+payload:
+  for: AF2_route_and_command
+  kind: phase
+  repo: null
+  hash: b22df6c54920ad92
+  nodes:
+    - path: clear-glass/src/automation/routes.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: lib/agent-tools/tools/clear-glass/autofill.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF1_active_profile_and_fill_one
+    dependents:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF4_settings_toggle
+    upstream:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF1_active_profile_and_fill_one
+    downstream:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF4_settings_toggle
+    blockedBy:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF1_active_profile_and_fill_one
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by AF1_active_profile_and_fill_one
+      - 'depends on (1): AF1_active_profile_and_fill_one'
+      - 'needed by (1): AF4_settings_toggle'
+    edges:
+      - from: docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF1_active_profile_and_fill_one
+        kind: declared

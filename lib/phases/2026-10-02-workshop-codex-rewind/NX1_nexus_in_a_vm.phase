@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-workshop-codex-rewind-phasemap.spec::NX1_nexus_in_a_vm
+type: phase
+id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::NX1_nexus_in_a_vm
+context: pipeline phase NX1_nexus_in_a_vm of docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+intent: null
+summary: NX1_nexus_in_a_vm (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676773
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676773
+lastSeenAt: 1792787676773
+fingerprint: null
+payload:
+  id: NX1_nexus_in_a_vm
+  map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-02-spatial-void-phasemap.spec
+    - tests/modules/test-spec-workshop.test.js
+    - loom/data/registry.json
+    - idearium/ui/js/void-sky.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 24f038cc5c7b50f4

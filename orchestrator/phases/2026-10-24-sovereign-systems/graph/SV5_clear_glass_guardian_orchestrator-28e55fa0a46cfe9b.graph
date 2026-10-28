@@ -1,0 +1,72 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV5_clear_glass_guardian_orchestrator:28e55fa0a46cfe9b
+type: graph
+id: phase:SV5_clear_glass_guardian_orchestrator:28e55fa0a46cfe9b
+context: dependency graph of phase SV5_clear_glass_guardian_orchestrator
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792880100970
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100970
+lastSeenAt: 1792880100970
+fingerprint: null
+payload:
+  for: SV5_clear_glass_guardian_orchestrator
+  kind: phase
+  repo: null
+  hash: 28e55fa0a46cfe9b
+  nodes:
+    - path: orchestrator/compartment.json
+      role: changes
+      exists: false
+      system: orchestrator
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
+    dependents:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
+    upstream:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV2_core_files_go_home
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
+    downstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV8_warp_sovereign
+    blockedBy:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
+    unlocks:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by SV4_ollama_versionium_diagnostic
+      - 'depends on (1): SV4_ollama_versionium_diagnostic · all upstream 6'
+      - >-
+        needed by (1): SV6_loom_idearium_copilot · all downstream 15 · finishing it unlocks
+        SV6_loom_idearium_copilot
+    edges:
+      - from: docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
+        kind: declared

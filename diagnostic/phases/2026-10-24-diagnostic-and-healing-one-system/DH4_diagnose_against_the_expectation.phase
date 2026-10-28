@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH4_diagnose_against_the_expectation
+type: phase
+id: docs_2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH4_diagnose_against_the_expectation
+context: >-
+  pipeline phase DH4_diagnose_against_the_expectation of
+  docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec
+intent: null
+summary: DH4_diagnose_against_the_expectation (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756248
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756248
+lastSeenAt: 1792841756248
+fingerprint: null
+payload:
+  id: DH4_diagnose_against_the_expectation
+  map: docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/lib/expectations.js
+    - diagnostic/lib/pulse-watch.js
+    - diagnostic/nexus-diagnostic.js
+  depends_on:
+    - DH3_the_announce_carries_the_spec
+  blocks: []
+  spec: null
+  graph: 15f1e76caf290a7f

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP8_the_ladder_says_why_ollama_is_missing
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP8_the_ladder_says_why_ollama_is_missing
+context: >-
+  pipeline phase HP8_the_ladder_says_why_ollama_is_missing of
+  docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP8_the_ladder_says_why_ollama_is_missing (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477352
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477352
+lastSeenAt: 1792822477352
+fingerprint: null
+payload:
+  id: HP8_the_ladder_says_why_ollama_is_missing
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 759c9c7ee4f76954

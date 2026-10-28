@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+context: >-
+  pipeline phase LM1_spec_as_living_model of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM1_spec_as_living_model (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675524
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675524
+lastSeenAt: 1792787675524
+fingerprint: null
+payload:
+  id: LM1_spec_as_living_model
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/grammar-fallback.js
+    - orchestrator/lib/mutation-contract.js
+    - lib/open-loop-taxonomy.js
+    - lib/loop-topology.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0fafcb56a76e6808

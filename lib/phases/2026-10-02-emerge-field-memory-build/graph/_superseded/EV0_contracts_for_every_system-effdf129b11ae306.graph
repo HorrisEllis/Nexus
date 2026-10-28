@@ -1,0 +1,329 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EV0_contracts_for_every_system:effdf129b11ae306
+type: graph
+id: phase:EV0_contracts_for_every_system:effdf129b11ae306
+context: dependency graph of phase EV0_contracts_for_every_system
+intent: null
+summary: 29 node(s), 10 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787919479
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787919479
+lastSeenAt: 1792787919479
+fingerprint: null
+payload:
+  for: EV0_contracts_for_every_system
+  kind: phase
+  repo: null
+  hash: effdf129b11ae306
+  nodes:
+    - path: copilot/event-taxonomy.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/event-taxonomy.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/event-taxonomy.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/interaction-contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: emerge/event-taxonomy.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/interaction-contract.json
+      role: changes
+      exists: true
+      system: emerge
+    - path: idearium/event-taxonomy.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: intelligence/event-taxonomy.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/event-taxonomy-pattern.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/event-taxonomy.js
+      role: changes
+      exists: false
+      system: loom
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: warp/event-taxonomy.js
+      role: changes
+      exists: false
+      system: warp
+    - path: warp/interaction-contract.json
+      role: changes
+      exists: true
+      system: warp
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap-import.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/phase-dag.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/test/phasemap-map.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/generate-atlases.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/event-taxonomy.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap-import.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: loom/test/phasemap-map.test.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: scripts/generate-atlases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+  crossings:
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: loom
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/roadmap-import.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: false
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: false
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EC6_economy_and_the_tokenizer
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN1_nexus_as_claude_codes_toolbox
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GG1_graphs_generate_code
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::AC1_accounts_into_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB4_the_emergence_loop_builds
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CL1_the_component_lab
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EC6_economy_and_the_tokenizer
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GG1_graphs_generate_code
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN1_nexus_as_claude_codes_toolbox
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN2_claude_code_inside_nexus
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LN1_lenses_on_the_canvas
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR3_gap_driven_search
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR6_contradictions_held
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR2_screenshots_through_clear_glass
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EC6_economy_and_the_tokenizer
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN1_nexus_as_claude_codes_toolbox
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GG1_graphs_generate_code
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): EM0_ground'
+      - >-
+        needed by (8): EM1_emerge_core, MR1_recall_triad_and_context_table,
+        EC6_economy_and_the_tokenizer, SH1_shadow_space, GA1_guardian_source_of_truth, ST1_settings,
+        IN1_nexus_as_claude_codes_toolbox, GG1_graphs_generate_code · all downstream 40 · finishing
+        it unlocks EM1_emerge_core, MR1_recall_triad_and_context_table,
+        EC6_economy_and_the_tokenizer, SH1_shadow_space, GA1_guardian_source_of_truth, ST1_settings,
+        IN1_nexus_as_claude_codes_toolbox, GG1_graphs_generate_code
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        kind: declared

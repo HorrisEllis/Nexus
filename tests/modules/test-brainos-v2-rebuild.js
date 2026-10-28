@@ -22,8 +22,8 @@ function test(id, desc, fn) {
 const ROOT = path.join(__dirname, '../..');
 
 function run() {
-  const html = fs.readFileSync(path.join(ROOT, 'ui/brainos/index.html'), 'utf8');
-  const appJs = fs.readFileSync(path.join(ROOT, 'ui/brainos/brainos-app.js'), 'utf8');
+  const html = fs.readFileSync(path.join(ROOT, 'lib', 'ui', 'brainos', 'index.html'), 'utf8');
+  const appJs = fs.readFileSync(path.join(ROOT, 'lib', 'ui', 'brainos', 'brainos-app.js'), 'utf8');
   const cortexSrc = fs.readFileSync(path.join(ROOT, 'cortex/boot.js'), 'utf8');
   const preloadSrc = fs.readFileSync(path.join(ROOT, 'clear-glass/src/preload/index.js'), 'utf8');
 
@@ -34,7 +34,7 @@ function run() {
 
   test('BV2-002', 'the real, mapped right-panel tabs exist — each with its own panel, none a dead tab', () => {
     // §0.39.282 — pipeline, automation and tool-calls were added after the v2 rebuild, each on a real source
-    // (automation: clear-glass/src/mesh/automation-engine.js). The invariant kept: node + chatlog, every tab has a body.
+    // (automation: lib/automation/engine.js). The invariant kept: node + chatlog, every tab has a body.
     // §0.39.373 BO1 — activity: every compartment's activity log (idearium GET /api/activity, live over its SSE).
     const tabs = [...html.matchAll(/data-rtab="([a-z]+)"/g)].map((m) => m[1]);
     assert.deepStrictEqual(tabs.slice().sort(), ['activity', 'automation', 'chatlog', 'node', 'pipeline', 'toolcalls']);

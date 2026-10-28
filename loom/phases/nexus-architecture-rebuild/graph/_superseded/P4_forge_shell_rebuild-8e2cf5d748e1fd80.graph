@@ -1,0 +1,301 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P4_forge_shell_rebuild:8e2cf5d748e1fd80
+type: graph
+id: phase:P4_forge_shell_rebuild:8e2cf5d748e1fd80
+context: dependency graph of phase P4_forge_shell_rebuild
+intent: null
+summary: 30 node(s), 11 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678238
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678238
+lastSeenAt: 1792787678238
+fingerprint: null
+payload:
+  for: P4_forge_shell_rebuild
+  kind: phase
+  repo: null
+  hash: 8e2cf5d748e1fd80
+  nodes:
+    - path: architect/schemas/index.js
+      role: changes
+      exists: true
+      system: architect
+    - path: clear-glass/schemas/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: copilot/schemas/index.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/server.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/test/phasemap-map.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap-import.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/phase-dag.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-deps-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: scripts/generate-atlases.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/connections.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hook-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/config.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/contracts/index.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/ingest/index.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/schema/cortex-sync.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/templates/system-scaffold.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: loom/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/contracts/index.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/schema/cortex-sync.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/ingest/index.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/templates/system-scaffold.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/connections.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/config.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/hook-registry.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap-import.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-deps-gate.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: scripts/generate-atlases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+  crossings:
+    - from: emerge/compiler/phase-specs.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: emerge
+      toSystem: loom
+      kind: system
+      known: false
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/roadmap-import.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: false
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: false
+    - from: lib/phase-deps-gate.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: false
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/nexus-architecture-rebuild-phasemap.spec::P15_forge_shell_into_loom
+    upstream: []
+    downstream:
+      - docs/nexus-architecture-rebuild-phasemap.spec::P15_forge_shell_into_loom
+    blockedBy: []
+    unlocks:
+      - docs/nexus-architecture-rebuild-phasemap.spec::P15_forge_shell_into_loom
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): P15_forge_shell_into_loom · finishing it unlocks P15_forge_shell_into_loom'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

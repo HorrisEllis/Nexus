@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::LS2_copilot_sends_the_text_as_it_comes
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::LS2_copilot_sends_the_text_as_it_comes
+context: >-
+  pipeline phase LS2_copilot_sends_the_text_as_it_comes of
+  docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: LS2_copilot_sends_the_text_as_it_comes (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792874369471
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874369471
+lastSeenAt: 1792874369471
+fingerprint: null
+payload:
+  id: LS2_copilot_sends_the_text_as_it_comes
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/server.js
+    - copilot/tool-runtime.js
+    - lib/repo-agent.js
+  depends_on:
+    - LS1_the_bridge_job_holds_what_is_written_so_far
+  blocks: []
+  spec: null
+  graph: 41cf35b25962a14b

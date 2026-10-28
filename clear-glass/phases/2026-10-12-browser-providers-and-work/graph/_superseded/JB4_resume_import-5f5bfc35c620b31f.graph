@@ -1,0 +1,99 @@
+envelope: 1
+uuid: nexus-export-graph-phase:JB4_resume_import:5f5bfc35c620b31f
+type: graph
+id: phase:JB4_resume_import:5f5bfc35c620b31f
+context: dependency graph of phase JB4_resume_import
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677316
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677316
+lastSeenAt: 1792787677316
+fingerprint: null
+payload:
+  for: JB4_resume_import
+  kind: phase
+  repo: null
+  hash: 5f5bfc35c620b31f
+  nodes:
+    - path: clear-glass/renderer/settings/sections/autofill.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/clear-glass-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-screen-qa.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/autofill/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-autofill.test.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-screen-qa.test.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB0_gig_files
+    dependents:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB6_the_application_ledger
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB0_gig_files
+    downstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB6_the_application_ledger
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB7_the_follow_up
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB6_the_application_ledger
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): JB0_gig_files'
+      - >-
+        needed by (1): JB6_the_application_ledger · all downstream 2 · finishing it unlocks
+        JB6_the_application_ledger
+    edges:
+      - from: docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB0_gig_files
+        kind: declared

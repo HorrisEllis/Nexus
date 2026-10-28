@@ -110,7 +110,7 @@ const VERSION_SOURCES = [
   { system: 'guardian',     file: 'guardian/registry-components.js',     re: /const V\s*=\s*'([\d.]+[\w.-]*)'/ },
   { system: 'idearium',     file: 'idearium/index.js',                   re: /export const VERSION\s*=\s*'([\d.]+[\w.-]*)'/ },
   { system: 'architect',    file: 'architect/registry-components.js',    re: /const V\s*=\s*'([\d.]+[\w.-]*)'/ },
-  { system: 'emerge',       file: 'emerge/registry-components.js',       re: /const V\s*=\s*'([\d.]+[\w.-]*)'/ },
+  { system: 'emerge',       file: 'lib/emerge/registry-components.js',       re: /const V\s*=\s*'([\d.]+[\w.-]*)'/ },
   { system: 'ollama-bridge', file: 'ollama/server.js',                   re: /const VERSION\s*=\s*'([\d.]+[\w.-]*)'/ },
   { system: 'clear-glass',  file: 'clear-glass/registry-components.js',  re: /const V\s*=\s*'([\d.]+[\w.-]*)'/ },
   { system: 'loom',         file: 'loom/registry-components.js',         re: /const V\s*=\s*'([\d.]+[\w.-]*)'/ },
@@ -248,7 +248,7 @@ if (versionBumpedSystems.length) {
   // that exact priority order — a second, disagreeing priority order
   // here would violate §10.1 (one write/read authority).
   const specCandidates = (sys) => [
-    `${sys}/spec/${sys}.spec`, `${sys}/${sys}.spec`,
+    `${require('../lib/nexus-self/systems.js').dirOf(sys)}/spec/${sys}.spec`, `${require('../lib/nexus-self/systems.js').dirOf(sys)}/${sys}.spec`,   // 0.60.241
   ];
   for (const { system, from, to } of versionBumpedSystems) {
     const existing = specCandidates(system).find(p => fs.existsSync(path.join(ROOT, p)));

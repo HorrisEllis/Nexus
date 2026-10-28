@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GQ3_brick_tests:7bb3b9e18cbc76b9
+type: graph
+id: phase:GQ3_brick_tests:7bb3b9e18cbc76b9
+context: dependency graph of phase GQ3_brick_tests
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677880
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677880
+lastSeenAt: 1792787677880
+fingerprint: null
+payload:
+  for: GQ3_brick_tests
+  kind: phase
+  repo: null
+  hash: 7bb3b9e18cbc76b9
+  nodes:
+    - path: lib/brick-tests.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ1_quality_stream
+    dependents:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ2_brick_gate_runs_the_test
+    upstream:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ1_quality_stream
+    downstream:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ2_brick_gate_runs_the_test
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ5_command
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ6_ui
+    blockedBy:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ1_quality_stream
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by GQ1_quality_stream
+      - 'depends on (1): GQ1_quality_stream'
+      - 'needed by (1): GQ2_brick_gate_runs_the_test · all downstream 3'
+    edges:
+      - from: docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ1_quality_stream
+        kind: declared

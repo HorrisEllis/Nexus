@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-idearium-atlas-phasemap.spec::A4
+type: phase
+id: docs_2026-09-27-idearium-atlas-phasemap.spec::A4
+context: pipeline phase A4 of docs/2026-09-27-idearium-atlas-phasemap.spec
+intent: null
+summary: A4 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753992
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753992
+lastSeenAt: 1792841753992
+fingerprint: null
+payload:
+  id: A4
+  map: docs/2026-09-27-idearium-atlas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec/idearium.spec
+    - lib/version.js
+  depends_on:
+    - A3
+  blocks: []
+  spec: null
+  graph: 3ce8fa56e6d76fb5

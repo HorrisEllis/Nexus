@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-versionium-releases-phasemap.spec::GH1_the_git_bridge
+type: phase
+id: docs_2026-10-07-versionium-releases-phasemap.spec::GH1_the_git_bridge
+context: pipeline phase GH1_the_git_bridge of docs/2026-10-07-versionium-releases-phasemap.spec
+intent: null
+summary: GH1_the_git_bridge (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755013
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755013
+lastSeenAt: 1792841755013
+fingerprint: null
+payload:
+  id: GH1_the_git_bridge
+  map: docs/2026-10-07-versionium-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+    - versionium/lib/releases.js
+    - lib/version.js
+  depends_on:
+    - VR2_history_and_diff
+  blocks: []
+  spec: null
+  graph: 97998ba3afae84c1

@@ -52,7 +52,7 @@ const FILES = [
   ]],
   // 0.60.66 SF3 — a .spec in the compiler's format is checked at the code.write gate and collected when it lands
   ['lib/spec-collect.js', I('lib/spec-collect.js'), [
-    I('nexus/nexus-bus.js'),                                    // require — emit idearium.spec.collected
+    I('lib/nexus/nexus-bus.js'),                                    // require — emit idearium.spec.collected
   ]],
   // 0.60.94 FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." No model.
   // §FR4a 0.60.118 — the flight recorder on its own (products/flight-recorder)
@@ -127,8 +127,8 @@ const FILES = [
   // 0.60.73 WB1/WB2 — James chose option 1: WARP around the agent the ladder and RAID already chose (cache, axiom gate, retain)
   ['lib/warp-rung.js', I('lib/warp-rung.js'), [
     I('lib/seam/adapters/warp-cascade.js'),                     // require — createWarpDispatch (unifiedDispatch, one provider, one attempt)
-    I('warp/plugins/crystallizer-flatfile.js'),                 // require — the exact cache (data/warp/rung-crystals.json)
-    I('warp/dispatch/population.js'),                           // require — retention and promotion after 3 passing results
+    I('lib/warp/plugins/crystallizer-flatfile.js'),                 // require — the exact cache (data/warp/rung-crystals.json)
+    I('lib/warp/dispatch/population.js'),                           // require — retention and promotion after 3 passing results
   ]],
   // 0.60.28 PF1 — ready before run: Guardian's facts per agent, and the build's pure check over its ladder
   ['guardian/lib/provider-ready.js', I('guardian/lib/provider-ready.js'), []],
@@ -150,7 +150,33 @@ const FILES = [
   [I('scripts/generate-atlases.js'), I('loom/scanners/phasemap-map.js'), '0.60.156 loadAll() handed to generate({ phasemaps })'],
   // §0.60.156 GM5 — context as a SISO stream: every source in the table asked at once, the residue named
   ['lib/context-sources.js', I('lib/context-sources.js'), [I('lib/context-atlas.js'), I('lib/component-store.js'), I('lib/gate-context.js'), I('lib/vector-memory.js'), I('lib/nexus-client.js')]],   // the rows' asks; intelligence and cortex by route
-  ['lib/context-stream.js', I('lib/context-stream.js'), [I('lib/context-sources.js'), I('siso/index.js'), I('lib/context-atlas.js')]],   // rows · Event/Gate/Stream/StreamLog (import()) · qtokens
+  ['lib/context-stream.js', I('lib/context-stream.js'), [I('lib/context-sources.js'), I('lib/siso/index.js'), I('lib/context-atlas.js')]],   // rows · Event/Gate/Stream/StreamLog (import()) · qtokens
+  // §0.60.238 CG1 — James: "before an agent does anything. if confidence is lower than 75%, context must be obtained. build worksurface, compile list of dependancies, find the context, ask user last." The pre-dispatch gate; lazily composes repo-agent.contextFor (worksurface + find context) and context-atlas (the stores' graphs). Map: docs/2026-10-24-agent-orchestration-phasemap.spec.
+  ['lib/agent-confidence-gate.js', I('lib/agent-confidence-gate.js'), [I('lib/repo-agent.js'), I('lib/context-atlas.js')]],
+  [I('lib/repo-agent.js'), I('lib/agent-confidence-gate.js'), '§0.60.239 CG2 — _dispatch runs the gate after context is gathered, before the send; the decision on the record (ctxInfo.gate)'],
+  // §0.60.242 GD1 (BCR2) — lib/raid-port.js: the one door to RAID (RAID reached, never loaded). Ported from the brave-cori line.
+  ['lib/raid-port.js', I('lib/raid-port.js'), [I('lib/nexus-self/systems.js')]],   // Cortex's port by systems.js when not in-process
+  [I('guardian/server.js'), I('lib/raid-port.js'), '§GD1 — /build and SEAM-forge gates ask RAID through the port (fixes the undefined-raid ReferenceError in /build)'],
+  [I('guardian/api-dispatch.js'), I('lib/raid-port.js'), '§GD1 — outcome() feedback to RAID through the port, with the agent'],
+  [I('guardian/lib/dispatcher.js'), I('lib/raid-port.js'), '§GD1 — browser-job approval through the port, fails closed'],
+  // §0.60.248 BX2 — idearium/lib/flow-sources.js: BrainOS's FlowGraph gathered server-side. Composes phase-dag + run-state + the repo's
+  // phases view + Clear Glass's mesh (:7704), each best-effort. Consumed by idearium/api (GET …/flow, /api/flow/mesh).
+  ['idearium/lib/flow-sources.js', I('idearium/lib/flow-sources.js'), [I('lib/phase-dag.js'), I('lib/run-state.js'), I('idearium/repo/phases.js')]],
+  [I('idearium/api/index.js'), I('idearium/lib/flow-sources.js'), '§BX2 — repo.flow / flow.mesh handlers call flowFor()/mesh() (dynamic import, ESM)'],
+  // §0.60.249 AU1 — lib/automation-registry.js: one neutral door over the six automation sources (copilot, ollama, lib, clear-glass,
+  // idearium, brainos). Pure + DI (no static cross-system require); the transport to Clear Glass's engine (:7704) is a runtime port,
+  // the declared convention, not a static crossing. Consumed by idearium/api (GET /api/automation, POST /api/automation/run).
+  ['lib/automation-registry.js', I('lib/automation-registry.js'), [I('lib/node-schemas/schema.macro')]],   // lib's own contribution: the automation node TYPES it reads in-process
+  [I('idearium/api/index.js'), I('lib/automation-registry.js'), '§AU1 — automation.list / automation.run handlers call list()/run(); clear-glass engine reached by runtime port :7704'],
+  // §0.60.256 AE1 — the automation engine is CORE (lib/automation/): used by ≥2 systems (Clear Glass's browser automation AND the
+  // orchestrator's platform orchestration), so it is the kernel's. Each system runs its OWN instance from core — sovereign, each
+  // on its own, no system→system crossing. The engine is DI (receives hooks, reaches no system). nodes.js is core too.
+  ['lib/automation/engine.js', I('lib/automation/engine.js'), [I('lib/automation/cron.js'), I('lib/automation/template.js'), I('lib/automation/steps.js'), I('lib/automation/dom.js')]],
+  ['lib/automation-nodes.js', I('lib/automation-nodes.js'), [I('lib/node-export.js')]],   // core node-file utility + the one source of NODES_DIR
+  [I('lib/automation/routes.js'), I('lib/automation-nodes.js'), '§AE1 — the door lists/imports .macro/.workflow node files through the core utility'],
+  [I('clear-glass/src/mesh/agent-mesh.js'), I('lib/automation/engine.js'), '§AE1 — Clear Glass runs its OWN engine instance from core for browser automation (local, standalone); its namespace is brainos'],
+  ['orchestrator/automation/index.js', I('orchestrator/automation/index.js'), [I('lib/automation/engine.js'), I('lib/automation/routes.js')]],   // the orchestrator's OWN instance for platform orchestration; its own namespace
+  [I('orchestrator/orchestrator.js'), I('orchestrator/automation/index.js'), '§AE1/AE3 — the :9000 server mounts the orchestrator engine door (/automation/*)'],
   [I('idearium/api/index.js'), I('lib/context-stream.js'), '0.60.156 makeAttempt: the stream note per gate; POST /api/context/find, /api/repos/:uuid/context/find'],
   [I('idearium/api/index.js'), I('lib/context-sources.js'), '0.60.156 GET /api/context/sources'],
   // §0.60.157 GM4 — the node lattice: every data node of every system, edges typed; read by route, never the files
@@ -238,6 +264,8 @@ const FILES = [
   ['clear-glass/src/accounts/idearium-login.js', I('clear-glass/src/accounts/idearium-login.js'), [I('clear-glass/src/passwords/vault.js'), I('idearium/api/index.js')]],   // vault.get(origin); HTTP POST access/login
   ['idearium/ui/js/code-surface.js', I('idearium/ui/js/code-surface.js'), [I('idearium/api/index.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/plan-panel.js')]],   // §CT5 openPlanPanel, _gateBar
   ['idearium/ui/js/code-tab-panels.js', I('idearium/ui/js/code-tab-panels.js'), [I('idearium/api/index.js'), I('idearium/ui/js/code-surface.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/repo-tasks.js'), I('idearium/ui/js/repo-drawer-views.js')]],   // §0.60.82 CE6 · CE7 · CE9: …/file, …/code/assist, …/runs, …/agent/history; openManagePanel; rtView mounted in the Code tab
+  // 0.60.244 SV0 — the phasemap parser is core's: moved verbatim out of loom's scanner (2 crossings designed out, none baselined)
+  ['lib/phasemap-parse.js', I('lib/phasemap-parse.js'), [I('lib/nexus-self/systems.js')]],   // require — NS: the 15 and their terms
 ];
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
@@ -323,7 +351,7 @@ const CONSUMERS = [
   [I('lib/nerve/index.js'), I('clear-glass/src/ipc/agent-routes.js'), '§FN2 HTTP GET :7702/cli/attention → each window\'s focus in the snapshot'],
   [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/agent-routes.js'), '§FN1 HTTP POST :7702/cli/driver (field, fieldOff, at, spotlight, pointer) · GET /cli/attention'],
   [I('idearium/cli/route-commands.js'), I('cortex/boot.js'), '§FN2 HTTP GET /nerve/snapshot (`idearium nerve`)'],
-  [I('ui/tv-shell/nerve/nerve.js'), I('guardian/server.js'), '§FN3 HTTP /api/guardian/nerve/snapshot windows[].focus → the HUD and the browser node ring'],
+  [I('lib/ui/tv-shell/nerve/nerve.js'), I('guardian/server.js'), '§FN3 HTTP /api/guardian/nerve/snapshot windows[].focus → the HUD and the browser node ring'],
   [I('idearium/api/index.js'), I('idearium/lib/access.cjs'), '§IA0 decide() before every route (ROUTE_CAP); §IA1 /api/access/* — login, keys, revoke'],
   [I('clear-glass/src/main/index.js'), I('clear-glass/src/accounts/idearium-login.js'), '§IA4 signIn({vault: passwordVault, cookies: session.defaultSession.cookies}) at start'],
   [I('idearium/ui/settings.html'), I('idearium/api/index.js'), '§IA3 Settings → Access: HTTP access/me, access/keys, config access.*'],
@@ -365,7 +393,7 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/prevention.js'), '0.60.123 MP _guardedSync heavyAllowedHere; GET /system/lean prevention; POST /system/prevention/clear'],
   [I('clear-glass/src/main/index.js'), I('lib/prevention.js'), '0.60.123 MP Eros and the NCP prewarm held under prevention'],
   [I('cortex/core/raid/officiator.js'), I('lib/prevention.js'), '0.60.123 MP the tick asks heavyAllowedHere'],
-  [I('nexus/autopilot.js'), I('lib/prevention.js'), '0.60.123 MP the loom refresh waits for heavyAllowed'],
+  [I('lib/nexus/autopilot.js'), I('lib/prevention.js'), '0.60.123 MP the loom refresh waits for heavyAllowed'],
   // SD20 0.60.203 — a starved machine does not spin (docs/2026-10-10-idearium-solid-phasemap.spec)
   [I('cortex/core/raid/worker.js'), I('lib/prevention.js'), 'SD20 0.60.203 the drain waits on heavyAllowedHere(raid-worker)'],
   [I('cortex/core/raid/officiator.js'), I('cortex/core/raid/contract-intake.js'), 'SD20 0.60.203 listQueue: sameGoal (no second contract for one goal) and failStreak (its own failing contracts hold synthesis)'],
@@ -404,6 +432,13 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/phase-deps-gate.js'), '0.60.125 DG1 _phaseBuild: openDeps → 409 DEPS_OPEN unless anyway'],
   [I('idearium/ui/js/phases.js'), I('idearium/ui/js/plan-panel.js'), '0.60.125 DG1 phaseBuildPost — the one door for every ▶ build'],
   [I('guardian/server.js'), I('guardian/lib/provider-login.js'), '0.60.124 SW2 flushQueuedJobs asks holdsJobs(provider); a reported sign-in flushes'],
+  [I('lib/phase-dag.js'), I('lib/phasemap-parse.js'), '0.60.244 SV0 _parse and parsePhasemap: the parser is core\'s (was loom/scanners/phasemap-map.js, an upward crossing)'],
+  [I('idearium/repo/roadmap-import.js'), I('lib/phasemap-parse.js'), '0.60.244 SV0 an imported roadmap parsed by core\'s parser (was loom\'s, a crossing into loom)'],
+  [I('loom/scanners/phasemap-map.js'), I('lib/phasemap-parse.js'), '0.60.244 SV0 loom re-exports parsePhasemapText, isPhasemapFile, NS, SYSTEMS from core'],
+  [I('idearium/api/index.js'), I('cos/testenv/index.js'), '0.60.244 SV0 runTarget handed to verify-first (VF.check runTarget:) through the door idearium already crosses'],
+  [I('cos/testenv/index.js'), I('cos/testenv/run-target.js'), '0.60.244 SV0 the runTarget getter (lazy: run-target.js requires index.js)'],
+  [I('idearium/api/index.js'), I('lib/system-boundary.js'), '0.60.250 SV1 GET /api/system/tables → tables(): the shared store\'s writers and readers per table'],
+  [I('idearium/ui/settings.html'), I('idearium/api/index.js'), '0.60.250 SV1 the Sovereignty card: GET /api/system/tables?system=<it>'],
 ];
 
 function mapBuildSurface(driver) {

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::EC6_economy_and_the_tokenizer
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::EC6_economy_and_the_tokenizer
+context: >-
+  pipeline phase EC6_economy_and_the_tokenizer of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: EC6_economy_and_the_tokenizer (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676671
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676671
+lastSeenAt: 1792787676671
+fingerprint: null
+payload:
+  id: EC6_economy_and_the_tokenizer
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/economy/tokens.js
+    - lib/economy/tokenizer/gguf.js
+    - lib/economy/tokenizer/bpe.js
+    - lib/economy/router.js
+    - lib/economy/ledger.js
+  depends_on:
+    - EM1_emerge_core
+    - EV0_contracts_for_every_system
+  blocks: []
+  spec: null
+  graph: 8672a4aa6309a394

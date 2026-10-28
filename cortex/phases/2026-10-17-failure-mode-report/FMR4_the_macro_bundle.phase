@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-failure-mode-report-phasemap.spec::FMR4_the_macro_bundle
+type: phase
+id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR4_the_macro_bundle
+context: pipeline phase FMR4_the_macro_bundle of docs/2026-10-17-failure-mode-report-phasemap.spec
+intent: null
+summary: FMR4_the_macro_bundle (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677781
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677781
+lastSeenAt: 1792787677781
+fingerprint: null
+payload:
+  id: FMR4_the_macro_bundle
+  map: docs/2026-10-17-failure-mode-report-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/self-heal/failure-mode-forensics.js
+    - intelligence/rfr2/clip/index.js
+    - clear-glass/src/automation/nodes.js
+  depends_on:
+    - FMR1_every_ledger_into_rfr2
+    - FMR3_the_report
+  blocks: []
+  spec: null
+  graph: ae03f54c04d34a09

@@ -1,0 +1,120 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL23_ncp_providers_start_verification:68e2b72f9c16e13c
+type: graph
+id: phase:BL23_ncp_providers_start_verification:68e2b72f9c16e13c
+context: dependency graph of phase BL23_ncp_providers_start_verification
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675434
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675434
+lastSeenAt: 1792787675434
+fingerprint: null
+payload:
+  for: BL23_ncp_providers_start_verification
+  kind: phase
+  repo: null
+  hash: 68e2b72f9c16e13c
+  nodes:
+    - path: architecture-spec/registry/watcher.js
+      role: changes
+      exists: true
+      system: architecture-spec
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/lists.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/bookmarks/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/nexus-chat.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: architecture-spec/registry/api.js
+      role: used-by
+      exists: true
+      system: architecture-spec
+    - path: clear-glass/plugins/adblocker/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/import.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/listener-commands.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/safe-watch.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: architecture-spec/registry/watcher.js
+      to: lib/safe-watch.js
+      kind: requires
+    - from: clear-glass/src/adblock/lists.js
+      to: clear-glass/src/adblock/engine.js
+      kind: requires
+    - from: clear-glass/src/adblock/lists.js
+      to: clear-glass/src/adblock/import.js
+      kind: requires
+    - from: clear-glass/src/page/nexus-chat.js
+      to: lib/listener-commands.js
+      kind: requires
+    - from: architecture-spec/registry/api.js
+      to: architecture-spec/registry/watcher.js
+      kind: requires
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-08-23-backlog-phasemap.spec::BL29_tab_context_menu_move_to_background
+    upstream: []
+    downstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL29_tab_context_menu_move_to_background
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-23-backlog-phasemap.spec::BL29_tab_context_menu_move_to_background
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): BL29_tab_context_menu_move_to_background · finishing it unlocks
+        BL29_tab_context_menu_move_to_background
+    edges: []

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP3_the_ladder_climbs_only_what_is_installed
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP3_the_ladder_climbs_only_what_is_installed
+context: >-
+  pipeline phase HP3_the_ladder_climbs_only_what_is_installed of
+  docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP3_the_ladder_climbs_only_what_is_installed (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822477346
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822477346
+lastSeenAt: 1792822477346
+fingerprint: null
+payload:
+  id: HP3_the_ladder_climbs_only_what_is_installed
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - idearium/api/index.js
+    - idearium/ui/settings.html
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5fc0d678d2233afd

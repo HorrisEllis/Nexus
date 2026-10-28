@@ -1,0 +1,69 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MK2_truth_and_idea_ledgers:e9e363c77361bbb4
+type: graph
+id: phase:MK2_truth_and_idea_ledgers:e9e363c77361bbb4
+context: dependency graph of phase MK2_truth_and_idea_ledgers
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792992204321
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992204321
+lastSeenAt: 1792992204321
+fingerprint: null
+payload:
+  for: MK2_truth_and_idea_ledgers
+  kind: phase
+  repo: null
+  hash: e9e363c77361bbb4
+  nodes:
+    - path: lib/ledger-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/ledger-store.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-store.js
+      kind: requires
+    - from: lib/migrate-ledger-per-system.js
+      to: lib/ledger-store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-26-memory-kernel-additive-phasemap.spec::MK1_dedup_ledger
+    dependents: []
+    upstream:
+      - docs/2026-10-26-memory-kernel-additive-phasemap.spec::MK1_dedup_ledger
+    downstream: []
+    blockedBy:
+      - docs/2026-10-26-memory-kernel-additive-phasemap.spec::MK1_dedup_ledger
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by MK1_dedup_ledger
+      - 'depends on (1): MK1_dedup_ledger'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-26-memory-kernel-additive-phasemap.spec::MK1_dedup_ledger
+        kind: declared

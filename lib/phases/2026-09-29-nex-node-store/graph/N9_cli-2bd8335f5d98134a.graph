@@ -1,0 +1,60 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N9_cli:2bd8335f5d98134a
+type: graph
+id: phase:N9_cli:2bd8335f5d98134a
+context: dependency graph of phase N9_cli
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676252
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676252
+lastSeenAt: 1792787676252
+fingerprint: null
+payload:
+  for: N9_cli
+  kind: phase
+  repo: null
+  hash: 2bd8335f5d98134a
+  nodes:
+    - path: lib/nexstore/cli.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+    dependents:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N12_ui
+    upstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N1_record_and_log
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N4_kinds_record_ledger_ring_blob
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N6_time
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+    downstream:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N12_ui
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N13_release
+    blockedBy:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+    unlocks:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N12_ui
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · blocked by N8_service
+      - 'depends on (1): N8_service · all upstream 9'
+      - 'needed by (1): N12_ui · all downstream 2 · finishing it unlocks N12_ui'
+    edges:
+      - from: docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+        kind: declared

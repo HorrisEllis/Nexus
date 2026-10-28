@@ -27,7 +27,7 @@ function run() {
   const src = fs.readFileSync(path.join(__dirname, '../../architect/service.js'), 'utf8');
 
   test('AP-001', 'architect/service.js now requires nexus-connect.js', () => {
-    assert.ok(/require\(['"]\.\.\/nexus\/nexus-connect['"]\)/.test(src), 'expected a real require of ../nexus/nexus-connect');
+    assert.ok(/require\(['"]\.\.\/lib\/nexus\/nexus-connect['"]\)/.test(src), 'expected a real require of ../lib/nexus/nexus-connect (nexus/ moved into lib/, 0.60.241)');
   });
 
   test('AP-002', 'the old hand-rolled duplicate registration call (raw http.request to /api/register) is gone from registerWithOrchestrator', () => {
@@ -56,7 +56,7 @@ function run() {
   });
 
   test('AP-006', 'nexus-connect.js\'s real startHeartbeat genuinely uses createPulse() internally — the actual claim this whole fix rests on, checked directly rather than assumed', () => {
-    const ncSrc = fs.readFileSync(path.join(__dirname, '../../nexus/nexus-connect.js'), 'utf8');
+    const ncSrc = fs.readFileSync(path.join(__dirname, '..', '..', 'lib', 'nexus', 'nexus-connect.js'), 'utf8');
     const fnStart = ncSrc.indexOf('function startHeartbeat');
     assert.ok(fnStart !== -1, 'startHeartbeat function not found in nexus-connect.js');
     const fnEnd = ncSrc.indexOf('\n}', fnStart) + 2;

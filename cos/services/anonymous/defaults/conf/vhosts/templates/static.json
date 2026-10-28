@@ -1,0 +1,12 @@
+{
+  "$template": "static",
+  "label": "Static site",
+  "description": "HTML, CSS and JavaScript served straight from disk. No runtime.",
+  "stack": "static",
+  "php": false,
+  "index": ["index.html", "index.htm"],
+  "listing": false,
+  "headers": { "X-Content-Type-Options": "nosniff" },
+  "compress": true,
+  "provisions": ["documentRoot", "tlsCertificate", "proxyRoute", "dnsRecord"]
+}

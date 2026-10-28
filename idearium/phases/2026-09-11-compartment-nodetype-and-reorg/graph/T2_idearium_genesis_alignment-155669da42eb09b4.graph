@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T2_idearium_genesis_alignment:155669da42eb09b4
+type: graph
+id: phase:T2_idearium_genesis_alignment:155669da42eb09b4
+context: dependency graph of phase T2_idearium_genesis_alignment
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675822
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675822
+lastSeenAt: 1792787675822
+fingerprint: null
+payload:
+  for: T2_idearium_genesis_alignment
+  kind: phase
+  repo: null
+  hash: 155669da42eb09b4
+  nodes:
+    - path: idearium/spec-engine/templates/genesis.spec
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
+    dependents: []
+    upstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
+    downstream: []
+    blockedBy:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by T3_warp_replaces_siso
+      - 'depends on (1): T3_warp_replaces_siso'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
+        kind: declared

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-13-track-b-sovereignty-phasemap.spec::MCO18_interaction_contract_split_scoped
+type: phase
+id: docs_2026-09-13-track-b-sovereignty-phasemap.spec::MCO18_interaction_contract_split_scoped
+context: >-
+  pipeline phase MCO18_interaction_contract_split_scoped of
+  docs/2026-09-13-track-b-sovereignty-phasemap.spec
+intent: null
+summary: MCO18_interaction_contract_split_scoped (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675946
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675946
+lastSeenAt: 1792787675946
+fingerprint: null
+payload:
+  id: MCO18_interaction_contract_split_scoped
+  map: docs/2026-09-13-track-b-sovereignty-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE 2026-09-13. All 6 remaining real systems reconciled the'
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cdf5f24602f5099b

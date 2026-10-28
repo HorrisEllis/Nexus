@@ -33,7 +33,7 @@ async function run() {
   const SG = require(path.join(ROOT, 'lib', 'step-gate.js'));
   const RK = require(path.join(ROOT, 'lib', 'reply-kind.js'));
   const nx = require(path.join(ROOT, 'lib', 'node-export.js'));
-  const bus = require(path.join(ROOT, 'nexus', 'nexus-bus.js'));
+  const bus = require(path.join(ROOT, 'lib', 'nexus', 'nexus-bus.js'));
   const seen = []; for (const t of ['run.started', 'run.resumed', 'run.step', 'run.finished', 'run.failed', 'run.off-task', 'run.lost', 'run.fallback']) bus.on(t, e => seen.push(t));
 
   // ── RS-0x the run state ──

@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792757382216
+exported_at: 1792880100798
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382216
-lastSeenAt: 1792757382216
+firstSeenAt: 1792880100798
+lastSeenAt: 1792880100798
 fingerprint: null
 payload:
   for: CS5_caps_per_compartment
@@ -101,8 +101,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 3351ce8a7e938b5b
-    layer: 6
+    layer: 9
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D4_caps_by_the_os
@@ -110,15 +109,23 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
     upstream:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
       - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
       - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
@@ -131,10 +138,22 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D4_caps_by_the_os
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV2_core_files_go_home
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
     downstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D4_caps_by_the_os
@@ -146,12 +165,17 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 3351ce8a7e938b5b · layer 6 · blocked by CS4_every_system_a_compartment,
+        layer 9 · ON THE CRITICAL PATH · blocked by CS4_every_system_a_compartment,
         CS_D4_caps_by_the_os
-      - 'depends on (2): CS4_every_system_a_compartment, CS_D4_caps_by_the_os · all upstream 20'
+      - 'depends on (2): CS4_every_system_a_compartment, CS_D4_caps_by_the_os · all upstream 36'
       - >-
-        needed by (3): CS7_spawn_despawn_and_balance, CS10_hats_bound_to_the_compartment,
-        CS8_the_cos_screen
+        needed by (4): CS7_spawn_despawn_and_balance, CS10_hats_bound_to_the_compartment,
+        CS8_the_cos_screen, MG4_resources_per_compartment · all downstream 6
       - >-
         same files as CS1_a_version_is_a_system_state with no order between them:
         cos/compartment/qemu-runtime.js
+    edges:
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS_D4_caps_by_the_os
+        kind: declared

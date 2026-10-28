@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-guardian-cos-expansion-phasemap.spec::GA6_spec_builder_depth
+type: phase
+id: docs_copilot-guardian-cos-expansion-phasemap.spec::GA6_spec_builder_depth
+context: pipeline phase GA6_spec_builder_depth of docs/copilot-guardian-cos-expansion-phasemap.spec
+intent: null
+summary: GA6_spec_builder_depth (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756361
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756361
+lastSeenAt: 1792841756361
+fingerprint: null
+payload:
+  id: GA6_spec_builder_depth
+  map: docs/copilot-guardian-cos-expansion-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/governance/spec-wizard.js
+    - lib/ui/home/areas/spec-wizard.js
+  depends_on:
+    - GA9_cos_expansion_via_copilot
+  blocks: []
+  spec: null
+  graph: e83a05d5f8faacab

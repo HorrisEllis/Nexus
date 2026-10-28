@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-debugging-product-phasemap.spec::DBG1_the_key
+type: phase
+id: docs_2026-10-18-debugging-product-phasemap.spec::DBG1_the_key
+context: pipeline phase DBG1_the_key of docs/2026-10-18-debugging-product-phasemap.spec
+intent: null
+summary: DBG1_the_key (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478177
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478177
+lastSeenAt: 1792822478177
+fingerprint: null
+payload:
+  id: DBG1_the_key
+  map: docs/2026-10-18-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/lineage.js
+    - cortex/core/raid/contract-adapters.js
+    - idearium/api/index.js
+    - guardian/lib/jobs.js
+    - lib/run-state.js
+    - lib/work-journal.js
+    - lib/repo-inject.js
+    - lib/phase-faults.js
+  depends_on:
+    - DBG0a_synchronized_ids
+  blocks: []
+  spec: null
+  graph: 6716c6c874b49d8e

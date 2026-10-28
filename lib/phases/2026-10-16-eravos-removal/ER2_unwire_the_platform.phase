@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-eravos-removal-phasemap.spec::ER2_unwire_the_platform
+type: phase
+id: docs_2026-10-16-eravos-removal-phasemap.spec::ER2_unwire_the_platform
+context: pipeline phase ER2_unwire_the_platform of docs/2026-10-16-eravos-removal-phasemap.spec
+intent: null
+summary: ER2_unwire_the_platform (?) — 22 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755703
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755703
+lastSeenAt: 1792841755703
+fingerprint: null
+payload:
+  id: ER2_unwire_the_platform
+  map: docs/2026-10-16-eravos-removal-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.83
+  files:
+    - orchestrator/orchestrator.config.json
+    - orchestrator/orchestrator.js
+    - orchestrator/lib/contract-poller.js
+    - orchestrator/lib/contract-handshake.js
+    - orchestrator/lib/mcp-server.js
+    - lib/nexus/autopilot.js
+    - lib/system-check.js
+    - lib/nexus-self/systems.js
+    - lib/blueprint-index.js
+    - lib/gap-priority.js
+    - lib/lean-mode.js
+    - lib/agent-tools/naming.js
+    - lib/agent-tools/tools/coordination/capability-tools.js
+    - scripts/precommit-check.js
+    - diagnostic/nexus-diagnostic.js
+    - guardian/server.js
+    - guardian/interaction-contract.json
+    - lib/hooks/guardian.hooks.js
+    - loom/maps/session-2026-08-14-map.js
+    - loom/maps/cos-testenv-map.js
+    - loom/scanners/capability-map.js
+    - loom/ui/index.html
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 29c23ca726a65e52

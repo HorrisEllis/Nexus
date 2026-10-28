@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+context: pipeline phase EM2_warp_his_own of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: EM2_warp_his_own (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754422
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754422
+lastSeenAt: 1792841754422
+fingerprint: null
+payload:
+  id: EM2_warp_his_own
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/warp/core/Link.js
+    - lib/warp/core/Expectation.js
+    - lib/warp/core/Engine.js
+    - lib/warp/core/Ledger.js
+    - lib/warp/core/Axiom.js
+    - lib/warp/adapters/siso-gates.js
+    - lib/warp/spec/warp.spec
+    - lib/warp/MANIFEST.json
+  depends_on:
+    - EM1_emerge_core
+    - SH1_shadow_space
+  blocks: []
+  spec: null
+  graph: ab1c4e5df6a686ef

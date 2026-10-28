@@ -1,0 +1,316 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SS1_system_store_adoption:e25a76a6e4bc1227
+type: graph
+id: phase:SS1_system_store_adoption:e25a76a6e4bc1227
+context: dependency graph of phase SS1_system_store_adoption
+intent: null
+summary: 44 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756002
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756002
+lastSeenAt: 1792841756002
+fingerprint: null
+payload:
+  for: SS1_system_store_adoption
+  kind: phase
+  repo: null
+  hash: e25a76a6e4bc1227
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: guardian/agents/index.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/artifact-upload.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/ask.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/config.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/account-routing.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/agent-registry.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/jobs.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/cli/clear-idearium.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/cli/diagnose.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/cli/session.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/ledgers.node.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/contracts/nodes/systems.node.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: service/guardian-service.js
+      role: changes
+      exists: false
+      system: null
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/registry.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/recursive-diagnose.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: diagnostic/healer/api/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/config.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/synthesis/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/lib/artifact-namer.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-attention.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/gap/predicate.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-clearup.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/system-store.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/data-clearup.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/agents/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: guardian/agents/index.js
+      to: guardian/lib/artifact-namer.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/lib/provider-attention.js
+      kind: requires
+    - from: guardian/lib/ncp.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: guardian/lib/ncp.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/healer/api/index.js
+      to: lib/system-store.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-store.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/providers/registry.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/recursive-diagnose.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: intelligence/config.js
+      to: lib/data-home.js
+      kind: requires
+    - from: intelligence/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: intelligence/synthesis/index.js
+      to: lib/data-home.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/ncp.js
+      to: intelligence/gap/predicate.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC1_watchers_never_kill_a_kernel
+    dependents:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS2_every_system_home
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::UI1_toolbox_and_store_explorer
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::MEM1_cortex_keeps_the_books
+      - docs/2026-10-21-data-layout-phasemap.spec::DL3_rewire_writers
+    upstream:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC1_watchers_never_kill_a_kernel
+    downstream:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::MEM1_cortex_keeps_the_books
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS2_every_system_home
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS3_nodes_are_the_data
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS4_seal_into_compartments
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::UI1_toolbox_and_store_explorer
+      - docs/2026-10-21-data-layout-phasemap.spec::DL3_rewire_writers
+      - docs/2026-10-21-data-layout-phasemap.spec::DL5_memory_in_cortex
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS2_every_system_home
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::UI1_toolbox_and_store_explorer
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::MEM1_cortex_keeps_the_books
+      - docs/2026-10-21-data-layout-phasemap.spec::DL3_rewire_writers
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): RC1_watchers_never_kill_a_kernel'
+      - >-
+        needed by (4): SS2_every_system_home, UI1_toolbox_and_store_explorer,
+        MEM1_cortex_keeps_the_books, DL3_rewire_writers · all downstream 7 · finishing it unlocks
+        SS2_every_system_home, UI1_toolbox_and_store_explorer, MEM1_cortex_keeps_the_books,
+        DL3_rewire_writers
+    edges:
+      - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC1_watchers_never_kill_a_kernel
+        kind: declared

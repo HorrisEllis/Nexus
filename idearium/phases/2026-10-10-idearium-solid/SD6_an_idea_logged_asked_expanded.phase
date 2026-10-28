@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD6_an_idea_logged_asked_expanded
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD6_an_idea_logged_asked_expanded
+context: pipeline phase SD6_an_idea_logged_asked_expanded of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD6_an_idea_logged_asked_expanded (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792820507247
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820507247
+lastSeenAt: 1792820507247
+fingerprint: null
+payload:
+  id: SD6_an_idea_logged_asked_expanded
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/void.js
+    - idearium/cli/route-commands.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1d402c08b3b1ae59

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-autonomous-phasemap.spec::CA4_connections
+type: phase
+id: docs_copilot-autonomous-phasemap.spec::CA4_connections
+context: pipeline phase CA4_connections of docs/copilot-autonomous-phasemap.spec
+intent: null
+summary: CA4_connections (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792878423836
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878423836
+lastSeenAt: 1792878423836
+fingerprint: null
+payload:
+  id: CA4_connections
+  map: docs/copilot-autonomous-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/connections.js
+    - lib/contract-queue.js
+    - idearium/ui/js/app.js
+  depends_on:
+    - CA1_scheduler
+  blocks: []
+  spec: null
+  graph: 4d0e2a07a9104f38

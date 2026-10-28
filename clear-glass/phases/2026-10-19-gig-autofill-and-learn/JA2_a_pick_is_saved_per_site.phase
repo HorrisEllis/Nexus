@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::JA2_a_pick_is_saved_per_site
+type: phase
+id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::JA2_a_pick_is_saved_per_site
+context: >-
+  pipeline phase JA2_a_pick_is_saved_per_site of
+  docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+intent: null
+summary: JA2_a_pick_is_saved_per_site (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792814522030
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814522030
+lastSeenAt: 1792814522030
+fingerprint: null
+payload:
+  id: JA2_a_pick_is_saved_per_site
+  map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/matcher.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/copilot/tools.js
+    - clear-glass/src/copilot/bridge.js
+  depends_on:
+    - JA1_the_matcher_consults_learned
+  blocks: []
+  spec: null
+  graph: af5f76542e8c50de

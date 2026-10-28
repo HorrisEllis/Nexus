@@ -98,7 +98,7 @@ spec:
       systems: [idearium]
       status: "DONE (0.39.374) — idearium/cli/route-commands.js: one table, one runner; idearium/cli/store-chatter.js keeps stdout the answer. test-cli-route-commands 8/8."
       james: '"That was fantastic. Everything needs to be available as commands."'
-      files: [idearium/cli/route-commands.js, idearium/cli/store-chatter.js, idearium/cli/index.js, cli/nexus.js]
+      files: [idearium/cli/route-commands.js, idearium/cli/store-chatter.js, idearium/cli/index.js, lib/cli/nexus.js]
       does: "Every capability above, and the repo agent, its proposals and its charter, as an idearium command (and through nexus /idearium): one row each in a table run by one runner, --json for scripts and agents."
       proof: "the real CLI, as its own process, against the real API: help lists every row; agent, ask, changes, apply, activity, tasks, charter set/check; refusals exit 1 with the reason"
 
@@ -159,7 +159,7 @@ spec:
       status: 'LATER — off the path — copilot on Nexus surfaces, spotlight and dead-click diagnosis come after the loop (declutter 2026-10-09)'
       status_before: MAPPED
       depends_on: [CM2_every_command_for_every_agent]
-      files: [clear-glass/src/page/field.js, lib/agent-tools/tools/clear-glass/browser.js, ui/tv-shell/spotlight/spotlight.js]
+      files: [clear-glass/src/page/field.js, lib/agent-tools/tools/clear-glass/browser.js, lib/ui/tv-shell/spotlight/spotlight.js]
       does: >-
         Nexus's own pages (the TV shell and its channels, Idearium, BrainOS, nerve) are surfaces copilot opens and
         reads through the field it already has. field() also names a target by spotlight.js's element registry (a
@@ -173,7 +173,7 @@ spec:
       status: 'LATER — off the path — copilot on Nexus surfaces, spotlight and dead-click diagnosis come after the loop (declutter 2026-10-09)'
       status_before: MAPPED
       depends_on: [UN1_nexus_surfaces_in_the_field]
-      files: [ui/tv-shell/spotlight/spotlight.js, clear-glass/src/page/field.js]
+      files: [lib/ui/tv-shell/spotlight/spotlight.js, clear-glass/src/page/field.js]
       does: >-
         One spotlight verb for copilot, whatever surface James is on: the TV shell's (by name, steps, POST
         /api/ui/spotlight/*) and the field's (by number / x,y). The field's spotlight() is the page-side ring; the shell's

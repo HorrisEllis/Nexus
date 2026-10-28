@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_idearium-repository-overhaul-phasemap.spec::MCO-F_config
+type: phase
+id: docs_idearium-repository-overhaul-phasemap.spec::MCO-F_config
+context: pipeline phase MCO-F_config of docs/idearium-repository-overhaul-phasemap.spec
+intent: null
+summary: MCO-F_config (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478640
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478640
+lastSeenAt: 1792822478640
+fingerprint: null
+payload:
+  id: MCO-F_config
+  map: docs/idearium-repository-overhaul-phasemap.spec
+  repo: null
+  layer: null
+  status: '>'
+  files:
+    - idearium/lib/config.js
+    - tests/modules/test-mcof-config-gate.js
+    - idearium/api/index.js
+    - idearium/lib/config-core.cjs
+  depends_on:
+    - MCO0_audit_real_coverage
+  blocks: []
+  spec: null
+  graph: e75766c143925a9e

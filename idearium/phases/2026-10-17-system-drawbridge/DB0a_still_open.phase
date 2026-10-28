@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB0a_still_open
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB0a_still_open
+context: pipeline phase DB0a_still_open of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB0a_still_open (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677817
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677817
+lastSeenAt: 1792787677817
+fingerprint: null
+payload:
+  id: DB0a_still_open
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c850c4ed5b9cba3f

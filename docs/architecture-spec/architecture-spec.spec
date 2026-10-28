@@ -161,21 +161,21 @@ spec:
 
   modules:
     - id: capability-node-schema
-      path: architecture-spec/registry/{component,hook,wire,bundle,config}.js   # 0.8.0: the real paths (0.7.0 said schema/)
+      path: idearium/architecture-spec/registry/{component,hook,wire,bundle,config}.js   # 0.8.0: the real paths (0.7.0 said schema/)
       description: >
         The declared unit — Component / Hook / Wire / NodeBundle /
         Config files. Restates loom/schema/*.js unchanged for the first
         three; bundle and config are this spec's own additions,
         reference-only and deliberately-untyped respectively.
     - id: lattice-compiler
-      path: architecture-spec/registry/lattice.js   # built — compileLattice() (0.7.0 said compiler/lattice.js, not built)
+      path: idearium/architecture-spec/registry/lattice.js   # built — compileLattice() (0.7.0 said compiler/lattice.js, not built)
       description: >
         Reads every Component/Hook/Wire file, resolves every wire's two
         hook ends against real node ids across any lattice level,
         produces CompiledLattice. Direct generalization of
         loom/schema/registry.js's graph() method.
     - id: registry-watcher
-      path: architecture-spec/registry/watcher.js   # built — createWatcher(), NODE_TYPES [component, hook, wire, bundle, config]
+      path: idearium/architecture-spec/registry/watcher.js   # built — createWatcher(), NODE_TYPES [component, hook, wire, bundle, config]
       description: >
         Generalization of guardian/lib/node-registry.js out of guardian
         and into this spec's own registry/ domain (matching genesis.spec's
@@ -184,7 +184,7 @@ spec:
         the mechanism guardian already runs, scoped for reuse by any system
         instead of owned by guardian alone.
     - id: friction-tension
-      path: architecture-spec/registry/friction.js  # built and tested against this very .spec file's own gaps.entries during authoring — see version_history 0.3.0
+      path: idearium/architecture-spec/registry/friction.js  # built and tested against this very .spec file's own gaps.entries during authoring — see version_history 0.3.0
       description: >
         Computes FrictionScore and TensionScore live from this system's
         own compiled lattice orphans plus this .spec file's own
@@ -196,7 +196,7 @@ spec:
         it returned friction: 5, tension: 9 — real numbers computed from
         this file's own real gaps section, not illustrative ones.
     - id: decompose
-      path: architecture-spec/registry/decompose.js  # built and tested against real loom phasemap data
+      path: idearium/architecture-spec/registry/decompose.js  # built and tested against real loom phasemap data
       description: >
         Agnostic decomposition tool — walks any seam-bounded structure
         (a phasemap, a component, a spec block) and produces node-sized
@@ -214,7 +214,7 @@ spec:
         created, confirmed by running the real lattice compiler against
         its own output before the fix).
     - id: registry-api
-      path: architecture-spec/registry/api.js
+      path: idearium/architecture-spec/registry/api.js
       description: >
         The real, cross-system-safe surface onto this registry — what
         makes it possible for copilot, agents, or any other system to
@@ -235,7 +235,7 @@ spec:
         fires per write (added→changed for one real change) — the same
         debounce gap noted against watcher.js itself, not yet ported.
     - id: create-atlas
-      path: architecture-spec/registry/create-atlas.js
+      path: idearium/architecture-spec/registry/create-atlas.js
       description: >
         Scaffolds and synthesizes a system atlas from multiple real
         sources at once — a system's own .spec (governance/meta), its
@@ -256,13 +256,13 @@ spec:
 
     # 0.8.0 — real files under architecture-spec/registry/ that 0.7.0 did not list:
     - id: phases
-      path: architecture-spec/registry/phases.js
+      path: idearium/architecture-spec/registry/phases.js
       description: "PHASE_SCHEMA, PHASE_STATUSES, checkPhase, summarize, oneLine — a phase as a node (decompose.js's output)."
     - id: edit-atlas
-      path: architecture-spec/registry/edit-atlas.js
+      path: idearium/architecture-spec/registry/edit-atlas.js
       description: "findSection, editSection — edits one section of an atlas in place."
     - id: nexus-atlas-aggregate
-      path: architecture-spec/registry/nexus-atlas-aggregate.js
+      path: idearium/architecture-spec/registry/nexus-atlas-aggregate.js
       description: "aggregate — the per-system atlases into one NEXUS view."
 
   # ── 0.8.0 — the registry as the doorway (docs/2026-10-01-routing-registry-genesis-phasemap.spec RC1/RC2) ─────────────
@@ -602,3 +602,9 @@ spec:
 #                              exists anywhere — SB22 / P36 open
 #   crossings                   297 system to system, 255 lib/ reaching up into a system, 531 systems using lib/ (DB1)
 #   declared routes             27 of 544 not served by their source; 15 of 109 CLI commands reach a route some registry declares
+
+# ## ADDENDUM 2026-10-24 (0.60.236 RF2) — the registry modules moved into idearium
+# James, 2026-10-24: "need the systems soveriegn" · "yes start rf2, security goes with remote desktop". The top-level folder architecture-spec/
+# was not one of the 15 systems; only idearium uses it, so the refactor tool (lib/architecture-apply.js, RF2) moved it to
+# idearium/architecture-spec/ (git kept each file's history). Every `path:` field above now names the new place; the narrative and the
+# history notes beside them are left as written (§0.3). Proof: tests/modules/test-genesis-and-architecture-spec.test.js GA-01.

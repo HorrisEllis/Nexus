@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR2_decentralize_interaction_contracts
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR2_decentralize_interaction_contracts
+context: >-
+  pipeline phase AR2_decentralize_interaction_contracts of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: AR2_decentralize_interaction_contracts (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753789
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753789
+lastSeenAt: 1792841753789
+fingerprint: null
+payload:
+  id: AR2_decentralize_interaction_contracts
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/orchestrator.js
+    - tests/modules/interaction-contract.test.js
+    - tests/brutal.test.js
+    - lib/contracts/nexus-interaction-contract.js
+    - lib/contracts/SYSTEM-CONTRACTS.js
+  depends_on:
+    - D1_diagnostic_real_folder
+  blocks: []
+  spec: null
+  graph: 1773c8ec1efb8050

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R1_repair_contract_schema
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R1_repair_contract_schema
+context: pipeline phase R1_repair_contract_schema of docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R1_repair_contract_schema (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792879719555
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879719555
+lastSeenAt: 1792879719555
+fingerprint: null
+payload:
+  id: R1_repair_contract_schema
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/gap-field.js
+    - lib/resource-monitor.js
+    - tests/modules/test-language-checks.test.js
+    - copilot/diagnostics.js
+    - lib/diagnostic-causal.js
+    - copilot/lifeline.js
+    - copilot/tool-runtime.js
+    - idearium/api/index.js
+    - lib/agent-tools/tools/diagnostic/resource-monitor.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9e4b4fc532cdda53

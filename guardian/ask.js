@@ -127,7 +127,9 @@ async function askSync(prompt, opts = {}, deps = {}) {
   // §AGENT-TAB 0.39.244 — not for a job aimed at a repo's own tab (opts.agentId): the
   // dispatcher opens that tab itself and waits for it (lib/dispatcher.js _awaitAgentTab),
   // so the shared tab being down is no evidence the job can't complete.
-  if (!opts.agentId && typeof isProviderConnected === 'function' && !isProviderConnected(resolved)) {
+  // §0.60.231 CL1 — nor for a person's own pick of an agent (opts.openTab, from the Clear Glass CLI through copilot): the dispatcher queues
+  // the job, asks for the tab (guardian.tab.needed), and it flushes when the userscript connects. Refusing it sent his pick to Ollama.
+  if (!opts.agentId && !opts.openTab && typeof isProviderConnected === 'function' && !isProviderConnected(resolved)) {
     return { ok: false, error: `no provider connected on NCP channel '${resolved}' — check that Clear Glass booted with GUARDIAN_DIR set and that its '${resolved}' tab has a restored session (not a login page)`, provider: resolved };
   }
 

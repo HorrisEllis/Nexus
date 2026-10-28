@@ -1,0 +1,265 @@
+envelope: 1
+uuid: nexus-export-graph-phase:I1_boot_js_intelligence_routes:11f31f0c6f5617e4
+type: graph
+id: phase:I1_boot_js_intelligence_routes:11f31f0c6f5617e4
+context: dependency graph of phase I1_boot_js_intelligence_routes
+intent: null
+summary: 31 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792878420331
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878420331
+lastSeenAt: 1792878420331
+fingerprint: null
+payload:
+  for: I1_boot_js_intelligence_routes
+  kind: phase
+  repo: null
+  hash: 11f31f0c6f5617e4
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: diagnostic/lib/causality.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: idearium/repo/deviation.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/adversarial.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/server.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/spatial/system-lattice.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: copilot/adversarial.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-adapters.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/adversarial.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pulse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: tests/modules/adversarial.test.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/lib/causality.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: diagnostic/lib/causality.js
+      kind: requires
+  crossings:
+    - from: copilot/adversarial.js
+      to: intelligence/adversarial.js
+      fromSystem: copilot
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR1_architect_retirement_and_hooks_to_loom
+    upstream: []
+    downstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR1_architect_retirement_and_hooks_to_loom
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::X1_node_decomposition_tool
+        files:
+          - cortex/boot.js
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): AR1_architect_retirement_and_hooks_to_loom'
+      - 'same files as X1_node_decomposition_tool with no order between them: cortex/boot.js'
+    edges: []

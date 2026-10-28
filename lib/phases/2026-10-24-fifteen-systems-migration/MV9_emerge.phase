@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
+context: pipeline phase MV9_emerge of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV9_emerge (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478483
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478483
+lastSeenAt: 1792822478483
+fingerprint: null
+payload:
+  id: MV9_emerge
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/
+    - lib/emerge/
+  depends_on:
+    - MV7_siso
+  blocks: []
+  spec: null
+  graph: fdcaa0eb6fa36abb

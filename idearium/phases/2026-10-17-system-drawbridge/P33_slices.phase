@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::P33_slices
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::P33_slices
+context: pipeline phase P33_slices of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: P33_slices (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677839
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677839
+lastSeenAt: 1792787677839
+fingerprint: null
+payload:
+  id: P33_slices
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 175c69cb48638ad2

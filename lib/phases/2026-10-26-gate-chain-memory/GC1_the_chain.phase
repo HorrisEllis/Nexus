@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-26-gate-chain-memory-phasemap.spec::GC1_the_chain
+type: phase
+id: docs_2026-10-26-gate-chain-memory-phasemap.spec::GC1_the_chain
+context: pipeline phase GC1_the_chain of docs/2026-10-26-gate-chain-memory-phasemap.spec
+intent: null
+summary: GC1_the_chain (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792991448759
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792991448759
+lastSeenAt: 1792991448759
+fingerprint: null
+payload:
+  id: GC1_the_chain
+  map: docs/2026-10-26-gate-chain-memory-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/gate-chain.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 138995b2a6fd3690

@@ -1,0 +1,75 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NX1_nexus_in_a_vm:24f038cc5c7b50f4
+type: graph
+id: phase:NX1_nexus_in_a_vm:24f038cc5c7b50f4
+context: dependency graph of phase NX1_nexus_in_a_vm
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676773
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676773
+lastSeenAt: 1792787676773
+fingerprint: null
+payload:
+  for: NX1_nexus_in_a_vm
+  kind: phase
+  repo: null
+  hash: 24f038cc5c7b50f4
+  nodes:
+    - path: docs/2026-10-02-spatial-void-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/ui/js/void-sky.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: loom/data/registry.json
+      role: changes
+      exists: true
+      system: loom
+    - path: tests/modules/test-spec-workshop.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-spec-workshop.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR2_architect_in_the_workshop
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW2_workshop_page_in_the_voids_style
+    dependents: []
+    upstream:
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR2_architect_in_the_workshop
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::CX0_codex_component_store
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW1_spec_workshop
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW2_workshop_page_in_the_voids_style
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - >-
+        depends on (2): AR2_architect_in_the_workshop, SW2_workshop_page_in_the_voids_style · all
+        upstream 4
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR2_architect_in_the_workshop
+        kind: inferred
+      - from: docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW2_workshop_page_in_the_voids_style
+        kind: inferred

@@ -4,7 +4,7 @@
 // working" real. DOM/toast/spotlight halves are browser-only by nature.
 const assert = require('assert');
 const http = require('http');
-require('../../ui/tv-shell/tutorial/tutorial.js'); // attaches to globalThis
+require('../../lib/ui/tv-shell/tutorial/tutorial.js'); // attaches to globalThis
 const { _check } = globalThis.NexusTutorial;
 
 let passed = 0, failed = 0;

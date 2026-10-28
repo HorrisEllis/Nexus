@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-idearium-one-surface-phasemap.spec::OS7_one_proposal_surface
+type: phase
+id: docs_2026-10-07-idearium-one-surface-phasemap.spec::OS7_one_proposal_surface
+context: pipeline phase OS7_one_proposal_surface of docs/2026-10-07-idearium-one-surface-phasemap.spec
+intent: null
+summary: OS7_one_proposal_surface (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677092
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677092
+lastSeenAt: 1792787677092
+fingerprint: null
+payload:
+  id: OS7_one_proposal_surface
+  map: docs/2026-10-07-idearium-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ecf19282ae895337

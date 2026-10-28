@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-self-awareness-phasemap.spec::AW1_guardian_reflected_in_nodes
+type: phase
+id: docs_2026-10-10-self-awareness-phasemap.spec::AW1_guardian_reflected_in_nodes
+context: pipeline phase AW1_guardian_reflected_in_nodes of docs/2026-10-10-self-awareness-phasemap.spec
+intent: null
+summary: AW1_guardian_reflected_in_nodes (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677255
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677255
+lastSeenAt: 1792787677255
+fingerprint: null
+payload:
+  id: AW1_guardian_reflected_in_nodes
+  map: docs/2026-10-10-self-awareness-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/node-registry.js
+    - guardian/lib/jobs.js
+    - guardian/lib/ncp.js
+    - guardian/lib/selector-map.js
+  depends_on:
+    - AW0_no_guessed_causes
+  blocks: []
+  spec: null
+  graph: c659f7d61e4da4c9

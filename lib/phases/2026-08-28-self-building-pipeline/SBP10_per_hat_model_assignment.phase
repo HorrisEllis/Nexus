@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP10_per_hat_model_assignment
+type: phase
+id: docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP10_per_hat_model_assignment
+context: >-
+  pipeline phase SBP10_per_hat_model_assignment of
+  docs/2026-08-28-self-building-pipeline-phasemap.spec
+intent: null
+summary: SBP10_per_hat_model_assignment (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753416
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753416
+lastSeenAt: 1792841753416
+fingerprint: null
+payload:
+  id: SBP10_per_hat_model_assignment
+  map: docs/2026-08-28-self-building-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ollama/abliterated-catalog.js
+    - lib/hat-seed.js
+    - lib/hat-forge.js
+    - architect/schemas/index.js
+    - clear-glass/renderer/settings/sections/mesh.js
+    - clear-glass/renderer/shell/agents.js
+  depends_on:
+    - SBP9_hat_forge_real_hats
+    - SBP3_wire_contract_intake_through_routing_ir
+  blocks: []
+  spec: null
+  graph: 0ae60e1c88ce959c

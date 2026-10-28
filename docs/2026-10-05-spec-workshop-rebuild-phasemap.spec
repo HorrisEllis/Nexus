@@ -92,7 +92,7 @@ spec:
       status_before: OPEN
       james: '"record the generation process from the agents and create a macro or replayable file"'
       depends_on: []
-      files: [lib/generation-recorder.js, warp/core/Engine.js, intelligence/rfr2/clip/index.js]
+      files: [lib/generation-recorder.js, lib/warp/core/Engine.js, intelligence/rfr2/clip/index.js]
       does: >-
         Every generation an agent makes for a spec or a build is a WARP 2 link: what caused it (the block id, the
         request), the prompt (hashed, and kept), the context it was given, the model, the output, and what happened to
@@ -106,7 +106,7 @@ spec:
       status_before: OPEN
       james: '"to rebuild or reconstruct data using events, snapshots etc."'
       depends_on: [RS1_the_generation_recorder]
-      files: [lib/generation-recorder.js, emergence/vendor/rfr2/cfr-kernel/rewind.js]
+      files: [lib/generation-recorder.js, lib/emergence/vendor/rfr2/cfr-kernel/rewind.js]
       does: >-
         Replay a macro: the document rebuilt from the recorded outputs, byte-identical, no model asked. Rewind to any
         step (the rewind engine's seek over the snapshots). Branch from a step: ask again from there, the old path kept.
@@ -117,7 +117,7 @@ spec:
       status: "DONE (0.49.0) — lib/spec-document.js: detect (emerge · yaml · markdown · the workshop's sections list), parse into blocks that partition the file (emerge: domain \"…\" and // ── banners, with the comments directly above; yaml: top keys or, under one root, its keys; markdown: headings; the workshop form: each sections: item, its id its id: field), ids natural or given (a marker line // @block, # @block, <!-- @block -->; in the workshop form the id: field itself), serialize byte-identical, replaceBlock (every other block byte for byte, the check run on the result, an id it would duplicate refused), setId (any id but empty or a line break; a taken id refused), renameRefs (that spec's maps' blocks: / sections:), check (yaml by js-yaml; emerge structural — the Emerge kernel's parser reads another dialect, compartment · invariant · signal, not genesis's domains — said), isBookkeeping (meta, history … and the idea's framing, one rule with main's SP1). genesis.spec, a YAML phasemap, a markdown spec and a workshop spec round-trip byte-identical. test-spec-document. SB28 (genesis's file list) stays its own phase; the routes for editing blocks come with RS6."
       james: '"I''m thinking like document editor but for the emerge and .spec files. each block has a block id, which can be completely custom, can be anything."'
       depends_on: []
-      files: [lib/spec-document.js, emerge/emerge-kernel.js, idearium/spec-engine/templates/genesis.spec]
+      files: [lib/spec-document.js, lib/emerge/emerge-kernel.js, idearium/spec-engine/templates/genesis.spec]
       does: >-
         A .spec or .eg file as blocks over its real text — Emerge (domain "…", key = value) or YAML, detected. Each block
         is a range of the file with its own id: edited as text, comments and order kept, checked live by its own parser
@@ -131,7 +131,7 @@ spec:
       status_before: OPEN
       james: '"i wanted it to use deterministic primitives, and then anything on top is probabilistic. like a constraint field, or emergence."'
       depends_on: [RS1_the_generation_recorder, RS3_the_spec_document]
-      files: [idearium/lib/workshop.js, idearium/api/index.js, warp/adapters/emerge-field.js]
+      files: [idearium/lib/workshop.js, idearium/api/index.js, lib/warp/adapters/emerge-field.js]
       does: >-
         idea → promote → template → spec → architect → blueprint → repo → cos, each station a WARP 2 link that expects its
         output. Deterministic first (the template, the registry, what was built before); the model only where a block or
@@ -212,7 +212,7 @@ spec:
       james: '"i wanted it to use deterministic primitives, and then anything on top is probabilistic."'
       depends_on: [RS4_the_pipeline_on_warp2]
       reuses: [docs/2026-10-02-emerge-field-memory-build-phasemap.spec — the crystallize phase (promote-after-N)]
-      files: [warp/dispatch/population.js, lib/component-store.js]
+      files: [lib/warp/dispatch/population.js, lib/component-store.js]
       does: >-
         A generation that converges N times independently (N stated, tunable) is promoted into the deterministic core — a
         template part, a component — so the same thing is never asked of a model twice. The boundary moves up.

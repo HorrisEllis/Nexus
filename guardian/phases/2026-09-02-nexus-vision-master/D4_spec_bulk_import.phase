@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::D4_spec_bulk_import
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::D4_spec_bulk_import
+context: pipeline phase D4_spec_bulk_import of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: D4_spec_bulk_import (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675633
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675633
+lastSeenAt: 1792787675633
+fingerprint: null
+payload:
+  id: D4_spec_bulk_import
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - C1_copilot_spec_wizard
+    - B2_chunk_contract_chaining
+  blocks: []
+  spec: null
+  graph: a8957d46b0a04c43

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME8_the_drainers_run_the_engine
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME8_the_drainers_run_the_engine
+context: pipeline phase ME8_the_drainers_run_the_engine of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME8_the_drainers_run_the_engine (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792878422192
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878422192
+lastSeenAt: 1792878422192
+fingerprint: null
+payload:
+  id: ME8_the_drainers_run_the_engine
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-intake.js
+    - cortex/core/raid/worker.js
+    - orchestrator/lib/contract-poller.js
+    - idearium/api/index.js
+    - architect/service.js
+  depends_on:
+    - ME0_the_inventory_proved
+    - ME3_one_engine_one_budget
+    - ME5_one_chooser
+  blocks: []
+  spec: null
+  graph: 6bd189bacdffec69

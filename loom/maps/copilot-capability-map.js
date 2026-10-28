@@ -88,8 +88,11 @@ const FILES = [
     ['nexus.guardian.clear-glass-bridge']],
   ['lib/agent-tools/tools/site-settings/site-settings-manage.js', 'nexus.lib.agent-tools.tools.site-settings-manage',
     ['nexus.guardian.clear-glass-bridge']],
+  // §AD1 0.60.251 — autofill_manage left the Guardian job path (it never reached Clear Glass: provider 'autofill' is not routed);
+  // its one require is clearglass.browser.tool's _call, the direct :7702 door to /cli/autofill/*.
+  ['lib/agent-tools/tools/clear-glass/browser.js', 'nexus.lib.agent-tools.tools.clearglass-browser-tool', []],
   ['lib/agent-tools/tools/autofill/autofill-manage.js', 'nexus.lib.agent-tools.tools.autofill-manage',
-    ['nexus.guardian.clear-glass-bridge', 'nexus.clear-glass.src.autofill.matcher']],
+    ['nexus.lib.agent-tools.tools.clearglass-browser-tool']],
   ['lib/agent-tools/tools/clear-glass/stream-bridge.js', 'nexus.lib.agent-tools.tools.clear-glass-stream-bridge',
     ['nexus.lib.clear-glass-stream-bridge']],
   ['lib/agent-tools/tools/clear-glass/search-engine.js', 'nexus.lib.agent-tools.tools.clearglass-search-engine', []],
@@ -101,6 +104,10 @@ const FILES = [
   // clear-glass/src/ipc/bridge.js's autofill:proposal / autofill:gig* handlers.
   ['clear-glass/src/autofill/proposal.js', 'nexus.clear-glass.src.autofill.proposal', []],
   ['clear-glass/src/autofill/gig.js', 'nexus.clear-glass.src.autofill.gig', []],
+  // §JA3 0.60.230 — the element picker on a missed field: requires store (field types), matcher (fieldKeysOf, learnKey, fillFields)
+  // and renderer/selector-check.js (looksGenerated); its non-require edges (the picker source, the bridge) are in economy-map.js.
+  ['clear-glass/src/autofill/learn-pick.js', 'nexus.clear-glass.src.autofill.learn-pick',
+    ['nexus.clear-glass.src.autofill.store', 'nexus.clear-glass.src.autofill.matcher']],
   ['lib/extract-code.js', 'nexus.lib.extract-code', []],
   ['idearium/spec-engine/index.js', 'nexus.idearium.spec-engine', []],
   ['idearium/spec-engine/compiler-t0.js', 'nexus.idearium.spec-engine.compiler-t0',
@@ -241,7 +248,7 @@ const FILES = [
   ['intelligence/registry-components.js', 'nexus.intelligence.registry', []],
   ['intelligence/routes.js', 'nexus.intelligence.routes', ['nexus.intelligence.index']],
   ['intelligence/field-provider.js', 'nexus.intelligence.field-provider', ['nexus.intelligence.cfr']],
-  ['hooks/intelligence.hooks.js', 'nexus.hooks.intelligence', []],
+  ['lib/hooks/intelligence.hooks.js', 'nexus.hooks.intelligence', []],
   ['intelligence/consumer.js', 'nexus.intelligence.consumer', ['nexus.lib.contract-queue', 'nexus.intelligence.framework-builder']],
   ['intelligence/schemas.js', 'nexus.intelligence.schemas', []],
   ['intelligence/config.js', 'nexus.intelligence.config', []],

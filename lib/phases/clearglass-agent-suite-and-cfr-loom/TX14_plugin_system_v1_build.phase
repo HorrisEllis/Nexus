@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+context: >-
+  pipeline phase TX14_plugin_system_v1_build of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX14_plugin_system_v1_build (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678135
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678135
+lastSeenAt: 1792787678135
+fingerprint: null
+payload:
+  id: TX14_plugin_system_v1_build
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/guardian-picker.js
+    - lib/agent-tools/tools/governance/tool-config.js
+    - lib/tool-config.js
+  depends_on:
+    - TX11_plugin_architecture_decision
+  blocks: []
+  spec: null
+  graph: 1a4936ab08174f55

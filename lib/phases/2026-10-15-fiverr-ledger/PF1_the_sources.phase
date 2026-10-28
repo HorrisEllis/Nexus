@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-fiverr-ledger-phasemap.spec::PF1_the_sources
+type: phase
+id: docs_2026-10-15-fiverr-ledger-phasemap.spec::PF1_the_sources
+context: pipeline phase PF1_the_sources of docs/2026-10-15-fiverr-ledger-phasemap.spec
+intent: null
+summary: PF1_the_sources (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792820507613
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820507613
+lastSeenAt: 1792820507613
+fingerprint: null
+payload:
+  id: PF1_the_sources
+  map: docs/2026-10-15-fiverr-ledger-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/gig-ledger.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - PF0_the_ledger
+  blocks: []
+  spec: null
+  graph: 28198a8912efefda

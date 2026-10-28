@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-verified-primitives-phasemap.spec::VP6_debug_and_intelligence_in_the_desktop
+type: phase
+id: docs_2026-10-05-verified-primitives-phasemap.spec::VP6_debug_and_intelligence_in_the_desktop
+context: >-
+  pipeline phase VP6_debug_and_intelligence_in_the_desktop of
+  docs/2026-10-05-verified-primitives-phasemap.spec
+intent: null
+summary: VP6_debug_and_intelligence_in_the_desktop (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792877162331
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877162331
+lastSeenAt: 1792877162331
+fingerprint: null
+payload:
+  id: VP6_debug_and_intelligence_in_the_desktop
+  map: docs/2026-10-05-verified-primitives-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/testenv/index.js
+    - lib/cos-debug-report.js
+    - lib/gap-field.js
+    - idearium/ui/desktop.html
+  depends_on:
+    - VP1_confidence_from_evidence
+  blocks: []
+  spec: null
+  graph: 1483be6a21c0c296

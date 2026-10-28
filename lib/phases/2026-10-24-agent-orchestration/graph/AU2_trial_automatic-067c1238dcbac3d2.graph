@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AU2_trial_automatic:067c1238dcbac3d2
+type: graph
+id: phase:AU2_trial_automatic:067c1238dcbac3d2
+context: dependency graph of phase AU2_trial_automatic
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792940185298
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792940185298
+lastSeenAt: 1792940185298
+fingerprint: null
+payload:
+  for: AU2_trial_automatic
+  kind: phase
+  repo: null
+  hash: 067c1238dcbac3d2
+  nodes:
+    - path: docs/framework-trial/trial.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-framework-trial-deploy.test.js
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

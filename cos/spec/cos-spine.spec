@@ -216,7 +216,7 @@ spec:
 
     - id: IF-SPEC-COMPILER
       name: spec-compiler
-      path: emerge/compiler/kg-builder.js
+      path: lib/emerge/compiler/kg-builder.js
       description: "Compiles a spec into its knowledge graph at a depth; phase-specs.js writes each phase's .phase and .graph."
       exports: ["build", "createKGPipeline", "computeGaps", "DEPTH", "phase-specs.js: derive, write, check"]
       behavioral_contracts: ["a module below depth 1.0 or a BLACK node is a gap, named"]
@@ -456,3 +456,10 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node"
     - "per module: its acceptance lines; machine ones where QEMU is present, said as skipped where it is not"
+
+## ADDENDUM 2026-10-24 (0.60.242) — the first system runs in its compartment, behind a wall
+James, 2026-10-24: "Isn't loom in a compartment already or clearglass?" · "Do it." Loom (docs/2026-10-24-loom-into-cos-phasemap.spec LM4)
+runs in nexus-self-loom, started by COS. The compartment's code boundary is enforced: cos/compartment/boundary.js, preloaded by
+compartment/process-runner.js when the env carries COS_BOUNDARY; a require outside the allowed paths is refused. The filesystem is not walled
+yet. lib/cos-bridge.js gains start, stop and processOf; loom/templates/cos-compartment.js gains boundaryFor and moveIn (the seal moves a
+system in, never before). This is the path CS4 and every system after it uses.

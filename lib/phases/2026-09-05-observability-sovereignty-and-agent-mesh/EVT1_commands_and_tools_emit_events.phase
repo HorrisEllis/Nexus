@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::EVT1_commands_and_tools_emit_events
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::EVT1_commands_and_tools_emit_events
+context: >-
+  pipeline phase EVT1_commands_and_tools_emit_events of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: EVT1_commands_and_tools_emit_events (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675791
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675791
+lastSeenAt: 1792787675791
+fingerprint: null
+payload:
+  id: EVT1_commands_and_tools_emit_events
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cd104364a7ca3847

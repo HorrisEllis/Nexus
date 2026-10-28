@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-agent-orchestration-phasemap.spec::CG4_the_gate_in_the_ui
+type: phase
+id: docs_2026-10-24-agent-orchestration-phasemap.spec::CG4_the_gate_in_the_ui
+context: pipeline phase CG4_the_gate_in_the_ui of docs/2026-10-24-agent-orchestration-phasemap.spec
+intent: null
+summary: CG4_the_gate_in_the_ui (ui) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371317
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371317
+lastSeenAt: 1792874371317
+fingerprint: null
+payload:
+  id: CG4_the_gate_in_the_ui
+  map: docs/2026-10-24-agent-orchestration-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - idearium/ui/js/code-surface.js
+  depends_on:
+    - CG3_route_and_command
+  blocks: []
+  spec: docs/brainos-in-idearium.spec
+  graph: 24188efb763168b1

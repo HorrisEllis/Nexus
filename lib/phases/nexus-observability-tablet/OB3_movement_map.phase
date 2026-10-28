@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-observability-tablet-phasemap.spec::OB3_movement_map
+type: phase
+id: docs_nexus-observability-tablet-phasemap.spec::OB3_movement_map
+context: pipeline phase OB3_movement_map of docs/nexus-observability-tablet-phasemap.spec
+intent: null
+summary: OB3_movement_map (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678267
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678267
+lastSeenAt: 1792787678267
+fingerprint: null
+payload:
+  id: OB3_movement_map
+  map: docs/nexus-observability-tablet-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/capability-registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1750f2d80be7b16d

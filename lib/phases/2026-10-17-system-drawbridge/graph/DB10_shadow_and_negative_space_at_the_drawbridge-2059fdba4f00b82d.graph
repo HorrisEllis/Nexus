@@ -1,0 +1,258 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DB10_shadow_and_negative_space_at_the_drawbridge:2059fdba4f00b82d
+type: graph
+id: phase:DB10_shadow_and_negative_space_at_the_drawbridge:2059fdba4f00b82d
+context: dependency graph of phase DB10_shadow_and_negative_space_at_the_drawbridge
+intent: null
+summary: 19 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792880100345
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100345
+lastSeenAt: 1792880100345
+fingerprint: null
+payload:
+  for: DB10_shadow_and_negative_space_at_the_drawbridge
+  kind: phase
+  repo: null
+  hash: 2059fdba4f00b82d
+  nodes:
+    - path: lib/drawbridge-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/scanners/capability-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: copilot/lib/capabilities.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/tools/materialize-cli.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/proof-run.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/diagnostic/loom-scan.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/diagnostic-causal.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/bootstrap.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/scanners/spec-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/liminal-space/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/drawbridge-registry.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/shadow.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/shadow.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/shadow.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/drawbridge-registry.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: lib/drawbridge-registry.js
+      kind: requires
+    - from: copilot/lib/capabilities.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: cortex/tools/materialize-cli.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/diagnostic-causal.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: loom/scanners/spec-map.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/shadow.js
+      kind: requires
+    - from: idearium/repo/proof-run.js
+      to: lib/shadow.js
+      kind: requires
+  crossings:
+    - from: lib/shadow.js
+      to: intelligence/liminal-space/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: copilot/lib/capabilities.js
+      to: loom/scanners/capability-map.js
+      fromSystem: copilot
+      toSystem: loom
+      kind: system
+      known: true
+    - from: copilot/lib/nexus-awareness.js
+      to: loom/scanners/capability-map.js
+      fromSystem: copilot
+      toSystem: loom
+      kind: system
+      known: true
+    - from: cortex/tools/materialize-cli.js
+      to: loom/scanners/capability-map.js
+      fromSystem: cortex
+      toSystem: loom
+      kind: system
+      known: true
+    - from: lib/agent-pull.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/diagnostic-causal.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+    dependents:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+    downstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB14_heartbeat_over_routes
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB18_nodes_in_relation_to_their_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB22_the_root_and_the_missing_four
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB24_cos_reads_only_the_registry
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB26_the_ui_floats_on_the_registry
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::P33a_a_registry_for_any_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND2_one_node_route_for_every_system
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND4_commands_and_capabilities_from_the_schemas
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND6_the_nodes_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+      - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
+    blockedBy:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 3 · ON THE CRITICAL PATH · blocked by DB9_every_repo_generates_its_registry,
+        DB0c_reading
+      - 'depends on (2): DB9_every_repo_generates_its_registry, DB0c_reading · all upstream 5'
+      - 'needed by (1): DB12_the_ui_handshake · all downstream 36'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+        kind: inferred
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+        kind: inferred

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB23_autopilot_to_the_orchestrator
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB23_autopilot_to_the_orchestrator
+context: >-
+  pipeline phase DB23_autopilot_to_the_orchestrator of
+  docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB23_autopilot_to_the_orchestrator (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792875541762
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875541762
+lastSeenAt: 1792875541762
+fingerprint: null
+payload:
+  id: DB23_autopilot_to_the_orchestrator
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/autopilot.js
+    - lib/nexus/autopilot.js
+    - package.json
+    - cos/app/runtime.js
+    - lib/nexus-self/systems.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 640b7dbdcb4ce1b1

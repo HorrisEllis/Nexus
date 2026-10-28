@@ -1,0 +1,247 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LS2_copilot_sends_the_text_as_it_comes:41cf35b25962a14b
+type: graph
+id: phase:LS2_copilot_sends_the_text_as_it_comes:41cf35b25962a14b
+context: dependency graph of phase LS2_copilot_sends_the_text_as_it_comes
+intent: null
+summary: 27 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792874369471
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874369471
+lastSeenAt: 1792874369471
+fingerprint: null
+payload:
+  for: LS2_copilot_sends_the_text_as_it_comes
+  kind: phase
+  repo: null
+  hash: 41cf35b25962a14b
+  nodes:
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/clear-glass-stream-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/copilot-adversarial-wire.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/copilot-handshake-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-confidence-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/intuition.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/copilot-context.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/expectation-watcher.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/inject-config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/recursive-diagnose.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/blueprint-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/config.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/inject-config.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/blueprint-index.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/copilot-context.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/recursive-diagnose.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/expectation-watcher.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/intuition.js
+      kind: requires
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-wire.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-handshake-dispatch.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-agent-confidence-gate.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/repo-agent.js
+      kind: requires
+  crossings:
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: guardian/routes/autonomous-loop.js
+      to: copilot/tool-runtime.js
+      fromSystem: guardian
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: copilot/tool-runtime.js
+      fromSystem: idearium
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS1_the_bridge_job_holds_what_is_written_so_far
+    dependents:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS3_one_feed_for_every_agent
+    upstream:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS1_the_bridge_job_holds_what_is_written_so_far
+    downstream:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS3_one_feed_for_every_agent
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS4_live_in_the_code_tab_and_the_work_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS3_one_feed_for_every_agent
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): LS1_the_bridge_job_holds_what_is_written_so_far'
+      - >-
+        needed by (1): LS3_one_feed_for_every_agent · all downstream 2 · finishing it unlocks
+        LS3_one_feed_for_every_agent
+    edges:
+      - from: docs/2026-10-05-cli-data-code-phasemap.spec::LS1_the_bridge_job_holds_what_is_written_so_far
+        kind: declared

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
+context: >-
+  pipeline phase BK2_phase_build_writes_code of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: BK2_phase_build_writes_code (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476718
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476718
+lastSeenAt: 1792822476718
+fingerprint: null
+payload:
+  id: BK2_phase_build_writes_code
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/repo/phases.js
+    - lib/repo-inject.js
+  depends_on:
+    - BK1_blocked_is_actionable
+    - CI1_compounding_iterate
+  blocks: []
+  spec: null
+  graph: b18c237a25441cd3

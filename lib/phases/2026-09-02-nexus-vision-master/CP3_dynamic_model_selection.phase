@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::CP3_dynamic_model_selection
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CP3_dynamic_model_selection
+context: pipeline phase CP3_dynamic_model_selection of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: CP3_dynamic_model_selection (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753648
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753648
+lastSeenAt: 1792841753648
+fingerprint: null
+payload:
+  id: CP3_dynamic_model_selection
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ollama/config.js
+    - lib/agent-tools/tools/diagnostic/resource-monitor.js
+    - lib/resource-monitor.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f7d4565ba6e4e527

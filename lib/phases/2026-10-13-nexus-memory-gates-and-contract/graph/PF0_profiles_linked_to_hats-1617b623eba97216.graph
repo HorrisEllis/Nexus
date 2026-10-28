@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PF0_profiles_linked_to_hats:1617b623eba97216
+type: graph
+id: phase:PF0_profiles_linked_to_hats:1617b623eba97216
+context: dependency graph of phase PF0_profiles_linked_to_hats
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677422
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677422
+lastSeenAt: 1792787677422
+fingerprint: null
+payload:
+  for: PF0_profiles_linked_to_hats
+  kind: phase
+  repo: null
+  hash: 1617b623eba97216
+  nodes:
+    - path: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

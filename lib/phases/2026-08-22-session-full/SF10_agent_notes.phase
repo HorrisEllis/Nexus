@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF10_agent_notes
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF10_agent_notes
+context: pipeline phase SF10_agent_notes of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF10_agent_notes (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675364
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675364
+lastSeenAt: 1792787675364
+fingerprint: null
+payload:
+  id: SF10_agent_notes
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-capability-profile.js
+    - lib/agent-notes.js
+    - lib/agent-tools/tools/coordination/agent-notes.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2d100608bc826abf

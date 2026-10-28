@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ3_repair_with_the_checks_own_words
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ3_repair_with_the_checks_own_words
+context: pipeline phase RQ3_repair_with_the_checks_own_words of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ3_repair_with_the_checks_own_words (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755265
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755265
+lastSeenAt: 1792841755265
+fingerprint: null
+payload:
+  id: RQ3_repair_with_the_checks_own_words
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/phase-plan.js
+    - lib/pipeline-routing.js
+    - idearium/api/index.js
+  depends_on:
+    - RQ1_the_verifier_library
+    - RQ2_the_generation_failure_vocabulary_and_index
+  blocks: []
+  spec: null
+  graph: 110d36f958db9933

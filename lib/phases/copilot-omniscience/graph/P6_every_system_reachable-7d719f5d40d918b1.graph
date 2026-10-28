@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P6_every_system_reachable:7d719f5d40d918b1
+type: graph
+id: phase:P6_every_system_reachable:7d719f5d40d918b1
+context: dependency graph of phase P6_every_system_reachable
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678186
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678186
+lastSeenAt: 1792787678186
+fingerprint: null
+payload:
+  for: P6_every_system_reachable
+  kind: phase
+  repo: null
+  hash: 7d719f5d40d918b1
+  nodes:
+    - path: lib/self-register.js
+      role: changes
+      exists: true
+      system: lib
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/self-register-remote.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/self-register.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/self-register.js
+      kind: requires
+    - from: lib/self-register-remote.js
+      to: lib/self-register.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

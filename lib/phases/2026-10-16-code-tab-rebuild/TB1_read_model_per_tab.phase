@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+context: pipeline phase TB1_read_model_per_tab of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB1_read_model_per_tab (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755666
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755666
+lastSeenAt: 1792841755666
+fingerprint: null
+payload:
+  id: TB1_read_model_per_tab
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/run-state.js
+  depends_on:
+    - TB0_decisions
+  blocks: []
+  spec: null
+  graph: 323a33f7acc6e516

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO12_guardian_audit_complete
+type: phase
+id: docs_2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO12_guardian_audit_complete
+context: >-
+  pipeline phase MCO12_guardian_audit_complete of
+  docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec
+intent: null
+summary: MCO12_guardian_audit_complete (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792877322020
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877322020
+lastSeenAt: 1792877322020
+fingerprint: null
+payload:
+  id: MCO12_guardian_audit_complete
+  map: docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE 2026-09-13. All 20 real POST routes in guardian/server.js'
+  files:
+    - guardian/server.js
+    - guardian/interaction-contract.json
+    - cortex/core/raid/index.js
+    - cortex/core/raid/contract-intake.js
+    - lib/raid-port.js
+    - cortex/core/raid/contract-boundary.js
+  depends_on:
+    - MCO12_guardian_list_was_unreliable
+  blocks: []
+  spec: null
+  graph: 0261abe994d47185

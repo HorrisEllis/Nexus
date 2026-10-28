@@ -1,0 +1,200 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CG1_ncp_events_real:d173963e478d5d69
+type: graph
+id: phase:CG1_ncp_events_real:d173963e478d5d69
+context: dependency graph of phase CG1_ncp_events_real
+intent: null
+summary: 22 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877321774
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877321774
+lastSeenAt: 1792877321774
+fingerprint: null
+payload:
+  for: CG1_ncp_events_real
+  kind: phase
+  repo: null
+  hash: d173963e478d5d69
+  nodes:
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/session-hub.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: guardian/lib/ncp.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: clear-glass/seam/watchdog-gates.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/adapter.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/intake-bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: guardian/lib/dispatcher.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/profile-lanes.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/ncp-hostile-payload.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/ncp-dual-live-flap.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/ncp-race.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/stale-sweep-socket-close.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/siso/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/session-hub.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/account-switch.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: intelligence/gap/predicate.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/ncp.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: guardian/lib/ncp.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: guardian/lib/ncp.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: clear-glass/src/core/bus.js
+      to: clear-glass/siso/index.js
+      kind: requires
+    - from: clear-glass/test/session-hub.test.js
+      to: clear-glass/src/cookies/session-hub.js
+      kind: requires
+    - from: clear-glass/test/session-hub.test.js
+      to: clear-glass/src/providers/account-switch.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/lib/profile-lanes.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: tests/modules/ncp-hostile-payload.test.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: tests/ncp-dual-live-flap.test.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: tests/ncp-race.test.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: tests/stale-sweep-socket-close.test.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: clear-glass/seam/watchdog-gates.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/downloads/adapter.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/downloads/intake-bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/ncp.js
+      to: intelligence/gap/predicate.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
+    dependents:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG2_route_ncp_onto_guardian_sse
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded
+    downstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG2_route_ncp_onto_guardian_sse
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG2_route_ncp_onto_guardian_sse
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (2): RF5_agent_registry_is_hardcoded, RF1_ncp_liveness_is_console_only'
+      - >-
+        needed by (1): CG2_route_ncp_onto_guardian_sse · finishing it unlocks
+        CG2_route_ncp_onto_guardian_sse
+    edges:
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded
+        kind: inferred
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
+        kind: inferred

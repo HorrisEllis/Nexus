@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-omniscience-phasemap.spec::P7_stream_to_all_systems
+type: phase
+id: docs_copilot-omniscience-phasemap.spec::P7_stream_to_all_systems
+context: pipeline phase P7_stream_to_all_systems of docs/copilot-omniscience-phasemap.spec
+intent: null
+summary: P7_stream_to_all_systems (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678186
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678186
+lastSeenAt: 1792787678186
+fingerprint: null
+payload:
+  id: P7_stream_to_all_systems
+  map: docs/copilot-omniscience-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 765df9d3dc2003cb

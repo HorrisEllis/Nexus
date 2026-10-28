@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME6_one_learner
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME6_one_learner
+context: pipeline phase ME6_one_learner of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME6_one_learner (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792877323543
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877323543
+lastSeenAt: 1792877323543
+fingerprint: null
+payload:
+  id: ME6_one_learner
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/economy/router.js
+    - cortex/core/raid/index.js
+    - lib/agent-build-learning.js
+    - lib/agent-record.js
+    - guardian/lib/raid-feedback.js
+  depends_on:
+    - ME4_one_attempt_record
+    - ME5_one_chooser
+  blocks: []
+  spec: null
+  graph: f947ab6d2e1583d9

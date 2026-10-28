@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::SR3_artifact_extraction_introspect_bridge
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR3_artifact_extraction_introspect_bridge
+context: >-
+  pipeline phase SR3_artifact_extraction_introspect_bridge of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: SR3_artifact_extraction_introspect_bridge (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792879715946
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879715946
+lastSeenAt: 1792879715946
+fingerprint: null
+payload:
+  id: SR3_artifact_extraction_introspect_bridge
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/server.js
+    - lib/introspect.js
+    - lib/gap-field.js
+    - lib/component-ledger.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f570617117926981

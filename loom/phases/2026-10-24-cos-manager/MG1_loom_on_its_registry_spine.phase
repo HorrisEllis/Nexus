@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
+context: pipeline phase MG1_loom_on_its_registry_spine of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG1_loom_on_its_registry_spine (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792880100853
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100853
+lastSeenAt: 1792880100853
+fingerprint: null
+payload:
+  id: MG1_loom_on_its_registry_spine
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/registry-components.js
+    - loom/interaction-contract.json
+    - loom/event-taxonomy.js
+  depends_on:
+    - DB21_one_registry_schema_every_level
+    - DB12_the_ui_handshake
+    - CS3_the_registry_is_the_bridge
+    - MG0b_the_full_spec
+  blocks: []
+  spec: null
+  graph: b94506b8e5eebd15

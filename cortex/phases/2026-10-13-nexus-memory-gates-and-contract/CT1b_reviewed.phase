@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT1b_reviewed
+type: phase
+id: docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT1b_reviewed
+context: pipeline phase CT1b_reviewed of docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+intent: null
+summary: CT1b_reviewed (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677424
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677424
+lastSeenAt: 1792787677424
+fingerprint: null
+payload:
+  id: CT1b_reviewed
+  map: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3178ffe24c2f885c

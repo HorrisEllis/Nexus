@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-idea-to-spec-workshop-phasemap.spec::WK3_the_agent_drafts_every_block
+type: phase
+id: docs_2026-10-05-idea-to-spec-workshop-phasemap.spec::WK3_the_agent_drafts_every_block
+context: >-
+  pipeline phase WK3_the_agent_drafts_every_block of
+  docs/2026-10-05-idea-to-spec-workshop-phasemap.spec
+intent: null
+summary: WK3_the_agent_drafts_every_block (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677036
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677036
+lastSeenAt: 1792787677036
+fingerprint: null
+payload:
+  id: WK3_the_agent_drafts_every_block
+  map: docs/2026-10-05-idea-to-spec-workshop-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/workshop.js
+    - idearium/ui/workshop.html
+  depends_on:
+    - WK1_the_workshop_is_blocks_from_the_templates
+  blocks: []
+  spec: null
+  graph: 06035725e06b5b37

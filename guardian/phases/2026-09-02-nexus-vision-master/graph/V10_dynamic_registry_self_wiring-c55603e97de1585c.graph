@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:V10_dynamic_registry_self_wiring:c55603e97de1585c
+type: graph
+id: phase:V10_dynamic_registry_self_wiring:c55603e97de1585c
+context: dependency graph of phase V10_dynamic_registry_self_wiring
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675689
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675689
+lastSeenAt: 1792787675689
+fingerprint: null
+payload:
+  for: V10_dynamic_registry_self_wiring
+  kind: phase
+  repo: null
+  hash: c55603e97de1585c
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::VM1_versionium_owns_loom_map_sync
+    dependents: []
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::VM1_versionium_owns_loom_map_sync
+    downstream: []
+    blockedBy:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::VM1_versionium_owns_loom_map_sync
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by VM1_versionium_owns_loom_map_sync
+      - 'depends on (1): VM1_versionium_owns_loom_map_sync'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::VM1_versionium_owns_loom_map_sync
+        kind: declared

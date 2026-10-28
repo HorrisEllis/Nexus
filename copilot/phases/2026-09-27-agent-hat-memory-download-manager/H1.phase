@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H1
+type: phase
+id: docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H1
+context: pipeline phase H1 of docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+intent: null
+summary: H1 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676023
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676023
+lastSeenAt: 1792787676023
+fingerprint: null
+payload:
+  id: H1
+  map: docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/activity-recall.js
+    - copilot/intuition.js
+    - copilot/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9a057fb15580f17d

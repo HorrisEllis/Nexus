@@ -1,0 +1,70 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AE4_repoint_the_registry:12b92196a075064e
+type: graph
+id: phase:AE4_repoint_the_registry:12b92196a075064e
+context: dependency graph of phase AE4_repoint_the_registry
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792961047709
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792961047709
+lastSeenAt: 1792961047709
+fingerprint: null
+payload:
+  for: AE4_repoint_the_registry
+  kind: phase
+  repo: null
+  hash: 12b92196a075064e
+  nodes:
+    - path: lib/automation-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-automation-registry.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/api/index.js
+      to: lib/automation-registry.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+    dependents:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
+    upstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
+    downstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
+    blockedBy:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+    unlocks:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by AE2_browser_driver_port, AE3_the_engine_door
+      - 'depends on (2): AE2_browser_driver_port, AE3_the_engine_door · all upstream 5'
+      - 'needed by (1): AE5_ui_and_cleanup · finishing it unlocks AE5_ui_and_cleanup'
+    edges:
+      - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+        kind: declared
+      - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+        kind: declared

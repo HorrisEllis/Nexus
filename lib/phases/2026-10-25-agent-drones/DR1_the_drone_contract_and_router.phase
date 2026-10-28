@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-agent-drones-phasemap.spec::DR1_the_drone_contract_and_router
+type: phase
+id: docs_2026-10-25-agent-drones-phasemap.spec::DR1_the_drone_contract_and_router
+context: pipeline phase DR1_the_drone_contract_and_router of docs/2026-10-25-agent-drones-phasemap.spec
+intent: null
+summary: DR1_the_drone_contract_and_router (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792963020108
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792963020108
+lastSeenAt: 1792963020108
+fingerprint: null
+payload:
+  id: DR1_the_drone_contract_and_router
+  map: docs/2026-10-25-agent-drones-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/drone.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1e44363fde5cdb19

@@ -1,0 +1,226 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DA1_fix_stale_guardian_coverage_gate:530277f4bc7864a2
+type: graph
+id: phase:DA1_fix_stale_guardian_coverage_gate:530277f4bc7864a2
+context: dependency graph of phase DA1_fix_stale_guardian_coverage_gate
+intent: null
+summary: 26 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877321790
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877321790
+lastSeenAt: 1792877321790
+fingerprint: null
+payload:
+  for: DA1_fix_stale_guardian_coverage_gate
+  kind: phase
+  repo: null
+  hash: 530277f4bc7864a2
+  nodes:
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: docs/guardian.spec
+      role: changes
+      exists: true
+      system: null
+    - path: guardian/userscripts.yaml
+      role: changes
+      exists: true
+      system: guardian
+    - path: orchestrator/lib/spec-drift.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: scripts/precommit-check.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-mesh-guardian-coverage.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/agent-mesh-drainer.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/agent-mesh-hostile.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-accounts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/driver/page-resolver.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/dom-transport.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/route-graph.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/network/install.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/capability-spec.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-agent-mesh-guardian-coverage.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/route-graph.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/automation-engine.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/network/install.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/dom-transport.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: scripts/precommit-check.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-drainer.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-hostile.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/clear-glass-accounts.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+    dependents:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA2_dispatch_outcome_events
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::BR2_brainos_controls_agents
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF2_shared_data_directory_is_the_root_of_the_crash
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded
+    downstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::BR2_brainos_controls_agents
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA2_dispatch_outcome_events
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA2_dispatch_outcome_events
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): DF1_guardian_own_data_folder · all upstream 4'
+      - >-
+        needed by (2): DA2_dispatch_outcome_events, BR2_brainos_controls_agents · finishing it
+        unlocks DA2_dispatch_outcome_events
+    edges:
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+        kind: inferred

@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+type: phase
+id: docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+context: >-
+  pipeline phase AE1_move_the_core of
+  docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+intent: null
+summary: AE1_move_the_core (library) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792962436811
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792962436811
+lastSeenAt: 1792962436811
+fingerprint: null
+payload:
+  id: AE1_move_the_core
+  map: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+  repo: null
+  layer: library
+  status: >-
+    DONE (headless) 0.60.256 — engine is CORE (lib/automation/); each system runs its own instance
+    (Clear Glass local for browser automation, orchestrator for platform); decoupled via the kernel
+    (boundary 10/10, no crossing); namespaced stores. Live two-process + AE4/AE5 are his.
+  files:
+    - clear-glass/src/mesh/automation-engine.js
+    - clear-glass/src/automation/cron.js
+    - clear-glass/src/automation/template.js
+    - clear-glass/src/automation/steps.js
+    - clear-glass/src/automation/dom.js
+    - clear-glass/src/automation/nodes.js
+    - clear-glass/src/automation/from-macro.js
+    - clear-glass/src/automation/templates.js
+  depends_on:
+    - AE_D1_engine_home
+    - AE_D2_state_stays
+  blocks: []
+  spec: docs/2026-10-25-automation-engine-sovereignty-graph.md
+  graph: 2a96f2d1d0bc3b9f

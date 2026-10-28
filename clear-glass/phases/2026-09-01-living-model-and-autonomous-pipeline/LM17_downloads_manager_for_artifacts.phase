@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM17_downloads_manager_for_artifacts
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM17_downloads_manager_for_artifacts
+context: >-
+  pipeline phase LM17_downloads_manager_for_artifacts of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM17_downloads_manager_for_artifacts (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675554
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675554
+lastSeenAt: 1792787675554
+fingerprint: null
+payload:
+  id: LM17_downloads_manager_for_artifacts
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/providers/download-capture.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3d19dd972de8a30e

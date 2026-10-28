@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-30-interaction-contract-context-phasemap.spec::IC6_multi_source_code_request_intake
+type: phase
+id: docs_2026-08-30-interaction-contract-context-phasemap.spec::IC6_multi_source_code_request_intake
+context: >-
+  pipeline phase IC6_multi_source_code_request_intake of
+  docs/2026-08-30-interaction-contract-context-phasemap.spec
+intent: null
+summary: IC6_multi_source_code_request_intake (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792878419898
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878419898
+lastSeenAt: 1792878419898
+fingerprint: null
+payload:
+  id: IC6_multi_source_code_request_intake
+  map: docs/2026-08-30-interaction-contract-context-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-intake.js
+  depends_on:
+    - IC5_full_input_queue_output_qc_lifecycle
+  blocks: []
+  spec: null
+  graph: 58dcc4be126a9159

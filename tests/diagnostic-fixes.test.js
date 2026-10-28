@@ -45,10 +45,10 @@ test('F4: architect has /api/contract route', () =>
 
 // Fix 5: diagnostic in boot sequence
 test('F5: diagnostic service in boot-systems.js', () =>
-  read('cli/boot-systems.js').includes('nexus-diagnostic.js') &&
-  read('cli/boot-systems.js').includes("systemId: 'diagnostic'"));
+  read('lib/cli/boot-systems.js').includes('nexus-diagnostic.js') &&
+  read('lib/cli/boot-systems.js').includes("systemId: 'diagnostic'"));
 test('F5: diagnostic boots after emerge (last)', () => {
-  const s = read('cli/boot-systems.js');
+  const s = read('lib/cli/boot-systems.js');
   return s.indexOf('nexus-diagnostic.js') > s.indexOf('emerge-ide.js');
 });
 
@@ -120,7 +120,7 @@ test('F8: the direct probe still runs as a real fallback if the registry has not
 // Syntax checks
 const { spawnSync } = require('child_process');
 const files = ['orchestrator/orchestrator.js','idearium/index.js','cortex/self-heal/index.js',
-  'architect/service.js','cli/boot-systems.js','diagnostic/nexus-diagnostic.js'];
+  'architect/service.js','lib/cli/boot-systems.js','diagnostic/nexus-diagnostic.js'];
 for (const f of files) {
   test(`SYNTAX: ${f}`, () =>
     spawnSync('node', ['--check', path.join(ROOT, f)], { encoding:'utf8', timeout:5000 }).status === 0);

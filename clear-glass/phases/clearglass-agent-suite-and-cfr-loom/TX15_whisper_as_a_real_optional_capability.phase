@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX15_whisper_as_a_real_optional_capability
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX15_whisper_as_a_real_optional_capability
+context: >-
+  pipeline phase TX15_whisper_as_a_real_optional_capability of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX15_whisper_as_a_real_optional_capability (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678138
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678138
+lastSeenAt: 1792787678138
+fingerprint: null
+payload:
+  id: TX15_whisper_as_a_real_optional_capability
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TX14_plugin_system_v1_build
+  blocks: []
+  spec: null
+  graph: 9064ceff1c0912a4

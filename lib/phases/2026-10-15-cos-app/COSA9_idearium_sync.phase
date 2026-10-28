@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+type: phase
+id: docs_2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+context: pipeline phase COSA9_idearium_sync of docs/2026-10-15-cos-app-phasemap.spec
+intent: null
+summary: COSA9_idearium_sync (?) — 15 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755518
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755518
+lastSeenAt: 1792841755518
+fingerprint: null
+payload:
+  id: COSA9_idearium_sync
+  map: docs/2026-10-15-cos-app-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-notes.js
+    - lib/history-import-job.js
+    - lib/zip-ingest.js
+    - lib/nexus-self/store.js
+    - lib/nexus-self/systems.js
+    - idearium/lib/projects.cjs
+    - idearium/ui/js/projects.js
+    - docs/2026-10-15-pipeline-focus-phasemap.spec
+    - lib/cos-bridge.js
+    - cos/workspace/vm-control.js
+    - cos/app/switch.js
+    - lib/project-decompose.js
+    - idearium/ui/js/repo-notes.js
+    - idearium/cli/route-commands.js
+    - idearium/repo/nexus-self.js
+  depends_on:
+    - COSA1_version_store_and_import
+    - COSA3_run_and_supervise
+  blocks: []
+  spec: null
+  graph: 4e2d0d6d0315ae08

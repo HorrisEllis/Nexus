@@ -28,7 +28,7 @@ process.env.LOOM_PORT = '13803';
       const before = await gen.generateSystemDoc('architect');
       assert.ok(before.includes('2/3 active'));
 
-      const hooksPath = path.join(__dirname, '../..', 'hooks/architect.hooks.js');
+      const hooksPath = path.join(__dirname, '..', '..', 'lib', 'hooks', 'architect.hooks.js');
       const original = fs.readFileSync(hooksPath, 'utf8');
       try {
         const mutated = original.replace("status:'active', updatedAt:'2026-06-11T17:30:00Z' },\n  { id:'arch-hook-scan-0003'", "status:'test-mutated', updatedAt:'2026-06-11T17:30:00Z' },\n  { id:'arch-hook-scan-0003'");

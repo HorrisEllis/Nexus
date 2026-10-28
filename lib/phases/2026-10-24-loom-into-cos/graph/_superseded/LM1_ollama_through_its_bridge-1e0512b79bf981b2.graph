@@ -1,0 +1,160 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM1_ollama_through_its_bridge:1e0512b79bf981b2
+type: graph
+id: phase:LM1_ollama_through_its_bridge:1e0512b79bf981b2
+context: dependency graph of phase LM1_ollama_through_its_bridge
+intent: null
+summary: 18 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877325050
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325050
+lastSeenAt: 1792877325050
+fingerprint: null
+payload:
+  for: LM1_ollama_through_its_bridge
+  kind: phase
+  repo: null
+  hash: 1e0512b79bf981b2
+  nodes:
+    - path: lib/ollama-port.js
+      role: changes
+      exists: false
+      system: lib
+    - path: loom/agent-suite/index.js
+      role: changes
+      exists: true
+      system: loom
+    - path: ollama/routes/generate.js
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/server.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: tests/modules/test-ollama-port.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: loom/test/agent-suite.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/dispatch.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/http-utils.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/ollama-client.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/state.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/jobs.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/models.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/queue.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/stream.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/system.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/uploads.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: ollama/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/state.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/dispatch.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/http-utils.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/system.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/uploads.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/stream.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/jobs.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/queue.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/models.js
+      kind: requires
+    - from: loom/test/agent-suite.test.js
+      to: loom/agent-suite/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+    dependents:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+    downstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): LM_D1_ollama_through_its_bridge'
+      - >-
+        needed by (1): LM4_the_seal_and_into_its_compartment · all downstream 2 · finishing it
+        unlocks LM4_the_seal_and_into_its_compartment
+    edges:
+      - from: docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+        kind: declared

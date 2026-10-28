@@ -15,7 +15,7 @@
  * Warp's Axiom primitive doesn't mandate purity here (only Gate does),
  * this is precisely what Axiom exists for.
  */
-const { Axiom } = require('../../warp/core');
+const { Axiom } = require('../../lib/warp/core');
 
 function makeLoomAxioms(registry) {
   return [

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+type: phase
+id: docs_agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+context: >-
+  pipeline phase AM7_agent_switch_continuity_and_chat_recall of
+  docs/agent-model-and-user-continuity-phasemap.spec
+intent: null
+summary: AM7_agent_switch_continuity_and_chat_recall (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371455
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371455
+lastSeenAt: 1792874371455
+fingerprint: null
+payload:
+  id: AM7_agent_switch_continuity_and_chat_recall
+  map: docs/agent-model-and-user-continuity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/chat-logger.js
+    - copilot/lifeline.js
+    - copilot/lib/self-model.js
+    - cortex/push-recall.js
+    - lib/vector-memory.js
+    - lib/agent-tools/tools/query/agent-chat-search.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7923aa805489fa32

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-22-brainos-agent-suite-phasemap.spec::HT1_hat_manager
+type: phase
+id: docs_2026-09-22-brainos-agent-suite-phasemap.spec::HT1_hat_manager
+context: pipeline phase HT1_hat_manager of docs/2026-09-22-brainos-agent-suite-phasemap.spec
+intent: null
+summary: HT1_hat_manager (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675984
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675984
+lastSeenAt: 1792787675984
+fingerprint: null
+payload:
+  id: HT1_hat_manager
+  map: docs/2026-09-22-brainos-agent-suite-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/hat-forge.js
+    - architect/schemas/index.js
+    - clear-glass/renderer/site-profile-groups.js
+    - clear-glass/schemas/index.js
+    - lib/agent-tools/tools/identity/hat-forge.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c65f629e4c701947

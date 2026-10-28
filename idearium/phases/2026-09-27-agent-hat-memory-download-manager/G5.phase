@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G5
+type: phase
+id: docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G5
+context: pipeline phase G5 of docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+intent: null
+summary: G5 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476406
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476406
+lastSeenAt: 1792822476406
+fingerprint: null
+payload:
+  id: G5
+  map: docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/agent-suite/index.js
+    - idearium/api/index.js
+    - idearium/ui/js/app.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 35fe9a2cfba852af

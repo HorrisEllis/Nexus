@@ -1,0 +1,66 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CON8_nexus_server_hook:fd911e37cdaf9fee
+type: graph
+id: phase:CON8_nexus_server_hook:fd911e37cdaf9fee
+context: dependency graph of phase CON8_nexus_server_hook
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677686
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677686
+lastSeenAt: 1792787677686
+fingerprint: null
+payload:
+  for: CON8_nexus_server_hook
+  kind: phase
+  repo: null
+  hash: fd911e37cdaf9fee
+  nodes:
+    - path: lib/nexus-cli-interface.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/uid/config-schema.js
+      role: changes
+      exists: true
+      system: lib
+    - path: nexus/autopilot.js
+      role: used-by
+      exists: true
+      system: nexus
+    - path: lib/uid/component-map.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/uid/config-schema.js
+      to: lib/uid/component-map.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/nexus-cli-interface.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
+    dependents: []
+    upstream:
+      - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
+    downstream: []
+    blockedBy:
+      - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by CON1_one_door_client
+      - 'depends on (1): CON1_one_door_client'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
+        kind: declared

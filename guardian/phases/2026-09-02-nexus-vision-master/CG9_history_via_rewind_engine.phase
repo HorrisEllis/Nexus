@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::CG9_history_via_rewind_engine
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CG9_history_via_rewind_engine
+context: pipeline phase CG9_history_via_rewind_engine of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: CG9_history_via_rewind_engine (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675673
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675673
+lastSeenAt: 1792787675673
+fingerprint: null
+payload:
+  id: CG9_history_via_rewind_engine
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 236f3a18df458ec9

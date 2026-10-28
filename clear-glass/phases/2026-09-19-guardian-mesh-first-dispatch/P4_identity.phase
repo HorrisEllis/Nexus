@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P4_identity
+type: phase
+id: docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P4_identity
+context: pipeline phase P4_identity of docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+intent: null
+summary: P4_identity (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675981
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675981
+lastSeenAt: 1792787675981
+fingerprint: null
+payload:
+  id: P4_identity
+  map: docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f5af86aa56495490

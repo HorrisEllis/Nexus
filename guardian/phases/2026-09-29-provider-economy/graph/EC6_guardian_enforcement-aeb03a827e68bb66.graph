@@ -1,0 +1,215 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EC6_guardian_enforcement:aeb03a827e68bb66
+type: graph
+id: phase:EC6_guardian_enforcement:aeb03a827e68bb66
+context: dependency graph of phase EC6_guardian_enforcement
+intent: null
+summary: 23 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877322469
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877322469
+lastSeenAt: 1792877322469
+fingerprint: null
+payload:
+  for: EC6_guardian_enforcement
+  kind: phase
+  repo: null
+  hash: aeb03a827e68bb66
+  nodes:
+    - path: guardian/lib/dispatcher.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/economy-guard.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/index.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/dispatcher-ping-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/dispatcher-stale-socket.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/clear-glass-bridge.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/chat-transcripts.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatch-pool.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/profile-lanes.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/economy/gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/lib/model-inventory.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: guardian/lib/economy-guard.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: guardian/lib/economy-guard.js
+      to: lib/economy/store.js
+      kind: requires
+    - from: guardian/lib/economy-guard.js
+      to: lib/economy/gate.js
+      kind: requires
+    - from: guardian/lib/economy-guard.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/dispatch-pool.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/profile-lanes.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/chat-transcripts.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/clear-glass-bridge.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      kind: requires
+    - from: tests/dispatcher-ping-gate.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-stale-socket.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      fromSystem: guardian
+      toSystem: ollama
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC1_usage_ledger
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC2_gate
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC3_token_constraints
+    dependents:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC8_economy_console
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC11_release
+    upstream:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC0_policy_model
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC1_usage_ledger
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC2_gate
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC3_token_constraints
+    downstream:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC11_release
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC8_economy_console
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC8_economy_console
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC11_release
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (3): EC1_usage_ledger, EC2_gate, EC3_token_constraints · all upstream 4'
+      - >-
+        needed by (2): EC8_economy_console, EC11_release · finishing it unlocks EC8_economy_console,
+        EC11_release
+    edges:
+      - from: docs/2026-09-29-provider-economy-phasemap.spec::EC1_usage_ledger
+        kind: declared
+      - from: docs/2026-09-29-provider-economy-phasemap.spec::EC2_gate
+        kind: declared
+      - from: docs/2026-09-29-provider-economy-phasemap.spec::EC3_token_constraints
+        kind: declared

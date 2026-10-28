@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-self-build-pipeline-phasemap.spec::SB4_decision_lattice_wiring
+type: phase
+id: docs_nexus-self-build-pipeline-phasemap.spec::SB4_decision_lattice_wiring
+context: pipeline phase SB4_decision_lattice_wiring of docs/nexus-self-build-pipeline-phasemap.spec
+intent: null
+summary: SB4_decision_lattice_wiring (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756498
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756498
+lastSeenAt: 1792841756498
+fingerprint: null
+payload:
+  id: SB4_decision_lattice_wiring
+  map: docs/nexus-self-build-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/reflection.js
+    - intelligence/lattice/associative-lattice.js
+    - orchestrator/lib/request-handler.js
+  depends_on:
+    - SB3_guided_build_loop
+  blocks: []
+  spec: null
+  graph: b104dbd3d608dd84

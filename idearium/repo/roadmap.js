@@ -141,7 +141,7 @@ export function buildRoadmap({ projectId, maps = [] } = {}) {
         ...(p.shelf ? { shelf: true } : {}),   // §HP9 0.55.1 — the declutter's shelf: kept, never the queue
         unresolved_deps: unresolved, blocked_by: [], ready: false, layer: null,
         // §0.39.271 P2 — what the phase says it does, closes and touches (loom P1)
-        name: nm || null, closes: p.closes || [], files: p.files || [], specs: p.specs || [], systems: p.systems || [], blocks: p.blocks || [], form: p.form || 'key', ...(p.kind === 'decision' ? { kind: 'decision' } : {}),   // §CV6 a decision, not a phase
+        name: nm || null, closes: p.closes || [], files: p.files || [], specs: p.specs || [], systems: p.systems || [], blocks: p.blocks || [], form: p.form || 'key', ...(p.kind === 'decision' || p.kind === 'finding' ? { kind: p.kind } : {}),   // §CV6 a decision, not a phase · §NF1 a finding, not a phase
           // §RS10 0.50.0 — the spec blocks it was planned from
         _mapIdx: mapIdx,
       });
@@ -214,7 +214,9 @@ const oneLine = (s, n = 70) => String(s).replace(/\s+/g, ' ').trim().slice(0, n)
  * setPhaseStatus({ text, mapName, phaseId, status, date, force })
  * -> { text, before, after }   (throws RoadmapError; returns text only if proven)
  */
-export function setPhaseStatus({ text, mapName, phaseId, status, date = new Date().toISOString().slice(0, 10), force = false } = {}) {
+// note: what the value says after its date (0.60.223 SL1: "DONE 2026-10-23. 0.60.223 — proven by run …"); one line, quotes stripped,
+// and still proven below to read back as the same status
+export function setPhaseStatus({ text, mapName, phaseId, status, date = new Date().toISOString().slice(0, 10), force = false, note = '' } = {}) {
   if (!EDITABLE_STATUSES.includes(status)) {
     throw new RoadmapError('BAD_STATUS', status === 'blocked'
       ? "'blocked' is not a stored status: loom's scanner has no such value. A phase is blocked when a dependency is not complete, and that is shown, not written."
@@ -233,7 +235,8 @@ export function setPhaseStatus({ text, mapName, phaseId, status, date = new Date
 
   const lines = String(text).split('\n');
   const hdr = target.line;
-  const newValue = NEW_VALUE[status](date);
+  const n = String(note || '').replace(/["\\\n\r]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 240);
+  const newValue = NEW_VALUE[status](date) + (n ? ` ${n}` : '');
   let out;
 
   if (target.statusLine === -1) {

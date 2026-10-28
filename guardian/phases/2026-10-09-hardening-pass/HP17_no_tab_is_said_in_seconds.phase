@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
+context: pipeline phase HP17_no_tab_is_said_in_seconds of docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP17_no_tab_is_said_in_seconds (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677147
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677147
+lastSeenAt: 1792787677147
+fingerprint: null
+payload:
+  id: HP17_no_tab_is_said_in_seconds
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/ask.js
+  depends_on:
+    - HP16_a_job_nobody_waits_for_is_not_sent_later
+  blocks: []
+  spec: null
+  graph: 9bc532dfbe78e5c6

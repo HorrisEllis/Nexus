@@ -1,0 +1,105 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM25_atlas_living_update:fffff5497b586859
+type: graph
+id: phase:LM25_atlas_living_update:fffff5497b586859
+context: dependency graph of phase LM25_atlas_living_update
+intent: null
+summary: 5 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675568
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675568
+lastSeenAt: 1792787675568
+fingerprint: null
+payload:
+  for: LM25_atlas_living_update
+  kind: phase
+  repo: null
+  hash: fffff5497b586859
+  nodes:
+    - path: loom/lib/changelog.js
+      role: changes
+      exists: true
+      system: loom
+    - path: scripts/precommit-check.js
+      role: changes
+      exists: true
+      system: null
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/lib/mco05-loom-changelog.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: loom/lib/changelog.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/lib/changelog.js
+      kind: requires
+    - from: tests/lib/mco05-loom-changelog.test.js
+      to: loom/lib/changelog.js
+      kind: requires
+  crossings:
+    - from: loom/lib/changelog.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: loom
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM21_atlas_fact_extractors
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM23_atlas_history_versions_calendar
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM24_atlas_prose_layer
+    dependents:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM26_atlas_completeness_and_release_gate
+    upstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM18_atlas_map_each_system_first
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM19_atlas_spec_coverage_prerequisite
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM20_atlas_schema_and_deterministic_seed
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM21_atlas_fact_extractors
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM22_atlas_structure_ledger
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM23_atlas_history_versions_calendar
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM24_atlas_prose_layer
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+    downstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM26_atlas_completeness_and_release_gate
+    blockedBy:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM21_atlas_fact_extractors
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM23_atlas_history_versions_calendar
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM24_atlas_prose_layer
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 5 · blocked by LM2_registry_as_hub_with_watchdog, LM21_atlas_fact_extractors,
+        LM23_atlas_history_versions_calendar, LM24_atlas_prose_layer
+      - >-
+        depends on (4): LM2_registry_as_hub_with_watchdog, LM21_atlas_fact_extractors,
+        LM23_atlas_history_versions_calendar, LM24_atlas_prose_layer · all upstream 9
+      - 'needed by (1): LM26_atlas_completeness_and_release_gate'
+    edges:
+      - from: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+        kind: declared
+      - from: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM21_atlas_fact_extractors
+        kind: declared
+      - from: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM23_atlas_history_versions_calendar
+        kind: declared
+      - from: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM24_atlas_prose_layer
+        kind: declared

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-idearium-control-phasemap.spec::IM3_ideas_mapped_to_nexus
+type: phase
+id: docs_2026-10-19-idearium-control-phasemap.spec::IM3_ideas_mapped_to_nexus
+context: pipeline phase IM3_ideas_mapped_to_nexus of docs/2026-10-19-idearium-control-phasemap.spec
+intent: null
+summary: IM3_ideas_mapped_to_nexus (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755959
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755959
+lastSeenAt: 1792841755959
+fingerprint: null
+payload:
+  id: IM3_ideas_mapped_to_nexus
+  map: docs/2026-10-19-idearium-control-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/work-funnel.js
+    - lib/phase-map-auto.js
+  depends_on:
+    - IM1_ideas_and_notes_as_one
+  blocks: []
+  spec: null
+  graph: 5e5195c7fd8a967b

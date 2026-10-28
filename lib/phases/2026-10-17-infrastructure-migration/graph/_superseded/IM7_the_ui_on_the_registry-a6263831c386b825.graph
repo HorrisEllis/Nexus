@@ -1,0 +1,230 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IM7_the_ui_on_the_registry:a6263831c386b825
+type: graph
+id: phase:IM7_the_ui_on_the_registry:a6263831c386b825
+context: dependency graph of phase IM7_the_ui_on_the_registry
+intent: null
+summary: 19 node(s), 11 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677795
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677795
+lastSeenAt: 1792787677795
+fingerprint: null
+payload:
+  for: IM7_the_ui_on_the_registry
+  kind: phase
+  repo: null
+  hash: a6263831c386b825
+  nodes:
+    - path: lib/system-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: changes
+      exists: true
+      system: nexus
+    - path: nexus/nexus-connect.js
+      role: changes
+      exists: true
+      system: nexus
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/healer/api/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/agents/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/alk/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/predicate.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/execution/run-pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/lattice/associative-lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/heartbeat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/lib/pulse.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: lib/system-store.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: nexus/nexus-connect.js
+      to: lib/heartbeat.js
+      kind: requires
+    - from: nexus/nexus-connect.js
+      to: intelligence/lattice/associative-lattice.js
+      kind: requires
+    - from: nexus/nexus-connect.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: diagnostic/healer/api/index.js
+      to: lib/system-store.js
+      kind: requires
+    - from: guardian/agents/index.js
+      to: lib/system-store.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-store.js
+      kind: requires
+    - from: cortex/boot.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: guardian/server.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/alk/index.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/index.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/server.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/run-pipeline.js
+      to: nexus/nexus-bus.js
+      kind: requires
+  crossings:
+    - from: nexus/nexus-connect.js
+      to: intelligence/lattice/associative-lattice.js
+      fromSystem: nexus
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: nexus/nexus-connect.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: nexus
+      toSystem: orchestrator
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: nexus/nexus-bus.js
+      fromSystem: cortex
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: nexus/nexus-bus.js
+      fromSystem: cortex
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: nexus/nexus-bus.js
+      fromSystem: guardian
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: intelligence/alk/index.js
+      to: nexus/nexus-bus.js
+      fromSystem: intelligence
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: intelligence/gap/predicate.js
+      to: nexus/nexus-bus.js
+      fromSystem: intelligence
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: intelligence/index.js
+      to: nexus/nexus-bus.js
+      fromSystem: intelligence
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: intelligence/routes.js
+      to: nexus/nexus-bus.js
+      fromSystem: intelligence
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: intelligence/server.js
+      to: nexus/nexus-bus.js
+      fromSystem: intelligence
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/execution/run-pipeline.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

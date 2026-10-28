@@ -18,6 +18,8 @@ const fs   = require('fs');
 const MODULES_DIR = __dirname;
 
 const SUITES = [
+  'test-autofill-active.test.js',         // 0.60.257 AF1 — activeProfile (default/sole/first, never null) + setDefault + matchOne; the "no profile 'null'" fix
+  'test-autofill-fill-active.test.js',    // 0.60.258 AF2 — fillFields/detectFields default to the active profile (copilot/agents stop passing null); zero profiles → clean error
   'test-build-paths.test.js',             // 0.60.67 WB0 — every build path and whether WARP is on it, measured; CK-255
   'test-warp-rung.test.js',               // 0.60.73 WB1/WB2 — WARP around the chosen agent: cache, axiom gate, retain; gate mode never serves
   'test-projects-overview.test.js',       // 0.60.74 COSA10 — every project on one list; no two API routes share a method and path
@@ -77,6 +79,13 @@ const SUITES = [
   'test-pipeline-routing.test.js', // 0.39.286 RG — routing and fallback: modes, chains, failure classes, breaker, the route walked and kept on the chunk, /api/routing, the settings page
   'test-genesis-and-architecture-spec.test.js', // 0.39.286 GN1/AR1 — genesis 1.1.0 (registry doorway, routing) the default system template; the architecture spec cut to what exists
   'test-genesis-sandboxed.test.js', // DB19 (parked) — a fork of genesis: sealed sandbox, the registry the drawbridge, three tunnels (compartment, bridge, contract)
+  'test-gate-waits-for-verdict.test.js', // 0.60.257 GV1–GV4 — RAID holds a phase nothing can check for his verdict (never FAILED, no self-heal); accept lands, reject reverts
+  'test-autofill-transfer.test.js', // 0.60.256 AT1–AT5 — the autofill data out and in (one .autofill file, a merge, undo); gig files are .gig
+  'test-registry-draft.test.js', // 0.60.255 (from brave-cori 0.60.229) DB16 — a registry drafted for every system with none, from its tree; not in force until he accepts it
+  'test-self-building-loop.test.js', // 0.60.255 (from brave-cori 0.60.225) SL4 the loop (build, land by his rule, close, next; budget, three misses, decisions skipped) and SL5 his rule B; LP-05 in Clear Glass
+  'test-evidence-close.test.js', // 0.60.224 SL2 — an open phase closes by evidence, its own (or file-specific) tests passing; dry run first; EC-05 in Clear Glass
+  'test-phase-close.test.js', // 0.60.223 SL1 — a proven, landed phase closes itself; undoing its change reopens it (lib/phase-close.js); PC-06 in Clear Glass
+  'test-build-queue.test.js', // 0.60.222 SL0 — what can be built now, and why every other open phase cannot (lib/build-queue.js); BQ-05 in Clear Glass
   'test-roadmap-import.test.js', // 0.60.199 SD17 — a project's own roadmap (phases.json / PHASEMAP.md) imported as a phasemap, so it continues; RI-05 in Clear Glass
   'test-mastermind-ready.test.js', // 0.60.200 SD18 — what Idearium needed to work on MASTERMIND: wrapper folder, primary roadmap, the project's own test runner, integrity notes that fit
   'test-any-project-tests.test.js', // 0.60.201 — "do the tests pass" for any project: npm, its own runner, Gradle, Maven, pytest, Cargo, Go, make; a missing tool said
@@ -451,17 +460,34 @@ const SUITES = [
   'test-economy-resume.test.js',    // 0.60.165 AB1 — a build that exhausted only on time-bound holds (economy/rate-limit/no-RAM) is retried when the slot frees; never a real failure
   'test-cos-run-target.test.js',     // 0.60.166 CT1 — the gate's test runs inside COS's process sandbox (clean env, timeout, output cap); portable, no KVM needed
   'test-tf-already-done.test.js',      // 0.60.167 — a phase whose files already exist is not stuck forever on test_first:require (TF.decide: passes-already+exists = already satisfied)
+  'test-autofill-learned.test.js',     // 0.60.225 JA1 — the autofill matcher consults a per-site learned map (a picked field fills every time); works for micro1/Mercor/Turing/etc
+  'test-architecture-migrate.test.js',  // 0.60.234 RF0/RF1 — the refactor tool: every folder outside the 15 systems gets a home from its edges, as a DAG-clean phasemap
+  'test-autofill-learn-macro.test.js',  // 0.60.232 JA5 — the pick is also a macro + .macro node; a real page: label → box → selector-check's selector
+  'test-cg-agent-doors.test.js',  // 0.60.251 AD1–AD5 + SI1 — autofill/gig/macros reachable by agents, co-pilot and rows; no userscript on a sign-in page
+  'test-nexus-update.test.js',  // 0.60.252 UP1–UP4 — update Nexus from GitHub (git now, COS the end state): check, apply, rollback, the hat's tool, the page in Clear Glass
+  'test-eros-hooks.test.js',  // 0.60.253 ER1–ER4 — ErosmancerOS into Snowflake, the accounts and the DOM mutator; the right tab or none
+  'test-autofill-learn-ui.test.js',     // 0.60.231 JA4 — the learn-loop on screen (Clear Glass): Pick what a fill could not place; Fields it learned, with Forget
+  'test-autofill-learn-pick.test.js',   // 0.60.230 JA3 — the element picker on a missed field: needsPick, a stable unique key, saved per-site, filled again
+  'test-autofill-learn-save.test.js',   // 0.60.226 JA2 — a picked field saves per-origin to site-settings (autofill.field.<key>) and the fill path reads it back
   'test-stream-fallback.test.js',  // 0.60.191 R1/I1 — the DOM mutator's stream at the node anchor, kept as a partial .response; the last fallback before a re-send
   'test-approval-chain.test.js',  // 0.60.190 APV — an approved change: its entry in the Versionium commit of its diff, the change log route/row/drawer, the orchestrator's ledger
   'test-phase-census.test.js',  // 0.60.188 CNS1 — every phase judged against its evidence; short ids, mapping commits and map citations are not evidence
   'test-pipeline-root-causes.test.js',  // 0.60.170 RC1-RC4 — watcher EPERM never kills a kernel; linear node scan; Windows-safe node names; agent file names guarded
   'test-verify-first.test.js',          // 0.60.171 VF1 CB1 CB2 SM1 RC4b — check as it is before any agent; Gemini's five-part brief with the axioms; gemini first; agent self-models; labelled files archived
   'test-phase-dag.test.js',             // 0.60.172 DG3 — every phase of every phasemap in one DAG: cycles, dangling, undeclared, layers, critical path, conflicts; the build refuses an invalid DAG
+  'test-root-findings-not-phases.test.js',  // 0.60.225 NF1 — a root_findings entry is a finding, not a phase: loom marks it, the DAG closes it, the build refuses NOT_A_PHASE
+  'test-phase-groom.test.js',  // 0.60.227 SL3 — the DAG groomed: one depends_on reader, MP1's inferred edges, no cycle, DG1 checks every phase, the route
+  'test-agent-maps-phase.test.js',  // 0.60.228 SL8 — the agent maps one phase Nexus cannot place: checked by code, kept per phase text, past DG2; the run says so
+  'test-phase-nodes-all.test.js',  // 0.60.229 SL9 — every phase a .phase with its .graph beside its owner system; deterministic; the route reads what is written
+  'test-pipeline-sim.test.js',  // 0.60.230 SL10 — the phase build through every failure mode: scratch, extending, every gate; the run says why
   'test-upload-placement.test.js',      // 0.60.173 UP1-UP4 — a zip with an intent placed against the repo, waits for his answer, only his answer writes; his moves learned; the panel in Clear Glass
   'clear-glass-page-map.test.js',       // 0.60.174 PM1-PM4 — the page as blocks → index + chunks → a synthesized map that learns per site → intent → targets (layout in Clear Glass)
   'clear-glass-page-session.test.js',   // 0.60.175 PM5-PM8 — the page map as driver actions, co-pilot tools and commands; attention → Nerve → Ollama feel; live re-map; the panel in Clear Glass
+  'test-raid-port.test.js',             // 0.60.246 GD1 done (BCR2): RAID's one door; RP-04 — Guardian loads none of RAID's code
+  'test-cos-services.test.js',          // 0.60.245 BCR1 (from brave-cori's 0.60.235 SV0) — his engines in COS: the gate grammar (no IPC string run as code), two kernels side by side, upstream unchanged, no secret carried in
   'test-substrate-spec.test.js',        // 0.60.176 — docs/substrate.spec, docs/belief-loop.spec, emerge SPEC_COMPILER compile at full depth, tied to their phases; emerge build order topological
   'test-phase-specs.test.js',           // 0.60.176 PS1 — each phase specced again with its DAG and related files beside its owner; drift checked
+  'test-loom-into-cos.test.js',         // 0.60.248 (from brave-cori 0.60.241 LM0–LM3) and 0.60.249 LM4 — Loom reaches into no other system, and runs in its COS compartment behind the wall (LI-08 the real move-in)
   'test-data-clearup.test.js',          // 0.60.177 DL0/DL1 — every data file placed by docs/data-layout.spec; moved by hash with a manifest; rolled back byte for byte
   'test-readme-generate.test.js',    // 0.60.153 — the README: every system, module and file; every phase; the data; Idearium; every release; under 512 KiB
   'test-ui-editor.test.js',           // 0.60.122 UE0/UE1 — the UI editor: GrapesJS vendored, a repo page opened, edited, saved back (Clear Glass)
@@ -522,6 +548,10 @@ const SUITES = [
   'test-capability-registry.js',
   'test-raid-router.js',
   'test-snr-filter.js',
+  'test-agent-confidence-gate.test.js', // 0.60.238 CG1 — before an agent acts, <75% confidence obtains context (worksurface, deps, find, ask-user LAST)
+  'test-framework-trial-deploy.test.js', // 0.60.247 AU2 — the framework trial deploys itself (collect answers; judging stays blind/human)
+  'test-flow-sources.test.js',           // 0.60.248 BX2 — the BrainOS FlowGraph backend (phases+DAG, runs, mesh; each source best-effort, named on failure)
+  'test-automation-registry.test.js',    // 0.60.249 AU1 — the automation union: one neutral door over the six sources; absent named, not thrown; run records under the source
   'test-ui-registry.js',
   // Added 2026-07-06 — built alongside cortex/core/raid/snr-filter.js and
   // the real roleConfidence/topologicalProximity fitness terms this pass.

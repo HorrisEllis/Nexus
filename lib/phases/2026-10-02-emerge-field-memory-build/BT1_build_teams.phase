@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+context: pipeline phase BT1_build_teams of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: BT1_build_teams (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792878421502
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878421502
+lastSeenAt: 1792878421502
+fingerprint: null
+payload:
+  id: BT1_build_teams
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/tool-forge.js
+    - lib/hat-forge.js
+    - lib/contract-queue.js
+    - idearium/api/index.js
+  depends_on:
+    - GA1_guardian_source_of_truth
+    - CB1_cfr_build_logic
+    - SH1_shadow_space
+  blocks: []
+  spec: null
+  graph: e33cdadfdb0a4366

@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL10_nexus_roadmap_html_files:80b8c025c01b3474
+type: graph
+id: phase:BL10_nexus_roadmap_html_files:80b8c025c01b3474
+context: dependency graph of phase BL10_nexus_roadmap_html_files
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675413
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675413
+lastSeenAt: 1792787675413
+fingerprint: null
+payload:
+  for: BL10_nexus_roadmap_html_files
+  kind: phase
+  repo: null
+  hash: 80b8c025c01b3474
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-08-23-backlog-phasemap.spec::BL9_per_system_phasemap_folders
+    dependents: []
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL8_docs_consolidation
+      - docs/2026-08-23-backlog-phasemap.spec::BL9_per_system_phasemap_folders
+    downstream: []
+    blockedBy:
+      - docs/2026-08-23-backlog-phasemap.spec::BL9_per_system_phasemap_folders
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by BL9_per_system_phasemap_folders
+      - 'depends on (1): BL9_per_system_phasemap_folders · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL9_per_system_phasemap_folders
+        kind: declared

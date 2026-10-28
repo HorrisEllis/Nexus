@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-infrastructure-migration-phasemap.spec::IM5_each_system_to_the_template
+type: phase
+id: docs_2026-10-17-infrastructure-migration-phasemap.spec::IM5_each_system_to_the_template
+context: >-
+  pipeline phase IM5_each_system_to_the_template of
+  docs/2026-10-17-infrastructure-migration-phasemap.spec
+intent: null
+summary: IM5_each_system_to_the_template (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677794
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677794
+lastSeenAt: 1792787677794
+fingerprint: null
+payload:
+  id: IM5_each_system_to_the_template
+  map: docs/2026-10-17-infrastructure-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/boundary.js
+  depends_on:
+    - IM1_the_shape_census_as_a_command
+    - IM3_wire_what_exists
+    - IM4_the_kernel_boundary
+  blocks: []
+  spec: null
+  graph: aebf66ab8872db55

@@ -209,7 +209,7 @@ spec:
       systems: [loom, emerge, emergence, warp]
       value: { score: 4, cost: M, for: [foundation], why: "everything sits on it; brings in main and fixes the 38-versions-stale component registry" }
       status: "DONE (1.7.14, 0.39.319) — (1) and (2) at 1.7.3. (3) emergence/ in beside emerge/; warp/ forked to 1.5.0 at 0.39.318 (additive). Emergence's tests read StreamLog's gateClaimed/eventType, which Nexus's StreamLog had renamed to claimed/type; both names now kept. Emergence 155/155 (the upload itself runs 155, not the 157 written above), WARP 43/43, WARP consumers green; tests/modules/test-emergence-and-warp-suites.test.js. warp/test/dispatch.test.js needs siso_ref/, absent — failed before the fork too. (4) docs/emerge-copies-divergence.md. Not yet: emergence in loom (EV0 adds it to loom's systems)."
-      files: [loom/data/registry.json, loom/data/events.json, emergence/, warp/, docs/emerge-copies-divergence.md]
+      files: [loom/data/registry.json, loom/data/events.json, lib/emergence/, lib/warp/, docs/emerge-copies-divergence.md]
       does: >-
         (1) This branch brought in line with main 0.39.300 (a merge, main's tree wins; this branch's 0.39.298
         Architect stays in history — main's 0.39.299 rebuild supersedes it). (2) loom/data/registry.json regenerated
@@ -225,7 +225,7 @@ spec:
       value: { score: 4, cost: M, for: [quality, foundation], why: "drift stops piling up: an undeclared event or route fails the suite" }
       status: "DONE (1.7.15, 0.39.320) — (1) warp has no taxonomy: it emits no event of its own (its Streams carry their callers' events) and ET1 refuses an empty one; said in warp/interaction-contract.json. (2) cos, emerge and warp interaction-contract.json, projected from their servers (cos: vaultd only; warp: none). (3) lib/route-contract-check.js — served and declared must match — in `nexus contracts check` and loom. Found, not fixed: emerge-ide's POST /api/codegen is unreachable (the POST block answers first; `method` undefined), marked reachable:false. Emergence now in loom (70 components, 0 edges lost) and the atlas."
       depends_on: [EM0_ground]
-      files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
+      files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, lib/emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, lib/warp/interaction-contract.json, lib/emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
       does: >-
         E14–E16 made real before any phase uses them. (1) An event-taxonomy.js in the ET1 shape for each system that has
         none and that this map touches — written from the events each system ALREADY emits (read from its bus.emit /
@@ -267,7 +267,7 @@ spec:
       value: { score: 3, cost: L, for: [ownership, foundation], why: "his constraint field as code; the deterministic core every other phase leans on" }
       status: DONE (1.7.16, 0.39.321) — emerge/core/ (field, constraint, transition, observation, lens, gap, history, level, budget, seed, index) and emerge/spec/emerge-core.spec; tests/modules/test-emerge-core.test.js 6/6 is the proof. Ids are drawn from the seed and the history holds logical ticks only, so one seed replays byte-identical. Soft and probabilistic constraints permit a violation at its cost; every other type refuses.
       depends_on: [EM0_ground, EV0_contracts_for_every_system]
-      files: [emerge/core/field.js, emerge/core/constraint.js, emerge/core/transition.js, emerge/core/observation.js, emerge/core/lens.js, emerge/core/gap.js, emerge/core/history.js, emerge/core/level.js, emerge/core/budget.js, emerge/core/seed.js, emerge/core/index.js, emerge/spec/emerge-core.spec]
+      files: [lib/emerge/core/field.js, lib/emerge/core/constraint.js, lib/emerge/core/transition.js, lib/emerge/core/observation.js, lib/emerge/core/lens.js, lib/emerge/core/gap.js, lib/emerge/core/history.js, lib/emerge/core/level.js, lib/emerge/core/budget.js, lib/emerge/core/seed.js, lib/emerge/core/index.js, lib/emerge/spec/emerge-core.spec]
       does: >-
         EMERGE's core: James's Rheon primitives as code — the constraint field the Architect spec calls layer 0, built
         at last. Field, Constraint, Transition, Observation (with confidence + source + cost), Lens (read-only by
@@ -286,7 +286,7 @@ spec:
       depends_on: [EM1_emerge_core, SH1_shadow_space]
       james: '"maybe fork it, for me." · "and had it back." · "okay but keep updating it. i dont need it until its been converted to cfr"'
       handback: the forked warp/ (1.5.0 at 0.39.318) is kept updated here and zipped back to James only once it has been converted to CFR — not before.
-      files: [warp/core/Link.js, warp/core/Expectation.js, warp/core/Engine.js, warp/core/Ledger.js, warp/core/Axiom.js, warp/adapters/siso-gates.js, warp/spec/warp.spec, warp/MANIFEST.json]
+      files: [lib/warp/core/Link.js, lib/warp/core/Expectation.js, lib/warp/core/Engine.js, lib/warp/core/Ledger.js, lib/warp/core/Axiom.js, lib/warp/adapters/siso-gates.js, lib/warp/spec/warp.spec, lib/warp/MANIFEST.json]
       does: >-
         "okay but siso is taken. by someone. its identicle. i need my own" · "still i want to make warp mine". WARP 2,
         written fresh on Emerge's primitives — not edited from the SISO-shaped files. The atom is the LINK (cause →
@@ -350,7 +350,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [RF1_relational_field]
-      files: [lib/context-atlas.js, cortex/memory/jaa-db.js, emerge/core/transition.js, docs/nexstore-writers.yaml]
+      files: [lib/context-atlas.js, cortex/memory/jaa-db.js, lib/emerge/core/transition.js, docs/nexstore-writers.yaml]
       does: >-
         E5. Every memory write — chat logs, agent memory, hat memory, crystals, fix map, case library, vector memory —
         goes Observation → constraints → Transition → History. Starts as a dual write beside each existing writer
@@ -397,7 +397,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [MR1_recall_triad_and_context_table]
-      files: [lib/gap-search.js, emergence/vendor/rfr2/liminal/negative-space.js, emergence/vendor/rfr2/liminal/relational-gaps.js]
+      files: [lib/gap-search.js, lib/emergence/vendor/rfr2/liminal/negative-space.js, lib/emergence/vendor/rfr2/liminal/relational-gaps.js]
       does: >-
         Search for what is missing. The negative-space and relational-gap detectors find what is absent; Emerge's
         pressure ("significance of missing structure") and density ("generative potential of a gap") order the gaps;
@@ -454,7 +454,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic]
-      files: [lib/case-library.js, emergence/components/pattern-engine/, lib/repo-hat-memory.js, meta/crystal-lattice.js]
+      files: [lib/case-library.js, lib/emergence/components/pattern-engine/, lib/repo-hat-memory.js, lib/meta/crystal-lattice.js]
       does: >-
         Every converged build's EndStateFirst trace (the conditions that led there, walked backward) is stored as a
         RECIPE in the case library; a failed chain as an ANTI-RECIPE (crystal-lattice's negative match). The pattern
@@ -468,7 +468,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [MR7_recipes, EM2_warp_his_own]
-      files: [warp/dispatch/population.js, emerge/core/constraint.js]
+      files: [lib/warp/dispatch/population.js, lib/emerge/core/constraint.js]
       does: >-
         The boundary moves up. WARP's promote-after-3 generalized: a synthesis, recipe or generated piece that converges
         N times independently (N stated, tunable, never a hidden constant) is promoted INTO the deterministic core — a
@@ -483,7 +483,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2]
-      files: [emergence/vendor/rfr2/liminal/, lib/agent-memory.js]
+      files: [lib/emergence/vendor/rfr2/liminal/, lib/agent-memory.js]
       does: >-
         RFR2's detectors read every agent reply before it counts: assumption (a claim stated as fact — a hallucination
         signal), reversal (contradicting itself), oscillatory (circling — CFR resonance), negative space (what it
@@ -498,7 +498,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [MR9_liminal_on_the_agents]
-      files: [emergence/vendor/rfr2/field/relational.js, lib/repo-hat-memory.js]
+      files: [lib/emergence/vendor/rfr2/field/relational.js, lib/repo-hat-memory.js]
       does: >-
         The relational module models "not individuals — the space between them". Pointed at James ↔ each agent:
         meaning, decay, rupture ("I hate that ui you made"), repair ("lets do it"). What each agent learns about how
@@ -557,7 +557,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [EM2_warp_his_own, CF1_cfr_improved_with_rfr2]
-      files: [idearium/spec-engine/blocks.yaml, emerge/compiler/index.js, emerge/compiler/emit.js, intelligence/cfr/contract-verifier.js]
+      files: [idearium/spec-engine/blocks.yaml, lib/emerge/compiler/index.js, lib/emerge/compiler/emit.js, intelligence/cfr/contract-verifier.js]
       does: >-
         "what about using cfr instead of events?" The `events` block becomes CAUSAL: per event caused_by, must_cause
         <event> within <time>, on_fail, payload, axiom. emerge's T1 (no model) compiles it into WARP 2 links and
@@ -573,7 +573,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR2_vector_space_for_the_field]
-      files: [emergence/loop.js]
+      files: [lib/emergence/loop.js]
       does: >-
         Emergence's loop aimed at building: observations = analysis rows; the Lens = the relational field over code
         and spec; the target = the contract's end-state, with its mass; convergence = the build closing on the
@@ -656,7 +656,7 @@ spec:
       status: 'LATER — off the path; partly built — lib/shadow.js is live in phase builds (N22) (declutter 2026-10-09)'
       status_before: "PARTIAL (1.7.17, 0.39.322) — (2) done: lib/shadow-space.js — a change acts in a COS workspace branch with its shadow declared; commit() runs the test inside the space itself, settles the shadow, and merges fast-forward only on both passing; otherwise the space is discarded and the real tree untouched; an absent file is a gap with the step as cause. Found and fixed: self_repair's promote trusted a testResult the caller handed in — now only its own test()'s pass opens it. (1) one record with WARP 2's expectation is EM2's; (3) the shadow read is MR9's. Not yet: idearium's codegen writing through a shadow space."
       depends_on: [EM0_ground, EV0_contracts_for_every_system]
-      files: [lib/shadow.js, intelligence/liminal-space/, cos/workspace/, emergence/vendor/rfr2/liminal/shadow.js]
+      files: [lib/shadow.js, intelligence/liminal-space/, cos/workspace/, lib/emergence/vendor/rfr2/liminal/shadow.js]
       does: >-
         "shadow space?" One idea, three uses joined. (1) The SHADOW is the expectation: WARP 2's expectations ARE
         lib/shadow.js's declarations — before a step runs it declares what must exist after; negative space on settle
@@ -1000,7 +1000,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [PH1_phase_runs_end_in_proof, EV0_contracts_for_every_system]
-      files: [emerge/compiler/index.js, emerge/compiler/emit.js, idearium/repo/graph.js, idearium/lib/wiring-gen.js]
+      files: [lib/emerge/compiler/index.js, lib/emerge/compiler/emit.js, idearium/repo/graph.js, idearium/lib/wiring-gen.js]
       does: >-
         James: "I'm saying to generate code." What already runs with no LLM: emerge's T0 (structure) and T1 (typed
         interfaces, gate stubs, wiring, test skeletons) from a spec. Added: the WIRING of a phase generated from its wiring

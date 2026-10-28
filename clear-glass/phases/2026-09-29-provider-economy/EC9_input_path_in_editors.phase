@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-provider-economy-phasemap.spec::EC9_input_path_in_editors
+type: phase
+id: docs_2026-09-29-provider-economy-phasemap.spec::EC9_input_path_in_editors
+context: pipeline phase EC9_input_path_in_editors of docs/2026-09-29-provider-economy-phasemap.spec
+intent: null
+summary: EC9_input_path_in_editors (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676319
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676319
+lastSeenAt: 1792787676319
+fingerprint: null
+payload:
+  id: EC9_input_path_in_editors
+  map: docs/2026-09-29-provider-economy-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/automation/steps.js
+    - clear-glass/src/mesh/automation-engine.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2b376534e7e951b9

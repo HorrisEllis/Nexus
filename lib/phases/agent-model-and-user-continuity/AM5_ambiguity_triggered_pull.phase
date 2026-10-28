@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
+type: phase
+id: docs_agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
+context: pipeline phase AM5_ambiguity_triggered_pull of docs/agent-model-and-user-continuity-phasemap.spec
+intent: null
+summary: AM5_ambiguity_triggered_pull (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678108
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678108
+lastSeenAt: 1792787678108
+fingerprint: null
+payload:
+  id: AM5_ambiguity_triggered_pull
+  map: docs/agent-model-and-user-continuity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-pull.js
+    - lib/agent-system/contracts.js
+    - lib/agent-tools/tools/browser-action.js
+    - cortex/push-recall.js
+    - lib/loom-map.js
+    - lib/agent-tools/tools/browser/browser-action.js
+    - lib/agent-model.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ca63b016e003ffb7

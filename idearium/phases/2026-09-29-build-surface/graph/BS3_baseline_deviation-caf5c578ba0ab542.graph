@@ -1,0 +1,88 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS3_baseline_deviation:caf5c578ba0ab542
+type: graph
+id: phase:BS3_baseline_deviation:caf5c578ba0ab542
+context: dependency graph of phase BS3_baseline_deviation
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676195
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676195
+lastSeenAt: 1792787676195
+fingerprint: null
+payload:
+  for: BS3_baseline_deviation
+  kind: phase
+  repo: null
+  hash: caf5c578ba0ab542
+  nodes:
+    - path: idearium/repo/deviation.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/test-build-surface.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: tests/modules/test-build-surface.api.js
+      role: uses
+      exists: true
+      system: null
+  edges:
+    - from: tests/modules/test-build-surface.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: tests/modules/test-build-surface.test.js
+      to: tests/modules/test-build-surface.api.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/deviation.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS2_file_states
+    dependents:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+      - docs/2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+    upstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS2_file_states
+    downstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS10_settings_and_environment_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+      - docs/2026-09-29-build-surface-phasemap.spec::BS18_sync_ci_theme
+      - docs/2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+      - docs/2026-09-29-build-surface-phasemap.spec::BS5_spec_to_phasemap
+      - docs/2026-09-29-build-surface-phasemap.spec::BS6_build_plan
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+      - docs/2026-09-29-build-surface-phasemap.spec::BS8_files_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS9_spec_and_phase_build_ui
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+      - docs/2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): BS2_file_states'
+      - >-
+        needed by (2): BS7_api, BS4_environment_check · all downstream 10 · finishing it unlocks
+        BS7_api, BS4_environment_check
+    edges:
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS2_file_states
+        kind: declared

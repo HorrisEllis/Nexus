@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM9_deterministic_agent_switch_cli:e66e4bcde0f0b933
+type: graph
+id: phase:LM9_deterministic_agent_switch_cli:e66e4bcde0f0b933
+context: dependency graph of phase LM9_deterministic_agent_switch_cli
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675543
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675543
+lastSeenAt: 1792787675543
+fingerprint: null
+payload:
+  for: LM9_deterministic_agent_switch_cli
+  kind: phase
+  repo: null
+  hash: e66e4bcde0f0b933
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM10_per_agent_wake_words
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM11_copilot_ollama_guardian_toggle
+    upstream: []
+    downstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM10_per_agent_wake_words
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM11_copilot_ollama_guardian_toggle
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM10_per_agent_wake_words
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM11_copilot_ollama_guardian_toggle
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): LM10_per_agent_wake_words, LM11_copilot_ollama_guardian_toggle · finishing it
+        unlocks LM10_per_agent_wake_words, LM11_copilot_ollama_guardian_toggle
+    edges: []

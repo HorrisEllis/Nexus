@@ -204,11 +204,53 @@ class AutofillStore {
     return { ...updated };
   }
 
+  // §AT1 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." An imported profile keeps its id (so a second
+  // import of the same file replaces, not doubles), and its fields are checked as createProfile checks them (src/autofill/transfer.js).
+  putProfile(p = {}) {
+    const fields = p.fields || {}, documents = p.documents || {};
+    const fieldCheck = _validateFields(fields); if (fieldCheck.error) return fieldCheck;
+    const docCheck = _validateDocuments(documents); if (docCheck.error) return docCheck;
+    const id = typeof p.id === 'string' && p.id.trim() ? p.id.trim() : randomUUID();
+    const now = Date.now();
+    const profile = { id, label: p.label || `Profile ${Object.keys(this.data.profiles || {}).length + 1}`, fields: { ...fields }, documents: { ...documents },
+      createdAt: p.createdAt || now, updatedAt: p.updatedAt || now };
+    this.data = { ...this.data, profiles: { ...this.data.profiles, [id]: profile } };
+    this._persist();
+    return { ...profile };
+  }
+
+  /** replaceProfiles(list) — the whole set at once: an import's undo puts back exactly what was there */
+  replaceProfiles(list = []) {
+    const profiles = {}; for (const p of list) if (p && p.id) profiles[p.id] = p;
+    this.data = { ...this.data, profiles };
+    this._persist();
+    return { ok: true, profiles: Object.keys(profiles).length };
+  }
+
   deleteProfile(id) {
     if (!this.data.profiles?.[id]) return { error: `no autofill profile "${id}"` };
     const { [id]: _removed, ...rest } = this.data.profiles;
     this.data = { ...this.data, profiles: rest };
     this._persist();
+    return { ok: true, id };
+  }
+
+  // §AF1 2026-10-26 — James, running Nexus: copilot autofill failed "no autofill profile 'null'" because there is no active-
+  // profile concept — a fill with no explicit profile passed null. activeProfile() resolves THE profile every fill (copilot,
+  // the context menu, the inline chip) uses when none is named: the one set default, else the sole one, else the first; and it
+  // NEVER returns null — no profile is a clean { ok:false, reason:'no-profile' } the UI can act on (offer "create a profile").
+  _defaultRow() { return this._defJaa || (this._defJaa = new JaaRows('cg_autofill_default', {})); }
+  activeProfile() {
+    const list = this.listProfiles();
+    if (!list.length) return { ok: false, reason: 'no-profile' };
+    let defId = null; try { const r = this._defaultRow().load(); defId = r && r[0] && r[0].profileId; } catch (_) {}
+    const chosen = (defId && this.getProfile(defId)) || list[0];   // default → sole/first (list is sorted by createdAt)
+    return { ok: true, profile: chosen, profileId: chosen.id, isDefault: chosen.id === defId };
+  }
+  setDefault(id) {
+    if (!this.getProfile(id)) return { ok: false, error: `no autofill profile "${id}"` };
+    try { this._defaultRow().replaceAll([{ id: 'default', profileId: id, at: Date.now() }]); }
+    catch (e) { return { ok: false, error: e.message }; }
     return { ok: true, id };
   }
 }

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
+context: pipeline phase ST1_settings of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: ST1_settings (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822476903
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476903
+lastSeenAt: 1792822476903
+fingerprint: null
+payload:
+  id: ST1_settings
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/settings.html
+    - idearium/api/index.js
+  depends_on:
+    - EM1_emerge_core
+    - EV0_contracts_for_every_system
+  blocks: []
+  spec: null
+  graph: f936bfb1bd8f266d

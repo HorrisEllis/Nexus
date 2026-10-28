@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_loom-phasemap-section-phasemap.spec::LP1_phasemap_scanner
+type: phase
+id: docs_loom-phasemap-section-phasemap.spec::LP1_phasemap_scanner
+context: pipeline phase LP1_phasemap_scanner of docs/loom-phasemap-section-phasemap.spec
+intent: null
+summary: LP1_phasemap_scanner (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792879046158
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879046158
+lastSeenAt: 1792879046158
+fingerprint: null
+payload:
+  id: LP1_phasemap_scanner
+  map: docs/loom-phasemap-section-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/phasemap-map.js
+    - loom/scanners/spec-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2709f2d3c5318d31

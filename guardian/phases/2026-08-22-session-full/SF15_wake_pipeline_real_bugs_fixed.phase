@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF15_wake_pipeline_real_bugs_fixed
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF15_wake_pipeline_real_bugs_fixed
+context: pipeline phase SF15_wake_pipeline_real_bugs_fixed of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF15_wake_pipeline_real_bugs_fixed (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675374
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675374
+lastSeenAt: 1792787675374
+fingerprint: null
+payload:
+  id: SF15_wake_pipeline_real_bugs_fixed
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/nexus-hey-claude.user.js
+    - guardian/userscript-nexus-wake.js
+  depends_on:
+    - SF14_wake_pipeline_real_architecture
+  blocks: []
+  spec: null
+  graph: 31df01244706d8fa

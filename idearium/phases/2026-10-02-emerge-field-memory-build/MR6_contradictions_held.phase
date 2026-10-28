@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR6_contradictions_held
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR6_contradictions_held
+context: pipeline phase MR6_contradictions_held of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: MR6_contradictions_held (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676632
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676632
+lastSeenAt: 1792787676632
+fingerprint: null
+payload:
+  id: MR6_contradictions_held
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - RF1_relational_field
+    - MR1_recall_triad_and_context_table
+  blocks: []
+  spec: null
+  graph: 66efe147c088270c

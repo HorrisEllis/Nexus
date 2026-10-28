@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+type: phase
+id: docs_2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+context: pipeline phase LM5_the_ways_in of docs/2026-10-24-loom-into-cos-phasemap.spec
+intent: null
+summary: LM5_the_ways_in (backend) — 19 file(s)
+system: idearium
+tags: []
+exported_at: 1792879045936
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879045936
+lastSeenAt: 1792879045936
+fingerprint: null
+payload:
+  id: LM5_the_ways_in
+  map: docs/2026-10-24-loom-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - lib/pulse.js
+    - ollama/routes/generate.js
+    - lib/ollama-port.js
+    - loom/lib/store.js
+    - lib/system-store.js
+    - lib/agent-build-loop.js
+    - loom/templates/cos-compartment.js
+    - lib/system-boundary.js
+    - lib/cos-bridge.js
+    - cortex/memory/jaa-db.js
+    - lib/gap-field.js
+    - loom/server.js
+    - architect/service.js
+    - copilot/diagnostics.js
+    - lib/nexus/nexus-connect.js
+    - lib/ui/home/areas/agent-suite.js
+    - cos/compartment/process-runner.js
+    - lib/agent-tools/tools/sandbox/cos-compartment.js
+    - idearium/repo/nexus-self.js
+  depends_on:
+    - LM4_the_seal_and_into_its_compartment
+  blocks: []
+  spec: null
+  graph: c1e1983fe6a5fe52

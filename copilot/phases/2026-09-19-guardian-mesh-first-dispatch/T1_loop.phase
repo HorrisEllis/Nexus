@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::T1_loop
+type: phase
+id: docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::T1_loop
+context: pipeline phase T1_loop of docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+intent: null
+summary: T1_loop (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753902
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753902
+lastSeenAt: 1792841753902
+fingerprint: null
+payload:
+  id: T1_loop
+  map: docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/intents.js
+    - copilot/lib/autonomy-router.js
+    - copilot/lib/grammar-router.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2b262e7ed997a051

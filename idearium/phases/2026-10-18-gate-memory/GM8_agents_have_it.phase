@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-gate-memory-phasemap.spec::GM8_agents_have_it
+type: phase
+id: docs_2026-10-18-gate-memory-phasemap.spec::GM8_agents_have_it
+context: pipeline phase GM8_agents_have_it of docs/2026-10-18-gate-memory-phasemap.spec
+intent: null
+summary: GM8_agents_have_it (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792820508003
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820508003
+lastSeenAt: 1792820508003
+fingerprint: null
+payload:
+  id: GM8_agents_have_it
+  map: docs/2026-10-18-gate-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+    - lib/agent-tools/tool-catalog.js
+  depends_on:
+    - GM5_the_context_ladder
+    - GM7_the_context_panel_per_gate
+  blocks: []
+  spec: null
+  graph: e98b0bbe016313f7

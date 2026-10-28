@@ -1,0 +1,262 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ3_repair_with_the_checks_own_words:110d36f958db9933
+type: graph
+id: phase:RQ3_repair_with_the_checks_own_words:110d36f958db9933
+context: dependency graph of phase RQ3_repair_with_the_checks_own_words
+intent: null
+summary: 27 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755265
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755265
+lastSeenAt: 1792841755265
+fingerprint: null
+payload:
+  for: RQ3_repair_with_the_checks_own_words
+  kind: phase
+  repo: null
+  hash: 110d36f958db9933
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/phase-plan.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-record.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/capability-spec.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/model-door.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/verify-first.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/work-funnel.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-expectation-tests.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-model-fit-ladder.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/lib/job-retry.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/capability-spec.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/verify-first.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/work-funnel.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: tests/modules/test-expectation-tests.test.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/agent-record.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-model-fit-ladder.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+  crossings:
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ2_the_generation_failure_vocabulary_and_index
+    dependents:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ4_escalate_on_the_checks_and_keep_the_lesson
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ2_the_generation_failure_vocabulary_and_index
+    downstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ16_hypotheses_in_parallel
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ18_test_and_attack_intents
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ20_the_budget_meter
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ4_escalate_on_the_checks_and_keep_the_lesson
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ5_the_small_model_baseline
+    blockedBy:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ2_the_generation_failure_vocabulary_and_index
+    unlocks:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ4_escalate_on_the_checks_and_keep_the_lesson
+    conflicts:
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+        files:
+          - lib/phase-plan.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ25_progress_is_evidence_not_activity
+        files:
+          - idearium/api/index.js
+    dangling: []
+    lines:
+      - >-
+        layer 3 · blocked by RQ1_the_verifier_library,
+        RQ2_the_generation_failure_vocabulary_and_index
+      - >-
+        depends on (2): RQ1_the_verifier_library, RQ2_the_generation_failure_vocabulary_and_index ·
+        all upstream 3
+      - >-
+        needed by (1): RQ4_escalate_on_the_checks_and_keep_the_lesson · all downstream 8 · finishing
+        it unlocks RQ4_escalate_on_the_checks_and_keep_the_lesson
+      - 'same files as RQ9_the_chunked_contract with no order between them: lib/phase-plan.js'
+      - >-
+        same files as RQ25_progress_is_evidence_not_activity with no order between them:
+        idearium/api/index.js
+    edges:
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+        kind: declared
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ2_the_generation_failure_vocabulary_and_index
+        kind: declared

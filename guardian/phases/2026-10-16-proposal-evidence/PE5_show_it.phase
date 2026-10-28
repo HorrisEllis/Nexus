@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-proposal-evidence-phasemap.spec::PE5_show_it
+type: phase
+id: docs_2026-10-16-proposal-evidence-phasemap.spec::PE5_show_it
+context: pipeline phase PE5_show_it of docs/2026-10-16-proposal-evidence-phasemap.spec
+intent: null
+summary: PE5_show_it (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677732
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677732
+lastSeenAt: 1792787677732
+fingerprint: null
+payload:
+  id: PE5_show_it
+  map: docs/2026-10-16-proposal-evidence-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cd4648aa33c9f614

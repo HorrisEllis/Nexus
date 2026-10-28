@@ -19,7 +19,7 @@
  */
 
 const FILES = [
-  ['ui/forge-shell/index.html', 'nexus.ui.forge-shell',
+  ['lib/ui/forge-shell/index.html', 'nexus.ui.forge-shell',
     ['nexus.loom.server']],
     // §2026-08-13 — the LOOM tab's fetch(`${LOOM}/api/phasemap`) is a real
     // HTTP dependency on loom/server.js, not a require() edge (this is a
@@ -44,15 +44,16 @@ const FILES = [
 function homeFiles() {
   const fs = require('fs'), path = require('path');
   const root = path.resolve(__dirname, '..', '..');
-  const html = fs.readFileSync(path.join(root, 'ui/home/index.html'), 'utf8');
+  const html = fs.readFileSync(path.join(root, 'lib/ui/home/index.html'), 'utf8');
   const rels = [...html.matchAll(/<(?:script[^>]*\ssrc|link[^>]*\shref)="\/(ui\/home\/[^"]+)"/g)].map(m => m[1]);
   const idOf = rel => 'nexus.' + rel.replace(/\.js$/, '').split('/').join('.');
   const out = [];
   for (const rel of rels) {
-    if (!fs.existsSync(path.join(root, rel))) throw new Error(`ui-map: ui/home/index.html links /${rel}, which does not exist`);
-    out.push([rel, idOf(rel), []]);
+    const file = `lib/${rel}`;   // 0.60.241 RF2: the URL is /ui/home/…; the file lives in lib/ui/home/…
+    if (!fs.existsSync(path.join(root, file))) throw new Error(`ui-map: lib/ui/home/index.html links /${rel}, which does not exist (${file})`);
+    out.push([file, idOf(rel), []]);
   }
-  out.push(['ui/home/index.html', 'nexus.ui.home', out.map(f => f[1])]);   // loads each, in link order
+  out.push(['lib/ui/home/index.html', 'nexus.ui.home', out.map(f => f[1])]);   // loads each, in link order
   return out;
 }
 

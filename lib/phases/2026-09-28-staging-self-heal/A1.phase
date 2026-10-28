@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-staging-self-heal-phasemap.spec::A1
+type: phase
+id: docs_2026-09-28-staging-self-heal-phasemap.spec::A1
+context: pipeline phase A1 of docs/2026-09-28-staging-self-heal-phasemap.spec
+intent: null
+summary: A1 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676182
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676182
+lastSeenAt: 1792787676182
+fingerprint: null
+payload:
+  id: A1
+  map: docs/2026-09-28-staging-self-heal-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/SPEC-REGISTRY.spec
+    - tests/modules/test-nexus-atlas-refs.test.js
+  depends_on:
+    - S0
+    - S1
+    - S2
+    - S3
+    - C0
+    - C1
+    - S4
+    - S5
+    - S6
+    - S7
+  blocks: []
+  spec: null
+  graph: 678cef6eb0b005d6

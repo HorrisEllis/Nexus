@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::PM2_index_and_chunks
+type: phase
+id: docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::PM2_index_and_chunks
+context: pipeline phase PM2_index_and_chunks of docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+intent: null
+summary: PM2_index_and_chunks (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677955
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677955
+lastSeenAt: 1792787677955
+fingerprint: null
+payload:
+  id: PM2_index_and_chunks
+  map: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.174
+  files:
+    - clear-glass/src/page/page-map.js
+    - tests/modules/clear-glass-page-map.test.js
+  depends_on:
+    - PM1_blocks
+  blocks: []
+  spec: null
+  graph: 7f6219ca6e083920

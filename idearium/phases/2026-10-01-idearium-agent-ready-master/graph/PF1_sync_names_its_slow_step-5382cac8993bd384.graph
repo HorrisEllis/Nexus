@@ -1,0 +1,183 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PF1_sync_names_its_slow_step:5382cac8993bd384
+type: graph
+id: phase:PF1_sync_names_its_slow_step:5382cac8993bd384
+context: dependency graph of phase PF1_sync_names_its_slow_step
+intent: null
+summary: 19 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822476649
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476649
+lastSeenAt: 1792822476649
+fingerprint: null
+payload:
+  for: PF1_sync_names_its_slow_step
+  kind: phase
+  repo: null
+  hash: 5382cac8993bd384
+  nodes:
+    - path: idearium/repo/nexus-self.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/living-spec.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-nexus-atlas-and-glass.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-inject-approval.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-incremental.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-visible.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-specs-and-ideas-cleanup.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/architecture-spec/registry/nexus-atlas-aggregate.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/db.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/graph.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/cos-bridge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-writer.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/zip-ingest.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/lib/db.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/zip-ingest.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/ledger-writer.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/architecture-spec/registry/nexus-atlas-aggregate.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: tests/modules/test-nexus-atlas-and-glass.test.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: tests/modules/test-nexus-inject-approval.test.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-incremental.test.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-visible.test.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: tests/modules/test-nexus-specs-and-ideas-cleanup.test.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF5_in_place_spec_update
+    upstream: []
+    downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF5_in_place_spec_update
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF6_boot_sync_yields_to_the_person
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF7_pipeline_scoped_to_changes
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF5_in_place_spec_update
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): PF5_in_place_spec_update · all downstream 3 · finishing it unlocks
+        PF5_in_place_spec_update
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

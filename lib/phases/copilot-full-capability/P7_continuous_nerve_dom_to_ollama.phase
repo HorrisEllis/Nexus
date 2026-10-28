@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-full-capability-phasemap.spec::P7_continuous_nerve_dom_to_ollama
+type: phase
+id: docs_copilot-full-capability-phasemap.spec::P7_continuous_nerve_dom_to_ollama
+context: pipeline phase P7_continuous_nerve_dom_to_ollama of docs/copilot-full-capability-phasemap.spec
+intent: null
+summary: P7_continuous_nerve_dom_to_ollama (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792879046072
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879046072
+lastSeenAt: 1792879046072
+fingerprint: null
+payload:
+  id: P7_continuous_nerve_dom_to_ollama
+  map: docs/copilot-full-capability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nerve/index.js
+    - ollama/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a34710fc7c64be7f

@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AU1_addenda_written_for_you:a1c1fe9139548e36
+type: graph
+id: phase:AU1_addenda_written_for_you:a1c1fe9139548e36
+context: dependency graph of phase AU1_addenda_written_for_you
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677463
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677463
+lastSeenAt: 1792787677463
+fingerprint: null
+payload:
+  for: AU1_addenda_written_for_you
+  kind: phase
+  repo: null
+  hash: a1c1fe9139548e36
+  nodes:
+    - path: lib/auto-addendum.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/spec-document.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/api/index.js
+      to: lib/spec-document.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: lib/spec-document.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::GT2_each_gate_tags_and_reports
+    dependents: []
+    upstream:
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::GT2_each_gate_tags_and_reports
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): GT2_each_gate_tags_and_reports'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-automatic-tracking-phasemap.spec::GT2_each_gate_tags_and_reports
+        kind: declared

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-fiverr-ledger-phasemap.spec::PF0_the_ledger
+type: phase
+id: docs_2026-10-15-fiverr-ledger-phasemap.spec::PF0_the_ledger
+context: pipeline phase PF0_the_ledger of docs/2026-10-15-fiverr-ledger-phasemap.spec
+intent: null
+summary: PF0_the_ledger (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792841755524
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755524
+lastSeenAt: 1792841755524
+fingerprint: null
+payload:
+  id: PF0_the_ledger
+  map: docs/2026-10-15-fiverr-ledger-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.53
+  files:
+    - lib/gig-ledger.js
+    - lib/gig-ledger-listener.js
+    - tests/modules/test-gig-ledger.test.js
+    - lib/test-sandbox.js
+    - loom/maps/run-state-map.js
+    - lib/repo-agent.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b01d7279d317b77b

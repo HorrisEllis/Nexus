@@ -1,0 +1,264 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PF6_boot_sync_yields_to_the_person:f8e349719667eff2
+type: graph
+id: phase:PF6_boot_sync_yields_to_the_person:f8e349719667eff2
+context: dependency graph of phase PF6_boot_sync_yields_to_the_person
+intent: null
+summary: 25 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676373
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676373
+lastSeenAt: 1792787676373
+fingerprint: null
+payload:
+  for: PF6_boot_sync_yields_to_the_person
+  kind: phase
+  repo: null
+  hash: f8e349719667eff2
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: service/idearium-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-projects-overview.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-carve.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-undo-any-change.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/core/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: intelligence/spatial/lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/core/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-projects-overview.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-repo-carve.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-undo-any-change.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      fromSystem: service
+      toSystem: idearium
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF5_in_place_spec_update
+    dependents: []
+    upstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF1_sync_names_its_slow_step
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF5_in_place_spec_update
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF8_settings_console_one_cheap_read
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::HC1_hat_agent_to_cos_build
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
+        files:
+          - idearium/api/index.js
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (1): PF5_in_place_spec_update · all upstream 2'
+      - 'needed by (0): —'
+      - >-
+        same files as PF8_settings_console_one_cheap_read with no order between them:
+        idearium/api/index.js
+      - >-
+        same files as DT3_failure_modes_routes_and_preflight with no order between them:
+        idearium/api/index.js
+      - 'same files as CI1_compounding_iterate with no order between them: idearium/api/index.js'
+      - 'same files as HC1_hat_agent_to_cos_build with no order between them: idearium/api/index.js'
+      - >-
+        same files as CP1_copilot_drives_idearium_and_talks_to_its_agents with no order between
+        them: idearium/api/index.js
+      - … and 3 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF5_in_place_spec_update
+        kind: declared

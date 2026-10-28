@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-workshop-codex-rewind-phasemap.spec::RW1_rewind_engine_vm_snapshots
+type: phase
+id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::RW1_rewind_engine_vm_snapshots
+context: >-
+  pipeline phase RW1_rewind_engine_vm_snapshots of
+  docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+intent: null
+summary: RW1_rewind_engine_vm_snapshots (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676757
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676757
+lastSeenAt: 1792787676757
+fingerprint: null
+payload:
+  id: RW1_rewind_engine_vm_snapshots
+  map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/compartment/qmp.js
+    - cos/workspace/index.js
+    - cos/workspace/rewind.js
+    - lib/cos-bridge.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 823f1c8b9650eab6

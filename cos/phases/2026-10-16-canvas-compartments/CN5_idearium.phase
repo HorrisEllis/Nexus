@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-canvas-compartments-phasemap.spec::CN5_idearium
+type: phase
+id: docs_2026-10-16-canvas-compartments-phasemap.spec::CN5_idearium
+context: pipeline phase CN5_idearium of docs/2026-10-16-canvas-compartments-phasemap.spec
+intent: null
+summary: CN5_idearium (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677652
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677652
+lastSeenAt: 1792787677652
+fingerprint: null
+payload:
+  id: CN5_idearium
+  map: docs/2026-10-16-canvas-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE in code by 0.60.82; his own ERAVOS repo on his machine is his data (to confirm)
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cd3acbaaaaf6698a

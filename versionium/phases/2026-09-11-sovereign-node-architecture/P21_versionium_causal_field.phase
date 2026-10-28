@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P21_versionium_causal_field
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P21_versionium_causal_field
+context: >-
+  pipeline phase P21_versionium_causal_field of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P21_versionium_causal_field (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753835
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753835
+lastSeenAt: 1792841753835
+fingerprint: null
+payload:
+  id: P21_versionium_causal_field
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - versionium/lib/causality.js
+    - intelligence/cfr/field.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: dd22948d324dfd20

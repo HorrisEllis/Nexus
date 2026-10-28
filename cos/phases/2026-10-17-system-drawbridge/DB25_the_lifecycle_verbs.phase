@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
+context: pipeline phase DB25_the_lifecycle_verbs of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB25_the_lifecycle_verbs (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792879718676
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879718676
+lastSeenAt: 1792879718676
+fingerprint: null
+payload:
+  id: DB25_the_lifecycle_verbs
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager.js
+    - cos/workspace/vm-control.js
+    - cos/compartment/process-runner.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - DB24_cos_reads_only_the_registry
+  blocks: []
+  spec: null
+  graph: 63526244516a7aba

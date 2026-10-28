@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-observability-tablet-phasemap.spec::OB10_sigma_role_intent_map
+type: phase
+id: docs_nexus-observability-tablet-phasemap.spec::OB10_sigma_role_intent_map
+context: pipeline phase OB10_sigma_role_intent_map of docs/nexus-observability-tablet-phasemap.spec
+intent: null
+summary: OB10_sigma_role_intent_map (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756467
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756467
+lastSeenAt: 1792841756467
+fingerprint: null
+payload:
+  id: OB10_sigma_role_intent_map
+  map: docs/nexus-observability-tablet-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/bda/pendulum.js
+    - intelligence/cfr/sigma.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8dfabb35bc64f400

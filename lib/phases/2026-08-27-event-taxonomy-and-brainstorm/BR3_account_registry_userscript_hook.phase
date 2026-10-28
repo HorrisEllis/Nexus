@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR3_account_registry_userscript_hook
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR3_account_registry_userscript_hook
+context: >-
+  pipeline phase BR3_account_registry_userscript_hook of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: BR3_account_registry_userscript_hook (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675458
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675458
+lastSeenAt: 1792787675458
+fingerprint: null
+payload:
+  id: BR3_account_registry_userscript_hook
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/account-registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8be6d498ddcef7ec

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR1_callto_component_hotswap_catalog
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR1_callto_component_hotswap_catalog
+context: >-
+  pipeline phase BR1_callto_component_hotswap_catalog of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: BR1_callto_component_hotswap_catalog (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675457
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675457
+lastSeenAt: 1792787675457
+fingerprint: null
+payload:
+  id: BR1_callto_component_hotswap_catalog
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TX10_component_registry_discipline
+  blocks: []
+  spec: null
+  graph: e6e82690ee483733

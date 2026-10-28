@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-verification-spine-phasemap.spec::P7_one_raid_verify_entrypoint
+type: phase
+id: docs_raid-verification-spine-phasemap.spec::P7_one_raid_verify_entrypoint
+context: pipeline phase P7_one_raid_verify_entrypoint of docs/raid-verification-spine-phasemap.spec
+intent: null
+summary: P7_one_raid_verify_entrypoint (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678322
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678322
+lastSeenAt: 1792787678322
+fingerprint: null
+payload:
+  id: P7_one_raid_verify_entrypoint
+  map: docs/raid-verification-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/net/qbittorrent.js
+    - clear-glass/src/providers/registry.js
+    - cortex/core/raid/index.js
+    - lib/execution-pipeline.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f6475ea7b7f6cac4

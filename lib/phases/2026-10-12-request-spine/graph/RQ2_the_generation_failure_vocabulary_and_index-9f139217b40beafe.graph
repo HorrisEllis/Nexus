@@ -1,0 +1,255 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ2_the_generation_failure_vocabulary_and_index:9f139217b40beafe
+type: graph
+id: phase:RQ2_the_generation_failure_vocabulary_and_index:9f139217b40beafe
+context: dependency graph of phase RQ2_the_generation_failure_vocabulary_and_index
+intent: null
+summary: 27 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755263
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755263
+lastSeenAt: 1792841755263
+fingerprint: null
+payload:
+  for: RQ2_the_generation_failure_vocabulary_and_index
+  kind: phase
+  repo: null
+  hash: 9f139217b40beafe
+  nodes:
+    - path: lib/agent-capability-profile.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-record.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/failure-vocab.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/person-model/index.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cos/kernel.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: diagnostic/lib/diagnostic-contract.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/lib/ncp-handler.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/model-door.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-model-fit-ladder.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/job-retry.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-store.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-model-fit-ladder.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: copilot/lib/person-model/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: cos/kernel.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/lib/diagnostic-contract.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/component-ledger.js
+      kind: requires
+  crossings:
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/component-ledger.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+    dependents:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ3_repair_with_the_checks_own_words
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ24_the_gate_transaction
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+    downstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ16_hypotheses_in_parallel
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ18_test_and_attack_intents
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ20_the_budget_meter
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ24_the_gate_transaction
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ3_repair_with_the_checks_own_words
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ4_escalate_on_the_checks_and_keep_the_lesson
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ5_the_small_model_baseline
+    blockedBy:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ17_observe_by_request
+        files:
+          - lib/component-ledger.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ26_comparison_and_drift_on_real_signals
+        files:
+          - lib/component-ledger.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by RQ1_the_verifier_library
+      - 'depends on (1): RQ1_the_verifier_library · all upstream 2'
+      - >-
+        needed by (2): RQ3_repair_with_the_checks_own_words, RQ24_the_gate_transaction · all
+        downstream 10
+      - 'same files as RQ17_observe_by_request with no order between them: lib/component-ledger.js'
+      - >-
+        same files as RQ26_comparison_and_drift_on_real_signals with no order between them:
+        lib/component-ledger.js
+    edges:
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+        kind: declared

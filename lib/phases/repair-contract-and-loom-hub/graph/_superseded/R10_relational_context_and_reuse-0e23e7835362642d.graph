@@ -1,0 +1,320 @@
+envelope: 1
+uuid: nexus-export-graph-phase:R10_relational_context_and_reuse:0e23e7835362642d
+type: graph
+id: phase:R10_relational_context_and_reuse:0e23e7835362642d
+context: dependency graph of phase R10_relational_context_and_reuse
+intent: null
+summary: 39 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678344
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678344
+lastSeenAt: 1792787678344
+fingerprint: null
+payload:
+  for: R10_relational_context_and_reuse
+  kind: phase
+  repo: null
+  hash: 0e23e7835362642d
+  nodes:
+    - path: cortex/snapshot/index.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/relational-field.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/agent-build-learning.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/chunk-build-orchestrator.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/chunker/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/diagnostic-causal.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/relational-context.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/replay-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/stub-scanner.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/ui/index.html
+      role: changes
+      exists: true
+      system: loom
+    - path: ui/tv-shell/index.html
+      role: changes
+      exists: true
+      system: ui
+    - path: copilot/lib/person-model/index.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cos/kernel.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: diagnostic/lib/diagnostic-contract.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/spec-engine/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/chunk-service.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/command-builder.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/constant-autonomy.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-spec-library.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: idearium/lib/cortex-listeners.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/db.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: siso/core/index.js
+      role: uses
+      exists: true
+      system: siso
+  edges:
+    - from: lib/relational-context.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: lib/tool-index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-store.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: idearium/index.js
+      to: siso/core/index.js
+      kind: requires
+    - from: idearium/index.js
+      to: idearium/lib/cortex-listeners.js
+      kind: requires
+    - from: idearium/index.js
+      to: idearium/lib/db.js
+      kind: requires
+    - from: idearium/index.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/chunker/index.js
+      kind: requires
+    - from: lib/chunk-service.js
+      to: lib/chunker/index.js
+      kind: requires
+    - from: tests/modules/test-spec-library.test.js
+      to: lib/chunker/index.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/command-builder.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: copilot/lib/person-model/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: cos/kernel.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/lib/diagnostic-contract.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/component-ledger.js
+      kind: requires
+  crossings:
+    - from: lib/relational-context.js
+      to: loom/schema/index.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/tool-index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/component-ledger.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+    - from: idearium/index.js
+      to: siso/core/index.js
+      fromSystem: idearium
+      toSystem: siso
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R7_fault_taxonomy_reconnection
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R2_real_snapshot_rollback
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R8_ui_diagnostic_surfaces_wired_together
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R1_repair_contract_schema
+    dependents: []
+    upstream:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R0_phasemap_history_in_cortex
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R1_repair_contract_schema
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R2_real_snapshot_rollback
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R7_fault_taxonomy_reconnection
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R8_ui_diagnostic_surfaces_wired_together
+    downstream: []
+    blockedBy:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R2_real_snapshot_rollback
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by R2_real_snapshot_rollback
+      - >-
+        depends on (6): R4_loom_ledger_awareness, R7_fault_taxonomy_reconnection,
+        R2_real_snapshot_rollback, R5_loom_visual_map, R8_ui_diagnostic_surfaces_wired_together,
+        R1_repair_contract_schema · all upstream 7
+      - 'needed by (0): —'
+    edges:
+      - from: docs/repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
+        kind: inferred
+      - from: docs/repair-contract-and-loom-hub-phasemap.spec::R7_fault_taxonomy_reconnection
+        kind: inferred
+      - from: docs/repair-contract-and-loom-hub-phasemap.spec::R2_real_snapshot_rollback
+        kind: inferred
+      - from: docs/repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+        kind: inferred
+      - from: docs/repair-contract-and-loom-hub-phasemap.spec::R8_ui_diagnostic_surfaces_wired_together
+        kind: inferred
+      - from: docs/repair-contract-and-loom-hub-phasemap.spec::R1_repair_contract_schema
+        kind: inferred

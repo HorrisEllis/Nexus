@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-synthesis-zoom-versionium-phasemap.spec::VX1_versionium_degrades_not_crashes
+type: phase
+id: docs_2026-10-02-synthesis-zoom-versionium-phasemap.spec::VX1_versionium_degrades_not_crashes
+context: >-
+  pipeline phase VX1_versionium_degrades_not_crashes of
+  docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec
+intent: null
+summary: VX1_versionium_degrades_not_crashes (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754586
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754586
+lastSeenAt: 1792841754586
+fingerprint: null
+payload:
+  id: VX1_versionium_degrades_not_crashes
+  map: docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/index.js
+    - versionium/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 977dab93352999ae

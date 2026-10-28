@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-model-and-user-continuity-phasemap.spec::AM10_thinking_partner_rename_and_ui_builder
+type: phase
+id: docs_agent-model-and-user-continuity-phasemap.spec::AM10_thinking_partner_rename_and_ui_builder
+context: >-
+  pipeline phase AM10_thinking_partner_rename_and_ui_builder of
+  docs/agent-model-and-user-continuity-phasemap.spec
+intent: null
+summary: AM10_thinking_partner_rename_and_ui_builder (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792841756296
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756296
+lastSeenAt: 1792841756296
+fingerprint: null
+payload:
+  id: AM10_thinking_partner_rename_and_ui_builder
+  map: docs/agent-model-and-user-continuity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/reflection.js
+    - copilot/lib/self-model.js
+    - copilot/server.js
+    - cortex/push-recall.js
+    - lib/agent-model.js
+  depends_on:
+    - AM3_open_ended_grounded_conversation
+    - AM7_agent_switch_continuity_and_chat_recall
+  blocks: []
+  spec: null
+  graph: 0304b8ec3f70eeb5

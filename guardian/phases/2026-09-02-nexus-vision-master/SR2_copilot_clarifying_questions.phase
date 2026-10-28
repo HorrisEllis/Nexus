@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::SR2_copilot_clarifying_questions
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR2_copilot_clarifying_questions
+context: >-
+  pipeline phase SR2_copilot_clarifying_questions of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: SR2_copilot_clarifying_questions (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675709
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675709
+lastSeenAt: 1792787675709
+fingerprint: null
+payload:
+  id: SR2_copilot_clarifying_questions
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/ask.js
+    - guardian/lib/jobs.js
+    - lib/intent-hat-router.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fe1ec9e7087e46e1

@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792595037302
+exported_at: 1792787678001
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792595037302
-lastSeenAt: 1792595037302
+firstSeenAt: 1792787678001
+lastSeenAt: 1792787678001
 fingerprint: null
 payload:
   for: APV2_commit_carries_it
@@ -225,7 +225,6 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 035c035515349513
     layer: 2
     deps:
       - docs/2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
@@ -248,8 +247,13 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 035c035515349513 · layer 2
+      - layer 2
       - 'depends on (2): APV1_change_entry, RC7_every_run_names_its_starter · all upstream 4'
       - >-
         needed by (2): APV3_changelog_read, APV4_emit_on_the_ledger · finishing it unlocks
         APV3_changelog_read, APV4_emit_on_the_ledger
+    edges:
+      - from: docs/2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
+        kind: declared
+      - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC7_every_run_names_its_starter
+        kind: declared

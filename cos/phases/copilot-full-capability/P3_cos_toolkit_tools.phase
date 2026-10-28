@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-full-capability-phasemap.spec::P3_cos_toolkit_tools
+type: phase
+id: docs_copilot-full-capability-phasemap.spec::P3_cos_toolkit_tools
+context: pipeline phase P3_cos_toolkit_tools of docs/copilot-full-capability-phasemap.spec
+intent: null
+summary: P3_cos_toolkit_tools (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678160
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678160
+lastSeenAt: 1792787678160
+fingerprint: null
+payload:
+  id: P3_cos_toolkit_tools
+  map: docs/copilot-full-capability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/playground/llm-lab.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 242126ebcb2eda89

@@ -1,0 +1,83 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P8_rewind_replay_tool:ad52bfced684ea88
+type: graph
+id: phase:P8_rewind_replay_tool:ad52bfced684ea88
+context: dependency graph of phase P8_rewind_replay_tool
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678165
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678165
+lastSeenAt: 1792787678165
+fingerprint: null
+payload:
+  for: P8_rewind_replay_tool
+  kind: phase
+  repo: null
+  hash: ad52bfced684ea88
+  nodes:
+    - path: clear-glass/src/driver/url-listener.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/rewind/engine.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/rewind/resume.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/phase2.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/rewind/engine.js
+      kind: requires
+    - from: clear-glass/src/rewind/resume.js
+      to: clear-glass/src/rewind/engine.js
+      kind: requires
+    - from: clear-glass/test/phase2.test.js
+      to: clear-glass/src/rewind/engine.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/driver/url-listener.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/copilot-full-capability-phasemap.spec::P5_clear_glass_url_tools
+    dependents:
+      - docs/copilot-full-capability-phasemap.spec::P11_nexus_help_tool
+    upstream:
+      - docs/copilot-full-capability-phasemap.spec::P5_clear_glass_url_tools
+    downstream:
+      - docs/copilot-full-capability-phasemap.spec::P11_nexus_help_tool
+    blockedBy: []
+    unlocks:
+      - docs/copilot-full-capability-phasemap.spec::P11_nexus_help_tool
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): P5_clear_glass_url_tools'
+      - 'needed by (1): P11_nexus_help_tool · finishing it unlocks P11_nexus_help_tool'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/copilot-full-capability-phasemap.spec::P5_clear_glass_url_tools
+        kind: inferred

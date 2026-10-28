@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV18_cli:9acc4cce06b275dc
+type: graph
+id: phase:MV18_cli:9acc4cce06b275dc
+context: dependency graph of phase MV18_cli
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792820476286
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476286
+lastSeenAt: 1792820476286
+fingerprint: null
+payload:
+  for: MV18_cli
+  kind: phase
+  repo: null
+  hash: 9acc4cce06b275dc
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV21_nexus
+    dependents: []
+    upstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV15_siso
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV19_emerge
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV21_nexus
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV22_warp
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV21_nexus
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by MV21_nexus
+      - 'depends on (1): MV21_nexus · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV21_nexus
+        kind: declared

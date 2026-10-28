@@ -1,0 +1,220 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS16_provider_login_wall:0555ae73a52e7573
+type: graph
+id: phase:BS16_provider_login_wall:0555ae73a52e7573
+context: dependency graph of phase BS16_provider_login_wall
+intent: null
+summary: 25 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822476541
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476541
+lastSeenAt: 1792822476541
+fingerprint: null
+payload:
+  for: BS16_provider_login_wall
+  kind: phase
+  repo: null
+  hash: 0555ae73a52e7573
+  nodes:
+    - path: guardian/lib/dispatcher.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-login.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/userscript-chat-stream.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/userscripts.yaml
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/dispatcher-ping-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/dispatcher-stale-socket.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/spec-parser.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-ping-gate.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-stale-socket.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+  crossings:
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    upstream: []
+    downstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): BS12_release · finishing it unlocks BS12_release'
+    edges: []

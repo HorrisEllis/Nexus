@@ -1,0 +1,32 @@
+<div class="grid3" id="fw-stats"></div>
+<div class="card">
+  <div class="card-title">Banned addresses</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>IP</th><th>Reason</th><th>Hits</th><th>Banned</th><th></th></tr></thead>
+      <tbody id="fw-bans"></tbody>
+    </table>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Ban or whitelist</div>
+  <div class="frow c3">
+    <div><label for="fw-ip">IP address</label><input id="fw-ip" placeholder="203.0.113.9"></div>
+    <div><label for="fw-action">Action</label>
+      <select id="fw-action"><option value="ban">Ban</option><option value="whitelist">Whitelist</option></select></div>
+    <div><label for="fw-reason">Reason</label><input id="fw-reason" placeholder="optional"></div>
+  </div>
+  <div class="actions"><button onclick="panel.addFwRule()">Apply</button></div>
+</div>
+<div class="card">
+  <div class="card-title">Operating system firewall</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:12px">
+    Applies rules with netsh on Windows or ufw/iptables on Linux, so the OS blocks traffic
+    before it reaches the platform.</p>
+  <div class="actions">
+    <button class="sec" onclick="panel.sysfwDetect()">Detect</button>
+    <button class="sec" onclick="panel.sysfwApply()">Apply rules</button>
+    <button class="sec" onclick="panel.sysfwList()">List rules</button>
+  </div>
+  <div id="sysfw-result" style="margin-top:12px;font-size:13px"></div>
+</div>

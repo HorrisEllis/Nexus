@@ -1,0 +1,130 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MC0_recorder_records_the_tab:5b2c303ade2f84c7
+type: graph
+id: phase:MC0_recorder_records_the_tab:5b2c303ade2f84c7
+context: dependency graph of phase MC0_recorder_records_the_tab
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677412
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677412
+lastSeenAt: 1792787677412
+fingerprint: null
+payload:
+  for: MC0_recorder_records_the_tab
+  kind: phase
+  repo: null
+  hash: 5b2c303ade2f84c7
+  nodes:
+    - path: clear-glass/renderer/settings/core.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/zoom.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/page-resolver.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/field.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-memory.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-session.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/reader.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/semantic-tree.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/core/zoom.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/reader.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-session.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-memory.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::NV1_words_to_elements
+    dependents: []
+    upstream:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::NV1_words_to_elements
+    downstream: []
+    blockedBy:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::NV1_words_to_elements
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by NV1_words_to_elements
+      - 'depends on (1): NV1_words_to_elements'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::NV1_words_to_elements
+        kind: inferred

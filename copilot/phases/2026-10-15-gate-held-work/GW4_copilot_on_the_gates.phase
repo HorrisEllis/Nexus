@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW4_copilot_on_the_gates
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW4_copilot_on_the_gates
+context: pipeline phase GW4_copilot_on_the_gates of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW4_copilot_on_the_gates (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677551
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677551
+lastSeenAt: 1792787677551
+fingerprint: null
+payload:
+  id: GW4_copilot_on_the_gates
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/server.js
+    - copilot/adaptive-fulfillment.js
+    - copilot/tool-runtime.js
+    - cortex/core/raid/contract-intake.js
+  depends_on:
+    - GW1_the_baton
+    - GW2_the_run_follows_the_gate
+  blocks: []
+  spec: null
+  graph: 716480a2afed4f07

@@ -1,0 +1,327 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ27_the_reasoning_half_gets_its_home:ed8b75d6432e38bc
+type: graph
+id: phase:RQ27_the_reasoning_half_gets_its_home:ed8b75d6432e38bc
+context: dependency graph of phase RQ27_the_reasoning_half_gets_its_home
+intent: null
+summary: 35 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677390
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677390
+lastSeenAt: 1792787677390
+fingerprint: null
+payload:
+  for: RQ27_the_reasoning_half_gets_its_home
+  kind: phase
+  repo: null
+  hash: ed8b75d6432e38bc
+  nodes:
+    - path: copilot/analysis.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/context-gate.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/context-synthesis.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/registry-components.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/agent-memory.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/case-library.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/routes/opportunity.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/query/context-atlas.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/build-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-component-store.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/diagnostic/loom-scan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/agent-chat-search.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/query-movement.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/query-recall.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/intake.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/prevention.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/context-synthesis.js
+      to: lib/agent-tools/tools/query/query-recall.js
+      kind: requires
+    - from: cortex/core/raid/context-synthesis.js
+      to: lib/agent-tools/tools/query/query-movement.js
+      kind: requires
+    - from: cortex/core/raid/context-synthesis.js
+      to: lib/agent-tools/tools/query/nexus-map.js
+      kind: requires
+    - from: cortex/core/raid/context-synthesis.js
+      to: lib/agent-tools/tools/query/agent-chat-search.js
+      kind: requires
+    - from: cortex/core/raid/context-synthesis.js
+      to: lib/agent-tools/tools/diagnostic/loom-scan.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/prevention.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/officiator.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: cortex/core/raid/officiator.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/build-context.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: tests/modules/test-component-store.test.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: copilot/routes/opportunity.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/context-atlas.js
+      to: lib/context-atlas.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/officiator.js
+      to: copilot/lifeline.js
+      fromSystem: cortex
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: cortex/core/raid/officiator.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ12_the_phase_dag
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ21_the_contract_file_is_its_record
+    dependents: []
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ12_the_phase_dag
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ21_the_contract_file_is_its_record
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+    downstream: []
+    blockedBy:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ12_the_phase_dag
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ21_the_contract_file_is_its_record
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ4_escalate_on_the_checks_and_keep_the_lesson
+        files:
+          - lib/case-library.js
+          - lib/component-store.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ13_the_work_surface_and_provenance
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ17_observe_by_request
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
+        files:
+          - lib/case-library.js
+          - lib/component-store.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ22_the_dependency_boundary_with_invariants_that_run
+        files:
+          - cortex/core/raid/context-gate.js
+          - lib/registry-harness.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ25_progress_is_evidence_not_activity
+        files:
+          - idearium/cli/route-commands.js
+    dangling: []
+    lines:
+      - >-
+        layer 5 · blocked by RQ7_the_context_obligations, RQ9_the_chunked_contract,
+        RQ12_the_phase_dag, RQ21_the_contract_file_is_its_record
+      - >-
+        depends on (4): RQ7_the_context_obligations, RQ9_the_chunked_contract, RQ12_the_phase_dag,
+        RQ21_the_contract_file_is_its_record · all upstream 7
+      - 'needed by (0): —'
+      - >-
+        same files as RQ4_escalate_on_the_checks_and_keep_the_lesson with no order between them:
+        lib/case-library.js, lib/component-store.js
+      - >-
+        same files as RQ13_the_work_surface_and_provenance with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as RQ17_observe_by_request with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as RQ19_what_nexus_can_take_over with no order between them: lib/case-library.js,
+        lib/component-store.js
+      - >-
+        same files as RQ22_the_dependency_boundary_with_invariants_that_run with no order between
+        them: cortex/core/raid/context-gate.js, lib/registry-harness.js
+      - … and 1 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+        kind: declared
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+        kind: declared
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ12_the_phase_dag
+        kind: declared
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ21_the_contract_file_is_its_record
+        kind: declared

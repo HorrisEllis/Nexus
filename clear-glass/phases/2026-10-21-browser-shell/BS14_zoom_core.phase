@@ -7,11 +7,11 @@ intent: null
 summary: BS14_zoom_core (integration) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792502099144
+exported_at: 1792787678026
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792502099144
-lastSeenAt: 1792502099144
+firstSeenAt: 1792787678026
+lastSeenAt: 1792787678026
 fingerprint: null
 payload:
   id: BS14_zoom_core
@@ -31,4 +31,4 @@ payload:
   blocks:
     - MOD-BSH-ZOOM-CORE
   spec: clear-glass/spec/browser-shell.spec
-  graph: 5aa982aa70280429
+  graph: ad165f3fde0be418

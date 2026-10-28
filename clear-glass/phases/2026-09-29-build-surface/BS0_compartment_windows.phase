@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS0_compartment_windows
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS0_compartment_windows
+context: pipeline phase BS0_compartment_windows of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS0_compartment_windows (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676190
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676190
+lastSeenAt: 1792787676190
+fingerprint: null
+payload:
+  id: BS0_compartment_windows
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/main/compartment-window.js
+    - clear-glass/src/preload/compartment-window.js
+    - clear-glass/src/main/index.js
+    - idearium/ui/js/window-chrome.js
+    - idearium/ui/settings.html
+    - idearium/ui/desktop.html
+    - cos/workspace/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 96cfa0a56795fd3f

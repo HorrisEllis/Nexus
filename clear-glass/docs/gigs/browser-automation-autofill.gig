@@ -1,0 +1,71 @@
+# Clear Glass gig file (clearglass.gig/1) — load it in Settings → Autofill → Gig, or in the gig panel.
+format: clearglass.gig/1
+platform: fiverr
+title: I will automate your browser tasks, form filling and data entry
+category: Programming & Tech
+subcategory: Web Automation
+tags:
+  - browser automation
+  - form filling
+  - data entry
+  - macro
+  - electron
+description: >-
+  Filling the same forms or clicking through the same pages every day? I automate it so it happens
+  in seconds, and only does what you approve.
+
+
+  I built the automation layer of my own browser: it learns which box takes which value on each
+  site, records macros, and never submits a form on its own unless you say so.
+
+
+  What I can automate:
+
+  - Filling forms from your data (applications, listings, orders, CRMs)
+
+  - Copying data between websites, spreadsheets and files
+
+  - Recorded click-and-type macros you can run again
+
+  - Checks that stop and ask when a page changes
+
+
+  How it works: you show me the task once (a screen recording is perfect). I build it, show it
+  working on your real page, and hand over the script with a short guide.
+
+
+  Safe by default: it fills, you review, you press submit.
+packages:
+  basic:
+    name: One Form or Page
+    description: Automation of one form or page, with a run guide.
+    deliveryDays: 2
+    revisions: 1
+    price: 40
+  standard:
+    name: Multi-Page Task
+    description: A task across several pages or a spreadsheet, with checks.
+    deliveryDays: 5
+    revisions: 2
+    price: 120
+  premium:
+    name: Full Workflow
+    description: A full repeatable workflow with macros, data import and a guide.
+    deliveryDays: 9
+    revisions: 3
+    price: 300
+faq:
+  - question: Will it submit forms for me?
+    answer: Only if you ask for that. By default it fills everything and leaves the final submit to you.
+  - question: Which sites can you automate?
+    answer: Most sites, where their terms allow it. I will tell you up front if a site forbids automation.
+  - question: What do I need to run it?
+    answer: Usually just Chrome or a small app I provide, with step-by-step instructions.
+requirements:
+  - >-
+    Which pages or forms, and what data goes in them? A screen recording of you doing it once is
+    ideal.
+  - Who will use it, and on what? (Windows, Mac, a server; one person or a team)
+  - What must it always do, and what must it never do?
+  - How will you check that it is done? (the test you will run, or what you will look at)
+  - Please share any files, examples, access or data I need to start.

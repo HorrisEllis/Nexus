@@ -1,0 +1,181 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB15_empty_is_not_built:39cd55ae1d782360
+type: graph
+id: phase:SB15_empty_is_not_built:39cd55ae1d782360
+context: dependency graph of phase SB15_empty_is_not_built
+intent: null
+summary: 19 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676861
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676861
+lastSeenAt: 1792787676861
+fingerprint: null
+payload:
+  for: SB15_empty_is_not_built
+  kind: phase
+  repo: null
+  hash: 39cd55ae1d782360
+  nodes:
+    - path: idearium/repo/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/build-verify.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/test/e2e-pipeline.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-auto-repo-creation.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-loop.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-materialize-physical.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-build-verify.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dangling-hooks-and-idearium-load.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-atlas-and-glass.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-inject-approval.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-incremental.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/testenv/installer.js
+      role: uses
+      exists: true
+      system: cos
+    - path: idearium/lib/db.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/source-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/cos-run.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/build-verify.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: lib/build-verify.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: idearium/repo/index.js
+      to: idearium/lib/db.js
+      kind: requires
+    - from: idearium/repo/index.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: idearium/repo/index.js
+      to: idearium/repo/source-files.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/build-verify.js
+      kind: requires
+    - from: tests/modules/test-build-verify.test.js
+      to: lib/build-verify.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/repo/index.js
+      kind: requires
+    - from: idearium/test/e2e-pipeline.test.js
+      to: idearium/repo/index.js
+      kind: requires
+    - from: tests/modules/idearium-auto-repo-creation.test.js
+      to: idearium/repo/index.js
+      kind: requires
+    - from: tests/modules/idearium-loop.test.js
+      to: idearium/repo/index.js
+      kind: requires
+    - from: tests/modules/idearium-materialize-physical.test.js
+      to: idearium/repo/index.js
+      kind: requires
+    - from: tests/modules/test-dangling-hooks-and-idearium-load.test.js
+      to: idearium/repo/index.js
+      kind: requires
+    - from: tests/modules/test-nexus-atlas-and-glass.test.js
+      to: idearium/repo/index.js
+      kind: requires
+    - from: tests/modules/test-nexus-inject-approval.test.js
+      to: idearium/repo/index.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: idearium/repo/index.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-incremental.test.js
+      to: idearium/repo/index.js
+      kind: requires
+  crossings:
+    - from: lib/build-verify.js
+      to: cos/testenv/installer.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB12_the_registry_is_the_component_list
+    dependents: []
+    upstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB10_reuse_first_keyed_on_the_contract
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB11_each_block_chunked
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB12_the_registry_is_the_component_list
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB9_the_spec_is_a_spec_file
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · ready
+      - 'depends on (1): SB12_the_registry_is_the_component_list · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB12_the_registry_is_the_component_list
+        kind: declared

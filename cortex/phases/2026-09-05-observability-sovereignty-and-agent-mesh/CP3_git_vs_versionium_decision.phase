@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CP3_git_vs_versionium_decision
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CP3_git_vs_versionium_decision
+context: >-
+  pipeline phase CP3_git_vs_versionium_decision of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: CP3_git_vs_versionium_decision (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753750
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753750
+lastSeenAt: 1792841753750
+fingerprint: null
+payload:
+  id: CP3_git_vs_versionium_decision
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5596e1b70a39c284

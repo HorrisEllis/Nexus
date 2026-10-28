@@ -280,6 +280,7 @@
   </div>
   <div class="ctx-group" data-when="page">
     <div class="ctx-label">Clear Glass</div>
+    <div class="ctx-item" role="menuitem" data-action="autofill-page"><span class="ci-ico" data-icon="paste" data-icon-size="16"></span><span class="ci-label">Autofill this page</span></div>
     <div class="ctx-item" role="menuitem" data-action="copilot-page"><span class="ci-ico" data-icon="sparkle" data-icon-size="16"></span><span class="ci-label">Ask Co-pilot about this page</span></div>
     <div class="ctx-item" role="menuitem" data-action="answer-question"><span class="ci-ico" data-icon="eye" data-icon-size="16"></span><span class="ci-label">Answer this question</span></div>
     <div class="ctx-item" role="menuitem" data-action="pick"><span class="ci-ico" data-icon="target" data-icon-size="16"></span><span class="ci-label">Pick element</span></div>
@@ -310,7 +311,7 @@
     <label class="gig-field"><span>What does this gig offer? (one line)</span><textarea id="gig-offer" rows="2" placeholder="e.g. simple booking websites for small businesses"></textarea></label>
     <label class="gig-field"><span>Anything else (optional)</span><input id="gig-extra" placeholder="e.g. fast delivery, beginner-friendly prices"></label>
     <button id="gig-write" class="gig-main">Write the gig</button>
-    <div class="gig-row"><button id="gig-import" title="Load a .gig file (or .gig.json)">Load a gig file…</button><button id="gig-template" title="An empty .gig to fill in">Download template</button><input type="file" id="gig-file" accept=".gig,.yaml,.yml,.json,application/json" hidden></div>
+    <div class="gig-row"><button id="gig-import" title="Load a .gig file (an old .gig.json loads too)">Load a gig file…</button><button id="gig-template" title="An empty .gig to fill in">Download template</button><input type="file" id="gig-file" accept=".gig,.yaml,.yml,.json,application/json" hidden></div>
     <div id="gig-write-status" class="gig-status"></div>
     <div id="gig-actions" hidden><button id="gig-fill" class="gig-main">Fill this Fiverr page</button><button id="gig-export" title="Save this gig as a .gig file">Save gig file</button><button id="gig-copy-all">Copy all</button></div>
     <div id="gig-missing" aria-live="polite"></div>

@@ -1,0 +1,207 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PR2_screenshots_through_clear_glass:3444f6584530ed41
+type: graph
+id: phase:PR2_screenshots_through_clear_glass:3444f6584530ed41
+context: dependency graph of phase PR2_screenshots_through_clear_glass
+intent: null
+summary: 19 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676706
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676706
+lastSeenAt: 1792787676706
+fingerprint: null
+payload:
+  for: PR2_screenshots_through_clear_glass
+  kind: phase
+  repo: null
+  hash: 3444f6584530ed41
+  nodes:
+    - path: clear-glass/src/driver/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: idearium/repo/proof-run.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/adblock/lists.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/handler-registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/bridge-sources.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/host-import.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/kill-switch.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/ipc/handler-registry.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/screen-qa/detector.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/bridge-sources.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/kill-switch.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/host-import.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/proof-run.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+    dependents: []
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV0_fulfil_a_taken_order
+        files:
+          - idearium/repo/proof-run.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+        files:
+          - idearium/repo/proof-run.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+        files:
+          - idearium/repo/proof-run.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+        files:
+          - idearium/repo/proof-run.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::DA1_domain_agnostic_end_states
+        files:
+          - idearium/repo/proof-run.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CL1_the_component_lab
+        files:
+          - idearium/repo/proof-run.js
+    dangling: []
+    lines:
+      - layer 3 · ready
+      - >-
+        depends on (2): PR1_proof_run_the_delivery_checker, GA1_guardian_source_of_truth · all
+        upstream 4
+      - 'needed by (0): —'
+      - >-
+        same files as FV0_fulfil_a_taken_order with no order between them:
+        idearium/repo/proof-run.js
+      - 'same files as LB1_the_end_state_lab with no order between them: idearium/repo/proof-run.js'
+      - >-
+        same files as FM1_mining_failure_modes with no order between them:
+        idearium/repo/proof-run.js
+      - >-
+        same files as RD1_raid_complete_or_build with no order between them:
+        idearium/repo/proof-run.js
+      - >-
+        same files as DA1_domain_agnostic_end_states with no order between them:
+        idearium/repo/proof-run.js
+      - … and 1 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+        kind: declared

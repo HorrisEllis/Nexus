@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_loom-phasemap-section-phasemap.spec::LP3_loom_section
+type: phase
+id: docs_loom-phasemap-section-phasemap.spec::LP3_loom_section
+context: pipeline phase LP3_loom_section of docs/loom-phasemap-section-phasemap.spec
+intent: null
+summary: LP3_loom_section (?) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1792877164147
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877164147
+lastSeenAt: 1792877164147
+fingerprint: null
+payload:
+  id: LP3_loom_section
+  map: docs/loom-phasemap-section-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/maps/phasemap-map.js
+    - loom/server.js
+    - loom/registry-components.js
+    - loom/ui/index.html
+    - loom/test/phasemap-map.test.js
+    - loom/scanners/phasemap-map.js
+    - architect/schemas/index.js
+    - clear-glass/schemas/index.js
+    - copilot/schemas/index.js
+    - loom/scanners/event-taxonomy-map.js
+    - copilot/lib/self-model.js
+    - loom/scanners/capability-map.js
+    - loom/scanners/spec-map.js
+  depends_on:
+    - LP2_split_by_system
+  blocks: []
+  spec: null
+  graph: 319e0eb63b972e07

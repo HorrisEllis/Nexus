@@ -1,0 +1,236 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ET2_guardian_event_taxonomy:3864f053a89e1c31
+type: graph
+id: phase:ET2_guardian_event_taxonomy:3864f053a89e1c31
+context: dependency graph of phase ET2_guardian_event_taxonomy
+intent: null
+summary: 25 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675451
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675451
+lastSeenAt: 1792787675451
+fingerprint: null
+payload:
+  for: ET2_guardian_event_taxonomy
+  kind: phase
+  repo: null
+  hash: 3864f053a89e1c31
+  nodes:
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/agent-chat.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-system/contracts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gemini-toolbox/agent-contracts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/wake-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-system/submit.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-map.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gemini-toolbox/injection.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: service/guardian-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/spec-parser.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: service/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-chat.js
+      kind: requires
+    - from: guardian/lib/wake-loop.js
+      to: lib/agent-chat.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/agent-chat.js
+      kind: requires
+    - from: lib/agent-system/submit.js
+      to: lib/agent-system/contracts.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-map.js
+      to: lib/agent-system/contracts.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/gemini-toolbox/agent-contracts.js
+      kind: requires
+    - from: lib/gemini-toolbox/injection.js
+      to: lib/gemini-toolbox/agent-contracts.js
+      kind: requires
+  crossings:
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: service/guardian-service.js
+      to: guardian/server.js
+      fromSystem: service
+      toSystem: guardian
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
+    dependents:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
+    upstream:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
+    downstream:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR6_copilot_as_agent_chat_model
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR7_guardian_dispatch_connectivity_sweep
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET6_sigma_gates_on_taxonomy
+    blockedBy:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by ET1_event_taxonomy_pattern
+      - 'depends on (1): ET1_event_taxonomy_pattern'
+      - 'needed by (1): ET5_loom_event_taxonomy_map · all downstream 4'
+    edges:
+      - from: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
+        kind: declared

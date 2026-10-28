@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P9_multi_agent_parallel_dispatch
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P9_multi_agent_parallel_dispatch
+context: pipeline phase P9_multi_agent_parallel_dispatch of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P9_multi_agent_parallel_dispatch (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678243
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678243
+lastSeenAt: 1792787678243
+fingerprint: null
+payload:
+  id: P9_multi_agent_parallel_dispatch
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/chains.js
+    - lib/parallel-dispatch.js
+    - copilot/lib/self-model.js
+    - lib/agent-tools/tools/coordination/parallel-dispatch.js
+    - lib/agent-council.js
+    - lib/agent-tools/tools/coordination/agent-council.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8ad7c5128e9ee3f3

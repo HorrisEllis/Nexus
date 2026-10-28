@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-spatial-void-phasemap.spec::V5_the_page
+type: phase
+id: docs_2026-10-02-spatial-void-phasemap.spec::V5_the_page
+context: pipeline phase V5_the_page of docs/2026-10-02-spatial-void-phasemap.spec
+intent: null
+summary: V5_the_page (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676746
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676746
+lastSeenAt: 1792787676746
+fingerprint: null
+payload:
+  id: V5_the_page
+  map: docs/2026-10-02-spatial-void-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/void.html
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 598efc9ae1916e6f

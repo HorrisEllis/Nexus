@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:A1:1b42fcb0ed4d9adc
+type: graph
+id: phase:A1:1b42fcb0ed4d9adc
+context: dependency graph of phase A1
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676150
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676150
+lastSeenAt: 1792787676150
+fingerprint: null
+payload:
+  for: A1
+  kind: phase
+  repo: null
+  hash: 1b42fcb0ed4d9adc
+  nodes:
+    - path: docs/atlases/idearium-atlas.md
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G0
+        files:
+          - idearium/spec/idearium.repo-graph.spec
+    dangling: []
+    prose:
+      - each phase
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - 'depends_on written as prose, not a phase: "each phase" — name the phase it means'
+      - 'same files as G0 with no order between them: idearium/spec/idearium.repo-graph.spec'
+    edges: []

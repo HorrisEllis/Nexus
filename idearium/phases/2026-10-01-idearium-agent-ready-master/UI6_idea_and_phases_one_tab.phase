@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI6_idea_and_phases_one_tab
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI6_idea_and_phases_one_tab
+context: >-
+  pipeline phase UI6_idea_and_phases_one_tab of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: UI6_idea_and_phases_one_tab (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676464
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676464
+lastSeenAt: 1792787676464
+fingerprint: null
+payload:
+  id: UI6_idea_and_phases_one_tab
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3d173a75197812ed

@@ -68,7 +68,7 @@ function classifyIntent(prompt) {
 // ── navigate ─────────────────────────────────────────────────────────────────
 function _navigableSurfaces() {
   try {
-    const h = require('../hooks/index.js');
+    const h = require('../lib/hooks/index.js');
     const surfaces = new Map();
     for (const hook of h.allHooks()) {
       const to = hook.to;

@@ -1,0 +1,182 @@
+envelope: 1
+uuid: nexus-export-graph-phase:VS1_sovereign_folder_and_foundation:0347201816acd368
+type: graph
+id: phase:VS1_sovereign_folder_and_foundation:0347201816acd368
+context: dependency graph of phase VS1_sovereign_folder_and_foundation
+intent: null
+summary: 16 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675733
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675733
+lastSeenAt: 1792787675733
+fingerprint: null
+payload:
+  for: VS1_sovereign_folder_and_foundation
+  kind: phase
+  repo: null
+  hash: 0347201816acd368
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: orchestrator/orchestrator.config.json
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: service/cortex-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: hooks/index.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: orchestrator/lib/pulse.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: hooks/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: service/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+  crossings:
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: cortex
+      toSystem: orchestrator
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: nexus/nexus-bus.js
+      fromSystem: cortex
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: hooks/index.js
+      fromSystem: cortex
+      toSystem: hooks
+      kind: system
+      known: true
+    - from: service/cortex-service.js
+      to: cortex/boot.js
+      fromSystem: service
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS2_ring_buffer_and_causal_field
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS3_agent_chat_log_query
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS4_active_drift_enforcement
+    upstream: []
+    downstream:
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::MEM3_timestamps_everywhere
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS2_ring_buffer_and_causal_field
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS3_agent_chat_log_query
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS4_active_drift_enforcement
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS2_ring_buffer_and_causal_field
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS3_agent_chat_log_query
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS4_active_drift_enforcement
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (3): VS2_ring_buffer_and_causal_field, VS3_agent_chat_log_query,
+        VS4_active_drift_enforcement · all downstream 4 · finishing it unlocks
+        VS2_ring_buffer_and_causal_field, VS3_agent_chat_log_query, VS4_active_drift_enforcement
+    edges: []

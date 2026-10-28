@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL10_nexus_roadmap_html_files
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL10_nexus_roadmap_html_files
+context: pipeline phase BL10_nexus_roadmap_html_files of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL10_nexus_roadmap_html_files (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675413
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675413
+lastSeenAt: 1792787675413
+fingerprint: null
+payload:
+  id: BL10_nexus_roadmap_html_files
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - BL9_per_system_phasemap_folders
+  blocks: []
+  spec: null
+  graph: 80b8c025c01b3474

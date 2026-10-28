@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP7_DESIGN_PRINCIPLE_automation_over_code
+type: phase
+id: docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP7_DESIGN_PRINCIPLE_automation_over_code
+context: >-
+  pipeline phase SBP7_DESIGN_PRINCIPLE_automation_over_code of
+  docs/2026-08-28-self-building-pipeline-phasemap.spec
+intent: null
+summary: SBP7_DESIGN_PRINCIPLE_automation_over_code (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792878419866
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878419866
+lastSeenAt: 1792878419866
+fingerprint: null
+payload:
+  id: SBP7_DESIGN_PRINCIPLE_automation_over_code
+  map: docs/2026-08-28-self-building-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-intake.js
+    - lib/compartment-engine.js
+    - clear-glass/src/mesh/agent-mesh.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8f43182418844f91

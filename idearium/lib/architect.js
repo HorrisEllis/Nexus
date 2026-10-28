@@ -21,6 +21,11 @@
  * architecture until James accepts it. Pure except ask(): the API owns loadTable/syncTable, loom and the repo write.
  */
 
+import { createRequire } from 'module';
+// 0.60.241 RF2 — lib/nexus-self/systems.js movedId: an id from before a folder moved → its id now (server-only module: Idearium's API)
+const _movedId = (id) => { try { return createRequire(import.meta.url)('../../lib/nexus-self/systems.js').movedId(id); } catch (_) { return null; } };
+
+
 export const TABLE = 'idearium_architectures';
 export const MODULE_ID = 'nexus-idearium-architect-v1-0000-2026-1002-jamesbrooks-001';
 
@@ -81,7 +86,10 @@ export function lookup(index, ref) {
   if (!r || !index) return null;
   if (index.byRef.has(r)) return index.byRef.get(r);
   const bare = r.replace(/^(loom|store):/, '').replace(/@.*$/, '');
-  return index.byId.get(bare) || null;
+  if (index.byId.has(bare)) return index.byId.get(bare);
+  // 0.60.241 RF2 — a component whose file moved has a new id (ids follow paths); an id saved before the move still finds it
+  const now = _movedId(bare);
+  return (now && index.byId.get(now)) || null;
 }
 
 const _pub = (e, score, why) => ({ kind: e.kind, id: e.id, ref: e.ref, name: e.name, score: Math.round(score * 100) / 100, why, ...(e.version ? { version: e.version } : {}) });

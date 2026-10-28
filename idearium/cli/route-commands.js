@@ -40,6 +40,55 @@ export const SPEC = [
       : { method: 'GET', path: `/api/repos/${a.repo.uuid}/agent/settings` }; },
     print: (d, a, h) => { const s = d.settings || d; h.header(`${a.repo.name} — its agent`); for (const k of ['provider', 'backend', 'injectMode', 'toolScope', 'ollamaModel']) if (s[k] != null) console.log(`  ${k.padEnd(12)} ${h.c.bold(String(s[k]))}`); if (s.providers) console.log(h.c.dim(`  providers: ${s.providers.join(' · ')}`)); console.log(''); } },
 
+  // §CG3 0.60.240 — James: "before an agent does anything. if confidence is lower than 75%, context must be obtained. build
+  // worksurface, compile list of dependancies, find the context, ask user last." A dry read of the gate for a message: what an
+  // agent would gather before it answers, and whether it would clear the 75% floor or need to ask.
+  { key: 'repo.gate', repo: true, usage: 'repo gate <repo> "<message>"', about: 'the confidence gate for a message: the context an agent would gather before it acts (worksurface, deps, find context, ask James last)',
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/agent/gate`, body: { message: a.args.join(' ') } }),
+    need: (a) => a.args.length ? null : 'a message',
+    print: (d, a, h) => {
+      if (!d || d.ok === false) { console.log(h.c.red((d && d.error) || 'the gate could not run')); return; }
+      const pct = Math.round((d.confidence || 0) * 100), thr = Math.round((d.threshold || 0.75) * 100);
+      h.header(`${a.repo.name} — the confidence gate`);
+      console.log('  ' + (d.confident ? h.c.green(`confident (${pct}% ≥ ${thr}%) — the agent proceeds`) : h.c.yellow(`below the floor (${pct}% < ${thr}%) — gathers context, asks James last`)));
+      for (const s of (d.steps || [])) console.log(`  ${ICON[s.action] || '·'} ${String(s.rung).padEnd(13)} ${h.c.dim(`${Math.round((s.confidence || 0) * 100)}%`)}  ${h.c.dim(s.got || s.action || '')}`);
+      if (d.prereqs) console.log(h.c.dim(`\n  would ask James: ${String(d.prereqs).slice(0, 200)}`));
+      console.log('');
+    } },
+
+  // §BX2 0.60.248 — James: "What about BrainOS?" The repo's FlowGraph (phases+DAG, runs, the live mesh) — the data the BrainOS
+  // Flow canvas draws. A source that is down is named, the rest still shows (§1.2).
+  { key: 'repo.flow', repo: true, usage: 'repo flow <repo>', about: 'the BrainOS FlowGraph: the repo\'s phases by DAG layer, its runs, and the live agent mesh',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/flow` }),
+    print: (d, a, h) => {
+      if (!d || d.ok === false) { console.log(h.c.red((d && d.error) || 'no flow')); return; }
+      h.header(`${a.repo.name} — flow`);
+      console.log(`  phases ${h.c.bold(String((d.phases || []).length))}  ·  edges ${(d.edges || []).length}  ·  runs ${(d.runs || []).length}  ·  agents ${h.c.bold(String((d.agents || []).length))}`);
+      for (const s of (d.sources || [])) console.log(`  ${s.ok ? h.c.green('✓') : h.c.yellow('✗')} ${String(s.source).padEnd(11)} ${s.ok ? h.c.dim(`${s.n} item(s)`) : h.c.dim(s.error || '')}`);
+      console.log('');
+    } },
+
+  // §AU1 0.60.249 — James: "copilot system, ollama, lib folder, clearglass, idearium, and brainos have automation" · "Clearglass
+  // automation, and macros, continue." One neutral door over all six (lib/automation-registry.js): list what each present source
+  // holds, run one and record it under that source, and NAME an absent source — never fake one (§1.2).
+  { key: 'automation.list', repo: false, usage: 'automation list [--source <id>]', about: 'every automation (workflows + macros) across the six sources (copilot, ollama, lib, clear-glass, idearium, brainos); a source that is down is named',
+    req: (a) => ({ method: 'GET', path: `/api/automation${a.flags.source ? `?source=${encodeURIComponent(String(a.flags.source))}` : ''}` }),
+    print: (d, a, h) => {
+      if (!d || d.ok === false) { console.log(h.c.red((d && d.error) || 'the registry could not list')); return; }
+      h.header('automation — the union');
+      for (const s of (d.sources || [])) console.log(`  ${s.present ? h.c.green('✓') : h.c.yellow('✗')} ${String(s.id).padEnd(12)} ${h.c.dim(`${s.kind}`)}  ${s.present ? h.c.dim(`${s.count} item(s)`) : h.c.dim(s.why || 'absent')}`);
+      if ((d.items || []).length) { console.log(''); for (const it of d.items) console.log(`  ${h.c.dim(String(it.source).padEnd(12))} ${String(it.kind).padEnd(9)} ${it.name || it.id}`); }
+      console.log('');
+    } },
+  { key: 'automation.run', repo: false, usage: 'automation run <source> <id>', about: 'run one automation through its source and record the run under that source (an absent/driver source says where it actually runs)',
+    need: (a) => (a.args[0] && a.args[1] ? null : '<source> <id>'),
+    req: (a) => ({ method: 'POST', path: '/api/automation/run', body: { source: a.args[0], id: a.args[1] }, timeoutMs: 600000 }),
+    print: (d, a, h) => {
+      if (!d) { console.log(h.c.red('no answer')); return; }
+      if (d.ok === false) { console.log(`${h.c.coral('✗')} ${h.c.dim(d.source || '')} ${d.error}`); return; }
+      console.log(`${h.c.mint('✓')} ran via ${h.c.bold(d.via || d.source)} ${h.c.dim(`run ${d.runId || '—'} · ${d.status || 'ok'}`)}`);
+    } },
+
   // ── what its agent proposed ───────────────────────────────────────────────────────────────────────────────────────
   // §0.60.118 DK1 — James: "maybe buttons for agent tools, for the repo, to execute. replayable proceedures?" The same as the
   // Code tab's tools panel: one tool through the agent's door (this repo's scope), and .procedure files replayed in order.
@@ -143,6 +192,35 @@ export const SPEC = [
   // 0.60.7 — Versionium managed per repo (lib/repo-history.js) and the import checks (lib/import-checks.js)
   // 0.60.8 — intent routing for reasoning (lib/reasoning-route.js)
   // 0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match."
+  // §0.60.252 UP3 — James, 2026-10-25: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?"
+  // · "first one but the second one needs to be the end state" (git now, COS later). lib/nexus-update.js; restarting stays his.
+  { key: 'update', repo: false, usage: 'update [--no-fetch]', about: 'is there a newer Nexus on GitHub: this version and origin\'s, each release in between with James\'s words, the systems it changes, what an update would set aside or refuse',
+    req: (a) => ({ method: 'GET', path: `/api/update${a.flags['no-fetch'] ? '?fetch=0' : ''}`, timeoutMs: 150000 }),
+    print: (d, a, h) => {
+      if (d.ok === false) return console.log(h.c.amber(`  ${d.driver ? `[${d.driver}] ` : ''}${d.error}`));
+      console.log(`  ${h.c.bold(d.current)} → ${d.upToDate ? h.c.mint('up to date') : h.c.bold(d.latest)}${d.behind ? h.c.dim(`  (${d.behind} commit(s) behind${d.ahead ? `, ${d.ahead} ahead` : ''})`) : ''}`);
+      for (const r of (d.releases || []).slice(0, 12)) console.log(`  ${h.c.gray(r.version.padEnd(9))} ${r.quote ? `"${String(r.quote).slice(0, 150)}"` : h.c.dim('(no quote in its line)')}`);
+      if (d.systems && d.systems.length) console.log(h.c.dim(`  changes: ${d.systems.join(', ')}${d.lockChanged ? ' · package-lock.json (npm install runs)' : ''}`));
+      const p = d.plan || {}; if ((p.archive || []).length) console.log(h.c.dim(`  sets aside first (copied to _archive/update/): ${p.archive.length} data file(s)`)); if ((p.blocks || []).length) console.log(h.c.amber(`  refuses: your edits to ${p.blocks.map(b => b.file).slice(0, 6).join(', ')}`));
+      if (d.can && !d.upToDate) console.log(h.c.amber(`  ${d.can}`)); else if (!d.upToDate) console.log(h.c.dim('  idearium update apply --yes'));
+    } },
+  { key: 'update.apply', repo: false, usage: 'update apply --yes', about: 'bring in the newer Nexus from GitHub: fast-forward only, his changed data files copied aside first, npm install if the lockfile changed; says what to restart',
+    personOnly: () => 'updating Nexus\'s code is the person\'s — an agent uses nexus.update.tool apply with confirm:true after asking them',
+    need: (a) => (a.flags.yes ? null : '--yes (it changes Nexus\'s code; `idearium update` shows what it brings)'),
+    req: () => ({ method: 'POST', path: '/api/update/apply', timeoutMs: 20 * 60000, body: { confirm: true } }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); if (d.action === 'none') return console.log(h.c.mint(`  ${d.why}`)); console.log(h.c.mint(`  ${d.from.version} → ${d.to.version}`) + h.c.dim(`  ${(d.archived || []).length} data file(s) set aside${d.npm && d.npm.ran ? ` · npm install ${d.npm.ok ? 'ok' : `FAILED: ${d.npm.error}`}` : ''}`)); console.log(h.c.amber(`  restart: ${(d.restart.systems || []).join(', ') || '—'} — ${d.restart.note}`)); } },
+  { key: 'update.rollback', repo: false, usage: 'update rollback --yes', about: 'undo the last update: back to the commit it came from (refuses if your edits are in the way)',
+    personOnly: () => 'rolling Nexus back is the person\'s — an agent uses nexus.update.tool rollback with confirm:true after asking them',
+    need: (a) => (a.flags.yes ? null : '--yes'),
+    req: () => ({ method: 'POST', path: '/api/update/rollback', timeoutMs: 20 * 60000, body: { confirm: true } }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); console.log(h.c.mint(`  ${d.from.version} → ${d.to.version}`)); if (d.note) console.log(h.c.dim(`  ${d.note}`)); console.log(h.c.amber(`  restart: ${(d.restart.systems || []).join(', ') || '—'}`)); } },
+  // §0.60.254 UP8 — James, 2026-10-26: "should be automatic". auto (the default) applies when Nexus is idle; notify only says; off does nothing
+  { key: 'update.policy', repo: false, usage: 'update policy [auto|notify|off] [--every <hours>]', about: 'how Nexus updates itself from GitHub: auto (when idle, then restarts what changed — never Clear Glass under you), notify, or off; and what the last automatic check did',
+    req: (a) => (a.args[0] || a.flags.every ? { method: 'POST', path: '/api/update/policy', body: { ...(a.args[0] ? { policy: a.args[0] } : {}), ...(a.flags.every ? { everyHours: Number(a.flags.every) } : {}) } } : { method: 'GET', path: '/api/update/auto' }),
+    print: (d, a, h) => { const p = d.policy && typeof d.policy === 'object' ? d.policy : d; console.log(`  ${h.c.bold(p.policy)} ${h.c.dim(`every ${p.everyHours} h`)}`); if (d.last) console.log(h.c.dim(`  last check ${String(d.last.at).slice(0, 16)}: ${d.last.action}${d.last.to ? ` → ${d.last.to}` : d.last.latest ? ` (${d.last.latest} on GitHub)` : ''}${d.last.error || d.last.why ? ` — ${d.last.error || [].concat(d.last.why).join('; ')}` : ''}`)); } },
+  { key: 'update.history', repo: false, usage: 'update history', about: 'every update and rollback this install made: when, from and to which version, who, what was set aside',
+    req: () => ({ method: 'GET', path: '/api/update/history' }),
+    print: (d, a, h) => { const l = d.history || []; if (!l.length) return console.log(h.c.dim('  no updates yet')); for (const r of l) console.log(`  ${h.c.gray(r.at.slice(0, 16))} ${r.kind.padEnd(8)} ${r.from.version} → ${r.to.version}  ${h.c.dim(`by ${r.by}${(r.archived || []).length ? ` · ${r.archived.length} set aside` : ''}`)}`); } },
   // 0.60.41 RN1 — Nexus's own releases, recorded in Versionium (lib/nexus-releases.js): James's words, the proof, the commit
   { key: 'system.releases', repo: false, usage: 'system releases [--sync [--all]] [--limit n] [--version x.y.z]', about: 'every Nexus release, newest first, from Versionium: James\'s words, the git commit, the changelog, its commits; --sync records any missing (with the newest 30 releases\' commits; --all: every release\'s)',
     req: (a) => a.flags.sync ? { method: 'POST', path: '/api/releases/sync', timeoutMs: 120000, body: a.flags.all ? { all: true } : {} } : { method: 'GET', path: '/api/releases' },
@@ -352,6 +430,40 @@ export const SPEC = [
     req: () => ({ method: 'GET', path: '/api/ledger/out' }),
     print: (d, a, h) => { console.log(`  sent ${d.sent} · buffered ${d.buffered} · drained ${d.drained} · failed ${d.failed}${d.lastType ? h.c.dim(` · last ${d.lastType}`) : ''}`); if (d.lastError) console.log(h.c.amber(`  last error: ${d.lastError}`)); } },
   // 0.60.188 CNS1 — James: "It built 5 phases in a row. I think I see what you mean but there are way more idearium phases than that." · "go ahead with the census"
+  // SL0 0.60.222 — James: "we need this to work so it can start building itself." What can be built now, and why the rest cannot
+  { key: 'phases.next', usage: 'phases next [--limit n] [--group decision|deps-open|cycle|dangling|no-files|done-by-evidence|held|conflict]', about: "Nexus's phases that can be built now, in order (DAG layer, then how many wait on each), and every other open phase in one group with why and what would unblock it",
+    req: (a) => ({ method: 'GET', path: `/api/phases/next?limit=${parseInt(a.flags.limit, 10) || 20}${a.flags.group ? `&group=${encodeURIComponent(String(a.flags.group))}` : ''}` }),
+    print: (d, a, h) => { if (a.flags.group) { for (const b of d.blocked || []) console.log(`  ${b.id}  ${h.c.dim(b.map.split('/').pop())}\n    ${b.why} → ${b.unblock}`); return; } for (const l of d.lines || []) console.log(/^blocked|^said/.test(l) ? h.c.dim(l) : l); } },
+  { key: 'repo.next', repo: true, usage: 'repo next <repo> [--limit n] [--group …]', about: "a repo's phases that can be built now, in order, and why the rest cannot",
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/next?limit=${parseInt(a.flags.limit, 10) || 20}${a.flags.group ? `&group=${encodeURIComponent(String(a.flags.group))}` : ''}` }),
+    print: (d, a, h) => { if (a.flags.group) { for (const b of d.blocked || []) console.log(`  ${b.id}\n    ${b.why} → ${b.unblock}`); return; } for (const l of d.lines || []) console.log(/^blocked|^said/.test(l) ? h.c.dim(l) : l); } },
+  { key: 'repo.closes', repo: true, usage: 'repo closes <repo>', about: 'the phases its proven, landed runs closed by themselves (SL1), each with the run and version; reopened ones say which change was undone',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/closes` }),
+    print: (d) => { console.log(`${d.open} closed · ${d.reopened} reopened`); for (const c of d.closes || []) console.log(`  ${c.reopenedAt ? '↺' : '✓'} ${c.phase}  ${c.reopenedAt ? c.reopenNote : c.note}`); } },
+  { key: 'repo.close', repo: true, usage: 'repo close <repo> <runId>', about: "check one run again: its phase closes if the run is proven and every change of it is applied; else says what it waits on",
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/close`, body: { runId: a.args[0] } }),
+    print: (d) => { console.log(d.closed ? `closed: ${d.record.phase} — ${d.record.note}` : `not closed: ${d.why}`); for (const w of d.waiting || []) console.log(`  waits on ${w}`); } },
+  { key: 'repo.nodes', repo: true, usage: 'repo nodes <repo>', about: "every phase's .phase node and its dependency graph, per owner system (SL9): how many are written, which phases of the maps have none yet, and nodes whose phase is in no map — written by `node emerge/compiler/phase-specs.js --all`",
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/nodes` }),
+    print: (d) => { console.log(`${d.nodes} nodes for ${d.phases} phases · ${Object.entries(d.bySystem).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(' · ')}`); if (d.missingCount) console.log(`  ${d.missingCount} phase(s) with no node: ${d.missing.slice(0, 8).map(k => k.split('::').pop()).join(', ')}${d.missingCount > 8 ? ', …' : ''}`); if (d.staleCount) console.log(`  ${d.staleCount} node(s) whose phase is in no map: ${d.stale.slice(0, 5).map(x => x.file).join(', ')}`); if (d.remedy) console.log(`  ${d.remedy}`); } },
+  { key: 'repo.groom', repo: true, usage: 'repo groom <repo> [--apply] [--map <path>]', about: "the dependency graph groomed (SL3): files from each phase's own words, depends_on from shared files and same-file order (never closing a cycle), and the cycles, dangling and prose references a person must answer — a dry run; --apply writes the map edits",
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/groom`, body: { apply: !!a.flags.apply, ...(a.flags.map ? { map: String(a.flags.map) } : {}) } }),
+    print: (d) => { for (const l of d.lines || []) console.log(l); console.log(d.written ? `written: ${d.written.files} files, ${d.written.deps} depends_on, in ${d.written.maps} maps (${d.written.via || 'written'})` : `dry run — ${d.pending.maps} maps would change; --apply writes them`); for (const r of d.refused || []) console.log(`  refused: ${r}`); } },
+  { key: 'repo.evidence', repo: true, usage: 'repo evidence <repo> [--apply] [--limit n] [--map <path>]', about: "the open phases whose every file exists, judged by their own tests (or tests specific to their files): a dry run lists what would close; --apply closes them (SL2)",
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/evidence`, body: { apply: !!a.flags.apply, limit: parseInt(a.flags.limit, 10) || 10, ...(a.flags.map ? { map: String(a.flags.map) } : {}) } }),
+    print: (d) => { console.log(`${d.dryRun ? 'dry run — ' : ''}${d.checked} checked · ${(d.dryRun ? d.wouldClose : d.closed).length} ${d.dryRun ? 'would close' : 'closed'} · ${d.ran.length} test(s) ran`); for (const c of d.dryRun ? d.wouldClose : d.closed) console.log(`  ✓ ${c.phase}  ${c.note}`); for (const o of (d.open || []).filter(x => x.failed)) console.log(`  ✗ ${o.id}  ${o.why}`); } },
+  // §GV3 0.60.257 — James, 2026-10-26: "the gate doesn't wait for me to accept it or not before it fails." His verdict on a phase RAID holds
+  { key: 'repo.verdict', repo: true, usage: 'repo verdict <repo> <runId> accept|reject [--words "<why>"]', about: "settle a phase RAID holds for a person (nothing could check it): accept lands its changes and closes it; reject reverts them",
+    need: (a) => (!a.args[0] || !['accept', 'reject'].includes(a.args[1]) ? '<runId> accept|reject' : null),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/verdict`, body: { runId: a.args[0], accept: a.args[1] === 'accept', words: a.flags.words ? String(a.flags.words) : '', startedBy: 'command' } }),
+    print: (d, a, h) => console.log(d.accepted ? h.c.mint(`  accepted ${d.runId}: ${d.landed} landed${(d.refused || []).length ? ` · refused: ${d.refused.join('; ')}` : ''}`) : h.c.amber(`  rejected ${d.runId}: ${d.reverted} reverted${(d.kept || []).length ? ` · not reverted: ${d.kept.join('; ')}` : ''}`)) },
+  { key: 'repo.loop', repo: true, usage: 'repo loop <repo> [start|stop|step] [--phases n] [--minutes n]', about: "the self-building loop on a repo (SL4): start builds what can be built now, one phase after another, closing each proven, landed one, until the budget, three misses in a row, or nothing left; stop ends it; no verb shows it",
+    req: (a) => { const v = a.args[0]; if (v === 'start') return { method: 'POST', path: `/api/repos/${a.repo.uuid}/loop/start`, body: { budget: { phases: parseInt(a.flags.phases, 10) || undefined, minutes: parseInt(a.flags.minutes, 10) || undefined } } };
+      if (v === 'stop' || v === 'step') return { method: 'POST', path: `/api/repos/${a.repo.uuid}/loop/${v}`, body: {} }; return { method: 'GET', path: `/api/repos/${a.repo.uuid}/loop` }; },
+    print: (d) => { const l = d.loop; if (!l) { console.log('no loop has run on this repo'); return; } console.log(`${l.loopId} ${l.state}${l.stopWhy ? ` — ${l.stopWhy}` : ''} · built ${l.built.length}/${l.budget.phases} · closed ${l.closed.length} · skipped ${l.skipped.length}${l.current ? ` · building ${l.current.phase} (${l.current.runId})` : ''}`); for (const c of l.closed) console.log(`  ✓ ${c.key.split('::').pop()}`); for (const k of l.skipped) console.log(`  – ${k.key.split('::').pop()}: ${k.why}`); if (d.first) console.log(`first step: ${d.first.outcome} ${d.first.why}`); } },
+  { key: 'trust', usage: 'trust [--repo <uuid>] | trust --set A|B|C --words "<his words>" [--repo <uuid>] [--kept a,b]', about: "his rule for what lands without him (SL5): A every change asks; B a proven change whose gates all passed lands in his project repos, Nexus stays review; C as B and Nexus too, except kept files. Setting it needs his words",
+    req: (a) => a.flags.set ? { method: 'POST', path: '/api/trust-rule', body: { rule: String(a.flags.set).toUpperCase(), words: a.flags.words, repo: a.flags.repo || '*', kept: a.flags.kept ? String(a.flags.kept).split(',') : [] } } : { method: 'GET', path: `/api/trust-rule${a.flags.repo ? `?repo=${encodeURIComponent(a.flags.repo)}` : ''}` },
+    print: (d) => { const r = d.rule; console.log(`rule ${r.rule} (${r.scope}) — his words: "${r.words || '—'}"${r.kept && r.kept.length ? ` · kept: ${r.kept.join(', ')}` : ''}`); if (r.context) console.log(`  ${r.context}`); } },
   { key: 'phases.census', usage: 'phases census [--system idearium] [--open]', about: "every phase of Nexus's phasemaps judged against its evidence (commits that name it and touched its code, release lines, its files, its proof's tests and ids): done, partly, mentioned, not-built, no-files, deferred, superseded — and the open ones bottom-up. Deterministic, no model",
     req: (a) => ({ method: 'GET', path: `/api/phases/census?system=${encodeURIComponent(a.flags.system || 'idearium')}` }),
     print: (d, a, h) => { console.log(`  ${d.total} phases · ${Object.entries(d.counts).map(([k, v]) => `${k} ${v}`).join(' · ')}${d.shallow ? h.c.amber(' · SHALLOW history') : ''}`); if (a.flags.open) d.order.forEach((k, i) => console.log(h.c.dim(`  ${String(i + 1).padStart(3)}. ${k.replace(/^docs\//, '')}`))); else console.log(h.c.dim(`  ${d.order.length} open, bottom-up: --open lists them · docs/idearium-phase-census.md is the full table`)); } },
@@ -439,11 +551,23 @@ export const SPEC = [
       console.log(h.c.dim(`  matching genesis: ${(d.matches || []).join(', ') || '—'}`));
     } },
   // 0.60.133 IM1 — "need to get the systems soveriegn again": which systems are, and what stands in each one's way
+  // §0.60.234 RF0/RF1 — James, 2026-10-24: "15 systems. the rest of the folders need to migrate." The refactor tool's proposal: each top-level
+  // folder outside the 15 gets a home from its edges (lib/architecture-migrate.js), as a phasemap RF2 applies. Read only.
+  { key: 'system.migrate', repo: false, usage: 'system migrate [--write <file.spec>]', about: 'the refactor tool: every folder outside the 15 systems, who uses it, and the home its edges give it (one system → that system; lib/ or two systems → core; no evidence → to confirm); --write saves it as a phasemap',
+    local: async (a) => { const AM = require('../../lib/architecture-migrate.js'); const rows = AM.propose(AM.read({})); if (a.flags.write && a.flags.write !== true) require('fs').writeFileSync(String(a.flags.write), AM.phasemap(rows, { origin: 'system migrate' })); return { rows, written: a.flags.write && a.flags.write !== true ? String(a.flags.write) : null }; },
+    print: (d, a, h) => { for (const r of d.rows || []) console.log(`  ${r.dir.padEnd(18)} ${r.placed ? h.c.mint(`→ ${r.homeDir}`) : h.c.amber('→ ? (to confirm)')}  ${h.c.dim(`${r.rule} ${r.why}`)}`); if (d.written) console.log(h.c.mint(`  written: ${d.written}`)); } },
+  // 0.60.250 SV1 — the shared store's tables: who writes and reads each, and the owner the evidence names (contested ones are his call)
+  { key: 'system.tables', repo: false, usage: 'system tables [<system>]', about: "the shared store's tables (cortex/memory/jaa-db.js): which systems write and read each, from the code; the owner the evidence names, the contested ones, and how many store users name no table it can read",
+    req: (a) => ({ method: 'GET', path: `/api/system/tables${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),
+    print: (d, a, h) => {
+      for (const t of d.tables || []) console.log(`  ${t.table.padEnd(28)} ${(t.status === 'contested' ? h.c.amber(t.status) : t.owner ? h.c.mint(t.status) : h.c.dim(t.status)).padEnd(24)} ${h.c.dim(`writes: ${t.writers.join(', ') || '—'}${t.readers.length ? ` · reads: ${t.readers.join(', ')}` : ''}`)}`);
+      const s = d.summary || {}; console.log(h.c.dim(`  ${s.tables} tables · ${s.oneWriter} one writer · ${s.withCore} one system + core · ${s.onlyCore} only core · ${s.contested} contested · ${s.readOnly} read only · ${d.blind} of ${d.users} store users name no table this can read`));
+    } },
   { key: 'system.sovereign', repo: false, usage: 'system sovereign [<system>]', about: 'which systems are sovereign (nothing they require is in another system\'s folder; lib/ is the kernel) and, for each that is not, what is in the way: its data kept in cortex\'s store, a shared primitive in another system, or another system\'s capability required as a file',
     req: (a) => ({ method: 'GET', path: `/api/system/sovereign${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),
     print: (d, a, h) => {
       for (const r of d.systems || []) {
-        console.log(`  ${(r.sovereign ? h.c.mint('sovereign') : h.c.amber('not yet  '))} ${r.system.padEnd(16)} ${h.c.dim(`out ${r.out} · in ${r.in} · kernel ${r.kernel}`)}${r.sovereign ? '' : h.c.dim(`  — data ${r.blockers.data} · primitive ${r.blockers.primitive} · capability ${r.blockers.capability}`)}`);
+        console.log(`  ${(r.sovereign ? h.c.mint('sovereign') : h.c.amber('not yet  '))} ${r.system.padEnd(16)} ${h.c.dim(`out ${r.out} · in ${r.in}${r.inFrom ? ` (systems ${r.inFrom.systems}, core ${r.inFrom.core})` : ''} · kernel ${r.kernel}${r.step ? ` · next: ${r.step}` : ''}`)}${r.sovereign ? '' : h.c.dim(`  — data ${r.blockers.data} · primitive ${r.blockers.primitive} · capability ${r.blockers.capability}`)}`);
         if (r.list) for (const [k, xs] of Object.entries(r.list)) for (const x of xs) console.log(h.c.dim(`      ${k.padEnd(10)} ${x.from} → ${x.to}`));
       }
       console.log(h.c.dim(`  ${(d.sovereign || []).length} sovereign: ${(d.sovereign || []).join(', ') || '—'}`));
@@ -511,6 +635,18 @@ export const SPEC = [
     req: () => ({ method: 'GET', path: '/api/system/heartbeat' }),
     print: (d, a, h) => { for (const b of d.systems || []) console.log(`  ${(b.status === 'up' ? h.c.mint : h.c.amber)(b.status.padEnd(8))} ${b.name.padEnd(22)} ${h.c.dim(`${b.ms != null ? b.ms + ' ms · ' : ''}${b.why}`)}`); console.log(h.c.dim(`  ${d.up} of ${(d.systems || []).length} up`)); } },
   // 0.60.127 DB9 + DB10 — a system's registry generated as its dependency graph, and its negative space (what is declared and not there, what is there and not declared)
+  // 0.60.229 DB16 — James: "then we need to resume the component registery for each system, get the mall sovereign, then cos phases to migrate."
+  { key: 'system.drafts', repo: false, usage: 'system drafts [<system>]', about: 'the registries drafted for the systems that have none (DB16), lowest friction first: routes from its contract, its event taxonomy, the files other systems reach into, and how far it is from sovereign. Drafts are his to accept (rename to registry-components.js and add to loom)',
+    req: (a) => (a.args[0] ? { method: 'GET', path: `/api/system/registry/${encodeURIComponent(a.args[0])}/draft` } : { method: 'GET', path: '/api/system/registry-drafts' }),
+    print: (d, a, h) => {
+      if (d.systems) { console.log(h.c.dim(`  ${d.order}`)); for (const s of d.systems) console.log(`  ${(s.sovereign ? h.c.mint : h.c.amber)(s.system.padEnd(15))} out ${String(s.out).padStart(2)} · ${String(s.routes).padStart(2)} routes · ${s.taxonomy ? `${s.declaredEvents} events (taxonomy) · ` : ''}${s.reachedInto} files reached into${s.written ? '' : h.c.amber(' · not written')}`); return; }
+      console.log(`  ${d.systemId} — draft ${d.written ? 'written' : 'not written'}, ${d.accepted ? 'ACCEPTED (registry-components.js exists)' : 'not accepted'}`);
+      for (const c of d.components) console.log(`  route  ${c.route.method} ${c.route.path}  ${h.c.dim(c.from)}`);
+      if (d.events.taxonomy) console.log(`  events ${d.events.declared} in ${d.events.taxonomy}`);
+      for (const r of d.reached_into.slice(0, 15)) console.log(h.c.amber(`  reached into  ${r.file}  by ${r.by.join(', ')}`));
+      if (d.sovereignty) console.log(`  sovereign: ${d.sovereignty.sovereign ? 'yes' : `no — ${d.sovereignty.out} way(s) out (data ${d.sovereignty.blockers.data}, primitive ${d.sovereignty.blockers.primitive}, capability ${d.sovereignty.blockers.capability})`}`);
+      for (const x of d.said) console.log(h.c.dim(`  ${x}`));
+    } },
   { key: 'system.registry', repo: false, usage: 'system registry [<system>] [--settle]', about: 'with no system: every system and what it depends on (the dependency graph). With one: its registry generated from the source — what it declares (routes, served), what it depends on and who consumes it, and the negative space: declared routes the source does not serve, and files other systems reach into directly. --settle records each absence as a gap',
     req: (a) => (!a.args[0] ? { method: 'GET', path: '/api/system/registry' } : a.flags && a.flags.settle ? { method: 'POST', path: `/api/system/registry/${encodeURIComponent(a.args[0])}/settle`, body: {} } : { method: 'GET', path: `/api/system/registry/${encodeURIComponent(a.args[0])}` }),
     print: (d, a, h) => {
@@ -710,10 +846,10 @@ export const SPEC = [
     need: (a) => (a.args[0] ? null : '<phase>'),
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/graph?phase=${encodeURIComponent(a.args[0])}${a.flags.map ? `&map=${encodeURIComponent(String(a.flags.map))}` : ''}` }),
     print: (d, a, h) => { for (const l of d.lines || []) console.log(/^(NEW CROSSING|  missing)|NO DEPENDENCY GRAPH/.test(l) ? `  ${h.c.amber(l)}` : `  ${l}`); } },
-  { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan] [--anyway]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan plans it again)',
+  { key: 'repo.phase', repo: true, usage: 'repo phase <repo> <phase> [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan] [--anyway] [--rebuild]]', about: 'one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan plans it again; --rebuild builds a complete phase again)',
     need: (a) => (a.args[0] ? null : '<phase>'),
     req: (a) => (a.args[1] === 'build'
-      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { startedBy: 'person:cli', phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}), ...(a.flags.replan ? { replan: true } : {}), ...(a.flags.anyway ? { anyway: true } : {}) }, timeoutMs: 120000 }
+      ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/phases/build`, body: { startedBy: 'person:cli', phase: a.args[0], ...(a.flags.map ? { map: a.flags.map } : {}), ...(a.flags.provider ? { provider: a.flags.provider } : {}), ...(a.flags.note ? { note: a.flags.note } : {}), ...(a.flags.replan ? { replan: true } : {}), ...(a.flags.anyway ? { anyway: true } : {}), ...(a.flags.rebuild ? { rebuild: true } : {}) }, timeoutMs: 120000 }
       : { method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/runs?phase=${encodeURIComponent(a.args[0])}` }),
     print: (d, a, h) => {
       if (a.args[1] === 'build') {
@@ -953,6 +1089,71 @@ export const SPEC = [
       for (const f of ['autofill', 'macros', 'workflows', 'passwords', 'resume', 'driver', 'mesh', 'guardian']) for (const [k, v] of Object.entries(d[f] || {})) { const from = (d.from || {})[`${f}.${k}`]; console.log(`  ${`${f}.${k}`.padEnd(22)} ${JSON.stringify(v)}  ${from === 'site' ? h.c.mint('this site') : h.c.dim(from)}`); }
       console.log(`  ${'network.via'.padEnd(22)} ${(d.network || {}).via}  ${(d.network || {}).rule ? h.c.mint('this site') : h.c.dim('default')}`);
     } },
+  // §JA3 0.60.230 — James, 2026-10-19: "if he doesn't understand, have the element picker popup for me to select the element for him.
+  // saves to per site settings ... and updates the autofill." The pick waits on the person in the application's tab.
+  { key: 'autofill.pick', repo: false, usage: 'autofill pick <fieldType> [--agent <tab>] [--profile <id>]', about: 'the element picker on a field the autofill missed: he clicks the box for <fieldType> in the application tab; it is checked, saved for that site, and the page is filled again',
+    need: (a) => (!a.args[0] ? '<fieldType> (e.g. github, linkedin)' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/pick', timeoutMs: 5 * 60000, body: { fieldType: a.args[0], agentId: a.flags.agent || 'default', ...(a.flags.profile ? { profileId: a.flags.profile } : {}) } }),
+    print: (d, a, h) => {
+      if (!d.ok) return console.log(h.c.amber(`  ${d.cancelled ? 'cancelled' : 'not saved'}: ${d.error}`));
+      console.log(h.c.mint(`  ${d.origin}: "${d.fieldKey}" → ${d.fieldType}`) + (d.warning ? h.c.amber(`  (${d.warning})`) : ''));
+      const f = d.fill || {}; if (f.filled) console.log(`  filled ${f.filled.length}${(f.needsPick?.unplaced || []).length ? ` · still unplaced: ${f.needsPick.unplaced.join(', ')}` : ''}`); else if (f.error) console.log(h.c.amber(`  refill: ${f.error}`));
+    } },
+  { key: 'autofill.learn', repo: false, usage: 'autofill learn <fieldKey> <fieldType> [--url <page>] [--agent <tab>]', about: 'teach the autofill a field by name: the field\'s label/name/id → what goes there, saved for that site',
+    need: (a) => (a.args.length < 2 ? '<fieldKey> <fieldType>' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/learn', body: { fieldKey: a.args.slice(0, -1).join(' '), fieldType: a.args[a.args.length - 1], agentId: a.flags.agent || 'default', ...(a.flags.url ? { url: a.flags.url } : {}) } }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.origin}: "${d.fieldKey}" → ${d.fieldType}`) : h.c.amber(`  ${d.error}`)) },
+  // §JA4 0.60.231 — what the autofill was taught, per site, and its undo (§0.3 reversible)
+  { key: 'autofill.learned', repo: false, usage: 'autofill learned [<url>]', about: 'the fields the autofill was taught, per site (by the picker or by name): field → what goes there',
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/cli/autofill/learned${a.args[0] ? `?url=${encodeURIComponent(/^[a-z]+:\/\//i.test(a.args[0]) ? a.args[0] : `https://${a.args[0]}/`)}` : ''}` }),
+    print: (d, a, h) => { const l = d.learned || []; if (!l.length) return console.log(h.c.dim('  nothing learned yet')); let o = null; for (const r of l) { if (r.origin !== o) { o = r.origin; console.log(h.c.bold(`  ${o}`)); } console.log(`    "${r.fieldKey}" → ${r.fieldType}`); } } },
+  { key: 'autofill.forget', repo: false, usage: 'autofill forget <url> <fieldKey>', about: 'forget one taught field on one site: the next fill asks again',
+    need: (a) => (a.args.length < 2 ? '<url> <fieldKey>' : null),
+    req: (a) => { const url = /^[a-z]+:\/\//i.test(a.args[0]) ? a.args[0] : `https://${a.args[0]}/`; return { system: 'clear-glass', method: 'POST', path: '/cli/autofill/forget', body: { url, fieldKey: a.args.slice(1).join(' ') } }; },
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.origin}: forgot "${d.fieldKey}"`) : h.c.amber(`  ${d.error}`)) },
+  // §AT2 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." The autofill data as one .autofill file
+  // (clear-glass/src/autofill/transfer.js): profiles, the fields learned per site, the last gig. An import merges; undo puts back what it replaced.
+  { key: 'autofill.export', repo: false, usage: 'autofill export [--out <file.autofill>]', about: 'the autofill data as one .autofill file (YAML): profiles, the fields learned per site, the last gig; --out writes it, else it is printed',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/autofill/export' }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); if (a.flags.out) { require('fs').writeFileSync(String(a.flags.out), d.text); console.log(h.c.mint(`  wrote ${a.flags.out}: ${d.counts.profiles} profile(s), ${d.counts.learned} learned field(s)${d.counts.gig ? ', the gig' : ''}`)); } else console.log(d.text); } },
+  { key: 'autofill.import', repo: false, usage: 'autofill import <file.autofill> | autofill import undo', about: 'merge an .autofill file into Clear Glass (a profile is replaced only by a newer copy; learned fields set; the gig taken), keeping what it replaced; `undo` puts that back',
+    need: (a) => (!a.args[0] ? '<file.autofill> or undo' : null),
+    req: (a) => { if (a.args[0] === 'undo') return { system: 'clear-glass', method: 'POST', path: '/cli/autofill/import/undo', body: {} }; const fs = require('fs'); if (!fs.existsSync(a.args[0])) return { error: `no such file: ${a.args[0]}` }; return { system: 'clear-glass', method: 'POST', path: '/cli/autofill/import', body: { text: fs.readFileSync(a.args[0], 'utf8'), by: 'command' } }; },
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); if (d.restored) return console.log(h.c.mint(`  undone: ${d.restored.profiles} profile(s), ${d.restored.learned} learned field(s)${d.restored.gig ? ', the gig' : ''} put back`)); const c = d.counts; console.log(h.c.mint(`  ${c.profilesAdded} added · ${c.profilesReplaced} replaced (newer) · ${c.profilesKept} kept · ${c.learned} learned · ${c.gig ? 'the gig' : 'no gig'}`)); for (const r of d.refused || []) console.log(h.c.amber(`  not taken: ${r.what} ${r.item} — ${r.why}`)); for (const w of d.warnings || []) console.log(h.c.dim(`  ${w}`)); } },
+  // §AD4 0.60.251 — James, 2026-10-25: "need clearglass' fiverr, job application automation, autofill and macros working fully,
+  // including with the agents and copilot." The fill, the gig and macros as rows, so nexus.command (every agent) has them.
+  { key: 'autofill.profiles', repo: false, usage: 'autofill profiles', about: 'the autofill profiles in Clear Glass: id and label (the identity a fill types in)',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/autofill/profiles' }),
+    print: (d, a, h) => { const l = d.profiles || []; if (!l.length) return console.log(h.c.dim('  no autofill profiles — add one in Settings › Autofill')); for (const p of l) console.log(`  ${h.c.gray(String(p.id).slice(0, 12))} ${p.label || p.name || ''}  ${h.c.dim(`${Object.keys(p.fields || {}).length} fields`)}`); } },
+  { key: 'autofill.detect', repo: false, usage: 'autofill detect [--agent <tab>] [--profile <id>]', about: 'preview the fill of the application/form in a tab: which field gets what and how confident; touches nothing',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/detect', body: { agentId: a.flags.agent || 'default', ...(a.flags.profile ? { profileId: a.flags.profile } : {}) } }),
+    print: (d, a, h) => { if (d.error) return console.log(h.c.amber(`  ${d.error}`)); for (const m of d.matches || []) console.log(`  ${String(m.fieldType).padEnd(14)} ${h.c.dim(m.confidence)}  ${m.label || m.name || m.cgId || ''}`); const u = (d.needsPick && d.needsPick.unplaced) || []; if (u.length) console.log(h.c.amber(`  no field takes: ${u.join(', ')} — autofill pick <type>`)); } },
+  { key: 'autofill.fill', repo: false, usage: 'autofill fill [--agent <tab>] [--profile <id>] [--min high|medium|low]', about: 'fill the application/form in a tab from an autofill profile and what was taught for that site; sets values only, never submits',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/fill', body: { agentId: a.flags.agent || 'default', minConfidence: a.flags.min || 'medium', ...(a.flags.profile ? { profileId: a.flags.profile } : {}) } }),
+    print: (d, a, h) => { if (d.error) return console.log(h.c.amber(`  ${d.error}`)); console.log(h.c.mint(`  filled ${(d.filled || []).length} of ${d.totalFields || 0}`) + `  ${(d.filled || []).map(f => f.fieldType).join(', ')}`); if ((d.failed || []).length) console.log(h.c.amber(`  failed: ${d.failed.map(f => `${f.fieldType} (${f.error})`).join(', ')}`)); const u = (d.needsPick && d.needsPick.unplaced) || []; if (u.length) console.log(h.c.amber(`  no field took: ${u.join(', ')} — autofill pick <type>`)); } },
+  { key: 'gig.fill', repo: false, usage: 'gig fill [--agent <tab>] [--offer "<one line>"] [--profile <id>]', about: 'fill the Fiverr gig editor in a tab: the gig already written, else one written from the Fiverr profile and the offer; never saves or publishes',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/gig/autofill', timeoutMs: 180000, body: { agentId: a.flags.agent || 'default', offer: a.flags.offer || a.args.join(' ') || '', ...(a.flags.profile ? { profileId: a.flags.profile } : {}) } }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); console.log(h.c.mint(`  "${d.title}": filled ${(d.filled || []).map(f => f.key).join(', ') || 'nothing'}`) + (d.drafted ? h.c.dim('  (written just now)') : '')); if ((d.leftToCopy || []).length) console.log(h.c.dim(`  left to copy: ${d.leftToCopy.join(', ')}`)); } },
+  { key: 'gig.detect', repo: false, usage: 'gig detect [--agent <tab>]', about: 'preview which parts of the written gig the Fiverr editor in a tab would take; touches nothing',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/gig/detect', body: { agentId: a.flags.agent || 'default' } }),
+    print: (d, a, h) => { if (d.error) return console.log(h.c.amber(`  ${d.error}`)); for (const m of d.matches || []) console.log(`  ${String(m.key).padEnd(14)} ${h.c.dim(m.confidence || '')}`); if ((d.leftToCopy || []).length) console.log(h.c.dim(`  left to copy: ${d.leftToCopy.join(', ')}`)); } },
+  { key: 'macro.list', repo: false, usage: 'macro list', about: 'the Clear Glass macros: name, url pattern, steps, params',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/macros' }),
+    print: (d, a, h) => { const l = d.macros || []; if (!l.length) return console.log(h.c.dim(d.error ? `  ${d.error}` : '  no macros yet')); for (const m of l) console.log(`  ${String(m.name).padEnd(28)} ${h.c.dim(`${m.urlPattern || '*'} · ${typeof m.steps === 'number' ? m.steps : (m.steps || []).length} steps${(m.params || []).length ? ` · {{${m.params.join('}} {{')}}}` : ''}`)}`); } },
+  { key: 'macro.show', repo: false, usage: 'macro show <name>', about: 'one macro: its steps and params',
+    need: (a) => (!a.args.length ? '<name>' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/cli/macros/${encodeURIComponent(a.args.join(' '))}` }),
+    print: (d, a, h) => { const m = d.macro || d; if (d.error) return console.log(h.c.amber(`  ${d.error}`)); console.log(h.c.bold(`  ${m.name}`) + h.c.dim(`  ${m.urlPattern || '*'}`)); (m.steps || []).forEach((s, i) => console.log(`  ${String(i + 1).padStart(3)}. ${s.action} ${h.c.dim(JSON.stringify(s.data || {}).slice(0, 100))}`)); } },
+  { key: 'macro.run', repo: false, usage: 'macro run <name> [key=value ...] [--agent <tab>]', about: 'replay a macro in a tab with its {{params}}: checks its url pattern, snapshots first, stops at the first failed step',
+    need: (a) => (!a.args.filter(x => !/^[\w.-]+=/.test(x)).length ? '<name>' : null),
+    req: (a) => { const params = {}, name = []; for (const x of a.args) { const m = /^([\w.-]+)=(.*)$/.exec(x); if (m) params[m[1]] = m[2]; else name.push(x); } return { system: 'clear-glass', method: 'POST', path: `/cli/macros/${encodeURIComponent(name.join(' '))}/run`, timeoutMs: 5 * 60000, body: { agentId: a.flags.agent || 'default', params } }; },
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.macro}: ${d.stepsCompleted} steps done`) : h.c.amber(`  ${d.error}${d.failedAtStep != null ? ` (step ${d.failedAtStep + 1})` : ''}`)) },
+  { key: 'macro.record', repo: false, usage: 'macro record [<name>] [--agent <tab>]', about: 'start recording what is done in a tab as a macro (a .macro node from the first second); `macro stop` ends it',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/macros/record/start', body: { agentId: a.flags.agent || 'default', name: a.args.join(' ') || undefined } }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  recording "${d.name}" → ${d.file}`) : h.c.amber(`  ${d.error}`)) },
+  { key: 'macro.stop', repo: false, usage: 'macro stop [--agent <tab>]', about: 'stop recording a tab: the steps it made (passwords become a {{password}} param) and the .macro file',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/macros/record/stop', body: { agentId: a.flags.agent || 'default' } }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${(d.steps || []).length} steps → ${d.file}`) + ((d.params || []).length ? h.c.dim(`  params: ${d.params.join(', ')}`) : '') : h.c.amber(`  ${d.error}`)) },
   { key: 'glass.processes', repo: false, usage: 'glass processes', about: 'what is running in Clear Glass: each process with its tabs and background tabs, memory and CPU (ending one is his, in the Processes window)',
     req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/processes' }),
     print: (d, a, h) => {
@@ -1037,6 +1238,18 @@ export const SPEC = [
   // ── 0.59.12 — James: "the nexus> is for you. not me. give yourself the tools using nexus>. dude...." What the agent in a
   //    chat Clear Glass watches needs to work on his machine: show him a page, and read (never write) logs, files and the
   //    tree. `local` rows run in the process that hears the line (lib/nexus-read.js); secrets refused, keys redacted. ──
+  // §ER2/ER4 0.60.253 — James, 2026-10-25: "can you hook erosmanceros into snowflake, accounts manager, and the dom mutator."
+  { key: 'eros.open', repo: false, usage: 'eros open <url> [--snowflake | --account <accountId>]', about: 'a page for ErosmancerOS to drive like a person: through Snowflake, signed in as one of his accounts (at its pace), or plain — opened by Clear Glass, then Eros attaches to exactly that page',
+    need: (a) => (!a.args[0] ? '<url>' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/eros/open', timeoutMs: 150000, body: { url: /^[a-z]+:\/\//i.test(a.args[0]) ? a.args[0] : `https://${a.args[0]}`, via: a.flags.snowflake ? 'snowflake' : a.flags.account ? 'account' : 'plain', ...(a.flags.account ? { accountId: String(a.flags.account) } : {}) } }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.agentId}`) + h.c.dim(`  ${d.via}${d.accountId ? ` ${d.accountId}` : ''} · Eros tab ${String(d.tabId).slice(0, 8)} · pace ${d.profile} · ${d.url}`) : h.c.amber(`  ${d.error}`)) },
+  { key: 'eros.tabs', repo: false, usage: 'eros tabs', about: 'ErosmancerOS\'s tabs: each with the Clear Glass agent it is (or none) and the pace it moves at',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/eros/tabs' }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); for (const t of d.tabs || []) console.log(`  ${h.c.gray(String(t.targetId).slice(0, 8))} ${(t.agentId || h.c.dim('(no agent)')).toString().padEnd(22)} ${h.c.dim(`${t.profile || ''} ${t.url}`)}`); } },
+  { key: 'eros.pace', repo: false, usage: 'eros pace <accountId> <precise|cautious|exploratory|turbo|default>', about: 'the pace ErosmancerOS moves at in that account\'s pages (its pointer and its keys); default clears it',
+    need: (a) => (a.args.length < 2 ? '<accountId> <pace>' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'PUT', path: `/cli/accounts/${encodeURIComponent(a.args[0])}`, body: { updates: { erosProfile: a.args[1] === 'default' ? null : a.args[1] } } }),
+    print: (d, a, h) => console.log(d.error ? h.c.amber(`  ${d.error}`) : h.c.mint(`  ${d.label || d.id}: ${d.erosProfile || 'default'}`)) },
   { key: 'glass.open', repo: false, usage: 'glass open <url>', about: 'show James a page in Clear Glass: the window already on that site comes to the front, else the main window goes there, else a new one',
     need: (a) => (a.args[0] ? null : '<url>'),
     req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/open', body: { url: /^[a-z][\w+.-]*:\/\//i.test(a.args[0]) ? a.args[0] : `${/^(?:localhost|127\.|\d+\.\d+\.\d+\.\d+)/.test(a.args[0]) ? 'http' : 'https'}://${a.args[0]}` } }),   // a local system is plain http

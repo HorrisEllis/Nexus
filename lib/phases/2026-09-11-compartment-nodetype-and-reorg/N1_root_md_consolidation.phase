@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N1_root_md_consolidation
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N1_root_md_consolidation
+context: >-
+  pipeline phase N1_root_md_consolidation of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: N1_root_md_consolidation (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792874367970
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874367970
+lastSeenAt: 1792874367970
+fingerprint: null
+payload:
+  id: N1_root_md_consolidation
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/version.js
+    - docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+    - orchestrator/lib/changelog.js
+    - tests/modules/changelog.test.js
+    - cos/host/system-map.js
+    - scripts/precommit-check.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9967d74d15e704f6

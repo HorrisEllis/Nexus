@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG6_relations_and_fractals
+type: phase
+id: docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG6_relations_and_fractals
+context: >-
+  pipeline phase FG6_relations_and_fractals of
+  docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+intent: null
+summary: FG6_relations_and_fractals (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792841754578
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754578
+lastSeenAt: 1792841754578
+fingerprint: null
+payload:
+  id: FG6_relations_and_fractals
+  map: docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/graph.js
+    - intelligence/lattice/associative-lattice.js
+  depends_on:
+    - FG1_containment_tree
+  blocks: []
+  spec: null
+  graph: ce7f0dde54b7b1ca
