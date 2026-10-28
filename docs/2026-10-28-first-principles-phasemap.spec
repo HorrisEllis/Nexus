@@ -97,3 +97,9 @@ James, 2026-10-28: "stop. just get fiverr working." Said while the five cores we
 - FP3 (gate-eval.js), FP4 (state-diff.js) and FP5 (gig-pricing.js) are on disk, not wired and not tested. FP5 is kept but unused: the
   gig fill matches the pricing boxes by placeholder and chooses delivery time directly. They stay mapped for the gates and the Tab switch.
 - Proof: tests/modules/test-fiverr-works.test.js 5/5 (FW-01 FP1, FW-04 FP2, FW-05 in Clear Glass).
+
+## ADDENDUM 2026-10-28 (0.60.265) — this map's releases renumbered
+James, 2026-10-28: "no patch file. unless idearium can run it. like i can drag it into the versionium tab and import". Merging main in (to make
+a change pack he can drop on his Nexus), main already had its own 0.60.221–0.60.224 and went up to 0.60.260. The releases named above as
+0.60.221, 0.60.222, 0.60.223 and 0.60.224 are 0.60.261, 0.60.262, 0.60.263 and 0.60.264; their changelogs say so. The text above is kept as
+written (§0.3).

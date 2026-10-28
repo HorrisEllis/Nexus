@@ -409,6 +409,8 @@ const SUITES = [
   'test-processes.test.js',              // 0.60.219 SP5 — processes with their pages, end (his only), the activity ring, the doors
   'test-processes-ui.test.js',           // 0.60.220 SP6 — the Processes window in Clear Glass (Shift+Esc, ☰, Tools)
   'test-fiverr-works.test.js',           // 0.60.221 — Fiverr: link-tabs open as tabs, pricing boxes filled, dropdowns chosen one by one
+  'test-autofill-chips.test.js',         // 0.60.267 AF3 — the page reader always there; a chip under each input
+  'test-change-pack.test.js',            // 0.60.265 — a change to Nexus as one zip, through the gate
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
   'test-chatgpt-scrape-template.test.js', // 0.60.69 — the ChatGPT chat reader template (loop body, vars, extract fields)
   'test-cos-app-ui.test.js',          // 0.60.89 COSA6 — COS window (jsdom) and controller

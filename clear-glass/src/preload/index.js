@@ -371,6 +371,15 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     gigDetect: (gig, agentId)                => ipcRenderer.invoke('autofill:gig:detect', { gig, agentId }),
     gigFill:   (gig, agentId, minConfidence) => ipcRenderer.invoke('autofill:gig:fill', { gig, agentId, minConfidence }),
     gigAssign: (d) => ipcRenderer.invoke('autofill:gig:assign', d),   // 0.60.222 — teach a gig part the element he picked
+    gigPage:   (agentId) => ipcRenderer.invoke('autofill:gig:page', { agentId }),          // 0.60.224
+    gigSaveRecording: (d) => ipcRenderer.invoke('autofill:gig:saveRecording', d),         // 0.60.224 — his choices → the page's macro
+    suggest:   (agentId) => ipcRenderer.invoke('autofill:suggest', { agentId }),          // 0.60.267 AF3 — what can go in every field
+    gigSetLast: (gig) => ipcRenderer.invoke('autofill:gig:setLast', { gig }),            // 0.60.267 — the panel's gig is the chips' gig
+    fillOne:   (agentId, cgId, value) => ipcRenderer.invoke('autofill:fillOne', { agentId, cgId, value }),   // 0.60.267 AF3 — a chip clicked
+    anchor:    (agentId, cgId, kind, value) => ipcRenderer.invoke('autofill:anchor', { agentId, cgId, kind, value }),   // 0.60.268 AF5 — ⚓ a field
+    exportAll: ()                            => ipcRenderer.invoke('autofill:export'),                   // §AT2 0.60.256 the .autofill file: { text, filename, counts }
+    importAll: (text)                        => ipcRenderer.invoke('autofill:import', { text }),         // merges; keeps what it replaced
+    importUndo: ()                           => ipcRenderer.invoke('autofill:import:undo'),
     gigImport: (text)                        => ipcRenderer.invoke('autofill:gig:import', { text }),
     gigFile: (gig)                           => ipcRenderer.invoke('autofill:gig:file', { gig }),        // the gig as a .gig (YAML) file: { text, filename }
     gigTemplate: ()                          => ipcRenderer.invoke('autofill:gig:file', { template: true }),   // an empty .gig to fill in   // a .gig.json file's text -> the gig, checked against Fiverr's limits

@@ -751,7 +751,7 @@ class ClearDriver {
       if (native) native.setAttribute('data-cg-choose-native', String(window.__cgChooseN));
       // what is already on screen, so the options that appear on opening can be told apart
       document.querySelectorAll('[data-cg-pre]').forEach(function(el){ el.removeAttribute('data-cg-pre'); });
-      document.querySelectorAll('[role="option"],[role="menuitem"],li,[class*="option" i],[class*="item" i]').forEach(function(el){ if (vis(el)) el.setAttribute('data-cg-pre', '1'); });
+      document.querySelectorAll('body *').forEach(function(el){ if (vis(el)) el.setAttribute('data-cg-pre', '1'); });   // everything on screen before opening
       return { n: window.__cgChooseN, native: !!native, shown: norm(trig.innerText || trig.textContent).slice(0, 200),
         options: native ? Array.prototype.map.call(native.options, function(o){ return o.textContent.trim(); }) : null };
     })(${JSON.stringify(selector || null)}, ${JSON.stringify(column || null)}, ${JSON.stringify(row || null)}, ${JSON.stringify(showsText || null)})`);
@@ -770,6 +770,8 @@ class ClearDriver {
       opts = await this._evalJs(wc, `(function(){
         function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
         var all = Array.prototype.filter.call(document.querySelectorAll('[role="option"],[role="menuitem"],li,[class*="option" i],[class*="item" i]'), function(el){ return vis(el) && !el.hasAttribute('data-cg-pre'); });
+        // 0.60.222b — a site whose options are plain divs: what appeared on opening, with short text of its own
+        if (!all.length) all = Array.prototype.filter.call(document.querySelectorAll('body *'), function(el){ var t = (el.innerText || '').trim(); return vis(el) && !el.hasAttribute('data-cg-pre') && t && t.length <= 80 && t.indexOf('\\n') < 0; });
         var leaves = all.filter(function(el){ return !all.some(function(o){ return o !== el && el.contains(o); }); });
         return leaves.slice(0, 200).map(function(el, i){ el.setAttribute('data-cg-opt', String(i)); return (el.innerText || el.textContent || '').replace(/\\s+/g, ' ').trim(); });
       })()`);

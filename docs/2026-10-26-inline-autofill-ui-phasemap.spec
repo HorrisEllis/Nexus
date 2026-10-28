@@ -47,7 +47,7 @@ phases:
     proof: "test-autofill-active.test.js: activeProfile picks default/sole/first and names no-profile cleanly (no null); matchOne returns the type+value for one input, or nothing for a non-fillable one — injected, no backend"
 
   AF2_route_and_command:
-    status: BUILT 0.60.258 — the fix lands at matcher._siteChoice (every fill/detect path defaults to store.activeProfile; zero profiles → clean noProfile error, never getProfile(null)). So copilot/agents/context-menu/gig/routes all fill from the active profile. test-autofill-fill-active.test.js 4/4; all 10 autofill suites green; backward compatible (minimal stores keep pass-through). NOTE: the actual named routes GET /cli/autofill/active + POST /cli/autofill/default are not yet added — the active-profile DEFAULTING (the real fix) is done; the explicit active/default endpoints can follow with AF4's settings picker.
+    status: "BUILT 0.60.258 — the fix lands at matcher._siteChoice (every fill/detect path defaults to store.activeProfile; zero profiles → clean noProfile error, never getProfile(null)). So copilot/agents/context-menu/gig/routes all fill from the active profile. test-autofill-fill-active.test.js 4/4; all 10 autofill suites green; backward compatible (minimal stores keep pass-through). NOTE: the actual named routes GET /cli/autofill/active + POST /cli/autofill/default are not yet added — the active-profile DEFAULTING (the real fix) is done; the explicit active/default endpoints can follow with AF4's settings picker."
     layer: integration
     depends_on: [AF1_active_profile_and_fill_one]
     files: [clear-glass/src/automation/routes.js, lib/agent-tools/tools/clear-glass/autofill.js]
@@ -59,7 +59,7 @@ phases:
     proof: "a fill with no profileId fills from the active profile (not null); a fill with a selector fills one field; in the autofill route + co-pilot tool tests"
 
   AF3_the_inline_chip:
-    status: OPEN
+    status: BUILT 0.60.267 — renderer/autofill-inline.js (+ .css), src/autofill/suggest.js, bridge autofill:suggest / fillOne; test-autofill-chips 5/5 in Clear Glass (drift in the 2026-10-28 addendum)
     layer: ui
     depends_on: [AF1_active_profile_and_fill_one]
     files: [clear-glass/renderer/autofill-inline.js]
@@ -84,6 +84,18 @@ phases:
       autofill.profileId per origin), so a site can be excluded.
     proof: "the toggle hides/shows the chip; the default-profile picker sets what activeProfile() returns; a per-site off suppresses the chip on that origin; in Clear Glass"
 
+  AF5_node_anchors_and_picker_on_confusion:
+    status: BUILT 0.60.268 — ⚓ chips + autofill:anchor (learned map / page-memory target), the gig panel's picker on a miss; test-autofill-chips AC-06..08
+    layer: ui
+    depends_on: [AF3_the_inline_chip]
+    files: [clear-glass/src/autofill/suggest.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/renderer/autofill-inline.js, clear-glass/renderer/gig-panel.js]
+    does: >-
+      His 2026-10-28 "what a node anchor. also have the element picker come up to map the page if confused." Every fillable field the
+      chips cannot place gets a ⚓ chip; he says what it is (a profile field type, or a gig part on a Fiverr editor page) and that meaning
+      is anchored to the field's stable identity on the site (learn-pick chooseKey → saveLearned; gig parts → page-memory targets), so every
+      later fill and chip uses it. When the gig fill cannot place parts, the element picker comes up by itself, one part after another.
+    proof: "an unplaced field shows ⚓; anchoring it as email makes its chip offer the profile email and saves the learned key; a gig fill with a missing part starts the picker for it; in Clear Glass"
+
 order: >-
   AF1 first — the active-profile resolution + matchOne; it is the null-profile FIX (copilot/agents stop passing null) and the
   data the chip needs, and it is unit-testable without Electron. AF2 wires the route + command (fill defaults to the active
@@ -91,3 +103,22 @@ order: >-
   for), anchored under the input by the same rect positioning guardian-picker already uses. AF4 the settings toggle + default
   picker. All but AF1 are Clear Glass UI, verified live on his machine (this container has no Electron). Each phase specced
   again as .phase + .graph (his 2026-10-20); DG2 foresees any crossing.
+
+# ── ADDENDUM 2026-10-28 (0.60.267) — AF3 built; what changed from the map, and the root cause found on the way
+# James, 2026-10-28: "fill this in · Did not fill: matchGigFields: domFields must be the dom_query array · needs to autofill any field it can.
+# also needs to have the autopill under each input fieled."
+# - Root cause of the error: the full page reader (dom/archaeology.js DOM_OBSERVER_SCRIPT) was never injected (inject() had no caller), so
+#   every fill depended on the DOM-tree panel having been opened. handleQuery/handleMutate now put it on the page first (_ensure).
+# - Drift from AF3 as mapped, decided by his axioms (USER_AUTONOMY, his data stays his; §1.2): the chip is drawn in Clear Glass's own window
+#   over the page, not "injected into real pages" — inside the page, a site's scripts could read the suggested profile values before he
+#   chose. The page only reports where its fields are.
+# - "under each input": every suggested field has a chip, not only the focused one (his 2026-10-28 words); the focused one is brighter.
+# - Gig parts are offered too (the gig written in the panel), beside the active profile.
+# - AF4 (Settings toggle + default-profile picker) stays OPEN.
+
+# ── ADDENDUM 2026-10-28 — AF5 mapped: node anchors, and the picker when confused
+# James, 2026-10-28, after the chips (0.60.267): "what a node anchor. also have the element picker come up to map the page if confused."
+# Reading (the coder's; to confirm): "node anchor" = each field (node) on the page anchored to what it means — the chips already show what
+# goes in a field they understand; a field they do not understand gets a ⚓ to anchor it once, by its stable identity (JA3's chooseKey), so
+# the page is mapped and stays mapped. "if confused" = when a fill cannot place something, the element picker comes up without being asked.
+# Built on: learn-pick.js (chooseKey, saveLearned — JA3's identity and save path), page-memory targets (0.60.262), the gig panel's Point at it.

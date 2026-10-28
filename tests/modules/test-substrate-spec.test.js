@@ -39,6 +39,9 @@ const SPECS = [
   { spec: 'clear-glass/spec/adblock.spec', map: 'docs/2026-10-21-adblock-phasemap.spec' },   // 0.60.183
   { spec: 'clear-glass/spec/browser-shell.spec', map: 'docs/2026-10-21-browser-shell-phasemap.spec' },
   { spec: 'docs/system-node-db.spec', map: 'docs/2026-10-22-system-node-db-phasemap.spec' },
+  { spec: 'cos/spec/cos-spine.spec', map: 'docs/2026-10-23-cos-spine-phasemap.spec' },
+  { spec: 'docs/self-building-loop.spec', map: 'docs/2026-10-23-self-building-loop-phasemap.spec' },   // 2026-10-23 SL — his "so it can start building itself"   // 2026-10-23 CS — COS is the spine: versions are system states
+  { spec: 'clear-glass/spec/copilot-any-agent.spec', map: 'docs/2026-10-24-copilot-any-agent-phasemap.spec' },   // 2026-10-24 CL — his "get the cli working for guardian, use any agent as the copilot"
   { spec: 'cos/spec/cos-spine.spec', map: 'docs/2026-10-23-cos-spine-phasemap.spec' },   // 2026-10-23 CS — COS is the spine: versions are system states
   { spec: 'clear-glass/spec/flow-cores.spec', map: 'docs/2026-10-28-first-principles-phasemap.spec' },   // 2026-10-28 FP — the deterministic cores
   { spec: 'clear-glass/spec/tab-compartments.spec', map: 'docs/2026-10-28-tab-compartments-phasemap.spec' },   // 2026-10-28 TC — a compartment per tab, links open tabs

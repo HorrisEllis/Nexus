@@ -13,6 +13,9 @@
  *   PARTS[page]            the gig parts each page takes, in order — the fill does these and nothing else there
  *   targetKey(page, part)  'fiverr:<page>:<part>' — where a picked element is remembered (page-memory setTarget)
  *   suggestedCategory(links, gig) → the "Category > Subcategory" link for the gig's category, by option-match (ambiguous / missing said)
+ *   macroName(page)        'fiverr <page>' — his recorded choices for a page, replayed by every fill of that page (0.60.224)
+ *   pageMacroSteps(steps)  a recording → steps for THIS page of any gig: no navigation (the recording's URL is another gig), each click waits
+ *                          for its element first (a dropdown's options exist only once it is open), no publish/save/continue click kept
  */
 const OM = require('../page/option-match');
 
@@ -50,4 +53,29 @@ function suggestedCategory(links, gig) {
   return { ok: true, link: cands[m.index], text: m.option };
 }
 
-module.exports = { gigPage, PARTS, targetKey, suggestedCategory };
+const macroName = (page) => `fiverr ${page}`;
+// a click whose element names one of these is his to press (0.39.301: "Not automate talking or posting"), so it never enters a page macro
+const HIS_BUTTONS = /\b(publish|save|continue|submit|send|pay)\b/i;
+
+function pageMacroSteps(steps) {
+  const out = [], dropped = [];
+  for (const st of Array.isArray(steps) ? steps : []) {
+    if (!st || !st.action) continue;
+    if (st.action === 'navigate') { dropped.push('navigate (the recording was on another gig\'s address)'); continue; }
+    if (st.action === 'click' && HIS_BUTTONS.test(`${(st.data && st.data.selector) || ''} ${st.label || ''}`)) { dropped.push(`click ${st.label ? `"${st.label}"` : st.data.selector} (yours to press)`); continue; }
+    if (st.action === 'click' && st.data && st.data.selector) out.push({ action: 'wait_for', data: { selector: st.data.selector } });
+    out.push(st);
+  }
+  return { steps: out, dropped };
+}
+
+// valueOf(gig, part) — what a gig part holds ('basic.delivery' → '3'); the fill and the chips read parts the same way (0.60.268)
+function valueOf(gig, part) {
+  if (!gig) return null;
+  if (part === 'category') return gig.category ? (gig.subcategory ? `${gig.category} > ${gig.subcategory}` : gig.category) : null;
+  const [tier, k] = String(part).split('.'); const p = gig.packages && gig.packages[tier]; if (!p) return null;
+  const v = k === 'delivery' ? (Number.isFinite(p.deliveryDays) ? String(p.deliveryDays) : null) : p[k];
+  return v === undefined || v === null || v === '' ? null : String(v);
+}
+
+module.exports = { gigPage, PARTS, targetKey, suggestedCategory, macroName, pageMacroSteps, valueOf };

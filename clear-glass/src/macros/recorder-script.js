@@ -34,7 +34,7 @@ const INSTALL = `(function () {
     };
     var push = function (e) { e.url = location.href; e.ts = Date.now(); S.q.push(e); };
     ['click', 'input', 'change', 'submit'].forEach(function (type) {
-      document.addEventListener(type, function (e) { var el = e.target; push({ type: type, sel: selOf(el), value: el && el.value, inputType: el && el.type }); }, true);
+      document.addEventListener(type, function (e) { var el = e.target; var ev = { type: type, sel: selOf(el), value: el && el.value, inputType: el && el.type }; if (el && (el.type === 'checkbox' || el.type === 'radio')) ev.checked = !!el.checked; if (type === 'click' && el) { var b = el.closest ? (el.closest('button,a,[role="button"]') || el) : el; ev.text = String(b.innerText || b.value || b.getAttribute && b.getAttribute('aria-label') || '').trim().slice(0, 60); } push(ev); }, true);   // 0.60.224: a box's state, not its value
     });
     var NAVKEYS = { ArrowDown: 1, ArrowUp: 1, PageDown: 1, PageUp: 1, Home: 1, End: 1, ' ': 1 };
     document.addEventListener('keydown', function (e) {

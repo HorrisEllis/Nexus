@@ -27,6 +27,7 @@
 <link rel="stylesheet" href="cos-theme.css"><!-- 0.60.5 — the Compartment-OS palette, the one Settings loads too -->
 <link rel="stylesheet" href="selector-assign/selector-assign.css">
 <link rel="stylesheet" href="site-profile-groups.css">   <!-- 0.60.217 SP3 one site's settings by feature (scoped: .sp-groups, #site-settings-panel) -->
+<link rel="stylesheet" href="autofill-inline.css">   <!-- 0.60.267 AF3 the chip under each input (scoped: #af-chips) -->
 <link rel="stylesheet" href="shell/shell.css">
 <link rel="stylesheet" href="shell/toolbar.css">   <!-- 0.60.210 the ☰ menu's Tools rows and Customize toolbar -->
 <link rel="stylesheet" href="shell/copilot.css"><!-- BS11 the co-pilot pane on the same system -->
@@ -313,7 +314,7 @@
     <button id="gig-write" class="gig-main">Write the gig</button>
     <div class="gig-row"><button id="gig-import" title="Load a .gig file (an old .gig.json loads too)">Load a gig file…</button><button id="gig-template" title="An empty .gig to fill in">Download template</button><input type="file" id="gig-file" accept=".gig,.yaml,.yml,.json,application/json" hidden></div>
     <div id="gig-write-status" class="gig-status"></div>
-    <div id="gig-actions" hidden><button id="gig-fill" class="gig-main">Fill this Fiverr page</button><button id="gig-export" title="Save this gig as a .gig file">Save gig file</button><button id="gig-copy-all">Copy all</button></div>
+    <div id="gig-actions" hidden><button id="gig-fill" class="gig-main">Fill this Fiverr page</button><button id="gig-export" title="Save this gig as a .gig file">Save gig file</button><button id="gig-copy-all">Copy all</button><button id="gig-record" title="Record your own choices on this editor page (Service type, metadata, rows); every fill of this page replays them">Record my choices on this page</button></div>
     <div id="gig-missing" aria-live="polite"></div>
     <div id="gig-parts"></div>
   </div>
@@ -447,6 +448,7 @@
 <script src="site-profile-groups.js"></script>   <!-- 0.60.217 SP3 -->
 <script src="browser.js"></script>
 <script src="gig-panel.js"></script>
+<script src="autofill-inline.js"></script>   <!-- 0.60.267 AF3 -->
 <script src="page-map-panel.js"></script>
 <script src="shell/icons.js"></script>
 <script src="shell/menus.js"></script>
