@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-tab-compartments-phasemap.spec::TC3_links_open_tabs
+type: phase
+id: docs_2026-10-28-tab-compartments-phasemap.spec::TC3_links_open_tabs
+context: pipeline phase TC3_links_open_tabs of docs/2026-10-28-tab-compartments-phasemap.spec
+intent: null
+summary: TC3_links_open_tabs (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793180610616
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793180610616
+lastSeenAt: 1793180610616
+fingerprint: null
+payload:
+  id: TC3_links_open_tabs
+  map: docs/2026-10-28-tab-compartments-phasemap.spec
+  repo: null
+  layer: integration
+  status: MAPPED
+  files:
+    - clear-glass/src/main/compartment-window.js
+    - clear-glass/src/main/index.js
+    - clear-glass/renderer/browser.js
+    - clear-glass/src/driver/index.js
+  depends_on:
+    - TC2_one_webview_per_tab
+    - TC_D2_links_open_tabs
+  blocks:
+    - MOD-TC-LINKS
+  spec: clear-glass/spec/tab-compartments.spec
+  graph: 305d1614c57d93a7

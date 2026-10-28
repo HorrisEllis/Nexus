@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793179560191
+exported_at: 1793180611541
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793179560191
-lastSeenAt: 1793179560191
+firstSeenAt: 1793180611541
+lastSeenAt: 1793180611541
 fingerprint: null
 payload:
   for: FG6_blocks_ui
@@ -31,7 +31,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 41f076ccce672924
+    dagHash: 56b114c7f05d7b11
     layer: 2
     deps:
       - docs/2026-10-28-gated-flows-phasemap.spec::FG3_gate_per_step
@@ -46,6 +46,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 41f076ccce672924 · layer 2 · blocked by FG3_gate_per_step
+      - DAG 56b114c7f05d7b11 · layer 2 · blocked by FG3_gate_per_step
       - 'depends on (1): FG3_gate_per_step · all upstream 2'
       - 'needed by (0): —'

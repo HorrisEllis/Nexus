@@ -7,11 +7,11 @@ intent: null
 summary: FG5_fiverr_gig_flow (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793179560190
+exported_at: 1793180611540
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793179560190
-lastSeenAt: 1793179560190
+firstSeenAt: 1793180611540
+lastSeenAt: 1793180611540
 fingerprint: null
 payload:
   id: FG5_fiverr_gig_flow
@@ -27,6 +27,7 @@ payload:
   depends_on:
     - FG4_pointer_and_choose_steps
     - FG_D3_publish_is_his
+    - TC3_links_open_tabs
   blocks:
     - MOD-FG-FIVERR
   spec: clear-glass/spec/gated-flows.spec

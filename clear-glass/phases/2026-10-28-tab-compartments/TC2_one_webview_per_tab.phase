@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-tab-compartments-phasemap.spec::TC2_one_webview_per_tab
+type: phase
+id: docs_2026-10-28-tab-compartments-phasemap.spec::TC2_one_webview_per_tab
+context: pipeline phase TC2_one_webview_per_tab of docs/2026-10-28-tab-compartments-phasemap.spec
+intent: null
+summary: TC2_one_webview_per_tab (ui) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793180610615
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793180610615
+lastSeenAt: 1793180610615
+fingerprint: null
+payload:
+  id: TC2_one_webview_per_tab
+  map: docs/2026-10-28-tab-compartments-phasemap.spec
+  repo: null
+  layer: ui
+  status: MAPPED
+  files:
+    - clear-glass/renderer/tabs/webviews.js
+    - clear-glass/renderer/browser.js
+    - clear-glass/renderer/browser.html
+    - clear-glass/src/driver/index.js
+    - clear-glass/src/driver/page-resolver.js
+  depends_on:
+    - TC1_a_compartment_per_tab
+  blocks:
+    - MOD-TC-WEBVIEWS
+  spec: clear-glass/spec/tab-compartments.spec
+  graph: 28c3c752658ba747

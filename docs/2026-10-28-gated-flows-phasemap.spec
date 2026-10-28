@@ -89,7 +89,7 @@ phases:
   FG5_fiverr_gig_flow:
     layer: integration
     status: MAPPED
-    depends_on: [FG4_pointer_and_choose_steps, FG_D3_publish_is_his]
+    depends_on: [FG4_pointer_and_choose_steps, FG_D3_publish_is_his, TC3_links_open_tabs]
     files: [clear-glass/src/autofill/gig-flow.js, clear-glass/src/autofill/gig.js, clear-glass/src/ipc/bridge.js, clear-glass/renderer/gig-panel.js]
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-FG-FIVERR]
@@ -107,3 +107,9 @@ phases:
     blocks: [MOD-FG-BLOCKS-UI]
     does: Settings › Macros draws a macro's steps as blocks with their gates; a run marks each block; "Resume from here" on a stopped one
     proof: in Clear Glass, a gated macro's blocks and a stopped run's mark
+
+## ADDENDUM 2026-10-28 — FG5 waits on TC3 (links open as tabs)
+James, 2026-10-28: "why did fiverr open in a popout window? like none of the autofill works." · "I want it just to open in a new tab."
+Fiverr's Edit Gig is a target=_blank link that Clear Glass opened as a bare window no flow can reach (compartment-window.js:72). The Fiverr
+flow therefore depends on TC3_links_open_tabs (docs/2026-10-28-tab-compartments-phasemap.spec): Edit Gig opens as a tab in the same
+compartment, where the flow's blocks run.

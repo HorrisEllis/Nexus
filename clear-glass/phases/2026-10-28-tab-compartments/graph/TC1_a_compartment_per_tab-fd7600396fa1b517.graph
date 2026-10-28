@@ -1,0 +1,191 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TC1_a_compartment_per_tab:fd7600396fa1b517
+type: graph
+id: phase:TC1_a_compartment_per_tab:fd7600396fa1b517
+context: dependency graph of phase TC1_a_compartment_per_tab
+intent: null
+summary: 21 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793180610612
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793180610612
+lastSeenAt: 1793180610612
+fingerprint: null
+payload:
+  for: TC1_a_compartment_per_tab
+  kind: phase
+  repo: null
+  hash: fd7600396fa1b517
+  nodes:
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/compartment.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/tabs/compartments.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/contexts/manager.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/contexts/google-signin.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/manager.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/vault.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/fingerprint/engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/compartment-window.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/window-frame.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/sse/server.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/tls/proxy.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/main/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/window-frame.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/sse/server.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/tls/proxy.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/fingerprint/engine.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/manager.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/net/compartment.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 56b114c7f05d7b11
+    layer: 1
+    deps:
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC_D1_tab_is_a_compartment
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC_D3_cos_reads_through_a_route
+    dependents:
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC2_one_webview_per_tab
+    upstream:
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC_D1_tab_is_a_compartment
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC_D3_cos_reads_through_a_route
+    downstream:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG5_fiverr_gig_flow
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC2_one_webview_per_tab
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC3_links_open_tabs
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC4_pop_out_and_dock
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC5_new_tab_chooser
+    blockedBy:
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC_D1_tab_is_a_compartment
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC_D3_cos_reads_through_a_route
+    unlocks:
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC2_one_webview_per_tab
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 56b114c7f05d7b11 · layer 1 · blocked by TC_D1_tab_is_a_compartment,
+        TC_D3_cos_reads_through_a_route
+      - 'depends on (2): TC_D1_tab_is_a_compartment, TC_D3_cos_reads_through_a_route'
+      - >-
+        needed by (1): TC2_one_webview_per_tab · all downstream 5 · finishing it unlocks
+        TC2_one_webview_per_tab

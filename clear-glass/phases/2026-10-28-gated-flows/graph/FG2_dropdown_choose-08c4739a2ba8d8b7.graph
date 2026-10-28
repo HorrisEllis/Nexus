@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793179560185
+exported_at: 1793180611534
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793179560185
-lastSeenAt: 1793179560185
+firstSeenAt: 1793180611534
+lastSeenAt: 1793180611534
 fingerprint: null
 payload:
   for: FG2_dropdown_choose
@@ -108,7 +108,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 41f076ccce672924
+    dagHash: 56b114c7f05d7b11
     layer: 1
     deps:
       - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
@@ -125,6 +125,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 41f076ccce672924 · layer 1 · blocked by FG_D2_choice_is_read_back
+      - DAG 56b114c7f05d7b11 · layer 1 · blocked by FG_D2_choice_is_read_back
       - 'depends on (1): FG_D2_choice_is_read_back'
       - 'needed by (1): FG4_pointer_and_choose_steps · all downstream 2'

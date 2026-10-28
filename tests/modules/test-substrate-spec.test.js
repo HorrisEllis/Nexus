@@ -40,6 +40,7 @@ const SPECS = [
   { spec: 'clear-glass/spec/browser-shell.spec', map: 'docs/2026-10-21-browser-shell-phasemap.spec' },
   { spec: 'docs/system-node-db.spec', map: 'docs/2026-10-22-system-node-db-phasemap.spec' },
   { spec: 'cos/spec/cos-spine.spec', map: 'docs/2026-10-23-cos-spine-phasemap.spec' },   // 2026-10-23 CS — COS is the spine: versions are system states
+  { spec: 'clear-glass/spec/tab-compartments.spec', map: 'docs/2026-10-28-tab-compartments-phasemap.spec' },   // 2026-10-28 TC — a compartment per tab, links open tabs
   { spec: 'clear-glass/spec/gated-flows.spec', map: 'docs/2026-10-28-gated-flows-phasemap.spec' },   // 2026-10-28 FG — gated flows, dropdowns, Tab mode
   { spec: 'clear-glass/spec/site-profile.spec', map: 'docs/2026-10-23-site-profile-processes-phasemap.spec' },   // 2026-10-23 SP — per-site settings, Processes   // 2026-10-22 ND — his "each database for each system"   // 0.60.179   // 2026-10-20 — compile only: its new modules' phases (AQ1/AQ2) are not in a map yet
 ];

@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793179560183
+exported_at: 1793180611531
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793179560183
-lastSeenAt: 1793179560183
+firstSeenAt: 1793180611531
+lastSeenAt: 1793180611531
 fingerprint: null
 payload:
   for: FG1_keyboard_mode_switch
@@ -212,7 +212,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 41f076ccce672924
+    dagHash: 56b114c7f05d7b11
     layer: 1
     deps:
       - docs/2026-10-28-gated-flows-phasemap.spec::FG_D4_tab_mode_reverted_not_blocked
@@ -226,6 +226,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 41f076ccce672924 · layer 1 · blocked by FG_D4_tab_mode_reverted_not_blocked
+      - DAG 56b114c7f05d7b11 · layer 1 · blocked by FG_D4_tab_mode_reverted_not_blocked
       - 'depends on (1): FG_D4_tab_mode_reverted_not_blocked'
       - 'needed by (0): —'

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-tab-compartments-phasemap.spec::TC1_a_compartment_per_tab
+type: phase
+id: docs_2026-10-28-tab-compartments-phasemap.spec::TC1_a_compartment_per_tab
+context: pipeline phase TC1_a_compartment_per_tab of docs/2026-10-28-tab-compartments-phasemap.spec
+intent: null
+summary: TC1_a_compartment_per_tab (foundation) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793180610613
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793180610613
+lastSeenAt: 1793180610613
+fingerprint: null
+payload:
+  id: TC1_a_compartment_per_tab
+  map: docs/2026-10-28-tab-compartments-phasemap.spec
+  repo: null
+  layer: foundation
+  status: MAPPED
+  files:
+    - clear-glass/src/tabs/compartments.js
+    - clear-glass/src/main/index.js
+    - clear-glass/src/net/compartment.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - TC_D1_tab_is_a_compartment
+    - TC_D3_cos_reads_through_a_route
+  blocks:
+    - MOD-TC-STORE
+  spec: clear-glass/spec/tab-compartments.spec
+  graph: fd7600396fa1b517

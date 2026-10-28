@@ -1,0 +1,69 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TC5_new_tab_chooser:46eb739d167a39d2
+type: graph
+id: phase:TC5_new_tab_chooser:46eb739d167a39d2
+context: dependency graph of phase TC5_new_tab_chooser
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793180610619
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793180610619
+lastSeenAt: 1793180610619
+fingerprint: null
+payload:
+  for: TC5_new_tab_chooser
+  kind: phase
+  repo: null
+  hash: 46eb739d167a39d2
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/shell/shell.css
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/tabs/chooser.js
+      role: changes
+      exists: false
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 56b114c7f05d7b11
+    layer: 3
+    deps:
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC2_one_webview_per_tab
+    dependents: []
+    upstream:
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC1_a_compartment_per_tab
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC2_one_webview_per_tab
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC_D1_tab_is_a_compartment
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC_D3_cos_reads_through_a_route
+    downstream: []
+    blockedBy:
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC2_one_webview_per_tab
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-28-tab-compartments-phasemap.spec::TC3_links_open_tabs
+        files:
+          - clear-glass/renderer/browser.js
+      - with: docs/2026-10-28-tab-compartments-phasemap.spec::TC4_pop_out_and_dock
+        files:
+          - clear-glass/renderer/browser.js
+    dangling: []
+    lines:
+      - DAG 56b114c7f05d7b11 · layer 3 · blocked by TC2_one_webview_per_tab
+      - 'depends on (1): TC2_one_webview_per_tab · all upstream 4'
+      - 'needed by (0): —'
+      - >-
+        same files as TC3_links_open_tabs with no order between them:
+        clear-glass/renderer/browser.js
+      - >-
+        same files as TC4_pop_out_and_dock with no order between them:
+        clear-glass/renderer/browser.js
