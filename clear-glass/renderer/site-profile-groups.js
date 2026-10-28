@@ -18,9 +18,9 @@
 (function () {
   const FEATURE = {
     autofill: 'Autofill', macros: 'Macros', workflows: 'Workflows', passwords: 'Passwords & account', network: 'Network',
-    resume: 'Resume', driver: 'ClearDriver', mesh: 'Co-pilot & agent mesh', guardian: 'Guardian',
+    resume: 'Resume', accessibility: 'Accessibility', driver: 'ClearDriver', mesh: 'Co-pilot & agent mesh', guardian: 'Guardian',
   };
-  const ORDER = ['autofill', 'macros', 'workflows', 'passwords', 'network', 'resume', 'driver', 'mesh', 'guardian'];
+  const ORDER = ['autofill', 'macros', 'workflows', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'mesh', 'guardian'];
   const ROUTE = [['direct', 'Direct'], ['transport', 'Through Snowflake'], ['block', 'Blocked']];
   const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
   const show = (v) => v === true ? 'on' : v === false ? 'off' : v == null || v === '' ? 'none' : Array.isArray(v) ? (v.length ? v.join(', ') : 'none') : String(v);

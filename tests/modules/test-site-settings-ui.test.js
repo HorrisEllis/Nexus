@@ -49,7 +49,7 @@ const rowSel = (key, inner = '') => `.sp-row[data-key="${key}"] ${inner}`.trim()
   const stubAnswers = { 'toolbar.commands': [], 'bookmarks.list': [], 'plugins.list': [], 'options.get': {}, 'providers.list': [],
     'autofill.listProfiles': [{ id: 'cv', label: 'My CV' }], 'accounts.list': [{ id: 'work', label: 'Work' }], 'macros.list': { macros: [{ name: 'expand-all' }] } };
   try {
-    await test('SU-01', 'the toolbar popup: nine groups from the key table; set → this site, ↺ → default; a refused value says why; the route is a rule', async () => {
+    await test('SU-01', 'the toolbar popup: ten groups from the key table (accessibility added 0.60.273); set → this site, ↺ → default; a refused value says why; the route is a rule', async () => {
       const page = await browser.newPage({ viewport: { width: 1440, height: 900 } }); const errors = []; page.on('pageerror', e => errors.push(e.message));
       const { P, net } = await wire(page);
       await page.addInitScript(initScript({ answers: stubAnswers })); await page.addInitScript(BRIDGE);
@@ -59,7 +59,7 @@ const rowSel = (key, inner = '') => `.sp-row[data-key="${key}"] ${inner}`.trim()
       await page.waitForSelector('#site-settings-panel .sp-group');
       assert.strictEqual(await page.innerText('#site-settings-panel .sp-host'), 'shop.example');
       const groups = await page.$$eval('#site-settings-panel .sp-group', els => els.map(e => e.dataset.feature));
-      assert.deepStrictEqual(groups, ['autofill', 'macros', 'workflows', 'passwords', 'network', 'resume', 'driver', 'mesh', 'guardian']);
+      assert.deepStrictEqual(groups, ['autofill', 'macros', 'workflows', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'mesh', 'guardian']);
       const rows = await page.$$eval('#site-settings-panel .sp-row', els => els.length);
       assert.strictEqual(rows, P.KEYS.length + 1, 'one row per key, and the network route');
       assert.strictEqual(await page.innerText(rowSel('driver.navTimeoutMs', '.sp-tag')), 'Settings', 'the global option is named as Settings');

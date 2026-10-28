@@ -169,3 +169,13 @@ from its file the first time). The built-in pick stays as the fallback, said. Pr
 
 # ADDENDUM 2026-10-28 (0.60.271) — choose at a person's pace (openWait / pickWait / settleWait) and pointer via 'auto' (Eros, else
 # Electron input, said). James: "it needs delays in between the dropdown menu. like drop down and then click."
+
+# ADDENDUM 2026-10-28 (0.60.273) — FG1 built; the choose fix from his picture 3
+# James, 2026-10-28: "need the accessability settings, per site. look at picture 2.  image 3, its the drop downs"
+# FG1 BUILT. The key is accessibility.tabMode ('site' | 'off'), in its own Accessibility group, which is his word (the map said page.keyboardMode;
+#   renamed to his word). It is applied in main _siteOnLoad, via src/page/keyboard-mode.js offScript, on state-diff (FP4). Unlike the map's
+#   probe-then-revert-at-load, it reverts after each Tab, because his picture 2 came from a Tab on that page, not from a stored mode.
+#   To confirm on his machine: window.__cgTabOff.last shows what was undone.
+# FG2: an option is scrolled within its list (pointer scroll:'within'), with one direct click when the pointer's click does not take
+#   (clickedBy 'page'), and it is still read back.
+# Proof: test-site-a11y-and-dropdowns 3/3; SA-03 fails on 0.60.272.

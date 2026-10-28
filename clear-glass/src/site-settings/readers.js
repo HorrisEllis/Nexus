@@ -17,6 +17,7 @@
  *   driverPolicy(url)     → { allowed, navTimeoutMs, waitTimeoutMs, from } | null
  *   meshAgent(url)        → { enabled, agent } | null
  *   guardianPolicy(url)   → { listen, capture } | null
+ *   tabMode(url)          → 'site' | 'off' | null   (0.60.273 FG1)
  * Each hook is one siteProfile call; a url that is not an http(s) page reads as null (no site, nothing to change).
  */
 let _get = null;
@@ -44,6 +45,7 @@ function passwordPolicy(url)   { const p = _profile('passwords', url); return p 
 function resumeMode(url)       { const p = _profile('resume', url);    return p ? (p.resume.restore || 'off') : null; }
 function meshAgent(url)        { const p = _profile('mesh', url);      return p ? { enabled: p.mesh.enabled !== false, agent: p.mesh.agent || null } : null; }
 function guardianPolicy(url)   { const p = _profile('guardian', url);  return p ? { listen: p.guardian.listen !== false, capture: p.guardian.capture !== false } : null; }
+function tabMode(url)          { const p = _profile('accessibility', url); return p ? (p.accessibility.tabMode || 'site') : null; }
 function driverPolicy(url) {
   const p = _profile('driver', url);
   if (!p) return null;
@@ -53,4 +55,4 @@ function driverPolicy(url) {
   };
 }
 
-module.exports = { install, installed, autofillFor, macrosOnLoad, workflowsAllowed, passwordPolicy, resumeMode, driverPolicy, meshAgent, guardianPolicy };
+module.exports = { install, installed, autofillFor, macrosOnLoad, workflowsAllowed, passwordPolicy, resumeMode, driverPolicy, meshAgent, guardianPolicy, tabMode };

@@ -28,9 +28,11 @@ const KEYS = Object.freeze([
   { key: 'mesh.enabled',         feature: 'mesh',      type: 'bool',     default: true,   does: 'Co-pilot and the agent mesh work on this site' },
   { key: 'mesh.agent',           feature: 'mesh',      type: 'string',   default: null,   does: 'The agent that answers Co-pilot on this site (none: the mesh decides)' },
   { key: 'guardian.listen',      feature: 'guardian',  type: 'bool',     default: true,   global: 'guardian.listen', does: "Guardian's listeners run on this site" },
+  // 0.60.273 FG1 — James, 2026-10-28: "need the accessability settings, per site. look at picture 2." (his Fiverr page after a Tab)
+  { key: 'accessibility.tabMode', feature: 'accessibility', type: 'enum', values: ['site', 'off'], default: 'site', does: 'What the site turns on when Tab is pressed (its keyboard / accessibility look): Site leaves it, Off undoes it (Tab still moves focus)' },
   { key: 'guardian.capture',     feature: 'guardian',  type: 'bool',     default: true,   global: 'guardian.capture', does: 'Chats on this site are captured' },
 ]);
-const FEATURES = Object.freeze(['autofill', 'macros', 'workflows', 'passwords', 'network', 'resume', 'driver', 'mesh', 'guardian']);
+const FEATURES = Object.freeze(['autofill', 'macros', 'workflows', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'mesh', 'guardian']);
 const BY_KEY = new Map(KEYS.map(k => [k.key, k]));
 
 function byFeature(feature) { return KEYS.filter(k => k.feature === feature); }

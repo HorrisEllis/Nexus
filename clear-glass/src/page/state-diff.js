@@ -52,4 +52,4 @@ function revertScript(diff, before) {
   return true; })(${JSON.stringify(plan)})`;
 }
 
-module.exports = { snapshotScript, diffState, revertScript };
+module.exports = { snapshotScript, diffState, revertScript, _part };

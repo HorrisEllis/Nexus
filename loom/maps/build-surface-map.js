@@ -32,6 +32,10 @@ const FILES = [
     I('clear-glass/src/preload/webview-bridge.js'),            // the page's autofill:rects / autofill:stale (ipc-message)
   ]],
   ['clear-glass/src/autofill/suggest.js', I('clear-glass/src/autofill/suggest.js'), []],
+  ['clear-glass/src/page/keyboard-mode.js', I('clear-glass/src/page/keyboard-mode.js'), [   // 0.60.273 FG1 — the Tab switch per site
+    I('clear-glass/src/page/state-diff.js'),                   // require — snapshotScript, diffState, _part injected into the page
+  ]],
+  ['clear-glass/src/page/state-diff.js', I('clear-glass/src/page/state-diff.js'), []],      // 0.60.221 FP4 — pure; first used 0.60.273
   ['clear-glass/src/about/index.js', I('clear-glass/src/about/index.js'), []],   // 0.60.269 — versions and the update check (fetch, no requires)
   ['clear-glass/renderer/settings/sections/about.js', I('clear-glass/renderer/settings/sections/about.js'), [   // 0.60.269 Settings › About
     I('clear-glass/src/ipc/bridge.js'),                        // IPC about:info / about:check (cg.about)

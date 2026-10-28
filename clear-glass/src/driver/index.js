@@ -796,11 +796,19 @@ class ClearDriver {
     const m = OM.matchOption(opts, option);
     if (!m.ok) throw new Error(`choose: ${m.why} — options: ${m.candidates.slice(0, 40).join(' | ')}`);
     await this._pause(pickWait);   // … and then click
-    const picked = await this._humanPointer(agentId, { selector: `[data-cg-opt="${m.index}"]`, do: 'click', via, label: m.option });
+    const optSel = `[data-cg-opt="${m.index}"]`;
+    const picked = await this._humanPointer(agentId, { selector: optSel, do: 'click', via, label: m.option, scroll: 'within' });
     await this._pause(settleWait);
-    const shown = await this._evalJs(wc, `(function(){ var t = document.querySelector(${JSON.stringify(trigSel)}); return t ? (t.innerText || t.textContent || '').replace(/\\s+/g, ' ').trim() : null; })()`);
+    const readShown = () => this._evalJs(wc, `(function(){ var t = document.querySelector(${JSON.stringify(trigSel)}); return t ? (t.innerText || t.textContent || '').replace(/\\s+/g, ' ').trim() : null; })()`);
+    let shown = await readShown(), clickedBy = 'pointer';
+    // 0.60.273 — the pointer's click did not take (his picture 3: STANDARD and PREMIUM still "DELIVERY TIME") and the option is still open on
+    // the page: one direct click on that option, said in the result as clickedBy 'page'. Read back again either way.
+    if (!OM.shows(shown, m.option)) {
+      const again = await this._evalJs(wc, `(function(){ var o = document.querySelector(${JSON.stringify(optSel)}); if (!o || !o.isConnected) return false; o.click(); return true; })()`).catch(() => false);
+      if (again) { clickedBy = 'page'; await this._pause(settleWait); shown = await readShown(); }
+    }
     if (!OM.shows(shown, m.option)) throw new Error(`choose: clicked "${m.option}" but the dropdown shows "${shown}"`);
-    return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
+    return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, clickedBy, ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
   }
 
   // check: checkbox/radio to a definite state (a click toggles, so clicking an already-checked box unchecks it).
@@ -1008,7 +1016,7 @@ class ClearDriver {
     return r;
   }
 
-  async _pointerAct(agentId, { n, x, y, selector, do: action = 'click', text, deltaY = 300, via = 'native', spotlight = true, label } = {}) {
+  async _pointerAct(agentId, { n, x, y, selector, do: action = 'click', text, deltaY = 300, via = 'native', spotlight = true, label, scroll = 'page' } = {}) {
     if (!['move', 'click', 'double', 'right', 'scroll', 'type'].includes(action)) throw new Error(`pointer "do" must be move|click|double|right|scroll|type, not "${action}"`);
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
@@ -1020,8 +1028,21 @@ class ClearDriver {
       if (tgt.z < 0) throw new Error(`target #${n} is off-screen — scroll (pointer action "scroll") and call field again`);
       x = tgt.cx; y = tgt.cy;
     } else if (selector) {
-      const pos = await this._evalJs(wc, `(function(){ const el = document.querySelector(${JSON.stringify(selector)}); if (!el) return null;
-        el.scrollIntoView({ block: 'center', inline: 'center' }); const r = el.getBoundingClientRect(); return { x: Math.round(r.left + r.width/2), y: Math.round(r.top + r.height/2) }; })()`);
+      // 0.60.273 — scroll 'within': an option in an open dropdown is brought into view inside its own list, and the page moves only if the
+      // list itself is off screen (and then the least it can). Centring it on the page moved the page under Fiverr's open menu (his picture 3).
+      const pos = await this._evalJs(wc, `(function(within){ const el = document.querySelector(${JSON.stringify(selector)}); if (!el) return null;
+        if (!within) el.scrollIntoView({ block: 'center', inline: 'center' });
+        else {
+          for (var p = el.parentElement; p && p !== document.body && p !== document.documentElement; p = p.parentElement) {
+            var cs = getComputedStyle(p); if (!/(auto|scroll)/.test(cs.overflowY) || p.scrollHeight <= p.clientHeight) continue;
+            var pr = p.getBoundingClientRect(), er = el.getBoundingClientRect();
+            if (er.top < pr.top || er.bottom > pr.bottom) p.scrollTop += (er.top + er.height / 2) - (pr.top + pr.height / 2);
+            break;
+          }
+          var q = el.getBoundingClientRect();
+          if (q.top < 0 || q.bottom > innerHeight || q.left < 0 || q.right > innerWidth) el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
+        const r = el.getBoundingClientRect(); return { x: Math.round(r.left + r.width/2), y: Math.round(r.top + r.height/2) }; })(${JSON.stringify(scroll === 'within')})`);
       if (!pos) throw new Error(`Element not found: ${selector}`);
       x = pos.x; y = pos.y;
     }

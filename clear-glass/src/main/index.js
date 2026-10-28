@@ -2844,6 +2844,10 @@ function _runShortcut(action, accel, owner) {
 // the page does not run itself again. A failure is said in the log with the macro and the site.
 const _siteLoadRuns = new Map();   // `${wcId}|${origin}|${name}` → at
 function _siteOnLoad(contents, url) {
+  // 0.60.273 FG1 — James: "need the accessability settings, per site." On a site set to Off, what a Tab turns on is undone (keyboard-mode.js).
+  if (require('../site-settings/readers').tabMode(url) === 'off') {
+    contents.executeJavaScript(require('../page/keyboard-mode').offScript(), true).catch(e => console.warn(`[site-settings] Tab switch at ${new URL(url).origin} not set: ${e.message}`));
+  }
   const mode = require('../site-settings/readers').resumeMode(url);
   if (mode && mode !== 'off') {
     const js = require('../rewind/resume.js').resumeScript(mode);
