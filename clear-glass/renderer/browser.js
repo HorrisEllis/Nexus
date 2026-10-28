@@ -516,6 +516,10 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   })();
 
   document.getElementById('btn-new-tab').addEventListener('click', () => _tabs.newTab());
+  // FP1 / TC3 (0.60.221) — James, 2026-10-28: "why did fiverr open in a popout window? like none of the autofill works." · "I want it just to
+  // open in a new tab." A link meant as a new tab (target=_blank) is sent here by main (src/main/compartment-window.js) and opens as a tab of
+  // this window, in its session, where autofill, the driver and macros reach it.
+  if (window.ClearGlass?.on) window.ClearGlass.on('cg:open-tab', (d) => { if (d && typeof d.url === 'string' && /^https?:/i.test(d.url)) _tabs.newTab(d.url); });
 
   // Wire webview events into tab state
   // BS2 (0.60.179) — the tab shows the site's icon, as Firefox does (http/https/data icons only)

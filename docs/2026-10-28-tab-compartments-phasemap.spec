@@ -40,7 +40,7 @@ phases:
 
   TC1_a_compartment_per_tab:
     layer: foundation
-    status: MAPPED
+    status: DEFERRED 2026-10-28 — no fact needs it yet (first principles, docs/2026-10-28-first-principles-phasemap.spec); kept as his direction
     depends_on: [TC_D1_tab_is_a_compartment, TC_D3_cos_reads_through_a_route]
     files: [clear-glass/src/tabs/compartments.js, clear-glass/src/main/index.js, clear-glass/src/net/compartment.js, clear-glass/src/ipc/bridge.js]
     spec: clear-glass/spec/tab-compartments.spec
@@ -52,7 +52,7 @@ phases:
 
   TC2_one_webview_per_tab:
     layer: ui
-    status: MAPPED
+    status: DEFERRED 2026-10-28 — no fact needs it yet (first principles, docs/2026-10-28-first-principles-phasemap.spec); kept as his direction
     depends_on: [TC1_a_compartment_per_tab]
     files: [clear-glass/renderer/tabs/webviews.js, clear-glass/renderer/browser.js, clear-glass/renderer/browser.html, clear-glass/src/driver/index.js, clear-glass/src/driver/page-resolver.js]
     spec: clear-glass/spec/tab-compartments.spec
@@ -65,7 +65,8 @@ phases:
   TC3_links_open_tabs:
     layer: integration
     status: MAPPED
-    depends_on: [TC2_one_webview_per_tab, TC_D2_links_open_tabs]
+    # depends_on before 2026-10-28 first principles: [TC2_one_webview_per_tab, TC_D2_links_open_tabs]
+    depends_on: [TC_D2_links_open_tabs, FP1_where_a_request_opens]
     files: [clear-glass/src/main/compartment-window.js, clear-glass/src/main/index.js, clear-glass/renderer/browser.js, clear-glass/src/driver/index.js]
     spec: clear-glass/spec/tab-compartments.spec
     blocks: [MOD-TC-LINKS]
@@ -74,7 +75,7 @@ phases:
 
   TC4_pop_out_and_dock:
     layer: integration
-    status: MAPPED
+    status: DEFERRED 2026-10-28 — no fact needs it yet (first principles, docs/2026-10-28-first-principles-phasemap.spec); kept as his direction
     depends_on: [TC3_links_open_tabs]
     files: [clear-glass/src/tabs/move.js, clear-glass/src/main/compartment-window.js, clear-glass/src/rewind/resume.js, clear-glass/renderer/browser.js, clear-glass/src/ipc/bridge.js]
     spec: clear-glass/spec/tab-compartments.spec
@@ -84,10 +85,23 @@ phases:
 
   TC5_new_tab_chooser:
     layer: ui
-    status: MAPPED
+    status: DEFERRED 2026-10-28 — no fact needs it yet (first principles, docs/2026-10-28-first-principles-phasemap.spec); kept as his direction
     depends_on: [TC2_one_webview_per_tab]
     files: [clear-glass/renderer/tabs/chooser.js, clear-glass/renderer/browser.js, clear-glass/renderer/shell/shell.css]
     spec: clear-glass/spec/tab-compartments.spec
     blocks: [MOD-TC-CHOOSER]
     does: New tab / private / as an account / through a route; "Open link in…"; the compartment on the tab strip and in Processes
     proof: in Clear Glass, a private tab and an account tab side by side, each its own sign-in
+
+## ADDENDUM 2026-10-28 — first principles: TC3 alone is needed by a fact
+James, 2026-10-28: "only good iudeas. we need to first principles this. only whats needed for a fact. dags use deterministic, and only. then
+build from that.the determinisitci is the foundation".
+Map: docs/2026-10-28-first-principles-phasemap.spec. The fact (F1) is that Edit Gig opened as a window nothing addresses. TC3 answers it on
+FP1 (decideOpen) and does not need TC2: with today's one page per window, a link-tab opens in the same session, so Fiverr stays signed in.
+TC1, TC2, TC4 and TC5 are deferred, not dropped: they are his direction ("COMPLETELY isolated tabs, that can be seperate accounts, snowflake
+instances") and are built when he calls for them. The earlier TC3 depends_on is kept as a comment (§0.3).
+
+## ADDENDUM 2026-10-28 (0.60.221) — TC3 built
+James, 2026-10-28: "stop. just get fiverr working." A link meant as a tab (foreground-tab / background-tab) is denied as a window and sent to the window it is in (cg:open-tab), where
+renderer/browser.js opens it with _tabs.newTab, in the window's session. A sized popup stays a window. Popups are not yet driver-registered
+(pop-<wcId>) or dockable: that part waits on TC4. Proof: test-fiverr-works FW-01, FW-02.

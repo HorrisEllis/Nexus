@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-first-principles-phasemap.spec::FP4_what_a_key_changed
+type: phase
+id: docs_2026-10-28-first-principles-phasemap.spec::FP4_what_a_key_changed
+context: pipeline phase FP4_what_a_key_changed of docs/2026-10-28-first-principles-phasemap.spec
+intent: null
+summary: FP4_what_a_key_changed (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793181421699
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793181421699
+lastSeenAt: 1793181421699
+fingerprint: null
+payload:
+  id: FP4_what_a_key_changed
+  map: docs/2026-10-28-first-principles-phasemap.spec
+  repo: null
+  layer: foundation
+  status: MAPPED
+  files:
+    - clear-glass/src/page/state-diff.js
+    - tests/modules/test-flow-cores.test.js
+  depends_on: []
+  blocks:
+    - MOD-FC-DIFF
+  spec: clear-glass/spec/flow-cores.spec
+  graph: 22e789abdd34d323

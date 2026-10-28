@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+type: phase
+id: docs_2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+context: pipeline phase FP1_where_a_request_opens of docs/2026-10-28-first-principles-phasemap.spec
+intent: null
+summary: FP1_where_a_request_opens (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793181421694
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793181421694
+lastSeenAt: 1793181421694
+fingerprint: null
+payload:
+  id: FP1_where_a_request_opens
+  map: docs/2026-10-28-first-principles-phasemap.spec
+  repo: null
+  layer: foundation
+  status: MAPPED
+  files:
+    - clear-glass/src/tabs/open-decision.js
+    - tests/modules/test-flow-cores.test.js
+  depends_on: []
+  blocks:
+    - MOD-FC-OPEN
+  spec: clear-glass/spec/flow-cores.spec
+  graph: 5a34e2c1af78339b

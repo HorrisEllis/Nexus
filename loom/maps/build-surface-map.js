@@ -20,7 +20,13 @@ const I = (rel) => idFor(rel);
 const FILES = [
   ['clear-glass/src/main/compartment-window.js', I('clear-glass/src/main/compartment-window.js'), [
     I('clear-glass/src/preload/compartment-window.js'),        // PRELOAD path — the compartment window's only preload
+    I('clear-glass/src/main/window-frame.js'),                 // require — popupOptions, darkenWindow (listed 0.60.221: it was missing)
+    I('clear-glass/src/tabs/open-decision.js'),                // require (0.60.221) — decideOpen: a link meant as a tab opens a tab
+    I('clear-glass/renderer/browser.js'),                      // IPC cg:open-tab → _tabs.newTab (0.60.221)
   ]],
+  ['clear-glass/src/tabs/open-decision.js', I('clear-glass/src/tabs/open-decision.js'), []],   // 0.60.221 FP1 — pure
+  ['clear-glass/src/page/option-match.js', I('clear-glass/src/page/option-match.js'), []],     // 0.60.221 FP2 — pure
+  // the driver's require of option-match.js (choose, 0.60.221) is a plain require: the source scanner maps it, so it is not hand-mapped here
   ['clear-glass/src/preload/compartment-window.js', I('clear-glass/src/preload/compartment-window.js'), []],
   ['clear-glass/src/copilot/verbs.js', I('clear-glass/src/copilot/verbs.js'), []],
   ['guardian/lib/provider-login.js', I('guardian/lib/provider-login.js'), []],

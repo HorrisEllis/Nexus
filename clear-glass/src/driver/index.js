@@ -13,7 +13,7 @@ const { BrowserWindow, webContents } = require('electron');
 const { randomUUID: uuidv4 } = require('crypto'); // §BUGFIX 2026-08-23 — the real 'uuid' npm package was never installed (checked node_modules and package.json directly); this crashed every real file that required it, including boot-critical ones. Node's own built-in produces the identical UUID format, zero dependency.
 
 // actions that change a page: refused where the site says agents may not drive it (navigate checks its target instead)
-const DRIVING = new Set(['click', 'type', 'scroll', 'hover', 'eval', 'select', 'check', 'setValue', 'pressKey', 'upload', 'pointer', 'inject', 'cookies.set', 'cookies.clear', 'storage.set', 'back', 'forward', 'reload']);
+const DRIVING = new Set(['click', 'type', 'scroll', 'hover', 'eval', 'select', 'choose', 'check', 'setValue', 'pressKey', 'upload', 'pointer', 'inject', 'cookies.set', 'cookies.clear', 'storage.set', 'back', 'forward', 'reload']);
 const AGENT_PAGE = /^(mesh|ncp|auto)-/;
 
 class ClearDriver {
@@ -87,6 +87,7 @@ class ClearDriver {
       case 'readTree':       return this._readTree(agentId, args);   // 0.60.49 SP1 — the semantic tree
       case 'resolve':        return this._resolve(agentId, args);    // 0.60.49 SP1 — a semantic address → its element
       case 'select':         return this._select(agentId, args);
+      case 'choose':         return this._choose(agentId, args);
       case 'check':          return this._check(agentId, args);
       case 'setValue':       return this._setValue(agentId, args);
       case 'pressKey':       return this._pressKey(agentId, args);
@@ -700,6 +701,87 @@ class ClearDriver {
     })()`);
     if (!r || r.ok === false) throw new Error(`select ${selector}: ${(r && r.error) || 'failed'}${r && r.options ? ' — options: ' + r.options.join(' | ') : ''}`);
     return r;
+  }
+
+  // choose (0.60.221) — James, 2026-10-28: "it needs to do the drop down menus. one by one ... using erosmancer and mouse curve and the virtual
+  // input" · "the drop down doesn't work". select took a native <select> only; Fiverr's dropdowns are its own widgets. One dropdown per call:
+  //   find it — by selector, or by what a person sees: the column's header (BASIC) and the row's label ("Number of APIs integrated") or the
+  //   text it shows (DELIVERY TIME), by where they sit on the page (no class names);
+  //   a native <select> → select, with the option matched first (src/page/option-match.js);
+  //   a widget → opened with the curved pointer (via 'native', or 'eros' for ErosmancerOS's virtual input), the options that appeared read,
+  //   the wanted one matched (ambiguous or missing → refused with the options seen), clicked with the pointer, and read back: a dropdown
+  //   that does not show the choice is a failure, never a silent pass.
+  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'native' } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (option === undefined || option === null || option === '') throw new Error('choose requires option');
+    if (!selector && !column) throw new Error('choose requires selector, or column with row or shows');
+    const OM = require('../page/option-match');
+    const found = await this._evalJs(wc, `(function(sel, col, row, showsText){
+      function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+      function norm(t){ return String(t || '').replace(/\\s+/g, ' ').trim().toLowerCase(); }
+      function ownText(el){ return norm(Array.prototype.map.call(el.childNodes, function(n){ return n.nodeType === 3 ? n.textContent : ''; }).join(' ')) || (el.children.length ? '' : norm(el.textContent)); }
+      function byText(t){ var want = norm(t), out = []; document.querySelectorAll('body *').forEach(function(el){ if (vis(el) && (ownText(el) === want || (!el.children.length && norm(el.textContent) === want))) out.push(el); }); return out; }
+      var trig = null;
+      if (sel) { try { trig = document.querySelector(sel); } catch (_) {} if (!trig) return { error: 'no element for ' + sel }; }
+      else {
+        var heads = byText(col); if (!heads.length) return { error: 'no column headed "' + col + '" on the page' };
+        var h = heads[0].getBoundingClientRect();
+        var band = null;
+        if (row) { var rows = byText(row); if (!rows.length) return { error: 'no row labelled "' + row + '" on the page' };
+          var rl = rows[0], box = (rl.closest('tr') || rl.parentElement || rl).getBoundingClientRect(); band = { top: box.top, bottom: box.bottom }; }
+        var cands = [];
+        document.querySelectorAll('select,[role="combobox"],[aria-haspopup],button,[tabindex],div,span').forEach(function(el){
+          if (!vis(el)) return; var r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+          if (cx < h.left || cx > h.right) return;
+          if (band && (cy < band.top || cy > band.bottom)) return;
+          if (!band && showsText && norm(el.textContent) !== norm(showsText)) return;
+          if (!band && !showsText) return;
+          cands.push(el); });
+        // the outermost control that is a select or looks like a dropdown trigger; else the innermost match
+        trig = cands.find(function(el){ return el.tagName === 'SELECT'; })
+            || cands.find(function(el){ return el.getAttribute('role') === 'combobox' || el.hasAttribute('aria-haspopup'); })
+            || cands.filter(function(el){ return !cands.some(function(o){ return o !== el && el.contains(o); }); })[0] || null;
+        if (!trig) return { error: 'no dropdown in column "' + col + '"' + (row ? ' and row "' + row + '"' : ' showing "' + showsText + '"') };
+      }
+      window.__cgChooseN = (window.__cgChooseN || 0) + 1;
+      trig.setAttribute('data-cg-choose', String(window.__cgChooseN));
+      trig.scrollIntoView({ block: 'center' });
+      var native = trig.tagName === 'SELECT' ? trig : trig.querySelector('select');
+      if (native) native.setAttribute('data-cg-choose-native', String(window.__cgChooseN));
+      // what is already on screen, so the options that appear on opening can be told apart
+      document.querySelectorAll('[data-cg-pre]').forEach(function(el){ el.removeAttribute('data-cg-pre'); });
+      document.querySelectorAll('[role="option"],[role="menuitem"],li,[class*="option" i],[class*="item" i]').forEach(function(el){ if (vis(el)) el.setAttribute('data-cg-pre', '1'); });
+      return { n: window.__cgChooseN, native: !!native, shown: norm(trig.innerText || trig.textContent).slice(0, 200),
+        options: native ? Array.prototype.map.call(native.options, function(o){ return o.textContent.trim(); }) : null };
+    })(${JSON.stringify(selector || null)}, ${JSON.stringify(column || null)}, ${JSON.stringify(row || null)}, ${JSON.stringify(showsText || null)})`);
+    if (!found || found.error) throw new Error(`choose: ${(found && found.error) || 'page did not answer'}`);
+    const trigSel = `[data-cg-choose="${found.n}"]`;
+    if (found.native) {
+      const m = OM.matchOption(found.options, option);
+      if (!m.ok) throw new Error(`choose: ${m.why} — options: ${m.candidates.join(' | ')}`);
+      const r = await this._select(agentId, { selector: `[data-cg-choose-native="${found.n}"]`, text: m.option });
+      return { kind: 'native', option: m.option, shown: r.text, by: m.by, via: 'native' };
+    }
+    await this._pointer(agentId, { selector: trigSel, do: 'click', via, label: `open ${column || selector}` });
+    let opts = null;
+    for (let i = 0; i < 10 && !(opts && opts.length); i++) {
+      await this._sleep(150);
+      opts = await this._evalJs(wc, `(function(){
+        function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+        var all = Array.prototype.filter.call(document.querySelectorAll('[role="option"],[role="menuitem"],li,[class*="option" i],[class*="item" i]'), function(el){ return vis(el) && !el.hasAttribute('data-cg-pre'); });
+        var leaves = all.filter(function(el){ return !all.some(function(o){ return o !== el && el.contains(o); }); });
+        return leaves.slice(0, 200).map(function(el, i){ el.setAttribute('data-cg-opt', String(i)); return (el.innerText || el.textContent || '').replace(/\\s+/g, ' ').trim(); });
+      })()`);
+    }
+    if (!opts || !opts.length) throw new Error(`choose: the dropdown did not open (no new options after clicking ${column || selector})`);
+    const m = OM.matchOption(opts, option);
+    if (!m.ok) throw new Error(`choose: ${m.why} — options: ${m.candidates.slice(0, 40).join(' | ')}`);
+    await this._pointer(agentId, { selector: `[data-cg-opt="${m.index}"]`, do: 'click', via, label: m.option });
+    await this._sleep(250);
+    const shown = await this._evalJs(wc, `(function(){ var t = document.querySelector(${JSON.stringify(trigSel)}); return t ? (t.innerText || t.textContent || '').replace(/\\s+/g, ' ').trim() : null; })()`);
+    if (!OM.shows(shown, m.option)) throw new Error(`choose: clicked "${m.option}" but the dropdown shows "${shown}"`);
+    return { kind: 'widget', option: m.option, shown, by: m.by, via };
   }
 
   // check: checkbox/radio to a definite state (a click toggles, so clicking an already-checked box unchecks it).

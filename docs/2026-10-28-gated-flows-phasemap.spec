@@ -43,7 +43,8 @@ phases:
   FG1_keyboard_mode_switch:
     layer: foundation
     status: MAPPED
-    depends_on: [FG_D4_tab_mode_reverted_not_blocked]
+    # depends_on before 2026-10-28 first principles: [FG_D4_tab_mode_reverted_not_blocked]
+    depends_on: [FG_D4_tab_mode_reverted_not_blocked, FP4_what_a_key_changed]
     files: [clear-glass/src/page/keyboard-mode.js, clear-glass/src/site-settings/keys.js, clear-glass/src/site-settings/readers.js, clear-glass/src/options/store.js, clear-glass/src/main/index.js, clear-glass/renderer/site-profile-groups.js, clear-glass/renderer/settings/sections/sites.js]
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-FG-TAB]
@@ -55,7 +56,8 @@ phases:
   FG2_dropdown_choose:
     layer: foundation
     status: MAPPED
-    depends_on: [FG_D2_choice_is_read_back]
+    # depends_on before 2026-10-28 first principles: [FG_D2_choice_is_read_back]
+    depends_on: [FG_D2_choice_is_read_back, FP2_which_option_is_meant]
     files: [clear-glass/src/page/dropdown.js, clear-glass/src/driver/index.js]
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-FG-CHOOSE]
@@ -67,7 +69,8 @@ phases:
   FG3_gate_per_step:
     layer: backend
     status: MAPPED
-    depends_on: [FG_D1_gate_is_a_step_field]
+    # depends_on before 2026-10-28 first principles: [FG_D1_gate_is_a_step_field]
+    depends_on: [FG_D1_gate_is_a_step_field, FP3_is_the_gate_open]
     files: [lib/agent-tools/tools/clear-glass/gates.js, lib/agent-tools/tools/clear-glass/macro.js]
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-FG-GATES]
@@ -89,7 +92,8 @@ phases:
   FG5_fiverr_gig_flow:
     layer: integration
     status: MAPPED
-    depends_on: [FG4_pointer_and_choose_steps, FG_D3_publish_is_his, TC3_links_open_tabs]
+    # depends_on before 2026-10-28 first principles: [FG4_pointer_and_choose_steps, FG_D3_publish_is_his, TC3_links_open_tabs]
+    depends_on: [FG4_pointer_and_choose_steps, FG_D3_publish_is_his, TC3_links_open_tabs, FP5_the_pricing_page_blocks]
     files: [clear-glass/src/autofill/gig-flow.js, clear-glass/src/autofill/gig.js, clear-glass/src/ipc/bridge.js, clear-glass/renderer/gig-panel.js]
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-FG-FIVERR]
@@ -100,7 +104,7 @@ phases:
 
   FG6_blocks_ui:
     layer: ui
-    status: MAPPED
+    status: DEFERRED 2026-10-28 — no fact needs it yet (first principles, docs/2026-10-28-first-principles-phasemap.spec); kept
     depends_on: [FG3_gate_per_step]
     files: [clear-glass/renderer/settings/sections/macros.js, clear-glass/renderer/settings/sections/macros.css]
     spec: clear-glass/spec/gated-flows.spec
@@ -113,3 +117,17 @@ James, 2026-10-28: "why did fiverr open in a popout window? like none of the aut
 Fiverr's Edit Gig is a target=_blank link that Clear Glass opened as a bare window no flow can reach (compartment-window.js:72). The Fiverr
 flow therefore depends on TC3_links_open_tabs (docs/2026-10-28-tab-compartments-phasemap.spec): Edit Gig opens as a tab in the same
 compartment, where the flow's blocks run.
+
+## ADDENDUM 2026-10-28 — first principles: each phase stands on its deterministic core
+James, 2026-10-28: "only good iudeas. we need to first principles this. only whats needed for a fact. dags use deterministic, and only. then
+build from that.the determinisitci is the foundation".
+Map: docs/2026-10-28-first-principles-phasemap.spec (spec clear-glass/spec/flow-cores.spec). Each page-touching phase here now depends on the
+pure function it calls: FG1 on FP4 (what a Tab changed: the probe comes before any undo), FG2 on FP2 (which option is meant), FG3 on FP3
+(is the gate open), FG5 on FP5 (the pricing page's blocks, from his screenshot; the editor's other pages wait on a page read). FG6 is deferred:
+no fact needs it yet. The earlier depends_on lines are kept as comments above each phase (§0.3).
+
+## ADDENDUM 2026-10-28 (0.60.221) — FG2 built (choose), and the gig fill uses it
+James, 2026-10-28: "stop. just get fiverr working." ClearDriver choose: by selector, or by column + row label / shown text by position; native select through select; a widget opened with the
+curved pointer (via native or eros), the option matched (FP2), clicked and read back. The gig fill chooses each tier's DELIVERY TIME after
+typing. Drift from MOD-FG-CHOOSE: no typed search inside a dropdown yet (no fact needs it). Also fixed, outside the map: gig.js counted
+Fiverr's placeholder-only pricing boxes as low, under the fill's floor. Proof: test-fiverr-works 5/5.

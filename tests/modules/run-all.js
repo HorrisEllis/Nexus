@@ -399,6 +399,7 @@ const SUITES = [
   'test-global-settings.test.js',        // 0.60.218 SP4 — ClearDriver, Agent Mesh and Guardian settings (GS-05 in Clear Glass)
   'test-processes.test.js',              // 0.60.219 SP5 — processes with their pages, end (his only), the activity ring, the doors
   'test-processes-ui.test.js',           // 0.60.220 SP6 — the Processes window in Clear Glass (Shift+Esc, ☰, Tools)
+  'test-fiverr-works.test.js',           // 0.60.221 — Fiverr: link-tabs open as tabs, pricing boxes filled, dropdowns chosen one by one
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
   'test-chatgpt-scrape-template.test.js', // 0.60.69 — the ChatGPT chat reader template (loop body, vars, extract fields)
   'test-cos-app-ui.test.js',          // 0.60.89 COSA6 — COS window (jsdom) and controller

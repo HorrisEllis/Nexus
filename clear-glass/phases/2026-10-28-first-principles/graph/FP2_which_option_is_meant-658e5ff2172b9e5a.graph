@@ -1,0 +1,82 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FP2_which_option_is_meant:658e5ff2172b9e5a
+type: graph
+id: phase:FP2_which_option_is_meant:658e5ff2172b9e5a
+context: dependency graph of phase FP2_which_option_is_meant
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793181421696
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793181421696
+lastSeenAt: 1793181421696
+fingerprint: null
+payload:
+  for: FP2_which_option_is_meant
+  kind: phase
+  repo: null
+  hash: 658e5ff2172b9e5a
+  nodes:
+    - path: clear-glass/src/page/option-match.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-flow-cores.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/option-match.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 9e518f99f68c1be4
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+    upstream: []
+    downstream:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG5_fiverr_gig_flow
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+        files:
+          - tests/modules/test-flow-cores.test.js
+      - with: docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+        files:
+          - tests/modules/test-flow-cores.test.js
+      - with: docs/2026-10-28-first-principles-phasemap.spec::FP4_what_a_key_changed
+        files:
+          - tests/modules/test-flow-cores.test.js
+      - with: docs/2026-10-28-first-principles-phasemap.spec::FP5_the_pricing_page_blocks
+        files:
+          - tests/modules/test-flow-cores.test.js
+    dangling: []
+    lines:
+      - DAG 9e518f99f68c1be4 · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): FG2_dropdown_choose · all downstream 3'
+      - >-
+        same files as FP1_where_a_request_opens with no order between them:
+        tests/modules/test-flow-cores.test.js
+      - >-
+        same files as FP3_is_the_gate_open with no order between them:
+        tests/modules/test-flow-cores.test.js
+      - >-
+        same files as FP4_what_a_key_changed with no order between them:
+        tests/modules/test-flow-cores.test.js
+      - >-
+        same files as FP5_the_pricing_page_blocks with no order between them:
+        tests/modules/test-flow-cores.test.js

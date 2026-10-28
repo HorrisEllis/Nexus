@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+type: phase
+id: docs_2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+context: pipeline phase FP2_which_option_is_meant of docs/2026-10-28-first-principles-phasemap.spec
+intent: null
+summary: FP2_which_option_is_meant (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793181421696
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793181421696
+lastSeenAt: 1793181421696
+fingerprint: null
+payload:
+  id: FP2_which_option_is_meant
+  map: docs/2026-10-28-first-principles-phasemap.spec
+  repo: null
+  layer: foundation
+  status: MAPPED
+  files:
+    - clear-glass/src/page/option-match.js
+    - tests/modules/test-flow-cores.test.js
+  depends_on: []
+  blocks:
+    - MOD-FC-OPTION
+  spec: clear-glass/spec/flow-cores.spec
+  graph: 658e5ff2172b9e5a

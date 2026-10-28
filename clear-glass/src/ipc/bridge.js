@@ -2076,6 +2076,17 @@ class IpcBridge {
     let r;
     try { r = await require('../autofill/gig.js').fillGig(this.dom, gig, { agentId, minConfidence }); }
     catch (err) { return { error: err.message }; }
+    // 0.60.221 — James, 2026-10-28: "it needs to do the drop down menus. one by one" · "the drop down doesn't work". On Fiverr's Scope &
+    // Pricing page each tier's DELIVERY TIME is chosen, one after another, through the driver's choose (curved pointer, read back). A page
+    // without that dropdown is not an error: it is not the pricing page. Each result is said, chosen or why not.
+    r.dropdowns = [];
+    if (this.driver && gig.packages) {
+      for (const [tier, column] of [['basic', 'BASIC'], ['standard', 'STANDARD'], ['premium', 'PREMIUM']]) {
+        const p = gig.packages[tier]; if (!p || !Number.isFinite(p.deliveryDays)) continue;
+        try { const c = await this.driver.exec({ agentId, action: 'choose', column, shows: 'DELIVERY TIME', option: String(p.deliveryDays), by: 'person' }); r.dropdowns.push({ key: `${tier}.delivery`, ok: true, option: c.option }); }
+        catch (err) { r.dropdowns.push({ key: `${tier}.delivery`, ok: false, error: err.message }); if (/no column headed/.test(err.message)) break; }
+      }
+    }
     if (!r.error) this.postEvent('autofill.gig.filled', { agentId, filled: r.filled.length, skipped: r.skipped.length, failed: r.failed.length, leftToCopy: r.leftToCopy.length, ts: Date.now() });
     return r;
   }
