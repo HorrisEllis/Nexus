@@ -59,7 +59,7 @@ phases:
     proof: "a fill with no profileId fills from the active profile (not null); a fill with a selector fills one field; in the autofill route + co-pilot tool tests"
 
   AF3_the_inline_chip:
-    status: OPEN
+    status: BUILT 0.60.267 — renderer/autofill-inline.js (+ .css), src/autofill/suggest.js, bridge autofill:suggest / fillOne; test-autofill-chips 5/5 in Clear Glass (drift in the 2026-10-28 addendum)
     layer: ui
     depends_on: [AF1_active_profile_and_fill_one]
     files: [clear-glass/renderer/autofill-inline.js]
@@ -91,3 +91,15 @@ order: >-
   for), anchored under the input by the same rect positioning guardian-picker already uses. AF4 the settings toggle + default
   picker. All but AF1 are Clear Glass UI, verified live on his machine (this container has no Electron). Each phase specced
   again as .phase + .graph (his 2026-10-20); DG2 foresees any crossing.
+
+# ── ADDENDUM 2026-10-28 (0.60.267) — AF3 built; what changed from the map, and the root cause found on the way
+# James, 2026-10-28: "fill this in · Did not fill: matchGigFields: domFields must be the dom_query array · needs to autofill any field it can.
+# also needs to have the autopill under each input fieled."
+# - Root cause of the error: the full page reader (dom/archaeology.js DOM_OBSERVER_SCRIPT) was never injected (inject() had no caller), so
+#   every fill depended on the DOM-tree panel having been opened. handleQuery/handleMutate now put it on the page first (_ensure).
+# - Drift from AF3 as mapped, decided by his axioms (USER_AUTONOMY, his data stays his; §1.2): the chip is drawn in Clear Glass's own window
+#   over the page, not "injected into real pages" — inside the page, a site's scripts could read the suggested profile values before he
+#   chose. The page only reports where its fields are.
+# - "under each input": every suggested field has a chip, not only the focused one (his 2026-10-28 words); the focused one is brighter.
+# - Gig parts are offered too (the gig written in the panel), beside the active profile.
+# - AF4 (Settings toggle + default-profile picker) stays OPEN.

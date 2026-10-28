@@ -373,6 +373,9 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     gigAssign: (d) => ipcRenderer.invoke('autofill:gig:assign', d),   // 0.60.222 — teach a gig part the element he picked
     gigPage:   (agentId) => ipcRenderer.invoke('autofill:gig:page', { agentId }),          // 0.60.224
     gigSaveRecording: (d) => ipcRenderer.invoke('autofill:gig:saveRecording', d),         // 0.60.224 — his choices → the page's macro
+    suggest:   (agentId) => ipcRenderer.invoke('autofill:suggest', { agentId }),          // 0.60.267 AF3 — what can go in every field
+    gigSetLast: (gig) => ipcRenderer.invoke('autofill:gig:setLast', { gig }),            // 0.60.267 — the panel's gig is the chips' gig
+    fillOne:   (agentId, cgId, value) => ipcRenderer.invoke('autofill:fillOne', { agentId, cgId, value }),   // 0.60.267 AF3 — a chip clicked
     exportAll: ()                            => ipcRenderer.invoke('autofill:export'),                   // §AT2 0.60.256 the .autofill file: { text, filename, counts }
     importAll: (text)                        => ipcRenderer.invoke('autofill:import', { text }),         // merges; keeps what it replaced
     importUndo: ()                           => ipcRenderer.invoke('autofill:import:undo'),

@@ -1728,6 +1728,9 @@ class IpcBridge {
     ipcMain.handle('autofill:gig:fill', async (e, { gig, agentId = 'default', minConfidence = 'medium' } = {}) => this._gigFill({ gig, agentId, minConfidence }));
     ipcMain.handle('autofill:gig:assign', async (e, d = {}) => this._gigAssign(d));
     ipcMain.handle('autofill:gig:page', async (e, d = {}) => this._gigPage(d));                    // 0.60.224
+    ipcMain.handle('autofill:suggest', async (e, d = {}) => this._autofillSuggest(d));              // 0.60.267 AF3 — the chips
+    ipcMain.handle('autofill:gig:setLast', async (e, { gig } = {}) => { try { if (gig && gig.title && this.autofillStore) { this.autofillStore.setLastGig(gig); return { ok: true }; } } catch (err) { return { ok: false, error: err.message }; } return { ok: false, error: 'no gig' }; });   // 0.60.267 — the panel's gig is the chips' gig
+    ipcMain.handle('autofill:fillOne', async (e, d = {}) => this._autofillFillOne(d));              // 0.60.267 AF3 — a chip clicked
     ipcMain.handle('autofill:gig:saveRecording', async (e, d = {}) => this._gigSaveRecording(d));  // 0.60.224 — his choices → the page's macro   // 0.60.222 — a picked element taught to a gig part
     ipcMain.handle('autofill:gig:autofill', async (e, p = {}) => this._gigAutofill(p));   // §GA1 — the co-pilot's one door
     // 2026-10-12 — a gig FILE (.gig, or an old .gig.json: the shapes parseGig reads) → the same gig, held to Fiverr's limits like a written one.
@@ -2296,6 +2299,38 @@ class IpcBridge {
     }
     if (!r.error) this.postEvent('autofill.gig.filled', { agentId, page: r.page, filled: r.filled.length, learned: r.learned.length, notFound: r.notFound.length, failed: r.failed.length, ts: Date.now() });
     return r;
+  }
+
+  // 0.60.267 AF3 — James: "needs to autofill any field it can. also needs to have the autopill under each input fieled." Every field on the
+  // page with what could go in it (the active profile's match and the written gig's), for the chips Clear Glass draws under each input in its
+  // own window. Values go to the window, never into the page, until he clicks one. A site with autofill off gets none, said.
+  async _autofillSuggest({ agentId = 'default' } = {}) {
+    if (!this.dom) return { ok: false, error: 'dom bridge unavailable', suggestions: [] };
+    const SG = require('../autofill/suggest.js');
+    let profileMatches = [], profileName = 'profile', why = null;
+    if (this.autofillStore) {
+      try {
+        const det = await _autofillDetect(this.dom, this.autofillStore, { agentId, learned: this._learnedFields(agentId) });
+        if (det && !det.error) { profileMatches = det.matches || []; const p = this.autofillStore.getProfile(det.profileId); profileName = (p && (p.name || p.label)) || 'profile'; }
+        else why = det && det.error;
+      } catch (e) { why = e.message; }
+    }
+    let gigMatches = [];
+    const gig = this.autofillStore && this.autofillStore.getLastGig ? this.autofillStore.getLastGig() : null;
+    if (gig && gig.title) {
+      const domFields = await this.dom.handleQuery({ agentId, selector: 'input, textarea' });
+      if (Array.isArray(domFields)) { try { gigMatches = require('../autofill/gig.js').matchGigFields(domFields, gig); } catch (_) {} }
+    }
+    const suggestions = SG.combine({ profileMatches, gigMatches, profileName });
+    return { ok: true, suggestions, why: suggestions.length ? null : (why || 'nothing on this page matches the profile or the gig'), script: SG.reporterScript(suggestions.map(x => x.cgId)) };
+  }
+
+  async _autofillFillOne({ agentId = 'default', cgId, value } = {}) {
+    if (!this.dom || !cgId || value === undefined) return { ok: false, error: 'a field and a value are needed' };
+    const r = await this.dom.handleMutate({ agentId, cgId, mutation: { value: String(value) } });
+    if (r && r.error) return { ok: false, error: r.error };
+    try { require('../processes').activity().push({ kind: 'nav', what: `autofill chip filled ${cgId}`, by: 'person', level: 'info' }); } catch (_) {}
+    return { ok: true };
   }
 
   // 0.60.224 — which editor page this tab is on (the panel's record button names its macro by it)

@@ -1,0 +1,17 @@
+/* clear-glass/renderer/autofill-inline.css — the autofill chip under each input (AF3, 0.60.267). Drawn in the window, over the page. */
+#af-chips { position: fixed; inset: 0; pointer-events: none; z-index: 2147483000; }
+#af-chips .af-chip { position: fixed; pointer-events: auto; display: flex; align-items: stretch; gap: 1px; font: 12px/1.2 system-ui, sans-serif;
+  background: rgba(14, 18, 28, .94); color: #dfe6f3; border: 1px solid rgba(79, 209, 197, .45); border-radius: 999px; box-shadow: 0 2px 8px rgba(0,0,0,.35);
+  overflow: visible; opacity: .82; transition: opacity .12s; }
+#af-chips .af-chip:hover, #af-chips .af-chip.focus { opacity: 1; border-color: #4fd1c5; }
+#af-chips .af-chip button { all: unset; cursor: pointer; padding: 3px 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#af-chips .af-fill { min-width: 0; flex: 1 1 auto; }
+#af-chips .af-more { padding: 3px 7px; border-left: 1px solid rgba(255,255,255,.12); }
+#af-chips .af-chip.busy { opacity: .6; }
+#af-chips .af-chip.ok { border-color: #6ee7a0; }
+#af-chips .af-chip.bad { border-color: #ff7a8a; }
+#af-chips .af-list { position: absolute; top: calc(100% + 4px); left: 0; min-width: 220px; max-width: 420px; background: rgba(14, 18, 28, .98);
+  border: 1px solid rgba(79, 209, 197, .45); border-radius: 8px; padding: 4px; box-shadow: 0 6px 18px rgba(0,0,0,.45); }
+#af-chips .af-opt { display: flex !important; flex-direction: column; width: 100%; box-sizing: border-box; border-radius: 6px; }
+#af-chips .af-opt:hover { background: rgba(79, 209, 197, .14); }
+#af-chips .af-opt em { font-style: normal; font-size: 10.5px; color: #8a93a8; }

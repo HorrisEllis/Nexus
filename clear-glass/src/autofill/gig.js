@@ -280,6 +280,7 @@ const RANK = { high: 3, medium: 2, low: 1 };
 async function detectGig(dom, gig, { agentId = 'default' } = {}) {
   const domFields = await dom.handleQuery({ agentId, selector: 'input, textarea' });
   if (domFields && domFields.error) return { error: domFields.error };
+  if (!Array.isArray(domFields)) return { error: 'the page could not be read (no field list came back) — reload the page and fill again' };   // 0.60.267
   const matches = matchGigFields(domFields, gig);
   const filledKeys = new Set(matches.map(m => m.key));
   return { totalFields: domFields.length, matches, leftToCopy: gigParts(gig).filter(p => !filledKeys.has(p.key)).map(p => p.key) };
@@ -289,6 +290,7 @@ async function detectGig(dom, gig, { agentId = 'default' } = {}) {
 async function fillGig(dom, gig, { agentId = 'default', minConfidence = 'medium' } = {}) {
   const domFields = await dom.handleQuery({ agentId, selector: 'input, textarea' });
   if (domFields && domFields.error) return { error: domFields.error };
+  if (!Array.isArray(domFields)) return { error: 'the page could not be read (no field list came back) — reload the page and fill again' };   // 0.60.267
   const floor = RANK[minConfidence] || RANK.medium;
   const all = matchGigFields(domFields, gig);
   const toFill = all.filter(m => RANK[m.confidence] >= floor);

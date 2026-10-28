@@ -65,7 +65,8 @@ async function main() {
     /app\.put\('\/cli\/autofill\/profiles\/:id'/.test(BRIDGE) &&
     /app\.delete\('\/cli\/autofill\/profiles\/:id'/.test(BRIDGE));
   check('autofill detect/fill call the SAME real matcher functions the IPC handlers use, not a second implementation',
-    (BRIDGE.match(/_autofillDetect\(this\.dom, this\.autofillStore/g) || []).length === 2 &&
+    // 0.60.267: the chips' suggest (AF3) is a third caller of the same detectFields — reuse, which is what this check guards
+    (BRIDGE.match(/_autofillDetect\(this\.dom, this\.autofillStore/g) || []).length >= 2 &&
     (BRIDGE.match(/_autofillFill\(this\.dom, this\.autofillStore/g) || []).length === 2);
   check('field-types route exposes the real store\'s FIELD_TYPES/DOCUMENT_FIELDS, not a hand-copied duplicate',
     /require\('\.\.\/autofill\/store\.js'\)/.test(BRIDGE) && /FIELD_TYPES, DOCUMENT_FIELDS/.test(BRIDGE));

@@ -27,6 +27,9 @@
   const DEFAULT_Q = ['What must the finished result do or be? (the end state, in your words)', 'Who will use it, and where? (people, devices, platform)',
     'What must it always do — and never do?', 'How will you check it is done? (the test you will run, or what you will look at)', 'What materials, examples, logins or files do I need?'];
   let GIG = store.get('last', null);
+  // 0.60.267 — the gig in this panel is the one the chips under each input offer (main keeps it as the last gig), and they refresh when it changes
+  function shareGig() { if (!GIG) return; try { cg.autofill.gigSetLast(GIG).catch(() => {}); } catch (_) {} try { window.dispatchEvent(new Event('cg:gig-changed')); } catch (_) {} }
+  if (GIG) setTimeout(shareGig, 0);
   const say = (id, msg, kind = '') => { const el = $(id); el.textContent = msg; el.className = `gig-status ${kind}`; };
 
   function show(on) { panel.classList.toggle('visible', on); if (on) loadProfiles(); }
@@ -56,7 +59,7 @@
     let r; try { r = await cg.autofill.gig({ profileId: $('gig-profile').value, offer, extra: $('gig-extra').value.trim(), agentId }); } catch (e) { r = { ok: false, error: e.message }; }
     $('gig-write').disabled = false;
     if (!r || r.ok === false || !r.gig) return say('gig-write-status', `Not written: ${(r && r.error) || 'no answer'}`, 'bad');
-    GIG = r.gig; store.set('last', GIG);
+    GIG = r.gig; store.set('last', GIG); shareGig();
     say('gig-write-status', `Written.${(r.warnings || []).length ? ` ${r.warnings.length} note(s): ${r.warnings.slice(0, 2).join(' · ')}` : ''} Copy a part, or fill the Fiverr page.`, 'ok');
     paintGig();
   });
@@ -89,7 +92,7 @@
     if (f.size > 200000) return say('gig-write-status', 'That file is too large to be a gig.', 'bad');
     let r; try { r = await cg.autofill.gigImport(await f.text()); } catch (e) { r = { ok: false, error: e.message }; }
     if (!r || r.ok === false || !r.gig) return say('gig-write-status', `Not loaded: ${(r && r.error) || 'no answer'}`, 'bad');
-    GIG = r.gig; store.set('last', GIG);
+    GIG = r.gig; store.set('last', GIG); shareGig();
     say('gig-write-status', `Loaded "${r.gig.title}".${(r.warnings || []).length ? ` ${r.warnings.length} note(s): ${r.warnings.slice(0, 2).join(' · ')}` : ''} Fill this Fiverr page, or copy a part.`, 'ok');
     paintGig();
   });
@@ -119,7 +122,7 @@
   const PAGE_NAME = { overview: 'Overview', pricing: 'Scope & Pricing' };
   async function fill() {
     say('gig-write-status', 'Reading the page in this tab…');
-    let r; try { r = await cg.autofill.gigFill(GIG, agentId, 'medium'); } catch (e) { r = { ok: false, error: e.message }; }
+    let r; try { r = await cg.autofill.gigFill(GIG, agentId, 'low')   /* 0.60.267 — "needs to autofill any field it can": every match, a placeholder one too */; } catch (e) { r = { ok: false, error: e.message }; }
     if (!r || r.ok === false || r.error) { $('gig-missing').innerHTML = ''; return say('gig-write-status', `Not filled: ${(r && r.error) || 'no answer'} — open Fiverr's gig editor in this tab first.`, 'bad'); }
     const typed = (r.filled || []).length, chosen = (r.dropdowns || []).filter(d => d.ok).length, learned = (r.learned || []).length;
     const where = r.page ? `${PAGE_NAME[r.page] || r.page} page` : `this page (${r.pageWhy})`;

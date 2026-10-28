@@ -26,6 +26,12 @@ const FILES = [
   ]],
   ['clear-glass/src/tabs/open-decision.js', I('clear-glass/src/tabs/open-decision.js'), []],   // 0.60.221 FP1 — pure
   ['clear-glass/src/page/option-match.js', I('clear-glass/src/page/option-match.js'), []],     // 0.60.221 FP2 — pure
+  ['clear-glass/renderer/autofill-inline.js', I('clear-glass/renderer/autofill-inline.js'), [   // 0.60.267 AF3 — the chip under each input
+    I('clear-glass/renderer/browser.js'),                      // window.cg — the wrapped preload API
+    I('clear-glass/src/ipc/bridge.js'),                        // IPC autofill:suggest / autofill:fillOne
+    I('clear-glass/src/preload/webview-bridge.js'),            // the page's autofill:rects / autofill:stale (ipc-message)
+  ]],
+  ['clear-glass/src/autofill/suggest.js', I('clear-glass/src/autofill/suggest.js'), []],   // 0.60.267 AF3 — pure: combine, reporterScript
   ['clear-glass/renderer/gig-panel.js', I('clear-glass/renderer/gig-panel.js'), [   // 0.60.224 — reads window.cg (set by browser.js)
     I('clear-glass/renderer/browser.js'),                      // window.cg — the wrapped preload API
   ]],

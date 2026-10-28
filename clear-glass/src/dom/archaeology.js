@@ -84,7 +84,7 @@ function _ledgerWrite(system, type, payload) {
 // Injected into every page — the DOM mesh observer
 const DOM_OBSERVER_SCRIPT = `
 (function() {
-  if (window.__cgDomMesh) return; // already injected
+  if (window.__cgDomMesh && window.__cgDomMesh.mutate) return; // already injected (0.60.267: the renderer's query-only mesh is replaced, not kept)
 
   const mesh  = new Map();   // nodeId → metadata
   let   nodeCounter = 0;
@@ -410,9 +410,22 @@ class DomArchaeology {
   }
 
   // ── Query ─────────────────────────────────────────────────────────────
+  // 0.60.267 — James, 2026-10-28: "Did not fill: matchGigFields: domFields must be the dom_query array". Root cause: inject() above had no
+  // caller, so the page API existed only if the renderer's DOM-tree panel had been opened — and that one is query-only (no queryOne, mutate,
+  // prepareType). Every query and change now makes sure the full observer is on the page first; a page that refuses it is said, not undefined.
+  async _ensure(wc, agentId) {
+    let ok;
+    try { ok = await wc.executeJavaScript('!!(window.__cgDomMesh && window.__cgDomMesh.mutate && window.__cgDomMesh.query)', true); } catch (_) {}
+    if (ok !== false) return { ok: true };   // true, or no answer at all: the call itself then says what happened
+    await this.inject(wc, agentId);
+    try { ok = await wc.executeJavaScript('!!(window.__cgDomMesh && window.__cgDomMesh.mutate)', true); } catch (_) {}
+    return ok === false ? { error: 'the page would not take the DOM reader (it may still be loading, or it blocks scripts)' } : { ok: true, injected: true };
+  }
+
   async handleQuery({ agentId = 'default', selector, cgId, tree = false, x, y }) {
     const wc = this._getWebContents(agentId);
     if (!wc) return { error: 'No webcontents' };
+    { const e = await this._ensure(wc, agentId); if (e.error) return e; }
 
     if (tree) {
       return wc.executeJavaScript('window.__cgDomMesh?.getTree(5)', true);
@@ -421,7 +434,8 @@ class DomArchaeology {
       return wc.executeJavaScript(`window.__cgDomMesh?.getById(${JSON.stringify(cgId)})`, true);
     }
     if (selector) {
-      return wc.executeJavaScript(`window.__cgDomMesh?.query(${JSON.stringify(selector)})`, true);
+      const r = await wc.executeJavaScript(`window.__cgDomMesh?.query(${JSON.stringify(selector)})`, true);
+      return Array.isArray(r) ? r : { error: 'the page did not answer the query' };
     }
     // §BUILT 2026-09-21 — the real caller for screen-qa's right-click
     // path: which element is AT this window-relative point, not which
@@ -436,6 +450,7 @@ class DomArchaeology {
   async handleMutate({ agentId = 'default', cgId, selector, mutation, via = 'native', value, text }) {
     const wc = this._getWebContents(agentId);
     if (!wc) return { error: 'No webcontents' };
+    { const e = await this._ensure(wc, agentId); if (e.error) return e; }   // 0.60.267
     // §ER3 0.60.253 — found while hooking Eros in: browser_action documents dom_mutate as {selector, value} and sends exactly that, but
     // this read only `mutation`, so the page got mutate(cgId, undefined), threw, and the agent's call timed out (macro dom_mutate
     // steps too). The documented shorthand is a mutation; a call with neither is refused with why.

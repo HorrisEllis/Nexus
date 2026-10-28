@@ -44,7 +44,10 @@ contextBridge.exposeInMainWorld('__cg', {
     // link: the guest page (tv-shell/home, running inside Clear Glass's
     // <webview>) asks its host to open the real Settings window, same
     // relay pattern as dom:event/nexus:cookie-request above.
-    if (channel !== 'dom:pick-result' && channel !== 'dom:event' && channel !== 'nexus:cookie-request' && channel !== 'nexus:open-settings') return;
+    // 0.60.267 AF3 — the autofill chips: the page reports where its fields are (autofill:rects) and that its fields changed (autofill:stale).
+    // Positions only: no value crosses this way, and a page that fakes them only moves where a chip is drawn.
+    if (channel !== 'dom:pick-result' && channel !== 'dom:event' && channel !== 'nexus:cookie-request' && channel !== 'nexus:open-settings'
+      && channel !== 'autofill:rects' && channel !== 'autofill:stale') return;
     ipcRenderer.sendToHost(channel, data);
   },
 });
