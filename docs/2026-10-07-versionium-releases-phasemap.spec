@@ -181,3 +181,9 @@ spec:
 # the changelogs and git; every Idearium repo can cut its own. 0.60.34's GitHub-first release stays, as a second record of
 # the same lib/version.js.
 
+
+# ADDENDUM 2026-10-28 (0.60.274) — the changelogs moved into Versionium
+# James, 2026-10-28: "can we move the changelogs to versionium and idearium"
+# CHANGELOG-*.md now live in versionium/changelogs/ (git mv, 472 files). lib/changelogs.js is the only reader of the location (the root is
+# still read after it, for older trees). Idearium reads one with GET /api/releases/changelog and `system changelog`, and the Releases view
+# opens to its text. A new release's changelog is written at lib/changelogs.js pathFor(version).

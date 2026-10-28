@@ -236,6 +236,10 @@ export const SPEC = [
         if (a.flags.version && Array.isArray(r.commits)) for (const c of r.commits) console.log(`    ${h.c.dim(c.sha.slice(0, 8))} ${c.subject}  ${h.c.dim(`${c.files} file(s) +${c.added} −${c.removed}`)}`);
       }
     } },
+  // 0.60.274 — James, 2026-10-28: "can we move the changelogs to versionium and idearium". One release's changelog, from versionium/changelogs.
+  { key: 'system.changelog', repo: false, usage: 'system changelog [x.y.z]', about: "one release's changelog (versionium/changelogs/CHANGELOG-<version>.md); no version: the running release",
+    req: (a) => ({ method: 'GET', path: `/api/releases/changelog${a.args && a.args[0] ? `?version=${encodeURIComponent(a.args[0])}` : ''}` }),
+    print: (d, a, h) => { console.log(h.c.dim(`  ${d.rel}`)); console.log(d.text); } },
   // §0.60.72 RN2 — James: "tell me all the recent changes. i want a changelog for each change or diff." Written from git.
   { key: 'system.changes', repo: false, usage: 'system changes [--since x.y.z] [--write]', about: 'every change since a release: each commit under the first release that contains it, with its files (written from git, not by hand); --write saves CHANGES.md',
     req: (a) => ({ method: 'GET', path: `/api/releases/changes?${new URLSearchParams({ ...(a.flags.since ? { since: String(a.flags.since) } : {}), ...(a.flags.write ? { write: '1' } : {}) })}`, timeoutMs: 120000 }),

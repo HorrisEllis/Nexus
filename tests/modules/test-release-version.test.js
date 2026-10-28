@@ -50,7 +50,7 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, stdio: ['ignore', 'pipe
     assert.ok(!b.ok);
     const bad = Object.fromEntries(b.places.filter(p => !p.ok).map(p => [p.place, p.why]));
     assert.match(bad['package.json version'], /says 1\.2\.2, the release is 1\.2\.3/);
-    assert.match(bad['CHANGELOG-1.2.3.md'], /no changelog/);
+    assert.match(bad['versionium/changelogs/CHANGELOG-1.2.3.md'], /no changelog/);   // 0.60.274 — the changelogs' home
     assert.match(bad['git tag v1.2.1 (at HEAD)'], /HEAD is tagged v1\.2\.1, the release is 1\.2\.3/);
     const ck = CC.run('CK-253', { path: d });
     assert.ok(!ck.ok && ck.verifiable && ck.items.length === 3, JSON.stringify(ck));
@@ -72,7 +72,7 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, stdio: ['ignore', 'pipe
   await test('RV-03', 'the release zip: named, stamped inside, read back the same by Idearium\'s importer', () => {
     const { build } = require(path.join(ROOT, 'scripts/release-zip.js'));
     const out = build({ out: path.join(tmp, 'dist'), check: true });
-    assert.strictEqual(path.basename(out.zip), `nexus-${V}.zip`); assert.strictEqual(out.tag, `v${V}`); assert.strictEqual(out.notes, `CHANGELOG-${V}.md`);
+    assert.strictEqual(path.basename(out.zip), `nexus-${V}.zip`); assert.strictEqual(out.tag, `v${V}`); assert.strictEqual(out.notes, `versionium/changelogs/CHANGELOG-${V}.md`);
     const { extractZipToFiles } = require(path.join(ROOT, 'lib/zip-ingest.js'));
     const ex = extractZipToFiles({ buf: fs.readFileSync(out.zip), maxFiles: 20000, maxBytesPerFile: 4 * 1024 * 1024, maxTotalBytes: 2 * 1024 * 1024 * 1024 });
     assert.ok(ex.ok, ex.error);

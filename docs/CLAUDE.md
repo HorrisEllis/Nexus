@@ -303,3 +303,8 @@ see what you mean but there are way more idearium phases than that."
   the axioms do not settle it, they conflict, or it is his by USER_AUTONOMY (what he meant, the direction) — and then with the axioms named.
 - What he reports seeing is evidence (§0.0 truth is supreme, §0.1 evidence over memory). When the code seems to say otherwise, the gap is
   traced, not argued.
+
+## ADDENDUM 2026-10-28 (0.60.274) — where a changelog is written
+James, 2026-10-28: "can we move the changelogs to versionium and idearium"
+- A release's `CHANGELOG-<version>.md` is written in `versionium/changelogs/` (lib/changelogs.js `pathFor`), not at the repository root.
+  Read them through lib/changelogs.js, `system changelog [x.y.z]`, or Idearium's Releases view.

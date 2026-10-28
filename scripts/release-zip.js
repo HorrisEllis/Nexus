@@ -38,7 +38,7 @@ function build({ out = path.join(ROOT, 'dist'), ref = 'HEAD', check = false, roo
   let tracked = false; try { execFileSync('git', ['cat-file', '-e', `${ref}:VERSION`], { cwd: root, stdio: 'ignore' }); tracked = true; } catch (_) {}
   execFileSync('git', ['archive', '--format=zip', ...(tracked ? [] : [`--add-file=${vf}`]), '-o', zip, ref], { cwd: root, stdio: ['ignore', 'ignore', 'pipe'] });   // no --prefix: no folder
   fs.rmSync(tmp, { recursive: true, force: true });
-  return { version: cur.version, tag: cur.tag, title: cur.title, zip, bytes: fs.statSync(zip).size, notes: fs.existsSync(path.join(root, `CHANGELOG-${cur.version}.md`)) ? `CHANGELOG-${cur.version}.md` : null };
+  return { version: cur.version, tag: cur.tag, title: cur.title, zip, bytes: fs.statSync(zip).size, notes: (require('../lib/changelogs.js').forVersion(root, cur.version) || {}).rel || null };   // 0.60.274 — versionium/changelogs
 }
 
 if (require.main === module) {

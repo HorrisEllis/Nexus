@@ -3305,7 +3305,7 @@ const ROUTE_CAP = {
   'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
   'phases.census': CAPS.READ_IDEAS,   // 0.60.188 CNS1 — reads only
   'repo.changelog': CAPS.READ_IDEAS, 'ledger.out': CAPS.READ_IDEAS,   // 0.60.190 APV3/APV4 — read only
-  'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS, 'releases.changes': CAPS.READ_IDEAS,   // §0.60.41 RN1 · 0.60.72 RN2
+  'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS, 'releases.changes': CAPS.READ_IDEAS, 'releases.changelog': CAPS.READ_IDEAS,   // §0.60.41 RN1 · 0.60.72 RN2 · 0.60.274
   'repo.integrity': CAPS.READ_IDEAS, 'repo.integrity.notes': CAPS.WRITE_IDEAS,
   'route.assess': CAPS.READ_IDEAS,   // §0.60.8
   'checks.list': CAPS.READ_IDEAS, 'checks.run': CAPS.READ_IDEAS,   // §0.60.33 QA1 — the check catalogue; a run only reads and parses
@@ -3819,6 +3819,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','releases'],                                     'releases.list'],            // ?repository=nexus (default)
     ['POST',   ['api','releases','sync'],                              'releases.sync'],             // { all: true } → every release's commits
     ['GET',    ['api','releases','changes'],                           'releases.changes'],          // §0.60.72 RN2 ?since=0.60.47 · &write=1
+    ['GET',    ['api','releases','changelog'],                         'releases.changelog'],        // 0.60.274 ?version=x.y.z — its changelog's text (versionium/changelogs)
     ['POST',   ['api','repos',    ':uuid','history','import'],         'repo.history.import'],      // { zips:[{name, contentBase64}], dryRun, allowSecrets }
     // §0.60.7 PL4 — the import checks (lib/import-checks.js): GET reads them; POST also writes them as the repo's notes
     ['GET',    ['api','repos',    ':uuid','integrity'],                'repo.integrity'],
@@ -6015,6 +6016,15 @@ async function handle(req, res, route, query, body) {
     }
     // §0.60.72 RN2 — James: "tell me all the recent changes. i want a changelog for each change or diff." Every commit
     // under the first release that contains it, written from git (lib/release-notes.js); ?since=<version> · ?write=1 → CHANGES.md
+    // 0.60.274 — James, 2026-10-28: "can we move the changelogs to versionium and idearium". A release's changelog, read from its home
+    // (versionium/changelogs, through lib/changelogs.js); ?version= (default: the running release)
+    case 'releases.changelog': {
+      const CLS = _require('../../lib/changelogs.js');
+      const version = String(query.version || _require('../../lib/version.js').system || '').replace(/^v/, '');
+      const c = CLS.read(undefined, version);
+      if (!c) return err(res, 404, `no changelog for ${version} in ${CLS.DIR}`);
+      return ok(res, c);
+    }
     case 'releases.changes': {
       try {
         const N = _require('../../lib/release-notes.js'), R = _require('../../lib/nexus-releases.js');
