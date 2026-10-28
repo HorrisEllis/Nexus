@@ -1004,7 +1004,7 @@ class ClearDriver {
   // Clear Glass's attention record (src/page/attention.js) and Nexus Nerve know where an agent pointed
   async _pointer(agentId, args = {}) {
     const r = await this._pointerAct(agentId, args);
-    try { this.sse.emit('field.pointer', { agentId, do: r.action, x: r.x, y: r.y, n: r.target ? r.target.n : null, name: r.target ? r.target.name : null, covered: !!r.covered, via: r.via, ts: Date.now() }); } catch (_) {}
+    try { this.sse.emit('field.pointer', { agentId, do: r.action, x: r.x, y: r.y, n: r.target ? r.target.n : null, name: r.target ? r.target.name : null, label: args.label || null, covered: !!r.covered, via: r.via, ts: Date.now() }); } catch (_) {}
     return r;
   }
 

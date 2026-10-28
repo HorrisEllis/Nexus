@@ -394,3 +394,9 @@ and scrips injected into each page."
 - A mapped window stays live: the DOM observer every page already carries (dom/archaeology.js) reports dom.mutations, and the
   window is mapped again once it settles — so the feel follows the page without an agent asking.
 - attention-non-truth holds: the feel is a projection for attention; no decision is derived from it here.
+
+## ADDENDUM 2026-10-28 (0.60.272) — the virtual mouse in the live stream
+James, 2026-10-28: "What about the nexus nerve and interaction field with ollama continuous data stream with its using the virtual input/mouse"
+- field.pointer carries the act's label; Clear Glass attention keeps the last 12 acts per window as focus.acts (focus.pointer stays the last).
+- lib/nerve-ollama-bridge.js pushes every act since the last push, oldest first: what, on what, where, via eros|native, covered.
+- attention-non-truth holds: the acts are told to Ollama as context; no decision is derived from them here.
