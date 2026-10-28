@@ -11,6 +11,10 @@
  *   AC-04  in Clear Glass, browser.html: chips drawn under the reported fields with the value; a field already holding it has none; the ▾
  *          lists every option; a click fills that field (cg.autofill.fillOne) and the page keeps its focus
  *   AC-05  the suggest backend over a real page: the gig's pricing boxes and a profile email, with the reporter script
+ *   AC-06  (0.60.268 AF5) "what a node anchor": a field nothing placed is listed with its stable key; anchored as email, the key is learned
+ *          for the site and the next suggestion offers the profile email on it; anchored as a gig part, it is kept as that part's target
+ *   AC-07  in Clear Glass, browser.html: the ⚓ chip lists what the field can be (gig parts, profile types); a choice anchors it
+ *   AC-08  "have the element picker come up to map the page if confused": a gig fill that could not place a part brings the picker up
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -132,6 +136,76 @@ document.querySelectorAll('textarea').forEach(function (t) { t._state = ''; t.ad
     assert.ok(byVal.includes('Starter') && byVal.includes('Plus'), JSON.stringify(r.suggestions));
     assert.ok(r.suggestions.some(s => s.options.some(o => o.value === 'j@x.com')), 'the profile email: ' + JSON.stringify(r.suggestions) + ' ' + r.why);
     assert.match(r.script, /autofill:rects/);
+    await page.close();
+  });
+
+  if (browser) await test('AC-06', 'a field nothing placed has a ⚓ with its key; anchored as email it is learned and offered; as a gig part, kept', async () => {
+    const page = await browser.newPage({ viewport: { width: 900, height: 600 } });
+    await page.goto('data:text/html;charset=utf-8,' + encodeURIComponent(FORM + '<input name="contact_address_x" id="odd">'));
+    const Bridge = require(CG('src/ipc/bridge.js'));
+    const profile = { id: 'p1', name: 'Work', fields: { email: 'j@x.com', name: 'James Brooks' } };
+    const store = { getLastGig: () => null, getProfile: (id) => (id === 'p1' ? profile : null), listProfiles: () => [profile], activeProfile: () => ({ ok: true, profile, profileId: 'p1' }) };
+    const kv = new Map(); const siteSettings = { set: (u, k, v) => { kv.set(k, v); return true; }, getAllForOrigin: () => Object.fromEntries(kv) };
+    const a = arch(page);
+    const self = { dom: a, autofillStore: store, siteSettings, driver: { _getWebContents: () => ({ getURL: () => 'https://jobs.example/apply' }), exec: async () => { throw new Error('no readPage here'); } } };
+    for (const m of ['_learnedFields', '_pageUrl', '_autofillSuggest', '_autofillAnchor']) self[m] = Bridge.prototype[m].bind(self);
+    let r = await self._autofillSuggest({ agentId: 't' });
+    const odd = r.unmapped.find(u => u.key === 'odd');   // chooseKey: the id, the first stable unique name
+    assert.ok(odd, JSON.stringify(r.unmapped));
+    assert.ok(r.mapTo.profile.includes('email') && r.mapTo.profile.includes('name'), JSON.stringify(r.mapTo));
+    assert.ok(!r.suggestions.some(x => x.cgId === odd.cgId));
+    const an = await self._autofillAnchor({ agentId: 't', cgId: odd.cgId, kind: 'profile', value: 'email' });
+    assert.ok(an.ok && an.key === 'odd' && an.stable, JSON.stringify(an));
+    assert.strictEqual(kv.get('autofill.field.odd'), 'email', 'learned for the site (JA3 key)');
+    r = await self._autofillSuggest({ agentId: 't' });
+    assert.ok(r.suggestions.some(x => x.cgId === odd.cgId && x.options.some(o => o.value === 'j@x.com')), 'now offered: ' + JSON.stringify(r.suggestions));
+    assert.ok(!r.unmapped.some(u => u.cgId === odd.cgId), 'no longer a ⚓');
+    assert.match((await self._autofillAnchor({ agentId: 't', cgId: odd.cgId, kind: 'profile', value: 'not-a-type' })).error, /not a field type/);
+    // a gig part anchored by its cgId: the same selector-making as Point at it, kept as the part's target
+    const n2 = (await a.handleQuery({ agentId: 't', selector: 'textarea' }))[1];
+    const ga = await Bridge.prototype._gigAssign.call({ driver: { _getWebContents: () => ({ executeJavaScript: (c) => page._eval(c), getURL: () => 'https://www.fiverr.com/edit' }) } }, { page: 'pricing', part: 'standard.name', cgId: n2.id });
+    assert.ok(ga.ok, JSON.stringify(ga));
+    assert.strictEqual(await page.evaluate((sel) => { const n = document.querySelectorAll(sel); return n.length === 1 && n[0] === document.querySelectorAll('textarea')[1]; }, ga.selector), true);
+    await page.close();
+  });
+
+  if (browser) await test('AC-07', 'in Clear Glass: the ⚓ chip lists what the field can be; a choice anchors it', async () => {
+    const { initScript } = require(CG('src/driver/cg-stub.js'));
+    const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+    await page.addInitScript(initScript({ answers: { 'providers.list': [], 'toolbar.commands': [], 'bookmarks.list': [], 'plugins.list': [], 'options.get': {},
+      'autofill.suggest': { ok: true, script: '1', suggestions: [], unmapped: [{ cgId: 'cg-9', key: 'contact_address_x' }], mapTo: { profile: ['email', 'name'], gig: ['basic.name'], page: 'pricing' } },
+      'autofill.anchor': { ok: true } } }));
+    await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+    await page.waitForTimeout(300);
+    await page.evaluate(() => { const wv = document.getElementById('wv'); wv.executeJavaScript = () => Promise.resolve(true); wv.getZoomFactor = () => 1;
+      wv.getBoundingClientRect = () => ({ left: 0, top: 80, right: 1200, bottom: 780, width: 1200, height: 700 }); });
+    await page.evaluate(() => window.CGAutofillChips.refresh()); await page.waitForTimeout(100);
+    await page.evaluate(() => { const ev = new Event('ipc-message'); ev.channel = 'autofill:rects'; ev.args = [[{ cgId: 'cg-9', x: 20, y: 40, w: 200, v: '' }]]; document.getElementById('wv').dispatchEvent(ev); });
+    assert.strictEqual(await page.evaluate(() => document.querySelector('#af-chips .af-anchor .af-more').textContent), '⚓');
+    await page.evaluate(() => document.querySelector('#af-chips .af-anchor .af-more').click());
+    const opts = await page.evaluate(() => [...document.querySelectorAll('#af-chips .af-opt')].map(b => [b.dataset.anchor, b.dataset.val]));
+    assert.deepStrictEqual(opts, [['gig', 'basic.name'], ['profile', 'email'], ['profile', 'name']]);
+    await page.evaluate(() => document.querySelectorAll('#af-chips .af-opt')[1].click());
+    await page.waitForTimeout(100);
+    assert.deepStrictEqual((await page.evaluate(() => window.__cgCalls.filter(c => c.key === 'autofill.anchor').pop())).args, ['t', 'cg-9', 'profile', 'email']);
+    await page.close();
+  });
+
+  if (browser) await test('AC-08', 'a gig fill that could not place a part brings the element picker up for it, by itself', async () => {
+    const { initScript } = require(CG('src/driver/cg-stub.js'));
+    const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+    const gig = { title: 'I will build it', tags: [], description: 'd', faq: [], requirements: [], packages: { basic: { name: 'Starter', description: 'one', price: 30, deliveryDays: 3 } } };
+    await page.addInitScript(`try { localStorage.setItem('cg.gig.last', ${JSON.stringify(JSON.stringify(gig))}); } catch (_) {}`);
+    await page.addInitScript(initScript({ answers: { 'providers.list': [], 'toolbar.commands': [], 'bookmarks.list': [], 'plugins.list': [], 'options.get': {},
+      'autofill.gigFill': { page: 'pricing', filled: [], dropdowns: [], learned: [], failed: [], notFound: [{ key: 'basic.description', why: 'not found on the page' }] } } }));
+    await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
+    await page.waitForTimeout(300);
+    await page.evaluate(() => { window.__pickerClicks = 0; document.getElementById('picker-btn').addEventListener('click', () => window.__pickerClicks++, true); });
+    await page.evaluate(() => { document.getElementById('btn-gig').click(); document.getElementById('gig-fill').click(); });
+    await page.waitForTimeout(900);
+    assert.strictEqual(await page.evaluate(() => window.__pickerClicks), 1, 'the picker came up');
+    assert.strictEqual(await page.evaluate(() => typeof window.__cgOnNextPick), 'function', 'the next pick goes to basic.description');
+    assert.match(await page.evaluate(() => document.getElementById('gig-write-status').textContent), /basic\.description/);
     await page.close();
   });
 

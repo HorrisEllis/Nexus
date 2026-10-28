@@ -1731,6 +1731,7 @@ class IpcBridge {
     ipcMain.handle('autofill:suggest', async (e, d = {}) => this._autofillSuggest(d));              // 0.60.267 AF3 — the chips
     ipcMain.handle('autofill:gig:setLast', async (e, { gig } = {}) => { try { if (gig && gig.title && this.autofillStore) { this.autofillStore.setLastGig(gig); return { ok: true }; } } catch (err) { return { ok: false, error: err.message }; } return { ok: false, error: 'no gig' }; });   // 0.60.267 — the panel's gig is the chips' gig
     ipcMain.handle('autofill:fillOne', async (e, d = {}) => this._autofillFillOne(d));              // 0.60.267 AF3 — a chip clicked
+    ipcMain.handle('autofill:anchor', async (e, d = {}) => this._autofillAnchor(d));                // 0.60.268 AF5 — a field anchored to what it is
     ipcMain.handle('autofill:gig:saveRecording', async (e, d = {}) => this._gigSaveRecording(d));  // 0.60.224 — his choices → the page's macro   // 0.60.222 — a picked element taught to a gig part
     ipcMain.handle('autofill:gig:autofill', async (e, p = {}) => this._gigAutofill(p));   // §GA1 — the co-pilot's one door
     // 2026-10-12 — a gig FILE (.gig, or an old .gig.json: the shapes parseGig reads) → the same gig, held to Fiverr's limits like a written one.
@@ -2258,11 +2259,7 @@ class IpcBridge {
     try { r = await require('../autofill/gig.js').fillGig(this.dom, gig, { agentId, minConfidence }); }
     catch (err) { return { error: err.message }; }
     r.page = where.page; r.pageWhy = where.why; r.dropdowns = []; r.learned = []; r.notFound = [];
-    const valueOf = (part) => {
-      if (part === 'category') return gig.subcategory ? `${gig.category} > ${gig.subcategory}` : gig.category;
-      const [tier, k] = part.split('.'); const p = gig.packages && gig.packages[tier]; if (!p) return null;
-      return k === 'delivery' ? (Number.isFinite(p.deliveryDays) ? String(p.deliveryDays) : null) : (p[k] || null);
-    };
+    const valueOf = (part) => GP.valueOf(gig, part);   // 0.60.268: one reading of a gig part, shared with the chips
     const filledKeys = new Set((r.filled || []).map(f => f.key));
     for (const part of (where.page && GP.PARTS[where.page]) || []) {
       const value = valueOf(part); if (value === null || value === undefined || value === '') continue;
@@ -2321,8 +2318,55 @@ class IpcBridge {
       const domFields = await this.dom.handleQuery({ agentId, selector: 'input, textarea' });
       if (Array.isArray(domFields)) { try { gigMatches = require('../autofill/gig.js').matchGigFields(domFields, gig); } catch (_) {} }
     }
+    // 0.60.268 AF5 — gig parts he anchored on this kind of page (page-memory targets) are offered on their field
+    const GP = require('../autofill/gig-pages.js'), LP = require('../autofill/learn-pick.js');
+    let page = null, site = null;
+    if (this.driver) { try { const read = await this.driver.exec({ agentId, action: 'readPage', by: 'person' }); page = GP.gigPage(read).page; site = new URL(read.url).origin; } catch (_) {} }
+    if (page && site && gig) {
+      const mem = require('../page/page-memory').shared();
+      for (const part of GP.PARTS[page]) {
+        const t = mem.target(site, GP.targetKey(page, part)), v = GP.valueOf(gig, part); if (!t || v === null) continue;
+        const hit = await this.dom.handleQuery({ agentId, selector: t.selector }).catch(() => null);
+        if (Array.isArray(hit) && hit.length === 1) gigMatches.push({ cgId: hit[0].id, key: `${part} ⚓`, value: v, confidence: 'high' });
+      }
+    }
     const suggestions = SG.combine({ profileMatches, gigMatches, profileName });
-    return { ok: true, suggestions, why: suggestions.length ? null : (why || 'nothing on this page matches the profile or the gig'), script: SG.reporterScript(suggestions.map(x => x.cgId)) };
+    // 0.60.268 AF5 — "what a node anchor": every fillable field nothing placed gets a ⚓ chip; what it can be anchored as
+    let unmapped = [];
+    const all = await this.dom.handleQuery({ agentId, selector: 'input, select, textarea' });
+    if (Array.isArray(all)) {
+      const placed = new Set(suggestions.map(x => x.cgId));
+      unmapped = all.filter(f => LP.isFillable(f) && !placed.has(f.id) && String(f.type || '').toLowerCase() !== 'password' && f.visible !== false)
+        .map(f => { const k = LP.chooseKey(f, all); return { cgId: f.id, key: k.key || null, why: k.error || null }; });
+    }
+    let profileTypes = [];
+    try { const ap = this.autofillStore && this.autofillStore.activeProfile && this.autofillStore.activeProfile(); if (ap && ap.ok) profileTypes = [...LP.FIELD_TYPE_SET].filter(t => { const v = require('../autofill/matcher.js').valueFor(t, ap.profile); return v !== undefined && v !== null && v !== ''; }).sort(); } catch (_) {}
+    const mapTo = { profile: profileTypes, gig: page && gig ? GP.PARTS[page].filter(p => GP.valueOf(gig, p) !== null) : [], page };
+    return { ok: true, suggestions, unmapped, mapTo, why: suggestions.length ? null : (why || 'nothing on this page matches the profile or the gig'),
+      script: SG.reporterScript([...suggestions.map(x => x.cgId), ...unmapped.map(u => u.cgId)]) };
+  }
+
+  // 0.60.268 AF5 — James: "what a node anchor". He says what a field is; it is anchored to the field's stable identity on this site:
+  // a profile field type → JA3's learned map (learn-pick chooseKey + saveLearned, the same path a pick takes); a gig part → page-memory's
+  // target for that part on this kind of page (the same as Point at it). Every later fill and chip uses it.
+  async _autofillAnchor({ agentId = 'default', cgId, kind, value } = {}) {
+    if (!cgId || !value) return { ok: false, error: 'a field and what it is are needed' };
+    const LP = require('../autofill/learn-pick.js');
+    if (kind === 'profile') {
+      if (!LP.FIELD_TYPE_SET.has(value)) return { ok: false, error: `not a field type: ${value}` };
+      const all = await this.dom.handleQuery({ agentId, selector: 'input, select, textarea' });
+      if (!Array.isArray(all)) return { ok: false, error: (all && all.error) || 'the page could not be read' };
+      const f = all.find(x => x.id === cgId); if (!f) return { ok: false, error: 'that field is gone from the page' };
+      const k = LP.chooseKey(f, all); if (k.error) return { ok: false, error: k.error };
+      const r = LP.saveLearned(this.siteSettings, this._pageUrl(agentId), k.key, value);
+      return r.ok ? { ok: true, kind, key: k.key, stable: k.stable, value } : r;
+    }
+    if (kind === 'gig') {
+      const p = await this._gigPage({ agentId });
+      if (!p.page) return { ok: false, error: `not a Fiverr editor page the fill knows (${p.why})` };
+      return this._gigAssign({ agentId, page: p.page, part: value, cgId });
+    }
+    return { ok: false, error: 'kind is profile or gig' };
   }
 
   async _autofillFillOne({ agentId = 'default', cgId, value } = {}) {
@@ -2357,13 +2401,15 @@ class IpcBridge {
 
   // 0.60.222 — "hook into the element picker ... use it for correcting": he points at the element a part goes in; the pick (its xpath) is
   // turned into a selector that finds exactly that element again, checked on the page, and remembered for this site and page.
-  async _gigAssign({ agentId = 'default', page, part, xpath } = {}) {
+  async _gigAssign({ agentId = 'default', page, part, xpath, cgId } = {}) {   // cgId (0.60.268): a field the chips know, instead of a pick's xpath
     const GP = require('../autofill/gig-pages');
     if (!page || !GP.PARTS[page] || !GP.PARTS[page].includes(part)) return { ok: false, error: `unknown part ${part} for page ${page}` };
-    if (!xpath || !this.driver) return { ok: false, error: 'a picked element is needed' };
+    if ((!xpath && !cgId) || !this.driver) return { ok: false, error: 'a picked element is needed' };
     const wc = this.driver._getWebContents(agentId); if (!wc) return { ok: false, error: 'no page in this tab' };
     const r = await wc.executeJavaScript(`(function(xp){
-      var el = document.evaluate(xp, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+      var el = null;
+      if (xp.indexOf('cg:') === 0) { var all = document.querySelectorAll('input, textarea, select, [contenteditable="true"], [role="combobox"]'); for (var i = 0; i < all.length; i++) if (all[i].__cgId === xp.slice(3)) { el = all[i]; break; } }
+      else el = document.evaluate(xp, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
       if (!el) return { error: 'the picked element is gone' };
       var c = el.closest('textarea,input,select,[role="combobox"],[aria-haspopup],a,button') || el; el = c;
       var esc = function(v){ return (window.CSS && CSS.escape) ? CSS.escape(v) : String(v).replace(/[^a-zA-Z0-9_-]/g, '\\$&'); };
@@ -2382,7 +2428,7 @@ class IpcBridge {
         cur = p;
       }
       return uniq(parts.join(' > ')) ? { selector: parts.join(' > ') } : { error: 'no selector finds exactly the picked element' };
-    })(${JSON.stringify(xpath)})`, true).catch(e => ({ error: e.message }));
+    })(${JSON.stringify(xpath || ('cg:' + cgId))})`, true).catch(e => ({ error: e.message }));
     if (!r || r.error) return { ok: false, error: (r && r.error) || 'page did not answer' };
     let site = null; try { site = new URL(wc.getURL()).origin; } catch (_) {}
     if (!site) return { ok: false, error: 'the page has no site' };

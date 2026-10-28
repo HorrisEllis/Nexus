@@ -69,4 +69,13 @@ function pageMacroSteps(steps) {
   return { steps: out, dropped };
 }
 
-module.exports = { gigPage, PARTS, targetKey, suggestedCategory, macroName, pageMacroSteps };
+// valueOf(gig, part) — what a gig part holds ('basic.delivery' → '3'); the fill and the chips read parts the same way (0.60.268)
+function valueOf(gig, part) {
+  if (!gig) return null;
+  if (part === 'category') return gig.category ? (gig.subcategory ? `${gig.category} > ${gig.subcategory}` : gig.category) : null;
+  const [tier, k] = String(part).split('.'); const p = gig.packages && gig.packages[tier]; if (!p) return null;
+  const v = k === 'delivery' ? (Number.isFinite(p.deliveryDays) ? String(p.deliveryDays) : null) : p[k];
+  return v === undefined || v === null || v === '' ? null : String(v);
+}
+
+module.exports = { gigPage, PARTS, targetKey, suggestedCategory, macroName, pageMacroSteps, valueOf };

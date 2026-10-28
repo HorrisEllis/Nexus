@@ -10,6 +10,10 @@
  * the values come from main (cg.autofill.suggest: the active profile and the written gig) and go into the page only when a chip is clicked
  * (cg.autofill.fillOne). A field that already holds the value has no chip. Several options: the chip's ▾ lists them.
  * Refreshes on load, on in-page navigation and when the page's set of fields changes (Fiverr's editor steps).
+ *
+ * AF5 (0.60.268) — James, 2026-10-28: "what a node anchor. also have the element picker come up to map the page if confused." A field
+ * nothing placed gets a ⚓ chip: he says what it is (a profile field type, or a gig part on a Fiverr editor page) and the meaning is
+ * anchored to the field's stable identity on the site (cg.autofill.anchor); the chips come back with its value.
  */
 (function () {
   'use strict';
@@ -18,7 +22,7 @@
   if (!cg || !cg.autofill || !wv) return;
   const agentId = new URLSearchParams(location.search).get('agentId') || 'default';
   const layer = document.createElement('div'); layer.id = 'af-chips'; layer.setAttribute('aria-live', 'polite'); document.body.appendChild(layer);
-  let sugg = new Map(), rects = [], timer = 0, gen = 0, open = null, done = new Map();
+  let sugg = new Map(), unmapped = new Map(), mapTo = { profile: [], gig: [] }, rects = [], timer = 0, gen = 0, open = null, done = new Map();
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
   async function refresh() {
@@ -26,8 +30,10 @@
     let r; try { r = await cg.autofill.suggest(agentId); } catch (_) { r = null; }
     if (my !== gen) return;
     sugg = new Map(((r && r.suggestions) || []).map(s => [s.cgId, s]));
-    window.__cgAutofillChips = { count: sugg.size, why: r && r.why };
-    if (!sugg.size || !r.script) { rects = []; draw(); return; }
+    unmapped = new Map(((r && r.unmapped) || []).map(u => [u.cgId, u]));
+    mapTo = (r && r.mapTo) || { profile: [], gig: [] };
+    window.__cgAutofillChips = { count: sugg.size, unmapped: unmapped.size, why: r && r.why };
+    if ((!sugg.size && !unmapped.size) || !r.script) { rects = []; draw(); return; }
     try { await wv.executeJavaScript(r.script, true); } catch (_) {}
   }
   const soon = (ms = 500) => { clearTimeout(timer); timer = setTimeout(refresh, ms); };
@@ -38,7 +44,9 @@
     const visible = box.width > 0 && box.height > 0 && getComputedStyle(wv).visibility !== 'hidden';
     const html = [];
     for (const f of visible ? rects : []) {
-      const s = sugg.get(f.cgId); if (!s || !s.options.length) continue;
+      const s = sugg.get(f.cgId), u = !s && unmapped.get(f.cgId);
+      if (u) { html.push(anchorChip(f, u, box, z)); continue; }
+      if (!s || !s.options.length) continue;
       if (s.options.some(o => o.value === f.v)) continue;            // already holds it
       const x = box.left + f.x * z, y = box.top + f.y * z + 2;
       if (y < box.top || y > box.bottom - 18 || x > box.right - 40) continue;
@@ -51,12 +59,34 @@
     }
     layer.innerHTML = html.join('');
   }
+  // ⚓ — a field the chips do not understand: say once what it is
+  function anchorChip(f, u, box, z) {
+    const x = box.left + f.x * z, y = box.top + f.y * z + 2;
+    if (y < box.top || y > box.bottom - 18 || x > box.right - 40 || f.v) return '';
+    const st = done.get(f.cgId);
+    const list = open === f.cgId ? `<div class="af-list">${u.key ? '' : `<div class="af-note">${esc(u.why || 'this field has nothing to remember it by')}</div>`}`
+      + (mapTo.gig || []).map(p => `<button class="af-opt" data-anchor="gig" data-val="${esc(p)}"><span>gig · ${esc(p)}</span><em>Fiverr ${esc(mapTo.page || '')} page</em></button>`).join('')
+      + (mapTo.profile || []).map(t => `<button class="af-opt" data-anchor="profile" data-val="${esc(t)}"><span>${esc(t)}</span><em>your profile</em></button>`).join('')
+      + (!(mapTo.gig || []).length && !(mapTo.profile || []).length ? '<div class="af-note">no profile values or gig to anchor it to yet</div>' : '') + '</div>' : '';
+    return `<div class="af-chip af-anchor${st ? ' ' + st : ''}" style="left:${Math.round(Math.max(box.left, x))}px;top:${Math.round(y)}px" data-cg="${esc(f.cgId)}">`
+      + `<button class="af-more" title="What is this field? Anchor it once${u.key ? ` (known by “${esc(u.key)}”)` : ''}">⚓</button>${list}</div>`;
+  }
 
   layer.addEventListener('mousedown', (e) => e.preventDefault());   // the page's field keeps its focus
   layer.addEventListener('click', async (e) => {
     const chip = e.target.closest('.af-chip'); if (!chip) return;
-    const cgId = chip.dataset.cg, s = sugg.get(cgId); if (!s) return;
+    const cgId = chip.dataset.cg, s = sugg.get(cgId);
     if (e.target.closest('.af-more')) { open = open === cgId ? null : cgId; draw(); return; }
+    const a = e.target.closest('[data-anchor]');
+    if (a) {   // AF5 — anchor this field to what it is, then the chips come back with its value
+      open = null; done.set(cgId, 'busy'); draw();
+      let r; try { r = await cg.autofill.anchor(agentId, cgId, a.dataset.anchor, a.dataset.val); } catch (err) { r = { ok: false, error: err.message }; }
+      done.set(cgId, r && r.ok ? 'ok' : 'bad'); draw();
+      if (r && !r.ok && typeof window.toast === 'function') window.toast(`Not anchored: ${r.error}`, 'error');
+      setTimeout(() => { done.delete(cgId); refresh(); }, 600);
+      return;
+    }
+    if (!s) return;
     const b = e.target.closest('[data-v]'); if (!b) return;
     const o = s.options[Number(b.dataset.v) || 0]; open = null;
     done.set(cgId, 'busy'); draw();

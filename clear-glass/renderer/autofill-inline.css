@@ -15,3 +15,6 @@
 #af-chips .af-opt { display: flex !important; flex-direction: column; width: 100%; box-sizing: border-box; border-radius: 6px; }
 #af-chips .af-opt:hover { background: rgba(79, 209, 197, .14); }
 #af-chips .af-opt em { font-style: normal; font-size: 10.5px; color: #8a93a8; }
+#af-chips .af-anchor { opacity: .55; border-style: dashed; }   /* AF5: a field to anchor */
+#af-chips .af-anchor:hover { opacity: 1; }
+#af-chips .af-note { font-size: 11px; color: #8a93a8; padding: 4px 8px; }

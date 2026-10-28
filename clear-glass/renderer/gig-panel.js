@@ -131,7 +131,13 @@
     const miss = r.notFound || [];
     $('gig-missing').innerHTML = miss.map(m => `<div class="gig-miss"><span><b>${esc(m.key)}</b> — ${esc(m.why)}</span><button data-part="${esc(m.key)}">Point at it</button></div>`).join('');
     for (const b of $('gig-missing').querySelectorAll('button')) b.addEventListener('click', () => point(r.page, b.dataset.part));
+    // 0.60.268 AF5 — James: "have the element picker come up to map the page if confused". A part the fill could not place brings the picker
+    // up by itself, one part after another (each asked once per round; Esc in the picker stops it; Point at it stays for any later time).
+    const next = miss.find(m => !asked.has(`${r.page}:${m.key}`));
+    if (r.page && next && autoPick) { asked.add(`${r.page}:${next.key}`); const t = ++autoToken; setTimeout(() => { if (t === autoToken && !recording) point(r.page, next.key); }, 400); }   // not if he has moved on (recording, another fill)
+    else if (!next) asked.clear();
   }
+  const asked = new Set(); let autoPick = true, autoToken = 0;   // 0.60.268: parts the picker already asked for this round; a newer action cancels a pending one
   function point(page, part) {
     if (!page) return say('gig-write-status', 'This page is not one the fill knows yet, so a pick cannot be kept for it.', 'bad');
     say('gig-write-status', `Click the element "${part}" goes in…`);
@@ -149,6 +155,7 @@
   // rows) he does once while this records; it is kept as the page's macro ('fiverr <page>') and every fill of that page replays it.
   let recording = null;
   $('gig-record').addEventListener('click', async () => {
+    autoToken++;   // 0.60.268: recording wins over a pending automatic pick
     const btn = $('gig-record');
     if (!recording) {
       let p; try { p = await cg.autofill.gigPage(agentId); } catch (e) { p = { page: null, why: e.message }; }

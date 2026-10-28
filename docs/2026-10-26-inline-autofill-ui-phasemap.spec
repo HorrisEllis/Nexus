@@ -84,6 +84,18 @@ phases:
       autofill.profileId per origin), so a site can be excluded.
     proof: "the toggle hides/shows the chip; the default-profile picker sets what activeProfile() returns; a per-site off suppresses the chip on that origin; in Clear Glass"
 
+  AF5_node_anchors_and_picker_on_confusion:
+    status: BUILT 0.60.268 — ⚓ chips + autofill:anchor (learned map / page-memory target), the gig panel's picker on a miss; test-autofill-chips AC-06..08
+    layer: ui
+    depends_on: [AF3_the_inline_chip]
+    files: [clear-glass/src/autofill/suggest.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/renderer/autofill-inline.js, clear-glass/renderer/gig-panel.js]
+    does: >-
+      His 2026-10-28 "what a node anchor. also have the element picker come up to map the page if confused." Every fillable field the
+      chips cannot place gets a ⚓ chip; he says what it is (a profile field type, or a gig part on a Fiverr editor page) and that meaning
+      is anchored to the field's stable identity on the site (learn-pick chooseKey → saveLearned; gig parts → page-memory targets), so every
+      later fill and chip uses it. When the gig fill cannot place parts, the element picker comes up by itself, one part after another.
+    proof: "an unplaced field shows ⚓; anchoring it as email makes its chip offer the profile email and saves the learned key; a gig fill with a missing part starts the picker for it; in Clear Glass"
+
 order: >-
   AF1 first — the active-profile resolution + matchOne; it is the null-profile FIX (copilot/agents stop passing null) and the
   data the chip needs, and it is unit-testable without Electron. AF2 wires the route + command (fill defaults to the active
@@ -103,3 +115,10 @@ order: >-
 # - "under each input": every suggested field has a chip, not only the focused one (his 2026-10-28 words); the focused one is brighter.
 # - Gig parts are offered too (the gig written in the panel), beside the active profile.
 # - AF4 (Settings toggle + default-profile picker) stays OPEN.
+
+# ── ADDENDUM 2026-10-28 — AF5 mapped: node anchors, and the picker when confused
+# James, 2026-10-28, after the chips (0.60.267): "what a node anchor. also have the element picker come up to map the page if confused."
+# Reading (the coder's; to confirm): "node anchor" = each field (node) on the page anchored to what it means — the chips already show what
+# goes in a field they understand; a field they do not understand gets a ⚓ to anchor it once, by its stable identity (JA3's chooseKey), so
+# the page is mapped and stays mapped. "if confused" = when a fill cannot place something, the element picker comes up without being asked.
+# Built on: learn-pick.js (chooseKey, saveLearned — JA3's identity and save path), page-memory targets (0.60.262), the gig panel's Point at it.
