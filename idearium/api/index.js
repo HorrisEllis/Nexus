@@ -7755,6 +7755,21 @@ async function handle(req, res, route, query, body) {
           return ok(res, r);
         }
         const zips = (body.zips || []).map(z => ({ name: String(z.name || 'project.zip'), buffer: Buffer.from(String(z.contentBase64 || ''), 'base64') }));
+        // 0.60.225 — James: "no patch file. unless idearium can run it. like i can drag it into the versionium tab and import". A zip with
+        // nexus-change.json is a change to Nexus itself (lib/nexus-self/change-pack.js): checked against the files on this machine, then — on
+        // his press — written through the apply gate, system by system. Never through the repo layer (Nexus's repos are immutable).
+        { const CP = _require('../../lib/nexus-self/change-pack.js');
+          if (zips.length === 1 && CP.isPack(zips[0].buffer)) {
+            if (!repo.nexusSelf) return err(res, 409, "this is a change to Nexus itself: drop it on a Nexus repo's Versionium tab (core, clear-glass, …)");
+            const pack = CP.read(zips[0].buffer);
+            if (!pack.ok) return err(res, 400, pack.error);
+            const m = pack.manifest, manifest = { from: m.from, to: m.to, version: m.version, made: m.made, files: m.files.length };
+            if (!body.applyPack) return ok(res, { changePack: true, manifest, check: CP.check(pack) });
+            const r = CP.applyPack(pack, { by: body.by || 'person' });
+            if (!r.ok) return err(res, 409, `not applied: ${[...(r.errors || []), ...(r.conflicts || []).map(c => `${c.path} — ${c.why}`)].slice(0, 6).join('; ')}`, { changePack: true, ...r });
+            os.emit('nexus-self.change-pack.applied', { repoUuid: repo.uuid, from: m.from, to: m.to, version: m.version, applies: r.applies });
+            return ok(res, { changePack: true, manifest, applied: r });
+          } }
         const r = await RH.importHistory(_vcall, repo.uuid, { zips, dryRun: !!body.dryRun, allowSecrets: !!body.allowSecrets });
         if (!r.ok) return err(res, 409, r.error, { code: r.code, versions: r.versions, secrets: r.secrets });
         if (!r.dryRun) os.emit('idearium.repo.history.imported', { repoUuid: repo.uuid, imported: r.imported, skipped: r.skipped, branch: r.branch });

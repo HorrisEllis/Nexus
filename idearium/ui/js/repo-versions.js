@@ -53,7 +53,7 @@
         <button class="action-btn" onclick="document.getElementById('vx-hist-input').click()">⟲ import history…</button>
         <input id="vx-hist-input" type="file" accept=".zip" multiple style="display:none" onchange="importRepoHistory(this.files)">
       </div>
-      <div id="vx-drop" class="vx-drop">drop a project zip with its .git (every commit becomes a version) — or several zips of one project (one version each, in order)</div>
+      <div id="vx-drop" class="vx-drop">drop a project zip with its .git (every commit becomes a version) — or several zips of one project (one version each, in order) — or a Nexus change pack (nexus-change.json) to apply it</div>
       <div id="vx-hist"></div>
       <div class="vx-list">${list.slice(0, S.shown).map(row).join('') || '<div class="vx-dim" style="padding:8px">nothing of this kind yet</div>'}</div>
       ${list.length > S.shown ? `<button class="vx-more" onclick="moreVersions()">show ${Math.min(200, list.length - S.shown)} more of ${list.length - S.shown}</button>` : ''}
@@ -126,6 +126,7 @@
     let d;
     try { d = await api(`/api/repos/${S.repo}/history/import`, { method: 'POST', body: JSON.stringify({ zips, dryRun: true }) }, 300000); }
     catch (e) { out.innerHTML = `<div class="ds-mono">${esc(e.message)}</div>`; return; }
+    if (d.changePack) return showChangePack(d, out);
     const sec = d.secrets || [];
     out.innerHTML = `<div class="ds"><div class="ds-label">history to import · ${d.wouldImport} new version(s) of ${d.versions.length}</div>
       <div class="vx-list">${d.versions.map(v => `<div class="vx-row${v.skipped ? ' vx-skip' : ''}"><span class="vx-k">${v.source === 'git' ? '⟲' : '▣'}</span><span class="vx-when">${esc(String(v.date || '').slice(0, 10))}</span><span class="vx-msg">${esc(v.message)}</span><span class="vx-dim">${v.files} files${v.tooLarge ? ` · ${v.tooLarge} too large` : ''}${v.skipped ? ` · ${esc(v.skipped)}` : ''}</span></div>`).join('')}</div>
@@ -134,6 +135,37 @@
         ${d.wouldImport ? `<button class="action-btn" onclick="confirmHistoryImport(${sec.length ? 'true' : 'false'})">${sec.length ? 'import, keeping them in the history' : `import ${d.wouldImport} version(s)`}</button>` : '<span class="vx-dim">nothing new to import</span>'}
         <button class="vx-more" onclick="document.getElementById('vx-hist').innerHTML=''">cancel</button>
       </div></div>`;
+  }
+
+  // 0.60.225 — James: "like i can drag it into the versionium tab and import". A change pack (a zip with nexus-change.json) is a change to
+  // Nexus itself: what it would write, per system, against the files on this machine; a file changed here since its base is a conflict and
+  // nothing is written. Apply goes through the gate; each apply rolls back by its id.
+  function showChangePack(d, out) {
+    const m = d.manifest || {}, c = d.check || { systems: {}, counts: {}, errors: [] };
+    const rows = Object.entries(c.systems).map(([sys, s]) => `<div class="vx-row"><span class="vx-k">▣</span><span>${esc(sys)}</span><span class="vx-dim">${s.apply.length} to write · ${s.already.length} already here${s.conflicts.length ? ` · <b>${s.conflicts.length} conflict(s)</b>` : ''}</span></div>`
+      + s.conflicts.map(x => `<div class="vx-row vx-skip"><span class="vx-k">!</span><span>${esc(x.path)}</span><span class="vx-dim">${esc(x.why)}</span></div>`).join('')).join('');
+    out.innerHTML = `<div class="ds"><div class="ds-label">change to Nexus${m.version ? ` · ${esc(m.version)}` : ''} · ${m.files} file(s) · ${esc(String(m.from || '').slice(0, 8))}..${esc(String(m.to || '').slice(0, 8))}</div>
+      <div class="vx-list">${rows}</div>
+      ${(c.errors || []).length ? `<div class="ds-mono vx-warn">${c.errors.map(esc).join('\n')}</div>` : ''}
+      <div class="vx-tools">
+        ${c.ok && c.counts.apply ? `<button class="action-btn" onclick="applyChangePack()">apply ${c.counts.apply} file(s) through the gate</button>` : `<span class="vx-dim">${c.ok ? 'every file is already here — nothing to apply' : 'not applicable as it stands: nothing will be written'}</span>`}
+        <button class="vx-more" onclick="document.getElementById('vx-hist').innerHTML=''">cancel</button>
+      </div></div>`;
+  }
+  async function applyChangePack() {
+    const out = $('vx-hist'); if (!S.pending) return;
+    out.innerHTML = `<div class="detail-empty">applying through the gate…</div>`;
+    let d; try { d = await api(`/api/repos/${S.repo}/history/import`, { method: 'POST', body: JSON.stringify({ zips: S.pending, applyPack: true }) }, 300000); }
+    catch (e) { out.innerHTML = `<div class="ds-mono">${esc(e.message)}</div>`; return; }
+    const a = (d.applied && d.applied.applies) || [];
+    out.innerHTML = `<div class="ds"><div class="ds-label">applied · ${a.reduce((n, x) => n + x.files, 0)} file(s) in ${a.length} system(s)${d.applied && d.applied.skipped ? ` · ${d.applied.skipped} already here` : ''} — restart the system(s) that changed</div>
+      <div class="vx-list">${a.map(x => `<div class="vx-row"><span class="vx-k">✓</span><span>${esc(x.system)} · ${x.files} file(s)</span><span class="vx-dim">${esc(x.applyId)}</span><button class="vx-more" onclick="rollbackApply('${esc(x.applyId)}')">roll back</button></div>`).join('')}</div></div>`;
+    say('change applied through the gate', 'ok'); S.pending = null;
+  }
+  async function rollbackApply(id) {
+    if (!confirm(`Roll back ${id}? Its files go back to what they were before it.`)) return;
+    try { await api(`/api/nexus-self/applies/${encodeURIComponent(id)}/rollback`, { method: 'POST', body: '{}' }, 60000); say(`${id} rolled back`, 'ok'); }
+    catch (e) { say(e.message, 'err'); }
   }
 
   async function confirmHistoryImport(withSecrets) {
@@ -158,5 +190,5 @@
     } catch (e) { say(`import checks did not run: ${e.message}`, 'err'); }
   }
 
-  Object.assign(window, { renderVersionIndex, filterVersions, moreVersions, pickVersion, compareVersions, openVersion, restoreVersionFile, importRepoHistory, confirmHistoryImport, runIntegrity });
+  Object.assign(window, { renderVersionIndex, filterVersions, moreVersions, pickVersion, compareVersions, openVersion, restoreVersionFile, importRepoHistory, confirmHistoryImport, runIntegrity, applyChangePack, rollbackApply });
 })();
