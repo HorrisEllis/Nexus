@@ -47,7 +47,7 @@ phases:
     proof: "test-autofill-active.test.js: activeProfile picks default/sole/first and names no-profile cleanly (no null); matchOne returns the type+value for one input, or nothing for a non-fillable one — injected, no backend"
 
   AF2_route_and_command:
-    status: BUILT 0.60.258 — the fix lands at matcher._siteChoice (every fill/detect path defaults to store.activeProfile; zero profiles → clean noProfile error, never getProfile(null)). So copilot/agents/context-menu/gig/routes all fill from the active profile. test-autofill-fill-active.test.js 4/4; all 10 autofill suites green; backward compatible (minimal stores keep pass-through). NOTE: the actual named routes GET /cli/autofill/active + POST /cli/autofill/default are not yet added — the active-profile DEFAULTING (the real fix) is done; the explicit active/default endpoints can follow with AF4's settings picker.
+    status: "BUILT 0.60.258 — the fix lands at matcher._siteChoice (every fill/detect path defaults to store.activeProfile; zero profiles → clean noProfile error, never getProfile(null)). So copilot/agents/context-menu/gig/routes all fill from the active profile. test-autofill-fill-active.test.js 4/4; all 10 autofill suites green; backward compatible (minimal stores keep pass-through). NOTE: the actual named routes GET /cli/autofill/active + POST /cli/autofill/default are not yet added — the active-profile DEFAULTING (the real fix) is done; the explicit active/default endpoints can follow with AF4's settings picker."
     layer: integration
     depends_on: [AF1_active_profile_and_fill_one]
     files: [clear-glass/src/automation/routes.js, lib/agent-tools/tools/clear-glass/autofill.js]
