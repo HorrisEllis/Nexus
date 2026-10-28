@@ -370,9 +370,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     gig:       (payload)                     => ipcRenderer.invoke('autofill:gig', payload),
     gigDetect: (gig, agentId)                => ipcRenderer.invoke('autofill:gig:detect', { gig, agentId }),
     gigFill:   (gig, agentId, minConfidence) => ipcRenderer.invoke('autofill:gig:fill', { gig, agentId, minConfidence }),
-    exportAll: ()                            => ipcRenderer.invoke('autofill:export'),                   // §AT2 0.60.256 the .autofill file: { text, filename, counts }
-    importAll: (text)                        => ipcRenderer.invoke('autofill:import', { text }),         // merges; keeps what it replaced
-    importUndo: ()                           => ipcRenderer.invoke('autofill:import:undo'),
+    gigAssign: (d) => ipcRenderer.invoke('autofill:gig:assign', d),   // 0.60.222 — teach a gig part the element he picked
     gigImport: (text)                        => ipcRenderer.invoke('autofill:gig:import', { text }),
     gigFile: (gig)                           => ipcRenderer.invoke('autofill:gig:file', { gig }),        // the gig as a .gig (YAML) file: { text, filename }
     gigTemplate: ()                          => ipcRenderer.invoke('autofill:gig:file', { template: true }),   // an empty .gig to fill in   // a .gig.json file's text -> the gig, checked against Fiverr's limits

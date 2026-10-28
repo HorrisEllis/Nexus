@@ -39,9 +39,10 @@ const SPECS = [
   { spec: 'clear-glass/spec/adblock.spec', map: 'docs/2026-10-21-adblock-phasemap.spec' },   // 0.60.183
   { spec: 'clear-glass/spec/browser-shell.spec', map: 'docs/2026-10-21-browser-shell-phasemap.spec' },
   { spec: 'docs/system-node-db.spec', map: 'docs/2026-10-22-system-node-db-phasemap.spec' },
-  { spec: 'cos/spec/cos-spine.spec', map: 'docs/2026-10-23-cos-spine-phasemap.spec' },
-  { spec: 'docs/self-building-loop.spec', map: 'docs/2026-10-23-self-building-loop-phasemap.spec' },   // 2026-10-23 SL — his "so it can start building itself"   // 2026-10-23 CS — COS is the spine: versions are system states
-  { spec: 'clear-glass/spec/copilot-any-agent.spec', map: 'docs/2026-10-24-copilot-any-agent-phasemap.spec' },   // 2026-10-24 CL — his "get the cli working for guardian, use any agent as the copilot"
+  { spec: 'cos/spec/cos-spine.spec', map: 'docs/2026-10-23-cos-spine-phasemap.spec' },   // 2026-10-23 CS — COS is the spine: versions are system states
+  { spec: 'clear-glass/spec/flow-cores.spec', map: 'docs/2026-10-28-first-principles-phasemap.spec' },   // 2026-10-28 FP — the deterministic cores
+  { spec: 'clear-glass/spec/tab-compartments.spec', map: 'docs/2026-10-28-tab-compartments-phasemap.spec' },   // 2026-10-28 TC — a compartment per tab, links open tabs
+  { spec: 'clear-glass/spec/gated-flows.spec', map: 'docs/2026-10-28-gated-flows-phasemap.spec' },   // 2026-10-28 FG — gated flows, dropdowns, Tab mode
   { spec: 'clear-glass/spec/site-profile.spec', map: 'docs/2026-10-23-site-profile-processes-phasemap.spec' },   // 2026-10-23 SP — per-site settings, Processes   // 2026-10-22 ND — his "each database for each system"   // 0.60.179   // 2026-10-20 — compile only: its new modules' phases (AQ1/AQ2) are not in a map yet
   { spec: 'cos/spec/cos-services.spec', map: 'docs/2026-10-24-cos-services-phasemap.spec' },   // 2026-10-24 BCR1 (from brave-cori) — his "this is all the networking backend for anything needed netwroking wise"
 ];

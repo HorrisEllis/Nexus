@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-tab-compartments-phasemap.spec::TC4_pop_out_and_dock
+type: phase
+id: docs_2026-10-28-tab-compartments-phasemap.spec::TC4_pop_out_and_dock
+context: pipeline phase TC4_pop_out_and_dock of docs/2026-10-28-tab-compartments-phasemap.spec
+intent: null
+summary: TC4_pop_out_and_dock (integration) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793180610618
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793180610618
+lastSeenAt: 1793180610618
+fingerprint: null
+payload:
+  id: TC4_pop_out_and_dock
+  map: docs/2026-10-28-tab-compartments-phasemap.spec
+  repo: null
+  layer: integration
+  status: MAPPED
+  files:
+    - clear-glass/src/tabs/move.js
+    - clear-glass/src/main/compartment-window.js
+    - clear-glass/src/rewind/resume.js
+    - clear-glass/renderer/browser.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - TC3_links_open_tabs
+  blocks:
+    - MOD-TC-MOVE
+  spec: clear-glass/spec/tab-compartments.spec
+  graph: 0443ed76584f9e29

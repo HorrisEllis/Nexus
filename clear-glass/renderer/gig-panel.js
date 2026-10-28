@@ -112,14 +112,34 @@
     say('gig-write-status', `Saved ${_download(r)} — fill it in, then "Load a gig file…".`, 'ok');
   });
   $('gig-copy-all').addEventListener('click', (e) => GIG && copy(parts(GIG).map(p => `${p.label}\n${p.text}`).join('\n\n'), e.currentTarget));
-  $('gig-fill').addEventListener('click', async () => {
-    if (!GIG) return;
-    say('gig-write-status', 'Filling the Fiverr page in this tab…');
+  // 0.60.222 — James, 2026-10-28: "like autofill should detect pages, so it can know when to paste, or detect the actual elements. like hook
+  // into the element picker, mayne use it for correcting". The fill says which editor page it found and what it did; each part it could not
+  // find has "Point at it": the element picker starts, the element he clicks is remembered for that part on this site, and the part is
+  // filled again. Next time it is filled there first.
+  const PAGE_NAME = { overview: 'Overview', pricing: 'Scope & Pricing' };
+  async function fill() {
+    say('gig-write-status', 'Reading the page in this tab…');
     let r; try { r = await cg.autofill.gigFill(GIG, agentId, 'medium'); } catch (e) { r = { ok: false, error: e.message }; }
-    if (!r || r.ok === false) return say('gig-write-status', `Not filled: ${(r && r.error) || 'no answer'} — open Fiverr's gig editor in this tab first.`, 'bad');
-    const n = r.filled ?? (r.results || []).filter(x => x.ok !== false).length;
-    say('gig-write-status', `Filled ${n || 0} field(s). Read it on the page, then press Save / Publish on Fiverr yourself.${r.skipped && r.skipped.length ? ` Left for you to paste: ${r.skipped.slice(0, 3).join(', ')}.` : ''}`, 'ok');
-  });
+    if (!r || r.ok === false || r.error) { $('gig-missing').innerHTML = ''; return say('gig-write-status', `Not filled: ${(r && r.error) || 'no answer'} — open Fiverr's gig editor in this tab first.`, 'bad'); }
+    const typed = (r.filled || []).length, chosen = (r.dropdowns || []).filter(d => d.ok).length, learned = (r.learned || []).length;
+    const where = r.page ? `${PAGE_NAME[r.page] || r.page} page` : `this page (${r.pageWhy})`;
+    say('gig-write-status', `${where}: typed ${typed}, chose ${chosen}${learned ? `, ${learned} where you pointed before` : ''}. Read it on the page; Save / Publish stay yours.`, (r.notFound || []).length ? '' : 'ok');
+    const miss = r.notFound || [];
+    $('gig-missing').innerHTML = miss.map(m => `<div class="gig-miss"><span><b>${esc(m.key)}</b> — ${esc(m.why)}</span><button data-part="${esc(m.key)}">Point at it</button></div>`).join('');
+    for (const b of $('gig-missing').querySelectorAll('button')) b.addEventListener('click', () => point(r.page, b.dataset.part));
+  }
+  function point(page, part) {
+    if (!page) return say('gig-write-status', 'This page is not one the fill knows yet, so a pick cannot be kept for it.', 'bad');
+    say('gig-write-status', `Click the element "${part}" goes in…`);
+    window.__cgOnNextPick = async (pick) => {
+      let a; try { a = await cg.autofill.gigAssign({ agentId, page, part, xpath: pick && pick.xpath }); } catch (e) { a = { ok: false, error: e.message }; }
+      if (!a || !a.ok) return say('gig-write-status', `Not kept: ${(a && a.error) || 'no answer'}`, 'bad');
+      say('gig-write-status', `Kept: "${part}" is ${a.selector} on this page. Filling again…`, 'ok');
+      fill();
+    };
+    const pb = document.getElementById('picker-btn'); if (pb && !pb.classList.contains('active')) pb.click();
+  }
+  $('gig-fill').addEventListener('click', () => { if (GIG) fill(); });
 
   // ── step 2: an order → Idearium ─────────────────────────────────────────
   function questions() { return (GIG && GIG.requirements && GIG.requirements.length ? GIG.requirements : DEFAULT_Q).slice(0, 5); }

@@ -222,6 +222,7 @@ const GIG_PATTERNS = [
   { part: 'requirement',        re: /requirement|write[-_ ]?your[-_ ]?question[-_ ]?here|what[-_ ]?do[-_ ]?you[-_ ]?need[-_ ]?from[-_ ]?the[-_ ]?buyer/i },
   { part: 'description',        re: /description|briefly[-_ ]?describe[-_ ]?your[-_ ]?gig|about[-_ ]?this[-_ ]?gig/i },
 ];
+const FIVERR_PLACEHOLDER = /^(name your package|describe the details of your offering)$/i;   // Fiverr's Scope & Pricing boxes, exact
 function _gigPart(text) {
   if (!text) return null;
   const t = String(text).replace(/\s+/g, ' ').trim().slice(0, 200);
@@ -246,7 +247,10 @@ function matchGigFields(domFields, gig) {
     if (['submit', 'button', 'hidden', 'checkbox', 'radio', 'file', 'image', 'reset', 'search'].includes(type)) continue;
     let part = null, confidence = null, source = null;
     for (const [src, text, conf] of [['name', field.name, 'medium'], ['id', field.attrs && (field.attrs.id || field.id_attr), 'medium'],
-      ['label', field.label, 'medium'], ['label', field.attrs && field.attrs['aria-label'], 'medium'], ['placeholder', field.attrs && field.attrs.placeholder, 'low']]) {
+      ['label', field.label, 'medium'], ['label', field.attrs && field.attrs['aria-label'], 'medium'],
+      // 0.60.221 — Fiverr's pricing boxes have no label or name, only these placeholders (his screenshot, 2026-10-28). Matched as 'low', they
+      // fell under the default 'medium' floor and were never filled. Fiverr's own exact wording is as sure as a label: medium.
+      ['placeholder', field.attrs && field.attrs.placeholder, FIVERR_PLACEHOLDER.test(String(field.attrs && field.attrs.placeholder || '').trim()) ? 'medium' : 'low']]) {
       const p = _gigPart(text);
       if (p) { part = p; source = src; confidence = conf; break; }
     }

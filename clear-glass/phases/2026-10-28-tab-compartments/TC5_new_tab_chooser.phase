@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-tab-compartments-phasemap.spec::TC5_new_tab_chooser
+type: phase
+id: docs_2026-10-28-tab-compartments-phasemap.spec::TC5_new_tab_chooser
+context: pipeline phase TC5_new_tab_chooser of docs/2026-10-28-tab-compartments-phasemap.spec
+intent: null
+summary: TC5_new_tab_chooser (ui) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793180610619
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793180610619
+lastSeenAt: 1793180610619
+fingerprint: null
+payload:
+  id: TC5_new_tab_chooser
+  map: docs/2026-10-28-tab-compartments-phasemap.spec
+  repo: null
+  layer: ui
+  status: MAPPED
+  files:
+    - clear-glass/renderer/tabs/chooser.js
+    - clear-glass/renderer/browser.js
+    - clear-glass/renderer/shell/shell.css
+  depends_on:
+    - TC2_one_webview_per_tab
+  blocks:
+    - MOD-TC-CHOOSER
+  spec: clear-glass/spec/tab-compartments.spec
+  graph: 46eb739d167a39d2

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+type: phase
+id: docs_2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+context: pipeline phase FP3_is_the_gate_open of docs/2026-10-28-first-principles-phasemap.spec
+intent: null
+summary: FP3_is_the_gate_open (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793181421698
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793181421698
+lastSeenAt: 1793181421698
+fingerprint: null
+payload:
+  id: FP3_is_the_gate_open
+  map: docs/2026-10-28-first-principles-phasemap.spec
+  repo: null
+  layer: foundation
+  status: MAPPED
+  files:
+    - lib/agent-tools/tools/clear-glass/gate-eval.js
+    - tests/modules/test-flow-cores.test.js
+  depends_on: []
+  blocks:
+    - MOD-FC-GATE
+  spec: clear-glass/spec/flow-cores.spec
+  graph: b97321d3c42d3424

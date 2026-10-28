@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::FG5_fiverr_gig_flow
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::FG5_fiverr_gig_flow
+context: pipeline phase FG5_fiverr_gig_flow of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: FG5_fiverr_gig_flow (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793180611540
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793180611540
+lastSeenAt: 1793180611540
+fingerprint: null
+payload:
+  id: FG5_fiverr_gig_flow
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: integration
+  status: MAPPED
+  files:
+    - clear-glass/src/autofill/gig-flow.js
+    - clear-glass/src/autofill/gig.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/renderer/gig-panel.js
+  depends_on:
+    - FG4_pointer_and_choose_steps
+    - FG_D3_publish_is_his
+    - TC3_links_open_tabs
+  blocks:
+    - MOD-FG-FIVERR
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 216aea9c663a7a59

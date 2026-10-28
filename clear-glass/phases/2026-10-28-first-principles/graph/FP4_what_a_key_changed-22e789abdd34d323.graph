@@ -1,0 +1,73 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FP4_what_a_key_changed:22e789abdd34d323
+type: graph
+id: phase:FP4_what_a_key_changed:22e789abdd34d323
+context: dependency graph of phase FP4_what_a_key_changed
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793181421699
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793181421699
+lastSeenAt: 1793181421699
+fingerprint: null
+payload:
+  for: FP4_what_a_key_changed
+  kind: phase
+  repo: null
+  hash: 22e789abdd34d323
+  nodes:
+    - path: clear-glass/src/page/state-diff.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-flow-cores.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 9e518f99f68c1be4
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG1_keyboard_mode_switch
+    upstream: []
+    downstream:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG1_keyboard_mode_switch
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+        files:
+          - tests/modules/test-flow-cores.test.js
+      - with: docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+        files:
+          - tests/modules/test-flow-cores.test.js
+      - with: docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+        files:
+          - tests/modules/test-flow-cores.test.js
+      - with: docs/2026-10-28-first-principles-phasemap.spec::FP5_the_pricing_page_blocks
+        files:
+          - tests/modules/test-flow-cores.test.js
+    dangling: []
+    lines:
+      - DAG 9e518f99f68c1be4 · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): FG1_keyboard_mode_switch'
+      - >-
+        same files as FP1_where_a_request_opens with no order between them:
+        tests/modules/test-flow-cores.test.js
+      - >-
+        same files as FP2_which_option_is_meant with no order between them:
+        tests/modules/test-flow-cores.test.js
+      - >-
+        same files as FP3_is_the_gate_open with no order between them:
+        tests/modules/test-flow-cores.test.js
+      - >-
+        same files as FP5_the_pricing_page_blocks with no order between them:
+        tests/modules/test-flow-cores.test.js

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::FG6_blocks_ui
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::FG6_blocks_ui
+context: pipeline phase FG6_blocks_ui of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: FG6_blocks_ui (ui) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793180611541
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793180611541
+lastSeenAt: 1793180611541
+fingerprint: null
+payload:
+  id: FG6_blocks_ui
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: ui
+  status: MAPPED
+  files:
+    - clear-glass/renderer/settings/sections/macros.js
+    - clear-glass/renderer/settings/sections/macros.css
+  depends_on:
+    - FG3_gate_per_step
+  blocks:
+    - MOD-FG-BLOCKS-UI
+  spec: clear-glass/spec/gated-flows.spec
+  graph: a43be0af6c52f6cb
