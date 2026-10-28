@@ -593,6 +593,8 @@ class IpcBridge {
     });
     // §0.39.301 — the gig writer's second door (src/autofill/gig.js), same functions the autofill:gig* IPC uses.
     // §0.59.3 — a buyer's answers → a spec in Idearium, built from there (the same function the Gig panel calls)
+    this.app.get('/cli/about', (req, res) => res.json(this._aboutInfo()));                      // 0.60.269 — what is running
+    this.app.get('/cli/about/check', async (req, res) => { try { res.json(await this._aboutCheck()); } catch (e) { res.status(502).json({ ok: false, error: e.message }); } });
     this.app.post('/cli/autofill/gig/to-idearium', async (req, res) => { const r = await this._gigToIdearium(req.body || {}); res.status(r.ok ? 200 : 502).json(r); });
     this.app.post('/cli/autofill/gig', async (req, res) => {
       const r = await this._gigDraft(req.body || {});
@@ -1732,6 +1734,8 @@ class IpcBridge {
     ipcMain.handle('autofill:gig:setLast', async (e, { gig } = {}) => { try { if (gig && gig.title && this.autofillStore) { this.autofillStore.setLastGig(gig); return { ok: true }; } } catch (err) { return { ok: false, error: err.message }; } return { ok: false, error: 'no gig' }; });   // 0.60.267 — the panel's gig is the chips' gig
     ipcMain.handle('autofill:fillOne', async (e, d = {}) => this._autofillFillOne(d));              // 0.60.267 AF3 — a chip clicked
     ipcMain.handle('autofill:anchor', async (e, d = {}) => this._autofillAnchor(d));                // 0.60.268 AF5 — a field anchored to what it is
+    ipcMain.handle('about:info', async () => this._aboutInfo());                                   // 0.60.269 — Settings › About
+    ipcMain.handle('about:check', async () => this._aboutCheck());                                 // 0.60.269 — newer Electron / Clear Glass / Nexus?
     ipcMain.handle('autofill:gig:saveRecording', async (e, d = {}) => this._gigSaveRecording(d));  // 0.60.224 — his choices → the page's macro   // 0.60.222 — a picked element taught to a gig part
     ipcMain.handle('autofill:gig:autofill', async (e, p = {}) => this._gigAutofill(p));   // §GA1 — the co-pilot's one door
     // 2026-10-12 — a gig FILE (.gig, or an old .gig.json: the shapes parseGig reads) → the same gig, held to Fiverr's limits like a written one.
@@ -2274,8 +2278,13 @@ class IpcBridge {
         if (filledKeys.has(part)) continue;
         if (part.endsWith('.delivery')) {
           const column = part.split('.')[0].toUpperCase();
+          // 0.60.269 — James: "I want to be able to edit what you added." The pick is his node file now: the macro "Fiverr gig - choose
+          // delivery" (clear-glass/automation/nodes), run as him; editing it in Settings › Macros changes what this does. The built-in pick
+          // runs only when the macro cannot, and says so.
+          const viaMacro = typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose delivery', { tier: column, delivery: value }) : { ok: false, why: 'node macros not wired here' };
+          if (viaMacro.ok) { r.dropdowns.push({ key: part, ok: true, option: value, via: 'macro' }); continue; }
           const c = await this.driver.exec({ agentId, action: 'choose', column, shows: 'DELIVERY TIME', option: value, by: 'person' });
-          r.dropdowns.push({ key: part, ok: true, option: c.option }); continue;
+          r.dropdowns.push({ key: part, ok: true, option: c.option, via: 'built-in', why: viaMacro.why }); continue;
         }
         if (part === 'category') {
           const sc = GP.suggestedCategory(read.links, gig);
@@ -2296,6 +2305,37 @@ class IpcBridge {
     }
     if (!r.error) this.postEvent('autofill.gig.filled', { agentId, page: r.page, filled: r.filled.length, learned: r.learned.length, notFound: r.notFound.length, failed: r.failed.length, ts: Date.now() });
     return r;
+  }
+
+  // 0.60.269 — James: "also need a about page in the settings, where it says the version, can check for updates to electron and clearglass."
+  _aboutInfo() {
+    const A = require('../about');
+    let nexus = null, cgv = null;
+    try { nexus = require('../../../lib/version.js').system; } catch (_) {}
+    try { cgv = require('../../package.json').version; } catch (_) {}
+    return { ok: true, ...A.info({ nexus, clearGlass: cgv }), sources: { ...A.SOURCES, ...this._aboutSources() } };
+  }
+  _aboutSources() { try { const o = this.options && this.options.get ? this.options.get() : null; return (o && o.about && o.about.sources) || {}; } catch (_) { return {}; } }
+  async _aboutCheck() {
+    const A = require('../about'), i = this._aboutInfo();
+    const r = await A.check({ fetchText: (u) => A.fetchText(u), current: { electron: i.electron, clearGlass: i.clearGlass, nexus: i.nexus }, sources: this._aboutSources() });
+    return { ok: true, info: i, ...r };
+  }
+
+  // 0.60.269 — run one of Clear Glass's own node macros (clear-glass/automation/nodes) as him: imported from its file the first time, his
+  // edited copy every time after (importMacro reuses a macro with the same steps and never overwrites his). { ok } | { ok:false, why }
+  async _gigNodeMacro(agentId, name, params) {
+    if (!this.macroTool) return { ok: false, why: 'macros not available here' };
+    const N = require('../../../lib/automation-nodes.js');
+    let have = null; try { have = await this.macroTool.execute({ action: 'get', name }); } catch (_) {}
+    if (!have || have.error) {
+      const p = N.bundledMacro(require('path').join(__dirname, '..', '..', 'automation', 'nodes'), name);
+      if (!p) return { ok: false, why: `no macro "${name}" (and no node file for it)` };
+      const im = await N.importMacro(p, { getMacro: (n) => this.macroTool.execute({ action: 'get', name: n }), createMacro: (m) => this.macroTool.execute({ action: 'create', ...m }) });
+      if (!im.ok) return { ok: false, why: im.error };
+    }
+    let m; try { m = await this.runMacroAsPerson({ name, agentId, params, skipSnapshot: true, by: 'person' }); } catch (e) { m = { error: e.message }; }
+    return m && !m.error && m.ok !== false ? { ok: true } : { ok: false, why: `macro "${name}" stopped${m && m.failedAtStep != null ? ` at step ${m.failedAtStep + 1}` : ''}: ${(m && m.error) || 'no answer'}` };
   }
 
   // 0.60.267 AF3 — James: "needs to autofill any field it can. also needs to have the autopill under each input fieled." Every field on the

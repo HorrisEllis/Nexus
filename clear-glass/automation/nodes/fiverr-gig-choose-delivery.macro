@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-macro-fiverr-gig-choose-delivery-v1
+type: macro
+id: fiverr-gig-choose-delivery-v1
+context: Clear Glass → Settings → Macros
+intent: >-
+  Scope & Pricing: in the BASIC / STANDARD / PREMIUM column named by {{tier}}, open the DELIVERY
+  TIME dropdown and pick {{delivery}} (e.g. "3 Days"). What _gigFill does for each *.delivery part.
+summary: 2 browser steps for fiverr.com; asks for tier, delivery
+system: clear-glass.automation
+tags:
+  - macro
+  - step:wait_for
+  - step:choose
+exported_at: 1793207566450
+source: clear-glass/src/automation/nodes.js
+occurrences: 1
+firstSeenAt: 1793207566450
+lastSeenAt: 1793207566450
+fingerprint: c4e22f7fde7d67ff
+payload:
+  uuid: fiverr-gig-choose-delivery-v1
+  name: Fiverr gig - choose delivery
+  urlPattern: fiverr.com
+  steps:
+    - action: wait_for
+      data:
+        selector: body
+    - action: choose
+      data:
+        column: '{{tier}}'
+        shows: DELIVERY TIME
+        option: '{{delivery}}'
+  params:
+    - tier
+    - delivery
+  profile: null
+  description: >-
+    Scope & Pricing: in the BASIC / STANDARD / PREMIUM column named by {{tier}}, open the DELIVERY
+    TIME dropdown and pick {{delivery}} (e.g. "3 Days"). What _gigFill does for each *.delivery
+    part.
+  createdAt: 1793207566448
+  runCount: 0
+  lastRunAt: null

@@ -149,7 +149,10 @@ function createProviderRouter(deps) {
   // is POST /api/jobs + poll GET /api/jobs/:id
   async function _dispatchToMistral(job) {
     const BRIDGE_PORT = parseInt(process.env.OLLAMA_BRIDGE_PORT || '3749');
-    const model = process.env.MISTRAL_MODEL || 'mistral:7b-instruct-q4_K_M';
+    // 0.60.270 — James's log, 2026-10-28: every self-heal job went here with 'mistral:7b-instruct-q4_K_M', which is not in his
+    // install (he said so on 2026-09-03: "no mistral."), and Ollama answered 404. With no MISTRAL_MODEL set the model is left out,
+    // so the bridge uses its own default (ollama/config.js DEFAULT_MODEL): a model he has.
+    const model = process.env.MISTRAL_MODEL || undefined;
     return new Promise(resolve => {
       const body = JSON.stringify({
         prompt: job.prompt || job.content || '',
@@ -173,7 +176,9 @@ function createProviderRouter(deps) {
             let polls = 0;
             const poll = () => {
               polls++;
-              if (polls > 120) { resolve({ ok: false, error: 'poll timeout' }); return; }
+              // 0.60.270 — a failed or timed-out bridge job now marks the guardian job failed. Before, only the promise said so; the
+              // job stayed pending and guardian/ask.js waited out its whole 115 s for an answer that had failed in 2 ms (his log).
+              if (polls > 120) { updateJob(job.id, { status: 'error', error: 'ollama-bridge poll timeout' }); resolve({ ok: false, error: 'poll timeout' }); return; }
               const pr = http.request({ hostname: '127.0.0.1', port: BRIDGE_PORT, path: `/api/jobs/${jobId}`, method: 'GET', timeout: 5000 }, rs => {
                 let rb = ''; rs.on('data', c => rb += c);
                 rs.on('end', () => {
@@ -190,6 +195,7 @@ function createProviderRouter(deps) {
                       bus.emit('guardian.job.complete', { jobId: job.id, provider: 'mistral', chars: (pd.result || '').length });
                       resolve({ ok: true, text: pd.result || pd.text || '' });
                     } else if (pd.status === 'failed' || pd.progress === 'failed') {
+                      updateJob(job.id, { status: 'error', error: pd.error || 'ollama job failed', completedAt: Date.now() });
                       resolve({ ok: false, error: pd.error || 'ollama job failed' });
                     } else {
                       setTimeout(poll, 1000);

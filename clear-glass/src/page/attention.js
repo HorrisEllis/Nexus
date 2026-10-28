@@ -17,12 +17,13 @@ const MODULE_ID = 'clear-glass.page.attention';
 const VERSION = '1.0.0';
 const WINDOW_IDLE_MS = 15000;   // nerve's own WINDOW_STALE_MS
 const FORGET_MS = 10 * 60000;   // a window silent this long is dropped
+const ACTS_KEEP = 12;            // pointer acts kept per window for the live stream (0.60.272)
 
 function createAttention({ now = () => Date.now() } = {}) {
   const wins = new Map();   // agentId → { agentId, url, lastMutation, mutationCount, field, spotlight, pointer, lastAt }
   const picks = [];         // §0.59.2 — elements handed to the agents from the Guardian picker (→ CLAUDE CODE), newest last
   const MAX_PICKS = 25;
-  const win = (id) => { if (!wins.has(id)) wins.set(id, { agentId: id, url: null, lastMutation: 0, mutationCount: 0, field: null, spotlight: null, pointer: null, page: null, lastAt: 0 }); return wins.get(id); };
+  const win = (id) => { if (!wins.has(id)) wins.set(id, { agentId: id, url: null, lastMutation: 0, mutationCount: 0, field: null, spotlight: null, pointer: null, acts: [], page: null, lastAt: 0 }); return wins.get(id); };
 
   /** note(type, data) — fed every Clear Glass bus event; keeps only what says where attention is */
   function note(type, data = {}) {
@@ -49,7 +50,11 @@ function createAttention({ now = () => Date.now() } = {}) {
       new: +data.new || 0, changed: +data.changed || 0, gone: +data.gone || 0, feel: data.feel || '', lines: Array.isArray(data.lines) ? data.lines.slice(0, 6) : [], at: t }; if (data.url) w.url = data.url; w.lastAt = t; return true; }
     if (type === 'page.outcome') { const w = win(id); if (w.page) w.page.lastOutcome = { intent: data.intent || null, id: data.id || null, ok: data.ok !== false, at: t }; w.lastAt = t; return true; }
     if (type === 'field.spotlight') { const w = win(id); w.spotlight = data.off ? null : { label: data.label || null, n: data.n ?? null, selector: data.selector || null, ok: data.ok !== false, at: t }; w.lastAt = t; return true; }
-    if (type === 'field.pointer') { const w = win(id); w.pointer = { do: data.do || 'click', x: data.x, y: data.y, n: data.n ?? null, name: data.name || null, covered: !!data.covered, via: data.via || 'native', at: t }; w.lastAt = t; return true; }
+    // 0.60.272 — James, 2026-10-28: "What about the nexus nerve and interaction field with ollama continuous data stream with its using the
+    // virtual input/mouse". The last act stays `pointer`; the last ACTS_KEEP stay in `acts`, so a choose (open, then pick) is not
+    // collapsed to its last click between two pushes to Ollama's live stream.
+    if (type === 'field.pointer') { const w = win(id); w.pointer = { do: data.do || 'click', x: data.x, y: data.y, n: data.n ?? null, name: data.name || null, label: data.label || null, covered: !!data.covered, via: data.via || 'native', at: t };
+      w.acts.push(w.pointer); if (w.acts.length > ACTS_KEEP) w.acts.splice(0, w.acts.length - ACTS_KEEP); w.lastAt = t; return true; }
     return false;
   }
 
@@ -60,7 +65,7 @@ function createAttention({ now = () => Date.now() } = {}) {
     return [...wins.values()].sort((a, b) => b.lastAt - a.lastAt).map(w => ({
       agentId: w.agentId, lastMutation: w.lastMutation || null, msSinceLastMutation: w.lastMutation ? t - w.lastMutation : null,
       mutationCount: w.mutationCount, idle: t - w.lastAt > WINDOW_IDLE_MS,
-      focus: { url: w.url, field: w.field, spotlight: w.spotlight, pointer: w.pointer, page: w.page, at: w.lastAt },
+      focus: { url: w.url, field: w.field, spotlight: w.spotlight, pointer: w.pointer, acts: w.acts.slice(), page: w.page, at: w.lastAt },
     }));
   }
 

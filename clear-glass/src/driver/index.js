@@ -711,7 +711,22 @@ class ClearDriver {
   //   a widget → opened with the curved pointer (via 'native', or 'eros' for ErosmancerOS's virtual input), the options that appeared read,
   //   the wanted one matched (ambiguous or missing → refused with the options seen), clicked with the pointer, and read back: a dropdown
   //   that does not show the choice is a failure, never a silent pass.
-  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'native' } = {}) {
+  // 0.60.271 — James, 2026-10-28: "it needs delays in between the dropdown menu. like drop down and then click. Also should use electrons
+  // digital input and mouse curve from erosmanceros to simulate a human mouse". A person's pace now: a pause after the dropdown opens
+  // (openWait), a look at the options before the click (pickWait), a settle after it (settleWait) — each in ms, a [min, max] picked at
+  // random, overridable per step (his macro node can set them). via 'auto' (the default) moves with ErosmancerOS's curve when Eros is
+  // wired and answering, else Electron's own input along the native curved path; a fallback is said in the result (viaWhy).
+  async _humanPointer(agentId, args) {
+    if (args.via !== 'auto') return this._pointer(agentId, args);
+    if (typeof this.erosInput === 'function') {
+      try { return await this._pointer(agentId, { ...args, via: 'eros' }); }
+      catch (e) { const r = await this._pointer(agentId, { ...args, via: 'native' }); return { ...r, viaWhy: `ErosmancerOS did not take it (${e.message}) — Electron input instead` }; }
+    }
+    const r = await this._pointer(agentId, { ...args, via: 'native' }); return { ...r, viaWhy: 'ErosmancerOS is not wired here — Electron input' };
+  }
+  _pause(span) { const [a, b] = Array.isArray(span) ? span : [span, span]; return this._sleep(a + Math.random() * Math.max(0, b - a)); }
+
+  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'auto', openWait = [600, 1100], pickWait = [300, 650], settleWait = [500, 900] } = {}) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
     if (option === undefined || option === null || option === '') throw new Error('choose requires option');
@@ -763,10 +778,11 @@ class ClearDriver {
       const r = await this._select(agentId, { selector: `[data-cg-choose-native="${found.n}"]`, text: m.option });
       return { kind: 'native', option: m.option, shown: r.text, by: m.by, via: 'native' };
     }
-    await this._pointer(agentId, { selector: trigSel, do: 'click', via, label: `open ${column || selector}` });
+    const opened = await this._humanPointer(agentId, { selector: trigSel, do: 'click', via, label: `open ${column || selector}` });
+    await this._pause(openWait);   // drop down … (his words) — the menu animates in before anything is read
     let opts = null;
-    for (let i = 0; i < 10 && !(opts && opts.length); i++) {
-      await this._sleep(150);
+    for (let i = 0; i < 20 && !(opts && opts.length); i++) {
+      if (i) await this._sleep(150);
       opts = await this._evalJs(wc, `(function(){
         function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
         var all = Array.prototype.filter.call(document.querySelectorAll('[role="option"],[role="menuitem"],li,[class*="option" i],[class*="item" i]'), function(el){ return vis(el) && !el.hasAttribute('data-cg-pre'); });
@@ -779,11 +795,12 @@ class ClearDriver {
     if (!opts || !opts.length) throw new Error(`choose: the dropdown did not open (no new options after clicking ${column || selector})`);
     const m = OM.matchOption(opts, option);
     if (!m.ok) throw new Error(`choose: ${m.why} — options: ${m.candidates.slice(0, 40).join(' | ')}`);
-    await this._pointer(agentId, { selector: `[data-cg-opt="${m.index}"]`, do: 'click', via, label: m.option });
-    await this._sleep(250);
+    await this._pause(pickWait);   // … and then click
+    const picked = await this._humanPointer(agentId, { selector: `[data-cg-opt="${m.index}"]`, do: 'click', via, label: m.option });
+    await this._pause(settleWait);
     const shown = await this._evalJs(wc, `(function(){ var t = document.querySelector(${JSON.stringify(trigSel)}); return t ? (t.innerText || t.textContent || '').replace(/\\s+/g, ' ').trim() : null; })()`);
     if (!OM.shows(shown, m.option)) throw new Error(`choose: clicked "${m.option}" but the dropdown shows "${shown}"`);
-    return { kind: 'widget', option: m.option, shown, by: m.by, via };
+    return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
   }
 
   // check: checkbox/radio to a definite state (a click toggles, so clicking an already-checked box unchecks it).
@@ -987,7 +1004,7 @@ class ClearDriver {
   // Clear Glass's attention record (src/page/attention.js) and Nexus Nerve know where an agent pointed
   async _pointer(agentId, args = {}) {
     const r = await this._pointerAct(agentId, args);
-    try { this.sse.emit('field.pointer', { agentId, do: r.action, x: r.x, y: r.y, n: r.target ? r.target.n : null, name: r.target ? r.target.name : null, covered: !!r.covered, via: r.via, ts: Date.now() }); } catch (_) {}
+    try { this.sse.emit('field.pointer', { agentId, do: r.action, x: r.x, y: r.y, n: r.target ? r.target.n : null, name: r.target ? r.target.name : null, label: args.label || null, covered: !!r.covered, via: r.via, ts: Date.now() }); } catch (_) {}
     return r;
   }
 

@@ -31,7 +31,11 @@ const FILES = [
     I('clear-glass/src/ipc/bridge.js'),                        // IPC autofill:suggest / autofill:fillOne
     I('clear-glass/src/preload/webview-bridge.js'),            // the page's autofill:rects / autofill:stale (ipc-message)
   ]],
-  ['clear-glass/src/autofill/suggest.js', I('clear-glass/src/autofill/suggest.js'), []],   // 0.60.267 AF3 — pure: combine, reporterScript
+  ['clear-glass/src/autofill/suggest.js', I('clear-glass/src/autofill/suggest.js'), []],
+  ['clear-glass/src/about/index.js', I('clear-glass/src/about/index.js'), []],   // 0.60.269 — versions and the update check (fetch, no requires)
+  ['clear-glass/renderer/settings/sections/about.js', I('clear-glass/renderer/settings/sections/about.js'), [   // 0.60.269 Settings › About
+    I('clear-glass/src/ipc/bridge.js'),                        // IPC about:info / about:check (cg.about)
+  ]],   // 0.60.267 AF3 — pure: combine, reporterScript
   ['clear-glass/renderer/gig-panel.js', I('clear-glass/renderer/gig-panel.js'), [   // 0.60.224 — reads window.cg (set by browser.js)
     I('clear-glass/renderer/browser.js'),                      // window.cg — the wrapped preload API
   ]],

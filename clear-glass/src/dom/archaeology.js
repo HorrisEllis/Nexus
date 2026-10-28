@@ -359,6 +359,7 @@ class DomArchaeology {
         window.__cgSendPick = (data) => {
           if (window.__cgIpc) window.__cgIpc.send('dom:pick-result', data);
         };
+        true;   // 0.60.270 — the script's value goes back to main; it was the function above, which cannot be cloned ("[DOM] Injection error: An object could not be cloned.", James's log), and dom.injected never fired
       `, true);
 
       this.sse.emit('dom.injected', { agentId, url: wc.getURL(), ts: Date.now() });

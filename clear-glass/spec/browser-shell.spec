@@ -610,4 +610,8 @@ spec:
   # - Agent Mesh, Element Picker and NCP Providers (and Guardian scripts, Mesh HUD) live in the agents hub since BS9 (0.60.180). 0.60.210's
   #   Tools rows listed every unpinned tool and brought three back. browser.js HUB_TOOLS: the ☰ menu leaves them to the hub; Customize toolbar
   #   can still pin them and names where they live. BST-21 checks both.
-
+  # ## ADDENDUM 2026-10-28 (0.60.269) — Settings › About
+  # James, 2026-10-28: "also need a about page in the settings, where it says the version, can check for updates to electron and clearglass."
+  # - src/about (info, check, newer, fetchText), bridge about:info / about:check, GET /cli/about(/check), command `glass about [--check]`,
+  #   renderer/settings/sections/about.js (+ .css). Read-only: Electron from the npm registry, Clear Glass and Nexus from the repository's main
+  #   branch; a newer one says how to get it, an unreachable one says so. Proof: test-about-and-nodes AN-01, AN-04.
