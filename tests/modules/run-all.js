@@ -411,7 +411,8 @@ const SUITES = [
   'test-fiverr-works.test.js',           // 0.60.221 — Fiverr: link-tabs open as tabs, pricing boxes filled, dropdowns chosen one by one
   'test-autofill-chips.test.js',         // 0.60.267 AF3 — the page reader always there; a chip under each input
   'test-about-and-nodes.test.js',
-  'test-run-log-fixes.test.js',          // 0.60.270 — jaa segment overflow, DOM clone, guardian missing-model wait        // 0.60.269 — the Fiverr automation as node files; Settings › About
+  'test-run-log-fixes.test.js',
+  'test-fiverr-pace.test.js',            // 0.60.271 — dropdowns at a person's pace, Eros or Electron input          // 0.60.270 — jaa segment overflow, DOM clone, guardian missing-model wait        // 0.60.269 — the Fiverr automation as node files; Settings › About
   'test-change-pack.test.js',            // 0.60.265 — a change to Nexus as one zip, through the gate
   'test-live-recording.test.js',      // 0.60.57 — a recording is a .macro node file from the first second; scroll/paging keys; survives navigation
   'test-chatgpt-scrape-template.test.js', // 0.60.69 — the ChatGPT chat reader template (loop body, vars, extract fields)

@@ -166,3 +166,6 @@ James, 2026-10-28: "can you move the fiverr automation and macros to actual node
 The four node files he handed over ship in clear-glass/automation/nodes, are seeded once into the Settings › Automation library (lib/automation-
 nodes.js seedBundled; his edit and delete stand), and the gig fill's delivery pick runs his "Fiverr gig - choose delivery" macro (imported
 from its file the first time). The built-in pick stays as the fallback, said. Proof: test-about-and-nodes AN-02, AN-03.
+
+# ADDENDUM 2026-10-28 (0.60.271) — choose at a person's pace (openWait / pickWait / settleWait) and pointer via 'auto' (Eros, else
+# Electron input, said). James: "it needs delays in between the dropdown menu. like drop down and then click."
