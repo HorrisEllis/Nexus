@@ -948,7 +948,8 @@ async function _startWire() {
       // import/export, validate, one-off steps, events, webhooks, cron preview.
       // Local pages only, except webhooks (they carry their own secret).
       if (u.startsWith('/automation/')) {
-        const r = await require('../automation/routes.js').handle(mesh && mesh._automation, { method: req.method, url: u, body: parsed, headers: req.headers, rawBody: body }, {
+        const r = await require('../../../lib/automation/routes.js').handle(   // 0.60.266: the routes moved to lib/automation in AE1 (0.60.251)
+          mesh && mesh._automation, { method: req.method, url: u, body: parsed, headers: req.headers, rawBody: body }, {
           getMacro: (name) => macroTool.execute({ action: 'get', name }),
           createMacro: (m) => macroTool.execute({ action: 'create', ...m }),
           openPath: (dir) => shell.openPath(dir),

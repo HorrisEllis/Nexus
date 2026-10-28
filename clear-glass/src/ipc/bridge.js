@@ -2140,7 +2140,7 @@ class IpcBridge {
     try {
       if (!this._liveRecorder) this._liveRecorder = new (require('../macros/live-recording').LiveRecorder)({
         getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
-        dir: require('../mesh/automation-engine.js').NODES_DIR });
+        dir: require('../../../lib/automation-nodes.js').NODES_DIR });   // 0.60.266: AE1 (0.60.251) moved NODES_DIR here; this call still named the old file
       if (op === 'start') return await this._liveRecorder.start({ agentId, name });
       if (op === 'stop') return await this._liveRecorder.stop(agentId);
       if (op === 'status') return this._liveRecorder.status(agentId);
