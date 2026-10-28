@@ -26,6 +26,9 @@ const FILES = [
   ]],
   ['clear-glass/src/tabs/open-decision.js', I('clear-glass/src/tabs/open-decision.js'), []],   // 0.60.221 FP1 — pure
   ['clear-glass/src/page/option-match.js', I('clear-glass/src/page/option-match.js'), []],     // 0.60.221 FP2 — pure
+  ['clear-glass/renderer/gig-panel.js', I('clear-glass/renderer/gig-panel.js'), [   // 0.60.224 — reads window.cg (set by browser.js)
+    I('clear-glass/renderer/browser.js'),                      // window.cg — the wrapped preload API
+  ]],
   ['clear-glass/src/autofill/gig-pages.js', I('clear-glass/src/autofill/gig-pages.js'), [   // 0.60.222 — which Fiverr page, its parts
     I('clear-glass/src/page/option-match.js'),                 // require — suggestedCategory's match
   ]],

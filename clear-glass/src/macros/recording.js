@@ -80,12 +80,21 @@ function recordingToSteps(recording, { startUrl = null } = {}) {
     }
     const sel = ev.sel;
     if (!sel) continue;
+    // 0.60.224 — a checkbox or radio is a state: its change becomes check {selector, checked}, and the clicks that made it (on the box or
+    // its label, within a moment before) are dropped, so a replay sets the state instead of toggling whatever is there
+    if ((ev.type === 'change' || ev.type === 'input') && (ev.inputType === 'checkbox' || ev.inputType === 'radio')) {
+      while (steps.length && steps[steps.length - 1].action === 'click' && steps[steps.length - 1]._ts && ev.ts && ev.ts - steps[steps.length - 1]._ts < 400) steps.pop();
+      const prev = steps[steps.length - 1];
+      if (prev && prev.action === 'check' && prev.data.selector === sel) prev.data.checked = ev.checked !== false;
+      else steps.push({ action: 'check', data: { selector: sel, checked: ev.checked !== false } });
+      continue;
+    }
     if (ev.type === 'click') {
       const prev = steps[steps.length - 1];
       // a click on the field you then type into is implied by the type step
       const next = recording[i + 1];
       if (next && (next.type === 'input' || next.type === 'change') && next.sel === sel) continue;
-      if (!(prev && prev.action === 'click' && prev.data.selector === sel)) steps.push({ action: 'click', data: { selector: sel } });
+      if (!(prev && prev.action === 'click' && prev.data.selector === sel)) steps.push({ action: 'click', data: { selector: sel }, _ts: ev.ts, ...(ev.text ? { label: ev.text } : {}) });   // label: what the button said (0.60.224)
       continue;
     }
     if (ev.type === 'input' || ev.type === 'change') {
@@ -111,7 +120,7 @@ function recordingToSteps(recording, { startUrl = null } = {}) {
     }
     // submit after a recorded click is the click's effect; scroll/other keys are noise
   }
-  return { steps: steps.map(({ _param, ...s }) => { if (s.data && s.data._k !== undefined) { const { _k, ...d } = s.data; return { ...s, data: d }; } return s; }), params };
+  return { steps: steps.map(({ _param, _ts, ...s }) => { if (s.data && s.data._k !== undefined) { const { _k, ...d } = s.data; return { ...s, data: d }; } return s; }), params };
 }
 
 /** One-line, plain-language description of a step (for the step list). */
@@ -122,6 +131,7 @@ function describeStep(step) {
     case 'navigate':     return `Go to ${d.url || '(no url)'}`;
     case 'click':        return `Click ${d.selector || '(no selector)'}`;
     case 'type':         return d.text === '\n' ? `Press Enter in ${d.selector}` : `Type “${String(d.text ?? '').slice(0, 40)}” into ${d.selector || '(no selector)'}`;
+    case 'check':        return `${d.checked === false ? 'Untick' : 'Tick'} ${d.selector || '(no selector)'}`;
     case 'hover':        return `Hover ${d.selector}`;
     case 'scroll':       return `Scroll ${d.selector || 'the page'}`;
     case 'wait':         return `Wait ${d.ms ?? '?'} ms`;

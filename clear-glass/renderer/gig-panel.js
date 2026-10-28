@@ -123,7 +123,8 @@
     if (!r || r.ok === false || r.error) { $('gig-missing').innerHTML = ''; return say('gig-write-status', `Not filled: ${(r && r.error) || 'no answer'} — open Fiverr's gig editor in this tab first.`, 'bad'); }
     const typed = (r.filled || []).length, chosen = (r.dropdowns || []).filter(d => d.ok).length, learned = (r.learned || []).length;
     const where = r.page ? `${PAGE_NAME[r.page] || r.page} page` : `this page (${r.pageWhy})`;
-    say('gig-write-status', `${where}: typed ${typed}, chose ${chosen}${learned ? `, ${learned} where you pointed before` : ''}. Read it on the page; Save / Publish stay yours.`, (r.notFound || []).length ? '' : 'ok');
+    const mac = r.macro ? (r.macro.ok ? `, replayed your choices ("${r.macro.name}")` : `; your recorded choices stopped: ${r.macro.error}`) : '';
+    say('gig-write-status', `${where}: typed ${typed}, chose ${chosen}${learned ? `, ${learned} where you pointed before` : ''}${mac}. Read it on the page; Save / Publish stay yours.`, (r.notFound || []).length || (r.macro && !r.macro.ok) ? '' : 'ok');
     const miss = r.notFound || [];
     $('gig-missing').innerHTML = miss.map(m => `<div class="gig-miss"><span><b>${esc(m.key)}</b> — ${esc(m.why)}</span><button data-part="${esc(m.key)}">Point at it</button></div>`).join('');
     for (const b of $('gig-missing').querySelectorAll('button')) b.addEventListener('click', () => point(r.page, b.dataset.part));
@@ -140,6 +141,27 @@
     const pb = document.getElementById('picker-btn'); if (pb && !pb.classList.contains('active')) pb.click();
   }
   $('gig-fill').addEventListener('click', () => { if (GIG) fill(); });
+
+  // 0.60.224 — James: "use it for ... creating macros/automation". What the gig does not hold (Service type, the metadata boxes, the pricing
+  // rows) he does once while this records; it is kept as the page's macro ('fiverr <page>') and every fill of that page replays it.
+  let recording = null;
+  $('gig-record').addEventListener('click', async () => {
+    const btn = $('gig-record');
+    if (!recording) {
+      let p; try { p = await cg.autofill.gigPage(agentId); } catch (e) { p = { page: null, why: e.message }; }
+      if (!p || !p.page) return say('gig-write-status', `Open Overview or Scope & Pricing first (${(p && p.why) || 'page not read'}).`, 'bad');
+      let s; try { s = await cg.macros.recordStart(agentId, `fiverr ${p.page} (recording)`); } catch (e) { s = { ok: false, error: e.message }; }
+      if (!s || s.ok === false) return say('gig-write-status', `Not recording: ${(s && s.error) || 'no answer'}`, 'bad');
+      recording = p.page; btn.textContent = 'Stop and keep my choices'; btn.classList.add('on');
+      return say('gig-write-status', 'Recording: make your choices on this page (dropdowns, boxes). Leave Save / Continue for after you stop.');
+    }
+    const page = recording; recording = null; btn.textContent = 'Record my choices on this page'; btn.classList.remove('on');
+    let r; try { r = await cg.macros.recordStop(agentId); } catch (e) { r = { ok: false, error: e.message }; }
+    if (!r || r.ok === false) return say('gig-write-status', `Recording not kept: ${(r && r.error) || 'no answer'}`, 'bad');
+    let k; try { k = await cg.autofill.gigSaveRecording({ page, steps: r.steps || [] }); } catch (e) { k = { ok: false, error: e.message }; }
+    if (!k || !k.ok) return say('gig-write-status', `Not kept: ${(k && k.error) || 'no answer'}`, 'bad');
+    say('gig-write-status', `Kept ${k.steps} step(s) as "${k.name}" — every fill of this page replays them.${(k.dropped || []).length ? ` Left out: ${k.dropped.join('; ')}.` : ''}`, 'ok');
+  });
 
   // ── step 2: an order → Idearium ─────────────────────────────────────────
   function questions() { return (GIG && GIG.requirements && GIG.requirements.length ? GIG.requirements : DEFAULT_Q).slice(0, 5); }

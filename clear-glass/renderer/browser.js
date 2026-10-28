@@ -72,6 +72,11 @@
     },
   });
 
+  // 0.60.224 — the panels loaded after this file (gig-panel.js since 0.59.3, page-map-panel.js since 0.60.175) read window.cg, which nothing
+  // ever set: each returned on its first line, so the Fiverr panel's buttons — "Fill this Fiverr page" among them — were never wired. Found
+  // while getting Fiverr working (James, 2026-10-28: "like none of the autofill works"). They get this same wrapped API.
+  window.cg = cg;
+
   const params = new URLSearchParams(window.location.search);
   const agentId = params.get('agentId') || 'default';
   const ssePort = params.get('ssePort') || 7701;

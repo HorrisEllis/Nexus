@@ -146,3 +146,11 @@ need macro steps that can choose (FG4), so they wait on it. Gig metadata's check
 ## ADDENDUM 2026-10-28 (0.60.223) — choose finds options that are plain divs
 James, 2026-10-28: "continue get it working". When no list item and no option/item-named element appears on opening, the options are what
 became visible then (short, one line), still matched and read back. Proof: test-fiverr-works FW-05 (a plain-div dropdown).
+
+## ADDENDUM 2026-10-28 (0.60.224) — the panel was never wired; his recorded choices are a page's macro
+James, 2026-10-28: "continue" · "like none of the autofill works" · "use it for correcting or creating macros/automation".
+- Root cause found: gig-panel.js and page-map-panel.js read window.cg, never set; both returned on load. browser.js now sets it. FW-10 fails
+  without it.
+- "creating macros": a recording on an editor page is kept as 'fiverr <page>' (gig-pages.pageMacroSteps: no navigation, a wait_for before
+  each click, his buttons left out by their text) and replayed by every fill of that page. A recorded checkbox is a check with a state.
+  browser_action names check / select / choose / pointer (the first part of FG4). Correcting a failed step with a pick is still to build.

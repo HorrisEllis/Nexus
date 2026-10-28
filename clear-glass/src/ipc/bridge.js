@@ -1654,7 +1654,9 @@ class IpcBridge {
       return require('../autofill/gig.js').detectGig(this.dom, gig, { agentId });
     });
     ipcMain.handle('autofill:gig:fill', async (e, { gig, agentId = 'default', minConfidence = 'medium' } = {}) => this._gigFill({ gig, agentId, minConfidence }));
-    ipcMain.handle('autofill:gig:assign', async (e, d = {}) => this._gigAssign(d));   // 0.60.222 — a picked element taught to a gig part
+    ipcMain.handle('autofill:gig:assign', async (e, d = {}) => this._gigAssign(d));
+    ipcMain.handle('autofill:gig:page', async (e, d = {}) => this._gigPage(d));                    // 0.60.224
+    ipcMain.handle('autofill:gig:saveRecording', async (e, d = {}) => this._gigSaveRecording(d));  // 0.60.224 — his choices → the page's macro   // 0.60.222 — a picked element taught to a gig part
     ipcMain.handle('autofill:gig:autofill', async (e, p = {}) => this._gigAutofill(p));   // §GA1 — the co-pilot's one door
     // 2026-10-12 — a gig FILE (.gig.json, the shape parseGig reads) → the same gig, held to Fiverr's limits like a written one.
     // Reads and checks only: nothing is saved, typed or published.
@@ -2117,8 +2119,38 @@ class IpcBridge {
         throw new Error('not found on the page');
       } catch (err) { r.notFound.push({ key: part, why: err.message }); }
     }
+    // 0.60.224 — his recorded choices for this page (Service type, the metadata boxes, the pricing rows …) replayed after the fill, as him
+    if (where.page && this.macroTool) {
+      let has = null; try { has = await this.macroTool.execute({ action: 'get', name: GP.macroName(where.page) }); } catch (_) {}
+      if (has && !has.error && (has.macro || has.steps || has.ok)) {
+        let m; try { m = await this.runMacroAsPerson({ name: GP.macroName(where.page), agentId, skipSnapshot: true, by: 'person' }); } catch (e) { m = { error: e.message }; }
+        r.macro = m && m.error ? { name: GP.macroName(where.page), ok: false, error: m.error, failedAtStep: m.failedAtStep } : { name: GP.macroName(where.page), ok: true, steps: m && m.stepsCompleted };
+      }
+    }
     if (!r.error) this.postEvent('autofill.gig.filled', { agentId, page: r.page, filled: r.filled.length, learned: r.learned.length, notFound: r.notFound.length, failed: r.failed.length, ts: Date.now() });
     return r;
+  }
+
+  // 0.60.224 — which editor page this tab is on (the panel's record button names its macro by it)
+  async _gigPage({ agentId = 'default' } = {}) {
+    if (!this.driver) return { page: null, why: 'driver not wired' };
+    try { return require('../autofill/gig-pages').gigPage(await this.driver.exec({ agentId, action: 'readPage', by: 'person' })); }
+    catch (e) { return { page: null, why: e.message }; }
+  }
+
+  // 0.60.224 — James: "use it for ... creating macros/automation". A recording of his choices on one editor page becomes that page's macro
+  // ('fiverr <page>'), made to replay on any gig (gig-pages.pageMacroSteps); a newer recording replaces it.
+  async _gigSaveRecording({ page, steps } = {}) {
+    const GP = require('../autofill/gig-pages');
+    if (!page || !GP.PARTS[page]) return { ok: false, error: 'record on a Fiverr editor page the fill knows (Overview, Scope & Pricing)' };
+    if (!this.macroTool) return { ok: false, error: 'macro tool not available' };
+    const { steps: out, dropped } = GP.pageMacroSteps(steps);
+    if (!out.length) return { ok: false, error: 'nothing to keep: the recording had no clicks, ticks or typing on this page', dropped };
+    const name = GP.macroName(page);
+    try { await this.macroTool.execute({ action: 'delete', name }); } catch (_) {}
+    const c = await this.macroTool.execute({ action: 'create', name, urlPattern: '*fiverr.com*', steps: out, description: `His choices on Fiverr's ${page} page, replayed by the gig fill` });
+    if (!c || c.error) return { ok: false, error: (c && c.error) || 'not saved', dropped };
+    return { ok: true, name, steps: out.length, dropped };
   }
 
   // 0.60.222 — "hook into the element picker ... use it for correcting": he points at the element a part goes in; the pick (its xpath) is
