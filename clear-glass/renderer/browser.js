@@ -756,6 +756,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     if (e.channel === 'dom:pick-result') {
       const pick = { ...e.args[0], pickId: 'pick-' + Date.now(), name: `pick-${picks.length + 1}` };
       picks.push(pick); window.__cgLastPickAt = Date.now();
+      // 0.60.222 — a panel that asked for the next pick (the gig panel's "Point at it") gets it
+      if (typeof window.__cgOnNextPick === 'function') { const f = window.__cgOnNextPick; window.__cgOnNextPick = null; try { f(pick); } catch (_) {} }
       renderPicks();
       picksPanel.classList.add('visible');
       pickerActive = false;

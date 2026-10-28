@@ -131,3 +131,14 @@ James, 2026-10-28: "stop. just get fiverr working." ClearDriver choose: by selec
 curved pointer (via native or eros), the option matched (FP2), clicked and read back. The gig fill chooses each tier's DELIVERY TIME after
 typing. Drift from MOD-FG-CHOOSE: no typed search inside a dropdown yet (no fact needs it). Also fixed, outside the map: gig.js counted
 Fiverr's placeholder-only pricing boxes as low, under the fill's floor. Proof: test-fiverr-works 5/5.
+
+## ADDENDUM 2026-10-28 (0.60.222) — the fill detects the page; the picker teaches it the elements
+James, 2026-10-28: "like autofill should detect pages, so it can know when to paste, or detect the actual elements. like hook into the element picker, mayne use it for correcting or creating macros/automation"
+Said with screenshots of Fiverr's Overview (Suggested categories, Service type, Gig metadata) and Scope & Pricing. Built on what existed:
+the page reader (readPage), page-memory (now also keeps targets: a picked element per site, page and part), the element picker's pick
+(its xpath), option-match. New: src/autofill/gig-pages.js (pure: gigPage, PARTS, targetKey, suggestedCategory); bridge _gigFill reads the
+page first and does that page's parts, a learned target first; _gigAssign turns a pick into a selector unique to that element and keeps it
+(IPC autofill:gig:assign, cg.autofill.gigAssign); the gig panel lists what was not found with "Point at it".
+Not built yet, said: "correcting or creating macros" — a pick replacing a failed macro step's selector, and a fill saved as a macro. They
+need macro steps that can choose (FG4), so they wait on it. Gig metadata's checkbox tabs and the Service type dropdown need his values
+(the gig does not hold them). Proof: test-fiverr-works 9/9.

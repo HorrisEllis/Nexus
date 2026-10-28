@@ -1249,6 +1249,8 @@
 #gig-panel .gig-main:disabled { opacity: .5; cursor: default; }
 #gig-panel .gig-status { min-height: 16px; margin: 6px 0; color: var(--text-dim, #999); }
 #gig-panel .gig-status.ok { color: #6ee7a0; } #gig-panel .gig-status.bad { color: #ff7a8a; }
+#gig-panel .gig-miss { display: flex; align-items: center; gap: 8px; justify-content: space-between; padding: 4px 0; border-top: 1px solid rgba(255,255,255,.06); font-size: 12px; }
+#gig-panel .gig-miss button { flex: none; }   /* 0.60.222 — "Point at it" for a part the fill did not find */
 #gig-panel .gig-note { background: rgba(79,209,197,.07); border-left: 2px solid var(--accent, #4fd1c5); padding: 6px 8px; margin-bottom: 8px; color: var(--text-dim, #aaa); }
 #gig-panel .gig-part { border: 1px solid var(--border, #333); border-radius: 6px; padding: 6px 8px; margin-top: 6px; }
 #gig-panel .gig-part-h { display: flex; align-items: center; gap: 8px; } #gig-panel .gig-part-h b { flex: 1; }

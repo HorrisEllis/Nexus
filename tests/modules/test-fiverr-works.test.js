@@ -11,8 +11,13 @@
  *   FW-05  in Clear Glass, on a page laid out like Fiverr's Scope & Pricing: choose opens each tier's custom DELIVERY TIME with the curved
  *          pointer, clicks the option, and the dropdown shows it — one by one; a native SELECT row by column + row label; a missing option
  *          is refused with the options seen
+ *   FW-06  (0.60.222) the page is detected from what it shows — Overview, Scope & Pricing, or unknown (said); the suggested category is matched
+ *   FW-07  a picked element is remembered per site and page, replaced by a newer pick, forgotten on request
+ *   FW-08  in Clear Glass, the pick → a selector that finds exactly the picked element (three same-placeholder boxes), kept for the part
+ *   FW-09  the fill on Scope & Pricing: a learned target first, delivery chosen per tier, what it could not find listed; Overview: the category link
  */
 require('../../lib/test-sandbox.js').ensure();
+process.env.APPDATA = require('fs').mkdtempSync(require('path').join(require('os').tmpdir(), 'fw-mem-'));   // page-memory's dir: never his
 const assert = require('assert');
 const path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
@@ -85,6 +90,53 @@ document.querySelectorAll('.dd').forEach(function(dd){ dd.addEventListener('clic
     assert.ok(OM.shows('3 DAYS', '3 Days') && !OM.shows('DELIVERY TIME', '3 Days'));
   });
 
+  const GP = require(CG('src/autofill/gig-pages.js'));
+  await test('FW-06', 'the page is detected from what it shows; an unknown Fiverr page is said; the suggested category is matched', () => {
+    const fv = 'https://www.fiverr.com/users/james_broooj/manage_gigs/x/edit';
+    assert.strictEqual(GP.gigPage({ url: fv, headings: [{ text: 'Scope & Pricing' }, { text: 'Packages' }] }).page, 'pricing');
+    assert.strictEqual(GP.gigPage({ url: fv, headings: [], text: 'Suggested categories\nService type\nGig metadata' }).page, 'overview');
+    const u = GP.gigPage({ url: fv, headings: [{ text: 'Gallery' }] }); assert.ok(u.page === null && /point at the fields/.test(u.why), u.why);
+    assert.strictEqual(GP.gigPage({ url: 'https://example.com', headings: [{ text: 'Scope & Pricing' }, { text: 'Packages' }] }).page, null);
+    const links = [{ text: 'Programming & Tech > AI Development', selector: 'a:nth-of-type(1)' }, { text: 'Programming & Tech > Software Development', selector: 'a:nth-of-type(2)' }];
+    assert.strictEqual(GP.suggestedCategory(links, { category: 'Programming & Tech', subcategory: 'AI Development' }).link.selector, 'a:nth-of-type(1)');
+    assert.match(GP.suggestedCategory(links, { category: 'Writing', subcategory: 'Blogs' }).why, /suggested: Programming/);
+  });
+
+  await test('FW-07', 'a pick is remembered per site and page, replaced by a newer one, forgotten on request', () => {
+    const mem = require(CG('src/page/page-memory.js')).createMemory({ dir: require('fs').mkdtempSync(path.join(require('os').tmpdir(), 'fw-t-')) });
+    const key = GP.targetKey('pricing', 'basic.delivery');
+    assert.ok(mem.setTarget('https://www.fiverr.com', key, { selector: '#a' }).ok);
+    mem.setTarget('https://www.fiverr.com', key, { selector: '#b' });
+    assert.strictEqual(mem.target('https://www.fiverr.com', key).selector, '#b');
+    assert.strictEqual(mem.target('https://other.example', key), null);
+    assert.ok(mem.forget('https://www.fiverr.com', key).ok && !mem.target('https://www.fiverr.com', key));
+  });
+
+  await test('FW-09', 'the fill does the detected page only: a learned target first, delivery per tier, the rest listed; Overview clicks the category', async () => {
+    const Bridge = require(CG('src/ipc/bridge.js'));
+    const gig = { title: 'I will build it', category: 'Programming & Tech', subcategory: 'AI Development', tags: [], description: 'd', faq: [], requirements: [],
+      packages: { basic: { name: 'Starter', description: 'one', price: 30, deliveryDays: 3 }, standard: { name: 'Plus', description: 'two', price: 60, deliveryDays: 5 } } };
+    const run = async (read) => {
+      const calls = [];
+      const self = { dom: { handleQuery: async () => [], handleMutate: async () => ({}) }, postEvent: () => {},
+        driver: { exec: async (c) => { calls.push(c); if (c.action === 'readPage') return read; if (c.action === 'choose') return { option: c.option + ' Days' }; return {}; } } };
+      return { r: await Bridge.prototype._gigFill.call(self, { gig }), calls };
+    };
+    const mem = require(CG('src/page/page-memory.js')).shared();
+    mem.setTarget('https://www.fiverr.com', 'fiverr:pricing:basic.name', { selector: '#learned-basic-name' });
+    const { r, calls } = await run({ url: 'https://www.fiverr.com/edit', headings: [{ text: 'Scope & Pricing' }, { text: 'Packages' }], links: [] });
+    assert.strictEqual(r.page, 'pricing');
+    assert.ok(calls.some(c => c.action === 'setValue' && c.selector === '#learned-basic-name' && c.value === 'Starter'), 'the learned target is used');
+    assert.deepStrictEqual(calls.filter(c => c.action === 'choose').map(c => [c.column, c.option]), [['BASIC', '3'], ['STANDARD', '5']]);
+    assert.deepStrictEqual(r.notFound.map(n => n.key).sort(), ['basic.description', 'standard.description', 'standard.name'], 'listed to point at');
+    assert.ok(!calls.some(c => c.action === 'pointer'), 'no category click on the pricing page');
+    const o = await run({ url: 'https://www.fiverr.com/edit', headings: [], text: 'Suggested categories Gig metadata', links: [{ text: 'Programming & Tech > AI Development', selector: '#cat1' }] });
+    assert.strictEqual(o.r.page, 'overview');
+    assert.ok(o.calls.some(c => c.action === 'pointer' && c.selector === '#cat1' && c.do === 'click'));
+    assert.ok(!o.calls.some(c => c.action === 'choose'), 'no delivery on the overview page');
+    mem.forget('https://www.fiverr.com', 'fiverr:pricing:basic.name');
+  });
+
   const glass = require(CG('src/driver/glass.js'));
   let browser; try { browser = await glass.chromium.launch(); } catch (e) { console.log(`  - FW-05 SKIPPED: the engine could not start (${e.message.split('\n')[0]})`); return done(); }
   console.log(`  · driven by Clear Glass (clear-glass/src/driver/glass.js), engine: ${glass.engine().kind}`);
@@ -108,6 +160,24 @@ document.querySelectorAll('.dd').forEach(function(dd){ dd.addEventListener('clic
       assert.strictEqual(await page.evaluate(() => document.querySelectorAll('select')[1].value), '2');
       await assert.rejects(d.exec({ agentId: 'default', action: 'choose', column: 'PREMIUM', row: 'Number of APIs integrated', option: '9', by: 'person' }), /no option matches "9" — options: Select \| 1 \| 2 \| 3/);
       await assert.rejects(d.exec({ agentId: 'default', action: 'choose', column: 'GOLD', shows: 'DELIVERY TIME', option: '3', by: 'person' }), /no column headed "GOLD"/);
+      await page.close();
+    });
+
+    await test('FW-08', 'in Clear Glass: the pick becomes a selector for exactly that element (three same-placeholder boxes), kept for the part', async () => {
+      const page = await browser.newPage({ viewport: { width: 1100, height: 700 } });
+      await page.goto('data:text/html;charset=utf-8,' + encodeURIComponent(PAGE));
+      const xpath = await page.evaluate(() => { const el = document.querySelectorAll('textarea')[1]; const parts = []; let n = el;
+        while (n && n.nodeType === 1) { let i = 1, s = n.previousSibling; while (s) { if (s.nodeType === 1 && s.tagName === n.tagName) i++; s = s.previousSibling; } parts.unshift(n.tagName.toLowerCase() + '[' + i + ']'); n = n.parentNode; }
+        return '/' + parts.join('/'); });
+      const wc = { executeJavaScript: (code) => page._eval(code), getURL: () => 'https://www.fiverr.com/edit' };
+      const Bridge = require(CG('src/ipc/bridge.js'));
+      const a = await Bridge.prototype._gigAssign.call({ driver: { _getWebContents: () => wc } }, { page: 'pricing', part: 'standard.name', xpath });
+      assert.ok(a.ok, JSON.stringify(a));
+      assert.strictEqual(await page.evaluate((sel) => { const n = document.querySelectorAll(sel); return n.length === 1 && n[0] === document.querySelectorAll('textarea')[1]; }, a.selector), true, a.selector);
+      const mem = require(CG('src/page/page-memory.js')).shared();
+      assert.strictEqual(mem.target('https://www.fiverr.com', 'fiverr:pricing:standard.name').selector, a.selector);
+      const bad = await Bridge.prototype._gigAssign.call({ driver: { _getWebContents: () => wc } }, { page: 'pricing', part: 'gold.name', xpath });
+      assert.match(bad.error, /unknown part gold.name/);
       await page.close();
     });
   } finally { try { await browser.close(); } catch (_) {} }

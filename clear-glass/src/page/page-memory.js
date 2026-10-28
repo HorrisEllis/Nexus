@@ -69,8 +69,20 @@ function createMemory({ dir = DEFAULT_DIR, now = () => Date.now(), warn = (m) =>
     const m = read(page.site);
     return { visits: m.visits, stability: (id) => stabilityOf(m, id), learned: (intent) => ({ ...(m.intents[_intentKey(intent)] || {}) }) };
   }
+  // 0.60.222 — James, 2026-10-28: "detect the actual elements. like hook into the element picker, mayne use it for correcting or creating
+  // macros/automation". What he pointed at with the picker, for a named part on a kind of page (key 'fiverr:pricing:basic.delivery'): used
+  // before any detection next time. Replaced by a newer pick; dropped by forget().
+  function target(site, key) { const m = read(site); return (m.targets && m.targets[key]) || null; }
+  function setTarget(site, key, t) {
+    if (!key || !t || !t.selector) return { ok: false, why: 'a key and a selector are needed' };
+    const m = read(site); m.targets = m.targets || {};
+    m.targets[key] = { selector: String(t.selector), xpath: t.xpath || null, by: t.by || 'picker', at: now() };
+    save(m); return { ok: true, key, target: m.targets[key] };
+  }
+  function targets(site) { const m = read(site); return { ...(m.targets || {}) }; }
+  function forget(site, key) { const m = read(site); if (!m.targets || !m.targets[key]) return { ok: false, why: `no target ${key}` }; delete m.targets[key]; save(m); return { ok: true }; }
   function sites() { try { return fs.readdirSync(dir).filter(f => f.endsWith('.json')).map(f => { try { const j = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')); return { site: j.site, visits: j.visits, blocks: Object.keys(j.blocks || {}).length, intents: Object.keys(j.intents || {}).length, last: j.last }; } catch (_) { return null; } }).filter(Boolean); } catch (_) { return []; } }
-  return { dir, read, visit, outcome, forPage, sites };
+  return { dir, read, visit, outcome, forPage, sites, target, setTarget, targets, forget };
 }
 
 let _shared = null;

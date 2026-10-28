@@ -1654,6 +1654,7 @@ class IpcBridge {
       return require('../autofill/gig.js').detectGig(this.dom, gig, { agentId });
     });
     ipcMain.handle('autofill:gig:fill', async (e, { gig, agentId = 'default', minConfidence = 'medium' } = {}) => this._gigFill({ gig, agentId, minConfidence }));
+    ipcMain.handle('autofill:gig:assign', async (e, d = {}) => this._gigAssign(d));   // 0.60.222 — a picked element taught to a gig part
     ipcMain.handle('autofill:gig:autofill', async (e, p = {}) => this._gigAutofill(p));   // §GA1 — the co-pilot's one door
     // 2026-10-12 — a gig FILE (.gig.json, the shape parseGig reads) → the same gig, held to Fiverr's limits like a written one.
     // Reads and checks only: nothing is saved, typed or published.
@@ -2073,22 +2074,87 @@ class IpcBridge {
     if (!this.dom) return { error: 'dom bridge unavailable' };
     if (!gig || !gig.title) return { error: 'write the gig first' };
     try { if (this.autofillStore) this.autofillStore.setLastGig(gig); } catch (_) {}   // §GA1a
+    // 0.60.222 — James, 2026-10-28: "like autofill should detect pages, so it can know when to paste, or detect the actual elements. like
+    // hook into the element picker". The fill reads the page first and does that page's parts only (src/autofill/gig-pages.js); a part he
+    // pointed at with the picker before (page-memory target) is filled there first; what is still not found is listed, to point at.
+    const GP = require('../autofill/gig-pages');
+    let read = null; if (this.driver) { try { read = await this.driver.exec({ agentId, action: 'readPage', by: 'person' }); } catch (_) {} }
+    const where = read ? GP.gigPage(read) : { page: null, why: 'the page could not be read' };
+    let site = null; try { site = new URL(read && read.url).origin; } catch (_) {}
+    const mem = require('../page/page-memory').shared();
     let r;
     try { r = await require('../autofill/gig.js').fillGig(this.dom, gig, { agentId, minConfidence }); }
     catch (err) { return { error: err.message }; }
-    // 0.60.221 — James, 2026-10-28: "it needs to do the drop down menus. one by one" · "the drop down doesn't work". On Fiverr's Scope &
-    // Pricing page each tier's DELIVERY TIME is chosen, one after another, through the driver's choose (curved pointer, read back). A page
-    // without that dropdown is not an error: it is not the pricing page. Each result is said, chosen or why not.
-    r.dropdowns = [];
-    if (this.driver && gig.packages) {
-      for (const [tier, column] of [['basic', 'BASIC'], ['standard', 'STANDARD'], ['premium', 'PREMIUM']]) {
-        const p = gig.packages[tier]; if (!p || !Number.isFinite(p.deliveryDays)) continue;
-        try { const c = await this.driver.exec({ agentId, action: 'choose', column, shows: 'DELIVERY TIME', option: String(p.deliveryDays), by: 'person' }); r.dropdowns.push({ key: `${tier}.delivery`, ok: true, option: c.option }); }
-        catch (err) { r.dropdowns.push({ key: `${tier}.delivery`, ok: false, error: err.message }); if (/no column headed/.test(err.message)) break; }
-      }
+    r.page = where.page; r.pageWhy = where.why; r.dropdowns = []; r.learned = []; r.notFound = [];
+    const valueOf = (part) => {
+      if (part === 'category') return gig.subcategory ? `${gig.category} > ${gig.subcategory}` : gig.category;
+      const [tier, k] = part.split('.'); const p = gig.packages && gig.packages[tier]; if (!p) return null;
+      return k === 'delivery' ? (Number.isFinite(p.deliveryDays) ? String(p.deliveryDays) : null) : (p[k] || null);
+    };
+    const filledKeys = new Set((r.filled || []).map(f => f.key));
+    for (const part of (where.page && GP.PARTS[where.page]) || []) {
+      const value = valueOf(part); if (value === null || value === undefined || value === '') continue;
+      const learned = site && mem.target(site, GP.targetKey(where.page, part));
+      const isChoice = part === 'category' || part.endsWith('.delivery');
+      try {
+        if (learned) {
+          if (isChoice) await this.driver.exec({ agentId, action: 'choose', selector: learned.selector, option: value, by: 'person' });
+          else await this.driver.exec({ agentId, action: 'setValue', selector: learned.selector, value, by: 'person' });
+          r.learned.push({ key: part, selector: learned.selector }); continue;
+        }
+        if (filledKeys.has(part)) continue;
+        if (part.endsWith('.delivery')) {
+          const column = part.split('.')[0].toUpperCase();
+          const c = await this.driver.exec({ agentId, action: 'choose', column, shows: 'DELIVERY TIME', option: value, by: 'person' });
+          r.dropdowns.push({ key: part, ok: true, option: c.option }); continue;
+        }
+        if (part === 'category') {
+          const sc = GP.suggestedCategory(read.links, gig);
+          if (!sc.ok) throw new Error(sc.why);
+          await this.driver.exec({ agentId, action: 'pointer', selector: sc.link.selector, do: 'click', by: 'person' });
+          r.dropdowns.push({ key: part, ok: true, option: sc.text }); continue;
+        }
+        throw new Error('not found on the page');
+      } catch (err) { r.notFound.push({ key: part, why: err.message }); }
     }
-    if (!r.error) this.postEvent('autofill.gig.filled', { agentId, filled: r.filled.length, skipped: r.skipped.length, failed: r.failed.length, leftToCopy: r.leftToCopy.length, ts: Date.now() });
+    if (!r.error) this.postEvent('autofill.gig.filled', { agentId, page: r.page, filled: r.filled.length, learned: r.learned.length, notFound: r.notFound.length, failed: r.failed.length, ts: Date.now() });
     return r;
+  }
+
+  // 0.60.222 — "hook into the element picker ... use it for correcting": he points at the element a part goes in; the pick (its xpath) is
+  // turned into a selector that finds exactly that element again, checked on the page, and remembered for this site and page.
+  async _gigAssign({ agentId = 'default', page, part, xpath } = {}) {
+    const GP = require('../autofill/gig-pages');
+    if (!page || !GP.PARTS[page] || !GP.PARTS[page].includes(part)) return { ok: false, error: `unknown part ${part} for page ${page}` };
+    if (!xpath || !this.driver) return { ok: false, error: 'a picked element is needed' };
+    const wc = this.driver._getWebContents(agentId); if (!wc) return { ok: false, error: 'no page in this tab' };
+    const r = await wc.executeJavaScript(`(function(xp){
+      var el = document.evaluate(xp, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+      if (!el) return { error: 'the picked element is gone' };
+      var c = el.closest('textarea,input,select,[role="combobox"],[aria-haspopup],a,button') || el; el = c;
+      var esc = function(v){ return (window.CSS && CSS.escape) ? CSS.escape(v) : String(v).replace(/[^a-zA-Z0-9_-]/g, '\\$&'); };
+      var uniq = function(s){ try { var n = document.querySelectorAll(s); return n.length === 1 && n[0] === el; } catch (_) { return false; } };
+      if (el.id && uniq('#' + esc(el.id))) return { selector: '#' + esc(el.id) };
+      var tag = el.tagName.toLowerCase();
+      var attrs = ['name', 'data-testid', 'data-test', 'aria-label', 'placeholder'];
+      for (var i = 0; i < attrs.length; i++) { var v = el.getAttribute(attrs[i]); if (v) { var s = tag + '[' + attrs[i] + '="' + v.replace(/"/g, '\\"') + '"]'; if (uniq(s)) return { selector: s }; } }
+      var parts = [], cur = el;
+      while (cur && cur.nodeType === 1 && parts.length < 8) {
+        if (cur.id && uniq('#' + esc(cur.id) + (parts.length ? ' > ' + parts.join(' > ') : ''))) { parts.unshift('#' + esc(cur.id)); break; }
+        var p = cur.parentElement, t = cur.tagName.toLowerCase();
+        var same = p ? Array.prototype.filter.call(p.children, function(x){ return x.tagName === cur.tagName; }) : [];
+        parts.unshift(same.length > 1 ? t + ':nth-of-type(' + (same.indexOf(cur) + 1) + ')' : t);
+        if (uniq(parts.join(' > '))) return { selector: parts.join(' > ') };
+        cur = p;
+      }
+      return uniq(parts.join(' > ')) ? { selector: parts.join(' > ') } : { error: 'no selector finds exactly the picked element' };
+    })(${JSON.stringify(xpath)})`, true).catch(e => ({ error: e.message }));
+    if (!r || r.error) return { ok: false, error: (r && r.error) || 'page did not answer' };
+    let site = null; try { site = new URL(wc.getURL()).origin; } catch (_) {}
+    if (!site) return { ok: false, error: 'the page has no site' };
+    const saved = require('../page/page-memory').shared().setTarget(site, GP.targetKey(page, part), { selector: r.selector, xpath, by: 'picker' });
+    try { require('../processes').activity().push({ kind: 'macro', what: `taught "${part}" on Fiverr's ${page} page: ${r.selector}`, url: wc.getURL(), by: 'person', level: 'info' }); } catch (_) {}
+    return { ok: saved.ok, part, page, selector: r.selector };
   }
 
   async _postToApiChannel(url, payload, captureBody = false) {
