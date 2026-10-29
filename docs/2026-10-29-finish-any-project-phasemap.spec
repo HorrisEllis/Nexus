@@ -113,3 +113,40 @@ phases:
     spec: docs/project-spine.spec
     blocks: [MOD-SCREEN]
     does: "the Spine tab: checklist, components, split, convert"
+
+  # ADDENDUM 2026-10-29 (0.60.286) — James, the same day: "yes, and can you do what you can to get idearium to work dynamically? like type in the
+  # cli, determine context needed, build dag. search the project for context, ask user about any gaps, then contract, etc"
+  # The order is his, verbatim, and the flow keeps it. Reuse: the spine (FA2) is the graph; RAID's v2 contract (cortex/core/raid/contract-gates.js)
+  # is the contract, so contract gates / contract run take it from there; lib/agent-confidence-gate.js keeps its place inside a dispatch (this
+  # is the same ladder, made visible, before any agent is asked).
+  FA8_intent_to_contract:
+    status: DONE 0.60.286
+    depends_on: [FA2_the_registry_is_the_spine]
+    files: [lib/intent-flow.js]
+    spec: docs/project-spine.spec
+    blocks: [MOD-INTENT-FLOW]
+    does: "intent → context needed → DAG → context found → gaps (asked) → contract"
+  FA9_the_cli_and_route:
+    status: DONE 0.60.286
+    depends_on: [FA8_intent_to_contract, FA6_routes_and_commands]
+    files: [idearium/api/index.js, idearium/cli/route-commands.js]
+    spec: docs/project-spine.spec
+    blocks: [MOD-INTENT-DOOR]
+    does: "POST /api/repos/:uuid/intent; repo do <repo> \"…\" asks each gap at the terminal"
+  FA10_the_do_box:
+    status: DONE 0.60.286
+    depends_on: [FA9_the_cli_and_route, FA7_the_screen]
+    files: [idearium/ui/js/repo-intent.js, idearium/ui/js/repo-spine.js]
+    spec: docs/project-spine.spec
+    blocks: [MOD-INTENT-SCREEN]
+    does: "the Do box on the Finish tab: stages, DAG, gaps as dropdowns, Contract"
+
+  # ADDENDUM 2026-10-29 (0.60.287) — James: "Each problem needs to build a dag using reverse end state reasoning." · "Yes the same way I reason.
+  # Bidirectional causal changing." The decision is HL_D3_reverse_end_state in docs/2026-10-29-his-loop-phasemap.spec (its HL2 is this phase).
+  FA11_bidirectional_causal_chain:
+    status: DONE 0.60.287
+    depends_on: [FA8_intent_to_contract]
+    files: [lib/intent-flow.js]
+    spec: docs/project-spine.spec
+    blocks: [MOD-CAUSAL-CHAIN]
+    does: "backward from the end state, forward from the change; the meeting set is the DAG; one-sided sets are gaps and side effects"

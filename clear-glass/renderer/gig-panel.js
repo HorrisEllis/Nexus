@@ -204,5 +204,7 @@
   $('gig-open-idearium').addEventListener('click', (e) => { const u = e.currentTarget.dataset.url; if (u) window.open(u, '_blank'); });
 
   paintGig(); step('write');
-  window.CgGigPanel = { show, step, parts: () => (GIG ? parts(GIG) : []) };
+  // 0.60.286 GM3 — the fill menu (renderer/gig-menu.js) reads and keeps the gig here, and points at a part the same way
+  window.CgGigPanel = { show, step, parts: () => (GIG ? parts(GIG) : []), gig: () => GIG, agentId,
+    setGig(g) { if (!g || !g.title) return; GIG = g; store.set('last', GIG); shareGig(); paintGig(); }, point };
 })();

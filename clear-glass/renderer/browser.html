@@ -315,7 +315,8 @@
     <button id="gig-write" class="gig-main">Write the gig</button>
     <div class="gig-row"><button id="gig-import" title="Load a .gig file (an old .gig.json loads too)">Load a gig file…</button><button id="gig-template" title="An empty .gig to fill in">Download template</button><input type="file" id="gig-file" accept=".gig,.yaml,.yml,.json,application/json" hidden></div>
     <div id="gig-write-status" class="gig-status"></div>
-    <div id="gig-actions" hidden><button id="gig-fill" class="gig-main">Fill this Fiverr page</button><button id="gig-export" title="Save this gig as a .gig file">Save gig file</button><button id="gig-copy-all">Copy all</button><button id="gig-record" title="Record your own choices on this editor page (Service type, metadata, rows); every fill of this page replays them">Record my choices on this page</button></div>
+    <div id="gig-actions" hidden><button id="gig-fill" class="gig-main">Fill this Fiverr page</button><button id="gig-menu-open" title="Every part of the gig as a row: tick what to fill, change a value or a choice, then Fill selected (0.60.286)">Fill menu…</button><button id="gig-export" title="Save this gig as a .gig file">Save gig file</button><button id="gig-copy-all">Copy all</button><button id="gig-record" title="Record your own choices on this editor page (Service type, metadata, rows); every fill of this page replays them">Record my choices on this page</button></div>
+    <div id="gig-menu" class="gig-menu" hidden></div>   <!-- 0.60.286 GM3 the fill menu: js renderer/gig-menu.js -->
     <div id="gig-missing" aria-live="polite"></div>
     <div id="gig-parts"></div>
   </div>
@@ -450,6 +451,7 @@
 <script src="site-profile-groups.js"></script>   <!-- 0.60.217 SP3 -->
 <script src="browser.js"></script>
 <script src="gig-panel.js"></script>
+<script src="gig-menu.js"></script>   <!-- 0.60.286 GM3 the fill menu -->
 <script src="autofill-inline.js"></script>   <!-- 0.60.267 AF3 -->
 <script src="page-map-panel.js"></script>
 <script src="shell/icons.js"></script>

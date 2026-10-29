@@ -52,6 +52,21 @@ const FILES = [
     I('clear-glass/src/ipc/bridge.js'),                        // IPC applications:call (cg.applications.call) → _opportunityCall
   ]],
   ['clear-glass/src/net/step.js', I('clear-glass/src/net/step.js'), []],   // SN1 — pure; the service and transport are handed in (deps)
+  // 0.60.286 FA — James: "create all the capability to finish this or any other project in the repo" (docs/project-spine.spec)
+  ['lib/adapters/contract.js', I('lib/adapters/contract.js'), [I('lib/adapters/javascript.js'), I('lib/adapters/documents.js'), I('lib/adapters/emerge.js')]],   // lazy requires
+  ['lib/adapters/javascript.js', I('lib/adapters/javascript.js'), [I('lib/code-intel/structure.js'), I('lib/code-intel/decls.js'), I('lib/code-intel/text.js')]],
+  ['lib/adapters/documents.js', I('lib/adapters/documents.js'), []],
+  ['lib/adapters/emerge.js', I('lib/adapters/emerge.js'), [I('lib/code-intel/structure.js')]],
+  ['lib/project-spine.js', I('lib/project-spine.js'), [I('lib/adapters/contract.js')]],
+  ['lib/project-refactor.js', I('lib/project-refactor.js'), [I('lib/project-spine.js')]],
+  ['lib/project-split.js', I('lib/project-split.js'), [I('lib/adapters/contract.js')]],
+  ['lib/project-convert.js', I('lib/project-convert.js'), [I('lib/adapters/contract.js'), I('lib/project-spine.js'), I('lib/spec-from-markdown.js'), I('lib/phasemap-parse.js'), I('lib/phase-dag.js')]],
+  ['lib/intent-flow.js', I('lib/intent-flow.js'), [I('lib/project-spine.js'), I('lib/code-intel/text.js')]],
+  ['idearium/ui/js/repo-spine.js', I('idearium/ui/js/repo-spine.js'), ['nexus.idearium.api', I('idearium/ui/js/repo-intent.js')]],   // a browser script: HTTP
+  ['idearium/ui/js/repo-intent.js', I('idearium/ui/js/repo-intent.js'), ['nexus.idearium.api']],
+  // 0.60.286 GM — James: "make a full menu with check boxes, adn drop downs if applicable"
+  ['clear-glass/src/autofill/gig-menu.js', I('clear-glass/src/autofill/gig-menu.js'), []],
+  ['clear-glass/renderer/gig-menu.js', I('clear-glass/renderer/gig-menu.js'), [I('clear-glass/renderer/gig-panel.js')]],   // window.CgGigPanel, cg.autofill.gigMenu/gigFill over IPC
   ['lib/repo-history-nodes.js', I('lib/repo-history-nodes.js'), [I('lib/node-export.js'), I('lib/test-sandbox.js')]],   // 0.60.285 HN1 — Idearium's history as nodes, one per unit
   ['lib/automation/pipeline.js', I('lib/automation/pipeline.js'), [I('lib/automation/engine.js'), I('lib/automation/steps.js')]],   // 0.60.284 PL1 — WORKFLOWS_DIR; byType, validateStep
   ['clear-glass/renderer/settings/sections/pipelines.js', I('clear-glass/renderer/settings/sections/pipelines.js'), [I('lib/automation/routes.js')]],   // 0.60.284 PL4 — wire /automation/pipelines*
@@ -494,6 +509,12 @@ const CONSUMERS = [
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig-pages.js'), '0.60.283 _gigTags: tagInputScript / tagShownScript (each tag gated)'],
   [I('lib/repo-agent.js'), I('lib/repo-history-nodes.js'), '0.60.285 HN2 _log → record(row, { text, message, toolCalls, model }): every exchange as nodes (lazy require)'],
   ['nexus.idearium.api', I('lib/repo-history-nodes.js'), '0.60.285 HN3 repo.history-nodes / repo.history-nodes.backfill — GET /api/repos/:uuid/history-nodes, POST …/backfill'],
+  ['nexus.idearium.api', I('lib/project-spine.js'), '0.60.286 FA6 repo.spine / spine.write / finish — the registry as the spine (lazy _require)'],
+  ['nexus.idearium.api', I('lib/project-refactor.js'), '0.60.286 FA6 repo.refactor — move/rename by component id'],
+  ['nexus.idearium.api', I('lib/project-split.js'), '0.60.286 FA6 repo.split-candidates / repo.split — one component, one file'],
+  ['nexus.idearium.api', I('lib/project-convert.js'), '0.60.286 FA6 repo.convert — md → spec, a spec build plan → phasemap'],
+  ['nexus.idearium.api', I('lib/intent-flow.js'), '0.60.286 FA9 repo.intent — intent → context → DAG → gaps → contract'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig-menu.js'), '0.60.286 GM2 _gigMenu / _gigFill(edits) — lazy require'],
 ];
 
 function mapBuildSurface(driver) {

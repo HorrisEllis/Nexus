@@ -117,6 +117,8 @@ const plainFiles = () => Object.entries(FILES).map(([p, c]) => ({ path: p.replac
     assert.deepStrictEqual([...new Set(u.map(x => x.section).filter(Boolean))], ['Paths', 'Counter', 'Words']);
     assert.strictEqual(J.parse('const x = ;', 'x.js').verdict, 'fail');
     assert.deepStrictEqual(J.dependencies("out.push(`const a = require('./gen')`);\nconst b = require('./real');\n").map(d => d.spec), ['./real'], 'emitted code is not a dependency');
+    // 0.60.287 — a "/*" inside a // comment hid the rest of lib/agent-tools/index.js (125 requires seen as 38); _require is Idearium's createRequire
+    assert.deepStrictEqual(J.dependencies("// see hooks/*.hooks.js\nconst a = require('./a'); // x /* y\nconst s = '/*'; const b = require('./b');\nconst c = _require('./c');\n").map(d => d.spec), ['./a', './b', './c']);
   });
 
   const S = require(path.join(ROOT, 'lib/project-spine.js'));

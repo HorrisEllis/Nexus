@@ -386,7 +386,8 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     // §0.39.301 — write a Fiverr gig, then (only when asked) type it into the gig editor (src/autofill/gig.js)
     gig:       (payload)                     => ipcRenderer.invoke('autofill:gig', payload),
     gigDetect: (gig, agentId)                => ipcRenderer.invoke('autofill:gig:detect', { gig, agentId }),
-    gigFill:   (gig, agentId, minConfidence) => ipcRenderer.invoke('autofill:gig:fill', { gig, agentId, minConfidence }),
+    gigFill:   (gig, agentId, minConfidence, opts = {}) => ipcRenderer.invoke('autofill:gig:fill', { gig, agentId, minConfidence, ...opts }),   // 0.60.286 GM2 opts: { only, replay, edits }
+    gigMenu:   (agentId, gig) => ipcRenderer.invoke('autofill:gig:menu', { agentId, gig }),   // 0.60.286 GM2 — the fill menu for the page in the tab
     gigAssign: (d) => ipcRenderer.invoke('autofill:gig:assign', d),   // 0.60.222 — teach a gig part the element he picked
     gigPage:   (agentId) => ipcRenderer.invoke('autofill:gig:page', { agentId }),          // 0.60.224
     gigSaveRecording: (d) => ipcRenderer.invoke('autofill:gig:saveRecording', d),         // 0.60.224 — his choices → the page's macro

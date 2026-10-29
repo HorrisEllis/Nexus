@@ -362,3 +362,24 @@ James, 2026-10-29: "yes, clear glass macros and settings too."
   outbox. Do not add a third.
 - A test process never writes into a real Versionium. Both recorders skip it and say so, unless the test sets
   `NEXUS_VERSIONIUM_RECORD_IN_TESTS=1` and points at its own stand-in.
+
+## ADDENDUM 2026-10-29 (0.60.287) — evidence of competence, not noise
+James, 2026-10-29: "Make sure you put as much evidence of competence as possible not just noise."
+- A `docs/PROOF-OF-COMPETENCY.md` entry is kept only when it holds:
+  - his words;
+  - the call he made against an alternative;
+  - something a stranger can run or open (a test id and its count, a commit, a number from a real run).
+- A line that restates the changelog, lists files, or praises without a check is noise. It is cut.
+- Where his method is the thing being proven, a test shows what it catches that the alternative misses. Example: IF-05 shows his
+  bidirectional chaining refusing a change that forward-only planning would have turned into a contract.
+- Fewer, stronger entries. The changelog holds the full record; the proof file holds what proves skill.
+
+## ADDENDUM 2026-10-29 (0.60.289) — every component wired to its module and to a UI
+James, 2026-10-29: "Each component needs to be wired to the module component, and ui"
+- A component (a code file) passes only with all three:
+  - a spec module that owns it (the module's `path:` names it);
+  - a Loom component with its real wires;
+  - a way in for a person (a screen) or an agent (a command row), when it serves anything a person or an agent does.
+- Measured by `node scripts/systems-report.js`. On 2026-10-29: Loom 80–100% registered; spec modules 0–36% (the gap); Idearium's routes
+  79% with a screen, 33% with a command, 14% with neither. The per-system document is `docs/NEXUS-SYSTEMS-FOR-CODING.md`.
+- Held forward on every new component. Closed backward with the Finish tool (`repo convert`, `repo spine`), the coding loop's systems first.

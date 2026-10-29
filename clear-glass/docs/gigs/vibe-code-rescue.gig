@@ -1,0 +1,69 @@
+# Clear Glass gig file (clearglass.gig/1) — load it in Settings → Autofill → Gig, or in the gig panel.
+# 0.60.286 — from the 2026-10-29 market brainstorm (ideas/2026-10-29-market-brainstorm.md): Fiverr's June 2026 index has Base44 searches up 95%
+# and vibe coding up 61%. The proof is his own: Idearium's Finish tool (repo finish) carried a project he did not write (Emerge) to a checklist.
+format: clearglass.gig/1
+platform: fiverr
+title: I will fix and finish your AI built app from Lovable, Bolt, Base44 or Cursor
+category: Programming & Tech
+subcategory: AI Development
+tags:
+  - vibe coding
+  - lovable
+  - bolt
+  - base44
+  - fix ai code
+description: >-
+  Your app was built fast with AI, and now it is stuck: things break when you change one part, the AI
+  keeps going in circles, and nobody knows what depends on what. I take it from there and finish it.
+
+
+  How I work:
+
+  - I map your whole project first: every file, what it uses, and what uses it
+
+  - I list what stands between it and done, as a checklist you can read
+
+  - I split tangled files into clear parts, without changing what they do
+
+  - I fix the bugs at their cause and prove each fix with a test
+
+  - I hand it back with a build plan your AI tool can follow from here
+
+
+  I run the same tools on my own large project every day, so your code is mapped and checked
+  by them, not guessed at.
+packages:
+  basic:
+    name: Project Map and Checklist
+    description: A map of your app, what is broken, and what is left to finish it.
+    deliveryDays: 2
+    revisions: 1
+    price: 75
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
+  standard:
+    name: Fix the Blockers
+    description: Map and checklist, plus the top blocking bugs fixed and tested.
+    deliveryDays: 5
+    revisions: 2
+    price: 220
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
+  premium:
+    name: Finish the App
+    description: Everything above, tangled files split, and a build plan to done.
+    deliveryDays: 10
+    revisions: 3
+    price: 550
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
+faq:
+  - question: Which tools was it built with?
+    answer: Lovable, Bolt, Base44, Cursor, Replit or Claude Code all work. I need the code itself (a zip or a repo).
+  - question: Will you rewrite my app?
+    answer: No. I keep what works and change only what is broken or tangled, and each change is tested.
+  - question: Can I keep using my AI tool after?
+    answer: Yes. You get a project map and a build plan your AI tool can follow, so it stops guessing.
+requirements:
+  - What does the app do, and what is broken or unfinished right now?
+  - Who will use it, and on what? (web, phone, desktop; one person or many)
+  - What must it always do, and what must it never do?
+  - How will you check that it is done? (the test you will run, or what you will look at)
+  - Please share the code (zip or repo access), and any logins or data I need to start.

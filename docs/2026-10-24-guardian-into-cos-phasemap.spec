@@ -194,3 +194,26 @@ childEnv (lib/phase-close.js, tests/modules/run-all.js) uses .env correctly. The
 # exe is the compartment manager, MG13 CLI in the exe, MG14 live thumbnails).
 # Here: Guardian in its compartment (GD8) is listed in the built-in 'systems' category (MG10). Its data (GD5, the response store) is browsed in
 # MG12's Data tab only through Guardian's routes (MG_D3, §5.15).
+
+# ADDENDUM 2026-10-29 (0.60.288) — pre-clean before the compartment
+# James, 2026-10-29: "Well, first of all, let's clean it. Pre-clean it out". Archived to _archive/2026-10-29-guardian-preclean/ (README there):
+#   - guardian/mesh/ and guardian/routes/mesh.js: his 2026-09-06 "redundant and should be deleted", left behind by RF2;
+#   - guardian/guardian-api.js: unused, and calling routes that 404.
+# Kept: guardian-service.js (GD8's entry), dropzone.js (a standalone CLI), command-registry.js and agent-model-nodes.js (his features, built
+# and unwired — to wire, not to drop). Guardian: 82 → 67 files, 35,928 → 30,380 lines.
+
+## ADDENDUM 2026-10-29 — measured: what Guardian reaches outside its compartment
+James, 2026-10-29: "need it in a cos compartment then the component registry spine". The coder's reading: "it" = Guardian, following his
+"Is there any reason why guardian can't be compressed down into a plugin for nexus?" (to confirm).
+Run (anyone can repeat): guardian/guardian-service.js under cos/compartment/boundary.js, mode audit, allow [guardian/, node_modules/].
+86 files outside the wall load at boot: 51 in lib (the shared kernel), 35 in other systems. Guardian's own direct edges into other systems
+are six; everything else comes in behind them:
+- GD2 (primitives to the kernel): guardian-service.js → intelligence/baseline.js; server.js → intelligence/gap/hunter.js
+- GD3 (intelligence by route): server.js → intelligence/cfr/ledger.js (pulls cfr/*, causal/compound, lib/domain-nodes)
+- GD4 (by route): server.js → cortex/snapshot/index.js (pulls versionium/lib/snapshot.js); server.js → cos/playground/llm-lab.js
+- GD5 (one owner for the response store): guardian/lib/chat-transcripts.js → clear-glass/src/downloads/artifact-chat-index.js
+Through lib, not Guardian's own: lib/component-ledger.js → cortex/memory/jaa-db.js (→ tiers, lib/vector-memory → ollama/config.js), and
+loom/scanners/event-taxonomy-map.js reading every system's event-taxonomy.js. These are lib's crossings; they cross into Guardian's
+compartment only because lib is mounted whole.
+Guardian started and indexed its nodes in audit mode; enforce mode would refuse at the first of these. So GD8 is six edges away for
+Guardian's own code, plus the lib crossings above.

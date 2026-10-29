@@ -30,7 +30,9 @@ const SIGNS = Object.freeze({
 const PARTS = Object.freeze({
   overview: ['category', 'tags'],   // 0.60.283: tags too (Search tags, typed one by one)
   pricing: ['basic.name', 'standard.name', 'premium.name', 'basic.description', 'standard.description', 'premium.description',
-    'basic.delivery', 'standard.delivery', 'premium.delivery'],
+    'basic.delivery', 'standard.delivery', 'premium.delivery',
+    // 0.60.286 GM2 — James: "do everything you can ... to get fiverr operational": revisions and price were never filled
+    'basic.revisions', 'standard.revisions', 'premium.revisions', 'basic.price', 'standard.price', 'premium.price'],
 });
 
 function gigPage(read) {
@@ -78,7 +80,9 @@ function valueOf(gig, part) {
   if (part === 'category') return gig.category ? (gig.subcategory ? `${gig.category} > ${gig.subcategory}` : gig.category) : null;
   if (part === 'tags') return Array.isArray(gig.tags) && gig.tags.length ? gig.tags.slice(0, 5).join(', ') : null;   // 0.60.283
   const [tier, k] = String(part).split('.'); const p = gig.packages && gig.packages[tier]; if (!p) return null;
-  const v = k === 'delivery' ? (Number.isFinite(p.deliveryDays) ? String(p.deliveryDays) : null) : p[k];
+  const v = k === 'delivery' ? (Number.isFinite(p.deliveryDays) ? String(p.deliveryDays) : null)
+    : k === 'revisions' ? (p.revisions == null || p.revisions === '' ? null : /unlimited/i.test(String(p.revisions)) ? 'Unlimited' : String(p.revisions))   // 0.60.286 GM2
+    : p[k];
   return v === undefined || v === null || v === '' ? null : String(v);
 }
 

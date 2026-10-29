@@ -1295,3 +1295,19 @@
 #page-map-panel .pm-target { padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
 #page-map-panel .pm-acts { display: flex; gap: 4px; margin-top: 3px; }
 #page-map-panel pre { white-space: pre-wrap; font-size: 11px; margin: 4px 0; }
+
+/* 0.60.286 GM3 — the gig's fill menu (gig-menu.js): a row per part, a tick, its value in place, its result */
+.gig-menu { margin-top: 10px; border: 1px solid rgba(255,255,255,.12); border-radius: 6px; padding: 8px; font-size: 12px; }
+.gig-menu .gm-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+.gig-menu .gm-page { opacity: .7; flex: 1; }
+.gig-menu .gm-opts { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 8px; opacity: .9; }
+.gig-menu .gm-group { border: 1px solid rgba(255,255,255,.08); border-radius: 5px; margin: 6px 0; padding: 4px 6px; }
+.gig-menu .gm-group legend { font-weight: 600; padding: 0 4px; }
+.gig-menu .gm-row { display: grid; grid-template-columns: 18px minmax(80px, 34%) 1fr; gap: 4px 6px; align-items: start; padding: 3px 0; border-top: 1px solid rgba(255,255,255,.04); }
+.gig-menu .gm-row.gm-here .gm-label { color: #00f0c0; }
+.gig-menu .gm-edit input:not([type=checkbox]), .gig-menu .gm-edit select, .gig-menu .gm-edit textarea { width: 100%; box-sizing: border-box; font: inherit; }
+.gig-menu .gm-res { grid-column: 2 / 4; font-size: 11px; }
+.gig-menu .gm-res:empty { display: none; }
+.gig-menu .ok { color: #40e080; } .gig-menu .bad { color: #ff6080; }
+.gig-menu .gm-max { font-size: 10px; opacity: .7; }
+.gig-menu .gm-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; position: sticky; bottom: 0; background: inherit; }

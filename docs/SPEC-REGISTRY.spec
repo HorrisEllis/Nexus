@@ -1855,3 +1855,21 @@ spec:
 # "what about .node types for each language/code block for each agent?" Modules MOD-HISTORY-NODES, -WIRE, -DOOR (HN1–HN3, DONE 0.60.285);
 # HN4 (runs, activity, notes) and HN5 (a screen) open. Decisions HN_D1 (reuse .input/.response, expand the rest) and HN_D2 (one .code_block
 # type, language and agent are fields), by his axioms, his to overturn. Also addended: lib/node-schemas/schema.response (jobId widened).
+
+# ADDENDUM 2026-10-29 (0.60.286) — registered: docs/project-spine.spec (1.0.0) and docs/2026-10-29-finish-any-project-phasemap.spec
+# James: "take this, and import it into idearium, then create all the capability to finish this or any other project in the repo. convert mds,
+# hardcoded phasemaps, refactor tool for the architecture to use the component registry as the spine, decomposition tool …" · the same day: "like
+# type in the cli, determine context needed, build dag. search the project for context, ask user about any gaps, then contract, etc"
+# Modules MOD-IMPORT-KEEPS-TRACKED, -ADAPTERS, -SPINE, -REFACTOR, -SPLIT, -CONVERT, -DOOR, -SCREEN, -INTENT-FLOW, -INTENT-DOOR, -INTENT-SCREEN (FA0–FA10,
+# DONE 0.60.286). Decisions FA_D1 (browser.html, a reading to confirm), FA_D2 (the registry is the spine — IN3; to confirm), FA_D3, FA_D4.
+# Also addended: clear-glass/spec/gated-flows.spec gains MOD-GM1..GM3 (the Fiverr fill menu), tied to GM1–GM3 in
+# docs/2026-10-28-gated-flows-phasemap.spec; docs/2026-10-19-infrastructure-spine-phasemap.spec (slices of IN3, AD1, AD2, AD4).
+
+# ADDENDUM 2026-10-29 — registered: docs/2026-10-29-his-loop-phasemap.spec (mapped, nothing built)
+# James: "Beyond getting fiverr gigs working. We then need the applications, port folios, appointments, calender, emails …" · "What about
+# sorting some tools by intent." · "Each problem needs to build a dag using reverse end state reasoning. Then dynamically chunk until the llm is
+# capable or we have to switch" · "Cos can be used for any code recursively." Phases HL0–HL9, GP1; specs written per phase before code.
+
+# ADDENDUM 2026-10-29 (0.60.289) — registered: docs/2026-10-29-fiverr-income-phasemap.spec (FI0–FI14, the Fiverr chain from money back)
+# James: "Also, make a dependency graph for the fiverr gigs." Built from the end state backward, DAG-checked. The per-system document
+# docs/NEXUS-SYSTEMS-FOR-CODING.md and scripts/systems-report.js answer "a full document of each system and what it needs to get nexus coding".

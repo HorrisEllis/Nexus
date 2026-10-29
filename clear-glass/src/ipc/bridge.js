@@ -615,9 +615,11 @@ class IpcBridge {
       catch (e) { res.status(400).json({ error: e.message }); }
     });
     this.app.post('/cli/autofill/gig/fill', async (req, res) => {
-      const r = await this._gigFill({ gig: req.body?.gig, agentId: req.body?.agentId || 'default', minConfidence: req.body?.minConfidence || 'medium' });
+      const b = req.body || {};   // 0.60.286 GM2 — agents get the menu's only / replay / edits too
+      const r = await this._gigFill({ gig: b.gig, agentId: b.agentId || 'default', minConfidence: b.minConfidence || 'medium', only: b.only || null, replay: b.replay !== false, edits: b.edits || null });
       res.status(r.error ? (r.error === 'dom bridge unavailable' ? 503 : 400) : 200).json(r);
     });
+    this.app.post('/cli/autofill/gig/menu', async (req, res) => { res.json(await this._gigMenu({ gig: req.body?.gig || null, agentId: req.body?.agentId || 'default' })); });   // 0.60.286 GM2
     // §GA1 0.60.161 — one door for the co-pilot's "fill this in for me": use the written gig, else write from profile+offer, else ask
     this.app.post('/cli/autofill/gig/autofill', async (req, res) => {
       const r = await this._gigAutofill({ agentId: req.body?.agentId || 'default', offer: req.body?.offer || '', profileId: req.body?.profileId || null, minConfidence: req.body?.minConfidence || 'medium' });
@@ -1743,9 +1745,10 @@ class IpcBridge {
       if (!this.dom) return { error: 'dom bridge unavailable' };
       return require('../autofill/gig.js').detectGig(this.dom, gig, { agentId });
     });
-    ipcMain.handle('autofill:gig:fill', async (e, { gig, agentId = 'default', minConfidence = 'medium' } = {}) => this._gigFill({ gig, agentId, minConfidence }));
+    ipcMain.handle('autofill:gig:fill', async (e, { gig, agentId = 'default', minConfidence = 'medium', only = null, replay = true, edits = null } = {}) => this._gigFill({ gig, agentId, minConfidence, only, replay, edits }));
     ipcMain.handle('autofill:gig:assign', async (e, d = {}) => this._gigAssign(d));
     ipcMain.handle('autofill:gig:page', async (e, d = {}) => this._gigPage(d));                    // 0.60.224
+    ipcMain.handle('autofill:gig:menu', async (e, d = {}) => this._gigMenu(d));                    // 0.60.286 GM2 — the fill menu for the page in the tab
     ipcMain.handle('autofill:suggest', async (e, d = {}) => this._autofillSuggest(d));              // 0.60.267 AF3 — the chips
     ipcMain.handle('autofill:gig:setLast', async (e, { gig } = {}) => { try { if (gig && gig.title && this.autofillStore) { this.autofillStore.setLastGig(gig); return { ok: true }; } } catch (err) { return { ok: false, error: err.message }; } return { ok: false, error: 'no gig' }; });   // 0.60.267 — the panel's gig is the chips' gig
     ipcMain.handle('autofill:fillOne', async (e, d = {}) => this._autofillFillOne(d));              // 0.60.267 AF3 — a chip clicked
@@ -2341,7 +2344,7 @@ class IpcBridge {
   }
 
   // 0.60.281 AP1 — the package rows of the pricing page from gig.packages[tier].features (see _gigFill): { filled, failed, unlisted }
-  async _gigFeatures(agentId, gig) {
+  async _gigFeatures(agentId, gig, want = null) {
     const out = { filled: [], failed: [], unlisted: [] };
     const named = new Set();
     for (const tier of ['basic', 'standard', 'premium']) {
@@ -2349,6 +2352,7 @@ class IpcBridge {
       const column = tier.toUpperCase();
       for (const [row, value] of Object.entries(p.features)) {
         named.add(row.toLowerCase());
+        if (want && !want.has(`${tier}.feature.${row}`)) continue;   // 0.60.286 GM2 — unticked in the fill menu
         try {
           if (value === true || value === false) {
             const c = await this.driver.exec({ agentId, action: 'checkAt', column, row, checked: value, by: 'person' });
@@ -2370,7 +2374,20 @@ class IpcBridge {
     return out;
   }
 
-  async _gigFill({ gig, agentId = 'default', minConfidence = 'medium' } = {}) {
+  // 0.60.286 GM2 — the fill menu: every part of the gig as a row (gig-menu.js), ticked for the Fiverr page open in the tab; the human check said
+  async _gigMenu({ gig = null, agentId = 'default' } = {}) {
+    const g = gig || (this.autofillStore && this.autofillStore.getLastGig ? this.autofillStore.getLastGig() : null);
+    let page = null, pageWhy = 'no page read'; const hc = await this._humanCheckGate(agentId).catch(() => ({ pass: true }));
+    if (this.driver) { try { const read = await this.driver.exec({ agentId, action: 'readPage', by: 'person' }); const w = require('../autofill/gig-pages').gigPage(read); page = w.page; pageWhy = w.why; } catch (err) { pageWhy = err.message; } }
+    return { ok: true, ...require('../autofill/gig-menu').menu(g, page), pageWhy, humanCheck: hc && !hc.pass ? hc.why : null };
+  }
+
+  async _gigFill({ gig, agentId = 'default', minConfidence = 'medium', only = null, replay = true, edits = null } = {}) {
+    // 0.60.286 GM2 — James, 2026-10-29: "need to do better than a button, make a full menu with check boxes, adn drop downs if applicable."
+    // From the fill menu: edits (his values) put into the gig first; only (the ticked keys) filled; replay (his recorded choices) optional.
+    if (edits && typeof edits === 'object' && gig) gig = require('../autofill/gig-menu').apply(gig, edits);
+    const want = Array.isArray(only) ? new Set(only.map(String)) : null;
+    const wants = (k) => !want || want.has(k) || (k === 'category' && want.has('subcategory'));
     if (!this.dom) return { error: 'dom bridge unavailable' };
     if (!gig || !gig.title) return { error: 'write the gig first' };
     try { if (this.autofillStore) this.autofillStore.setLastGig(gig); } catch (_) {}   // §GA1a
@@ -2384,12 +2401,13 @@ class IpcBridge {
     let site = null; try { site = new URL(read && read.url).origin; } catch (_) {}
     const mem = require('../page/page-memory').shared();
     let r;
-    try { r = await require('../autofill/gig.js').fillGig(this.dom, gig, { agentId, minConfidence }); }
+    try { r = await require('../autofill/gig.js').fillGig(this.dom, gig, { agentId, minConfidence, only: want ? [...want] : null }); }
     catch (err) { return { error: err.message }; }
     r.page = where.page; r.pageWhy = where.why; r.dropdowns = []; r.learned = []; r.notFound = [];
     const valueOf = (part) => GP.valueOf(gig, part);   // 0.60.268: one reading of a gig part, shared with the chips
     const filledKeys = new Set((r.filled || []).map(f => f.key));
     for (const part of (where.page && GP.PARTS[where.page]) || []) {
+      if (!wants(part)) continue;
       const value = valueOf(part); if (value === null || value === undefined || value === '') continue;
       const learned = site && mem.target(site, GP.targetKey(where.page, part));
       const isChoice = part === 'category' || part.endsWith('.delivery');
@@ -2403,6 +2421,19 @@ class IpcBridge {
           r.learned.push({ key: part, selector: learned.selector }); continue;
         }
         if (filledKeys.has(part)) continue;
+        // 0.60.286 GM2 — revisions chosen in the tier's column on the Revisions row, read back; price typed in the Price row, read back
+        if (part.endsWith('.revisions')) {
+          const column = part.split('.')[0].toUpperCase();
+          const c = await this.driver.exec({ agentId, action: 'choose', column, row: 'Revisions', option: value, by: 'person' });
+          const g = await this.driver.exec({ agentId, action: 'readChoice', column, row: 'Revisions', is: value, by: 'person' });
+          if (!g.matches) throw new Error(`Revisions shows "${g.shown}" after the pick, not "${value}"`);
+          r.dropdowns.push({ key: part, ok: true, option: c.option, via: 'built-in' }); continue;
+        }
+        if (part.endsWith('.price')) {
+          const column = part.split('.')[0].toUpperCase();
+          const t = await this.driver.exec({ agentId, action: 'typeAt', column, row: 'Price', text: value, by: 'person' });
+          r.filled.push({ key: part, confidence: 'high', source: 'typeAt', value: t.value }); continue;
+        }
         if (part.endsWith('.delivery')) {
           const column = part.split('.')[0].toUpperCase();
           // 0.60.269 — James: "I want to be able to edit what you added." The pick is his node file now: the macro "Fiverr gig - choose
@@ -2434,9 +2465,9 @@ class IpcBridge {
     // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." The package rows come from the gig (features), never from code: a number or text
     // is chosen in that tier's column and row (the gated choose, read back), yes/no ticks or clears that row's checkbox (checkAt, read back).
     // The page's rows the gig has no value for are listed (r.features.unlisted), so he can add them to the gig.
-    if (where.page === 'pricing' && this.driver) r.features = await this._gigFeatures(agentId, gig);
+    if (where.page === 'pricing' && this.driver) r.features = await this._gigFeatures(agentId, gig, want);
     // 0.60.224 — his recorded choices for this page (Service type, the metadata boxes, the pricing rows …) replayed after the fill, as him
-    if (where.page && this.macroTool) {
+    if (where.page && this.macroTool && replay !== false) {
       let has = null; try { has = await this.macroTool.execute({ action: 'get', name: GP.macroName(where.page) }); } catch (_) {}
       if (has && !has.error && (has.macro || has.steps || has.ok)) {
         let m; try { m = await this.runMacroAsPerson({ name: GP.macroName(where.page), agentId, skipSnapshot: true, by: 'person' }); } catch (e) { m = { error: e.message }; }

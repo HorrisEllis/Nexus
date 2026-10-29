@@ -3955,6 +3955,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','convert'],                   'repo.convert'],                  // mds and hard-coded plans that would be converted
     ['POST',   ['api','repos',    ':uuid','convert'],                   'repo.convert.apply'],            // { paths?, apply } — md → spec, a spec's build plan → phasemap
     ['GET',    ['api','repos',    ':uuid','finish'],                    'repo.finish'],                   // one checklist to finish the project
+    ['POST',   ['api','repos',    ':uuid','intent'],                    'repo.intent'],                   // 0.60.286 FA9 { text, answers, write } — intent → context → DAG → found → gaps → contract
     ['POST',   ['api','repos',    ':uuid','notes'],     'repo.notes.add'],     // §0.60.6 — { body, title?, kind?, tags?, pinned? }
     ['GET',    ['api','my-projects'],                   'projects.overview'],
     ['GET',    ['api','raid','held'],                   'raid.held'],          // §0.60.78 RT1 — cortex's officiator: the agents' wait, each staged drop's tries
@@ -8288,7 +8289,7 @@ async function handle(req, res, route, query, body) {
     // files); Idearium reads the repo, shows the plan, and applies through its own versioned writer. GET never writes; a POST without
     // apply:true returns the plan only.
     case 'repo.spine': case 'repo.spine.write': case 'repo.refactor': case 'repo.split-candidates': case 'repo.split':
-    case 'repo.convert': case 'repo.convert.apply': case 'repo.finish': {
+    case 'repo.convert': case 'repo.convert.apply': case 'repo.finish': case 'repo.intent': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
       const SP = _require('../../lib/project-spine.js');
@@ -8314,6 +8315,29 @@ async function handle(req, res, route, query, body) {
         return { ok: true, via: 'repo-layer' };
       };
       const writeSpine = () => { const fresh = SP.merge(readSpine(), SP.scan({ files: _repoTextFiles(params.uuid, getRepoLayer().get(params.uuid)), project })); const w = getRepoLayer().writeTextFile(params.uuid, SP.SPINE_FILE, SP.text(fresh)); return { spine: fresh, error: w.error || null }; };
+      // 0.60.286 FA9 — James: "like type in the cli, determine context needed, build dag. search the project for context, ask user about any
+      // gaps, then contract, etc". The flow is lib/intent-flow.js (deterministic); the contract it builds is RAID's v2, validated here by RAID's
+      // own contract-gates (Idearium already reaches it) and saved through the repo layer only on write:true.
+      if (action === 'repo.intent') {
+        const IF = _require('../../lib/intent-flow.js');
+        const r = IF.run({ text: body.text, files, project, answers: body.answers || {}, spine: spineNow() });
+        if (!r.ok) return err(res, 400, r.error);
+        let written = null, problems = [];
+        if (r.contract) {
+          const CG = _require('../../cortex/core/raid/contract-gates.js');
+          problems = CG.validate(r.contract);
+          if (!problems.length && body.write === true) {
+            const NE = _require('../../lib/node-export.js');
+            const file = `contracts/${r.contract.uuid}.contract`;
+            const text = NE.toYaml(NE.wrap('contract', r.contract.uuid, r.contract, { context: 'lib/intent-flow.js (0.60.286 FA9)', tags: ['v2', 'intent'] }));
+            const a = await apply([{ path: file, after: text }], [], `contract from "${String(body.text).slice(0, 60)}"`);
+            if (!a.ok) return err(res, a.status || 500, a.error, { code: a.code || 'APPLY_FAILED' });
+            written = file;
+            getIdeaOS().emit('idearium.repo.intent.contract', { repoUuid: params.uuid, contract: r.contract.uuid, gates: r.contract.gates.length });
+          }
+        }
+        return ok(res, { repoUuid: params.uuid, ...r, needed: { chosen: r.needed.chosen, scored: r.needed.scored.slice(0, 8) }, problems, written });
+      }
       if (action === 'repo.spine') {
         const old = readSpine(); const sp = spineNow(); const drift = old ? SP.check(old, files) : null;
         const lim = Math.min(parseInt(query.limit, 10) || 400, 5000);

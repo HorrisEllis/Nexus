@@ -32,11 +32,15 @@ typed channels, a CLI, and an API (`skills/james-brooks/SKILL.md`, "The Cobalt C
   copilot, and every agent get the same powers through one door.
 - **Instance, 0.60.7:** "Versionium for every repo" is five commands in that table, each served by the same route the UI
   calls.
+- **Checkable:** `node -e "import('./idearium/cli/route-commands.js').then(m=>console.log(m.SPEC.length))"` counts the commands in the one
+  table. `tests/modules/test-change-record.test.js` CR-05 fails if two rows share a key.
 
 ### Specification and mapping before building
 
 - **Rule he set:** "map before build". It is AXIOMS §3.3, made a standing rule in docs/CLAUDE.md.
-- **Evidence:** 104 phasemaps. Each phase names its files, what it depends on, and the proof it must pass. Decisions
+- **Evidence:** 200 phasemaps in docs/ (count them: `git ls-files 'docs/*-phasemap.spec' | wc -l`, 2026-10-29). Each phase
+  names its files, what it depends on, and the proof it must pass. Since his 2026-10-20 rule ("everything needs to be speccced before
+  built"), the full specs must compile at full depth; `tests/modules/test-substrate-spec.test.js` checks every one of them, with its map. Decisions
   record their options with the chosen one quoted. Example: `docs/2026-10-13-projects-raid-and-gates-phasemap.spec`,
   section `decisions:`.
 
@@ -1382,3 +1386,55 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
     rows are data in the gig file and not code. He can add the next subcategory's rows himself.
 - **Checkable:** `tests/modules/test-gig-features.test.js` 3/3 and `tests/modules/test-opportunity-contacts.test.js` 6/6 (both drive
   Clear Glass); `versionium/changelogs/CHANGELOG-0.60.281.md`.
+
+### 2026-10-29 — 0.60.286: "create all the capability to finish this or any other project in the repo."
+- **His words:** "take this, and import it into idearium, then create all the capability to finish this or any other project in the repo.
+  convert mds, hardcoded phasemaps, refactor tool for the architecture to use the component registry as the spine, decomposition tool for
+  breaking up each component into it's own file and wire it into the spine." Later the same day: "like type in the cli, determine context
+  needed, build dag. search the project for context, ask user about any gaps, then contract, etc"
+- **Context:**
+  - He uploaded Emerge, a project of his made outside Nexus.
+  - Importing it showed Idearium silently dropping its tracked `lang/build/current` folder: every folder named `build` was skipped.
+  - Its plan lived inside its spec, where Nexus never looked.
+- **What it shows:**
+  - **Systems design, named as a pipeline.** His second message is a complete agent workflow written as one line, in an order that holds
+    up:
+    1. understand the intent;
+    2. find the context it needs;
+    3. order the work as a DAG;
+    4. search;
+    5. ask the human last, only about gaps;
+    6. then commit to a contract.
+
+    The code keeps that order verbatim.
+  - **Architecture direction.** "The component registry as the spine" is his IN3 plan from 2026-10-19, now applied to any project.
+- **Checkable:**
+  - The real Emerge zip went through the router:
+    - the tracked build folder is kept;
+    - `cie-eg.spec`'s plan became 17 phases, 9 ready to build, 0 DAG problems;
+    - 10 mds became specs;
+    - `emerge-kernel.js` split into 5 files with identical exports, verified by loading old and new apart;
+    - all 26 multi-component files split and verified in the sandbox.
+  - Tests: `test-project-spine` 8/8, `test-intent-flow` 4/4 and `test-gig-fill-menu` 3/3, each with a Clear Glass check.
+  - Changelog: `versionium/changelogs/CHANGELOG-0.60.286.md`.
+
+### 2026-10-29 — 0.60.287: "Bidirectional causal changing." · "Should I stop making this like it's a product and make it for me?"
+- **His words:**
+  - First: "Each problem needs to build a dag using reverse end state reasoning."
+  - Asked whether he meant working back from done: "Yes the same way I reason. Bidirectional causal changing."
+  - Earlier the same day: "Should I stop making this like it's a product and make it for me?"
+- **The call, against the alternative:**
+  - **Method.** The coder had built the "type what you want" flow forwards: from his words to the files, outwards. He named the method
+    instead: chain backward from the end state and forward from the change, and work only where they meet. That is bidirectional search
+    over cause and effect, a known technique in planning. He arrived at it from how he reasons himself.
+  - **Direction.** He chose one user (himself) and one loop (Fiverr, then applications) over a general product. Every step mapped after
+    that call follows that order.
+- **What it catches that forward-only planning misses.** In `test-intent-flow` IF-05:
+  - A change to `money.js`, with the end "the cart total", gives the path money → pricing → cart.
+  - `receipt.js` also uses money. It is flagged as a side effect to verify, not ignored.
+  - A change to the menu with the same end is **refused before any work is planned**. Nothing connects the two, which forward
+    planning cannot tell.
+- **Checkable:**
+  - `tests/modules/test-intent-flow.test.js`: 5/5, including IF-05 above, and IF-04 driving the Do box in Clear Glass;
+  - `docs/2026-10-29-his-loop-phasemap.spec`, decisions HL_D2 and HL_D3 with his words;
+  - `lib/intent-flow.js` `causal()`.
