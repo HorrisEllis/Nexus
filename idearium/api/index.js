@@ -326,10 +326,13 @@ try {
     if (t.unref) t.unref();
   }
   RV.setCommitter(async ({ repoUuid, message, causedBy, provenance }) => {
+    // 0.60.278 VE5 — §17.12 (James, 2026-10-29: "full changes, and versions have to be pushed to versionium? enforce it everywhere") and
+    // his 0.40.0 words ("needs to snapshot every accept, every change"): the switch versions.every_change (the coder's, 0.40.0) no longer
+    // turns recording off. It is kept (§0.3), and a change made while it is off is recorded and says so.
     let on = true; try { on = getIdeariumValue('versions.every_change') !== false; } catch (_) {}
-    if (!on) return { ok: true, commitId: null, skipped: 'versions.every_change is off' };
+    const overrode = on ? null : 'versions.every_change is off, but every change is recorded (§17.12)';
     const r = await _commitRepoSnapshotFor(repoUuid, { message, causedBy, provenance });
-    return r.ok ? { ok: true, commitId: r.data.commitId, changed: r.data.files ? r.data.files.counts : null } : { ok: false, error: r.error };
+    return r.ok ? { ok: true, commitId: r.data.commitId, changed: r.data.files ? r.data.files.counts : null, ...(overrode ? { note: overrode } : {}) } : { ok: false, error: r.error };
   });
 } catch (_) {}
 // §0.60.41 RN1 — Nexus's releases recorded in Versionium once Versionium answers: idempotent, so every boot is safe; a
@@ -3306,7 +3309,7 @@ const ROUTE_CAP = {
   'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
   'phases.census': CAPS.READ_IDEAS,   // 0.60.188 CNS1 — reads only
   'repo.changelog': CAPS.READ_IDEAS, 'ledger.out': CAPS.READ_IDEAS,   // 0.60.190 APV3/APV4 — read only
-  'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS, 'releases.changes': CAPS.READ_IDEAS, 'releases.changelog': CAPS.READ_IDEAS,   // §0.60.41 RN1 · 0.60.72 RN2 · 0.60.274
+  'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS, 'releases.changes': CAPS.READ_IDEAS, 'releases.changelog': CAPS.READ_IDEAS, 'versionium.pending': CAPS.READ_IDEAS,   // §0.60.41 RN1 · 0.60.72 RN2 · 0.60.274
   'repo.integrity': CAPS.READ_IDEAS, 'repo.integrity.notes': CAPS.WRITE_IDEAS,
   'route.assess': CAPS.READ_IDEAS,   // §0.60.8
   'checks.list': CAPS.READ_IDEAS, 'checks.run': CAPS.READ_IDEAS,   // §0.60.33 QA1 — the check catalogue; a run only reads and parses
@@ -3820,7 +3823,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','releases'],                                     'releases.list'],            // ?repository=nexus (default)
     ['POST',   ['api','releases','sync'],                              'releases.sync'],             // { all: true } → every release's commits
     ['GET',    ['api','releases','changes'],                           'releases.changes'],          // §0.60.72 RN2 ?since=0.60.47 · &write=1
-    ['GET',    ['api','releases','changelog'],                         'releases.changelog'],        // 0.60.274 ?version=x.y.z — its changelog's text (versionium/changelogs)
+    ['GET',    ['api','releases','changelog'],                         'releases.changelog'],
+    ['GET',    ['api','versionium','pending'],                         'versionium.pending'],        // 0.60.278 VE5 — records waiting for Versionium (§17.12)        // 0.60.274 ?version=x.y.z — its changelog's text (versionium/changelogs)
     ['POST',   ['api','repos',    ':uuid','history','import'],         'repo.history.import'],      // { zips:[{name, contentBase64}], dryRun, allowSecrets }
     // §0.60.7 PL4 — the import checks (lib/import-checks.js): GET reads them; POST also writes them as the repo's notes
     ['GET',    ['api','repos',    ':uuid','integrity'],                'repo.integrity'],
@@ -6027,6 +6031,8 @@ async function handle(req, res, route, query, body) {
       if (!r.ok) return err(res, r.status === 404 ? 404 : 502, r.status === 404 ? `no changelog for ${query.version || 'the running release'} (versionium)` : `Versionium is down or refused: ${r.error}`);
       const { ok: _ok, ...c } = r.data || {}; return ok(res, c);
     }
+    // 0.60.278 VE5 — what waits for Versionium in nexus-client's buffer (every process's file): it is delivered when Versionium answers
+    case 'versionium.pending': return ok(res, _require('../../lib/versionium-record.js').pending());
     case 'releases.changes': {
       const q = new URLSearchParams({ ...(query.since ? { since: query.since } : {}), ...(query.write === '1' ? { write: '1' } : {}) }).toString();
       const r = await _versionium('GET', `/api/versionium/nexus/changes${q ? `?${q}` : ''}`, null, 60000);
@@ -10988,7 +10994,9 @@ function _nexusSelfSync({ only = null, force = false, shouldPause = null } = {})
           // the commit fails (§0.3)
           const RIq = _require('../../lib/repo-inject.js');
           const changes = RIq.takeGateEntries(system);
-          const where = `${system === '(nexus)' ? 'nexus index' : 'nexus/' + system} @ snapshot ${String(snapshot).slice(0, 12)}`;
+          // 0.60.278 VE4 — each snapshot names the running Nexus version, so a version is found among them (§17.12)
+          let nexusVersion = null; try { nexusVersion = _require('../../lib/release-version.js').current().version; } catch (_) {}
+          const where = `${system === '(nexus)' ? 'nexus index' : 'nexus/' + system} @ snapshot ${String(snapshot).slice(0, 12)}${nexusVersion ? ` · Nexus ${nexusVersion}` : ''}`;
           const r = await commitRepoSnapshot({
             repo, repoDir: dir, message: changes.length ? `${changes[0].title}${changes.length > 1 ? ` (+${changes.length - 1} more)` : ''} · ${where}` : where,
             ...(changes.length ? { provenance: { by: [...new Set(changes.map(c => c.approvedBy).filter(Boolean))], refs: changes.map(c => `inject:${c.inject}`), files: changes.flatMap(c => c.files), labels: [], checkpoint: null, at: Date.now(), changelog: changes } } : {}),

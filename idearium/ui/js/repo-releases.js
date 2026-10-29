@@ -27,6 +27,8 @@
       el.innerHTML = `<div class="ds"><div class="ds-label">releases</div><div class="ds-mono">could not read releases from Versionium: ${esc(e.message)}</div></div>`;
       return;
     }
+    // 0.60.278 VE5 — James, 2026-10-29: "full changes, and versions have to be pushed to versionium?" (§17.12). What still waits to reach it.
+    S.pending = await api('/api/versionium/pending', {}, 8000).catch(() => null);
     if (S.repo !== repo.uuid) return;
     draw();
   }
@@ -41,7 +43,9 @@
         <span class="vx-grow"></span>
         ${S.nexus ? `<button class="vx-chip" onclick="releaseChanges()" title="every commit since a release, under the release that shipped it">changes since…</button>
         <button class="vx-chip" onclick="syncReleases()" title="record every release and its commits in Versionium">${missing ? `sync (${missing} without commits)` : 'sync'}</button>` : ''}
-      </div>`;
+      </div>${S.pending ? (S.pending.count
+        ? `<div class="ds-mono rel-pending" title="made while Versionium was down; delivered when it answers, never dropped (§17.12)">${S.pending.count} change${S.pending.count === 1 ? '' : 's'} waiting for Versionium, the oldest since ${esc(new Date(S.pending.oldest).toLocaleString())}</div>`
+        : `<div class="ds-mono rel-pending ok">every change and version is in Versionium</div>`) : ''}`;
     const row = (r) => {
       const n = Array.isArray(r.commits) ? r.commits.length : null;
       const open = S.open === r.version;

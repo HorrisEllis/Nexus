@@ -332,3 +332,24 @@ James, 2026-10-29, choosing (a) over the coder's recommended (b): "a"
   `POST /api/versionium/nexus/releases/sync`) and never requires its code. Scripts and tests may require it.
 - What reads `lib/version.js` stays in lib (`lib/release-version.js`: current, fromFiles, agreement over lib's own places, quoteOf,
   lineOf, lines).
+
+## ADDENDUM 2026-10-29 (0.60.278) — every change and every version goes to Versionium, in full (§17.12)
+James, 2026-10-29: "can you add that to claude. full changes, and versions have to be pushed to versionium? enforce it everywhere that you'd
+find it. maybe the axioms"
+- **The law.** `docs/AXIOMS-v3.1.md` §17.12: wherever a change or a version is made, it is recorded in Versionium with the whole change:
+  - each path before and after (past 256 KB, their hashes and where the bytes are);
+  - who made it, why, and the version it belongs to.
+- **One way to record.** `lib/versionium-record.js` `record()`. It goes through `lib/nexus-client.js` `postDurable`: if Versionium is
+  down, the record waits in the buffer and is delivered by `drainBuffer`. Never drop a record, and never block the change on it. Do not
+  write a second recorder.
+- **Where it is enforced (docs/2026-10-29-versionium-everywhere-phasemap.spec):**
+  - the Nexus tree (the nexus-self sync, each snapshot naming the running version);
+  - every Idearium repo's versions and releases;
+  - Nexus's releases with every release's commits;
+  - each nexus-self apply, failed apply and rollback;
+  - each update by nexus-update.
+- **When you add a place that makes a change or a version,** record it there with `record()`, and add the place to that map's audit.
+  Reviewing, treat a change or version that is not in Versionium as a gap to close.
+- **The coder's own releases.** This sandbox cannot reach his Versionium. A release reaches it on his machine: the boot sync records the
+  release and its commits, and the nexus-self sync records the tree as that version. `versionium pending` (and the line in Idearium's
+  Releases view) shows what is still waiting.

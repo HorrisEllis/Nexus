@@ -46,6 +46,11 @@ historical record, not edited further.*
 > is the only writer and the canonical reader, and the others go through its API. One quick-reference
 > line added for it. Nothing else in this file changed.
 
+> **§ADDENDUM 2026-10-29 (b)** — James: "can you add that to claude. full changes, and versions have to be pushed to versionium? enforce it
+> everywhere that you'd find it. maybe the axioms". Added §17.12 (Group 17, after §17.11): every change and every version is recorded in
+> Versionium, in full; a record made while it is down waits in a durable buffer. The wording is the coder's, and "in full" is the coder's
+> reading of "full changes" (each path before and after), to confirm. One quick-reference line added. Nothing else in this file changed.
+
 
 ---
 
@@ -495,6 +500,10 @@ A cheap path — a cache hit, a fuzzy-reuse candidate, a skipped soft check — 
 A "faster," "cheaper," or "better" claim is only as good as the measurement behind it. Non-comparable axes — model-call count, storage bytes, dispatch latency — are never bundled into one aggregate multiplier. Every claim names the file and method that produced it, and reports the unfavorable cases alongside the favorable ones.
 *↳ WARP v1.4 explicitly discarded its own earlier "10x-35x cheaper, 15x-50x faster" claim for having no benchmark behind it, replaced it with per-mechanism measurements, and reported a case where one of its own optimizations (delta-cache on small objects, ~90 bytes) actually *lost* to plain storage rather than omitting it. That's §0.1 and §0.0 (reality is authority, never distort reality) enforced against the specific temptation to round a mixed result up to a marketing number.*
 
+**§17.12 Every Change and Every Version Is Recorded in Versionium, in Full** *(2026-10-29, on his word)*
+Wherever a change or a version is made, it is recorded in Versionium, the owner of versions (§5.15). That covers code, the Nexus tree, a repo, a release, an applied change pack, an update or a rollback. The record carries the change in full: each path before and after (or, past a size cap, their hashes and where the bytes are, said), who made it, why, and the version it belongs to. A record made while Versionium is down waits in a durable buffer and is delivered when it answers. It is never dropped and never blocks the change (§5.15 rule 3, §0.3). A version or change that exists anywhere but not in Versionium is a gap, found and closed, not tolerated.
+*↳ James, 2026-10-29: "can you add that to claude. full changes, and versions have to be pushed to versionium? enforce it everywhere that you'd find it. maybe the axioms". §17.5 (every output has provenance) and §17.6 (always auditable) say a change must be traceable; §17.12 names where the trace lives (Versionium, the one owner) and what it holds (the whole change, not a pointer to it).*
+
 ---
 
 ## Part II — Flexible Principles
@@ -653,6 +662,7 @@ A "faster," "cheaper," or "better" claim is only as good as the measurement behi
 §17.9  Evolution must be measurable.
 §17.10 Verify before you promote. Cost cuts may skip soft checks, never hard ones.
 §17.11 Every performance claim names its benchmark.
+§17.12 Every change and every version is recorded in Versionium, in full; a record made while it is down waits, never dropped.
 ```
 
 > **§** End-state: as reliable, resilient, and flexible as possible — while remaining fluid.

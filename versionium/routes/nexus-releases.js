@@ -34,7 +34,9 @@ async function handle(req, res, { method, pathname, url }) {
   if (pathname === '/api/versionium/nexus/releases' && method === 'GET') { json(res, 200, { ok: true, releases: NR.read() }); return true; }
   if (pathname === '/api/versionium/nexus/releases/sync' && method === 'POST') {
     const b = await readBody(req).catch(() => ({})) || {};
-    json(res, 200, await NR.sync(_self, { commits: b.all ? 'all' : (b.commits === false ? null : 'recent') }));
+    // 0.60.278 VE4 — "full changes" (§17.12): every release's commits by default; { recent: true } for the last ~30 only. Idempotent:
+    // a release already held gets only what it lacked (versionium/lib/releases.js release(), nothing rewritten)
+    json(res, 200, await NR.sync(_self, { commits: b.recent ? 'recent' : (b.commits === false ? null : 'all') }));
     return true;
   }
   if (pathname === '/api/versionium/nexus/changelog' && method === 'GET') {

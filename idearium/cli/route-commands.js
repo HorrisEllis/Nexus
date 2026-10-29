@@ -240,6 +240,14 @@ export const SPEC = [
   { key: 'system.changelog', repo: false, usage: 'system changelog [x.y.z]', about: "one release's changelog (versionium/changelogs/CHANGELOG-<version>.md); no version: the running release",
     req: (a) => ({ method: 'GET', path: `/api/releases/changelog${a.args && a.args[0] ? `?version=${encodeURIComponent(a.args[0])}` : ''}` }),
     print: (d, a, h) => { console.log(h.c.dim(`  ${d.rel}`)); console.log(d.text); } },
+  // 0.60.278 VE5 — James, 2026-10-29: "full changes, and versions have to be pushed to versionium?" (§17.12). What still waits to reach it.
+  { key: 'versionium.pending', repo: false, usage: 'versionium pending', about: 'every change or version still waiting to reach Versionium (it was down when it was made); delivered when it answers, never dropped',
+    req: () => ({ method: 'GET', path: '/api/versionium/pending' }),
+    print: (d, a, h) => {
+      if (!d.count) return console.log(h.c.mint('  nothing waiting: every change and version is in Versionium'));
+      console.log(h.c.amber(`  ${d.count} waiting for Versionium, the oldest since ${new Date(d.oldest).toLocaleString()}`));
+      for (const it of d.items.slice(0, 20)) console.log(`  ${h.c.dim(new Date(it.queuedAt).toISOString().slice(0, 16).replace('T', ' '))}  ${it.path}  ${it.what || ''}`);
+    } },
   // §0.60.72 RN2 — James: "tell me all the recent changes. i want a changelog for each change or diff." Written from git.
   { key: 'system.changes', repo: false, usage: 'system changes [--since x.y.z] [--write]', about: 'every change since a release: each commit under the first release that contains it, with its files (written from git, not by hand); --write saves CHANGES.md',
     req: (a) => ({ method: 'GET', path: `/api/releases/changes?${new URLSearchParams({ ...(a.flags.since ? { since: String(a.flags.since) } : {}), ...(a.flags.write ? { write: '1' } : {}) })}`, timeoutMs: 120000 }),

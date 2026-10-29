@@ -160,7 +160,7 @@ put('later.js', 'later'); const cAfter = commit('a change after the last release
     await w.renderReleases({ uuid: 'gd', nexusSelf: { role: 'system', system: 'guardian' } });
     assert.ok(/releases \(1\) · touching guardian/.test(text()) && /v0\.60\.2/.test(text()) && !/v0\.60\.3/.test(text()), text());
     await w.renderReleases({ uuid: 'repo-1' });
-    assert.strictEqual(calls[calls.length - 1], '/api/repos/repo-1/releases', 'an ordinary repo reads its own');
+    assert.strictEqual(calls.filter(c => c !== '/api/versionium/pending').pop(), '/api/repos/repo-1/releases', 'an ordinary repo reads its own');   // 0.60.278 VE5 — the view also asks what waits for Versionium
     const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8'), html = fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8');
     assert.ok(/id="rel-index"/.test(app) && /renderReleases\(repo\)/.test(app) && /js\/repo-releases\.js/.test(html));
   });
