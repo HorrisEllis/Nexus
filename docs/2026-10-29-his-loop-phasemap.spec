@@ -46,6 +46,24 @@ decisions:
       backward, a precondition the change never touches (asked, not assumed); reached only forward, a side effect to verify; nothing reached
       from both, the change cannot cause the end state — said before any work is done. Built as FA11 in docs/2026-10-29-finish-any-project-phasemap.spec.
 
+  HL_D4_the_gap_graph:
+    status: "DECIDED 2026-10-29 — his idea; how it joins the existing parts is the coder's reading, to confirm"
+    chosen: >-
+      James, 2026-10-29, right after the bidirectional chain was built: "Wait. What if we use each step in the bidirectional chaining, as an
+      event gate. A gap that needs filling. A gap graph? Each a condition as a compartment condition to pass the gate. Raid or cos is built for
+      end state reasoning." The chain's steps stop being a plan and become live state: every node is a gap, open until its condition holds;
+      the edges between them make the gap graph; a gate opens on the event that closes its gap; the condition is checked inside a compartment.
+      Three parts that exist and were never joined: (1) the gap lifecycle (docs/gap-lifecycle.spec, intelligence/gap/predicate.js, phase 23.7)
+      — a gap is an open loop with a checkable predicate, closed only when the predicate is false AND an artifact exists; (2) RAID's compartment
+      engine (lib/compartment-engine.js, phase 25; "Contract as the end state", cortex/core/raid/contract-intake.js checkEndState) — work runs
+      in a compartment with a frozen constraint frame, PASS commits its delta, FAIL rewinds; (3) the v2 contract's gates (contract-gates.js) —
+      depends_on, pass_when, evidence. The coder's reading of "Raid or cos": RAID holds the condition and the end-state verdict (its compartment
+      engine is the logic); COS holds the process when the gap's work runs code (its compartment is the wall, cos/compartment/boundary.js).
+      Each does its own job (§5.15). Mapping: a chain node → a gap (predicate: its condition is not yet true; artifact: what proves it); a
+      precondition that holds → a gap already closed (its evidence attached); a missing one → an open gap asked of him; a side effect → a gap
+      "still works"; the gate on a gap opens when verifyClosure says closed; a gap that will not close is split into smaller gaps, or moved
+      to the next agent (HL3) — chunking is splitting a gap.
+
 phases:
   HL0_nexus_runs_on_his_pc:
     status: OPEN
@@ -102,3 +120,9 @@ phases:
     depends_on: [HL_D1_cos_hosts_any_code, HL0_nexus_runs_on_his_pc]
     files: [guardian/server.js, cos/app/runtime.js]
     does: "Guardian loadable as its own process or hosted (COS, per HL_D1), keeping :7820; one fewer process on his PC"
+  HL10_the_gap_graph:
+    status: OPEN
+    depends_on: [HL_D4_the_gap_graph, HL2_reverse_end_state_dag, HL3_chunk_until_capable_or_switch]
+    files: [lib/intent-flow.js, intelligence/gap/predicate.js, lib/compartment-engine.js, cortex/core/raid/contract-gates.js]
+    does: "the chain becomes the gap graph: each node a gap with a predicate and the artifact that closes it; each gate an event gate opened by the gap's closure; each condition checked in a RAID compartment (PASS commits, FAIL rewinds), the work in a COS compartment when it runs code; a stuck gap split or moved on"
+
