@@ -199,3 +199,13 @@ spec:
 # API: POST /api/repos/:uuid/desktop/:op, GET …/desktop/checkpoints. As decided: a 9p (or vvfat) shared desktop refuses
 # live checkpoints, said. Open: the `cos vm pause|resume|snapshot` CLI verbs over the same module; the desktop window's
 # toolbar (UI2). Proof: tests/modules/test-vm-control.test.js 7/7 against a stand-in QEMU speaking QMP.
+
+# ── ADDENDUM 2026-10-29 — categories and cos.exe as the full compartment manager (his) ──
+# James, 2026-10-29: "catagories using either the architypes or the templates, with a full manager and editor, with the schemas, then catagories
+# which can be managed, including systems which would then list each system compartment. also really need cos.exe to be a fully compartment
+# manager with controls for the rewind engine, diagnostic tools, versions, data browser and tools. cli access. index.html/ui for the
+# thumbnail. look at all of the cos phases, and add all of this to them." · and: "yes, clear glass macros and settings too."
+# Mapped in full in docs/2026-10-24-cos-manager-phasemap.spec (addendum 2026-10-29: MG10 categories, MG11 the category manager UI, MG12 the
+# exe is the compartment manager, MG13 CLI in the exe, MG14 live thumbnails).
+# Here: VM1_control_like_vmware (pause, resume, checkpoint, rewind on QEMU) is MG12's Rewind tab for a VM-backed compartment. The open `cos vm …`
+# verbs above are what that tab and MG13's CLI call.

@@ -42,18 +42,21 @@ packages:
     deliveryDays: 2
     revisions: 1
     price: 40
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   standard:
     name: Multi-Page Task
     description: A task across several pages or a spreadsheet, with checks.
     deliveryDays: 5
     revisions: 2
     price: 120
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   premium:
     name: Full Workflow
     description: A full repeatable workflow with macros, data import and a guide.
     deliveryDays: 9
     revisions: 3
     price: 300
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
 faq:
   - question: Will it submit forms for me?
     answer: Only if you ask for that. By default it fills everything and leaves the final submit to you.

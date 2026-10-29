@@ -80,7 +80,7 @@ const SCHEMA = {
     // Which extensions become CHUNKS — no longer a filter on which files
     // are IMPORTED. That distinction is the fix: a .png is imported as a
     // real file and simply never chunked.
-    text_ext:       { default: ['.js', '.ts', '.jsx', '.tsx', '.json', '.md', '.txt', '.py', '.html', '.css', '.yml', '.yaml', '.spec', '.sh'], copilot_writable: true, type: 'array' },
+    text_ext:       { default: ['.js', '.ts', '.jsx', '.tsx', '.json', '.md', '.txt', '.py', '.html', '.css', '.yml', '.yaml', '.spec', '.sh', '.mjs', '.cjs', '.eg', '.toml'], copilot_writable: true, type: 'array' },
     verify_hashes:  { default: true, copilot_writable: true, type: 'boolean' },
   },
 

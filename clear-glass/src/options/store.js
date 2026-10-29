@@ -300,6 +300,14 @@ class NexusOptions {
 
   /** _persist() — the one real place this store writes: one JAA row per option key. */
   _persist() {
+    // 0.60.279 VE6 — James, 2026-10-29: "yes, clear glass macros and settings too." (§17.12) Each burst of saves goes to Versionium: which
+    // keys changed, before → after, secrets redacted (lib/versionium-record.js settingsRecorder; buffered while it is down; never blocks).
+    try {
+      if (this._lastSaved === undefined) { try { this._lastSaved = JSON.parse(JSON.stringify(this._kv().load() || {})); } catch (_) { this._lastSaved = {}; } }
+      if (!this._toVersionium) this._toVersionium = require('../../../lib/versionium-record.js').settingsRecorder({ kind: 'clear-glass.settings', system: 'clear-glass', label: 'Clear Glass settings' });
+      this._toVersionium(this._lastSaved, this.data);
+      this._lastSaved = JSON.parse(JSON.stringify(this.data || {}));
+    } catch (_) { /* the save is what matters; a record that cannot be made is said by pending() and the next save */ }
     this._kv().replaceAll(this.data);
   }
 

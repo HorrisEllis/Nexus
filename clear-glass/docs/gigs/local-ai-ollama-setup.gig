@@ -42,18 +42,21 @@ packages:
     deliveryDays: 1
     revisions: 1
     price: 40
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   standard:
     name: Tuned for Your Work
     description: Models chosen for your tasks, a chat interface and a guide.
     deliveryDays: 3
     revisions: 2
     price: 100
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   premium:
     name: Local AI in Your Tools
     description: A script or small app that uses your local model in your workflow.
     deliveryDays: 6
     revisions: 3
     price: 250
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
 faq:
   - question: Will it run on my computer?
     answer: >-

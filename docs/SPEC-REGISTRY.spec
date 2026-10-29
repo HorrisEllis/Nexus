@@ -1838,3 +1838,20 @@ spec:
 # postDurable) and VE_D2 ("full" = each path before → after), and phases VE0–VE5 (the law §17.12, the recorder, nexus-self applies,
 # updates, releases with all their commits, tree snapshots naming the version, the waiting line). DONE 0.60.278.
 # Also addended 2026-10-29: docs/2026-10-07-versionium-releases-phasemap.spec (VS1–VS4, his (a), 0.60.277).
+
+# ADDENDUM 2026-10-29 (0.60.281) — registered: docs/2026-10-29-gigs-contacts-snowflake-phasemap.spec (1.0.0)
+# James: "update the gig files. also capturing the contact info for job applications. also snowflake plugin support to macros and
+# automation. maybe a calander or add google or apple calender?" · "Guardian picker." Decisions AP_D1–AP_D4, SN_D1; phases AP1 (a gig's
+# package rows), AP2–AP4 (contacts: backend, route/command/tool, Settings › Applications), SN1 (Snowflake as a step) DONE 0.60.281;
+# CAL0 (calendar) and GP0 (Guardian picker) open, his. Also addended: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec (AP1).
+
+# ADDENDUM 2026-10-29 (0.60.284) — registered: docs/automation-pipelines.spec (1.0.0) and docs/2026-10-29-pipelines-phasemap.spec
+# James: "making a pipeline and workflow feature and include the macros and automation". Modules MOD-PIPELINE, -ROUTES, -COMMANDS, -UI
+# (PL1–PL4, DONE 0.60.284) and -ORCHESTRATOR (PL5, open: needs AE2/AE3). Also addended: clear-glass/spec/gated-flows.spec gains MOD-KB1..KB7
+# (0.60.275–0.60.280 had been built without their modules), tied to KB1–KB7 in docs/2026-10-28-gated-flows-phasemap.spec.
+
+# ADDENDUM 2026-10-29 (0.60.285) — registered: docs/idearium-history-nodes.spec (1.0.0) and docs/2026-10-29-history-nodes-phasemap.spec
+# James: "i want all the history in idearium saved as nodes per unit. like a .reponse, .input, all of the taxonomy and expand if needed." ·
+# "what about .node types for each language/code block for each agent?" Modules MOD-HISTORY-NODES, -WIRE, -DOOR (HN1–HN3, DONE 0.60.285);
+# HN4 (runs, activity, notes) and HN5 (a screen) open. Decisions HN_D1 (reuse .input/.response, expand the rest) and HN_D2 (one .code_block
+# type, language and agent are fields), by his axioms, his to overturn. Also addended: lib/node-schemas/schema.response (jobId widened).

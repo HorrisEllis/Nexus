@@ -88,6 +88,10 @@ class ClearDriver {
       case 'resolve':        return this._resolve(agentId, args);    // 0.60.49 SP1 — a semantic address → its element
       case 'select':         return this._select(agentId, args);
       case 'choose':         return this._choose(agentId, args);
+      case 'readChoice':     return this._readChoice(agentId, args);   // 0.60.280 KB4 — a macro step's choice gate
+      case 'net':            return this._net(agentId, args);          // 0.60.281 SN1 — Snowflake as a step (src/net/step.js)
+      case 'checkAt':        return this._checkAt(agentId, args);      // 0.60.281 AP1 — the checkbox at a column and a row, to a state, read back
+      case 'rowLabels':      return this._rowLabels(agentId, args);    // 0.60.281 AP1 — the row labels of a priced table (left of a column)
       case 'check':          return this._check(agentId, args);
       case 'setValue':       return this._setValue(agentId, args);
       case 'pressKey':       return this._pressKey(agentId, args);
@@ -726,11 +730,11 @@ class ClearDriver {
   }
   _pause(span) { const [a, b] = Array.isArray(span) ? span : [span, span]; return this._sleep(a + Math.random() * Math.max(0, b - a)); }
 
-  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'auto', openWait = [600, 1100], pickWait = [300, 650], settleWait = [500, 900], optionsWaitMs = 8000 } = {}) {
+  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'auto', openWait = [600, 1100], pickWait = [300, 650], settleWait = [500, 900], optionsWaitMs = 8000, pick = 'auto', keys = null, keysFor = null } = {}) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
     if (option === undefined || option === null || option === '') throw new Error('choose requires option');
-    if (!selector && !column) throw new Error('choose requires selector, or column with row or shows');
+    if (!selector && !column && !showsText) throw new Error('choose requires selector, column with row or shows, or shows alone');   // 0.60.283: shows alone (the Overview's SELECT A CATEGORY)
     const OM = require('../page/option-match');
     const found = await this._evalJs(wc, `(function(sel, col, row, showsText){
       function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
@@ -740,15 +744,16 @@ class ClearDriver {
       var trig = null;
       if (sel) { try { trig = document.querySelector(sel); } catch (_) {} if (!trig) return { error: 'no element for ' + sel }; }
       else {
-        var heads = byText(col); if (!heads.length) return { error: 'no column headed "' + col + '" on the page' };
-        var h = heads[0].getBoundingClientRect();
+        // 0.60.283 — no column: the dropdown is found by the text it shows anywhere on the page (Fiverr's SELECT A CATEGORY)
+        var h = null;
+        if (col) { var heads = byText(col); if (!heads.length) return { error: 'no column headed "' + col + '" on the page' }; h = heads[0].getBoundingClientRect(); }
         var band = null;
         if (row) { var rows = byText(row); if (!rows.length) return { error: 'no row labelled "' + row + '" on the page' };
           var rl = rows[0], box = (rl.closest('tr') || rl.parentElement || rl).getBoundingClientRect(); band = { top: box.top, bottom: box.bottom }; }
         var cands = [];
         document.querySelectorAll('select,[role="combobox"],[aria-haspopup],button,[tabindex],div,span').forEach(function(el){
           if (!vis(el)) return; var r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-          if (cx < h.left || cx > h.right) return;
+          if (h && (cx < h.left || cx > h.right)) return;
           if (band && (cy < band.top || cy > band.bottom)) return;
           if (!band && showsText && norm(el.textContent) !== norm(showsText)) return;
           if (!band && !showsText) return;
@@ -757,7 +762,7 @@ class ClearDriver {
         trig = cands.find(function(el){ return el.tagName === 'SELECT'; })
             || cands.find(function(el){ return el.getAttribute('role') === 'combobox' || el.hasAttribute('aria-haspopup'); })
             || cands.filter(function(el){ return !cands.some(function(o){ return o !== el && el.contains(o); }); })[0] || null;
-        if (!trig) return { error: 'no dropdown in column "' + col + '"' + (row ? ' and row "' + row + '"' : ' showing "' + showsText + '"') };
+        if (!trig) return { error: (col ? 'no dropdown in column "' + col + '"' : 'no dropdown') + (row ? ' and row "' + row + '"' : ' showing "' + showsText + '"') };
       }
       window.__cgChooseN = (window.__cgChooseN || 0) + 1;
       trig.setAttribute('data-cg-choose', String(window.__cgChooseN));
@@ -820,43 +825,154 @@ class ClearDriver {
     const optSel = `[data-cg-opt="${m.index}"]`;
     const readShown = () => this._evalJs(wc, `(function(){ var t = document.querySelector(${JSON.stringify(trigSel)}); return t ? (t.innerText || t.textContent || '').replace(/\\s+/g, ' ').trim() : null; })()`);
     const isOpen = () => this._evalJs(wc, `(function(){ var o = document.querySelector(${JSON.stringify(optSel)}); return !!(o && o.isConnected); })()`).catch(() => false);
-    const tried = [];
-    await this._waitResponsive(wc);
-    const picked = await this._humanPointer(agentId, { selector: optSel, do: 'click', via, label: m.option, scroll: 'within' });
-    await this._pause(settleWait);
-    let shown = await readShown(), clickedBy = 'pointer';
-    tried.push(`pointer → "${shown}"`);
-    // the keyboard: arrows from the option the menu has highlighted (or from the top) to the one meant, then Enter
-    if (!OM.shows(shown, m.option)) {
-      if (!(await isOpen())) { await open(); await readOptions(optionsWaitMs); }
-      const cur = await this._evalJs(wc, `(function(){ var os = Array.prototype.slice.call(document.querySelectorAll('[data-cg-opt]'));
-        for (var i = 0; i < os.length; i++) { var o = os[i]; if (o.getAttribute('aria-selected') === 'true' || o.getAttribute('aria-current') === 'true' || /(^|[\\s_-])(active|focused|highlighted|hover)/i.test(o.className || '')) return Number(o.getAttribute('data-cg-opt')); }
-        return -1; })()`).catch(() => -1);
-      const steps = m.index - (Number.isInteger(cur) ? cur : -1);
-      for (let i = 0; i < Math.abs(steps); i++) { await this._key(wc, steps > 0 ? 'Down' : 'Up'); await this._sleep(90 + Math.random() * 90); }
-      await this._key(wc, 'Enter');
-      await this._pause(settleWait);
-      shown = await readShown(); tried.push(`arrows ${steps > 0 ? '↓' : '↑'}×${Math.abs(steps)} + Enter → "${shown}"`);
-      if (OM.shows(shown, m.option)) clickedBy = 'keys';
-    }
-    // the option's number typed, then Enter ("6 DAYS DELIVERY" → 6)
+    // 0.60.280 KB5 — James, 2026-10-29: "bind arrow keys, or numbers to each drop down menu value". The ways to pick, in the order `pick` says
+    // (not `by`: every person's run already passes by: 'person', who acted):
+    // auto (pointer → arrows → number → direct click), pointer (pointer → direct click), keys (arrows → number), number (number → arrows).
+    // Keys bound in the node (keys, or keysFor[option]) are pressed exactly as written instead. Each way is read back; `tried` says each.
+    const tried = []; let shown = null, clickedBy = null, picked = null;
+    const reopen = async () => { if (!(await isOpen())) { await open(); await readOptions(optionsWaitMs); } };
+    const KEYN = { arrowdown: 'Down', down: 'Down', arrowup: 'Up', up: 'Up', enter: 'Enter', return: 'Enter', tab: 'Tab', escape: 'Escape', esc: 'Escape', space: 'Space', home: 'Home', end: 'End', pagedown: 'PageDown', pageup: 'PageUp' };
+    const bound = (() => {
+      let k = keys != null ? keys : (keysFor && (keysFor[String(option)] != null ? keysFor[String(option)] : keysFor[m.option]));
+      if (k == null || k === '') return null;
+      const list = Array.isArray(k) ? k : String(k).trim().split(/[\s,]+/);
+      return list.filter(Boolean).map(x => KEYN[String(x).toLowerCase()] || String(x));
+    })();
     const num = (/\d+/.exec(m.option) || [])[0];
-    if (!OM.shows(shown, m.option) && num) {
-      if (!(await isOpen())) { await open(); await readOptions(optionsWaitMs); }
-      for (const ch of num) { await this._key(wc, ch, true); await this._sleep(60 + Math.random() * 60); }
-      await this._key(wc, 'Enter');
-      await this._pause(settleWait);
-      shown = await readShown(); tried.push(`typed ${num} + Enter → "${shown}"`);
-      if (OM.shows(shown, m.option)) clickedBy = 'number';
+    const WAYS = {
+      bound: async () => {
+        await reopen();
+        for (const k of bound) { await this._key(wc, k, k.length === 1); await this._sleep(90 + Math.random() * 90); }
+        await this._pause(settleWait); shown = await readShown(); tried.push(`keys ${bound.join(' ')} → "${shown}"`); return 'keys (bound)';
+      },
+      pointer: async () => {
+        await reopen(); await this._waitResponsive(wc);
+        picked = await this._humanPointer(agentId, { selector: optSel, do: 'click', via, label: m.option, scroll: 'within' });
+        await this._pause(settleWait); shown = await readShown(); tried.push(`pointer → "${shown}"`); return 'pointer';
+      },
+      keys: async () => {   // arrows from the option the menu has highlighted (or from the top) to the one meant, then Enter
+        await reopen();
+        const cur = await this._evalJs(wc, `(function(){ var os = Array.prototype.slice.call(document.querySelectorAll('[data-cg-opt]'));
+          for (var i = 0; i < os.length; i++) { var o = os[i]; if (o.getAttribute('aria-selected') === 'true' || o.getAttribute('aria-current') === 'true' || /(^|[\\s_-])(active|focused|highlighted|hover)/i.test(o.className || '')) return Number(o.getAttribute('data-cg-opt')); }
+          return -1; })()`).catch(() => -1);
+        const steps = m.index - (Number.isInteger(cur) ? cur : -1);
+        for (let i = 0; i < Math.abs(steps); i++) { await this._key(wc, steps > 0 ? 'Down' : 'Up'); await this._sleep(90 + Math.random() * 90); }
+        await this._key(wc, 'Enter');
+        await this._pause(settleWait); shown = await readShown(); tried.push(`arrows ${steps > 0 ? '↓' : '↑'}×${Math.abs(steps)} + Enter → "${shown}"`); return 'keys';
+      },
+      number: async () => {   // the option's number typed, then Enter ("6 DAYS DELIVERY" → 6)
+        if (!num) { tried.push('number: the option has no number'); return null; }
+        await reopen();
+        for (const ch of num) { await this._key(wc, ch, true); await this._sleep(60 + Math.random() * 60); }
+        await this._key(wc, 'Enter');
+        await this._pause(settleWait); shown = await readShown(); tried.push(`typed ${num} + Enter → "${shown}"`); return 'number';
+      },
+      page: async () => {   // 0.60.273 — a direct click on the option while it is still on the page
+        await reopen();
+        const again = await this._evalJs(wc, `(function(){ var o = document.querySelector(${JSON.stringify(optSel)}); if (!o || !o.isConnected) return false; o.click(); return true; })()`).catch(() => false);
+        if (!again) { tried.push('direct click: the option was gone'); return null; }
+        await this._pause(settleWait); shown = await readShown(); tried.push(`direct click → "${shown}"`); return 'page';
+      },
+    };
+    const ORDER = { auto: ['pointer', 'keys', 'number', 'page'], pointer: ['pointer', 'page'], keys: ['keys', 'number'], number: ['number', 'keys'] };
+    if (!bound && !ORDER[pick]) throw new Error(`choose: pick is auto, pointer, keys or number (got ${JSON.stringify(pick)})`);
+    for (const way of (bound ? ['bound'] : ORDER[pick])) {
+      const label = await WAYS[way]();
+      if (label && OM.shows(shown, m.option)) { clickedBy = label; break; }
     }
-    // 0.60.273 — last, a direct click on the option while it is still on the page
-    if (!OM.shows(shown, m.option)) {
-      if (!(await isOpen())) { await open(); await readOptions(optionsWaitMs); }
-      const again = await this._evalJs(wc, `(function(){ var o = document.querySelector(${JSON.stringify(optSel)}); if (!o || !o.isConnected) return false; o.click(); return true; })()`).catch(() => false);
-      if (again) { await this._pause(settleWait); shown = await readShown(); tried.push(`direct click → "${shown}"`); if (OM.shows(shown, m.option)) clickedBy = 'page'; }
-    }
-    if (!OM.shows(shown, m.option)) throw new Error(`choose: "${m.option}" did not take — the dropdown shows "${shown}" (tried: ${tried.join('; ')})`);
+    if (!clickedBy) throw new Error(`choose: "${m.option}" did not take — the dropdown shows "${shown}" (tried: ${tried.join('; ')})`);
     return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, clickedBy, tried, ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
+  }
+
+  // 0.60.281 SN1 — James, 2026-10-29: "also snowflake plugin support to macros and automation." route/unroute this tab's site, start, stop,
+  // wait, check, status — through the net service the bridge hands in (driver.netStep), never a second copy of it
+  async _net(agentId, params = {}) {
+    if (typeof this.netStep !== 'function') throw new Error('net: Snowflake is not wired into this driver');
+    const urlOf = () => { try { const wc = this._getWebContents(agentId); return wc ? wc.getURL() : null; } catch (_) { return null; } };
+    return this.netStep({ do: params.do, site: params.site || null, via: params.via || 'transport', timeoutMs: params.timeoutMs || 90000, turnOn: params.turnOn !== false, start: params.start !== false }, urlOf);
+  }
+
+  // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." A package row that is a checkbox (Data Syncing, Conditional Logic …): the one in
+  // the column headed `column` and the row labelled `row`, clicked with the pointer only when it is not already in the wanted state, read back.
+  async _checkAt(agentId, { column, row, checked = true, via = 'auto' } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (!column || !row) throw new Error('checkAt needs column and row');
+    const find = () => this._evalJs(wc, `(function(col, row){
+      function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+      function norm(t){ return String(t || '').replace(/\\s+/g, ' ').trim().toLowerCase(); }
+      function byText(t){ var want = norm(t), out = []; document.querySelectorAll('body *').forEach(function(el){ if (!el.children.length && norm(el.textContent) === want && vis(el)) out.push(el); }); return out; }
+      var h = byText(col); if (!h.length) return { error: 'no column headed "' + col + '"' };
+      var rw = byText(row); if (!rw.length) return { error: 'no row labelled "' + row + '"' };
+      var hr = h[0].getBoundingClientRect(), rb = (rw[0].closest('tr') || rw[0].parentElement || rw[0]).getBoundingClientRect();
+      var boxes = Array.prototype.filter.call(document.querySelectorAll('input[type="checkbox"],[role="checkbox"]'), function(el){
+        var t = el.type === 'checkbox' && !vis(el) ? (el.closest('label') || el.parentElement) : el; if (!t || !vis(t)) return false;
+        var r = t.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2; return cx >= hr.left && cx <= hr.right && cy >= rb.top && cy <= rb.bottom; });
+      if (!boxes.length) return { error: 'no checkbox at column "' + col + '", row "' + row + '"' };
+      var b = boxes[0]; window.__cgCheckN = (window.__cgCheckN || 0) + 1; var target = b.type === 'checkbox' && !vis(b) ? (b.closest('label') || b.parentElement) : b;
+      target.setAttribute('data-cg-check', String(window.__cgCheckN));
+      return { n: window.__cgCheckN, checked: b.type === 'checkbox' ? !!b.checked : b.getAttribute('aria-checked') === 'true' };
+    })(${JSON.stringify(column)}, ${JSON.stringify(row)})`);
+    let f = await find();
+    if (!f || f.error) throw new Error(`checkAt: ${(f && f.error) || 'page did not answer'}`);
+    const want = !!checked;
+    if (f.checked === want) return { column, row, checked: want, changed: false };
+    await this._waitResponsive(wc);
+    await this._humanPointer(agentId, { selector: `[data-cg-check="${f.n}"]`, do: 'click', via, label: `${row} (${column})` });
+    await this._pause([250, 450]);
+    f = await find();
+    if (!f || f.error || f.checked !== want) throw new Error(`checkAt: "${row}" in ${column} is ${f && !f.error ? (f.checked ? 'ticked' : 'clear') : 'gone'} after the click, not ${want ? 'ticked' : 'clear'}`);
+    return { column, row, checked: want, changed: true };
+  }
+
+  // 0.60.281 AP1 — the row labels of a priced table: the short texts left of the column headed `column`, below its header (so the fill can
+  // say which of the page's rows the gig has no value for)
+  async _rowLabels(agentId, { column } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    const r = await this._evalJs(wc, `(function(col){
+      function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+      function norm(t){ return String(t || '').replace(/\\s+/g, ' ').trim(); }
+      var h = null; document.querySelectorAll('body *').forEach(function(el){ if (!h && !el.children.length && norm(el.textContent).toLowerCase() === String(col).toLowerCase() && vis(el)) h = el; });
+      if (!h) return { error: 'no column headed "' + col + '"' };
+      var hr = h.getBoundingClientRect(), out = [];
+      document.querySelectorAll('body *').forEach(function(el){ if (el.children.length || !vis(el)) return; var r = el.getBoundingClientRect(), t = norm(el.textContent);
+        if (t && t.length <= 80 && r.right <= hr.left + 2 && (r.top + r.bottom) / 2 > hr.bottom && out.indexOf(t) < 0) out.push(t); });
+      return { labels: out };
+    })(${JSON.stringify(column || 'BASIC')})`);
+    if (!r || r.error) throw new Error(`rowLabels: ${(r && r.error) || 'page did not answer'}`);
+    return r;
+  }
+
+  // 0.60.280 KB4 — James, 2026-10-29: "make the gates for them gated and have them check for the correct value". What a dropdown shows now:
+  // the one choose last marked in that column (or row, or the selector); when the page has redrawn it, the short texts in that column. With
+  // `is`, matches says whether it shows that value (the same match choose reads back with).
+  async _readChoice(agentId, { column = null, row = null, selector = null, is = null } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (!column && !row && !selector) throw new Error('readChoice needs column, row or selector');
+    const OM = require('../page/option-match');
+    const r = await this._evalJs(wc, `(function(sel, col, row){
+      function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+      function norm(t){ return String(t || '').replace(/\\s+/g, ' ').trim(); }
+      function byText(t){ var want = norm(t).toLowerCase(), out = []; document.querySelectorAll('body *').forEach(function(el){ if (!el.children.length && norm(el.textContent).toLowerCase() === want && vis(el)) out.push(el); }); return out; }
+      if (sel) { var e = null; try { e = document.querySelector(sel); } catch (_) {} return e ? { shown: norm(e.innerText || e.textContent), from: 'selector' } : { error: 'no element for ' + sel }; }
+      var band = null, cols = null;
+      if (col) { var h = byText(col); if (!h.length) return { error: 'no column headed "' + col + '"' }; var hr = h[0].getBoundingClientRect(); cols = { left: hr.left, right: hr.right }; }
+      if (row) { var rw = byText(row); if (!rw.length) return { error: 'no row labelled "' + row + '"' }; var rb = (rw[0].closest('tr') || rw[0].parentElement || rw[0]).getBoundingClientRect(); band = { top: rb.top, bottom: rb.bottom }; }
+      function inside(el){ var r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        return (!cols || (cx >= cols.left && cx <= cols.right)) && (!band || (cy >= band.top && cy <= band.bottom)); }
+      var marked = Array.prototype.filter.call(document.querySelectorAll('[data-cg-choose]'), function(el){ return vis(el) && inside(el); })
+        .sort(function(a, b){ return Number(b.getAttribute('data-cg-choose')) - Number(a.getAttribute('data-cg-choose')); });
+      if (marked.length) return { shown: norm(marked[0].innerText || marked[0].textContent), from: 'marked' };
+      var texts = []; document.querySelectorAll('body *').forEach(function(el){ if (el.children.length || !vis(el) || !inside(el)) return; var t = norm(el.textContent); if (t && t.length <= 60) texts.push(t); });
+      return { shown: null, texts: texts.slice(0, 80), from: 'column' };
+    })(${JSON.stringify(selector)}, ${JSON.stringify(column)}, ${JSON.stringify(row)})`);
+    if (!r || r.error) throw new Error(`readChoice: ${(r && r.error) || 'page did not answer'}`);
+    if (is == null || is === '') return r;
+    if (r.shown != null) return { ...r, is, matches: OM.shows(r.shown, String(is)) };
+    const hit = (r.texts || []).find(t => OM.shows(t, String(is)));
+    return { ...r, shown: hit || null, is, matches: !!hit };
   }
 
   // 0.60.275 — wait until the page answers quickly: a frozen page (his machine under load) is waited for, not acted on. Up to maxMs, then on.
@@ -921,13 +1037,18 @@ class ClearDriver {
     return r;
   }
 
-  async _pressKey(agentId, { key = 'Enter', modifiers = [] } = {}) {
+  // 0.60.280 KB5 — times: the same key N times at a person's pace (Down ×6 to reach a dropdown's seventh option)
+  async _pressKey(agentId, { key = 'Enter', modifiers = [], times = 1 } = {}) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
-    wc.sendInputEvent({ type: 'keyDown', keyCode: key, modifiers });
-    if (key.length === 1) wc.sendInputEvent({ type: 'char', keyCode: key, modifiers });
-    wc.sendInputEvent({ type: 'keyUp', keyCode: key, modifiers });
-    return { pressed: key, modifiers };
+    const n = Math.max(1, Math.min(200, parseInt(times, 10) || 1));
+    for (let i = 0; i < n; i++) {
+      if (i) await this._sleep(80 + Math.random() * 80);
+      wc.sendInputEvent({ type: 'keyDown', keyCode: key, modifiers });
+      if (key.length === 1) wc.sendInputEvent({ type: 'char', keyCode: key, modifiers });
+      wc.sendInputEvent({ type: 'keyUp', keyCode: key, modifiers });
+    }
+    return { pressed: key, modifiers, times: n };
   }
 
   // upload: a file input cannot be filled by typing or by script (browsers forbid setting .value). The one real way

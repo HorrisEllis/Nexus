@@ -1,0 +1,28 @@
+/* renderer/settings/sections/pipelines.css — Pipelines (0.60.284 PL4)
+ * One CSS file per UI file; every rule scoped to body[data-area="pipelines"]. */
+body[data-area="pipelines"] .pl-card { padding: 12px 14px; border-bottom: 1px solid var(--line, rgba(127,127,127,.2)); }
+body[data-area="pipelines"] .pl-card:last-child { border-bottom: 0; }
+body[data-area="pipelines"] .pl-card-head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+body[data-area="pipelines"] .pl-card-head .grow { flex: 1; min-width: 180px; }
+body[data-area="pipelines"] .pl-card-head .t { font-weight: 600; }
+body[data-area="pipelines"] .pl-card-head .d { font-size: 12px; opacity: .8; }
+body[data-area="pipelines"] .pl-steps { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+body[data-area="pipelines"] .pl-step { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; padding: 1px 6px; border: 1px solid var(--line, rgba(127,127,127,.3)); border-radius: 4px; }
+body[data-area="pipelines"] .pl-check { font-size: 12px; margin-top: 4px; }
+body[data-area="pipelines"] .pl-check-head { display: flex; gap: 8px; align-items: center; margin-bottom: 3px; }
+body[data-area="pipelines"] .pl-when, body[data-area="pipelines"] .pl-none { opacity: .6; }
+body[data-area="pipelines"] .pl-item { display: grid; grid-template-columns: minmax(90px, auto) minmax(0, 1fr) minmax(0, 2fr); gap: 8px; padding: 1px 0; }
+body[data-area="pipelines"] .pl-mark { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+body[data-area="pipelines"] .pl-why { opacity: .75; overflow-wrap: anywhere; }
+body[data-area="pipelines"] .pl-done .pl-mark { color: var(--ok, #3fb950); }
+body[data-area="pipelines"] .pl-failed .pl-mark { color: var(--bad, #ff6b6b); }
+body[data-area="pipelines"] .pl-blocked .pl-mark { color: var(--warn, #d29922); }
+body[data-area="pipelines"] .pl-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 14px; margin-bottom: 8px; }
+body[data-area="pipelines"] .pl-task { border: 1px solid var(--line, rgba(127,127,127,.3)); border-radius: 6px; padding: 8px 10px; margin: 8px 0; }
+body[data-area="pipelines"] .pl-task-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+body[data-area="pipelines"] .pl-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 12px; }
+body[data-area="pipelines"] .pl-task textarea { width: 100%; }
+@media (max-width: 760px) {
+  body[data-area="pipelines"] .pl-grid, body[data-area="pipelines"] .pl-form { grid-template-columns: 1fr; }
+  body[data-area="pipelines"] .pl-item { grid-template-columns: 1fr; }
+}

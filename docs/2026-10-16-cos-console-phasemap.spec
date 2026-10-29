@@ -123,3 +123,13 @@ addendum_c:
     CON_lite_command_line:
       status: BUILT-0.60.91
       built_note: "cos/app/shell.js, cos sh / cos exec, window pane; SH-01..12, UI-15..16. Limits: no stdin in the window pane; chains refused (test:all); Windows unverified."
+
+# ── ADDENDUM 2026-10-29 — categories and cos.exe as the full compartment manager (his) ──
+# James, 2026-10-29: "catagories using either the architypes or the templates, with a full manager and editor, with the schemas, then catagories
+# which can be managed, including systems which would then list each system compartment. also really need cos.exe to be a fully compartment
+# manager with controls for the rewind engine, diagnostic tools, versions, data browser and tools. cli access. index.html/ui for the
+# thumbnail. look at all of the cos phases, and add all of this to them." · and: "yes, clear glass macros and settings too."
+# Mapped in full in docs/2026-10-24-cos-manager-phasemap.spec (addendum 2026-10-29: MG10 categories, MG11 the category manager UI, MG12 the
+# exe is the compartment manager, MG13 CLI in the exe, MG14 live thumbnails).
+# Here: CON1 (one door), CON2 (grammar) and CON5 (the pane) are what MG13 uses: the console pane inside the exe, and `COS.exe <command>` from a
+# terminal, headless. The new command rows `cos category …` (MG10) go through the same grammar.

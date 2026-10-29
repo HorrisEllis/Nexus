@@ -218,7 +218,9 @@ addendum_e:
       does: "Setting update.policy: off | ask | auto (default ask). auto-install on any arrival (drop, inbox, Clear Glass); auto-switch only when idle and preflight passes; notification says what happened and how to undo. Never installs a zip that fails the checksum or the NP16 quarantine."
       proof: "a dropped zip installs with no click; with policy auto and an idle Nexus it switches and is healthy; with a crashing release it rolls itself back with the reason shown; with a job running it waits."
     COSA14_versionium_record:
-      status: OPEN
+      status: BUILT-0.60.279
+      built_note: "cos/app/versionium.js (its own outbox, because the exe ships without lib), hooked on install (inbox drops too), remove, switch and rollback; replayed at start and every minute; direct to Versionium's contract, not through Idearium (see the 2026-10-29 addendum: §5.15, §17.12). test-versionium-everywhere VE-06. Windows unverified."
+      status_before: OPEN
       depends_on: [COSA9_idearium_sync, COSA13_auto_update]
       does: "Every install, switch, rollback and remove is written to Versionium through Idearium (the one write door, RAID is the only write authority), with checksum, outcome, reason and the data-snapshot reference; queued and replayed when Idearium is down. COS's version list can be shown from the record (Nexus's own history in Idearium's repo view), and `repo diff` between two Nexus releases works from it."
       proof: "a switch while Idearium is down is recorded once, in order, after it returns; the record and COS's store agree (a test compares them); Idearium shows the switch and any rollback with its reason."
@@ -303,3 +305,18 @@ an update should land (git clone, through COS, or zip side by side), he said: "f
   to it yet. The tool will then ask COSA7 to fetch into the inbox, and COSA4/COSA13 switch with a snapshot and rollback.
   - The tool, its rows and its page stay the same.
   - It waits on COS's Windows build being verified, and on him running Nexus from the COS app.
+
+# ── ADDENDUM 2026-10-29 — categories and cos.exe as the full compartment manager (his) ──
+# James, 2026-10-29: "catagories using either the architypes or the templates, with a full manager and editor, with the schemas, then catagories
+# which can be managed, including systems which would then list each system compartment. also really need cos.exe to be a fully compartment
+# manager with controls for the rewind engine, diagnostic tools, versions, data browser and tools. cli access. index.html/ui for the
+# thumbnail. look at all of the cos phases, and add all of this to them." · and: "yes, clear glass macros and settings too."
+# Mapped in full in docs/2026-10-24-cos-manager-phasemap.spec (addendum 2026-10-29: MG10 categories, MG11 the category manager UI, MG12 the
+# exe is the compartment manager, MG13 CLI in the exe, MG14 live thumbnails).
+# Here:
+# - COSA6_the_exe and COSA12_vmware_window are what MG12 grows from. The exe becomes the manager: a category tree, and per compartment the
+#   Rewind, Diagnostics, Versions, Data and Tools tabs, plus thumbnails (MG14).
+# - COSA14_versionium_record is BUILT 0.60.279, ahead of its depends_on (§17.12, his law, made it due): cos/app/versionium.js records every
+#   install, remove, switch and rollback, with its own outbox in COS's store, because the exe ships without lib. It is replayed at start
+#   and every minute. It goes direct to Versionium's contract, not through Idearium as first mapped: the one owner is Versionium (§5.15),
+#   and Idearium need not be running. Proof: test-versionium-everywhere VE-06.

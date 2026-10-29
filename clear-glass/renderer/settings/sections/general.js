@@ -50,6 +50,8 @@
         pane({ title: 'Window', flush: true, body: [
           row('Closing hides to the tray', 'Clear Glass keeps running so agents and Guardian stay connected.', toggle(o.hideToTrayOnClose !== false, (on) => setOpt({ hideToTrayOnClose: on }))),
           row('Open the co-pilot pane with each window', null, toggle(o.autoOpenCopilotPane !== false, (on) => setOpt({ autoOpenCopilotPane: on }))),
+          // 0.60.280 KB7 — James: "the clearglass floating menu button, can you make that an option to pin it?"
+          row('Pin the floating CLI button', 'The ›_ button stays on every window, and ✕ collapses it instead of hiding it.', toggle(!!(o.floatCli && o.floatCli.pinned), async (on) => { const r = await cg.floatCli.pin(on); if (!r || r.ok === false) toast((r && r.error) || 'could not pin', 'err'); })),
           row('\u201CMove to background tab\u201D keeps the tab hidden', null, toggle(!o.backgroundTabDefaults || o.backgroundTabDefaults.openInBackground !== false, (on) => setOpt({ backgroundTabDefaults: { openInBackground: on } }))),
         ] }),
         pane({ title: 'Pages and files', body: h('div', { class: 'grid' }, field('Start page', start), field('Download folder', dl, 'Takes effect for the next download')) }),

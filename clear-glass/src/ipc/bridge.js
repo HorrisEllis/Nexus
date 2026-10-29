@@ -387,6 +387,15 @@ class IpcBridge {
     this.app.post('/cli/net/bridge/use',    _netRoute((b) => _net().useBridge(b.n)));
     this.app.post('/cli/net/https-only',    _netRoute((b) => _net().setHttpsOnly(b.on !== false && b.on !== 'off')));
     this.app.post('/cli/net/check',         _netRoute(() => { _netHost(); return _net().checkCircuit({ fetchVia: _fetchVia }); }));
+    // 0.60.281 SN1 — James, 2026-10-29: "also snowflake plugin support to macros and automation." The driver's `net` action (a macro step,
+    // a workflow's "Network (Snowflake)") runs src/net/step.js on this same service and transport; off when the Snowflake plugin is off.
+    this.netStep = (args, urlOf) => require('../net/step').netStep({ service: _net(), host: _netHost(), ensureBridge: _ensureBridge, fetchVia: _fetchVia, urlOf,
+      pluginOn: () => !this.pluginHost || (this.pluginHost.list() || []).some(p => p.name === 'snowflake' && p.state === 'active'),
+      // James: "can 't you have it turn on the snowflake?" — turned on as the 🧩 panel does it (plugins:enable), kept on after a restart, said
+      turnOnPlugin: () => { try { const p = (this.pluginHost.list() || []).find(x => x.name === 'snowflake'); if (!p) return { ok: false, error: 'the Snowflake plugin is not installed' };
+        this.pluginHost.enable(p.id); const cur = new Set(this.options?.get()?.disabledPlugins || []); cur.delete(p.id); this.options?.set({ disabledPlugins: [...cur] }); return { ok: true }; }
+        catch (err) { return { ok: false, error: err.message }; } } }, args);
+    if (this.driver) this.driver.netStep = this.netStep;
     // BS1/BS7 (0.60.179) — Firefox import, for real (src/import/firefox.js). Cookies go into the everyday session (Electron's default, where an
     // ordinary window's page loads) or a provider tab's; never into a Snowflake compartment. No cookie value leaves this route.
     const _ffSession = (into) => {
@@ -1243,6 +1252,9 @@ class IpcBridge {
     // the network route is the netPolicy origin rule. by: the person (the window) — an agent's write comes through /cli/site-profile.
     ipcMain.handle('site-profile:get',   async (e, d) => this._siteProfile().siteProfile(d && d.url));
     ipcMain.handle('site-profile:set',   async (e, d) => this._siteProfile().setSite(d && d.url, d && d.key, d && d.value, { by: 'person' }));
+    // 0.60.283 — James, 2026-10-29: "The accessability man. i can't fix it." (Fiverr remembers its accessibility look; keyboard-mode.js)
+    ipcMain.handle('site:a11yCheck', async (e, d = {}) => this._a11y(d && d.wcId, { reset: false }));
+    ipcMain.handle('site:a11yReset', async (e, d = {}) => this._a11y(d && d.wcId, { reset: true }));
     ipcMain.handle('site-profile:clear', async (e, d) => this._siteProfile().clearSite(d && d.url, d && d.key, { by: 'person' }));
     ipcMain.handle('site-profile:keys',  async () => ({ keys: this._siteProfile().KEYS, features: this._siteProfile().FEATURES }));
 
@@ -1738,6 +1750,7 @@ class IpcBridge {
     ipcMain.handle('autofill:gig:setLast', async (e, { gig } = {}) => { try { if (gig && gig.title && this.autofillStore) { this.autofillStore.setLastGig(gig); return { ok: true }; } } catch (err) { return { ok: false, error: err.message }; } return { ok: false, error: 'no gig' }; });   // 0.60.267 — the panel's gig is the chips' gig
     ipcMain.handle('autofill:fillOne', async (e, d = {}) => this._autofillFillOne(d));              // 0.60.267 AF3 — a chip clicked
     ipcMain.handle('autofill:anchor', async (e, d = {}) => this._autofillAnchor(d));                // 0.60.268 AF5 — a field anchored to what it is
+    ipcMain.handle('applications:call', async (e, d = {}) => this._opportunityCall(d));          // 0.60.281 AP4 — Settings › Applications, through Copilot
     ipcMain.handle('about:info', async () => this._aboutInfo());                                   // 0.60.269 — Settings › About
     ipcMain.handle('about:check', async () => this._aboutCheck());                                 // 0.60.269 — newer Electron / Clear Glass / Nexus?
     ipcMain.handle('autofill:gig:saveRecording', async (e, d = {}) => this._gigSaveRecording(d));  // 0.60.224 — his choices → the page's macro   // 0.60.222 — a picked element taught to a gig part
@@ -2254,6 +2267,109 @@ class IpcBridge {
     return g;
   }
 
+  // 0.60.283 — what holds a site's accessibility look on (its html/body classes and attributes, its storage, its readable cookies), and, on
+  // reset: a backup of every entry first (REVERSIBILITY: userData/a11y-resets/<host>-<time>.json), then they are removed, the site is set to
+  // accessibility.tabMode 'off' (so a look it brings back is swept at each load), and the page reloads. Nothing matched is said, with every
+  // storage key and cookie name it did not match, so a look stored under another name can be traced.
+  async _a11y(wcId, { reset = false } = {}) {
+    const { webContents, app } = this._electron || require('electron');   // _electron: a test's stand-in
+    const wc = webContents.fromId(Number(wcId));
+    if (!wc || wc.isDestroyed()) return { ok: false, error: 'no such page' };
+    let url = ''; try { url = wc.getURL(); } catch (_) {}
+    if (!/^https?:/.test(url)) return { ok: false, error: 'this page is not a website' };
+    const K = require('../page/keyboard-mode');
+    const found = await wc.executeJavaScript(K.sweepScript({ storage: reset, cookies: reset }), true);
+    const out = { ok: true, url, origin: new URL(url).origin, reset, found: found.found, classes: found.classes, attrs: found.attrs,
+      storage: found.storage.map(x => ({ area: x.area, key: x.key })), cookies: found.cookies.map(x => x.name), otherKeys: found.otherKeys, otherCookies: found.otherCookies, link: found.link };
+    if (!reset) return out;
+    try {
+      const fs = require('fs'), path = require('path'); const dir = path.join(app.getPath('userData'), 'a11y-resets'); fs.mkdirSync(dir, { recursive: true });
+      out.backup = path.join(dir, `${new URL(url).host}-${Date.now()}.json`);
+      fs.writeFileSync(out.backup, JSON.stringify({ at: new Date().toISOString(), url, ...found }, null, 2));
+    } catch (err) { out.backupError = err.message; }
+    try { out.tabMode = await this._siteProfile().setSite(url, 'accessibility.tabMode', 'off', { by: 'person' }); } catch (err) { out.tabModeError = err.message; }
+    try { wc.reload(); out.reloaded = true; } catch (err) { out.reloadError = err.message; }
+    return out;
+  }
+
+  // 0.60.281 AP4 — James, 2026-10-29: "also capturing the contact info for job applications." The applications and their contacts are the
+  // opportunity system's (lib/opportunity, served by Copilot); Clear Glass reaches them only through Copilot's routes (§5.15), and only these.
+  // Copilot down → the screen says so; nothing here holds a copy.
+  async _opportunityCall({ method = 'GET', path = '', body = null } = {}) {
+    const ALLOW = [['GET', /^\/api\/opportunity\/(status|list|contacts)(\?.*)?$/], ['POST', /^\/api\/opportunity\/contacts$/],
+      ['PUT', /^\/api\/opportunity\/contacts\/[\w-]+$/], ['POST', /^\/api\/opportunity\/contacts\/[\w-]+\/archive$/]];
+    const m = String(method).toUpperCase(), p = String(path);
+    if (!ALLOW.some(([am, re]) => am === m && re.test(p))) return { ok: false, error: `not an Applications route: ${m} ${p}` };
+    const payload = body && m !== 'GET' ? JSON.stringify(body) : null;
+    return new Promise((resolve) => {
+      const req = require('http').request({ host: '127.0.0.1', port: Number(process.env.COPILOT_PORT || 3750), path: p, method: m, timeout: 8000,
+        headers: { 'Content-Type': 'application/json', ...(payload ? { 'Content-Length': Buffer.byteLength(payload) } : {}) } }, (res) => {
+        let d = ''; res.on('data', (c) => { d += c; });
+        res.on('end', () => { try { resolve(JSON.parse(d)); } catch (_) { resolve({ ok: false, error: `Copilot answered ${res.statusCode} with no JSON` }); } });
+      });
+      req.on('timeout', () => { req.destroy(); resolve({ ok: false, error: 'Copilot did not answer in 8 s', down: true }); });
+      req.on('error', (err) => resolve({ ok: false, error: `Copilot is not running (${err.code || err.message}) — applications live there`, down: true }));
+      if (payload) req.write(payload);
+      req.end();
+    });
+  }
+
+  // 0.60.283 — the gig's tags (at most 5) into Fiverr's Search tags box, one by one, each gated on the page showing it. { done, missed, why? }
+  async _gigTags(agentId, gig, learnedSelector = null) {
+    const GP = require('../autofill/gig-pages');
+    const tags = (Array.isArray(gig.tags) ? gig.tags : []).slice(0, 5);
+    if (!tags.length) return { done: [], missed: [], why: 'the gig has no tags' };
+    let selector = learnedSelector;
+    if (!selector) {
+      const f = await this.driver.exec({ agentId, action: 'eval', code: GP.tagInputScript(), by: 'person' });
+      if (!f || !f.result || !f.result.found) throw new Error('the Search tags box was not found — point at it');
+      selector = '[data-cg-tags="1"]';
+    }
+    const done = [], missed = [];
+    for (const t of tags) {
+      let shown = false;
+      for (let attempt = 0; attempt < 2 && !shown; attempt++) {
+        await this.driver.exec({ agentId, action: 'type', selector, text: String(t), clearFirst: attempt > 0, by: 'person' });
+        await this.driver.exec({ agentId, action: 'pressKey', key: 'Enter', by: 'person' });
+        const g = await this.driver.exec({ agentId, action: 'eval', code: GP.tagShownScript(t), by: 'person' });
+        shown = !!(g && g.result);
+      }
+      (shown ? done : missed).push(t);
+    }
+    if (!done.length) throw new Error(`no tag took (${missed.join(', ')}) — the box may want them another way; point at it`);
+    return { done, missed };
+  }
+
+  // 0.60.281 AP1 — the package rows of the pricing page from gig.packages[tier].features (see _gigFill): { filled, failed, unlisted }
+  async _gigFeatures(agentId, gig) {
+    const out = { filled: [], failed: [], unlisted: [] };
+    const named = new Set();
+    for (const tier of ['basic', 'standard', 'premium']) {
+      const p = gig.packages && gig.packages[tier]; if (!p || !p.features) continue;
+      const column = tier.toUpperCase();
+      for (const [row, value] of Object.entries(p.features)) {
+        named.add(row.toLowerCase());
+        try {
+          if (value === true || value === false) {
+            const c = await this.driver.exec({ agentId, action: 'checkAt', column, row, checked: value, by: 'person' });
+            out.filled.push({ tier, row, value, changed: c.changed });
+          } else {
+            const c = await this.driver.exec({ agentId, action: 'choose', column, row, option: String(value), by: 'person' });
+            const g = await this.driver.exec({ agentId, action: 'readChoice', column, row, is: String(value), by: 'person' });
+            if (!g.matches) throw new Error(`the row shows "${g.shown}" after the pick, not "${value}"`);
+            out.filled.push({ tier, row, value, shown: c.option, clickedBy: c.clickedBy });
+          }
+        } catch (err) { out.failed.push({ tier, row, value, why: err.message }); }
+      }
+    }
+    try {
+      const rl = await this.driver.exec({ agentId, action: 'rowLabels', column: 'BASIC', by: 'person' });
+      const known = /^(packages|price|delivery time|revisions?|total|description|name)$/i;
+      out.unlisted = (rl.labels || []).filter(l => !named.has(l.toLowerCase()) && !known.test(l));
+    } catch (err) { out.rowsWhy = err.message; }
+    return out;
+  }
+
   async _gigFill({ gig, agentId = 'default', minConfidence = 'medium' } = {}) {
     if (!this.dom) return { error: 'dom bridge unavailable' };
     if (!gig || !gig.title) return { error: 'write the gig first' };
@@ -2278,6 +2394,9 @@ class IpcBridge {
       const learned = site && mem.target(site, GP.targetKey(where.page, part));
       const isChoice = part === 'category' || part.endsWith('.delivery');
       try {
+        // 0.60.283 — James: "i want autofill to do it all if possible." Search tags: each typed and Enter pressed in the tags box (the one he
+        // pointed at, else the box in the Search tags section), gated: the tag must show and leave the box, else typed once more.
+        if (part === 'tags') { r.tags = await this._gigTags(agentId, gig, learned && learned.selector); continue; }
         if (learned) {
           if (isChoice) await this.driver.exec({ agentId, action: 'choose', selector: learned.selector, option: value, by: 'person' });
           else await this.driver.exec({ agentId, action: 'setValue', selector: learned.selector, value, by: 'person' });
@@ -2296,13 +2415,26 @@ class IpcBridge {
         }
         if (part === 'category') {
           const sc = GP.suggestedCategory(read.links, gig);
-          if (!sc.ok) throw new Error(sc.why);
-          await this.driver.exec({ agentId, action: 'pointer', selector: sc.link.selector, do: 'click', by: 'person' });
-          r.dropdowns.push({ key: part, ok: true, option: sc.text }); continue;
+          if (sc.ok) {
+            await this.driver.exec({ agentId, action: 'pointer', selector: sc.link.selector, do: 'click', by: 'person' });
+            r.dropdowns.push({ key: part, ok: true, option: sc.text, via: 'suggested' }); continue;
+          }
+          // 0.60.283 — a new gig offers no suggestion, only SELECT A CATEGORY and SELECT A SUBCATEGORY: his node "Fiverr gig - choose
+          // category" (gated, editable in Settings › Macros), else the same two picks built in, each read back
+          if (!/select a category/i.test(String(read.text || ''))) throw new Error(sc.why);
+          const viaMacro = typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose category', { category: gig.category, subcategory: gig.subcategory || '' }) : { ok: false, why: 'node macros not wired here' };
+          if (viaMacro.ok) { r.dropdowns.push({ key: part, ok: true, option: value, via: 'macro' }); continue; }
+          const c1 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A CATEGORY', option: gig.category, by: 'person' });
+          const c2 = gig.subcategory ? await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A SUBCATEGORY', option: gig.subcategory, by: 'person' }) : null;
+          r.dropdowns.push({ key: part, ok: true, option: [c1.option, c2 && c2.option].filter(Boolean).join(' > '), via: 'built-in', why: viaMacro.why }); continue;
         }
         throw new Error('not found on the page');
       } catch (err) { r.notFound.push({ key: part, why: err.message }); }
     }
+    // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." The package rows come from the gig (features), never from code: a number or text
+    // is chosen in that tier's column and row (the gated choose, read back), yes/no ticks or clears that row's checkbox (checkAt, read back).
+    // The page's rows the gig has no value for are listed (r.features.unlisted), so he can add them to the gig.
+    if (where.page === 'pricing' && this.driver) r.features = await this._gigFeatures(agentId, gig);
     // 0.60.224 — his recorded choices for this page (Service type, the metadata boxes, the pricing rows …) replayed after the fill, as him
     if (where.page && this.macroTool) {
       let has = null; try { has = await this.macroTool.execute({ action: 'get', name: GP.macroName(where.page) }); } catch (_) {}
@@ -2311,7 +2443,7 @@ class IpcBridge {
         r.macro = m && m.error ? { name: GP.macroName(where.page), ok: false, error: m.error, failedAtStep: m.failedAtStep } : { name: GP.macroName(where.page), ok: true, steps: m && m.stepsCompleted };
       }
     }
-    if (!r.error) this.postEvent('autofill.gig.filled', { agentId, page: r.page, filled: r.filled.length, learned: r.learned.length, notFound: r.notFound.length, failed: r.failed.length, ts: Date.now() });
+    if (!r.error) this.postEvent('autofill.gig.filled', { agentId, page: r.page, filled: r.filled.length, learned: r.learned.length, notFound: r.notFound.length, failed: r.failed.length, features: r.features ? { filled: r.features.filled.length, failed: r.features.failed.length, unlisted: r.features.unlisted.length } : null, ts: Date.now() });
     return r;
   }
 
@@ -2335,15 +2467,15 @@ class IpcBridge {
   async _gigNodeMacro(agentId, name, params) {
     if (!this.macroTool) return { ok: false, why: 'macros not available here' };
     const N = require('../../../lib/automation-nodes.js');
-    let have = null; try { have = await this.macroTool.execute({ action: 'get', name }); } catch (_) {}
-    if (!have || have.error) {
-      const p = N.bundledMacro(require('path').join(__dirname, '..', '..', 'automation', 'nodes'), name);
-      if (!p) return { ok: false, why: `no macro "${name}" (and no node file for it)` };
-      const im = await N.importMacro(p, { getMacro: (n) => this.macroTool.execute({ action: 'get', name: n }), createMacro: (m) => this.macroTool.execute({ action: 'create', ...m }) });
-      if (!im.ok) return { ok: false, why: im.error };
-    }
+    // 0.60.280 KB6 — the node file is the truth: absent → imported; a copy he never edited → upgraded to the node's version (said); his edit stays
+    const node = N.bundledNode(require('path').join(__dirname, '..', '..', 'automation', 'nodes'), name);
+    let up = null;
+    if (node) up = await N.upgradeMacro(node, { getMacro: (n) => this.macroTool.execute({ action: 'get', name: n }), deleteMacro: (n) => this.macroTool.execute({ action: 'delete', name: n }), createMacro: (m) => this.macroTool.execute({ action: 'create', ...m }) });
+    else { let have = null; try { have = await this.macroTool.execute({ action: 'get', name }); } catch (_) {} if (!have || have.error) return { ok: false, why: `no macro "${name}" (and no node file for it)` }; }
+    if (up && !up.ok) return { ok: false, why: up.why };
     let m; try { m = await this.runMacroAsPerson({ name, agentId, params, skipSnapshot: true, by: 'person' }); } catch (e) { m = { error: e.message }; }
-    return m && !m.error && m.ok !== false ? { ok: true } : { ok: false, why: `macro "${name}" stopped${m && m.failedAtStep != null ? ` at step ${m.failedAtStep + 1}` : ''}: ${(m && m.error) || 'no answer'}` };
+    const note = up && (up.upgraded || up.kept) ? { node: up.why } : {};
+    return m && !m.error && m.ok !== false ? { ok: true, ...note, gates: (m.results || []).filter(x => x.gate).map(x => x.gate) } : { ok: false, ...note, why: `macro "${name}" stopped${m && m.failedAtStep != null ? ` at step ${m.failedAtStep + 1}` : ''}: ${(m && m.error) || 'no answer'}` };
   }
 
   // 0.60.267 AF3 — James: "needs to autofill any field it can. also needs to have the autopill under each input fieled." Every field on the

@@ -36,7 +36,7 @@
     "max_total_bytes": 536870912,
     "max_real_file_bytes": 52428800,
     "skip_dirs": ["node_modules", ".git", ".svn", "dist", "build", "__pycache__", ".next"],
-    "text_ext": [".js", ".ts", ".jsx", ".tsx", ".json", ".md", ".txt", ".py", ".html", ".css", ".yml", ".yaml", ".spec", ".sh"],
+    "text_ext": [".js", ".ts", ".jsx", ".tsx", ".json", ".md", ".txt", ".py", ".html", ".css", ".yml", ".yaml", ".spec", ".sh", ".mjs", ".cjs", ".eg", ".toml"],
     "verify_hashes": true
   },
 

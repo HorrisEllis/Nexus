@@ -1638,7 +1638,10 @@ async function bootstrap() {
     }
   }
   // BS6 (0.60.179) — the floating CLI: a content-protected child window per browser window (src/main/float-cli.js)
-  try { require('./float-cli').register({ ipcMain, BrowserWindow }); } catch (err) { console.warn(`[float-cli] not registered: ${err.message}`); }
+  // 0.60.280 KB7 — pinned (floatCli.pinned) is his option, kept in Clear Glass's options like the rest
+  try { require('./float-cli').register({ ipcMain, BrowserWindow,
+    isPinned: () => !!(nexusOptions && ((nexusOptions.get() || {}).floatCli || {}).pinned),
+    setPinned: (on) => { if (!nexusOptions) return { error: 'options not ready' }; const cur = (nexusOptions.get() || {}).floatCli || {}; nexusOptions.set({ floatCli: { ...cur, pinned: !!on } }); return { ok: true }; } }); } catch (err) { console.warn(`[float-cli] not registered: ${err.message}`); }
   // BS4 (0.60.179) — a plugin he turned off stays off after a restart
   for (const id of (nexusOptions?.get()?.disabledPlugins || [])) {
     try { pluginHost.disable(id); console.log(`[ClearGlass/Plugins] kept off: ${id}`); } catch (err) { console.warn(`[ClearGlass/Plugins] could not keep ${id} off: ${err.message}`); }

@@ -1,0 +1,63 @@
+envelope: 1
+uuid: nexus-export-schema-code_block
+type: schema
+id: code_block
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1793260000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    0.60.285 HN1 — James, 2026-10-29: "what about .node types for each language/code block for each agent?" One fenced code
+    block in an agent's reply. One type for every language (HN_D2, by NC0 and §5.13): the language and the agent are fields, so
+    "every Python block Claude wrote" is a query, not a type.
+  fields:
+    exchangeId:
+      type: string
+      required: true
+      description: >-
+        the exchange it belongs to
+    index:
+      type: number
+      required: true
+      description: >-
+        its order in the reply
+    language:
+      type: string
+      required: true
+      description: >-
+        as the agent wrote it after the fence ('' when none)
+    lang:
+      type: string
+      required: true
+      description: >-
+        normalized: javascript, python, shell, json …
+    code:
+      type: string
+      required: true
+      description: >-
+        the code, whole
+    sha:
+      type: string
+      required: true
+      description: >-
+        sha256 of the code
+    lines:
+      type: number
+      required: true
+      description: >-
+        line count
+    agent:
+      type: object
+      required: true
+      description: >-
+        { provider, model, hat } — who wrote it
+    unclosed:
+      type: boolean
+      required: false
+      description: >-
+        the fence never closed; the block runs to the end of the reply

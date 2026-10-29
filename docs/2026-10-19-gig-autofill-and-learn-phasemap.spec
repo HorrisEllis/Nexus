@@ -237,3 +237,14 @@ copilot." Map: docs/2026-10-25-clear-glass-agent-doors-phasemap.spec.
   - rows `gig fill|detect` and `autofill fill|detect|profiles`.
 - **Open:** a gig PART the editor's fields do not take is still left to copy by hand (`leftToCopy`). The picker loop for gig parts (GA2–GA4
   as written) is unbuilt.
+
+## ADDENDUM 2026-10-29 (0.60.281 AP1) — a gig's package rows
+James, 2026-10-29: "update the gig files." (his screenshot: the pricing page of "build an agent workflow that automates your repetitive work",
+with rows "Number of APIs integrated", "Number of Triggers / Actions", "Number of Platform/Tools Integrated", "Data Syncing", "Conditional Logic")
+- A package may carry `features: { "<row label as the page shows it>": value }` (src/autofill/gig.js `_features`): a number or text is picked in
+  that tier's column and row, yes/no ticks or clears the row's checkbox. The rows differ by subcategory, so they are the gig's data, never code.
+- The fill (bridge `_gigFeatures`, called from `_gigFill` on the pricing page) picks each through the driver's `choose` and reads it back
+  (`readChoice`), ticks through the new `checkAt` (clicked only when the state differs, read back), and lists the page's rows the gig does
+  not name (`rowLabels`) so he can add them. A value the menu lacks fails with the reason; nothing is guessed.
+- ai-agent-workflow-automation.gig carries the five rows with the coder's draft values (to confirm); the other gigs carry `features: {}`.
+- Proof: tests/modules/test-gig-features.test.js GF-01..03 (GF-02 caught a first-row miss in rowLabels before release).

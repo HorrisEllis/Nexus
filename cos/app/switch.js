@@ -74,4 +74,18 @@ async function rollback(root, project, opts = {}) {
   return r;
 }
 
-module.exports = { MODULE_ID, snapshotData, restoreData, pruneSnapshots, switchTo, rollback };
+// 0.60.279 VE7 / COSA14 — each switch and rollback, ok or not, is recorded in Versionium with from → to, the outcome and the reason (§17.12)
+function _rec(root, entry) { try { require('./versionium.js').record(root, entry).catch(() => {}); } catch (_) {} }
+async function switchToRecorded(root, project, version, opts = {}) {
+  const r = await switchTo(root, project, version, opts);
+  if (r && !r.already) _rec(root, { op: 'switch', project, from: r.from || null, to: version, outcome: r.ok ? 'ok' : (r.rolledBack ? 'failed, rolled back' : 'refused'), reason: r.ok ? null : (r.error || r.reason || null), detail: { snapshot: r.snapshot || null, backOn: r.backOn || null } });
+  return r;
+}
+async function rollbackRecorded(root, project, opts = {}) {
+  let before = null; try { before = readState(root, project); } catch (_) {}
+  const r = await rollback(root, project, opts);
+  _rec(root, { op: 'rollback', project, from: before && before.current, to: before && before.previous, outcome: r && r.ok ? 'ok' : 'failed', reason: r && !r.ok ? (r.error || r.reason || null) : (opts.reason || null), detail: { restoreData: !!opts.restoreData } });
+  return r;
+}
+
+module.exports = { MODULE_ID, snapshotData, restoreData, pruneSnapshots, switchTo: switchToRecorded, rollback: rollbackRecorded };

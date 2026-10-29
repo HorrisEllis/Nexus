@@ -73,3 +73,33 @@ phases:
 # releases request among the view's calls now that it also asks what is pending), test-releases with its base RL-03.
 # Open, said: Clear Glass's own records (macros, node files, settings) are its data, not versions of code. Recording edits to them is not in
 # this map, to confirm with him.
+
+# ADDENDUM 2026-10-29 (0.60.279) — his answer: "yes, clear glass macros and settings too." VE6 and VE7 BUILT.
+#  VE6_clear_glass_macros_and_settings:
+#    depends_on: [VE1_recorder]
+#    files: [lib/versionium-record.js, clear-glass/src/options/store.js, clear-glass/src/site-settings/store.js, lib/agent-tools/tools/clear-glass/macro.js, lib/automation-nodes.js]
+#    does: >-
+#      Clear Glass settings and site settings: each burst of saves is one record (settingsRecorder, 2 s) of the keys that changed, before
+#      and after, with any secret redacted (objectChange: password, token, key, cookie …). A macro made or deleted carries the whole macro
+#      before and after. A node file saved carries its text.
+#  VE7_cos_app (COSA14):
+#    depends_on: [VE_D1_one_recorder_durable]
+#    files: [cos/app/versionium.js, cos/app/store.js, cos/app/switch.js, cos/app/controller.js, scripts/build-cos-app.js]
+#    does: >-
+#      Every install (an inbox drop too), remove, switch and rollback, through the exe's own small recorder. It uses the same contract and
+#      keeps its own outbox, because the exe ships without lib. The controller replays the outbox at start and every minute.
+#  Also fixed: a test process never writes into a real Versionium (the sandbox remaps data folders, not ports). Both recorders skip and say
+#  so unless the test opts in with NEXUS_VERSIONIUM_RECORD_IN_TESTS=1 and its own Versionium. This was missing in 0.60.278.
+#  Proof: test-versionium-everywhere 7/7 (VE-05, VE-06, VE-07).
+
+phases_0_60_279:
+  VE6_clear_glass_macros_and_settings:
+    status: BUILT 0.60.279
+    depends_on: [VE1_recorder]
+    files: [lib/versionium-record.js, clear-glass/src/options/store.js, clear-glass/src/site-settings/store.js, lib/agent-tools/tools/clear-glass/macro.js, lib/automation-nodes.js]
+    does: Clear Glass settings and site settings (a burst of saves is one record, secrets redacted), macros made or deleted, node files saved
+  VE7_cos_app_installs_and_switches:
+    status: BUILT 0.60.279
+    depends_on: [VE_D1_one_recorder_durable, COSA14_versionium_record]
+    files: [cos/app/versionium.js, cos/app/store.js, cos/app/switch.js, cos/app/controller.js, scripts/build-cos-app.js]
+    does: every install, remove, switch and rollback of the COS app, with the exe's own outbox

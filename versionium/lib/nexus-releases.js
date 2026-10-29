@@ -119,6 +119,36 @@ async function sync(v, { root = ROOT, batch = 100, commits = 'recent' } = {}) {
   return { ok: !refused.length, repository: REPOSITORY, releases: all.length, recorded, already, refused, unpinned: all.filter(r => !r.gitCommit).length, withCommits: all.filter(r => Array.isArray(r.commits)).length };
 }
 
+/**
+ * syncInWorker(v, { root }) — 0.60.285: the full backfill (every release's commits, §17.12) computed in a child process, so Versionium
+ * keeps answering while git reads all history. One at a time: a second call while one runs gets the running one's promise.
+ * James's run log, 2026-10-29: after 0.60.278 made 'all' the default inside the server, Versionium was silent for 1113 s after boot.
+ */
+let _backfill = null;
+function syncInWorker(v, { root = ROOT, batch = 100, timeoutMs = 30 * 60000 } = {}) {
+  if (_backfill) return _backfill;
+  _backfill = new Promise((resolve) => {
+    const { fork } = require('child_process');
+    let done = false; const finish = (r) => { if (!done) { done = true; resolve(r); } };
+    let child; try { child = fork(path.join(__dirname, 'release-backfill-worker.js'), [root], { stdio: ['ignore', 'ignore', 'ignore', 'ipc'] }); }
+    catch (e) { return finish({ ok: false, error: `the backfill could not start: ${e.message}` }); }
+    const t = setTimeout(() => { try { child.kill(); } catch (_) {} finish({ ok: false, error: `the backfill took over ${Math.round(timeoutMs / 60000)} min and was stopped` }); }, timeoutMs);
+    if (t.unref) t.unref();
+    child.on('message', async (m) => {
+      clearTimeout(t);
+      if (!m || !m.ok) return finish({ ok: false, error: (m && m.error) || 'the backfill gave no answer' });
+      let recorded = 0, already = 0; const refused = [];
+      for (let i = 0; i < m.releases.length; i += batch) {
+        try { const r = await v('POST', '/api/versionium/releases', { releases: m.releases.slice(i, i + batch) }, 60000); recorded += r.recorded || 0; already += r.already || 0; refused.push(...(r.refused || [])); }
+        catch (e) { refused.push({ batch: i, error: e.message }); }
+      }
+      finish({ ok: !refused.length, repository: REPOSITORY, releases: m.releases.length, recorded, already, refused, withCommits: m.releases.filter(r => Array.isArray(r.commits)).length, in: 'a child process' });
+    });
+    child.on('exit', (code) => { clearTimeout(t); finish({ ok: false, error: `the backfill process ended (code ${code}) without an answer` }); });
+  }).finally(() => { _backfill = null; });
+  return _backfill;
+}
+
 /** released({ root }) — every release: lib's version lines (lib/release-version.js) and every changelog Versionium keeps */
 function released({ root = ROOT } = {}) {
   const RV = require('../../lib/release-version.js');
@@ -137,4 +167,4 @@ function agreement({ root = ROOT } = {}) {
   return { ...a, places, ok: places.every(p => p.ok) };
 }
 
-module.exports = { MODULE_ID, REPOSITORY, quoteOf, lineOf, read, sync, released, agreement };
+module.exports = { MODULE_ID, REPOSITORY, quoteOf, lineOf, read, sync, syncInWorker, released, agreement };

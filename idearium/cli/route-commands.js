@@ -24,6 +24,17 @@ const LOG_FLAGS = ['kind', 'actor', 'status', 'q', 'before', 'limit'];
  * a = { repo, args (positional after the repo), flags }. personOnly(a) → a reason: an agent calling the row through the
  * nexus.command tool (lib/agent-tools/tools/nexus/command.js) is refused with it; a person at the CLI is not.
  */
+// 0.60.284 PL3 — a pipeline run as a checklist: ✓ done, ▸ running, · waiting, ✗ failed, ⊘ blocked (by the task that failed)
+function _pipelineChecklist(run, h) {
+  const MARK = { done: '✓', running: '▸', waiting: '·', failed: '✗', blocked: '⊘' };
+  h.header(`${run.pipelineName || 'pipeline'} — ${run.status || '?'}`);
+  for (const id of (run.order || []).flat()) {
+    const t = (run.tasks || {})[id] || {};
+    const why = t.status === 'blocked' ? `blocked by ${t.blockedBy}` : t.error || (t.ms != null ? `${t.ms} ms${t.attempts > 1 ? `, ${t.attempts} attempts` : ''}` : '');
+    console.log(`  ${MARK[t.status] || '?'} ${t.label || id} ${h.c.dim(why || '')}`);
+  }
+}
+
 export const SPEC = [
   // ── the agent wearing the repo's hat ──────────────────────────────────────────────────────────────────────────────
   { key: 'repo.ask', repo: true, usage: 'repo ask <repo> "<message>" [--provider claude-code|ollama|chatgpt|…] [--model m]', about: 'talk to the agent wearing the repo\'s hat (its code lands as proposals)',
@@ -71,6 +82,28 @@ export const SPEC = [
   // §AU1 0.60.249 — James: "copilot system, ollama, lib folder, clearglass, idearium, and brainos have automation" · "Clearglass
   // automation, and macros, continue." One neutral door over all six (lib/automation-registry.js): list what each present source
   // holds, run one and record it under that source, and NAME an absent source — never fake one (§1.2).
+  // 0.60.284 PL3 — James, 2026-10-29: "making a pipeline and workflow feature and include the macros and automation". Pipelines on the
+  // automation engine that has the browser, macros and agents (Clear Glass's, docs/2026-10-29-pipelines-phasemap.spec PL_D2).
+  { key: 'pipeline.list', repo: false, usage: 'pipeline list [--archived]', about: 'pipelines: tasks in a dependency graph, each a macro, workflow, agent, command or browser step',
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipelines${a.flags.archived ? '?archived=1' : ''}` }),
+    print: (d, a, h) => { for (const p of d.pipelines || []) console.log(`  ${h.c.bold(p.name)}  ${h.c.dim(`${p.tasks.length} task${p.tasks.length === 1 ? '' : 's'}${p.archived ? ' · archived' : ''} · ${p.id}`)}`); if (!(d.pipelines || []).length) console.log(h.c.gray('  no pipelines yet — make one in Clear Glass Settings › Pipelines')); } },
+  { key: 'pipeline.show', repo: false, usage: 'pipeline show <id>', about: 'a pipeline\'s tasks in order, with what each runs and depends on',
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipelines/${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => { const p = d.pipeline || {}; h.header(p.name || 'pipeline'); const by = Object.fromEntries((p.tasks || []).map(t => [t.id, t]));
+      (d.layers || []).forEach((layer, i) => { for (const id of layer) { const t = by[id] || {}; console.log(`  ${i + 1}. ${h.c.bold(t.label || id)} ${h.c.dim(`(${id}) ${t.step ? t.step.type : ''}${(t.depends_on || []).length ? ` · after ${t.depends_on.join(', ')}` : ''}${t.gate ? ` · gate ${JSON.stringify(t.gate)}` : ''}`)}`); } }); } },
+  { key: 'pipeline.run', repo: false, usage: 'pipeline run <id> [--wait]', about: 'run a pipeline; --wait prints its checklist when it ends',
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: `/automation/pipelines/${encodeURIComponent(a.args[0])}/run${a.flags.wait ? '?wait=1' : ''}`, body: {}, timeoutMs: 30 * 60000 }),
+    print: (d, a, h) => { if (d.run) return _pipelineChecklist(d.run, h); console.log(`${h.c.mint('▸')} running — ${h.c.dim(`pipeline run-status ${d.runId}`)}`); } },
+  { key: 'pipeline.runs', repo: false, usage: 'pipeline runs <id>', about: 'a pipeline\'s last runs',
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipeline-runs?pipelineId=${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => { for (const r of d.runs || []) { const t = Object.values(r.tasks || {}); console.log(`  ${r.status === 'ok' ? h.c.green('✓') : r.status === 'running' ? '▸' : h.c.red('✗')} ${new Date(r.startedAt).toLocaleString()}  ${h.c.dim(`${t.filter(x => x.status === 'done').length}/${t.length} done · ${r.id}`)}`); } if (!(d.runs || []).length) console.log(h.c.gray('  no runs yet')); } },
+  { key: 'pipeline.run-status', repo: false, usage: 'pipeline run-status <run id>', about: 'one run\'s checklist: done, running, waiting, failed, blocked (and by what)',
+    need: (a) => (a.args[0] ? null : '<run id>'),
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipeline-runs/${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => _pipelineChecklist(d.run || {}, h) },
   { key: 'automation.list', repo: false, usage: 'automation list [--source <id>]', about: 'every automation (workflows + macros) across the six sources (copilot, ollama, lib, clear-glass, idearium, brainos); a source that is down is named',
     req: (a) => ({ method: 'GET', path: `/api/automation${a.flags.source ? `?source=${encodeURIComponent(String(a.flags.source))}` : ''}` }),
     print: (d, a, h) => {
@@ -715,6 +748,55 @@ export const SPEC = [
     req: (a) => ({ method: a.flags.notes ? 'POST' : 'GET', path: `/api/repos/${a.repo.uuid}/integrity`, ...(a.flags.notes ? { body: {} } : {}) }),
     print: (d, a, h) => { for (const c of d.checks || []) console.log(`  ${c.ok ? h.c.mint('✓') : (c.severity === 'error' ? h.c.amber('✗') : h.c.dim('?'))} ${c.id.padEnd(7)} ${c.name.padEnd(22)} ${c.ok ? '' : c.count}${c.error ? h.c.dim(` ${c.error}`) : ''}`); if (d.notes) console.log(h.c.dim(`  notes: ${d.notes.added} added, ${d.notes.updated} updated, ${d.notes.done} closed`)); } },
   // 0.60.6 — notes (lib/repo-notes.js): he and every agent log ideas, decisions, todos and questions in one place
+  // 0.60.285 HN3 — James, 2026-10-29: "i want all the history in idearium saved as nodes per unit." · "what about .node types for each
+  // language/code block for each agent?" — one .code_block type, the language and the agent are fields (HN_D2)
+  { key: 'repo.history-nodes', repo: true, usage: 'repo history-nodes <repo> [--lang python] [--provider claude] [--limit n] [--backfill]', about: 'the repo agent\'s history as nodes: each exchange with its input, response, tool calls and code blocks (by language and agent); --backfill turns the old log into nodes',
+    req: (a) => (a.flags.backfill ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/history-nodes/backfill`, body: {}, timeoutMs: 120000 }
+      : { method: 'GET', path: `/api/repos/${a.repo.uuid}/history-nodes?${[a.flags.lang ? `lang=${encodeURIComponent(a.flags.lang)}` : '', a.flags.provider ? `provider=${encodeURIComponent(a.flags.provider)}` : '', a.flags.limit ? `limit=${parseInt(a.flags.limit, 10)}` : ''].filter(Boolean).join('&')}` }),
+    print: (d, a, h) => {
+      if (a.flags.backfill) { console.log(`${h.c.mint('✓')} ${d.exchanges} exchange(s) → ${d.written} node(s) · ${d.skipped} already · ${d.truncated} marked truncated (the old log had cut them)${(d.errors || []).length ? h.c.red(` · ${d.errors.length} failed`) : ''}`); return; }
+      for (const x of d.exchanges || []) {
+        console.log(`  ${x.ok ? h.c.green('✓') : h.c.red('✗')} ${new Date(x.ts).toLocaleString()} ${h.c.bold(x.provider || '?')}${x.model ? h.c.dim(' ' + x.model) : ''}  ${h.c.dim(String((x.input && x.input.prompt) || '').replace(/\s+/g, ' ').slice(0, 70))}`);
+        for (const c of x.toolCalls || []) console.log(`      ${h.c.dim('tool')} ${c.name}${c.ok ? '' : h.c.red(' failed')}`);
+        for (const c of x.codeBlocks || []) console.log(`      ${h.c.dim('code')} ${c.lang} · ${c.lines} line(s)${c.unclosed ? h.c.yellow(' unclosed') : ''}`);
+      }
+      if (!(d.exchanges || []).length) console.log(h.c.gray('  no history nodes yet — new exchanges write them; --backfill turns the old log into nodes'));
+    } },
+  // 0.60.286 FA6 — James, 2026-10-29: "create all the capability to finish this or any other project in the repo" (docs/project-spine.spec)
+  { key: 'repo.finish', repo: true, usage: 'repo finish <repo>', about: 'one checklist of what stands between the project and done: the spine (its component registry) written and matching the code, wires that resolve, docs and hard-coded plans converted, files holding several components, phases done — each with the command that moves it',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/finish`, timeoutMs: 120000 }),
+    print: (d, a, h) => { console.log(`${h.c.bold(d.name || '')} — ${d.open ? h.c.amber(`${d.open} open`) : h.c.green('nothing open')} · ${(d.stats || {}).components || 0} components · ${(d.stats || {}).wires || 0} wires`);
+      for (const i of d.items || []) console.log(`  ${i.done ? h.c.green('✓') : h.c.amber('·')} ${i.id.padEnd(14)} ${i.say}${!i.done && i.cmd ? h.c.dim(`   → ${i.cmd}`) : ''}`); } },
+  { key: 'repo.spine', repo: true, usage: 'repo spine <repo> [--write] [--unknown] [--limit n]', about: 'the project\'s component registry as its spine: every component and every wire with its evidence (discovered by which adapter, declared, or unknown), and the drift against nexus.spine.json; --write writes it',
+    req: (a) => (a.flags.write ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/spine`, body: {}, timeoutMs: 120000 } : { method: 'GET', path: `/api/repos/${a.repo.uuid}/spine${a.flags.limit ? `?limit=${parseInt(a.flags.limit, 10)}` : ''}`, timeoutMs: 120000 }),
+    print: (d, a, h) => {
+      const st = d.stats || {}; console.log(`${a.flags.write ? `${h.c.mint('✓')} wrote ${d.file} — ` : ''}${st.components} components · ${st.wires} wires · ${d.unknown || 0} unknown · ${Object.entries(st.byAdapter || {}).map(([k, v]) => `${k} ${v}`).join(', ')}`);
+      if (a.flags.write) return;
+      if (d.drift) console.log(d.drift.ok ? h.c.green('  the spine matches the code') : h.c.amber(`  drift: ${d.drift.added.length} added, ${d.drift.gone.length} gone, ${d.drift.wiresAdded.length} wires new, ${d.drift.wiresGone.length} gone`));
+      else console.log(h.c.gray(`  not written yet — repo spine ${a.args[0] || '<repo>'} --write`));
+      for (const w of (d.wires || []).filter(x => (a.flags.unknown ? x.evidence === 'unknown' : true)).slice(0, a.flags.unknown ? 200 : 40)) console.log(`  ${w.fromPath}:${w.line || ''} ${h.c.dim('→')} ${w.toPath || h.c.red(w.spec)}  ${h.c.dim(w.evidence)}`);
+    } },
+  { key: 'repo.refactor', repo: true, usage: 'repo refactor <repo> move <component|path> <to> | rename <component|path> <name> [--apply]', about: 'refactor through the registry: who reaches the component is read from the spine\'s wires, each require/link rewritten on its line; verified by a rescan (no wire lost); --apply writes it (a repo version per file)',
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/refactor`, body: { op: a.args[0] || 'move', id: a.args[1], to: a.args[0] === 'rename' ? undefined : a.args[2], name: a.args[0] === 'rename' ? a.args[2] : undefined, apply: !!a.flags.apply }, timeoutMs: 120000 }),
+    print: (d, a, h) => { const p = d.plan || {}; console.log(`${d.applied ? h.c.mint('✓ applied') : h.c.amber('plan')} ${p.op} ${p.from} → ${p.to}`); for (const w of p.writes || []) console.log(`  ${w.created ? h.c.green('+') : h.c.dim('~')} ${w.path}`); for (const s of p.said || []) console.log(h.c.gray(`  ${s}`)); if (!d.applied) console.log(h.c.dim('  --apply to write it')); } },
+  { key: 'repo.split', repo: true, usage: 'repo split <repo> <file> [--by section|declaration] [--test "cmd"] [--apply] | repo split <repo> --candidates', about: 'one component, one file: a file holding several components broken into one file each under <name>/, the old path kept as the door (same exports, checked by loading both apart; --test runs the project\'s own test before and after); --apply writes it and wires the pieces into the spine',
+    req: (a) => (a.flags.candidates || !a.args[0] ? { method: 'GET', path: `/api/repos/${a.repo.uuid}/split-candidates` }
+      : { method: 'POST', path: `/api/repos/${a.repo.uuid}/split`, body: { path: a.args[0], by: a.flags.by || 'auto', apply: !!a.flags.apply, testCmd: a.flags.test || null }, timeoutMs: 600000 }),
+    print: (d, a, h) => {
+      if (d.candidates) { for (const c of d.candidates) console.log(`  ${String(c.lines).padStart(5)} lines  ${c.units} units  ${c.sections.length} sections  ${c.path}`); if (!d.candidates.length) console.log(h.c.gray('  every file holds one component')); return; }
+      const p = d.plan || {}; console.log(`${d.applied ? h.c.mint('✓ split') : h.c.amber('plan')} ${p.file} → ${(p.pieces || []).length} files by ${p.by}${d.verify ? (d.verify.ok ? h.c.green(' · same exports') : h.c.red(' · NOT the same')) : ''}`);
+      for (const x of p.pieces || []) console.log(`  ${h.c.green('+')} ${x.path}  ${h.c.dim(x.names.join(', '))}`);
+      for (const k of (p.kept || []).slice(0, 12)) console.log(h.c.gray(`  kept in the door: line ${k.line} ${k.names.join(', ')} — ${k.why}`));
+      if (!d.applied) console.log(h.c.dim('  --apply to write it'));
+    } },
+  { key: 'repo.convert', repo: true, usage: 'repo convert <repo> [--apply] [--replace]', about: 'convert the project\'s markdown into specs (sections kept, a module for each file it names, exports read) and the build plans hard-coded inside its specs into phasemaps (DAG-checked); the sources stay; --apply writes them',
+    req: (a) => (a.flags.apply || a.flags.preview ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/convert`, body: { apply: !!a.flags.apply, replace: !!a.flags.replace }, timeoutMs: 120000 } : { method: 'GET', path: `/api/repos/${a.repo.uuid}/convert` }),
+    print: (d, a, h) => {
+      if (d.writes) { for (const w of d.writes) console.log(`  ${d.applied ? h.c.green('✓') : h.c.amber('·')} ${w.path} ${h.c.dim(`from ${w.from}${w.kind === 'phasemap' ? ` · ${w.phases} phases, next ${(w.next || []).slice(0, 3).join(', ')}` : ` · ${w.modules} modules`}`)}`); for (const s of d.said || []) console.log(h.c.gray(`  ${s}`)); return; }
+      for (const m of d.mds || []) console.log(`  ${m.exists ? h.c.green('✓') : h.c.amber('·')} ${m.path} → ${m.target}`);
+      for (const x of d.specPlans || []) console.log(`  ${x.exists ? h.c.green('✓') : h.c.amber('·')} ${x.path} (${x.modules} modules with a build plan) → ${x.target}`);
+      console.log(h.c.dim(`  ${(d.todo || {}).mds || 0} md(s) and ${(d.todo || {}).specPlans || 0} plan(s) to convert — --apply`));
+    } },
   { key: 'repo.notes', repo: true, usage: 'repo notes <repo> [--q words] [--kind idea|decision|todo|question|quote|note]', about: 'the repo\'s notes, pinned first then newest',
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/notes${a.flags.q || a.flags.kind ? `?${[a.flags.q ? `q=${encodeURIComponent(a.flags.q)}` : '', a.flags.kind ? `kind=${encodeURIComponent(a.flags.kind)}` : ''].filter(Boolean).join('&')}` : ''}` }),
     print: (d, a, h) => { for (const n of d.notes || []) console.log(`  ${n.pinned ? h.c.amber('★') : ' '} ${h.c.dim(n.kind.padEnd(8))} ${n.status === 'done' ? h.c.dim(n.title) : n.title}  ${h.c.dim(n.id)}`); if (!(d.notes || []).length) console.log(h.c.gray('  no notes')); } },
@@ -722,6 +804,19 @@ export const SPEC = [
     need: (a) => (a.args.length ? null : '<text>'),
     req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/notes`, body: { body: a.args.join(' '), ...(a.flags.kind ? { kind: a.flags.kind } : {}), ...(a.flags.tags ? { tags: a.flags.tags } : {}), ...(a.flags.source ? { source: a.flags.source } : {}) } }),
     print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.note.kind}: ${d.note.title}  ${h.c.dim(d.note.id)}`) },
+  // 0.60.281 AP3 — James, 2026-10-29: "also capturing the contact info for job applications." The opportunity system's contacts
+  // (lib/opportunity/contacts.js), through Copilot's /api/opportunity/contacts — captured from each job's page, or added by hand.
+  { key: 'opp.contacts', repo: false, usage: 'opp contacts [--opp <id>] [--q words] [--archived]', about: 'the contacts behind your job applications: who, role, email, phone, the job, its status',
+    req: (a) => ({ system: 'copilot', method: 'GET', path: `/api/opportunity/contacts?${[a.flags.opp ? `opp=${encodeURIComponent(a.flags.opp)}` : '', a.flags.q ? `q=${encodeURIComponent(a.flags.q)}` : '', a.flags.archived ? 'archived=1' : ''].filter(Boolean).join('&')}` }),
+    print: (d, a, h) => { for (const c of d.contacts || []) console.log(`  ${[c.name, c.role, c.company].filter(Boolean).join(' · ') || h.c.dim('(no name)')}  ${[c.email, c.phone, c.site].filter(Boolean).join('  ')}\n    ${h.c.dim(`${c.oppTitle || 'no job'} · ${c.status || '—'} · ${c.source}${c.archived ? ' · archived' : ''} · ${c.id.slice(0, 8)}`)}`); if (!(d.contacts || []).length) console.log(h.c.gray('  no contacts yet — they are captured when a job page is read (opp capture), or added with opp contact')); } },
+  { key: 'opp.contact', repo: false, usage: 'opp contact <add|edit <id>|archive <id>|restore <id>> [--name n] [--email e] [--phone p] [--company c] [--role r] [--site s] [--status s] [--opp <id>] [--notes t]', about: 'add a contact by hand, edit one, archive it (never deleted)',
+    need: (a) => (['add', 'edit', 'archive', 'restore'].includes(a.args[0]) && (a.args[0] === 'add' || a.args[1]) ? null : 'add | edit <id> | archive <id> | restore <id>'),
+    req: (a) => { const f = a.flags, body = {}; for (const k of ['name', 'email', 'phone', 'company', 'role', 'site', 'linkedin', 'status', 'notes']) if (f[k] != null) body[k] = String(f[k]); if (f.opp) body.oppId = String(f.opp);
+      const [verb, id] = a.args;
+      if (verb === 'add') return { system: 'copilot', method: 'POST', path: '/api/opportunity/contacts', body };
+      if (verb === 'edit') return { system: 'copilot', method: 'PUT', path: `/api/opportunity/contacts/${encodeURIComponent(id)}`, body };
+      return { system: 'copilot', method: 'POST', path: `/api/opportunity/contacts/${encodeURIComponent(id)}/archive`, body: { archived: verb === 'archive' } }; },
+    print: (d, a, h) => { if (d.ok === false) { console.log(h.c.red(d.error)); return; } const c = d.contact || {}; console.log(`${h.c.mint('✓')} ${a.args[0]} — ${[c.name, c.email, c.phone].filter(Boolean).join(' · ')}  ${h.c.dim(c.id || '')}${d.deduped ? h.c.dim(' (already held)') : ''}`); } },
   { key: 'notes', repo: false, usage: 'notes [--q words] [--kind k] [--loose]', about: 'every note, on every repo (--loose: only those on no repo)',
     req: (a) => ({ method: 'GET', path: `/api/notes?scope=${a.flags.loose ? 'loose' : 'all'}${a.flags.q ? `&q=${encodeURIComponent(a.flags.q)}` : ''}${a.flags.kind ? `&kind=${encodeURIComponent(a.flags.kind)}` : ''}` }),
     print: (d, a, h) => { for (const n of d.notes || []) console.log(`  ${h.c.dim(n.kind.padEnd(8))} ${n.title}  ${h.c.dim(n.repoUuid ? (d.names || {})[n.repoUuid] || n.repoUuid.slice(0, 8) : 'no repo')} ${h.c.dim(n.id)}`); if (!(d.notes || []).length) console.log(h.c.gray('  no notes')); } },

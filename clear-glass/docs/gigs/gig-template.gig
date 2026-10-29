@@ -15,18 +15,21 @@ packages:
     deliveryDays: 2
     revisions: 1
     price: 30            # US dollars, at least 5; basic < standard < premium
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   standard:
     name: ""            # at most 35 characters
     description: ""     # at most 100 characters — exactly what is delivered
     deliveryDays: 4
     revisions: 2
     price: 90            # US dollars, at least 5; basic < standard < premium
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   premium:
     name: ""            # at most 35 characters
     description: ""     # at most 100 characters — exactly what is delivered
     deliveryDays: 7
     revisions: 3
     price: 250            # US dollars, at least 5; basic < standard < premium
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
 faq:                    # up to 5: questions a buyer would really ask
   - question: ""
     answer: ""

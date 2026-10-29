@@ -178,7 +178,7 @@ function remove(root, project, version) {
 function scanInbox(root, opts = {}) {
   const inbox = path.join(root, 'inbox'); fs.mkdirSync(inbox, { recursive: true }); const out = [];
   for (const n of fs.readdirSync(inbox).filter(n => /\.zip$/i.test(n)).sort()) {
-    const f = path.join(inbox, n); const r = importZip(root, f, opts); const sub = path.join(inbox, r.ok ? 'done' : 'failed'); fs.mkdirSync(sub, { recursive: true });
+    const f = path.join(inbox, n); const r = importZipRecorded(root, f, opts); /* 0.60.279 — a dropped zip's install is recorded too */ const sub = path.join(inbox, r.ok ? 'done' : 'failed'); fs.mkdirSync(sub, { recursive: true });
     fs.renameSync(f, path.join(sub, n)); if (!r.ok) fs.writeFileSync(path.join(sub, n + '.why.txt'), r.error + '\n');
     out.push({ file: n, ...r, zip: undefined });
   }
@@ -190,4 +190,19 @@ function status(root) {
   return { root, platform: process.platform, projects, inbox: { path: path.join(root, 'inbox'), pending } };
 }
 
-module.exports = { MODULE_ID, LIMITS, defaultRoot, checksumFor, inspect, importZip, linkData, list, remove, scanInbox, status, cmpVer };
+// 0.60.279 VE7 / COSA14 — James, 2026-10-29: "full changes, and versions have to be pushed to versionium?" (§17.12). Each install and remove
+// is recorded in Versionium (cos/app/versionium.js: its own outbox, because the exe ships without lib). The act never waits on it.
+function _rec(root, entry) { try { require('./versionium.js').record(root, entry).catch(() => {}); } catch (_) {} }
+const _importZip = importZip, _remove = remove;
+function importZipRecorded(root, zipPath, opts = {}) {
+  const r = _importZip(root, zipPath, opts);
+  if (r && r.ok && !r.already) _rec(root, { op: 'install', project: r.project, version: r.version, outcome: r.verified ? 'ok' : 'ok (not verified: no checksum)', sha256: (readState(root, r.project).versions[r.version] || {}).sha256 || null, detail: { entries: r.entries, dataMoved: r.dataMoved } });
+  return r;
+}
+function removeRecorded(root, project, version) {
+  const r = _remove(root, project, version);
+  if (r && r.ok) _rec(root, { op: 'remove', project, version, detail: { movedTo: r.moved } });
+  return r;
+}
+
+module.exports = { MODULE_ID, LIMITS, defaultRoot, checksumFor, inspect, importZip: importZipRecorded, linkData, list, remove: removeRecorded, scanInbox, status, cmpVer };

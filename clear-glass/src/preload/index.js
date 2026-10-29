@@ -214,6 +214,9 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     set:   (url, key, value) => ipcRenderer.invoke('site-profile:set', { url, key, value }),
     clear: (url, key)        => ipcRenderer.invoke('site-profile:clear', { url, key }),
     keys:  ()                => ipcRenderer.invoke('site-profile:keys'),
+    // 0.60.283 — what holds this tab's site's accessibility look on; reset: backed up, removed, the site set to Off, the page reloaded
+    a11yCheck: (wcId) => ipcRenderer.invoke('site:a11yCheck', { wcId }),
+    a11yReset: (wcId) => ipcRenderer.invoke('site:a11yReset', { wcId }),
   },
 
   // ── Accounts (real, per-agentKey identity — §PHASE-3 2026-08-23) ──────
@@ -356,6 +359,11 @@ contextBridge.exposeInMainWorld('ClearGlass', {
 
   // §BUILT 2026-09-19 — real AutofillProfile CRUD + detect/fill orchestration
   // 0.60.269 — Settings › About: the versions, and whether a newer Electron / Clear Glass / Nexus exists (read-only)
+  // 0.60.281 AP4 — James: "also capturing the contact info for job applications." Settings › Applications: the opportunity system's
+  // applications and contacts, through Copilot's /api/opportunity routes only (the bridge proxies an allowlist; §5.15)
+  applications: {
+    call: (method, path, body) => ipcRenderer.invoke('applications:call', { method, path, body }),
+  },
   about: {
     info:  () => ipcRenderer.invoke('about:info'),
     check: () => ipcRenderer.invoke('about:check'),
@@ -460,6 +468,11 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   // ── Floating CLI (BS6, 0.60.179) — its own window, excluded from screen capture; see src/main/float-cli.js ──
   floatCli: {
     toggle:  ()          => ipcRenderer.invoke('floatcli:toggle'),
+    // 0.60.280 KB7 — pin: the button on every browser window, kept
+    show:    (expanded)  => ipcRenderer.invoke('floatcli:show', { expanded: !!expanded }),
+    pin:     (pinned)    => ipcRenderer.invoke('floatcli:pin', { pinned: !!pinned }),
+    pinned:  ()          => ipcRenderer.invoke('floatcli:pinned'),
+    onPinned: (cb)       => { const f = (_e, d) => cb(d); ipcRenderer.on('floatcli:pinned', f); return () => ipcRenderer.removeListener('floatcli:pinned', f); },
     size:    (expanded)  => ipcRenderer.invoke('floatcli:size', { expanded }),
     hide:    ()          => ipcRenderer.invoke('floatcli:hide'),
     nav:     (op, url)   => ipcRenderer.invoke('floatcli:nav', { op, url }),

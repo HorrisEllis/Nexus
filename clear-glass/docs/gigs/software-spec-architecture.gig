@@ -44,18 +44,21 @@ packages:
     deliveryDays: 2
     revisions: 1
     price: 50
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   standard:
     name: Spec and Build Plan
     description: 'Full spec: parts, data, flows, and a phased build plan with tests.'
     deliveryDays: 5
     revisions: 2
     price: 160
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   premium:
     name: Architecture Package
     description: Spec, phased plan, dependency map and risk review, ready to build.
     deliveryDays: 9
     revisions: 3
     price: 380
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
 faq:
   - question: Do I need technical knowledge?
     answer: >-

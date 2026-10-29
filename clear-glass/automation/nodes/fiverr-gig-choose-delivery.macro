@@ -1,25 +1,32 @@
 envelope: 1
-uuid: nexus-export-macro-fiverr-gig-choose-delivery-v1
+uuid: nexus-export-macro-fiverr-gig-choose-delivery-v2
 type: macro
-id: fiverr-gig-choose-delivery-v1
+id: fiverr-gig-choose-delivery-v2
 context: Clear Glass → Settings → Macros
 intent: >-
   Scope & Pricing: in the BASIC / STANDARD / PREMIUM column named by {{tier}}, open the DELIVERY
   TIME dropdown and pick {{delivery}} (e.g. "3 Days"). What _gigFill does for each *.delivery part.
-summary: 2 browser steps for fiverr.com; asks for tier, delivery
+  v2 (0.60.280): gated. After the pick, the gate checks that this column's dropdown shows
+  {{delivery}}; if not, the pick runs again (2 retries). Edit `pick` (auto, pointer, keys, number)
+  or add `keysFor` to bind keys to each value, e.g. "3": "Down Down Down Enter".
+# 0.60.280 KB6: a copy of v1 that was never edited (its fingerprint is listed here) is upgraded to this; an edited one stays his
+supersedes:
+  - c4e22f7fde7d67ff
+summary: 2 browser steps for fiverr.com, the pick gated on the value shown; asks for tier, delivery
 system: clear-glass.automation
 tags:
   - macro
   - step:wait_for
   - step:choose
+  - gated
 exported_at: 1793207566450
 source: clear-glass/src/automation/nodes.js
 occurrences: 1
 firstSeenAt: 1793207566450
 lastSeenAt: 1793207566450
-fingerprint: c4e22f7fde7d67ff
+fingerprint: f2f466c33779c6e9
 payload:
-  uuid: fiverr-gig-choose-delivery-v1
+  uuid: fiverr-gig-choose-delivery-v2
   name: Fiverr gig - choose delivery
   urlPattern: fiverr.com
   steps:
@@ -31,6 +38,13 @@ payload:
         column: '{{tier}}'
         shows: DELIVERY TIME
         option: '{{delivery}}'
+        pick: auto
+      gate:
+        choice:
+          column: '{{tier}}'
+          is: '{{delivery}}'
+        retries: 2
+        timeoutMs: 4000
   params:
     - tier
     - delivery

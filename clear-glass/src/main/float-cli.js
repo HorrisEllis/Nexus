@@ -12,6 +12,10 @@
  *   attach(parentWin, { agentId }) → { toggle(), state(), destroy() }       one per browser window, made on first use
  *   register({ ipcMain, BrowserWindow })                                    the IPC: floatcli:toggle | size | hide | nav | url
  * Sizes: the round button alone (collapsed), or the panel (open). It sits at the parent's lower right and follows it.
+ *
+ * 0.60.280 KB7 — James, 2026-10-29: "the clearglass floating menu button, can you make that an option to pin it?" Pinned (options floatCli.pinned):
+ * the round button shows on every browser window at start and stays; ✕ collapses it to the button instead of hiding it. 📌 in the panel and
+ * Settings › General set it; every window hears the change (floatcli:pinned).
  */
 const path = require('path');
 
@@ -24,6 +28,7 @@ const byChild = new Map();    // float webContents id → controller
 function attach(parentWin, { agentId, BrowserWindow = require('electron').BrowserWindow, preload, file, platform = process.platform, log = console.warn } = {}) {
   if (byParent.has(parentWin.id)) return byParent.get(parentWin.id);
   let win = null, expanded = true, visible = false, url = '';
+  const pinned = () => { try { return !!(attachOptsPinned && attachOptsPinned()); } catch (_) { return false; } };
   const protectedOk = platform === 'win32' || platform === 'darwin';
 
   function place() {
@@ -51,26 +56,42 @@ function attach(parentWin, { agentId, BrowserWindow = require('electron').Browse
   parentWin.on('closed', () => destroy());
 
   function show() { if (!win || win.isDestroyed()) make(); expanded = true; place(); visible = true; win.once('ready-to-show', () => win.show()); if (win.webContents && !win.webContents.isLoading()) win.show(); win.webContents.send('floatcli:state', { open: true, expanded, url }); }
-  function hide() { if (win && !win.isDestroyed()) win.hide(); visible = false; notifyParent(); }
+  function showCollapsed() { if (!win || win.isDestroyed()) make(); expanded = false; place(); visible = true; win.once('ready-to-show', () => win.showInactive()); if (win.webContents && !win.webContents.isLoading()) win.showInactive(); notifyParent(); sendPin(); return { ok: true, open: true, expanded: false }; }
+  function sendPin() { try { if (win && !win.isDestroyed()) win.webContents.send('floatcli:state', { pinned: pinned() }); } catch (_) {} }
+  function hide() { if (pinned()) { size(false); try { if (win && !win.isDestroyed()) win.webContents.send('floatcli:state', { collapse: true, pinned: true }); } catch (_) {} return; }   // pinned: ✕ collapses to the button
+    if (win && !win.isDestroyed()) win.hide(); visible = false; notifyParent(); }
   function notifyParent() { try { if (!parentWin.isDestroyed()) parentWin.webContents.send('floatcli:state', { open: visible }); } catch (_) {} }
   function toggle() { visible ? hide() : show(); notifyParent(); return { ok: true, open: visible, protected: protectedOk }; }
   function size(isExpanded) { expanded = !!isExpanded; place(); return { ok: true, expanded }; }
   function nav(op, u) { if (!parentWin.isDestroyed()) parentWin.webContents.send('floatcli:nav', { op, url: u }); return { ok: true }; }
   function setUrl(u) { url = String(u || ''); if (win && !win.isDestroyed()) win.webContents.send('floatcli:state', { url }); }
   function destroy() { byParent.delete(parentWin.id); if (win && !win.isDestroyed()) win.destroy(); win = null; }
-  const ctl = { toggle, hide, size, nav, setUrl, destroy, state: () => ({ open: visible, expanded, protected: protectedOk, url }), window: () => win };
+  const ctl = { toggle, hide, size, nav, setUrl, destroy, showCollapsed, sendPin, state: () => ({ open: visible, expanded, protected: protectedOk, url, pinned: pinned() }), window: () => win };
   byParent.set(parentWin.id, ctl);
   return ctl;
 }
 
-function register({ ipcMain, BrowserWindow = require('electron').BrowserWindow, attachOpts = () => ({}) } = {}) {
+let attachOptsPinned = null;   // set by register: () => the floatCli.pinned option
+
+function register({ ipcMain, BrowserWindow = require('electron').BrowserWindow, attachOpts = () => ({}), isPinned = () => false, setPinned = null } = {}) {
+  attachOptsPinned = isPinned;
+  // 0.60.280 KB7 — show collapsed (a browser window at start, when pinned); pin or unpin (saved, and every window told)
+  ipcMain.handle('floatcli:show', (e, d = {}) => { const p = parentOf(e); if (!p) return { ok: false, error: 'no browser window to float over' }; const c = attach(p, { BrowserWindow, ...attachOpts(p) }); return d.expanded ? (c.state().open ? { ok: true, open: true } : c.toggle()) : c.showCollapsed(); });
+  ipcMain.handle('floatcli:pin', (e, d = {}) => {
+    if (!setPinned) return { ok: false, error: 'pinning is not wired here' };
+    const on = !!d.pinned; const r = setPinned(on); if (r && r.error) return { ok: false, error: r.error };
+    for (const c of byParent.values()) { try { c.sendPin(); if (on && !c.state().open) c.showCollapsed(); } catch (_) {} }
+    for (const w of BrowserWindow.getAllWindows()) { try { if (!w.isDestroyed()) w.webContents.send('floatcli:pinned', { pinned: on }); } catch (_) {} }
+    return { ok: true, pinned: on };
+  });
+  ipcMain.handle('floatcli:pinned', () => ({ ok: true, pinned: !!isPinned() }));
   const parentOf = (e) => { const w = BrowserWindow.fromWebContents(e.sender); return w && (w.getParentWindow && w.getParentWindow()) ? null : w; };
   ipcMain.handle('floatcli:toggle', (e) => {
     const p = parentOf(e); if (!p) return { ok: false, error: 'no browser window to float over' };
     return attach(p, { BrowserWindow, ...attachOpts(p) }).toggle();
   });
   ipcMain.handle('floatcli:size', (e, d = {}) => { const c = byChild.get(e.sender.id); return c ? c.size(d.expanded) : { ok: false, error: 'not a floating CLI' }; });
-  ipcMain.handle('floatcli:hide', (e) => { const c = byChild.get(e.sender.id); if (c) c.hide(); return { ok: !!c }; });
+  ipcMain.handle('floatcli:hide', (e) => { const c = byChild.get(e.sender.id); if (c) c.hide(); return { ok: !!c, pinned: !!isPinned() }; });
   ipcMain.handle('floatcli:nav', (e, d = {}) => {
     const c = byChild.get(e.sender.id); if (!c) return { ok: false, error: 'not a floating CLI' };
     if (!['go', 'back', 'forward', 'reload'].includes(d.op)) return { ok: false, error: 'op must be go, back, forward or reload' };

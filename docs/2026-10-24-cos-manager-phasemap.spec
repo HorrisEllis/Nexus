@@ -59,6 +59,13 @@ decisions:
     chosen: "every page is its own component: separate .html, .css and .js files, declared in the registry, using only the CLI rows and API routes it declares; no page shares code with another except through core"
     by: "his, 2026-10-24: \"each page is isolated, seperate, all js, html and css are seperated and isolated per component and uses the component registry\""
 
+  MG_D2_category_is_a_registry_record:
+    chosen: "a category is a record in COS's registry (CS_D1, the registry is the spine), validated against its archetype's or template's schema; every change to it is recorded in Versionium (§17.12)"
+    by_the_axioms: "§5.15 one owner (COS owns its categories); §17.12; §8.6 (MG5's editors, not a second editor)"
+  MG_D3_data_through_the_compartment:
+    chosen: "the data browser reads a compartment's data only through the routes its registry declares (MG2's tunnel), never its files"
+    by_the_axioms: "§5.15 rule 1"
+
 phases:
   MG0b_the_full_spec:
     status: OPEN
@@ -149,4 +156,90 @@ phases:
       the registry, shaking hands before it calls. Driven in Clear Glass, never Playwright.
     proof: "driven in Clear Glass: a compartment made, versioned, throttled, branched, rewound and destroyed from the pages; an undeclared call refused and shown"
 
+  MG10_categories:
+    status: OPEN
+    depends_on: [MG0b_the_full_spec, MG5_browsers_and_editors, MG6_settings_by_template_and_type, CS4_every_system_a_compartment, MG_D2_category_is_a_registry_record]
+    files: [cos/manager/categories.js, cos/manager/routes.js, idearium/cli/route-commands.js]
+    does: >-
+      Backend, then route, then command. A category is { id, name, from: archetype | template, source id, schema, settings layer (MG6),
+      members }. List, show, new (from an archetype or a template), edit against its schema, rename, remove (archived, §0.3). Every change
+      goes to Versionium. The built-in "systems" category lists each Nexus system as its compartment, with its state (CS4). Command rows:
+      `cos category list|show|new|edit|rm`.
+    proof: "a category made from an archetype and one from a template; an edit refused by its schema says why; systems lists every system compartment; each change in Versionium"
+  MG11_category_manager_ui:
+    status: OPEN
+    depends_on: [MG10_categories, MG_D1_ui_isolated_per_component, DB26_the_ui_floats_on_the_registry]
+    files: [cos/ui/categories]
+    does: >-
+      The manager and editor screens on MG10's routes only. Categories as a list; a category page with its archetype or template, its
+      schema (a form built from the schema, and raw), its settings and its members. Systems is one of them. Each page is its own component
+      (MG_D1).
+    proof: "driven in Clear Glass: a category made, edited against its schema, and removed; systems shows every system compartment"
+  MG12_the_exe_is_the_compartment_manager:
+    status: OPEN
+    depends_on: [MG3_the_state_manager, MG4_resources_per_compartment, MG9_the_console_ui, MG11_category_manager_ui, MG_D3_data_through_the_compartment, COSA6_the_exe, COSA12_vmware_window, CS8_the_cos_screen, VM1_control_like_vmware]
+    files: [cos/app/desktop/main.js, cos/app/desktop/ui, cos/app/controller.js, cos/manager/routes.js]
+    does: >-
+      cos.exe becomes the full compartment manager. On the left, a tree of categories and their compartments (MG10/MG11). Each compartment
+      has tabs:
+      - Rewind: VM1's checkpoint timeline and CS1's versions; restore, branch, pause and resume; Clear Glass's session rewind for a browser
+        compartment, to confirm.
+      - Diagnostics: health, failure modes, logs, lib/cos-debug-report.js.
+      - Versions: its Versionium history and releases; restore a version.
+      - Data: a browser of its data through its own routes (MG_D3).
+      - Tools: the commands and tools its registry declares, run from here.
+      It gathers CS8's screen into it rather than building a second one.
+    proof: "driven in Clear Glass on the exe's UI: a fixture compartment rewound to a checkpoint, its diagnostics read, a version restored, its data browsed through its route, a tool run"
+  MG13_cli_in_the_exe:
+    status: OPEN
+    depends_on: [CON1_one_door_client, CON2_grammar_and_completion, CON5_pane, MG12_the_exe_is_the_compartment_manager]
+    files: [cos/app/cli.js, cos/app/desktop/main.js]
+    does: >-
+      CLI access. A console pane inside the exe (CON5). From a terminal, `COS.exe <command>` runs any row headless and prints the result:
+      through CON1's one door when Idearium is up, and the local COS verbs when it is not.
+    proof: "`COS.exe status` and `COS.exe cos category list` print without opening a window; the pane runs the same rows"
+  MG14_live_thumbnails:
+    status: OPEN
+    depends_on: [MG12_the_exe_is_the_compartment_manager, CS3_the_registry_is_the_bridge]
+    files: [cos/app/desktop/thumbnails.js, cos/app/desktop/ui]
+    does: >-
+      Each compartment's own UI (the index.html its registry declares) rendered off-screen and shown as a live thumbnail in the manager's
+      tree and grid. Refreshed on change or every few seconds, paused when hidden. Clicking it opens that UI. A compartment with no UI shows
+      its status card instead, and says so.
+    proof: "a fixture compartment's index.html appears as its thumbnail and updates after a change; one with no UI says it has none"
+
 build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → MG8 → MG9. Backend → route → command → UI in each, and MG9 (the UI) last, as he said. Sovereignty of Nexus's own systems (SV1–SV7) goes on alongside; COS opening a Nexus system waits on it (CS_D7)."
+
+# ── ADDENDUM 2026-10-29 — categories, and cos.exe as the full compartment manager (his) ─────────────────────────────────────────────
+# James, 2026-10-29: "catagories using either the architypes or the templates, with a full manager and editor, with the schemas, then
+# catagories which can be managed, including systems which would then list each system compartment. / also really need cos.exe to be a fully
+# compartment manager with controls for the rewind engine, diagnostic tools, versions, data browser and tools. cli access. index.html/ui for
+# the thumbnail. / look at all of the cos phases, and add all of this to them."
+# Grounded 2026-10-29 against all 12 COS maps (testenv, machines, app, console, spine, manager, services, guardian-into-cos, loom-into-cos,
+# the copilot expansion, cos.spec, cos-debug-report.spec). What exists and is built on, not redone:
+#   - MG5 (browsers and editors for archetypes, schemas, blueprints, templates)
+#   - MG6 (settings by template and type)
+#   - MG9 (the console UI)
+#   - COSA6 (the exe, BUILT 0.60.89) and COSA12 (the VMware window, BUILT 0.60.90)
+#   - CS4 (every system a compartment) and CS8 (the COS screen: systems, versions, links)
+#   - VM1 (pause, resume, checkpoint, rewind on QEMU; cos/workspace/vm-control.js, built 0.39.371)
+#   - CON1–CON5 (the one-door console, grammar, the pane)
+#   - lib/cos-debug-report.js
+#   - cos/archetype and cos/blueprint with their schemas; loom/templates
+# Nothing existed for: categories, a "systems" category, one manager window with rewind, diagnostics, versions, data and tools per
+# compartment, the exe as a CLI, or live thumbnails.
+#
+# readings_to_confirm (the coder's):
+#   - "catagories using either the architypes or the templates … with the schemas": a category is a named group defined by one archetype
+#     or one template, and it carries that one's schema. Compartments made from it are its members. Categories are made, edited, renamed
+#     and removed in a manager, and edited against the schema.
+#   - "including systems which would then list each system compartment": a built-in category, "systems", whose members are Nexus's own
+#     systems, each as its compartment (CS4).
+#   - "controls for the rewind engine": a compartment's rewind is its checkpoints and versions (VM1 on QEMU, CS1). For a browser compartment
+#     it is also Clear Glass's session rewind (clear-glass/src/rewind/engine.js). To confirm which he meant.
+#   - "index.html/ui for the thumbnail": each compartment's own UI (its index.html, the route its registry declares) shown as a live
+#     thumbnail in the manager, the way VMware shows each VM's screen. To confirm.
+#
+# The decisions MG_D2 and MG_D3 and the phases MG10–MG14 are in this map's decisions: and phases: blocks above (real YAML, so
+# lib/phase-dag.js checks them).
+# build_order addendum: MG10 → MG11 → MG12 → MG13 → MG14, after MG3–MG9. Backend → route → command → UI in each (his order of delivery).
