@@ -13,7 +13,7 @@ const { BrowserWindow, webContents } = require('electron');
 const { randomUUID: uuidv4 } = require('crypto'); // §BUGFIX 2026-08-23 — the real 'uuid' npm package was never installed (checked node_modules and package.json directly); this crashed every real file that required it, including boot-critical ones. Node's own built-in produces the identical UUID format, zero dependency.
 
 // actions that change a page: refused where the site says agents may not drive it (navigate checks its target instead)
-const DRIVING = new Set(['click', 'type', 'scroll', 'hover', 'eval', 'select', 'choose', 'check', 'setValue', 'pressKey', 'upload', 'pointer', 'inject', 'cookies.set', 'cookies.clear', 'storage.set', 'back', 'forward', 'reload']);
+const DRIVING = new Set(['click', 'type', 'scroll', 'hover', 'eval', 'select', 'choose', 'check', 'checkAt', 'typeAt', 'setValue', 'pressKey', 'upload', 'pointer', 'inject', 'cookies.set', 'cookies.clear', 'storage.set', 'back', 'forward', 'reload']);
 const AGENT_PAGE = /^(mesh|ncp|auto)-/;
 
 class ClearDriver {
@@ -92,6 +92,7 @@ class ClearDriver {
       case 'net':            return this._net(agentId, args);          // 0.60.281 SN1 — Snowflake as a step (src/net/step.js)
       case 'checkAt':        return this._checkAt(agentId, args);      // 0.60.281 AP1 — the checkbox at a column and a row, to a state, read back
       case 'rowLabels':      return this._rowLabels(agentId, args);    // 0.60.281 AP1 — the row labels of a priced table (left of a column)
+      case 'typeAt':         return this._typeAt(agentId, args);       // 0.60.286 GM2 — the text box at a column and a row (a package's price), typed, read back
       case 'check':          return this._check(agentId, args);
       case 'setValue':       return this._setValue(agentId, args);
       case 'pressKey':       return this._pressKey(agentId, args);
@@ -923,6 +924,37 @@ class ClearDriver {
     f = await find();
     if (!f || f.error || f.checked !== want) throw new Error(`checkAt: "${row}" in ${column} is ${f && !f.error ? (f.checked ? 'ticked' : 'clear') : 'gone'} after the click, not ${want ? 'ticked' : 'clear'}`);
     return { column, row, checked: want, changed: true };
+  }
+
+  // 0.60.286 GM2 — James, 2026-10-29: "do everything you can ... to get fiverr operational". A package's price had no way in: the text box in the
+  // column headed `column` (BASIC) on the row labelled `row` (Price) is marked, typed as him (setValue's native setter + input/change), and read
+  // back. { column, row, text, value }
+  async _typeAt(agentId, { column, row, text = '' } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (!column || !row) throw new Error('typeAt needs column and row');
+    const f = await this._evalJs(wc, `(function(col, row){
+      function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+      function norm(t){ return String(t || '').replace(/\\s+/g, ' ').trim().toLowerCase(); }
+      function byText(t){ var want = norm(t), out = []; document.querySelectorAll('body *').forEach(function(el){ if (!el.children.length && norm(el.textContent) === want && vis(el)) out.push(el); }); return out; }
+      var h = byText(col); if (!h.length) return { error: 'no column headed "' + col + '"' };
+      var rw = byText(row); if (!rw.length) return { error: 'no row labelled "' + row + '"' };
+      var hr = h[0].getBoundingClientRect(), rb = (rw[0].closest('tr') || rw[0].parentElement || rw[0]).getBoundingClientRect();
+      var boxes = Array.prototype.filter.call(document.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=hidden]),textarea'), function(el){
+        if (!vis(el)) return false; var r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        return cx >= hr.left - 4 && cx <= hr.right + 4 && cy >= rb.top - 2 && cy <= rb.bottom + 2; });
+      if (!boxes.length) return { error: 'no text box at column "' + col + '", row "' + row + '"' };
+      window.__cgTypeN = (window.__cgTypeN || 0) + 1; boxes[0].setAttribute('data-cg-type', String(window.__cgTypeN));
+      return { n: window.__cgTypeN };
+    })(${JSON.stringify(column)}, ${JSON.stringify(row)})`);
+    if (!f || f.error) throw new Error(`typeAt: ${(f && f.error) || 'page did not answer'}`);
+    const selector = `[data-cg-type="${f.n}"]`;
+    await this._waitResponsive(wc);
+    await this._setValue(agentId, { selector, value: String(text) });
+    const back = await this._evalJs(wc, `(function(){ var e = document.querySelector(${JSON.stringify(selector)}); return e ? String(e.value) : null; })()`);
+    const want = String(text).replace(/[$,\s]/g, ''), got = String(back == null ? '' : back).replace(/[$,\s]/g, '');
+    if (got !== want) throw new Error(`typeAt: "${row}" in ${column} shows "${back}" after typing, not "${text}"`);
+    return { column, row, text: String(text), value: back };
   }
 
   // 0.60.281 AP1 — the row labels of a priced table: the short texts left of the column headed `column`, below its header (so the fill can

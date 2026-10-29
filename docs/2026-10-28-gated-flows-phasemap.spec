@@ -283,6 +283,28 @@ phases_kb:
     files: [clear-glass/src/main/float-cli.js, clear-glass/renderer/float-cli.js, clear-glass/renderer/float-cli.html, clear-glass/renderer/browser.js, clear-glass/renderer/settings/sections/general.js]
     does: an option floatCli.pinned (📌 in the panel, and in Settings), which shows the button on every browser window at start and keeps it
 
+  GM1_the_fill_menu_model:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GM1]
+    status: BUILT 0.60.286
+    depends_on: [KB4_gates_on_macro_steps]
+    files: [clear-glass/src/autofill/gig-menu.js]
+    does: every part of a gig as a row to tick, with its kind, options and value
+  GM2_fill_only_what_is_ticked:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GM2]
+    status: BUILT 0.60.286
+    depends_on: [GM1_the_fill_menu_model]
+    files: [clear-glass/src/ipc/bridge.js, clear-glass/src/driver/index.js, clear-glass/src/autofill/gig-pages.js, clear-glass/src/preload/index.js]
+    does: _gigFill only the ticked parts; price (typeAt) and revisions filled; IPC autofill:gig:menu
+  GM3_the_menu_in_the_gig_panel:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GM3]
+    status: BUILT 0.60.286
+    depends_on: [GM2_fill_only_what_is_ticked]
+    files: [clear-glass/renderer/gig-menu.js, clear-glass/renderer/browser.html, clear-glass/renderer/gig-panel.js]
+    does: the Fill menu — checkboxes, dropdowns, in-place edits, Fill selected, a result per row
+
 ## ADDENDUM 2026-10-29 (0.60.283) — FG1 reset, FG5 the new gig's Overview
 James, 2026-10-29: "The accessability man. i can't fix it." · "the autofill is still buggy. like i want autofill to do it all if possible.
 can you get fiverr to work, now with the keybindings, and gates"

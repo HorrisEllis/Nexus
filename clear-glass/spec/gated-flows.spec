@@ -381,6 +381,48 @@ spec:
       error_paths: ["options not ready → the pin says so"]
       acceptance: ["test-gated-dropdowns GD-05 in Clear Glass"]
 
+    # 0.60.286 GM1–GM3 — James, 2026-10-29, after the Press & Hold page stopped the fill: "okay the autofill still isn't working, do everything
+    # you can, invent, expand, anything to get fiverr operational as a source of income. need to do better than a button, make a full menu with
+    # check boxes, adn drop downs if applicable."
+    - id: MOD-GM1
+      name: gig-fill-menu-model
+      uuid: nexus-gated-flows-gig-fill-menu-model-v1-0000-2026-1029-001
+      path: clear-glass/src/autofill/gig-menu.js
+      phase: GM1_the_fill_menu_model
+      description: "menu(gig, page) lists every part of a gig as a row a person can tick: its group (Overview, Pricing, Description, FAQ, Buyer questions), the Fiverr page it goes on, its kind (text, long text, choice with its options, yes/no, tags), its value, and whether it is ticked by default (it has a value and belongs on the open page). apply(gig, edits) returns the gig with the menu's edits; only(rows) the part keys ticked."
+      deps: [{ name: dropdown-choose }]
+      exports: ["menu(gig, page) → { page, rows: [{ key, label, group, page, kind, value, options?, checked }] }", "apply(gig, edits) → gig", "DELIVERY, REVISIONS, CATEGORIES"]
+      gate_pipeline: ["GATE-GM1-001: gig → rows, one per part, each with its kind and options"]
+      behavioral_contracts: ["a choice row offers the options Fiverr shows; the gig's own value is always one of them"]
+      error_paths: ["no gig → no rows, said"]
+      acceptance: ["test-gig-fill-menu GM-01: a gig with three packages gives rows for every part, price and revisions included"]
+
+    - id: MOD-GM2
+      name: gig-fill-selected
+      uuid: nexus-gated-flows-gig-fill-selected-v1-0000-2026-1029-001
+      path: clear-glass/src/ipc/bridge.js
+      phase: GM2_fill_only_what_is_ticked
+      description: "_gigFill takes only (the ticked part keys) and options (replay his recorded choices, the confidence floor): only those parts are typed, chosen or ticked; each row answers its own result. Price and revisions are filled too: price typed at the tier's column and the Price row (driver typeAt, read back), revisions chosen in the Revisions row. IPC autofill:gig:menu answers the menu for the page in the tab."
+      deps: [{ name: gig-fill-menu-model }, { name: dropdown-choose }]
+      exports: ["_gigFill({ gig, agentId, minConfidence, only, replay })", "IPC autofill:gig:menu", "driver action typeAt { column, row, text }"]
+      gate_pipeline: ["GATE-GM2-001: the human check first (HC3)", "GATE-GM2-002: each ticked part → its way in → read back → its row's result"]
+      behavioral_contracts: ["an unticked part is never touched; Save and Publish stay his"]
+      error_paths: ["a part not found → its row says why, and Point at it"]
+      acceptance: ["test-gig-fill-menu GM-02: only the ticked parts are filled; price typed at its column and read back"]
+
+    - id: MOD-GM3
+      name: gig-fill-menu-screen
+      uuid: nexus-gated-flows-gig-fill-menu-screen-v1-0000-2026-1029-001
+      path: clear-glass/renderer/gig-menu.js
+      phase: GM3_the_menu_in_the_gig_panel
+      description: "The gig panel's Fill menu: grouped rows with a checkbox each, the value editable in place (a dropdown for a choice, a box for text, a tick for yes/no), All / None / This page, the options (replay my choices, confidence, point when not found), and Fill selected; each row then shows its result (typed, chosen, not found with Point at it)."
+      deps: [{ name: gig-fill-selected }]
+      exports: ["CgGigMenu.open(gig)", "CgGigMenu.fill()"]
+      gate_pipeline: ["GATE-GM3-001: open → the menu for the page → his ticks and edits → Fill selected → each row's result"]
+      behavioral_contracts: ["an edit in the menu changes the gig he fills, and is kept as his last gig"]
+      error_paths: ["the bridge answers no → said in the menu"]
+      acceptance: ["test-gig-fill-menu GM-03 in Clear Glass: the menu lists the rows, a dropdown changes a value, Fill selected sends only the ticked keys"]
+
   events:
     flows:
       - "macro.gate { macro, step, open, why, by }"

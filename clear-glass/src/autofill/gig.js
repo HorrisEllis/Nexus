@@ -309,12 +309,13 @@ async function detectGig(dom, gig, { agentId = 'default' } = {}) {
 }
 
 /** fillGig(dom, gig, { agentId, minConfidence }) — types the matched parts in. Never saves, never publishes. */
-async function fillGig(dom, gig, { agentId = 'default', minConfidence = 'medium' } = {}) {
+async function fillGig(dom, gig, { agentId = 'default', minConfidence = 'medium', only = null } = {}) {
   const domFields = await dom.handleQuery({ agentId, selector: 'input, textarea' });
   if (domFields && domFields.error) return { error: domFields.error };
   if (!Array.isArray(domFields)) return { error: 'the page could not be read (no field list came back) — reload the page and fill again' };   // 0.60.267
   const floor = RANK[minConfidence] || RANK.medium;
-  const all = matchGigFields(domFields, gig);
+  // 0.60.286 GM2 — only: the part keys ticked in the fill menu; the rest is never touched
+  const all = matchGigFields(domFields, gig).filter(m => !only || only.includes(m.key));
   const toFill = all.filter(m => RANK[m.confidence] >= floor);
   const skipped = all.filter(m => !toFill.includes(m)).map(m => ({ key: m.key, confidence: m.confidence, reason: 'below minConfidence' }));
   const filled = [], failed = [];
