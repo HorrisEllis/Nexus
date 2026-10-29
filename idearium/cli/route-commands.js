@@ -748,6 +748,20 @@ export const SPEC = [
     req: (a) => ({ method: a.flags.notes ? 'POST' : 'GET', path: `/api/repos/${a.repo.uuid}/integrity`, ...(a.flags.notes ? { body: {} } : {}) }),
     print: (d, a, h) => { for (const c of d.checks || []) console.log(`  ${c.ok ? h.c.mint('✓') : (c.severity === 'error' ? h.c.amber('✗') : h.c.dim('?'))} ${c.id.padEnd(7)} ${c.name.padEnd(22)} ${c.ok ? '' : c.count}${c.error ? h.c.dim(` ${c.error}`) : ''}`); if (d.notes) console.log(h.c.dim(`  notes: ${d.notes.added} added, ${d.notes.updated} updated, ${d.notes.done} closed`)); } },
   // 0.60.6 — notes (lib/repo-notes.js): he and every agent log ideas, decisions, todos and questions in one place
+  // 0.60.285 HN3 — James, 2026-10-29: "i want all the history in idearium saved as nodes per unit." · "what about .node types for each
+  // language/code block for each agent?" — one .code_block type, the language and the agent are fields (HN_D2)
+  { key: 'repo.history-nodes', repo: true, usage: 'repo history-nodes <repo> [--lang python] [--provider claude] [--limit n] [--backfill]', about: 'the repo agent\'s history as nodes: each exchange with its input, response, tool calls and code blocks (by language and agent); --backfill turns the old log into nodes',
+    req: (a) => (a.flags.backfill ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/history-nodes/backfill`, body: {}, timeoutMs: 120000 }
+      : { method: 'GET', path: `/api/repos/${a.repo.uuid}/history-nodes?${[a.flags.lang ? `lang=${encodeURIComponent(a.flags.lang)}` : '', a.flags.provider ? `provider=${encodeURIComponent(a.flags.provider)}` : '', a.flags.limit ? `limit=${parseInt(a.flags.limit, 10)}` : ''].filter(Boolean).join('&')}` }),
+    print: (d, a, h) => {
+      if (a.flags.backfill) { console.log(`${h.c.mint('✓')} ${d.exchanges} exchange(s) → ${d.written} node(s) · ${d.skipped} already · ${d.truncated} marked truncated (the old log had cut them)${(d.errors || []).length ? h.c.red(` · ${d.errors.length} failed`) : ''}`); return; }
+      for (const x of d.exchanges || []) {
+        console.log(`  ${x.ok ? h.c.green('✓') : h.c.red('✗')} ${new Date(x.ts).toLocaleString()} ${h.c.bold(x.provider || '?')}${x.model ? h.c.dim(' ' + x.model) : ''}  ${h.c.dim(String((x.input && x.input.prompt) || '').replace(/\s+/g, ' ').slice(0, 70))}`);
+        for (const c of x.toolCalls || []) console.log(`      ${h.c.dim('tool')} ${c.name}${c.ok ? '' : h.c.red(' failed')}`);
+        for (const c of x.codeBlocks || []) console.log(`      ${h.c.dim('code')} ${c.lang} · ${c.lines} line(s)${c.unclosed ? h.c.yellow(' unclosed') : ''}`);
+      }
+      if (!(d.exchanges || []).length) console.log(h.c.gray('  no history nodes yet — new exchanges write them; --backfill turns the old log into nodes'));
+    } },
   { key: 'repo.notes', repo: true, usage: 'repo notes <repo> [--q words] [--kind idea|decision|todo|question|quote|note]', about: 'the repo\'s notes, pinned first then newest',
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/notes${a.flags.q || a.flags.kind ? `?${[a.flags.q ? `q=${encodeURIComponent(a.flags.q)}` : '', a.flags.kind ? `kind=${encodeURIComponent(a.flags.kind)}` : ''].filter(Boolean).join('&')}` : ''}` }),
     print: (d, a, h) => { for (const n of d.notes || []) console.log(`  ${n.pinned ? h.c.amber('★') : ' '} ${h.c.dim(n.kind.padEnd(8))} ${n.status === 'done' ? h.c.dim(n.title) : n.title}  ${h.c.dim(n.id)}`); if (!(d.notes || []).length) console.log(h.c.gray('  no notes')); } },

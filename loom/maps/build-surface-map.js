@@ -52,6 +52,7 @@ const FILES = [
     I('clear-glass/src/ipc/bridge.js'),                        // IPC applications:call (cg.applications.call) → _opportunityCall
   ]],
   ['clear-glass/src/net/step.js', I('clear-glass/src/net/step.js'), []],   // SN1 — pure; the service and transport are handed in (deps)
+  ['lib/repo-history-nodes.js', I('lib/repo-history-nodes.js'), [I('lib/node-export.js'), I('lib/test-sandbox.js')]],   // 0.60.285 HN1 — Idearium's history as nodes, one per unit
   ['lib/automation/pipeline.js', I('lib/automation/pipeline.js'), [I('lib/automation/engine.js'), I('lib/automation/steps.js')]],   // 0.60.284 PL1 — WORKFLOWS_DIR; byType, validateStep
   ['clear-glass/renderer/settings/sections/pipelines.js', I('clear-glass/renderer/settings/sections/pipelines.js'), [I('lib/automation/routes.js')]],   // 0.60.284 PL4 — wire /automation/pipelines*
   ['clear-glass/src/page/state-diff.js', I('clear-glass/src/page/state-diff.js'), []],      // 0.60.221 FP4 — pure; first used 0.60.273
@@ -491,6 +492,8 @@ const CONSUMERS = [
   [I('lib/automation/pipeline.js'), I('lib/automation/engine.js'), '0.60.284 PL1 each task → engine.runStep(step, { vars, scope: { tasks } })'],
   [I('idearium/cli/route-commands.js'), I('lib/automation/routes.js'), '0.60.284 PL3 pipeline.* rows → Clear Glass :7704 /automation/pipelines*'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig-pages.js'), '0.60.283 _gigTags: tagInputScript / tagShownScript (each tag gated)'],
+  [I('lib/repo-agent.js'), I('lib/repo-history-nodes.js'), '0.60.285 HN2 _log → record(row, { text, message, toolCalls, model }): every exchange as nodes (lazy require)'],
+  ['nexus.idearium.api', I('lib/repo-history-nodes.js'), '0.60.285 HN3 repo.history-nodes / repo.history-nodes.backfill — GET /api/repos/:uuid/history-nodes, POST …/backfill'],
 ];
 
 function mapBuildSurface(driver) {

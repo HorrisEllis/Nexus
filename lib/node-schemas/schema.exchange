@@ -1,0 +1,78 @@
+envelope: 1
+uuid: nexus-export-schema-exchange
+type: schema
+id: exchange
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1793260000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    0.60.285 HN1 — James, 2026-10-29: "i want all the history in idearium saved as nodes per unit." One turn with a repo's
+    agent (lib/repo-agent.js _log, the repo_agent_log row), and the ids of the nodes that hold its parts (.input, .response, .tool_call,
+    .code_block). Written by lib/repo-history-nodes.js into idearium/data/nodes/exchange/.
+  fields:
+    exchangeId:
+      type: string
+      required: true
+      description: >-
+        the repo_agent_log row's uuid — the key every part shares
+    repoUuid:
+      type: string
+      required: true
+      description: >-
+        the repo (compartment) the exchange belongs to
+    ok:
+      type: boolean
+      required: true
+      description: >-
+        whether the agent answered
+    parts:
+      type: object
+      required: true
+      description: >-
+        { input, response, toolCalls[], codeBlocks[], injects[] } — node ids
+    ts:
+      type: number
+      required: true
+      description: >-
+        epoch ms
+    hat:
+      type: string
+      required: false
+      description: >-
+        the agent's hat
+    provider:
+      type: string
+      required: false
+      description: >-
+        who answered
+    model:
+      type: string
+      required: false
+      description: >-
+        the model
+    backend:
+      type: string
+      required: false
+      description: >-
+        the backend that dispatched it
+    error:
+      type: string
+      required: false
+      description: >-
+        why it failed
+    elapsedMs:
+      type: number
+      required: false
+      description: >-
+        how long it took
+    truncated:
+      type: boolean
+      required: false
+      description: >-
+        backfilled from a log row that had cut the message or reply (HN-004)

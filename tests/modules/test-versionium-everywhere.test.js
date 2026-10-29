@@ -153,7 +153,8 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     const rd = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     const upd = rd('lib/nexus-update.js');
     assert.ok(/fs\.appendFileSync\(f, JSON\.stringify[\s\S]{0,200}_toVersionium\(root, row\);/.test(upd) && /kind: `nexus\.update\.\$\{row\.kind \|\| 'update'\}`/.test(upd), 'every update row');
-    assert.ok(/commits: b\.recent \? 'recent' : \(b\.commits === false \? null : 'all'\)/.test(rd('versionium/routes/nexus-releases.js')), 'every release\'s commits by default');
+    // 0.60.285: every release's commits still, but the all-history read runs in a child process (it froze Versionium for 1113 s in-process)
+    assert.ok(/if \(b\.all\) \{ json\(res, 200, await NR\.syncInWorker\(_self\)\); return true; \}/.test(rd('versionium/routes/nexus-releases.js')) && /NR\.syncInWorker\(_self\)\.catch/.test(rd('versionium/routes/nexus-releases.js')), 'every release\'s commits, off Versionium\'s process');
     const api = rd('idearium/api/index.js');
     assert.ok(/ · Nexus \$\{nexusVersion\}/.test(api), 'tree snapshots name the version');
     assert.ok(!/if \(!on\) return \{ ok: true, commitId: null, skipped/.test(api) && /every change is recorded \(§17\.12\)/.test(api), 'versions.every_change no longer skips');

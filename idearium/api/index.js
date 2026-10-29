@@ -3921,6 +3921,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','tasks'],  'repo.tasks'],      // §0.39.366 — everything the agent wearing this repo's hat is doing, and did
     ['GET',    ['api','repos',    ':uuid','activity'],  'repo.activity'],
     ['GET',    ['api','repos',    ':uuid','notes'],     'repo.notes'],         // §0.60.6 — the repo's notes: ?q=&kind=&status=&tag=
+    ['GET',    ['api','repos',    ':uuid','history-nodes'],             'repo.history-nodes'],            // 0.60.285 HN3 — the repo's history as nodes: ?lang=&provider=&limit=
+    ['POST',   ['api','repos',    ':uuid','history-nodes','backfill'],  'repo.history-nodes.backfill'],   // 0.60.285 HN3 — old log rows → nodes (cut ones marked)
     ['POST',   ['api','repos',    ':uuid','notes'],     'repo.notes.add'],     // §0.60.6 — { body, title?, kind?, tags?, pinned? }
     ['GET',    ['api','my-projects'],                   'projects.overview'],
     ['GET',    ['api','raid','held'],                   'raid.held'],          // §0.60.78 RT1 — cortex's officiator: the agents' wait, each staged drop's tries
@@ -8238,6 +8240,15 @@ async function handle(req, res, route, query, body) {
         os.emit('idearium.repo.integrity.checked', { repoUuid: repo.uuid, ok: r.ok, failed: r.checks.filter(c => !c.ok).map(c => c.id), notes });
         return ok(res, { ...r, notes });
       } catch (e) { return err(res, e.status || 500, e.message); }
+    }
+    // 0.60.285 HN3 — James, 2026-10-29: "i want all the history in idearium saved as nodes per unit." (lib/repo-history-nodes.js)
+    case 'repo.history-nodes': case 'repo.history-nodes.backfill': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const HN = _require('../../lib/repo-history-nodes.js');
+      if (action === 'repo.history-nodes') return ok(res, { repoUuid: params.uuid, exchanges: HN.read({ repoUuid: params.uuid, lang: query.lang || null, provider: query.provider || null, limit: Math.min(parseInt(query.limit, 10) || 50, 500) }) });
+      const rows = _require('../../lib/repo-agent.js').history(params.uuid, 100000);
+      return ok(res, { repoUuid: params.uuid, ...HN.backfill({ rows }) });
     }
     case 'repo.notes': case 'repo.notes.add': case 'notes.list': case 'notes.add': case 'notes.update': {
       const RN = _require('../../lib/repo-notes.js');

@@ -34,9 +34,14 @@ async function handle(req, res, { method, pathname, url }) {
   if (pathname === '/api/versionium/nexus/releases' && method === 'GET') { json(res, 200, { ok: true, releases: NR.read() }); return true; }
   if (pathname === '/api/versionium/nexus/releases/sync' && method === 'POST') {
     const b = await readBody(req).catch(() => ({})) || {};
-    // 0.60.278 VE4 — "full changes" (§17.12): every release's commits by default; { recent: true } for the last ~30 only. Idempotent:
-    // a release already held gets only what it lacked (versionium/lib/releases.js release(), nothing rewritten)
-    json(res, 200, await NR.sync(_self, { commits: b.recent ? 'recent' : (b.commits === false ? null : 'all') }));
+    // 0.60.278 VE4 — "full changes" (§17.12): every release's commits. 0.60.285 — but never inside this process: 0.60.278 ran the all-history
+    // read here by default and Versionium was silent for 1113 s after boot (James's log, 2026-10-29). Now the default (a boot) records the
+    // releases with their newest ~30 releases' commits at once, and the full backfill runs in a child process (syncInWorker), started
+    // then in the background — or awaited when the caller asks { all: true } (the Releases page's Sync). Idempotent either way.
+    if (b.all) { json(res, 200, await NR.syncInWorker(_self)); return true; }
+    const r = await NR.sync(_self, { commits: b.commits === false ? null : 'recent' });
+    if (b.commits !== false && !b.noBackfill) NR.syncInWorker(_self).catch(() => {});   // the rest of history, off this process
+    json(res, 200, { ...r, backfill: b.commits === false || b.noBackfill ? null : 'started in a child process' });
     return true;
   }
   if (pathname === '/api/versionium/nexus/changelog' && method === 'GET') {

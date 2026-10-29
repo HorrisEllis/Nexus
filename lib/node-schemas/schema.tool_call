@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-schema-tool_call
+type: schema
+id: tool_call
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1793260000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    0.60.285 HN1 — one tool the repo agent called inside an exchange (out.toolCalls of lib/repo-agent.js, which the log row dropped):
+    its arguments and result, whole.
+  fields:
+    exchangeId:
+      type: string
+      required: true
+      description: >-
+        the exchange it belongs to
+    index:
+      type: number
+      required: true
+      description: >-
+        its order in the exchange
+    name:
+      type: string
+      required: true
+      description: >-
+        the tool
+    arguments:
+      type: object
+      required: true
+      description: >-
+        what the agent passed
+    ok:
+      type: boolean
+      required: true
+      description: >-
+        false when the tool returned an error or was refused
+    result:
+      type: any
+      required: false
+      description: >-
+        the tool's result, whole
+    iteration:
+      type: number
+      required: false
+      description: >-
+        the tool-loop round

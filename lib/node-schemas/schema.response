@@ -26,7 +26,10 @@ payload:
     jobId:
       type: string
       required: true
-      description: real guardian job id this response answers — the id the node is filed under and the correlation key for every sink
+      description: >-
+        real guardian job id this response answers — the id the node is filed under and the correlation key for every sink.
+        0.60.285 addendum (HN_D1, James's "expand if needed"): for an Idearium repo-agent exchange with no job, its exchange id,
+        and source says idearium.repo-agent.
     provider:
       type: string
       required: true

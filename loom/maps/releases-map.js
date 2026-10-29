@@ -26,6 +26,8 @@ const FILES = [
   // §0.60.72 RN2 — every commit under the release that shipped it, read from git (child_process); nexus-releases.sync
   // attaches them (a lazy require inside sync, so the scanner does not see it)
   ['versionium/lib/release-notes.js', I('versionium/lib/release-notes.js'), [I('versionium/lib/nexus-releases.js')]],
+  // 0.60.285 RB1 — the whole-history backfill runs in a child process (0.60.278's in-process one froze Versionium for 1113 s)
+  ['versionium/lib/release-backfill-worker.js', I('versionium/lib/release-backfill-worker.js'), [I('versionium/lib/nexus-releases.js'), I('versionium/lib/release-notes.js')]],
   // §0.60.72 RN3 — the Versionium tab's Releases (a browser script: Idearium's /api/releases, /api/repos/:uuid/releases)
   ['idearium/ui/js/repo-releases.js', I('idearium/ui/js/repo-releases.js'), ['nexus.idearium.api']],
 ];
@@ -46,6 +48,7 @@ const CONSUMERS = [
   [I('cos/app/store.js'), I('cos/app/versionium.js'), 'importZip/remove → record (COSA14, VE7)'],
   [I('cos/app/switch.js'), I('cos/app/versionium.js'), 'switchTo/rollback → record (COSA14, VE7)'],
   [I('cos/app/controller.js'), I('cos/app/versionium.js'), 'drain at start and every minute (VE7)'],
+  [I('versionium/lib/nexus-releases.js'), I('versionium/lib/release-backfill-worker.js'), 'syncInWorker(): child_process.fork of the worker, its releases posted in batches (0.60.285 RB1)'],
   [I('versionium/lib/nexus-releases.js'), I('versionium/lib/release-notes.js'), 'sync(): attach(releases) — each release\'s commits and files into Versionium (0.60.72 RN2)'],
   [I('idearium/ui/js/repo-releases.js'), 'nexus.idearium.api', 'renderReleases → GET /api/releases, /api/repos/:uuid/releases, /api/releases/changes; POST /api/releases/sync (0.60.72 RN3)'],
   ['nexus.idearium.api', I('lib/release-version.js'), 'idearium/api/index.js system.version and releases.list — the running release (0.60.34 VR1, 0.60.41 RN1)'],
