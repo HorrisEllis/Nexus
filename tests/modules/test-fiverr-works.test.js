@@ -137,7 +137,7 @@ document.querySelectorAll('.dv').forEach(function(dv){ dv.addEventListener('clic
       packages: { basic: { name: 'Starter', description: 'one', price: 30, deliveryDays: 3 }, standard: { name: 'Plus', description: 'two', price: 60, deliveryDays: 5 } } };
     const run = async (read) => {
       const calls = [];
-      const self = { dom: { handleQuery: async () => [], handleMutate: async () => ({}) }, postEvent: () => {}, _humanCheckGate: async () => ({ pass: true }),
+      const self = { dom: { handleQuery: async () => [], handleMutate: async () => ({}) }, postEvent: () => {}, _humanCheckGate: async () => ({ pass: true }), _gigFeatures: Bridge.prototype._gigFeatures,   // 0.60.281 AP1 the package rows
         driver: { exec: async (c) => { calls.push(c); if (c.action === 'readPage') return read; if (c.action === 'choose') return { option: c.option + ' Days' }; return {}; } } };
       return { r: await Bridge.prototype._gigFill.call(self, { gig }), calls };
     };

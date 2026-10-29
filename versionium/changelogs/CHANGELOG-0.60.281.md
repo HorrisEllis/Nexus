@@ -80,4 +80,13 @@ Mapped first: `docs/2026-10-29-gigs-contacts-snowflake-phasemap.spec` (AP1–AP4
   - `test-gig-features` 3/3 (GF-02 and GF-03 in Clear Glass);
   - `test-opportunity-contacts` 6/6 (OC-06 drives Settings › Applications in Clear Glass);
   - `test-snowflake-steps` 4/4.
-- `test-build-surface` BS7-04 fails on the base too: Ollama is down in the sandbox. It is not this release's.
+- Related suites, all green:
+  - automation-engine 16/16, automation-nodes 8/8, automation-settings-ui 8/8, automation-v2 18/18;
+  - clear-glass-gig 7/7, cg-gig-autofill 4/4, autofill-learn-macro 5/5, fiverr-works 11/11, fiverr-pace 2/2;
+  - gated-dropdowns 6/6, dropdown-keys 2/2, site-keys 5/5, site-a11y-and-dropdowns 3/3, site-settings-ui 3/3;
+  - browser-shell 28/28, macro 22/22, net-routes 24/24, snowflake 11/11, opportunity 28/28, nexus-command-tool 8/8, gig-ledger 10/10.
+- fiverr-works FW-09 builds its bridge from prototype methods, so it was given `_gigFeatures` too. The fill itself was unchanged.
+- These fail on the base too, so they are not this release's:
+  - `test-build-surface` BS7-04 (Ollama is down in the sandbox);
+  - `test-cli-route-commands` CL-07 (Guardian is not running);
+  - `test-cg-settings-ui-files` UF-01/03/06 (mesh.js, accounts.css).
