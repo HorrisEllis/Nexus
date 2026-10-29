@@ -50,10 +50,13 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, stdio: ['ignore', 'pipe
     assert.ok(!b.ok);
     const bad = Object.fromEntries(b.places.filter(p => !p.ok).map(p => [p.place, p.why]));
     assert.match(bad['package.json version'], /says 1\.2\.2, the release is 1\.2\.3/);
-    assert.match(bad['versionium/changelogs/CHANGELOG-1.2.3.md'], /no changelog/);   // 0.60.274 — the changelogs' home
+    // 0.60.277 VS1 — whether the release has its changelog is Versionium's to say (his (a), §5.15): lib's agreement no longer reads it
+    assert.ok(!Object.keys(bad).some(k => /CHANGELOG/.test(k)), 'lib does not read the changelogs');
+    const vb = require(path.join(ROOT, 'versionium/lib/nexus-releases.js')).agreement({ root: d });
+    assert.match(Object.fromEntries(vb.places.filter(p => !p.ok).map(p => [p.place, p.why]))['versionium/changelogs/CHANGELOG-1.2.3.md'], /no changelog/);
     assert.match(bad['git tag v1.2.1 (at HEAD)'], /HEAD is tagged v1\.2\.1, the release is 1\.2\.3/);
     const ck = CC.run('CK-253', { path: d });
-    assert.ok(!ck.ok && ck.verifiable && ck.items.length === 3, JSON.stringify(ck));
+    assert.ok(!ck.ok && ck.verifiable && ck.items.length === 2, JSON.stringify(ck));   // 0.60.277 — lib's places: package.json and the tag
   });
 
   await test('RV-02', 'an older Nexus zip is recognised, and how far behind it is is said', () => {

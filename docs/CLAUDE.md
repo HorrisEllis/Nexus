@@ -323,3 +323,12 @@ one system reaching into another's files.
   - one system going down must break no other; if it would, the piece is in the wrong place.
   - A new edge into another system's internals is designed out before code is written (the boundary ratchet,
     `lib/system-boundary.js`, catches it after).
+
+## ADDENDUM 2026-10-29 (0.60.277) — the changelogs are Versionium's (supersedes 0.60.274's "read them through lib/changelogs.js")
+James, 2026-10-29, choosing (a) over the coder's recommended (b): "a"
+- `versionium/changelogs/` and the release logic that reads it (`versionium/lib/changelogs.js`, `nexus-releases.js`, `release-notes.js`)
+  are Versionium's (§5.15). A new changelog is still written at `versionium/changelogs/CHANGELOG-<version>.md`.
+- Every other system asks Versionium (`GET /api/versionium/nexus/changelog|releases|changes|agreement`,
+  `POST /api/versionium/nexus/releases/sync`) and never requires its code. Scripts and tests may require it.
+- What reads `lib/version.js` stays in lib (`lib/release-version.js`: current, fromFiles, agreement over lib's own places, quoteOf,
+  lineOf, lines).

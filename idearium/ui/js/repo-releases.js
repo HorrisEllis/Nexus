@@ -3,7 +3,7 @@
 // git, versionium, the zip." · 2026-10-15: "i want idearium to have releases and a changelog for each version."
 // Reads Versionium's releases (GET /api/releases for Nexus itself, GET /api/repos/:uuid/releases for a repo). Nexus's
 // parent repo shows every release; a Nexus system's repo shows the releases whose commits touched that system. A row
-// opens to his words, its changelog file, and every commit with its files (lib/release-notes.js wrote them from git).
+// opens to his words, its changelog file, and every commit with its files (versionium/lib/release-notes.js wrote them from git).
 // "Changes since" renders the whole record (GET /api/releases/changes); "save" writes CHANGES.md. A release recorded
 // before RN2 has no commits yet: "sync" fills them (POST /api/releases/sync { all: true }).
 (function () {

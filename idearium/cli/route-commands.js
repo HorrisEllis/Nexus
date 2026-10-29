@@ -221,7 +221,7 @@ export const SPEC = [
   { key: 'update.history', repo: false, usage: 'update history', about: 'every update and rollback this install made: when, from and to which version, who, what was set aside',
     req: () => ({ method: 'GET', path: '/api/update/history' }),
     print: (d, a, h) => { const l = d.history || []; if (!l.length) return console.log(h.c.dim('  no updates yet')); for (const r of l) console.log(`  ${h.c.gray(r.at.slice(0, 16))} ${r.kind.padEnd(8)} ${r.from.version} → ${r.to.version}  ${h.c.dim(`by ${r.by}${(r.archived || []).length ? ` · ${r.archived.length} set aside` : ''}`)}`); } },
-  // 0.60.41 RN1 — Nexus's own releases, recorded in Versionium (lib/nexus-releases.js): James's words, the proof, the commit
+  // 0.60.41 RN1 — Nexus's own releases, recorded in Versionium (versionium/lib/nexus-releases.js): James's words, the proof, the commit
   { key: 'system.releases', repo: false, usage: 'system releases [--sync [--all]] [--limit n] [--version x.y.z]', about: 'every Nexus release, newest first, from Versionium: James\'s words, the git commit, the changelog, its commits; --sync records any missing (with the newest 30 releases\' commits; --all: every release\'s)',
     req: (a) => a.flags.sync ? { method: 'POST', path: '/api/releases/sync', timeoutMs: 120000, body: a.flags.all ? { all: true } : {} } : { method: 'GET', path: '/api/releases' },
     print: (d, a, h) => {

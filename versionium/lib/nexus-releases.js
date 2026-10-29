@@ -24,60 +24,23 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const MODULE_ID = 'nexus.lib.nexus-releases';
+const MODULE_ID = 'versionium.lib.nexus-releases';
 const REPOSITORY = 'nexus';
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = path.resolve(__dirname, '..', '..');   // 0.60.277 VS1 — moved into versionium/lib: the repository root is two up
 
-/** quoteOf(body) — James's opening words in a version line's [v: …] body, verbatim; null when it does not open with him */
-function quoteOf(body) {
-  const full = String(body || '').replace(/\*/g, '');
-  const at = full.search(/\bJames\b/);
-  if (at < 0 || at > 200) return null;
-  const s = full.slice(at);
-  const m = /^James\b\s*(?:[—:–-]\s*)?/.exec(s);
-  let i = m[0].length, end = -1;
-  // the leading run: quotes, dates in parentheses, '·' between them — stops at the first word that is not his
-  for (;;) {
-    const rest = s.slice(i);
-    const t = /^(\s+|·|…|—|–|:(?=\s*")|"[^"]*"|'[^']*'(?=\s*(?:·|"|$))|\([^)]{0,160}\))/.exec(rest);   // RN2: '(answering …): "alright."' keeps his answer
-    if (!t) break;
-    i += t[0].length;
-    if (t[0][0] === '"' || t[0][0] === "'" || (t[0][0] === '(' && end > 0)) end = i;   // a note on what he answered stays with it
-  }
-  if (end > 0) return s.slice(0, end).trim();
-  // a line that tells what he did and then quotes him ("James restarted on 0.59.6 and said "try now"") keeps that context
-  const q = /"[^"]*"/.exec(s);
-  return q && q.index < 400 ? s.slice(0, q.index + q[0].length).trim() : null;
-}
+// 0.60.277 VS1 — quoteOf and lineOf parse lib/version.js, which lib owns (§5.15 rule 2): they live in lib/release-version.js and are used from there
+const { quoteOf, lineOf } = require('../../lib/release-version.js');
 
-/**
- * lineOf(line) → { version, body } for a release line of lib/version.js, in any of the shapes the sessions have written:
- *   system: '0.60.71',   // [0.60.71: …]                 the live one
- *   // prev system: '0.60.69',   // [0.60.69 (built …): …]  (RN2: this shape was not read; its notes were lost)
- *   // previous: '0.60.55',   // [0.60.55: …]
- *   // previous: 0.41.0 — system: '0.41.0',   // [0.41.0: …]
- * The bracket must open with the same version, so another component's line (copilot: '3.7.1', // [0.39.282: …]) is not one.
- */
-const LINE_SHAPES = [
-  /^\s*(?:\/\/\s*previous:\s*[\d.]+\s*—\s*)?system:\s*'(\d+\.\d+\.\d+)',?\s*(?:\/\/\s*\[(?:\d+\.\d+\.\d+):\s*(.*?)\]?\s*)?$/,
-  /^\s*(?:\/\/\s*)?(?:prev(?:ious)?\s*)?(?:system)?:?\s*'(\d+\.\d+\.\d+)',?\s*\/\/\s*\[\1\b[^:\]]*:\s*(.*?)\]?\s*$/,
-];
-function lineOf(line) {
-  for (const re of LINE_SHAPES) { const m = re.exec(line); if (m) return { version: m[1], body: (m[2] || '').trim() }; }
-  return null;
-}
 /** the key a release line is recognised by in history: its version and the opening of its own words */
 const _bodyKey = (version, body) => `${version}|${String(body || '').replace(/\s+/g, ' ').slice(0, 80)}`;
 
 function _lines(root) {
-  const src = fs.readFileSync(path.join(root, 'lib/version.js'), 'utf8');
+  // the version lines are lib's (lib/version.js): read through lib's own reader, never by opening its file here (§5.15 rule 1)
   const out = new Map();
-  for (const line of src.split('\n')) {
-    const m = lineOf(line); if (!m || out.has(m.version)) continue;
-    m[1] = m.version;
-    const body = m.body;
-    const p = body.search(/\bProof:/);
-    out.set(m[1], { body, proof: p >= 0 ? body.slice(p + 6).trim() : null });
+  for (const m of require('../../lib/release-version.js').lines({ root })) {
+    if (out.has(m.version)) continue;
+    const p = m.body.search(/\bProof:/);
+    out.set(m.version, { body: m.body, proof: p >= 0 ? m.body.slice(p + 6).trim() : null });
   }
   return out;
 }
@@ -115,10 +78,10 @@ function _changelog(root, file) {
 }
 
 function read({ root = ROOT } = {}) {
-  const RV = require('./release-version.js');
+  const RV = require('../../lib/release-version.js');
   const lines = _lines(root);
   const { at, byBody, shallow } = _gitCommits(root);
-  return RV.released({ root }).map(version => {
+  return released({ root }).map(version => {
     const l = lines.get(version) || { body: '', proof: null };
     const exact = l.body ? byBody.get(_bodyKey(version, l.body)) : null;
     const g = exact || at.get(version) || null;
@@ -156,4 +119,22 @@ async function sync(v, { root = ROOT, batch = 100, commits = 'recent' } = {}) {
   return { ok: !refused.length, repository: REPOSITORY, releases: all.length, recorded, already, refused, unpinned: all.filter(r => !r.gitCommit).length, withCommits: all.filter(r => Array.isArray(r.commits)).length };
 }
 
-module.exports = { MODULE_ID, REPOSITORY, quoteOf, lineOf, read, sync };
+/** released({ root }) — every release: lib's version lines (lib/release-version.js) and every changelog Versionium keeps */
+function released({ root = ROOT } = {}) {
+  const RV = require('../../lib/release-version.js');
+  const set = new Set(RV.released({ root }));
+  for (const c of require('./changelogs.js').list(root)) { const m = c.name.match(/^CHANGELOG-(\d+\.\d+\.\d+)\.md$/); if (m) set.add(m[1]); }
+  return [...set].sort(RV.cmp);
+}
+
+/** agreement({ root }) — lib's agreement (lib/version.js, package.json, VERSION, the git tag) with the line only Versionium can say: the changelog */
+function agreement({ root = ROOT } = {}) {
+  const a = require('../../lib/release-version.js').agreement({ root });
+  if (!a.version) return a;
+  const C = require('./changelogs.js'), cf = C.forVersion(root, a.version);
+  const place = { place: cf ? cf.rel : C.pathFor(a.version), says: cf ? a.version : null, ok: !!cf, why: cf ? null : 'the release has no changelog (its notes on GitHub come from it)' };
+  const places = [...a.places, place];
+  return { ...a, places, ok: places.every(p => p.ok) };
+}
+
+module.exports = { MODULE_ID, REPOSITORY, quoteOf, lineOf, read, sync, released, agreement };

@@ -27,8 +27,8 @@ const os = require('os');
 const path = require('path');
 const { execFileSync } = require('child_process');
 const ROOT = path.join(__dirname, '../..');
-const NR = require(path.join(ROOT, 'lib/nexus-releases.js'));
-const RN = require(path.join(ROOT, 'lib/release-notes.js'));
+const NR = require(path.join(ROOT, 'versionium/lib/nexus-releases.js'));   // 0.60.277 VS1 — Versionium's (his (a))
+const RN = require(path.join(ROOT, 'versionium/lib/release-notes.js'));
 
 let passed = 0, failed = 0;
 async function test(id, desc, fn) {

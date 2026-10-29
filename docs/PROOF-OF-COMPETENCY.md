@@ -1351,3 +1351,17 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
   The fix went there: a gate RAID holds for a person, not a side door in Idearium.
 - **Checkable:** `tests/modules/test-gate-waits-for-verdict.test.js` 5/5 (GV-01: one call, never FAILED, no self-heal);
   `CHANGELOG-0.60.257.md`.
+
+### 2026-10-29 — 0.60.276–0.60.277: "Remember sovereignty." · "a"
+- **His words:** "Remember sovereignty. Add that to the axioms and then add it to the claude.md to read the axioms in the docs". Then,
+  given two ways to fix what the first check found, "a".
+- **Context:** The day before, the coder had moved the changelogs into Versionium's folder and then had lib read that folder directly.
+  He did not point at the code; he named the principle. Once it was written as §5.15, the first check against it found that violation.
+  The coder recommended (b): put the files back where lib owns them. He chose (a): Versionium owns the files and the code that reads
+  them, and every other system asks it.
+- **What it shows:** architectural judgment held against the cheaper option. (b) was smaller. (a) is the one that keeps one owner per
+  kind of data, and doing it showed where release code and version reading had been mixed in one lib module, which were then split.
+  It also shows principle-level direction: he corrected a class of mistake, not an instance, and the correction is now a checkable law.
+- **Checkable:** `docs/AXIOMS-v3.1.md` §5.15 (101 laws, 101 quick-reference lines); `tests/modules/test-versionium-owns-releases.test.js`
+  4/4 (no system requires the moved code; drawbridge ratchet: 0 added; an outage is said, not spread);
+  `versionium/changelogs/CHANGELOG-0.60.277.md`.

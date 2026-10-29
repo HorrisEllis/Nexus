@@ -14,7 +14,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
-const CL = require(path.join(ROOT, 'lib/changelogs.js'));
+const CL = require(path.join(ROOT, 'versionium/lib/changelogs.js'));   // 0.60.277 VS1 — Versionium's (his (a))
 
 let passed = 0, failed = 0;
 async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} ${desc}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${desc}\n    ${(e.stack || e.message).split('\n').slice(0, 6).join('\n    ')}`); failed++; } }
@@ -42,7 +42,7 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
   await test('CH-02', 'the readers: the release names its changelog by its new path, and agrees with it', async () => {
     const RV = require(path.join(ROOT, 'lib/release-version.js'));
     assert.ok(RV.released().includes(v));
-    const place = RV.agreement().places.find(p => /CHANGELOG/.test(p.place));
+    const place = require(path.join(ROOT, 'versionium/lib/nexus-releases.js')).agreement().places.find(p => /CHANGELOG/.test(p.place));   // 0.60.277 — Versionium's agreement
     assert.deepStrictEqual([place.place, place.ok], [`versionium/changelogs/CHANGELOG-${v}.md`, true]);
     const PC = require(path.join(ROOT, 'lib/phase-census.js'));
     if (typeof PC.releases === 'function') assert.ok(PC.releases(ROOT).some(r => r.ref === `CHANGELOG-${v}.md`));

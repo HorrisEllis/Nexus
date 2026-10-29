@@ -201,3 +201,63 @@ spec:
 #       record, with the changelog's name, synced by lib/nexus-releases. The coder recommends (b): it is smaller, nothing depends on
 #       Versionium being up, and it matches what Versionium already owns.
 # Nothing has moved yet.
+
+# ADDENDUM 2026-10-29 (0.60.277) — his choice: (a). Versionium owns the changelogs and the release logic that reads them.
+# James, 2026-10-29, asked "(a) the release logic moves into Versionium … (b) the files go back to a place Nexus's root owns … The coder
+# recommends (b)": "a"
+# His call, over the coder's recommendation (b). Mapped here before any code (§3.3). Each decision below is decided by his axioms.
+#
+# decisions:
+#   VS_D1_split_release_version:
+#     chosen: >-
+#       lib/release-version.js keeps what reads lib's own files: current, fromFiles, distance, describe, cmp, and agreement over lib/version.js,
+#       VERSION, package.json and the git tag, plus the version-line parsers quoteOf and lineOf. Idearium's repo import, the COS app,
+#       nexus-update and CK-253 all use these. What reads the changelogs moves to Versionium: released() with the changelogs, and the
+#       changelog line of the agreement.
+#     by_the_axioms: "§5.15 rule 1 (the owner reads its own data) and rule 2 (lib/version.js is in lib, so lib owns it); §5.7 low coupling"
+#   VS_D2_others_through_routes:
+#     chosen: >-
+#       Idearium reaches the moved code only through Versionium's routes (nexus-client, as it already does for releases). Scripts (not a
+#       system, per lib/system-boundary NOT_SYSTEMS) and tests may require versionium/lib directly.
+#     by_the_axioms: "§5.9, §5.10 contracts only, §5.15 rule 1; the drawbridge ratchet (no new system crossing)"
+#   VS_D3_outage_said_not_spread:
+#     chosen: >-
+#       When Versionium is down, Idearium's release routes answer 502 "Versionium is down", and the version route falls back to lib's
+#       agreement with the changelog line marked "not checked: Versionium is down". Idearium keeps running, and so does every check.
+#     by_the_axioms: "§5.15 rule 3; §1.2 nothing fails silently"
+#   VS_D4_scanners_read_source:
+#     chosen: >-
+#       The self-model scanners (context-atlas search, phase-census, spec-census, readme-generate) read the text of every file in the tree,
+#       the same way they read code and .spec files everywhere. They find CHANGELOG*.md by walking the tree and do not require Versionium.
+#       They never write it and are not its canonical reader.
+#     by_the_axioms: "§6.1 docs from proof; §5.15 rule 1 binds data readers and writers. Reading source text tree-wide is the coder's reading, to confirm"
+#
+# phases:
+#   VS1_move_release_logic:
+#     depends_on: [VS_D1_split_release_version]
+#     files: [versionium/lib/changelogs.js, versionium/lib/nexus-releases.js, versionium/lib/release-notes.js, lib/release-version.js, lib/nexus-update.js]
+#     does: >-
+#       git mv lib/changelogs.js, lib/nexus-releases.js and lib/release-notes.js into versionium/lib (history kept); ROOT becomes '../..';
+#       quoteOf and lineOf move into lib/release-version.js (nexus-releases re-exports them); agreement() gains its changelog line in
+#       versionium/lib/nexus-releases.js
+#   VS2_versionium_routes:
+#     depends_on: [VS1_move_release_logic]
+#     files: [versionium/routes/nexus-releases.js, versionium/server.js, versionium/registry-components.js]
+#     does: >-
+#       GET /api/versionium/nexus/releases, POST /api/versionium/nexus/releases/sync, GET /api/versionium/nexus/changelog?version=,
+#       GET /api/versionium/nexus/changes?since=&write=1, GET /api/versionium/nexus/agreement, each declared in its contract
+#   VS3_consumers_through_routes:
+#     depends_on: [VS2_versionium_routes, VS_D2_others_through_routes, VS_D3_outage_said_not_spread]
+#     files: [idearium/api/index.js, scripts/release-zip.js, lib/context-atlas.js, lib/phase-census.js, lib/spec-census.js, lib/checks/ck-253-versions.js]
+#     does: >-
+#       Idearium's releases.list, releases.sync, releases.changes, releases.changelog, the boot sync and the version route ask Versionium;
+#       the scanners walk the tree; release-zip requires versionium/lib (it is a script); CK-253 checks lib's places
+#   VS4_records_and_tests:
+#     depends_on: [VS3_consumers_through_routes]
+#     files: [tests/modules/test-release-version.test.js, tests/modules/test-releases.test.js, tests/modules/test-release-notes.test.js, tests/modules/test-changelogs-home.test.js, tests/modules/test-versionium-owns-releases.test.js, loom/maps/releases-map.js, loom/maps/build-surface-map.js, loom/maps/economy-map.js, loom/maps/raid-events-and-tools-map.js, loom/maps/run-state-map.js, docs/CLAUDE.md]
+#     does: >-
+#       tests follow the code to its new home; a new test proves that the ratchet sees no new crossing, that the routes are declared and
+#       served, and that an outage is said and not spread; the loom maps get the new paths
+# STATUS 2026-10-29 (0.60.277): VS1–VS4 BUILT. Proof: test-versionium-owns-releases 4/4; drawbridge ratchet ok, 0 added (540 baseline, 400
+# now); test-release-version 5/5, test-release-notes 6/6, test-changelogs-home 4/4, test-releases and test-readme-generate keep their base
+# results, and so do changelog.test, test-cg-agent-doors, test-event-contracts and test-nexstore-census (the same failures on the base).

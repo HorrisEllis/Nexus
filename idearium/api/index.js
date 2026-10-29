@@ -336,7 +336,8 @@ try {
 // sync that cannot reach it is said in the log and tried at the next boot (or POST /api/releases/sync)
 if (!process.env.NEXUS_TEST_SANDBOX) {
   const t = setTimeout(() => {
-    _require('../../lib/nexus-releases.js').sync(_vcall)
+    // 0.60.277 VS3 — Versionium owns the release logic (his (a), §5.15): it syncs its own records when asked
+    _vcall('POST', '/api/versionium/nexus/releases/sync', {}, 120000)
       .then(r => { if (r.recorded) console.log(`[idearium] releases: ${r.recorded} recorded in versionium (${r.already} already, ${r.unpinned} without a git commit in this clone)`); })
       .catch(e => console.warn(`[idearium] releases not synced to versionium yet: ${e.message}`));
   }, 20000);
@@ -6000,7 +6001,7 @@ async function handle(req, res, route, query, body) {
     // states it agrees (CK-253), and the module versions — labelled as modules, never shown as the version
     // §0.60.41 RN1 — James: "i want idearium to have releases and a changelog for each version. it was added to the wrong
     // place." A repo's release is a Versionium tag on its branch head with the commits since the last; Nexus's own come
-    // from lib/version.js, its changelogs and git (lib/nexus-releases.js), synced into Versionium.
+    // from lib/version.js, its changelogs and git (versionium/lib/nexus-releases.js since 0.60.277), synced into Versionium.
     case 'repo.releases.list': case 'repo.releases.create': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -6015,23 +6016,22 @@ async function handle(req, res, route, query, body) {
       } catch (e) { return err(res, e.status || 502, e.message, { code: e.code || null }); }
     }
     // §0.60.72 RN2 — James: "tell me all the recent changes. i want a changelog for each change or diff." Every commit
-    // under the first release that contains it, written from git (lib/release-notes.js); ?since=<version> · ?write=1 → CHANGES.md
+    // under the first release that contains it, written from git (versionium/lib/release-notes.js since 0.60.277); ?since=<version> · ?write=1 → CHANGES.md
     // 0.60.274 — James, 2026-10-28: "can we move the changelogs to versionium and idearium". A release's changelog, read from its home
-    // (versionium/changelogs, through lib/changelogs.js); ?version= (default: the running release)
+    // (versionium/changelogs; Versionium's own since 0.60.277); ?version= (default: the running release)
+    // 0.60.277 VS3 — James, 2026-10-29: "a". The changelogs and the release notes are Versionium's (§5.15): asked through its routes.
+    // Versionium down → 502 that says so; Idearium itself keeps running (rule 3).
     case 'releases.changelog': {
-      const CLS = _require('../../lib/changelogs.js');
-      const version = String(query.version || _require('../../lib/version.js').system || '').replace(/^v/, '');
-      const c = CLS.read(undefined, version);
-      if (!c) return err(res, 404, `no changelog for ${version} in ${CLS.DIR}`);
-      return ok(res, c);
+      const v = query.version ? `?version=${encodeURIComponent(query.version)}` : '';
+      const r = await _versionium('GET', `/api/versionium/nexus/changelog${v}`);
+      if (!r.ok) return err(res, r.status === 404 ? 404 : 502, r.status === 404 ? `no changelog for ${query.version || 'the running release'} (versionium)` : `Versionium is down or refused: ${r.error}`);
+      const { ok: _ok, ...c } = r.data || {}; return ok(res, c);
     }
     case 'releases.changes': {
-      try {
-        const N = _require('../../lib/release-notes.js'), R = _require('../../lib/nexus-releases.js');
-        const since = query.since || null;
-        if (query.write === '1') return ok(res, N.write({ since }));
-        return ok(res, { since, markdown: N.markdown(R.read(), { since }) });
-      } catch (e) { return err(res, 500, `release notes: ${e.message}`); }
+      const q = new URLSearchParams({ ...(query.since ? { since: query.since } : {}), ...(query.write === '1' ? { write: '1' } : {}) }).toString();
+      const r = await _versionium('GET', `/api/versionium/nexus/changes${q ? `?${q}` : ''}`, null, 60000);
+      if (!r.ok) return err(res, 502, `Versionium is down or refused: ${r.error}`);
+      const { ok: _ok, ...d } = r.data || {}; return ok(res, d);
     }
     case 'repo.changelog': {
       // 0.60.190 APV3 — James: "make sure it's all interconnected, changes are logged and the diff snapshotted in versionium with a change
@@ -6068,7 +6068,7 @@ async function handle(req, res, route, query, body) {
     }
     case 'releases.list': case 'releases.sync': {
       try {
-        if (action === 'releases.sync') return ok(res, await _require('../../lib/nexus-releases.js').sync(_vcall, { commits: (body && body.all) ? 'all' : 'recent' }));
+        if (action === 'releases.sync') return ok(res, await _vcall('POST', '/api/versionium/nexus/releases/sync', { all: !!(body && body.all) }, 180000));   // 0.60.277 VS3 — Versionium's
         const repository = query.repository || 'nexus';
         const d = await _vcall('GET', `/api/versionium/releases?${new URLSearchParams({ repository, n: String(parseInt(query.n, 10) || 1000) })}`);
         return ok(res, { repository, current: _require('../../lib/release-version.js').current().version, releases: d.releases || [] });
@@ -6079,7 +6079,13 @@ async function handle(req, res, route, query, body) {
       const root = path.dirname(_require.resolve('../../package.json'));
       const modVer = (rel) => { try { return JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8')).version || null; } catch (_) { return null; } };
       const cur = R.current();
-      return ok(res, { ...cur, agreement: R.agreement(), github: `https://github.com/HorrisEllis/Nexus/releases/tag/${cur.tag}`,
+      // 0.60.277 VS3 — the agreement with its changelog line is Versionium's; when Versionium is down, lib's own places are said, and the
+      // changelog line says it was not checked (§5.15 rule 3, §1.2)
+      let agreement;
+      const va = await _versionium('GET', '/api/versionium/nexus/agreement');
+      if (va.ok && va.data && va.data.agreement) agreement = va.data.agreement;
+      else { const a = R.agreement(); agreement = { ...a, places: [...a.places, { place: 'the changelog', says: null, ok: null, why: `not checked: Versionium is down (${va.error || 'no answer'})` }] }; }
+      return ok(res, { ...cur, agreement, github: `https://github.com/HorrisEllis/Nexus/releases/tag/${cur.tag}`,
         modules: { ideaos: modVer('idearium/package.json'), clearGlass: modVer('clear-glass/package.json') } });
     }
     // 0.60.207 DL2 — James: "start the data migration … make each system responsible for it's own data." lib/data-home.js: where each

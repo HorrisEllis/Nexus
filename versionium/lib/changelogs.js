@@ -1,7 +1,10 @@
 'use strict';
 /**
- * lib/changelogs.js — where Nexus's release changelogs live, said once (0.60.274).
- * component_id: nexus.lib.changelogs
+ * versionium/lib/changelogs.js — where Nexus's release changelogs live, said once (0.60.274; Versionium's own since 0.60.277, his (a)).
+ * component_id: versionium.lib.changelogs
+ *
+ * James, 2026-10-29, choosing (a): "a" — Versionium owns the changelogs and the release logic that reads them (§5.15). Other systems ask
+ * Versionium's routes (GET /api/versionium/nexus/changelog); only Versionium's own code, scripts and tests require this.
  *
  * James, 2026-10-28: "can we move the changelogs to versionium and idearium"
  *
@@ -19,7 +22,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.join(__dirname, '..');
+const ROOT = path.join(__dirname, '..', '..');   // 0.60.277 VS1 — in versionium/lib: the repository root is two up
 const DIR = 'versionium/changelogs';
 const NAME = /^CHANGELOG.*\.md$/;
 
@@ -56,4 +59,4 @@ function read(root = ROOT, version) {
 
 function pathFor(version) { return `${DIR}/CHANGELOG-${String(version).replace(/^v/, '')}.md`; }
 
-module.exports = { DIR, list, find, forVersion, read, pathFor, MODULE_ID: 'nexus.lib.changelogs' };
+module.exports = { DIR, list, find, forVersion, read, pathFor, MODULE_ID: 'versionium.lib.changelogs' };

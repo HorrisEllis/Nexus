@@ -40,6 +40,31 @@
     },
     {
       "method": "GET",
+      "path": "/api/versionium/nexus/releases",
+      "_componentId": "versionium.nexus.releases"
+    },
+    {
+      "method": "POST",
+      "path": "/api/versionium/nexus/releases/sync",
+      "_componentId": "versionium.nexus.releases.sync"
+    },
+    {
+      "method": "GET",
+      "path": "/api/versionium/nexus/changelog",
+      "_componentId": "versionium.nexus.changelog"
+    },
+    {
+      "method": "GET",
+      "path": "/api/versionium/nexus/changes",
+      "_componentId": "versionium.nexus.changes"
+    },
+    {
+      "method": "GET",
+      "path": "/api/versionium/nexus/agreement",
+      "_componentId": "versionium.nexus.agreement"
+    },
+    {
+      "method": "GET",
       "path": "/api/versionium/files/limits",
       "_componentId": "versionium.files.limits"
     },

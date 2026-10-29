@@ -37,7 +37,7 @@ const quiet = async (fn) => { const w = console.warn, l = console.log; console.w
   const REL = require(path.join(ROOT, 'versionium/lib/releases.js'));
   const route = require(path.join(ROOT, 'versionium/routes/versionium.js'));
   const engine = require(path.join(ROOT, 'versionium/lib/engine.js'));
-  const NR = require(path.join(ROOT, 'lib/nexus-releases.js'));
+  const NR = require(path.join(ROOT, 'versionium/lib/nexus-releases.js'));   // 0.60.277 VS1 — Versionium's (his (a))
   const RR = require(path.join(ROOT, 'lib/repo-releases.js'));
 
   const server = http.createServer(async (req, res) => {

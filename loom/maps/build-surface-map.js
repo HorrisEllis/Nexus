@@ -37,7 +37,7 @@ const FILES = [
   ]],
   // 0.60.274 — the changelogs' home (versionium/changelogs); it requires nothing of ours. Its consumers (release-version, nexus-releases,
   // phase-census, spec-census, context-atlas, scripts/release-zip, idearium/api's releases.changelog) are plain requires the source scanner maps.
-  ['lib/changelogs.js', I('lib/changelogs.js'), []],
+  ['lib/changelog-files.js', I('lib/changelog-files.js'), []],   // 0.60.277 — the scanners' view (VS_D4); lib/changelogs.js moved to versionium/lib (releases-map)
   ['clear-glass/src/shortcuts/site-keys.js', I('clear-glass/src/shortcuts/site-keys.js'), [   // 0.60.275 KB2 — keys bound to elements, per site
     I('clear-glass/src/shortcuts/registry.js'),                // require — normalize, isSafe
   ]],
