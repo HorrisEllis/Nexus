@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-macro-fiverr-gig-choose-category-v1
+type: macro
+id: fiverr-gig-choose-category-v1
+context: Clear Glass → Settings → Macros
+intent: >-
+  Overview of a new gig: open SELECT A CATEGORY and pick {{category}} (e.g. "Programming & Tech"), then
+  open SELECT A SUBCATEGORY and pick {{subcategory}} (e.g. "AI Development"). Each pick is gated: the
+  page must show the value after it, else the pick runs again (2 retries). What _gigFill does for the
+  category part when the page offers no suggested category. Edit `pick` (auto, pointer, keys, number)
+  or add `keysFor` to bind keys to each value.
+summary: 3 browser steps for fiverr.com, each pick gated on the value shown; asks for category, subcategory
+system: clear-glass.automation
+tags:
+  - macro
+  - step:wait_for
+  - step:choose
+  - gated
+source: clear-glass/src/automation/nodes.js
+fingerprint: bf337cf8bb667995
+payload:
+  uuid: fiverr-gig-choose-category-v1
+  name: Fiverr gig - choose category
+  urlPattern: fiverr.com
+  steps:
+    - action: wait_for
+      data:
+        selector: body
+    - action: choose
+      data:
+        shows: SELECT A CATEGORY
+        option: '{{category}}'
+        pick: auto
+      gate:
+        text: '{{category}}'
+        retries: 2
+        timeoutMs: 4000
+    - action: choose
+      data:
+        shows: SELECT A SUBCATEGORY
+        option: '{{subcategory}}'
+        pick: auto
+      gate:
+        text: '{{subcategory}}'
+        retries: 2
+        timeoutMs: 4000
+  params:
+    - category
+    - subcategory
+  profile: null
+  description: >-
+    Overview of a new gig: pick {{category}} in SELECT A CATEGORY, then {{subcategory}} in SELECT A
+    SUBCATEGORY, each gated on the value the page shows.
+  runCount: 0
+  lastRunAt: null

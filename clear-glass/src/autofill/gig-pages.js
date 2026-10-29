@@ -21,11 +21,14 @@ const OM = require('../page/option-match');
 
 const SIGNS = Object.freeze({
   pricing: [/scope\s*&\s*pricing/i, /\bpackages\b/i],
-  overview: [/suggested categories/i, /gig metadata/i, /service type/i],
+  overview: [/suggested categories/i, /gig metadata/i, /service type/i,
+    // 0.60.283 — James, 2026-10-29, with a screenshot of a NEW gig's Overview (Gig title, SELECT A CATEGORY, Search tags): "the autofill is still
+    // buggy. like i want autofill to do it all if possible." A new gig shows none of the three above until a category is picked.
+    /gig title/i, /select a category/i, /search tags/i, /positive keywords/i],
 });
 
 const PARTS = Object.freeze({
-  overview: ['category'],
+  overview: ['category', 'tags'],   // 0.60.283: tags too (Search tags, typed one by one)
   pricing: ['basic.name', 'standard.name', 'premium.name', 'basic.description', 'standard.description', 'premium.description',
     'basic.delivery', 'standard.delivery', 'premium.delivery'],
 });
@@ -35,7 +38,7 @@ function gigPage(read) {
   const hay = [r.title || '', ...(r.headings || []).map(h => (h && h.text) || h || ''), String(r.text || '').slice(0, 6000)].join('\n');
   if (!/fiverr\.com/i.test(String(r.url || '')) && !/fiverr/i.test(r.title || '')) return { page: null, why: 'not a Fiverr page' };
   const score = (p) => SIGNS[p].filter(re => re.test(hay)).length;
-  const pr = score('pricing'), ov = score('overview');
+  const pr = score('pricing'), ov = score('overview') + (/manage_gigs\/new|[?&]tab=general\b/i.test(String(r.url || '')) ? 2 : 0);
   if (pr >= 2 && pr >= ov) return { page: 'pricing', why: 'shows Scope & Pricing and Packages' };
   if (ov >= 2) return { page: 'overview', why: 'shows the category and gig metadata sections' };
   return { page: null, why: 'a Fiverr page this does not know yet (only Overview and Scope & Pricing are on record) — point at the fields to teach it' };
@@ -73,9 +76,33 @@ function pageMacroSteps(steps) {
 function valueOf(gig, part) {
   if (!gig) return null;
   if (part === 'category') return gig.category ? (gig.subcategory ? `${gig.category} > ${gig.subcategory}` : gig.category) : null;
+  if (part === 'tags') return Array.isArray(gig.tags) && gig.tags.length ? gig.tags.slice(0, 5).join(', ') : null;   // 0.60.283
   const [tier, k] = String(part).split('.'); const p = gig.packages && gig.packages[tier]; if (!p) return null;
   const v = k === 'delivery' ? (Number.isFinite(p.deliveryDays) ? String(p.deliveryDays) : null) : p[k];
   return v === undefined || v === null || v === '' ? null : String(v);
 }
 
-module.exports = { gigPage, PARTS, targetKey, suggestedCategory, macroName, pageMacroSteps, valueOf };
+// 0.60.283 — the Search tags box of the Overview: the text input in the section that says "Search tags" or "Positive keywords" (never the
+// title), marked data-cg-tags="1" for the driver. A tag is typed and Enter pressed; tagShownScript is its gate: the section shows the tag as a
+// chip and the box no longer holds it.
+const TAGS_SECTION = /positive keywords|search tags/i;
+function tagInputScript() {
+  return `(function(){
+  var re = ${TAGS_SECTION.toString()};
+  function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+  var inputs = Array.prototype.filter.call(document.querySelectorAll('input:not([type]),input[type="text"],input[type="search"]'), vis);
+  for (var i = 0; i < inputs.length; i++) { var el = inputs[i], up = el;
+    for (var d = 0; d < 6 && up; d++, up = up.parentElement) { if (re.test(up.textContent || '')) { el.setAttribute('data-cg-tags', '1'); return { found: true, placeholder: el.placeholder || null }; } } }
+  return { found: false };
+})()`;
+}
+function tagShownScript(tag) {
+  return `(function(t){
+  var el = document.querySelector('[data-cg-tags="1"]'); if (!el) return false;
+  var up = el; for (var d = 0; d < 6 && up && !${TAGS_SECTION.toString()}.test(up.textContent || ''); d++) up = up.parentElement;
+  var text = String((up || document.body).innerText || '').toLowerCase();
+  return text.indexOf(String(t).toLowerCase()) >= 0 && String(el.value || '').trim().toLowerCase() !== String(t).toLowerCase();
+})(${JSON.stringify(String(tag))})`;
+}
+
+module.exports = { gigPage, PARTS, targetKey, suggestedCategory, macroName, pageMacroSteps, valueOf, tagInputScript, tagShownScript };

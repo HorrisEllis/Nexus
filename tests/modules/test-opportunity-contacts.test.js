@@ -136,7 +136,8 @@ const PAGE = { url: 'https://jobs.acme.io/role/42', title: 'Backend Engineer at 
     assert.ok(down.down && /Copilot is not running/.test(down.error), JSON.stringify(down));
     process.env.COPILOT_PORT = String(srv.address().port);
     const rd = require('fs').readFileSync(CG('src/preload/index.js'), 'utf8');
-    assert.ok(/applications: \{ call: \(method, path, body\) => ipcRenderer\.invoke\('applications:call'/.test(rd));
+    assert.ok(/applications: \{\n    call: \(method, path, body\) => ipcRenderer\.invoke\('applications:call'/.test(rd));
+    assert.deepStrictEqual(require(CG('src/driver/cg-stub.js')).names().ns.applications, ['call'], 'one namespace the stub reads as such (a one-line one swallowed the next)');
   });
 
   const glass = require(CG('src/driver/glass.js'));

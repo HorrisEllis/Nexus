@@ -734,7 +734,7 @@ class ClearDriver {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
     if (option === undefined || option === null || option === '') throw new Error('choose requires option');
-    if (!selector && !column) throw new Error('choose requires selector, or column with row or shows');
+    if (!selector && !column && !showsText) throw new Error('choose requires selector, column with row or shows, or shows alone');   // 0.60.283: shows alone (the Overview's SELECT A CATEGORY)
     const OM = require('../page/option-match');
     const found = await this._evalJs(wc, `(function(sel, col, row, showsText){
       function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
@@ -744,15 +744,16 @@ class ClearDriver {
       var trig = null;
       if (sel) { try { trig = document.querySelector(sel); } catch (_) {} if (!trig) return { error: 'no element for ' + sel }; }
       else {
-        var heads = byText(col); if (!heads.length) return { error: 'no column headed "' + col + '" on the page' };
-        var h = heads[0].getBoundingClientRect();
+        // 0.60.283 — no column: the dropdown is found by the text it shows anywhere on the page (Fiverr's SELECT A CATEGORY)
+        var h = null;
+        if (col) { var heads = byText(col); if (!heads.length) return { error: 'no column headed "' + col + '" on the page' }; h = heads[0].getBoundingClientRect(); }
         var band = null;
         if (row) { var rows = byText(row); if (!rows.length) return { error: 'no row labelled "' + row + '" on the page' };
           var rl = rows[0], box = (rl.closest('tr') || rl.parentElement || rl).getBoundingClientRect(); band = { top: box.top, bottom: box.bottom }; }
         var cands = [];
         document.querySelectorAll('select,[role="combobox"],[aria-haspopup],button,[tabindex],div,span').forEach(function(el){
           if (!vis(el)) return; var r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-          if (cx < h.left || cx > h.right) return;
+          if (h && (cx < h.left || cx > h.right)) return;
           if (band && (cy < band.top || cy > band.bottom)) return;
           if (!band && showsText && norm(el.textContent) !== norm(showsText)) return;
           if (!band && !showsText) return;
@@ -761,7 +762,7 @@ class ClearDriver {
         trig = cands.find(function(el){ return el.tagName === 'SELECT'; })
             || cands.find(function(el){ return el.getAttribute('role') === 'combobox' || el.hasAttribute('aria-haspopup'); })
             || cands.filter(function(el){ return !cands.some(function(o){ return o !== el && el.contains(o); }); })[0] || null;
-        if (!trig) return { error: 'no dropdown in column "' + col + '"' + (row ? ' and row "' + row + '"' : ' showing "' + showsText + '"') };
+        if (!trig) return { error: (col ? 'no dropdown in column "' + col + '"' : 'no dropdown') + (row ? ' and row "' + row + '"' : ' showing "' + showsText + '"') };
       }
       window.__cgChooseN = (window.__cgChooseN || 0) + 1;
       trig.setAttribute('data-cg-choose', String(window.__cgChooseN));

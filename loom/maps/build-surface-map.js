@@ -483,6 +483,9 @@ const CONSUMERS = [
   [I('lib/automation/engine.js'), I('clear-glass/src/driver/index.js'), '0.60.281 SN1 browser step "network" → _drive(..., \'net\', { do, site, timeoutMs })'],
   [I('lib/agent-tools/tools/browser/browser-action.js'), I('clear-glass/src/driver/index.js'), '0.60.281 SN1 network → driver.exec { action: \'net\' } (macro steps), through Guardian'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/driver/index.js'), '0.60.281 AP1 _gigFeatures: choose / readChoice / checkAt / rowLabels per package row'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/page/keyboard-mode.js'), '0.60.283 _a11y: sweepScript — what holds a site\'s accessibility look on; reset backs up, removes, sets Off, reloads'],
+  [I('clear-glass/renderer/browser.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.283 the Site settings popup\'s Reset (cg.siteProfile.a11yReset → IPC site:a11yReset)'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig-pages.js'), '0.60.283 _gigTags: tagInputScript / tagShownScript (each tag gated)'],
 ];
 
 function mapBuildSurface(driver) {

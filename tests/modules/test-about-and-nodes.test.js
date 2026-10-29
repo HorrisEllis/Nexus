@@ -40,9 +40,10 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     assert.deepStrictEqual([r.nexus.latest, r.nexus.newer], ['0.60.269', false]);
   });
 
-  await test('AN-02', 'the four node files ship and parse; seeded into the library once (his delete stands); imported through the Settings route', async () => {
+  await test('AN-02', 'the node files ship and parse; seeded into the library once (his delete stands); imported through the Settings route', async () => {
     const files = fs.readdirSync(BUNDLED).sort();
-    assert.deepStrictEqual(files, ['fiverr-gig-choose-delivery.macro', 'fiverr-gig-fill-this-page.workflow', 'fiverr-gig-overview-steps.workflow', 'fiverr-gig-scope-pricing-steps.workflow']);
+    // 0.60.283: + fiverr-gig-choose-category.macro (a new gig's SELECT A CATEGORY / SUBCATEGORY, gated)
+    assert.deepStrictEqual(files, ['fiverr-gig-choose-category.macro', 'fiverr-gig-choose-delivery.macro', 'fiverr-gig-fill-this-page.workflow', 'fiverr-gig-overview-steps.workflow', 'fiverr-gig-scope-pricing-steps.workflow']);
     for (const f of files) assert.ok(N.parse(fs.readFileSync(path.join(BUNDLED, f), 'utf8')).payload, f);
     const R = require(path.join(ROOT, 'lib/automation/routes.js'));
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'an-nodes-'));
@@ -50,11 +51,11 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     const deps = { nodesDir: dir, bundledDir: BUNDLED, getMacro: async (n) => { const m = created.find(x => x.name === n); return m ? { ok: true, macro: m } : { error: `no macro named "${n}"` }; }, createMacro: async (m) => { created.push(m); return { ok: true }; } };
     const engine = { importWorkflow: (w) => ({ ok: true, workflow: { id: 'w1', name: w.name, steps: w.steps } }), create: (w) => ({ ok: true, workflow: { id: 'w1', ...w } }), list: () => [], get: () => null };
     let r = await R.handle(engine, { method: 'GET', url: '/automation/nodes' }, deps);
-    assert.strictEqual(r.body.nodes.length, 4, JSON.stringify(r.body).slice(0, 200));
+    assert.strictEqual(r.body.nodes.length, 5, JSON.stringify(r.body).slice(0, 200));
     assert.deepStrictEqual(r.body.seeded.sort(), files);
     fs.unlinkSync(path.join(dir, 'fiverr-gig-overview-steps.workflow'));
     r = await R.handle(engine, { method: 'GET', url: '/automation/nodes' }, deps);
-    assert.deepStrictEqual([r.body.nodes.length, r.body.seeded.length], [3, 0], 'deleted stays deleted');
+    assert.deepStrictEqual([r.body.nodes.length, r.body.seeded.length], [4, 0], 'deleted stays deleted');
     const im = await R.handle(engine, { method: 'POST', url: '/automation/nodes/fiverr-gig-choose-delivery.macro/import', body: {} }, deps);
     assert.ok(im.body.ok !== false, JSON.stringify(im.body));
     assert.deepStrictEqual(created.map(m => [m.name, m.params]), [['Fiverr gig - choose delivery', ['tier', 'delivery']]]);
@@ -68,7 +69,7 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     const gig = { title: 'I will build it', tags: [], description: 'd', faq: [], requirements: [], packages: { basic: { name: 'Starter', description: 'one', price: 30, deliveryDays: 3 }, standard: { name: 'Plus', description: 'two', price: 60, deliveryDays: 5 } } };
     const run = async (macroFails) => {
       const store = [], runs = [], calls = [];
-      const self = { dom: { handleQuery: async () => [], handleMutate: async () => ({}) }, postEvent: () => {}, _humanCheckGate: async () => ({ pass: true }),
+      const self = { dom: { handleQuery: async () => [], handleMutate: async () => ({}) }, postEvent: () => {}, _humanCheckGate: async () => ({ pass: true }), _gigFeatures: Bridge.prototype._gigFeatures, _gigTags: Bridge.prototype._gigTags,
         macroTool: { execute: async (a) => { if (a.action === 'get') { const m = store.find(x => x.name === a.name); return m ? { ok: true, macro: m } : { error: `no macro named "${a.name}"` }; } if (a.action === 'create') { store.push(a); return { ok: true }; } return {}; } },
         runMacroAsPerson: async (d) => { runs.push(d); return macroFails ? { error: 'Element not found: body', failedAtStep: 0 } : { ok: true, stepsCompleted: 2 }; },
         driver: { exec: async (c) => { calls.push(c); if (c.action === 'readPage') return { url: 'https://www.fiverr.com/edit', headings: [{ text: 'Scope & Pricing' }, { text: 'Packages' }], links: [] }; if (c.action === 'choose') return { option: `${c.option} Days` }; return {}; } } };

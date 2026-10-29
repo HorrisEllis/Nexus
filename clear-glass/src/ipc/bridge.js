@@ -1252,6 +1252,9 @@ class IpcBridge {
     // the network route is the netPolicy origin rule. by: the person (the window) — an agent's write comes through /cli/site-profile.
     ipcMain.handle('site-profile:get',   async (e, d) => this._siteProfile().siteProfile(d && d.url));
     ipcMain.handle('site-profile:set',   async (e, d) => this._siteProfile().setSite(d && d.url, d && d.key, d && d.value, { by: 'person' }));
+    // 0.60.283 — James, 2026-10-29: "The accessability man. i can't fix it." (Fiverr remembers its accessibility look; keyboard-mode.js)
+    ipcMain.handle('site:a11yCheck', async (e, d = {}) => this._a11y(d && d.wcId, { reset: false }));
+    ipcMain.handle('site:a11yReset', async (e, d = {}) => this._a11y(d && d.wcId, { reset: true }));
     ipcMain.handle('site-profile:clear', async (e, d) => this._siteProfile().clearSite(d && d.url, d && d.key, { by: 'person' }));
     ipcMain.handle('site-profile:keys',  async () => ({ keys: this._siteProfile().KEYS, features: this._siteProfile().FEATURES }));
 
@@ -2264,6 +2267,31 @@ class IpcBridge {
     return g;
   }
 
+  // 0.60.283 — what holds a site's accessibility look on (its html/body classes and attributes, its storage, its readable cookies), and, on
+  // reset: a backup of every entry first (REVERSIBILITY: userData/a11y-resets/<host>-<time>.json), then they are removed, the site is set to
+  // accessibility.tabMode 'off' (so a look it brings back is swept at each load), and the page reloads. Nothing matched is said, with every
+  // storage key and cookie name it did not match, so a look stored under another name can be traced.
+  async _a11y(wcId, { reset = false } = {}) {
+    const { webContents, app } = this._electron || require('electron');   // _electron: a test's stand-in
+    const wc = webContents.fromId(Number(wcId));
+    if (!wc || wc.isDestroyed()) return { ok: false, error: 'no such page' };
+    let url = ''; try { url = wc.getURL(); } catch (_) {}
+    if (!/^https?:/.test(url)) return { ok: false, error: 'this page is not a website' };
+    const K = require('../page/keyboard-mode');
+    const found = await wc.executeJavaScript(K.sweepScript({ storage: reset, cookies: reset }), true);
+    const out = { ok: true, url, origin: new URL(url).origin, reset, found: found.found, classes: found.classes, attrs: found.attrs,
+      storage: found.storage.map(x => ({ area: x.area, key: x.key })), cookies: found.cookies.map(x => x.name), otherKeys: found.otherKeys, otherCookies: found.otherCookies, link: found.link };
+    if (!reset) return out;
+    try {
+      const fs = require('fs'), path = require('path'); const dir = path.join(app.getPath('userData'), 'a11y-resets'); fs.mkdirSync(dir, { recursive: true });
+      out.backup = path.join(dir, `${new URL(url).host}-${Date.now()}.json`);
+      fs.writeFileSync(out.backup, JSON.stringify({ at: new Date().toISOString(), url, ...found }, null, 2));
+    } catch (err) { out.backupError = err.message; }
+    try { out.tabMode = await this._siteProfile().setSite(url, 'accessibility.tabMode', 'off', { by: 'person' }); } catch (err) { out.tabModeError = err.message; }
+    try { wc.reload(); out.reloaded = true; } catch (err) { out.reloadError = err.message; }
+    return out;
+  }
+
   // 0.60.281 AP4 — James, 2026-10-29: "also capturing the contact info for job applications." The applications and their contacts are the
   // opportunity system's (lib/opportunity, served by Copilot); Clear Glass reaches them only through Copilot's routes (§5.15), and only these.
   // Copilot down → the screen says so; nothing here holds a copy.
@@ -2284,6 +2312,32 @@ class IpcBridge {
       if (payload) req.write(payload);
       req.end();
     });
+  }
+
+  // 0.60.283 — the gig's tags (at most 5) into Fiverr's Search tags box, one by one, each gated on the page showing it. { done, missed, why? }
+  async _gigTags(agentId, gig, learnedSelector = null) {
+    const GP = require('../autofill/gig-pages');
+    const tags = (Array.isArray(gig.tags) ? gig.tags : []).slice(0, 5);
+    if (!tags.length) return { done: [], missed: [], why: 'the gig has no tags' };
+    let selector = learnedSelector;
+    if (!selector) {
+      const f = await this.driver.exec({ agentId, action: 'eval', code: GP.tagInputScript(), by: 'person' });
+      if (!f || !f.result || !f.result.found) throw new Error('the Search tags box was not found — point at it');
+      selector = '[data-cg-tags="1"]';
+    }
+    const done = [], missed = [];
+    for (const t of tags) {
+      let shown = false;
+      for (let attempt = 0; attempt < 2 && !shown; attempt++) {
+        await this.driver.exec({ agentId, action: 'type', selector, text: String(t), clearFirst: attempt > 0, by: 'person' });
+        await this.driver.exec({ agentId, action: 'pressKey', key: 'Enter', by: 'person' });
+        const g = await this.driver.exec({ agentId, action: 'eval', code: GP.tagShownScript(t), by: 'person' });
+        shown = !!(g && g.result);
+      }
+      (shown ? done : missed).push(t);
+    }
+    if (!done.length) throw new Error(`no tag took (${missed.join(', ')}) — the box may want them another way; point at it`);
+    return { done, missed };
   }
 
   // 0.60.281 AP1 — the package rows of the pricing page from gig.packages[tier].features (see _gigFill): { filled, failed, unlisted }
@@ -2340,6 +2394,9 @@ class IpcBridge {
       const learned = site && mem.target(site, GP.targetKey(where.page, part));
       const isChoice = part === 'category' || part.endsWith('.delivery');
       try {
+        // 0.60.283 — James: "i want autofill to do it all if possible." Search tags: each typed and Enter pressed in the tags box (the one he
+        // pointed at, else the box in the Search tags section), gated: the tag must show and leave the box, else typed once more.
+        if (part === 'tags') { r.tags = await this._gigTags(agentId, gig, learned && learned.selector); continue; }
         if (learned) {
           if (isChoice) await this.driver.exec({ agentId, action: 'choose', selector: learned.selector, option: value, by: 'person' });
           else await this.driver.exec({ agentId, action: 'setValue', selector: learned.selector, value, by: 'person' });
@@ -2358,9 +2415,18 @@ class IpcBridge {
         }
         if (part === 'category') {
           const sc = GP.suggestedCategory(read.links, gig);
-          if (!sc.ok) throw new Error(sc.why);
-          await this.driver.exec({ agentId, action: 'pointer', selector: sc.link.selector, do: 'click', by: 'person' });
-          r.dropdowns.push({ key: part, ok: true, option: sc.text }); continue;
+          if (sc.ok) {
+            await this.driver.exec({ agentId, action: 'pointer', selector: sc.link.selector, do: 'click', by: 'person' });
+            r.dropdowns.push({ key: part, ok: true, option: sc.text, via: 'suggested' }); continue;
+          }
+          // 0.60.283 — a new gig offers no suggestion, only SELECT A CATEGORY and SELECT A SUBCATEGORY: his node "Fiverr gig - choose
+          // category" (gated, editable in Settings › Macros), else the same two picks built in, each read back
+          if (!/select a category/i.test(String(read.text || ''))) throw new Error(sc.why);
+          const viaMacro = typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose category', { category: gig.category, subcategory: gig.subcategory || '' }) : { ok: false, why: 'node macros not wired here' };
+          if (viaMacro.ok) { r.dropdowns.push({ key: part, ok: true, option: value, via: 'macro' }); continue; }
+          const c1 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A CATEGORY', option: gig.category, by: 'person' });
+          const c2 = gig.subcategory ? await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A SUBCATEGORY', option: gig.subcategory, by: 'person' }) : null;
+          r.dropdowns.push({ key: part, ok: true, option: [c1.option, c2 && c2.option].filter(Boolean).join(' > '), via: 'built-in', why: viaMacro.why }); continue;
         }
         throw new Error('not found on the page');
       } catch (err) { r.notFound.push({ key: part, why: err.message }); }

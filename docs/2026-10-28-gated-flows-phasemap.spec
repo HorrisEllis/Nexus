@@ -268,3 +268,14 @@ phases_kb:
     depends_on: [BS6_float_cli]
     files: [clear-glass/src/main/float-cli.js, clear-glass/renderer/float-cli.js, clear-glass/renderer/float-cli.html, clear-glass/renderer/browser.js, clear-glass/renderer/settings/sections/general.js]
     does: an option floatCli.pinned (📌 in the panel, and in Settings), which shows the button on every browser window at start and keeps it
+
+## ADDENDUM 2026-10-29 (0.60.283) — FG1 reset, FG5 the new gig's Overview
+James, 2026-10-29: "The accessability man. i can't fix it." · "the autofill is still buggy. like i want autofill to do it all if possible.
+can you get fiverr to work, now with the keybindings, and gates"
+- FG1: a site that remembers its look loads with it on, so the Tab diff saw nothing. Added: sweepScript (classes, attributes, storage,
+  cookies named as accessibility), a reset in Site settings (backup first, then removed, the site set to Off, reloaded), and Off sweeping
+  at each load and keeping a removed class off. The names matched are a pattern (A11Y_RE), the coder's: a look stored under another name
+  is not found, and the reset then says so with every name it looked at.
+- FG5: the new gig's Overview is recognised; category and subcategory through the gated node "Fiverr gig - choose category" (built-in
+  fallback); tags one by one, each gated. choose takes shows alone.
+- Proof: tests/modules/test-fiverr-overview-and-a11y.test.js 5/5.
