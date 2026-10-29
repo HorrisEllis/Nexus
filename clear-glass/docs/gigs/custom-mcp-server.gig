@@ -1,0 +1,68 @@
+# Clear Glass gig file (clearglass.gig/1) — load it in Settings → Autofill → Gig, or in the gig panel.
+# 0.60.286 — from the 2026-10-29 market brainstorm: Claude Code specialist searches up 938% (Fiverr, June 2026). His proof: Nexus's own MCP
+# server (.mcp.json, the mcp__nexus__* tools: grep, read_range, loom_query, read_spec, gaps …) that his Claude Code sessions use every day.
+format: clearglass.gig/1
+platform: fiverr
+title: I will build a custom MCP server so Claude can use your tools and data
+category: Programming & Tech
+subcategory: AI Development
+tags:
+  - mcp server
+  - claude code
+  - mcp
+  - ai agent tools
+  - claude integration
+description: >-
+  Want Claude (or another AI) to work with your own tools, files or database instead of copy and
+  paste? I build an MCP server for it: a set of tools the AI can call, safely, with only the access
+  you allow.
+
+
+  What you get:
+
+  - An MCP server with the tools you need (search, read, query, create, update)
+
+  - Each tool limited to what you allow, with clear errors instead of silent failures
+
+  - Setup for Claude Code or Claude Desktop, tested with real calls
+
+  - A short guide to adding more tools later
+
+
+  I run my own MCP server every day: my AI coder uses it to search, read and check a large
+  project. Yours gets the same care.
+packages:
+  basic:
+    name: One Tool
+    description: An MCP server with one tool, set up and tested in Claude.
+    deliveryDays: 3
+    revisions: 1
+    price: 90
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
+  standard:
+    name: Tool Set
+    description: Up to five tools over your files, API or database, tested.
+    deliveryDays: 6
+    revisions: 2
+    price: 260
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
+  premium:
+    name: Full Integration
+    description: Up to twelve tools, access limits, tests and a live walkthrough.
+    deliveryDays: 10
+    revisions: 3
+    price: 600
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
+faq:
+  - question: What is MCP?
+    answer: The Model Context Protocol, the standard way Claude and other AI tools call outside tools. Your server can be reused by any client that speaks it.
+  - question: Can it reach my database safely?
+    answer: Yes. Each tool gets only the access you allow, and anything that changes data can be made to ask first.
+  - question: Which language?
+    answer: Node.js by default; Python if your stack is Python.
+requirements:
+  - Which tools, files, API or database should the AI be able to use, and what for?
+  - Who will use it, and on what? (Claude Code, Claude Desktop, a server; one person or a team)
+  - What must it always do, and what must it never do or touch?
+  - How will you check that it is done? (the task you will ask Claude to do)
+  - Please share API docs, sample data or access I need to start.
