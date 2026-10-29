@@ -29,6 +29,8 @@ function httpIdleProbe(project, run, timeoutMs = 2500) {
 class Controller {
   constructor({ root = Store.defaultRoot(), opts = {}, store = Store, rt = RT, sw = SW, onEvent = () => {}, idle = null } = {}) {
     this.root = root; this.opts = opts; this.store = store; this.rt = rt; this.sw = sw; this.emit = onEvent; this.busy = new Map(); this.idleProbe = idle || httpIdleProbe; this.waiting = new Map();
+    // 0.60.279 VE7 — what COS recorded while Versionium was down goes when it answers: now, then every minute (cos/app/versionium.js, §17.12)
+    try { const V = require('./versionium.js'); V.drain(root).catch(() => {}); const t = setInterval(() => V.drain(root).catch(() => {}), 60000); if (t.unref) t.unref(); } catch (_) {}
   }
   async _exclusive(project, what, fn) {
     if (this.busy.has(project)) return { ok: false, reason: 'busy', error: `${project} is busy (${this.busy.get(project)}): wait for it to finish` };

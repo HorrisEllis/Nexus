@@ -78,3 +78,13 @@ James, 2026-10-24: "Continue"
   (SV-01 compares each with real JS) and refuses the rest. One upstream gate (auth.js:135, an arrow returning a template string) was already
   broken: it is refused, so that API-key check fails closed; the engine is left as he wrote it, said here.
 - No conf, state, logs or key from the upload; defaults/ holds the vhost templates and the default site (what init does not make).
+
+# ── ADDENDUM 2026-10-29 — categories and cos.exe as the full compartment manager (his) ──
+# James, 2026-10-29: "catagories using either the architypes or the templates, with a full manager and editor, with the schemas, then catagories
+# which can be managed, including systems which would then list each system compartment. also really need cos.exe to be a fully compartment
+# manager with controls for the rewind engine, diagnostic tools, versions, data browser and tools. cli access. index.html/ui for the
+# thumbnail. look at all of the cos phases, and add all of this to them." · and: "yes, clear glass macros and settings too."
+# Mapped in full in docs/2026-10-24-cos-manager-phasemap.spec (addendum 2026-10-29: MG10 categories, MG11 the category manager UI, MG12 the
+# exe is the compartment manager, MG13 CLI in the exe, MG14 live thumbnails).
+# Here: each service compartment (SV2) is a member of the category of its template (MG10), and gets MG12's tabs. Its health route is what the
+# Diagnostics tab reads.

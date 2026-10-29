@@ -181,3 +181,13 @@ phases:
 # does so from its own process, so moving Loom in would break nothing; it is also undoable (stop). But his two statements disagree, so the
 # seal stays strict until he says which holds. If moving in when Loom loads nothing outside itself is his call, the seal's readiness
 # becomes outClean, and `sovereign` stays as it is.
+
+# ── ADDENDUM 2026-10-29 — categories and cos.exe as the full compartment manager (his) ──
+# James, 2026-10-29: "catagories using either the architypes or the templates, with a full manager and editor, with the schemas, then catagories
+# which can be managed, including systems which would then list each system compartment. also really need cos.exe to be a fully compartment
+# manager with controls for the rewind engine, diagnostic tools, versions, data browser and tools. cli access. index.html/ui for the
+# thumbnail. look at all of the cos phases, and add all of this to them." · and: "yes, clear glass macros and settings too."
+# Mapped in full in docs/2026-10-24-cos-manager-phasemap.spec (addendum 2026-10-29: MG10 categories, MG11 the category manager UI, MG12 the
+# exe is the compartment manager, MG13 CLI in the exe, MG14 live thumbnails).
+# Here: Loom in its compartment (LM4, done) is the first member of the built-in 'systems' category (MG10). LM5 (the ways in) gives MG12's Tools
+# tab its rows.

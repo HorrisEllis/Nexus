@@ -396,3 +396,16 @@ Decided (his): until COS can be integrated, the work is the boundaries only:
 5. then the COS spine phases.
 Deferred by him (kept, not dropped): the genesis diagnostic and self-heal system, the COS Linux distro, and the README split. The CB fixes
 are not boundary work, so they are deferred too; the coder will flag one if it starts blocking the boundary work (to confirm).
+
+# ── ADDENDUM 2026-10-29 — categories and cos.exe as the full compartment manager (his) ──
+# James, 2026-10-29: "catagories using either the architypes or the templates, with a full manager and editor, with the schemas, then catagories
+# which can be managed, including systems which would then list each system compartment. also really need cos.exe to be a fully compartment
+# manager with controls for the rewind engine, diagnostic tools, versions, data browser and tools. cli access. index.html/ui for the
+# thumbnail. look at all of the cos phases, and add all of this to them." · and: "yes, clear glass macros and settings too."
+# Mapped in full in docs/2026-10-24-cos-manager-phasemap.spec (addendum 2026-10-29: MG10 categories, MG11 the category manager UI, MG12 the
+# exe is the compartment manager, MG13 CLI in the exe, MG14 live thumbnails).
+# Here:
+# - CS4_every_system_a_compartment feeds MG10's built-in 'systems' category (each system listed as its compartment).
+# - CS8_the_cos_screen is gathered into MG12, the exe as the compartment manager: one window, not two. CS8's Systems, Versions and Links
+#   become MG12's tree and its Versions tab.
+# - CS1 (a version is the Versionium commit plus the QEMU snapshot) is what MG12's Rewind and Versions tabs drive.

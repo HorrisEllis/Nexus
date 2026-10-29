@@ -353,3 +353,12 @@ find it. maybe the axioms"
 - **The coder's own releases.** This sandbox cannot reach his Versionium. A release reaches it on his machine: the boot sync records the
   release and its commits, and the nexus-self sync records the tree as that version. `versionium pending` (and the line in Idearium's
   Releases view) shows what is still waiting.
+
+## ADDENDUM 2026-10-29 (0.60.279) — Clear Glass and the COS app record too; the one exception to "one recorder"
+James, 2026-10-29: "yes, clear glass macros and settings too."
+- Now recorded: Clear Glass settings and site settings (a burst is one record, secrets redacted by `objectChange`), macros made or
+  deleted, node files saved, and every COS app install, remove, switch and rollback.
+- The exception: the COS exe ships without lib, so `cos/app/versionium.js` is its own small recorder, on the same contract with its own
+  outbox. Do not add a third.
+- A test process never writes into a real Versionium. Both recorders skip it and say so, unless the test sets
+  `NEXUS_VERSIONIUM_RECORD_IN_TESTS=1` and points at its own stand-in.

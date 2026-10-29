@@ -19,6 +19,7 @@ const FILES = [
   ['versionium/lib/nexus-releases.js', I('versionium/lib/nexus-releases.js'), [I('lib/release-version.js'), I('versionium/lib/changelogs.js'), 'nexus.versionium.routes.versionium']],   // the last over HTTP (its own port)
   ['versionium/lib/changelogs.js', I('versionium/lib/changelogs.js'), []],
   // 0.60.278 VE1 — James, 2026-10-29: "full changes, and versions have to be pushed to versionium?" (§17.12): the one recorder
+  ['cos/app/versionium.js', I('cos/app/versionium.js'), ['nexus.versionium.routes.versionium']],   // 0.60.279 VE7 — the exe's own recorder, over HTTP (its own outbox)
   ['lib/versionium-record.js', I('lib/versionium-record.js'), [I('lib/nexus-client.js'), I('lib/version.js'), 'nexus.versionium.routes.versionium']],   // the last over HTTP (POST /api/versionium/commit)
   ['versionium/routes/nexus-releases.js', I('versionium/routes/nexus-releases.js'), [I('versionium/lib/nexus-releases.js'), I('versionium/lib/changelogs.js'), I('versionium/lib/release-notes.js'), I('lib/release-version.js')]],
   ['lib/repo-releases.js',       I('lib/repo-releases.js'),       ['nexus.versionium.routes.versionium', I('lib/repo-versions.js')]],      // HTTP; flush handed in
@@ -37,6 +38,14 @@ const CONSUMERS = [
   [I('lib/nexus-self/apply.js'), I('lib/versionium-record.js'), 'apply / failed apply / rollback → record() with each path before → after (VE2)'],
   [I('lib/nexus-update.js'), I('lib/versionium-record.js'), '_record(row) → record(): every update, rollback, adoption, with the files git says changed (VE3)'],
   ['nexus.idearium.api', I('lib/versionium-record.js'), 'idearium/api/index.js versionium.pending — GET /api/versionium/pending (VE5)'],
+  // 0.60.279 VE6/VE7 — James: "yes, clear glass macros and settings too."
+  [I('clear-glass/src/options/store.js'), I('lib/versionium-record.js'), '_persist → settingsRecorder: Clear Glass settings, a burst per record, secrets redacted (VE6)'],
+  [I('clear-glass/src/site-settings/store.js'), I('lib/versionium-record.js'), '_persist → settingsRecorder: site settings (VE6)'],
+  [I('lib/agent-tools/tools/clear-glass/macro.js'), I('lib/versionium-record.js'), 'create/delete → record the whole macro before → after (VE6)'],
+  [I('lib/automation-nodes.js'), I('lib/versionium-record.js'), 'saveNode → record the node file text (VE6)'],
+  [I('cos/app/store.js'), I('cos/app/versionium.js'), 'importZip/remove → record (COSA14, VE7)'],
+  [I('cos/app/switch.js'), I('cos/app/versionium.js'), 'switchTo/rollback → record (COSA14, VE7)'],
+  [I('cos/app/controller.js'), I('cos/app/versionium.js'), 'drain at start and every minute (VE7)'],
   [I('versionium/lib/nexus-releases.js'), I('versionium/lib/release-notes.js'), 'sync(): attach(releases) — each release\'s commits and files into Versionium (0.60.72 RN2)'],
   [I('idearium/ui/js/repo-releases.js'), 'nexus.idearium.api', 'renderReleases → GET /api/releases, /api/repos/:uuid/releases, /api/releases/changes; POST /api/releases/sync (0.60.72 RN3)'],
   ['nexus.idearium.api', I('lib/release-version.js'), 'idearium/api/index.js system.version and releases.list — the running release (0.60.34 VR1, 0.60.41 RN1)'],

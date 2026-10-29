@@ -9,6 +9,9 @@
  *   VE-03  a nexus-self apply and its rollback are each recorded with the whole change: each path's text before and after
  *   VE-04  wired: nexus-update records every row; the release sync defaults to every release's commits; tree snapshots name the version;
  *          versions.every_change no longer turns recording off; the route, the command and the Releases line; the law and CLAUDE.md
+ *   VE-05  (0.60.279) Clear Glass settings: a burst of saves is one record of the keys that changed, secrets redacted; macros and node files wired
+ *   VE-06  (0.60.279) the COS app: an install and a switch recorded through its own recorder; Versionium down → its outbox, then replayed in order
+ *   VE-07  (0.60.279) a test process never writes into a real Versionium unless it opts in, and says so
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -19,6 +22,7 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 've-'));
 process.env.NEXUS_SELF_DIR = path.join(TMP, 'self');
+process.env.NEXUS_VERSIONIUM_RECORD_IN_TESTS = '1';   // 0.60.279 — this test records into its own stand-in Versionium (below), never a real one
 
 let passed = 0, failed = 0;
 async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} ${desc}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${desc}\n    ${(e.stack || e.message).split('\n').slice(0, 6).join('\n    ')}`); failed++; } }
@@ -92,7 +96,58 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
       const big = VR.fullChange([{ path: 'x.bin', before: 'aa', after: 'bb' }], { readBlob: (s) => (s === 'aa' ? Buffer.alloc(10, 0) : Buffer.from('x'.repeat(300 * 1024))) });
       assert.match(big[0].note, /before binary; after 307200 bytes, over the 262144-byte cap/);
     });
+
+    await test('VE-05', 'Clear Glass settings: one record per burst, only the keys that changed, secrets redacted; macros and node files wired', async () => {
+      const n = got.length;
+      const rec = VR.settingsRecorder({ kind: 'clear-glass.settings', system: 'clear-glass', label: 'Clear Glass settings', wait: 80 });
+      rec({ theme: 'dark', apiKey: 'sk-old', accounts: { a: { label: 'Fiverr', password: 'p1' } } }, { theme: 'light', apiKey: 'sk-old', accounts: { a: { label: 'Fiverr', password: 'p1' } } });
+      rec({ theme: 'light', apiKey: 'sk-old' }, { theme: 'light', apiKey: 'sk-new', accounts: { a: { label: 'Fiverr', password: 'p2' } } });
+      await new Promise(r => setTimeout(r, 250));
+      assert.strictEqual(got.length - n, 1, 'one record for the burst');
+      const b = got[n]; assert.strictEqual(b.state.kind, 'clear-glass.settings'); assert.strictEqual(b.system, 'nexus.clear-glass');
+      const keys = Object.fromEntries(b.state.change.keys.map(k => [k.key, k]));
+      assert.deepStrictEqual([keys.theme.before, keys.theme.after], ['dark', 'light']);
+      assert.deepStrictEqual([keys.apiKey.before, keys.apiKey.after, keys.apiKey.note], ['[redacted]', '[redacted]', 'secrets redacted']);
+      assert.ok(keys.accounts.after.a.password === '[redacted]' && keys.accounts.after.a.label === 'Fiverr', JSON.stringify(keys.accounts));
+      assert.ok(!JSON.stringify(b).includes('sk-new') && !JSON.stringify(b).includes('p2'), 'no secret leaves the machine');
+      const rd = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
+      for (const f of ['clear-glass/src/options/store.js', 'clear-glass/src/site-settings/store.js']) assert.ok(/settingsRecorder\(/.test(rd(f)) && /this\._toVersionium\(this\._lastSaved, this\.data\)/.test(rd(f)), f);
+      assert.ok(/_toVersionium\('create', a\.name, null, row\)/.test(rd('lib/agent-tools/tools/clear-glass/macro.js')) && /_toVersionium\('delete', a\.name, row, null\)/.test(rd('lib/agent-tools/tools/clear-glass/macro.js')));
+      assert.ok(/kind: 'clear-glass\.node\.save'/.test(rd('lib/automation-nodes.js')));
+    });
+
+    await test('VE-06', 'the COS app: install and switch recorded by its own recorder; down → its outbox, replayed in order', async () => {
+      process.env.VERSIONIUM_PORT = String(port);
+      const CV = require(path.join(ROOT, 'cos/app/versionium.js'));
+      const root = path.join(TMP, 'cos'); fs.mkdirSync(root, { recursive: true });
+      const n = got.length;
+      const r = await CV.record(root, { op: 'install', project: 'nexus', version: '0.60.279', sha256: 'abc', outcome: 'ok' });
+      assert.ok(r.ok && r.commitId, JSON.stringify(r));
+      assert.deepStrictEqual([got[n].branch, got[n].state.kind, got[n].message], ['cos.app', 'cos.app.install', 'COS: installed nexus 0.60.279']);
+      process.env.VERSIONIUM_PORT = '1';
+      const q1 = await CV.record(root, { op: 'switch', project: 'nexus', from: '0.60.278', to: '0.60.279' });
+      const q2 = await CV.record(root, { op: 'rollback', project: 'nexus', from: '0.60.279', to: '0.60.278', reason: 'did not come up' });
+      assert.ok(q1.queued && q2.queued && CV.pending(root).count === 2, JSON.stringify([q1, q2, CV.pending(root)]));
+      process.env.VERSIONIUM_PORT = String(port);
+      const m = got.length;
+      const d = await CV.drain(root);
+      assert.deepStrictEqual([d.sent, d.left, CV.pending(root).count], [2, 0, 0]);
+      assert.deepStrictEqual(got.slice(m).map(b => b.state.kind), ['cos.app.switch', 'cos.app.rollback'], 'replayed in order');
+      const rd = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
+      assert.ok(/importZip: importZipRecorded/.test(rd('cos/app/store.js')) && /remove: removeRecorded/.test(rd('cos/app/store.js')) && /importZipRecorded\(root, f, opts\)/.test(rd('cos/app/store.js')));
+      assert.ok(/switchTo: switchToRecorded, rollback: rollbackRecorded/.test(rd('cos/app/switch.js')) && /V\.drain\(root\)/.test(rd('cos/app/controller.js')));
+      assert.ok(/'cos\/app\/versionium\.js'/.test(rd('scripts/build-cos-app.js')), 'shipped in the exe');
+    });
   } finally { srv.close(); cfg.getPath = realGet; }
+
+  await test('VE-07', 'a test process never writes into a real Versionium unless it opts in, and says so', async () => {
+    delete process.env.NEXUS_VERSIONIUM_RECORD_IN_TESTS;
+    const r = await VR.record({ kind: 'x.y', message: 'would have gone to the real one' });
+    assert.deepStrictEqual(r, { ok: true, skipped: 'a test process: not sent to a real Versionium' });
+    const c = await require(path.join(ROOT, 'cos/app/versionium.js')).record(TMP, { op: 'install', project: 'nexus', version: '9.9.9' });
+    assert.deepStrictEqual(c, { ok: true, skipped: 'a test process: not sent to a real Versionium' });
+    process.env.NEXUS_VERSIONIUM_RECORD_IN_TESTS = '1';
+  });
 
   await test('VE-04', 'wired everywhere it was found', async () => {
     const rd = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');

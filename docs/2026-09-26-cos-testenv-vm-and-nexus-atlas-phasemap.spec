@@ -136,3 +136,13 @@ spec:
     - provision.js has not run against a real Debian cloud image download here (no internet on the build
       machine); the seed and cloud-init path is tested with a real HTTP seed and an emulated first boot.
     - the two Eravos canvases (eravos/ui mods, ui/eravos organisms) are still two contracts.
+
+# ── ADDENDUM 2026-10-29 — categories and cos.exe as the full compartment manager (his) ──
+# James, 2026-10-29: "catagories using either the architypes or the templates, with a full manager and editor, with the schemas, then catagories
+# which can be managed, including systems which would then list each system compartment. also really need cos.exe to be a fully compartment
+# manager with controls for the rewind engine, diagnostic tools, versions, data browser and tools. cli access. index.html/ui for the
+# thumbnail. look at all of the cos phases, and add all of this to them." · and: "yes, clear glass macros and settings too."
+# Mapped in full in docs/2026-10-24-cos-manager-phasemap.spec (addendum 2026-10-29: MG10 categories, MG11 the category manager UI, MG12 the
+# exe is the compartment manager, MG13 CLI in the exe, MG14 live thumbnails).
+# Here: a test environment is a compartment made from a template, so it belongs to that template's category (MG10), and is run and rewound from
+# MG12.
