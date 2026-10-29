@@ -140,3 +140,13 @@ phases:
     spec: docs/project-spine.spec
     blocks: [MOD-INTENT-SCREEN]
     does: "the Do box on the Finish tab: stages, DAG, gaps as dropdowns, Contract"
+
+  # ADDENDUM 2026-10-29 (0.60.287) — James: "Each problem needs to build a dag using reverse end state reasoning." · "Yes the same way I reason.
+  # Bidirectional causal changing." The decision is HL_D3_reverse_end_state in docs/2026-10-29-his-loop-phasemap.spec (its HL2 is this phase).
+  FA11_bidirectional_causal_chain:
+    status: DONE 0.60.287
+    depends_on: [FA8_intent_to_contract]
+    files: [lib/intent-flow.js]
+    spec: docs/project-spine.spec
+    blocks: [MOD-CAUSAL-CHAIN]
+    does: "backward from the end state, forward from the change; the meeting set is the DAG; one-sided sets are gaps and side effects"

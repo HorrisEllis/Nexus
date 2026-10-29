@@ -378,6 +378,31 @@ spec:
       error_paths: ["a route error → said in the box"]
       acceptance: ["test-intent-flow IF-04 in Clear Glass: typed, the DAG and a gap's dropdown show; answered, the contract is written"]
 
+    # 0.60.287 FA11 — James, 2026-10-29: "Each problem needs to build a dag using reverse end state reasoning." · asked if that meant working
+    # back from done: "Yes the same way I reason. Bidirectional causal changing."
+    - id: MOD-CAUSAL-CHAIN
+      name: causal-chain
+      uuid: nexus-project-spine-causal-chain-v1-0000-2026-1029-001
+      path: lib/intent-flow.js
+      phase: FA11_bidirectional_causal_chain
+      description: "causal(spine, { start, end }) chains both ways over the spine's resolved wires: backward from the end (the components the done-when names, and the tests that would show it) through what each uses, recursively; forward from the start (the components the intent names) through what uses each, recursively. Reached from both sides: the causal path, ordered dependencies first. Reached only backward: a precondition the change never touches (a gap). Reached only forward: a side effect to verify. Neither meeting: the change cannot cause the end state, said before any work. run() builds its DAG and contract from it whenever the end is known."
+      deps: [{ name: spine }, { name: intent-flow }]
+      exports:
+        - "causal(spine, { start: [path], end: [path], depth }) → { path, order, preconditions, sideEffects, meets, start, end }"
+        - "endOf(spine, files, doneWhen) → [path] — the components and tests the done-when names"
+      gate_pipeline:
+        - "GATE-FA11-001: done-when → the end set (components + tests by its words)"
+        - "GATE-FA11-002: backward from the end over uses; forward from the start over used-by; each to a depth bound"
+        - "GATE-FA11-003: the meeting set → the causal path, ordered dependencies first; the one-sided sets → gaps and verify refs"
+      behavioral_contracts:
+        - "a change that cannot reach the end state is reported, never turned into a contract that cannot succeed"
+        - "a node on the path is either changed or verified; none is left out of the contract"
+      error_paths:
+        - "no end known (no done-when) → the forward-only DAG, and the done-when gap stays blocking"
+        - "the two sides do not meet → gap 'disconnected' (blocking), with what each side reached"
+      acceptance:
+        - "changing money.js with the end 'cart total' gives the path money → pricing → cart; changing the menu with the same end says they do not meet"
+
   events:
     idearium:
       - "idearium.repo.spine.written { repoUuid, components, wires, unknown }"

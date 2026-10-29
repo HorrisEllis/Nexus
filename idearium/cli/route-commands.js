@@ -770,6 +770,7 @@ export const SPEC = [
     print: (d, a, h) => {
       for (const s of d.stages || []) console.log(`  ${h.c.mint('▸')} ${h.c.bold(s.id.padEnd(14))} ${s.say}`);
       for (const n of (d.dag && d.dag.nodes) || []) { const f = (d.found || []).find(x => x.path === n.path); console.log(`      ${h.c.dim(n.role.padEnd(8))} ${n.path}${f && f.lines.length ? h.c.dim(`  · ${f.lines.slice(0, 2).map(l => `${l.line}: ${l.text.slice(0, 60)}`).join(' · ')}`) : ''}`); }
+      if (d.causal) console.log(h.c.dim(`      preconditions: ${(d.causal.preconditions || []).map(x => `${x.path}${x.holds ? ' (holds)' : ` (missing ${x.missing.join(', ')})`}`).join(', ') || 'none'} · side effects to verify: ${(d.causal.sideEffects || []).join(', ') || 'none'}`));   // 0.60.287 FA11
       for (const g of d.gaps || []) console.log(`  ${g.answer != null ? h.c.green('✓') : g.blocking ? h.c.amber('?') : h.c.dim('·')} ${g.id}: ${g.question}${g.answer != null ? h.c.dim(` → ${g.answer}`) : ''}`);
       if (d.written) console.log(`${h.c.mint('✓')} wrote ${d.written} — next: contract gates ${d.written}`);
       else if (d.contract && !a.flags.write) console.log(h.c.dim('  --write to save the contract'));

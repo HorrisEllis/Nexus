@@ -37,11 +37,14 @@ decisions:
       "Beyond getting fiverr gigs working. We then need …": Fiverr first; the rest after. And "I'm saying nexus": Nexus working on his PC
       comes before any of it (HL0).
   HL_D3_reverse_end_state:
-    status: "DECIDED 2026-10-29 — his words; the method is the coder's reading, to confirm"
+    status: "DECIDED 2026-10-29 — his words, twice"
     chosen: >-
-      "Each problem needs to build a dag using reverse end state reasoning." Reading: start from the end state (done-when), ask what must be
-      true just before it, and repeat until every precondition is something that already exists or a step an agent can do; the steps, in
-      reverse, are the DAG. Deterministic where the project answers (files, exports, tests); a planner model only for what it cannot.
+      First: "Each problem needs to build a dag using reverse end state reasoning." Asked whether that meant starting from done and working back
+      until reaching what exists, he answered: "Yes the same way I reason. Bidirectional causal changing." (read: chaining). So the DAG is built
+      from both ends: backward from the end state (what must be true for it — the things it uses, recursively) and forward from the change
+      (what the change reaches — the things that use it, recursively). The nodes reached from both sides are the causal path; reached only
+      backward, a precondition the change never touches (asked, not assumed); reached only forward, a side effect to verify; nothing reached
+      from both, the change cannot cause the end state — said before any work is done. Built as FA11 in docs/2026-10-29-finish-any-project-phasemap.spec.
 
 phases:
   HL0_nexus_runs_on_his_pc:
@@ -55,7 +58,7 @@ phases:
     files: [clear-glass/src/ipc/bridge.js, clear-glass/renderer/gig-menu.js]
     does: "the Fill menu proven on his real gig editor (he passes Press & Hold himself); what the live page differs on, fixed"
   HL2_reverse_end_state_dag:
-    status: OPEN
+    status: "DONE 0.60.287 as FA11_bidirectional_causal_chain (docs/2026-10-29-finish-any-project-phasemap.spec)"
     depends_on: [HL_D3_reverse_end_state]
     files: [lib/intent-flow.js]
     does: "done-when → preconditions → … → what exists; the DAG built backwards; feeds the contract (FA8)"

@@ -32,11 +32,15 @@ typed channels, a CLI, and an API (`skills/james-brooks/SKILL.md`, "The Cobalt C
   copilot, and every agent get the same powers through one door.
 - **Instance, 0.60.7:** "Versionium for every repo" is five commands in that table, each served by the same route the UI
   calls.
+- **Checkable:** `node -e "import('./idearium/cli/route-commands.js').then(m=>console.log(m.SPEC.length))"` counts the commands in the one
+  table. `tests/modules/test-change-record.test.js` CR-05 fails if two rows share a key.
 
 ### Specification and mapping before building
 
 - **Rule he set:** "map before build". It is AXIOMS §3.3, made a standing rule in docs/CLAUDE.md.
-- **Evidence:** 104 phasemaps. Each phase names its files, what it depends on, and the proof it must pass. Decisions
+- **Evidence:** 200 phasemaps in docs/ (count them: `git ls-files 'docs/*-phasemap.spec' | wc -l`, 2026-10-29). Each phase
+  names its files, what it depends on, and the proof it must pass. Since his 2026-10-20 rule ("everything needs to be speccced before
+  built"), the full specs must compile at full depth; `tests/modules/test-substrate-spec.test.js` checks every one of them, with its map. Decisions
   record their options with the chosen one quoted. Example: `docs/2026-10-13-projects-raid-and-gates-phasemap.spec`,
   section `decisions:`.
 
@@ -1413,3 +1417,24 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
     - all 26 multi-component files split and verified in the sandbox.
   - Tests: `test-project-spine` 8/8, `test-intent-flow` 4/4 and `test-gig-fill-menu` 3/3, each with a Clear Glass check.
   - Changelog: `versionium/changelogs/CHANGELOG-0.60.286.md`.
+
+### 2026-10-29 — 0.60.287: "Bidirectional causal changing." · "Should I stop making this like it's a product and make it for me?"
+- **His words:**
+  - First: "Each problem needs to build a dag using reverse end state reasoning."
+  - Asked whether he meant working back from done: "Yes the same way I reason. Bidirectional causal changing."
+  - Earlier the same day: "Should I stop making this like it's a product and make it for me?"
+- **The call, against the alternative:**
+  - **Method.** The coder had built the "type what you want" flow forwards: from his words to the files, outwards. He named the method
+    instead: chain backward from the end state and forward from the change, and work only where they meet. That is bidirectional search
+    over cause and effect, a known technique in planning. He arrived at it from how he reasons himself.
+  - **Direction.** He chose one user (himself) and one loop (Fiverr, then applications) over a general product. Every step mapped after
+    that call follows that order.
+- **What it catches that forward-only planning misses.** In `test-intent-flow` IF-05:
+  - A change to `money.js`, with the end "the cart total", gives the path money → pricing → cart.
+  - `receipt.js` also uses money. It is flagged as a side effect to verify, not ignored.
+  - A change to the menu with the same end is **refused before any work is planned**. Nothing connects the two, which forward
+    planning cannot tell.
+- **Checkable:**
+  - `tests/modules/test-intent-flow.test.js`: 5/5, including IF-05 above, and IF-04 driving the Do box in Clear Glass;
+  - `docs/2026-10-29-his-loop-phasemap.spec`, decisions HL_D2 and HL_D3 with his words;
+  - `lib/intent-flow.js` `causal()`.

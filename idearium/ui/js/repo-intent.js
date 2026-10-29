@@ -41,6 +41,7 @@
     const c = d.contract;
     out.innerHTML = `<ul class="fa-list">${stages}</ul>
       ${dag ? `<div class="ds-label">the DAG, in build order</div><ol class="fa-list">${dag}</ol>` : ''}
+      ${d.causal ? `<div class="dim">${d.causal.meets ? '' : 'the change and the end do not meet · '}preconditions: ${esc((d.causal.preconditions || []).map(x => `${x.path}${x.holds ? ' (holds)' : ' (missing: ' + x.missing.join(', ') + ')'}`).join(', ') || 'none')} · side effects to verify: ${esc((d.causal.sideEffects || []).join(', ') || 'none')}</div>` : ''}
       ${gaps ? `<div class="ds-label">gaps — the project could not answer these</div><ul class="fa-list fi-gaps">${gaps}</ul>` : ''}
       <div class="fa-actions">${(d.gaps || []).some(g => g.answer == null) ? '<button class="btn" data-fi="answer">Answer and run again</button>' : ''}
       ${c ? `<button class="btn" data-fi="write">Write the contract (${c.gates.length} gates)</button>` : ''}

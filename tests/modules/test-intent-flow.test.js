@@ -10,6 +10,9 @@
  *   IF-03  the route over a real imported repo: stages, the contract written at contracts/<id>.contract on write:true (RAID loads it);
  *          the repo do command row (answers from --answer, the follow that asks)
  *   IF-04  the Do box in Clear Glass: typed → the DAG and a gap's dropdown; answered → Write the contract → written
+ *   IF-05  0.60.287 FA11 his method — "Bidirectional causal changing": back from the end, forward from the change; the meeting set is the path
+ *          (in build order), a node used by the change but not on the way to the end is a side effect to verify, an untouched dependency is a
+ *          precondition that holds, and a change that cannot reach the end is refused before any contract
  */
 require('../../lib/test-sandbox.js').ensure();
 const fs = require('fs');
@@ -43,15 +46,13 @@ const files = () => Object.entries(FILES).map(([p, c]) => ({ path: p, content: c
   const F = require(path.join(ROOT, 'lib/intent-flow.js'));
   const CG = require(path.join(ROOT, 'cortex/core/raid/contract-gates.js'));
 
-  await test('IF-01', 'the stages in his order; the words find the component; the DAG: what it uses first, who uses it after', async () => {
+  await test('IF-01', 'the stages in his order; the change found from his words; chained both ways to the end he named', async () => {
     const r = F.run({ text: 'add a discount to the pricing so the cart total shows it', files: files(), project: 'shop' });
     assert.deepStrictEqual(r.stages.map(s => s.id), F.STAGES);
     assert.strictEqual(r.intent.verb, 'add');
-    assert.ok(r.needed.chosen.includes('shop/pricing.js'), JSON.stringify(r.needed));
-    const o = r.dag.order;
-    assert.ok(o.indexOf('shop/money.js') < o.indexOf('shop/pricing.js'), `money (used) before pricing: ${o.join(' → ')}`);
-    const roles = Object.fromEntries(r.dag.nodes.map(n => [n.path, n.role]));
-    assert.strictEqual(roles['shop/money.js'], 'uses');
+    assert.deepStrictEqual([r.needed.chosen, r.end], [['shop/pricing.js'], ['shop/cart.js']], 'the "so …" clause names the end, the rest the start');
+    assert.deepStrictEqual(r.dag.order, ['shop/pricing.js', 'shop/cart.js']);
+    assert.deepStrictEqual(r.causal.preconditions, [{ path: 'shop/money.js', holds: true, missing: [] }], 'money is used, not changed: a precondition that holds');
     assert.ok(r.found.find(f => f.path === 'shop/pricing.js').lines.some(l => /price/i.test(l.text)), 'the lines that hold its words');
   });
 
@@ -64,7 +65,8 @@ const files = () => Object.entries(FILES).map(([p, c]) => ({ path: p, content: c
     assert.ok(a.contract, a.stages.at(-1).say);
     assert.deepStrictEqual(CG.validate(a.contract), [], 'RAID accepts it');
     const g = a.contract.gates; const build = (p) => g.find(x => x.actions && x.actions[0].path === p);
-    assert.ok(build('shop/pricing.js').depends_on.includes(build('shop/money.js').id), 'pricing waits for money');
+    assert.ok(build('shop/pricing.js') && !build('shop/money.js'), 'the end (priceOf) is reached by changing pricing; money is not rebuilt');
+    assert.deepStrictEqual(a.causal.preconditions.map(x => x.path), ['shop/money.js']);
     assert.strictEqual(g.at(-1).id, 'verify'); assert.strictEqual(g.at(-1).done_when, 'priceOf returns the discounted price');
     assert.ok(a.contract.gaps.find(x => x.id === 'done-when').answer);
     const tie = F.run({ text: 'open it', files: [{ path: 'a/open.js', content: 'module.exports = 1' }, { path: 'b/open.js', content: 'module.exports = 2' }], project: 'p', answers: { 'done-when': 'x' } });
@@ -72,6 +74,24 @@ const files = () => Object.entries(FILES).map(([p, c]) => ({ path: p, content: c
     const picked = F.run({ text: 'open it', files: [{ path: 'a/open.js', content: 'module.exports = 1' }, { path: 'b/open.js', content: 'module.exports = 2' }], project: 'p', answers: { 'done-when': 'x', where: 'b/open.js' } });
     assert.deepStrictEqual(picked.needed.chosen, ['b/open.js']); assert.ok(picked.contract);
     assert.match(F.run({ text: '  ' }).error, /say what you want/);
+  });
+
+  await test('IF-05', 'his method: the path in build order, a side effect to verify, a precondition that holds, a change that cannot reach refused', async () => {
+    const more = [...files(), { path: 'shop/receipt.js', content: "const { money } = require('./money');\nmodule.exports = { line: (x) => money(x) };\n" }];
+    const r = F.run({ text: 'change the money format to euros so the cart total shows euros', files: more, project: 'shop' });
+    assert.deepStrictEqual([r.needed.chosen, r.end, r.causal.meets], [['shop/money.js'], ['shop/cart.js'], true]);
+    assert.deepStrictEqual(r.causal.order, ['shop/money.js', 'shop/pricing.js', 'shop/cart.js'], 'money → pricing → cart: each carries the change to the end');
+    assert.deepStrictEqual(r.causal.sideEffects, ['shop/receipt.js'], 'receipts use money too: not on the way to the end, so verified, not ignored');
+    const g = r.contract.gates;
+    assert.deepStrictEqual(g.filter(x => x.type === 'task').map(x => `${x.actions[0].path}:${x.actions[0].do}`), ['shop/money.js:change', 'shop/pricing.js:carry-to-end', 'shop/cart.js:carry-to-end']);
+    assert.ok(g.find(x => x.id === 'verify').requires.some(k => r.contract.refs[k].path === 'shop/receipt.js'), 'the side effect is in verify');
+    assert.deepStrictEqual(CG.validate(r.contract), []);
+    // forward alone would have built a DAG from the menu; both ways, the menu cannot reach the cart: refused, with the reason
+    const no = F.run({ text: 'change the menu', files: more, project: 'shop', answers: { 'done-when': 'the cart total is discounted' } });
+    assert.deepStrictEqual([no.causal.meets, no.contract, no.blockedBy], [false, null, ['disconnected']]);
+    assert.match(no.gaps.find(x => x.id === 'disconnected').question, /cannot reach shop\/cart\.js/);
+    const told = F.run({ text: 'change the menu', files: more, project: 'shop', answers: { 'done-when': 'the cart total is discounted', disconnected: 'change the end too' } });
+    assert.ok(told.contract && told.dag.order.includes('shop/cart.js'), 'once he says how, both sides are in the contract');
   });
 
   let api = null, uuid = null;
