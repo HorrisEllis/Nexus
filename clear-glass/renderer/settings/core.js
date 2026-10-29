@@ -19,7 +19,7 @@
   // clear-glass's own wire server (src/main/index.js _startWire): mesh
   // routes, automation, and the ErosmancerOS proxy. Same constant
   // agent-mesh.js/macro.js use (EROS_WIRE_PORT default 7704).
-  const WIRE_PORT = 7704;
+  const WIRE_PORT = Number(window.__CG_WIRE_PORT) || 7704;   // 0.60.284: a test serves the engine's door on its own port
 
   function h(tag, attrs, ...kids) {
     const el = document.createElement(tag);

@@ -52,6 +52,8 @@ const FILES = [
     I('clear-glass/src/ipc/bridge.js'),                        // IPC applications:call (cg.applications.call) → _opportunityCall
   ]],
   ['clear-glass/src/net/step.js', I('clear-glass/src/net/step.js'), []],   // SN1 — pure; the service and transport are handed in (deps)
+  ['lib/automation/pipeline.js', I('lib/automation/pipeline.js'), [I('lib/automation/engine.js'), I('lib/automation/steps.js')]],   // 0.60.284 PL1 — WORKFLOWS_DIR; byType, validateStep
+  ['clear-glass/renderer/settings/sections/pipelines.js', I('clear-glass/renderer/settings/sections/pipelines.js'), [I('lib/automation/routes.js')]],   // 0.60.284 PL4 — wire /automation/pipelines*
   ['clear-glass/src/page/state-diff.js', I('clear-glass/src/page/state-diff.js'), []],      // 0.60.221 FP4 — pure; first used 0.60.273
   ['clear-glass/src/about/index.js', I('clear-glass/src/about/index.js'), []],   // 0.60.269 — versions and the update check (fetch, no requires)
   ['clear-glass/renderer/settings/sections/about.js', I('clear-glass/renderer/settings/sections/about.js'), [   // 0.60.269 Settings › About
@@ -485,6 +487,9 @@ const CONSUMERS = [
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/driver/index.js'), '0.60.281 AP1 _gigFeatures: choose / readChoice / checkAt / rowLabels per package row'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/page/keyboard-mode.js'), '0.60.283 _a11y: sweepScript — what holds a site\'s accessibility look on; reset backs up, removes, sets Off, reloads'],
   [I('clear-glass/renderer/browser.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.283 the Site settings popup\'s Reset (cg.siteProfile.a11yReset → IPC site:a11yReset)'],
+  [I('lib/automation/routes.js'), I('lib/automation/pipeline.js'), '0.60.284 PL2 /automation/pipelines* and /automation/pipeline-runs* (A.pipelines, lazy)'],
+  [I('lib/automation/pipeline.js'), I('lib/automation/engine.js'), '0.60.284 PL1 each task → engine.runStep(step, { vars, scope: { tasks } })'],
+  [I('idearium/cli/route-commands.js'), I('lib/automation/routes.js'), '0.60.284 PL3 pipeline.* rows → Clear Glass :7704 /automation/pipelines*'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig-pages.js'), '0.60.283 _gigTags: tagInputScript / tagShownScript (each tag gated)'],
 ];
 

@@ -228,18 +228,26 @@ from its file the first time). The built-in pick stays as the fallback, said. Pr
 # KB1–KB3 (0.60.275) are entered below as real phases so lib/phase-dag.js checks them.
 phases_kb:
   KB1_choose_waits_and_keys:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-KB1]
     status: BUILT 0.60.275
     depends_on: [FG2_dropdown_choose, FG_D2_choice_is_read_back]
     files: [clear-glass/src/driver/index.js, tests/modules/test-dropdown-keys.test.js]
   KB2_site_keys:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-KB2]
     status: BUILT 0.60.275
     depends_on: [KB1_choose_waits_and_keys]
     files: [clear-glass/src/shortcuts/site-keys.js, clear-glass/src/main/index.js]
   KB3_site_keys_ui:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-KB3]
     status: BUILT 0.60.275
     depends_on: [KB2_site_keys]
     files: [clear-glass/renderer/site-keys/bind-bar.js, clear-glass/renderer/settings/sections/shortcuts.js]
   KB4_gates_on_macro_steps:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-KB4]
     status: BUILT 0.60.280
     depends_on: [FP3_is_the_gate_open, FG_D1_gate_is_a_step_field, KB1_choose_waits_and_keys]
     files: [lib/agent-tools/tools/clear-glass/macro.js, lib/agent-tools/tools/clear-glass/gate-eval.js, lib/agent-tools/tools/browser/browser-action.js, clear-glass/src/driver/index.js]
@@ -249,6 +257,8 @@ phases_kb:
       one is polled up to timeoutMs. If it stays closed the step runs again, up to retries (default 2), and then the run stops with what the
       gate saw. The gate is validated when the macro is made.
   KB5_keys_in_macros_and_automation:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-KB5]
     status: BUILT 0.60.280
     depends_on: [KB4_gates_on_macro_steps, KB2_site_keys]
     files: [clear-glass/src/driver/index.js, lib/agent-tools/tools/browser/browser-action.js, lib/automation/steps.js, lib/automation/engine.js]
@@ -256,6 +266,8 @@ phases_kb:
       A choose step takes pick (auto | pointer | keys | number; not `by`, which every run already uses for who acted), keys (an explicit sequence) and keysFor (per option). A macro step press_key
       takes key and times. A workflow's "Press a key" takes times. A macro bound to a site key (KB2) is the per-site keyboard shortcut.
   KB6_bundled_nodes_upgrade:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-KB6]
     status: BUILT 0.60.280
     depends_on: [KB4_gates_on_macro_steps]
     files: [lib/automation-nodes.js, clear-glass/src/ipc/bridge.js, clear-glass/automation/nodes/fiverr-gig-choose-delivery.macro]
@@ -264,6 +276,8 @@ phases_kb:
       was never edited, so it is upgraded, and the upgrade is said. An edited copy stays his, and the new one lands beside it as <name>.new,
       said. The delivery node is now gated: choose, then the gate { choice: { column: tier, is: delivery } } with 2 retries.
   KB7_pin_the_floating_cli:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-KB7]
     status: BUILT 0.60.280
     depends_on: [BS6_float_cli]
     files: [clear-glass/src/main/float-cli.js, clear-glass/renderer/float-cli.js, clear-glass/renderer/float-cli.html, clear-glass/renderer/browser.js, clear-glass/renderer/settings/sections/general.js]

@@ -24,6 +24,17 @@ const LOG_FLAGS = ['kind', 'actor', 'status', 'q', 'before', 'limit'];
  * a = { repo, args (positional after the repo), flags }. personOnly(a) → a reason: an agent calling the row through the
  * nexus.command tool (lib/agent-tools/tools/nexus/command.js) is refused with it; a person at the CLI is not.
  */
+// 0.60.284 PL3 — a pipeline run as a checklist: ✓ done, ▸ running, · waiting, ✗ failed, ⊘ blocked (by the task that failed)
+function _pipelineChecklist(run, h) {
+  const MARK = { done: '✓', running: '▸', waiting: '·', failed: '✗', blocked: '⊘' };
+  h.header(`${run.pipelineName || 'pipeline'} — ${run.status || '?'}`);
+  for (const id of (run.order || []).flat()) {
+    const t = (run.tasks || {})[id] || {};
+    const why = t.status === 'blocked' ? `blocked by ${t.blockedBy}` : t.error || (t.ms != null ? `${t.ms} ms${t.attempts > 1 ? `, ${t.attempts} attempts` : ''}` : '');
+    console.log(`  ${MARK[t.status] || '?'} ${t.label || id} ${h.c.dim(why || '')}`);
+  }
+}
+
 export const SPEC = [
   // ── the agent wearing the repo's hat ──────────────────────────────────────────────────────────────────────────────
   { key: 'repo.ask', repo: true, usage: 'repo ask <repo> "<message>" [--provider claude-code|ollama|chatgpt|…] [--model m]', about: 'talk to the agent wearing the repo\'s hat (its code lands as proposals)',
@@ -71,6 +82,28 @@ export const SPEC = [
   // §AU1 0.60.249 — James: "copilot system, ollama, lib folder, clearglass, idearium, and brainos have automation" · "Clearglass
   // automation, and macros, continue." One neutral door over all six (lib/automation-registry.js): list what each present source
   // holds, run one and record it under that source, and NAME an absent source — never fake one (§1.2).
+  // 0.60.284 PL3 — James, 2026-10-29: "making a pipeline and workflow feature and include the macros and automation". Pipelines on the
+  // automation engine that has the browser, macros and agents (Clear Glass's, docs/2026-10-29-pipelines-phasemap.spec PL_D2).
+  { key: 'pipeline.list', repo: false, usage: 'pipeline list [--archived]', about: 'pipelines: tasks in a dependency graph, each a macro, workflow, agent, command or browser step',
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipelines${a.flags.archived ? '?archived=1' : ''}` }),
+    print: (d, a, h) => { for (const p of d.pipelines || []) console.log(`  ${h.c.bold(p.name)}  ${h.c.dim(`${p.tasks.length} task${p.tasks.length === 1 ? '' : 's'}${p.archived ? ' · archived' : ''} · ${p.id}`)}`); if (!(d.pipelines || []).length) console.log(h.c.gray('  no pipelines yet — make one in Clear Glass Settings › Pipelines')); } },
+  { key: 'pipeline.show', repo: false, usage: 'pipeline show <id>', about: 'a pipeline\'s tasks in order, with what each runs and depends on',
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipelines/${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => { const p = d.pipeline || {}; h.header(p.name || 'pipeline'); const by = Object.fromEntries((p.tasks || []).map(t => [t.id, t]));
+      (d.layers || []).forEach((layer, i) => { for (const id of layer) { const t = by[id] || {}; console.log(`  ${i + 1}. ${h.c.bold(t.label || id)} ${h.c.dim(`(${id}) ${t.step ? t.step.type : ''}${(t.depends_on || []).length ? ` · after ${t.depends_on.join(', ')}` : ''}${t.gate ? ` · gate ${JSON.stringify(t.gate)}` : ''}`)}`); } }); } },
+  { key: 'pipeline.run', repo: false, usage: 'pipeline run <id> [--wait]', about: 'run a pipeline; --wait prints its checklist when it ends',
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: `/automation/pipelines/${encodeURIComponent(a.args[0])}/run${a.flags.wait ? '?wait=1' : ''}`, body: {}, timeoutMs: 30 * 60000 }),
+    print: (d, a, h) => { if (d.run) return _pipelineChecklist(d.run, h); console.log(`${h.c.mint('▸')} running — ${h.c.dim(`pipeline run-status ${d.runId}`)}`); } },
+  { key: 'pipeline.runs', repo: false, usage: 'pipeline runs <id>', about: 'a pipeline\'s last runs',
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipeline-runs?pipelineId=${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => { for (const r of d.runs || []) { const t = Object.values(r.tasks || {}); console.log(`  ${r.status === 'ok' ? h.c.green('✓') : r.status === 'running' ? '▸' : h.c.red('✗')} ${new Date(r.startedAt).toLocaleString()}  ${h.c.dim(`${t.filter(x => x.status === 'done').length}/${t.length} done · ${r.id}`)}`); } if (!(d.runs || []).length) console.log(h.c.gray('  no runs yet')); } },
+  { key: 'pipeline.run-status', repo: false, usage: 'pipeline run-status <run id>', about: 'one run\'s checklist: done, running, waiting, failed, blocked (and by what)',
+    need: (a) => (a.args[0] ? null : '<run id>'),
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipeline-runs/${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => _pipelineChecklist(d.run || {}, h) },
   { key: 'automation.list', repo: false, usage: 'automation list [--source <id>]', about: 'every automation (workflows + macros) across the six sources (copilot, ollama, lib, clear-glass, idearium, brainos); a source that is down is named',
     req: (a) => ({ method: 'GET', path: `/api/automation${a.flags.source ? `?source=${encodeURIComponent(String(a.flags.source))}` : ''}` }),
     print: (d, a, h) => {

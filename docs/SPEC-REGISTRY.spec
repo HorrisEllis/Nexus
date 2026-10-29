@@ -1844,3 +1844,8 @@ spec:
 # automation. maybe a calander or add google or apple calender?" · "Guardian picker." Decisions AP_D1–AP_D4, SN_D1; phases AP1 (a gig's
 # package rows), AP2–AP4 (contacts: backend, route/command/tool, Settings › Applications), SN1 (Snowflake as a step) DONE 0.60.281;
 # CAL0 (calendar) and GP0 (Guardian picker) open, his. Also addended: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec (AP1).
+
+# ADDENDUM 2026-10-29 (0.60.284) — registered: docs/automation-pipelines.spec (1.0.0) and docs/2026-10-29-pipelines-phasemap.spec
+# James: "making a pipeline and workflow feature and include the macros and automation". Modules MOD-PIPELINE, -ROUTES, -COMMANDS, -UI
+# (PL1–PL4, DONE 0.60.284) and -ORCHESTRATOR (PL5, open: needs AE2/AE3). Also addended: clear-glass/spec/gated-flows.spec gains MOD-KB1..KB7
+# (0.60.275–0.60.280 had been built without their modules), tied to KB1–KB7 in docs/2026-10-28-gated-flows-phasemap.spec.

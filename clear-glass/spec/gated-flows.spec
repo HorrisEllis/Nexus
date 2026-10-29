@@ -290,6 +290,97 @@ spec:
       error_paths: ["IPC down → read only, said"]
       acceptance: ["tested in Clear Glass: a gated macro shows its blocks; a stopped run marks its block and offers resume"]
 
+    - id: MOD-KB1
+      name: choose-waits-and-keys
+      uuid: nexus-gated-flows-choose-waits-and-keys-v1-0000-2026-1029-001
+      path: clear-glass/src/driver/index.js
+      phase: KB1_choose_waits_and_keys
+      description: "choose waits until the page answers quickly, reads the options until they hold still, opens again once if none appeared; a pick that does not show is tried by arrows and Enter, then by the option's number and Enter, then by a direct click, each read back; the result says what was tried and which took. Since 0.60.283 a dropdown can be found by the text it shows alone."
+      deps: [{ name: dropdown-choose }]
+      exports: ["_choose(agentId, { selector | column + row|shows | shows, option, pick, keys, keysFor, optionsWaitMs }) → { option, clickedBy, tried }", "_waitResponsive(wc)"]
+      gate_pipeline: ["GATE-KB1-001: wait responsive → open → options stable", "GATE-KB1-002: pick by the ways in order; read back after each", "GATE-KB1-003: none took → throw with what each way did"]
+      behavioral_contracts: ["a pick is never reported done without its read-back"]
+      error_paths: ["no dropdown → error names the column, row or text"]
+      acceptance: ["test-dropdown-keys DK-01/02; test-fiverr-overview-and-a11y FO-02 (shows alone)"]
+
+    - id: MOD-KB2
+      name: site-keys
+      uuid: nexus-gated-flows-site-keys-v1-0000-2026-1029-001
+      path: clear-glass/src/shortcuts/site-keys.js
+      phase: KB2_site_keys
+      description: "Keys bound to elements per site: on that site a key clicks an element, chooses an option in its dropdown, presses a key in the page, or runs a macro; it wins over a global shortcut there only."
+      deps: [{ name: dropdown-choose }]
+      exports: ["list(origin)", "bind(origin, accel, binding)", "unbind(origin, accel)", "steps(binding) → driver steps"]
+      gate_pipeline: ["GATE-KB2-001: accel normalized and safe", "GATE-KB2-002: on that site, the binding's steps run as him"]
+      behavioral_contracts: ["a binding is the site's only"]
+      error_paths: ["an unsafe accel → refused, said"]
+      acceptance: ["test-site-keys SK-01..05"]
+
+    - id: MOD-KB3
+      name: site-keys-ui
+      uuid: nexus-gated-flows-site-keys-ui-v1-0000-2026-1029-001
+      path: clear-glass/renderer/site-keys/bind-bar.js
+      phase: KB3_site_keys_ui
+      description: "After an element pick, a Bind a key bar offers to bind it; Settings › Keyboard shortcuts › Keys on sites lists, adds and removes them; agents use glass keys."
+      deps: [{ name: dropdown-choose }]
+      exports: ["mount({ cg })", "offer(pick)"]
+      gate_pipeline: ["GATE-KB3-001: a pick → the bar; save → siteKeys:set"]
+      behavioral_contracts: ["nothing is bound without his press"]
+      error_paths: ["the IPC refused → the bar says why"]
+      acceptance: ["test-site-keys SK-04/05 in Clear Glass"]
+
+    - id: MOD-KB4
+      name: gates-on-macro-steps
+      uuid: nexus-gated-flows-gates-on-macro-steps-v1-0000-2026-1029-001
+      path: lib/agent-tools/tools/clear-glass/macro.js
+      phase: KB4_gates_on_macro_steps
+      description: "A macro step may carry a gate checked after it runs (url, selector, text, value, gone, and choice: the dropdown there shows this value, read by the driver's readChoice); a closed gate is polled, then the step runs again up to retries, then the run stops saying what it saw; gates are validated when the macro is made."
+      deps: [{ name: dropdown-choose }]
+      exports: ["execute({ action: 'run', … }) with step.gate", "gate-eval validateGate(gate)"]
+      gate_pipeline: ["GATE-KB4-001: step → gate → poll → retry → stop with what it saw"]
+      behavioral_contracts: ["a failed step with a gate is retried like a closed gate"]
+      error_paths: ["an invalid gate → the macro is refused when made"]
+      acceptance: ["test-gated-dropdowns GD-01/02"]
+
+    - id: MOD-KB5
+      name: keys-in-macros-and-automation
+      uuid: nexus-gated-flows-keys-in-macros-and-automation-v1-0000-2026-1029-001
+      path: lib/automation/engine.js
+      phase: KB5_keys_in_macros_and_automation
+      description: "A choose step takes pick, keys and keysFor; press_key and a workflow's Press a key take times."
+      deps: [{ name: dropdown-choose }]
+      exports: ["browser step press { key, times }", "choose { pick, keys, keysFor }"]
+      gate_pipeline: ["GATE-KB5-001: times clamped 1..200"]
+      behavioral_contracts: ["each press is a real or in-page key as the step says"]
+      error_paths: ["pick not one of auto, pointer, keys, number → refused"]
+      acceptance: ["test-gated-dropdowns GD-03/06"]
+
+    - id: MOD-KB6
+      name: bundled-nodes-upgrade
+      uuid: nexus-gated-flows-bundled-nodes-upgrade-v1-0000-2026-1029-001
+      path: lib/automation-nodes.js
+      phase: KB6_bundled_nodes_upgrade
+      description: "A bundled node lists the fingerprints it supersedes; an unedited copy (library file and macro store) is upgraded and said, an edited one stays his with <file>.new beside it, a deleted one stays deleted."
+      deps: [{ name: dropdown-choose }]
+      exports: ["seedBundled(lib, bundled) → { upgraded, offered, seeded }", "upgradeMacro(node, io)", "bundledNode(dir, name)"]
+      gate_pipeline: ["GATE-KB6-001: fingerprint in supersedes → upgrade; else keep and offer"]
+      behavioral_contracts: ["his edit is never overwritten"]
+      error_paths: ["an unreadable node → skipped, said"]
+      acceptance: ["test-gated-dropdowns GD-04; test-about-and-nodes AN-02"]
+
+    - id: MOD-KB7
+      name: pin-the-floating-cli
+      uuid: nexus-gated-flows-pin-the-floating-cli-v1-0000-2026-1029-001
+      path: clear-glass/src/main/float-cli.js
+      phase: KB7_pin_the_floating_cli
+      description: "An option floatCli.pinned (📌 in the panel and Settings › General) shows the floating CLI button on every browser window at start and keeps it; ✕ collapses it instead of hiding."
+      deps: [{ name: dropdown-choose }]
+      exports: ["register({ ipcMain, BrowserWindow, isPinned, setPinned })", "IPC floatcli:pin / floatcli:pinned"]
+      gate_pipeline: ["GATE-KB7-001: pin → saved → every window told"]
+      behavioral_contracts: ["the option is his, kept in Clear Glass's options"]
+      error_paths: ["options not ready → the pin says so"]
+      acceptance: ["test-gated-dropdowns GD-05 in Clear Glass"]
+
   events:
     flows:
       - "macro.gate { macro, step, open, why, by }"

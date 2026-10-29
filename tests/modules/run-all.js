@@ -417,6 +417,7 @@ const SUITES = [
   'test-opportunity-contacts.test.js',     // 0.60.281 AP2–AP4 — contacts behind job applications: captured from the page, routes, command, tool, Settings › Applications
   'test-snowflake-steps.test.js',          // 0.60.281 SN1 — Snowflake as a step in macros and workflows (route, unroute, start, wait, check, stop)
   'test-fiverr-overview-and-a11y.test.js', // 0.60.283 — a new gig's Overview (category, subcategory, tags, gated) and a site's remembered accessibility look reset
+  'test-pipelines.test.js',                // 0.60.284 PL1–PL4 — pipelines: tasks in a dependency graph (macros, workflows, agents, commands), gated, a checklist
   'test-versionium-everywhere.test.js',   // 0.60.278 VE0–VE5 — every change and every version in Versionium, in full (§17.12)
   'test-versionium-owns-releases.test.js', // 0.60.277 VS1–VS4 — Versionium owns the changelogs and the release logic (his (a), §5.15)
   'test-dropdown-keys.test.js',           // 0.60.275 KB1 — dropdowns: wait for the page, arrows, the number
