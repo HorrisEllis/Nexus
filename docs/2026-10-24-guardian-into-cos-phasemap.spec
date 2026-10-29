@@ -194,3 +194,10 @@ childEnv (lib/phase-close.js, tests/modules/run-all.js) uses .env correctly. The
 # exe is the compartment manager, MG13 CLI in the exe, MG14 live thumbnails).
 # Here: Guardian in its compartment (GD8) is listed in the built-in 'systems' category (MG10). Its data (GD5, the response store) is browsed in
 # MG12's Data tab only through Guardian's routes (MG_D3, §5.15).
+
+# ADDENDUM 2026-10-29 (0.60.288) — pre-clean before the compartment
+# James, 2026-10-29: "Well, first of all, let's clean it. Pre-clean it out". Archived to _archive/2026-10-29-guardian-preclean/ (README there):
+#   - guardian/mesh/ and guardian/routes/mesh.js: his 2026-09-06 "redundant and should be deleted", left behind by RF2;
+#   - guardian/guardian-api.js: unused, and calling routes that 404.
+# Kept: guardian-service.js (GD8's entry), dropzone.js (a standalone CLI), command-registry.js and agent-model-nodes.js (his features, built
+# and unwired — to wire, not to drop). Guardian: 82 → 67 files, 35,928 → 30,380 lines.
