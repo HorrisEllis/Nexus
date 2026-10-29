@@ -24,7 +24,7 @@ const { execFileSync } = require('child_process');
 
 const MODULE_ID = 'nexus.lib.release-notes';
 const VERSION = '1.0.0';
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = path.resolve(__dirname, '..', '..');   // 0.60.277 VS1 — in versionium/lib
 const SEP = '\u001e';   // a record separator no commit message carries
 
 const _systemOf = (p) => { const top = String(p).split('/')[0]; return /\./.test(top) && !String(p).includes('/') ? 'root' : top; };

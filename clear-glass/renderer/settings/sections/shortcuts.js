@@ -106,10 +106,37 @@
         body: listed.length ? listed.map(id => actionRow(id, nameOf(id, ctx), id.startsWith('macro:') && !macroIds.includes(id) ? 'this macro no longer exists' : id.startsWith('workflow:') && !wfIds.includes(id) ? 'this workflow no longer exists' : null))
           : empty('No macros or workflows yet. Record a macro on the Macros page or build a workflow in Automation.') });
 
+      // 0.60.275 KB3 — James, 2026-10-28: "any way you can add all of that to the keybindings. like elements to keys, per site?" A key on a site
+      // clicks an element, chooses an option in its dropdown, presses a key in the page, or runs a macro (src/shortcuts/site-keys.js). The
+      // element is a CSS selector or the XPath the element picker gives — the quickest way is the picker's "Bind a key" on the page itself.
+      const sk = await cg.shortcuts.siteList().then(r => (r && r.siteKeys) || {}).catch(() => ({}));
+      const DOES = { click: 'Click it', choose: 'Choose an option', key: 'Press a key', macro: 'Run a macro' };
+      const lineOf = (b) => b.do === 'choose' ? `Choose “${b.option}”` : b.do === 'key' ? `Press ${b.key}` : b.do === 'macro' ? `Run macro “${b.macro}”` : 'Click';
+      const siteRows = [];
+      for (const [origin, keys] of Object.entries(sk)) for (const [accel, b] of Object.entries(keys)) {
+        siteRows.push(row(`${lineOf(b)}${b.label ? ` · ${b.label}` : ''}`, `${origin}${b.selector ? ` · ${b.selector}` : ''}`, kbd(accel),
+          btn('Remove', () => busy(null, async () => { await call(() => cg.shortcuts.siteRemove(origin, accel), 'remove site key'); toast(`${accel} removed on ${origin}`); rerender(); }), 'sm ghost')));
+      }
+      const f = { site: h('input', { class: 'sk-in', placeholder: 'https://www.fiverr.com', spellcheck: 'false' }),
+        keys: h('input', { class: 'sk-in sk-keys', placeholder: 'press the keys', readonly: 'readonly' }),
+        does: h('select', { class: 'sk-in' }, Object.entries(DOES).map(([v, l]) => h('option', { value: v, text: l }))),
+        selector: h('input', { class: 'sk-in', placeholder: 'the element: a CSS selector or an XPath', spellcheck: 'false' }),
+        extra: h('input', { class: 'sk-in', placeholder: 'the option (choose), the key (Down, Enter…) or the macro name', spellcheck: 'false' }) };
+      f.keys.addEventListener('keydown', (e) => { e.preventDefault(); const a = accelOf(e); if (!a) return; f.keys.value = a; f.keys.classList.toggle('bad', !safe(a)); });
+      const add = btn('Add key', () => busy(null, async () => {
+        const d = f.does.value, x = f.extra.value.trim();
+        const binding = { do: d, selector: f.selector.value.trim() || undefined, ...(d === 'choose' ? { option: x } : d === 'key' ? { key: x } : d === 'macro' ? { macro: x } : {}) };
+        const r = await cg.shortcuts.siteSet(f.site.value.trim(), f.keys.value, binding);
+        if (!r || r.error) return toast((r && r.error) || 'not saved', 'err');
+        toast(`${r.accel} on ${r.origin}: ${lineOf(r.binding)}`); rerender();
+      }), 'sm');
+      const sitePane = pane({ title: 'Keys on sites', sub: 'On that site the key does this to the element, before any shortcut above. Pick an element on the page and press “Bind a key” to fill this in for you.', flush: true,
+        body: [...(siteRows.length ? siteRows : [empty('No keys bound to elements yet.')]), h('div', { class: 'sk-form' }, [f.site, f.keys, f.does, f.selector, f.extra, add])] });
+
       tools.append(btn('Reset all to defaults', async () => {
         if (await confirmDo('Reset every shortcut?', 'Your changes are removed; the built-in keys come back.', 'Reset')) { await busy(null, () => call(() => cg.shortcuts.reset(), 'reset shortcuts')); toast('Shortcuts reset'); rerender(); }
       }, 'danger'));
-      return [mw, ...panes];
+      return [sitePane, mw, ...panes];
     },
   });
 })();

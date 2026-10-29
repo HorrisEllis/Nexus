@@ -11,3 +11,9 @@ body[data-area="shortcuts"] .capture .hint { color: var(--ink-dim); }
 body[data-area="shortcuts"] .capture kbd { font-size: 15px; padding: 5px 11px; }
 body[data-area="shortcuts"] .blurb.warn { color: var(--warn); }
 body[data-area="shortcuts"] .blurb.bad { color: var(--bad); }
+
+/* 0.60.275 KB3 — Keys on sites */
+body[data-area="shortcuts"] .sk-form { display: grid; grid-template-columns: 1.2fr 0.8fr 0.9fr 1.6fr 1.6fr auto; gap: 8px; padding: 12px 14px; align-items: center; }
+body[data-area="shortcuts"] .sk-form .sk-in { min-width: 0; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line, #333); background: var(--field, transparent); color: inherit; font: inherit; font-size: 12.5px; }
+body[data-area="shortcuts"] .sk-form .sk-keys.bad { border-color: var(--bad, #e5534b); }
+@media (max-width: 900px) { body[data-area="shortcuts"] .sk-form { grid-template-columns: 1fr 1fr; } }

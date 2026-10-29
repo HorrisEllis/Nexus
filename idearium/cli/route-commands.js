@@ -221,7 +221,7 @@ export const SPEC = [
   { key: 'update.history', repo: false, usage: 'update history', about: 'every update and rollback this install made: when, from and to which version, who, what was set aside',
     req: () => ({ method: 'GET', path: '/api/update/history' }),
     print: (d, a, h) => { const l = d.history || []; if (!l.length) return console.log(h.c.dim('  no updates yet')); for (const r of l) console.log(`  ${h.c.gray(r.at.slice(0, 16))} ${r.kind.padEnd(8)} ${r.from.version} → ${r.to.version}  ${h.c.dim(`by ${r.by}${(r.archived || []).length ? ` · ${r.archived.length} set aside` : ''}`)}`); } },
-  // 0.60.41 RN1 — Nexus's own releases, recorded in Versionium (lib/nexus-releases.js): James's words, the proof, the commit
+  // 0.60.41 RN1 — Nexus's own releases, recorded in Versionium (versionium/lib/nexus-releases.js): James's words, the proof, the commit
   { key: 'system.releases', repo: false, usage: 'system releases [--sync [--all]] [--limit n] [--version x.y.z]', about: 'every Nexus release, newest first, from Versionium: James\'s words, the git commit, the changelog, its commits; --sync records any missing (with the newest 30 releases\' commits; --all: every release\'s)',
     req: (a) => a.flags.sync ? { method: 'POST', path: '/api/releases/sync', timeoutMs: 120000, body: a.flags.all ? { all: true } : {} } : { method: 'GET', path: '/api/releases' },
     print: (d, a, h) => {
@@ -235,6 +235,18 @@ export const SPEC = [
         if (a.flags.version && r.notes) console.log(h.c.dim(`    ${r.notes}`));
         if (a.flags.version && Array.isArray(r.commits)) for (const c of r.commits) console.log(`    ${h.c.dim(c.sha.slice(0, 8))} ${c.subject}  ${h.c.dim(`${c.files} file(s) +${c.added} −${c.removed}`)}`);
       }
+    } },
+  // 0.60.274 — James, 2026-10-28: "can we move the changelogs to versionium and idearium". One release's changelog, from versionium/changelogs.
+  { key: 'system.changelog', repo: false, usage: 'system changelog [x.y.z]', about: "one release's changelog (versionium/changelogs/CHANGELOG-<version>.md); no version: the running release",
+    req: (a) => ({ method: 'GET', path: `/api/releases/changelog${a.args && a.args[0] ? `?version=${encodeURIComponent(a.args[0])}` : ''}` }),
+    print: (d, a, h) => { console.log(h.c.dim(`  ${d.rel}`)); console.log(d.text); } },
+  // 0.60.278 VE5 — James, 2026-10-29: "full changes, and versions have to be pushed to versionium?" (§17.12). What still waits to reach it.
+  { key: 'versionium.pending', repo: false, usage: 'versionium pending', about: 'every change or version still waiting to reach Versionium (it was down when it was made); delivered when it answers, never dropped',
+    req: () => ({ method: 'GET', path: '/api/versionium/pending' }),
+    print: (d, a, h) => {
+      if (!d.count) return console.log(h.c.mint('  nothing waiting: every change and version is in Versionium'));
+      console.log(h.c.amber(`  ${d.count} waiting for Versionium, the oldest since ${new Date(d.oldest).toLocaleString()}`));
+      for (const it of d.items.slice(0, 20)) console.log(`  ${h.c.dim(new Date(it.queuedAt).toISOString().slice(0, 16).replace('T', ' '))}  ${it.path}  ${it.what || ''}`);
     } },
   // §0.60.72 RN2 — James: "tell me all the recent changes. i want a changelog for each change or diff." Written from git.
   { key: 'system.changes', repo: false, usage: 'system changes [--since x.y.z] [--write]', about: 'every change since a release: each commit under the first release that contains it, with its files (written from git, not by hand); --write saves CHANGES.md',
@@ -1159,6 +1171,22 @@ export const SPEC = [
     print: (d, a, h) => {
       const i = d.info || d; console.log(h.c.bold(`  Nexus ${i.nexus || '?'} · Clear Glass ${i.clearGlass || '?'} · Electron ${i.electron || '?'} (Chrome ${i.chrome || '?'}, Node ${i.node || '?'}) · ${i.platform || ''}`));
       for (const k of ['electron', 'clearGlass', 'nexus']) { const x = d[k]; if (!x || typeof x !== 'object') continue; console.log(`  ${k.padEnd(11)} ${x.error ? 'could not check: ' + x.error : (x.newer ? h.c.yellow(`newer: ${x.latest} (you have ${x.current})`) : `up to date (${x.latest})`)}`); }
+    } },
+  // 0.60.275 KB2 — James, 2026-10-28: "any way you can add all of that to the keybindings. like elements to keys, per site?"
+  { key: 'glass.keys', repo: false, usage: 'glass keys [<site url>] | glass keys bind <site url> <keys> click|choose|key|macro [--selector s] [--option o] [--key k] [--macro name] | glass keys unbind <site url> <keys>',
+    about: 'keys bound to elements, per site: on that site the key clicks the element, chooses an option in its dropdown, presses a key in the page, or runs a macro (it wins over a global shortcut there)',
+    req: (a) => {
+      const [op, url, accel, what] = a.args || [];
+      if (op === 'bind') return { system: 'clear-glass', method: 'POST', path: '/cli/site-keys', body: { url, accel, binding: { do: what, selector: a.flags.selector, option: a.flags.option, key: a.flags.key, macro: a.flags.macro, label: a.flags.label } } };
+      if (op === 'unbind') return { system: 'clear-glass', method: 'POST', path: '/cli/site-keys/remove', body: { url, accel } };
+      return { system: 'clear-glass', method: 'GET', path: `/cli/site-keys${op ? `?url=${encodeURIComponent(op)}` : ''}` };
+    },
+    print: (d, a, h) => {
+      if (d.error) return console.log(h.c.amber(`  ${d.error}`));
+      if (d.ok && d.accel) return console.log(h.c.mint(`  ${d.origin} · ${d.accel}${d.binding ? ` → ${d.binding.do}` : ' removed'}`));
+      const all = d.siteKeys || {}; const sites = Object.keys(all);
+      if (!sites.length) return console.log(h.c.gray('  no keys bound to elements yet'));
+      for (const o of sites) { console.log(h.c.bold(`  ${o}`)); for (const [k, b] of Object.entries(all[o])) console.log(`    ${h.c.mint(k.padEnd(14))} ${b.do}${b.option ? ` "${b.option}"` : ''}${b.key ? ` ${b.key}` : ''}${b.macro ? ` ${b.macro}` : ''}${b.selector ? h.c.dim(`  ${b.selector}`) : ''}`); }
     } },
   { key: 'glass.processes', repo: false, usage: 'glass processes', about: 'what is running in Clear Glass: each process with its tabs and background tabs, memory and CPU (ending one is his, in the Processes window)',
     req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/processes' }),

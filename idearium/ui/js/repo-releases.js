@@ -3,7 +3,7 @@
 // git, versionium, the zip." · 2026-10-15: "i want idearium to have releases and a changelog for each version."
 // Reads Versionium's releases (GET /api/releases for Nexus itself, GET /api/repos/:uuid/releases for a repo). Nexus's
 // parent repo shows every release; a Nexus system's repo shows the releases whose commits touched that system. A row
-// opens to his words, its changelog file, and every commit with its files (lib/release-notes.js wrote them from git).
+// opens to his words, its changelog file, and every commit with its files (versionium/lib/release-notes.js wrote them from git).
 // "Changes since" renders the whole record (GET /api/releases/changes); "save" writes CHANGES.md. A release recorded
 // before RN2 has no commits yet: "sync" fills them (POST /api/releases/sync { all: true }).
 (function () {
@@ -27,6 +27,8 @@
       el.innerHTML = `<div class="ds"><div class="ds-label">releases</div><div class="ds-mono">could not read releases from Versionium: ${esc(e.message)}</div></div>`;
       return;
     }
+    // 0.60.278 VE5 — James, 2026-10-29: "full changes, and versions have to be pushed to versionium?" (§17.12). What still waits to reach it.
+    S.pending = await api('/api/versionium/pending', {}, 8000).catch(() => null);
     if (S.repo !== repo.uuid) return;
     draw();
   }
@@ -41,7 +43,9 @@
         <span class="vx-grow"></span>
         ${S.nexus ? `<button class="vx-chip" onclick="releaseChanges()" title="every commit since a release, under the release that shipped it">changes since…</button>
         <button class="vx-chip" onclick="syncReleases()" title="record every release and its commits in Versionium">${missing ? `sync (${missing} without commits)` : 'sync'}</button>` : ''}
-      </div>`;
+      </div>${S.pending ? (S.pending.count
+        ? `<div class="ds-mono rel-pending" title="made while Versionium was down; delivered when it answers, never dropped (§17.12)">${S.pending.count} change${S.pending.count === 1 ? '' : 's'} waiting for Versionium, the oldest since ${esc(new Date(S.pending.oldest).toLocaleString())}</div>`
+        : `<div class="ds-mono rel-pending ok">every change and version is in Versionium</div>`) : ''}`;
     const row = (r) => {
       const n = Array.isArray(r.commits) ? r.commits.length : null;
       const open = S.open === r.version;
@@ -63,7 +67,8 @@
     const files = r.files ? Object.entries(r.files).filter(([k]) => !S.system || k === S.system) : [];
     return `<div class="vx-detail">
         ${r.quote ? `<div class="ds-mono" style="white-space:pre-wrap">${esc(r.quote)}</div>` : ''}
-        <div class="ds-mono">${r.changelog ? `changelog: ${esc(r.changelog)}${r.title ? ` — ${esc(r.title)}` : ''}` : 'no changelog file'} · ${r.gitCommit ? `commit ${esc(r.gitCommit.slice(0, 8))}` : 'not pinned to a commit'}</div>
+        <div class="ds-mono">${r.changelog ? `changelog: ${esc(r.changelogPath || r.changelog)}${r.title ? ` — ${esc(r.title)}` : ''}` : 'no changelog file'} · ${r.gitCommit ? `commit ${esc(r.gitCommit.slice(0, 8))}` : 'not pinned to a commit'}</div>
+        ${r.changelog && S.nexus ? `<details class="rel-cl" data-v="${esc(r.version)}" ontoggle="readChangelog(this)"><summary class="ds-label">the changelog</summary><div class="ds-mono rel-cl-text" style="white-space:pre-wrap">reading…</div></details>` : ''}
         ${Array.isArray(r.commits) ? `<div class="ds-label">what landed (${commits.length}${S.system ? ` touching ${esc(S.system)}` : ''})</div>
           ${commits.map(c => `<div class="ds-mono">${esc(c.sha.slice(0, 8))} ${esc(String(c.at || '').slice(0, 16).replace('T', ' '))} — ${esc(c.subject)}<br>
             <span style="opacity:.7">${c.files} file(s) +${c.added} −${c.removed} · ${esc((c.systems || []).join(', '))}</span></div>`).join('')}
@@ -72,6 +77,19 @@
         ${r.notes ? `<details><summary class="ds-label">the version line</summary><div class="ds-mono" style="white-space:pre-wrap">${esc(r.notes)}</div></details>` : ''}
       </div>`;
   }
+
+  // 0.60.274 — James, 2026-10-28: "can we move the changelogs to versionium and idearium". The changelog's text, read from Versionium's
+  // home for it (GET /api/releases/changelog) the first time it is opened.
+  async function readChangelog(d) {
+    if (!d.open || d.dataset.read) return;
+    const out = d.querySelector('.rel-cl-text');
+    try {
+      const j = await api(`/api/releases/changelog?version=${encodeURIComponent(d.dataset.v)}`, {}, 15000);
+      if (!j || j.error || typeof j.text !== 'string') throw new Error((j && j.error) || 'no text');
+      d.dataset.read = '1'; out.textContent = j.text;
+    } catch (e) { out.textContent = `could not read it: ${e.message}`; }
+  }
+  window.readChangelog = readChangelog;
 
   function openRelease(v) { S.open = S.open === v ? null : v; draw(); }
   function moreReleases() { S.shown += 50; draw(); }

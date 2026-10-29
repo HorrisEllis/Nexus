@@ -1831,3 +1831,10 @@ spec:
 
 # ADDENDUM 2026-10-28 (0.60.270) — docs/2026-10-28-run-log-and-direction.md registered: the run-log diagnosis, his ideas and his
 # priority (Fiverr → job applications → contact log). James: "okay. don't lose any of this."
+
+# ADDENDUM 2026-10-29 (0.60.277–0.60.278) — registered: docs/2026-10-29-versionium-everywhere-phasemap.spec (1.0.0)
+# James: "can you add that to claude. full changes, and versions have to be pushed to versionium? enforce it everywhere that you'd find it.
+# maybe the axioms". The audit (what reached Versionium and what did not), decisions VE_D1 (one durable recorder on nexus-client
+# postDurable) and VE_D2 ("full" = each path before → after), and phases VE0–VE5 (the law §17.12, the recorder, nexus-self applies,
+# updates, releases with all their commits, tree snapshots naming the version, the waiting line). DONE 0.60.278.
+# Also addended 2026-10-29: docs/2026-10-07-versionium-releases-phasemap.spec (VS1–VS4, his (a), 0.60.277).

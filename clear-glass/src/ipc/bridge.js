@@ -741,6 +741,10 @@ class IpcBridge {
       catch (e) { res.status(500).json({ ok: false, error: e.message }); }
     });
     // SP5 (0.60.219) — agents read what is running and what happened; ending a process is not offered here (SP_D3)
+    // 0.60.275 KB2 — keys bound to elements, per site, for agents and the CLI (glass keys)
+    this.app.get('/cli/site-keys', (req, res) => { const all = this.options?.getSiteKeys?.() || {}; const SK = require('../shortcuts/site-keys'); res.json({ siteKeys: req.query.url ? { [SK.originOf(req.query.url) || req.query.url]: SK.forUrl(all, req.query.url) } : all }); });
+    this.app.post('/cli/site-keys', (req, res) => { const b = req.body || {}; const r = this.options ? this.options.setSiteKey(b.url, b.accel, b.binding) : { error: 'options not ready' }; res.status(r.error ? 400 : 200).json(r); });
+    this.app.post('/cli/site-keys/remove', (req, res) => { const b = req.body || {}; const r = this.options ? this.options.removeSiteKey(b.url, b.accel) : { error: 'options not ready' }; res.status(r.error ? 400 : 200).json(r); });
     this.app.get('/cli/processes', (req, res) => { try { res.json(require('../main/index').processes().list()); } catch (e) { res.status(500).json({ ok: false, error: e.message }); } });
     this.app.get('/cli/activity', (req, res) => res.json({ events: require('../processes').activity().recent({ limit: Math.min(+req.query.limit || 100, 500), kind: req.query.kind || null, origin: req.query.origin || null }) }));
     this.app.post('/cli/processes/end', (req, res) => res.status(403).json({ ok: false, why: 'ending a process is a person\'s action: the Processes window (Shift+Esc), not an agent route' }));
@@ -1850,6 +1854,10 @@ class IpcBridge {
     ipcMain.handle('shortcuts:set',    async (e, d) => this.options?.setShortcut(d.accel, d.action));
     ipcMain.handle('shortcuts:remove', async (e, d) => this.options?.removeShortcut(d.accel));
     ipcMain.handle('shortcuts:reset',  async () => this.options?.resetShortcuts());
+    // 0.60.275 KB2/KB3 — keys bound to elements, per site (src/shortcuts/site-keys.js)
+    ipcMain.handle('siteKeys:list',    async () => ({ siteKeys: this.options?.getSiteKeys?.() || {} }));
+    ipcMain.handle('siteKeys:set',     async (e, d) => this.options?.setSiteKey(d.url, d.accel, d.binding) || { error: 'options not ready' });
+    ipcMain.handle('siteKeys:remove',  async (e, d) => this.options?.removeSiteKey(d.url, d.accel) || { error: 'options not ready' });
     ipcMain.handle('listeners:get',        async (e, d) => this.options?.getListener(d.id));
     ipcMain.handle('listeners:register',   async (e, d) => this.options?.registerListener(d));
     ipcMain.handle('listeners:update',     async (e, d) => this.options?.updateListener(d.id, d.updates));

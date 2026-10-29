@@ -90,7 +90,7 @@ const CONSUMERS = [
   [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.251 AD4 autofill profiles|detect|fill, gig fill|detect, macro list|show|run|record|stop rows -> HTTP :7702'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/macros/live-recording.js'), '0.60.251 AD2 _macroRecord: one LiveRecorder for IPC macros:record* and /cli/macros/record/*'],
   // §UP 0.60.252 — James, 2026-10-25: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?"
-  [I('lib/nexus-update.js'), I('lib/nexus-releases.js'), '0.60.252 UP1 _releasesBetween: lineOf/quoteOf on origin\'s lib/version.js — his words per release'],
+  [I('lib/nexus-update.js'), I('lib/release-version.js'), '0.60.252 UP1 _releasesBetween: lineOf/quoteOf on origin\'s lib/version.js — his words per release (the parsers are lib\'s since 0.60.277)'],
   [I('lib/agent-tools/tools/nexus/update.js'), I('lib/nexus-update.js'), '0.60.252 UP4 nexus.update.tool check|history|apply|rollback'],
   [I('lib/agent-tools/index.js'), I('lib/agent-tools/tools/nexus/update.js'), '0.60.252 UP4 registerTool(nexus.update.tool)'],
   [I('lib/hat-seed.js'), I('lib/agent-tools/tools/nexus/update.js'), '0.60.252 UP4 the_clearglass_operator toolScope + SEED_ADDITIONS 0.60.252'],

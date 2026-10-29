@@ -51,6 +51,7 @@ const routes = [
   require('./routes/system.js'),
   require('./routes/versionium.js'),
   require('./routes/files.js'),
+  require('./routes/nexus-releases.js'),   // 0.60.277 VS2 — Nexus's releases and changelogs, served by their owner (his (a), §5.15)
 ];
 
 const server = http.createServer(async (req, res) => {

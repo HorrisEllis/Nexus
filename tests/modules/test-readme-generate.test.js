@@ -41,13 +41,13 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
       const head = atlas.search(new RegExp(`^### ${s.name.replace(/[-.]/g, '\\$&')}\\s*$`, 'm'));
       assert.ok(head > 0 && head < a && !/^### /m.test(atlas.slice(head + 4, a)), `${s.name}'s block is inside its own section`);
     }
-    const missing = files.filter(f => !atlas.includes('`' + f + '`')).filter(f => !/^CHANGELOG-/.test(f));
+    const missing = files.filter(f => !atlas.includes('`' + f + '`')).filter(f => !/(^|\/)CHANGELOG-/.test(f));   // 0.60.274 — versionium/changelogs
     // the atlas was generated from this tree a moment ago (scripts/generate-atlases.js); a file added since is named here, not hidden
     assert.ok(missing.length <= 3, `files not in the README: ${missing.slice(0, 10).join(', ')}`);
     const P = require(path.join(ROOT, 'loom/scanners/phasemap-map.js')).loadAll();
     assert.ok(atlas.includes(`${P.phases.length} phases across`), 'every phase counted');
     for (const p of P.phases.slice(0, 50)) assert.ok(atlas.includes(`**${RG.plain(p.id, 70)}**`), `phase ${p.id}`);
-    const notes = files.filter(f => /^CHANGELOG-[\d.]+(-part\d+)?\.md$/.test(f));
+    const notes = files.filter(f => /(^|\/)CHANGELOG-[\d.]+(-part\d+)?\.md$/.test(f));
     assert.ok(atlas.includes(`Every release note in the tree, ${notes.length} of them`), 'every release note');
     assert.ok(/James: "/.test(atlas.slice(atlas.indexOf('### Every release, in his words'))), 'his words, in the history');
     for (const k of ['### The data structure', 'the stores ·', 'the JAA tables ·', 'the node types ·', 'the ledgers and records ·', '### All the Idearium work', 'the routes ·', 'the command rows ·']) assert.ok(atlas.includes(k), k);

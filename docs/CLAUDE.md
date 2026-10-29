@@ -303,3 +303,53 @@ see what you mean but there are way more idearium phases than that."
   the axioms do not settle it, they conflict, or it is his by USER_AUTONOMY (what he meant, the direction) — and then with the axioms named.
 - What he reports seeing is evidence (§0.0 truth is supreme, §0.1 evidence over memory). When the code seems to say otherwise, the gap is
   traced, not argued.
+
+## ADDENDUM 2026-10-28 (0.60.274) — where a changelog is written
+James, 2026-10-28: "can we move the changelogs to versionium and idearium"
+- A release's `CHANGELOG-<version>.md` is written in `versionium/changelogs/` (lib/changelogs.js `pathFor`), not at the repository root.
+  Read them through lib/changelogs.js, `system changelog [x.y.z]`, or Idearium's Releases view.
+
+## ADDENDUM 2026-10-29 — read the axioms first; remember sovereignty
+James, 2026-10-29: "Remember sovereignty. Add that to the axioms and then add it to the claude.md to read the axioms in the docs"
+
+Said the day after 0.60.274. That release moved the changelogs into `versionium/` and then had `lib/` read the folder directly, which is
+one system reaching into another's files.
+- **Read the axioms at the start of every session.** Read `docs/AXIOMS-v3.1.md`: at least Part IV (the quick reference, one line per law)
+  and Group 5C (sovereignty, §5.9–§5.15) in full. Before a decision, read the laws it touches, and cite them in the owning map's
+  `decisions:`. The rules above are the operational distillation; the axioms are the law they come from.
+- **Sovereignty is checked at every placement (§5.9, §5.15).** Before a file, table, route or reader is added:
+  - name the system that owns it, and how the others reach it (its route or contract, never its files);
+  - placing a thing in a system's folder makes that system its owner, and obliges it to serve it;
+  - one system going down must break no other; if it would, the piece is in the wrong place.
+  - A new edge into another system's internals is designed out before code is written (the boundary ratchet,
+    `lib/system-boundary.js`, catches it after).
+
+## ADDENDUM 2026-10-29 (0.60.277) — the changelogs are Versionium's (supersedes 0.60.274's "read them through lib/changelogs.js")
+James, 2026-10-29, choosing (a) over the coder's recommended (b): "a"
+- `versionium/changelogs/` and the release logic that reads it (`versionium/lib/changelogs.js`, `nexus-releases.js`, `release-notes.js`)
+  are Versionium's (§5.15). A new changelog is still written at `versionium/changelogs/CHANGELOG-<version>.md`.
+- Every other system asks Versionium (`GET /api/versionium/nexus/changelog|releases|changes|agreement`,
+  `POST /api/versionium/nexus/releases/sync`) and never requires its code. Scripts and tests may require it.
+- What reads `lib/version.js` stays in lib (`lib/release-version.js`: current, fromFiles, agreement over lib's own places, quoteOf,
+  lineOf, lines).
+
+## ADDENDUM 2026-10-29 (0.60.278) — every change and every version goes to Versionium, in full (§17.12)
+James, 2026-10-29: "can you add that to claude. full changes, and versions have to be pushed to versionium? enforce it everywhere that you'd
+find it. maybe the axioms"
+- **The law.** `docs/AXIOMS-v3.1.md` §17.12: wherever a change or a version is made, it is recorded in Versionium with the whole change:
+  - each path before and after (past 256 KB, their hashes and where the bytes are);
+  - who made it, why, and the version it belongs to.
+- **One way to record.** `lib/versionium-record.js` `record()`. It goes through `lib/nexus-client.js` `postDurable`: if Versionium is
+  down, the record waits in the buffer and is delivered by `drainBuffer`. Never drop a record, and never block the change on it. Do not
+  write a second recorder.
+- **Where it is enforced (docs/2026-10-29-versionium-everywhere-phasemap.spec):**
+  - the Nexus tree (the nexus-self sync, each snapshot naming the running version);
+  - every Idearium repo's versions and releases;
+  - Nexus's releases with every release's commits;
+  - each nexus-self apply, failed apply and rollback;
+  - each update by nexus-update.
+- **When you add a place that makes a change or a version,** record it there with `record()`, and add the place to that map's audit.
+  Reviewing, treat a change or version that is not in Versionium as a gap to close.
+- **The coder's own releases.** This sandbox cannot reach his Versionium. A release reaches it on his machine: the boot sync records the
+  release and its commits, and the nexus-self sync records the tree as that version. `versionium pending` (and the line in Idearium's
+  Releases view) shows what is still waiting.

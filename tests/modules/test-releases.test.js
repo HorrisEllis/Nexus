@@ -37,7 +37,7 @@ const quiet = async (fn) => { const w = console.warn, l = console.log; console.w
   const REL = require(path.join(ROOT, 'versionium/lib/releases.js'));
   const route = require(path.join(ROOT, 'versionium/routes/versionium.js'));
   const engine = require(path.join(ROOT, 'versionium/lib/engine.js'));
-  const NR = require(path.join(ROOT, 'lib/nexus-releases.js'));
+  const NR = require(path.join(ROOT, 'versionium/lib/nexus-releases.js'));   // 0.60.277 VS1 — Versionium's (his (a))
   const RR = require(path.join(ROOT, 'lib/repo-releases.js'));
 
   const server = http.createServer(async (req, res) => {
@@ -149,7 +149,7 @@ const quiet = async (fn) => { const w = console.warn, l = console.log; console.w
     fs.copyFileSync(path.join(ROOT, 'lib/version.js'), path.join(t, 'lib/version.js'));
     fs.copyFileSync(path.join(ROOT, 'package.json'), path.join(t, 'package.json'));
     const v = require(path.join(ROOT, 'lib/version.js')).system;
-    fs.copyFileSync(path.join(ROOT, `CHANGELOG-${v}.md`), path.join(t, `CHANGELOG-${v}.md`));
+    fs.copyFileSync(path.join(ROOT, `versionium/changelogs/CHANGELOG-${v}.md`), path.join(t, `CHANGELOG-${v}.md`));   // 0.60.274 — an older tree's root copy is still read
     const all = NR.read({ root: t });
     assert.ok(all.some(r => r.version === v), 'the current release is read');
     assert.ok(all.every(r => !r.gitCommit), 'no git, so nothing is pinned to a commit');

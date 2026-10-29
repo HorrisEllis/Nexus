@@ -173,3 +173,9 @@ registry should be the spine, event bus, interaction contract, and component reg
   still no registry → refused `NO_REGISTRY`, with the reason, on the run. atlas.json is still recorded; non-build snapshots keep their
   existing gate (older repos' every-change history unaffected).
 - The NOT_INDEXED text keeps "has not been through the import pipeline" (test-mco3-versionium-tab reads it; 0.60.197 had dropped it).
+
+## ADDENDUM 2026-10-29 (0.60.278) — versions.every_change no longer turns recording off (§17.12)
+James, 2026-10-29: "full changes, and versions have to be pushed to versionium? enforce it everywhere that you'd find it. maybe the axioms" —
+and in 0.40.0, where the setting came from: "needs to snapshot every accept, every change". The switch was the coder's addition, not his.
+The setting is kept (§0.3). A change made while it is off is still committed to Versionium, and the committer's result says so in `note`.
+Decided by his axioms: §17.12 and USER_AUTONOMY (his later, explicit word).

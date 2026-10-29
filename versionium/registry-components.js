@@ -30,6 +30,12 @@ const components = [
   // The phasemap's file.snapshot / file.delta capabilities are one route here:
   // record() decides full copy vs delta per file (and proves any delta), so a
   // caller never has to know which one it got.
+  // 0.60.277 VS2 — James, 2026-10-29: "a" (Versionium owns the changelogs and the release logic that reads them, §5.15)
+  _c('nexus.releases', 'GET', '/api/versionium/nexus/releases', "Nexus's releases: lib's version lines, the changelogs and git", { grammar: ['versionium nexus releases'], tags: ['releases'] }),
+  _c('nexus.releases.sync', 'POST', '/api/versionium/nexus/releases/sync', "Record Nexus's releases (and their commits) as Versionium releases", { grammar: ['versionium nexus sync'], tags: ['releases'] }),
+  _c('nexus.changelog', 'GET', '/api/versionium/nexus/changelog', "One release's changelog (?version=; none: the running release)", { grammar: ['versionium nexus changelog'], tags: ['releases'] }),
+  _c('nexus.changes', 'GET', '/api/versionium/nexus/changes', 'Every change since a release, from git (?since=, &write=1)', { grammar: ['versionium nexus changes'], tags: ['releases'] }),
+  _c('nexus.agreement', 'GET', '/api/versionium/nexus/agreement', "Whether every place that states the release agrees, its changelog included", { grammar: ['versionium nexus agreement'], tags: ['releases'] }),
   _c('files.limits', 'GET', '/api/versionium/files/limits', 'Per-file size cap, per-record cap and keyframe interval', { grammar: ['versionium files limits'], tags: ['files'] }),
   _c('files.plan', 'POST', '/api/versionium/files/plan', 'Which file contents versionium needs for a repo tree, and which paths were deleted', { grammar: ['versionium files plan'], tags: ['files'] }),
   _c('files.record', 'POST', '/api/versionium/files/record', 'Attach a repo tree\'s files (full copy or proven delta) to an existing repo-snapshot commit', { grammar: ['versionium files record'], tags: ['files'] }),

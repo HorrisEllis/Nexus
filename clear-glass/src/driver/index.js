@@ -726,7 +726,7 @@ class ClearDriver {
   }
   _pause(span) { const [a, b] = Array.isArray(span) ? span : [span, span]; return this._sleep(a + Math.random() * Math.max(0, b - a)); }
 
-  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'auto', openWait = [600, 1100], pickWait = [300, 650], settleWait = [500, 900] } = {}) {
+  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'auto', openWait = [600, 1100], pickWait = [300, 650], settleWait = [500, 900], optionsWaitMs = 8000 } = {}) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
     if (option === undefined || option === null || option === '') throw new Error('choose requires option');
@@ -765,8 +765,10 @@ class ClearDriver {
       var native = trig.tagName === 'SELECT' ? trig : trig.querySelector('select');
       if (native) native.setAttribute('data-cg-choose-native', String(window.__cgChooseN));
       // what is already on screen, so the options that appear on opening can be told apart
-      document.querySelectorAll('[data-cg-pre]').forEach(function(el){ el.removeAttribute('data-cg-pre'); });
-      document.querySelectorAll('body *').forEach(function(el){ if (vis(el)) el.setAttribute('data-cg-pre', '1'); });   // everything on screen before opening
+      // 0.60.275 — James: "it keeps freezing". What is on screen before opening is kept in a page-side WeakSet, not written onto every
+      // element: an attribute on each of thousands of elements is a mutation storm the site's scripts and Clear Glass's own DOM observer both answer.
+      window.__cgPre = new WeakSet();
+      document.querySelectorAll('body *').forEach(function(el){ window.__cgPre.add(el); });
       return { n: window.__cgChooseN, native: !!native, shown: norm(trig.innerText || trig.textContent).slice(0, 200),
         options: native ? Array.prototype.map.call(native.options, function(o){ return o.textContent.trim(); }) : null };
     })(${JSON.stringify(selector || null)}, ${JSON.stringify(column || null)}, ${JSON.stringify(row || null)}, ${JSON.stringify(showsText || null)})`);
@@ -778,29 +780,103 @@ class ClearDriver {
       const r = await this._select(agentId, { selector: `[data-cg-choose-native="${found.n}"]`, text: m.option });
       return { kind: 'native', option: m.option, shown: r.text, by: m.by, via: 'native' };
     }
-    const opened = await this._humanPointer(agentId, { selector: trigSel, do: 'click', via, label: `open ${column || selector}` });
-    await this._pause(openWait);   // drop down … (his words) — the menu animates in before anything is read
-    let opts = null;
-    for (let i = 0; i < 20 && !(opts && opts.length); i++) {
-      if (i) await this._sleep(150);
-      opts = await this._evalJs(wc, `(function(){
+    // 0.60.275 — James, 2026-10-28: "the drop downs. it needs to wait for the system. it keeps freezing. and then, opens the drop down, doesn't
+    // click. could always try arrows, or a number." Before each step it waits until the page answers quickly (a frozen page is waited for, not
+    // clicked at); the options are read until they hold still; and a pick that does not show is tried again with the keyboard — the arrows to
+    // the option and Enter, then the option's number typed and Enter — and last a direct click. Each is read back; the result says which took.
+    const scan = () => this._evalJs(wc, `(function(){
         function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
-        var all = Array.prototype.filter.call(document.querySelectorAll('[role="option"],[role="menuitem"],li,[class*="option" i],[class*="item" i]'), function(el){ return vis(el) && !el.hasAttribute('data-cg-pre'); });
+        function fresh(el){ return !(window.__cgPre && window.__cgPre.has(el)); }
+        var all = Array.prototype.filter.call(document.querySelectorAll('[role="option"],[role="menuitem"],li,[class*="option" i],[class*="item" i]'), function(el){ return fresh(el) && vis(el); });
         // 0.60.222b — a site whose options are plain divs: what appeared on opening, with short text of its own
-        if (!all.length) all = Array.prototype.filter.call(document.querySelectorAll('body *'), function(el){ var t = (el.innerText || '').trim(); return vis(el) && !el.hasAttribute('data-cg-pre') && t && t.length <= 80 && t.indexOf('\\n') < 0; });
+        if (!all.length) all = Array.prototype.filter.call(document.querySelectorAll('body *'), function(el){ if (!fresh(el)) return false; var t = (el.innerText || '').trim(); return t && t.length <= 80 && t.indexOf('\\n') < 0 && vis(el); });
         var leaves = all.filter(function(el){ return !all.some(function(o){ return o !== el && el.contains(o); }); });
+        document.querySelectorAll('[data-cg-opt]').forEach(function(el){ el.removeAttribute('data-cg-opt'); });
         return leaves.slice(0, 200).map(function(el, i){ el.setAttribute('data-cg-opt', String(i)); return (el.innerText || el.textContent || '').replace(/\\s+/g, ' ').trim(); });
       })()`);
-    }
-    if (!opts || !opts.length) throw new Error(`choose: the dropdown did not open (no new options after clicking ${column || selector})`);
+    const readOptions = async (budgetMs) => {   // until the list holds still (the same options twice), or the budget is spent
+      let last = null, t0 = Date.now();
+      while (Date.now() - t0 < budgetMs) {
+        await this._waitResponsive(wc);
+        const o = await scan();
+        if (Array.isArray(o) && o.length && Array.isArray(last) && last.join('\n') === o.join('\n')) return o;
+        last = Array.isArray(o) ? o : null; await this._sleep(200);
+      }
+      return last;
+    };
+    const open = async () => {
+      await this._waitResponsive(wc);
+      const r = await this._humanPointer(agentId, { selector: trigSel, do: 'click', via, label: `open ${column || selector}` });
+      await this._pause(openWait);   // drop down … (his words) — the menu animates in before anything is read
+      return r;
+    };
+    const opened = await open();
+    let opts = await readOptions(optionsWaitMs);
+    if (!opts || !opts.length) { await open(); opts = await readOptions(optionsWaitMs); }   // the first click may have landed while the page was busy
+    if (!opts || !opts.length) throw new Error(`choose: the dropdown did not open (no new options after clicking ${column || selector}, twice)`);
     const m = OM.matchOption(opts, option);
     if (!m.ok) throw new Error(`choose: ${m.why} — options: ${m.candidates.slice(0, 40).join(' | ')}`);
     await this._pause(pickWait);   // … and then click
-    const picked = await this._humanPointer(agentId, { selector: `[data-cg-opt="${m.index}"]`, do: 'click', via, label: m.option });
+    const optSel = `[data-cg-opt="${m.index}"]`;
+    const readShown = () => this._evalJs(wc, `(function(){ var t = document.querySelector(${JSON.stringify(trigSel)}); return t ? (t.innerText || t.textContent || '').replace(/\\s+/g, ' ').trim() : null; })()`);
+    const isOpen = () => this._evalJs(wc, `(function(){ var o = document.querySelector(${JSON.stringify(optSel)}); return !!(o && o.isConnected); })()`).catch(() => false);
+    const tried = [];
+    await this._waitResponsive(wc);
+    const picked = await this._humanPointer(agentId, { selector: optSel, do: 'click', via, label: m.option, scroll: 'within' });
     await this._pause(settleWait);
-    const shown = await this._evalJs(wc, `(function(){ var t = document.querySelector(${JSON.stringify(trigSel)}); return t ? (t.innerText || t.textContent || '').replace(/\\s+/g, ' ').trim() : null; })()`);
-    if (!OM.shows(shown, m.option)) throw new Error(`choose: clicked "${m.option}" but the dropdown shows "${shown}"`);
-    return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
+    let shown = await readShown(), clickedBy = 'pointer';
+    tried.push(`pointer → "${shown}"`);
+    // the keyboard: arrows from the option the menu has highlighted (or from the top) to the one meant, then Enter
+    if (!OM.shows(shown, m.option)) {
+      if (!(await isOpen())) { await open(); await readOptions(optionsWaitMs); }
+      const cur = await this._evalJs(wc, `(function(){ var os = Array.prototype.slice.call(document.querySelectorAll('[data-cg-opt]'));
+        for (var i = 0; i < os.length; i++) { var o = os[i]; if (o.getAttribute('aria-selected') === 'true' || o.getAttribute('aria-current') === 'true' || /(^|[\\s_-])(active|focused|highlighted|hover)/i.test(o.className || '')) return Number(o.getAttribute('data-cg-opt')); }
+        return -1; })()`).catch(() => -1);
+      const steps = m.index - (Number.isInteger(cur) ? cur : -1);
+      for (let i = 0; i < Math.abs(steps); i++) { await this._key(wc, steps > 0 ? 'Down' : 'Up'); await this._sleep(90 + Math.random() * 90); }
+      await this._key(wc, 'Enter');
+      await this._pause(settleWait);
+      shown = await readShown(); tried.push(`arrows ${steps > 0 ? '↓' : '↑'}×${Math.abs(steps)} + Enter → "${shown}"`);
+      if (OM.shows(shown, m.option)) clickedBy = 'keys';
+    }
+    // the option's number typed, then Enter ("6 DAYS DELIVERY" → 6)
+    const num = (/\d+/.exec(m.option) || [])[0];
+    if (!OM.shows(shown, m.option) && num) {
+      if (!(await isOpen())) { await open(); await readOptions(optionsWaitMs); }
+      for (const ch of num) { await this._key(wc, ch, true); await this._sleep(60 + Math.random() * 60); }
+      await this._key(wc, 'Enter');
+      await this._pause(settleWait);
+      shown = await readShown(); tried.push(`typed ${num} + Enter → "${shown}"`);
+      if (OM.shows(shown, m.option)) clickedBy = 'number';
+    }
+    // 0.60.273 — last, a direct click on the option while it is still on the page
+    if (!OM.shows(shown, m.option)) {
+      if (!(await isOpen())) { await open(); await readOptions(optionsWaitMs); }
+      const again = await this._evalJs(wc, `(function(){ var o = document.querySelector(${JSON.stringify(optSel)}); if (!o || !o.isConnected) return false; o.click(); return true; })()`).catch(() => false);
+      if (again) { await this._pause(settleWait); shown = await readShown(); tried.push(`direct click → "${shown}"`); if (OM.shows(shown, m.option)) clickedBy = 'page'; }
+    }
+    if (!OM.shows(shown, m.option)) throw new Error(`choose: "${m.option}" did not take — the dropdown shows "${shown}" (tried: ${tried.join('; ')})`);
+    return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, clickedBy, tried, ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
+  }
+
+  // 0.60.275 — wait until the page answers quickly: a frozen page (his machine under load) is waited for, not acted on. Up to maxMs, then on.
+  async _waitResponsive(wc, { fastMs = 250, maxMs = 20000 } = {}) {
+    const t0 = Date.now(); let good = 0;
+    while (Date.now() - t0 < maxMs) {
+      const a = Date.now();
+      try { await this._evalJs(wc, '1'); } catch (_) { return false; }
+      if (Date.now() - a < fastMs) { if (++good >= 2) return true; } else good = 0;
+      await this._sleep(60);
+    }
+    return false;
+  }
+
+  // 0.60.275 — one key to the page, as the input system makes it: a named key (Down, Up, Enter) or a character
+  async _key(wc, key, isChar = false) {
+    if (isChar) { wc.sendInputEvent({ type: 'keyDown', keyCode: key }); wc.sendInputEvent({ type: 'char', keyCode: key }); wc.sendInputEvent({ type: 'keyUp', keyCode: key }); return; }
+    wc.sendInputEvent({ type: 'keyDown', keyCode: key });
+    await this._sleep(30 + Math.random() * 30);
+    wc.sendInputEvent({ type: 'keyUp', keyCode: key });
   }
 
   // check: checkbox/radio to a definite state (a click toggles, so clicking an already-checked box unchecks it).
@@ -1008,7 +1084,7 @@ class ClearDriver {
     return r;
   }
 
-  async _pointerAct(agentId, { n, x, y, selector, do: action = 'click', text, deltaY = 300, via = 'native', spotlight = true, label } = {}) {
+  async _pointerAct(agentId, { n, x, y, selector, do: action = 'click', text, deltaY = 300, via = 'native', spotlight = true, label, scroll = 'page' } = {}) {
     if (!['move', 'click', 'double', 'right', 'scroll', 'type'].includes(action)) throw new Error(`pointer "do" must be move|click|double|right|scroll|type, not "${action}"`);
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
@@ -1020,8 +1096,21 @@ class ClearDriver {
       if (tgt.z < 0) throw new Error(`target #${n} is off-screen — scroll (pointer action "scroll") and call field again`);
       x = tgt.cx; y = tgt.cy;
     } else if (selector) {
-      const pos = await this._evalJs(wc, `(function(){ const el = document.querySelector(${JSON.stringify(selector)}); if (!el) return null;
-        el.scrollIntoView({ block: 'center', inline: 'center' }); const r = el.getBoundingClientRect(); return { x: Math.round(r.left + r.width/2), y: Math.round(r.top + r.height/2) }; })()`);
+      // 0.60.273 — scroll 'within': an option in an open dropdown is brought into view inside its own list, and the page moves only if the
+      // list itself is off screen (and then the least it can). Centring it on the page moved the page under Fiverr's open menu (his picture 3).
+      const pos = await this._evalJs(wc, `(function(within){ const el = document.querySelector(${JSON.stringify(selector)}); if (!el) return null;
+        if (!within) el.scrollIntoView({ block: 'center', inline: 'center' });
+        else {
+          for (var p = el.parentElement; p && p !== document.body && p !== document.documentElement; p = p.parentElement) {
+            var cs = getComputedStyle(p); if (!/(auto|scroll)/.test(cs.overflowY) || p.scrollHeight <= p.clientHeight) continue;
+            var pr = p.getBoundingClientRect(), er = el.getBoundingClientRect();
+            if (er.top < pr.top || er.bottom > pr.bottom) p.scrollTop += (er.top + er.height / 2) - (pr.top + pr.height / 2);
+            break;
+          }
+          var q = el.getBoundingClientRect();
+          if (q.top < 0 || q.bottom > innerHeight || q.left < 0 || q.right > innerWidth) el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
+        const r = el.getBoundingClientRect(); return { x: Math.round(r.left + r.width/2), y: Math.round(r.top + r.height/2) }; })(${JSON.stringify(scroll === 'within')})`);
       if (!pos) throw new Error(`Element not found: ${selector}`);
       x = pos.x; y = pos.y;
     }
