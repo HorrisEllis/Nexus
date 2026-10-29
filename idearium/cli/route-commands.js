@@ -762,6 +762,41 @@ export const SPEC = [
       }
       if (!(d.exchanges || []).length) console.log(h.c.gray('  no history nodes yet — new exchanges write them; --backfill turns the old log into nodes'));
     } },
+  // 0.60.286 FA6 — James, 2026-10-29: "create all the capability to finish this or any other project in the repo" (docs/project-spine.spec)
+  { key: 'repo.finish', repo: true, usage: 'repo finish <repo>', about: 'one checklist of what stands between the project and done: the spine (its component registry) written and matching the code, wires that resolve, docs and hard-coded plans converted, files holding several components, phases done — each with the command that moves it',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/finish`, timeoutMs: 120000 }),
+    print: (d, a, h) => { console.log(`${h.c.bold(d.name || '')} — ${d.open ? h.c.amber(`${d.open} open`) : h.c.green('nothing open')} · ${(d.stats || {}).components || 0} components · ${(d.stats || {}).wires || 0} wires`);
+      for (const i of d.items || []) console.log(`  ${i.done ? h.c.green('✓') : h.c.amber('·')} ${i.id.padEnd(14)} ${i.say}${!i.done && i.cmd ? h.c.dim(`   → ${i.cmd}`) : ''}`); } },
+  { key: 'repo.spine', repo: true, usage: 'repo spine <repo> [--write] [--unknown] [--limit n]', about: 'the project\'s component registry as its spine: every component and every wire with its evidence (discovered by which adapter, declared, or unknown), and the drift against nexus.spine.json; --write writes it',
+    req: (a) => (a.flags.write ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/spine`, body: {}, timeoutMs: 120000 } : { method: 'GET', path: `/api/repos/${a.repo.uuid}/spine${a.flags.limit ? `?limit=${parseInt(a.flags.limit, 10)}` : ''}`, timeoutMs: 120000 }),
+    print: (d, a, h) => {
+      const st = d.stats || {}; console.log(`${a.flags.write ? `${h.c.mint('✓')} wrote ${d.file} — ` : ''}${st.components} components · ${st.wires} wires · ${d.unknown || 0} unknown · ${Object.entries(st.byAdapter || {}).map(([k, v]) => `${k} ${v}`).join(', ')}`);
+      if (a.flags.write) return;
+      if (d.drift) console.log(d.drift.ok ? h.c.green('  the spine matches the code') : h.c.amber(`  drift: ${d.drift.added.length} added, ${d.drift.gone.length} gone, ${d.drift.wiresAdded.length} wires new, ${d.drift.wiresGone.length} gone`));
+      else console.log(h.c.gray(`  not written yet — repo spine ${a.args[0] || '<repo>'} --write`));
+      for (const w of (d.wires || []).filter(x => (a.flags.unknown ? x.evidence === 'unknown' : true)).slice(0, a.flags.unknown ? 200 : 40)) console.log(`  ${w.fromPath}:${w.line || ''} ${h.c.dim('→')} ${w.toPath || h.c.red(w.spec)}  ${h.c.dim(w.evidence)}`);
+    } },
+  { key: 'repo.refactor', repo: true, usage: 'repo refactor <repo> move <component|path> <to> | rename <component|path> <name> [--apply]', about: 'refactor through the registry: who reaches the component is read from the spine\'s wires, each require/link rewritten on its line; verified by a rescan (no wire lost); --apply writes it (a repo version per file)',
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/refactor`, body: { op: a.args[0] || 'move', id: a.args[1], to: a.args[0] === 'rename' ? undefined : a.args[2], name: a.args[0] === 'rename' ? a.args[2] : undefined, apply: !!a.flags.apply }, timeoutMs: 120000 }),
+    print: (d, a, h) => { const p = d.plan || {}; console.log(`${d.applied ? h.c.mint('✓ applied') : h.c.amber('plan')} ${p.op} ${p.from} → ${p.to}`); for (const w of p.writes || []) console.log(`  ${w.created ? h.c.green('+') : h.c.dim('~')} ${w.path}`); for (const s of p.said || []) console.log(h.c.gray(`  ${s}`)); if (!d.applied) console.log(h.c.dim('  --apply to write it')); } },
+  { key: 'repo.split', repo: true, usage: 'repo split <repo> <file> [--by section|declaration] [--test "cmd"] [--apply] | repo split <repo> --candidates', about: 'one component, one file: a file holding several components broken into one file each under <name>/, the old path kept as the door (same exports, checked by loading both apart; --test runs the project\'s own test before and after); --apply writes it and wires the pieces into the spine',
+    req: (a) => (a.flags.candidates || !a.args[0] ? { method: 'GET', path: `/api/repos/${a.repo.uuid}/split-candidates` }
+      : { method: 'POST', path: `/api/repos/${a.repo.uuid}/split`, body: { path: a.args[0], by: a.flags.by || 'auto', apply: !!a.flags.apply, testCmd: a.flags.test || null }, timeoutMs: 600000 }),
+    print: (d, a, h) => {
+      if (d.candidates) { for (const c of d.candidates) console.log(`  ${String(c.lines).padStart(5)} lines  ${c.units} units  ${c.sections.length} sections  ${c.path}`); if (!d.candidates.length) console.log(h.c.gray('  every file holds one component')); return; }
+      const p = d.plan || {}; console.log(`${d.applied ? h.c.mint('✓ split') : h.c.amber('plan')} ${p.file} → ${(p.pieces || []).length} files by ${p.by}${d.verify ? (d.verify.ok ? h.c.green(' · same exports') : h.c.red(' · NOT the same')) : ''}`);
+      for (const x of p.pieces || []) console.log(`  ${h.c.green('+')} ${x.path}  ${h.c.dim(x.names.join(', '))}`);
+      for (const k of (p.kept || []).slice(0, 12)) console.log(h.c.gray(`  kept in the door: line ${k.line} ${k.names.join(', ')} — ${k.why}`));
+      if (!d.applied) console.log(h.c.dim('  --apply to write it'));
+    } },
+  { key: 'repo.convert', repo: true, usage: 'repo convert <repo> [--apply] [--replace]', about: 'convert the project\'s markdown into specs (sections kept, a module for each file it names, exports read) and the build plans hard-coded inside its specs into phasemaps (DAG-checked); the sources stay; --apply writes them',
+    req: (a) => (a.flags.apply || a.flags.preview ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/convert`, body: { apply: !!a.flags.apply, replace: !!a.flags.replace }, timeoutMs: 120000 } : { method: 'GET', path: `/api/repos/${a.repo.uuid}/convert` }),
+    print: (d, a, h) => {
+      if (d.writes) { for (const w of d.writes) console.log(`  ${d.applied ? h.c.green('✓') : h.c.amber('·')} ${w.path} ${h.c.dim(`from ${w.from}${w.kind === 'phasemap' ? ` · ${w.phases} phases, next ${(w.next || []).slice(0, 3).join(', ')}` : ` · ${w.modules} modules`}`)}`); for (const s of d.said || []) console.log(h.c.gray(`  ${s}`)); return; }
+      for (const m of d.mds || []) console.log(`  ${m.exists ? h.c.green('✓') : h.c.amber('·')} ${m.path} → ${m.target}`);
+      for (const x of d.specPlans || []) console.log(`  ${x.exists ? h.c.green('✓') : h.c.amber('·')} ${x.path} (${x.modules} modules with a build plan) → ${x.target}`);
+      console.log(h.c.dim(`  ${(d.todo || {}).mds || 0} md(s) and ${(d.todo || {}).specPlans || 0} plan(s) to convert — --apply`));
+    } },
   { key: 'repo.notes', repo: true, usage: 'repo notes <repo> [--q words] [--kind idea|decision|todo|question|quote|note]', about: 'the repo\'s notes, pinned first then newest',
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/notes${a.flags.q || a.flags.kind ? `?${[a.flags.q ? `q=${encodeURIComponent(a.flags.q)}` : '', a.flags.kind ? `kind=${encodeURIComponent(a.flags.kind)}` : ''].filter(Boolean).join('&')}` : ''}` }),
     print: (d, a, h) => { for (const n of d.notes || []) console.log(`  ${n.pinned ? h.c.amber('★') : ' '} ${h.c.dim(n.kind.padEnd(8))} ${n.status === 'done' ? h.c.dim(n.title) : n.title}  ${h.c.dim(n.id)}`); if (!(d.notes || []).length) console.log(h.c.gray('  no notes')); } },

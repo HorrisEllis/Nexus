@@ -989,7 +989,13 @@ export class RepoLayer {
       // reuse the path itself (minus extension noise) so fileName stays
       // human-readable in the repo's file list. realPath preserves the
       // real relative path/extension for materialize() (§REALPATH).
-      const sectionId = clean.replace(/\.[a-zA-Z0-9]+$/, '').replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase() || `file-${Date.now()}`;
+      let sectionId = clean.replace(/\.[a-zA-Z0-9]+$/, '').replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase() || `file-${Date.now()}`;
+      // 0.60.286 FA6 — two files with one stem (README.md, README.spec) took the same section id and the second was refused
+      // ("section 'readme' already exists"): the extension joins the id when the stem is taken
+      if (manifest.chunks.some(c => c.sectionId === sectionId && c.status !== 'removed')) {
+        sectionId = clean.replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase();
+        for (let n = 2; manifest.chunks.some(c => c.sectionId === sectionId && c.status !== 'removed'); n++) sectionId = `${clean.replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase()}-${n}`;
+      }
       const fresh = this.se.addChunk(manifest.uuid, { sectionId, title: clean, content, realPath: clean, repoUuid, preserveWhitespace: !!opts.preserveWhitespace });
       const newChunk = fresh.chunks.find(c => c.sectionId === sectionId && c.status !== 'removed');
       if (!opts.defer) this._materializeQuiet(repoUuid);

@@ -50,6 +50,7 @@ const SPECS = [
   { spec: 'cos/spec/cos-services.spec', map: 'docs/2026-10-24-cos-services-phasemap.spec' },
   { spec: 'docs/automation-pipelines.spec', map: 'docs/2026-10-29-pipelines-phasemap.spec' },
   { spec: 'docs/idearium-history-nodes.spec', map: 'docs/2026-10-29-history-nodes-phasemap.spec' },   // 2026-10-29 HN — his "all the history in idearium saved as nodes per unit"   // 2026-10-29 PL — his "making a pipeline and workflow feature and include the macros and automation"   // 2026-10-24 BCR1 (from brave-cori) — his "this is all the networking backend for anything needed netwroking wise"
+  { spec: 'docs/project-spine.spec', map: 'docs/2026-10-29-finish-any-project-phasemap.spec' },   // 2026-10-29 FA — his "create all the capability to finish this or any other project in the repo"
 ];
 
 console.log('\ntest-substrate-spec — full specs compile at full depth and stay tied to their phases');

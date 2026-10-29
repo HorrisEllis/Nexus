@@ -2568,6 +2568,29 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
   }
 }
 
+// 0.60.286 FA6 — a repo's text files as [{ path, content }] for the project tools (lib/project-*.js): the files an adapter reads, plus
+// .gitignore; the big and the binary left out (said by the tools as unknown, never guessed)
+const _FA_TEXT = /\.(js|cjs|mjs|jsx|ts|tsx|md|markdown|spec|eg|json)$/i;
+function _repoTextFiles(repoUuid, repo) {
+  const out = [];
+  for (const f of (repo && repo.files) || []) {
+    const p = String(f.path || '').replace(/\\/g, '/');
+    if (!_FA_TEXT.test(p) || /(^|\/)(node_modules|\.git)\//.test(p) || (f.size || f.bytes || 0) > 2 * 1024 * 1024) continue;
+    const r = getRepoLayer().readTextFile(repoUuid, p);
+    if (r && !r.error && typeof r.content === 'string' && !r.content.includes('\u0000')) out.push({ path: p, content: r.content });
+  }
+  return out;
+}
+// every file (bytes for the binary ones) — what a split's verify copies so the old and the new file load among their real neighbours
+function _repoAllFiles(repoUuid, repo) {
+  const out = []; const dir = _repoDiskDir(repoUuid);
+  for (const f of (repo && repo.files) || []) {
+    const p = String(f.path || '').replace(/\\/g, '/'); if (/(^|\/)(node_modules|\.git)\//.test(p)) continue;
+    try { if (dir) { const abs = path.join(dir, p); if (fs.existsSync(abs)) { out.push({ path: p, content: fs.readFileSync(abs) }); continue; } } } catch (_) { /* read through the layer below */ }
+    const r = getRepoLayer().readTextFile(repoUuid, p); if (r && !r.error) out.push({ path: p, content: r.content });
+  }
+  return out;
+}
 function _repoDiskDir(repoUuid) {
   const repo = getRepoLayer().get(repoUuid);
   if (!repo) return null;
@@ -3923,6 +3946,15 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','notes'],     'repo.notes'],         // §0.60.6 — the repo's notes: ?q=&kind=&status=&tag=
     ['GET',    ['api','repos',    ':uuid','history-nodes'],             'repo.history-nodes'],            // 0.60.285 HN3 — the repo's history as nodes: ?lang=&provider=&limit=
     ['POST',   ['api','repos',    ':uuid','history-nodes','backfill'],  'repo.history-nodes.backfill'],   // 0.60.285 HN3 — old log rows → nodes (cut ones marked)
+    // 0.60.286 FA6 — James: "create all the capability to finish this or any other project in the repo" (docs/project-spine.spec)
+    ['GET',    ['api','repos',    ':uuid','spine'],                     'repo.spine'],                    // the registry as the spine: components, wires with evidence, drift against nexus.spine.json
+    ['POST',   ['api','repos',    ':uuid','spine'],                     'repo.spine.write'],              // write nexus.spine.json (declared edges kept)
+    ['POST',   ['api','repos',    ':uuid','refactor'],                  'repo.refactor'],                 // { op: move|rename, id, to|name, apply } — asked of the registry
+    ['GET',    ['api','repos',    ':uuid','split-candidates'],          'repo.split-candidates'],         // files holding several components
+    ['POST',   ['api','repos',    ':uuid','split'],                     'repo.split'],                    // { path, by, apply, testCmd } — one component, one file; the old path is the door
+    ['GET',    ['api','repos',    ':uuid','convert'],                   'repo.convert'],                  // mds and hard-coded plans that would be converted
+    ['POST',   ['api','repos',    ':uuid','convert'],                   'repo.convert.apply'],            // { paths?, apply } — md → spec, a spec's build plan → phasemap
+    ['GET',    ['api','repos',    ':uuid','finish'],                    'repo.finish'],                   // one checklist to finish the project
     ['POST',   ['api','repos',    ':uuid','notes'],     'repo.notes.add'],     // §0.60.6 — { body, title?, kind?, tags?, pinned? }
     ['GET',    ['api','my-projects'],                   'projects.overview'],
     ['GET',    ['api','raid','held'],                   'raid.held'],          // §0.60.78 RT1 — cortex's officiator: the agents' wait, each staged drop's tries
@@ -8249,6 +8281,112 @@ async function handle(req, res, route, query, body) {
       if (action === 'repo.history-nodes') return ok(res, { repoUuid: params.uuid, exchanges: HN.read({ repoUuid: params.uuid, lang: query.lang || null, provider: query.provider || null, limit: Math.min(parseInt(query.limit, 10) || 50, 500) }) });
       const rows = _require('../../lib/repo-agent.js').history(params.uuid, 100000);
       return ok(res, { repoUuid: params.uuid, ...HN.backfill({ rows }) });
+    }
+    // 0.60.286 FA6 — James, 2026-10-29: "take this, and import it into idearium, then create all the capability to finish this or any other
+    // project in the repo. convert mds, hardcoded phasemaps, refactor tool for the architecture to use the component registry as the spine,
+    // decomposition tool for breaking up each component into it's own file and wire it into the spine." The tools are lib's (agnostic, over
+    // files); Idearium reads the repo, shows the plan, and applies through its own versioned writer. GET never writes; a POST without
+    // apply:true returns the plan only.
+    case 'repo.spine': case 'repo.spine.write': case 'repo.refactor': case 'repo.split-candidates': case 'repo.split':
+    case 'repo.convert': case 'repo.convert.apply': case 'repo.finish': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const SP = _require('../../lib/project-spine.js');
+      const files = _repoTextFiles(params.uuid, repo);
+      const project = String(repo.name || params.uuid).replace(/[^A-Za-z0-9_-]+/g, '-');
+      const readSpine = () => { const r = getRepoLayer().readTextFile(params.uuid, SP.SPINE_FILE); return r && !r.error ? SP.read(r.content) : null; };
+      const spineNow = () => SP.merge(readSpine(), SP.scan({ files, project }));
+      const apply = async (writes, moves, reason) => {
+        if (repo.nexusSelf && (moves || []).length) return { ok: false, status: 409, error: 'Nexus\'s own tree moves files through the apply gate by hand; the plan is shown, not applied', code: 'NEXUS_MOVE' };
+        if (repo.nexusSelf) {
+          const PH = await import('../repo/phases.js'); const { scope, snapshot } = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) });
+          return _phaseWriteMany(repo, scope, writes.map(w => ({ path: w.path, content: w.after })), snapshot, reason);
+        }
+        for (const m of moves || []) { const r = getRepoLayer().moveFile(params.uuid, m.from, m.to, { defer: true }); if (r.error) return { ok: false, status: 500, error: `move ${m.from} → ${m.to}: ${r.error}` }; }
+        // an imported project's files are its real bytes (the source layer): a new file joins them, so a chunk named like another
+        // file's (README.spec beside README.md: both 'readme') never refuses it
+        const L = getRepoLayer(); const sourced = (L.repos.repos.find(x => x.uuid === params.uuid) || {}).materializeDir || (repo.files || []).some(f => L.isSourceOwned(params.uuid, f.path));
+        for (const w of writes) {
+          if (sourced && !L.isSourceOwned(params.uuid, w.path)) { const b = L.writeSourceBytes(params.uuid, w.path, Buffer.from(w.after, 'utf8')); if (b.error) return { ok: false, status: 500, error: `write ${w.path}: ${b.error}` }; }
+          const r = L.writeTextFile(params.uuid, w.path, w.after, { defer: true, preserveWhitespace: true }); if (r.error) return { ok: false, status: 500, error: `write ${w.path}: ${r.error}` };
+        }
+        try { getRepoLayer().refresh(params.uuid); } catch (_) { /* the writes stand; the reindex says its own failure */ }
+        return { ok: true, via: 'repo-layer' };
+      };
+      const writeSpine = () => { const fresh = SP.merge(readSpine(), SP.scan({ files: _repoTextFiles(params.uuid, getRepoLayer().get(params.uuid)), project })); const w = getRepoLayer().writeTextFile(params.uuid, SP.SPINE_FILE, SP.text(fresh)); return { spine: fresh, error: w.error || null }; };
+      if (action === 'repo.spine') {
+        const old = readSpine(); const sp = spineNow(); const drift = old ? SP.check(old, files) : null;
+        const lim = Math.min(parseInt(query.limit, 10) || 400, 5000);
+        return ok(res, { repoUuid: params.uuid, file: SP.SPINE_FILE, written: !!old, drift, stats: sp.stats, unknown: sp.unknown, npm: sp.npm, problems: sp.problems,
+          components: sp.components.slice(0, lim), wires: sp.wires.slice(0, lim * 3), truncated: sp.components.length > lim });
+      }
+      if (action === 'repo.spine.write') {
+        const r = writeSpine(); if (r.error) return err(res, 500, `could not write ${SP.SPINE_FILE}: ${r.error}`);
+        getIdeaOS().emit('idearium.repo.spine.written', { repoUuid: params.uuid, components: r.spine.components.length, wires: r.spine.wires.length, unknown: r.spine.unknown });
+        return ok(res, { repoUuid: params.uuid, file: SP.SPINE_FILE, stats: r.spine.stats, unknown: r.spine.unknown });
+      }
+      if (action === 'repo.refactor') {
+        const RF = _require('../../lib/project-refactor.js');
+        const op = String(body.op || 'move');
+        const plan = op === 'rename' ? RF.rename(spineNow(), files, { id: body.id, name: body.name }) : op === 'move' ? RF.move(spineNow(), files, { id: body.id, to: body.to }) : { ok: false, refused: `no refactor "${op}" — move or rename` };
+        const view = { ...plan, spine: undefined, writes: (plan.writes || []).map(w => ({ path: w.path, before: body.full ? w.before : undefined, after: body.full ? w.after : undefined, lines: String(w.after || '').split('\n').length, created: w.before == null })) };
+        if (!plan.ok) return err(res, 409, plan.refused || 'refused', { code: 'REFUSED', plan: view });
+        if (body.apply !== true) return ok(res, { repoUuid: params.uuid, applied: false, plan: view });
+        const a = await apply(plan.writes, plan.moves, `refactor ${op} ${plan.id} → ${plan.to}`);
+        if (!a.ok) return err(res, a.status || 500, a.error, { code: a.code || 'APPLY_FAILED' });
+        const s2 = writeSpine();
+        getIdeaOS().emit('idearium.repo.refactored', { repoUuid: params.uuid, op, id: plan.id, writes: plan.writes.length });
+        return ok(res, { repoUuid: params.uuid, applied: true, plan: view, via: a.via, spine: s2.spine.stats });
+      }
+      if (action === 'repo.split-candidates') return ok(res, { repoUuid: params.uuid, candidates: _require('../../lib/project-split.js').candidates(files, { minUnits: parseInt(query.minUnits, 10) || 6 }) });
+      if (action === 'repo.split') {
+        const X = _require('../../lib/project-split.js');
+        const f = files.find(x => x.path === String(body.path || '').replace(/\\/g, '/'));
+        if (!f) return err(res, 404, `no text file ${body.path} in the repo`);
+        const plan = X.plan(f.path, f.content, { by: body.by || 'auto' });
+        const view = { ...plan, door: body.full ? plan.door : undefined, writes: (plan.writes || []).map(w => ({ path: w.path, lines: String(w.after).split('\n').length, created: w.before == null, ...(body.full ? { after: w.after } : {}) })) };
+        if (!plan.ok) return err(res, 409, plan.refused, { code: 'REFUSED', plan: view });
+        const v = body.verify === false ? null : X.verify(plan, { files: _repoAllFiles(params.uuid, repo), testCmd: body.testCmd || null });
+        if (v && !v.ok) return err(res, 409, `the split does not keep the file's behaviour: ${v.diff.length ? v.diff.map(d => `${d.name} ${d.before} → ${d.after}`).join('; ') : (v.parse || []).map(p => `${p.path}: ${p.error}`).join('; ') || (v.test ? `the test exits ${v.test.before.exit} before, ${v.test.after.exit} after` : 'refused')}`, { code: 'NOT_SAME', plan: view, verify: v });
+        if (body.apply !== true) return ok(res, { repoUuid: params.uuid, applied: false, plan: view, verify: v });
+        const a = await apply(plan.writes, [], `split ${f.path} into ${plan.pieces.length} files`);
+        if (!a.ok) return err(res, a.status || 500, a.error, { code: a.code || 'APPLY_FAILED' });
+        const s2 = writeSpine();
+        getIdeaOS().emit('idearium.repo.split', { repoUuid: params.uuid, path: f.path, pieces: plan.pieces.length });
+        return ok(res, { repoUuid: params.uuid, applied: true, plan: view, verify: v, via: a.via, spine: s2.spine.stats });
+      }
+      const CV = _require('../../lib/project-convert.js');
+      if (action === 'repo.convert' || action === 'repo.convert.apply') {
+        const pl = CV.plan(files);
+        if (action === 'repo.convert') return ok(res, { repoUuid: params.uuid, ...pl, todo: { mds: pl.mds.filter(m => !m.exists).length, specPlans: pl.specPlans.filter(x => !x.exists).length } });
+        const only = Array.isArray(body.paths) && body.paths.length ? new Set(body.paths) : null;
+        const byPath = new Map(files.map(x => [x.path, x]));
+        const writes = []; const said = [];
+        for (const m of pl.mds) { if (m.exists && body.replace !== true) continue; if (only && !only.has(m.path)) continue; const r = CV.mdToSpec(m.path, byPath.get(m.path).content, { files, project }); writes.push({ path: r.target, after: r.text, kind: 'spec', from: m.path, modules: r.modules }); }
+        for (const x of pl.specPlans) { if (x.exists && body.replace !== true) continue; if (only && !only.has(x.path)) continue; const r = CV.specPlan(byPath.get(x.path).content, { specPath: x.path }); if (!r || r.error) { said.push(`${x.path}: ${r ? r.error : 'no build plan'}`); continue; } writes.push({ path: r.target, after: r.text, kind: 'phasemap', from: x.path, phases: r.phases.length, next: r.next, problems: r.problems }); }
+        const view = writes.map(({ after, ...w }) => ({ ...w, lines: after.split('\n').length, ...(body.full ? { after } : {}) }));
+        if (body.apply !== true) return ok(res, { repoUuid: params.uuid, applied: false, writes: view, said });
+        const a = await apply(writes, [], `convert ${writes.length} document(s) and plan(s)`);
+        if (!a.ok) return err(res, a.status || 500, a.error, { code: a.code || 'APPLY_FAILED' });
+        getIdeaOS().emit('idearium.repo.converted', { repoUuid: params.uuid, specs: writes.filter(w => w.kind === 'spec').length, phasemaps: writes.filter(w => w.kind === 'phasemap').length });
+        return ok(res, { repoUuid: params.uuid, applied: true, writes: view, said, via: a.via });
+      }
+      // repo.finish — one checklist: what stands between this project and done, each item with the command that moves it
+      const sp = spineNow(); const old = readSpine(); const drift = old ? SP.check(old, files) : null;
+      const pl = CV.plan(files);
+      const cands = _require('../../lib/project-split.js').candidates(files);
+      let phases = null;
+      try { const PH = await import('../repo/phases.js'); const { maps } = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) }); const all = maps.flatMap(m => (m.phases || []).map(p => ({ ...p, map: m.path })));
+        phases = { maps: maps.length, total: all.length, done: all.filter(p => /done/i.test(p.status || '')).length }; } catch (e) { phases = { error: e.message }; }
+      const items = [
+        { id: 'spine', done: !!old && !!drift && drift.ok, say: !old ? `no ${SP.SPINE_FILE} yet — ${sp.components.length} components, ${sp.wires.length} wires to register` : drift.ok ? 'the spine matches the code' : `the code moved since the spine: ${drift.added.length} added, ${drift.gone.length} gone, ${drift.wiresAdded.length + drift.wiresGone.length} wires changed`, cmd: `repo spine ${repo.name} --write` },
+        { id: 'unknown-wires', done: !sp.unknown, say: sp.unknown ? `${sp.unknown} require(s) reach no file` : 'every wire resolves', cmd: `repo spine ${repo.name} --unknown` },
+        { id: 'docs', done: !pl.mds.some(m => !m.exists), say: `${pl.mds.filter(m => !m.exists).length} of ${pl.mds.length} md file(s) have no spec`, cmd: `repo convert ${repo.name} --apply` },
+        { id: 'plans', done: !pl.specPlans.some(x => !x.exists), say: pl.specPlans.length ? `${pl.specPlans.filter(x => !x.exists).length} spec(s) carry a build plan with no phasemap (${pl.specPlans.map(x => x.path).join(', ')})` : 'no hard-coded build plan', cmd: `repo convert ${repo.name} --apply` },
+        { id: 'split', done: !cands.length, say: cands.length ? `${cands.length} file(s) hold several components (largest: ${cands.slice(0, 3).map(c => `${c.path} ${c.lines} lines`).join(', ')})` : 'one component per file', cmd: cands[0] ? `repo split ${repo.name} ${cands[0].path}` : null },
+        { id: 'phases', done: !!phases && phases.total > 0 && phases.done === phases.total, say: phases && phases.total != null ? `${phases.done} of ${phases.total} phase(s) done across ${phases.maps} map(s)` : `phases unread: ${phases && phases.error}`, cmd: `repo phasemap ${repo.name} --ready` },
+      ];
+      return ok(res, { repoUuid: params.uuid, name: repo.name, items, open: items.filter(i => !i.done).length, stats: sp.stats, candidates: cands.slice(0, 20), convert: pl });
     }
     case 'repo.notes': case 'repo.notes.add': case 'notes.list': case 'notes.add': case 'notes.update': {
       const RN = _require('../../lib/repo-notes.js');
