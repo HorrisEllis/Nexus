@@ -100,3 +100,10 @@ phases:
 - SN1: src/net/step.js; driver `net`; browser_action `network`; workflow browser step "Network (Snowflake)". test-snowflake-steps 4/4.
 - Still his: CAL0 (the recommendation stands: Nexus's own calendar first, with an .ics feed Google and Apple subscribe to; two-way sync
   later) and GP0 (what is wrong with the Guardian picker today).
+
+## ADDENDUM 2026-10-29 (0.60.282) — SN1: the step turns Snowflake on
+James, 2026-10-29, after 0.60.281 refused when the plugin was off: "can 't you have it turn on the snowflake?"
+- Supersedes SN1's "refused when the Snowflake plugin is off" (kept above, §0.3). A step turns the plugin on (as plugins:enable does, kept
+  on after a restart) and says pluginTurnedOn; routing a site starts the transport (a routed site is blocked while it is off) and says
+  startedTransport. turnOn: false / start: false keep the old behaviour. Two readings of his words, both done — the coder's, to confirm.
+- His next words, "what about combining the", were cut off: asked.

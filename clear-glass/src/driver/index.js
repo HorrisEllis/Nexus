@@ -888,7 +888,7 @@ class ClearDriver {
   async _net(agentId, params = {}) {
     if (typeof this.netStep !== 'function') throw new Error('net: Snowflake is not wired into this driver');
     const urlOf = () => { try { const wc = this._getWebContents(agentId); return wc ? wc.getURL() : null; } catch (_) { return null; } };
-    return this.netStep({ do: params.do, site: params.site || null, via: params.via || 'transport', timeoutMs: params.timeoutMs || 90000 }, urlOf);
+    return this.netStep({ do: params.do, site: params.site || null, via: params.via || 'transport', timeoutMs: params.timeoutMs || 90000, turnOn: params.turnOn !== false, start: params.start !== false }, urlOf);
   }
 
   // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." A package row that is a checkbox (Data Syncing, Conditional Logic …): the one in

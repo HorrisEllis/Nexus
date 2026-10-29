@@ -6,6 +6,8 @@
  *   SF-01  route / unroute this tab's site in core's table; a site routed another way is left and said; only a step's own rule is removed
  *   SF-02  start, wait (starts it when off, then waits for ready), check (is Tor), stop, status; a transport that fails is said
  *   SF-03  refused, and said, when the Snowflake plugin is off; an unknown do is refused with the list
+ *   SF-05  James: "can 't you have it turn on the snowflake?" — the plugin turned on when off (said; turnOn: false refuses), routing a site
+ *          starts the transport (start: false leaves it off)
  *   SF-04  the doors: the driver's `net` action (the tab's own address), browser_action `network`, the workflow step "Network (Snowflake)"
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -72,6 +74,24 @@ function fakeHost({ after = 2, fail = false } = {}) {
     await assert.rejects(run({ do: 'route' }), /the Snowflake plugin is off — turn it on in the 🧩 panel/);
     assert.strictEqual(svc.policy().rules.length, 0, 'nothing routed');
     await assert.rejects(mk().run({ do: 'tunnel' }), /do is one of route, unroute, start, stop, wait, check, status/);
+  });
+
+  await test('SF-05', 'it turns Snowflake on: the plugin when it is off, the transport when a site is routed; both said', async () => {
+    let on = false; const turned = [];
+    const a = mk({ pluginOn: () => on, turnOnPlugin: async () => { turned.push(1); on = true; return { ok: true }; } });
+    const r = await a.run({ do: 'route' });
+    assert.deepStrictEqual([r.pluginTurnedOn, r.startedTransport, r.transport, turned.length, a.host.calls], [true, true, 'bootstrapping', 1, ['start']], JSON.stringify(r));
+    const again = await a.run({ do: 'route' });
+    assert.ok(!again.pluginTurnedOn && again.startedTransport === false && turned.length === 1, 'on already: not turned on or started again');
+    const b = mk({ pluginOn: () => false, turnOnPlugin: async () => ({ ok: true }) });
+    await assert.rejects(b.run({ do: 'route', turnOn: false }), /the Snowflake plugin is off — turn it on/);
+    await assert.rejects(b.run({ do: 'route' }), /the Snowflake plugin is off and could not be turned on/, 'a turn-on that does not take is said');
+    const c = mk({ pluginOn: () => false, turnOnPlugin: async () => ({ ok: false, error: 'the Snowflake plugin is not installed' }) });
+    await assert.rejects(c.run({ do: 'status' }), /could not be turned on \(the Snowflake plugin is not installed\)/);
+    const d = mk(); const kept = await d.run({ do: 'route', start: false });
+    assert.deepStrictEqual([kept.startedTransport, d.host.calls], [false, []], 'start: false leaves it off');
+    const src = require('fs').readFileSync(CG('src/ipc/bridge.js'), 'utf8');
+    assert.ok(/this\.pluginHost\.enable\(p\.id\); const cur = new Set\(this\.options\?\.get\(\)\?\.disabledPlugins \|\| \[\]\); cur\.delete\(p\.id\)/.test(src), 'turned on as the panel does, kept on after a restart');
   });
 
   await test('SF-04', 'the doors: driver net (the tab\'s own address), browser_action network, the workflow step', async () => {

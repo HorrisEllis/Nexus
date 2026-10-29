@@ -390,7 +390,11 @@ class IpcBridge {
     // 0.60.281 SN1 — James, 2026-10-29: "also snowflake plugin support to macros and automation." The driver's `net` action (a macro step,
     // a workflow's "Network (Snowflake)") runs src/net/step.js on this same service and transport; off when the Snowflake plugin is off.
     this.netStep = (args, urlOf) => require('../net/step').netStep({ service: _net(), host: _netHost(), ensureBridge: _ensureBridge, fetchVia: _fetchVia, urlOf,
-      pluginOn: () => !this.pluginHost || (this.pluginHost.list() || []).some(p => p.name === 'snowflake' && p.state === 'active') }, args);
+      pluginOn: () => !this.pluginHost || (this.pluginHost.list() || []).some(p => p.name === 'snowflake' && p.state === 'active'),
+      // James: "can 't you have it turn on the snowflake?" — turned on as the 🧩 panel does it (plugins:enable), kept on after a restart, said
+      turnOnPlugin: () => { try { const p = (this.pluginHost.list() || []).find(x => x.name === 'snowflake'); if (!p) return { ok: false, error: 'the Snowflake plugin is not installed' };
+        this.pluginHost.enable(p.id); const cur = new Set(this.options?.get()?.disabledPlugins || []); cur.delete(p.id); this.options?.set({ disabledPlugins: [...cur] }); return { ok: true }; }
+        catch (err) { return { ok: false, error: err.message }; } } }, args);
     if (this.driver) this.driver.netStep = this.netStep;
     // BS1/BS7 (0.60.179) — Firefox import, for real (src/import/firefox.js). Cookies go into the everyday session (Electron's default, where an
     // ordinary window's page loads) or a provider tab's; never into a Snowflake compartment. No cookie value leaves this route.
