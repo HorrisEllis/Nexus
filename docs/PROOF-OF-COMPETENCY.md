@@ -1382,3 +1382,34 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
     rows are data in the gig file and not code. He can add the next subcategory's rows himself.
 - **Checkable:** `tests/modules/test-gig-features.test.js` 3/3 and `tests/modules/test-opportunity-contacts.test.js` 6/6 (both drive
   Clear Glass); `versionium/changelogs/CHANGELOG-0.60.281.md`.
+
+### 2026-10-29 — 0.60.286: "create all the capability to finish this or any other project in the repo."
+- **His words:** "take this, and import it into idearium, then create all the capability to finish this or any other project in the repo.
+  convert mds, hardcoded phasemaps, refactor tool for the architecture to use the component registry as the spine, decomposition tool for
+  breaking up each component into it's own file and wire it into the spine." Later the same day: "like type in the cli, determine context
+  needed, build dag. search the project for context, ask user about any gaps, then contract, etc"
+- **Context:**
+  - He uploaded Emerge, a project of his made outside Nexus.
+  - Importing it showed Idearium silently dropping its tracked `lang/build/current` folder: every folder named `build` was skipped.
+  - Its plan lived inside its spec, where Nexus never looked.
+- **What it shows:**
+  - **Systems design, named as a pipeline.** His second message is a complete agent workflow written as one line, in an order that holds
+    up:
+    1. understand the intent;
+    2. find the context it needs;
+    3. order the work as a DAG;
+    4. search;
+    5. ask the human last, only about gaps;
+    6. then commit to a contract.
+
+    The code keeps that order verbatim.
+  - **Architecture direction.** "The component registry as the spine" is his IN3 plan from 2026-10-19, now applied to any project.
+- **Checkable:**
+  - The real Emerge zip went through the router:
+    - the tracked build folder is kept;
+    - `cie-eg.spec`'s plan became 17 phases, 9 ready to build, 0 DAG problems;
+    - 10 mds became specs;
+    - `emerge-kernel.js` split into 5 files with identical exports, verified by loading old and new apart;
+    - all 26 multi-component files split and verified in the sandbox.
+  - Tests: `test-project-spine` 8/8, `test-intent-flow` 4/4 and `test-gig-fill-menu` 3/3, each with a Clear Glass check.
+  - Changelog: `versionium/changelogs/CHANGELOG-0.60.286.md`.

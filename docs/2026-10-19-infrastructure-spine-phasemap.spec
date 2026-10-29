@@ -412,3 +412,15 @@ phases:
 # To confirm: (1) which slice comes first; (2) the coder's reading of "hook into the actual threads, PID or IO" is that COS owns each
 # compartment's process tree so it can measure and cap it (Windows Job Objects on his PC; QEMU limits for machines), not that it
 # reaches inside a running program's threads.
+
+# ADDENDUM 2026-10-29 (0.60.286) — slices of IN3, AD1, AD2 and AD4 built for the project tools; the phases stay OPEN
+# James, 2026-10-29, uploading Emerge.zip: "refactor tool for the architecture to use the component registry as the spine, decomposition tool for
+# breaking up each component into it's own file and wire it into the spine." Map: docs/2026-10-29-finish-any-project-phasemap.spec (FA0–FA10).
+# - IN3 (the registry is the spine), for built projects: lib/project-spine.js writes each project's registry as nexus.spine.json — every component,
+#   every wire with its evidence (discovered by which adapter / declared / unknown); declared edges kept across rescans. Nexus's own systems are not
+#   moved onto it yet: IN3's proof (one system's registry reproducing loom's edges) is still open.
+# - AD1: lib/adapters/contract.js — forFile, parse / units / symbols / dependencies, and a conformance check. Open: the conformance run over the old
+#   JS paths (verify-first, coder-brief) and NC1.
+# - AD2: lib/adapters/javascript.js wraps code-intel (structure, decls, text) and node --check. Open: verify-first and coder-brief moved behind it.
+# - AD4: lib/adapters/documents.js (markdown sections, the files a document names). Open: references between Nexus's own specs and phasemaps.
+# - Not in the plan before, built because Emerge needed it: lib/adapters/emerge.js (.eg: use, fn, kind, component …; parse answers unknown).
