@@ -13,6 +13,7 @@
  *   PS-06  convert: an md → an emerge-format spec naming the files it mentions; a spec's build plan → a phasemap whose DAG resolves
  *   PS-07  the door: import the zip through the real router, then spine, convert, split, refactor and finish, each GET a plan and each
  *          apply a repo write; the command rows
+ *   PS-08  the Finish tab in Clear Glass (AXIOMS §4.1): the real screen script against the real API — the checklist, a split preview
  */
 require('../../lib/test-sandbox.js').ensure();
 const fs = require('fs');
@@ -226,6 +227,44 @@ const plainFiles = () => Object.entries(FILES).map(([p, c]) => ({ path: p.replac
     assert.deepStrictEqual(row('repo.refactor').req({ repo: { uuid: 'r' }, args: ['move', 'x.js', 'y/'], flags: {} }), { method: 'POST', path: '/api/repos/r/refactor', body: { op: 'move', id: 'x.js', to: 'y/', name: undefined, apply: false }, timeoutMs: 120000 });
     assert.deepStrictEqual(row('repo.finish').req({ repo: { uuid: 'r' }, args: [], flags: {} }), { method: 'GET', path: '/api/repos/r/finish', timeoutMs: 120000 });
     assert.ok(row('repo.spine') && row('repo.convert'));
+    S._uuid = u; S._api = api;
+  });
+
+  await test('PS-08', 'the Finish tab in Clear Glass: the checklist, the components, a split preview with its pieces', async () => {
+    const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));
+    if (!glass.engine()) { console.log('  - PS-08 SKIPPED: Clear Glass has no engine here'); return; }
+    assert.ok(S._uuid, 'PS-07 made the repo');
+    const http = require('http'); const UI = path.join(ROOT, 'idearium/ui');
+    const HTML = `<!doctype html><html><head><link rel="stylesheet" href="/css/repo-spine.css"></head><body><div id="repo-subtab-finish"></div>
+      <script>const API_BASE=''; window.toast=(m)=>{document.body.dataset.toast=m};
+      async function api(p,o={},t){const r=await fetch(p,{headers:{'Content-Type':'application/json'},...o});const d=await r.json();if(!r.ok||d.ok===false){const e=new Error(d.error||'failed');e.data=d.detail||d;throw e}return d}</script>
+      <script src="/js/repo-spine.js"></script><script>renderSpine(document.getElementById('repo-subtab-finish'),{uuid:'${S._uuid}',name:'ps-proj'})</script></body></html>`;
+    const srv = http.createServer(async (req, res) => {
+      const u = new URL(req.url, 'http://x');
+      if (u.pathname === '/') { res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' }); return res.end(HTML); }
+      if (u.pathname.startsWith('/api/')) { let raw = ''; for await (const c of req) raw += c; const r = await quiet(() => S._api._route(req.method, u.pathname + u.search, raw ? JSON.parse(raw) : undefined)); res.writeHead(r.status, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify(r.json)); }
+      const f = path.join(UI, path.normalize(u.pathname).replace(/^[/\\]+/, ''));
+      if (!f.startsWith(UI) || !fs.existsSync(f)) { res.writeHead(404); return res.end(); }
+      res.writeHead(200, { 'Content-Type': f.endsWith('.js') ? 'text/javascript; charset=utf-8' : 'text/css; charset=utf-8' }); fs.createReadStream(f).pipe(res);
+    });
+    await new Promise(r => srv.listen(0, '127.0.0.1', r));
+    let browser;
+    try {
+      browser = await glass.chromium.launch();
+      const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+      const errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.goto(`http://127.0.0.1:${srv.address().port}/`);
+      await page.waitForSelector('.fa-list .fa-item', { timeout: 120000 });
+      const items = await page.$$eval('.fa-item b', els => els.map(e => e.textContent));
+      assert.deepStrictEqual(items, ['spine', 'unknown-wires', 'docs', 'plans', 'split', 'phases']);
+      await page.click('[data-fa="show"]');
+      if (process.env.PS_DEBUG) { await new Promise(r => setTimeout(r, 4000)); console.log('DEBUG', JSON.stringify(await page.evaluate(() => [document.getElementById('fa-plan') && document.getElementById('fa-plan').outerHTML.slice(0, 300), document.body.dataset.toast])), errors); }
+      await page.waitForFunction(() => /components ·|refused|did not/.test((document.getElementById('fa-plan') || {}).textContent || ''), null, { timeout: 120000 });
+      const plan = await page.textContent('#fa-plan');
+      assert.ok(/kernel\/words\.js/.test(plan), 'the split pieces are components in the spine');
+      if (process.env.PS_SHOT) await page.screenshot({ path: process.env.PS_SHOT, fullPage: true });
+      assert.deepStrictEqual(errors, []);
+    } finally { try { if (browser) await browser.close(); } catch (_) {} srv.close(); }
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exitCode = failed ? 1 : 0;

@@ -2067,6 +2067,7 @@ function renderCurrentRepoSubtab() {
   else if (CURRENT_REPO_SUBTAB === 'phases') renderRepoPhases(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'phasemap') renderRepoPhasemap(CURRENT_API_REPO);   // no button since 0.39.271 (merged into Phases)
   else if (CURRENT_REPO_SUBTAB === 'roadmap') renderRepoRoadmap(CURRENT_API_REPO);     // no button since 0.39.271 (merged into Phases)
+  else if (CURRENT_REPO_SUBTAB === 'finish' && typeof renderSpine === 'function') renderSpine(document.getElementById('repo-subtab-finish'), CURRENT_API_REPO);   // 0.60.286 FA7
   else if (CURRENT_REPO_SUBTAB === 'intelligence') renderRepoIntelligence(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'agent') renderRepoAgent(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'idea') renderRepoIdea(CURRENT_API_REPO);

@@ -1324,6 +1324,8 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
                  grade manager." Phasemap + Roadmap are one tab. Their panels stay below (renderers
                  kept); Phasemap's verification/graphs now show in Intelligence. -->
             <button class="repo-subtab-btn" data-subtab="phases" onclick="setRepoSubtab('phases')">Phases</button>
+            <!-- 0.60.286 FA7 — James: "create all the capability to finish this or any other project in the repo" -->
+            <button class="repo-subtab-btn" data-subtab="finish" onclick="setRepoSubtab('finish')" title="what stands between this project and done: its spine (component registry), docs and plans to convert, files to split, refactors">Finish</button>
             <button class="repo-subtab-btn" data-subtab="intelligence" onclick="setRepoSubtab('intelligence')">Intelligence</button>
             <!-- §0.48.0 OS9 — no Agent tab: the agent is the Code tab's; its settings are Settings → Agents -->
             <button class="repo-subtab-btn" data-subtab="debug" onclick="setRepoSubtab('debug')">Debug</button>
@@ -1416,6 +1418,10 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
                (symbols with abnormal fan-in/fan-out). All computed from the
                repo's own real atlas/graph/verification artifacts — see
                GET /api/repos/:uuid/scan. -->
+          <div class="repo-subtab-panel" id="repo-subtab-finish">   <!-- 0.60.286 FA7 js/repo-spine.js -->
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
           <div class="repo-subtab-panel" id="repo-subtab-intelligence">
             <div class="detail-empty">← select a repo</div>
           </div>
@@ -2644,6 +2650,7 @@ async function saveToIdearium(){
 <link rel="stylesheet" href="css/code-tab-flight.css">
 <link rel="stylesheet" href="css/upload-intent.css">
 <link rel="stylesheet" href="css/debug-failures.css">
+<link rel="stylesheet" href="css/repo-spine.css">   <!-- 0.60.286 FA7 the Finish tab -->
 <link rel="stylesheet" href="css/phase-graph-view.css">
 <link rel="stylesheet" href="css/ollama-check.css">
 <link rel="stylesheet" href="css/phases.css">
@@ -2678,6 +2685,7 @@ async function saveToIdearium(){
 <script src="js/file-versions.js"></script>
 <script src="js/components-panel.js"></script>
 <script src="js/repo-versions.js"></script>
+<script src="js/repo-spine.js"></script>   <!-- 0.60.286 FA7 the Finish tab: spine, convert, split, refactor -->
 <script src="js/repo-releases.js"></script>   <!-- §0.60.72 RN3 the Versionium tab's Releases: what landed in each -->   <!-- §0.60.7 the Versionium tab: every version, compare, import history -->
 <script src="js/repo-notes.js"></script>   <!-- §0.60.6 a repo's Notes tab -->   <!-- §0.60.5 decompose projects into the component store; bundles with their dependencies -->
 <script>

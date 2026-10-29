@@ -8376,8 +8376,9 @@ async function handle(req, res, route, query, body) {
       const pl = CV.plan(files);
       const cands = _require('../../lib/project-split.js').candidates(files);
       let phases = null;
-      try { const PH = await import('../repo/phases.js'); const { maps } = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) }); const all = maps.flatMap(m => (m.phases || []).map(p => ({ ...p, map: m.path })));
-        phases = { maps: maps.length, total: all.length, done: all.filter(p => /done/i.test(p.status || '')).length }; } catch (e) { phases = { error: e.message }; }
+      try { const PH = await import('../repo/phases.js'); const { maps } = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) }); const PP = _require('../../lib/phasemap-parse.js');
+        const all = maps.flatMap(m => (m.phases || PP.parsePhasemapText(m.text || '', String(m.path).split('/').pop())).filter(p => p.kind !== 'decision' && p.kind !== 'finding').map(p => ({ ...p, map: m.path })));
+        phases = { maps: maps.length, total: all.length, done: all.filter(p => /done|complete/i.test(p.status || '')).length }; } catch (e) { phases = { error: e.message }; }
       const items = [
         { id: 'spine', done: !!old && !!drift && drift.ok, say: !old ? `no ${SP.SPINE_FILE} yet — ${sp.components.length} components, ${sp.wires.length} wires to register` : drift.ok ? 'the spine matches the code' : `the code moved since the spine: ${drift.added.length} added, ${drift.gone.length} gone, ${drift.wiresAdded.length + drift.wiresGone.length} wires changed`, cmd: `repo spine ${repo.name} --write` },
         { id: 'unknown-wires', done: !sp.unknown, say: sp.unknown ? `${sp.unknown} require(s) reach no file` : 'every wire resolves', cmd: `repo spine ${repo.name} --unknown` },
