@@ -48,18 +48,21 @@ packages:
     deliveryDays: 4
     revisions: 1
     price: 120
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   standard:
     name: Multi-Screen App
     description: Up to 4 screens, local storage, installer and readme.
     deliveryDays: 8
     revisions: 2
     price: 320
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   premium:
     name: Full Desktop App
     description: Custom windows, background tasks, auto-update and tests.
     deliveryDays: 14
     revisions: 3
     price: 700
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
 faq:
   - question: Windows, Mac or both?
     answer: Both are possible. Tell me which you need; I test on the ones you choose.

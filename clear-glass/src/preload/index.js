@@ -356,6 +356,9 @@ contextBridge.exposeInMainWorld('ClearGlass', {
 
   // §BUILT 2026-09-19 — real AutofillProfile CRUD + detect/fill orchestration
   // 0.60.269 — Settings › About: the versions, and whether a newer Electron / Clear Glass / Nexus exists (read-only)
+  // 0.60.281 AP4 — James: "also capturing the contact info for job applications." Settings › Applications: the opportunity system's
+  // applications and contacts, through Copilot's /api/opportunity routes only (the bridge proxies an allowlist; §5.15)
+  applications: { call: (method, path, body) => ipcRenderer.invoke('applications:call', { method, path, body }) },
   about: {
     info:  () => ipcRenderer.invoke('about:info'),
     check: () => ipcRenderer.invoke('about:check'),

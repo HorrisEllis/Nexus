@@ -32,6 +32,11 @@ const ROUTES = [
   ['PUT',    '/api/opportunity/templates/:id',     (O, { p, body }) => O.drafting.setTemplate(p.id, body.text)],
   ['DELETE', '/api/opportunity/templates/:id',     (O, { p }) => O.drafting.resetTemplate(p.id)],
   ['PUT',    '/api/opportunity/recipes/:host',     (O, { p, body }) => O.setRecipe(p.host, body)],
+  // 0.60.281 AP3 — James, 2026-10-29: "also capturing the contact info for job applications." (lib/opportunity/contacts.js)
+  ['GET',    '/api/opportunity/contacts',          (O, { q }) => ({ ok: true, contacts: O.contacts.list({ oppId: q('opp') || null, includeArchived: q('archived') === '1', q: q('q') }).map(O.contacts.withStatus) })],
+  ['POST',   '/api/opportunity/contacts',          (O, { body }) => O.contacts.add(body.contact || body, { by: 'user', source: 'hand' })],
+  ['PUT',    '/api/opportunity/contacts/:id',      (O, { p, body }) => O.contacts.update(p.id, body.contact || body, { by: 'user' })],
+  ['POST',   '/api/opportunity/contacts/:id/archive', (O, { p, body }) => O.contacts.archive(p.id, { by: 'user', archived: body.archived !== false })],
   ['GET',    '/api/opportunity/:id',               (O, { p }) => O.show(p.id)],
   ['POST',   '/api/opportunity/:id/approve',       (O, { p, body }) => O.approve(p.id, { by: 'user', note: body.note || null })],
   ['POST',   '/api/opportunity/:id/dismiss',       (O, { p, body }) => O.dismiss(p.id, { by: 'user', note: body.note || null })],
@@ -68,7 +73,7 @@ async function handle(req, res, { method, url, pathname, json, readBody }) {
     try {
       const body = method === 'POST' || method === 'PUT' ? await readBody(req) : {};
       const r = await fn(O, { p, body: body || {}, q: (k) => url.searchParams.get(k) });
-      json(res, r && r.ok === false ? (r.userOnly ? 403 : /^no (opportunity|answer)/.test(r.error || '') ? 404 : 400) : 200, r);
+      json(res, r && r.ok === false ? (r.userOnly ? 403 : /^no (opportunity|answer|contact)/.test(r.error || '') ? 404 : 400) : 200, r);
     } catch (e) { json(res, 500, { ok: false, error: e.message }); }
     return true;
   }

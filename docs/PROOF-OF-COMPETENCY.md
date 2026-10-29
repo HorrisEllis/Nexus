@@ -1365,3 +1365,20 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
 - **Checkable:** `docs/AXIOMS-v3.1.md` §5.15 (101 laws, 101 quick-reference lines); `tests/modules/test-versionium-owns-releases.test.js`
   4/4 (no system requires the moved code; drawbridge ratchet: 0 added; an outage is said, not spread);
   `versionium/changelogs/CHANGELOG-0.60.277.md`.
+
+### 2026-10-29 — 0.60.281: "update the gig files. also capturing the contact info for job applications."
+- **His words:** "update the gig files. also capturing the contact info for job applications. also snowflake plugin support to macros and
+  automation." He sent it with a screenshot of his gig's Scope & Pricing page. The day before, he had set the order: "fiverr is the most
+  important. that and job applications, 0logging contact info from applications/businesses you apply for".
+- **Context:** The gig files held a name, description, days, revisions and price for each package. His screenshot showed that Fiverr asks
+  for more: rows that change with the subcategory, such as "Number of APIs integrated" and "Data Syncing". The job pipeline recorded who he
+  is as the applicant, and nothing about who he was applying to.
+- **What it shows:**
+  - **Product judgment from real use.** He found both gaps by working the actual sites, not from the code, and the screenshot was the spec
+    for the gig rows.
+  - **Getting the follow-up loop right.** A pipeline that can apply but cannot say whom to follow up with is missing the part that turns an
+    application into a conversation.
+  - **His rule held, and it shaped the design.** His rule from 0.60.280, "this is the nodes in the settings, not hardcoded", is why the
+    rows are data in the gig file and not code. He can add the next subcategory's rows himself.
+- **Checkable:** `tests/modules/test-gig-features.test.js` 3/3 and `tests/modules/test-opportunity-contacts.test.js` 6/6 (both drive
+  Clear Glass); `versionium/changelogs/CHANGELOG-0.60.281.md`.

@@ -43,18 +43,36 @@ packages:
     deliveryDays: 3
     revisions: 1
     price: 60
+    features:            # Fiverr's package rows for this subcategory, as the page labels them (draft values, to confirm)
+      "Number of APIs integrated": 1
+      "Number of Triggers / Actions": 3
+      "Number of Platform/Tools Integrated": 1
+      "Data Syncing": no
+      "Conditional Logic": no
   standard:
     name: Multi-Step Workflow
     description: A workflow of up to 4 steps, with checks between steps and a log.
     deliveryDays: 6
     revisions: 2
     price: 180
+    features:
+      "Number of APIs integrated": 2
+      "Number of Triggers / Actions": 4
+      "Number of Platform/Tools Integrated": 2
+      "Data Syncing": yes
+      "Conditional Logic": yes
   premium:
     name: Agent System
     description: Several agents, routing and fallback across providers, tests and a spec.
     deliveryDays: 12
     revisions: 3
     price: 450
+    features:
+      "Number of APIs integrated": 4
+      "Number of Triggers / Actions": 10
+      "Number of Platform/Tools Integrated": 4
+      "Data Syncing": yes
+      "Conditional Logic": yes
 faq:
   - question: Which AI providers can you use?
     answer: >-

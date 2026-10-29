@@ -89,6 +89,9 @@ class ClearDriver {
       case 'select':         return this._select(agentId, args);
       case 'choose':         return this._choose(agentId, args);
       case 'readChoice':     return this._readChoice(agentId, args);   // 0.60.280 KB4 — a macro step's choice gate
+      case 'net':            return this._net(agentId, args);          // 0.60.281 SN1 — Snowflake as a step (src/net/step.js)
+      case 'checkAt':        return this._checkAt(agentId, args);      // 0.60.281 AP1 — the checkbox at a column and a row, to a state, read back
+      case 'rowLabels':      return this._rowLabels(agentId, args);    // 0.60.281 AP1 — the row labels of a priced table (left of a column)
       case 'check':          return this._check(agentId, args);
       case 'setValue':       return this._setValue(agentId, args);
       case 'pressKey':       return this._pressKey(agentId, args);
@@ -878,6 +881,66 @@ class ClearDriver {
     }
     if (!clickedBy) throw new Error(`choose: "${m.option}" did not take — the dropdown shows "${shown}" (tried: ${tried.join('; ')})`);
     return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, clickedBy, tried, ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
+  }
+
+  // 0.60.281 SN1 — James, 2026-10-29: "also snowflake plugin support to macros and automation." route/unroute this tab's site, start, stop,
+  // wait, check, status — through the net service the bridge hands in (driver.netStep), never a second copy of it
+  async _net(agentId, params = {}) {
+    if (typeof this.netStep !== 'function') throw new Error('net: Snowflake is not wired into this driver');
+    const urlOf = () => { try { const wc = this._getWebContents(agentId); return wc ? wc.getURL() : null; } catch (_) { return null; } };
+    return this.netStep({ do: params.do, site: params.site || null, via: params.via || 'transport', timeoutMs: params.timeoutMs || 90000 }, urlOf);
+  }
+
+  // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." A package row that is a checkbox (Data Syncing, Conditional Logic …): the one in
+  // the column headed `column` and the row labelled `row`, clicked with the pointer only when it is not already in the wanted state, read back.
+  async _checkAt(agentId, { column, row, checked = true, via = 'auto' } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (!column || !row) throw new Error('checkAt needs column and row');
+    const find = () => this._evalJs(wc, `(function(col, row){
+      function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+      function norm(t){ return String(t || '').replace(/\\s+/g, ' ').trim().toLowerCase(); }
+      function byText(t){ var want = norm(t), out = []; document.querySelectorAll('body *').forEach(function(el){ if (!el.children.length && norm(el.textContent) === want && vis(el)) out.push(el); }); return out; }
+      var h = byText(col); if (!h.length) return { error: 'no column headed "' + col + '"' };
+      var rw = byText(row); if (!rw.length) return { error: 'no row labelled "' + row + '"' };
+      var hr = h[0].getBoundingClientRect(), rb = (rw[0].closest('tr') || rw[0].parentElement || rw[0]).getBoundingClientRect();
+      var boxes = Array.prototype.filter.call(document.querySelectorAll('input[type="checkbox"],[role="checkbox"]'), function(el){
+        var t = el.type === 'checkbox' && !vis(el) ? (el.closest('label') || el.parentElement) : el; if (!t || !vis(t)) return false;
+        var r = t.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2; return cx >= hr.left && cx <= hr.right && cy >= rb.top && cy <= rb.bottom; });
+      if (!boxes.length) return { error: 'no checkbox at column "' + col + '", row "' + row + '"' };
+      var b = boxes[0]; window.__cgCheckN = (window.__cgCheckN || 0) + 1; var target = b.type === 'checkbox' && !vis(b) ? (b.closest('label') || b.parentElement) : b;
+      target.setAttribute('data-cg-check', String(window.__cgCheckN));
+      return { n: window.__cgCheckN, checked: b.type === 'checkbox' ? !!b.checked : b.getAttribute('aria-checked') === 'true' };
+    })(${JSON.stringify(column)}, ${JSON.stringify(row)})`);
+    let f = await find();
+    if (!f || f.error) throw new Error(`checkAt: ${(f && f.error) || 'page did not answer'}`);
+    const want = !!checked;
+    if (f.checked === want) return { column, row, checked: want, changed: false };
+    await this._waitResponsive(wc);
+    await this._humanPointer(agentId, { selector: `[data-cg-check="${f.n}"]`, do: 'click', via, label: `${row} (${column})` });
+    await this._pause([250, 450]);
+    f = await find();
+    if (!f || f.error || f.checked !== want) throw new Error(`checkAt: "${row}" in ${column} is ${f && !f.error ? (f.checked ? 'ticked' : 'clear') : 'gone'} after the click, not ${want ? 'ticked' : 'clear'}`);
+    return { column, row, checked: want, changed: true };
+  }
+
+  // 0.60.281 AP1 — the row labels of a priced table: the short texts left of the column headed `column`, below its header (so the fill can
+  // say which of the page's rows the gig has no value for)
+  async _rowLabels(agentId, { column } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    const r = await this._evalJs(wc, `(function(col){
+      function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+      function norm(t){ return String(t || '').replace(/\\s+/g, ' ').trim(); }
+      var h = null; document.querySelectorAll('body *').forEach(function(el){ if (!h && !el.children.length && norm(el.textContent).toLowerCase() === String(col).toLowerCase() && vis(el)) h = el; });
+      if (!h) return { error: 'no column headed "' + col + '"' };
+      var hr = h.getBoundingClientRect(), out = [];
+      document.querySelectorAll('body *').forEach(function(el){ if (el.children.length || !vis(el)) return; var r = el.getBoundingClientRect(), t = norm(el.textContent);
+        if (t && t.length <= 80 && r.right <= hr.left + 2 && (r.top + r.bottom) / 2 > hr.bottom && out.indexOf(t) < 0) out.push(t); });
+      return { labels: out };
+    })(${JSON.stringify(column || 'BASIC')})`);
+    if (!r || r.error) throw new Error(`rowLabels: ${(r && r.error) || 'page did not answer'}`);
+    return r;
   }
 
   // 0.60.280 KB4 — James, 2026-10-29: "make the gates for them gated and have them check for the correct value". What a dropdown shows now:

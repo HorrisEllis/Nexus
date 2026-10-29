@@ -1838,3 +1838,9 @@ spec:
 # postDurable) and VE_D2 ("full" = each path before → after), and phases VE0–VE5 (the law §17.12, the recorder, nexus-self applies,
 # updates, releases with all their commits, tree snapshots naming the version, the waiting line). DONE 0.60.278.
 # Also addended 2026-10-29: docs/2026-10-07-versionium-releases-phasemap.spec (VS1–VS4, his (a), 0.60.277).
+
+# ADDENDUM 2026-10-29 (0.60.281) — registered: docs/2026-10-29-gigs-contacts-snowflake-phasemap.spec (1.0.0)
+# James: "update the gig files. also capturing the contact info for job applications. also snowflake plugin support to macros and
+# automation. maybe a calander or add google or apple calender?" · "Guardian picker." Decisions AP_D1–AP_D4, SN_D1; phases AP1 (a gig's
+# package rows), AP2–AP4 (contacts: backend, route/command/tool, Settings › Applications), SN1 (Snowflake as a step) DONE 0.60.281;
+# CAL0 (calendar) and GP0 (Guardian picker) open, his. Also addended: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec (AP1).

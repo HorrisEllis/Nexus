@@ -48,18 +48,21 @@ packages:
     deliveryDays: 1
     revisions: 1
     price: 35
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   standard:
     name: Bug and Test
     description: Root cause, fix and a test that keeps it fixed.
     deliveryDays: 3
     revisions: 2
     price: 90
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   premium:
     name: Stability Pass
     description: Up to 5 related bugs, fixes, tests and a short report.
     deliveryDays: 6
     revisions: 3
     price: 220
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
 faq:
   - question: What do you need?
     answer: >-

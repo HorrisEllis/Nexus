@@ -45,18 +45,21 @@ packages:
     deliveryDays: 2
     revisions: 1
     price: 60
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   standard:
     name: Rules and Build Plan
     description: Rules, project map, phased plan, and one task run with you.
     deliveryDays: 4
     revisions: 2
     price: 150
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   premium:
     name: Full AI Dev Setup
     description: Rules, plan, test checks, automation and a live walkthrough.
     deliveryDays: 7
     revisions: 3
     price: 350
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
 faq:
   - question: Which AI tools do you support?
     answer: Claude Code first, plus Cursor and similar tools that read project rules.

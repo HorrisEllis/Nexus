@@ -722,6 +722,19 @@ export const SPEC = [
     need: (a) => (a.args.length ? null : '<text>'),
     req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/notes`, body: { body: a.args.join(' '), ...(a.flags.kind ? { kind: a.flags.kind } : {}), ...(a.flags.tags ? { tags: a.flags.tags } : {}), ...(a.flags.source ? { source: a.flags.source } : {}) } }),
     print: (d, a, h) => console.log(`${h.c.mint('✓')} ${d.note.kind}: ${d.note.title}  ${h.c.dim(d.note.id)}`) },
+  // 0.60.281 AP3 — James, 2026-10-29: "also capturing the contact info for job applications." The opportunity system's contacts
+  // (lib/opportunity/contacts.js), through Copilot's /api/opportunity/contacts — captured from each job's page, or added by hand.
+  { key: 'opp.contacts', repo: false, usage: 'opp contacts [--opp <id>] [--q words] [--archived]', about: 'the contacts behind your job applications: who, role, email, phone, the job, its status',
+    req: (a) => ({ system: 'copilot', method: 'GET', path: `/api/opportunity/contacts?${[a.flags.opp ? `opp=${encodeURIComponent(a.flags.opp)}` : '', a.flags.q ? `q=${encodeURIComponent(a.flags.q)}` : '', a.flags.archived ? 'archived=1' : ''].filter(Boolean).join('&')}` }),
+    print: (d, a, h) => { for (const c of d.contacts || []) console.log(`  ${[c.name, c.role, c.company].filter(Boolean).join(' · ') || h.c.dim('(no name)')}  ${[c.email, c.phone, c.site].filter(Boolean).join('  ')}\n    ${h.c.dim(`${c.oppTitle || 'no job'} · ${c.status || '—'} · ${c.source}${c.archived ? ' · archived' : ''} · ${c.id.slice(0, 8)}`)}`); if (!(d.contacts || []).length) console.log(h.c.gray('  no contacts yet — they are captured when a job page is read (opp capture), or added with opp contact')); } },
+  { key: 'opp.contact', repo: false, usage: 'opp contact <add|edit <id>|archive <id>|restore <id>> [--name n] [--email e] [--phone p] [--company c] [--role r] [--site s] [--status s] [--opp <id>] [--notes t]', about: 'add a contact by hand, edit one, archive it (never deleted)',
+    need: (a) => (['add', 'edit', 'archive', 'restore'].includes(a.args[0]) && (a.args[0] === 'add' || a.args[1]) ? null : 'add | edit <id> | archive <id> | restore <id>'),
+    req: (a) => { const f = a.flags, body = {}; for (const k of ['name', 'email', 'phone', 'company', 'role', 'site', 'linkedin', 'status', 'notes']) if (f[k] != null) body[k] = String(f[k]); if (f.opp) body.oppId = String(f.opp);
+      const [verb, id] = a.args;
+      if (verb === 'add') return { system: 'copilot', method: 'POST', path: '/api/opportunity/contacts', body };
+      if (verb === 'edit') return { system: 'copilot', method: 'PUT', path: `/api/opportunity/contacts/${encodeURIComponent(id)}`, body };
+      return { system: 'copilot', method: 'POST', path: `/api/opportunity/contacts/${encodeURIComponent(id)}/archive`, body: { archived: verb === 'archive' } }; },
+    print: (d, a, h) => { if (d.ok === false) { console.log(h.c.red(d.error)); return; } const c = d.contact || {}; console.log(`${h.c.mint('✓')} ${a.args[0]} — ${[c.name, c.email, c.phone].filter(Boolean).join(' · ')}  ${h.c.dim(c.id || '')}${d.deduped ? h.c.dim(' (already held)') : ''}`); } },
   { key: 'notes', repo: false, usage: 'notes [--q words] [--kind k] [--loose]', about: 'every note, on every repo (--loose: only those on no repo)',
     req: (a) => ({ method: 'GET', path: `/api/notes?scope=${a.flags.loose ? 'loose' : 'all'}${a.flags.q ? `&q=${encodeURIComponent(a.flags.q)}` : ''}${a.flags.kind ? `&kind=${encodeURIComponent(a.flags.kind)}` : ''}` }),
     print: (d, a, h) => { for (const n of d.notes || []) console.log(`  ${h.c.dim(n.kind.padEnd(8))} ${n.title}  ${h.c.dim(n.repoUuid ? (d.names || {})[n.repoUuid] || n.repoUuid.slice(0, 8) : 'no repo')} ${h.c.dim(n.id)}`); if (!(d.notes || []).length) console.log(h.c.gray('  no notes')); } },

@@ -413,6 +413,9 @@ const SUITES = [
   'test-about-and-nodes.test.js',
   'test-run-log-fixes.test.js',
   'test-gated-dropdowns.test.js',          // 0.60.280 KB4–KB7 — gated dropdowns in the node, keys in macros and automation, the node upgraded, the CLI pinned
+  'test-gig-features.test.js',             // 0.60.281 AP1 — a gig's package rows: features in the .gig, checkAt/rowLabels, the fill's rows
+  'test-opportunity-contacts.test.js',     // 0.60.281 AP2–AP4 — contacts behind job applications: captured from the page, routes, command, tool, Settings › Applications
+  'test-snowflake-steps.test.js',          // 0.60.281 SN1 — Snowflake as a step in macros and workflows (route, unroute, start, wait, check, stop)
   'test-versionium-everywhere.test.js',   // 0.60.278 VE0–VE5 — every change and every version in Versionium, in full (§17.12)
   'test-versionium-owns-releases.test.js', // 0.60.277 VS1–VS4 — Versionium owns the changelogs and the release logic (his (a), §5.15)
   'test-dropdown-keys.test.js',           // 0.60.275 KB1 — dropdowns: wait for the page, arrows, the number

@@ -45,6 +45,13 @@ const FILES = [
     I('clear-glass/renderer/browser.js'),                      // window.cg — mount({ cg }) and offer() after dom:pick-result
     I('clear-glass/src/ipc/bridge.js'),                        // IPC siteKeys:set (through the preload's shortcuts.siteSet)
   ]],
+  // 0.60.281 AP2–AP4, SN1 — James, 2026-10-29: "update the gig files. also capturing the contact info for job applications. also snowflake
+  // plugin support to macros and automation."
+  ['lib/opportunity/contacts.js', I('lib/opportunity/contacts.js'), [I('lib/opportunity/store.js')]],   // require — T.contacts, jaa, ledger
+  ['clear-glass/renderer/settings/sections/applications.js', I('clear-glass/renderer/settings/sections/applications.js'), [   // AP4 Settings › Applications
+    I('clear-glass/src/ipc/bridge.js'),                        // IPC applications:call (cg.applications.call) → _opportunityCall
+  ]],
+  ['clear-glass/src/net/step.js', I('clear-glass/src/net/step.js'), []],   // SN1 — pure; the service and transport are handed in (deps)
   ['clear-glass/src/page/state-diff.js', I('clear-glass/src/page/state-diff.js'), []],      // 0.60.221 FP4 — pure; first used 0.60.273
   ['clear-glass/src/about/index.js', I('clear-glass/src/about/index.js'), []],   // 0.60.269 — versions and the update check (fetch, no requires)
   ['clear-glass/renderer/settings/sections/about.js', I('clear-glass/renderer/settings/sections/about.js'), [   // 0.60.269 Settings › About
@@ -466,6 +473,16 @@ const CONSUMERS = [
   [I('cos/testenv/index.js'), I('cos/testenv/run-target.js'), '0.60.244 SV0 the runTarget getter (lazy: run-target.js requires index.js)'],
   [I('idearium/api/index.js'), I('lib/system-boundary.js'), '0.60.250 SV1 GET /api/system/tables → tables(): the shared store\'s writers and readers per table'],
   [I('idearium/ui/settings.html'), I('idearium/api/index.js'), '0.60.250 SV1 the Sovereignty card: GET /api/system/tables?system=<it>'],
+  [I('lib/opportunity/index.js'), I('lib/opportunity/contacts.js'), '0.60.281 AP2 capture()/prepare() → captureFor(opp, page): the job page\'s contacts'],
+  [I('copilot/routes/opportunity.js'), I('lib/opportunity/contacts.js'), '0.60.281 AP3 GET|POST /api/opportunity/contacts, PUT /:id, POST /:id/archive (through O.contacts)'],
+  [I('lib/agent-tools/tools/opportunity/opportunity.js'), I('lib/opportunity/contacts.js'), '0.60.281 AP3 contacts / contact_add / contact_edit / contact_archive'],
+  [I('idearium/cli/route-commands.js'), I('copilot/routes/opportunity.js'), '0.60.281 AP3 opp.contacts / opp.contact rows → copilot /api/opportunity/contacts (nexus-client)'],
+  [I('clear-glass/src/ipc/bridge.js'), I('copilot/routes/opportunity.js'), '0.60.281 AP4 _opportunityCall: HTTP :3750 /api/opportunity/(status|list|contacts…), an allowlist (§5.15)'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/net/step.js'), '0.60.281 SN1 this.netStep → netStep(service, host, ensureBridge, fetchVia, pluginOn) handed to driver.netStep'],
+  [I('clear-glass/src/driver/index.js'), I('clear-glass/src/net/step.js'), '0.60.281 SN1 _net(): the driver action net calls the netStep the bridge handed in'],
+  [I('lib/automation/engine.js'), I('clear-glass/src/driver/index.js'), '0.60.281 SN1 browser step "network" → _drive(..., \'net\', { do, site, timeoutMs })'],
+  [I('lib/agent-tools/tools/browser/browser-action.js'), I('clear-glass/src/driver/index.js'), '0.60.281 SN1 network → driver.exec { action: \'net\' } (macro steps), through Guardian'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/driver/index.js'), '0.60.281 AP1 _gigFeatures: choose / readChoice / checkAt / rowLabels per package row'],
 ];
 
 function mapBuildSurface(driver) {

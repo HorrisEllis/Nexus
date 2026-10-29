@@ -42,18 +42,21 @@ packages:
     deliveryDays: 2
     revisions: 1
     price: 50
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   standard:
     name: Core Coverage
     description: Tests for your main features and failure cases, plus a bug list.
     deliveryDays: 5
     revisions: 2
     price: 150
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   premium:
     name: Full Test Setup
     description: Broad coverage, CI on GitHub, and a guide to adding tests.
     deliveryDays: 9
     revisions: 3
     price: 350
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
 faq:
   - question: Which test tools do you use?
     answer: Whatever your project already uses. If none, Node's built-in test runner or Jest.

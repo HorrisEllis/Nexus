@@ -167,6 +167,7 @@ function parseGig(text) {
       deliveryDays: _int(p.deliveryDays ?? p.delivery ?? p.days, 1, `${tier} delivery days`, warnings, tier === 'basic' ? 3 : tier === 'standard' ? 5 : 7),
       revisions: /unlimited/i.test(String(p.revisions)) ? 'unlimited' : _int(p.revisions, 0, `${tier} revisions`, warnings, 1),
       price: _int(String(p.price ?? '').replace(/[^0-9.]/g, ''), LIMITS.minPrice, `${tier} price`, warnings, tier === 'basic' ? 30 : tier === 'standard' ? 60 : 120),
+      features: _features(p.features, tier, warnings),
     };
   }
   const order = TIERS.filter(t => packages[t]);
@@ -184,6 +185,25 @@ function parseGig(text) {
   return { ok: true, gig, warnings };
 }
 
+// 0.60.281 AP1 — James, 2026-10-29: "update the gig files." Fiverr's package rows (Number of APIs integrated, Data Syncing …) differ by
+// subcategory, so they are data in the gig, never code: features: { "<the row label as Fiverr shows it>": value }. A number or text picks that
+// option in the row's dropdown; yes/no (true/false) ticks or clears the row's checkbox. A row the page shows and the gig lacks is listed back.
+function _features(raw, tier, warnings) {
+  if (raw == null || raw === '') return {};
+  if (typeof raw !== 'object' || Array.isArray(raw)) { warnings.push(`the ${tier} features are not "row label: value" pairs; ignored`); return {}; }
+  const out = {};
+  for (const [k, v] of Object.entries(raw)) {
+    const label = String(k).replace(/\s+/g, ' ').trim();
+    if (!label || label.length > 80) { warnings.push(`a ${tier} feature row label is empty or over 80 characters; ignored`); continue; }
+    if (v === true || v === false) out[label] = v;
+    else if (/^(yes|y|on|true|✓)$/i.test(String(v).trim())) out[label] = true;
+    else if (/^(no|n|off|false|✗)$/i.test(String(v).trim())) out[label] = false;
+    else if (v == null || String(v).trim() === '') { warnings.push(`the ${tier} feature "${label}" has no value; ignored`); }
+    else out[label] = typeof v === 'number' ? v : String(v).trim().slice(0, 60);
+  }
+  return out;
+}
+
 /** gigParts(gig) → [{ key, label, text }] — each part on its own, in the order Fiverr's editor asks for them. */
 function gigParts(gig) {
   if (!gig) return [];
@@ -196,6 +216,8 @@ function gigParts(gig) {
     out.push({ key: `${t}.name`, label: `${t[0].toUpperCase() + t.slice(1)} — name`, text: p.name });
     out.push({ key: `${t}.description`, label: `${t[0].toUpperCase() + t.slice(1)} — description`, text: p.description });
     out.push({ key: `${t}.terms`, label: `${t[0].toUpperCase() + t.slice(1)} — delivery, revisions, price`, text: `${p.deliveryDays} day${p.deliveryDays === 1 ? '' : 's'} · ${p.revisions === 'unlimited' ? 'unlimited' : p.revisions} revision${p.revisions === 1 ? '' : 's'} · $${p.price}` });
+    const fe = Object.entries(p.features || {});
+    if (fe.length) out.push({ key: `${t}.features`, label: `${t[0].toUpperCase() + t.slice(1)} — package rows`, text: fe.map(([k, v]) => `${k}: ${v === true ? 'yes' : v === false ? 'no' : v}`).join(' · ') });
   }
   if (gig.description) out.push({ key: 'description', label: 'Description', text: gig.description });
   (gig.faq || []).forEach((x, i) => { out.push({ key: `faq.${i}.question`, label: `FAQ ${i + 1} — question`, text: x.question }); out.push({ key: `faq.${i}.answer`, label: `FAQ ${i + 1} — answer`, text: x.answer }); });
@@ -340,6 +362,7 @@ function gigTemplate() {
     `    deliveryDays: ${days}`,
     `    revisions: ${rev}`,
     `    price: ${price}            # US dollars, at least ${L.minPrice}; basic < standard < premium`,
+    '    features: {}        # Fiverr\'s package rows for your subcategory, as the page labels them: "Number of APIs integrated": 2, "Data Syncing": yes',
   ].join('\n');
   const text = [
     `# Clear Glass gig file (${GIG_FORMAT}) — a template. Fill it in, then load it: Settings → Autofill → Gig → "Load a gig file…".`,

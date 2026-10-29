@@ -387,6 +387,11 @@ class IpcBridge {
     this.app.post('/cli/net/bridge/use',    _netRoute((b) => _net().useBridge(b.n)));
     this.app.post('/cli/net/https-only',    _netRoute((b) => _net().setHttpsOnly(b.on !== false && b.on !== 'off')));
     this.app.post('/cli/net/check',         _netRoute(() => { _netHost(); return _net().checkCircuit({ fetchVia: _fetchVia }); }));
+    // 0.60.281 SN1 — James, 2026-10-29: "also snowflake plugin support to macros and automation." The driver's `net` action (a macro step,
+    // a workflow's "Network (Snowflake)") runs src/net/step.js on this same service and transport; off when the Snowflake plugin is off.
+    this.netStep = (args, urlOf) => require('../net/step').netStep({ service: _net(), host: _netHost(), ensureBridge: _ensureBridge, fetchVia: _fetchVia, urlOf,
+      pluginOn: () => !this.pluginHost || (this.pluginHost.list() || []).some(p => p.name === 'snowflake' && p.state === 'active') }, args);
+    if (this.driver) this.driver.netStep = this.netStep;
     // BS1/BS7 (0.60.179) — Firefox import, for real (src/import/firefox.js). Cookies go into the everyday session (Electron's default, where an
     // ordinary window's page loads) or a provider tab's; never into a Snowflake compartment. No cookie value leaves this route.
     const _ffSession = (into) => {
@@ -1738,6 +1743,7 @@ class IpcBridge {
     ipcMain.handle('autofill:gig:setLast', async (e, { gig } = {}) => { try { if (gig && gig.title && this.autofillStore) { this.autofillStore.setLastGig(gig); return { ok: true }; } } catch (err) { return { ok: false, error: err.message }; } return { ok: false, error: 'no gig' }; });   // 0.60.267 — the panel's gig is the chips' gig
     ipcMain.handle('autofill:fillOne', async (e, d = {}) => this._autofillFillOne(d));              // 0.60.267 AF3 — a chip clicked
     ipcMain.handle('autofill:anchor', async (e, d = {}) => this._autofillAnchor(d));                // 0.60.268 AF5 — a field anchored to what it is
+    ipcMain.handle('applications:call', async (e, d = {}) => this._opportunityCall(d));          // 0.60.281 AP4 — Settings › Applications, through Copilot
     ipcMain.handle('about:info', async () => this._aboutInfo());                                   // 0.60.269 — Settings › About
     ipcMain.handle('about:check', async () => this._aboutCheck());                                 // 0.60.269 — newer Electron / Clear Glass / Nexus?
     ipcMain.handle('autofill:gig:saveRecording', async (e, d = {}) => this._gigSaveRecording(d));  // 0.60.224 — his choices → the page's macro   // 0.60.222 — a picked element taught to a gig part
@@ -2254,6 +2260,58 @@ class IpcBridge {
     return g;
   }
 
+  // 0.60.281 AP4 — James, 2026-10-29: "also capturing the contact info for job applications." The applications and their contacts are the
+  // opportunity system's (lib/opportunity, served by Copilot); Clear Glass reaches them only through Copilot's routes (§5.15), and only these.
+  // Copilot down → the screen says so; nothing here holds a copy.
+  async _opportunityCall({ method = 'GET', path = '', body = null } = {}) {
+    const ALLOW = [['GET', /^\/api\/opportunity\/(status|list|contacts)(\?.*)?$/], ['POST', /^\/api\/opportunity\/contacts$/],
+      ['PUT', /^\/api\/opportunity\/contacts\/[\w-]+$/], ['POST', /^\/api\/opportunity\/contacts\/[\w-]+\/archive$/]];
+    const m = String(method).toUpperCase(), p = String(path);
+    if (!ALLOW.some(([am, re]) => am === m && re.test(p))) return { ok: false, error: `not an Applications route: ${m} ${p}` };
+    const payload = body && m !== 'GET' ? JSON.stringify(body) : null;
+    return new Promise((resolve) => {
+      const req = require('http').request({ host: '127.0.0.1', port: Number(process.env.COPILOT_PORT || 3750), path: p, method: m, timeout: 8000,
+        headers: { 'Content-Type': 'application/json', ...(payload ? { 'Content-Length': Buffer.byteLength(payload) } : {}) } }, (res) => {
+        let d = ''; res.on('data', (c) => { d += c; });
+        res.on('end', () => { try { resolve(JSON.parse(d)); } catch (_) { resolve({ ok: false, error: `Copilot answered ${res.statusCode} with no JSON` }); } });
+      });
+      req.on('timeout', () => { req.destroy(); resolve({ ok: false, error: 'Copilot did not answer in 8 s', down: true }); });
+      req.on('error', (err) => resolve({ ok: false, error: `Copilot is not running (${err.code || err.message}) — applications live there`, down: true }));
+      if (payload) req.write(payload);
+      req.end();
+    });
+  }
+
+  // 0.60.281 AP1 — the package rows of the pricing page from gig.packages[tier].features (see _gigFill): { filled, failed, unlisted }
+  async _gigFeatures(agentId, gig) {
+    const out = { filled: [], failed: [], unlisted: [] };
+    const named = new Set();
+    for (const tier of ['basic', 'standard', 'premium']) {
+      const p = gig.packages && gig.packages[tier]; if (!p || !p.features) continue;
+      const column = tier.toUpperCase();
+      for (const [row, value] of Object.entries(p.features)) {
+        named.add(row.toLowerCase());
+        try {
+          if (value === true || value === false) {
+            const c = await this.driver.exec({ agentId, action: 'checkAt', column, row, checked: value, by: 'person' });
+            out.filled.push({ tier, row, value, changed: c.changed });
+          } else {
+            const c = await this.driver.exec({ agentId, action: 'choose', column, row, option: String(value), by: 'person' });
+            const g = await this.driver.exec({ agentId, action: 'readChoice', column, row, is: String(value), by: 'person' });
+            if (!g.matches) throw new Error(`the row shows "${g.shown}" after the pick, not "${value}"`);
+            out.filled.push({ tier, row, value, shown: c.option, clickedBy: c.clickedBy });
+          }
+        } catch (err) { out.failed.push({ tier, row, value, why: err.message }); }
+      }
+    }
+    try {
+      const rl = await this.driver.exec({ agentId, action: 'rowLabels', column: 'BASIC', by: 'person' });
+      const known = /^(packages|price|delivery time|revisions?|total|description|name)$/i;
+      out.unlisted = (rl.labels || []).filter(l => !named.has(l.toLowerCase()) && !known.test(l));
+    } catch (err) { out.rowsWhy = err.message; }
+    return out;
+  }
+
   async _gigFill({ gig, agentId = 'default', minConfidence = 'medium' } = {}) {
     if (!this.dom) return { error: 'dom bridge unavailable' };
     if (!gig || !gig.title) return { error: 'write the gig first' };
@@ -2303,6 +2361,10 @@ class IpcBridge {
         throw new Error('not found on the page');
       } catch (err) { r.notFound.push({ key: part, why: err.message }); }
     }
+    // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." The package rows come from the gig (features), never from code: a number or text
+    // is chosen in that tier's column and row (the gated choose, read back), yes/no ticks or clears that row's checkbox (checkAt, read back).
+    // The page's rows the gig has no value for are listed (r.features.unlisted), so he can add them to the gig.
+    if (where.page === 'pricing' && this.driver) r.features = await this._gigFeatures(agentId, gig);
     // 0.60.224 — his recorded choices for this page (Service type, the metadata boxes, the pricing rows …) replayed after the fill, as him
     if (where.page && this.macroTool) {
       let has = null; try { has = await this.macroTool.execute({ action: 'get', name: GP.macroName(where.page) }); } catch (_) {}
@@ -2311,7 +2373,7 @@ class IpcBridge {
         r.macro = m && m.error ? { name: GP.macroName(where.page), ok: false, error: m.error, failedAtStep: m.failedAtStep } : { name: GP.macroName(where.page), ok: true, steps: m && m.stepsCompleted };
       }
     }
-    if (!r.error) this.postEvent('autofill.gig.filled', { agentId, page: r.page, filled: r.filled.length, learned: r.learned.length, notFound: r.notFound.length, failed: r.failed.length, ts: Date.now() });
+    if (!r.error) this.postEvent('autofill.gig.filled', { agentId, page: r.page, filled: r.filled.length, learned: r.learned.length, notFound: r.notFound.length, failed: r.failed.length, features: r.features ? { filled: r.features.filled.length, failed: r.features.failed.length, unlisted: r.features.unlisted.length } : null, ts: Date.now() });
     return r;
   }
 

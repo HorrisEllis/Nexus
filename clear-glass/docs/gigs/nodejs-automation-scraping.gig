@@ -42,18 +42,21 @@ packages:
     deliveryDays: 2
     revisions: 1
     price: 30
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   standard:
     name: Scraper or Automation
     description: Scraper or automation with an output file and a readme.
     deliveryDays: 4
     revisions: 2
     price: 90
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
   premium:
     name: Desktop Tool or Multi-Step Flow
     description: Small Electron tool or multi-step automation, tested and documented.
     deliveryDays: 7
     revisions: 3
     price: 250
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
 faq:
   - question: What do you need from me?
     answer: >-
