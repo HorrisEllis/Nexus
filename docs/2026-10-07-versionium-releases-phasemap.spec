@@ -187,3 +187,17 @@ spec:
 # CHANGELOG-*.md now live in versionium/changelogs/ (git mv, 472 files). lib/changelogs.js is the only reader of the location (the root is
 # still read after it, for older trees). Idearium reads one with GET /api/releases/changelog and `system changelog`, and the Releases view
 # opens to its text. A new release's changelog is written at lib/changelogs.js pathFor(version).
+
+# ADDENDUM 2026-10-29 (0.60.276) — 0.60.274 breaks §5.15; open, the choice goes to him
+# James, 2026-10-29: "Remember sovereignty. Add that to the axioms and then add it to the claude.md to read the axioms in the docs"
+# Checked against the new §5.15 (docs/AXIOMS-v3.1.md). versionium/changelogs is in Versionium's folder, so by rule 2 Versionium owns it. Yet
+# lib/changelogs.js reads it directly, as do its six readers (release-version, nexus-releases, phase-census, spec-census, context-atlas,
+# scripts/release-zip), and Idearium's GET /api/releases/changelog reads it through lib. That breaks rule 1.
+# Making them ask Versionium over HTTP would break rule 3: the release checks (CK-253) and the release zip would fail whenever Versionium is
+# down. The axioms conflict here, so the choice is his. The two ways, with the coder's recommendation named as the coder's:
+#   (a) Versionium owns the files and the release logic that reads them: release-version, nexus-releases and lib/changelogs move into
+#       versionium/lib, and Idearium and the checks ask Versionium.
+#   (b) Nexus's root owns the files (back to the root, or docs/changelogs/), and Versionium keeps what it already keeps: each release's
+#       record, with the changelog's name, synced by lib/nexus-releases. The coder recommends (b): it is smaller, nothing depends on
+#       Versionium being up, and it matches what Versionium already owns.
+# Nothing has moved yet.

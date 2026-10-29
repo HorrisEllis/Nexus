@@ -36,6 +36,17 @@ historical record, not edited further.*
 > only (docs/2026-10-05-cli-data-code-phasemap.spec HG7). Nothing else in this
 > file changed.
 
+> **§ADDENDUM 2026-10-29** — James: "Remember sovereignty. Add that to the axioms and then add it to the claude.md to read the axioms in
+> the docs". §5.9 said every system is sovereign and no system reaches inside another; his own rules that sharpen it lived only in
+> handoffs and chats, so they were forgotten in practice (0.60.274 moved the changelogs into versionium/ and then had lib/ read that
+> folder directly). They are now law, as §5.15, built from what is on record: "rememeber each system is sovereign" (his words,
+> 2026-10-25, docs/2026-10-25-automation-engine-sovereignty-graph.md) · the 2026-09-19 handoff's "Rule from James: each system is
+> sovereign; if cortex going down breaks something, it gets moved" (recorded as his rule, not as a quote) · the 2026-09-23 handoff's
+> sovereignty rule, the coder's wording of the architecture memory "each system owns writing/storing its own data": a node type's owner
+> is the only writer and the canonical reader, and the others go through its API. One quick-reference
+> line added for it. Nothing else in this file changed.
+
+
 ---
 
 ## Preamble
@@ -208,6 +219,16 @@ Language syntax belongs to the language, not the architecture. Structure is sepa
 Any implementation may be replaced provided it satisfies the same contract. Replacing the UI, the database, the transport, the language, or the renderer must not require changes outside the declared interface. The contract — not the implementation — is the dependency.
 *↳ §16.6 (the architecture decides) says local decisions bend to global invariants. §5.14 is what that buys you: an implementation is local, the contract is the global invariant, so the implementation is the thing allowed to change.*
 
+
+**§5.15 Sovereignty Is Kept, Not Just Declared** *(2026-10-29, on his word)*
+§5.9 in practice, four rules:
+1. **One owner per kind of data.** The system that owns a kind of data (a table, a store, a folder of files, a node type) is its only writer and its canonical reader. Every other system asks the owner through its contract. It never reads or writes the owner's files, tables or folders, even when the path is right there.
+2. **Placement is ownership.** Putting a thing in a system's folder makes that system its owner, and obliges that system to serve it to the others.
+3. **One system's outage breaks no other.** If a system going down breaks something in another system, the thing that broke is in the wrong place, and it moves to the system it depends on, or stops depending on it.
+4. **Checked at every placement.** Before a file, table, route or reader is added, its owner is named, and so is how the others reach it. A new edge that crosses into another system's internals is designed out before code is written (the boundary ratchet, lib/system-boundary.js, enforces it after).
+*↳ James, 2026-10-25: "rememeber each system is sovereign." · 2026-10-29: "Remember sovereignty." Rules 1 and 3 are from the record
+(the 2026-09-23 handoff's "each system owns writing/storing its own data", and the 2026-09-19 handoff's rule from him that if cortex
+going down breaks something, it gets moved); their wording here is the coder's. §5.15 is §5.9 made checkable; it adds no new value, only the tests that show whether §5.9 holds.*
 ---
 
 ### § Group 6 — Documentation
@@ -564,6 +585,7 @@ A "faster," "cheaper," or "better" claim is only as good as the measurement behi
 §5.12  The UI is disposable.
 §5.13  Syntax is not architecture.
 §5.14  Every layer is replaceable.
+§5.15  Sovereignty is kept, not just declared: one owner per kind of data, placement is ownership, one system's outage breaks no other.
 §6.1   Documentation is generated from proof, not written as aspiration.
 §6.2   Always read before building.
 §6.3   Every spec is living and tracked in the registry.

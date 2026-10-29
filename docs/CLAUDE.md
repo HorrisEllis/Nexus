@@ -308,3 +308,18 @@ see what you mean but there are way more idearium phases than that."
 James, 2026-10-28: "can we move the changelogs to versionium and idearium"
 - A release's `CHANGELOG-<version>.md` is written in `versionium/changelogs/` (lib/changelogs.js `pathFor`), not at the repository root.
   Read them through lib/changelogs.js, `system changelog [x.y.z]`, or Idearium's Releases view.
+
+## ADDENDUM 2026-10-29 — read the axioms first; remember sovereignty
+James, 2026-10-29: "Remember sovereignty. Add that to the axioms and then add it to the claude.md to read the axioms in the docs"
+
+Said the day after 0.60.274. That release moved the changelogs into `versionium/` and then had `lib/` read the folder directly, which is
+one system reaching into another's files.
+- **Read the axioms at the start of every session.** Read `docs/AXIOMS-v3.1.md`: at least Part IV (the quick reference, one line per law)
+  and Group 5C (sovereignty, §5.9–§5.15) in full. Before a decision, read the laws it touches, and cite them in the owning map's
+  `decisions:`. The rules above are the operational distillation; the axioms are the law they come from.
+- **Sovereignty is checked at every placement (§5.9, §5.15).** Before a file, table, route or reader is added:
+  - name the system that owns it, and how the others reach it (its route or contract, never its files);
+  - placing a thing in a system's folder makes that system its owner, and obliges it to serve it;
+  - one system going down must break no other; if it would, the piece is in the wrong place.
+  - A new edge into another system's internals is designed out before code is written (the boundary ratchet,
+    `lib/system-boundary.js`, catches it after).
