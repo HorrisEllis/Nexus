@@ -324,6 +324,60 @@ spec:
       error_paths: ["a route error → said in the tab"]
       acceptance: ["driven in Clear Glass: the tab lists the checklist, a split preview shows its pieces"]
 
+    # 0.60.286 FA8–FA10 — James, 2026-10-29: "yes, and can you do what you can to get idearium to work dynamically? like type in the cli,
+    # determine context needed, build dag. search the project for context, ask user about any gaps, then contract, etc"
+    - id: MOD-INTENT-FLOW
+      name: intent-flow
+      uuid: nexus-project-spine-intent-flow-v1-0000-2026-1029-001
+      path: lib/intent-flow.js
+      phase: FA8_intent_to_contract
+      description: "run({ text, files, project, answers }) takes what he typed and goes, in his order: the intent (verb, terms, paths named); the context needed (the components the terms and paths point at, scored, through the spine); the DAG (those components, what they use first, who uses them after, ordered so a dependency is built before what needs it); the context found (each component's matching lines); the gaps (a term found nowhere, a path that does not exist, two components tied for one term, no test near the change, no done-when) each as a question with options; then the contract — RAID's v2 contract (context gate with the refs, one build gate per DAG node in order, a verify gate with the tests) — once every blocking gap has an answer. Deterministic: no model is asked."
+      deps: [{ name: spine }, { name: adapters }]
+      exports:
+        - "run({ text, files, project, answers }) → { stages: [{ id, say }], intent, needed, dag, found, gaps, contract | null, blockedBy }"
+        - "STAGES = ['intent', 'context-needed', 'dag', 'context-found', 'gaps', 'contract']"
+      gate_pipeline:
+        - "GATE-FA8-001: text → verb, terms, named paths"
+        - "GATE-FA8-002: terms + paths → scored components (path 3, exports 2, content 1) → the top ones"
+        - "GATE-FA8-003: components + spine wires → DAG (uses before, used-by after) → topological order"
+        - "GATE-FA8-004: each component → its lines that hold the terms"
+        - "GATE-FA8-005: gaps → questions with options; a blocking gap unanswered → no contract, said"
+        - "GATE-FA8-006: answers → the v2 contract (cortex/core/raid/contract-gates.js scaffold shape), validated"
+      behavioral_contracts:
+        - "the user is asked last, and only about what the project could not answer"
+        - "the contract names every file it will touch and the order"
+      error_paths:
+        - "an empty intent → refused"
+        - "no component matches → a gap asking which part of the project it is about"
+      acceptance:
+        - "an intent naming the gig menu finds clear-glass/src/autofill/gig-menu.js, orders its dependency first, asks for done-when, and with the answer writes a contract whose build gates follow the DAG"
+
+    - id: MOD-INTENT-DOOR
+      name: intent-door
+      uuid: nexus-project-spine-intent-door-v1-0000-2026-1029-001
+      path: idearium/cli/route-commands.js
+      phase: FA9_the_cli_and_route
+      description: "POST /api/repos/:uuid/intent { text, answers, write } runs the flow over the repo's files; write:true saves the contract at contracts/<id>.contract through the repo layer. The command repo do <repo> \"<what you want>\" prints each stage as it lands, asks each gap at the terminal (its options numbered; Enter keeps the first), then runs again with the answers; --write saves the contract, then contract gates / contract run take it from there."
+      deps: [{ name: intent-flow }, { name: repo-layer }]
+      exports: ["route repo.intent", "command repo.do"]
+      gate_pipeline: ["GATE-FA9-001: the flow → the stages printed → each gap asked → the flow again with the answers → the contract"]
+      behavioral_contracts: ["nothing is written without --write (or write:true)"]
+      error_paths: ["no such repo → 404", "not a terminal → the gaps are printed with --answer id=value to give them"]
+      acceptance: ["test-intent-flow IF-03: the command row builds the request; the route answers the stages and writes the contract"]
+
+    - id: MOD-INTENT-SCREEN
+      name: intent-screen
+      uuid: nexus-project-spine-intent-screen-v1-0000-2026-1029-001
+      path: idearium/ui/js/repo-intent.js
+      phase: FA10_the_do_box
+      description: "On the Finish tab, a Do box: type what you want; the stages appear (intent, context needed, the DAG in order, the lines found); each gap is a question with a dropdown of its options or a free answer; Contract writes it when every blocking gap is answered."
+      deps: [{ name: intent-door }]
+      exports: ["renderIntent(el, repo)"]
+      gate_pipeline: ["GATE-FA10-001: text → POST intent → stages → answers → POST intent with answers and write"]
+      behavioral_contracts: ["a gap is asked once; an answer stays while the text does"]
+      error_paths: ["a route error → said in the box"]
+      acceptance: ["test-intent-flow IF-04 in Clear Glass: typed, the DAG and a gap's dropdown show; answered, the contract is written"]
+
   events:
     idearium:
       - "idearium.repo.spine.written { repoUuid, components, wires, unknown }"

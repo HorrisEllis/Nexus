@@ -763,6 +763,33 @@ export const SPEC = [
       if (!(d.exchanges || []).length) console.log(h.c.gray('  no history nodes yet — new exchanges write them; --backfill turns the old log into nodes'));
     } },
   // 0.60.286 FA6 — James, 2026-10-29: "create all the capability to finish this or any other project in the repo" (docs/project-spine.spec)
+  // 0.60.286 FA9 — James, 2026-10-29: "like type in the cli, determine context needed, build dag. search the project for context, ask user about any gaps, then contract, etc"
+  { key: 'repo.do', repo: true, usage: 'repo do <repo> "<what you want>" [--answer id=value …] [--write]', about: 'type what you want: the intent, the context it needs, the DAG in build order, the lines found, then each gap asked here (numbered options, Enter takes the first), then the contract (RAID v2: context → build gates in DAG order → verify); --write saves it at contracts/<id>.contract for contract gates / contract run',
+    need: (a) => (a.args.length ? null : '"<what you want>"'),
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/intent`, body: { text: a.args.join(' '), answers: _answersOf(a.flags), write: !!a.flags.write }, timeoutMs: 120000 }),
+    print: (d, a, h) => {
+      for (const s of d.stages || []) console.log(`  ${h.c.mint('▸')} ${h.c.bold(s.id.padEnd(14))} ${s.say}`);
+      for (const n of (d.dag && d.dag.nodes) || []) { const f = (d.found || []).find(x => x.path === n.path); console.log(`      ${h.c.dim(n.role.padEnd(8))} ${n.path}${f && f.lines.length ? h.c.dim(`  · ${f.lines.slice(0, 2).map(l => `${l.line}: ${l.text.slice(0, 60)}`).join(' · ')}`) : ''}`); }
+      for (const g of d.gaps || []) console.log(`  ${g.answer != null ? h.c.green('✓') : g.blocking ? h.c.amber('?') : h.c.dim('·')} ${g.id}: ${g.question}${g.answer != null ? h.c.dim(` → ${g.answer}`) : ''}`);
+      if (d.written) console.log(`${h.c.mint('✓')} wrote ${d.written} — next: contract gates ${d.written}`);
+      else if (d.contract && !a.flags.write) console.log(h.c.dim('  --write to save the contract'));
+    },
+    // each gap still open is asked at the terminal; the flow runs again with the answers (and with --write, saves the contract)
+    follow: async (d, a, h) => {
+      const open = (d.gaps || []).filter(g => g.answer == null && (g.blocking || a.flags.all));
+      if (!open.length) return null;
+      if (!process.stdin.isTTY) { console.log(h.c.dim(`  answer with: ${open.map(g => `--answer ${g.id}="…"`).join(' ')}`)); return null; }
+      const rl = (await import('readline')).createInterface({ input: process.stdin, output: process.stdout });
+      const ask = (q) => new Promise(res => rl.question(q, res));
+      a._answers = a._answers || _answersOf(a.flags);
+      for (const g of open) {
+        console.log(`\n${h.c.bold(g.question)}`); (g.options || []).forEach((o, i) => console.log(`  ${i + 1}) ${o}`));
+        const r = String(await ask('  > ')).trim();
+        a._answers[g.id] = /^\d+$/.test(r) && g.options && g.options[+r - 1] ? g.options[+r - 1] : r || (g.options || [])[0] || '';
+      }
+      rl.close();
+      return { method: 'POST', path: `/api/repos/${a.repo.uuid}/intent`, body: { text: a.args.join(' '), answers: a._answers, write: !!a.flags.write }, timeoutMs: 120000 };
+    } },
   { key: 'repo.finish', repo: true, usage: 'repo finish <repo>', about: 'one checklist of what stands between the project and done: the spine (its component registry) written and matching the code, wires that resolve, docs and hard-coded plans converted, files holding several components, phases done — each with the command that moves it',
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/finish`, timeoutMs: 120000 }),
     print: (d, a, h) => { console.log(`${h.c.bold(d.name || '')} — ${d.open ? h.c.amber(`${d.open} open`) : h.c.green('nothing open')} · ${(d.stats || {}).components || 0} components · ${(d.stats || {}).wires || 0} wires`);
@@ -1616,6 +1643,13 @@ function _lines(v) {
   const from = +m[1], to = +(m[2] || m[1]);
   return from >= 1 ? { from: Math.min(from, to), to: Math.max(from, to) } : { error: 'lines start at 1' };
 }
+// 0.60.286 FA9 — --answer id=value (once or many) and --answers '{"id":"value"}' → { id: value }
+function _answersOf(flags = {}) {
+  const out = {};
+  if (flags.answers) { try { Object.assign(out, JSON.parse(flags.answers)); } catch (_) { /* not JSON: ignored, --answer still read */ } }
+  for (const x of [].concat(flags.answer || [])) { const s = String(x); const i = s.indexOf('='); if (i > 0) out[s.slice(0, i).trim()] = s.slice(i + 1).trim(); }
+  return out;
+}
 function _printSurface(d, a, h) {
   if (!d.open) console.log(h.c.gray('  no file open'));
   else console.log(`  ${h.c.bold(d.open)}${d.sel ? h.c.dim(`  lines ${d.sel.from}–${d.sel.to}`) : ''}${d.chunk ? h.c.dim(`  chunk ${d.chunk}`) : ''}`);
@@ -1642,6 +1676,14 @@ export function makeRouteCommands(h) {
       if (d && d.ok === false) h.die(d.error || 'refused');
       if (flags.json) { process.stdout.write(`${JSON.stringify(d, null, 2)}\n`); return; }
       row.print(d && d.data && !d.tasks && !d.rows ? { ...d, ...d.data } : d, a, h);
+      // 0.60.286 FA9 — a row may follow its answer with another request (repo do asks each gap, then runs again with the answers)
+      for (let round = 0; row.follow && round < 6; round++) {
+        const next = await row.follow(d && d.data && !d.tasks && !d.rows ? { ...d, ...d.data } : d, a, h);
+        if (!next) break;
+        try { d = await h.api(next.method, next.path, next.body || null, next.timeoutMs || 15000); } catch (e) { h.die(e.message); }
+        if (d && d.ok === false) h.die(d.error || 'refused');
+        row.print(d && d.data && !d.tasks && !d.rows ? { ...d, ...d.data } : d, a, h);
+      }
     };
   }
   return out;

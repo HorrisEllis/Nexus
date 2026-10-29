@@ -45,6 +45,9 @@
         ${cands ? `<table class="fa-table"><tr><th>file</th><th>lines</th><th>units</th><th>sections</th><th></th></tr>${cands}</table>` : '<div class="ds-mono">every file holds one component</div>'}</div>
       <div class="ds"><div class="ds-label">convert — markdown to specs, hard-coded build plans to phasemaps (sources kept)</div><ul class="fa-list">${conv || '<li class="dim">nothing to convert</li>'}</ul></div>
       <div class="ds" id="fa-plan"></div>`;
+    // 0.60.286 FA10 — the Do box first: type what you want (js/repo-intent.js)
+    const box = document.createElement('div'); box.className = 'ds'; box.id = 'fa-intent'; S.el.prepend(box);
+    if (typeof renderIntent === 'function') renderIntent(box, S.repo);
   }
 
   function showPlan(html) { const p = document.getElementById('fa-plan'); if (p) { p.innerHTML = html; p.scrollIntoView({ block: 'nearest' }); } }
