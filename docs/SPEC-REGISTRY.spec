@@ -1864,3 +1864,8 @@ spec:
 # DONE 0.60.286). Decisions FA_D1 (browser.html, a reading to confirm), FA_D2 (the registry is the spine — IN3; to confirm), FA_D3, FA_D4.
 # Also addended: clear-glass/spec/gated-flows.spec gains MOD-GM1..GM3 (the Fiverr fill menu), tied to GM1–GM3 in
 # docs/2026-10-28-gated-flows-phasemap.spec; docs/2026-10-19-infrastructure-spine-phasemap.spec (slices of IN3, AD1, AD2, AD4).
+
+# ADDENDUM 2026-10-29 — registered: docs/2026-10-29-his-loop-phasemap.spec (mapped, nothing built)
+# James: "Beyond getting fiverr gigs working. We then need the applications, port folios, appointments, calender, emails …" · "What about
+# sorting some tools by intent." · "Each problem needs to build a dag using reverse end state reasoning. Then dynamically chunk until the llm is
+# capable or we have to switch" · "Cos can be used for any code recursively." Phases HL0–HL9, GP1; specs written per phase before code.
