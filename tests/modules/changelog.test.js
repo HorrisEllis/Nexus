@@ -30,6 +30,9 @@ function makeFixture() {
     fs.readFileSync(path.join(__dirname, '..', '..', 'orchestrator', 'lib', 'changelog.js'), 'utf8')
       .replace("path.join(__dirname, '..', '..', 'docs')", "process.env.TEST_DOCS_DIR")
       .replace("path.join(__dirname, '..', '..', 'data', 'changelog-snapshot.json')", "process.env.TEST_SNAPSHOT_PATH")
+      // 0.60.289 — since 0.60.209 (DL3) the snapshot path comes from lib/data-home.js; the line above no longer matched and the copy required a
+      // lib the fixture does not have (CL-01..05 failed since). Both shapes are replaced now.
+      .replace("path.join(require('../../lib/data-home.js').dir('orchestrator'), 'changelog-snapshot.json')", "process.env.TEST_SNAPSHOT_PATH")
       .replace("path.join(__dirname, '..', '..', 'docs', 'CHANGELOG.md')", "process.env.TEST_CHANGELOG_PATH")
   );
   return dir;

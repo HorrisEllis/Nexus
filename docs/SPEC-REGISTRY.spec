@@ -1869,3 +1869,7 @@ spec:
 # James: "Beyond getting fiverr gigs working. We then need the applications, port folios, appointments, calender, emails …" · "What about
 # sorting some tools by intent." · "Each problem needs to build a dag using reverse end state reasoning. Then dynamically chunk until the llm is
 # capable or we have to switch" · "Cos can be used for any code recursively." Phases HL0–HL9, GP1; specs written per phase before code.
+
+# ADDENDUM 2026-10-29 (0.60.289) — registered: docs/2026-10-29-fiverr-income-phasemap.spec (FI0–FI14, the Fiverr chain from money back)
+# James: "Also, make a dependency graph for the fiverr gigs." Built from the end state backward, DAG-checked. The per-system document
+# docs/NEXUS-SYSTEMS-FOR-CODING.md and scripts/systems-report.js answer "a full document of each system and what it needs to get nexus coding".
