@@ -412,6 +412,7 @@ const SUITES = [
   'test-autofill-chips.test.js',         // 0.60.267 AF3 — the page reader always there; a chip under each input
   'test-about-and-nodes.test.js',
   'test-run-log-fixes.test.js',
+  'test-gated-dropdowns.test.js',          // 0.60.280 KB4–KB7 — gated dropdowns in the node, keys in macros and automation, the node upgraded, the CLI pinned
   'test-versionium-everywhere.test.js',   // 0.60.278 VE0–VE5 — every change and every version in Versionium, in full (§17.12)
   'test-versionium-owns-releases.test.js', // 0.60.277 VS1–VS4 — Versionium owns the changelogs and the release logic (his (a), §5.15)
   'test-dropdown-keys.test.js',           // 0.60.275 KB1 — dropdowns: wait for the page, arrows, the number

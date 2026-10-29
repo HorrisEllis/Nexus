@@ -64,3 +64,7 @@ body.open #panel { display: flex; animation: rise .16s ease-out; }
 #fc-input { flex: 1; resize: none; overflow-y: auto; scrollbar-width: thin; max-height: 140px; min-height: 34px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--edge-hi); background: var(--void); color: var(--ink-hi); font: 12.5px/1.45 var(--mono); outline: none; }
 #fc-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cyan) 10%, transparent); }
 #fc-send { width: 36px; height: 34px; border-radius: 10px; border: 0; cursor: pointer; color: var(--void); font-weight: 700; background: linear-gradient(135deg, var(--cyan), var(--violet)); }
+
+/* 0.60.280 KB7 — 📌 pinned */
+#fc-pin { filter: grayscale(1) opacity(.55); }
+#fc-pin.on { filter: none; color: var(--cyan); }

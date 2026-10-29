@@ -212,3 +212,59 @@ from its file the first time). The built-in pick stays as the fallback, said. Pr
 #    files: [clear-glass/renderer/site-keys/bind-bar.js, clear-glass/renderer/site-keys/bind-bar.css, clear-glass/renderer/browser.js, clear-glass/renderer/browser.html, clear-glass/renderer/settings/sections/shortcuts.js, clear-glass/renderer/settings/sections/shortcuts.css]
 #    does: "Bind a key" after an element pick; Settings › Keyboard shortcuts › Keys on sites lists, adds and removes
 #    proof: test-site-keys SK-04, SK-05 (both in Clear Glass)
+
+# ── ADDENDUM 2026-10-29 — gated dropdowns in the node, keys in macros and automation, the bundled node upgraded, the CLI button pinned ─────
+# James, 2026-10-29: "the drop downs, still aren't working. make the gates for them gated and have them check for the correct value. remember
+# this is the nodes in the settings, not hardcoded, so add capabilities to the actual backend. like the gates, add the keyboard shortcuts per
+# site to the macros and automation. that way we can bind arrow keys, or numbers to each drop down menu value. / the clearglass floating menu
+# button, can you make that an option to pin it?"
+# Grounded: macro.js ran each step and moved on (no gate checked after a step). FG3's gate-eval.js was on disk and never wired. The macro's
+# urlPattern already makes it per site. Workflows reach the driver only through a macro step, and their own "Press a key" presses once.
+# Bundled node files seed once ("his edit or delete stands"), so an improved node never reached him.
+# Readings (the coder's, to confirm):
+#  - "bind arrow keys, or numbers to each drop down menu value": a choose step can carry keysFor, a map from each option to the keys that
+#    pick it ("3": "Down Down Down Enter", "14": "1 4 Enter").
+#  - "pin": the floating CLI's button shows on every browser window at start and stays, until unpinned.
+# KB1–KB3 (0.60.275) are entered below as real phases so lib/phase-dag.js checks them.
+phases_kb:
+  KB1_choose_waits_and_keys:
+    status: BUILT 0.60.275
+    depends_on: [FG2_dropdown_choose, FG_D2_choice_is_read_back]
+    files: [clear-glass/src/driver/index.js, tests/modules/test-dropdown-keys.test.js]
+  KB2_site_keys:
+    status: BUILT 0.60.275
+    depends_on: [KB1_choose_waits_and_keys]
+    files: [clear-glass/src/shortcuts/site-keys.js, clear-glass/src/main/index.js]
+  KB3_site_keys_ui:
+    status: BUILT 0.60.275
+    depends_on: [KB2_site_keys]
+    files: [clear-glass/renderer/site-keys/bind-bar.js, clear-glass/renderer/settings/sections/shortcuts.js]
+  KB4_gates_on_macro_steps:
+    status: BUILT 0.60.280
+    depends_on: [FP3_is_the_gate_open, FG_D1_gate_is_a_step_field, KB1_choose_waits_and_keys]
+    files: [lib/agent-tools/tools/clear-glass/macro.js, lib/agent-tools/tools/clear-glass/gate-eval.js, lib/agent-tools/tools/browser/browser-action.js, clear-glass/src/driver/index.js]
+    does: >-
+      A macro step may carry a gate, checked after the step: FG3's url, selector, text, value and gone, plus choice ({ column | row |
+      selector, is }), meaning "the dropdown there now shows this value", read by the driver's new readChoice. An open gate goes on. A closed
+      one is polled up to timeoutMs. If it stays closed the step runs again, up to retries (default 2), and then the run stops with what the
+      gate saw. The gate is validated when the macro is made.
+  KB5_keys_in_macros_and_automation:
+    status: BUILT 0.60.280
+    depends_on: [KB4_gates_on_macro_steps, KB2_site_keys]
+    files: [clear-glass/src/driver/index.js, lib/agent-tools/tools/browser/browser-action.js, lib/automation/steps.js, lib/automation/engine.js]
+    does: >-
+      A choose step takes pick (auto | pointer | keys | number; not `by`, which every run already uses for who acted), keys (an explicit sequence) and keysFor (per option). A macro step press_key
+      takes key and times. A workflow's "Press a key" takes times. A macro bound to a site key (KB2) is the per-site keyboard shortcut.
+  KB6_bundled_nodes_upgrade:
+    status: BUILT 0.60.280
+    depends_on: [KB4_gates_on_macro_steps]
+    files: [lib/automation-nodes.js, clear-glass/src/ipc/bridge.js, clear-glass/automation/nodes/fiverr-gig-choose-delivery.macro]
+    does: >-
+      A bundled node lists the fingerprints it supersedes. His copy (in the library and in the macro store) whose fingerprint is one of them
+      was never edited, so it is upgraded, and the upgrade is said. An edited copy stays his, and the new one lands beside it as <name>.new,
+      said. The delivery node is now gated: choose, then the gate { choice: { column: tier, is: delivery } } with 2 retries.
+  KB7_pin_the_floating_cli:
+    status: BUILT 0.60.280
+    depends_on: [BS6_float_cli]
+    files: [clear-glass/src/main/float-cli.js, clear-glass/renderer/float-cli.js, clear-glass/renderer/float-cli.html, clear-glass/renderer/browser.js, clear-glass/renderer/settings/sections/general.js]
+    does: an option floatCli.pinned (📌 in the panel, and in Settings), which shows the button on every browser window at start and keeps it

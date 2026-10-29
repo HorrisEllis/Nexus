@@ -67,12 +67,20 @@
   function collapse() { document.body.classList.remove('open'); cg.floatCli.size(false); }
   $('fab').addEventListener('click', expand);
   $('fc-min').addEventListener('click', collapse);
+  // 0.60.280 KB7 — James: "the clearglass floating menu button, can you make that an option to pin it?" Pinned: the button stays on every
+  // window, and ✕ collapses to it instead of hiding.
+  let pinned = false;
+  const paintPin = () => { const b = $('fc-pin'); b.classList.toggle('on', pinned); b.setAttribute('aria-pressed', String(pinned)); b.title = pinned ? 'Pinned: the button stays on every window (click to unpin)' : 'Pin: keep the button on every window'; $('fc-close').title = pinned ? 'Collapse to the button (pinned)' : 'Hide (Ctrl+Shift+Space)'; };
+  $('fc-pin').addEventListener('click', async () => { const r = await cg.floatCli.pin(!pinned); if (r && r.ok) { pinned = r.pinned; paintPin(); } else print('error', (r && r.error) || 'could not pin'); });
+  try { cg.floatCli.pinned().then((r) => { pinned = !!(r && r.pinned); paintPin(); }).catch(() => {}); } catch (_) {}
   $('fc-close').addEventListener('click', () => cg.floatCli.hide());
   window.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.code === 'Space') { e.preventDefault(); cg.floatCli.hide(); } });
 
   cg.floatCli.onState((s) => {
     if (s.url !== undefined) { url = s.url; $('fc-where').textContent = url ? (() => { try { return new URL(url).host || url; } catch (_) { return url; } })() : ''; }
     if (s.open && s.expanded !== false) expand();
+    if (s.pinned !== undefined) { pinned = !!s.pinned; paintPin(); }
+    if (s.collapse) document.body.classList.remove('open');
   });
   const hello = document.createElement('div'); hello.className = 'fc-hello';
   hello.textContent = 'Pick who answers above — Ollama, Co-pilot, Guardian (or Claude Code). Type /help for every command. This window is not part of the page.';

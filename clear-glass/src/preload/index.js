@@ -460,6 +460,11 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   // ── Floating CLI (BS6, 0.60.179) — its own window, excluded from screen capture; see src/main/float-cli.js ──
   floatCli: {
     toggle:  ()          => ipcRenderer.invoke('floatcli:toggle'),
+    // 0.60.280 KB7 — pin: the button on every browser window, kept
+    show:    (expanded)  => ipcRenderer.invoke('floatcli:show', { expanded: !!expanded }),
+    pin:     (pinned)    => ipcRenderer.invoke('floatcli:pin', { pinned: !!pinned }),
+    pinned:  ()          => ipcRenderer.invoke('floatcli:pinned'),
+    onPinned: (cb)       => { const f = (_e, d) => cb(d); ipcRenderer.on('floatcli:pinned', f); return () => ipcRenderer.removeListener('floatcli:pinned', f); },
     size:    (expanded)  => ipcRenderer.invoke('floatcli:size', { expanded }),
     hide:    ()          => ipcRenderer.invoke('floatcli:hide'),
     nav:     (op, url)   => ipcRenderer.invoke('floatcli:nav', { op, url }),

@@ -2335,15 +2335,15 @@ class IpcBridge {
   async _gigNodeMacro(agentId, name, params) {
     if (!this.macroTool) return { ok: false, why: 'macros not available here' };
     const N = require('../../../lib/automation-nodes.js');
-    let have = null; try { have = await this.macroTool.execute({ action: 'get', name }); } catch (_) {}
-    if (!have || have.error) {
-      const p = N.bundledMacro(require('path').join(__dirname, '..', '..', 'automation', 'nodes'), name);
-      if (!p) return { ok: false, why: `no macro "${name}" (and no node file for it)` };
-      const im = await N.importMacro(p, { getMacro: (n) => this.macroTool.execute({ action: 'get', name: n }), createMacro: (m) => this.macroTool.execute({ action: 'create', ...m }) });
-      if (!im.ok) return { ok: false, why: im.error };
-    }
+    // 0.60.280 KB6 — the node file is the truth: absent → imported; a copy he never edited → upgraded to the node's version (said); his edit stays
+    const node = N.bundledNode(require('path').join(__dirname, '..', '..', 'automation', 'nodes'), name);
+    let up = null;
+    if (node) up = await N.upgradeMacro(node, { getMacro: (n) => this.macroTool.execute({ action: 'get', name: n }), deleteMacro: (n) => this.macroTool.execute({ action: 'delete', name: n }), createMacro: (m) => this.macroTool.execute({ action: 'create', ...m }) });
+    else { let have = null; try { have = await this.macroTool.execute({ action: 'get', name }); } catch (_) {} if (!have || have.error) return { ok: false, why: `no macro "${name}" (and no node file for it)` }; }
+    if (up && !up.ok) return { ok: false, why: up.why };
     let m; try { m = await this.runMacroAsPerson({ name, agentId, params, skipSnapshot: true, by: 'person' }); } catch (e) { m = { error: e.message }; }
-    return m && !m.error && m.ok !== false ? { ok: true } : { ok: false, why: `macro "${name}" stopped${m && m.failedAtStep != null ? ` at step ${m.failedAtStep + 1}` : ''}: ${(m && m.error) || 'no answer'}` };
+    const note = up && (up.upgraded || up.kept) ? { node: up.why } : {};
+    return m && !m.error && m.ok !== false ? { ok: true, ...note, gates: (m.results || []).filter(x => x.gate).map(x => x.gate) } : { ok: false, ...note, why: `macro "${name}" stopped${m && m.failedAtStep != null ? ` at step ${m.failedAtStep + 1}` : ''}: ${(m && m.error) || 'no answer'}` };
   }
 
   // 0.60.267 AF3 — James: "needs to autofill any field it can. also needs to have the autopill under each input fieled." Every field on the

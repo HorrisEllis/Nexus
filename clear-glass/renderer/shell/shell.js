@@ -70,6 +70,12 @@
   });
 
   // ── the floating CLI's button and its navigation ───────────────────────────
+  // 0.60.280 KB7 — pinned (Settings › General, or 📌 in the panel): the button is on this window from the start, and on any window when pinned later
+  try {
+    const showPinned = () => cg().floatCli.show(false).then((r) => { const b = $('btn-float-cli'); if (b && r && r.ok) b.classList.add('on'); }).catch(() => {});
+    cg().floatCli.pinned().then((r) => { if (r && r.pinned) showPinned(); }).catch(() => {});
+    cg().floatCli.onPinned(({ pinned }) => { if (pinned) showPinned(); });
+  } catch (_) {}
   const fbtn = $('btn-float-cli');
   if (fbtn) fbtn.addEventListener('click', async () => {
     try { const r = await cg().floatCli.toggle(); fbtn.classList.toggle('on', !!(r && r.open)); if (r && r.ok === false) UI.toast(`Floating CLI: ${r.error}`); }

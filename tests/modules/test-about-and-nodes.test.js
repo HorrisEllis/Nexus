@@ -58,7 +58,9 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     const im = await R.handle(engine, { method: 'POST', url: '/automation/nodes/fiverr-gig-choose-delivery.macro/import', body: {} }, deps);
     assert.ok(im.body.ok !== false, JSON.stringify(im.body));
     assert.deepStrictEqual(created.map(m => [m.name, m.params]), [['Fiverr gig - choose delivery', ['tier', 'delivery']]]);
-    assert.deepStrictEqual(created[0].steps[1], { action: 'choose', data: { column: '{{tier}}', shows: 'DELIVERY TIME', option: '{{delivery}}' } });
+    // 0.60.280 KB6 — v2 of the node: the pick is gated on the value shown (James: "make the gates for them gated and have them check for the correct value")
+    assert.deepStrictEqual(created[0].steps[1], { action: 'choose', data: { column: '{{tier}}', shows: 'DELIVERY TIME', option: '{{delivery}}', pick: 'auto' },
+      gate: { choice: { column: '{{tier}}', is: '{{delivery}}' }, retries: 2, timeoutMs: 4000 } });
   });
 
   await test('AN-03', 'the gig fill picks delivery with his node macro (imported once, run as him); the built-in pick only when it cannot', async () => {

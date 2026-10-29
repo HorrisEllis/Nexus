@@ -88,6 +88,7 @@ class ClearDriver {
       case 'resolve':        return this._resolve(agentId, args);    // 0.60.49 SP1 — a semantic address → its element
       case 'select':         return this._select(agentId, args);
       case 'choose':         return this._choose(agentId, args);
+      case 'readChoice':     return this._readChoice(agentId, args);   // 0.60.280 KB4 — a macro step's choice gate
       case 'check':          return this._check(agentId, args);
       case 'setValue':       return this._setValue(agentId, args);
       case 'pressKey':       return this._pressKey(agentId, args);
@@ -726,7 +727,7 @@ class ClearDriver {
   }
   _pause(span) { const [a, b] = Array.isArray(span) ? span : [span, span]; return this._sleep(a + Math.random() * Math.max(0, b - a)); }
 
-  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'auto', openWait = [600, 1100], pickWait = [300, 650], settleWait = [500, 900], optionsWaitMs = 8000 } = {}) {
+  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'auto', openWait = [600, 1100], pickWait = [300, 650], settleWait = [500, 900], optionsWaitMs = 8000, pick = 'auto', keys = null, keysFor = null } = {}) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
     if (option === undefined || option === null || option === '') throw new Error('choose requires option');
@@ -820,43 +821,94 @@ class ClearDriver {
     const optSel = `[data-cg-opt="${m.index}"]`;
     const readShown = () => this._evalJs(wc, `(function(){ var t = document.querySelector(${JSON.stringify(trigSel)}); return t ? (t.innerText || t.textContent || '').replace(/\\s+/g, ' ').trim() : null; })()`);
     const isOpen = () => this._evalJs(wc, `(function(){ var o = document.querySelector(${JSON.stringify(optSel)}); return !!(o && o.isConnected); })()`).catch(() => false);
-    const tried = [];
-    await this._waitResponsive(wc);
-    const picked = await this._humanPointer(agentId, { selector: optSel, do: 'click', via, label: m.option, scroll: 'within' });
-    await this._pause(settleWait);
-    let shown = await readShown(), clickedBy = 'pointer';
-    tried.push(`pointer → "${shown}"`);
-    // the keyboard: arrows from the option the menu has highlighted (or from the top) to the one meant, then Enter
-    if (!OM.shows(shown, m.option)) {
-      if (!(await isOpen())) { await open(); await readOptions(optionsWaitMs); }
-      const cur = await this._evalJs(wc, `(function(){ var os = Array.prototype.slice.call(document.querySelectorAll('[data-cg-opt]'));
-        for (var i = 0; i < os.length; i++) { var o = os[i]; if (o.getAttribute('aria-selected') === 'true' || o.getAttribute('aria-current') === 'true' || /(^|[\\s_-])(active|focused|highlighted|hover)/i.test(o.className || '')) return Number(o.getAttribute('data-cg-opt')); }
-        return -1; })()`).catch(() => -1);
-      const steps = m.index - (Number.isInteger(cur) ? cur : -1);
-      for (let i = 0; i < Math.abs(steps); i++) { await this._key(wc, steps > 0 ? 'Down' : 'Up'); await this._sleep(90 + Math.random() * 90); }
-      await this._key(wc, 'Enter');
-      await this._pause(settleWait);
-      shown = await readShown(); tried.push(`arrows ${steps > 0 ? '↓' : '↑'}×${Math.abs(steps)} + Enter → "${shown}"`);
-      if (OM.shows(shown, m.option)) clickedBy = 'keys';
-    }
-    // the option's number typed, then Enter ("6 DAYS DELIVERY" → 6)
+    // 0.60.280 KB5 — James, 2026-10-29: "bind arrow keys, or numbers to each drop down menu value". The ways to pick, in the order `pick` says
+    // (not `by`: every person's run already passes by: 'person', who acted):
+    // auto (pointer → arrows → number → direct click), pointer (pointer → direct click), keys (arrows → number), number (number → arrows).
+    // Keys bound in the node (keys, or keysFor[option]) are pressed exactly as written instead. Each way is read back; `tried` says each.
+    const tried = []; let shown = null, clickedBy = null, picked = null;
+    const reopen = async () => { if (!(await isOpen())) { await open(); await readOptions(optionsWaitMs); } };
+    const KEYN = { arrowdown: 'Down', down: 'Down', arrowup: 'Up', up: 'Up', enter: 'Enter', return: 'Enter', tab: 'Tab', escape: 'Escape', esc: 'Escape', space: 'Space', home: 'Home', end: 'End', pagedown: 'PageDown', pageup: 'PageUp' };
+    const bound = (() => {
+      let k = keys != null ? keys : (keysFor && (keysFor[String(option)] != null ? keysFor[String(option)] : keysFor[m.option]));
+      if (k == null || k === '') return null;
+      const list = Array.isArray(k) ? k : String(k).trim().split(/[\s,]+/);
+      return list.filter(Boolean).map(x => KEYN[String(x).toLowerCase()] || String(x));
+    })();
     const num = (/\d+/.exec(m.option) || [])[0];
-    if (!OM.shows(shown, m.option) && num) {
-      if (!(await isOpen())) { await open(); await readOptions(optionsWaitMs); }
-      for (const ch of num) { await this._key(wc, ch, true); await this._sleep(60 + Math.random() * 60); }
-      await this._key(wc, 'Enter');
-      await this._pause(settleWait);
-      shown = await readShown(); tried.push(`typed ${num} + Enter → "${shown}"`);
-      if (OM.shows(shown, m.option)) clickedBy = 'number';
+    const WAYS = {
+      bound: async () => {
+        await reopen();
+        for (const k of bound) { await this._key(wc, k, k.length === 1); await this._sleep(90 + Math.random() * 90); }
+        await this._pause(settleWait); shown = await readShown(); tried.push(`keys ${bound.join(' ')} → "${shown}"`); return 'keys (bound)';
+      },
+      pointer: async () => {
+        await reopen(); await this._waitResponsive(wc);
+        picked = await this._humanPointer(agentId, { selector: optSel, do: 'click', via, label: m.option, scroll: 'within' });
+        await this._pause(settleWait); shown = await readShown(); tried.push(`pointer → "${shown}"`); return 'pointer';
+      },
+      keys: async () => {   // arrows from the option the menu has highlighted (or from the top) to the one meant, then Enter
+        await reopen();
+        const cur = await this._evalJs(wc, `(function(){ var os = Array.prototype.slice.call(document.querySelectorAll('[data-cg-opt]'));
+          for (var i = 0; i < os.length; i++) { var o = os[i]; if (o.getAttribute('aria-selected') === 'true' || o.getAttribute('aria-current') === 'true' || /(^|[\\s_-])(active|focused|highlighted|hover)/i.test(o.className || '')) return Number(o.getAttribute('data-cg-opt')); }
+          return -1; })()`).catch(() => -1);
+        const steps = m.index - (Number.isInteger(cur) ? cur : -1);
+        for (let i = 0; i < Math.abs(steps); i++) { await this._key(wc, steps > 0 ? 'Down' : 'Up'); await this._sleep(90 + Math.random() * 90); }
+        await this._key(wc, 'Enter');
+        await this._pause(settleWait); shown = await readShown(); tried.push(`arrows ${steps > 0 ? '↓' : '↑'}×${Math.abs(steps)} + Enter → "${shown}"`); return 'keys';
+      },
+      number: async () => {   // the option's number typed, then Enter ("6 DAYS DELIVERY" → 6)
+        if (!num) { tried.push('number: the option has no number'); return null; }
+        await reopen();
+        for (const ch of num) { await this._key(wc, ch, true); await this._sleep(60 + Math.random() * 60); }
+        await this._key(wc, 'Enter');
+        await this._pause(settleWait); shown = await readShown(); tried.push(`typed ${num} + Enter → "${shown}"`); return 'number';
+      },
+      page: async () => {   // 0.60.273 — a direct click on the option while it is still on the page
+        await reopen();
+        const again = await this._evalJs(wc, `(function(){ var o = document.querySelector(${JSON.stringify(optSel)}); if (!o || !o.isConnected) return false; o.click(); return true; })()`).catch(() => false);
+        if (!again) { tried.push('direct click: the option was gone'); return null; }
+        await this._pause(settleWait); shown = await readShown(); tried.push(`direct click → "${shown}"`); return 'page';
+      },
+    };
+    const ORDER = { auto: ['pointer', 'keys', 'number', 'page'], pointer: ['pointer', 'page'], keys: ['keys', 'number'], number: ['number', 'keys'] };
+    if (!bound && !ORDER[pick]) throw new Error(`choose: pick is auto, pointer, keys or number (got ${JSON.stringify(pick)})`);
+    for (const way of (bound ? ['bound'] : ORDER[pick])) {
+      const label = await WAYS[way]();
+      if (label && OM.shows(shown, m.option)) { clickedBy = label; break; }
     }
-    // 0.60.273 — last, a direct click on the option while it is still on the page
-    if (!OM.shows(shown, m.option)) {
-      if (!(await isOpen())) { await open(); await readOptions(optionsWaitMs); }
-      const again = await this._evalJs(wc, `(function(){ var o = document.querySelector(${JSON.stringify(optSel)}); if (!o || !o.isConnected) return false; o.click(); return true; })()`).catch(() => false);
-      if (again) { await this._pause(settleWait); shown = await readShown(); tried.push(`direct click → "${shown}"`); if (OM.shows(shown, m.option)) clickedBy = 'page'; }
-    }
-    if (!OM.shows(shown, m.option)) throw new Error(`choose: "${m.option}" did not take — the dropdown shows "${shown}" (tried: ${tried.join('; ')})`);
+    if (!clickedBy) throw new Error(`choose: "${m.option}" did not take — the dropdown shows "${shown}" (tried: ${tried.join('; ')})`);
     return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, clickedBy, tried, ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
+  }
+
+  // 0.60.280 KB4 — James, 2026-10-29: "make the gates for them gated and have them check for the correct value". What a dropdown shows now:
+  // the one choose last marked in that column (or row, or the selector); when the page has redrawn it, the short texts in that column. With
+  // `is`, matches says whether it shows that value (the same match choose reads back with).
+  async _readChoice(agentId, { column = null, row = null, selector = null, is = null } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (!column && !row && !selector) throw new Error('readChoice needs column, row or selector');
+    const OM = require('../page/option-match');
+    const r = await this._evalJs(wc, `(function(sel, col, row){
+      function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+      function norm(t){ return String(t || '').replace(/\\s+/g, ' ').trim(); }
+      function byText(t){ var want = norm(t).toLowerCase(), out = []; document.querySelectorAll('body *').forEach(function(el){ if (!el.children.length && norm(el.textContent).toLowerCase() === want && vis(el)) out.push(el); }); return out; }
+      if (sel) { var e = null; try { e = document.querySelector(sel); } catch (_) {} return e ? { shown: norm(e.innerText || e.textContent), from: 'selector' } : { error: 'no element for ' + sel }; }
+      var band = null, cols = null;
+      if (col) { var h = byText(col); if (!h.length) return { error: 'no column headed "' + col + '"' }; var hr = h[0].getBoundingClientRect(); cols = { left: hr.left, right: hr.right }; }
+      if (row) { var rw = byText(row); if (!rw.length) return { error: 'no row labelled "' + row + '"' }; var rb = (rw[0].closest('tr') || rw[0].parentElement || rw[0]).getBoundingClientRect(); band = { top: rb.top, bottom: rb.bottom }; }
+      function inside(el){ var r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        return (!cols || (cx >= cols.left && cx <= cols.right)) && (!band || (cy >= band.top && cy <= band.bottom)); }
+      var marked = Array.prototype.filter.call(document.querySelectorAll('[data-cg-choose]'), function(el){ return vis(el) && inside(el); })
+        .sort(function(a, b){ return Number(b.getAttribute('data-cg-choose')) - Number(a.getAttribute('data-cg-choose')); });
+      if (marked.length) return { shown: norm(marked[0].innerText || marked[0].textContent), from: 'marked' };
+      var texts = []; document.querySelectorAll('body *').forEach(function(el){ if (el.children.length || !vis(el) || !inside(el)) return; var t = norm(el.textContent); if (t && t.length <= 60) texts.push(t); });
+      return { shown: null, texts: texts.slice(0, 80), from: 'column' };
+    })(${JSON.stringify(selector)}, ${JSON.stringify(column)}, ${JSON.stringify(row)})`);
+    if (!r || r.error) throw new Error(`readChoice: ${(r && r.error) || 'page did not answer'}`);
+    if (is == null || is === '') return r;
+    if (r.shown != null) return { ...r, is, matches: OM.shows(r.shown, String(is)) };
+    const hit = (r.texts || []).find(t => OM.shows(t, String(is)));
+    return { ...r, shown: hit || null, is, matches: !!hit };
   }
 
   // 0.60.275 — wait until the page answers quickly: a frozen page (his machine under load) is waited for, not acted on. Up to maxMs, then on.
@@ -921,13 +973,18 @@ class ClearDriver {
     return r;
   }
 
-  async _pressKey(agentId, { key = 'Enter', modifiers = [] } = {}) {
+  // 0.60.280 KB5 — times: the same key N times at a person's pace (Down ×6 to reach a dropdown's seventh option)
+  async _pressKey(agentId, { key = 'Enter', modifiers = [], times = 1 } = {}) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
-    wc.sendInputEvent({ type: 'keyDown', keyCode: key, modifiers });
-    if (key.length === 1) wc.sendInputEvent({ type: 'char', keyCode: key, modifiers });
-    wc.sendInputEvent({ type: 'keyUp', keyCode: key, modifiers });
-    return { pressed: key, modifiers };
+    const n = Math.max(1, Math.min(200, parseInt(times, 10) || 1));
+    for (let i = 0; i < n; i++) {
+      if (i) await this._sleep(80 + Math.random() * 80);
+      wc.sendInputEvent({ type: 'keyDown', keyCode: key, modifiers });
+      if (key.length === 1) wc.sendInputEvent({ type: 'char', keyCode: key, modifiers });
+      wc.sendInputEvent({ type: 'keyUp', keyCode: key, modifiers });
+    }
+    return { pressed: key, modifiers, times: n };
   }
 
   // upload: a file input cannot be filled by typing or by script (browsers forbid setting .value). The one real way
