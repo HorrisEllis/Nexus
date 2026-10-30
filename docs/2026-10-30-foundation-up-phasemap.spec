@@ -138,3 +138,9 @@ pushback_recorded:
   - "ESS v0.1.0: 28-bit short hashes, hash pins code not behaviour, BIND as root, ungated CONTRACT_UPDATE, replay by ts (architecture-spec addendum (d))."
   - "AES-GCM nonce in CIE-EG §8.3: one key per chain (Learn Emerge, level 6)."
   - "Attribution: SISO and Jaa's architecture are Jonathan Bailey's, as Nexus's own siso.spec says; his work builds on them."
+
+# ── ADDENDUM 2026-10-30 — F_D3 answered; F2 and MG28 (his) ─────────────────────────────────────────────────────────────────────────────
+# James, 2026-10-30: "no not every keystroke, only when you need it. or maybe make it a setting, using the contiious event stream."
+# F_D3 (his): the assistant acts only when it is needed, on the continuous event stream (the structural moments are events on it); how
+# eagerly it acts is a setting. "copy every file you need to a cos/dependancies folder": MG28 (cos-manager map, MG_D9) copies with a lock;
+# F2 still switches lib/emerge's callers and archives it, so the two copies of Emerge stay a named gap until F2.

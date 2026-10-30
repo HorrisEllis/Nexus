@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793376634297
+exported_at: 1793383131473
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793376634297
-lastSeenAt: 1793376634297
+firstSeenAt: 1793383131473
+lastSeenAt: 1793383131473
 fingerprint: null
 payload:
   for: MG3_the_state_manager
@@ -214,6 +214,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
       - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+      - docs/2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
@@ -228,6 +229,9 @@ payload:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
         files:
           - idearium/cli/route-commands.js
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
+        files:
+          - idearium/cli/route-commands.js
     dangling: []
     lines:
       - >-
@@ -239,13 +243,14 @@ payload:
       - >-
         needed by (6): MG4_resources_per_compartment, MG7_automation_macros_and_hats,
         MG9_the_console_ui, MG12_the_exe_is_the_compartment_manager, MG25_storage_manager,
-        MG26_branch_benchmark_merge · all downstream 10
+        MG26_branch_benchmark_merge · all downstream 11
       - >-
         same files as MG10_categories with no order between them: cos/manager/routes.js,
         idearium/cli/route-commands.js
       - >-
         same files as MG19_the_spec_bundle with no order between them:
         idearium/cli/route-commands.js
+      - 'same files as MG29_the_cockpit with no order between them: idearium/cli/route-commands.js'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
         kind: declared

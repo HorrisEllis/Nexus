@@ -137,6 +137,43 @@ decisions:
       "the plan it to rebuild nexus at somepoint. in my emerge coding language. from the bottom up in my own language. almost everything in
       nexus is my own. I love architecture." · "no cos renamed to emerge."
 
+  MG_D9_cos_dependencies:
+    chosen: >-
+      His: the files COS takes from outside Nexus are copied into cos/dependencies (his spelling "dependancies"; the folder is named
+      dependencies, said). By his axioms, the copy carries VENDOR.lock.json (source, commit, sha256 per file) and a check that fails on any
+      edit; it is refreshed only from its source. Sets: Emerge, the ERAVOS canvas and schemas, his update system, his SNR Passthrough, the ESS
+      text. Not copied: Emergence and the Associative Lattice (they are Emerge's components, F5, kept in _archive). Until F2 switches the
+      callers of lib/emerge, Nexus holds two copies of Emerge; that divergence is a named gap, not hidden.
+    by: "his, 2026-10-30: \"copy every file you need to a cos/dependancies folder.\""
+    by_the_axioms: >-
+      §0.3 (preserved with provenance: source and commit per file); §10.3 (a copy that can drift unseen is a competing truth layer, so the lock
+      and the check); §5.15 rule 2 (placement is ownership: COS owns what it holds, so it holds only what it will use, each set naming its
+      consumer phase); §16.5 (no file without a consumer); §17.12 (the copy is a change recorded in Versionium).
+  MG_D10_the_cockpit_has_its_own_server:
+    chosen: >-
+      The cockpit is served by COS's own small server (cos/ui/serve.js, 127.0.0.1:7797) that also forwards to the one endpoint (autopilot's
+      door :7799 today, COS's manager on the same routes after MG17). Autopilot is not changed. CORS "*" on the door is refused.
+    by_the_axioms: >-
+      the tablet spec's connection law ("the tablet talks to ONE endpoint", docs/nexus-tablet.spec); §4.3 (CORS "*" on /control would let any
+      website a person visits restart his systems; the server forwards a POST only from its own origin to a loopback host); §5.12 (the UI is
+      disposable: stopping the cockpit server changes nothing that runs); §5.15 (COS's pages served by COS, not by lib/); §16.5 (no change to
+      autopilot). Found while mapping: cos/tablet/index.html is served by nothing, and /status sends no CORS header, so the tablet has only
+      ever shown its built-in fallback.
+  MG_D11_idearium_look_forked:
+    chosen: >-
+      His "forking idearium specifically for cos for now": COS's cockpit takes Idearium's look (the --nx-* palettes, accents, motion and the
+      self-hosted fonts), copied into cos/ui, with a test that fails when they differ; open and spacious, his "beautiful, not cramped, open".
+      READING TO CONFIRM: the look and its patterns, not Idearium's pages; Idearium's ~3 MB UI is a coding workspace, and COS's screens are
+      the tablet's containers.
+    by: "his, 2026-10-30: \"what about using forking idearium specifically for cos for now, llook at the tablet spec. i want it to look beautiful, not cramped, open and use the axioms as law for each decisiion. full control panel/cockpit for each system.\""
+    by_the_axioms: "§8.6 (reuse the theme that exists); §5.6 (one look across Nexus); §5.15 (COS cannot link Idearium's origin, so a copy with a test, as Idearium does with the main UI); §0.3"
+  MG_D12_pages_in_frames_bus_declared:
+    chosen: >-
+      Until COS's registry is accepted (DB16), each page runs in its own frame (its own document, so no DOM, style or script crosses) and
+      talks to the shell only by declared events over postMessage; each tab of a page is its own section folder. The bus moves onto the
+      registry in MG30 without a page changing.
+    by_the_axioms: "§5.7 (all inter-module communication through the bus; siblings never call each other); §5.12; §5.13 (html, css, js separate per section); his MG_D1 and MG_D7"
+
 phases:
   MG0b_the_full_spec:
     status: SPECCED 2026-10-30 — cos/spec/cos-manager.spec
@@ -339,10 +376,10 @@ phases:
     proof: "npm run start:all boots every system through COS; an old release zip still starts in cos.exe; no second supervisor (ports and pids)"
   MG18_the_supervisor_screen:
     status: OPEN
-    depends_on: [MG16_the_autopilot_door, MG_D1_ui_isolated_per_component, MG_D7_pages_and_sections_on_the_registry_bus, DB16_a_registry_for_each_system]
-    files: [cos/ui/core, cos/ui/shell, cos/ui/overview, cos/ui/ledger, cos/ui/proposals, cos/manager/contract.json]
+    depends_on: [MG0b_the_full_spec, MG_D1_ui_isolated_per_component, MG_D10_the_cockpit_has_its_own_server, MG_D11_idearium_look_forked, MG_D12_pages_in_frames_bus_declared]
+    files: [cos/ui/serve.js, cos/ui/core, cos/ui/shell, cos/ui/overview, cos/ui/ledger, cos/ui/proposals, cos/manager/contract.json, tests/modules/test-cos-ui-theme.test.js]
     spec: cos/spec/cos-manager.spec
-    blocks: [MOD-MG-UI-CORE, MOD-MG-UI-SHELL, MOD-MG-UI-OVERVIEW, MOD-MG-UI-LEDGER, MOD-MG-UI-PROPOSALS]
+    blocks: [MOD-MG-UI-CORE, MOD-MG-UI-SHELL, MOD-MG-UI-OVERVIEW, MOD-MG-UI-LEDGER, MOD-MG-UI-PROPOSALS, MOD-MG-UI-SERVE, MOD-MG-UI-THEME]
     does: >-
       The first pages, as soon as the supervisor and its door stand (the most leverage first: the screen that replaces autopilot's status
       and the home page's tiles): ui/core (handshake, call, run, events, confirm), the shell (top bar, tree, router), Overview, Ledger,
@@ -420,6 +457,30 @@ phases:
     blocks: [MOD-MG-UI-TIMELINE, MOD-MG-UI-RESOURCES]
     does: "the snapshot browser (per compartment and whole-system timelines, lanes, compare, merge report) and the resources screen (pool, allocations, balancer log, network map, storage), each section its own component on the registry bus"
     proof: "driven in Clear Glass: a system state taken, a branch benchmarked, refused, changed and merged, the system restored; a memory cut read back, a network bridged, a volume mounted"
+  MG28_cos_dependencies:
+    status: OPEN
+    depends_on: [MG_D9_cos_dependencies]
+    files: [cos/dependencies, cos/dependencies/VENDOR.lock.json, cos/dependencies/check.js, tests/modules/test-cos-dependencies.test.js, tests/modules/run-all.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-DEPS]
+    does: "copy the five sets with their lock; check.js; a test that runs the check and proves a one-byte edit fails it"
+    proof: "the check passes on the copy; an edited byte fails it naming the file"
+  MG29_the_cockpit:
+    status: OPEN
+    depends_on: [MG18_the_supervisor_screen]
+    files: [cos/ui/cockpit, idearium/cli/route-commands.js, cos/manager/contract.json]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-CONTAINER-ROWS, MOD-MG-UI-COCKPIT]
+    does: "the command rows first (cos ledger, contract, files, tables, test), then each system's cockpit: Overview, API, Data, Files, Events, Tests, Snapshot (said as not built)"
+    proof: "driven in Clear Glass against a running door: tabs read, a restart confirmed and seen on the ledger"
+  MG30_pages_on_the_registry_bus:
+    status: OPEN
+    depends_on: [MG29_the_cockpit, DB16_a_registry_for_each_system, MG_D7_pages_and_sections_on_the_registry_bus]
+    files: [cos/registry-components.js, cos/ui/core]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-UI-REGISTRY-BUS]
+    does: "every page and section declared in COS's accepted registry; the bus checks against it"
+    proof: "an undeclared event refused and shown, in Clear Glass"
 
 build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → MG8 → MG9. Backend → route → command → UI in each, and MG9 (the UI) last, as he said. Sovereignty of Nexus's own systems (SV1–SV7) goes on alongside; COS opening a Nexus system waits on it (CS_D7)."
 
@@ -509,3 +570,16 @@ build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → M
 # James, 2026-10-30: "cos becomes nexus. / i want to eventually make this into a os. / emerge will be replacing nexus."
 # Recorded as MG_D8 with three readings TO CONFIRM. Nothing renamed or built. Open question for him: after (a) and (c), "Nexus" names the
 # product (COS) and emerge names the language its systems are written in; the coder reads it that way.
+
+# ── ADDENDUM 2026-10-30 (e) — cos/dependencies; the cockpit on today's door; spec and map first (his) ─────────────────────────────────
+# James, 2026-10-30: "no not every keystroke, only when you need it. or maybe make it a setting, using the contiious event stream. / copy every
+# file you need to a cos/dependancies folder. then lets build cos, tabs, beautiful, what about using forking idearium specifically for cos for
+# now, llook at the tablet spec. ..." Then, as the coder began copying: "SPEC AND MAP FIRST. DAG" · "THE AXIOMS IN DOCS THE 3.1 AS LAW".
+# The coder had started the copy before the spec (a folder made, nothing copied, removed); this addendum and the spec modules are that work
+# done first, as he ordered.
+# Recorded: MG_D9 (his: cos/dependencies, locked), MG_D10 (by the axioms: COS's own cockpit server, one endpoint, no CORS "*"), MG_D11 (his:
+# Idearium's look forked, reading to confirm), MG_D12 (by the axioms: pages in frames, a declared bus, sections as folders). New phases MG28,
+# MG29, MG30. MG18 changed: it was [MG16_the_autopilot_door, MG_D1, MG_D7, DB16]; it is now [MG0b, MG_D1, MG_D10, MG_D11, MG_D12], because
+# autopilot's door already serves the routes the screens need in the same shape (MG-003), and the registry bus moves to MG30 (which waits
+# on DB16). The earlier line is kept here (§0.3).
+# The assistant (F_D3): his answer recorded in docs/2026-10-30-foundation-up-phasemap.spec.

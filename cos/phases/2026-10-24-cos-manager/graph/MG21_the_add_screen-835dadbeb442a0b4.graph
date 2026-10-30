@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793376634364
+exported_at: 1793383131582
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793376634364
-lastSeenAt: 1793376634364
+firstSeenAt: 1793383131582
+lastSeenAt: 1793383131582
 fingerprint: null
 payload:
   for: MG21_the_add_screen
@@ -68,17 +68,18 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
       - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
       - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D10_the_cockpit_has_its_own_server
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D11_idearium_look_forked
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D12_pages_in_frames_bus_declared
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D6_the_spec_is_the_system
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D7_pages_and_sections_on_the_registry_bus
       - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
       - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
       - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
@@ -97,6 +98,9 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
     unlocks: []
     conflicts:
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+        files:
+          - cos/manager/contract.json
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG22_template_and_archetype_builder
         files:
           - cos/manager/contract.json
@@ -115,11 +119,15 @@ payload:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
         files:
           - cos/manager/contract.json
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
+        files:
+          - cos/manager/contract.json
     dangling: []
     lines:
       - layer 11 · blocked by MG20_add_deploy_connect, MG18_the_supervisor_screen
-      - 'depends on (2): MG20_add_deploy_connect, MG18_the_supervisor_screen · all upstream 58'
+      - 'depends on (2): MG20_add_deploy_connect, MG18_the_supervisor_screen · all upstream 59'
       - 'needed by (0): —'
+      - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'
       - >-
         same files as MG22_template_and_archetype_builder with no order between them:
         cos/manager/contract.json
@@ -128,10 +136,7 @@ payload:
         cos/manager/contract.json
       - 'same files as MG24_network_manager with no order between them: cos/manager/contract.json'
       - 'same files as MG25_storage_manager with no order between them: cos/manager/contract.json'
-      - >-
-        same files as MG26_branch_benchmark_merge with no order between them:
-        cos/manager/contract.json
-      - … and 1 more phases sharing its files without an order
+      - … and 3 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
         kind: declared

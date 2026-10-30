@@ -328,6 +328,21 @@ spec:
       behavioral_contracts: ["merge only on verdict merge, or ask taken by a person", "a merge takes a version of the target first"]
       error_paths: ["a measurement missing → verdict ask, never merge"]
 
+    - id: VendorLock
+      name: VendorLock
+      description: "What cos/dependencies holds, where each file came from, and its hash: a copy that cannot drift unseen (MG_D9)."
+      fields:
+        format:    "'nexus.vendor-lock/1'"
+        entries:   "[{ name: string, source: string (repo URL or archive path), commit: string|null, path: string, sha256: string, bytes: number }]"
+        sets:      "[{ name, source, commit, consumer: string (the phase that will use it), why: string }]"
+        createdAt: "number"
+        createdBy: "string"
+        refreshed: "[{ at, by, from: commit, to: commit }] — appended on each refresh, never rewritten"
+        excluded:  "[{ path, why }] — what was left out on purpose (node_modules, build output)"
+        license:   "[{ set, file }] — the license file of each set, where it has one"
+      behavioral_contracts: ["a file in cos/dependencies is never edited in place; a refresh copies again from the source and appends to refreshed"]
+      error_paths: ["a file whose sha256 differs from its entry → the check fails, naming the file and both hashes"]
+
   interfaces:
 
     - id: IF-COMPARTMENT-JSON
@@ -1073,6 +1088,115 @@ spec:
       behavioral_contracts: ["the draft is kept between visits"]
       error_paths: ["a trial fails → the step and its log shown in the trial section"]
       acceptance: ["in Clear Glass: a template built, tried and saved"]
+
+    # ── cos/dependencies and the cockpit on today's door (MG28–MG30, his 2026-10-30) ─────────────────
+
+    - id: MOD-MG-DEPS
+      name: cos-dependencies
+      uuid: nexus-cos-manager-deps-v1-0000-2026-1030-001
+      path: cos/dependencies/check.js
+      phase: MG28_cos_dependencies
+      description: >-
+        cos/dependencies holds the files COS takes from outside Nexus, copied whole with VENDOR.lock.json: Emerge (its emerge/ package,
+        CIE-EG, BUILDING.md; github.com/HorrisEllis/Emerge at its commit), the ERAVOS canvas and schemas (github.com/HorrisEllis/Eravos-Canvas
+        at its commit), his update system, his SNR Passthrough (the door's template) and the ESS spec text (from his 2026-10-30 uploads in
+        _archive). check.js recomputes every hash and fails on any difference. Each set names the phase that will consume it.
+      deps: []
+      schema_refs: [VendorLock]
+      exports: ["node cos/dependencies/check.js → exit 0 when every file matches its lock, 1 naming each mismatch", "verify(lock, root) → { ok, mismatches }"]
+      gate_pipeline: ["GATE-MG28-001: every file in the lock", "GATE-MG28-002: every hash matches", "GATE-MG28-003: no file outside the lock"]
+      behavioral_contracts: ["copied, never edited in place", "nothing in COS requires a set until its consumer phase does"]
+      error_paths: ["a source not reachable at copy time → that set is left out and said, never partly copied"]
+      acceptance: ["check passes on the fresh copy; a one-byte edit makes it fail naming the file"]
+
+    - id: MOD-MG-UI-SERVE
+      name: cockpit-server
+      uuid: nexus-cos-manager-ui-serve-v1-0000-2026-1030-001
+      path: cos/ui/serve.js
+      phase: MG18_the_supervisor_screen
+      description: >-
+        COS's cockpit server (MG_D10): serves cos/ui's pages on 127.0.0.1 (COS_UI_PORT, default 7797) and forwards /ap/* to the one endpoint,
+        autopilot's door on :7799 (later COS's own manager, the same routes, MG-003), so the pages are same-origin and need no CORS. It forwards
+        only the routes it lists; a POST is forwarded only when its Origin is the cockpit's own and its Host is loopback (no other website can
+        restart a system through it). Writes nothing.
+      deps: [{ name: manager-contract }]
+      schema_refs: [SupervisedSystem]
+      exports: ["node cos/ui/serve.js [--port 7797] [--door http://127.0.0.1:7799]", "GET /ui/* (static, path-safe)", "GET /ap/(status|ledger…|graph|tables…|files/…|contract-map/:name|warp)",
+        "POST /ap/(control/:name/(restart|stop|start)|spawn/:name|run-tests/:name)"]
+      gate_pipeline: ["GATE-MGSV-001: route on the allowlist", "GATE-MGSV-002: POST origin and host checked", "GATE-MGSV-003: path stays inside cos/ui"]
+      behavioral_contracts: ["the door's answer is passed through unchanged, status code included", "a door that does not answer is a 502 naming the door"]
+      error_paths: ["a disallowed route → 404 naming it", "a cross-origin POST → 403 naming the origin"]
+      acceptance: ["a page reads /ap/status same-origin; a POST with another Origin is refused 403; ../ in a path is refused"]
+
+    - id: MOD-MG-UI-THEME
+      name: cockpit-theme
+      uuid: nexus-cos-manager-ui-theme-v1-0000-2026-1030-001
+      path: cos/ui/core/theme.css
+      phase: MG18_the_supervisor_screen
+      description: >-
+        Idearium's look, forked for COS (MG_D11): the --nx-* palettes (nexus, midnight, graphite), accents and motion from
+        idearium/ui/css/nexus-theme.css, and its self-hosted fonts (Space Grotesk, DM Mono, Bebas Neue, with their licenses) copied into cos/ui;
+        open spacing (his "beautiful, not cramped, open"). A test fails when COS's tokens differ from Idearium's, the pattern Idearium already
+        keeps with the main UI (test-idearium-theme).
+      deps: [{ name: ui-core }]
+      schema_refs: [PageComponent]
+      exports: ["theme.css: --nx-* tokens and the spacing scale", "fonts/*.woff2 + LICENSE-*.txt"]
+      gate_pipeline: ["GATE-MGTH-001: tokens equal Idearium's"]
+      behavioral_contracts: ["a palette change in Idearium shows as a failing test in COS until copied"]
+      error_paths: ["a token missing or different → the test names it"]
+      acceptance: ["tests/modules/test-cos-ui-theme.test.js passes; changing one token makes it fail naming it"]
+
+    - id: MOD-MG-CONTAINER-ROWS
+      name: container-rows
+      uuid: nexus-cos-manager-container-rows-v1-0000-2026-1030-001
+      path: idearium/cli/route-commands.js
+      phase: MG29_the_cockpit
+      description: >-
+        The command rows the cockpit's tabs stand on, added before the screen (§3.4: API → CLI → UI): `cos ledger [system [hook [day]]]`,
+        `cos contract <system>`, `cos files <system> [path]`, `cos tables [name]`, `cos test <system>` (a person's act), over the same door
+        routes. Status and control already have rows (`repo system`).
+      deps: [{ name: manager-contract }]
+      schema_refs: [SupervisedSystem]
+      exports: ["rows: cos ledger, cos contract, cos files, cos tables, cos test"]
+      gate_pipeline: ["GATE-MGCR-001: each row's route is on the door", "GATE-MGCR-002: cos test is personOnly"]
+      behavioral_contracts: ["agents get every read a person gets; running tests is a person's act"]
+      error_paths: ["the door down → the row says so, with the door's address"]
+      acceptance: ["each row prints what the matching tab shows"]
+
+    - id: MOD-MG-UI-COCKPIT
+      name: ui-cockpit
+      uuid: nexus-cos-manager-ui-cockpit-v1-0000-2026-1030-001
+      path: cos/ui/cockpit
+      phase: MG29_the_cockpit
+      description: >-
+        One system's full cockpit, the tablet's container (docs/nexus-tablet.spec container_model): tabs Overview (state, pid, port, health,
+        restarts, crashes, down since; start, stop, restart, spawn, each confirmed), API (its contract), Data (the store's tables, read-only),
+        Files (its data tree, read-only), Events (its ledger by hook and day), Tests (the real run-all filtered to it, one at a time), and
+        Snapshot (said as not built, naming CS1 and MG3). Each tab is its own section folder (section.html, section.css, section.js). Writes go
+        only through the door (tablet boundary: mutation through the owner's API).
+      deps: [{ name: ui-core }, { name: ui-shell }, { name: cockpit-server }, { name: container-rows }]
+      schema_refs: [SupervisedSystem, SupervisorLedgerEntry]
+      exports: ["index.html, page.css, page.js and sections/ (overview, api, data, files, events, tests, snapshot)"]
+      gate_pipeline: ["GATE-MGCK-001: handshake", "GATE-MGCK-002: acts confirmed", "GATE-MGCK-003: a tab whose source is down says which and why"]
+      behavioral_contracts: ["observation is disk-backed where the door is (ledger, tables, files), so a wedged system still shows why", "no tab writes a file or a table"]
+      error_paths: ["the door down → every tab shows 'COS's door is not answering' with its address, never an empty page"]
+      acceptance: ["driven in Clear Glass (glass.js) against a running door: a system's tabs open, its events and files read, a restart confirmed and seen on its ledger"]
+
+    - id: MOD-MG-UI-REGISTRY-BUS
+      name: ui-registry-bus
+      uuid: nexus-cos-manager-ui-registry-bus-v1-0000-2026-1030-001
+      path: cos/registry-components.js
+      phase: MG30_pages_on_the_registry_bus
+      description: >-
+        MG_D7 completed: once COS's registry is accepted (DB16), every page and section is declared in it with the events it emits and hears,
+        and ui/core's bus checks against the registry instead of the page's own declaration (MG_D12's interim).
+      deps: [{ name: ui-core }]
+      schema_refs: [PageComponent]
+      exports: ["cos/registry-components.js: each page and section as a component with its emits and listens"]
+      gate_pipeline: ["GATE-MGRB-001: every page declared", "GATE-MGRB-002: an undeclared event refused and shown"]
+      behavioral_contracts: ["one declaration per page: the registry"]
+      error_paths: ["a page not in the registry → the shell does not load it and says which"]
+      acceptance: ["in Clear Glass: a section emitting an undeclared event is refused and shows it"]
 
   events:
     cos:

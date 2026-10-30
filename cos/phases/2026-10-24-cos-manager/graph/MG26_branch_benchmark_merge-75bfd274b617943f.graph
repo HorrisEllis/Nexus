@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793376634384
+exported_at: 1793383131605
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793376634384
-lastSeenAt: 1793376634384
+firstSeenAt: 1793383131605
+lastSeenAt: 1793383131605
 fingerprint: null
 payload:
   for: MG26_branch_benchmark_merge
@@ -91,6 +91,9 @@ payload:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG25_storage_manager
         files:
           - cos/manager/contract.json
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
+        files:
+          - cos/manager/contract.json
     dangling: []
     lines:
       - >-
@@ -109,7 +112,7 @@ payload:
       - >-
         same files as MG22_template_and_archetype_builder with no order between them:
         cos/manager/contract.json
-      - … and 3 more phases sharing its files without an order
+      - … and 4 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
         kind: declared

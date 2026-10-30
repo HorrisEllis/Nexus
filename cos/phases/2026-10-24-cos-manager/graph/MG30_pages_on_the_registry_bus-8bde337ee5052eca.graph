@@ -1,0 +1,78 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MG30_pages_on_the_registry_bus:8bde337ee5052eca
+type: graph
+id: phase:MG30_pages_on_the_registry_bus:8bde337ee5052eca
+context: dependency graph of phase MG30_pages_on_the_registry_bus
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793383131625
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793383131625
+lastSeenAt: 1793383131625
+fingerprint: null
+payload:
+  for: MG30_pages_on_the_registry_bus
+  kind: phase
+  repo: null
+  hash: 8bde337ee5052eca
+  nodes:
+    - path: cos/registry-components.js
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D7_pages_and_sections_on_the_registry_bus
+    dependents: []
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D10_the_cockpit_has_its_own_server
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D11_idearium_look_forked
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D12_pages_in_frames_bus_declared
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D7_pages_and_sections_on_the_registry_bus
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D7_pages_and_sections_on_the_registry_bus
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 7 · blocked by MG29_the_cockpit, DB16_a_registry_for_each_system,
+        MG_D7_pages_and_sections_on_the_registry_bus
+      - >-
+        depends on (3): MG29_the_cockpit, DB16_a_registry_for_each_system,
+        MG_D7_pages_and_sections_on_the_registry_bus · all upstream 19
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
+        kind: declared
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+        kind: declared
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG_D7_pages_and_sections_on_the_registry_bus
+        kind: declared
