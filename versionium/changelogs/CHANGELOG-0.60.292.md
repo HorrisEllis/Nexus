@@ -57,6 +57,22 @@ Spec: `clear-glass/spec/gated-flows.spec` MOD-UG1..5. Map: `docs/2026-10-28-gate
   checks all of his. The macro and workflow steps reach it.
 - **UG-05:** the bar saves a gate from a pick, page-scoped. The store validates and removes it, and the command row builds its requests.
 
+## Regression check
+
+51 suites touch the driver, the DOM mesh, the autofill, the workflow engine, site settings or the options store. Each was run on 0.60.291
+and on this release, and the results compared.
+
+The comparison found three things, each fixed in this release:
+- **A browser that cannot read a gate** (an older Clear Glass, or a test's stand-in) made a workflow step fail. Such a step is now left
+  unchecked, and the result says so. Only a gate read closed fails a step (automation-v2 back to 18/18).
+- **A page that answers nothing to the read** is unknown, so the write is left unchecked and reported. It is never counted as a pass or
+  as a closed gate (the evidence rule; test-eros-hooks back to 6/6).
+- **The gig fill now lists the driver's own closed gate**, because the driver catches a revert first (test-gig-all-fields back to 5/5).
+
+Still red, the same on 0.60.291 and not caused by this release:
+- clear-glass-accounts: 1 check;
+- test-cg-accounts-portal-settings: 3 checks.
+
 ## Not proven yet
 
 Nothing here has run on his PC or on fiverr.com yet.
