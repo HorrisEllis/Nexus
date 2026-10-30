@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG23_allocation_and_balance
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG23_allocation_and_balance
+context: pipeline phase MG23_allocation_and_balance of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG23_allocation_and_balance (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793376634375
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793376634375
+lastSeenAt: 1793376634375
+fingerprint: null
+payload:
+  id: MG23_allocation_and_balance
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/balancer.js
+    - cos/manager/contract.json
+    - tests/modules/test-cos-balancer.test.js
+  depends_on:
+    - MG4_resources_per_compartment
+    - CS7_spawn_despawn_and_balance
+    - CS11_raid_in_the_exe
+    - MG15_the_supervisor_in_cos
+  blocks:
+    - MOD-MG-BALANCER
+  spec: cos/spec/cos-manager.spec
+  graph: bb5091a74ffd1e91

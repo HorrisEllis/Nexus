@@ -9,11 +9,11 @@ intent: null
 summary: MG2_genesis_compartments_through_the_registry (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792880100854
+exported_at: 1793365823347
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100854
-lastSeenAt: 1792880100854
+firstSeenAt: 1793365823347
+lastSeenAt: 1793365823347
 fingerprint: null
 payload:
   id: MG2_genesis_compartments_through_the_registry
@@ -29,6 +29,7 @@ payload:
     - MG1_loom_on_its_registry_spine
     - DB20_sealed_archetype
     - DB13_the_tunnel
-  blocks: []
-  spec: null
+  blocks:
+    - MOD-MG-GENESIS
+  spec: cos/spec/cos-manager.spec
   graph: 131d5c39fbd1cf58

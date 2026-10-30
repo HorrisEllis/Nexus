@@ -7,11 +7,11 @@ intent: null
 summary: MG4_resources_per_compartment (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792880100857
+exported_at: 1793365823355
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100857
-lastSeenAt: 1792880100857
+firstSeenAt: 1793365823355
+lastSeenAt: 1793365823355
 fingerprint: null
 payload:
   id: MG4_resources_per_compartment
@@ -25,6 +25,7 @@ payload:
     - MG3_the_state_manager
     - CS5_caps_per_compartment
     - CS7_spawn_despawn_and_balance
-  blocks: []
-  spec: null
+  blocks:
+    - MOD-MG-RESOURCES
+  spec: cos/spec/cos-manager.spec
   graph: 45437b4444ec3e8d

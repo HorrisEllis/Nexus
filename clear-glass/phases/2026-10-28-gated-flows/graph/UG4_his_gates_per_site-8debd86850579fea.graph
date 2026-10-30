@@ -1,0 +1,254 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UG4_his_gates_per_site:8debd86850579fea
+type: graph
+id: phase:UG4_his_gates_per_site:8debd86850579fea
+context: dependency graph of phase UG4_his_gates_per_site
+intent: null
+summary: 29 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793386281625
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281625
+lastSeenAt: 1793386281625
+fingerprint: null
+payload:
+  for: UG4_his_gates_per_site
+  kind: phase
+  repo: null
+  hash: 8debd86850579fea
+  nodes:
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/preload/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/browser/browser-action.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/clear-glass/macro.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/ambiguity-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/clear-glass-accounts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/nexus-options-autoboot.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/autofill/matcher.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/handler-registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/element-gate.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/shortcuts/registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/shortcuts/site-keys.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/toolbar/commands.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/toolbar/commands.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/shortcuts/registry.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/shortcuts/site-keys.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/ipc/handler-registry.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/screen-qa/detector.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-accounts.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/nexus-options-autoboot.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/ambiguity-pull.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 13
+    deps:
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG2_every_driver_write_gated
+    dependents:
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG5_gates_made_with_the_picker
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG2_every_driver_write_gated
+    downstream:
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG5_gates_made_with_the_picker
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG5_gates_made_with_the_picker
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 13
+      - 'depends on (1): UG2_every_driver_write_gated · all upstream 19'
+      - >-
+        needed by (1): UG5_gates_made_with_the_picker · finishing it unlocks
+        UG5_gates_made_with_the_picker
+    edges:
+      - from: docs/2026-10-28-gated-flows-phasemap.spec::UG2_every_driver_write_gated
+        kind: declared

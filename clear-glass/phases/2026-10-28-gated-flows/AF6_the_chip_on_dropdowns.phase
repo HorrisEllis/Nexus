@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::AF6_the_chip_on_dropdowns
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::AF6_the_chip_on_dropdowns
+context: pipeline phase AF6_the_chip_on_dropdowns of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: AF6_the_chip_on_dropdowns (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281630
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281630
+lastSeenAt: 1793386281630
+fingerprint: null
+payload:
+  id: AF6_the_chip_on_dropdowns
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.296
+  files:
+    - clear-glass/src/autofill/suggest.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - EI1_every_key_and_click_paced_through_eros
+    - KB1_choose_waits_and_keys
+  blocks:
+    - MOD-AF6
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 15cfca64abf4a4d3

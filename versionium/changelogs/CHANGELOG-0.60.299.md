@@ -1,20 +1,38 @@
-# 0.60.299 — PF1: the .portfolio node, and per-site portfolio support
+# 0.60.299 — four rules every system follows; one exe runs Nexus; his update system read and probed
 
-James, 2026-10-30: **"make a .portfolio node, all nodes are physical files in the backend. import and export. and add per site support. same with the macros, and pipeline. i also want macros for the ui not just per sire."**
+James, 2026-10-30:
+> "the plan it to rebuild nexus at somepoint. in my emerge coding language. from the bottom up in my own language. almost everything in nexus is my own. I love architecture."
+> "oh and add to the architecture spec that each system needs schemas to use for expected system behavior. also i want .benchmark nodes for the sigma deviations from baseline to record into ..."
+> "like every single step is a gate. the success of the previous, triggers the next, with retry logic including increasing the timing little by little ..."
+> "it will be what runs nexus. replacing powershell. just one exe."
 
-## What was built (PF1 + the per-site keys)
-- **`clear-glass/src/autofill/portfolio.js`** — the `.portfolio` node. `PortfolioStore` keeps your portfolios in JAA (`cg_portfolio`): name, headline, bio, skills, and project items (title, role, description, skills, link, date). `exportNode` / `parsePortfolio` / `importNode` carry it as one **`clearglass.portfolio/1`** file — a physical file you can read, edit, and re-import. An import merges **by id, newer wins**, and an item with no title is refused, never half-stored.
-- **`lib/node-schemas/schema.portfolio`** — registers the node type (like `schema.macro`, `schema.pipeline`).
-- **Per-site:** `portfolio.enabled` + `portfolio.id` in site-settings (the Portfolio group now shows in the Site Settings popup), with a `portfolioFor(url)` reader — mirroring Autofill. Macros (`macros.enabled`/`autoRun`) and pipelines (`pipelines.enabled`) already had per-site support.
+## Architecture spec 0.12.0 → 0.13.0 (`docs/architecture-spec/architecture-spec.spec`, ADDENDUM 2026-10-30)
 
-## Sovereignty (§5.15)
-A portfolio is your autofill/seller **content**, so the `.portfolio` node lives with Clear Glass autofill — like `.gig`/`.autofill`, not with automation (`lib/automation-nodes.js` owns `.macro`/`.pipeline`).
+- **A. Behaviour schemas.** Each system has `<system>/schemas/behaviour/*.schema`. Each one names an input, the events it must emit, its outputs, its time envelope and its invariants. They are the "expected" side of the baseline and the oracle for its tests.
+- **B. `.benchmark` nodes.**
+  - A deviation from baseline past sigma is written as a node. Intelligence owns and writes these nodes.
+  - Intelligence links the node to the events that came before the dip.
+  - COS's load balancer acts on the node and names it.
+  - Builds on `intelligence/baseline.js`, `schema.sigma_record`, `rfr2`, `causal`, and `cos/watchdog`.
+- **C. A data pipeline door per system.** Pipes are declared in each system's contract. One router checks both ends' contracts before it delivers, and records every hop.
+  - The router being COS's is a reading, to confirm.
+  - `schema.pipeline` is already taken by Clear Glass's site pipelines. The suggested name for this one is `pipe`.
+- **D. The dependency gate.**
+  - Every step is a gate, and each dependency is a `.dep` node carrying an id and a contract id.
+  - Retries come with a slowly growing delay.
+  - Failures are recorded as failure modes, diagnosed by Intelligence, and escalated.
+  - Each step is written to disk before it runs, so a chain survives a restart.
+  - Builds on his gate walker, `step_chain`, `gate` records, the `.contract` gates, `phase-dag`, and self-heal escalation.
+  - What "escalating if its not critical" means is to confirm.
 
-## Reuse (rule 2)
-`transfer.js`'s export/import pattern, `AutofillStore`'s JAA rows, the site-settings machinery. Nothing new invented beside them.
+Test: GA-01 accepts version 0.13 (`test-genesis-and-architecture-spec` 7/7).
 
-## Proof (headless)
-`test-portfolio-node.test.js` 8/8 (create, validate, export, import round-trip, upsert-by-id newer-wins, bad file, bare profile, update/remove); `test-site-profile` 3/3; `test-site-settings-ui` 3/3 (the panel renders the Portfolio group).
+## One exe (`docs/2026-10-15-cos-app-phasemap.spec` addendum)
 
-## Remaining (mapped — `docs/2026-10-30-portfolio-node-per-site-ui-macros-phasemap.spec`)
-PF3 (fill the Fiverr My Portfolio page from the node + the seller profile from your profile — page detection confirmed live), UM1 (UI macros — grounding first), and the routes + command + Portfolio UI (import/export buttons, the per-site picker).
+- **What already exists:** the exe, the release-zip drop, switch and rollback, the off/ask/auto policy, and GitHub as the release source.
+- **His update-system.zip:** read in full and probed with in-memory transports. It has two defects:
+  1. Its duplicate check uses the payload hash. Two identical pings arrive as one.
+  2. A stale or failed ack triggers an immediate resend, again and again: 28,773 pushes in 300 ms.
+- **The suggested role, to confirm:** GitHub for releases; his system as the push channel between machines over Bridge, after both fixes.
+
+Spec text only. Nothing is built.

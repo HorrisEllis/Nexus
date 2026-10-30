@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
+context: pipeline phase MG21_the_add_screen of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG21_the_add_screen (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793376294608
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793376294608
+lastSeenAt: 1793376294608
+fingerprint: null
+payload:
+  id: MG21_the_add_screen
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/contract.json
+  depends_on:
+    - MG20_add_deploy_connect
+    - MG18_the_supervisor_screen
+  blocks:
+    - MOD-MG-UI-ADD
+  spec: cos/spec/cos-manager.spec
+  graph: 835dadbeb442a0b4

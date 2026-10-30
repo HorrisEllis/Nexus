@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG28_cos_dependencies
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG28_cos_dependencies
+context: pipeline phase MG28_cos_dependencies of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG28_cos_dependencies (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793383131615
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793383131615
+lastSeenAt: 1793383131615
+fingerprint: null
+payload:
+  id: MG28_cos_dependencies
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/dependencies/VENDOR.lock.json
+    - cos/dependencies/check.js
+    - tests/modules/test-cos-dependencies.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - MG_D9_cos_dependencies
+  blocks:
+    - MOD-MG-DEPS
+  spec: cos/spec/cos-manager.spec
+  graph: fbc97cbd5f671aa8

@@ -1,0 +1,223 @@
+envelope: 1
+uuid: nexus-export-graph-phase:F3_the_door:b2415e92525104ae
+type: graph
+id: phase:F3_the_door:b2415e92525104ae
+context: dependency graph of phase F3_the_door
+intent: null
+summary: 20 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793382595484
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595484
+lastSeenAt: 1793382595484
+fingerprint: null
+payload:
+  for: F3_the_door
+  kind: phase
+  repo: null
+  hash: b2415e92525104ae
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 9
+    deps:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F0_the_kernel_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+    dependents:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
+      - docs/2026-10-30-foundation-up-phasemap.spec::F8_the_tutor
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+      - docs/2026-10-30-foundation-up-phasemap.spec::F0_the_kernel_spec
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D0_foundation_up
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D1_ess_is_the_kernel
+    downstream:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
+      - docs/2026-10-30-foundation-up-phasemap.spec::F8_the_tutor
+    blockedBy:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F0_the_kernel_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 9 · blocked by F0_the_kernel_spec, MG15_the_supervisor_in_cos
+      - 'depends on (2): F0_the_kernel_spec, MG15_the_supervisor_in_cos · all upstream 23'
+      - 'needed by (2): F4_raid_routes_the_doors, F8_the_tutor'
+    edges:
+      - from: docs/2026-10-30-foundation-up-phasemap.spec::F0_the_kernel_spec
+        kind: declared
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+        kind: declared

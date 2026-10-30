@@ -1,0 +1,186 @@
+envelope: 1
+uuid: nexus-export-graph-phase:F7_the_assistant:4ebc18dab8418c79
+type: graph
+id: phase:F7_the_assistant:4ebc18dab8418c79
+context: dependency graph of phase F7_the_assistant
+intent: null
+summary: 16 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793382595495
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595495
+lastSeenAt: 1793382595495
+fingerprint: null
+payload:
+  for: F7_the_assistant
+  kind: phase
+  repo: null
+  hash: 4ebc18dab8418c79
+  nodes:
+    - path: emerge/lang/ide.js
+      role: changes
+      exists: false
+      system: null
+    - path: idearium/repo/work-surface.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/phase-dag.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/flow-sources.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phase-mapping.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/build-queue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-deps-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-groom.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-convert.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-architecture-migrate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/phasemap-parse.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/phase-dag.js
+      to: lib/phasemap-parse.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/work-surface.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/work-surface.js
+      kind: requires
+    - from: idearium/lib/flow-sources.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/repo/phase-mapping.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/build-queue.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-census.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-deps-gate.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-groom.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/project-convert.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: tests/modules/test-architecture-migrate.test.js
+      to: lib/phase-dag.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 12
+    deps:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D3_the_assistant_watches_structure_not_keystrokes
+      - docs/2026-10-30-foundation-up-phasemap.spec::F6_the_compound_build
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+    dependents:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F8_the_tutor
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW1_emerge_and_warp_one_system
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW2_the_callers_outside_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D0_emerge_and_warp_one_system
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D1_compiler_and_ide_with_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D2_the_runtime_is_not_a_crossing
+      - docs/2026-10-26-gate-walker-programmable-surface-phasemap.spec::GWK1_the_walker_and_chain_schema
+      - docs/2026-10-30-foundation-up-phasemap.spec::F0_the_kernel_spec
+      - docs/2026-10-30-foundation-up-phasemap.spec::F1_one_vocabulary
+      - docs/2026-10-30-foundation-up-phasemap.spec::F5_memory_and_learning
+      - docs/2026-10-30-foundation-up-phasemap.spec::F6_the_compound_build
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D0_foundation_up
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D1_ess_is_the_kernel
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D3_the_assistant_watches_structure_not_keystrokes
+    downstream:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F8_the_tutor
+    blockedBy:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D3_the_assistant_watches_structure_not_keystrokes
+      - docs/2026-10-30-foundation-up-phasemap.spec::F6_the_compound_build
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 12 · blocked by F_D3_the_assistant_watches_structure_not_keystrokes,
+        F6_the_compound_build, EW4_the_ide_into_idearium
+      - >-
+        depends on (3): F_D3_the_assistant_watches_structure_not_keystrokes, F6_the_compound_build,
+        EW4_the_ide_into_idearium · all upstream 26
+      - 'needed by (1): F8_the_tutor'
+    edges:
+      - from: docs/2026-10-30-foundation-up-phasemap.spec::F_D3_the_assistant_watches_structure_not_keystrokes
+        kind: declared
+      - from: docs/2026-10-30-foundation-up-phasemap.spec::F6_the_compound_build
+        kind: declared
+      - from: docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+        kind: declared

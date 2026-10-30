@@ -653,3 +653,24 @@ Found when Loom ran in its compartment behind cos/compartment/boundary.js (docs/
 2. A require whose path is built at run time (``require(`../hooks/${system}.hooks.js`)``) is not read by the scanner.
 The wall sees both, because it judges every require as Node resolves it. So a compartment move runs audit first, then enforce. The census
 stays the ratchet; the wall is the proof.
+
+# ── ADDENDUM 2026-10-30 — CIE-EG's component registry slots into each system's spine (his); DB21's component level ───────────────────
+# James, 2026-10-30, after the Emerge repo (github.com/HorrisEllis/Emerge, CIE-EG_Specification_v0_3_1.md) was read into the session:
+# "the component registry in the cie-eg slots into the systems spine. i have been removing as much friction within my systems as possible"
+# Read against the tree, field by field (the coder's census):
+#   CIE-EG §5.1 record          {id, namespace, name, version, uuid, hooks, shape_hash}
+#   Nexus Component             {id, namespace, name, version} required (loom/schema/component.js) + uuid (the loom.uuid-present axiom)
+#     → the five identity fields are the same fields.
+#   CIE-EG hooks                inline, {dir: in|out, shape}            Nexus Hook: own record, {id, component_id, name, type, direction}
+#     → CIE-EG adds the payload SHAPE (Nexus has none: it is the architecture spec's RULE A, behaviour schemas, at the hook);
+#       Nexus adds the open transport TYPE (api, event_bus, webserver, ...) CIE-EG does not carry; Nexus's bidirectional = an in and an out.
+#   CIE-EG road (6.1)           one out hook → one in hook ("the existing wire statement ... compiles to a road")
+#   Nexus Wire                  {id, from_hook_id, to_hook_id} → the same edge.
+#   CIE-EG registry hash (5.3) + contract_hash   ≈ Nexus registryVersion (components, spine, eventBus, contract, each hashed; CS1).
+#   CIE-EG gate pipeline (6.2)  source registered → shape → a road exists → destination fits → ledger, then deliver; a failure is a typed
+#     gap with a pressure, and a gap at or above block_at closes its road ≈ the dependency gate (architecture-spec RULE D), the handshake
+#     (§5.11) and autopilot's circuit breaker, in one mechanism.
+# Recorded as his decision (USER_AUTONOMY): DB21's schema takes CIE-EG §5 as its component level, with Nexus's hook `type` kept as an
+# optional transport field and payload shapes added to Nexus's hooks. COS's registry bus (cos-manager MG_D7) is the CIE-EG gate.
+# Readings TO CONFIRM: (1) the source of truth for the record is Emerge's (cie-eg.spec), and Nexus's loom schemas conform to it, not the
+# reverse; (2) Nexus's hook `type` goes into CIE-EG upstream, or stays a Nexus extension. DB21 is still OPEN; nothing is built by this.

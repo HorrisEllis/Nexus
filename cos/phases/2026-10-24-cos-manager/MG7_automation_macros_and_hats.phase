@@ -7,11 +7,11 @@ intent: null
 summary: MG7_automation_macros_and_hats (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792880100860
+exported_at: 1793365823365
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100860
-lastSeenAt: 1792880100860
+firstSeenAt: 1793365823365
+lastSeenAt: 1793365823365
 fingerprint: null
 payload:
   id: MG7_automation_macros_and_hats
@@ -26,6 +26,7 @@ payload:
     - MG3_the_state_manager
     - CS10_hats_bound_to_the_compartment
     - CON8_nexus_server_hook
-  blocks: []
-  spec: null
+  blocks:
+    - MOD-MG-MACROS
+  spec: cos/spec/cos-manager.spec
   graph: a30d0a389948e0ff

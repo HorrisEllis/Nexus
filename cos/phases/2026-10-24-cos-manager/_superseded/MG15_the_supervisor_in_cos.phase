@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+context: pipeline phase MG15_the_supervisor_in_cos of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG15_the_supervisor_in_cos (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793365823383
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793365823383
+lastSeenAt: 1793365823383
+fingerprint: null
+payload:
+  id: MG15_the_supervisor_in_cos
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/supervisor.js
+    - cos/manager/server.js
+    - versionium/compartment.json
+    - tests/modules/test-cos-supervisor.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - MG0b_the_full_spec
+    - MG_D4_cos_is_the_autopilot
+    - CS4a_cos_boots_alone
+  blocks:
+    - MOD-MG-SUPERVISOR
+    - MOD-MG-SERVER
+  spec: cos/spec/cos-manager.spec
+  graph: 3c09c7d2a96b76f1

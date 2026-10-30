@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792880100859
+exported_at: 1793365823361
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100859
-lastSeenAt: 1792880100859
+firstSeenAt: 1793365823361
+lastSeenAt: 1793365823361
 fingerprint: null
 payload:
   for: MG6_settings_by_template_and_type
@@ -33,12 +33,18 @@ payload:
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
     dependents:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG10_categories
     upstream:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0d_layers
     downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG10_categories
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG11_category_manager_ui
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
@@ -49,7 +55,7 @@ payload:
     lines:
       - layer 2 · blocked by MG0b_the_full_spec, AS1_one_resolver_global_then_repo
       - 'depends on (2): MG0b_the_full_spec, AS1_one_resolver_global_then_repo · all upstream 4'
-      - 'needed by (1): MG9_the_console_ui'
+      - 'needed by (2): MG9_the_console_ui, MG10_categories · all downstream 6'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
         kind: declared

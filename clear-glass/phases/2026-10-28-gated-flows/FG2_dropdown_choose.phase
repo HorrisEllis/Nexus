@@ -7,11 +7,11 @@ intent: null
 summary: FG2_dropdown_choose (foundation) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793180611534
+exported_at: 1793386281593
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793180611534
-lastSeenAt: 1793180611534
+firstSeenAt: 1793386281593
+lastSeenAt: 1793386281593
 fingerprint: null
 payload:
   id: FG2_dropdown_choose
@@ -24,7 +24,8 @@ payload:
     - clear-glass/src/driver/index.js
   depends_on:
     - FG_D2_choice_is_read_back
+    - FP2_which_option_is_meant
   blocks:
     - MOD-FG-CHOOSE
   spec: clear-glass/spec/gated-flows.spec
-  graph: 08c4739a2ba8d8b7
+  graph: ea9138208f910de6

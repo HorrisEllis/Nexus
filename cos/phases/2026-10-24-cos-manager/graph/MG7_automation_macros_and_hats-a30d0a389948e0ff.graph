@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792880100860
+exported_at: 1793365823365
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100860
-lastSeenAt: 1792880100860
+firstSeenAt: 1793365823365
+lastSeenAt: 1793365823365
 fingerprint: null
 payload:
   for: MG7_automation_macros_and_hats
@@ -132,6 +132,9 @@ payload:
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
     downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
@@ -147,7 +150,7 @@ payload:
       - >-
         depends on (3): MG3_the_state_manager, CS10_hats_bound_to_the_compartment,
         CON8_nexus_server_hook · all upstream 51
-      - 'needed by (1): MG9_the_console_ui'
+      - 'needed by (1): MG9_the_console_ui · all downstream 4'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
         kind: declared

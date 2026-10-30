@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+context: pipeline phase MG20_add_deploy_connect of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG20_add_deploy_connect (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793376294605
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793376294605
+lastSeenAt: 1793376294605
+fingerprint: null
+payload:
+  id: MG20_add_deploy_connect
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/intake.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - tests/modules/test-cos-intake.test.js
+  depends_on:
+    - MG19_the_spec_bundle
+    - MG15_the_supervisor_in_cos
+    - MG8_the_factory
+    - CS9_every_project_a_compartment
+  blocks:
+    - MOD-MG-INTAKE
+  spec: cos/spec/cos-manager.spec
+  graph: 5acb3d96414f1f83

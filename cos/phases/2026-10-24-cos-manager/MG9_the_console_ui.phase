@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
 context: pipeline phase MG9_the_console_ui of docs/2026-10-24-cos-manager-phasemap.spec
 intent: null
-summary: MG9_the_console_ui (?) — 1 file(s)
+summary: MG9_the_console_ui (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792880100862
+exported_at: 1793365823370
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100862
-lastSeenAt: 1792880100862
+firstSeenAt: 1793365823370
+lastSeenAt: 1793365823370
 fingerprint: null
 payload:
   id: MG9_the_console_ui
@@ -21,6 +21,7 @@ payload:
   status: OPEN
   files:
     - cos/ui
+    - cos/spec/cos-manager.spec
   depends_on:
     - MG3_the_state_manager
     - MG4_resources_per_compartment
@@ -31,6 +32,9 @@ payload:
     - MG_D1_ui_isolated_per_component
     - DB26_the_ui_floats_on_the_registry
     - COSA12_vmware_window
-  blocks: []
-  spec: null
-  graph: 66862ef658e800ac
+  blocks:
+    - MOD-MG-UI-COMPARTMENT
+    - MOD-MG-UI-CATALOG
+    - MOD-MG-UI-AUTOMATION
+  spec: cos/spec/cos-manager.spec
+  graph: 7e29ba0757fc4361

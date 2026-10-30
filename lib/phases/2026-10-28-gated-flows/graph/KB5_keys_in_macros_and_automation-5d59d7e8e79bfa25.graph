@@ -1,0 +1,240 @@
+envelope: 1
+uuid: nexus-export-graph-phase:KB5_keys_in_macros_and_automation:5d59d7e8e79bfa25
+type: graph
+id: phase:KB5_keys_in_macros_and_automation:5d59d7e8e79bfa25
+context: dependency graph of phase KB5_keys_in_macros_and_automation
+intent: null
+summary: 28 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793386281609
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281609
+lastSeenAt: 1793386281609
+fingerprint: null
+payload:
+  for: KB5_keys_in_macros_and_automation
+  kind: phase
+  repo: null
+  hash: 5d59d7e8e79bfa25
+  nodes:
+    - path: clear-glass/src/driver/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/agent-tools/tools/browser/browser-action.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/steps.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/clear-glass/macro.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/ambiguity-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/automation/index.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/automation-engine.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/core/zoom.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/page-resolver.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/element-gate.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/field.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/option-match.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-memory.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-session.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/reader.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/semantic-tree.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/automation/cron.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/core/zoom.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/reader.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/option-match.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-session.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-memory.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: lib/automation/steps.js
+      to: lib/automation/cron.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/ambiguity-pull.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: lib/automation/steps.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/steps.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: orchestrator/automation/index.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: tests/modules/automation-engine.test.js
+      to: lib/automation/engine.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+    dependents:
+      - docs/2026-10-29-gigs-contacts-snowflake-phasemap.spec::SN1_snowflake_in_macros_and_workflows
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+    downstream:
+      - docs/2026-10-29-gigs-contacts-snowflake-phasemap.spec::SN1_snowflake_in_macros_and_workflows
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5
+      - 'depends on (2): KB4_gates_on_macro_steps, KB2_site_keys · all upstream 9'
+      - 'needed by (1): SN1_snowflake_in_macros_and_workflows'
+    edges:
+      - from: docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+        kind: declared
+      - from: docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+        kind: declared

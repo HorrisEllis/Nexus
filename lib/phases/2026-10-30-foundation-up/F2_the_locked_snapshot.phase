@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-foundation-up-phasemap.spec::F2_the_locked_snapshot
+type: phase
+id: docs_2026-10-30-foundation-up-phasemap.spec::F2_the_locked_snapshot
+context: pipeline phase F2_the_locked_snapshot of docs/2026-10-30-foundation-up-phasemap.spec
+intent: null
+summary: F2_the_locked_snapshot (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793382595481
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595481
+lastSeenAt: 1793382595481
+fingerprint: null
+payload:
+  id: F2_the_locked_snapshot
+  map: docs/2026-10-30-foundation-up-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/vendor/VENDOR.lock.json
+    - scripts/vendor-check.js
+    - tests/modules/test-substrate-spec.test.js
+  depends_on:
+    - F_D2_copies_are_locked
+    - F0_the_kernel_spec
+  blocks: []
+  spec: null
+  graph: b8861ec3342fda6e

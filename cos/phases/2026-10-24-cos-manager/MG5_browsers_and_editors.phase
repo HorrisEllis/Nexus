@@ -7,11 +7,11 @@ intent: null
 summary: MG5_browsers_and_editors (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792880100858
+exported_at: 1793365823358
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100858
-lastSeenAt: 1792880100858
+firstSeenAt: 1793365823358
+lastSeenAt: 1793365823358
 fingerprint: null
 payload:
   id: MG5_browsers_and_editors
@@ -25,6 +25,7 @@ payload:
     - cos/blueprint/registry.js
   depends_on:
     - MG0b_the_full_spec
-  blocks: []
-  spec: null
+  blocks:
+    - MOD-MG-CATALOG
+  spec: cos/spec/cos-manager.spec
   graph: 760b89a277f7798c

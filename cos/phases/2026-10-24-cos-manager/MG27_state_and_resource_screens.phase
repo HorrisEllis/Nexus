@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
+context: pipeline phase MG27_state_and_resource_screens of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG27_state_and_resource_screens (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793376634387
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793376634387
+lastSeenAt: 1793376634387
+fingerprint: null
+payload:
+  id: MG27_state_and_resource_screens
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/contract.json
+  depends_on:
+    - MG23_allocation_and_balance
+    - MG24_network_manager
+    - MG25_storage_manager
+    - MG26_branch_benchmark_merge
+    - MG18_the_supervisor_screen
+  blocks:
+    - MOD-MG-UI-TIMELINE
+    - MOD-MG-UI-RESOURCES
+  spec: cos/spec/cos-manager.spec
+  graph: 9011cdbc9e55938f

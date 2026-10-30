@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::UG3_every_dom_write_gated
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::UG3_every_dom_write_gated
+context: pipeline phase UG3_every_dom_write_gated of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: UG3_every_dom_write_gated (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281624
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281624
+lastSeenAt: 1793386281624
+fingerprint: null
+payload:
+  id: UG3_every_dom_write_gated
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    SUPERSEDED 2026-10-30 by PL_D4_a_gate_is_a_pipeline_block (his correction; archived to
+    _archive/2026-10-30-write-gates/) — was BUILT 0.60.292
+  files:
+    - clear-glass/src/dom/archaeology.js
+    - clear-glass/src/autofill/matcher.js
+  depends_on:
+    - UG1_one_gate_for_every_element
+  blocks:
+    - MOD-UG3
+  spec: clear-glass/spec/gated-flows.spec
+  graph: fe52db277cfeab98

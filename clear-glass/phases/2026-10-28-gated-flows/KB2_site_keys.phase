@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+context: pipeline phase KB2_site_keys of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: KB2_site_keys (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281604
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281604
+lastSeenAt: 1793386281604
+fingerprint: null
+payload:
+  id: KB2_site_keys
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.275
+  files:
+    - clear-glass/src/shortcuts/site-keys.js
+    - clear-glass/src/main/index.js
+  depends_on:
+    - KB1_choose_waits_and_keys
+  blocks:
+    - MOD-KB2
+  spec: clear-glass/spec/gated-flows.spec
+  graph: a2456fa5feed64eb

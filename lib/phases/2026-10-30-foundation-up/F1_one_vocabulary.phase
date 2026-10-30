@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-foundation-up-phasemap.spec::F1_one_vocabulary
+type: phase
+id: docs_2026-10-30-foundation-up-phasemap.spec::F1_one_vocabulary
+context: pipeline phase F1_one_vocabulary of docs/2026-10-30-foundation-up-phasemap.spec
+intent: null
+summary: F1_one_vocabulary (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793382595478
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595478
+lastSeenAt: 1793382595478
+fingerprint: null
+payload:
+  id: F1_one_vocabulary
+  map: docs/2026-10-30-foundation-up-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/lang/emerge-lang.spec
+    - emerge/spec/cie-eg.spec
+  depends_on:
+    - F0_the_kernel_spec
+  blocks: []
+  spec: null
+  graph: acec7aacfc186e20

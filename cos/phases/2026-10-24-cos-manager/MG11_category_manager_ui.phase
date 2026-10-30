@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG11_category_manager_ui
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG11_category_manager_ui
+context: pipeline phase MG11_category_manager_ui of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG11_category_manager_ui (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793365823374
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793365823374
+lastSeenAt: 1793365823374
+fingerprint: null
+payload:
+  id: MG11_category_manager_ui
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/ui/categories
+    - cos/spec/cos-manager.spec
+  depends_on:
+    - MG10_categories
+    - MG_D1_ui_isolated_per_component
+    - DB26_the_ui_floats_on_the_registry
+  blocks:
+    - MOD-MG-UI-CATEGORIES
+  spec: cos/spec/cos-manager.spec
+  graph: 307710eb282e1bc3

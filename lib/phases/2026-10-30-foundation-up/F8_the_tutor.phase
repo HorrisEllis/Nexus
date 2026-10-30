@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-foundation-up-phasemap.spec::F8_the_tutor
+type: phase
+id: docs_2026-10-30-foundation-up-phasemap.spec::F8_the_tutor
+context: pipeline phase F8_the_tutor of docs/2026-10-30-foundation-up-phasemap.spec
+intent: null
+summary: F8_the_tutor (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793382595498
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595498
+lastSeenAt: 1793382595498
+fingerprint: null
+payload:
+  id: F8_the_tutor
+  map: docs/2026-10-30-foundation-up-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tutor
+    - lib/end-state.js
+  depends_on:
+    - F7_the_assistant
+    - F3_the_door
+  blocks: []
+  spec: null
+  graph: 584152ca3ff74bde

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-foundation-up-phasemap.spec::F6_the_compound_build
+type: phase
+id: docs_2026-10-30-foundation-up-phasemap.spec::F6_the_compound_build
+context: pipeline phase F6_the_compound_build of docs/2026-10-30-foundation-up-phasemap.spec
+intent: null
+summary: F6_the_compound_build (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793382595490
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595490
+lastSeenAt: 1793382595490
+fingerprint: null
+payload:
+  id: F6_the_compound_build
+  map: docs/2026-10-30-foundation-up-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/compiler/t2-gate.js
+  depends_on:
+    - F5_memory_and_learning
+    - GWK1_the_walker_and_chain_schema
+  blocks: []
+  spec: null
+  graph: ed3011d31d4a71cb

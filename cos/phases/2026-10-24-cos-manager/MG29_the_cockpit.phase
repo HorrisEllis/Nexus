@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
+context: pipeline phase MG29_the_cockpit of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG29_the_cockpit (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793383131621
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793383131621
+lastSeenAt: 1793383131621
+fingerprint: null
+payload:
+  id: MG29_the_cockpit
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+    - cos/manager/contract.json
+  depends_on:
+    - MG18_the_supervisor_screen
+  blocks:
+    - MOD-MG-CONTAINER-ROWS
+    - MOD-MG-UI-COCKPIT
+  spec: cos/spec/cos-manager.spec
+  graph: 5b12f47d1e8a5aef

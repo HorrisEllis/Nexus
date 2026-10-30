@@ -7,11 +7,11 @@ intent: null
 summary: MG3_the_state_manager (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792880100856
+exported_at: 1793365823351
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100856
-lastSeenAt: 1792880100856
+firstSeenAt: 1793365823351
+lastSeenAt: 1793365823351
 fingerprint: null
 payload:
   id: MG3_the_state_manager
@@ -29,6 +29,7 @@ payload:
     - SN0_one_branch
     - SN2_run_in_parallel
     - VM1_control_like_vmware
-  blocks: []
-  spec: null
-  graph: dc78414883320b4a
+  blocks:
+    - MOD-MG-STATE
+  spec: cos/spec/cos-manager.spec
+  graph: aaebad36af856d16

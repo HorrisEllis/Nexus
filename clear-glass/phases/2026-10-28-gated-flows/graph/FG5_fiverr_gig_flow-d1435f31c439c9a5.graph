@@ -1,0 +1,229 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FG5_fiverr_gig_flow:d1435f31c439c9a5
+type: graph
+id: phase:FG5_fiverr_gig_flow:d1435f31c439c9a5
+context: dependency graph of phase FG5_fiverr_gig_flow
+intent: null
+summary: 22 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793386281598
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281598
+lastSeenAt: 1793386281598
+fingerprint: null
+payload:
+  for: FG5_fiverr_gig_flow
+  kind: phase
+  repo: null
+  hash: d1435f31c439c9a5
+  nodes:
+    - path: clear-glass/renderer/gig-panel.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/gig-flow.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/autofill/gig.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/gig-file.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-gig.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/adblock/lists.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/handler-registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/bridge-sources.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/host-import.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/kill-switch.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/ipc/handler-registry.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/screen-qa/detector.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/bridge-sources.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/kill-switch.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/host-import.js
+      kind: requires
+    - from: clear-glass/test/gig-file.test.js
+      to: clear-glass/src/autofill/gig.js
+      kind: requires
+    - from: tests/modules/clear-glass-gig.test.js
+      to: clear-glass/src/autofill/gig.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/autofill/gig.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D3_publish_is_his
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC3_links_open_tabs
+      - docs/2026-10-28-first-principles-phasemap.spec::FP5_the_pricing_page_blocks
+    dependents:
+      - docs/2026-10-29-gigs-contacts-snowflake-phasemap.spec::AP1_gig_features
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-first-principles-phasemap.spec::FP4_what_a_key_changed
+      - docs/2026-10-28-first-principles-phasemap.spec::FP5_the_pricing_page_blocks
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG3_gate_per_step
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D3_publish_is_his
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC3_links_open_tabs
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC_D2_links_open_tabs
+    downstream:
+      - docs/2026-10-29-gigs-contacts-snowflake-phasemap.spec::AP1_gig_features
+    blockedBy:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D3_publish_is_his
+      - docs/2026-10-28-tab-compartments-phasemap.spec::TC3_links_open_tabs
+      - docs/2026-10-28-first-principles-phasemap.spec::FP5_the_pricing_page_blocks
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
+        files:
+          - clear-glass/src/ipc/bridge.js
+      - with: docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
+        files:
+          - clear-glass/src/autofill/gig.js
+          - clear-glass/src/ipc/bridge.js
+    dangling: []
+    lines:
+      - >-
+        layer 5 · blocked by FG4_pointer_and_choose_steps, FG_D3_publish_is_his,
+        TC3_links_open_tabs, FP5_the_pricing_page_blocks
+      - >-
+        depends on (4): FG4_pointer_and_choose_steps, FG_D3_publish_is_his, TC3_links_open_tabs,
+        FP5_the_pricing_page_blocks · all upstream 13
+      - 'needed by (1): AP1_gig_features'
+      - >-
+        same files as GT1_gate_timing_for_dropdowns with no order between them:
+        clear-glass/src/ipc/bridge.js
+      - >-
+        same files as GT2_the_fill_includes_and_reports_dropdowns with no order between them:
+        clear-glass/src/autofill/gig.js, clear-glass/src/ipc/bridge.js
+    edges:
+      - from: docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
+        kind: declared
+      - from: docs/2026-10-28-gated-flows-phasemap.spec::FG_D3_publish_is_his
+        kind: declared
+      - from: docs/2026-10-28-tab-compartments-phasemap.spec::TC3_links_open_tabs
+        kind: declared
+      - from: docs/2026-10-28-first-principles-phasemap.spec::FP5_the_pricing_page_blocks
+        kind: declared
