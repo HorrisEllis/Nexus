@@ -1887,3 +1887,10 @@ spec:
 # .response ... the job ledger, each job has to have it's corrasponding .response node to be fullfilled from clearglass' end." Reuse:
 # pipelines.js/macros.js + the engine (linked 0.60.293) for CM; response-sink.js (.response node) + the queue + the ledger for JL.
 # CAUTION: the parallel claude/laughing-fermi session is live in this exact area — coordinate before CM/JL code (collision risk).
+
+# ADDENDUM 2026-10-30 — registered: docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec (ML1–ML5) — MAPPED, not built
+# James: "systems compartment ... metric points of data for stats ... model usage. agent usage. also running the intelligence system
+# on jobs every edge? or batch them every 10 or so? to map the relation between code primitives ... for emerge also." Answer (ML_D1,
+# his axioms): per-edge CHEAP metric collection + BATCHED Intelligence learning (every ~10 edges or a sigma event). Reuse: proc-stats,
+# economy ledger (model/agent usage), baseline.js (sigma), relational-field + causal (the learning graph), code-intel (primitives).
+# CAUTION: COS/Intelligence/compartments are where the parallel sessions are live — coordinate before code.
