@@ -444,3 +444,21 @@ phases:
 #         lib keeps only the boot address book (name → folder, port, health route), which loom reads as one of its sources;
 #     (b) all of it in loom; each caller keeps the last answer it got and works from that while loom is down.
 #   Unanswered at the time of writing; no code moves until he answers.
+
+# ADDENDUM 2026-10-30 (b) — his answer: each system builds its own registry; loom is the system registry; Nexus is moving to COS
+# James, 2026-10-30, sent instead of picking (a) split or (b) all in loom: "each system needs to build and update it's own registry. the
+# registry is also where each module wires in. like each system generates its own map. then loom the system registry. just know nexus is
+# moving to cos."
+# - Decided (his): three levels.
+#   1. Each system GENERATES and updates its own registry: every component (file) and module (spec module) wires in there, with its edges.
+#      It is that system's own map; no hand-written rows in loom/maps/*.js (those are what IN4 retires).
+#   2. Loom is the system registry: it reads each system's registry (through the system's route, §5.15, not its files) and holds the whole.
+#   3. Nexus is moving to COS: a system is a COS compartment.
+# - What that settles of the address-book question (the coder's reading, to confirm): where a system runs (port, health route, entry) is its
+#   own compartment manifest, <system>/compartment.json (nexus.compartment/1, cos/spec/cos-spine.spec census), which COS reads to spawn it.
+#   So the address book is neither loom's nor lib's: each system declares it, COS runs it, loom records it. Loom down breaks no lookup.
+# - Supersedes, for the system level: the coder's proposal of lib/system-registry.js as the system registry (the first addendum above,
+#   kept, §0.3). lib/system-registry.js becomes a reader over the compartment manifests until its callers move to COS / loom.
+# - Changes to the plan: IN3 = a generated registry per system (one schema, NC0's schema rule; each system runs it on itself); IN4 = loom
+#   aggregates those and its hand maps are archived; IN6 = each system onto it, alongside CS4 (every system a compartment). To be specced
+#   in full (emerge format) before any phase is built.
