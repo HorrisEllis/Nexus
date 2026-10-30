@@ -138,7 +138,13 @@ document.querySelectorAll('.dv').forEach(function(dv){ dv.addEventListener('clic
     const run = async (read) => {
       const calls = [];
       const self = { dom: { handleQuery: async () => [], handleMutate: async () => ({}) }, postEvent: () => {}, _humanCheckGate: async () => ({ pass: true }), _gigFeatures: Bridge.prototype._gigFeatures,   // 0.60.281 AP1 the package rows
-        driver: { exec: async (c) => { calls.push(c); if (c.action === 'readPage') return read; if (c.action === 'choose') return { option: c.option + ' Days' }; return {}; } } };
+        // 2026-10-30 GG1: every part is gated now, so the stand-in answers the reads a page would (what was last typed, what was chosen)
+        driver: { exec: async (c) => { calls.push(c); if (c.action === 'readPage') return read; if (c.action === 'choose') return { option: c.option + ' Days' };
+          if (c.action === 'setValue' || c.action === 'insertText' || c.action === 'typeAt') { last = String(c.value != null ? c.value : c.text); return { value: last, selector: '#typed' }; }
+          if (c.action === 'readChoice') return { matches: true, shown: c.is };
+          if (c.action === 'eval') return { result: { found: true, value: last } };
+          return {}; } } };
+      let last = '';
       return { r: await Bridge.prototype._gigFill.call(self, { gig }), calls };
     };
     const mem = require(CG('src/page/page-memory.js')).shared();

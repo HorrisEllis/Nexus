@@ -477,6 +477,20 @@ spec:
       error_paths: ["the key ran and the part still does not read back → notFound names the key it tried"]
       acceptance: ["test-gig-all-fields GF-04 in Clear Glass: a field the fill cannot find is filled through the key he bound to it"]
 
+    # 2026-10-30 GG1 — James: "each field/drop down/ or anything should be gated."
+    - id: MOD-GG1
+      name: every-part-gated
+      uuid: nexus-gated-flows-every-part-gated-v1-0000-2026-1030-001
+      path: clear-glass/src/ipc/bridge.js
+      phase: GG1_every_part_gated
+      description: "Every part the gig fill does ends at a gate (gigGate): what the page shows for it is read until it is right, then read again after the page settles, so a page that puts its own value back fails it. The checks (gigChecks) only read: a box's value, a dropdown's shown choice, a checkbox's state (checkAt read), text shown on the page. A closed gate runs the part again; still closed, his site keys for the part, gated on the element he bound; else the part says what its gate saw. The label-matching pass's boxes, the package rows and his recorded page macros (a typed step on its value, a choice on what it shows) are gated the same way. Every gate is listed in r.gates."
+      deps: [{ name: gig-text-and-lists }, { name: gig-site-key-fallback }]
+      exports: ["gigGate(check, { timeoutMs, settleMs }) → { open, saw, held }", "gigChecks(driver, agentId) → { text, choice, shown, allShown, checked }", "driver checkAt { read:true }", "typeAt returns selector", "pageMacroSteps adds gates"]
+      gate_pipeline: ["GATE-GG1-001: part → its gate (read until right, read again settled) → retry → his keys → said"]
+      behavioral_contracts: ["a part whose gate stayed closed is never counted as filled", "a gate never changes the page", "no driver → said (gatesWhy), never a pass"]
+      error_paths: ["closed gate → notFound with what it saw and the keys it tried"]
+      acceptance: ["test-gig-all-fields GF-05 in Clear Glass: every part has an open gate; a page that reverts the title after 250 ms is caught, tried twice, said"]
+
   events:
     flows:
       - "macro.gate { macro, step, open, why, by }"

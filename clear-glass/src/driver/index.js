@@ -896,7 +896,7 @@ class ClearDriver {
 
   // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." A package row that is a checkbox (Data Syncing, Conditional Logic …): the one in
   // the column headed `column` and the row labelled `row`, clicked with the pointer only when it is not already in the wanted state, read back.
-  async _checkAt(agentId, { column, row, checked = true, via = 'auto' } = {}) {
+  async _checkAt(agentId, { column, row, checked = true, via = 'auto', read = false } = {}) {   // read (2026-10-30 GG1): only say the state, a gate
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
     if (!column || !row) throw new Error('checkAt needs column and row');
@@ -917,6 +917,7 @@ class ClearDriver {
     })(${JSON.stringify(column)}, ${JSON.stringify(row)})`);
     let f = await find();
     if (!f || f.error) throw new Error(`checkAt: ${(f && f.error) || 'page did not answer'}`);
+    if (read) return { column, row, checked: !!f.checked };
     const want = !!checked;
     if (f.checked === want) return { column, row, checked: want, changed: false };
     await this._waitResponsive(wc);
@@ -955,7 +956,7 @@ class ClearDriver {
     const back = await this._evalJs(wc, `(function(){ var e = document.querySelector(${JSON.stringify(selector)}); return e ? String(e.value) : null; })()`);
     const want = String(text).replace(/[$,\s]/g, ''), got = String(back == null ? '' : back).replace(/[$,\s]/g, '');
     if (got !== want) throw new Error(`typeAt: "${row}" in ${column} shows "${back}" after typing, not "${text}"`);
-    return { column, row, text: String(text), value: back };
+    return { column, row, text: String(text), value: back, selector };   // selector (2026-10-30 GG1): the box, for the part's settled gate
   }
 
   // 0.60.281 AP1 — the row labels of a priced table: the short texts left of the column headed `column`, below its header (so the fill can

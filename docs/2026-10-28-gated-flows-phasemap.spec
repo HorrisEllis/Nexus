@@ -354,3 +354,19 @@ phases_gf:
     status: BUILT 0.60.290
     depends_on: [GF3_text_and_lists_filled_and_read_back, KB2_site_keys, KB3_site_keys_ui]
     files: [clear-glass/src/shortcuts/site-keys.js, clear-glass/src/ipc/bridge.js, clear-glass/renderer/site-keys/bind-bar.js]
+
+## ADDENDUM 2026-10-30 — GG1: each field, dropdown, or anything, gated
+James, 2026-10-30, after 0.60.290 (every field filled and read back): "each field/drop down/ or anything should be gated."
+Grounded: 0.60.290 read most parts back once, at the moment they were set. Not gated: the boxes the label-matching pass set (no read at all),
+the suggested-category click, a field he taught with the picker (setValue), and nothing was read again after the page settled, so a page
+that puts its own value back afterwards counted as filled. His recorded page macros carried no gates unless he wrote one.
+Decided by his axioms: §1.2 nothing silent (a closed gate says what it saw; no driver → said, never a pass); FG3/KB4 reuse (the gate is
+the macro gates' idea, read-only checks on the driver's own reads; no second engine); TRUTH_OVER_COHERENCE (a part whose gate stayed closed
+is never counted as filled).
+phases_gg:
+  GG1_every_part_gated:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GG1]
+    status: BUILT 0.60.291
+    depends_on: [GF3_text_and_lists_filled_and_read_back, GF4_friction_goes_to_his_site_keys, KB4_gates_on_macro_steps]
+    files: [clear-glass/src/ipc/bridge.js, clear-glass/src/driver/index.js, clear-glass/src/autofill/gig-fields.js, clear-glass/src/autofill/gig-pages.js, clear-glass/src/autofill/gig.js, tests/modules/test-gig-all-fields.test.js]

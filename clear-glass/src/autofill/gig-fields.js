@@ -15,6 +15,7 @@
  *   clickButtonScript(re)      clicks the visible button whose words match re, never one of HIS_BUTTONS → { clicked, text, why }
  *   listBoxesScript(kind)      after an Add: the empty visible boxes of an FAQ (question, answer) or a buyer question (question), marked
  *                              data-cg-part=<kind>.question / <kind>.answer → { found, why }
+ *   valueAtScript({ selector | cgId, key })  what a box shows now, marked data-cg-part=<key> → { found, value }   (GG1, a part's gate)
  *   shownScript(text)          the page shows this text (an FAQ or a question once added) → boolean
  * Fiverr's other editor pages are not on record (gig-pages.js); the words matched here are the editor's own labels, a reading to confirm on
  * his machine. What does not match falls to his site keys (bridge _gigSiteKey), then to "point at it".
@@ -98,6 +99,19 @@ function listBoxesScript(kind) {
 })(${JSON.stringify(String(kind))})`;
 }
 
+// 2026-10-30 GG1 — James: "each field/drop down/ or anything should be gated." What a box shows now, found by a selector or by the id the DOM
+// mesh gave it (a field the label-matching pass filled); the box is marked data-cg-part=<key> so a retry can type into it.
+function valueAtScript({ selector = null, cgId = null, key = null } = {}) {
+  return `(function(sel, id, key){ var el = null;
+  if (sel) { try { el = document.querySelector(sel); } catch (_) {} }
+  else if (id) el = Array.prototype.find.call(document.querySelectorAll('input,textarea,select,[contenteditable]'), function(e){ return e.__cgId === id; }) || null;
+  if (!el) return { found: false };
+  if (key) el.setAttribute('data-cg-part', key);
+  var v = el.tagName === 'SELECT' ? ((el.options[el.selectedIndex] || {}).text || '') : /^(INPUT|TEXTAREA)$/.test(el.tagName) ? String(el.value) : String(el.innerText || el.textContent || '');
+  return { found: true, value: v };
+})(${JSON.stringify(selector)}, ${JSON.stringify(cgId)}, ${JSON.stringify(key)})`;
+}
+
 function shownScript(text) {
   return `(function(t){ var hay = String(document.body.innerText || '').replace(/\\s+/g, ' ').toLowerCase();
   return hay.indexOf(String(t).replace(/\\s+/g, ' ').trim().toLowerCase().slice(0, 60)) >= 0; })(${JSON.stringify(String(text))})`;
@@ -111,4 +125,4 @@ function readsBack(shown, value) {
   return n(shown).includes(v.slice(0, 60));
 }
 
-module.exports = { MODULE_ID, VERSION, HIS_BUTTONS, SECTIONS, fieldScript, readScript, clickButtonScript, listBoxesScript, shownScript, readsBack };
+module.exports = { MODULE_ID, VERSION, HIS_BUTTONS, SECTIONS, fieldScript, readScript, clickButtonScript, listBoxesScript, valueAtScript, shownScript, readsBack };
