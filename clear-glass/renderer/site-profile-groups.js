@@ -18,9 +18,11 @@
 (function () {
   const FEATURE = {
     autofill: 'Autofill', macros: 'Macros', workflows: 'Workflows', passwords: 'Passwords & account', network: 'Network',
-    resume: 'Resume', accessibility: 'Accessibility', driver: 'ClearDriver', mesh: 'Co-pilot & agent mesh', guardian: 'Guardian',
+    resume: 'Resume', accessibility: 'Accessibility', driver: 'ClearDriver', gates: 'Gates', pipelines: 'Pipelines', mesh: 'Co-pilot & agent mesh', guardian: 'Guardian',
   };
-  const ORDER = ['autofill', 'macros', 'workflows', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'mesh', 'guardian'];
+  // 2026-10-30 — gates (a gate block's timing here) and pipelines (whether this site's pipelines run, PL10): James, "with the option for per site
+  // pipelines". Drawn from the key table like every group; a group the key table has and this list does not is added at the end, never hidden.
+  const ORDER = ['autofill', 'macros', 'workflows', 'pipelines', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'gates', 'mesh', 'guardian'];
   const ROUTE = [['direct', 'Direct'], ['transport', 'Through Snowflake'], ['block', 'Blocked']];
   const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
   const show = (v) => v === true ? 'on' : v === false ? 'off' : v == null || v === '' ? 'none' : Array.isArray(v) ? (v.length ? v.join(', ') : 'none') : String(v);
@@ -73,7 +75,7 @@
     function draw() {
       root.replaceChildren();
       if (!prof.origin) { root.append(el('div', 'sp-empty', 'This page is not a website, so it has no site settings.')); return; }
-      for (const f of ORDER) {
+      for (const f of [...ORDER, ...[...new Set(rows.map(k => k.feature))].filter(x => !ORDER.includes(x))]) {
         const ks = rows.filter(k => k.feature === f);
         if (!ks.length) continue;
         const g = el('section', 'sp-group'); g.dataset.feature = f;
