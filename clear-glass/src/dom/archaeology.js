@@ -510,6 +510,10 @@ class DomArchaeology {
       let same = false; try { same = await wc.executeJavaScript(EG.sameElementScript(g, { cgId }), true); } catch (_) {}
       if (same) exps.push({ ...g, label: `your gate${g.label ? ` "${g.label}"` : ''}` });
     }
+    // a page that does not answer the read at all (null, not even "not found") leaves the write unchecked, said: unknown is never a pass
+    // nor a closed gate (the evidence rule, docs/CLAUDE.md NC0)
+    let probe = null; try { probe = await wc.executeJavaScript(EG.stateScript(exps[0]), true); } catch (_) {}
+    if (probe == null) return { ...result, gate: { unchecked: 'the page did not answer the gate\'s read' } };
     const check = async () => {
       const outs = [];
       for (const e of exps) { let st = null; try { st = await wc.executeJavaScript(EG.stateScript(e), true); } catch (err) { outs.push({ open: false, saw: err.message }); continue; } outs.push({ ...EG.evaluate(e, st || {}, OM), label: e.label }); }

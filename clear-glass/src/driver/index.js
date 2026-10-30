@@ -1127,6 +1127,9 @@ class ClearDriver {
       if (same) exps.push({ ...g, label: `your gate${g.label ? ` "${g.label}"` : ''}` });
     }
     if (!exps.length) return { ...(result || {}), gate: { none: `nothing to check after ${action} here: pick the element and Gate this element, or the next step's gate covers it` } };
+    // a page that does not answer the read at all leaves the write unchecked, said: unknown is never a pass nor a closed gate (NC0)
+    const domExp = exps.find(e => !e.choice && !e.checkAt);
+    if (domExp) { let probe = null; try { probe = await this._evalJs(wc, EG.stateScript(domExp)); } catch (_) {} if (probe == null) return { ...(result || {}), gate: { unchecked: 'the page did not answer the gate\'s read' } }; }
     let g = null;
     for (let t = 0; t <= pol.retries; t++) {
       if (t) { await this._sleep(150); result = await redo(); }

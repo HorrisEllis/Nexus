@@ -2523,7 +2523,9 @@ class IpcBridge {
     const gated = async (key, doIt, check, retries = 1) => {
       let g = null;
       for (let t = 0; t <= retries; t++) {
-        const rec = await doIt(t);
+        let rec;
+        // 2026-10-30 UG2 — the driver gates each write itself now; its closed gate is this part's closed gate, listed the same way
+        try { rec = await doIt(t); } catch (err) { if (err && err.code === 'GATE_CLOSED') { r.gates.push({ key, open: false, tries: err.gate.tries, saw: err.gate.saw, at: 'the write' }); throw new Error(`its gate stayed closed: ${err.gate.saw}`); } throw err; }
         g = await gigGate(check);
         if (g.open) { r.gates.push({ key, open: true, tries: t + 1, saw: g.saw }); return rec; }
       }
