@@ -2374,6 +2374,91 @@ class IpcBridge {
     return out;
   }
 
+  // 2026-10-30 GF3 — James: "fix the autofill to work with all fields". A text part found by its section's words (gig-fields.js), typed in as
+  // a keyboard would (driver insertText, so a rich editor takes it), read back. { ok, kind, shown } or throws why.
+  async _gigText(agentId, part, value, section = null) {
+    const GF = require('../autofill/gig-fields');
+    const sec = section || GF.SECTIONS[part];
+    if (!sec) throw new Error(`no section words for ${part}`);
+    const f = await this.driver.exec({ agentId, action: 'eval', code: GF.fieldScript(part, sec.re, { exclude: sec.exclude || null, prefer: sec.prefer || null }), by: 'person' });
+    const found = f && f.result;
+    if (!found || !found.found) throw new Error((found && found.why) || 'not found on the page');
+    const t = await this.driver.exec({ agentId, action: 'insertText', selector: found.selector, text: String(value), by: 'person' });
+    const back = await this.driver.exec({ agentId, action: 'eval', code: GF.readScript(part), by: 'person' });
+    const shown = back && back.result != null ? back.result : t && t.shown;
+    if (!GF.readsBack(shown, value)) throw new Error(`the ${part} box shows "${String(shown || '').slice(0, 60)}" after typing, not the gig's text`);
+    return { ok: true, kind: found.kind, length: String(value).length };
+  }
+
+  // 2026-10-30 GF3 — the lists: each FAQ (question + answer) or buyer question added through its own Add button, its empty boxes filled,
+  // confirmed with Add, and read back on the page. One the page already shows is skipped, said. Save, Publish and Continue stay his.
+  async _gigList(agentId, kind, items, want = null) {
+    const GF = require('../autofill/gig-fields');
+    const out = { done: [], already: [], failed: [] };
+    const list = (Array.isArray(items) ? items : []).map((x, i) => ({ i, q: kind === 'faq' ? x && x.question : x, a: kind === 'faq' ? x && x.answer : null }))
+      .filter(x => x.q && (kind !== 'faq' || x.a))
+      .filter(x => !want || (kind === 'faq' ? want.has(`faq.${x.i}.question`) || want.has(`faq.${x.i}.answer`) : want.has(`requirement.${x.i}`)));
+    const ev = async (code) => { const r = await this.driver.exec({ agentId, action: 'eval', code, by: 'person' }); return r && r.result; };
+    for (const it of list) {
+      try {
+        if (await ev(GF.shownScript(it.q))) { out.already.push(it.i); continue; }
+        const add = await ev(GF.clickButtonScript(kind === 'faq' ? /^\+?\s*add faq$/i : /^\+?\s*add (new )?question$/i));
+        if (!add || !add.clicked) throw new Error((add && add.why) || 'the Add button was not found');
+        let boxes = null;
+        for (let t = 0; t < 10 && !(boxes && boxes.found); t++) { if (t) await new Promise(r => setTimeout(r, 150)); boxes = await ev(GF.listBoxesScript(kind)); }
+        if (!boxes || !boxes.found) throw new Error((boxes && boxes.why) || 'no boxes opened');
+        await this.driver.exec({ agentId, action: 'insertText', selector: `[data-cg-part="${kind}.question"]`, text: String(it.q), by: 'person' });
+        if (kind === 'faq') await this.driver.exec({ agentId, action: 'insertText', selector: '[data-cg-part="faq.answer"]', text: String(it.a), by: 'person' });
+        const ok = await ev(GF.clickButtonScript(/^add$/i));
+        if (!ok || !ok.clicked) throw new Error((ok && ok.why) || 'the Add button under the boxes was not found');
+        let shown = false;
+        for (let t = 0; t < 10 && !shown; t++) { if (t) await new Promise(r => setTimeout(r, 150)); shown = !!(await ev(GF.shownScript(it.q))); }
+        if (!shown) throw new Error('added, but the page does not show it');
+        out.done.push(it.i);
+      } catch (err) { out.failed.push({ i: it.i, why: err.message }); }
+    }
+    return out;
+  }
+
+  // 2026-10-30 GF4 — James: "if you run into friction use the per site keybindings that I proposed." His keys on this site that name the part
+  // (binding.part, bound in the bind bar): an element he bound gets the value typed (text) or chosen (choice) there; otherwise the binding's own
+  // steps run (click, key, macro); then the part is read back. { ok, accel, how } | { ok:false, why }
+  async _gigSiteKey(agentId, url, part, value, { kind = 'text', verify = null } = {}) {
+    const SK = require('../shortcuts/site-keys'), GF = require('../autofill/gig-fields');
+    let map = {}; try { map = (this.options && this.options.getSiteKeys && this.options.getSiteKeys()) || {}; } catch (_) {}
+    const keys = SK.forPart(map, url, part);
+    if (!keys.length) return { ok: false, why: `no key of yours on this site for ${part} — pick the element, Bind a key, and set "for gig part" to ${part}` };
+    const tried = [];
+    for (const { accel, binding } of keys) {
+      try {
+        let selector = binding.selector || null;
+        if (selector && SK.isXPath(selector)) {
+          const m = await this.driver.exec({ agentId, action: 'eval', code: SK.markScript(selector), by: 'person' });
+          if (!m || !m.result) throw new Error('the element it names is not on this page');
+          selector = SK.MARKED;
+        }
+        let how;
+        if (selector && kind === 'text' && binding.do !== 'macro') {
+          const t = await this.driver.exec({ agentId, action: 'insertText', selector, text: String(value), by: 'person' });
+          if (!GF.readsBack(t && t.shown, value)) throw new Error(`typed, but it shows "${String((t && t.shown) || '').slice(0, 60)}"`);
+          how = 'typed at the element you bound';
+        } else if (selector && (binding.do === 'choose' || kind === 'choice')) {
+          const c = await this.driver.exec({ agentId, action: 'choose', selector, option: binding.option || String(value), by: 'person' });
+          how = `chose "${c && c.option}" at the element you bound`;
+        } else {
+          for (const st of SK.steps(binding)) {
+            if (st.macro) { const m = await this.runMacroAsPerson({ name: st.macro, agentId, skipSnapshot: true, by: 'person' }); if (m && m.error) throw new Error(`macro ${st.macro}: ${m.error}`); }
+            else await this.driver.exec({ agentId, ...st, ...(selector && st.selector ? { selector } : {}), by: 'person' });
+          }
+          how = SK.describe(binding);
+        }
+        if (verify && !(await verify())) throw new Error(`${how}, but the part still does not read back`);
+        return { ok: true, accel, how };
+      } catch (err) { tried.push(`${accel}: ${err.message}`); }
+    }
+    return { ok: false, why: `your keys for ${part} did not take (${tried.join('; ')})` };
+  }
+
   // 0.60.286 GM2 — the fill menu: every part of the gig as a row (gig-menu.js), ticked for the Fiverr page open in the tab; the human check said
   async _gigMenu({ gig = null, agentId = 'default' } = {}) {
     const g = gig || (this.autofillStore && this.autofillStore.getLastGig ? this.autofillStore.getLastGig() : null);
@@ -2387,7 +2472,8 @@ class IpcBridge {
     // From the fill menu: edits (his values) put into the gig first; only (the ticked keys) filled; replay (his recorded choices) optional.
     if (edits && typeof edits === 'object' && gig) gig = require('../autofill/gig-menu').apply(gig, edits);
     const want = Array.isArray(only) ? new Set(only.map(String)) : null;
-    const wants = (k) => !want || want.has(k) || (k === 'category' && want.has('subcategory'));
+    const wants = (k) => !want || want.has(k) || (k === 'category' && want.has('subcategory'))
+      || (k === 'faq' && [...want].some(x => x.startsWith('faq.'))) || (k === 'requirement' && [...want].some(x => x.startsWith('requirement.')));
     if (!this.dom) return { error: 'dom bridge unavailable' };
     if (!gig || !gig.title) return { error: 'write the gig first' };
     try { if (this.autofillStore) this.autofillStore.setLastGig(gig); } catch (_) {}   // §GA1a
@@ -2401,9 +2487,13 @@ class IpcBridge {
     let site = null; try { site = new URL(read && read.url).origin; } catch (_) {}
     const mem = require('../page/page-memory').shared();
     let r;
-    try { r = await require('../autofill/gig.js').fillGig(this.dom, gig, { agentId, minConfidence, only: want ? [...want] : null }); }
+    // 2026-10-30 GF3: on Description & FAQ and Requirements the FAQs and questions are added item by item (_gigList), never typed into
+    // whatever boxes happen to be open; and a description is typed, not set (a rich editor ignores a set value)
+    const listPage = where.page === 'description' || where.page === 'requirements';
+    try { r = await require('../autofill/gig.js').fillGig(this.dom, gig, { agentId, minConfidence, only: want ? [...want] : null, skip: listPage ? /^(faq\.|requirement\.|description$)/ : null }); }
     catch (err) { return { error: err.message }; }
-    r.page = where.page; r.pageWhy = where.why; r.dropdowns = []; r.learned = []; r.notFound = [];
+    r.page = where.page; r.pageWhy = where.why; r.dropdowns = []; r.learned = []; r.notFound = []; r.siteKeys = [];
+    if (where.page === 'gallery') r.gallery = 'the Gallery takes your images, video and documents: yours to add (nothing is uploaded for you)';
     const valueOf = (part) => GP.valueOf(gig, part);   // 0.60.268: one reading of a gig part, shared with the chips
     const filledKeys = new Set((r.filled || []).map(f => f.key));
     for (const part of (where.page && GP.PARTS[where.page]) || []) {
@@ -2415,6 +2505,18 @@ class IpcBridge {
         // 0.60.283 — James: "i want autofill to do it all if possible." Search tags: each typed and Enter pressed in the tags box (the one he
         // pointed at, else the box in the Search tags section), gated: the tag must show and leave the box, else typed once more.
         if (part === 'tags') { r.tags = await this._gigTags(agentId, gig, learned && learned.selector); continue; }
+        // 2026-10-30 GF3 — the lists, item by item; the title and the description by their section's words, typed, read back
+        if (part === 'faq' || part === 'requirement') {
+          const L = await this._gigList(agentId, part, part === 'faq' ? gig.faq : gig.requirements, want);
+          r[part === 'faq' ? 'faqs' : 'requirements'] = L;
+          if (L.failed.length) throw new Error(L.failed.map(f => `#${f.i + 1}: ${f.why}`).join('; '));
+          continue;
+        }
+        if ((part === 'title' || part === 'description') && !learned) {
+          if (filledKeys.has(part)) continue;
+          const t = await this._gigText(agentId, part, value);
+          r.filled.push({ key: part, confidence: 'high', source: `section words (${t.kind})` }); continue;
+        }
         if (learned) {
           if (isChoice) await this.driver.exec({ agentId, action: 'choose', selector: learned.selector, option: value, by: 'person' });
           else await this.driver.exec({ agentId, action: 'setValue', selector: learned.selector, value, by: 'person' });
@@ -2460,7 +2562,17 @@ class IpcBridge {
           r.dropdowns.push({ key: part, ok: true, option: [c1.option, c2 && c2.option].filter(Boolean).join(' > '), via: 'built-in', why: viaMacro.why }); continue;
         }
         throw new Error('not found on the page');
-      } catch (err) { r.notFound.push({ key: part, why: err.message }); }
+      } catch (err) {
+        // 2026-10-30 GF4 — friction: his keys for this part on this site, then read back; else said, with how to bind one
+        const GF = require('../autofill/gig-fields');
+        const kind = part === 'category' || /\.(delivery|revisions)$/.test(part) ? 'choice' : part === 'tags' || part === 'faq' || part === 'requirement' ? 'run' : 'text';
+        const shownOf = part === 'faq' ? ((gig.faq || [])[0] || {}).question : part === 'requirement' ? (gig.requirements || [])[0] : part === 'tags' ? (gig.tags || [])[0] : value;
+        const verify = kind === 'run' && shownOf ? async () => { const v = await this.driver.exec({ agentId, action: 'eval', code: GF.shownScript(shownOf), by: 'person' }); return !!(v && v.result); } : null;
+        let sk = { ok: false, why: 'no page address to look up your keys' };
+        if (this.driver && read && read.url) { try { sk = await this._gigSiteKey(agentId, read.url, part, value, { kind, verify }); } catch (e) { sk = { ok: false, why: e.message }; } }
+        if (sk.ok) r.siteKeys.push({ key: part, accel: sk.accel, how: sk.how, after: err.message });
+        else r.notFound.push({ key: part, why: `${err.message} · ${sk.why}` });
+      }
     }
     // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." The package rows come from the gig (features), never from code: a number or text
     // is chosen in that tier's column and row (the gated choose, read back), yes/no ticks or clears that row's checkbox (checkAt, read back).

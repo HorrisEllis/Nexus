@@ -62,7 +62,7 @@ document.querySelectorAll('.dd').forEach(function(dd){ dd.addEventListener('clic
     const { SPEC } = require(path.join(ROOT, 'idearium/cli/route-commands.js'));
     const row = SPEC.find(r => r.key === 'glass.keys');
     assert.deepStrictEqual(row.req({ args: ['https://www.fiverr.com'], flags: {} }), { system: 'clear-glass', method: 'GET', path: '/cli/site-keys?url=https%3A%2F%2Fwww.fiverr.com' });
-    assert.deepStrictEqual(row.req({ args: ['bind', 'https://www.fiverr.com', 'Alt+6', 'choose'], flags: { selector: '//x', option: '6' } }).body.binding, { do: 'choose', selector: '//x', option: '6', key: undefined, macro: undefined, label: undefined });
+    assert.deepStrictEqual(row.req({ args: ['bind', 'https://www.fiverr.com', 'Alt+6', 'choose'], flags: { selector: '//x', option: '6' } }).body.binding, { do: 'choose', selector: '//x', option: '6', key: undefined, macro: undefined, label: undefined, part: undefined });   // 2026-10-30 GF4: --part passed through
     assert.strictEqual(row.req({ args: ['unbind', 'https://www.fiverr.com', 'Alt+6'], flags: {} }).path, '/cli/site-keys/remove');
   });
 

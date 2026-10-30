@@ -423,6 +423,60 @@ spec:
       error_paths: ["the bridge answers no → said in the menu"]
       acceptance: ["test-gig-fill-menu GM-03 in Clear Glass: the menu lists the rows, a dropdown changes a value, Fill selected sends only the ticked keys"]
 
+    # 2026-10-30 GF — James: "the fiverr automation. isn't working. like the autofill needs to do all the work it can. like can you fix the
+    # autofill to work with all fields, and if you run into friction use the per site keybindings that I proposed."
+    - id: MOD-GF1
+      name: gig-fields
+      uuid: nexus-gated-flows-gig-fields-v1-0000-2026-1030-001
+      path: clear-glass/src/autofill/gig-fields.js
+      phase: GF1_every_field_found_by_its_section
+      description: "Pure page scripts for the gig parts that are not dropdowns: a field found by the words of its section (Gig title, Description), marked data-cg-part, read back; a list item (an FAQ, a buyer question) added by its own Add button, its boxes found empty, filled, confirmed with Add, and read back on the page. Never a Save, Publish or Continue button."
+      deps: [{ name: gig-fill-menu-model }]
+      exports: ["fieldScript(key, sectionRe, { exclude, prefer })", "readScript(key)", "clickButtonScript(re)", "listBoxesScript(kind)", "shownScript(text)", "HIS_BUTTONS"]
+      gate_pipeline: ["GATE-GF1-001: a field is the nearest visible one under its section's words; an excluded section never matches"]
+      behavioral_contracts: ["a button named Save, Publish, Continue, Submit, Send or Pay is never clicked by these scripts"]
+      error_paths: ["no field under the section → { found:false, why } with the section's words"]
+      acceptance: ["test-gig-all-fields GF-01: each script marks the right field on a page laid out like the editor"]
+
+    - id: MOD-GF2
+      name: gig-fill-every-page
+      uuid: nexus-gated-flows-gig-fill-every-page-v1-0000-2026-1030-001
+      path: clear-glass/src/autofill/gig-pages.js
+      phase: GF2_every_editor_page_known
+      description: "gigPage knows the editor's Description & FAQ, Requirements and Gallery pages (their words and the tab= in the address), and PARTS lists every part each page takes: the title on Overview, the description and FAQs, the buyer questions. The Gallery's files are his to add, and said."
+      deps: [{ name: gig-fields }]
+      exports: ["gigPage(read)", "PARTS", "valueOf(gig, part)"]
+      gate_pipeline: ["GATE-GF2-001: a page is placed by two of its signs, or the address and one"]
+      behavioral_contracts: ["a page it cannot place is said as unknown, never guessed"]
+      error_paths: ["an unknown page → page null with why"]
+      acceptance: ["test-gig-all-fields GF-02: every page is placed; each lists its parts"]
+
+    - id: MOD-GF3
+      name: gig-text-and-lists
+      uuid: nexus-gated-flows-gig-text-and-lists-v1-0000-2026-1030-001
+      path: clear-glass/src/ipc/bridge.js
+      phase: GF3_text_and_lists_filled_and_read_back
+      description: "_gigFill fills the title, the description (a rich editor is typed into as text input, not set), each FAQ and each buyer question, each read back off the page; one already on the page is not added twice. The driver gains insertText { selector, text }: focus, select what is there, insert as typed text, read back."
+      deps: [{ name: gig-fields }, { name: gig-fill-every-page }, { name: gig-fill-selected }]
+      exports: ["_gigText(agentId, part, value, section)", "_gigList(agentId, kind, items, want)", "driver action insertText { selector, text }"]
+      gate_pipeline: ["GATE-GF3-001: each part → found → filled → read back; a read-back that differs is a failure with what the page shows"]
+      behavioral_contracts: ["Save, Publish and Continue stay his; an FAQ or question already shown is skipped, said"]
+      error_paths: ["not found or not read back → the part goes to the site key fallback, else notFound with why"]
+      acceptance: ["test-gig-all-fields GF-03 in Clear Glass: title, a rich description, two FAQs and two buyer questions filled and read back"]
+
+    - id: MOD-GF4
+      name: gig-site-key-fallback
+      uuid: nexus-gated-flows-gig-site-key-fallback-v1-0000-2026-1030-001
+      path: clear-glass/src/shortcuts/site-keys.js
+      phase: GF4_friction_goes_to_his_site_keys
+      description: "A site key may name the gig part it serves (binding.part). When the fill meets friction on a part (not found, not read back, a dropdown that will not take), it looks for his keys on that site for that part and uses them: an element he bound gets the part's value typed or chosen there; a key, click or macro binding is run, then the part is read back. Each use is said (r.siteKeys)."
+      deps: [{ name: gig-text-and-lists }]
+      exports: ["validate(binding) keeps part", "forPart(map, url, part) → [{ accel, binding }]"]
+      gate_pipeline: ["GATE-GF4-001: friction → his keys for the part → used → read back again"]
+      behavioral_contracts: ["a site key is used only on its own site, only for the part it names; none bound → said, with how to bind one"]
+      error_paths: ["the key ran and the part still does not read back → notFound names the key it tried"]
+      acceptance: ["test-gig-all-fields GF-04 in Clear Glass: a field the fill cannot find is filled through the key he bound to it"]
+
   events:
     flows:
       - "macro.gate { macro, step, open, why, by }"

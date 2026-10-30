@@ -40,6 +40,13 @@
     for (const [v, l] of [['click', 'Click it'], ['choose', 'Choose an option'], ['key', 'Press a key in it'], ['macro', 'Run a macro']]) { const o = el('option', null, l); o.value = v; does.append(o); }
     const extra = el('input', 'kb-extra'); extra.placeholder = 'option (6, or "6 Days")'; extra.style.display = 'none';
     const label = el('input', 'kb-label'); label.placeholder = 'name (optional)';
+    // 2026-10-30 GF4 — James: "if you run into friction use the per site keybindings that I proposed." The gig part this key serves: when the
+    // fill cannot do that part, it uses this element (types or chooses the gig's value there) or runs this key.
+    const part = el('input', 'kb-part'); part.placeholder = 'for gig part (optional)'; part.setAttribute('list', 'cg-kb-parts'); part.title = 'The autofill uses this key when it cannot do this part by itself';
+    if (!document.getElementById('cg-kb-parts')) { const dl = el('datalist'); dl.id = 'cg-kb-parts';
+      for (const k of ['title', 'category', 'tags', 'description', 'faq', 'requirement', 'basic.name', 'basic.description', 'basic.delivery', 'basic.revisions', 'basic.price',
+        'standard.name', 'standard.description', 'standard.delivery', 'standard.revisions', 'standard.price', 'premium.name', 'premium.description', 'premium.delivery', 'premium.revisions', 'premium.price']) { const o = el('option'); o.value = k; dl.append(o); }
+      document.body.append(dl); }
     const say = el('div', 'kb-say');
     const save = el('button', 'kb-save', 'Save'); const x = el('button', 'kb-x', '×'); x.title = 'Close';
     const hint = { choose: 'option (6, or "6 Days")', key: 'key (Down, Up, Enter, a digit)', macro: 'macro name' };
@@ -48,14 +55,14 @@
     x.addEventListener('click', close);
     save.addEventListener('click', async () => {
       const d = does.value, v = extra.value.trim();
-      const binding = { do: d, selector: xpath, label: label.value.trim() || undefined, ...(d === 'choose' ? { option: v } : d === 'key' ? { key: v } : d === 'macro' ? { macro: v } : {}) };
+      const binding = { do: d, selector: xpath, label: label.value.trim() || undefined, part: part.value.trim() || undefined, ...(d === 'choose' ? { option: v } : d === 'key' ? { key: v } : d === 'macro' ? { macro: v } : {}) };
       let r; try { r = await ctx.cg.shortcuts.siteSet(url, keys.value, binding); } catch (e) { r = { error: e.message }; }
       if (!r || r.error) { say.textContent = (r && r.error) || 'not saved'; say.className = 'kb-say bad'; return; }
       say.className = 'kb-say ok'; say.textContent = `${r.accel} saved on ${r.origin.replace(/^https?:\/\//, '')}`;
       setTimeout(close, 1400);
     });
     bar.append(title, el('div', 'kb-row', null), say);
-    bar.children[1].append(keys, does, extra, label, save, x);
+    bar.children[1].append(keys, does, extra, label, part, save, x);
     document.body.append(bar);
     keys.focus();
     return true;

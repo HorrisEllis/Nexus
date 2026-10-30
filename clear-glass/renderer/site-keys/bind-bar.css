@@ -7,7 +7,7 @@
 #cg-key-bind input, #cg-key-bind select { padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line, #2b2f38); background: transparent; color: inherit; font: inherit; min-width: 0; }
 #cg-key-bind select option { color: #111; }
 #cg-key-bind .kb-keys { width: 140px; text-align: center; }
-#cg-key-bind .kb-extra, #cg-key-bind .kb-label { flex: 1 1 140px; }
+#cg-key-bind .kb-extra, #cg-key-bind .kb-label, #cg-key-bind .kb-part { flex: 1 1 140px; }
 #cg-key-bind button { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line, #2b2f38); background: var(--accent, #3b82f6); color: #fff; cursor: pointer; font: inherit; }
 #cg-key-bind .kb-x { background: transparent; color: inherit; padding: 6px 10px; }
 #cg-key-bind .kb-say { margin-top: 6px; min-height: 1em; font-size: 12px; }
