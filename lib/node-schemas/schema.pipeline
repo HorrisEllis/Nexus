@@ -1,0 +1,59 @@
+envelope: 1
+uuid: nexus-export-schema-pipeline
+type: schema
+id: pipeline
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1793318400000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/automation/pipeline.js — the real pipeline record (Pipelines.create / update, kept as one .pipeline file each); written with its
+    requires by lib/automation-nodes.js pipelineNode(), read back by importNode(). James, 2026-10-30: "can you export the .macro and .automation
+    nodes to the .pipeline node and import into the pipeline section of clearglass? ... these are meant to be actual persistent files in the backend."
+  fields:
+    id:
+      type: string
+      required: true
+      description: the pipeline's id where it was kept (a fresh one is given on import)
+    name:
+      type: string
+      required: true
+      description: what the Pipelines screen shows; at most 80 characters
+    description:
+      type: string
+      required: false
+      description: what it is for
+    site:
+      type: string
+      required: false
+      description: its site — an origin (https://www.fiverr.com) or a URL pattern; none = any page (PL10)
+    onLoad:
+      type: boolean
+      required: false
+      description: run when a page of its site opens (needs site)
+    vars:
+      type: object
+      required: false
+      description: '{{vars.x}} its tasks read'
+    settings:
+      type: object
+      required: false
+      description: '{ parallel: 1..4 }'
+    tasks:
+      type: array
+      required: true
+      description: >-
+        [{ id, label, depends_on: [task ids], step: { type, config } (one engine step: macro, workflow, pipeline, gate, agent, command …),
+        gate?: { notEmpty, contains, equals, matches, element: { gateId | selector | xpath, value | equals | matches | shows | checked | text |
+        visible | gone | url } }, retries: 0..5, onFail: stop | continue }]
+    requires:
+      type: object
+      required: false
+      description: >-
+        in an exported node only: { macros: [macro payloads], workflows: [{ ref, name, steps, … }], pipelines: [pipeline bodies] } — what its
+        tasks run, so the file imports and runs on another machine

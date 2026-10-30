@@ -528,6 +528,11 @@ const CONSUMERS = [
   [I('lib/automation/pipeline.js'), I('lib/automation/engine.js'), '0.60.293 PL7 a task\'s element gate runs through the engine\'s gate step (engine.runStep)'],
   [I('clear-glass/src/main/index.js'), I('lib/automation/pipeline.js'), '0.60.293 PL10 a site\'s pipelines run when a page of it opens — lazy require'],
   [I('lib/agent-tools/tools/clear-glass/macro.js'), I('lib/agent-tools/tools/clear-glass/gate-eval.js'), '0.60.293 PL8 a macro step\'s element gate (use, shows, checked …) read through the driver\'s gate action'],
+  // 2026-10-30 PN1–PN4, AF6 — .pipeline node files; the chip on dropdowns
+  [I('lib/automation-nodes.js'), I('lib/automation/pipeline.js'), '0.60.296 PN1 pipelineNode / importPipeline — the .pipeline node with what it runs bundled'],
+  [I('lib/automation/pipeline.js'), I('lib/node-export.js'), '0.60.296 PN2 each pipeline kept as a .pipeline node file'],
+  [I('lib/automation/routes.js'), I('lib/automation-nodes.js'), '0.60.296 PN2 /automation/pipelines/:id/node(/save), .pipeline import'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/suggest.js'), '0.60.296 AF6 dropdownScript: the chip on dropdowns; fillOne chooses'],
   [I('clear-glass/src/options/store.js'), I('clear-glass/src/page/element-gate.js'), '0.60.292 UG4 his site gates validated — lazy require'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/page/element-gate.js'), '0.60.292 UG1 the gig fill\'s settle is element-gate\'s; /cli/site-gates — lazy require'],
   [I('clear-glass/renderer/browser.js'), I('clear-glass/renderer/site-gates/gate-bar.js'), '0.60.292 UG5 Gate this element after a pick (window.CGGateBar)'],

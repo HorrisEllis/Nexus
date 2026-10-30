@@ -1,0 +1,307 @@
+# The Fiverr gig as a pipeline — bundled with Clear Glass (2026-10-30 PN4). James: "should we rebuild the fiverr plugin?"
+envelope: 1
+uuid: nexus-export-pipeline-5d69a76a-fa34-45ae-b9e0-abc463a3e9ba
+type: pipeline
+id: 5d69a76a-fa34-45ae-b9e0-abc463a3e9ba
+context: Clear Glass → Settings → Pipelines
+intent: >-
+  A new Fiverr gig, page by page: Overview (category, subcategory, with your choose-category macro),
+  then — after you press Save & Continue — Scope & Pricing (each package). Each page waits at a
+  gate. Publish, Save and Continue stay yours.
+summary: 3 tasks for https://www.fiverr.com; bundles 2 macro(s), 1 workflow(s), 0 pipeline(s)
+system: clear-glass.automation
+tags:
+  - pipeline
+  - site:https://www.fiverr.com
+  - step:macro
+  - step:gate
+  - step:workflow
+  - fiverr
+  - bundled
+exported_at: 1793347584277
+source: lib/automation-nodes.js
+occurrences: 1
+firstSeenAt: 1793347584277
+lastSeenAt: 1793347584277
+fingerprint: null
+payload:
+  id: 5d69a76a-fa34-45ae-b9e0-abc463a3e9ba
+  format: nexus-pipeline
+  version: 1
+  name: Fiverr gig
+  description: >-
+    A new Fiverr gig, page by page: Overview (category, subcategory, with your choose-category
+    macro), then — after you press Save & Continue — Scope & Pricing (each package). Each page waits
+    at a gate. Publish, Save and Continue stay yours.
+  site: https://www.fiverr.com
+  vars:
+    category: ''
+    subcategory: ''
+    basic_name: ''
+    basic_description: ''
+    basic_delivery: ''
+    standard_name: ''
+    standard_description: ''
+    standard_delivery: ''
+    premium_name: ''
+    premium_description: ''
+    premium_delivery: ''
+  settings:
+    parallel: 1
+  tasks:
+    - id: overview
+      label: 'Overview: category and subcategory'
+      depends_on: []
+      step:
+        type: macro
+        config:
+          name: Fiverr gig - choose category
+          agentId: default
+          params:
+            category: '{{vars.category}}'
+            subcategory: '{{vars.subcategory}}'
+      gate:
+        element:
+          text: '{{vars.subcategory}}'
+          timeoutMs: 8000
+      retries: 1
+      onFail: stop
+    - id: on-pricing
+      label: You press Save & Continue (your click)
+      depends_on:
+        - overview
+      step:
+        type: gate
+        config:
+          condition: page_text
+          value: Scope & Pricing
+          timeoutMs: 600000
+      retries: 0
+      onFail: stop
+    - id: pricing
+      label: 'Scope & Pricing: each package'
+      depends_on:
+        - on-pricing
+      step:
+        type: workflow
+        config:
+          workflow: Fiverr gig - Scope & Pricing (steps)
+          vars:
+            basic_name: '{{vars.basic_name}}'
+            basic_description: '{{vars.basic_description}}'
+            basic_delivery: '{{vars.basic_delivery}}'
+            standard_name: '{{vars.standard_name}}'
+            standard_description: '{{vars.standard_description}}'
+            standard_delivery: '{{vars.standard_delivery}}'
+            premium_name: '{{vars.premium_name}}'
+            premium_description: '{{vars.premium_description}}'
+            premium_delivery: '{{vars.premium_delivery}}'
+      retries: 0
+      onFail: stop
+  requires:
+    macros:
+      - uuid: fiverr-gig-choose-category-v1
+        name: Fiverr gig - choose category
+        urlPattern: fiverr.com
+        steps:
+          - action: wait_for
+            data:
+              selector: body
+          - action: choose
+            data:
+              shows: SELECT A CATEGORY
+              option: '{{category}}'
+              pick: auto
+            gate:
+              text: '{{category}}'
+              retries: 2
+              timeoutMs: 4000
+          - action: choose
+            data:
+              shows: SELECT A SUBCATEGORY
+              option: '{{subcategory}}'
+              pick: auto
+            gate:
+              text: '{{subcategory}}'
+              retries: 2
+              timeoutMs: 4000
+        params:
+          - category
+          - subcategory
+        profile: null
+        description: >-
+          Overview of a new gig: pick {{category}} in SELECT A CATEGORY, then {{subcategory}} in
+          SELECT A SUBCATEGORY, each gated on the value the page shows.
+        createdAt: 1793347584277
+        runCount: 0
+        lastRunAt: null
+      - uuid: fiverr-gig-choose-delivery-v2
+        name: Fiverr gig - choose delivery
+        urlPattern: fiverr.com
+        steps:
+          - action: wait_for
+            data:
+              selector: body
+          - action: choose
+            data:
+              column: '{{tier}}'
+              shows: DELIVERY TIME
+              option: '{{delivery}}'
+              pick: auto
+            gate:
+              choice:
+                column: '{{tier}}'
+                is: '{{delivery}}'
+              retries: 2
+              timeoutMs: 4000
+        params:
+          - tier
+          - delivery
+        profile: null
+        description: >-
+          Scope & Pricing: in the BASIC / STANDARD / PREMIUM column named by {{tier}}, open the
+          DELIVERY TIME dropdown and pick {{delivery}} (e.g. "3 Days"). What _gigFill does for each
+          *.delivery part.
+        createdAt: 1793207566448
+        runCount: 0
+        lastRunAt: null
+    workflows:
+      - ref: bd0b0dee-02fc-43f3-99e7-5ce0dba2497c
+        name: Fiverr gig - Scope & Pricing (steps)
+        description: >-
+          Scope & Pricing page, as editable steps: stops at a human check, types each package name
+          and description by its placeholder, picks each delivery time with the "choose delivery"
+          macro. A step that cannot find its field is skipped, not fatal. Never saves or publishes.
+        vars:
+          basic_name: ''
+          basic_description: ''
+          basic_delivery: ''
+          standard_name: ''
+          standard_description: ''
+          standard_delivery: ''
+          premium_name: ''
+          premium_description: ''
+          premium_delivery: ''
+        settings:
+          concurrency: queue
+          timeoutMs: 120000
+        steps:
+          - id: 46cfb183-bfe6-4d05-aa7b-e0b780bedcc7
+            type: trigger
+            config: {}
+          - id: 84c115a1-a5af-4189-9e27-3d6cae564726
+            type: extract
+            config:
+              page: auto
+              mode: page
+            label: Page
+          - id: f58184e1-fcc0-4bbe-adff-3bcab41c9c65
+            type: condition
+            config:
+              left: '{{steps.Page.output.text}}'
+              op: matches
+              value: >-
+                /press\s*(&|and)\s*hold|px-captcha|verify you are human|checking if the site
+                connection is secure/i
+              onTrue: 9882747e-c7f7-4c80-90c2-2b76fb240f6c
+              onFalse: next
+            label: Human check?
+          - id: 9c0fb2fb-cad3-4160-9789-1b4c81215fb9
+            type: browser
+            config:
+              action: fill
+              page: auto
+              selector: (//*[@placeholder="Name your package"])[1]
+              value: '{{vars.basic_name}}'
+            label: BASIC name
+            onError: continue
+          - id: 74dd33b4-196c-4361-a7dd-7248e65a44e3
+            type: browser
+            config:
+              action: fill
+              page: auto
+              selector: (//*[@placeholder="Describe the details of your offering"])[1]
+              value: '{{vars.basic_description}}'
+            label: BASIC description
+            onError: continue
+          - id: 438a74c1-69be-4f05-b7e3-5383d9c00260
+            type: macro
+            config:
+              name: Fiverr gig - choose delivery
+              agentId: default
+              params: |-
+                tier = BASIC
+                delivery = {{vars.basic_delivery}}
+            label: BASIC delivery
+            onError: continue
+          - id: 9a36e7b6-512b-45ef-b608-35738543aab0
+            type: browser
+            config:
+              action: fill
+              page: auto
+              selector: (//*[@placeholder="Name your package"])[2]
+              value: '{{vars.standard_name}}'
+            label: STANDARD name
+            onError: continue
+          - id: 6e0e1e5a-1ecd-4999-914d-2c88d95c9885
+            type: browser
+            config:
+              action: fill
+              page: auto
+              selector: (//*[@placeholder="Describe the details of your offering"])[2]
+              value: '{{vars.standard_description}}'
+            label: STANDARD description
+            onError: continue
+          - id: b044e9af-30ba-4ad3-8f02-817065e2e708
+            type: macro
+            config:
+              name: Fiverr gig - choose delivery
+              agentId: default
+              params: |-
+                tier = STANDARD
+                delivery = {{vars.standard_delivery}}
+            label: STANDARD delivery
+            onError: continue
+          - id: 8a328fe9-44ad-4e83-9d5d-0344d8e5b98c
+            type: browser
+            config:
+              action: fill
+              page: auto
+              selector: (//*[@placeholder="Name your package"])[3]
+              value: '{{vars.premium_name}}'
+            label: PREMIUM name
+            onError: continue
+          - id: c3b098dc-4c94-4c85-82f1-75c5ec9f699d
+            type: browser
+            config:
+              action: fill
+              page: auto
+              selector: (//*[@placeholder="Describe the details of your offering"])[3]
+              value: '{{vars.premium_description}}'
+            label: PREMIUM description
+            onError: continue
+          - id: ec1ecbde-695f-4272-a991-a77f5bd493a8
+            type: macro
+            config:
+              name: Fiverr gig - choose delivery
+              agentId: default
+              params: |-
+                tier = PREMIUM
+                delivery = {{vars.premium_delivery}}
+            label: PREMIUM delivery
+            onError: continue
+          - id: 484ffc61-90fa-46da-9245-13465ca9892b
+            type: stop
+            config: {}
+            label: Done
+          - id: 9882747e-c7f7-4c80-90c2-2b76fb240f6c
+            type: notify
+            config:
+              title: 'Fiverr: a human check is up'
+              body: Nothing was typed. The check is yours to pass; run this again after.
+            label: Held
+          - id: bc433ee2-fb67-46e8-8643-6e5fde343797
+            type: stop
+            config: {}
+            label: Stop
+    pipelines: []

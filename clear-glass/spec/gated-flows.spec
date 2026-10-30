@@ -586,6 +586,20 @@ spec:
       error_paths: ["ErosmancerOS down → paced keys, viaWhy says why"]
       acceptance: ["test-pipeline-gates PG-07 in Clear Glass: measured gaps between keys, a pause every few; ErosmancerOS used when wired; down → paced, said"]
 
+    # 2026-10-30 AF6 — James: "when it shows the black autfill chip, can you make that work for drop down also?"
+    - id: MOD-AF6
+      name: chip-for-dropdowns
+      uuid: nexus-gated-flows-chip-for-dropdowns-v1-0000-2026-1030-001
+      path: clear-glass/src/autofill/suggest.js
+      phase: AF6_the_chip_on_dropdowns
+      description: "The black autofill chip also sits under a dropdown that is not a form field: Fiverr's SELECT A CATEGORY / SELECT A SUBCATEGORY, DELIVERY TIME and Revisions per package (the gig's value), and any [role=combobox] / [aria-haspopup=listbox] its label names (the profile's value, by the same matcher the fields use). dropdownScript marks them data-cg-dd (reads only); the reporter reports them with what they show; a click chooses the option through the driver (opens it, picks, reads back; paced, ErosmancerOS when wired). A native <select> is chosen by the text it shows, and a text box typed by the driver."
+      deps: [{ name: human-input-for-every-key }]
+      exports: ["dropdownScript() → [{ key, kind, label?, name? }]", "_autofillSuggest: dropdown chips", "_autofillFillOne: choose / select / type"]
+      gate_pipeline: ["GATE-AF6-001: mark → suggest → his click → choose → read back"]
+      behavioral_contracts: ["nothing is chosen until he clicks the chip", "a value already shown has no chip"]
+      error_paths: ["the option is not in the dropdown → the chip turns red with why"]
+      acceptance: ["test-pipeline-nodes AF-06 in Clear Glass: a new gig's SELECT A CATEGORY gets a chip with the gig's category; clicking it chooses it"]
+
   events:
     flows:
       - "macro.gate { macro, step, open, why, by }"

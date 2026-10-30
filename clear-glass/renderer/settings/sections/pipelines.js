@@ -75,6 +75,37 @@
     return { kind: step.type, what: '', more: JSON.stringify(c), raw: step };
   }
 
+  // 2026-10-30 PN3 — James: "that way the pipeline feature can choose macros and automation nodes from clearglass and node files." What a task can
+  // run, listed from where it lives: Clear Glass's macros, the engine's workflows and pipelines, and the node files in the library (.macro,
+  // .workflow, .pipeline). A node file picked is imported first (the engine's own importer), then the task names what came in.
+  const NODE = '📄 ';
+  async function sources() {
+    const cgx = window.cg || {};
+    const [m, w, p, n] = await Promise.all([
+      cgx.macros && cgx.macros.list ? cgx.macros.list().then(r => (r && r.macros) || (Array.isArray(r) ? r : [])).catch(() => []) : Promise.resolve([]),
+      wire('/automation/workflows').then(r => r.workflows || []).catch(() => []),
+      wire('/automation/pipelines').then(r => r.pipelines || []).catch(() => []),
+      wire('/automation/nodes').then(r => r.nodes || []).catch(() => [])]);
+    return { macro: m.map(x => x.name).filter(Boolean), workflow: w.map(x => x.name).filter(Boolean), pipeline: p.map(x => x.name).filter(Boolean), nodes: n };
+  }
+  function datalists(src) {
+    const make = (id, items) => { const dl = h('datalist', { id }); for (const [v, l] of items) { const o = document.createElement('option'); o.value = v; o.label = l; dl.append(o); } return dl; };
+    const files = (type) => src.nodes.filter(x => x.type === type).map(x => [`${NODE}${x.file}`, `node file · ${x.summary || x.name}`]);
+    return [make('pl-src-macro', [...src.macro.map(x => [x, 'Clear Glass macro']), ...files('macro')]),
+      make('pl-src-workflow', [...src.workflow.map(x => [x, 'workflow']), ...files('workflow')]),
+      make('pl-src-pipeline', [...src.pipeline.map(x => [x, 'pipeline']), ...files('pipeline')])];
+  }
+  async function fromNodeFile(input) {
+    const v = input.value.trim(); if (!v.startsWith(NODE)) return;
+    const file = v.slice(NODE.length);
+    try {
+      const r = await wire(`/automation/nodes/${encodeURIComponent(file)}/import`, { method: 'POST', body: {}, allowNotOk: true });
+      if (!r || r.ok === false) throw new Error((r && r.error) || 'not imported');
+      input.value = (r.macro && r.macro.name) || (r.workflow && r.workflow.name) || (r.pipeline && r.pipeline.name) || input.value;
+      toast(`${file} imported — the task runs “${input.value}”`);
+    } catch (e) { toast(`${file} could not be imported: ${e.message}`, 'bad'); }
+  }
+
   function taskRow(t, i, rows) {
     const s = fromStep(t.step);
     const kind = h('select', { 'data-k': 'type', 'aria-label': 'What it runs' }, KINDS.map(k => h('option', { value: k.value, text: k.label, selected: k.value === s.kind ? 'selected' : null })));
@@ -83,7 +114,9 @@
     const more = h('textarea', { 'data-k': 'prompt', rows: '2' }); more.value = s.more;
     const moreField = field('', more);
     const whatField = field('', what);
+    what.addEventListener('change', () => fromNodeFile(what));
     const sync = () => { const k = KINDS.find(x => x.value === kind.value);
+      if (['macro', 'workflow', 'pipeline'].includes(kind.value)) what.setAttribute('list', `pl-src-${kind.value}`); else what.removeAttribute('list');
       whatField.firstChild.textContent = k ? k.what : 'Step'; what.placeholder = k ? k.hint : '';
       moreField.firstChild.textContent = kind.value === 'agent' ? 'Prompt — {{tasks.<id>.output}} reads an earlier task' : kind.value === 'command' ? 'Method and path (GET /api/…)' : '';
       moreField.style.display = ['agent', 'command'].includes(kind.value) || s.raw ? '' : 'none'; };
@@ -120,6 +153,7 @@
   }
 
   async function edit(p, rerender) {
+    const src = await sources();
     const name = h('input', { type: 'text', 'data-k': 'name', value: (p && p.name) || '' });
     const desc = h('input', { type: 'text', 'data-k': 'description', value: (p && p.description) || '' });
     // 2026-10-30 PL10 — James: "with the option for per site pipelines": a site (its address or a pattern), and run when a page of it opens
@@ -132,8 +166,9 @@
     const add = h('button', { class: 'btn sm', type: 'button', text: '+ Task', onclick: () => { list.append(taskRow({}, list.children.length, rows)); } });
     const saved = await modal({ title: p ? `Edit — ${p.name}` : 'New pipeline', wide: true,
       body: [h('div', { class: 'pl-form' }, field('Name', name), field('What it is for', desc), field('Tasks at once', par), field('Site', site),
-        field('Run when a page of the site opens', onLoad)), list, add],
+        field('Run when a page of the site opens', onLoad)), list, add, ...datalists(src)],
       actions: [{ label: 'Save', primary: true, run: async () => {
+        for (const w of list.querySelectorAll('[data-k="what"]')) if (w.value.trim().startsWith(NODE)) await fromNodeFile(w);   // a node file picked and not yet imported
         const body = { name: name.value.trim(), description: desc.value.trim(), settings: { parallel: Number(par.value) || 1 }, tasks: [...list.children].map(readTask),
           site: site.value.trim() || null, onLoad: !!(site.value.trim() && onLoad.checked) };
         const r = p ? await wire(`/automation/pipelines/${encodeURIComponent(p.id)}`, { method: 'PUT', body, allowNotOk: true }) : await wire('/automation/pipelines', { method: 'POST', body, allowNotOk: true });
@@ -141,6 +176,21 @@
         return 'saved';
       } }] });
     if (saved) { toast(p ? 'Pipeline saved' : 'Pipeline made'); rerender(); }
+  }
+
+  // PN2/PN3 — a .pipeline node file into the Pipelines: one from the node files (Settings › Automation's library, which also holds the bundled
+  // "Fiverr gig"), or pasted; what it bundles (macros, workflows, pipelines) comes in with it
+  async function importNode(rerender) {
+    const nodes = await wire('/automation/nodes').then(r => (r.nodes || []).filter(n => n.type === 'pipeline')).catch(() => []);
+    const paste = h('textarea', { rows: '6', 'data-k': 'paste', placeholder: 'or paste a .pipeline file here' });
+    const say = (r) => { if (!r || r.ok === false) throw new Error((r && (r.problems ? r.problems.join(' · ') : r.error)) || 'not imported');
+      toast(`“${r.pipeline.name}” imported${r.macros && r.macros.length ? ` with ${r.macros.length} macro(s)` : ''}${r.workflows && r.workflows.length ? `, ${r.workflows.length} workflow(s)` : ''}${(r.warnings || []).length ? ` — ${r.warnings.join('; ')}` : ''}`); };
+    const done = await modal({ title: 'Import a pipeline', wide: true,
+      body: [h('div', { class: 'pl-nodes' }, nodes.length ? nodes.map(n => h('div', { class: 'pl-node', 'data-file': n.file },
+        h('div', { class: 'grow' }, h('b', { text: n.name }), h('div', { class: 'd', text: `${n.file} · ${n.summary || ''}` })),
+        btn('Import', async (e) => busy(e.currentTarget, async () => { say(await wire(`/automation/nodes/${encodeURIComponent(n.file)}/import`, { method: 'POST', body: {}, allowNotOk: true })); rerender(); }), 'sm'))) : [empty('No .pipeline files in the node files yet.')]), paste],
+      actions: [{ label: 'Import pasted', primary: true, run: async () => { if (!paste.value.trim()) throw new Error('paste a .pipeline file first'); say(await wire('/automation/import', { method: 'POST', body: { text: paste.value }, allowNotOk: true })); return 'imported'; } }] });
+    if (done) rerender();
   }
 
   function checklist(run, p) {
@@ -170,6 +220,8 @@
         h('div', { class: 'grow' }, h('div', { class: 't', text: p.name }), h('div', { class: 'd', text: [p.site ? `${p.site.replace(/^https?:\/\//, '')}${p.onLoad ? ' · runs when a page opens' : ''}` : null, p.description, `${p.tasks.length} task${p.tasks.length === 1 ? '' : 's'}`, p.settings && p.settings.parallel > 1 ? `${p.settings.parallel} at once` : null].filter(Boolean).join(' · ') })),
         btn('Run', (e) => busy(e.currentTarget, async () => { const r = await wire(`/automation/pipelines/${encodeURIComponent(p.id)}/run`, { method: 'POST', body: {} }); slot.replaceChildren(checklist({ status: 'running', startedAt: Date.now(), order: [], tasks: {} }, p)); watch(r.runId); }), 'sm primary'),
         btn('Edit', () => edit(p, rerender).catch(fail), 'sm'),
+        // PN2 — the pipeline as a .pipeline node file in the library, with the macros, workflows and pipelines it runs bundled
+        btn('Export', (e) => busy(e.currentTarget, async () => { const r = await wire(`/automation/pipelines/${encodeURIComponent(p.id)}/node/save`, { method: 'POST', body: {} }); toast(`${r.file} saved in the node files${r.missing && r.missing.length ? ` — not found to bundle: ${r.missing.join(', ')}` : ''}`); }), 'sm'),
         btn('Archive', async () => { if (!(await confirmDo('Archive this pipeline?', 'It is kept (Show archived) and its runs stay; it leaves the list.', 'Archive', false))) return; await wire(`/automation/pipelines/${encodeURIComponent(p.id)}/archive`, { method: 'POST', body: {} }); toast('Archived'); rerender(); }, 'sm ghost')),
       h('div', { class: 'pl-steps' }, p.tasks.map(t => h('span', { class: 'pl-step', text: `${t.id}${(t.depends_on || []).length ? ` ← ${t.depends_on.join(', ')}` : ''}` }))),
       slot);
@@ -187,7 +239,7 @@
       catch (e) { return [pane({ title: 'Pipelines', body: [empty(`The automation engine did not answer: ${e.message}`, btn('Try again', () => rerender(), 'sm'))] })]; }
       const ps = list.pipelines || [];
       const lasts = await Promise.all(ps.map(p => wire(`/automation/pipeline-runs?pipelineId=${encodeURIComponent(p.id)}&limit=1`).then(r => (r.runs || [])[0] || null).catch(() => null)));
-      return [pane({ title: 'Pipelines', sub: `${ps.length}`, tools: btn('New pipeline', () => edit(null, rerender).catch(fail), 'sm primary'), flush: true,
+      return [pane({ title: 'Pipelines', sub: `${ps.length}`, tools: [btn('Import', () => importNode(rerender).catch(fail), 'sm'), btn('New pipeline', () => edit(null, rerender).catch(fail), 'sm primary')], flush: true,
         body: ps.length ? ps.map((p, i) => card(p, lasts[i], rerender)) : [empty('No pipelines yet. A pipeline runs your macros, workflows and agents in order, each after the ones it needs.', btn('New pipeline', () => edit(null, rerender).catch(fail), 'sm primary'))] })];
     },
   });

@@ -2711,11 +2711,11 @@ class IpcBridge {
   async _autofillSuggest({ agentId = 'default' } = {}) {
     if (!this.dom) return { ok: false, error: 'dom bridge unavailable', suggestions: [] };
     const SG = require('../autofill/suggest.js');
-    let profileMatches = [], profileName = 'profile', why = null;
+    let profileMatches = [], profileName = 'profile', why = null, activeProfile = null;
     if (this.autofillStore) {
       try {
         const det = await _autofillDetect(this.dom, this.autofillStore, { agentId, learned: this._learnedFields(agentId) });
-        if (det && !det.error) { profileMatches = det.matches || []; const p = this.autofillStore.getProfile(det.profileId); profileName = (p && (p.name || p.label)) || 'profile'; }
+        if (det && !det.error) { profileMatches = det.matches || []; const p = this.autofillStore.getProfile(det.profileId); activeProfile = p || null; profileName = (p && (p.name || p.label)) || 'profile'; }
         else why = det && det.error;
       } catch (e) { why = e.message; }
     }
@@ -2736,6 +2736,25 @@ class IpcBridge {
         const hit = await this.dom.handleQuery({ agentId, selector: t.selector }).catch(() => null);
         if (Array.isArray(hit) && hit.length === 1) gigMatches.push({ cgId: hit[0].id, key: `${part} ⚓`, value: v, confidence: 'high' });
       }
+    }
+    // 2026-10-30 AF6 — James: "when it shows the black autfill chip, can you make that work for drop down also?" Dropdowns that are not form fields
+    // (Fiverr's category, subcategory, delivery and revisions per package; any [role=combobox]) get a chip too: the gig's value for a gig part,
+    // the profile's for a combobox its label names (the same matcher the fields use). Clicking it chooses the option (_autofillFillOne).
+    if (this.driver) {
+      try {
+        const dd = await this.driver.exec({ agentId, action: 'eval', code: SG.dropdownScript(), by: 'person' });
+        const list = (dd && Array.isArray(dd.result)) ? dd.result : [];
+        const profile = activeProfile;   // the profile the fields above were matched from (the site's choice, else the active one)
+        for (const x of list) {
+          const hit = await this.dom.handleQuery({ agentId, selector: `[data-cg-dd="${x.key}"]` }).catch(() => null);
+          const cgId = Array.isArray(hit) && hit[0] && hit[0].id; if (!cgId) continue;
+          if (x.kind === 'gig' && gig) { const v = GP.valueOf(gig, x.key); if (v != null && v !== '') gigMatches.push({ cgId, key: x.key, value: x.key.endsWith('.delivery') ? `${v} day${v === '1' ? '' : 's'}` : v, confidence: 'high', dropdown: true }); }
+          else if (x.kind === 'combo' && profile) {
+            let m = []; try { m = require('../autofill/matcher.js').matchFields([{ id: cgId, tag: 'select', type: 'select-one', name: x.name, label: x.label, attrs: { 'aria-label': x.label } }], profile); } catch (_) {}
+            for (const one of m) profileMatches.push({ ...one, dropdown: true });
+          }
+        }
+      } catch (_) { /* no dropdowns read: the field chips stand on their own */ }
     }
     const suggestions = SG.combine({ profileMatches, gigMatches, profileName });
     // 0.60.268 AF5 — "what a node anchor": every fillable field nothing placed gets a ⚓ chip; what it can be anchored as
@@ -2778,11 +2797,25 @@ class IpcBridge {
 
   async _autofillFillOne({ agentId = 'default', cgId, value } = {}) {
     if (!this.dom || !cgId || value === undefined) return { ok: false, error: 'a field and a value are needed' };
+    // 2026-10-30 AF6 — a dropdown is chosen, not set: a marked dropdown (data-cg-dd) through the driver's choose (opens it, picks the option, reads
+    // it back; paced, ErosmancerOS when wired); a native <select> by the text it shows; a text box is typed by the driver (paced, EI1)
+    if (this.driver) {
+      let what = null;
+      try { const x = await this.driver.exec({ agentId, action: 'eval', by: 'person', code: `(function(id){ var el = Array.prototype.find.call(document.querySelectorAll('input,textarea,select,[contenteditable],[data-cg-dd]'), function(e){ return e.__cgId === id; }); if (!el) return null; el.setAttribute('data-cg-chip', id); return { tag: el.tagName, dd: el.getAttribute('data-cg-dd') }; })(${JSON.stringify(cgId)})` }); what = x && x.result; } catch (_) {}
+      const sel = `[data-cg-chip="${String(cgId).replace(/"/g, '')}"]`;
+      try {
+        if (what && what.dd) { const c = await this.driver.exec({ agentId, action: 'choose', selector: sel, option: String(value), by: 'person' }); this._chipLog(cgId, `chose ${c.option}`); return { ok: true, chose: c.option }; }
+        if (what && what.tag === 'SELECT') { await this.driver.exec({ agentId, action: 'select', selector: sel, text: String(value), by: 'person' }); this._chipLog(cgId, 'selected'); return { ok: true }; }
+        if (what && /^(INPUT|TEXTAREA)$/.test(what.tag)) { const t = await this.driver.exec({ agentId, action: 'setValue', selector: sel, value: String(value), by: 'person' }); this._chipLog(cgId, 'typed'); return { ok: true, via: t.via }; }
+      } catch (err) { return { ok: false, error: err.message }; }
+    }
     const r = await this.dom.handleMutate({ agentId, cgId, mutation: { value: String(value) } });
     if (r && r.error) return { ok: false, error: r.error };
     try { require('../processes').activity().push({ kind: 'nav', what: `autofill chip filled ${cgId}`, by: 'person', level: 'info' }); } catch (_) {}
     return { ok: true };
   }
+
+  _chipLog(cgId, what) { try { require('../processes').activity().push({ kind: 'nav', what: `autofill chip ${what} (${cgId})`, by: 'person', level: 'info' }); } catch (_) {} }
 
   // 0.60.224 — which editor page this tab is on (the panel's record button names its macro by it)
   async _gigPage({ agentId = 'default' } = {}) {

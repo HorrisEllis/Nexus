@@ -137,3 +137,40 @@ phases_pl6:
     files: [clear-glass/renderer/settings/sections/pipelines.js]
     spec: docs/automation-pipelines.spec
     blocks: [MOD-PIPELINE-SITE-UI]
+
+## ADDENDUM 2026-10-30 — PN1–PN4: .pipeline node files; the editor picks from Clear Glass and node files; the Fiverr gig as a pipeline
+James, 2026-10-30: "what version are we on? should we rebuild the fiverr plugin? can you export the .macro and .automation nodes to the
+.pipeline node and import into the pipeline section of clearglass? ... that way the pipeline feature can choose macros and automation nodes
+from clearglass and node files. these are meant to be actual persistent files in the backend. all nodes are supposed to be physcial files
+for each system."
+Grounded: there is no Fiverr plugin; "the Fiverr plugin" is the Fiverr node files Clear Glass bundles (clear-glass/automation/nodes: 2
+.macro, 3 .workflow) plus the bridge's gig fill. Pipelines were JSON records, not node files; .pipeline was not a node type.
+Readings (the coder's, to confirm): ".automation nodes" = the .workflow node files (the automation engine's); "rebuild the fiverr plugin" =
+the Fiverr gig as a bundled .pipeline node made of those files (the coder's recommendation, asked as his question, answered yes).
+Decided by his axioms: §8.6 reuse (the node envelope, the node library, importNode/importMacro, seedBundled); §0.3 (old JSON archived);
+NC0 schema rule (a reusable type has a schema: schema.pipeline).
+phases_pn:
+  PN1_the_pipeline_node:
+    status: BUILT 0.60.296
+    depends_on: [PL1_pipeline_core]
+    files: [lib/automation-nodes.js, lib/node-export.js, lib/node-schemas/schema.pipeline]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-PIPELINE-NODE]
+  PN2_pipelines_kept_as_node_files:
+    status: BUILT 0.60.296
+    depends_on: [PN1_the_pipeline_node]
+    files: [lib/automation/pipeline.js, lib/automation/routes.js]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-PIPELINE-FILES]
+  PN3_the_editor_picks_from_clear_glass_and_files:
+    status: BUILT 0.60.296
+    depends_on: [PN2_pipelines_kept_as_node_files, PL11_screens_for_gates_and_sites]
+    files: [clear-glass/renderer/settings/sections/pipelines.js]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-PIPELINE-PICKER]
+  PN4_the_fiverr_pipeline:
+    status: BUILT 0.60.296
+    depends_on: [PN1_the_pipeline_node, PL10_per_site_pipelines]
+    files: [clear-glass/automation/nodes/fiverr-gig.pipeline]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-FIVERR-PIPELINE]

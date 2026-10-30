@@ -27,9 +27,9 @@ function combine({ profileMatches = [], gigMatches = [], profileName = 'profile'
   };
   for (const m of Array.isArray(profileMatches) ? profileMatches : []) {
     if (m.needsEdit) continue;   // a template with {{placeholders}} still to fill is not offered as it stands
-    add(m.cgId, { value: m.value, label: `${m.fieldType} · ${profileName}`, source: 'profile', confidence: m.confidence || 'low' });
+    add(m.cgId, { value: m.value, label: `${m.fieldType} · ${profileName}`, source: 'profile', confidence: m.confidence || 'low', ...(m.dropdown ? { dropdown: true } : {}) });
   }
-  for (const m of Array.isArray(gigMatches) ? gigMatches : []) add(m.cgId, { value: m.value, label: `gig · ${m.key}`, source: 'gig', confidence: m.confidence || 'low' });
+  for (const m of Array.isArray(gigMatches) ? gigMatches : []) add(m.cgId, { value: m.value, label: `gig · ${m.key}`, source: 'gig', confidence: m.confidence || 'low', ...(m.dropdown ? { dropdown: true } : {}) });
   const out = [...by.values()];
   for (const e of out) e.options.sort((a, b) => (RANK[b.confidence] || 0) - (RANK[a.confidence] || 0));
   return out;
@@ -44,14 +44,16 @@ function reporterScript(ids) {
     var send = function () {
       raf = 0;
       var want = window.__cgChipIds || [], out = [];
-      var all = document.querySelectorAll('input, textarea, select, [contenteditable="true"]');
+      var all = document.querySelectorAll('input, textarea, select, [contenteditable="true"], [data-cg-dd]');
       for (var i = 0; i < all.length; i++) {
         var el = all[i];
         if (!el.__cgId || want.indexOf(el.__cgId) < 0) continue;
         var r = el.getBoundingClientRect(), cs = getComputedStyle(el);
         if (r.width <= 0 || r.height <= 0 || cs.visibility === 'hidden' || cs.display === 'none') continue;
         if (r.bottom < 0 || r.top > innerHeight) continue;
-        out.push({ cgId: el.__cgId, x: r.left, y: r.bottom, w: r.width, v: el.isContentEditable ? (el.textContent || '') : String(el.value == null ? '' : el.value), focus: document.activeElement === el });
+        var dd = el.hasAttribute('data-cg-dd');   // AF6: a dropdown that is not a form field — what it shows is its text
+        var v = el.tagName === 'SELECT' ? ((el.options[el.selectedIndex] || {}).text || '') : (dd || el.isContentEditable) ? String(el.textContent || '').replace(/\s+/g, ' ').trim() : String(el.value == null ? '' : el.value);
+        out.push({ cgId: el.__cgId, x: r.left, y: r.bottom, w: r.width, v: v, focus: document.activeElement === el || el.contains(document.activeElement), dd: dd });
       }
       if (window.__cg) window.__cg.send('autofill:rects', out);
       var n = document.querySelectorAll('input, textarea, select').length;
@@ -69,4 +71,35 @@ function reporterScript(ids) {
 })(${JSON.stringify(Array.isArray(ids) ? ids : [])})`;
 }
 
-module.exports = { combine, reporterScript };
+// 2026-10-30 AF6 — James: "when it shows the black autfill chip, can you make that work for drop down also?" A dropdown that is not a form field
+// (Fiverr's SELECT A CATEGORY, DELIVERY TIME, Revisions; any [role=combobox] / [aria-haspopup=listbox]) is found and marked data-cg-dd=<what it
+// is>, so the chip can sit under it and the driver can choose in it. → [{ key, kind: 'gig' | 'combo', label?, name? }]. Marks only; reads only.
+function dropdownScript() {
+  return `(function () {
+  function vis(e) { var r = e.getBoundingClientRect(), cs = getComputedStyle(e); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+  function norm(t) { return String(t || '').replace(/\\s+/g, ' ').trim(); }
+  document.querySelectorAll('[data-cg-dd]').forEach(function (e) { e.removeAttribute('data-cg-dd'); });
+  var leaves = Array.prototype.filter.call(document.querySelectorAll('body *'), function (e) { return e.children.length === 0 && vis(e); });
+  var heads = {}; ['BASIC', 'STANDARD', 'PREMIUM'].forEach(function (h) { var el = leaves.filter(function (e) { return norm(e.textContent).toUpperCase() === h; })[0]; if (el) heads[h] = el.getBoundingClientRect(); });
+  function colOf(el) { var r = el.getBoundingClientRect(), cx = r.left + r.width / 2; for (var h in heads) { var b = heads[h]; if (cx >= b.left - 40 && cx <= b.right + 40) return h; } return null; }
+  function rowOf(el) { var r = el.getBoundingClientRect(), cy = r.top + r.height / 2, best = null;
+    leaves.forEach(function (e) { var b = e.getBoundingClientRect(); var t = norm(e.textContent); if (b.right <= r.left + 2 && cy >= b.top - 6 && cy <= b.bottom + 6 && t && t.length < 40 && (!best || b.right > best.r)) best = { t: t, r: b.right }; });
+    return best && best.t; }
+  var out = [], n = 0;
+  var mark = function (el, key, extra) { var trig = el.closest('[role=combobox],[aria-haspopup],button,[tabindex]') || el; if (trig.hasAttribute('data-cg-dd')) return; trig.setAttribute('data-cg-dd', key); out.push(Object.assign({ key: key }, extra)); };
+  leaves.forEach(function (e) { var t = norm(e.textContent).toUpperCase();
+    if (t === 'SELECT A CATEGORY') mark(e, 'category', { kind: 'gig' });
+    else if (t === 'SELECT A SUBCATEGORY') mark(e, 'subcategory', { kind: 'gig' });
+    else if (t === 'DELIVERY TIME') { var c = colOf(e); if (c) mark(e, c.toLowerCase() + '.delivery', { kind: 'gig' }); } });
+  document.querySelectorAll('[role=combobox],[aria-haspopup=listbox]').forEach(function (e) {
+    if (!vis(e) || e.hasAttribute('data-cg-dd') || /^(INPUT|SELECT|TEXTAREA)$/.test(e.tagName)) return;
+    var row = rowOf(e), col = colOf(e);
+    if (col && row && /revision/i.test(row)) { mark(e, col.toLowerCase() + '.revisions', { kind: 'gig' }); return; }
+    var lb = e.getAttribute('aria-labelledby') && document.getElementById(e.getAttribute('aria-labelledby'));
+    mark(e, 'combo-' + (++n), { kind: 'combo', label: norm(e.getAttribute('aria-label') || (lb && lb.textContent) || row || ''), name: e.getAttribute('name') || e.id || '' });
+  });
+  return out;
+})()`;
+}
+
+module.exports = { combine, reporterScript, dropdownScript };
