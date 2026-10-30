@@ -1,17 +1,14 @@
 'use strict';
 /**
- * tests/modules/test-element-gates.test.js — a gate on every DOM element, for every caller (UG1–UG5, 0.60.292)
+ * tests/modules/test-element-gates.test.js — a gate on any DOM element, made with the picker per site or page (UG1, UG4, UG5; 0.60.292, 0.60.293)
  * James, 2026-10-30: "it needs to be universal for all dom elements. like for the job applications for instance, even if we need a way to
  * create them per page using the element picker, per site settings, macros and automation features. stop thinking so narrow"
  *
  *   UG-01  element-gate: every write's expectation derived; value / equals / matches / shows / checked / text / visible / gone evaluated;
  *          {{value}} filled in; a gate with nothing to check refused; his gates matched by site and page
- *   UG-02  in Clear Glass: the driver gates every write: a box, a native dropdown and a checkbox open; a box whose page puts its value back
- *          fails with GATE_CLOSED after the retry, saying what it saw; gates off in Site settings → said, not checked
- *   UG-03  in Clear Glass: the DOM mesh's value writes (the general autofill, applications) are gated: an application form's email field
- *          that reverts is reported failed by the autofill, never filled; the other fields filled with open gates
- *   UG-04  in Clear Glass: his gate on a field (made like the picker makes it: an XPath, "matches an email") closes a write of a non-email
- *          there and opens for an email; the gate action checks all of his on the page; a macro step and a workflow step reach it
+ *   (UG-02, UG-03 — the automatic write gates — are archived with them, his correction of 2026-10-30: _archive/2026-10-30-write-gates/)
+ *   UG-04  in Clear Glass: the driver's gate action only reads: his gate on a field (an XPath, "matches an email") is closed for a non-email
+ *          and open for an email; one by id, all of his on the page, or a condition; nothing is written by it
  *   UG-05  in Clear Glass: the "Gate this element" bar saves a gate from a pick; the store validates; the command row builds the requests
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -94,81 +91,26 @@ const FORM = `<!doctype html><html><head><meta charset="utf-8"><style>body{font:
     return d;
   }
   const R = require(CG('src/site-settings/readers.js'));
-  const fastGates = (extra = {}) => R.install((url) => ({ origin: new URL(url).origin, driver: { allowed: true }, autofill: { enabled: true, profileId: 'me' }, gates: { enabled: true, settleMs: 250, timeoutMs: 600, retries: 1, ...extra }, from: {} }));
+  const fastGates = (extra = {}) => R.install((url) => ({ origin: new URL(url).origin, driver: { allowed: true }, autofill: { enabled: true, profileId: 'me' }, gates: { settleMs: 250, timeoutMs: 600, ...extra }, from: {} }));
 
-  if (browser) await test('UG-02', 'in Clear Glass: every driver write gated; a value the page puts back fails GATE_CLOSED; gates off said', async () => {
-    const page = await browser.newPage({ viewport: { width: 900, height: 700 } });
-    await page.goto(base + '/apply');
-    fastGates();
-    const d = driverOn(page);
-    let r = await d.exec({ agentId: 'w', action: 'setValue', selector: '#name', value: 'James Brooks', by: 'person' });
-    assert.ok(r.gate && r.gate.open && r.gate.tries === 1, JSON.stringify(r));
-    r = await d.exec({ agentId: 'w', action: 'select', selector: '#sel', text: 'Canada', by: 'person' });
-    assert.ok(r.gate && r.gate.open, JSON.stringify(r));
-    r = await d.exec({ agentId: 'w', action: 'check', selector: '#cb', checked: true, by: 'person' });
-    assert.ok(r.gate && r.gate.open, JSON.stringify(r));
-    const t0 = Date.now();
-    await assert.rejects(d.exec({ agentId: 'w', action: 'setValue', selector: '#rev', value: '555 0100', by: 'person' }),
-      (e) => e.code === 'GATE_CLOSED' && e.gate.tries === 2 && /then the page changed it|holds ""/.test(e.gate.saw));
-    assert.ok(Date.now() - t0 < 6000, 'bounded by the site\'s timing');
-    r = await d.exec({ agentId: 'w', action: 'click', selector: '#name', by: 'person' });
-    assert.strictEqual(r.gate, undefined, 'a click is not a write: its gate is the next step\'s');
-    fastGates({ enabled: false });
-    r = await d.exec({ agentId: 'w', action: 'setValue', selector: '#rev', value: '555 0100', by: 'person' });
-    assert.match(r.gate.off, /gates are off on this site/);
-    fastGates();
-    r = await d.exec({ agentId: 'w', action: 'setValue', selector: '#rev', value: '1', gate: false, by: 'person' });
-    assert.match(r.gate.skipped, /gate:false/);
-    await assert.rejects(d.exec({ agentId: 'w', action: 'setValue', selector: '#rev', value: '1', gate: false, by: 'agent' }), (e) => e.code === 'GATE_REFUSED');
-    R.install(null);
-    await page.close();
-  });
-
-  if (browser) await test('UG-03', 'in Clear Glass: the general autofill on an application form: the reverting field failed, never filled; the rest gated open', async () => {
-    const page = await browser.newPage({ viewport: { width: 900, height: 700 } });
-    await page.goto(base + '/apply');
-    fastGates();
-    const DomArchaeology = require(CG('src/dom/archaeology.js'));
-    const dom = Object.create(DomArchaeology.prototype); dom.sse = { emit: () => {} }; dom.picks = new Map();   // the constructor binds Electron's IPC
-    const wc = wcOf(page); dom._getWebContents = () => wc; dom.getSiteGates = () => ({});
-    const fields = await dom.handleQuery({ agentId: 'w', selector: 'input, select, textarea' });
-    assert.ok(Array.isArray(fields) && fields.length >= 4, JSON.stringify(fields).slice(0, 200));
-    const M = require(CG('src/autofill/matcher.js'));
-    const profile = { id: 'me', label: 'Me', fields: { name: 'James Brooks', email: 'james@example.com', tel: '555 0100' } };
-    const store = { getProfile: () => profile, listProfiles: () => [profile], getActiveProfileId: () => 'me' };
-    const r = await M.fillFields(dom, store, { agentId: 'w', profileId: 'me', minConfidence: 'low' });
-    assert.ok(!r.error, r.error);
-    const byId = Object.fromEntries(fields.map(f => [f.id, f.attrs && f.attrs.id]));
-    const failedIds = r.failed.map(f => byId[f.cgId]), filledIds = r.filled.map(f => byId[f.cgId]);
-    assert.ok(failedIds.includes('rev') && r.failed.find(f => byId[f.cgId] === 'rev').code === 'GATE_CLOSED', JSON.stringify(r.failed));
-    assert.ok(!filledIds.includes('rev'), 'never counted as filled');
-    assert.ok(filledIds.includes('email') && filledIds.includes('name') && r.filled.every(f => f.gate && f.gate.open), JSON.stringify(r.filled));
-    R.install(null);
-    await page.close();
-  });
-
-  if (browser) await test('UG-04', 'in Clear Glass: his picked gate closes a non-email write and opens for an email; the gate action; macro and workflow steps', async () => {
+  if (browser) await test('UG-04', 'in Clear Glass: the gate action only reads: his picked gate closed for a non-email, open for an email; by id, all, a condition', async () => {
     const page = await browser.newPage({ viewport: { width: 900, height: 700 } });
     await page.goto(base + '/apply');
     fastGates();
     const mine = { [base]: [{ id: 'email-ok', label: 'an email', xpath: '//*[@id="email"]', matches: '/^\\S+@\\S+\\.\\S+$/' }] };
     const d = driverOn(page, mine);
-    await assert.rejects(d.exec({ agentId: 'w', action: 'setValue', selector: '#email', value: 'not an email', by: 'person' }), (e) => e.code === 'GATE_CLOSED' && /your gate "an email"/.test(e.gate.saw));
-    const r = await d.exec({ agentId: 'w', action: 'setValue', selector: '#email', value: 'james@example.com', by: 'person' });
-    assert.ok(r.gate.open && r.gate.checks === 2, JSON.stringify(r.gate));
-    let g = await d.exec({ agentId: 'w', action: 'gate', all: true, by: 'person' });
+    let r = await d.exec({ agentId: 'w', action: 'setValue', selector: '#email', value: 'not an email', by: 'person' });
+    assert.strictEqual(r.gate, undefined, 'a write is a write: no gate behind it');
+    let g = await d.exec({ agentId: 'w', action: 'gate', id: 'email-ok', by: 'person' });
+    assert.ok(!g.open && /does not match/.test(g.saw), JSON.stringify(g));
+    await d.exec({ agentId: 'w', action: 'setValue', selector: '#email', value: 'james@example.com', by: 'person' });
+    g = await d.exec({ agentId: 'w', action: 'gate', all: true, by: 'person' });
     assert.deepStrictEqual([g.open, g.checks], [true, 1]);
     g = await d.exec({ agentId: 'w', action: 'gate', gate: { selector: '#name', value: 'nobody' }, by: 'person' });
     assert.strictEqual(g.open, false);
-    // a macro step and a workflow step become this driver call
+    assert.strictEqual(await page.evaluate(() => document.getElementById('email').value), 'james@example.com', 'the gate wrote nothing');
     const BA = require(path.join(ROOT, 'lib/agent-tools/tools/browser/browser-action.js'));
     assert.deepStrictEqual(BA.driverCall('gate', { id: 'email-ok' }), { action: 'gate', id: 'email-ok' });
-    const steps = require(path.join(ROOT, 'lib/automation/steps.js'));
-    assert.ok(JSON.stringify(steps).includes('"value":"gate"'), 'the workflow step exists');
-    const { AutomationEngine } = (() => { try { return require(path.join(ROOT, 'lib/automation/engine.js')); } catch (e) { return {}; } })();
-    const engineSrc = fs.readFileSync(path.join(ROOT, 'lib/automation/engine.js'), 'utf8');
-    assert.match(engineSrc, /case 'fill': \{[^\n]*_gatedAct/, 'a workflow fill is gated through the driver');
-    void AutomationEngine;
     R.install(null);
     await page.close();
   });

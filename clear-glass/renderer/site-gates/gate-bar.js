@@ -7,8 +7,9 @@
  *
  * After a pick on a site (browser.js, dom:pick-result), the bar offers: what must hold at this element (holds what was typed, holds exactly,
  * matches a pattern, shows a choice, is ticked, is clear, contains text, is visible, is gone), on this whole site or only this page, Save.
- * Saved through ClearGlass.shortcuts.gateAdd (main: options siteGates, src/page/element-gate.js validates); from then on every write the
- * driver or the DOM mesh makes to that element is checked by it, and a macro or workflow "gate" step checks it on demand. Settings ›
+ * Saved through ClearGlass.shortcuts.gateAdd (main: options siteGates, src/page/element-gate.js validates). 2026-10-30, his correction ("gates
+ * are for the pipelines for macro atuomation"): a gate is a block — a pipeline task's gate, a workflow's "Wait at a gate", a macro step's
+ * gate (use: <id>) — which the flow waits on; nothing checks it behind a write. Settings ›
  * ClearDriver › Gates on sites lists, checks and removes them. Nothing is sent to the page; the bar lives in the chrome.
  *
  *   window.CGGateBar.mount({ cg })          once, from browser.js
@@ -41,7 +42,7 @@
     close();
     let origin = url, pageGlob = null; try { const u = new URL(url); origin = u.origin; pageGlob = `${u.origin}${u.pathname}*`; } catch (_) {}
     bar = el('div'); bar.id = 'cg-gate-bar'; bar.setAttribute('role', 'dialog'); bar.setAttribute('aria-label', 'Gate this element');
-    const title = el('div', 'gb-title', `⛩ Gate this element on ${origin.replace(/^https?:\/\//, '')}: every write to it is checked`);
+    const title = el('div', 'gb-title', `⛩ Gate this element on ${origin.replace(/^https?:\/\//, '')}: a gate your pipelines, workflows and macros can wait on`);
     const kind = el('select', 'gb-kind'); for (const [v, l] of KINDS) { const o = el('option', null, l); o.value = v; kind.append(o); }
     const extra = el('input', 'gb-extra'); extra.style.display = 'none';
     const scope = el('select', 'gb-scope'); for (const [v, l] of [['site', 'Whole site'], ['page', 'Only this page']]) { const o = el('option', null, l); o.value = v; scope.append(o); }

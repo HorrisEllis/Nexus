@@ -23,6 +23,11 @@ class ClearDriver {
     this.vault  = vault;
     this.sse    = sse;
     this.queue  = new Map(); // agentId → action queue
+    // 2026-10-30 — James: "also needs to use delays between key clicks, erosmanceros is for all copilot and guardian agents. any input not from
+    // me." Every key this driver puts in a page is paced like a person's (ErosmancerOS types it when wired; otherwise one key at a time at
+    // this pace, with short pauses). CG_INPUT_PACE_MS="min,max" sets it (the test sandbox sets a fast one, lib/test-sandbox.js).
+    const env = String(process.env.CG_INPUT_PACE_MS || '').split(',').map(Number).filter(n => Number.isFinite(n) && n >= 0);
+    this.pace = env.length === 2 ? { key: env, pause: [env[0] * 4, env[1] * 4], pauseEvery: [8, 16] } : { key: [45, 140], pause: [220, 520], pauseEvery: [8, 16] };
   }
 
   // ── Primary dispatch ──────────────────────────────────────────────────
@@ -37,11 +42,7 @@ class ClearDriver {
 
     let result;
     try {
-      // 2026-10-30 UG2 — James: "it needs to be universal for all dom elements." Every write, for every caller (fills, macros, workflows,
-      // site keys, agents), is gated here: its derived expectation, his site gates for that element, and any gate the call carries.
-      const again = { ...args };
       result = await this._dispatch(action, agentId, args, execId);
-      if (require('../page/element-gate').WRITES.has(action) && !again.read) result = await this._gated(action, agentId, again, result, () => this._dispatch(action, agentId, { ...again }, execId));
       this.sse.emit('driver.result', { execId, action, agentId, result, ts: Date.now() });
     } catch (err) {
       this.sse.emit('driver.error', { execId, action, agentId, error: err.message, ts: Date.now() });
@@ -159,6 +160,14 @@ class ClearDriver {
   async _click(agentId, { selector, x, y, button = 'left', delay = 0 }) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    // 2026-10-30 — James: "erosmanceros is for all copilot and guardian agents. any input not from me." A left click goes the way a person's
+    // hand does: ErosmancerOS's curve when wired, else Electron's along the curved path (_humanPointer 'auto'); a fallback is said (viaWhy).
+    // Another button keeps the direct events below.
+    if (button === 'left' && typeof this._pointer === 'function') {
+      if (delay > 0) await this._sleep(delay + Math.random() * 50);
+      const r = await this._humanPointer(agentId, { ...(selector ? { selector } : { x, y }), do: 'click', via: 'auto', label: selector || 'click' });
+      return { clicked: { x: r.x, y: r.y, selector }, via: r.via, ...(r.viaWhy ? { viaWhy: r.viaWhy } : {}) };
+    }
 
     if (selector) {
       // Resolve element position via DOM
@@ -193,20 +202,19 @@ class ClearDriver {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
 
-    if (selector) await this._click(agentId, { selector });
-    if (clearFirst) {
-      wc.sendInputEvent({ type: 'keyDown', keyCode: 'A', modifiers: ['control'] });
-      await this._sleep(50);
-    }
-
+    // 2026-10-30 — James: "needs to use delays between key clicks, erosmanceros is for all copilot and guardian agents. any input not from me."
+    // With an element: typed through _humanType (ErosmancerOS when wired, else paced keys), after what is there unless clearFirst.
+    if (selector) { const t = await this._humanType(agentId, { selector, text: String(text), replace: !!clearFirst }); return { typed: t.typed, via: t.via, ...(t.viaWhy ? { viaWhy: t.viaWhy } : {}) }; }
+    // no element: the keys go to whatever has focus, at the pace (delay, when a caller gives one, is the lower bound)
+    const P = this.pace, rnd = ([a, b]) => a + Math.random() * Math.max(0, b - a);
     for (const char of text) {
       wc.sendInputEvent({ type: 'keyDown', keyCode: char });
       wc.sendInputEvent({ type: 'char', keyCode: char });
       wc.sendInputEvent({ type: 'keyUp', keyCode: char });
-      await this._sleep(delay + Math.random() * 30 - 15);
+      await this._sleep(Math.max(rnd(P.key), delay === 50 ? 0 : delay));
     }
 
-    return { typed: text.length };
+    return { typed: text.length, via: 'paced' };
   }
 
   // ── Scroll ────────────────────────────────────────────────────────────
@@ -1053,10 +1061,50 @@ class ClearDriver {
 
   // setValue: long answers (a cover letter) typed key by key take minutes and trip per-key handlers. Sets the value
   // through the element's native setter (so React/Vue-controlled inputs register it), then fires input+change.
+  // 2026-10-30 — every key typed for anyone but him, paced (see the constructor): ErosmancerOS types it when wired (its own human timing),
+  // else one key at a time — insertText per character (any script, any editor), Enter between lines, a pause every few keys. replace: what
+  // is in the box goes first. → { via, typed, shown, viaWhy? }
+  async _humanType(agentId, { selector, text = '', replace = true } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    const sel = JSON.stringify(selector);
+    const at = await this._evalJs(wc, `(function(){ var el = document.querySelector(${sel}); if (!el) return { ok:false, error:'element not found' };
+      el.scrollIntoView && el.scrollIntoView({ block:'center' }); el.focus && el.focus();
+      var rich = !/^(INPUT|TEXTAREA)$/.test(el.tagName);
+      if (${replace ? 'true' : 'false'}) {
+        if (!rich) { var proto = el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype; var d = Object.getOwnPropertyDescriptor(proto, 'value'); if (d && d.set) d.set.call(el, ''); else el.value = ''; el.dispatchEvent(new Event('input', { bubbles:true })); }
+        else { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand('delete'); }
+      } else if (!rich && el.setSelectionRange) { try { var n = String(el.value).length; el.setSelectionRange(n, n); } catch (_) { /* email, number … have no caret to move: the keys go to its end anyway */ } }
+      var b = el.getBoundingClientRect(); return { ok:true, rich: rich, x: Math.round(b.left + Math.min(b.width / 2, 40)), y: Math.round(b.top + Math.min(b.height / 2, 16)) }; })()`);
+    if (!at || !at.ok) throw new Error(`type ${selector}: ${(at && at.error) || 'failed'}`);
+    let via = 'paced', viaWhy = null;
+    if (typeof this.erosInput === 'function') {
+      try { await this.erosInput(agentId, wc.getURL(), { x: at.x, y: at.y, action: 'type', text: String(text) }); via = 'eros'; }
+      catch (e) { viaWhy = `ErosmancerOS did not type it (${e.message}) — paced keys instead`; }
+    } else viaWhy = 'ErosmancerOS is not wired here — paced keys';
+    if (via !== 'eros') {
+      const P = this.pace, rnd = ([a, b]) => a + Math.random() * Math.max(0, b - a);
+      let next = Math.round(rnd(P.pauseEvery));
+      const chars = [...String(text)];
+      for (let i = 0; i < chars.length; i++) {
+        const ch = chars[i];
+        if (ch === '\n') { wc.sendInputEvent({ type: 'keyDown', keyCode: 'Enter' }); wc.sendInputEvent({ type: 'char', keyCode: 'Enter' }); wc.sendInputEvent({ type: 'keyUp', keyCode: 'Enter' }); }
+        else if (ch !== '\r') { if (typeof wc.insertText === 'function') await wc.insertText(ch); else { wc.sendInputEvent({ type: 'keyDown', keyCode: ch }); wc.sendInputEvent({ type: 'char', keyCode: ch }); wc.sendInputEvent({ type: 'keyUp', keyCode: ch }); } }
+        await this._sleep(rnd(P.key));
+        if (--next <= 0 && i < chars.length - 1) { await this._sleep(rnd(P.pause)); next = Math.round(rnd(P.pauseEvery)); }
+      }
+    }
+    const shown = await this._evalJs(wc, `(function(){ var el = document.querySelector(${sel}); if (!el) return null;
+      el.dispatchEvent(new Event('change', { bubbles:true })); return /^(INPUT|TEXTAREA)$/.test(el.tagName) ? String(el.value) : String(el.innerText || ''); })()`);
+    return { via, typed: [...String(text)].length, shown, rich: at.rich, ...(viaWhy ? { viaWhy } : {}) };
+  }
+
   async _setValue(agentId, { selector, value = '' } = {}) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
     if (!selector) throw new Error('setValue requires selector');
+    // 2026-10-30 — a value is typed, paced (_humanType), never set at once: "any input not from me" goes the way a person's does
+    if (String(value) !== '') { const t = await this._humanType(agentId, { selector, text: String(value), replace: true }); return { ok: true, length: String(value).length, via: t.via, ...(t.viaWhy ? { viaWhy: t.viaWhy } : {}) }; }
     const r = await this._evalJs(wc, `(function(){
       const el = document.querySelector(${JSON.stringify(selector)});
       if (!el) return { ok:false, error:'element not found' };
@@ -1076,7 +1124,7 @@ class ClearDriver {
     return r;
   }
 
-  // ── 2026-10-30 UG2/UG4 — gates (src/page/element-gate.js) ─────────────────────────────────────────────────────────────────────────────
+  // ── 2026-10-30 UG4/PL6 — reading a gate (src/page/element-gate.js) for a pipeline, workflow or macro step ─────────────────────────────────────────────────────────────────────────────
   // getSiteGates: main hands the options store's siteGates in (src/main/index.js); none → his gates are not applied, and the result says so
   _siteGates() { try { return (typeof this.getSiteGates === 'function' && this.getSiteGates()) || {}; } catch (_) { return {}; } }
   _gatePolicy(url) {
@@ -1103,43 +1151,8 @@ class ClearDriver {
     for (const e of exps) { let r; try { r = await this._gateRead(agentId, e); } catch (err) { r = { open: false, saw: err.message }; } outs.push({ ...r, label: e.label || e.why || null }); }
     return { open: outs.every(o => o.open), saw: outs.map(o => (o.label ? `${o.label}: ` : '') + o.saw).join(' · ') };
   }
-  async _gated(action, agentId, args, result, redo) {
-    const EG = require('../page/element-gate');
-    const wc = this._getWebContents(agentId);
-    let url = ''; try { url = wc.getURL(); } catch (_) {}
-    const pol = this._gatePolicy(url);
-    if (args.gate === false) {
-      if (args._agentCall) throw Object.assign(new Error('an agent cannot turn a write\'s gate off'), { code: 'GATE_REFUSED' });
-      return { ...(result || {}), gate: { skipped: 'the caller turned this write\'s gate off (gate:false)' } };
-    }
-    if (!pol.enabled) return { ...(result || {}), gate: { off: 'gates are off on this site (Site settings › Gates)' } };
-    const written = args.text != null ? args.text : args.value != null ? args.value : args.option != null ? args.option : null;
-    const exps = [];
-    const d = EG.derive(action, args, result || {}); if (d) exps.push(d);
-    if (args.gate && typeof args.gate === 'object') { const g = EG.normalize(args.gate, written); if (EG.validate(g).ok) exps.push({ ...g, label: 'the call\'s gate' }); }
-    // his gates on this site whose element is the one written
-    const where = d && (d.selector || d.xpath || d.cgId) ? { selector: d.selector, xpath: d.xpath, cgId: d.cgId } : (args.selector ? { selector: args.selector } : null);
-    const mine = EG.matchSite(this._siteGates(), url);
-    if (where) for (const g0 of mine) {
-      const g = EG.normalize(g0, written);
-      if (!(g.selector || g.xpath || g.cgId)) continue;
-      let same = false; try { same = await this._evalJs(wc, EG.sameElementScript(g, where.selector && EG.isXPath(where.selector) ? { xpath: where.selector } : where)); } catch (_) {}
-      if (same) exps.push({ ...g, label: `your gate${g.label ? ` "${g.label}"` : ''}` });
-    }
-    if (!exps.length) return { ...(result || {}), gate: { none: `nothing to check after ${action} here: pick the element and Gate this element, or the next step's gate covers it` } };
-    // a page that does not answer the read at all leaves the write unchecked, said: unknown is never a pass nor a closed gate (NC0)
-    const domExp = exps.find(e => !e.choice && !e.checkAt);
-    if (domExp) { let probe = null; try { probe = await this._evalJs(wc, EG.stateScript(domExp)); } catch (_) {} if (probe == null) return { ...(result || {}), gate: { unchecked: 'the page did not answer the gate\'s read' } }; }
-    let g = null;
-    for (let t = 0; t <= pol.retries; t++) {
-      if (t) { await this._sleep(150); result = await redo(); }
-      g = await EG.settle(() => this._gateAll(agentId, exps), pol);
-      if (g.open) return { ...(result || {}), gate: { open: true, saw: g.saw, tries: t + 1, checks: exps.length } };
-    }
-    const e = new Error(`${action}: its gate stayed closed after ${pol.retries + 1} tries — ${g.saw}`);
-    e.code = 'GATE_CLOSED'; e.gate = { open: false, saw: g.saw, tries: pol.retries + 1 };
-    throw e;
-  }
+  // (0.60.292's _gated — an automatic read-back after every write — is archived: _archive/2026-10-30-write-gates/. A gate is a block a
+  // pipeline, workflow or macro waits on, his correction of 2026-10-30; this driver only reads one, through the gate action below.)
   // the gate action: { gate } checks that gate; { id } one of his; { all: true } every gate of his on this page. Nothing is written.
   async _gateCheck(agentId, { gate = null, id = null, all = false, timeoutMs = null } = {}) {
     const EG = require('../page/element-gate');
@@ -1160,6 +1173,10 @@ class ClearDriver {
   // (setValue writes textContent, which its own model never sees). This puts the text in the way a keyboard does: focus the box, select what is
   // there, insert as typed text (Electron's insertText; execCommand when there is none), Enter between lines; then read it back.
   async _insertText(agentId, { selector, text = '' } = {}) {
+    // 2026-10-30 — paced like a person's typing (or ErosmancerOS's), never inserted at once; the at-once body below is kept only for a page
+    // whose editor will not take single keys, and is no longer reached (git history 0.60.290 has it as it ran)
+    if (!selector) throw new Error('insertText requires selector');
+    { const t = await this._humanType(agentId, { selector, text: String(text), replace: true }); return { ok: true, rich: t.rich, shown: t.shown, via: t.via, ...(t.viaWhy ? { viaWhy: t.viaWhy } : {}) }; }
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
     if (!selector) throw new Error('insertText requires selector');

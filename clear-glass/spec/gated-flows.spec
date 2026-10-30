@@ -558,6 +558,34 @@ spec:
       error_paths: ["refused gate → the bar says why"]
       acceptance: ["test-element-gates UG-05 in Clear Glass: the bar saves a gate from a pick; Settings lists it"]
 
+    # 2026-10-30 — James, with a screenshot of a new gig: "the drop down didn't work fully. it was a new gig. also needs to use delays between
+    # key clicks, erosmanceros is for all copilot and guardian agents. any input not from me."
+    - id: MOD-GF5
+      name: category-picked-from-what-the-page-shows
+      uuid: nexus-gated-flows-category-from-page-v1-0000-2026-1030-001
+      path: clear-glass/src/ipc/bridge.js
+      phase: GF5_category_and_subcategory_finished
+      description: "A new gig's category: his gated node macro first; when it ran, its own gates are the part's gate (no second check, no built-in re-pick). When it stopped part way, the built-in pick reads the page and picks only what is still unchosen (SELECT A CATEGORY, SELECT A SUBCATEGORY), so a chosen category no longer blocks the subcategory. The same for delivery. A gate read the page does not answer is recorded unchecked, never retried as closed."
+      deps: [{ name: gig-fill-every-page }]
+      exports: ["_gigFill category / delivery"]
+      gate_pipeline: ["GATE-GF5-001: macro → ok: done; stopped → read the page → pick what is unchosen → gated"]
+      behavioral_contracts: ["a value the page already shows is kept, said (kept)"]
+      error_paths: ["neither picks → notFound with the macro's why and the pick's"]
+      acceptance: ["test-fiverr-overview-and-a11y FO-04 in Clear Glass: the macro chose the category and stopped; the fill picks only the subcategory", "test-about-and-nodes AN-03"]
+
+    - id: MOD-EI1
+      name: human-input-for-every-key
+      uuid: nexus-gated-flows-human-input-v1-0000-2026-1030-001
+      path: clear-glass/src/driver/index.js
+      phase: EI1_every_key_and_click_paced_through_eros
+      description: "Every key the driver puts in a page, for every caller (the fills, macros, workflows, pipelines, Copilot and agents), is typed like a person's: ErosmancerOS types it when wired (its own human timing, at the field); otherwise one key at a time at the driver's pace (45-140 ms, a 220-520 ms pause every 8-16 keys), never a whole value at once. setValue, insertText, type and typeAt all go through _humanType. A left click goes through the human pointer (ErosmancerOS's curve when wired, else Electron's along a curved path). A fallback is said in the result (via, viaWhy). CG_INPUT_PACE_MS sets the pace; the test sandbox sets a fast one."
+      deps: [{ name: dropdown-choose }]
+      exports: ["_humanType(agentId, { selector, text, replace }) → { via, typed, shown, viaWhy? }", "driver.pace", "env CG_INPUT_PACE_MS"]
+      gate_pipeline: ["GATE-EI1-001: a write → ErosmancerOS, or paced keys → read back"]
+      behavioral_contracts: ["no write puts a whole value in at once", "a field that has no caret (email, number) still takes the keys"]
+      error_paths: ["ErosmancerOS down → paced keys, viaWhy says why"]
+      acceptance: ["test-pipeline-gates PG-07 in Clear Glass: measured gaps between keys, a pause every few; ErosmancerOS used when wired; down → paced, said"]
+
   events:
     flows:
       - "macro.gate { macro, step, open, why, by }"

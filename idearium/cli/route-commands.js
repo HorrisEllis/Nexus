@@ -84,9 +84,10 @@ export const SPEC = [
   // holds, run one and record it under that source, and NAME an absent source — never fake one (§1.2).
   // 0.60.284 PL3 — James, 2026-10-29: "making a pipeline and workflow feature and include the macros and automation". Pipelines on the
   // automation engine that has the browser, macros and agents (Clear Glass's, docs/2026-10-29-pipelines-phasemap.spec PL_D2).
-  { key: 'pipeline.list', repo: false, usage: 'pipeline list [--archived]', about: 'pipelines: tasks in a dependency graph, each a macro, workflow, agent, command or browser step',
-    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipelines${a.flags.archived ? '?archived=1' : ''}` }),
-    print: (d, a, h) => { for (const p of d.pipelines || []) console.log(`  ${h.c.bold(p.name)}  ${h.c.dim(`${p.tasks.length} task${p.tasks.length === 1 ? '' : 's'}${p.archived ? ' · archived' : ''} · ${p.id}`)}`); if (!(d.pipelines || []).length) console.log(h.c.gray('  no pipelines yet — make one in Clear Glass Settings › Pipelines')); } },
+  // 2026-10-30 PL10 — --site <url>: the pipelines of that page's site (James: "with the option for per site pipelines"); --on-load: only those that run when it opens
+  { key: 'pipeline.list', repo: false, usage: 'pipeline list [--archived] [--site <url> [--on-load]]', about: 'pipelines: tasks in a dependency graph, each a macro, workflow, agent, command, browser step, another pipeline or a wait at a gate; per site with --site',
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipelines${a.flags.site ? `?site=${encodeURIComponent(a.flags.site)}${a.flags['on-load'] ? '&onLoad=1' : ''}` : a.flags.archived ? '?archived=1' : ''}` }),
+    print: (d, a, h) => { for (const p of d.pipelines || []) console.log(`  ${h.c.bold(p.name)}  ${h.c.dim(`${p.tasks.length} task${p.tasks.length === 1 ? '' : 's'}${p.site ? ` · ${p.site}${p.onLoad ? ' (on load)' : ''}` : ''}${p.archived ? ' · archived' : ''} · ${p.id}`)}`); if (!(d.pipelines || []).length) console.log(h.c.gray('  no pipelines yet — make one in Clear Glass Settings › Pipelines')); } },
   { key: 'pipeline.show', repo: false, usage: 'pipeline show <id>', about: 'a pipeline\'s tasks in order, with what each runs and depends on',
     need: (a) => (a.args[0] ? null : '<id>'),
     req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipelines/${encodeURIComponent(a.args[0])}` }),
@@ -1313,7 +1314,7 @@ export const SPEC = [
     } },
   // 2026-10-30 UG4 — James: "it needs to be universal for all dom elements ... per site settings, macros and automation features."
   { key: 'glass.gates', repo: false, usage: 'glass gates [<site url>] | glass gates add <site url> --selector s [--value v | --equals v | --matches /re/ | --shows o | --checked true|false | --text t | --visible true | --gone true] [--page glob] [--label name] | glass gates remove <site url> <id> | glass gates check [--id id]',
-    about: 'gates on any element, per site: every write the driver or the DOM mesh makes is checked by its own gate and by yours for that element; check runs yours on the page open in Clear Glass',
+    about: 'gates on any element, per site or page: blocks your pipelines, workflows and macros wait on (a pipeline task gate, Wait at a gate, a macro step gate use:<id>); check runs yours on the page open in Clear Glass',
     req: (a) => {
       const [op, url, id] = a.args || [];
       const f = a.flags || {}, b = (v) => (v === 'true' ? true : v === 'false' ? false : v);

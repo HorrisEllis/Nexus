@@ -38,6 +38,17 @@ decisions:
       "pipeline and workflow feature": pipelines over the workflows he has; "different agents": an agent task names its agent; "from
       orchastrator": the orchestrator runs pipelines once AE2/AE3 give it the browser and agents — not built here.
 
+  # 2026-10-30 — his, after "gates are for the pipelines for macro atuomation" (the ADDENDUM at the end of this map)
+  PL_D4_a_gate_is_a_pipeline_block:
+    status: "DECIDED — his, 2026-10-30 (\"gates are for the pipelines for macro atuomation\"); supersedes the coder's 0.60.292 reading"
+    chosen: >-
+      A gate is a step condition in a pipeline, a workflow or a macro, which the flow waits on; made on any element with the picker, per site
+      or page. 0.60.292's automatic read-back inside every driver and DOM write is archived (_archive/2026-10-30-write-gates/).
+  PL_D5_per_site_pipelines:
+    status: "DECIDED — his, 2026-10-30 (\"with the option for per site pipelines\")"
+    chosen: >-
+      A pipeline may name its site (origin or pattern) and run when a page of it opens; a site's Site settings can turn pipelines off. The
+      coder's reading of "option": a pipeline without a site works everywhere, as before (to confirm).
 phases:
   PL1_pipeline_core:
     status: DONE 0.60.284
@@ -74,3 +85,55 @@ phases:
     spec: docs/automation-pipelines.spec
     blocks: [MOD-PIPELINE-ORCHESTRATOR]
     does: "the orchestrator's engine runs pipelines with macros and browser steps (through AE2) and agent tasks through RAID (AE3)"
+
+
+## ADDENDUM 2026-10-30 — PL6–PL11: gates are pipeline blocks; macros, workflows and pipelines linked; per-site pipelines
+James, 2026-10-30, after 0.60.292 put an automatic read-back into every driver write: "what? gates are for the pipelines for macro
+atuomation" · asked why it was misread: "considering what the context of what i proposed., and the request. why, did you misread me? i also
+told to stop thimnking so fucking narrow" · then: "yes. i want that with the option for per site pipelines. make sure macros, automations,
+and pipelines are interconnected. i build bottom up, and interconnected, and compound leverage"
+What a gate is, in his record: "fiverr working with gates for each step, each gate can be like blocks." · "gating for each step, that way it
+can continue to a new page." (2026-10-28, FP3) · KB4 (2026-10-29) step gates in macros and automation · PL (0.60.284) a task's gate.
+A gate is a block in a pipeline: a condition the flow waits on before the next step. The coder read "gated" from its own last task (a
+read-back) and "universal" as "lower in the stack" instead of "available everywhere"; recorded in docs/2026-10-28-gated-flows-phasemap.spec.
+Decided by his axioms: bottom up (§3.3, his words): the gate → the gate step → pipeline/macro gates → the links → per-site; §8.6 one gate step
+serves workflows and pipelines (a task is an engine step, PL_D1); one engine and one store (PL_D2); §5.15 the engine (lib) reaches the page
+only through Clear Glass's driver action, never its code.
+(PL_D4 and PL_D5 are with the map's other decisions, at the top.)
+phases_pl6:
+  PL6_the_gate_step:
+    status: BUILT 0.60.293
+    depends_on: [PL_D4_a_gate_is_a_pipeline_block, PL1_pipeline_core, UG1_one_gate_for_every_element]
+    files: [lib/automation/engine.js, lib/automation/steps.js, clear-glass/src/driver/index.js]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-GATE-STEP]
+  PL7_pipeline_tasks_gated_on_elements:
+    status: BUILT 0.60.293
+    depends_on: [PL6_the_gate_step]
+    files: [lib/automation/pipeline.js]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-PIPELINE-ELEMENT-GATE]
+  PL8_macro_steps_gated_on_elements:
+    status: BUILT 0.60.293
+    depends_on: [PL6_the_gate_step, KB4_gates_on_macro_steps]
+    files: [lib/agent-tools/tools/clear-glass/macro.js, lib/agent-tools/tools/clear-glass/gate-eval.js]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-MACRO-ELEMENT-GATES]
+  PL9_macros_workflows_pipelines_linked:
+    status: BUILT 0.60.293
+    depends_on: [PL6_the_gate_step, PL2_pipeline_door]
+    files: [lib/automation/engine.js, lib/automation/steps.js, clear-glass/src/ipc/bridge.js, lib/agent-tools/tools/browser/browser-action.js]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-LINKS]
+  PL10_per_site_pipelines:
+    status: BUILT 0.60.293
+    depends_on: [PL_D5_per_site_pipelines, PL1_pipeline_core]
+    files: [lib/automation/pipeline.js, lib/automation/routes.js, clear-glass/src/site-settings/keys.js, clear-glass/src/site-settings/readers.js, clear-glass/src/main/index.js]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-PIPELINE-SITE]
+  PL11_screens_for_gates_and_sites:
+    status: BUILT 0.60.293
+    depends_on: [PL7_pipeline_tasks_gated_on_elements, PL9_macros_workflows_pipelines_linked, PL10_per_site_pipelines, PL4_pipelines_screen]
+    files: [clear-glass/renderer/settings/sections/pipelines.js]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-PIPELINE-SITE-UI]

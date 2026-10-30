@@ -1281,9 +1281,8 @@ async function bootstrap() {
   driver = new ClearDriver({ ctxMgr, dom, vault, sse: { emit: (t, d) => emit(t, d) } });
   driver.erosInput = (...a) => (_erosInputFn ? _erosInputFn(...a) : Promise.reject(new Error('the ErosmancerOS wire is not started yet')));
   dom.erosInput = driver.erosInput;   // §ER3 0.60.253 — the DOM mutator types through ErosmancerOS when asked (via: 'eros')
-  // 2026-10-30 UG2/UG3 — his gates (the options store, made below) reach every write the driver and the DOM mesh make
+  // 2026-10-30 UG4/PL6 — his gates (the options store, made below) for the driver's gate action, which pipelines, workflows and macros use
   driver.getSiteGates = () => (nexusOptions && nexusOptions.getSiteGates ? nexusOptions.getSiteGates() : {});
-  dom.getSiteGates = driver.getSiteGates;
 
   // 7. URL listener — glob/regex per-agent request hooks
   urlListener = new UrlListener({ sse: { emit: (t, d) => emit(t, d) }, ctxMgr });
@@ -2876,6 +2875,7 @@ function _siteOnLoad(contents, url) {
     const js = require('../rewind/resume.js').resumeScript(mode);
     if (js) contents.executeJavaScript(js, true).catch(e => console.warn(`[site-settings] resume at ${new URL(url).origin} not kept: ${e.message}`));
   }
+  _sitePipelinesOnLoad(contents, url);   // 2026-10-30 PL10 — this site's pipelines that run when a page of it opens
   const m = require('../site-settings/readers').macrosOnLoad(url);
   if (!m || !m.enabled || !m.autoRun.length || !ipcBridge) return;
   const origin = new URL(url).origin; const now = Date.now();
@@ -2887,6 +2887,26 @@ function _siteOnLoad(contents, url) {
     Promise.resolve(ipcBridge.runMacroAsPerson({ name, agentId: `wc:${contents.id}`, url, by: 'site settings (on load)' }))
       .then(r => { if (r && r.error) console.warn(`[site-settings] macro "${name}" on load at ${origin} did not run: ${r.error}`); })
       .catch(e => console.warn(`[site-settings] macro "${name}" on load at ${origin} failed: ${e.message}`));
+  }
+}
+// 2026-10-30 PL10 — James: "i want that with the option for per site pipelines." A pipeline that names this site and runs when a page of it
+// opens (onLoad) runs here, from this Clear Glass's own engine (the one Settings › Pipelines shows), with the page given as {{vars.page}}
+// (its window: wc:<id>) and {{vars.url}}; once per page and minute, like a site's macros; off when the site's Site settings say pipelines.enabled
+// false. A failure is said in the log with the pipeline and the site.
+function _sitePipelinesOnLoad(contents, url) {
+  const A = ipcBridge && ipcBridge.mesh && ipcBridge.mesh._automation; if (!A) return;
+  if (require('../site-settings/readers').pipelinesAllowed(url) === false) return;
+  let P; try { P = A.pipelines || (A.pipelines = new (require('../../../lib/automation/pipeline.js').Pipelines)(A)); } catch (e) { console.warn(`[pipelines] not loaded: ${e.message}`); return; }
+  const list = P.forSite(url, { onLoad: true }); if (!list.length) return;
+  const origin = new URL(url).origin, now = Date.now();
+  for (const [k, at] of _siteLoadRuns) if (now - at > 60000) _siteLoadRuns.delete(k);
+  for (const p of list) {
+    const key = `${contents.id}|${origin}|pipeline:${p.id}`;
+    if (_siteLoadRuns.has(key)) continue;
+    _siteLoadRuns.set(key, now);
+    Promise.resolve(P.run(p.id, { vars: { page: `wc:${contents.id}`, url }, wait: true }))
+      .then(r => { if (r && !r.ok) console.warn(`[pipelines] "${p.name}" on load at ${origin} did not finish: ${r.error || r.status}`); try { require('../processes').activity().push({ kind: 'pipeline', what: `pipeline "${p.name}" ${r && r.ok ? 'ran' : `did not finish: ${(r && r.error) || 'a task failed'}`}`, url, by: 'site pipeline (on load)', level: r && r.ok ? 'info' : 'warn' }); } catch (_) {} })
+      .catch(e => console.warn(`[pipelines] "${p.name}" on load at ${origin} failed: ${e.message}`));
   }
 }
 // §0.39.265 — workflow event triggers: "I open a page" and "a download finishes".

@@ -448,7 +448,7 @@ class DomArchaeology {
   }
 
   // ── Mutate ────────────────────────────────────────────────────────────
-  async handleMutate({ agentId = 'default', cgId, selector, mutation, via = 'native', value, text, gate }) {
+  async handleMutate({ agentId = 'default', cgId, selector, mutation, via = 'native', value, text }) {
     const wc = this._getWebContents(agentId);
     if (!wc) return { error: 'No webcontents' };
     { const e = await this._ensure(wc, agentId); if (e.error) return e; }   // 0.60.267
@@ -478,54 +478,17 @@ class DomArchaeology {
       catch (e) { return { error: `ErosmancerOS could not type it: ${e.message}`, via: 'eros' }; }
       const { value: _v, ...rest } = mutation;
       const after = Object.keys(rest).length ? await wc.executeJavaScript(`window.__cgDomMesh?.mutate(${JSON.stringify(cgId)}, ${JSON.stringify(rest)})`, true) : null;
-      let result = { ok: true, nodeId: cgId, via: 'eros', typed: mutation.value.length, profile: typed && typed.profile, at: { x: at.x, y: at.y }, ...(after && after.error ? { rest: after } : {}) };
-      result = await this._gateMutation(wc, cgId, mutation.value, result, gate, () => wc.executeJavaScript(`window.__cgDomMesh?.mutate(${JSON.stringify(cgId)}, ${JSON.stringify({ value: mutation.value })})`, true));
+      const result = { ok: true, nodeId: cgId, via: 'eros', typed: mutation.value.length, profile: typed && typed.profile, at: { x: at.x, y: at.y }, ...(after && after.error ? { rest: after } : {}) };
       this.sse.emit('dom.mutated', { agentId, cgId, mutation: { ...mutation, value: `(${mutation.value.length} chars typed)` }, result, ts: Date.now() });
       return result;
     }
 
-    const doIt = () => wc.executeJavaScript(`window.__cgDomMesh?.mutate(${JSON.stringify(cgId)}, ${JSON.stringify(mutation)})`, true);
-    let result = await doIt();
-    // 2026-10-30 UG3 — James: "it needs to be universal for all dom elements. like for the job applications". A value set here (the general
-    // autofill, the applications fill, screen-QA, agents' dom_mutate) is gated like a driver write: read until it holds, read again settled,
-    // set once more if closed, then { error, code: GATE_CLOSED }.
-    if (mutation.value !== undefined && result && !result.error) result = await this._gateMutation(wc, cgId, mutation.value, result, gate, doIt);
+    const result = await wc.executeJavaScript(
+      `window.__cgDomMesh?.mutate(${JSON.stringify(cgId)}, ${JSON.stringify(mutation)})`, true
+    );
 
     this.sse.emit('dom.mutated', { agentId, cgId, mutation, result, ts: Date.now() });
     return result;
-  }
-
-  async _gateMutation(wc, cgId, value, result, gate, redo) {
-    const EG = require('../page/element-gate'), OM = require('../page/option-match');
-    if (gate === false) return { ...result, gate: { skipped: 'the caller turned this write\'s gate off (gate:false)' } };
-    let url = ''; try { url = wc.getURL(); } catch (_) {}
-    let p = null; try { p = require('../site-settings/readers').gatePolicy(url); } catch (_) {}
-    const pol = { enabled: true, settleMs: 400, timeoutMs: 2500, retries: 1, ...(p || {}) };
-    if (!pol.enabled) return { ...result, gate: { off: 'gates are off on this site (Site settings › Gates)' } };
-    const exps = [EG.derive('mutate', { cgId, value })];
-    if (gate && typeof gate === 'object') { const g = EG.normalize(gate, value); if (EG.validate(g).ok) exps.push({ ...g, label: 'the call\'s gate' }); }
-    let mine = []; try { mine = EG.matchSite((typeof this.getSiteGates === 'function' && this.getSiteGates()) || {}, url); } catch (_) {}
-    for (const g0 of mine) {
-      const g = EG.normalize(g0, value); if (!(g.selector || g.xpath || g.cgId)) continue;
-      let same = false; try { same = await wc.executeJavaScript(EG.sameElementScript(g, { cgId }), true); } catch (_) {}
-      if (same) exps.push({ ...g, label: `your gate${g.label ? ` "${g.label}"` : ''}` });
-    }
-    // a page that does not answer the read at all (null, not even "not found") leaves the write unchecked, said: unknown is never a pass
-    // nor a closed gate (the evidence rule, docs/CLAUDE.md NC0)
-    let probe = null; try { probe = await wc.executeJavaScript(EG.stateScript(exps[0]), true); } catch (_) {}
-    if (probe == null) return { ...result, gate: { unchecked: 'the page did not answer the gate\'s read' } };
-    const check = async () => {
-      const outs = [];
-      for (const e of exps) { let st = null; try { st = await wc.executeJavaScript(EG.stateScript(e), true); } catch (err) { outs.push({ open: false, saw: err.message }); continue; } outs.push({ ...EG.evaluate(e, st || {}, OM), label: e.label }); }
-      return { open: outs.every(o => o.open), saw: outs.map(o => (o.label ? `${o.label}: ` : '') + o.saw).join(' · ') };
-    };
-    let g = null;
-    for (let t = 0; t <= pol.retries; t++) {
-      if (t) await redo();
-      g = await EG.settle(check, pol);
-      if (g.open) return { ...result, gate: { open: true, saw: g.saw, tries: t + 1, checks: exps.length } };
-    }
-    return { error: `its gate stayed closed after ${pol.retries + 1} tries — ${g.saw}`, code: 'GATE_CLOSED', nodeId: cgId, gate: { open: false, saw: g.saw, tries: pol.retries + 1 } };
   }
 
   // ── Element pick registration ─────────────────────────────────────────

@@ -219,6 +219,104 @@ spec:
       error_paths: ["the port not built → the task fails with 'browser steps need Clear Glass running'"]
       acceptance: ["a pipeline on :9000 runs a macro task through Clear Glass and an agent task through RAID"]
 
+    # 2026-10-30 PL6–PL11 — James: "yes. i want that with the option for per site pipelines. make sure macros, automations, and pipelines are
+    # interconnected. i build bottom up, and interconnected, and compound leverage" — after "gates are for the pipelines for macro atuomation".
+    - id: MOD-GATE-STEP
+      name: gate-step
+      uuid: nexus-automation-gate-step-v1-0000-2026-1030-001
+      path: lib/automation/engine.js
+      phase: PL6_the_gate_step
+      description: >-
+        One engine step, "Wait at a gate": one of his gates (by id, made with the picker) or any element condition (holds a value, exactly,
+        matches a pattern, shows a choice, ticked or clear, contains text, visible, gone, the address, the page's text). It asks Clear
+        Glass's driver to read it (the driver's gate action, which only reads) until it opens or timeoutMs passes; closed fails the step
+        with what it saw. Because a pipeline task is one engine step, the same step is a workflow block and a pipeline task.
+      deps: [{ name: automation-engine }]
+      exports: ["step type gate { gateId? | selector | xpath, value | equals | matches | shows | checked | text | visible | gone | url, timeoutMs }"]
+      gate_pipeline: ["GATE-PL6-001: read through the driver until open or timeout; closed → the step fails with what it saw"]
+      behavioral_contracts: ["the step writes nothing", "no browser → the step fails and says why"]
+      error_paths: ["closed → Error('gate closed: …')"]
+      acceptance: ["test-pipeline-gates PG-01 in Clear Glass: a workflow's gate step waits for a field to hold a value, and fails with what it saw"]
+
+    - id: MOD-PIPELINE-ELEMENT-GATE
+      name: pipeline-element-gate
+      uuid: nexus-automation-pipeline-element-gate-v1-0000-2026-1030-001
+      path: lib/automation/pipeline.js
+      phase: PL7_pipeline_tasks_gated_on_elements
+      description: >-
+        A task's gate may carry element (any element condition, or gateId: one of his), checked after the task through the gate step; the
+        output keys (notEmpty, contains, equals, matches) still hold. A closed element gate is a closed gate: the task runs again (its
+        retries), then fails and blocks its dependents.
+      deps: [{ name: pipeline }, { name: gate-step }]
+      exports: ["task.gate.element { gateId? | selector | xpath, …condition, timeoutMs }"]
+      gate_pipeline: ["GATE-PL7-001: task → output gate → element gate → done, or retry, or failed"]
+      behavioral_contracts: ["the element gate is validated with the pipeline"]
+      error_paths: ["closed → the task fails with what the gate saw"]
+      acceptance: ["test-pipeline-gates PG-02 in Clear Glass: a task waits at its element gate; a task whose gate stays closed blocks its dependent"]
+
+    - id: MOD-MACRO-ELEMENT-GATES
+      name: macro-element-gates
+      uuid: nexus-automation-macro-element-gates-v1-0000-2026-1030-001
+      path: lib/agent-tools/tools/clear-glass/macro.js
+      phase: PL8_macro_steps_gated_on_elements
+      description: >-
+        A macro step's gate takes the same element conditions and his gates by id (use: <id>), read through the driver's gate action; FG3's
+        keys (url, selector, text, value, gone) and KB4's choice keep their own reads. One gate idea for macros, workflows and pipelines.
+      deps: [{ name: gate-step }]
+      exports: ["step.gate { use?, shows?, checked?, matches?, equals?, visible?, xpath? } alongside FG3/KB4 keys"]
+      gate_pipeline: ["GATE-PL8-001: macro step → its gate (FG3 / KB4 / element) → retries → stop with what it saw"]
+      behavioral_contracts: ["a gate key nothing reads is refused when the macro is made"]
+      error_paths: ["closed → the run stops at that step with what the gate saw"]
+      acceptance: ["test-pipeline-gates PG-03: a macro step gated on his gate by id"]
+
+    - id: MOD-LINKS
+      name: macros-workflows-pipelines-linked
+      uuid: nexus-automation-links-v1-0000-2026-1030-001
+      path: lib/automation/engine.js
+      phase: PL9_macros_workflows_pipelines_linked
+      description: >-
+        Each runs the others: an engine step "Run a pipeline" (so a workflow runs a pipeline, and a pipeline task runs another pipeline); a
+        macro step run_workflow and run_pipeline (Clear Glass's macro runner hands them to its engine); a pipeline task already runs a
+        macro or a workflow. Nesting is bounded (depth 5) and a pipeline that would run itself is refused.
+      deps: [{ name: pipeline }, { name: automation-engine }]
+      exports: ["step type pipeline { name | id, vars, wait }", "macro steps run_workflow { name } and run_pipeline { name, vars }"]
+      gate_pipeline: ["GATE-PL9-001: one engine, one store: the pipelines a workflow runs are the ones the Pipelines screen shows"]
+      behavioral_contracts: ["a pipeline never runs itself, directly or through a chain"]
+      error_paths: ["too deep or a loop → refused, named"]
+      acceptance: ["test-pipeline-gates PG-04: a macro runs a workflow that runs a pipeline whose task runs a macro; a self-running pipeline is refused"]
+
+    - id: MOD-PIPELINE-SITE
+      name: per-site-pipelines
+      uuid: nexus-automation-per-site-pipelines-v1-0000-2026-1030-001
+      path: lib/automation/pipeline.js
+      phase: PL10_per_site_pipelines
+      description: >-
+        A pipeline may belong to a site (site: an origin or a URL pattern) and run when a page of it opens (onLoad). forSite(url) lists a
+        site's pipelines; Clear Glass runs the onLoad ones as a page of the site loads, unless the site's Site settings turn pipelines off
+        (pipelines.enabled), the same way it runs a site's macros.
+      deps: [{ name: pipeline }]
+      exports: ["pipeline.site", "pipeline.onLoad", "Pipelines.forSite(url, { onLoad })", "GET /automation/pipelines?site=<url>", "site setting pipelines.enabled"]
+      gate_pipeline: ["GATE-PL10-001: a page loads → its site's onLoad pipelines → run, said in Processes"]
+      behavioral_contracts: ["a site pipeline runs only on its own site"]
+      error_paths: ["a pattern that is not a site → refused by validate"]
+      acceptance: ["test-pipeline-gates PG-05: forSite matches by origin and pattern; validate refuses a bad site"]
+
+    - id: MOD-PIPELINE-SITE-UI
+      name: per-site-pipelines-screen
+      uuid: nexus-automation-per-site-pipelines-screen-v1-0000-2026-1030-001
+      path: clear-glass/renderer/settings/sections/pipelines.js
+      phase: PL11_screens_for_gates_and_sites
+      description: >-
+        The Pipelines editor: a Site field and "run when a page of it opens"; each task's gate: output, or an element gate (one of his gates
+        for that site, or a condition on an element); the task kinds gain Run a pipeline and Wait at a gate. The list shows each pipeline's
+        site. Workflows get Run a pipeline and Wait at a gate from the catalogue; macros take run_workflow / run_pipeline / gate steps.
+      deps: [{ name: per-site-pipelines }, { name: pipeline-element-gate }]
+      exports: ["Settings › Pipelines: Site, onLoad, element gates, Run a pipeline, Wait at a gate"]
+      gate_pipeline: ["GATE-PL11-001: edit → validate → save → run as a checklist"]
+      behavioral_contracts: ["nothing is kept in the screen; everything goes through the engine's door"]
+      error_paths: ["validate's problems shown"]
+      acceptance: ["test-pipeline-gates PG-06 in Clear Glass: the editor saves a site pipeline whose task waits at an element gate"]
+
   events:
     automation:
       - "automation.pipeline.start { pipelineId, runId }"

@@ -422,7 +422,8 @@ const SUITES = [
   'test-release-backfill-off-process.test.js', // 0.60.285 — the full release backfill in a child process (0.60.278 froze Versionium for 1113 s)
   'test-gig-fill-menu.test.js',   // 0.60.286 GM1–GM3 — the Fiverr fill menu: ticks, dropdowns, only what is ticked; price and revisions
   'test-gig-all-fields.test.js',  // 0.60.290 GF1–GF4 — every field (title, rich description, FAQs, buyer questions) read back; friction → his site keys; 0.60.291 GG1 every part gated
-  'test-element-gates.test.js',   // 0.60.292 UG1–UG5 — a gate on every DOM element: driver writes, DOM-mesh writes, his picked gates, macro/workflow steps
+  'test-element-gates.test.js',   // 0.60.292 UG1/UG4/UG5 — a gate on any DOM element, made with the picker per site or page (UG2/UG3 archived 0.60.293)
+  'test-pipeline-gates.test.js',  // 0.60.293 PL6–PL11 — gates as pipeline blocks; macros ↔ workflows ↔ pipelines; per-site pipelines
   'test-intent-flow.test.js',     // 0.60.286 FA8–FA10 — type what you want: intent → context → DAG → found → gaps → contract
   'test-project-spine.test.js',   // 0.60.286 FA — import whole, the registry as the spine, refactor, split, convert, finish
   'test-versionium-everywhere.test.js',   // 0.60.278 VE0–VE5 — every change and every version in Versionium, in full (§17.12)

@@ -55,10 +55,11 @@ function driverPolicy(url) {
   };
 }
 
-// 2026-10-30 UG2 — the gates every write is checked by on this site (src/driver/index.js _gated, src/dom/archaeology.js handleMutate)
+// 2026-10-30 PL6 — a gate block's timing on this site (src/driver/index.js _gateCheck); PL10 — whether this site's pipelines run
 function gatePolicy(url) {
   const p = _profile('gates', url);
-  return p ? { enabled: p.gates.enabled !== false, settleMs: p.gates.settleMs, timeoutMs: p.gates.timeoutMs, retries: p.gates.retries } : null;
+  return p ? { settleMs: p.gates.settleMs, timeoutMs: p.gates.timeoutMs } : null;
 }
+function pipelinesAllowed(url) { const p = _profile('pipelines', url); return p ? p.pipelines.enabled !== false : null; }
 
-module.exports = { install, installed, gatePolicy, autofillFor, macrosOnLoad, workflowsAllowed, passwordPolicy, resumeMode, driverPolicy, meshAgent, guardianPolicy, tabMode };
+module.exports = { install, installed, gatePolicy, pipelinesAllowed, autofillFor, macrosOnLoad, workflowsAllowed, passwordPolicy, resumeMode, driverPolicy, meshAgent, guardianPolicy, tabMode };

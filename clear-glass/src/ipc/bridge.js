@@ -1040,6 +1040,14 @@ class IpcBridge {
     if (site && !site.enabled) return { error: `macros are off for ${new URL(url).origin} (its site settings, macros.enabled)` };
     const BA = require('../../../lib/agent-tools/tools/browser/browser-action.js');
     const runStep = async ({ action, data = {} }) => {
+      // 2026-10-30 PL9 — a macro step that runs a workflow or a pipeline goes to this Clear Glass's own engine (the one Settings › Automation and
+      // Pipelines show): macros → workflows → pipelines → macros, one engine, one store
+      if (action === 'run_workflow' || action === 'run_pipeline') {
+        const A = this.mesh && this.mesh._automation; if (!A) return { error: 'the automation engine is not running here' };
+        const step = action === 'run_workflow' ? { type: 'workflow', config: { workflow: data.name, vars: data.vars || {} } } : { type: 'pipeline', config: { pipeline: data.name, vars: data.vars || {} } };
+        const r = await A.runStep(step, { vars: data.vars || {} });
+        return r && r.ok ? { ok: true, action, result: r.output } : { error: (r && r.error) || 'it did not run' };
+      }
       const call = BA.driverCall(action, data); if (!call) return BA.execute({ action, data });
       if (!this.driver) return { error: 'driver not wired' };
       try { return { ok: true, action, result: await this.driver.exec({ agentId, ...call, by: 'person' }) }; } catch (err) { return { error: err.message }; }
@@ -2523,9 +2531,10 @@ class IpcBridge {
     const gated = async (key, doIt, check, retries = 1) => {
       let g = null;
       for (let t = 0; t <= retries; t++) {
-        let rec;
-        // 2026-10-30 UG2 — the driver gates each write itself now; its closed gate is this part's closed gate, listed the same way
-        try { rec = await doIt(t); } catch (err) { if (err && err.code === 'GATE_CLOSED') { r.gates.push({ key, open: false, tries: err.gate.tries, saw: err.gate.saw, at: 'the write' }); throw new Error(`its gate stayed closed: ${err.gate.saw}`); } throw err; }
+        const rec = await doIt(t);
+        // a page that does not answer the read at all is unknown: recorded as unchecked, never a pass and never retried as closed (NC0)
+        const first = await (async () => { try { return await check(); } catch (_) { return null; } })();
+        if (first && first.unread) { r.gates.push({ key, unchecked: first.saw, tries: t + 1 }); return rec; }
         g = await gigGate(check);
         if (g.open) { r.gates.push({ key, open: true, tries: t + 1, saw: g.saw }); return rec; }
       }
@@ -2607,9 +2616,11 @@ class IpcBridge {
           // runs only when the macro cannot, and says so. Either way the part's gate reads the column.
           check = C.choice({ column }, value);
           let via = 'built-in', why = null, option = value;
-          await gated(part, async (t) => {
-            const viaMacro = !t && typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose delivery', { tier: column, delivery: value }) : { ok: false, why: t ? 'the macro ran and the gate stayed closed' : 'node macros not wired here' };
-            if (viaMacro.ok) { via = 'macro'; return; }
+          // his node macro is gated on the value itself: when it ran, its gates are this part's gate (re-checking it and re-picking with the
+          // built-in, 0.60.291, broke that — test-about-and-nodes AN-03)
+          const viaMacro = typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose delivery', { tier: column, delivery: value }) : { ok: false, why: 'node macros not wired here' };
+          if (viaMacro.ok) via = 'macro';
+          else await gated(part, async () => {
             const c = await this.driver.exec({ agentId, action: 'choose', column, shows: 'DELIVERY TIME', option: value, by: 'person' });
             via = 'built-in'; why = viaMacro.why; option = c.option;
           }, check);
@@ -2625,14 +2636,20 @@ class IpcBridge {
           // 0.60.283 — a new gig offers no suggestion, only SELECT A CATEGORY and SELECT A SUBCATEGORY: his node "Fiverr gig - choose
           // category" (gated, editable in Settings › Macros), else the same two picks built in, each read back; then the part's gate
           if (!/select a category/i.test(String(read.text || ''))) throw new Error(sc.why);
-          let rec = null;
-          await gated(part, async (t) => {
-            const viaMacro = !t && typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose category', { category: gig.category, subcategory: gig.subcategory || '' }) : { ok: false, why: t ? 'the macro ran and the gate stayed closed' : 'node macros not wired here' };
-            if (viaMacro.ok) { rec = { key: part, ok: true, option: value, via: 'macro' }; return; }
-            const c1 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A CATEGORY', option: gig.category, by: 'person' });
-            const c2 = gig.subcategory ? await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A SUBCATEGORY', option: gig.subcategory, by: 'person' }) : null;
-            rec = { key: part, ok: true, option: [c1.option, c2 && c2.option].filter(Boolean).join(' > '), via: 'built-in', why: viaMacro.why };
+          // 2026-10-30 — James, with a screenshot of a new gig (PROGRAMMING & TECH chosen, SELECT A SUBCATEGORY left): "the drop down didn't work
+          // fully. it was a new gig." His node macro is gated on each value itself: when it ran, its gates are this part's gate. When it stopped
+          // part way (the category chosen, the subcategory not), the built-in pick reads the page first and picks only what is still unchosen —
+          // before, it looked for "SELECT A CATEGORY" again, which the page no longer showed, so the subcategory was never picked.
+          const viaMacro = typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose category', { category: gig.category, subcategory: gig.subcategory || '' }) : { ok: false, why: 'node macros not wired here' };
+          if (viaMacro.ok) { r.dropdowns.push({ key: part, ok: true, option: value, via: 'macro' }); continue; }
+          const GF = require('../autofill/gig-fields');
+          const shows = async (t) => { const x = await this.driver.exec({ agentId, action: 'eval', code: GF.shownScript(t), by: 'person' }); return !!(x && x.result); };
+          const picked = [];
+          await gated(part, async () => {
+            if (await shows('SELECT A CATEGORY')) { const c1 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A CATEGORY', option: gig.category, by: 'person' }); picked.push(c1.option); }
+            if (gig.subcategory && await shows('SELECT A SUBCATEGORY')) { const c2 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A SUBCATEGORY', option: gig.subcategory, by: 'person' }); picked.push(c2.option); }
           }, check);
+          const rec = { key: part, ok: true, option: picked.length ? picked.join(' > ') : value, via: 'built-in', why: viaMacro.why, ...(picked.length < (gig.subcategory ? 2 : 1) ? { kept: 'what the page already showed' } : {}) };
           r.dropdowns.push(rec); continue;
         }
         throw new Error('not found on the page');
@@ -3245,6 +3262,7 @@ function gigChecks(driver, agentId) {
     text: (where, value) => async () => { const x = await ev(GF.valueAtScript(where)); if (!x || !x.found) return { open: false, saw: 'the box is gone' };
       return { open: GF.readsBack(x.value, value), saw: q(x.value) }; },
     choice: (where, value) => async () => { const g = await driver.exec({ agentId, action: 'readChoice', ...where, is: String(value), by: 'person' });
+      if (!g || (g.shown == null && g.matches == null && !(g.texts && g.texts.length))) return { open: false, unread: true, saw: 'the page did not answer the read' };
       return { open: !!(g && g.matches), saw: q(g && g.shown != null ? g.shown : (g && g.texts || []).slice(0, 4).join(' | ')) }; },
     shown: (text) => async () => { const ok = !!(await ev(GF.shownScript(text))); return { open: ok, saw: ok ? `${q(text)} shown` : `${q(text)} not on the page` }; },
     allShown: (list) => async () => { const want = list(); if (!want.length) return { open: false, saw: 'nothing took' };
