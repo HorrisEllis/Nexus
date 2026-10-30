@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+context: pipeline phase GG1_every_part_gated of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GG1_every_part_gated (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281620
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281620
+lastSeenAt: 1793386281620
+fingerprint: null
+payload:
+  id: GG1_every_part_gated
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.291
+  files:
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/driver/index.js
+    - clear-glass/src/autofill/gig-fields.js
+    - clear-glass/src/autofill/gig-pages.js
+    - clear-glass/src/autofill/gig.js
+    - tests/modules/test-gig-all-fields.test.js
+  depends_on:
+    - GF3_text_and_lists_filled_and_read_back
+    - GF4_friction_goes_to_his_site_keys
+    - KB4_gates_on_macro_steps
+  blocks:
+    - MOD-GG1
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 89f557418c1d7e83

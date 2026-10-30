@@ -1,0 +1,211 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UG2_every_driver_write_gated:724b30041f1accb0
+type: graph
+id: phase:UG2_every_driver_write_gated:724b30041f1accb0
+context: dependency graph of phase UG2_every_driver_write_gated
+intent: null
+summary: 22 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793386281622
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281622
+lastSeenAt: 1793386281622
+fingerprint: null
+payload:
+  for: UG2_every_driver_write_gated
+  kind: phase
+  repo: null
+  hash: 724b30041f1accb0
+  nodes:
+    - path: clear-glass/src/driver/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/keys.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/chat-ledger.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/passwords/service.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/profile.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/zoom.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/page-resolver.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/element-gate.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/field.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/option-match.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-memory.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-session.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/reader.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/semantic-tree.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/core/zoom.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/reader.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/option-match.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-session.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-memory.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/site-settings/profile.js
+      to: clear-glass/src/site-settings/keys.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/downloads/chat-ledger.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/passwords/service.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 12
+    deps:
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+    dependents:
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG4_his_gates_per_site
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+    downstream:
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG4_his_gates_per_site
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG5_gates_made_with_the_picker
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG4_his_gates_per_site
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 12
+      - 'depends on (1): UG1_one_gate_for_every_element · all upstream 18'
+      - >-
+        needed by (1): UG4_his_gates_per_site · all downstream 2 · finishing it unlocks
+        UG4_his_gates_per_site
+    edges:
+      - from: docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+        kind: declared

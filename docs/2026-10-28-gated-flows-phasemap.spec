@@ -488,3 +488,37 @@ phases_a11y2:
     status: BUILT 0.60.297
     depends_on: [FG1_keyboard_mode_switch]
     files: [clear-glass/src/page/keyboard-mode.js, clear-glass/src/site-settings/keys.js, clear-glass/src/main/index.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/renderer/browser.js, clear-glass/renderer/browser.html, clear-glass/renderer/a11y-panel.js, clear-glass/renderer/a11y-panel.css, clear-glass/src/site-settings/readers.js, clear-glass/renderer/site-profile-groups.js, idearium/cli/route-commands.js]
+
+
+## ADDENDUM 2026-10-30 — GT: dropdown gates need time, the fill reports its dropdowns, choose gets its fields
+James, 2026-10-30, testing Fiverr after 0.60.312: "wheich needs more timing for the gates for the drop down menus. also the autofill clip should
+include the drop downs. also the macro editor needs to have the fields to change all of this. like element text, target text or menu number, in
+relation to the drop down menu items."
+Grounded (the coder's census): the gate's wait is fixed (src/page/element-gate.js settle: 2500 ms, 400 ms settle; bridge.js gated(): one
+retry, no growing delay), while Fiverr loads the subcategory list over the network after the category is chosen. The gig fill reports
+leftToCopy from before the page's parts ran (src/autofill/gig.js:330), so his "Filled ... title. Left to copy by hand: title, category"; the
+dropdowns it chose sit in r.dropdowns, unprinted by Copilot (src/copilot/verbs.js). The macro editor has no form for choose (renderer/settings/
+sections/macros.js ACTIONS), so it shows Selector and Text, and choose reads neither. AF6 (0.60.296) already put the black chip on dropdowns.
+READING TO CONFIRM: "the autofill clip" is the fill Copilot runs ("fill it in"), whose report must include the dropdowns; if he meant the black
+chip, AF6 has it and the gap is why it did not show on his page.
+Decided by his axioms: timing defaults kept for text, longer only for choice gates, every value a field (§16.4, USER_AUTONOMY: his to tune);
+retries grow (architecture-spec RULE D); the report counts each part once (§1.2, §10.3).
+phases_gt:
+  GT1_gate_timing_for_dropdowns:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GT1]
+    status: OPEN
+    depends_on: [AF6_the_chip_on_dropdowns, GF5_category_and_subcategory_finished]
+    files: [clear-glass/src/page/element-gate.js, clear-glass/src/ipc/bridge.js, tests/modules/test-pipeline-gates.test.js]
+  GT2_the_fill_includes_and_reports_dropdowns:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GT2]
+    status: OPEN
+    depends_on: [GT1_gate_timing_for_dropdowns]
+    files: [clear-glass/src/ipc/bridge.js, clear-glass/src/autofill/gig.js, clear-glass/src/copilot/verbs.js, tests/modules/test-fiverr-overview-and-a11y.test.js]
+  GT3_choose_fields_in_the_macro_editor:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GT3]
+    status: OPEN
+    depends_on: [GT1_gate_timing_for_dropdowns]
+    files: [clear-glass/renderer/settings/sections/macros.js, clear-glass/src/driver/index.js, tests/modules/test-pipeline-nodes.test.js]

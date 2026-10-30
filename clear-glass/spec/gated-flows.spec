@@ -600,6 +600,63 @@ spec:
       error_paths: ["the option is not in the dropdown → the chip turns red with why"]
       acceptance: ["test-pipeline-nodes AF-06 in Clear Glass: a new gig's SELECT A CATEGORY gets a chip with the gig's category; clicking it chooses it"]
 
+    # 2026-10-30 GT — James: "wheich needs more timing for the gates for the drop down menus. also the autofill clip should include the drop
+    # downs. also the macro editor needs to have the fields to change all of this. like element text, target text or menu number, in relation
+    # to the drop down menu items."
+    - id: MOD-GT1
+      name: gate-timing-per-part
+      uuid: nexus-gated-flows-gate-timing-v1-0000-2026-1030-001
+      path: clear-glass/src/page/element-gate.js
+      phase: GT1_gate_timing_for_dropdowns
+      description: >-
+        settle() takes its timing per part instead of fixed constants (2500 ms timeout, 400 ms settle, one retry in bridge.js gated()). A
+        choice gate waits as long as choose waits for options (optionsWaitMs, 8 s) by default; a gate that depends on another (the
+        subcategory on the category) opens only after that gate held, and waits for its dropdown's options to arrive; a closed gate retries
+        with a growing delay (base × factor^n, capped: architecture-spec RULE D). Every value is a field on the step (GT3) and on his node
+        macro, with these defaults.
+      deps: [{ name: chip-for-dropdowns }]
+      exports: ["settle(check, { timeoutMs, settleMs, every }) (unchanged signature)", "gateTiming(step) → { timeoutMs, settleMs, every, retries, backoff: { baseMs, factor, capMs }, after }"]
+      gate_pipeline: ["GATE-GT1-001: the gate it depends on held", "GATE-GT1-002: options present", "GATE-GT1-003: read, settle, read again", "GATE-GT1-004: retry with growing delay"]
+      behavioral_contracts: ["defaults keep today's text gates as they are; only choice gates wait longer", "each try and its delay is in the run's record"]
+      error_paths: ["still closed after the last retry → the part says what the gate saw on each try, never 'done'"]
+      acceptance: ["on a fixture page whose subcategory list loads 4 s after the category is chosen: the subcategory is chosen and held; with today's constants it fails (the test proves both)"]
+
+    - id: MOD-GT2
+      name: fill-report-true
+      uuid: nexus-gated-flows-fill-report-v1-0000-2026-1030-001
+      path: clear-glass/src/ipc/bridge.js
+      phase: GT2_the_fill_includes_and_reports_dropdowns
+      description: >-
+        Found 2026-10-30: the gig fill returns leftToCopy computed inside fillGig (src/autofill/gig.js) before the page's own parts run, so a
+        part filled later (the title typed by GF2, the category and subcategory chosen) is still listed as left, and the dropdowns land in
+        r.dropdowns, which Copilot's sentence (src/copilot/verbs.js describeJob) never prints. His report: "Filled ... title. Left to copy by
+        hand: title, category, ...". leftToCopy is recomputed once every part has run, from filled, dropdowns and gates together; Copilot's
+        sentence names the dropdowns chosen and any that failed with what their gate saw.
+      deps: [{ name: gate-timing-per-part }]
+      exports: ["fill result: { filled, dropdowns, gates, failed, leftToCopy } with leftToCopy = parts not done by any path", "describeJob: dropdowns said"]
+      gate_pipeline: ["GATE-GT2-001: every part accounted once", "GATE-GT2-002: the sentence matches the result"]
+      behavioral_contracts: ["a part is in exactly one of filled, dropdowns, failed, left"]
+      error_paths: ["a part that ran but whose gate stayed closed → failed with what it saw, not left"]
+      acceptance: ["a fill that types the title and chooses both dropdowns reports none of the three as left, and Copilot says the dropdowns it chose"]
+
+    - id: MOD-GT3
+      name: choose-in-the-macro-editor
+      uuid: nexus-gated-flows-choose-editor-v1-0000-2026-1030-001
+      path: clear-glass/renderer/settings/sections/macros.js
+      phase: GT3_choose_fields_in_the_macro_editor
+      description: >-
+        The macro editor gets a real form for choose (today it falls back to Selector and Text, and choose reads neither Text nor anything but
+        Extra data): Dropdown shows (the element's text, e.g. SELECT A CATEGORY), Element (a selector, optional), Option (the target text, e.g.
+        {{category}}) or Menu number (the option's position in the list, counted from 1), Pick (auto, pointer, keys), and Timing (open, look,
+        settle, gate wait, retries), each with its default shown. The summary line reads `Choose {{category}} in "SELECT A CATEGORY"`. A + Choose
+        button joins the Add row. The driver's choose gains index (the menu number), matched by position after the options are read.
+      deps: [{ name: gate-timing-per-part }]
+      exports: ["ACTIONS.choose fields: shows, selector, option | index, pick, openWait, pickWait, settleWait, gateTimeoutMs, retries", "driver choose({ index })"]
+      gate_pipeline: ["GATE-GT3-001: option or index, not both", "GATE-GT3-002: index within the options read"]
+      behavioral_contracts: ["existing macros (shows/option/pick in Extra data) open in the new fields unchanged", "Text is no longer offered for choose"]
+      error_paths: ["index past the end → refused with the options read", "neither option nor index → the step says it needs one"]
+      acceptance: ["in Clear Glass: his 'Fiverr gig - choose category' opens with SELECT A CATEGORY, {{category}}, auto in their fields; a step by Menu number 3 picks the third option"]
+
     # 2026-10-30 A11Y2 — James, with a screenshot of fiverr.com still in yellow-on-black links and the reset saying "Nothing on this page is named
     # as accessibility": "look at the accessability. needs to actually hook into the back end settings. looks lazy also."
     - id: MOD-A11Y2

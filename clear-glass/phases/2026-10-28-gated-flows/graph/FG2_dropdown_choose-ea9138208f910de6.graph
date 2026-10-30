@@ -1,0 +1,186 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FG2_dropdown_choose:ea9138208f910de6
+type: graph
+id: phase:FG2_dropdown_choose:ea9138208f910de6
+context: dependency graph of phase FG2_dropdown_choose
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793386281593
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281593
+lastSeenAt: 1793386281593
+fingerprint: null
+payload:
+  for: FG2_dropdown_choose
+  kind: phase
+  repo: null
+  hash: ea9138208f910de6
+  nodes:
+    - path: clear-glass/src/driver/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/dropdown.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/zoom.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/page-resolver.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/element-gate.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/field.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/option-match.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-memory.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-session.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/reader.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/semantic-tree.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/core/zoom.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/reader.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/option-match.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-session.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-memory.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+    dependents:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+    downstream:
+      - docs/2026-10-28-gated-flows-phasemap.spec::AF6_the_chip_on_dropdowns
+      - docs/2026-10-28-gated-flows-phasemap.spec::EI1_every_key_and_click_paced_through_eros
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG5_fiverr_gig_flow
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF5_category_and_subcategory_finished
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM3_the_menu_in_the_gig_panel
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB5_keys_in_macros_and_automation
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB6_bundled_nodes_upgrade
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG2_every_driver_write_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG3_every_dom_write_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG4_his_gates_per_site
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG5_gates_made_with_the_picker
+      - docs/2026-10-29-gigs-contacts-snowflake-phasemap.spec::AP1_gig_features
+      - docs/2026-10-29-gigs-contacts-snowflake-phasemap.spec::SN1_snowflake_in_macros_and_workflows
+      - docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL7_pipeline_tasks_gated_on_elements
+      - docs/2026-10-29-pipelines-phasemap.spec::PL8_macro_steps_gated_on_elements
+      - docs/2026-10-29-pipelines-phasemap.spec::PL9_macros_workflows_pipelines_linked
+      - docs/2026-10-29-pipelines-phasemap.spec::PN3_the_editor_picks_from_clear_glass_and_files
+    blockedBy:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by FG_D2_choice_is_read_back, FP2_which_option_is_meant
+      - 'depends on (2): FG_D2_choice_is_read_back, FP2_which_option_is_meant · all upstream 3'
+      - 'needed by (2): FG4_pointer_and_choose_steps, KB1_choose_waits_and_keys · all downstream 35'
+    edges:
+      - from: docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+        kind: declared
+      - from: docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+        kind: declared

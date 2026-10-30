@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GF5_category_and_subcategory_finished
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GF5_category_and_subcategory_finished
+context: pipeline phase GF5_category_and_subcategory_finished of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GF5_category_and_subcategory_finished (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281628
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281628
+lastSeenAt: 1793386281628
+fingerprint: null
+payload:
+  id: GF5_category_and_subcategory_finished
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.294
+  files:
+    - clear-glass/src/ipc/bridge.js
+    - tests/modules/test-fiverr-overview-and-a11y.test.js
+  depends_on:
+    - GF2_every_editor_page_known
+    - GG1_every_part_gated
+  blocks:
+    - MOD-GF5
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 312042fa331b4574
