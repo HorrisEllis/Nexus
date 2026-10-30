@@ -122,3 +122,17 @@ order: >-
 # goes in a field they understand; a field they do not understand gets a ⚓ to anchor it once, by its stable identity (JA3's chooseKey), so
 # the page is mapped and stays mapped. "if confused" = when a fill cannot place something, the element picker comes up without being asked.
 # Built on: learn-pick.js (chooseKey, saveLearned — JA3's identity and save path), page-memory targets (0.60.262), the gig panel's Point at it.
+
+# ── ADDENDUM 2026-10-30 (0.60.298) — DD1: the fill works for dropdowns and checkboxes, not just text
+# James, 2026-10-30: "Hook it into the autofill chip. Make sure it works for all elements. Including drop downs. You can use the
+# keyboard bindings if needed."
+# Root cause: a <select> only changes when the value equals an OPTION's value; a profile holds "United States" but the option
+# value is "US", so the bulk fill (fillFields -> handleMutate -> mutate) set nothing. AF6 (0.60.296) made the chip's driver-paced
+# single fill choose a dropdown, but the bulk path (Autofill this page, Library Fill, copilot, no-driver chip) had no option match.
+# Built (reuse, rule 2): clear-glass/src/dom/select-match.js bestOption()/boolOf() — one source, interpolated into the in-page DOM
+# mesh (archaeology.js mutate: <select> selects the matching option, checkbox/radio sets checked, contenteditable sets text, all
+# dispatch input+change, no silent wrong pick §1.2) AND required by the chip's fillOne (ipc/bridge.js) so the driver gets the exact
+# option text. Keyboard bindings were not needed (native select + events suffices; custom dropdowns stay on AF6's dropdownScript).
+# Placement (sovereignty §5.9/§5.15): select-match.js is the DOM mesh's (Clear Glass), beside archaeology.js; no cross-system edge.
+# Proof: tests/modules/test-select-match.test.js 7/7; the reconstructed in-page script parses. Live (his machine): a real form's
+# country/state/years dropdowns.

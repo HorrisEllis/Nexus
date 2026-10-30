@@ -10,6 +10,9 @@
 
 const { webContents, BrowserWindow, ipcMain } = require('electron');
 const { randomUUID: uuidv4 } = require('crypto'); // §BUGFIX 2026-08-23 — the real 'uuid' npm package was never installed (checked node_modules and package.json directly); this crashed every real file that required it, including boot-critical ones. Node's own built-in produces the identical UUID format, zero dependency.
+// §DD1 2026-10-30 — James: "Make sure it works for all elements. Including drop downs." The in-page DOM mesh is a string, so it
+// cannot require; the dropdown/checkbox matchers are interpolated into it from their one real source (tested in test-select-match).
+const { SOURCE: SELECT_MATCH_SRC, BOOL_SOURCE: BOOL_MATCH_SRC } = require('./select-match.js');
 
 // §MCO10 2026-09-13 — James: "stream the DOM to the compartment ledger per
 // contract using the compartment uuid." Same real cross-process HTTP
@@ -85,6 +88,10 @@ function _ledgerWrite(system, type, payload) {
 const DOM_OBSERVER_SCRIPT = `
 (function() {
   if (window.__cgDomMesh && window.__cgDomMesh.mutate) return; // already injected (0.60.267: the renderer's query-only mesh is replaced, not kept)
+
+  // §DD1 2026-10-30 — the dropdown/checkbox matchers, interpolated from clear-glass/src/dom/select-match.js (one source, tested headless)
+  ${SELECT_MATCH_SRC}
+  ${BOOL_MATCH_SRC}
 
   const mesh  = new Map();   // nodeId → metadata
   let   nodeCounter = 0;
@@ -248,27 +255,37 @@ const DOM_OBSERVER_SCRIPT = `
       if (mutation.text    !== undefined) el.innerText    = mutation.text;
       if (mutation.html    !== undefined) el.innerHTML    = mutation.html;
       if (mutation.value   !== undefined) {
-        // §FIXED 2026-09-19 — James: "autofill... follow axioms." Found
-        // while building real form-fill: el.value = mutation.value
-        // silently did nothing observable on a React/Vue-controlled
-        // input (they override the native value property's setter with
-        // their own internal tracking; assigning through the instance
-        // property bypasses it entirely — real, well-known, and a real
-        // correctness bug here, not an autofill-specific workaround).
-        // It also never dispatched input/change, so even a plain
-        // vanilla-JS onChange listener never fired. The real fix: call
-        // the NATIVE prototype's value setter directly (bypassing
-        // whatever the framework overrode it with, the same technique
-        // real browser-automation tools use for exactly this reason),
-        // then dispatch real, bubbling input and change events so
-        // anything listening — React, Vue, or plain JS — actually
-        // observes the change. Fixes every real caller of dom_mutate's
-        // value mutation, not just autofill.
-        const proto = el.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype
-                    : el.tagName === 'SELECT'   ? window.HTMLSelectElement.prototype
-                    : window.HTMLInputElement.prototype;
-        const nativeSetter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
-        if (nativeSetter) nativeSetter.call(el, mutation.value); else el.value = mutation.value;
+        // §FIXED 2026-09-19 (kept, §0.3) — el.value = x silently did nothing on a React/Vue-controlled input (they override the
+        // native value setter with their own tracking) and never dispatched input/change. The fix: call the NATIVE prototype's
+        // value setter, then dispatch real bubbling input and change events, so React/Vue/plain JS all observe the change.
+        // §DD1 2026-10-30 — James: "Make sure it works for all elements. Including drop downs." Each element kind is filled the
+        // way it actually changes: a <select> by selecting the matching OPTION (a value-set alone does nothing unless it equals
+        // an option's value), a checkbox/radio by its checked state, text by the native-setter technique. No wrong pick is ever
+        // made silently (§1.2).
+        const tag = (el.tagName || '').toUpperCase();
+        const itype = (el.getAttribute ? (el.getAttribute('type') || '') : '').toLowerCase();
+        if (tag === 'SELECT') {
+          const opts = [].map.call(el.options || [], function (o) { return { value: o.value, text: o.text, label: o.label, index: o.index }; });
+          const pick = bestOption(opts, mutation.value);
+          if (!pick) return { error: 'no option matches "' + String(mutation.value) + '" in this dropdown (' + opts.map(function (o) { return o.text; }).filter(Boolean).slice(0, 8).join(', ') + ')' };
+          const setSel = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, 'value');
+          if (setSel && setSel.set) setSel.set.call(el, pick.value); else el.value = pick.value;
+          if (typeof pick.index === 'number') el.selectedIndex = pick.index;
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+          el.dispatchEvent(new Event('change', { bubbles: true }));
+          return { ok: true, nodeId: cgId, selected: pick.text };
+        }
+        if (tag === 'INPUT' && (itype === 'checkbox' || itype === 'radio')) {
+          const b = boolOf(mutation.value);
+          if (b === null && itype === 'checkbox') return { error: 'a checkbox takes yes/no; "' + String(mutation.value) + '" is neither' };
+          const want = itype === 'radio' ? (b !== false) : b;   // a radio is selected unless the value is a clear "no"
+          if (el.checked !== want) { el.checked = want; el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); el.dispatchEvent(new MouseEvent('click', { bubbles: true })); }
+          return { ok: true, nodeId: cgId, checked: el.checked };
+        }
+        const proto = tag === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+        const nativeSetter = Object.getOwnPropertyDescriptor(proto, 'value') && Object.getOwnPropertyDescriptor(proto, 'value').set;
+        if (el.isContentEditable) { el.textContent = mutation.value; }            // a div[contenteditable], e.g. some rich fields
+        else if (nativeSetter) { nativeSetter.call(el, mutation.value); } else { el.value = mutation.value; }
         el.dispatchEvent(new Event('input', { bubbles: true }));
         el.dispatchEvent(new Event('change', { bubbles: true }));
       }

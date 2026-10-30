@@ -1876,3 +1876,14 @@ spec:
 # ADDENDUM 2026-10-29 (0.60.289) — registered: docs/2026-10-29-fiverr-income-phasemap.spec (FI0–FI14, the Fiverr chain from money back)
 # James: "Also, make a dependency graph for the fiverr gigs." Built from the end state backward, DAG-checked. The per-system document
 # docs/NEXUS-SYSTEMS-FOR-CODING.md and scripts/systems-report.js answer "a full document of each system and what it needs to get nexus coding".
+
+# ADDENDUM 2026-10-30 (0.60.299) — registered: docs/2026-10-30-portfolio-node-per-site-ui-macros-phasemap.spec (PF1–PF3, UM1)
+# James: "make a .portfolio node, all nodes are physical files in the backend. import and export. and add per site support. same with
+# the macros, and pipeline. i also want macros for the ui not just per sire." PF1 DONE 0.60.299 (the .portfolio node + per-site keys);
+# PF3 (fill My Portfolio + seller profile), UM1 (UI macros), routes+command+UI remain.
+
+# ADDENDUM 2026-10-30 — registered: docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec (CM1, JL1–JL2) — MAPPED, not built
+# James: "consolidate macros, automation into the pipeline section. also ... each job from guardian saved in the queue, the formeer
+# .response ... the job ledger, each job has to have it's corrasponding .response node to be fullfilled from clearglass' end." Reuse:
+# pipelines.js/macros.js + the engine (linked 0.60.293) for CM; response-sink.js (.response node) + the queue + the ledger for JL.
+# CAUTION: the parallel claude/laughing-fermi session is live in this exact area — coordinate before CM/JL code (collision risk).

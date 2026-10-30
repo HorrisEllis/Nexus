@@ -2857,11 +2857,11 @@ class IpcBridge {
     // it back; paced, ErosmancerOS when wired); a native <select> by the text it shows; a text box is typed by the driver (paced, EI1)
     if (this.driver) {
       let what = null;
-      try { const x = await this.driver.exec({ agentId, action: 'eval', by: 'person', code: `(function(id){ var el = Array.prototype.find.call(document.querySelectorAll('input,textarea,select,[contenteditable],[data-cg-dd]'), function(e){ return e.__cgId === id; }); if (!el) return null; el.setAttribute('data-cg-chip', id); return { tag: el.tagName, dd: el.getAttribute('data-cg-dd') }; })(${JSON.stringify(cgId)})` }); what = x && x.result; } catch (_) {}
+      try { const x = await this.driver.exec({ agentId, action: 'eval', by: 'person', code: `(function(id){ var el = Array.prototype.find.call(document.querySelectorAll('input,textarea,select,[contenteditable],[data-cg-dd]'), function(e){ return e.__cgId === id; }); if (!el) return null; el.setAttribute('data-cg-chip', id); return { tag: el.tagName, dd: el.getAttribute('data-cg-dd'), options: el.tagName==='SELECT' ? Array.prototype.map.call(el.options, function(o){ return { value:o.value, text:o.text, label:o.label, index:o.index }; }) : null }; })(${JSON.stringify(cgId)})` }); what = x && x.result; } catch (_) {}
       const sel = `[data-cg-chip="${String(cgId).replace(/"/g, '')}"]`;
       try {
         if (what && what.dd) { const c = await this.driver.exec({ agentId, action: 'choose', selector: sel, option: String(value), by: 'person' }); this._chipLog(cgId, `chose ${c.option}`); return { ok: true, chose: c.option }; }
-        if (what && what.tag === 'SELECT') { await this.driver.exec({ agentId, action: 'select', selector: sel, text: String(value), by: 'person' }); this._chipLog(cgId, 'selected'); return { ok: true }; }
+        if (what && what.tag === 'SELECT') { const pick = require('../dom/select-match.js').bestOption(what.options || [], value); const text = pick ? pick.text : String(value); await this.driver.exec({ agentId, action: 'select', selector: sel, text, by: 'person' }); this._chipLog(cgId, 'selected ' + text); return { ok: true, selected: text }; }   // §DD1 2026-10-30 — resolve the profile value to the real option first (so "United States" picks "US"), then the driver selects it by its exact text
         if (what && /^(INPUT|TEXTAREA)$/.test(what.tag)) { const t = await this.driver.exec({ agentId, action: 'setValue', selector: sel, value: String(value), by: 'person' }); this._chipLog(cgId, 'typed'); return { ok: true, via: t.via }; }
       } catch (err) { return { ok: false, error: err.message }; }
     }
