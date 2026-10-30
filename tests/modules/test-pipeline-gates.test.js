@@ -14,6 +14,8 @@
  *          pipeline that would run itself is refused
  *   PG-05  per-site pipelines: forSite by origin and by pattern, only its own site, only onLoad ones when asked; validate refuses a bad site
  *          and onLoad without a site; the route answers ?site=
+ *   PG-07  in Clear Glass: every key paced like a person (measured gaps, a pause every few keys); ErosmancerOS types it when wired; down or
+ *          not wired → paced keys, said
  *   PG-06  in Clear Glass: the Pipelines editor saves a site pipeline that runs on load, whose task runs a pipeline and waits at an element gate
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -200,6 +202,34 @@ const FORM = `<!doctype html><html><head><meta charset="utf-8"></head><body><h2>
     assert.deepStrictEqual({ site: sent.body.site, onLoad: sent.body.onLoad, step: sent.body.tasks[0].step, gate: sent.body.tasks[0].gate },
       { site: 'https://www.fiverr.com', onLoad: true, step: { type: 'pipeline', config: { pipeline: 'pg-inner' } }, gate: { element: { selector: '#email', matches: '/@/' } } });
     await p2.close();
+  });
+
+  // 2026-10-30 — James: "also needs to use delays between key clicks, erosmanceros is for all copilot and guardian agents. any input not from me."
+  if (browser) await test('PG-07', 'in Clear Glass: every key paced like a person (measured gaps); ErosmancerOS types it when wired; not wired → paced, said', async () => {
+    await fresh();
+    await page.evaluate(() => { window.__t = []; document.getElementById('name').addEventListener('input', () => window.__t.push(performance.now())); });
+    const keep = d.pace; d.pace = { key: [40, 60], pause: [200, 260], pauseEvery: [5, 5] };
+    let r = await d.exec({ agentId: 'w', action: 'setValue', selector: '#name', value: 'James Brooks', by: 'agent' });
+    const ts = (await page.evaluate(() => window.__t)).slice(1);   // the first input is the box cleared before typing
+    const gaps = ts.slice(1).map((t, i) => t - ts[i]);
+    assert.strictEqual(await page.evaluate(() => document.getElementById('name').value), 'James Brooks');
+    assert.strictEqual(ts.length, 12, 'one input per key, never the whole value at once');
+    assert.ok(gaps.every(g => g >= 30), `every gap a person's: ${gaps.map(Math.round)}`);
+    assert.ok(gaps.filter(g => g >= 190).length >= 2, `a pause every few keys: ${gaps.map(Math.round)}`);
+    assert.ok(r.via === 'paced' && /ErosmancerOS is not wired here/.test(r.viaWhy), JSON.stringify(r));
+    d.pace = keep;
+    // wired: ErosmancerOS types it (its own human timing), at the field
+    const sent = []; d.erosInput = async (agentId, url, o) => { sent.push(o); await page._send('Input.insertText', { text: o.text }); return { ok: true }; };
+    await fresh();
+    r = await d.exec({ agentId: 'w', action: 'insertText', selector: '#name', text: 'Copilot typed this', by: 'agent' });
+    assert.ok(r.via === 'eros' && sent.length === 1 && sent[0].action === 'type' && sent[0].text === 'Copilot typed this' && sent[0].x > 0, JSON.stringify({ r, sent }));
+    // ErosmancerOS down → paced keys, said; never silent
+    d.erosInput = async () => { throw new Error('connect ECONNREFUSED'); };
+    await fresh();
+    r = await d.exec({ agentId: 'w', action: 'type', selector: '#name', text: 'paced', by: 'agent' });
+    assert.ok(r.via === 'paced' && /ErosmancerOS did not type it \(connect ECONNREFUSED\)/.test(r.viaWhy), JSON.stringify(r));
+    assert.strictEqual(await page.evaluate(() => document.getElementById('name').value), 'paced');
+    delete d.erosInput;
   });
 
   R.install(null);

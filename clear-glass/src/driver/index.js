@@ -23,6 +23,11 @@ class ClearDriver {
     this.vault  = vault;
     this.sse    = sse;
     this.queue  = new Map(); // agentId → action queue
+    // 2026-10-30 — James: "also needs to use delays between key clicks, erosmanceros is for all copilot and guardian agents. any input not from
+    // me." Every key this driver puts in a page is paced like a person's (ErosmancerOS types it when wired; otherwise one key at a time at
+    // this pace, with short pauses). CG_INPUT_PACE_MS="min,max" sets it (the test sandbox sets a fast one, lib/test-sandbox.js).
+    const env = String(process.env.CG_INPUT_PACE_MS || '').split(',').map(Number).filter(n => Number.isFinite(n) && n >= 0);
+    this.pace = env.length === 2 ? { key: env, pause: [env[0] * 4, env[1] * 4], pauseEvery: [8, 16] } : { key: [45, 140], pause: [220, 520], pauseEvery: [8, 16] };
   }
 
   // ── Primary dispatch ──────────────────────────────────────────────────
@@ -155,6 +160,14 @@ class ClearDriver {
   async _click(agentId, { selector, x, y, button = 'left', delay = 0 }) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    // 2026-10-30 — James: "erosmanceros is for all copilot and guardian agents. any input not from me." A left click goes the way a person's
+    // hand does: ErosmancerOS's curve when wired, else Electron's along the curved path (_humanPointer 'auto'); a fallback is said (viaWhy).
+    // Another button keeps the direct events below.
+    if (button === 'left' && typeof this._pointer === 'function') {
+      if (delay > 0) await this._sleep(delay + Math.random() * 50);
+      const r = await this._humanPointer(agentId, { ...(selector ? { selector } : { x, y }), do: 'click', via: 'auto', label: selector || 'click' });
+      return { clicked: { x: r.x, y: r.y, selector }, via: r.via, ...(r.viaWhy ? { viaWhy: r.viaWhy } : {}) };
+    }
 
     if (selector) {
       // Resolve element position via DOM
@@ -189,20 +202,19 @@ class ClearDriver {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
 
-    if (selector) await this._click(agentId, { selector });
-    if (clearFirst) {
-      wc.sendInputEvent({ type: 'keyDown', keyCode: 'A', modifiers: ['control'] });
-      await this._sleep(50);
-    }
-
+    // 2026-10-30 — James: "needs to use delays between key clicks, erosmanceros is for all copilot and guardian agents. any input not from me."
+    // With an element: typed through _humanType (ErosmancerOS when wired, else paced keys), after what is there unless clearFirst.
+    if (selector) { const t = await this._humanType(agentId, { selector, text: String(text), replace: !!clearFirst }); return { typed: t.typed, via: t.via, ...(t.viaWhy ? { viaWhy: t.viaWhy } : {}) }; }
+    // no element: the keys go to whatever has focus, at the pace (delay, when a caller gives one, is the lower bound)
+    const P = this.pace, rnd = ([a, b]) => a + Math.random() * Math.max(0, b - a);
     for (const char of text) {
       wc.sendInputEvent({ type: 'keyDown', keyCode: char });
       wc.sendInputEvent({ type: 'char', keyCode: char });
       wc.sendInputEvent({ type: 'keyUp', keyCode: char });
-      await this._sleep(delay + Math.random() * 30 - 15);
+      await this._sleep(Math.max(rnd(P.key), delay === 50 ? 0 : delay));
     }
 
-    return { typed: text.length };
+    return { typed: text.length, via: 'paced' };
   }
 
   // ── Scroll ────────────────────────────────────────────────────────────
@@ -1049,10 +1061,50 @@ class ClearDriver {
 
   // setValue: long answers (a cover letter) typed key by key take minutes and trip per-key handlers. Sets the value
   // through the element's native setter (so React/Vue-controlled inputs register it), then fires input+change.
+  // 2026-10-30 — every key typed for anyone but him, paced (see the constructor): ErosmancerOS types it when wired (its own human timing),
+  // else one key at a time — insertText per character (any script, any editor), Enter between lines, a pause every few keys. replace: what
+  // is in the box goes first. → { via, typed, shown, viaWhy? }
+  async _humanType(agentId, { selector, text = '', replace = true } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    const sel = JSON.stringify(selector);
+    const at = await this._evalJs(wc, `(function(){ var el = document.querySelector(${sel}); if (!el) return { ok:false, error:'element not found' };
+      el.scrollIntoView && el.scrollIntoView({ block:'center' }); el.focus && el.focus();
+      var rich = !/^(INPUT|TEXTAREA)$/.test(el.tagName);
+      if (${replace ? 'true' : 'false'}) {
+        if (!rich) { var proto = el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype; var d = Object.getOwnPropertyDescriptor(proto, 'value'); if (d && d.set) d.set.call(el, ''); else el.value = ''; el.dispatchEvent(new Event('input', { bubbles:true })); }
+        else { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand('delete'); }
+      } else if (!rich && el.setSelectionRange) { try { var n = String(el.value).length; el.setSelectionRange(n, n); } catch (_) { /* email, number … have no caret to move: the keys go to its end anyway */ } }
+      var b = el.getBoundingClientRect(); return { ok:true, rich: rich, x: Math.round(b.left + Math.min(b.width / 2, 40)), y: Math.round(b.top + Math.min(b.height / 2, 16)) }; })()`);
+    if (!at || !at.ok) throw new Error(`type ${selector}: ${(at && at.error) || 'failed'}`);
+    let via = 'paced', viaWhy = null;
+    if (typeof this.erosInput === 'function') {
+      try { await this.erosInput(agentId, wc.getURL(), { x: at.x, y: at.y, action: 'type', text: String(text) }); via = 'eros'; }
+      catch (e) { viaWhy = `ErosmancerOS did not type it (${e.message}) — paced keys instead`; }
+    } else viaWhy = 'ErosmancerOS is not wired here — paced keys';
+    if (via !== 'eros') {
+      const P = this.pace, rnd = ([a, b]) => a + Math.random() * Math.max(0, b - a);
+      let next = Math.round(rnd(P.pauseEvery));
+      const chars = [...String(text)];
+      for (let i = 0; i < chars.length; i++) {
+        const ch = chars[i];
+        if (ch === '\n') { wc.sendInputEvent({ type: 'keyDown', keyCode: 'Enter' }); wc.sendInputEvent({ type: 'char', keyCode: 'Enter' }); wc.sendInputEvent({ type: 'keyUp', keyCode: 'Enter' }); }
+        else if (ch !== '\r') { if (typeof wc.insertText === 'function') await wc.insertText(ch); else { wc.sendInputEvent({ type: 'keyDown', keyCode: ch }); wc.sendInputEvent({ type: 'char', keyCode: ch }); wc.sendInputEvent({ type: 'keyUp', keyCode: ch }); } }
+        await this._sleep(rnd(P.key));
+        if (--next <= 0 && i < chars.length - 1) { await this._sleep(rnd(P.pause)); next = Math.round(rnd(P.pauseEvery)); }
+      }
+    }
+    const shown = await this._evalJs(wc, `(function(){ var el = document.querySelector(${sel}); if (!el) return null;
+      el.dispatchEvent(new Event('change', { bubbles:true })); return /^(INPUT|TEXTAREA)$/.test(el.tagName) ? String(el.value) : String(el.innerText || ''); })()`);
+    return { via, typed: [...String(text)].length, shown, rich: at.rich, ...(viaWhy ? { viaWhy } : {}) };
+  }
+
   async _setValue(agentId, { selector, value = '' } = {}) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
     if (!selector) throw new Error('setValue requires selector');
+    // 2026-10-30 — a value is typed, paced (_humanType), never set at once: "any input not from me" goes the way a person's does
+    if (String(value) !== '') { const t = await this._humanType(agentId, { selector, text: String(value), replace: true }); return { ok: true, length: String(value).length, via: t.via, ...(t.viaWhy ? { viaWhy: t.viaWhy } : {}) }; }
     const r = await this._evalJs(wc, `(function(){
       const el = document.querySelector(${JSON.stringify(selector)});
       if (!el) return { ok:false, error:'element not found' };
@@ -1121,6 +1173,10 @@ class ClearDriver {
   // (setValue writes textContent, which its own model never sees). This puts the text in the way a keyboard does: focus the box, select what is
   // there, insert as typed text (Electron's insertText; execCommand when there is none), Enter between lines; then read it back.
   async _insertText(agentId, { selector, text = '' } = {}) {
+    // 2026-10-30 — paced like a person's typing (or ErosmancerOS's), never inserted at once; the at-once body below is kept only for a page
+    // whose editor will not take single keys, and is no longer reached (git history 0.60.290 has it as it ran)
+    if (!selector) throw new Error('insertText requires selector');
+    { const t = await this._humanType(agentId, { selector, text: String(text), replace: true }); return { ok: true, rich: t.rich, shown: t.shown, via: t.via, ...(t.viaWhy ? { viaWhy: t.viaWhy } : {}) }; }
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
     if (!selector) throw new Error('insertText requires selector');

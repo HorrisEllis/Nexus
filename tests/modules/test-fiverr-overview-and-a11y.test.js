@@ -9,6 +9,7 @@
  *   FO-02  in Clear Glass: choose finds a dropdown by the text it shows alone; the fill picks the category, then the subcategory (whose
  *          options appear only after), each read back; the tags are typed one by one, each gated on the page showing it
  *   FO-03  the node "Fiverr gig - choose category" is bundled, gated on each value, and its gates validate
+ *   FO-04  in Clear Glass (2026-10-30, his new-gig screenshot): his macro chose the category and stopped; the fill picks only the subcategory
  *   FA-01  in Clear Glass: a look the site remembers (a class from its own storage at load) is found, backed up, removed, the site set to
  *          Off, the page reloaded and it stays off; nothing named as accessibility is said with what was looked at
  *   FA-02  Tab mode Off sweeps at load and keeps a removed class off when the site puts it back
@@ -97,6 +98,30 @@ const A11Y = `<!doctype html><html><head><style>html.a11y-mode a{color:yellow;ba
     assert.deepStrictEqual(await page.evaluate(() => [document.getElementById('cat').textContent, document.getElementById('sub').textContent]), ['Programming & Tech', 'AI Development']);
     assert.deepStrictEqual(r.tags, { done: ['ai agent', 'automation', 'workflow'], missed: [] }, JSON.stringify(r.notFound));
     assert.deepStrictEqual(await page.evaluate(() => Array.prototype.map.call(document.querySelectorAll('.chip'), c => c.textContent)), ['ai agent', 'automation', 'workflow']);
+    await page.close();
+  });
+
+  // 2026-10-30 — James, with a screenshot of a new gig (PROGRAMMING & TECH chosen, SELECT A SUBCATEGORY left): "the drop down didn't work
+  // fully. it was a new gig." His node macro picked the category and stopped at the subcategory; the fill must pick only what is left.
+  if (browser) await test('FO-04', 'in Clear Glass: the macro chose the category and stopped; the fill picks only the subcategory, read back', async () => {
+    const page = await browser.newPage({ viewport: { width: 1000, height: 800 } });
+    await page.goto(base + '/users/x/manage_gigs/new?wizard=0&tab=general');
+    const d = driverOn(page);
+    const Bridge = require(CG('src/ipc/bridge.js'));
+    const gig = { title: 'I will build an AI agent workflow', category: 'Programming & Tech', subcategory: 'AI Development', tags: [], packages: {} };
+    const FIVERR = 'https://www.fiverr.com/users/x/manage_gigs/new?wizard=0&tab=general';
+    const exec = (a) => (a.action === 'readPage' ? d.exec(a).then(x => ({ ...x, url: FIVERR })) : d.exec({ ...a, ...(a.action === 'choose' ? fast : {}), ...(a.action === 'type' ? { delay: 5 } : {}) }));
+    const chooses = [];
+    const self = { dom: { handleQuery: async () => [], handleMutate: async () => ({}) }, postEvent: () => {}, _humanCheckGate: async () => ({ pass: true }),
+      _gigTags: Bridge.prototype._gigTags, _gigFeatures: Bridge.prototype._gigFeatures, _gigText: Bridge.prototype._gigText,
+      // his node macro: picks the category, then stops at the subcategory (as on his page)
+      _gigNodeMacro: async (agentId, name) => { if (/category/.test(name)) { await exec({ agentId, action: 'choose', shows: 'SELECT A CATEGORY', option: 'Programming & Tech' }); return { ok: false, why: 'stopped at step 2: the subcategory did not take' }; } return { ok: false, why: 'n/a' }; },
+      driver: { exec: (a) => { if (a.action === 'choose') chooses.push(a.shows); return exec(a); } } };
+    const r = await Bridge.prototype._gigFill.call(self, { gig });
+    const cat = r.dropdowns.find(x => x.key === 'category');
+    assert.ok(cat && cat.via === 'built-in' && cat.option === 'AI Development' && /stopped at step 2/.test(cat.why), JSON.stringify(r.dropdowns) + ' ' + JSON.stringify(r.notFound));
+    assert.deepStrictEqual(chooses, ['SELECT A SUBCATEGORY'], 'only the subcategory was picked by the fill (the category was the macro\'s)');
+    assert.deepStrictEqual(await page.evaluate(() => [document.getElementById('cat').textContent, document.getElementById('sub').textContent]), ['Programming & Tech', 'AI Development']);
     await page.close();
   });
 

@@ -430,3 +430,30 @@ only), the gate steps, glass gates. Archived (_archive/2026-10-30-write-gates/, 
 in the DOM mesh's handleMutate (UG3), the workflow engine's automatic gating of fill/select/tick, and the gates.enabled / gates.retries site
 settings that configured them. GG1's gig-fill read-backs stay with the gig fill. Continued as PL6–PL11 in docs/2026-10-29-pipelines-phasemap.spec.
 (UG2 and UG3 above are marked SUPERSEDED in place; their entries are kept.)
+
+## ADDENDUM 2026-10-30 — GF5 the new gig's subcategory finished; EI1 every key and click paced, through ErosmancerOS
+James, 2026-10-30, with a screenshot of a new gig's Overview (PROGRAMMING & TECH chosen, SELECT A SUBCATEGORY left, the title empty): "the drop
+down didn't work fully. it was a new gig. also needs to use delays between key clicks, erosmanceros is for all copilot and guardian agents.
+any input not from me."
+Root cause (traced, bisected): 0.60.291 (GG1) wrapped the category in a retry whose second try skipped his macro and re-picked with the
+built-in, which looks for "SELECT A CATEGORY" — gone once the macro had chosen the category — so the subcategory was never picked; the same
+retry made the delivery re-pick after his macro had already gated it (test-about-and-nodes AN-03, red since 0.60.291, which the coder's
+regression lists missed). The title: not traced from the screenshot alone; the fill's row for it says why (to read on his machine).
+Readings (the coder's, to confirm): "any input not from me" — every key and click the driver makes, for any caller, since none of it is his
+hand; agents' long prompts into AI chat boxes (Guardian's userscripts, the mesh agent page) are not changed here: typing a long prompt key by
+key costs minutes, which is his call (asked).
+Decided by his axioms: §8.6 reuse (ErosmancerOS's input, the human pointer the dropdowns already use); §1.2 (the path taken is said: via,
+viaWhy); NC0 evidence (an unanswered read is unknown, not closed).
+phases_ei:
+  GF5_category_and_subcategory_finished:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GF5]
+    status: BUILT 0.60.294
+    depends_on: [GF2_every_editor_page_known, GG1_every_part_gated]
+    files: [clear-glass/src/ipc/bridge.js, tests/modules/test-fiverr-overview-and-a11y.test.js]
+  EI1_every_key_and_click_paced_through_eros:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-EI1]
+    status: BUILT 0.60.294
+    depends_on: [KB1_choose_waits_and_keys]
+    files: [clear-glass/src/driver/index.js, lib/test-sandbox.js, tests/modules/test-pipeline-gates.test.js]
