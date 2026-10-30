@@ -213,3 +213,20 @@ emerge-codegen-v2 compiles requires.
 #     the Nexus pieces come in as modules of an Emerge spec (their design, their tests, their schemas), built by Emerge in .eg, not copied
 #     as JavaScript. The crystal and pattern node shapes come in as Emerge registry records (CIE-EG §5).
 # Specs next, in Emerge's repo (asked of him 2026-10-30, not yet answered). Not built.
+
+# ── ADDENDUM 2026-10-30 (c) — Emergence (emergence-6.zip) into Emerge, decoupled (his) ────────────────────────────────────────────────
+# James, 2026-10-30, sending emergence-6.zip (the upload the 2026-10-05 divergence report read): "yes but emerge stays decoupled, adding the
+# pattern engine with a ime and rfr2 and cfr, and emerge.zip / anything else in emerge i can redesign? like i kept aes-265GCM since its not
+# smart to build your own. tell me whats mine. tell me what integrating emerge, with emerge.zip looks like"
+# The upload: Emergence 0.1.0 (3 commits), a system built on WARP that reads text (tone, trend, gaslighting, mixed signals, avoidance, goal
+# convergence): components rfr2-observer, cfr-creator, event-ledger, associative-lattice, pattern-engine (exact recall + Markov prediction),
+# feedback-loop-buffer, idea-store, causal-graph; vendor rfr2 (causality, cfr-kernel: physics, render, rewind; field: ALKModule, relational;
+# lattice; ledger; liminal x11), jaa, resonance-v5.1; emerge-language.spec v2.0.0 (seven roots, Lens added); warp beside it.
+# Emerge already holds part of it in its own form: observe/field.js (the CFR field, a pure fold over the ledger), observe/liminal.js,
+# sigma, delta, gaps (CIE-EG §13), core/lens.js.
+# EW_D5 (his): Emerge stays decoupled; the pattern engine, RFR2 and CFR (and "a ime", TO CONFIRM what he meant: ALK? AIME?) are added to it.
+# The coder's reading of "decoupled", TO CONFIRM: Emerge's core (language, compiler, CIE-EG registry, contract, gate, ledger, observe) imports
+# none of them; each is a component in Emerge's repo with its own component.spec, registered (CIE-EG §5), reached only by roads through
+# the gate, an observer that never gates (Emergence's own law: "rfr2 observes — a lens"); and each is ported to .eg by spec (CIE-EG §0).
+# One owner per reading: observe/ stays the deterministic reading of the ledger; the components build on its output, never beside it.
+# Emergence the text reader is a system built from Emerge, its own repo and compartment.
