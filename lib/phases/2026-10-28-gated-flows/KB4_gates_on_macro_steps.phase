@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+context: pipeline phase KB4_gates_on_macro_steps of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: KB4_gates_on_macro_steps (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281608
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281608
+lastSeenAt: 1793386281608
+fingerprint: null
+payload:
+  id: KB4_gates_on_macro_steps
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.280
+  files:
+    - lib/agent-tools/tools/clear-glass/macro.js
+    - lib/agent-tools/tools/clear-glass/gate-eval.js
+    - lib/agent-tools/tools/browser/browser-action.js
+    - clear-glass/src/driver/index.js
+  depends_on:
+    - FP3_is_the_gate_open
+    - FG_D1_gate_is_a_step_field
+    - KB1_choose_waits_and_keys
+  blocks:
+    - MOD-KB4
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 9d0c03bbba992231
