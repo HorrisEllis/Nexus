@@ -1311,6 +1311,27 @@ export const SPEC = [
       if (!sites.length) return console.log(h.c.gray('  no keys bound to elements yet'));
       for (const o of sites) { console.log(h.c.bold(`  ${o}`)); for (const [k, b] of Object.entries(all[o])) console.log(`    ${h.c.mint(k.padEnd(14))} ${b.do}${b.option ? ` "${b.option}"` : ''}${b.key ? ` ${b.key}` : ''}${b.macro ? ` ${b.macro}` : ''}${b.selector ? h.c.dim(`  ${b.selector}`) : ''}`); }
     } },
+  // 2026-10-30 UG4 — James: "it needs to be universal for all dom elements ... per site settings, macros and automation features."
+  { key: 'glass.gates', repo: false, usage: 'glass gates [<site url>] | glass gates add <site url> --selector s [--value v | --equals v | --matches /re/ | --shows o | --checked true|false | --text t | --visible true | --gone true] [--page glob] [--label name] | glass gates remove <site url> <id> | glass gates check [--id id]',
+    about: 'gates on any element, per site: every write the driver or the DOM mesh makes is checked by its own gate and by yours for that element; check runs yours on the page open in Clear Glass',
+    req: (a) => {
+      const [op, url, id] = a.args || [];
+      const f = a.flags || {}, b = (v) => (v === 'true' ? true : v === 'false' ? false : v);
+      if (op === 'add') { const gate = {}; for (const k of ['selector', 'value', 'equals', 'matches', 'shows', 'text', 'page', 'label']) if (f[k] != null) gate[k] = String(f[k]); for (const k of ['checked', 'visible', 'gone']) if (f[k] != null) gate[k] = b(String(f[k])); return { system: 'clear-glass', method: 'POST', path: '/cli/site-gates', body: { url, gate } }; }
+      if (op === 'remove') return { system: 'clear-glass', method: 'POST', path: '/cli/site-gates/remove', body: { url, id } };
+      if (op === 'check') return { system: 'clear-glass', method: 'POST', path: '/cli/site-gates/check', body: f.id ? { id: String(f.id) } : {} };
+      return { system: 'clear-glass', method: 'GET', path: `/cli/site-gates${op ? `?url=${encodeURIComponent(op)}` : ''}` };
+    },
+    print: (d, a, h) => {
+      if (d.error) return console.log(h.c.amber(`  ${d.error}`));
+      if (d.open !== undefined && d.checks !== undefined) return console.log(d.open ? h.c.mint(`  open · ${d.checks} gate(s) · ${d.saw}`) : h.c.amber(`  closed · ${d.saw}`));
+      if (d.ok && d.gate) return console.log(h.c.mint(`  ${d.origin} · ${d.gate.id} saved`));
+      if (d.ok && d.id) return console.log(h.c.mint(`  ${d.origin} · ${d.id} removed`));
+      const all = d.siteGates || {}; const sites = Object.keys(all);
+      if (!sites.length) return console.log(h.c.gray('  no gates of yours yet (pick an element › Gate this element)'));
+      for (const o of sites) { console.log(`  ${o}`); for (const g of all[o]) console.log(`    ${g.id}  ${g.label || ''}  ${JSON.stringify(Object.fromEntries(Object.entries(g).filter(([k]) => !['id', 'label'].includes(k))))}`); }
+    },
+  },
   { key: 'glass.processes', repo: false, usage: 'glass processes', about: 'what is running in Clear Glass: each process with its tabs and background tabs, memory and CPU (ending one is his, in the Processes window)',
     req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/processes' }),
     print: (d, a, h) => {

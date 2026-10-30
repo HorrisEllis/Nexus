@@ -30,9 +30,14 @@ const KEYS = Object.freeze([
   { key: 'guardian.listen',      feature: 'guardian',  type: 'bool',     default: true,   global: 'guardian.listen', does: "Guardian's listeners run on this site" },
   // 0.60.273 FG1 — James, 2026-10-28: "need the accessability settings, per site. look at picture 2." (his Fiverr page after a Tab)
   { key: 'accessibility.tabMode', feature: 'accessibility', type: 'enum', values: ['site', 'off'], default: 'site', does: 'What the site turns on when Tab is pressed (its keyboard / accessibility look): Site leaves it, Off undoes it (Tab still moves focus)' },
+  // 2026-10-30 UG2 — James: "it needs to be universal for all dom elements ... per site settings". Every write the driver or the DOM mesh makes is gated.
+  { key: 'gates.enabled',        feature: 'gates',     type: 'bool',     default: true,   does: 'Every field, dropdown and box written on this site is checked afterwards (its gate)' },
+  { key: 'gates.settleMs',       feature: 'gates',     type: 'int',      min: 0,    max: 10000,  default: 400,  does: 'How long the page settles before a gate is read again' },
+  { key: 'gates.timeoutMs',      feature: 'gates',     type: 'int',      min: 100,  max: 60000,  default: 2500, does: 'How long a gate waits to open' },
+  { key: 'gates.retries',        feature: 'gates',     type: 'int',      min: 0,    max: 5,      default: 1,    does: 'How many more times a write is made when its gate stays closed' },
   { key: 'guardian.capture',     feature: 'guardian',  type: 'bool',     default: true,   global: 'guardian.capture', does: 'Chats on this site are captured' },
 ]);
-const FEATURES = Object.freeze(['autofill', 'macros', 'workflows', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'mesh', 'guardian']);
+const FEATURES = Object.freeze(['autofill', 'macros', 'workflows', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'gates', 'mesh', 'guardian']);
 const BY_KEY = new Map(KEYS.map(k => [k.key, k]));
 
 function byFeature(feature) { return KEYS.filter(k => k.feature === feature); }

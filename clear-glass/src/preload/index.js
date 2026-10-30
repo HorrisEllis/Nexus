@@ -283,6 +283,11 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     siteList:   ()                     => ipcRenderer.invoke('siteKeys:list'),
     siteSet:    (url, accel, binding)  => ipcRenderer.invoke('siteKeys:set', { url, accel, binding }),
     siteRemove: (url, accel)           => ipcRenderer.invoke('siteKeys:remove', { url, accel }),
+    // 2026-10-30 UG5 — his gates per site
+    gateList:   ()                     => ipcRenderer.invoke('siteGates:list'),
+    gateAdd:    (url, gate)            => ipcRenderer.invoke('siteGates:add', { url, gate }),
+    gateRemove: (url, id)              => ipcRenderer.invoke('siteGates:remove', { url, id }),
+    gateCheck:  (opts = {})            => ipcRenderer.invoke('siteGates:check', opts),
     onAction: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('shortcut:action', f); return () => ipcRenderer.removeListener('shortcut:action', f); },
   },
 
