@@ -424,3 +424,23 @@ phases:
 # - AD2: lib/adapters/javascript.js wraps code-intel (structure, decls, text) and node --check. Open: verify-first and coder-brief moved behind it.
 # - AD4: lib/adapters/documents.js (markdown sections, the files a document names). Open: references between Nexus's own specs and phasemaps.
 # - Not in the plan before, built because Emerge needed it: lib/adapters/emerge.js (.eg: use, fn, kind, component …; parse answers unknown).
+
+# ADDENDUM 2026-10-30 — his direction: the system registry migrates to loom
+# James, 2026-10-30, after the coder reported where decoupling stands (1,095 cross-folder requires: 695 into lib, 250 lib up into a system,
+# 150 system to system; 11 of 15 systems with a registry-components.js, routes only; IN3–IN6 OPEN) and proposed lib/system-registry.js as
+# the system registry the per-system registries roll up into: "loom was supposed to be the system builder, and meta system. i feel it should
+# migrate to loom"
+# - The record agrees with him. loom's own registry-components.js header: "THE registry authority — builds and maps NEXUS". The loom atlas:
+#   "the sovereign source of truth for how NEXUS's components, hooks, and wires connect". lib/system-registry.js (2026-09-06) is a
+#   read-only aggregator, written "matching loom's own proven read-only-aggregator pattern" (its header): it was built as a loom scanner
+#   in all but its folder.
+# - What moves (the coder's reading, to confirm): the system registry (each system, its components, its edges, its registry-components.js
+#   rolled up) is loom's, and is built by loom. IN3's "registry" is loom's registry, not a new one in lib; IN4 (loom reads the registry) becomes
+#   loom IS the registry.
+# - The problem that goes to him (§5.15: one system going down must break no other). lib/system-registry.js is also the address book:
+#   get('diagnostic') → its port, used by nexus-status, the healer, data-home, node-registry, compartments, the tunnel and the heartbeat.
+#   If the address book lives only behind loom's route, loom down = nobody can find anybody, loom included. Options put to him:
+#     (a) split (the coder's recommendation): loom owns and builds the system registry (what each system is, its components and wires);
+#         lib keeps only the boot address book (name → folder, port, health route), which loom reads as one of its sources;
+#     (b) all of it in loom; each caller keeps the last answer it got and works from that while loom is down.
+#   Unanswered at the time of writing; no code moves until he answers.
