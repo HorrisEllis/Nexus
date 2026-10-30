@@ -80,7 +80,7 @@
         if (!ks.length) continue;
         const g = el('section', 'sp-group'); g.dataset.feature = f;
         g.append(el('h4', 'sp-group-h', FEATURE[f] || f));
-        for (const k of ks) g.append(row(k));
+        for (const k of ks) if (!k.panel) g.append(row(k));   // a key with its own panel (accessibility.keepOff: AC2) is drawn by that panel
         root.append(g);
       }
     }
