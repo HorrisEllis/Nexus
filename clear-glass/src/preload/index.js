@@ -217,6 +217,10 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     // 0.60.283 — what holds this tab's site's accessibility look on; reset: backed up, removed, the site set to Off, the page reloaded
     a11yCheck: (wcId) => ipcRenderer.invoke('site:a11yCheck', { wcId }),
     a11yReset: (wcId) => ipcRenderer.invoke('site:a11yReset', { wcId }),
+    // 2026-10-30 AC2 — the look traced to what turns it on; what is kept off is the site setting accessibility.keepOff; the site's own control
+    a11yTrace:       (wcId)            => ipcRenderer.invoke('site-profile:a11yTrace', { wcId }),
+    a11yKeepOff:     (wcId, entry, on) => ipcRenderer.invoke('site-profile:a11yKeepOff', { wcId, entry, on }),
+    a11yOpenControl: (wcId, n)         => ipcRenderer.invoke('site-profile:a11yOpenControl', { wcId, n }),
   },
 
   // ── Accounts (real, per-agentKey identity — §PHASE-3 2026-08-23) ──────

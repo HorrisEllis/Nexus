@@ -759,6 +759,14 @@ class IpcBridge {
     this.app.get('/cli/site-gates', (req, res) => { const all = this.options?.getSiteGates?.() || {}; const EG = require('../page/element-gate'); res.json({ siteGates: req.query.url ? { [EG.originOf(req.query.url) || req.query.url]: EG.matchSite(all, req.query.url) } : all }); });
     this.app.post('/cli/site-gates', (req, res) => { const b = req.body || {}; const r = this.options ? this.options.addSiteGate(b.url, b.gate) : { error: 'options not ready' }; res.status(r.error ? 400 : 200).json(r); });
     this.app.post('/cli/site-gates/remove', (req, res) => { const b = req.body || {}; const r = this.options ? this.options.removeSiteGate(b.url, b.id) : { error: 'options not ready' }; res.status(r.error ? 400 : 200).json(r); });
+    // 2026-10-30 AC2 — the same for an agent, on the page it drives: trace, keep off (the site setting), open the site's own control
+    this.app.post('/cli/site-a11y', async (req, res) => {
+      const b = req.body || {}; let wcId = b.wcId;
+      if (wcId == null) { try { const wc = this.driver._getWebContents(b.agentId || 'default'); wcId = wc && wc.id; } catch (_) {} }
+      if (wcId == null) return res.status(400).json({ ok: false, error: 'no page open for this agent' });
+      const r = b.op === 'keep' ? await this._a11yKeepOff(wcId, b.entry, b.on !== false, { by: cliBy(req) }) : b.op === 'open' ? await this._a11yOpenControl(wcId, b.n) : await this._a11yTrace(wcId);
+      res.status(r.ok === false ? 400 : 200).json(r);
+    });
     this.app.post('/cli/site-gates/check', async (req, res) => { const b = req.body || {}; try { res.json(await this.driver.exec({ agentId: b.agentId || 'default', action: 'gate', ...(b.id ? { id: b.id } : b.gate ? { gate: b.gate } : { all: true }), by: 'agent' })); } catch (err) { res.status(400).json({ error: err.message }); } });
     this.app.post('/cli/site-keys/remove', (req, res) => { const b = req.body || {}; const r = this.options ? this.options.removeSiteKey(b.url, b.accel) : { error: 'options not ready' }; res.status(r.error ? 400 : 200).json(r); });
     this.app.get('/cli/processes', (req, res) => { try { res.json(require('../main/index').processes().list()); } catch (e) { res.status(500).json({ ok: false, error: e.message }); } });
@@ -1270,6 +1278,11 @@ class IpcBridge {
     // 0.60.283 — James, 2026-10-29: "The accessability man. i can't fix it." (Fiverr remembers its accessibility look; keyboard-mode.js)
     ipcMain.handle('site:a11yCheck', async (e, d = {}) => this._a11y(d && d.wcId, { reset: false }));
     ipcMain.handle('site:a11yReset', async (e, d = {}) => this._a11y(d && d.wcId, { reset: true }));
+    // 2026-10-30 AC2 — James: "look at the accessability. needs to actually hook into the back end settings. looks lazy also." The look traced to
+    // what turns it on (whatever it is named); what he keeps off is the site setting accessibility.keepOff, applied by main at every load.
+    ipcMain.handle('site-profile:a11yTrace',       async (e, d = {}) => this._a11yTrace(d && d.wcId));
+    ipcMain.handle('site-profile:a11yKeepOff',     async (e, d = {}) => this._a11yKeepOff(d && d.wcId, d && d.entry, d && d.on, { by: 'person' }));
+    ipcMain.handle('site-profile:a11yOpenControl', async (e, d = {}) => this._a11yOpenControl(d && d.wcId, d && d.n));
     ipcMain.handle('site-profile:clear', async (e, d) => this._siteProfile().clearSite(d && d.url, d && d.key, { by: 'person' }));
     ipcMain.handle('site-profile:keys',  async () => ({ keys: this._siteProfile().KEYS, features: this._siteProfile().FEATURES }));
 
@@ -2311,6 +2324,49 @@ class IpcBridge {
     try { out.tabMode = await this._siteProfile().setSite(url, 'accessibility.tabMode', 'off', { by: 'person' }); } catch (err) { out.tabModeError = err.message; }
     try { wc.reload(); out.reloaded = true; } catch (err) { out.reloadError = err.message; }
     return out;
+  }
+
+  // 2026-10-30 AC2 — James, with fiverr.com in yellow-on-black links after the reset found nothing named accessibility: "look at the
+  // accessability. needs to actually hook into the back end settings. looks lazy also."
+  //   _a11yTrace(wcId)  → the link's look, the stylesheet rules that paint it and the classes/attributes that switch them on (whatever they
+  //                       are named), the site's own accessibility control, and what this site keeps off now (accessibility.keepOff)
+  //   _a11yKeepOff(wcId, entry, on) → the setting updated (validated by keys.js); on: applied to the page now; off: the page reloads, since a
+  //                       removed class or rule comes back only from the site itself
+  //   _a11yOpenControl(wcId, n) → clicks the site's control n (a server-kept look is turned off in the site's own settings)
+  _a11yPage(wcId) {
+    const { webContents } = this._electron || require('electron');
+    const wc = webContents.fromId(Number(wcId));
+    if (!wc || wc.isDestroyed()) return { error: 'no such page' };
+    let url = ''; try { url = wc.getURL(); } catch (_) {}
+    if (!/^https?:/.test(url)) return { error: 'this page is not a website' };
+    return { wc, url, origin: new URL(url).origin };
+  }
+  _a11yKept(url) { try { const p = this._siteProfile().siteProfile(url); return [].concat((p && p.accessibility && p.accessibility.keepOff) || []); } catch (_) { return []; } }
+  async _a11yTrace(wcId) {
+    const pg = this._a11yPage(wcId); if (pg.error) return { ok: false, error: pg.error };
+    let t; try { t = await pg.wc.executeJavaScript(require('../page/keyboard-mode').traceScript(), true); } catch (err) { return { ok: false, error: `the page could not be read: ${err.message}` }; }
+    const kept = this._a11yKept(pg.url);
+    let applied = null; try { applied = await pg.wc.executeJavaScript('window.__cgKeepOff ? { removed: window.__cgKeepOff.removed, rules: window.__cgKeepOff.rules } : null', true); } catch (_) {}
+    return { ok: true, url: pg.url, origin: pg.origin, ...t, keepOff: kept, applied };
+  }
+  async _a11yKeepOff(wcId, entry, on = true, { by = 'person' } = {}) {
+    const pg = this._a11yPage(wcId); if (pg.error) return { ok: false, error: pg.error };
+    if (!/^(class|attr|rule):./.test(String(entry || ''))) return { ok: false, error: `not something to keep off: ${entry} (class:<name>, attr:<name> or rule:<selector>)` };
+    const kept = this._a11yKept(pg.url).filter(x => x !== entry);
+    if (on) kept.push(entry);
+    const set = kept.length ? this._siteProfile().setSite(pg.url, 'accessibility.keepOff', kept, { by }) : this._siteProfile().clearSite(pg.url, 'accessibility.keepOff', { by });
+    if (set && set.ok === false) return { ok: false, error: set.why || set.error || 'not saved' };
+    const out = { ok: true, origin: pg.origin, entry, on: !!on, keepOff: kept };
+    if (on) { try { out.applied = await pg.wc.executeJavaScript(require('../page/keyboard-mode').keepOffScript([entry]), true); } catch (err) { out.applyError = err.message; } }
+    else { try { pg.wc.reload(); out.reloaded = true; } catch (err) { out.reloadError = err.message; } }
+    return out;
+  }
+  async _a11yOpenControl(wcId, n) {
+    const pg = this._a11yPage(wcId); if (pg.error) return { ok: false, error: pg.error };
+    const sel = `[data-cg-a11yctl="${Number(n) || 0}"]`;
+    let r; try { r = await pg.wc.executeJavaScript(`(function(){ var e = document.querySelector(${JSON.stringify(sel)}); if (!e) return null; e.scrollIntoView({ block: 'center' }); e.click(); return (e.getAttribute('aria-label') || e.title || e.textContent || '').trim().slice(0, 80); })()`, true); }
+    catch (err) { return { ok: false, error: err.message }; }
+    return r == null ? { ok: false, error: 'that control is not on the page any more (find it again)' } : { ok: true, opened: r };
   }
 
   // 0.60.281 AP4 — James, 2026-10-29: "also capturing the contact info for job applications." The applications and their contacts are the

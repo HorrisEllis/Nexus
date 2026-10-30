@@ -30,6 +30,9 @@ const KEYS = Object.freeze([
   { key: 'guardian.listen',      feature: 'guardian',  type: 'bool',     default: true,   global: 'guardian.listen', does: "Guardian's listeners run on this site" },
   // 0.60.273 FG1 — James, 2026-10-28: "need the accessability settings, per site. look at picture 2." (his Fiverr page after a Tab)
   { key: 'accessibility.tabMode', feature: 'accessibility', type: 'enum', values: ['site', 'off'], default: 'site', does: 'What the site turns on when Tab is pressed (its keyboard / accessibility look): Site leaves it, Off undoes it (Tab still moves focus)' },
+  // 2026-10-30 AC2 — James: "look at the accessability. needs to actually hook into the back end settings." What turns this site's look on,
+  // as traced (keyboard-mode.js traceScript), kept off at every load: 'class:<name>', 'attr:<name>' or 'rule:<selector>'.
+  { key: 'accessibility.keepOff', feature: 'accessibility', type: 'string[]', default: [], maxLen: 400, panel: 'a11y', does: "What turns this site's accessibility look on, kept off at every load (classes, attributes, style rules found by Find what turns it on)" },
   // 2026-10-30 PL6/PL10 — James: "gates are for the pipelines for macro atuomation" · "with the option for per site pipelines". A gate block's timing
   // on this site, and whether this site's pipelines run (0.60.292's gates.enabled / gates.retries, for the archived write gates, are gone).
   { key: 'gates.settleMs',       feature: 'gates',     type: 'int',      min: 0,    max: 10000,  default: 400,  does: 'How long the page settles before a gate block is read again' },
@@ -67,7 +70,7 @@ function validate(key, value) {
       return typeof value === 'string' && value.length <= 200 ? { ok: true, value } : { ok: false, why: `${key} is a short text (an id)` };
     case 'string[]': {
       const list = Array.isArray(value) ? value : String(value || '').split(/[\s,]+/).filter(Boolean);
-      if (list.some(x => typeof x !== 'string' || x.length > 200) || list.length > 50) return { ok: false, why: `${key} is a list of ids (at most 50)` };
+      if (list.some(x => typeof x !== 'string' || x.length > (k.maxLen || 200)) || list.length > 50) return { ok: false, why: `${key} is a list of ids (at most 50)` };
       return { ok: true, value: list };
     }
     default: return { ok: false, why: `${key}: no rule for type ${k.type}` };

@@ -2870,6 +2870,9 @@ function _siteOnLoad(contents, url) {
   if (require('../site-settings/readers').tabMode(url) === 'off') {
     contents.executeJavaScript(require('../page/keyboard-mode').offScript(), true).catch(e => console.warn(`[site-settings] Tab switch at ${new URL(url).origin} not set: ${e.message}`));
   }
+  // 2026-10-30 AC2 — James: "needs to actually hook into the back end settings." What he chose to keep off on this site (accessibility.keepOff).
+  const keep = require('../site-settings/readers').keepOff(url);
+  if (keep && keep.length) contents.executeJavaScript(require('../page/keyboard-mode').keepOffScript(keep), true).catch(e => console.warn(`[site-settings] accessibility keep-off at ${new URL(url).origin} not applied: ${e.message}`));
   const mode = require('../site-settings/readers').resumeMode(url);
   if (mode && mode !== 'off') {
     const js = require('../rewind/resume.js').resumeScript(mode);

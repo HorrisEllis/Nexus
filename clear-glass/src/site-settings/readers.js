@@ -18,6 +18,7 @@
  *   meshAgent(url)        → { enabled, agent } | null
  *   guardianPolicy(url)   → { listen, capture } | null
  *   tabMode(url)          → 'site' | 'off' | null   (0.60.273 FG1)
+ *   keepOff(url)          → string[] | null         (2026-10-30 AC2)
  * Each hook is one siteProfile call; a url that is not an http(s) page reads as null (no site, nothing to change).
  */
 let _get = null;
@@ -46,6 +47,8 @@ function resumeMode(url)       { const p = _profile('resume', url);    return p 
 function meshAgent(url)        { const p = _profile('mesh', url);      return p ? { enabled: p.mesh.enabled !== false, agent: p.mesh.agent || null } : null; }
 function guardianPolicy(url)   { const p = _profile('guardian', url);  return p ? { listen: p.guardian.listen !== false, capture: p.guardian.capture !== false } : null; }
 function tabMode(url)          { const p = _profile('accessibility', url); return p ? (p.accessibility.tabMode || 'site') : null; }
+// 2026-10-30 AC2 — what turns this site's accessibility look on, kept off at every load (main _siteOnLoad → keyboard-mode keepOffScript)
+function keepOff(url)          { const p = _profile('accessibility', url); return p ? [].concat(p.accessibility.keepOff || []) : null; }
 function driverPolicy(url) {
   const p = _profile('driver', url);
   if (!p) return null;
@@ -62,4 +65,4 @@ function gatePolicy(url) {
 }
 function pipelinesAllowed(url) { const p = _profile('pipelines', url); return p ? p.pipelines.enabled !== false : null; }
 
-module.exports = { install, installed, gatePolicy, pipelinesAllowed, autofillFor, macrosOnLoad, workflowsAllowed, passwordPolicy, resumeMode, driverPolicy, meshAgent, guardianPolicy, tabMode };
+module.exports = { install, installed, gatePolicy, pipelinesAllowed, autofillFor, macrosOnLoad, workflowsAllowed, passwordPolicy, resumeMode, driverPolicy, meshAgent, guardianPolicy, tabMode, keepOff };

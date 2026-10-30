@@ -1,0 +1,35 @@
+/* renderer/a11y-panel.css — this site's accessibility look, traced and kept off (AC2, 2026-10-30). Scoped to .a11y-panel. */
+.a11y-panel { margin-top: 10px; border: 1px solid var(--edge, #2a313b); border-radius: var(--r-m, 8px); background: color-mix(in srgb, var(--void, #0d1117) 60%, transparent); font: 12px var(--sans, system-ui); color: var(--ink, #d6dde6); overflow: hidden; }
+.a11y-panel .a11y-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 10px; border-bottom: 1px solid color-mix(in srgb, var(--edge, #2a313b) 70%, transparent); }
+.a11y-panel .a11y-title { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint, #6b7685); }
+.a11y-panel .a11y-body { display: grid; gap: 8px; padding: 10px; }
+.a11y-panel .a11y-hint { color: var(--ink-dim, #8b96a5); line-height: 1.4; }
+.a11y-panel .a11y-warn { color: var(--amber, #e3b341); line-height: 1.4; padding: 6px 8px; border-radius: var(--r-s, 6px); background: color-mix(in srgb, var(--amber, #e3b341) 10%, transparent); }
+.a11y-panel .a11y-sub { margin-top: 2px; font-size: 10.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint, #6b7685); }
+.a11y-panel .a11y-swatch { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: var(--r-s, 6px); border: 1px dashed var(--edge, #2a313b); }
+.a11y-panel .a11y-sample { padding: 3px 8px; border-radius: 4px; font-weight: 600; white-space: nowrap; }
+.a11y-panel .a11y-facts { display: flex; flex-wrap: wrap; gap: 4px 10px; font: 10.5px var(--mono, ui-monospace, monospace); color: var(--ink-dim, #8b96a5); }
+.a11y-panel .a11y-list { display: grid; border: 1px solid color-mix(in srgb, var(--edge, #2a313b) 70%, transparent); border-radius: var(--r-s, 6px); }
+.a11y-panel .a11y-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 7px 8px; cursor: pointer; }
+.a11y-panel .a11y-row + .a11y-row { border-top: 1px solid color-mix(in srgb, var(--edge, #2a313b) 60%, transparent); }
+.a11y-panel .a11y-row:hover { background: color-mix(in srgb, var(--cyan, #39c5cf) 5%, transparent); }
+.a11y-panel .a11y-name { color: var(--ink-hi, #eef2f6); font: 11.5px var(--mono, ui-monospace, monospace); overflow-wrap: anywhere; }
+.a11y-panel .a11y-detail { color: var(--ink-faint, #6b7685); font-size: 10.5px; overflow-wrap: anywhere; }
+.a11y-panel .a11y-switch { appearance: none; width: 28px; height: 16px; border-radius: 999px; background: var(--edge, #2a313b); position: relative; cursor: pointer; transition: background .15s; margin: 0; }
+.a11y-panel .a11y-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink-dim, #8b96a5); transition: transform .15s, background .15s; }
+.a11y-panel .a11y-switch:checked { background: color-mix(in srgb, var(--cyan, #39c5cf) 55%, transparent); }
+.a11y-panel .a11y-switch:checked::after { transform: translateX(12px); background: var(--ink-hi, #eef2f6); }
+.a11y-panel .a11y-switch:focus-visible { outline: 2px solid var(--cyan, #39c5cf); outline-offset: 2px; }
+.a11y-panel .a11y-switch:disabled { opacity: .4; cursor: not-allowed; }
+.a11y-panel .a11y-tag { font-size: 10.5px; padding: 2px 7px; border-radius: 999px; white-space: nowrap; border: 1px solid var(--edge, #2a313b); color: var(--ink-dim, #8b96a5); }
+.a11y-panel .a11y-tag.on { color: var(--cyan, #39c5cf); border-color: color-mix(in srgb, var(--cyan, #39c5cf) 45%, transparent); background: color-mix(in srgb, var(--cyan, #39c5cf) 10%, transparent); }
+.a11y-panel .a11y-ctl { display: grid; gap: 6px; }
+.a11y-panel .a11y-btn { border: 1px solid var(--edge, #2a313b); background: var(--void, #0d1117); color: var(--ink-hi, #eef2f6); border-radius: var(--r-s, 6px); padding: 5px 10px; font: 12px var(--sans, system-ui); cursor: pointer; text-align: left; }
+.a11y-panel .a11y-btn:hover:not(:disabled) { border-color: var(--cyan, #39c5cf); }
+.a11y-panel .a11y-btn.primary { color: var(--cyan, #39c5cf); border-color: color-mix(in srgb, var(--cyan, #39c5cf) 45%, transparent); white-space: nowrap; }
+.a11y-panel .a11y-btn.ghost { border-color: transparent; background: none; color: var(--ink-dim, #8b96a5); padding-left: 0; }
+.a11y-panel .a11y-btn:disabled { opacity: .55; cursor: progress; }
+.a11y-panel .a11y-foot { display: grid; gap: 4px; padding: 6px 10px 9px; border-top: 1px solid color-mix(in srgb, var(--edge, #2a313b) 70%, transparent); }
+.a11y-panel .a11y-status { color: var(--ink-dim, #8b96a5); line-height: 1.4; min-height: 0; }
+.a11y-panel .a11y-status:empty { display: none; }
+.a11y-panel .a11y-status.bad { color: var(--bad, #ff6b6b); }

@@ -79,4 +79,78 @@ function offScript() {
 })()`;
 }
 
-module.exports = { offScript, sweepScript, A11Y_RE };
+// 2026-10-30 AC2 — James, with fiverr.com still in yellow-on-black links and the reset finding nothing named accessibility: "look at the
+// accessability. needs to actually hook into the back end settings. looks lazy also." The look is traced to its cause whatever it is named:
+//   traceScript() → { link, inline, rules: [{ selector, sheet, props, triggers }], triggers: [{ kind: 'class'|'attr', name, value?, on }],
+//                     unreadable: [sheet], forced: { colors, contrast }, controls: [{ n, label, kind }], widgets: [name] }
+//     rules: stylesheet rules that match a link and paint what the link shows (its colour, its background, its underline, its spacing);
+//     triggers: in those rules' selectors, the classes and attributes an ancestor has now (what switches the rule on);
+//     controls: the site's own accessibility control (a widget's button, anything named accessibility), marked data-cg-a11yctl=<n> to open.
+//   keepOffScript(list) → applied at every load of the site (main _siteOnLoad, setting accessibility.keepOff): 'class:<name>' removed from every
+//     element and kept off, 'attr:<name>' the same, 'rule:<selector>' deleted from every sheet that can be read (and from sheets added later).
+function traceScript() {
+  return `(function(){
+  function vis(e){ var r = e.getBoundingClientRect(), cs = getComputedStyle(e); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+  var probe = document.createElement('span'); document.body.appendChild(probe);
+  function norm(v){ probe.style.color = ''; probe.style.color = v; return probe.style.color ? getComputedStyle(probe).color : null; }
+  var links = Array.prototype.filter.call(document.querySelectorAll('a[href]'), vis).slice(0, 30);
+  var a = links[0], out = { link: null, inline: null, rules: [], triggers: [], unreadable: [], forced: { colors: matchMedia('(forced-colors: active)').matches, contrast: matchMedia('(prefers-contrast: more)').matches }, controls: [], widgets: [] };
+  if (a) { var cs = getComputedStyle(a); out.link = { color: cs.color, background: cs.backgroundColor, decoration: cs.textDecorationLine, spacing: cs.letterSpacing, outline: cs.outlineStyle !== 'none' ? cs.outlineColor : null };
+    if (/color|background|outline/i.test(a.getAttribute('style') || '')) out.inline = a.getAttribute('style'); }
+  var seen = {};
+  function addTrigger(kind, name, value, el){ var k = kind + ':' + name; if (seen[k]) return; seen[k] = 1; out.triggers.push({ kind: kind, name: name, value: value == null ? null : value, on: el === document.documentElement ? 'html' : el === document.body ? 'body' : (el.tagName.toLowerCase() + (el.id ? '#' + el.id : '')) }); }
+  function triggersOf(sel){ var found = [];
+    sel.split(',').forEach(function(one){ var parts = one.trim().split(/\\s*[ >+~]\\s*/); parts.slice(0, -1).concat([parts[parts.length - 1]]).forEach(function(part, i, all){
+      var last = i === all.length - 1;
+      (part.match(/\\.[\\w-]+/g) || []).forEach(function(c){ c = c.slice(1); links.forEach(function(l){ for (var e = last ? null : l.parentElement; e; e = e.parentElement) if (e.classList && e.classList.contains(c)) { addTrigger('class', c, null, e); found.push('class:' + c); break; } }); });
+      (part.match(/\\[[^\\]]+\\]/g) || []).forEach(function(at){ var m = /^\\[\\s*([\\w:-]+)\\s*(?:[~|^$*]?=\\s*["']?([^"'\\]]*)["']?)?\\s*\\]$/.exec(at); if (!m) return;
+        links.forEach(function(l){ for (var e = last ? null : l.parentElement; e; e = e.parentElement) if (e.hasAttribute && e.hasAttribute(m[1]) && m[1] !== 'href') { addTrigger('attr', m[1], e.getAttribute(m[1]), e); found.push('attr:' + m[1]); break; } }); });
+    }); });
+    return found.filter(function(x, i, arr){ return arr.indexOf(x) === i; }); }
+  function paints(st){ if (!out.link) return null; var p = {};
+    var c = st.getPropertyValue('color'), b = st.getPropertyValue('background-color') || st.getPropertyValue('background'), d = st.getPropertyValue('text-decoration') || st.getPropertyValue('text-decoration-line'), sp = st.getPropertyValue('letter-spacing');
+    if (c && norm(c) === out.link.color) p.color = c;
+    if (b && b !== 'none' && norm(b.split(' ')[0]) === out.link.background && out.link.background !== 'rgba(0, 0, 0, 0)') p.background = b;
+    if (d && /underline/.test(d) && /underline/.test(out.link.decoration)) p.underline = d;
+    if (sp && sp !== 'normal' && sp === out.link.spacing) p.spacing = sp;
+    return Object.keys(p).length ? p : null; }
+  function walk(list, sheet){ for (var i = 0; i < list.length; i++) { var r = list[i];
+    if (r.cssRules && !r.selectorText) { var cond = r.conditionText || (r.media && r.media.mediaText); if (!cond || matchMedia(cond).matches) walk(r.cssRules, sheet); continue; }
+    if (!r.selectorText || !r.style) continue;
+    var hit = false; try { hit = links.some(function(l){ return l.matches(r.selectorText); }); } catch (_) {}
+    if (!hit) continue;
+    var p = paints(r.style); if (!p) continue;
+    out.rules.push({ selector: r.selectorText.length > 395 ? r.selectorText.slice(0, 300) + '…' : r.selectorText, keepable: r.selectorText.length <= 395, sheet: sheet, props: p, triggers: triggersOf(r.selectorText) }); } }
+  Array.prototype.forEach.call(document.styleSheets, function(sh){ var name = sh.href || (sh.ownerNode && sh.ownerNode.id ? '#' + sh.ownerNode.id : 'a <style> in the page');
+    try { walk(sh.cssRules, name); } catch (_) { out.unreadable.push(name); } });
+  probe.remove();
+  var named = /accessib|a11y|disabilit|userway|acsb|equalweb|audioeye|recite|uwy/i, n = 0;
+  document.querySelectorAll('[data-cg-a11yctl]').forEach(function(e){ e.removeAttribute('data-cg-a11yctl'); });
+  Array.prototype.forEach.call(document.querySelectorAll('button,a,[role=button],[tabindex],div[id],span[id]'), function(e){
+    if (!vis(e) || out.controls.length >= 6) return;
+    var label = [e.getAttribute('aria-label'), e.getAttribute('title'), e.id, typeof e.className === 'string' ? e.className : '', e.tagName === 'A' || e.tagName === 'BUTTON' ? e.textContent : ''].filter(Boolean).join(' ').replace(/\\s+/g, ' ').slice(0, 160);
+    if (!named.test(label)) return; if (e.closest('[data-cg-a11yctl]')) return;
+    e.setAttribute('data-cg-a11yctl', String(++n)); out.controls.push({ n: n, label: (e.getAttribute('aria-label') || e.getAttribute('title') || e.textContent || e.id || '').replace(/\\s+/g, ' ').trim().slice(0, 80), kind: e.tagName.toLowerCase() }); });
+  [['UserWay', 'UserWay'], ['acsbJS', 'accessiBe'], ['INDmenu', 'EqualWeb'], ['AudioEye', 'AudioEye'], ['Recite', 'Recite Me']].forEach(function(w){ if (window[w[0]]) out.widgets.push(w[1]); });
+  return out;
+})()`;
+}
+
+function keepOffScript(list = []) {
+  const items = (Array.isArray(list) ? list : []).filter(x => /^(class|attr|rule):./.test(String(x)));
+  return `(function(items){
+  var st = window.__cgKeepOff = window.__cgKeepOff || { removed: 0, rules: 0, items: [] }; st.items = items;
+  function apply(){
+    items.forEach(function(it){ var i = it.indexOf(':'), kind = it.slice(0, i), name = it.slice(i + 1);
+      if (kind === 'class') document.querySelectorAll('.' + CSS.escape(name)).forEach(function(e){ e.classList.remove(name); st.removed++; });
+      else if (kind === 'attr') { try { document.querySelectorAll('[' + CSS.escape(name) + ']').forEach(function(e){ e.removeAttribute(name); st.removed++; }); } catch (_) {} }
+      else if (kind === 'rule') Array.prototype.forEach.call(document.styleSheets, function(sh){ var rs; try { rs = sh.cssRules; } catch (_) { return; }
+        (function del(list, owner){ for (var j = list.length - 1; j >= 0; j--) { var r = list[j]; if (r.cssRules && !r.selectorText) del(r.cssRules, r); else if (r.selectorText === name) { try { owner.deleteRule(j); st.rules++; } catch (_) {} } } })(rs, sh); });
+    }); }
+  apply();
+  if (!st.observing) { st.observing = true; var t = 0; try { new MutationObserver(function(){ clearTimeout(t); t = setTimeout(apply, 30); }).observe(document.documentElement, { attributes: true, childList: true, subtree: true }); } catch (_) {} }
+  return { applied: items.length, removed: st.removed, rules: st.rules };
+})(${JSON.stringify(items)})`;
+}
+
+module.exports = { offScript, sweepScript, traceScript, keepOffScript, A11Y_RE };

@@ -61,7 +61,7 @@ const rowSel = (key, inner = '') => `.sp-row[data-key="${key}"] ${inner}`.trim()
       const groups = await page.$$eval('#site-settings-panel .sp-group', els => els.map(e => e.dataset.feature));
       assert.deepStrictEqual(groups, ['autofill', 'macros', 'workflows', 'pipelines', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'gates', 'mesh', 'guardian']);   // 2026-10-30: pipelines, gates
       const rows = await page.$$eval('#site-settings-panel .sp-row', els => els.length);
-      assert.strictEqual(rows, P.KEYS.length + 1, 'one row per key, and the network route');
+      assert.strictEqual(rows, P.KEYS.filter(k => !k.panel).length + 1, 'one row per key (a key with its own panel, AC2 accessibility.keepOff, is drawn there), and the network route');
       assert.strictEqual(await page.innerText(rowSel('driver.navTimeoutMs', '.sp-tag')), 'Settings', 'the global option is named as Settings');
       // set: Agents may drive → Off
       await page.selectOption(rowSel('driver.allowed', 'select'), 'false');

@@ -416,6 +416,7 @@ const SUITES = [
   'test-gig-features.test.js',             // 0.60.281 AP1 — a gig's package rows: features in the .gig, checkAt/rowLabels, the fill's rows
   'test-opportunity-contacts.test.js',     // 0.60.281 AP2–AP4 — contacts behind job applications: captured from the page, routes, command, tool, Settings › Applications
   'test-snowflake-steps.test.js',          // 0.60.281 SN1 — Snowflake as a step in macros and workflows (route, unroute, start, wait, check, stop)
+  'test-a11y-trace.test.js', // 2026-10-30 AC2 — the accessibility look traced to what turns it on, kept off by the site setting, the popup panel
   'test-fiverr-overview-and-a11y.test.js', // 0.60.283 — a new gig's Overview (category, subcategory, tags, gated) and a site's remembered accessibility look reset
   'test-pipelines.test.js',                // 0.60.284 PL1–PL4 — pipelines: tasks in a dependency graph (macros, workflows, agents, commands), gated, a checklist
   'test-history-nodes.test.js',            // 0.60.285 HN1–HN3 — Idearium's history as nodes per unit (.exchange .input .response .tool_call .code_block)
