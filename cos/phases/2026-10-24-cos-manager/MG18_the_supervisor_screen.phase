@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
+context: pipeline phase MG18_the_supervisor_screen of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG18_the_supervisor_screen (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793365823389
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793365823389
+lastSeenAt: 1793365823389
+fingerprint: null
+payload:
+  id: MG18_the_supervisor_screen
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/contract.json
+  depends_on:
+    - MG16_the_autopilot_door
+    - MG_D1_ui_isolated_per_component
+  blocks:
+    - MOD-MG-UI-CORE
+    - MOD-MG-UI-SHELL
+    - MOD-MG-UI-OVERVIEW
+    - MOD-MG-UI-LEDGER
+    - MOD-MG-UI-PROPOSALS
+  spec: cos/spec/cos-manager.spec
+  graph: 7b0be1d382c7dd67

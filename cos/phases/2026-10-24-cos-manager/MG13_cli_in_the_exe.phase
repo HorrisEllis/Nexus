@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
+context: pipeline phase MG13_cli_in_the_exe of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG13_cli_in_the_exe (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793365823378
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793365823378
+lastSeenAt: 1793365823378
+fingerprint: null
+payload:
+  id: MG13_cli_in_the_exe
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/app/cli.js
+    - cos/app/desktop/main.js
+  depends_on:
+    - CON1_one_door_client
+    - CON2_grammar_and_completion
+    - CON5_pane
+    - MG12_the_exe_is_the_compartment_manager
+  blocks:
+    - MOD-MG-EXE-CLI
+  spec: cos/spec/cos-manager.spec
+  graph: c61b1b6bd0890fc2

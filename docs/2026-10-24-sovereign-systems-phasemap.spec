@@ -209,3 +209,9 @@ phases_c:
     does: "warp, once it is a system (CS19): its users reach it by route except for the one copy of the primitives in core (CS18), then its compartment."
     proof: "warp sovereign in the census; COS opens it in its compartment"
 build_order_c: "SV0 → CS12 → SV1 → SV2 → SV3 → SV4 → SV5 → SV6 → SV7 (= DB6) → CS4 per system as each is sovereign → CS18 → CS19 → SV8; last, unless sovereignty needs one sooner: CS13, CS14, CS15, CS16, CS17, CS20, CS21"
+
+# ## ADDENDUM 2026-10-30 — CS13 may be superseded by MG_D4 (to confirm)
+# James, 2026-10-30: "... lets spec the ui for the cos to manage the system. This will be the new orchastrator/autopilot."
+# docs/2026-10-24-cos-manager-phasemap.spec MG_D4_cos_is_the_autopilot (the coder's reading, TO CONFIRM): COS's manager becomes the one
+# supervisor, and lib/nexus/autopilot.js hands over and stays as a launcher (MG17). If he confirms, CS13_autopilot_to_orchestrator has no
+# supervisor left to move, and is superseded by MG17. CS13 is kept as written until then (§0.3).

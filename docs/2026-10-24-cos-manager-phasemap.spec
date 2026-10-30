@@ -66,11 +66,30 @@ decisions:
     chosen: "the data browser reads a compartment's data only through the routes its registry declares (MG2's tunnel), never its files"
     by_the_axioms: "§5.15 rule 1"
 
+  MG_D4_cos_is_the_autopilot:
+    chosen: >-
+      COS's manager is the one supervisor and the system's management screen: autopilot's job (boot, restart with backoff, circuit, memory
+      floor, on-demand spawn and idle stop, its ledger, its :7799 door) moves into cos/manager, read from each system's compartment.json, and
+      lib/nexus/autopilot.js becomes a launcher that hands over (kept, §0.3). The orchestrator on :9000 stays the API router it is. CS13
+      (autopilot to orchestrator/) is superseded by it: there is no supervisor left to move. TO CONFIRM — the coder's reading of his words.
+    by: >-
+      his, 2026-10-30: "look at all of the phases for each cos and soveriegn phases. then lets spec the ui for the cos to manage the system.
+      This will be the new orchastrator/autopilot." Standing on his 2026-10-23 "Okay, so COS would be the spine, right? It would be the
+      orchestrator, right?". The reading (supervisor + management screen move into COS; the :9000 router stays) is the coder's; the other
+      reading on the table is that COS also replaces the :9000 orchestrator, which is bigger and is not phased here.
+    by_the_axioms: >-
+      §10.3 two supervisors are competing truth layers (cos/app/runtime.js today starts autopilot as a second one beside COS's own
+      process-runner); §8.6 COS already has process-runner, watchdog and proc-stats; §5.15 rule 2 each system declares its own runtime in its
+      compartment.json instead of autopilot's hard-coded list; §5.12 the pages float on the manager and the manager runs headless; §0.3 the
+      door on :7799 keeps every caller working.
+
 phases:
   MG0b_the_full_spec:
-    status: OPEN
+    status: SPECCED 2026-10-30 — cos/spec/cos-manager.spec
     depends_on: [MG_D0_order]
     files: [cos/spec/cos-manager.spec, tests/modules/test-substrate-spec.test.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-CONTRACT]
     does: >-
       The full spec in emerge's module format before any MG code (his 2026-10-20 rule): schemas (CompartmentState, Version, Branch,
       Settings layer, Macro, Template, PageComponent), the interfaces it stands on (vm-control, cos-bridge, versionium, archetype and
@@ -82,6 +101,8 @@ phases:
     status: OPEN
     depends_on: [DB21_one_registry_schema_every_level, DB12_the_ui_handshake, CS3_the_registry_is_the_bridge, MG0b_the_full_spec]
     files: [loom/registry-components.js, loom/interaction-contract.json, loom/event-taxonomy.js, loom/ui]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-LOOM-SPINE]
     does: >-
       Loom first, end to end: its registry is read as its spine (DB21's schema), it is the bridge to its compartment (CS3), it carries
       Loom's bus (event-taxonomy) and contract (interaction-contract), and Loom's UI shakes hands with it before any call (DB12). The UI
@@ -92,6 +113,8 @@ phases:
     status: OPEN
     depends_on: [MG1_loom_on_its_registry_spine, DB20_sealed_archetype, DB13_the_tunnel]
     files: [cos/archetype/nexus-system.js, cos/archetype/genesis-catalog.js, lib/cos-bridge.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-GENESIS]
     does: >-
       A compartment made from the genesis archetype reaches its own store and its server.js only through its registry's declared routes
       (the tunnel), and COS reads its data the same way, never its files.
@@ -101,6 +124,8 @@ phases:
     status: OPEN
     depends_on: [MG0b_the_full_spec, CS1_a_version_is_a_system_state, SN0_one_branch, SN2_run_in_parallel, VM1_control_like_vmware]
     files: [cos/manager/state.js, cos/manager/routes.js, idearium/cli/route-commands.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-STATE]
     does: >-
       One manager over every compartment's state: its versions (a Versionium commit and its QEMU snapshot under one id, CS1), its branches,
       runs in parallel, what is running, and every change on the event ledger. Backend, then route, then a command row.
@@ -110,6 +135,8 @@ phases:
     status: OPEN
     depends_on: [MG3_the_state_manager, CS5_caps_per_compartment, CS7_spawn_despawn_and_balance]
     files: [cos/manager/resources.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-RESOURCES]
     does: "edit a compartment's resources (memory, CPU, its throttle), spawn, despawn, balance, rewind: by route and command, read back from the OS or hypervisor (CS_D4)"
     proof: "a cap set, read back, and enforced on a fixture compartment; what cannot be enforced is said"
 
@@ -117,6 +144,8 @@ phases:
     status: OPEN
     depends_on: [MG0b_the_full_spec]
     files: [cos/manager/catalog.js, cos/archetype/registry.js, cos/blueprint/registry.js, loom/templates]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-CATALOG]
     does: >-
       A browser and editor, backend first, for each kind: archetypes, schemas, blueprints and templates. List, read, diff, validate against
       its schema, write (versioned, undoable), make a new one from an existing one.
@@ -126,6 +155,8 @@ phases:
     status: OPEN
     depends_on: [MG0b_the_full_spec, AS1_one_resolver_global_then_repo]
     files: [cos/manager/settings.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-SETTINGS]
     does: "settings for COS and for each compartment, layered schema default → COS's → the template's or type's → the compartment's own, one resolver (AS1's shape), each value saying where it came from"
     proof: "a template's setting shows on every compartment made from it; a compartment's own value wins and says so; reset falls back"
 
@@ -133,6 +164,8 @@ phases:
     status: OPEN
     depends_on: [MG3_the_state_manager, CS10_hats_bound_to_the_compartment, CON8_nexus_server_hook]
     files: [cos/manager/macros.js, lib/hat-seed.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-MACROS]
     does: >-
       Macros: a recorded or written sequence of COS commands, run against a compartment or many, on demand or by rule. Hats bound to the
       compartment (CS10). The main orchestrator can call every COS verb through the same routes (CON8). An agent's act is a proposal unless
@@ -143,6 +176,8 @@ phases:
     status: OPEN
     depends_on: [MG5_browsers_and_editors, SV2_into_a_compartment, CE1_the_compartment_machine, EL1_electron_compiler]
     files: [cos/manager/factory.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-FACTORY]
     does: "new compartment templates, and compartments that are compilers, web servers (his engines, SV), test environments (CE1), or anything a template describes, made from the editors (MG5)"
     proof: "a web-server compartment and a test-env compartment made from templates, each answering its health route"
 
@@ -150,6 +185,8 @@ phases:
     status: OPEN
     depends_on: [MG3_the_state_manager, MG4_resources_per_compartment, MG5_browsers_and_editors, MG6_settings_by_template_and_type, MG7_automation_macros_and_hats, MG8_the_factory, MG_D1_ui_isolated_per_component, DB26_the_ui_floats_on_the_registry, COSA12_vmware_window]
     files: [cos/ui]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-UI-COMPARTMENT, MOD-MG-UI-CATALOG, MOD-MG-UI-AUTOMATION]
     does: >-
       The VMware-like console, last, on the routes and commands above only: a tree of compartments, each one's state, versions and
       branches, resources, settings, macros and editors. Each page is its own component (MG_D1): its own .html, .css and .js, declared in
@@ -160,6 +197,8 @@ phases:
     status: OPEN
     depends_on: [MG0b_the_full_spec, MG5_browsers_and_editors, MG6_settings_by_template_and_type, CS4_every_system_a_compartment, MG_D2_category_is_a_registry_record]
     files: [cos/manager/categories.js, cos/manager/routes.js, idearium/cli/route-commands.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-CATEGORIES]
     does: >-
       Backend, then route, then command. A category is { id, name, from: archetype | template, source id, schema, settings layer (MG6),
       members }. List, show, new (from an archetype or a template), edit against its schema, rename, remove (archived, §0.3). Every change
@@ -170,6 +209,8 @@ phases:
     status: OPEN
     depends_on: [MG10_categories, MG_D1_ui_isolated_per_component, DB26_the_ui_floats_on_the_registry]
     files: [cos/ui/categories]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-UI-CATEGORIES]
     does: >-
       The manager and editor screens on MG10's routes only. Categories as a list; a category page with its archetype or template, its
       schema (a form built from the schema, and raw), its settings and its members. Systems is one of them. Each page is its own component
@@ -179,6 +220,8 @@ phases:
     status: OPEN
     depends_on: [MG3_the_state_manager, MG4_resources_per_compartment, MG9_the_console_ui, MG11_category_manager_ui, MG_D3_data_through_the_compartment, COSA6_the_exe, COSA12_vmware_window, CS8_the_cos_screen, VM1_control_like_vmware]
     files: [cos/app/desktop/main.js, cos/app/desktop/ui, cos/app/controller.js, cos/manager/routes.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-EXE-MANAGER]
     does: >-
       cos.exe becomes the full compartment manager. On the left, a tree of categories and their compartments (MG10/MG11). Each compartment
       has tabs:
@@ -194,6 +237,8 @@ phases:
     status: OPEN
     depends_on: [CON1_one_door_client, CON2_grammar_and_completion, CON5_pane, MG12_the_exe_is_the_compartment_manager]
     files: [cos/app/cli.js, cos/app/desktop/main.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-EXE-CLI]
     does: >-
       CLI access. A console pane inside the exe (CON5). From a terminal, `COS.exe <command>` runs any row headless and prints the result:
       through CON1's one door when Idearium is up, and the local COS verbs when it is not.
@@ -202,11 +247,53 @@ phases:
     status: OPEN
     depends_on: [MG12_the_exe_is_the_compartment_manager, CS3_the_registry_is_the_bridge]
     files: [cos/app/desktop/thumbnails.js, cos/app/desktop/ui]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-THUMBS]
     does: >-
       Each compartment's own UI (the index.html its registry declares) rendered off-screen and shown as a live thumbnail in the manager's
       tree and grid. Refreshed on change or every few seconds, paused when hidden. Clicking it opens that UI. A compartment with no UI shows
       its status card instead, and says so.
     proof: "a fixture compartment's index.html appears as its thumbnail and updates after a change; one with no UI says it has none"
+
+  MG15_the_supervisor_in_cos:
+    status: OPEN
+    depends_on: [MG0b_the_full_spec, MG_D4_cos_is_the_autopilot, CS4a_cos_boots_alone]
+    files: [cos/manager/supervisor.js, cos/manager/server.js, lib/system-shape.js, tests/modules/test-cos-supervisor.test.js, tests/modules/run-all.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-SUPERVISOR, MOD-MG-SERVER]
+    does: >-
+      autopilot's supervision in COS, on process-runner, watchdog and proc-stats: the boot plan from every compartment.json (each system adds
+      bootPhase, onDemand, maxOldSpaceMB to its own), backoff, circuit, memory floors, on-demand and idle, the ledger. Served by
+      cos/manager/server.js on :7799 under /api/cos/, headless. Its defaults equal autopilot's constants. Backend, route, command rows
+      (cos ps|start|stop|restart|boot|ledger), in that order.
+    proof: "fixture systems: boot in phase order, a killed child restarted with backoff, a crash loop opens the circuit, on-demand start and idle stop, each a ledger line; the defaults test reads autopilot's constants and the policy's"
+  MG16_the_autopilot_door:
+    status: OPEN
+    depends_on: [MG15_the_supervisor_in_cos]
+    files: [cos/manager/autopilot-door.js, cos/manager/contract.json, tests/modules/test-cos-autopilot-door.test.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-AUTOPILOT-DOOR]
+    does: "every route autopilot serves on :7799, answered by the manager in the same shape; /files and /tables kept as legacy with their callers counted"
+    proof: "each route's answer matches a recorded autopilot fixture; orchestrator /api/autopilot/status and Clear Glass's spawn of clear-glass work unchanged"
+  MG17_autopilot_hands_over:
+    status: OPEN
+    depends_on: [MG16_the_autopilot_door, CS12_the_mover_is_proven]
+    files: [lib/nexus/autopilot.js, cos/app/runtime.js, package.json, lib/nexus-self/systems.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-AUTOPILOT-HANDOVER]
+    does: "autopilot becomes the launcher of COS's manager (its old body archived with the version that retired it); runtime.js starts the manager for new releases and keeps ENTRIES for old ones"
+    proof: "npm run start:all boots every system through COS; an old release zip still starts in cos.exe; no second supervisor (ports and pids)"
+  MG18_the_supervisor_screen:
+    status: OPEN
+    depends_on: [MG16_the_autopilot_door, MG_D1_ui_isolated_per_component]
+    files: [cos/ui/core, cos/ui/shell, cos/ui/overview, cos/ui/ledger, cos/ui/proposals, cos/manager/contract.json]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-UI-CORE, MOD-MG-UI-SHELL, MOD-MG-UI-OVERVIEW, MOD-MG-UI-LEDGER, MOD-MG-UI-PROPOSALS]
+    does: >-
+      The first pages, as soon as the supervisor and its door stand (the most leverage first: the screen that replaces autopilot's status
+      and the home page's tiles): ui/core (handshake, call, run, events, confirm), the shell (top bar, tree, router), Overview, Ledger,
+      Proposals. MG9 then adds the compartment tabs, the catalog and automation on the same shell.
+    proof: "driven in Clear Glass at /ui/shell/: a fixture system stopped, started and restarted from its card; the act on the Ledger with by = the person; an undeclared call refused and shown"
 
 build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → MG8 → MG9. Backend → route → command → UI in each, and MG9 (the UI) last, as he said. Sovereignty of Nexus's own systems (SV1–SV7) goes on alongside; COS opening a Nexus system waits on it (CS_D7)."
 
@@ -243,3 +330,20 @@ build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → M
 # The decisions MG_D2 and MG_D3 and the phases MG10–MG14 are in this map's decisions: and phases: blocks above (real YAML, so
 # lib/phase-dag.js checks them).
 # build_order addendum: MG10 → MG11 → MG12 → MG13 → MG14, after MG3–MG9. Backend → route → command → UI in each (his order of delivery).
+
+# ── ADDENDUM 2026-10-30 — COS is the new orchestrator/autopilot; the full spec (MG0b) and the UI specced (his) ───────────────────────
+# James, 2026-10-30: "look at all of the phases for each cos and soveriegn phases. then lets spec the ui for the cos to manage the system.
+# This will be the new orchastrator/autopilot."
+# Read first, 13 maps: cos-app (COSA0c–COSA7 built; COSA5, COSA8 open), cos-console (CON1–8 open), cos-spine (CS1–11 open, nothing built),
+# this map (MG0b–MG14 open, nothing built), cos-services (SV0 done, SV1–4 open), guardian-into-cos (GD0–1 done, GD2–8 open), loom-into-cos
+# (LM0–4 done, LM5 open), sovereign-systems (SV0 done, SV1 partly, SV1_D1 his, SV2–8 and CS12–21 open), and the older track-b, versionium,
+# observability, node-architecture and testenv maps (closed or retracted).
+# Found: autopilot (lib/nexus/autopilot.js) is a second supervisor beside COS. cos/app/runtime.js says so in its header ("COS does not
+# become a second supervisor: it starts the project's OWN supervisor"), and COS's own process-runner, watchdog and proc-stats go unused for it.
+# Done in this addendum:
+#   - cos/spec/cos-manager.spec written (MG0b): 8 schemas, 8 interfaces, 26 modules, every MG phase tied to it by spec:/blocks:.
+#   - Decision MG_D4_cos_is_the_autopilot, the coder's reading, TO CONFIRM.
+#   - New phases: MG15 (the supervisor in COS), MG16 (autopilot's :7799 door kept), MG17 (autopilot hands over), MG18 (the first screen:
+#     core, shell, Overview, Ledger, Proposals).
+# build_order addendum: MG0b → MG15 → MG16 → MG18 → MG17, then MG1–MG14 as before. The supervisor screen comes before the rest of the UI
+# because it replaces something running today. The handover comes after the screen, so his stack never runs without a way to see it.

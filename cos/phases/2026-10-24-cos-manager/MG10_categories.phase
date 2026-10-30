@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG10_categories
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG10_categories
+context: pipeline phase MG10_categories of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG10_categories (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793365823372
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793365823372
+lastSeenAt: 1793365823372
+fingerprint: null
+payload:
+  id: MG10_categories
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/categories.js
+    - cos/manager/routes.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - MG0b_the_full_spec
+    - MG5_browsers_and_editors
+    - MG6_settings_by_template_and_type
+    - CS4_every_system_a_compartment
+    - MG_D2_category_is_a_registry_record
+  blocks:
+    - MOD-MG-CATEGORIES
+  spec: cos/spec/cos-manager.spec
+  graph: 26220cd45f2bc4b4

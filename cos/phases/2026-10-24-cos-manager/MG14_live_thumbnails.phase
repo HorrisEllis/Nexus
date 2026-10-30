@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
+context: pipeline phase MG14_live_thumbnails of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG14_live_thumbnails (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793365823380
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793365823380
+lastSeenAt: 1793365823380
+fingerprint: null
+payload:
+  id: MG14_live_thumbnails
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/app/desktop/thumbnails.js
+  depends_on:
+    - MG12_the_exe_is_the_compartment_manager
+    - CS3_the_registry_is_the_bridge
+  blocks:
+    - MOD-MG-THUMBS
+  spec: cos/spec/cos-manager.spec
+  graph: ec031bf12160634e

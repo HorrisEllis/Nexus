@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+context: pipeline phase MG16_the_autopilot_door of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG16_the_autopilot_door (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793365823384
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793365823384
+lastSeenAt: 1793365823384
+fingerprint: null
+payload:
+  id: MG16_the_autopilot_door
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/autopilot-door.js
+    - cos/manager/contract.json
+    - tests/modules/test-cos-autopilot-door.test.js
+  depends_on:
+    - MG15_the_supervisor_in_cos
+  blocks:
+    - MOD-MG-AUTOPILOT-DOOR
+  spec: cos/spec/cos-manager.spec
+  graph: f23dc76a372f2324

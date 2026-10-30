@@ -1,0 +1,116 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MG15_the_supervisor_in_cos:0c43ddb05e7ec414
+type: graph
+id: phase:MG15_the_supervisor_in_cos:0c43ddb05e7ec414
+context: dependency graph of phase MG15_the_supervisor_in_cos
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793365865912
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793365865912
+lastSeenAt: 1793365865912
+fingerprint: null
+payload:
+  for: MG15_the_supervisor_in_cos
+  kind: phase
+  repo: null
+  hash: 0c43ddb05e7ec414
+  nodes:
+    - path: cos/manager/server.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: changes
+      exists: false
+      system: cos
+    - path: lib/system-shape.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-supervisor.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: diagnostic/tests/shape.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-system-shape.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/run-all.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: diagnostic/tests/shape.test.js
+      to: lib/system-shape.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-shape.js
+      kind: requires
+    - from: tests/modules/test-system-shape.test.js
+      to: lib/system-shape.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+    downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
+    blockedBy:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+    unlocks:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by MG0b_the_full_spec, MG_D4_cos_is_the_autopilot, CS4a_cos_boots_alone
+      - >-
+        depends on (3): MG0b_the_full_spec, MG_D4_cos_is_the_autopilot, CS4a_cos_boots_alone · all
+        upstream 8
+      - >-
+        needed by (1): MG16_the_autopilot_door · all downstream 3 · finishing it unlocks
+        MG16_the_autopilot_door
+    edges:
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+        kind: declared
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+        kind: declared

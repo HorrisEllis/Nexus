@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+context: >-
+  pipeline phase MG12_the_exe_is_the_compartment_manager of
+  docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG12_the_exe_is_the_compartment_manager (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793365823376
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793365823376
+lastSeenAt: 1793365823376
+fingerprint: null
+payload:
+  id: MG12_the_exe_is_the_compartment_manager
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/app/desktop/main.js
+    - cos/app/controller.js
+    - cos/manager/routes.js
+  depends_on:
+    - MG3_the_state_manager
+    - MG4_resources_per_compartment
+    - MG9_the_console_ui
+    - MG11_category_manager_ui
+    - MG_D3_data_through_the_compartment
+    - COSA6_the_exe
+    - COSA12_vmware_window
+    - CS8_the_cos_screen
+    - VM1_control_like_vmware
+  blocks:
+    - MOD-MG-EXE-MANAGER
+  spec: cos/spec/cos-manager.spec
+  graph: 7350f98407b97c68

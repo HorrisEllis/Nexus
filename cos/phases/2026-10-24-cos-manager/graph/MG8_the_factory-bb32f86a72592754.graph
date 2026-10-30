@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792880100861
+exported_at: 1793365823368
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100861
-lastSeenAt: 1792880100861
+firstSeenAt: 1793365823368
+lastSeenAt: 1793365823368
 fingerprint: null
 payload:
   for: MG8_the_factory
@@ -49,6 +49,9 @@ payload:
       - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
       - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
     downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
@@ -65,7 +68,7 @@ payload:
       - >-
         depends on (4): MG5_browsers_and_editors, SV2_into_a_compartment,
         CE1_the_compartment_machine, EL1_electron_compiler · all upstream 12
-      - 'needed by (1): MG9_the_console_ui'
+      - 'needed by (1): MG9_the_console_ui · all downstream 4'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
         kind: declared
