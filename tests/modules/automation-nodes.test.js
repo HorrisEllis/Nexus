@@ -140,7 +140,7 @@ await test('NODE-05', '.macro nodes: export, parse, import (reuse / rename); wro
   const S = macroStore();
   assert.deepStrictEqual((await N.importNode(e, n.text, S)).macro, { name: 'login', reused: false, renamed: false });
   assert.deepStrictEqual((await N.importNode(e, n.text, S)).macro, { name: 'login', reused: true, renamed: false });
-  assert.match((await N.importNode(e, NX.toYaml(NX.wrap('hat', 'h1', {})), S)).error, /this is a \.hat node — only \.workflow and \.macro import here/);
+  assert.match((await N.importNode(e, NX.toYaml(NX.wrap('hat', 'h1', {})), S)).error, /this is a \.hat node — only \.workflow, \.macro and \.pipeline import here/);
   assert.match((await N.importNode(e, 'nonsense: [', S)).error, /not a NEXUS node file/);
   assert.match((await N.importNode(e, '', S)).error, /empty/);
 });

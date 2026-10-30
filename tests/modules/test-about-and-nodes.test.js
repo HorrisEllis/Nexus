@@ -42,8 +42,8 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
 
   await test('AN-02', 'the node files ship and parse; seeded into the library once (his delete stands); imported through the Settings route', async () => {
     const files = fs.readdirSync(BUNDLED).sort();
-    // 0.60.283: + fiverr-gig-choose-category.macro (a new gig's SELECT A CATEGORY / SUBCATEGORY, gated)
-    assert.deepStrictEqual(files, ['fiverr-gig-choose-category.macro', 'fiverr-gig-choose-delivery.macro', 'fiverr-gig-fill-this-page.workflow', 'fiverr-gig-overview-steps.workflow', 'fiverr-gig-scope-pricing-steps.workflow']);
+    // 0.60.283: + fiverr-gig-choose-category.macro (a new gig's SELECT A CATEGORY / SUBCATEGORY, gated); 0.60.296 PN4: + fiverr-gig.pipeline
+    assert.deepStrictEqual(files, ['fiverr-gig-choose-category.macro', 'fiverr-gig-choose-delivery.macro', 'fiverr-gig-fill-this-page.workflow', 'fiverr-gig-overview-steps.workflow', 'fiverr-gig-scope-pricing-steps.workflow', 'fiverr-gig.pipeline']);
     for (const f of files) assert.ok(N.parse(fs.readFileSync(path.join(BUNDLED, f), 'utf8')).payload, f);
     const R = require(path.join(ROOT, 'lib/automation/routes.js'));
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'an-nodes-'));
@@ -51,11 +51,11 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     const deps = { nodesDir: dir, bundledDir: BUNDLED, getMacro: async (n) => { const m = created.find(x => x.name === n); return m ? { ok: true, macro: m } : { error: `no macro named "${n}"` }; }, createMacro: async (m) => { created.push(m); return { ok: true }; } };
     const engine = { importWorkflow: (w) => ({ ok: true, workflow: { id: 'w1', name: w.name, steps: w.steps } }), create: (w) => ({ ok: true, workflow: { id: 'w1', ...w } }), list: () => [], get: () => null };
     let r = await R.handle(engine, { method: 'GET', url: '/automation/nodes' }, deps);
-    assert.strictEqual(r.body.nodes.length, 5, JSON.stringify(r.body).slice(0, 200));
+    assert.strictEqual(r.body.nodes.length, 6, JSON.stringify(r.body).slice(0, 200));
     assert.deepStrictEqual(r.body.seeded.sort(), files);
     fs.unlinkSync(path.join(dir, 'fiverr-gig-overview-steps.workflow'));
     r = await R.handle(engine, { method: 'GET', url: '/automation/nodes' }, deps);
-    assert.deepStrictEqual([r.body.nodes.length, r.body.seeded.length], [4, 0], 'deleted stays deleted');
+    assert.deepStrictEqual([r.body.nodes.length, r.body.seeded.length], [5, 0], 'deleted stays deleted');
     const im = await R.handle(engine, { method: 'POST', url: '/automation/nodes/fiverr-gig-choose-delivery.macro/import', body: {} }, deps);
     assert.ok(im.body.ok !== false, JSON.stringify(im.body));
     assert.deepStrictEqual(created.map(m => [m.name, m.params]), [['Fiverr gig - choose delivery', ['tier', 'delivery']]]);

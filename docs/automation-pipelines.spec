@@ -317,6 +317,75 @@ spec:
       error_paths: ["validate's problems shown"]
       acceptance: ["test-pipeline-gates PG-06 in Clear Glass: the editor saves a site pipeline whose task waits at an element gate"]
 
+    # 2026-10-30 PN1–PN4 — James: "can you export the .macro and .automation nodes to the .pipeline node and import into the pipeline section of
+    # clearglass? ... that way the pipeline feature can choose macros and automation nodes from clearglass and node files. these are meant to be
+    # actual persistent files in the backend. all nodes are supposed to be physcial files for each system." · "should we rebuild the fiverr plugin?"
+    - id: MOD-PIPELINE-NODE
+      name: pipeline-node-file
+      uuid: nexus-automation-pipeline-node-v1-0000-2026-1030-001
+      path: lib/automation-nodes.js
+      phase: PN1_the_pipeline_node
+      description: >-
+        .pipeline is a NEXUS node type (lib/node-export.js envelope, lib/node-schemas/schema.pipeline). pipelineNode(pipeline, { macros,
+        workflows }) bundles the macros and workflows its tasks run (payload.requires), as a .workflow bundles its own; importPipeline(text)
+        brings the bundled macros and workflows in through the existing importers (a same macro reused, a name taken by a different one
+        renamed and the tasks repointed), then the pipeline itself. listNodes lists .pipeline files beside .macro and .workflow.
+      deps: [{ name: pipeline }]
+      exports: ["pipelineNode(pipeline, { macros, workflows }) → { text, filename }", "importPipeline(engine, text, { getMacro, createMacro }) → { ok, pipeline, imported }", "listNodes(dir) includes .pipeline"]
+      gate_pipeline: ["GATE-PN1-001: export → envelope with requires → import → each require through its importer → the pipeline"]
+      behavioral_contracts: ["a pipeline node is self-contained: importing it on another machine gives a pipeline that runs"]
+      error_paths: ["a task's macro or workflow missing at export → named in the node's warnings, never dropped silently"]
+      acceptance: ["test-pipeline-nodes PN-01: export with requires, import on an empty engine runs"]
+
+    - id: MOD-PIPELINE-FILES
+      name: pipelines-are-node-files
+      uuid: nexus-automation-pipelines-are-files-v1-0000-2026-1030-001
+      path: lib/automation/pipeline.js
+      phase: PN2_pipelines_kept_as_node_files
+      description: >-
+        Each pipeline is kept as its own .pipeline node file (the envelope, readable and editable), not a bare JSON record: create and update
+        write <id>.pipeline; a JSON pipeline from before is read, rewritten as .pipeline, and the JSON moved to the folder's _archive (§0.3).
+        Runs stay as they were. GET /automation/pipelines/:id/node gives the node with its requires; …/node/save writes it into the node
+        library; POST /automation/import takes a .pipeline text too.
+      deps: [{ name: pipeline-node-file }]
+      exports: ["Pipelines store: <id>.pipeline", "GET /automation/pipelines/:id/node", "POST /automation/pipelines/:id/node/save", "POST /automation/import (.pipeline)", "POST /automation/nodes/<file>.pipeline/import"]
+      gate_pipeline: ["GATE-PN2-001: write → envelope → read back the same pipeline"]
+      behavioral_contracts: ["nothing is lost on the move: the JSON is archived, not deleted"]
+      error_paths: ["a file that does not parse → listed as unreadable with why, never skipped silently"]
+      acceptance: ["test-pipeline-nodes PN-02: a pipeline is a .pipeline file on disk; an old JSON pipeline is migrated and archived"]
+
+    - id: MOD-PIPELINE-PICKER
+      name: pipeline-picks-macros-workflows-nodes
+      uuid: nexus-automation-pipeline-picker-v1-0000-2026-1030-001
+      path: clear-glass/renderer/settings/sections/pipelines.js
+      phase: PN3_the_editor_picks_from_clear_glass_and_files
+      description: >-
+        In the Pipelines editor a task's macro or workflow is chosen from a list: Clear Glass's macros, the engine's workflows and pipelines,
+        and the node files in the library (.macro, .workflow); a node file chosen is imported first, then used by its name. Each pipeline
+        card has Export (save its .pipeline into the library) and the section has Import (a .pipeline file from the library or pasted).
+      deps: [{ name: pipelines-are-node-files }]
+      exports: ["Settings › Pipelines: task picker (macros, workflows, pipelines, node files), Export node, Import node"]
+      gate_pipeline: ["GATE-PN3-001: pick → (import a node file) → the task names it"]
+      behavioral_contracts: ["the list says where each item comes from"]
+      error_paths: ["an import that fails → said in the editor, the task left as it was"]
+      acceptance: ["test-pipeline-nodes PN-03 in Clear Glass: the picker lists macros, workflows and node files; picking a node file imports it"]
+
+    - id: MOD-FIVERR-PIPELINE
+      name: fiverr-gig-pipeline-node
+      uuid: nexus-automation-fiverr-gig-pipeline-v1-0000-2026-1030-001
+      path: clear-glass/automation/nodes/fiverr-gig.pipeline
+      phase: PN4_the_fiverr_pipeline
+      description: >-
+        The Fiverr gig, rebuilt as a bundled .pipeline node for https://www.fiverr.com, from the Fiverr node files Clear Glass already ships
+        (Fiverr gig - choose category / choose delivery macros, the Overview and Scope & Pricing workflows): each page a task, each waiting at
+        a gate. Seeded into the library once like the other bundled nodes; his edited copy stays his.
+      deps: [{ name: pipeline-node-file }]
+      exports: ["clear-glass/automation/nodes/fiverr-gig.pipeline"]
+      gate_pipeline: ["GATE-PN4-001: the bundled node parses, validates and imports"]
+      behavioral_contracts: ["Publish, Save and Continue stay his (FI_D1)"]
+      error_paths: ["a required node missing → the import says which"]
+      acceptance: ["test-pipeline-nodes PN-04: the bundled Fiverr pipeline parses, validates, and imports with its macros and workflows"]
+
   events:
     automation:
       - "automation.pipeline.start { pipelineId, runId }"

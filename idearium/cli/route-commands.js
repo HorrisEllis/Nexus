@@ -88,6 +88,13 @@ export const SPEC = [
   { key: 'pipeline.list', repo: false, usage: 'pipeline list [--archived] [--site <url> [--on-load]]', about: 'pipelines: tasks in a dependency graph, each a macro, workflow, agent, command, browser step, another pipeline or a wait at a gate; per site with --site',
     req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipelines${a.flags.site ? `?site=${encodeURIComponent(a.flags.site)}${a.flags['on-load'] ? '&onLoad=1' : ''}` : a.flags.archived ? '?archived=1' : ''}` }),
     print: (d, a, h) => { for (const p of d.pipelines || []) console.log(`  ${h.c.bold(p.name)}  ${h.c.dim(`${p.tasks.length} task${p.tasks.length === 1 ? '' : 's'}${p.site ? ` · ${p.site}${p.onLoad ? ' (on load)' : ''}` : ''}${p.archived ? ' · archived' : ''} · ${p.id}`)}`); if (!(d.pipelines || []).length) console.log(h.c.gray('  no pipelines yet — make one in Clear Glass Settings › Pipelines')); } },
+  // 2026-10-30 PN2 — James: "export the .macro and .automation nodes to the .pipeline node and import into the pipeline section of clearglass"
+  { key: 'pipeline.export', repo: false, usage: 'pipeline export <id or name>', about: 'save a pipeline as a .pipeline node file in the node library, with the macros, workflows and pipelines it runs bundled',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: `/automation/pipelines/${encodeURIComponent((a.args || [])[0] || '')}/node/save`, body: {} }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.file} saved${d.missing && d.missing.length ? ` — not bundled (not found): ${d.missing.join(', ')}` : ''}`) : h.c.amber(`  ${d.error}`)) },
+  { key: 'pipeline.import', repo: false, usage: 'pipeline import <node file in the library, e.g. fiverr-gig.pipeline>', about: 'import a .pipeline node file (and what it bundles) into Clear Glass\'s Pipelines',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: `/automation/nodes/${encodeURIComponent((a.args || [])[0] || '')}/import`, body: {} }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  “${d.pipeline ? d.pipeline.name : (d.workflow || d.macro || {}).name}” imported${(d.warnings || []).length ? ` — ${d.warnings.join('; ')}` : ''}`) : h.c.amber(`  ${d.error}`)) },
   { key: 'pipeline.show', repo: false, usage: 'pipeline show <id>', about: 'a pipeline\'s tasks in order, with what each runs and depends on',
     need: (a) => (a.args[0] ? null : '<id>'),
     req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/automation/pipelines/${encodeURIComponent(a.args[0])}` }),

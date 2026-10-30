@@ -457,3 +457,15 @@ phases_ei:
     status: BUILT 0.60.294
     depends_on: [KB1_choose_waits_and_keys]
     files: [clear-glass/src/driver/index.js, lib/test-sandbox.js, tests/modules/test-pipeline-gates.test.js]
+
+## ADDENDUM 2026-10-30 — AF6 the black autofill chip on dropdowns
+James, 2026-10-30: "when it shows the black autfill chip, can you make that work for drop down also?"
+Grounded: the chip (renderer/autofill-inline.js, AF3) covered input, textarea and native select (set by value, not by the text shown); Fiverr's
+dropdowns are not fields, so they had none. Decided by his axioms: §8.6 reuse (the chip, the reporter, the matcher, the driver's choose).
+phases_af6:
+  AF6_the_chip_on_dropdowns:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-AF6]
+    status: BUILT 0.60.296
+    depends_on: [EI1_every_key_and_click_paced_through_eros, KB1_choose_waits_and_keys]
+    files: [clear-glass/src/autofill/suggest.js, clear-glass/src/ipc/bridge.js]
