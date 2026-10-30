@@ -40,6 +40,8 @@ const FILES = [
   ['clear-glass/src/autofill/transfer.js', I('clear-glass/src/autofill/transfer.js'), [I('clear-glass/src/autofill/learn-pick.js'), I('clear-glass/src/autofill/matcher.js')]],
   // §DD1 0.60.298 — James, 2026-10-30: "Make sure it works for all elements. Including drop downs." The dropdown/checkbox option matcher (pure, no deps)
   ['clear-glass/src/dom/select-match.js', I('clear-glass/src/dom/select-match.js'), []],
+  // §PF1 0.60.299 — James, 2026-10-30: "make a .portfolio node, all nodes are physical files in the backend. import and export." The .portfolio node + store
+  ['clear-glass/src/autofill/portfolio.js', I('clear-glass/src/autofill/portfolio.js'), [I('clear-glass/src/storage/jaa.js')]],
   ['clear-glass/erosmancer/erosmancer-os/src/replay/index.ts', I('clear-glass/erosmancer/erosmancer-os/src/replay/index.ts'), []],
   ['clear-glass/erosmancer/erosmancer-os/src/api/server.ts', I('clear-glass/erosmancer/erosmancer-os/src/api/server.ts'), [
     I('clear-glass/erosmancer/erosmancer-os/src/replay/index.ts'),         // import { ScriptReplayQueue } — snapshot(), list() (EC10)

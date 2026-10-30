@@ -40,6 +40,7 @@ function _profile(feature, url) {
 }
 
 function autofillFor(url)      { const p = _profile('autofill', url);  return p ? { enabled: p.autofill.enabled !== false, profileId: p.autofill.profileId || null } : null; }
+function portfolioFor(url)     { const p = _profile('portfolio', url); return p ? { enabled: p.portfolio.enabled !== false, id: p.portfolio.id || null } : null; }   // §PF2 0.60.299
 function macrosOnLoad(url)     { const p = _profile('macros', url);    return p ? { enabled: p.macros.enabled !== false, autoRun: p.macros.enabled === false ? [] : [].concat(p.macros.autoRun || []) } : null; }
 function workflowsAllowed(url) { const p = _profile('workflows', url); return p ? p.workflows.enabled !== false : null; }
 function passwordPolicy(url)   { const p = _profile('passwords', url); return p ? { offer: p.passwords.offer || 'ask', autofill: p.passwords.autofill !== false, accountId: p.passwords.accountId || null } : null; }
@@ -65,4 +66,4 @@ function gatePolicy(url) {
 }
 function pipelinesAllowed(url) { const p = _profile('pipelines', url); return p ? p.pipelines.enabled !== false : null; }
 
-module.exports = { install, installed, gatePolicy, pipelinesAllowed, autofillFor, macrosOnLoad, workflowsAllowed, passwordPolicy, resumeMode, driverPolicy, meshAgent, guardianPolicy, tabMode, keepOff };
+module.exports = { install, installed, gatePolicy, pipelinesAllowed, autofillFor, portfolioFor, macrosOnLoad, workflowsAllowed, passwordPolicy, resumeMode, driverPolicy, meshAgent, guardianPolicy, tabMode, keepOff };

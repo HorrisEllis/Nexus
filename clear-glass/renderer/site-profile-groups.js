@@ -17,12 +17,12 @@
  */
 (function () {
   const FEATURE = {
-    autofill: 'Autofill', macros: 'Macros', workflows: 'Workflows', passwords: 'Passwords & account', network: 'Network',
+    autofill: 'Autofill', portfolio: 'Portfolio', macros: 'Macros', workflows: 'Workflows', passwords: 'Passwords & account', network: 'Network',
     resume: 'Resume', accessibility: 'Accessibility', driver: 'ClearDriver', gates: 'Gates', pipelines: 'Pipelines', mesh: 'Co-pilot & agent mesh', guardian: 'Guardian',
   };
   // 2026-10-30 — gates (a gate block's timing here) and pipelines (whether this site's pipelines run, PL10): James, "with the option for per site
   // pipelines". Drawn from the key table like every group; a group the key table has and this list does not is added at the end, never hidden.
-  const ORDER = ['autofill', 'macros', 'workflows', 'pipelines', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'gates', 'mesh', 'guardian'];
+  const ORDER = ['autofill', 'portfolio', 'macros', 'workflows', 'pipelines', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'gates', 'mesh', 'guardian'];   // §PF2 0.60.299 portfolio
   const ROUTE = [['direct', 'Direct'], ['transport', 'Through Snowflake'], ['block', 'Blocked']];
   const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
   const show = (v) => v === true ? 'on' : v === false ? 'off' : v == null || v === '' ? 'none' : Array.isArray(v) ? (v.length ? v.join(', ') : 'none') : String(v);

@@ -15,6 +15,9 @@
 const KEYS = Object.freeze([
   { key: 'autofill.enabled',     feature: 'autofill',  type: 'bool',     default: true,   does: 'Offer and fill forms on this site' },
   { key: 'autofill.profileId',   feature: 'autofill',  type: 'string',   default: null,   does: 'The autofill profile used on this site (none: ask)' },
+  // §PF2 0.60.299 — James, 2026-10-30: "add per site support" (for the .portfolio node, same as autofill/macros/pipeline)
+  { key: 'portfolio.enabled',    feature: 'portfolio', type: 'bool',     default: true,   does: 'Offer and fill the portfolio on this site' },
+  { key: 'portfolio.id',         feature: 'portfolio', type: 'string',   default: null,   does: 'The portfolio (.portfolio node) used on this site (none: ask)' },
   { key: 'macros.enabled',       feature: 'macros',    type: 'bool',     default: true,   does: 'Macros may run on this site' },
   { key: 'macros.autoRun',       feature: 'macros',    type: 'string[]', default: [],     does: 'Macros run when a page of this site loads' },
   { key: 'workflows.enabled',    feature: 'workflows', type: 'bool',     default: true,   does: 'Workflows triggered by visiting a page run on this site' },
@@ -40,7 +43,7 @@ const KEYS = Object.freeze([
   { key: 'pipelines.enabled',    feature: 'pipelines', type: 'bool',     default: true,   does: 'Pipelines may run on this site, including the ones that run when a page of it opens' },
   { key: 'guardian.capture',     feature: 'guardian',  type: 'bool',     default: true,   global: 'guardian.capture', does: 'Chats on this site are captured' },
 ]);
-const FEATURES = Object.freeze(['autofill', 'macros', 'workflows', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'gates', 'pipelines', 'mesh', 'guardian']);
+const FEATURES = Object.freeze(['autofill', 'portfolio', 'macros', 'workflows', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'gates', 'pipelines', 'mesh', 'guardian']);
 const BY_KEY = new Map(KEYS.map(k => [k.key, k]));
 
 function byFeature(feature) { return KEYS.filter(k => k.feature === feature); }
