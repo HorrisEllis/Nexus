@@ -320,3 +320,23 @@ an update should land (git clone, through COS, or zip side by side), he said: "f
 #   install, remove, switch and rollback, with its own outbox in COS's store, because the exe ships without lib. It is replayed at start
 #   and every minute. It goes direct to Versionium's contract, not through Idearium as first mapped: the one owner is Versionium (§5.15),
 #   and Idearium need not be running. Proof: test-versionium-everywhere VE-06.
+
+# ── ADDENDUM 2026-10-30 — one exe runs Nexus, replacing PowerShell; his update-system read (his) ─────────────────────────────────────
+# James, 2026-10-30, sending update-system.zip: "it will be what runs nexus. replacing powershell. / just one exe. then we can drag and drop
+# new systems onto it, or use idearium to have one built from the pipeline, or copilot. copoilot it an etry point. / then we can have an
+# updater using github. or this?"
+# What exists for it (read 2026-10-30): the exe (COSA6), a release zip dropped on it is imported (COSA1, the drop overlay in desktop/ui),
+# switch and rollback (COSA4), the update policy off/ask/auto, GitHub as the release source (COSA0c, cos/app/app-update.js checks
+# cos-v<x.y.z>), and COS's one recorder (cos/app/versionium.js). With docs/2026-10-24-cos-manager-phasemap.spec MG_D4 (COS is the one
+# supervisor) the exe is what runs Nexus, and lib/nexus/autopilot.js stops being the entry PowerShell starts.
+# His update-system (10 files, 876 lines: UpdateService, UpdateClient, HandshakeRegistry, EventContract, ContractTransport, WebRTCTransport,
+# a drop zone): server-push revisions over WebRTC data channels, checksum, staleness, rollback as a publish, heartbeat catch-up, a
+# location per handshake that can be revoked, and dedup. Probed by the coder with in-memory transports, two defects:
+#   (1) dedup keys on the payload's hash, so a second identical event on one location is dropped (two {} pings: 1 received; a repeated
+#       request() would time out);
+#   (2) a client that acks rejected-stale or failed makes the server force a full resend at once, with no backoff: 28,773 pushes in
+#       300 ms to a client already on the latest revision.
+# The coder's reading, TO CONFIRM: GitHub stays the source of releases for the exe (built); his update-system is the push channel between
+# machines (Bridge, :9999, which already has the signaling it needs), for pushing a revision to another device or a remote compartment,
+# once (1) keys dedup on requestId and (2) retries with the growing delay of the dependency gate (architecture-spec 0.13.0 RULE D).
+# Its envelope (location + requestId + hash) is the same shape as the handshake §5.11 asks for; it should be the one envelope, not a second.
