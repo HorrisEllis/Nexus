@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793402129299
+exported_at: 1793402929598
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793402129299
-lastSeenAt: 1793402129299
+firstSeenAt: 1793402929598
+lastSeenAt: 1793402929598
 fingerprint: null
 payload:
   for: GT1_gate_timing_for_dropdowns
@@ -203,16 +203,10 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
       - docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
-    conflicts:
-      - with: docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
-        files:
-          - clear-glass/src/ipc/bridge.js
-      - with: docs/2026-10-28-gated-flows-phasemap.spec::FG5_fiverr_gig_flow
-        files:
-          - clear-glass/src/ipc/bridge.js
+    conflicts: []
     dangling: []
     lines:
-      - layer 12 · ready
+      - layer 12
       - >-
         depends on (2): AF6_the_chip_on_dropdowns, GF5_category_and_subcategory_finished · all
         upstream 20
@@ -222,10 +216,6 @@ payload:
         SD5_the_dom_map_before_the_fill · all downstream 6 · finishing it unlocks
         GT2_the_fill_includes_and_reports_dropdowns, GT3_choose_fields_in_the_macro_editor,
         GT4_pace_between_dropdowns_and_find_again
-      - >-
-        same files as FG4_pointer_and_choose_steps with no order between them:
-        clear-glass/src/ipc/bridge.js
-      - 'same files as FG5_fiverr_gig_flow with no order between them: clear-glass/src/ipc/bridge.js'
     edges:
       - from: docs/2026-10-28-gated-flows-phasemap.spec::AF6_the_chip_on_dropdowns
         kind: declared

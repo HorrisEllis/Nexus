@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793402129301
+exported_at: 1793402929601
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793402129301
-lastSeenAt: 1793402129301
+firstSeenAt: 1793402929601
+lastSeenAt: 1793402929601
 fingerprint: null
 payload:
   for: GT3_choose_fields_in_the_macro_editor
@@ -160,27 +160,20 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
       - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
     downstream: []
-    blockedBy:
-      - docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
+    blockedBy: []
     unlocks: []
     conflicts:
       - with: docs/2026-10-28-gated-flows-phasemap.spec::FG6_blocks_ui
         files:
           - clear-glass/renderer/settings/sections/macros.js
-      - with: docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
-        files:
-          - clear-glass/src/driver/index.js
     dangling: []
     lines:
-      - layer 13 · blocked by GT1_gate_timing_for_dropdowns
+      - layer 13 · ready
       - 'depends on (1): GT1_gate_timing_for_dropdowns · all upstream 21'
       - 'needed by (0): —'
       - >-
         same files as FG6_blocks_ui with no order between them:
         clear-glass/renderer/settings/sections/macros.js
-      - >-
-        same files as GT4_pace_between_dropdowns_and_find_again with no order between them:
-        clear-glass/src/driver/index.js
     edges:
       - from: docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
         kind: declared

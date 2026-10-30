@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793402129248
+exported_at: 1793402929555
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793402129248
-lastSeenAt: 1793402129248
+firstSeenAt: 1793402929555
+lastSeenAt: 1793402929555
 fingerprint: null
 payload:
   for: FG1_keyboard_mode_switch
@@ -238,10 +238,7 @@ payload:
       - docs/2026-10-28-first-principles-phasemap.spec::FP4_what_a_key_changed
     unlocks:
       - docs/2026-10-28-gated-flows-phasemap.spec::AC2_the_look_traced_and_kept_off_by_the_backend
-    conflicts:
-      - with: docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
-        files:
-          - clear-glass/src/site-settings/keys.js
+    conflicts: []
     dangling: []
     lines:
       - layer 4 · blocked by FG_D4_tab_mode_reverted_not_blocked, FP4_what_a_key_changed
@@ -249,9 +246,6 @@ payload:
       - >-
         needed by (1): AC2_the_look_traced_and_kept_off_by_the_backend · finishing it unlocks
         AC2_the_look_traced_and_kept_off_by_the_backend
-      - >-
-        same files as GT4_pace_between_dropdowns_and_find_again with no order between them:
-        clear-glass/src/site-settings/keys.js
     edges:
       - from: docs/2026-10-28-gated-flows-phasemap.spec::FG_D4_tab_mode_reverted_not_blocked
         kind: declared

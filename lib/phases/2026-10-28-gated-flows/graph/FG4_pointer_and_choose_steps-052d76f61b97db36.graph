@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793402129255
+exported_at: 1793402929561
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793402129255
-lastSeenAt: 1793402129255
+firstSeenAt: 1793402929561
+lastSeenAt: 1793402929561
 fingerprint: null
 payload:
   for: FG4_pointer_and_choose_steps
@@ -217,13 +217,7 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::FG3_gate_per_step
     unlocks: []
     conflicts:
-      - with: docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
-        files:
-          - clear-glass/src/ipc/bridge.js
       - with: docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
-        files:
-          - clear-glass/src/ipc/bridge.js
-      - with: docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
         files:
           - clear-glass/src/ipc/bridge.js
       - with: docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
@@ -238,13 +232,7 @@ payload:
       - 'depends on (2): FG2_dropdown_choose, FG3_gate_per_step · all upstream 7'
       - 'needed by (1): FG5_fiverr_gig_flow · all downstream 2'
       - >-
-        same files as GT1_gate_timing_for_dropdowns with no order between them:
-        clear-glass/src/ipc/bridge.js
-      - >-
         same files as GT2_the_fill_includes_and_reports_dropdowns with no order between them:
-        clear-glass/src/ipc/bridge.js
-      - >-
-        same files as GT4_pace_between_dropdowns_and_find_again with no order between them:
         clear-glass/src/ipc/bridge.js
       - 'same files as GT5_service_type with no order between them: clear-glass/src/ipc/bridge.js'
       - >-

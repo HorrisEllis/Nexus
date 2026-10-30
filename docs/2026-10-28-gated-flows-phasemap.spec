@@ -507,7 +507,7 @@ phases_gt:
   GT1_gate_timing_for_dropdowns:
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-GT1]
-    status: OPEN
+    status: BUILT 0.60.318
     depends_on: [AF6_the_chip_on_dropdowns, GF5_category_and_subcategory_finished]
     files: [clear-glass/src/page/element-gate.js, clear-glass/src/ipc/bridge.js, tests/modules/test-pipeline-gates.test.js]
   GT2_the_fill_includes_and_reports_dropdowns:
@@ -534,9 +534,9 @@ phases_gt4:
   GT4_pace_between_dropdowns_and_find_again:
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-GT4]
-    status: OPEN
+    status: BUILT 0.60.318
     depends_on: [GT1_gate_timing_for_dropdowns]
-    files: [clear-glass/src/driver/index.js, clear-glass/src/site-settings/keys.js, clear-glass/src/ipc/bridge.js, tests/modules/test-pipeline-gates.test.js]
+    files: [clear-glass/src/driver/index.js, clear-glass/src/site-settings/keys.js, clear-glass/src/ipc/bridge.js, clear-glass/src/page/element-gate.js, tests/modules/test-choose-refind-glass.test.js]
   GT5_service_type:
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-GT5]
@@ -549,3 +549,12 @@ phases_gt4:
     status: OPEN
     depends_on: [GT5_service_type]
     files: [clear-glass/src/autofill/gig-fields.js, clear-glass/src/autofill/gig.js, clear-glass/src/ipc/bridge.js]
+
+## ADDENDUM 2026-10-30 (c) — GT1 and GT4 built (0.60.318)
+James, 2026-10-30: "yes fix it. lets get this working already". GT1 then GT4, in DAG order. Built as specced, with two differences, both said:
+- GT1's test is tests/modules/test-choose-refind-glass.test.js (GR-04, GR-05), not test-pipeline-gates (which stays green, 7/7). The `after`
+  field (a gate that depends on another) is carried by gateTiming; the one dependent pair today, category → subcategory, is ordered in the
+  bridge's category part (pace), not by a general `after` walker. A general one is GT3's, with the step fields.
+- GT4 also excludes Clear Glass's own spotlight overlay from a dropdown's options: the live fixture read its label "open undefined" as the
+  only option (found by GR-03; a defect of choose's scan since 0.60.222b's plain-div fallback).
+Proof: test-choose-refind-glass 7/7 on a live page; against the old driver GR-01 fails with his exact error.

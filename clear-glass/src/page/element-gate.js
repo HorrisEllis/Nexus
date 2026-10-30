@@ -25,6 +25,9 @@
  *   sameElementScript(a, b)    a page expression → do two "where"s name the same element (a site gate applies to the write)
  *   evaluate(exp, state, OM)   { open, saw }
  *   settle(check, opts)        read until open (timeoutMs), then again after settleMs: a page that puts its own value back is caught
+ *   gateTiming(step, site)     a part's timing: { timeoutMs, settleMs, every, retries, backoff: { baseMs, factor, capMs }, after } (GT1)
+ *   quietScript(quietMs, capMs) a page expression → a promise of { quiet, waitedMs, mutations }: no DOM change for quietMs (GT4), capped
+ *   backoffMs(timing, n)       the wait before try n+1: baseMs × factor^n, capped (architecture-spec RULE D)
  *   matchSite(map, url)        his gates for this page: map is { [origin]: [gate] }
  */
 
@@ -152,10 +155,43 @@ async function settle(check, { timeoutMs = 2500, settleMs = 400, every = 150 } =
   return d.open ? { open: true, saw: d.saw, held: true } : { open: false, saw: `it showed ${c.saw}, then the page changed it: ${d.saw}`, held: false };
 }
 
+// 2026-10-30 GT1 — James: "wheich needs more timing for the gates for the drop down menus." A gate's timing is the part's, not two constants.
+// Text gates keep today's (2500 ms, 400 ms, one retry, no wait between); a choice waits as long as choose waits for its options (8 s), is
+// tried three times, and waits longer before each retry (architecture-spec RULE D: "increasing the timing little by little"). The site's
+// gates.timeoutMs / gates.settleMs (his keys) lift the floor; the step's own fields win over both (USER_AUTONOMY).
+const TIMING = Object.freeze({
+  text:   { timeoutMs: 2500, settleMs: 400, every: 150, retries: 1, backoff: { baseMs: 0,   factor: 1, capMs: 0 } },
+  choice: { timeoutMs: 8000, settleMs: 600, every: 200, retries: 2, backoff: { baseMs: 600, factor: 2, capMs: 4000 } },
+});
+function gateTiming(step = {}, site = {}) {
+  const s = step || {}, kind = s.kind === 'choice' ? 'choice' : 'text', d = TIMING[kind], st = site || {};
+  const num = (v, min, max) => (Number.isFinite(Number(v)) && v !== null && v !== '' ? Math.max(min, Math.min(max, Number(v))) : null);
+  const pick = (k, min, max) => { const own = num(s[k], min, max); if (own != null) return own; const fromSite = num(st[k], min, max); return fromSite != null ? Math.max(fromSite, d[k]) : d[k]; };
+  const b = s.backoff || {};
+  return {
+    kind, timeoutMs: pick('timeoutMs', 100, 60000), settleMs: pick('settleMs', 0, 10000), every: num(s.every, 50, 5000) || d.every,
+    retries: num(s.retries, 0, 10) != null ? num(s.retries, 0, 10) : d.retries,
+    backoff: { baseMs: num(b.baseMs, 0, 60000) != null ? num(b.baseMs, 0, 60000) : d.backoff.baseMs, factor: num(b.factor, 1, 10) || d.backoff.factor, capMs: num(b.capMs, 0, 120000) != null ? num(b.capMs, 0, 120000) : d.backoff.capMs },
+    after: s.after || null,
+  };
+}
+// 2026-10-30 GT4 — the page has finished re-rendering when nothing in it has changed for quietMs; never waits past capMs (a page that never
+// stops, an animated banner, is said: quiet false)
+function quietScript(quietMs = 400, capMs = 4000) {
+  return `new Promise(function(done){ var t0 = Date.now(), last = Date.now(), n = 0;
+  var mo = new MutationObserver(function(m){ n += m.length; last = Date.now(); });
+  mo.observe(document.documentElement, { subtree: true, childList: true, attributes: true, characterData: true });
+  (function tick(){ var now = Date.now();
+    if (now - last >= ${Number(quietMs) || 0}) { mo.disconnect(); return done({ quiet: true, waitedMs: now - t0, mutations: n }); }
+    if (now - t0 >= ${Number(capMs) || 0}) { mo.disconnect(); return done({ quiet: false, waitedMs: now - t0, mutations: n }); }
+    setTimeout(tick, 50); })(); })`;
+}
+function backoffMs(t, n) { const b = (t && t.backoff) || {}; if (!b.baseMs) return 0; return Math.min(b.capMs || Infinity, Math.round(b.baseMs * Math.pow(b.factor || 1, n))); }
+
 function originOf(url) { try { const u = new URL(url); return /^https?:$/.test(u.protocol) ? `${u.protocol}//${u.host}` : null; } catch (_) { return null; } }
 function matchSite(map = {}, url) {
   const o = originOf(url); if (!o || !map || !Array.isArray(map[o])) return [];
   return map[o].filter(g => g && (!g.page || _glob(g.page, url)));
 }
 
-module.exports = { MODULE_ID, VERSION, WRITES, WHAT, WHERE, derive, normalize, validate, stateScript, sameElementScript, evaluate, settle, matchSite, originOf, isXPath: _isXPath };
+module.exports = { MODULE_ID, VERSION, WRITES, WHAT, WHERE, TIMING, derive, normalize, validate, stateScript, sameElementScript, evaluate, settle, gateTiming, backoffMs, quietScript, matchSite, originOf, isXPath: _isXPath };

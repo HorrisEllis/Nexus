@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793402129304
+exported_at: 1793402929603
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793402129304
-lastSeenAt: 1793402129304
+firstSeenAt: 1793402929603
+lastSeenAt: 1793402929603
 fingerprint: null
 payload:
   for: GT5_service_type
@@ -191,8 +191,7 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
     downstream:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
-    blockedBy:
-      - docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
+    blockedBy: []
     unlocks:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
     conflicts:
@@ -209,7 +208,7 @@ payload:
           - clear-glass/src/autofill/gig.js
     dangling: []
     lines:
-      - layer 14 · blocked by GT4_pace_between_dropdowns_and_find_again
+      - layer 14 · ready
       - 'depends on (1): GT4_pace_between_dropdowns_and_find_again · all upstream 22'
       - >-
         needed by (1): GT6_gig_metadata_bullets_per_tab · finishing it unlocks

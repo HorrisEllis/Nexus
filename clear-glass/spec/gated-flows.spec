@@ -751,3 +751,10 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node"
     - "per module: its acceptance lines, the UI ones in Clear Glass"
+
+# ── ADDENDUM 2026-10-30 (0.60.318) — MOD-GT1 and MOD-GT4 built ─────────────────────────────────────────────────────────────────────────
+# MOD-GT1: element-gate.js exports gateTiming(step, site) and backoffMs(timing, n); TIMING.text = today's, TIMING.choice = 8000/600/200, 2
+# retries, backoff 600 × 2^n capped 4000. bridge.js gated(key, doIt, check, retries, kind) reads it; each try is on the gate record (each).
+# MOD-GT4: driver/index.js choose: findScript(shows, reuse) re-run by ensureMark before each open and read-back; lost() names the mark, the
+# text and the page's dropdowns. element-gate.js quietScript(quietMs, capMs). Site key gates.betweenDropdownsMs (int, 0..15000, 1200).
+# The options scan excludes [id^="__cg_"] (Clear Glass's spotlight). Acceptance met: tests/modules/test-choose-refind-glass.test.js GR-01..07.

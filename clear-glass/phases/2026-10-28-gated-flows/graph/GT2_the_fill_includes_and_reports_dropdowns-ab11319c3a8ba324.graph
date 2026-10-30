@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793402129300
+exported_at: 1793402929599
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793402129300
-lastSeenAt: 1793402129300
+firstSeenAt: 1793402929599
+lastSeenAt: 1793402929599
 fingerprint: null
 payload:
   for: GT2_the_fill_includes_and_reports_dropdowns
@@ -206,8 +206,7 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
       - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
     downstream: []
-    blockedBy:
-      - docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
+    blockedBy: []
     unlocks: []
     conflicts:
       - with: docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
@@ -216,9 +215,6 @@ payload:
       - with: docs/2026-10-28-gated-flows-phasemap.spec::FG5_fiverr_gig_flow
         files:
           - clear-glass/src/autofill/gig.js
-          - clear-glass/src/ipc/bridge.js
-      - with: docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
-        files:
           - clear-glass/src/ipc/bridge.js
       - with: docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
         files:
@@ -230,7 +226,7 @@ payload:
           - clear-glass/src/autofill/gig.js
     dangling: []
     lines:
-      - layer 13 · blocked by GT1_gate_timing_for_dropdowns
+      - layer 13 · ready
       - 'depends on (1): GT1_gate_timing_for_dropdowns · all upstream 21'
       - 'needed by (0): —'
       - >-
@@ -239,9 +235,6 @@ payload:
       - >-
         same files as FG5_fiverr_gig_flow with no order between them:
         clear-glass/src/autofill/gig.js, clear-glass/src/ipc/bridge.js
-      - >-
-        same files as GT4_pace_between_dropdowns_and_find_again with no order between them:
-        clear-glass/src/ipc/bridge.js
       - >-
         same files as GT5_service_type with no order between them: clear-glass/src/ipc/bridge.js,
         clear-glass/src/autofill/gig.js

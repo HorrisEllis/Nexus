@@ -2584,18 +2584,27 @@ class IpcBridge {
     // part again (retries); still closed → his site keys for the part, gated the same way; else the part says what its gate saw.
     r.gates = [];
     const C = gigChecks(this.driver, agentId);
-    const gated = async (key, doIt, check, retries = 1) => {
-      let g = null;
-      for (let t = 0; t <= retries; t++) {
+    // 2026-10-30 GT1 — the gate's timing is the part's (element-gate gateTiming): a choice waits for its options and retries with a growing
+    // delay; text keeps today's. His site keys gates.timeoutMs / gates.settleMs lift the floor. Every try, what it saw and the wait before
+    // the next are on the part's gate record, so a run says how long it waited and why (§1.2).
+    const EG = require('../page/element-gate');
+    const siteTiming = { timeoutMs: this.siteSettings && read && read.url ? this.siteSettings.get(read.url, 'gates.timeoutMs') : null,
+      settleMs: this.siteSettings && read && read.url ? this.siteSettings.get(read.url, 'gates.settleMs') : null };
+    const gated = async (key, doIt, check, retries = null, kind = 'text') => {
+      const tm = EG.gateTiming({ kind, ...(retries != null ? { retries } : {}) }, siteTiming);
+      const triesSaw = []; let g = null;
+      for (let t = 0; t <= tm.retries; t++) {
+        if (t > 0) { const wait = EG.backoffMs(tm, t - 1); if (wait) await new Promise(res => setTimeout(res, wait)); triesSaw[t - 1].waitMs = wait; }
         const rec = await doIt(t);
         // a page that does not answer the read at all is unknown: recorded as unchecked, never a pass and never retried as closed (NC0)
         const first = await (async () => { try { return await check(); } catch (_) { return null; } })();
         if (first && first.unread) { r.gates.push({ key, unchecked: first.saw, tries: t + 1 }); return rec; }
-        g = await gigGate(check);
-        if (g.open) { r.gates.push({ key, open: true, tries: t + 1, saw: g.saw }); return rec; }
+        g = await gigGate(check, { timeoutMs: tm.timeoutMs, settleMs: tm.settleMs, every: tm.every });
+        triesSaw.push({ try: t + 1, open: g.open, saw: g.saw });
+        if (g.open) { r.gates.push({ key, open: true, tries: t + 1, saw: g.saw, kind: tm.kind, ...(t ? { each: triesSaw } : {}) }); return rec; }
       }
-      r.gates.push({ key, open: false, tries: retries + 1, saw: g && g.saw });
-      throw new Error(`its gate stayed closed: ${g && g.saw}`);
+      r.gates.push({ key, open: false, tries: tm.retries + 1, saw: g && g.saw, kind: tm.kind, each: triesSaw });
+      throw new Error(`its gate stayed closed after ${tm.retries + 1} tries: ${triesSaw.map(x => `${x.try}: ${x.saw}`).join(' · ')}`);
     };
     const friction = async (part, value, err, check) => {
       const kind = part === 'category' || /\.(delivery|revisions)$/.test(part) ? 'choice' : part === 'tags' || part === 'faq' || part === 'requirement' ? 'run' : 'text';
@@ -2651,13 +2660,13 @@ class IpcBridge {
         if (learned) {
           check = isChoice ? C.choice({ selector: learned.selector }, value) : C.text({ selector: learned.selector }, value);
           await gated(part, (t) => isChoice ? this.driver.exec({ agentId, action: 'choose', selector: learned.selector, option: value, by: 'person' })
-            : this.driver.exec({ agentId, action: t ? 'insertText' : 'setValue', selector: learned.selector, ...(t ? { text: value } : { value }), by: 'person' }), check);
+            : this.driver.exec({ agentId, action: t ? 'insertText' : 'setValue', selector: learned.selector, ...(t ? { text: value } : { value }), by: 'person' }), check, null, isChoice ? 'choice' : 'text');
           r.learned.push({ key: part, selector: learned.selector }); continue;
         }
         // 0.60.286 GM2 — revisions chosen in the tier's column on the Revisions row; price typed in the Price row; each gated
         if (part.endsWith('.revisions')) {
           check = C.choice({ column, row: 'Revisions' }, value);
-          const c = await gated(part, () => this.driver.exec({ agentId, action: 'choose', column, row: 'Revisions', option: value, by: 'person' }), check);
+          const c = await gated(part, () => this.driver.exec({ agentId, action: 'choose', column, row: 'Revisions', option: value, by: 'person' }), check, null, 'choice');
           r.dropdowns.push({ key: part, ok: true, option: c.option, via: 'built-in' }); continue;
         }
         if (part.endsWith('.price')) {
@@ -2701,10 +2710,24 @@ class IpcBridge {
           const GF = require('../autofill/gig-fields');
           const shows = async (t) => { const x = await this.driver.exec({ agentId, action: 'eval', code: GF.shownScript(t), by: 'person' }); return !!(x && x.result); };
           const picked = [];
+          // 2026-10-30 GT4 — James: "more timing in between drop down menus." After the category holds, the page re-renders its section and
+          // loads the subcategory's list: the fill waits his betweenDropdownsMs, then for the DOM to go quiet and SELECT A SUBCATEGORY to show
+          // (GATE-GT4-001/002), before the next choose. choose itself finds its dropdown again if the re-render took its mark (GATE-GT4-003).
+          const pace = async () => {
+            const between = (this.siteSettings && read && read.url ? this.siteSettings.get(read.url, 'gates.betweenDropdownsMs') : null) ?? 1200;
+            await new Promise(res => setTimeout(res, between));
+            const q = await this.driver.exec({ agentId, action: 'eval', code: EG.quietScript(siteTiming.settleMs || 400, 4000), by: 'person' }).catch(() => null);
+            const until = Date.now() + EG.gateTiming({ kind: 'choice' }, siteTiming).timeoutMs;
+            while (Date.now() < until && !(await shows('SELECT A SUBCATEGORY'))) await new Promise(res => setTimeout(res, 250));
+            return { betweenMs: between, quiet: q && q.result, subcategoryShown: await shows('SELECT A SUBCATEGORY') };
+          };
           await gated(part, async () => {
-            if (await shows('SELECT A CATEGORY')) { const c1 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A CATEGORY', option: gig.category, by: 'person' }); picked.push(c1.option); }
+            if (await shows('SELECT A CATEGORY')) {
+              const c1 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A CATEGORY', option: gig.category, by: 'person' }); picked.push(c1.option);
+              if (gig.subcategory) r.paced = await pace();
+            }
             if (gig.subcategory && await shows('SELECT A SUBCATEGORY')) { const c2 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A SUBCATEGORY', option: gig.subcategory, by: 'person' }); picked.push(c2.option); }
-          }, check);
+          }, check, null, 'choice');
           const rec = { key: part, ok: true, option: picked.length ? picked.join(' > ') : value, via: 'built-in', why: viaMacro.why, ...(picked.length < (gig.subcategory ? 2 : 1) ? { kept: 'what the page already showed' } : {}) };
           r.dropdowns.push(rec); continue;
         }
