@@ -30,14 +30,14 @@ const KEYS = Object.freeze([
   { key: 'guardian.listen',      feature: 'guardian',  type: 'bool',     default: true,   global: 'guardian.listen', does: "Guardian's listeners run on this site" },
   // 0.60.273 FG1 — James, 2026-10-28: "need the accessability settings, per site. look at picture 2." (his Fiverr page after a Tab)
   { key: 'accessibility.tabMode', feature: 'accessibility', type: 'enum', values: ['site', 'off'], default: 'site', does: 'What the site turns on when Tab is pressed (its keyboard / accessibility look): Site leaves it, Off undoes it (Tab still moves focus)' },
-  // 2026-10-30 UG2 — James: "it needs to be universal for all dom elements ... per site settings". Every write the driver or the DOM mesh makes is gated.
-  { key: 'gates.enabled',        feature: 'gates',     type: 'bool',     default: true,   does: 'Every field, dropdown and box written on this site is checked afterwards (its gate)' },
-  { key: 'gates.settleMs',       feature: 'gates',     type: 'int',      min: 0,    max: 10000,  default: 400,  does: 'How long the page settles before a gate is read again' },
-  { key: 'gates.timeoutMs',      feature: 'gates',     type: 'int',      min: 100,  max: 60000,  default: 2500, does: 'How long a gate waits to open' },
-  { key: 'gates.retries',        feature: 'gates',     type: 'int',      min: 0,    max: 5,      default: 1,    does: 'How many more times a write is made when its gate stays closed' },
+  // 2026-10-30 PL6/PL10 — James: "gates are for the pipelines for macro atuomation" · "with the option for per site pipelines". A gate block's timing
+  // on this site, and whether this site's pipelines run (0.60.292's gates.enabled / gates.retries, for the archived write gates, are gone).
+  { key: 'gates.settleMs',       feature: 'gates',     type: 'int',      min: 0,    max: 10000,  default: 400,  does: 'How long the page settles before a gate block is read again' },
+  { key: 'gates.timeoutMs',      feature: 'gates',     type: 'int',      min: 100,  max: 60000,  default: 2500, does: 'How long a gate block waits to open, unless the step says' },
+  { key: 'pipelines.enabled',    feature: 'pipelines', type: 'bool',     default: true,   does: 'Pipelines may run on this site, including the ones that run when a page of it opens' },
   { key: 'guardian.capture',     feature: 'guardian',  type: 'bool',     default: true,   global: 'guardian.capture', does: 'Chats on this site are captured' },
 ]);
-const FEATURES = Object.freeze(['autofill', 'macros', 'workflows', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'gates', 'mesh', 'guardian']);
+const FEATURES = Object.freeze(['autofill', 'macros', 'workflows', 'passwords', 'network', 'resume', 'accessibility', 'driver', 'gates', 'pipelines', 'mesh', 'guardian']);
 const BY_KEY = new Map(KEYS.map(k => [k.key, k]));
 
 function byFeature(feature) { return KEYS.filter(k => k.feature === feature); }

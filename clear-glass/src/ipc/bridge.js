@@ -1040,6 +1040,14 @@ class IpcBridge {
     if (site && !site.enabled) return { error: `macros are off for ${new URL(url).origin} (its site settings, macros.enabled)` };
     const BA = require('../../../lib/agent-tools/tools/browser/browser-action.js');
     const runStep = async ({ action, data = {} }) => {
+      // 2026-10-30 PL9 — a macro step that runs a workflow or a pipeline goes to this Clear Glass's own engine (the one Settings › Automation and
+      // Pipelines show): macros → workflows → pipelines → macros, one engine, one store
+      if (action === 'run_workflow' || action === 'run_pipeline') {
+        const A = this.mesh && this.mesh._automation; if (!A) return { error: 'the automation engine is not running here' };
+        const step = action === 'run_workflow' ? { type: 'workflow', config: { workflow: data.name, vars: data.vars || {} } } : { type: 'pipeline', config: { pipeline: data.name, vars: data.vars || {} } };
+        const r = await A.runStep(step, { vars: data.vars || {} });
+        return r && r.ok ? { ok: true, action, result: r.output } : { error: (r && r.error) || 'it did not run' };
+      }
       const call = BA.driverCall(action, data); if (!call) return BA.execute({ action, data });
       if (!this.driver) return { error: 'driver not wired' };
       try { return { ok: true, action, result: await this.driver.exec({ agentId, ...call, by: 'person' }) }; } catch (err) { return { error: err.message }; }
@@ -2523,9 +2531,7 @@ class IpcBridge {
     const gated = async (key, doIt, check, retries = 1) => {
       let g = null;
       for (let t = 0; t <= retries; t++) {
-        let rec;
-        // 2026-10-30 UG2 — the driver gates each write itself now; its closed gate is this part's closed gate, listed the same way
-        try { rec = await doIt(t); } catch (err) { if (err && err.code === 'GATE_CLOSED') { r.gates.push({ key, open: false, tries: err.gate.tries, saw: err.gate.saw, at: 'the write' }); throw new Error(`its gate stayed closed: ${err.gate.saw}`); } throw err; }
+        const rec = await doIt(t);
         g = await gigGate(check);
         if (g.open) { r.gates.push({ key, open: true, tries: t + 1, saw: g.saw }); return rec; }
       }

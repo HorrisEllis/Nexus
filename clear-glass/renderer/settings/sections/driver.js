@@ -22,7 +22,7 @@
   }
 
   // 2026-10-30 UG5 — James: "it needs to be universal for all dom elements ... a way to create them per page using the element picker, per site
-  // settings, macros and automation features." Every write is gated by its own check; these are his, made with the picker (Gate this element).
+  // settings, macros and automation features." · "gates are for the pipelines for macro atuomation": his gates, made with the picker, used as blocks.
   const lineOf = (g) => { const w = Object.entries(g).filter(([k]) => !['id', 'label', 'page', 'selector', 'xpath'].includes(k)).map(([k, v]) => v === '{{value}}' ? 'holds what was typed' : `${k} ${JSON.stringify(v)}`); return w.join(', '); };
   async function gatesPane() {
     const sg = await cg.shortcuts.gateList().then(r => (r && r.siteGates) || {}).catch(() => ({}));
@@ -32,7 +32,7 @@
         btn('Remove', async () => { const r = await call(() => cg.shortcuts.gateRemove(origin, g.id), 'remove gate'); if (r && !r.error) { toast(`gate ${g.id} removed`); goto('driver'); } }, 'sm ghost')));
     }
     const check = btn('Check gates on this page', async () => { const r = await call(() => cg.shortcuts.gateCheck({}), 'check gates'); if (r) toast(r.error ? r.error : `${r.open ? 'open' : 'closed'} · ${r.checks} gate(s) · ${r.saw}`, r.open ? undefined : 'bad'); }, 'sm');
-    return pane({ title: 'Gates on sites', sub: 'Every field, dropdown and box the driver or the autofill writes is read back and read again after the page settles. Add your own: pick an element on a page and press “Gate this element”. Each site’s gate timing is in Site settings › Gates.', flush: true,
+    return pane({ title: 'Gates on sites', sub: 'A gate is a block your pipelines, workflows and macros wait on: a condition on an element of a page. Make one: pick an element on a page and press “Gate this element”. Use it by its id in a pipeline task’s gate, a workflow’s “Wait at a gate”, or a macro step’s gate (use). Each site’s gate timing is in Site settings › Gates.', flush: true,
       body: [...(rows.length ? rows : [row('No gates of yours yet', 'Pick an element on a page, then Gate this element.', null)]), row('Check', 'Run every gate of yours on the page open now', check)] });
   }
 

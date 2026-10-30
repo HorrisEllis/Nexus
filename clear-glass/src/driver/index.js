@@ -37,11 +37,7 @@ class ClearDriver {
 
     let result;
     try {
-      // 2026-10-30 UG2 — James: "it needs to be universal for all dom elements." Every write, for every caller (fills, macros, workflows,
-      // site keys, agents), is gated here: its derived expectation, his site gates for that element, and any gate the call carries.
-      const again = { ...args };
       result = await this._dispatch(action, agentId, args, execId);
-      if (require('../page/element-gate').WRITES.has(action) && !again.read) result = await this._gated(action, agentId, again, result, () => this._dispatch(action, agentId, { ...again }, execId));
       this.sse.emit('driver.result', { execId, action, agentId, result, ts: Date.now() });
     } catch (err) {
       this.sse.emit('driver.error', { execId, action, agentId, error: err.message, ts: Date.now() });
@@ -1076,7 +1072,7 @@ class ClearDriver {
     return r;
   }
 
-  // ── 2026-10-30 UG2/UG4 — gates (src/page/element-gate.js) ─────────────────────────────────────────────────────────────────────────────
+  // ── 2026-10-30 UG4/PL6 — reading a gate (src/page/element-gate.js) for a pipeline, workflow or macro step ─────────────────────────────────────────────────────────────────────────────
   // getSiteGates: main hands the options store's siteGates in (src/main/index.js); none → his gates are not applied, and the result says so
   _siteGates() { try { return (typeof this.getSiteGates === 'function' && this.getSiteGates()) || {}; } catch (_) { return {}; } }
   _gatePolicy(url) {
@@ -1103,43 +1099,8 @@ class ClearDriver {
     for (const e of exps) { let r; try { r = await this._gateRead(agentId, e); } catch (err) { r = { open: false, saw: err.message }; } outs.push({ ...r, label: e.label || e.why || null }); }
     return { open: outs.every(o => o.open), saw: outs.map(o => (o.label ? `${o.label}: ` : '') + o.saw).join(' · ') };
   }
-  async _gated(action, agentId, args, result, redo) {
-    const EG = require('../page/element-gate');
-    const wc = this._getWebContents(agentId);
-    let url = ''; try { url = wc.getURL(); } catch (_) {}
-    const pol = this._gatePolicy(url);
-    if (args.gate === false) {
-      if (args._agentCall) throw Object.assign(new Error('an agent cannot turn a write\'s gate off'), { code: 'GATE_REFUSED' });
-      return { ...(result || {}), gate: { skipped: 'the caller turned this write\'s gate off (gate:false)' } };
-    }
-    if (!pol.enabled) return { ...(result || {}), gate: { off: 'gates are off on this site (Site settings › Gates)' } };
-    const written = args.text != null ? args.text : args.value != null ? args.value : args.option != null ? args.option : null;
-    const exps = [];
-    const d = EG.derive(action, args, result || {}); if (d) exps.push(d);
-    if (args.gate && typeof args.gate === 'object') { const g = EG.normalize(args.gate, written); if (EG.validate(g).ok) exps.push({ ...g, label: 'the call\'s gate' }); }
-    // his gates on this site whose element is the one written
-    const where = d && (d.selector || d.xpath || d.cgId) ? { selector: d.selector, xpath: d.xpath, cgId: d.cgId } : (args.selector ? { selector: args.selector } : null);
-    const mine = EG.matchSite(this._siteGates(), url);
-    if (where) for (const g0 of mine) {
-      const g = EG.normalize(g0, written);
-      if (!(g.selector || g.xpath || g.cgId)) continue;
-      let same = false; try { same = await this._evalJs(wc, EG.sameElementScript(g, where.selector && EG.isXPath(where.selector) ? { xpath: where.selector } : where)); } catch (_) {}
-      if (same) exps.push({ ...g, label: `your gate${g.label ? ` "${g.label}"` : ''}` });
-    }
-    if (!exps.length) return { ...(result || {}), gate: { none: `nothing to check after ${action} here: pick the element and Gate this element, or the next step's gate covers it` } };
-    // a page that does not answer the read at all leaves the write unchecked, said: unknown is never a pass nor a closed gate (NC0)
-    const domExp = exps.find(e => !e.choice && !e.checkAt);
-    if (domExp) { let probe = null; try { probe = await this._evalJs(wc, EG.stateScript(domExp)); } catch (_) {} if (probe == null) return { ...(result || {}), gate: { unchecked: 'the page did not answer the gate\'s read' } }; }
-    let g = null;
-    for (let t = 0; t <= pol.retries; t++) {
-      if (t) { await this._sleep(150); result = await redo(); }
-      g = await EG.settle(() => this._gateAll(agentId, exps), pol);
-      if (g.open) return { ...(result || {}), gate: { open: true, saw: g.saw, tries: t + 1, checks: exps.length } };
-    }
-    const e = new Error(`${action}: its gate stayed closed after ${pol.retries + 1} tries — ${g.saw}`);
-    e.code = 'GATE_CLOSED'; e.gate = { open: false, saw: g.saw, tries: pol.retries + 1 };
-    throw e;
-  }
+  // (0.60.292's _gated — an automatic read-back after every write — is archived: _archive/2026-10-30-write-gates/. A gate is a block a
+  // pipeline, workflow or macro waits on, his correction of 2026-10-30; this driver only reads one, through the gate action below.)
   // the gate action: { gate } checks that gate; { id } one of his; { all: true } every gate of his on this page. Nothing is written.
   async _gateCheck(agentId, { gate = null, id = null, all = false, timeoutMs = null } = {}) {
     const EG = require('../page/element-gate');

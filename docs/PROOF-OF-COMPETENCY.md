@@ -1456,3 +1456,15 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
 - **GF-04:** a description box the fill cannot find by its words is filled through the key he bound to it (part: description), and read
   back.
 - **Check it:** `node tests/modules/test-gig-all-fields.test.js` → 5 passed.
+
+### 2026-10-30 — 0.60.293: "gates are for the pipelines for macro atuomation" · "i build bottom up, and interconnected, and compound leverage"
+- **His words:** "what? gates are for the pipelines for macro atuomation", then "make sure macros, automations, and pipelines are
+  interconnected. i build bottom up, and interconnected, and compound leverage".
+- **The call, against the alternative.** The coder had pushed a check down into every write the browser makes: automatic and hidden, and
+  it slowed every write. He corrected it to the design his record already held: a gate is a building block that flows wait on. He also
+  asked for the three automation layers to run each other. The result is one block and one engine. "Wait at a gate" is written once, and
+  it is a workflow step, a pipeline task and a pipeline task's gate. Macros run workflows, workflows run pipelines, pipelines run macros
+  and other pipelines. That is compound leverage in the literal sense: each new piece is usable from every layer at once.
+- **Check it:** `node tests/modules/test-pipeline-gates.test.js` → 6 passed. In PG-04, a macro runs a workflow, which runs a pipeline,
+  whose task runs a macro gated on a gate he made with the picker. The value is typed at the bottom of the chain, and the run shows up in
+  the same store the Pipelines screen reads.

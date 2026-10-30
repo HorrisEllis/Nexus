@@ -7,7 +7,8 @@
  * Spec: docs/automation-pipelines.spec MOD-PIPELINE-UI · Map: docs/2026-10-29-pipelines-phasemap.spec PL4
  *
  * A pipeline is tasks with dependencies; each task runs one of what he already has — a macro, a workflow, a question to an agent (any
- * agent, each task its own), a Nexus command — and may carry a gate (what its output must contain) and retries. Run shows the checklist:
+ * agent, each task its own), a Nexus command, another pipeline, a wait at a gate — and may carry a gate (what its output must contain, and
+ * 2026-10-30 PL7/PL11 an element gate: one of his gates or a condition on an element) and retries; and may belong to a site (PL10). Run shows the checklist:
  * ✓ done, ▸ running, · waiting, ✗ failed, ⊘ blocked (by the task that failed). Everything goes through the automation engine's door
  * (wire('/automation/pipelines…')); nothing is kept here.
  */
@@ -19,13 +20,45 @@
     { value: 'workflow', label: 'Run a workflow', what: 'Workflow name', hint: 'as in Settings › Automation' },
     { value: 'agent', label: 'Ask an agent', what: 'Agent', hint: 'claude, chatgpt, deepseek, ollama …' },
     { value: 'command', label: 'Call a Nexus system', what: 'System', hint: 'copilot, idearium, cortex …' },
+    // 2026-10-30 PL9/PL11 — James: "make sure macros, automations, and pipelines are interconnected" · "gates are for the pipelines for macro atuomation"
+    { value: 'pipeline', label: 'Run a pipeline', what: 'Pipeline name', hint: 'another pipeline (never this one)' },
+    { value: 'gate', label: 'Wait at a gate', what: 'Your gate (id)', hint: 'from Settings › ClearDriver › Gates on sites' },
   ];
+  // a task's element gate: what must hold on the page after the task (one of his gates, or a condition on an element)
+  const MUSTS = [['', 'no element gate'], ['value', 'holds…'], ['equals', 'holds exactly…'], ['matches', 'matches the pattern…'], ['shows', 'shows the choice…'],
+    ['checked', 'is ticked'], ['unchecked', 'is clear'], ['text', 'contains the text…'], ['visible', 'is visible'], ['gone', 'is gone'], ['page_text', 'the page shows…'], ['url', 'the address matches…']];
+  function elementOf(gid, sel, must, val) {
+    if (gid) return { gateId: gid };
+    if (!must) return null;
+    const w = sel ? (/^(\(|\/)/.test(sel) ? { xpath: sel } : { selector: sel }) : {};
+    if (must === 'checked') return { ...w, checked: true };
+    if (must === 'unchecked') return { ...w, checked: false };
+    if (must === 'visible') return { ...w, visible: true };
+    if (must === 'gone') return { ...w, gone: true };
+    if (must === 'page_text') return { text: val };
+    if (must === 'url') return { url: val };
+    return { ...w, [must]: val };
+  }
+  function mustOf(e) {
+    if (!e || e.gateId) return { must: '', sel: '', val: '' };
+    const sel = e.selector || e.xpath || '';
+    if (e.checked === true) return { must: 'checked', sel, val: '' };
+    if (e.checked === false) return { must: 'unchecked', sel, val: '' };
+    if (e.visible) return { must: 'visible', sel, val: '' };
+    if (e.gone) return { must: 'gone', sel, val: '' };
+    if (!sel && e.text != null) return { must: 'page_text', sel, val: e.text };
+    if (e.url != null) return { must: 'url', sel, val: e.url };
+    const k = ['value', 'equals', 'matches', 'shows', 'text'].find(x => e[x] != null) || '';
+    return { must: k, sel, val: k ? e[k] : '' };
+  }
   const polls = new Map();   // pipelineId → timer, while a run is going
 
   // a task row of the editor ⇄ an engine step
   function toStep(kind, what, more) {
     if (kind === 'macro') return { type: 'macro', config: { name: what } };
     if (kind === 'workflow') return { type: 'workflow', config: { workflow: what } };
+    if (kind === 'pipeline') return { type: 'pipeline', config: { pipeline: what } };
+    if (kind === 'gate') return { type: 'gate', config: { gateId: what } };
     if (kind === 'agent') return { type: 'agent', config: { agentKey: what, prompt: more, await: true } };
     const m = String(more || '').trim().match(/^(GET|POST|PUT|DELETE)\s+(\S+)/i);
     return { type: 'command', config: { system: what, method: m ? m[1].toUpperCase() : 'GET', endpoint: m ? m[2] : (more || '/health') } };
@@ -35,6 +68,8 @@
     if (!step) return { kind: 'macro', what: '', more: '' };
     if (step.type === 'macro') return { kind: 'macro', what: c.name || '', more: '' };
     if (step.type === 'workflow') return { kind: 'workflow', what: c.workflow || '', more: '' };
+    if (step.type === 'pipeline') return { kind: 'pipeline', what: c.pipeline || '', more: '' };
+    if (step.type === 'gate' && c.gateId) return { kind: 'gate', what: c.gateId, more: '' };
     if (step.type === 'agent') return { kind: 'agent', what: c.agentKey || '', more: c.prompt || '' };
     if (step.type === 'command') return { kind: 'command', what: c.system || '', more: `${c.method || 'GET'} ${c.endpoint || ''}`.trim() };
     return { kind: step.type, what: '', more: JSON.stringify(c), raw: step };
@@ -62,6 +97,10 @@
         field('Runs', kind), whatField,
         field('After', h('input', { type: 'text', 'data-k': 'deps', value: (t.depends_on || []).join(', '), placeholder: 'task ids, comma separated' })),
         field('Gate: output contains', h('input', { type: 'text', 'data-k': 'contains', value: (t.gate && t.gate.contains) || '', placeholder: 'empty: the step succeeded' })),
+        field('Gate: your gate', h('input', { type: 'text', 'data-k': 'gateId', value: (t.gate && t.gate.element && t.gate.element.gateId) || '', placeholder: 'a gate id (or the element below)' })),
+        field('Gate: element', h('input', { type: 'text', 'data-k': 'gateSel', value: mustOf(t.gate && t.gate.element).sel, placeholder: '#email · //input[@name="email"]' })),
+        field('…must', h('select', { 'data-k': 'gateMust' }, MUSTS.map(([v, l]) => h('option', { value: v, text: l, selected: mustOf(t.gate && t.gate.element).must === v ? 'selected' : null })))),
+        field('…value', h('input', { type: 'text', 'data-k': 'gateVal', value: mustOf(t.gate && t.gate.element).val, placeholder: '{{vars.email}} · /^\\S+@\\S+$/' })),
         field('Retries', h('input', { type: 'number', min: '0', max: '5', 'data-k': 'retries', value: String(t.retries || 0) })),
         field('If it fails', h('select', { 'data-k': 'onFail' }, [['stop', 'stop the pipeline'], ['continue', 'go on with the rest']].map(([v, l]) => h('option', { value: v, text: l, selected: (t.onFail || 'stop') === v ? 'selected' : null }))))),
       moreField);
@@ -75,21 +114,28 @@
     const step = row._raw && kind === row._raw.type ? row._raw : toStep(kind, g('what'), row.querySelector('[data-k="prompt"]').value);
     const t = { id, label: g('label') || id, depends_on: g('deps') ? g('deps').split(',').map(x => x.trim()).filter(Boolean) : [], step, retries: Number(g('retries')) || 0, onFail: g('onFail') || 'stop' };
     if (g('contains')) t.gate = { contains: g('contains') };
+    const el = elementOf(g('gateId'), g('gateSel'), g('gateMust'), g('gateVal'));   // 2026-10-30 PL7
+    if (el) t.gate = { ...(t.gate || {}), element: el };
     return t;
   }
 
   async function edit(p, rerender) {
     const name = h('input', { type: 'text', 'data-k': 'name', value: (p && p.name) || '' });
     const desc = h('input', { type: 'text', 'data-k': 'description', value: (p && p.description) || '' });
-    const par = h('select', { 'data-k': 'parallel' }, [1, 2, 3, 4].map(n => h('option', { value: String(n), text: n === 1 ? 'one at a time' : `${n} at once`, selected: ((p && p.settings && p.settings.parallel) || 1) === n ? 'selected' : null })));
+    // 2026-10-30 PL10 — James: "with the option for per site pipelines": a site (its address or a pattern), and run when a page of it opens
+    const site = h('input', { type: 'text', 'data-k': 'site', value: (p && p.site) || '', placeholder: 'empty: any page · https://www.fiverr.com · https://www.upwork.com/jobs/*' });
+    const onLoad = h('input', { type: 'checkbox', 'data-k': 'onLoad' }); onLoad.checked = !!(p && p.onLoad);
+        const par = h('select', { 'data-k': 'parallel' }, [1, 2, 3, 4].map(n => h('option', { value: String(n), text: n === 1 ? 'one at a time' : `${n} at once`, selected: ((p && p.settings && p.settings.parallel) || 1) === n ? 'selected' : null })));
     const list = h('div', { class: 'pl-tasks' });
     const rows = { renumber: () => [...list.children].forEach((r, i) => { r.dataset.i = String(i); r.querySelector('b').textContent = `Task ${i + 1}`; }) };
     ((p && p.tasks && p.tasks.length) ? p.tasks : [{ id: 'first' }]).forEach((t, i) => list.append(taskRow(t, i, rows)));
     const add = h('button', { class: 'btn sm', type: 'button', text: '+ Task', onclick: () => { list.append(taskRow({}, list.children.length, rows)); } });
     const saved = await modal({ title: p ? `Edit — ${p.name}` : 'New pipeline', wide: true,
-      body: [h('div', { class: 'pl-form' }, field('Name', name), field('What it is for', desc), field('Tasks at once', par)), list, add],
+      body: [h('div', { class: 'pl-form' }, field('Name', name), field('What it is for', desc), field('Tasks at once', par), field('Site', site),
+        field('Run when a page of the site opens', onLoad)), list, add],
       actions: [{ label: 'Save', primary: true, run: async () => {
-        const body = { name: name.value.trim(), description: desc.value.trim(), settings: { parallel: Number(par.value) || 1 }, tasks: [...list.children].map(readTask) };
+        const body = { name: name.value.trim(), description: desc.value.trim(), settings: { parallel: Number(par.value) || 1 }, tasks: [...list.children].map(readTask),
+          site: site.value.trim() || null, onLoad: !!(site.value.trim() && onLoad.checked) };
         const r = p ? await wire(`/automation/pipelines/${encodeURIComponent(p.id)}`, { method: 'PUT', body, allowNotOk: true }) : await wire('/automation/pipelines', { method: 'POST', body, allowNotOk: true });
         if (!r || r.ok === false) throw new Error(r && r.problems ? r.problems.join(' · ') : (r && r.error) || 'not saved');
         return 'saved';
@@ -121,7 +167,7 @@
     if (last && last.status === 'running') watch(last.id);
     box.append(
       h('div', { class: 'pl-card-head' },
-        h('div', { class: 'grow' }, h('div', { class: 't', text: p.name }), h('div', { class: 'd', text: [p.description, `${p.tasks.length} task${p.tasks.length === 1 ? '' : 's'}`, p.settings && p.settings.parallel > 1 ? `${p.settings.parallel} at once` : null].filter(Boolean).join(' · ') })),
+        h('div', { class: 'grow' }, h('div', { class: 't', text: p.name }), h('div', { class: 'd', text: [p.site ? `${p.site.replace(/^https?:\/\//, '')}${p.onLoad ? ' · runs when a page opens' : ''}` : null, p.description, `${p.tasks.length} task${p.tasks.length === 1 ? '' : 's'}`, p.settings && p.settings.parallel > 1 ? `${p.settings.parallel} at once` : null].filter(Boolean).join(' · ') })),
         btn('Run', (e) => busy(e.currentTarget, async () => { const r = await wire(`/automation/pipelines/${encodeURIComponent(p.id)}/run`, { method: 'POST', body: {} }); slot.replaceChildren(checklist({ status: 'running', startedAt: Date.now(), order: [], tasks: {} }, p)); watch(r.runId); }), 'sm primary'),
         btn('Edit', () => edit(p, rerender).catch(fail), 'sm'),
         btn('Archive', async () => { if (!(await confirmDo('Archive this pipeline?', 'It is kept (Show archived) and its runs stay; it leaves the list.', 'Archive', false))) return; await wire(`/automation/pipelines/${encodeURIComponent(p.id)}/archive`, { method: 'POST', body: {} }); toast('Archived'); rerender(); }, 'sm ghost')),

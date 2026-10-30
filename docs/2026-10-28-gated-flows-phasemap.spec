@@ -395,13 +395,13 @@ phases_ug:
   UG2_every_driver_write_gated:
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-UG2]
-    status: BUILT 0.60.292
+    status: SUPERSEDED 2026-10-30 by PL_D4_a_gate_is_a_pipeline_block (his correction; archived to _archive/2026-10-30-write-gates/) — was BUILT 0.60.292
     depends_on: [UG1_one_gate_for_every_element]
     files: [clear-glass/src/driver/index.js, clear-glass/src/site-settings/keys.js, clear-glass/src/site-settings/readers.js]
   UG3_every_dom_write_gated:
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-UG3]
-    status: BUILT 0.60.292
+    status: SUPERSEDED 2026-10-30 by PL_D4_a_gate_is_a_pipeline_block (his correction; archived to _archive/2026-10-30-write-gates/) — was BUILT 0.60.292
     depends_on: [UG1_one_gate_for_every_element]
     files: [clear-glass/src/dom/archaeology.js, clear-glass/src/autofill/matcher.js]
   UG4_his_gates_per_site:
@@ -416,3 +416,17 @@ phases_ug:
     status: BUILT 0.60.292
     depends_on: [UG4_his_gates_per_site, KB3_site_keys_ui]
     files: [clear-glass/renderer/site-gates/gate-bar.js, clear-glass/renderer/site-gates/gate-bar.css, clear-glass/renderer/browser.js, clear-glass/renderer/browser.html, clear-glass/renderer/settings/sections/driver.js]
+
+## ADDENDUM 2026-10-30 — UG2/UG3 archived: a gate is a pipeline block, not a read-back inside every write (his correction)
+James, 2026-10-30, reading 0.60.292: "what? gates are for the pipelines for macro atuomation" · "considering what the context of what i
+proposed., and the request. why, did you misread me? i also told to stop thimnking so fucking narrow"
+How it was misread (the coder's, said plainly): "gated" was taken from the coder's own last task (0.60.290's read-back of each gig field),
+not from his record, where a gate is a block a flow waits on (FP3: "gates for each step, each gate can be like blocks"; KB4; PL's task
+gates); and "universal ... stop thinking so narrow" was read as "push the check lower, into every write" instead of "make gates available
+everywhere: any element, any site, in pipelines, macros and automation". gate-eval.js, which quotes his FP3 words at its top, came up in the
+coder's own search during UG and was passed over.
+Kept (they fit his meaning): element-gate.js (UG1, the condition), his picked gates per site/page (UG4/UG5), the driver's gate action (reads
+only), the gate steps, glass gates. Archived (_archive/2026-10-30-write-gates/, §0.3): the automatic read-back in ClearDriver.exec (UG2) and
+in the DOM mesh's handleMutate (UG3), the workflow engine's automatic gating of fill/select/tick, and the gates.enabled / gates.retries site
+settings that configured them. GG1's gig-fill read-backs stay with the gig fill. Continued as PL6–PL11 in docs/2026-10-29-pipelines-phasemap.spec.
+(UG2 and UG3 above are marked SUPERSEDED in place; their entries are kept.)
