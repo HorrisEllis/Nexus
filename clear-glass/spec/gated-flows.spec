@@ -491,6 +491,73 @@ spec:
       error_paths: ["closed gate → notFound with what it saw and the keys it tried"]
       acceptance: ["test-gig-all-fields GF-05 in Clear Glass: every part has an open gate; a page that reverts the title after 250 ms is caught, tried twice, said"]
 
+    # 2026-10-30 UG — James: "it needs to be universal for all dom elements. like for the job applications for instance, even if we need a way
+    # to create them per page using the element picker, per site settings, macros and automation features. stop thinking so narrow"
+    - id: MOD-UG1
+      name: element-gate
+      uuid: nexus-gated-flows-element-gate-v1-0000-2026-1030-001
+      path: clear-glass/src/page/element-gate.js
+      phase: UG1_one_gate_for_every_element
+      description: "One gate for any element on any page, pure. An expectation names an element (selector, XPath, or the DOM mesh's cgId) and what must hold: value (what was typed, {{value}} for the value just written), shows (the choice a dropdown shows), checked, text (contained), visible, gone, url. derive(action, args) gives the expectation of every write (type, setValue, insertText, typeAt, select, choose, check, checkAt, a DOM value mutation); stateScript reads only what the expectation asks; evaluate says open and what it saw; settle(check) reads until open, then again after the page settles. matchSite(gates, url) gives his gates for a page."
+      deps: [{ name: dropdown-choose }]
+      exports: ["WRITES", "derive(action, args, result)", "normalize(exp)", "stateScript(exp)", "evaluate(exp, state) → { open, saw }", "settle(check, { timeoutMs, settleMs }) → { open, saw, held }", "matchSite(siteGates, url) → [gate]", "validate(gate)"]
+      gate_pipeline: ["GATE-UG1-001: an expectation → read only what it asks → open or what it saw"]
+      behavioral_contracts: ["a check never changes the page", "an expectation with nothing to check is refused by validate, never treated as open"]
+      error_paths: ["the element is not on the page → closed, saw 'not on the page'"]
+      acceptance: ["test-element-gates UG-01: derive, evaluate and validate for every kind"]
+
+    - id: MOD-UG2
+      name: driver-writes-gated
+      uuid: nexus-gated-flows-driver-writes-gated-v1-0000-2026-1030-001
+      path: clear-glass/src/driver/index.js
+      phase: UG2_every_driver_write_gated
+      description: "ClearDriver gates every write it makes, for every caller (the fills, macros, workflows, agents, site keys): after the action, its derived expectation plus his site gates for that element plus any gate the call carries, settled; closed → the action once more (the site's gates.retries) → still closed, the call fails with code GATE_CLOSED and what it saw. The result carries gate { open, saw, tries }. A site's Site settings decide it (gates.enabled, gates.settleMs, gates.timeoutMs, gates.retries). A new action gate { gate | id | all } checks a gate, one of his by id, or every gate of his on the page, without writing."
+      deps: [{ name: element-gate }]
+      exports: ["exec({ action, ..., gate? }) → result.gate", "action gate { gate | id | all }", "site settings gates.*"]
+      gate_pipeline: ["GATE-UG2-001: write → derived + his site gates + the call's gate → settled → retry → GATE_CLOSED"]
+      behavioral_contracts: ["gate:false on a call is refused for an agent's call; a person's own internal steps (typing a tag that clears its box) may say so, and it is reported in the result"]
+      error_paths: ["GATE_CLOSED with saw and tries"]
+      acceptance: ["test-element-gates UG-02 in Clear Glass: a box that puts its value back fails the write with GATE_CLOSED after the retry; a dropdown and a checkbox gated; gates.enabled off on the site skips, said"]
+
+    - id: MOD-UG3
+      name: dom-writes-gated
+      uuid: nexus-gated-flows-dom-writes-gated-v1-0000-2026-1030-001
+      path: clear-glass/src/dom/archaeology.js
+      phase: UG3_every_dom_write_gated
+      description: "The DOM mesh's value mutation (handleMutate), which the general autofill, the applications fill, screen-QA and agents' dom_mutate use, is gated the same way: the element's value read until it holds, then again after the page settles; closed → set again → closed → { error, code GATE_CLOSED, saw }."
+      deps: [{ name: element-gate }]
+      exports: ["handleMutate(...) → result.gate | { error, code: 'GATE_CLOSED' }"]
+      gate_pipeline: ["GATE-UG3-001: mutate value → settled read → retry → GATE_CLOSED"]
+      behavioral_contracts: ["the autofill counts a closed gate as failed, never filled"]
+      error_paths: ["GATE_CLOSED"]
+      acceptance: ["test-element-gates UG-03 in Clear Glass: an application form field that reverts is reported failed by the general autofill"]
+
+    - id: MOD-UG4
+      name: site-gates
+      uuid: nexus-gated-flows-site-gates-v1-0000-2026-1030-001
+      path: clear-glass/src/options/store.js
+      phase: UG4_his_gates_per_site
+      description: "His own gates, per site and optionally per page (a URL pattern): an element he picked and what must hold there. Kept in the options store (siteGates), validated by element-gate. The driver applies those whose element is the one it writes; the gate action checks them on demand; a macro or workflow step 'gate' checks one by id or all on the page."
+      deps: [{ name: element-gate }, { name: driver-writes-gated }]
+      exports: ["getSiteGates()", "addSiteGate(url, gate)", "removeSiteGate(url, id)", "IPC siteGates:list|add|remove|check", "GET/POST /cli/site-gates", "macro step gate"]
+      gate_pipeline: ["GATE-UG4-001: his gate saved → applied at every write to its element → checked on demand"]
+      behavioral_contracts: ["a gate applies only on its own site (and page pattern)", "REVERSIBILITY: removed in Settings or glass gates remove"]
+      error_paths: ["an invalid gate → refused with why"]
+      acceptance: ["test-element-gates UG-04 in Clear Glass: his gate on a field (value must be an email) closes a write of a non-email there; the gate step checks all his gates on a page"]
+
+    - id: MOD-UG5
+      name: site-gates-screens
+      uuid: nexus-gated-flows-site-gates-screens-v1-0000-2026-1030-001
+      path: clear-glass/renderer/site-gates/gate-bar.js
+      phase: UG5_gates_made_with_the_picker
+      description: "After an element pick, a bar offers Gate this element: what must hold (holds what was typed, holds this value, shows this choice, is ticked, contains text, is visible, is gone), for this site or only this page; saved through siteGates:add. Settings › ClearDriver › Gates on sites lists, checks and removes them. The command glass gates gives agents the same."
+      deps: [{ name: site-gates }]
+      exports: ["window.CGGateBar.mount({ cg })", "window.CGGateBar.offer({ xpath, url })", "Settings › ClearDriver › Gates on sites", "glass gates [url] | add | remove | check"]
+      gate_pipeline: ["GATE-UG5-001: pick → Gate this element → saved → listed"]
+      behavioral_contracts: ["nothing is sent to the page by the bar"]
+      error_paths: ["refused gate → the bar says why"]
+      acceptance: ["test-element-gates UG-05 in Clear Glass: the bar saves a gate from a pick; Settings lists it"]
+
   events:
     flows:
       - "macro.gate { macro, step, open, why, by }"

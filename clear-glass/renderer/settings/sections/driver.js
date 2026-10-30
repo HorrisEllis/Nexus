@@ -21,6 +21,21 @@
     return i;
   }
 
+  // 2026-10-30 UG5 — James: "it needs to be universal for all dom elements ... a way to create them per page using the element picker, per site
+  // settings, macros and automation features." Every write is gated by its own check; these are his, made with the picker (Gate this element).
+  const lineOf = (g) => { const w = Object.entries(g).filter(([k]) => !['id', 'label', 'page', 'selector', 'xpath'].includes(k)).map(([k, v]) => v === '{{value}}' ? 'holds what was typed' : `${k} ${JSON.stringify(v)}`); return w.join(', '); };
+  async function gatesPane() {
+    const sg = await cg.shortcuts.gateList().then(r => (r && r.siteGates) || {}).catch(() => ({}));
+    const rows = [];
+    for (const [origin, list] of Object.entries(sg)) for (const g of list) {
+      rows.push(row(`${g.label || g.id} · ${lineOf(g)}`, `${origin}${g.page ? ` · only ${g.page}` : ''} · ${g.selector || g.xpath || ''}`,
+        btn('Remove', async () => { const r = await call(() => cg.shortcuts.gateRemove(origin, g.id), 'remove gate'); if (r && !r.error) { toast(`gate ${g.id} removed`); goto('driver'); } }, 'sm ghost')));
+    }
+    const check = btn('Check gates on this page', async () => { const r = await call(() => cg.shortcuts.gateCheck({}), 'check gates'); if (r) toast(r.error ? r.error : `${r.open ? 'open' : 'closed'} · ${r.checks} gate(s) · ${r.saw}`, r.open ? undefined : 'bad'); }, 'sm');
+    return pane({ title: 'Gates on sites', sub: 'Every field, dropdown and box the driver or the autofill writes is read back and read again after the page settles. Add your own: pick an element on a page and press “Gate this element”. Each site’s gate timing is in Site settings › Gates.', flush: true,
+      body: [...(rows.length ? rows : [row('No gates of yours yet', 'Pick an element on a page, then Gate this element.', null)]), row('Check', 'Run every gate of yours on the page open now', check)] });
+  }
+
   section({
     id: 'driver', group: 'Agents', icon: '⦿', label: 'ClearDriver',
     keywords: 'cleardriver driver automation agents drive navigate wait timeout sites allowed',
@@ -41,7 +56,8 @@
         pane({ title: 'Timeouts', sub: 'Defaults were 30 s and 10 s.', body: h('div', { class: 'grid' },
           field('Navigate (ms)', nav, 'How long a page may take to load'),
           field('Wait for an element (ms)', wait, 'How long a wait for a selector may take')) }),
-        pane({ title: 'Per site', flush: true, body: row('Site settings', 'Allow or refuse agents, and set timeouts, for one site.', btn('Open', () => goto('sites'), 'sm')) }),
+        pane({ title: 'Per site', flush: true, body: row('Site settings', 'Allow or refuse agents, and set timeouts and gates, for one site.', btn('Open', () => goto('sites'), 'sm')) }),
+        await gatesPane(),
       ];
     },
   });

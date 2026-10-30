@@ -370,3 +370,49 @@ phases_gg:
     status: BUILT 0.60.291
     depends_on: [GF3_text_and_lists_filled_and_read_back, GF4_friction_goes_to_his_site_keys, KB4_gates_on_macro_steps]
     files: [clear-glass/src/ipc/bridge.js, clear-glass/src/driver/index.js, clear-glass/src/autofill/gig-fields.js, clear-glass/src/autofill/gig-pages.js, clear-glass/src/autofill/gig.js, tests/modules/test-gig-all-fields.test.js]
+
+## ADDENDUM 2026-10-30 — UG1–UG5: a gate on every DOM element, universal; his own gates made with the picker
+James, 2026-10-30, after GG1 gated only the Fiverr gig fill: "it needs to be universal for all dom elements. like for the job applications
+for instance, even if we need a way to create them per page using the element picker, per site settings, macros and automation features.
+stop thinking so narrow"
+He was asked where GG1 was added; the answer was the gig fill only. That was too narrow, and he said so.
+Grounded: every write to a page goes through one of two doors: ClearDriver (src/driver/index.js: type, setValue, insertText, typeAt,
+select, choose, check, checkAt), which every fill, macro, workflow, site key and agent uses; and the DOM mesh's value mutation (handleMutate
+in src/dom/archaeology.js), which the general autofill (matcher.js fillFields), the applications fill, screen-QA and agents' dom_mutate use.
+Gating those two doors gates every element, for every caller. src/gates/index.js is an older event-bus "gate" registry, a different thing
+with the same word: untouched, and not reused for this.
+Decided by his axioms: §8.6 reuse (the two existing doors, the site-settings key table, the options store like siteKeys, the picker's
+offer hook, FG3's gate idea; GG1's settled loop becomes element-gate's settle, one loop); §5.15 sovereignty (the gate is Clear Glass's,
+as the owner of the page; nothing in lib is required for it); §1.2 (a closed gate fails the write with what it saw; gates off on a site is
+said in the result); USER_AUTONOMY (his gates are his: made, listed and removed by him).
+phases_ug:
+  UG1_one_gate_for_every_element:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-UG1]
+    status: BUILT 0.60.292
+    depends_on: [GG1_every_part_gated]
+    files: [clear-glass/src/page/element-gate.js, tests/modules/test-element-gates.test.js]
+  UG2_every_driver_write_gated:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-UG2]
+    status: BUILT 0.60.292
+    depends_on: [UG1_one_gate_for_every_element]
+    files: [clear-glass/src/driver/index.js, clear-glass/src/site-settings/keys.js, clear-glass/src/site-settings/readers.js]
+  UG3_every_dom_write_gated:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-UG3]
+    status: BUILT 0.60.292
+    depends_on: [UG1_one_gate_for_every_element]
+    files: [clear-glass/src/dom/archaeology.js, clear-glass/src/autofill/matcher.js]
+  UG4_his_gates_per_site:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-UG4]
+    status: BUILT 0.60.292
+    depends_on: [UG2_every_driver_write_gated]
+    files: [clear-glass/src/options/store.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, lib/agent-tools/tools/browser/browser-action.js, idearium/cli/route-commands.js]
+  UG5_gates_made_with_the_picker:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-UG5]
+    status: BUILT 0.60.292
+    depends_on: [UG4_his_gates_per_site, KB3_site_keys_ui]
+    files: [clear-glass/renderer/site-gates/gate-bar.js, clear-glass/renderer/site-gates/gate-bar.css, clear-glass/renderer/browser.js, clear-glass/renderer/browser.html, clear-glass/renderer/settings/sections/driver.js]

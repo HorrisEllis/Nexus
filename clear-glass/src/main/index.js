@@ -1281,6 +1281,9 @@ async function bootstrap() {
   driver = new ClearDriver({ ctxMgr, dom, vault, sse: { emit: (t, d) => emit(t, d) } });
   driver.erosInput = (...a) => (_erosInputFn ? _erosInputFn(...a) : Promise.reject(new Error('the ErosmancerOS wire is not started yet')));
   dom.erosInput = driver.erosInput;   // §ER3 0.60.253 — the DOM mutator types through ErosmancerOS when asked (via: 'eros')
+  // 2026-10-30 UG2/UG3 — his gates (the options store, made below) reach every write the driver and the DOM mesh make
+  driver.getSiteGates = () => (nexusOptions && nexusOptions.getSiteGates ? nexusOptions.getSiteGates() : {});
+  dom.getSiteGates = driver.getSiteGates;
 
   // 7. URL listener — glob/regex per-agent request hooks
   urlListener = new UrlListener({ sse: { emit: (t, d) => emit(t, d) }, ctxMgr });

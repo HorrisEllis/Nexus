@@ -755,6 +755,11 @@ class IpcBridge {
     // 0.60.275 KB2 — keys bound to elements, per site, for agents and the CLI (glass keys)
     this.app.get('/cli/site-keys', (req, res) => { const all = this.options?.getSiteKeys?.() || {}; const SK = require('../shortcuts/site-keys'); res.json({ siteKeys: req.query.url ? { [SK.originOf(req.query.url) || req.query.url]: SK.forUrl(all, req.query.url) } : all }); });
     this.app.post('/cli/site-keys', (req, res) => { const b = req.body || {}; const r = this.options ? this.options.setSiteKey(b.url, b.accel, b.binding) : { error: 'options not ready' }; res.status(r.error ? 400 : 200).json(r); });
+    // 2026-10-30 UG4 — his gates per site, for agents and the CLI (glass gates)
+    this.app.get('/cli/site-gates', (req, res) => { const all = this.options?.getSiteGates?.() || {}; const EG = require('../page/element-gate'); res.json({ siteGates: req.query.url ? { [EG.originOf(req.query.url) || req.query.url]: EG.matchSite(all, req.query.url) } : all }); });
+    this.app.post('/cli/site-gates', (req, res) => { const b = req.body || {}; const r = this.options ? this.options.addSiteGate(b.url, b.gate) : { error: 'options not ready' }; res.status(r.error ? 400 : 200).json(r); });
+    this.app.post('/cli/site-gates/remove', (req, res) => { const b = req.body || {}; const r = this.options ? this.options.removeSiteGate(b.url, b.id) : { error: 'options not ready' }; res.status(r.error ? 400 : 200).json(r); });
+    this.app.post('/cli/site-gates/check', async (req, res) => { const b = req.body || {}; try { res.json(await this.driver.exec({ agentId: b.agentId || 'default', action: 'gate', ...(b.id ? { id: b.id } : b.gate ? { gate: b.gate } : { all: true }), by: 'agent' })); } catch (err) { res.status(400).json({ error: err.message }); } });
     this.app.post('/cli/site-keys/remove', (req, res) => { const b = req.body || {}; const r = this.options ? this.options.removeSiteKey(b.url, b.accel) : { error: 'options not ready' }; res.status(r.error ? 400 : 200).json(r); });
     this.app.get('/cli/processes', (req, res) => { try { res.json(require('../main/index').processes().list()); } catch (e) { res.status(500).json({ ok: false, error: e.message }); } });
     this.app.get('/cli/activity', (req, res) => res.json({ events: require('../processes').activity().recent({ limit: Math.min(+req.query.limit || 100, 500), kind: req.query.kind || null, origin: req.query.origin || null }) }));
@@ -1874,6 +1879,11 @@ class IpcBridge {
     ipcMain.handle('siteKeys:list',    async () => ({ siteKeys: this.options?.getSiteKeys?.() || {} }));
     ipcMain.handle('siteKeys:set',     async (e, d) => this.options?.setSiteKey(d.url, d.accel, d.binding) || { error: 'options not ready' });
     ipcMain.handle('siteKeys:remove',  async (e, d) => this.options?.removeSiteKey(d.url, d.accel) || { error: 'options not ready' });
+    // 2026-10-30 UG4/UG5 — his gates per site (options siteGates), made with the picker; check runs the driver's gate action on the page
+    ipcMain.handle('siteGates:list',   async () => ({ siteGates: this.options?.getSiteGates?.() || {} }));
+    ipcMain.handle('siteGates:add',    async (e, d) => this.options?.addSiteGate(d.url, d.gate) || { error: 'options not ready' });
+    ipcMain.handle('siteGates:remove', async (e, d) => this.options?.removeSiteGate(d.url, d.id) || { error: 'options not ready' });
+    ipcMain.handle('siteGates:check',  async (e, d) => { try { return await this.driver.exec({ agentId: d.agentId || 'default', action: 'gate', ...(d.id ? { id: d.id } : d.gate ? { gate: d.gate } : { all: true }), by: 'person' }); } catch (err) { return { error: err.message }; } });
     ipcMain.handle('listeners:get',        async (e, d) => this.options?.getListener(d.id));
     ipcMain.handle('listeners:register',   async (e, d) => this.options?.registerListener(d));
     ipcMain.handle('listeners:update',     async (e, d) => this.options?.updateListener(d.id, d.updates));
@@ -3221,18 +3231,8 @@ class IpcBridge {
 
 // 2026-10-30 GG1 — James: "each field/drop down/ or anything should be gated." A gate: check() → { open, saw }, read until open (timeoutMs),
 // then read again after settleMs, so a page that puts its own value back is caught. { open, saw, held }
-async function gigGate(check, { timeoutMs = 2500, settleMs = 400, every = 150 } = {}) {
-  const until = Date.now() + timeoutMs; let c = { open: false, saw: 'not read' };
-  for (;;) {
-    try { c = await check(); } catch (e) { c = { open: false, saw: e.message }; }
-    if (c.open || Date.now() >= until) break;
-    await new Promise(res => setTimeout(res, every));
-  }
-  if (!c.open) return { open: false, saw: c.saw, held: false };
-  await new Promise(res => setTimeout(res, settleMs));
-  let d; try { d = await check(); } catch (e) { d = { open: false, saw: e.message }; }
-  return d.open ? { open: true, saw: d.saw, held: true } : { open: false, saw: `it showed ${c.saw}, then the page changed it: ${d.saw}`, held: false };
-}
+// 2026-10-30 UG1 — GG1's settled loop is element-gate's settle now: one loop for every gate (§8.6)
+function gigGate(check, opts) { return require('../page/element-gate').settle(check, opts); }
 
 // the checks a part's gate reads, each → async () => { open, saw }; read only, nothing on the page is changed by them
 function gigChecks(driver, agentId) {

@@ -1,0 +1,13 @@
+/* 0.60.292 UG5 — the "Gate this element" bar after an element pick; every rule under #cg-gate-bar. It sits above the "Bind a key" bar. */
+#cg-gate-bar { position: fixed; left: 50%; bottom: 118px; transform: translateX(-50%); z-index: 2147483000; width: min(760px, calc(100vw - 32px));
+  background: var(--panel, #15171c); color: var(--text, #e8e8ea); border: 1px solid var(--line, #2b2f38); border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.45); padding: 10px 12px; font: 13px/1.4 system-ui, sans-serif; }
+#cg-gate-bar .gb-title { font-weight: 600; margin-bottom: 8px; }
+#cg-gate-bar .gb-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+#cg-gate-bar input, #cg-gate-bar select { padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line, #2b2f38); background: transparent; color: inherit; font: inherit; min-width: 0; }
+#cg-gate-bar select option { color: #111; }
+#cg-gate-bar .gb-extra, #cg-gate-bar .gb-label { flex: 1 1 140px; }
+#cg-gate-bar button { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line, #2b2f38); background: var(--accent, #3b82f6); color: #fff; cursor: pointer; font: inherit; }
+#cg-gate-bar .gb-x { background: transparent; color: inherit; padding: 6px 10px; }
+#cg-gate-bar .gb-say { margin-top: 6px; min-height: 1em; font-size: 12px; }
+#cg-gate-bar .gb-say.bad { color: #e5534b; } #cg-gate-bar .gb-say.ok { color: #3fb950; }

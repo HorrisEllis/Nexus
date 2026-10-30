@@ -55,4 +55,10 @@ function driverPolicy(url) {
   };
 }
 
-module.exports = { install, installed, autofillFor, macrosOnLoad, workflowsAllowed, passwordPolicy, resumeMode, driverPolicy, meshAgent, guardianPolicy, tabMode };
+// 2026-10-30 UG2 — the gates every write is checked by on this site (src/driver/index.js _gated, src/dom/archaeology.js handleMutate)
+function gatePolicy(url) {
+  const p = _profile('gates', url);
+  return p ? { enabled: p.gates.enabled !== false, settleMs: p.gates.settleMs, timeoutMs: p.gates.timeoutMs, retries: p.gates.retries } : null;
+}
+
+module.exports = { install, installed, gatePolicy, autofillFor, macrosOnLoad, workflowsAllowed, passwordPolicy, resumeMode, driverPolicy, meshAgent, guardianPolicy, tabMode };

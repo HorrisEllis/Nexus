@@ -301,8 +301,9 @@ async function fillFields(dom, autofillStore, { agentId = 'default', profileId, 
   for (const m of toFill) {
     try {
       const r = await dom.handleMutate({ agentId, cgId: m.cgId, mutation: { value: m.value } });
-      if (r?.error) failed.push({ cgId: m.cgId, fieldType: m.fieldType, error: r.error });
-      else filled.push({ cgId: m.cgId, fieldType: m.fieldType, confidence: m.confidence, source: m.source });
+      // 2026-10-30 UG3 — the write is gated in handleMutate: a closed gate is an error (code GATE_CLOSED, with what it saw), never "filled"
+      if (r?.error) failed.push({ cgId: m.cgId, fieldType: m.fieldType, error: r.error, ...(r.code ? { code: r.code, gate: r.gate } : {}) });
+      else filled.push({ cgId: m.cgId, fieldType: m.fieldType, confidence: m.confidence, source: m.source, ...(r && r.gate ? { gate: r.gate } : {}) });
     } catch (err) { failed.push({ cgId: m.cgId, fieldType: m.fieldType, error: err.message }); }
   }
   // §JA3 0.60.230 — what this fill could not place, so the element picker can ask for it (src/autofill/learn-pick.js needsPick):

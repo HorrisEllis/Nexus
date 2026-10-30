@@ -69,6 +69,9 @@ const FILES = [
   ['clear-glass/renderer/gig-menu.js', I('clear-glass/renderer/gig-menu.js'), [I('clear-glass/renderer/gig-panel.js')]],   // window.CgGigPanel, cg.autofill.gigMenu/gigFill over IPC
   // 2026-10-30 GF — James: "fix the autofill to work with all fields, and if you run into friction use the per site keybindings that I proposed"
   ['clear-glass/src/autofill/gig-fields.js', I('clear-glass/src/autofill/gig-fields.js'), []],
+  // 2026-10-30 UG — James: "it needs to be universal for all dom elements ... stop thinking so narrow"
+  ['clear-glass/src/page/element-gate.js', I('clear-glass/src/page/element-gate.js'), [I('clear-glass/src/page/option-match.js')]],
+  ['clear-glass/renderer/site-gates/gate-bar.js', I('clear-glass/renderer/site-gates/gate-bar.js'), []],   // a browser script: cg.shortcuts.gateAdd over IPC
   ['lib/repo-history-nodes.js', I('lib/repo-history-nodes.js'), [I('lib/node-export.js'), I('lib/test-sandbox.js')]],   // 0.60.285 HN1 — Idearium's history as nodes, one per unit
   ['lib/automation/pipeline.js', I('lib/automation/pipeline.js'), [I('lib/automation/engine.js'), I('lib/automation/steps.js')]],   // 0.60.284 PL1 — WORKFLOWS_DIR; byType, validateStep
   ['clear-glass/renderer/settings/sections/pipelines.js', I('clear-glass/renderer/settings/sections/pipelines.js'), [I('lib/automation/routes.js')]],   // 0.60.284 PL4 — wire /automation/pipelines*
@@ -519,6 +522,11 @@ const CONSUMERS = [
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig-menu.js'), '0.60.286 GM2 _gigMenu / _gigFill(edits) — lazy require'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig-fields.js'), '0.60.290 GF3 _gigText / _gigList / _gigSiteKey — lazy require'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/shortcuts/site-keys.js'), '0.60.290 GF4 friction → his keys for the part (forPart) — lazy require'],
+  [I('clear-glass/src/driver/index.js'), I('clear-glass/src/page/element-gate.js'), '0.60.292 UG2 every driver write gated; the gate action — lazy require'],
+  [I('clear-glass/src/dom/archaeology.js'), I('clear-glass/src/page/element-gate.js'), '0.60.292 UG3 every DOM-mesh value write gated — lazy require'],
+  [I('clear-glass/src/options/store.js'), I('clear-glass/src/page/element-gate.js'), '0.60.292 UG4 his site gates validated — lazy require'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/page/element-gate.js'), '0.60.292 UG1 the gig fill\'s settle is element-gate\'s; /cli/site-gates — lazy require'],
+  [I('clear-glass/renderer/browser.js'), I('clear-glass/renderer/site-gates/gate-bar.js'), '0.60.292 UG5 Gate this element after a pick (window.CGGateBar)'],
 ];
 
 function mapBuildSurface(driver) {
