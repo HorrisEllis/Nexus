@@ -20,6 +20,7 @@ const MODULES_DIR = __dirname;
 const SUITES = [
   'test-select-match.test.js',            // 0.60.298 DD1 — bestOption/boolOf: a dropdown/checkbox fills from a profile value that isn't the option's raw value ("United States"→US)
   'test-portfolio-node.test.js',          // 0.60.299 PF1 — the .portfolio node: PortfolioStore + export/import a clearglass.portfolio/1 file (merge by id, newer-wins)
+  'test-dropdown-fill-glass.test.js',     // 0.60.316 DD1-verify — real browser (glass.js): a <select>/checkbox/radio/text/contenteditable actually fills; caught the checkbox double-toggle
   'test-autofill-active.test.js',         // 0.60.257 AF1 — activeProfile (default/sole/first, never null) + setDefault + matchOne; the "no profile 'null'" fix
   'test-autofill-fill-active.test.js',    // 0.60.258 AF2 — fillFields/detectFields default to the active profile (copilot/agents stop passing null); zero profiles → clean error
   'test-build-paths.test.js',             // 0.60.67 WB0 — every build path and whether WARP is on it, measured; CK-255
