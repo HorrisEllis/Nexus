@@ -1,0 +1,108 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MG21_the_add_screen:835dadbeb442a0b4
+type: graph
+id: phase:MG21_the_add_screen:835dadbeb442a0b4
+context: dependency graph of phase MG21_the_add_screen
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793376294608
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793376294608
+lastSeenAt: 1793376294608
+fingerprint: null
+payload:
+  for: MG21_the_add_screen
+  kind: phase
+  repo: null
+  hash: 835dadbeb442a0b4
+  nodes:
+    - path: cos/manager/contract.json
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 11
+    deps:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
+    dependents: []
+    upstream:
+      - docs/2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
+      - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
+      - docs/2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D6_every_project_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D6_the_spec_is_the_system
+      - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
+      - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+      - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV2_core_files_go_home
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 11 · blocked by MG20_add_deploy_connect, MG18_the_supervisor_screen
+      - 'depends on (2): MG20_add_deploy_connect, MG18_the_supervisor_screen · all upstream 57'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+        kind: declared
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
+        kind: declared

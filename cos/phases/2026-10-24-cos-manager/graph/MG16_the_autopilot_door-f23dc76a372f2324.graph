@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793365823384
+exported_at: 1793376294592
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823384
-lastSeenAt: 1793365823384
+firstSeenAt: 1793376294592
+lastSeenAt: 1793376294592
 fingerprint: null
 payload:
   for: MG16_the_autopilot_door
@@ -54,15 +54,20 @@ payload:
     downstream:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+        files:
+          - cos/manager/contract.json
     dangling: []
     lines:
       - layer 5 · blocked by MG15_the_supervisor_in_cos
       - 'depends on (1): MG15_the_supervisor_in_cos · all upstream 9'
-      - 'needed by (2): MG17_autopilot_hands_over, MG18_the_supervisor_screen'
+      - 'needed by (2): MG17_autopilot_hands_over, MG18_the_supervisor_screen · all downstream 3'
+      - 'same files as MG20_add_deploy_connect with no order between them: cos/manager/contract.json'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
         kind: declared

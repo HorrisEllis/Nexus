@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
+context: pipeline phase MG19_the_spec_bundle of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG19_the_spec_bundle (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793376294602
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793376294602
+lastSeenAt: 1793376294602
+fingerprint: null
+payload:
+  id: MG19_the_spec_bundle
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/spec-bundle.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-spec-bundle.test.js
+  depends_on:
+    - MG0b_the_full_spec
+    - MG_D6_the_spec_is_the_system
+  blocks:
+    - MOD-MG-SPEC-BUNDLE
+  spec: cos/spec/cos-manager.spec
+  graph: a86ef0aa328b41e4

@@ -231,6 +231,24 @@ spec:
       behavioral_contracts: ["each step is on the ledger", "a step that fails stops the run and names the step"]
       error_paths: ["a step outside the person-acts rule with no rule allowing it → the run becomes a proposal"]
 
+    - id: SpecBundle
+      name: SpecBundle
+      description: "A whole system or project as one .spec file: the spec is the metadata, the payload is the system, the history is everything that happened to it (his, 2026-10-30)."
+      fields:
+        format:      "'nexus.spec-bundle/1'"
+        spec:        "object — the system's own .spec (meta, schemas, modules, phases summary), readable without unpacking anything"
+        system:      "{ name: string, uuid: string, kind: 'nexus-system'|'project', version: string }"
+        compartment: "{ compartmentId, archetype|template, settings, caps }|null — how COS ran it"
+        history:     "{ versions, commits, conversations, notes, decisions, phases, changelogs, benchmarks } — each { count, sha256 }, the records themselves in the payload's history/ folder; appended, never rewritten"
+        payload:     "{ encoding: 'zip+base64', sha256: string, sizeBytes: number, files: number, data: string } — the tree and history/, compressed; written LAST so a reader of the metadata stops before it"
+        parent:      "string|null — the sha256 of the bundle this one was exported after (its line of exports)"
+        exportedAt:  "number"
+        exportedBy:  "string — person | agent:<name>"
+        from:        "string — the install it came from"
+      behavioral_contracts: ["valid YAML: every .spec reader in Nexus reads its metadata unchanged", "import verifies payload.sha256 before writing anything",
+        "an import never overwrites: it makes a new repo, or a new version of the same uuid when he says so"]
+      error_paths: ["payload hash mismatch → refused, nothing written", "unknown format → refused naming it", "no payload (a plain .spec) → imported as a spec to build from, said"]
+
   interfaces:
 
     - id: IF-COMPARTMENT-JSON
@@ -296,6 +314,14 @@ spec:
       exports: ["the driver's open, click, type, read and wait verbs"]
       behavioral_contracts: ["the page is loaded from COS's server, as a person loads it"]
       error_paths: ["Clear Glass not running → the UI test skips and says why"]
+
+    - id: IF-IDEARIUM-REPOS
+      name: idearium-repos
+      path: idearium/api/index.js
+      description: "Idearium owns repos and their history (versions through Versionium, threads, notes, phases); COS reaches it only by route (§5.15)."
+      exports: ["POST /api/repos/import (repo.import-archive: a zip → a repo, materialized, pipeline, baseline snapshot)", "GET /api/repos/:uuid", "the repo versions and diff commands"]
+      behavioral_contracts: ["the repo's living model is the .spec in its spec folder (idearium/repo/living-spec.js)"]
+      error_paths: ["Idearium down → COS reads the bundle's metadata itself and holds the import until it answers, said"]
 
   modules:
 
@@ -580,7 +606,8 @@ spec:
       path: cos/ui/overview
       phase: MG18_the_supervisor_screen
       description: >-
-        What autopilot's /status and the home page's system tiles show, as one page: a card per system (SupervisedSystem): name, state,
+        The tablet (cos/tablet/index.html: a grid of system tiles, a system view, panels, Co-pilot) on compartments, his 2026-10-30 "look at
+        tablet except it uses the compartments"; what autopilot's /status and the home page's system tiles show, as one page: a card per system (SupervisedSystem): name, state,
         port, uptime, restarts and backoff, circuit, memory and CPU against its caps, last health and its time, critical and on-demand
         marks. Actions on a card: start, stop, restart, open its UI, reset the circuit (each a person act, confirmed). Header actions: boot
         core, boot all, stop all. A filter by state; undeclared systems listed apart, each with what its compartment.json lacks. Sort by
@@ -724,6 +751,64 @@ spec:
       error_paths: ["render fails → the status card, with why"]
       acceptance: ["a fixture compartment's index.html appears as its thumbnail and updates after a change; one with no UI says it has none"]
 
+    # ── add, deploy, connect, import, export: the system as one .spec (MG19–MG21, his 2026-10-30) ──
+
+    - id: MOD-MG-SPEC-BUNDLE
+      name: spec-bundle
+      uuid: nexus-cos-manager-spec-bundle-v1-0000-2026-1030-001
+      path: idearium/repo/spec-bundle.js
+      phase: MG19_the_spec_bundle
+      description: >-
+        Idearium packs and unpacks a SpecBundle (it owns repos and their history). Export: the repo's .spec as the metadata, the tree and every
+        history record (Versionium versions and commits by its route, conversations, notes and decisions, phases, changelogs, .benchmark nodes)
+        in the payload. Import: a .spec bundle, or any zip with a .spec in it, becomes the whole project repo through repo.import-archive, its
+        history restored beside it. Compare: two bundles, or a bundle and a repo, side by side: metadata, files and history.
+      deps: [{ name: idearium-repos }]
+      schema_refs: [SpecBundle]
+      exports: ["pack(repoUuid, { by }) → SpecBundle (written to a file)", "unpack(file) → { spec, files, history }", "read(file) → the metadata only",
+        "compare(a, b) → { meta, files: { added, removed, changed }, history }", "routes GET /api/repos/:uuid/export.spec, POST /api/repos/import (gains .spec),",
+        "POST /api/repos/compare; rows `repo export`, `repo import`, `repo compare`"]
+      gate_pipeline: ["GATE-MG19-001: format and hash", "GATE-MG19-002: never overwrite", "GATE-MG19-003: recorded in Versionium"]
+      behavioral_contracts: ["export then import gives the same tree and the same history counts and hashes", "secrets are never packed (the redaction objectChange uses)"]
+      error_paths: ["a history part its owner cannot serve (Versionium down) → packed as missing with why, never silently left out"]
+      acceptance: ["a repo exported, imported as a new repo, and compared with the first: no difference but the uuid"]
+
+    - id: MOD-MG-INTAKE
+      name: intake
+      uuid: nexus-cos-manager-intake-v1-0000-2026-1030-001
+      path: cos/manager/intake.js
+      phase: MG20_add_deploy_connect
+      description: >-
+        One way a system enters COS, four kinds. Import: a dropped file is read first and said: a COS release zip (COSA1, unchanged), a zip with
+        a .spec, or a .spec bundle (both go to Idearium's import, then a compartment is made for the repo, CS9). Deploy: a new compartment from a
+        template or archetype (the factory, MG8). Connect: a system already running elsewhere, by its address; COS shakes hands with it (§5.11)
+        and watches it without running it. Export: a compartment as a SpecBundle (Idearium's pack, plus how COS ran it).
+      deps: [{ name: spec-bundle }, { name: supervisor }, { name: factory }, { name: cos-runtime }]
+      schema_refs: [SpecBundle, SupervisedSystem]
+      exports: ["inspect(file) → { kind, meta, will }", "add({ file|template|address }, { by }) → { compartmentId, steps }", "exportOf(compartmentId, { by }) → file",
+        "routes POST /api/cos/intake/inspect, POST /api/cos/intake, GET /api/cos/compartments/:id/export.spec; rows `cos add`, `cos export`"]
+      gate_pipeline: ["GATE-MG20-001: inspected and said before anything is written", "GATE-MG20-002: person act", "GATE-MG20-003: each step a gate (architecture-spec RULE D)", "GATE-MG20-004: recorded"]
+      behavioral_contracts: ["each step (unpack, import, compartment, start, health) is a gate with its record; a failure says the step", "a connected system is never started or stopped by COS"]
+      error_paths: ["Idearium down → the file is kept in COS's inbox and the import waits for it, said", "handshake refused → not connected, with the reason"]
+      acceptance: ["a zip with a .spec dropped on COS becomes a repo in Idearium and a running compartment; a .spec bundle the same, with its history; a template deploys; a running address connects"]
+
+    - id: MOD-MG-UI-ADD
+      name: ui-add
+      uuid: nexus-cos-manager-ui-add-v1-0000-2026-1030-001
+      path: cos/ui/add
+      phase: MG21_the_add_screen
+      description: >-
+        Add a system: drop a file anywhere on the window or on this page, or pick Deploy (a template or archetype from the catalog) or Connect
+        (an address). Before anything happens the page shows what it found (the kind, the spec's name, version and history counts) and what it
+        will do; Add runs it, each step shown as it passes. Export sits on every compartment's Overview tab and on the Overview cards.
+      deps: [{ name: ui-core }, { name: intake }]
+      schema_refs: [SpecBundle]
+      exports: ["index.html, page.css, page.js; routes /api/cos/intake/*, GET /api/cos/compartments/:id/export.spec"]
+      gate_pipeline: ["GATE-MGUI-ADD-001: handshake", "GATE-MGUI-ADD-002: inspected before Add"]
+      behavioral_contracts: ["a drop shows what it is before it is used"]
+      error_paths: ["a step fails → the step and its error shown; what passed stays"]
+      acceptance: ["in Clear Glass: a zip with a .spec dropped, shown, added and running; exported again from its card"]
+
   events:
     cos:
       - "cos.system.state { name, state, pid, by }"
@@ -733,6 +818,8 @@ spec:
       - "cos.proposal.held { id, by, verb } / cos.proposal.taken { id, by }"
       - "cos.policy.changed { keys, by }"
       - "cos.handover { from, version }"
+      - "cos.intake.added { kind, compartment, by } / cos.intake.held { file, why }"
+      - "cos.export.written { compartment, sha256, by }"
 
   enforcement:
     gates:

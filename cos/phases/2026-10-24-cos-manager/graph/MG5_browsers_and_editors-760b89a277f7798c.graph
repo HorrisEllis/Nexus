@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793365823358
+exported_at: 1793376294555
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823358
-lastSeenAt: 1793365823358
+firstSeenAt: 1793376294555
+lastSeenAt: 1793376294555
 fingerprint: null
 payload:
   for: MG5_browsers_and_editors
@@ -107,6 +107,8 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
       - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
       - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
@@ -117,7 +119,7 @@ payload:
     lines:
       - layer 2 · blocked by MG0b_the_full_spec
       - 'depends on (1): MG0b_the_full_spec · all upstream 2'
-      - 'needed by (3): MG8_the_factory, MG9_the_console_ui, MG10_categories · all downstream 7'
+      - 'needed by (3): MG8_the_factory, MG9_the_console_ui, MG10_categories · all downstream 9'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
         kind: declared

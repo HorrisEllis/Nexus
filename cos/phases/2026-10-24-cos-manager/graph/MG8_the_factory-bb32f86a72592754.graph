@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793365823368
+exported_at: 1793376294563
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823368
-lastSeenAt: 1793365823368
+firstSeenAt: 1793376294563
+lastSeenAt: 1793376294563
 fingerprint: null
 payload:
   for: MG8_the_factory
@@ -35,6 +35,7 @@ payload:
       - docs/2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
     dependents:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
     upstream:
       - docs/2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
       - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
@@ -52,6 +53,8 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
       - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
       - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
@@ -68,7 +71,7 @@ payload:
       - >-
         depends on (4): MG5_browsers_and_editors, SV2_into_a_compartment,
         CE1_the_compartment_machine, EL1_electron_compiler · all upstream 12
-      - 'needed by (1): MG9_the_console_ui · all downstream 4'
+      - 'needed by (2): MG9_the_console_ui, MG20_add_deploy_connect · all downstream 6'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
         kind: declared

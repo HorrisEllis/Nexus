@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793365823389
+exported_at: 1793376294599
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823389
-lastSeenAt: 1793365823389
+firstSeenAt: 1793376294599
+lastSeenAt: 1793376294599
 fingerprint: null
 payload:
   for: MG18_the_supervisor_screen
@@ -31,7 +31,8 @@ payload:
     deps:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
-    dependents: []
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
     upstream:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
       - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
@@ -44,17 +45,22 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
-    downstream: []
+    downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+        files:
+          - cos/manager/contract.json
     dangling: []
     lines:
       - layer 6 · blocked by MG16_the_autopilot_door, MG_D1_ui_isolated_per_component
       - 'depends on (2): MG16_the_autopilot_door, MG_D1_ui_isolated_per_component · all upstream 11'
-      - 'needed by (0): —'
+      - 'needed by (1): MG21_the_add_screen'
+      - 'same files as MG20_add_deploy_connect with no order between them: cos/manager/contract.json'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
         kind: declared

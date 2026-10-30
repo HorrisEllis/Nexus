@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793365823351
+exported_at: 1793376294549
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823351
-lastSeenAt: 1793365823351
+firstSeenAt: 1793376294549
+lastSeenAt: 1793376294549
 fingerprint: null
 payload:
   for: MG3_the_state_manager
@@ -219,6 +219,9 @@ payload:
         files:
           - cos/manager/routes.js
           - idearium/cli/route-commands.js
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
+        files:
+          - idearium/cli/route-commands.js
     dangling: []
     lines:
       - >-
@@ -232,6 +235,9 @@ payload:
         MG9_the_console_ui, MG12_the_exe_is_the_compartment_manager · all downstream 6
       - >-
         same files as MG10_categories with no order between them: cos/manager/routes.js,
+        idearium/cli/route-commands.js
+      - >-
+        same files as MG19_the_spec_bundle with no order between them:
         idearium/cli/route-commands.js
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec

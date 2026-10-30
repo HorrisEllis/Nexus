@@ -83,6 +83,32 @@ decisions:
       compartment.json instead of autopilot's hard-coded list; §5.12 the pages float on the manager and the manager runs headless; §0.3 the
       door on :7799 keeps every caller working.
 
+  MG_D5_cos_is_the_orchestrator:
+    chosen: >-
+      COS is the orchestrator: it manages the overview (the tablet's, on compartments) and runs each system isolated in its compartment.
+      Confirms MG_D4's reading of the role. Open, smaller: whether :9000's API router later moves into COS too (not phased).
+    by: >-
+      his, 2026-10-30, answering MG_D4: "cos is the orchastrator, manages the overview, look at tablet except it uses the compartments as a
+      way to manage the compartments for each system and run them isolated." Same message: "no cos renamed to emerge." (read by the coder
+      as: COS keeps its name; emerge is "meant to be for new systems. like a tracker" — what emerge tracks is TO CONFIRM.)
+  MG_D6_the_spec_is_the_system:
+    chosen: >-
+      A system or project travels as one .spec file (SpecBundle): the spec is its metadata, a compressed payload is the whole tree, and its
+      history (versions, commits, conversations, notes, decisions, phases, changelogs, benchmarks) rides inside, appended, never rewritten. Any
+      zip with a .spec in it imports the whole project. COS and Idearium both export and import it; Idearium packs (it owns repos and their
+      history), COS asks it by route and adds how it ran the compartment.
+    by: >-
+      his, 2026-10-30: "i want a full manager for adding, deploying or connecting/importing a system into cos. can also drag and drop zips. any
+      zip with a .spec imports the entire project repo. the .spec is the entire compressed system, the spec is the metadata. i want each system
+      to export as a compressed .spec file, in cos and indearium. the spec is the history of each project, versions, conversations, all of it,
+      logged, tracked, expanded, compared, etc."
+    by_the_axioms: >-
+      The file's layout is decided by his axioms: §5.13 (the spec is the contract, the payload is not architecture) and §0.3 (nothing lost) give
+      a YAML file whose metadata comes first and whose payload is one compressed field last, so every .spec reader in Nexus (55 files in lib
+      alone) reads the metadata unchanged and none of them has to learn a container. The alternative, a zip renamed .spec, would break each of
+      those readers. §5.15 places the packer with Idearium (the owner of repos and their history) and keeps COS on its route; §5.15 rule 3:
+      with Idearium down, COS still reads the metadata and holds the import.
+
 phases:
   MG0b_the_full_spec:
     status: SPECCED 2026-10-30 — cos/spec/cos-manager.spec
@@ -294,6 +320,30 @@ phases:
       and the home page's tiles): ui/core (handshake, call, run, events, confirm), the shell (top bar, tree, router), Overview, Ledger,
       Proposals. MG9 then adds the compartment tabs, the catalog and automation on the same shell.
     proof: "driven in Clear Glass at /ui/shell/: a fixture system stopped, started and restarted from its card; the act on the Ledger with by = the person; an undeclared call refused and shown"
+  MG19_the_spec_bundle:
+    status: OPEN
+    depends_on: [MG0b_the_full_spec, MG_D6_the_spec_is_the_system]
+    files: [idearium/repo/spec-bundle.js, idearium/api/index.js, idearium/cli/route-commands.js, lib/node-schemas/schema.spec_bundle, tests/modules/test-spec-bundle.test.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-SPEC-BUNDLE]
+    does: "Idearium packs, unpacks, reads and compares a SpecBundle; GET /api/repos/:uuid/export.spec; POST /api/repos/import takes a .spec and any zip with a .spec; rows repo export|import|compare"
+    proof: "a repo exported, imported as a new repo and compared with the first: no difference but the uuid; a corrupted payload refused before anything is written"
+  MG20_add_deploy_connect:
+    status: OPEN
+    depends_on: [MG19_the_spec_bundle, MG15_the_supervisor_in_cos, MG8_the_factory, CS9_every_project_a_compartment]
+    files: [cos/manager/intake.js, cos/manager/server.js, cos/manager/contract.json, tests/modules/test-cos-intake.test.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-INTAKE]
+    does: "COS's one way in: inspect a dropped file and say what it is; import (release zip, zip with a .spec, .spec bundle), deploy (template), connect (address, handshake); export a compartment as a .spec"
+    proof: "each kind added to a fixture COS through the route and the row, each step a gate on the ledger; Idearium stopped, the import is held and said"
+  MG21_the_add_screen:
+    status: OPEN
+    depends_on: [MG20_add_deploy_connect, MG18_the_supervisor_screen]
+    files: [cos/ui/add, cos/ui/shell, cos/manager/contract.json]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-UI-ADD]
+    does: "the Add page and the window-wide drop: what was found, what will happen, Add, each step shown; Export on every card and compartment"
+    proof: "driven in Clear Glass: a zip with a .spec dropped, shown, added and running, then exported from its card"
 
 build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → MG8 → MG9. Backend → route → command → UI in each, and MG9 (the UI) last, as he said. Sovereignty of Nexus's own systems (SV1–SV7) goes on alongside; COS opening a Nexus system waits on it (CS_D7)."
 
@@ -347,3 +397,18 @@ build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → M
 #     core, shell, Overview, Ledger, Proposals).
 # build_order addendum: MG0b → MG15 → MG16 → MG18 → MG17, then MG1–MG14 as before. The supervisor screen comes before the rest of the UI
 # because it replaces something running today. The handover comes after the screen, so his stack never runs without a way to see it.
+
+# ── ADDENDUM 2026-10-30 (b) — COS is the orchestrator (his); the system travels as one .spec; add, deploy, connect, import, export ───
+# James, 2026-10-30: "no cos renamed to emerge. integrating its meant to be for new systems. like a tracker. / cos is the orchastrator, manages
+# the overview, look at tablet except it uses the compartments as a way to manage the compartments for each system and run them isolated. /
+# i want a full manager for adding, deploying or connecting/importing a system into cos. can also drag and drop zips. any zip with a .spec
+# imports the entire project repo. the .spec is the entire compressed system, the spec is the metadata. i want each system to export as a
+# compressed .spec file, in cos and indearium. the spec is the history of each project, versions, conversations, all of it, logged, tracked,
+# expanded, compared, etc. / also idearium and emerge and warp integrate into one?"
+# Recorded: MG_D5 (COS is the orchestrator; MG_D4's role reading confirmed), MG_D6 (the spec is the system). New: SpecBundle, MG19 (Idearium
+# packs), MG20 (COS's intake), MG21 (the Add screen). The Overview page is the tablet on compartments (MOD-MG-UI-OVERVIEW).
+# Stands on: POST /api/repos/import (repo.import-archive), idearium/repo/living-spec.js, COSA1's release-zip drop, MG8's factory, CS9.
+# His three-way question was asked and decided on 2026-10-24 (docs/2026-10-24-emerge-warp-system-phasemap.spec EW_D0/EW_D1, his "okay warp
+# and emerge."): emerge and warp one system, the spec compiler and IDE in Idearium (EW1-EW3 done, EW4-EW5 open). Asked again; the coder's
+# answer is in the reply, his call stands until he changes it.
+# build_order addendum: ... MG18 → MG19 → MG20 → MG21.
