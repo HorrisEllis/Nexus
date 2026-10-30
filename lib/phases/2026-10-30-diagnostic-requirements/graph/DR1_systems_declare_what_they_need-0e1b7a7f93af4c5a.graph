@@ -1,0 +1,90 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DR1_systems_declare_what_they_need:0e1b7a7f93af4c5a
+type: graph
+id: phase:DR1_systems_declare_what_they_need:0e1b7a7f93af4c5a
+context: dependency graph of phase DR1_systems_declare_what_they_need
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793383782978
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793383782978
+lastSeenAt: 1793383782978
+fingerprint: null
+payload:
+  for: DR1_systems_declare_what_they_need
+  kind: phase
+  repo: null
+  hash: 0e1b7a7f93af4c5a
+  nodes:
+    - path: copilot/compartment.json
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/compartment.json
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/system-shape.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-system-shape-requires.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: diagnostic/tests/shape.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-system-shape.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: diagnostic/tests/shape.test.js
+      to: lib/system-shape.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-shape.js
+      kind: requires
+    - from: tests/modules/test-system-shape.test.js
+      to: lib/system-shape.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D0_diagnostic_takes_care_of_it
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D2_declared_by_each_system
+    dependents:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR2_diagnostic_checks_them
+    upstream:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D0_diagnostic_takes_care_of_it
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D2_declared_by_each_system
+    downstream:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR2_diagnostic_checks_them
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR4_fixed_under_policy
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR5_seen_and_fixed_from_the_screens
+    blockedBy:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D0_diagnostic_takes_care_of_it
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D2_declared_by_each_system
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by DR_D0_diagnostic_takes_care_of_it, DR_D2_declared_by_each_system
+      - 'depends on (2): DR_D0_diagnostic_takes_care_of_it, DR_D2_declared_by_each_system'
+      - 'needed by (1): DR2_diagnostic_checks_them · all downstream 3'
+    edges:
+      - from: docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D0_diagnostic_takes_care_of_it
+        kind: declared
+      - from: docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D2_declared_by_each_system
+        kind: declared

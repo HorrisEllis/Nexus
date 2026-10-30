@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-diagnostic-requirements-phasemap.spec::DR1_systems_declare_what_they_need
+type: phase
+id: docs_2026-10-30-diagnostic-requirements-phasemap.spec::DR1_systems_declare_what_they_need
+context: >-
+  pipeline phase DR1_systems_declare_what_they_need of
+  docs/2026-10-30-diagnostic-requirements-phasemap.spec
+intent: null
+summary: DR1_systems_declare_what_they_need (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793383782978
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793383782978
+lastSeenAt: 1793383782978
+fingerprint: null
+payload:
+  id: DR1_systems_declare_what_they_need
+  map: docs/2026-10-30-diagnostic-requirements-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/system-shape.js
+    - cortex/compartment.json
+    - copilot/compartment.json
+    - tests/modules/test-system-shape-requires.test.js
+  depends_on:
+    - DR_D0_diagnostic_takes_care_of_it
+    - DR_D2_declared_by_each_system
+  blocks:
+    - MOD-DR-DECLARE
+  spec: diagnostic/spec/requirements.spec
+  graph: 0e1b7a7f93af4c5a

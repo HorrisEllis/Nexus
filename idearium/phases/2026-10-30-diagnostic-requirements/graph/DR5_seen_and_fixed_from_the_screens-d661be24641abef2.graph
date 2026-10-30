@@ -1,0 +1,204 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DR5_seen_and_fixed_from_the_screens:d661be24641abef2
+type: graph
+id: phase:DR5_seen_and_fixed_from_the_screens:d661be24641abef2
+context: dependency graph of phase DR5_seen_and_fixed_from_the_screens
+intent: null
+summary: 21 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793383782987
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793383782987
+lastSeenAt: 1793383782987
+fingerprint: null
+payload:
+  for: DR5_seen_and_fixed_from_the_screens
+  kind: phase
+  repo: null
+  hash: d661be24641abef2
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/automation/templates.js
+      role: changes
+      exists: true
+      system: lib
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR4_fixed_under_policy
+    dependents: []
+    upstream:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR1_systems_declare_what_they_need
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR2_diagnostic_checks_them
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR3_the_owner_can_fix_it
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR4_fixed_under_policy
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D0_diagnostic_takes_care_of_it
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D1_detect_then_owner_fixes
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D2_declared_by_each_system
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D3_downloads_ask_first
+    downstream: []
+    blockedBy:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR4_fixed_under_policy
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by DR4_fixed_under_policy
+      - 'depends on (1): DR4_fixed_under_policy · all upstream 8'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR4_fixed_under_policy
+        kind: declared
