@@ -182,3 +182,34 @@ emerge-codegen-v2 compiles requires.
 #   as its gate accepts it, which agent wrote it, the checker's verdict, the rejected attempts. Supersedes EW4's "the IDE into Idearium"
 #   (a move of the old copy); EW4 is kept as written (§0.3).
 # Not built; specs next, in Emerge's repo for what is Emerge's (the compound build), in Idearium's for the work area.
+
+# ── ADDENDUM 2026-10-30 (b) — crystal memory in Emerge: scan, pattern, graph, confidence, adversary, test, crystallize (his) ──────────
+# James, 2026-10-30: "what about adding as much code as possible. like using the intelligence system to scan each ai response, each output.
+# integrating a pattern memory into emerge. a graph for edges, nodes, functions, traversal, gaps, like the relationship between the words.
+# then the confidence scoring, and the adversarial agent to verify it, then it crystalizes. thats how the crystal memory is meant to work.
+# verify, test, crystalized."
+# EW_D4 (his): every model output Emerge receives is scanned, learned from as patterns in a graph, scored, verified by an adversarial agent,
+# tested, and only then crystallized; a crystal is reused. The order is his: verify, test, crystallize.
+# What each stage stands on (read 2026-10-30, the coder's census):
+#   scan each output   Emerge: every model answer is already a T2 result, accepted or kept as .t2-rejected (compiler/t2-gate.js); Emerge's
+#                      observe/ reads its ledger (deltas, sigma, CFR field, liminal, gap hunt). Nexus: Intelligence observes agent replies.
+#   pattern memory     Nexus: lib/pattern-leverage.js, intelligence/mastermind.js (recurring shapes), schema.bep_pattern, schema.pattern_sequence.
+#   the graph          Emerge: compiler/kg-builder.js (nodes, edges, depth, BLACK gaps), observe/gaps.js. Nexus: intelligence/relational-field.js
+#                      (RFR2: causes of friction), the lattice. "the relationship between the words": the CIE-EG text model keeps a symbol's
+#                      identity and its interpretation apart (§2.5), so a word is a node and its uses are edges.
+#   confidence         Nexus: lib/agent-confidence-gate.js (below 75%, get context first), cortex/core/raid/snr-filter.js; schema.crystal's
+#                      success_probability.
+#   adversarial agent  Nexus: intelligence/adversarial.js (two readings compared; a contradiction is a gap), lib/meta/adversary-suite.js
+#                      (six attack classes: syntax, logic, edge case, state, cross-domain, stress).
+#   test               Emerge: the checker and the interpreter's tests; the behaviour schemas (architecture-spec RULE A) at the hook (CIE-EG shape).
+#   crystallize        Nexus: schema.crystal (pattern_signature, entry and exit conditions, success_probability, failure_boundaries,
+#                      support_paths, usage_count), lib/warp's crystallizer (an exact digest served at zero cost). Emerge's axiom
+#                      PROOF_REQUIRED_FOR_PROMOTION (lib/emerge/emerge.spec). CIE-EG has no crystal yet: it is new to Emerge.
+# The coder's readings, TO CONFIRM:
+#   - The crystal is what makes the compound build (EW_D3) compound: WARP reuses only an exact digest; a crystal is reused wherever its
+#     pattern_signature and entry conditions match, with its success_probability, so a statement once proven is not asked for again.
+#   - "adding as much code as possible": bring in as much of what Nexus already has as possible. CIE-EG §0 sets the terms: anything added to
+#     Emerge's Node runtime is temporary and worth adding only if it can be written again in .eg; and Emerge depends on nothing above it. So
+#     the Nexus pieces come in as modules of an Emerge spec (their design, their tests, their schemas), built by Emerge in .eg, not copied
+#     as JavaScript. The crystal and pattern node shapes come in as Emerge registry records (CIE-EG §5).
+# Specs next, in Emerge's repo (asked of him 2026-10-30, not yet answered). Not built.
