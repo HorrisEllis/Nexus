@@ -7,9 +7,11 @@
  *
  * The facts, from his screenshots: Overview shows "Suggested categories" (links "Programming & Tech > AI Development"), "Service type" (a
  * dropdown) and "Gig metadata" (tabs of checkboxes); Scope & Pricing shows "Scope & Pricing" and "Packages" with BASIC / STANDARD / PREMIUM.
- * The editor's other pages are not on record: a page this cannot place is said as unknown, never guessed.
+ * The editor's other pages are not on record: a page this cannot place is said as unknown, never guessed. 2026-10-30 GF2: Description & FAQ,
+ * Requirements and Gallery placed by their words and the address's tab= (the coder's reading, to confirm on his machine).
  *
- *   gigPage(read)          read = the driver's readPage (url, title, headings, text, links) → { page: 'overview'|'pricing'|null, why }
+ *   gigPage(read)          read = the driver's readPage (url, title, headings, text, links) → { page: 'overview'|'pricing'|'description'|
+ *                          'requirements'|'gallery'|null, why }
  *   PARTS[page]            the gig parts each page takes, in order — the fill does these and nothing else there
  *   targetKey(page, part)  'fiverr:<page>:<part>' — where a picked element is remembered (page-memory setTarget)
  *   suggestedCategory(links, gig) → the "Category > Subcategory" link for the gig's category, by option-match (ambiguous / missing said)
@@ -25,25 +27,41 @@ const SIGNS = Object.freeze({
     // 0.60.283 — James, 2026-10-29, with a screenshot of a NEW gig's Overview (Gig title, SELECT A CATEGORY, Search tags): "the autofill is still
     // buggy. like i want autofill to do it all if possible." A new gig shows none of the three above until a category is picked.
     /gig title/i, /select a category/i, /search tags/i, /positive keywords/i],
+  // 2026-10-30 GF2 — James: "fix the autofill to work with all fields". The editor's other pages, by their own words (the coder's reading of
+  // Fiverr's editor, not his screenshots: to confirm on his machine). A page still not placed is said, never guessed.
+  description: [/description\s*&\s*faq/i, /briefly describe your gig/i, /frequently asked questions/i, /\badd faq\b/i],
+  requirements: [/get all the information you need from buyers/i, /add new question/i, /requirements?\b/i, /answer type/i],
+  gallery: [/gig gallery/i, /showcase your services/i, /images?\s*\(up to 3\)/i, /documents?\s*\(up to 2\)/i],
 });
+// the editor's address names its page (?tab=…): worth two signs, as the new-gig address already was
+const TAB_OF = { general: 'overview', pricing: 'pricing', description: 'description', requirements: 'requirements', gallery: 'gallery' };
 
 const PARTS = Object.freeze({
-  overview: ['category', 'tags'],   // 0.60.283: tags too (Search tags, typed one by one)
+  overview: ['title', 'category', 'tags'],   // 0.60.283: tags too (Search tags, typed one by one); 2026-10-30 GF2: the title
   pricing: ['basic.name', 'standard.name', 'premium.name', 'basic.description', 'standard.description', 'premium.description',
     'basic.delivery', 'standard.delivery', 'premium.delivery',
     // 0.60.286 GM2 — James: "do everything you can ... to get fiverr operational": revisions and price were never filled
     'basic.revisions', 'standard.revisions', 'premium.revisions', 'basic.price', 'standard.price', 'premium.price'],
+  description: ['description', 'faq'],        // 2026-10-30 GF2: every FAQ is one part, filled item by item (bridge _gigList)
+  requirements: ['requirement'],              // every buyer question, item by item
+  gallery: [],                                // his files to add: said, never guessed
 });
 
 function gigPage(read) {
   const r = read || {};
   const hay = [r.title || '', ...(r.headings || []).map(h => (h && h.text) || h || ''), String(r.text || '').slice(0, 6000)].join('\n');
   if (!/fiverr\.com/i.test(String(r.url || '')) && !/fiverr/i.test(r.title || '')) return { page: null, why: 'not a Fiverr page' };
-  const score = (p) => SIGNS[p].filter(re => re.test(hay)).length;
-  const pr = score('pricing'), ov = score('overview') + (/manage_gigs\/new|[?&]tab=general\b/i.test(String(r.url || '')) ? 2 : 0);
+  const url = String(r.url || '');
+  const tab = (/[?&]tab=(\w+)/i.exec(url) || [])[1];
+  const score = (p) => SIGNS[p].filter(re => re.test(hay)).length
+    + (TAB_OF[tab && tab.toLowerCase()] === p ? 2 : 0) + (p === 'overview' && /manage_gigs\/new/i.test(url) && !tab ? 2 : 0);
+  const pr = score('pricing'), ov = score('overview');
   if (pr >= 2 && pr >= ov) return { page: 'pricing', why: 'shows Scope & Pricing and Packages' };
+  // GF2: the address's tab decides first among the others; then the page's words
+  const rest = ['description', 'requirements', 'gallery'].map(p => [p, score(p)]).sort((a, b) => b[1] - a[1]);
+  if (rest[0][1] >= 2 && rest[0][1] > ov) return { page: rest[0][0], why: `shows the ${rest[0][0]} page's words${TAB_OF[tab] === rest[0][0] ? ' and its tab in the address' : ''}` };
   if (ov >= 2) return { page: 'overview', why: 'shows the category and gig metadata sections' };
-  return { page: null, why: 'a Fiverr page this does not know yet (only Overview and Scope & Pricing are on record) — point at the fields to teach it' };
+  return { page: null, why: 'a Fiverr page this does not know yet (Overview, Scope & Pricing, Description & FAQ, Requirements, Gallery are known) — point at the fields to teach it' };
 }
 
 const targetKey = (page, part) => `fiverr:${page}:${part}`;
@@ -79,6 +97,11 @@ function valueOf(gig, part) {
   if (!gig) return null;
   if (part === 'category') return gig.category ? (gig.subcategory ? `${gig.category} > ${gig.subcategory}` : gig.category) : null;
   if (part === 'tags') return Array.isArray(gig.tags) && gig.tags.length ? gig.tags.slice(0, 5).join(', ') : null;   // 0.60.283
+  // 2026-10-30 GF2 — the title without the "I will" the editor shows itself; the description; the lists as a count (filled item by item)
+  if (part === 'title') return gig.title ? String(gig.title).replace(/^I will\s+/i, '') : null;
+  if (part === 'description') return gig.description ? String(gig.description) : null;
+  if (part === 'faq') return Array.isArray(gig.faq) && gig.faq.some(f => f && f.question && f.answer) ? `${gig.faq.filter(f => f && f.question && f.answer).length} FAQ` : null;
+  if (part === 'requirement') return Array.isArray(gig.requirements) && gig.requirements.some(Boolean) ? `${gig.requirements.filter(Boolean).length} question(s)` : null;
   const [tier, k] = String(part).split('.'); const p = gig.packages && gig.packages[tier]; if (!p) return null;
   const v = k === 'delivery' ? (Number.isFinite(p.deliveryDays) ? String(p.deliveryDays) : null)
     : k === 'revisions' ? (p.revisions == null || p.revisions === '' ? null : /unlimited/i.test(String(p.revisions)) ? 'Unlimited' : String(p.revisions))   // 0.60.286 GM2

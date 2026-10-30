@@ -421,6 +421,7 @@ const SUITES = [
   'test-history-nodes.test.js',            // 0.60.285 HN1–HN3 — Idearium's history as nodes per unit (.exchange .input .response .tool_call .code_block)
   'test-release-backfill-off-process.test.js', // 0.60.285 — the full release backfill in a child process (0.60.278 froze Versionium for 1113 s)
   'test-gig-fill-menu.test.js',   // 0.60.286 GM1–GM3 — the Fiverr fill menu: ticks, dropdowns, only what is ticked; price and revisions
+  'test-gig-all-fields.test.js',  // 0.60.290 GF1–GF4 — every field (title, rich description, FAQs, buyer questions) read back; friction → his site keys
   'test-intent-flow.test.js',     // 0.60.286 FA8–FA10 — type what you want: intent → context → DAG → found → gaps → contract
   'test-project-spine.test.js',   // 0.60.286 FA — import whole, the registry as the spine, refactor, split, convert, finish
   'test-versionium-everywhere.test.js',   // 0.60.278 VE0–VE5 — every change and every version in Versionium, in full (§17.12)

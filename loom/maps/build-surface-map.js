@@ -67,6 +67,8 @@ const FILES = [
   // 0.60.286 GM — James: "make a full menu with check boxes, adn drop downs if applicable"
   ['clear-glass/src/autofill/gig-menu.js', I('clear-glass/src/autofill/gig-menu.js'), []],
   ['clear-glass/renderer/gig-menu.js', I('clear-glass/renderer/gig-menu.js'), [I('clear-glass/renderer/gig-panel.js')]],   // window.CgGigPanel, cg.autofill.gigMenu/gigFill over IPC
+  // 2026-10-30 GF — James: "fix the autofill to work with all fields, and if you run into friction use the per site keybindings that I proposed"
+  ['clear-glass/src/autofill/gig-fields.js', I('clear-glass/src/autofill/gig-fields.js'), []],
   ['lib/repo-history-nodes.js', I('lib/repo-history-nodes.js'), [I('lib/node-export.js'), I('lib/test-sandbox.js')]],   // 0.60.285 HN1 — Idearium's history as nodes, one per unit
   ['lib/automation/pipeline.js', I('lib/automation/pipeline.js'), [I('lib/automation/engine.js'), I('lib/automation/steps.js')]],   // 0.60.284 PL1 — WORKFLOWS_DIR; byType, validateStep
   ['clear-glass/renderer/settings/sections/pipelines.js', I('clear-glass/renderer/settings/sections/pipelines.js'), [I('lib/automation/routes.js')]],   // 0.60.284 PL4 — wire /automation/pipelines*
@@ -515,6 +517,8 @@ const CONSUMERS = [
   ['nexus.idearium.api', I('lib/project-convert.js'), '0.60.286 FA6 repo.convert — md → spec, a spec build plan → phasemap'],
   ['nexus.idearium.api', I('lib/intent-flow.js'), '0.60.286 FA9 repo.intent — intent → context → DAG → gaps → contract'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig-menu.js'), '0.60.286 GM2 _gigMenu / _gigFill(edits) — lazy require'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig-fields.js'), '0.60.290 GF3 _gigText / _gigList / _gigSiteKey — lazy require'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/shortcuts/site-keys.js'), '0.60.290 GF4 friction → his keys for the part (forPart) — lazy require'],
 ];
 
 function mapBuildSurface(driver) {

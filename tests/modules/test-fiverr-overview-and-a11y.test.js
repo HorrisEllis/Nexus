@@ -53,7 +53,7 @@ const A11Y = `<!doctype html><html><head><style>html.a11y-mode a{color:yellow;ba
     const r = GP.gigPage({ url: 'https://www.fiverr.com/users/x/manage_gigs/new?wizard=0&tab=general', title: 'Fiverr', text: 'Gig title Category SELECT A CATEGORY SELECT A SUBCATEGORY Search tags Positive keywords' });
     assert.strictEqual(r.page, 'overview', JSON.stringify(r));
     assert.strictEqual(GP.gigPage({ url: 'https://www.fiverr.com/x', text: 'Gig title Search tags' }).page, 'overview', 'two signs are enough without the address');
-    assert.deepStrictEqual(GP.PARTS.overview, ['category', 'tags']);
+    assert.deepStrictEqual(GP.PARTS.overview, ['title', 'category', 'tags']);   // 2026-10-30 GF2: the title too ("work with all fields")
     assert.strictEqual(GP.valueOf({ tags: ['a', 'b', 'c', 'd', 'e', 'f'] }, 'tags'), 'a, b, c, d, e', 'at most 5');
   });
 

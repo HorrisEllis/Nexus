@@ -4,7 +4,7 @@
  *
  * James, 2026-10-28: "could always try arrows, or a number. any way you can add all of that to the keybindings. like elements to keys, per site?"
  *
- * A binding is { do, selector?, option?, key?, macro?, label? } under a site (its origin) and a key (an accelerator, as registry.js normalizes):
+ * A binding is { do, selector?, option?, key?, macro?, label?, part? } (part, 2026-10-30 GF4: the gig part the fill uses it for on friction) under a site (its origin) and a key (an accelerator, as registry.js normalizes):
  *   click   — the element (a CSS selector, or the XPath the element picker gives), with the pointer
  *   choose  — the dropdown at the element, the option meant (ClearDriver choose: arrows and the number when a click does not take)
  *   key     — one key into the page (Down, Up, Enter, a digit …), after a click on the element when one is named
@@ -16,6 +16,7 @@
  *   unbind(map, url, accel)      → { map } | { error }
  *   forUrl(map, url)             → { [accel]: binding }     this site's keys
  *   lookup(map, url, accel)      → binding | null
+ *   forPart(map, url, part)      → [{ accel, binding }]     this site's keys that serve one gig part (GF4)
  *   steps(binding)               → [{ action, … }]          the ClearDriver commands it runs (a macro is { macro })
  *   isXPath(selector)            → true for an XPath ("/html/…", "//div", "(//a)[2]")
  *   markScript(xpath)            → a page expression: marks the element the XPath names (data-cg-sitekey) → true, or false when it is not there
@@ -39,6 +40,8 @@ function validate(b) {
   if (b.do === 'key') { if (!short(b.key, 20)) return { ok: false, why: 'key needs the key to press (Down, Up, Enter, a digit …)' }; out.key = b.key.trim(); }
   if (b.do === 'macro') { if (!short(b.macro, 120)) return { ok: false, why: 'macro needs the macro\'s name' }; out.macro = b.macro.trim(); }
   if (b.label != null && b.label !== '') out.label = String(b.label).slice(0, 120);
+  // 2026-10-30 GF4 — the gig part a key serves ('description', 'basic.delivery', 'faq' …): the fill uses it when that part meets friction
+  if (b.part != null && b.part !== '') { if (!/^[\w.-]{1,80}$/.test(String(b.part))) return { ok: false, why: 'part is a gig part key, like description or basic.delivery' }; out.part = String(b.part); }
   return { ok: true, binding: out };
 }
 
@@ -59,6 +62,8 @@ function unbind(map = {}, url, accel) {
   return { map: next, origin, accel: a };
 }
 
+// 2026-10-30 GF4 — James: "if you run into friction use the per site keybindings that I proposed." His keys on this site for one gig part.
+function forPart(map = {}, url, part) { return Object.entries(forUrl(map, url)).filter(([, b]) => b && b.part === part).map(([accel, binding]) => ({ accel, binding })); }
 function forUrl(map = {}, url) { const o = originOf(url); return (o && map && map[o]) ? { ...map[o] } : {}; }
 function lookup(map = {}, url, accel) { const a = R.normalize(accel); return (a && forUrl(map, url)[a]) || null; }
 
@@ -84,8 +89,8 @@ function describe(b) {
   if (b.do === 'click') return `Click ${on}`;
   if (b.do === 'choose') return `Choose "${b.option}" in ${on}`;
   if (b.do === 'key') return `Press ${b.key}${b.selector ? ` in ${on}` : ''}`;
-  if (b.do === 'macro') return `Run macro “${b.macro}”`;
+  if (b.do === 'macro') return `Run macro “${b.macro}”${b.part ? ` (for ${b.part})` : ''}`;
   return b.do;
 }
 
-module.exports = { DO, MARKED, originOf, isXPath, markScript, validate, bind, unbind, forUrl, lookup, steps, describe };
+module.exports = { DO, MARKED, originOf, isXPath, markScript, validate, bind, unbind, forUrl, forPart, lookup, steps, describe };

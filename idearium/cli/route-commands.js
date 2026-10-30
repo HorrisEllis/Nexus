@@ -1296,11 +1296,11 @@ export const SPEC = [
       for (const k of ['electron', 'clearGlass', 'nexus']) { const x = d[k]; if (!x || typeof x !== 'object') continue; console.log(`  ${k.padEnd(11)} ${x.error ? 'could not check: ' + x.error : (x.newer ? h.c.yellow(`newer: ${x.latest} (you have ${x.current})`) : `up to date (${x.latest})`)}`); }
     } },
   // 0.60.275 KB2 — James, 2026-10-28: "any way you can add all of that to the keybindings. like elements to keys, per site?"
-  { key: 'glass.keys', repo: false, usage: 'glass keys [<site url>] | glass keys bind <site url> <keys> click|choose|key|macro [--selector s] [--option o] [--key k] [--macro name] | glass keys unbind <site url> <keys>',
+  { key: 'glass.keys', repo: false, usage: 'glass keys [<site url>] | glass keys bind <site url> <keys> click|choose|key|macro [--selector s] [--option o] [--key k] [--macro name] [--part gig-part] | glass keys unbind <site url> <keys>',
     about: 'keys bound to elements, per site: on that site the key clicks the element, chooses an option in its dropdown, presses a key in the page, or runs a macro (it wins over a global shortcut there)',
     req: (a) => {
       const [op, url, accel, what] = a.args || [];
-      if (op === 'bind') return { system: 'clear-glass', method: 'POST', path: '/cli/site-keys', body: { url, accel, binding: { do: what, selector: a.flags.selector, option: a.flags.option, key: a.flags.key, macro: a.flags.macro, label: a.flags.label } } };
+      if (op === 'bind') return { system: 'clear-glass', method: 'POST', path: '/cli/site-keys', body: { url, accel, binding: { do: what, selector: a.flags.selector, option: a.flags.option, key: a.flags.key, macro: a.flags.macro, label: a.flags.label, part: a.flags.part } } };
       if (op === 'unbind') return { system: 'clear-glass', method: 'POST', path: '/cli/site-keys/remove', body: { url, accel } };
       return { system: 'clear-glass', method: 'GET', path: `/cli/site-keys${op ? `?url=${encodeURIComponent(op)}` : ''}` };
     },

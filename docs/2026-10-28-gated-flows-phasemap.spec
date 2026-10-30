@@ -315,3 +315,42 @@ can you get fiverr to work, now with the keybindings, and gates"
 - FG5: the new gig's Overview is recognised; category and subcategory through the gated node "Fiverr gig - choose category" (built-in
   fallback); tags one by one, each gated. choose takes shows alone.
 - Proof: tests/modules/test-fiverr-overview-and-a11y.test.js 5/5.
+
+## ADDENDUM 2026-10-30 — GF1–GF4: every field of the gig, and his site keys when there is friction
+James, 2026-10-30: "the fiverr automation. isn't working. like the autofill needs to do all the work it can. like can you fix the autofill to
+work with all fields, and if you run into friction use the per site keybindings that I proposed."
+Grounded (read, not assumed): the Fill menu listed the title, the description, every FAQ and every buyer question, and the fill never
+filled them on any page. gigPage knew only Overview and Scope & Pricing, so on Description & FAQ and Requirements it filled nothing. The text
+fill found boxes only by name/label/placeholder (input, textarea), so Fiverr's description, a rich editor, was never matched; setValue on a
+rich editor sets textContent, which such editors ignore. His site keys (KB2) ran only when he pressed them; the fill never used them.
+Decided by his axioms: §8.6 reuse (the driver, the marks, KB2's bindings and steps, the bridge's fill; no second key system, no second
+fill); §1.2 nothing silent (each part read back, each site key used is said, a part not done says why and how to bind a key for it);
+USER_AUTONOMY / FI_D1 (Save, Publish, Continue stay his; the scripts never click them).
+Readings (the coder's, to confirm on his machine): the editor's other pages carry tab=description / tab=requirements / tab=gallery in the
+address (from the coder's knowledge of Fiverr, not his screenshots); an FAQ and a buyer question are added through their own Add button and
+confirmed with a button named Add. Each is a guess about a page not on record until his run shows it, which is why friction falls to his keys.
+phases_gf:
+  GF1_every_field_found_by_its_section:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GF1]
+    status: BUILT 0.60.290
+    depends_on: [GM1_the_fill_menu_model]
+    files: [clear-glass/src/autofill/gig-fields.js, tests/modules/test-gig-all-fields.test.js]
+  GF2_every_editor_page_known:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GF2]
+    status: BUILT 0.60.290
+    depends_on: [GF1_every_field_found_by_its_section]
+    files: [clear-glass/src/autofill/gig-pages.js]
+  GF3_text_and_lists_filled_and_read_back:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GF3]
+    status: BUILT 0.60.290
+    depends_on: [GF2_every_editor_page_known, GM2_fill_only_what_is_ticked]
+    files: [clear-glass/src/ipc/bridge.js, clear-glass/src/driver/index.js]
+  GF4_friction_goes_to_his_site_keys:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GF4]
+    status: BUILT 0.60.290
+    depends_on: [GF3_text_and_lists_filled_and_read_back, KB2_site_keys, KB3_site_keys_ui]
+    files: [clear-glass/src/shortcuts/site-keys.js, clear-glass/src/ipc/bridge.js, clear-glass/renderer/site-keys/bind-bar.js]

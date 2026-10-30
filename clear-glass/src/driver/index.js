@@ -13,7 +13,7 @@ const { BrowserWindow, webContents } = require('electron');
 const { randomUUID: uuidv4 } = require('crypto'); // §BUGFIX 2026-08-23 — the real 'uuid' npm package was never installed (checked node_modules and package.json directly); this crashed every real file that required it, including boot-critical ones. Node's own built-in produces the identical UUID format, zero dependency.
 
 // actions that change a page: refused where the site says agents may not drive it (navigate checks its target instead)
-const DRIVING = new Set(['click', 'type', 'scroll', 'hover', 'eval', 'select', 'choose', 'check', 'checkAt', 'typeAt', 'setValue', 'pressKey', 'upload', 'pointer', 'inject', 'cookies.set', 'cookies.clear', 'storage.set', 'back', 'forward', 'reload']);
+const DRIVING = new Set(['click', 'type', 'scroll', 'hover', 'eval', 'select', 'choose', 'check', 'checkAt', 'typeAt', 'setValue', 'insertText', 'pressKey', 'upload', 'pointer', 'inject', 'cookies.set', 'cookies.clear', 'storage.set', 'back', 'forward', 'reload']);
 const AGENT_PAGE = /^(mesh|ncp|auto)-/;
 
 class ClearDriver {
@@ -95,6 +95,7 @@ class ClearDriver {
       case 'typeAt':         return this._typeAt(agentId, args);       // 0.60.286 GM2 — the text box at a column and a row (a package's price), typed, read back
       case 'check':          return this._check(agentId, args);
       case 'setValue':       return this._setValue(agentId, args);
+      case 'insertText':     return this._insertText(agentId, args);
       case 'pressKey':       return this._pressKey(agentId, args);
       case 'upload':         return this._upload(agentId, args);
       // §0.39.279 — the interaction field (src/page/field.js): see the page as numbered x/y/z targets, point at one
@@ -1067,6 +1068,36 @@ class ClearDriver {
     })()`);
     if (!r || !r.ok) throw new Error(`setValue ${selector}: ${(r && r.error) || 'failed'}`);
     return r;
+  }
+
+  // 2026-10-30 GF3 — James: "fix the autofill to work with all fields". A rich editor (Fiverr's description) ignores a value set from script
+  // (setValue writes textContent, which its own model never sees). This puts the text in the way a keyboard does: focus the box, select what is
+  // there, insert as typed text (Electron's insertText; execCommand when there is none), Enter between lines; then read it back.
+  async _insertText(agentId, { selector, text = '' } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (!selector) throw new Error('insertText requires selector');
+    const sel = JSON.stringify(selector);
+    const ready = await this._evalJs(wc, `(function(){ var el = document.querySelector(${sel}); if (!el) return { ok:false, error:'element not found' };
+      el.scrollIntoView && el.scrollIntoView({ block:'center' }); el.focus && el.focus();
+      if (/^(INPUT|TEXTAREA)$/.test(el.tagName)) el.select();
+      else { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+      return { ok:true, rich: !/^(INPUT|TEXTAREA)$/.test(el.tagName) }; })()`);
+    if (!ready || !ready.ok) throw new Error(`insertText ${selector}: ${(ready && ready.error) || 'failed'}`);
+    const lines = String(text).split(/\r?\n/);
+    for (let i = 0; i < lines.length; i++) {
+      // a line break: Enter as a keyboard gives it (key down, its character, key up) — an editor that acts on keydown takes the first, a plain
+      // editable box needs the character
+      if (i) { if (ready.rich) { wc.sendInputEvent({ type: 'keyDown', keyCode: 'Enter' }); wc.sendInputEvent({ type: 'char', keyCode: 'Enter' }); wc.sendInputEvent({ type: 'keyUp', keyCode: 'Enter' }); await this._sleep(20); }
+        else await this._evalJs(wc, `document.execCommand('insertText', false, '\\n')`); }
+      if (!lines[i]) continue;
+      if (typeof wc.insertText === 'function') await wc.insertText(lines[i]);
+      else await this._evalJs(wc, `document.execCommand('insertText', false, ${JSON.stringify(lines[i])})`);
+      await this._sleep(20);
+    }
+    const shown = await this._evalJs(wc, `(function(){ var el = document.querySelector(${sel}); if (!el) return null;
+      el.dispatchEvent(new Event('change', { bubbles:true })); return /^(INPUT|TEXTAREA)$/.test(el.tagName) ? el.value : (el.innerText || ''); })()`);
+    return { ok: true, rich: ready.rich, shown: shown == null ? null : String(shown) };
   }
 
   // 0.60.280 KB5 — times: the same key N times at a person's pace (Down ×6 to reach a dropdown's seventh option)
