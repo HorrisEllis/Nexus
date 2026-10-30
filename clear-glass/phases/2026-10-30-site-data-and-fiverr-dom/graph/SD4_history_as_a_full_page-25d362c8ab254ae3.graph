@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SD4_history_as_a_full_page:25d362c8ab254ae3
+type: graph
+id: phase:SD4_history_as_a_full_page:25d362c8ab254ae3
+context: dependency graph of phase SD4_history_as_a_full_page
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793402130902
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793402130902
+lastSeenAt: 1793402130902
+fingerprint: null
+payload:
+  for: SD4_history_as_a_full_page
+  kind: phase
+  repo: null
+  hash: 25d362c8ab254ae3
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD3_cookies_and_logins
+    dependents: []
+    upstream:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD2_reset_a_site
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD3_cookies_and_logins
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD_D1_reset_is_undoable
+    downstream: []
+    blockedBy:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD3_cookies_and_logins
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by SD3_cookies_and_logins
+      - 'depends on (1): SD3_cookies_and_logins · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD3_cookies_and_logins
+        kind: declared

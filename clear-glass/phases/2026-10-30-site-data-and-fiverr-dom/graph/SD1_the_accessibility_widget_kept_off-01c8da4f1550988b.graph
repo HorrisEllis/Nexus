@@ -1,0 +1,84 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SD1_the_accessibility_widget_kept_off:01c8da4f1550988b
+type: graph
+id: phase:SD1_the_accessibility_widget_kept_off:01c8da4f1550988b
+context: dependency graph of phase SD1_the_accessibility_widget_kept_off
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793402130896
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793402130896
+lastSeenAt: 1793402130896
+fingerprint: null
+payload:
+  for: SD1_the_accessibility_widget_kept_off
+  kind: phase
+  repo: null
+  hash: 01c8da4f1550988b
+  nodes:
+    - path: clear-glass/renderer/a11y-panel.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/keyboard-mode.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/keys.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/profile.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/state-diff.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/page/keyboard-mode.js
+      to: clear-glass/src/page/state-diff.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/page/keyboard-mode.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/page/keyboard-mode.js
+      kind: requires
+    - from: clear-glass/src/site-settings/profile.js
+      to: clear-glass/src/site-settings/keys.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD_D2_block_the_widget_per_site
+    dependents: []
+    upstream:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD_D2_block_the_widget_per_site
+    downstream: []
+    blockedBy:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD_D2_block_the_widget_per_site
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by SD_D2_block_the_widget_per_site
+      - 'depends on (1): SD_D2_block_the_widget_per_site'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD_D2_block_the_widget_per_site
+        kind: declared

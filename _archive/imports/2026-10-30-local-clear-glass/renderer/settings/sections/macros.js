@@ -1,0 +1,438 @@
+'use strict';
+/**
+ * renderer/settings/sections/macros.js — Macros  (styles: macros.css)
+ *
+ * §BUILT 2026-09-23 — list/run + the step builder; every step is a real
+ * browser_action action (enum via macros:schema) or an erosmancer step, and
+ * create goes through macro.js's own validation.
+ *
+ * §REBUILT 2026-09-26 — James: "make the macros way more user friendly."
+ * What changed, and why each is real rather than cosmetic:
+ *   - Record: pick a tab, do the thing, stop — the driver's recorder
+ *     (record.start/stop, src/driver/index.js) captures it and
+ *     src/macros/recording.js turns it into steps. Passwords become a
+ *     {{password}} parameter; the macro never holds the secret.
+ *   - Templates: log in, fill a form, search, open-and-screenshot.
+ *   - Steps read as sentences ("Type “…” into #email") and each action has
+ *     labelled fields, not one placeholder-only pair. Every enum action is
+ *     still reachable under "More actions".
+ *   - Parameters are found in the steps ({{name}}) — no separate list to
+ *     keep in sync by hand; extra ones can still be added.
+ *   - Edit and Duplicate. Edit is delete-then-create (macro.js has no
+ *     update); if the create is refused the old macro is put back.
+ *   - Checks before save: a step with no url/selector is flagged in place.
+ *   - Run: this tab by default, labelled parameter fields, an explicit
+ *     "rewind snapshot first" choice.
+ * UI-06's contract (first text input = name; first step input = the url of
+ * a navigate step; steps read as {action, data}) is unchanged.
+ */
+(function () {
+  const { cg, h, call, wire, toast, toggle, busy, modal, confirmDo, field, pane, row, btn, chip, empty, ago, select, agentOptions, section, goto } = window.CGS;
+
+  // Friendly definitions for the actions people use; anything else in the
+  // live enum still works through the generic two-field form.
+  const ACTIONS = {
+    navigate:     { label: 'Go to page',          fields: [['url', 'Page address', 'https://example.com/login']] },
+    click:        { label: 'Click',               fields: [['selector', 'Element', 'button[type=submit]']] },
+    type:         { label: 'Type text',           fields: [['selector', 'Into element', 'input[name=email]'], ['text', 'Text', 'jo@example.com or {{email}}']] },
+    wait_for:     { label: 'Wait for element',    fields: [['selector', 'Element', '.results']] },
+    wait:         { label: 'Pause',               fields: [['ms', 'Milliseconds', '1000']] },
+    hover:        { label: 'Hover',               fields: [['selector', 'Element', 'nav .menu']] },
+    scroll:       { label: 'Scroll',              fields: [['selector', 'Element (blank = page)', '#feed']] },
+    find_in_page: { label: 'Find text on page',   fields: [['text', 'Text', 'Apply now']] },
+    screenshot:   { label: 'Screenshot',          fields: [] },
+    toast:        { label: 'Show a message',      fields: [['text', 'Message', 'Done']] },
+    choose:       { label: 'Choose from dropdown', fields: [['selector', 'Dropdown', '[data-testid="delivery"]'], ['option', 'Option (the words it shows)', '3 days']] },
+    check:        { label: 'Tick / untick',      fields: [['selector', 'Box', 'input[name=agree]'], ['checked', 'Ticked? (true / false)', 'true']] },
+    eval:         { label: 'Run script',          fields: [['code', 'JavaScript', 'document.title']] },
+    back:         { label: 'Back',                fields: [] },
+    forward:      { label: 'Forward',             fields: [] },
+    reload:       { label: 'Reload',              fields: [] },
+  };
+  const REQUIRED = { navigate: 'url', choose: 'selector', click: 'selector', type: 'selector', wait_for: 'selector', hover: 'selector', find_in_page: 'text', eval: 'code' };
+  const fieldsFor = (action) => (ACTIONS[action] ? ACTIONS[action].fields : [['selector', 'Selector', ''], ['text', 'Text', '']]);
+
+  const TEMPLATES = [
+    { id: 'login', label: 'Log in to a site', blurb: 'Go to the sign-in page, fill email and password, submit.',
+      macro: { name: 'log-in', urlPattern: '', description: 'Sign in with an email and password', steps: [
+        { action: 'navigate', data: { url: 'https://example.com/login' } },
+        { action: 'type', data: { selector: 'input[type=email]', text: '{{email}}' } },
+        { action: 'type', data: { selector: 'input[type=password]', text: '{{password}}' } },
+        { action: 'click', data: { selector: 'button[type=submit]' } },
+      ] } },
+    { id: 'form', label: 'Fill a form', blurb: 'Type into fields from parameters, then submit.',
+      macro: { name: 'fill-form', urlPattern: '', description: 'Fill name and email, then submit', steps: [
+        { action: 'type', data: { selector: 'input[name=name]', text: '{{name}}' } },
+        { action: 'type', data: { selector: 'input[name=email]', text: '{{email}}' } },
+        { action: 'click', data: { selector: 'button[type=submit]' } },
+        { action: 'wait', data: { ms: 1500 } },
+        { action: 'screenshot', data: {} },
+      ] } },
+    { id: 'search', label: 'Search a site', blurb: 'Type a query into the search box and wait for results.',
+      macro: { name: 'search', urlPattern: '', description: 'Search for {{query}}', steps: [
+        { action: 'type', data: { selector: 'input[type=search]', text: '{{query}}' } },
+        { action: 'type', data: { selector: 'input[type=search]', text: '\n' } },
+        { action: 'wait_for', data: { selector: 'main' } },
+      ] } },
+    { id: 'shot', label: 'Open and screenshot', blurb: 'Go to a page, wait for it, take a screenshot.',
+      macro: { name: 'open-and-screenshot', urlPattern: '', description: 'Capture {{url}}', steps: [
+        { action: 'navigate', data: { url: '{{url}}' } },
+        { action: 'wait', data: { ms: 2000 } },
+        { action: 'screenshot', data: {} },
+      ] } },
+  ];
+
+  function describe(step) {
+    const d = step.data || {};
+    if (step.engine === 'erosmancer') return `Erosmancer ${step.action}${d.payload ? ` “${String(d.payload).slice(0, 40)}”` : ''}`;
+    switch (step.action) {
+      case 'navigate': return `Go to ${d.url || '…'}`;
+      case 'click': return `Click ${d.selector || '…'}`;
+      case 'choose': return `Choose “${d.option ?? '…'}” in ${d.selector || '…'}`;
+      case 'type': return d.text === '\n' ? `Press Enter in ${d.selector || '…'}` : `Type “${String(d.text ?? '').slice(0, 40)}” into ${d.selector || '…'}`;
+      case 'wait': return `Pause ${d.ms ?? '…'} ms`;
+      case 'wait_for': return `Wait until ${d.selector || '…'} appears`;
+      case 'hover': return `Hover ${d.selector || '…'}`;
+      case 'scroll': return `Scroll ${d.selector || 'the page'}`;
+      case 'find_in_page': return `Find “${d.text || '…'}”`;
+      case 'screenshot': return 'Take a screenshot';
+      case 'toast': return `Show “${d.text || ''}”`;
+      case 'eval': return `Run a script (${String(d.code || '').length} chars)`;
+      default: return `${step.action}${Object.keys(d).length ? ' ' + JSON.stringify(d).slice(0, 60) : ''}`;
+    }
+  }
+  const paramsIn = (steps, extra = []) => {
+    const found = new Set();
+    const walk = (v) => { if (typeof v === 'string') for (const m of v.matchAll(/\{\{\s*([a-zA-Z_][\w-]*)\s*\}\}/g)) found.add(m[1]); else if (v && typeof v === 'object') Object.values(v).forEach(walk); };
+    steps.forEach(s => walk(s.data || {}));
+    extra.forEach(p => p && found.add(p));
+    return [...found];
+  };
+
+  // ── one step card ─────────────────────────────────────────────────────
+  function stepCard(schema, step, hooks) {
+    const el = h('div', { class: 'step' });
+    const engine = select([{ value: 'browser', label: 'Browser' }, { value: 'erosmancer', label: 'Erosmancer (human-like)' }], step.engine === 'erosmancer' ? 'erosmancer' : 'browser', { title: 'Engine' });
+    const action = h('select', { title: 'What this step does' });
+    const inputs = h('div', { class: 'step-fields' });
+    const sentence = h('div', { class: 'step-say' });
+    const extra = h('input', { type: 'text', class: 'mono', placeholder: 'key=value, key=value (optional)' });
+    const moreBox = h('details', { class: 'step-more' }, h('summary', { text: 'Extra data' }), extra);
+    let current = {};   // key -> input
+    const d0 = step.data || {};
+    const known = new Set();
+
+    const fillActions = () => {
+      const eros = engine.value === 'erosmancer';
+      const list = eros ? schema.erosActions : schema.actions;
+      const common = list.filter(a => ACTIONS[a]), rest = list.filter(a => !ACTIONS[a]);
+      action.replaceChildren(
+        ...(eros ? list.map(a => h('option', { value: a, text: a })) : [
+          h('optgroup', { label: 'Common' }, common.map(a => h('option', { value: a, text: ACTIONS[a].label }))),
+          rest.length ? h('optgroup', { label: 'More actions' }, rest.map(a => h('option', { value: a, text: a.replace(/_/g, ' ') }))) : null,
+        ].filter(Boolean)));
+      if (list.includes(step.action)) action.value = step.action;
+      el.classList.toggle('eros', eros);
+      buildFields();
+    };
+    const buildFields = () => {
+      const prev = Object.fromEntries(Object.entries(current).map(([k, i]) => [k, i.value]));
+      current = {};
+      const defs = engine.value === 'erosmancer'
+        ? [['targetUuid', 'Erosmancer node', 'node uuid'], ['payload', 'Payload', 'text, url, code…']]
+        : fieldsFor(action.value);
+      inputs.replaceChildren(...defs.map(([k, label, ph]) => {
+        const v = prev[k] ?? (k === 'targetUuid' ? step.targetUuid : k === 'payload' ? d0.payload : d0[k]);
+        const inp = k === 'code' ? h('textarea', { rows: '2', class: 'mono', placeholder: ph }) : h('input', { type: k === 'ms' ? 'number' : 'text', placeholder: ph });
+        if (v !== undefined && v !== null) inp.value = String(v);
+        inp.addEventListener('input', say);
+        current[k] = inp; known.add(k);
+        // 2026-10-30 ME3 — a selector can be filled from an element logged with the picker (Log element for macro): pick it here instead of typing it
+        if (k === 'selector' && (hooks.elements || []).length) {
+          const logged = select([{ value: '', label: 'Logged element…' }, ...hooks.elements.map((e, i) => ({ value: String(i), label: `${e.name}${e.near ? '' : ' · ' + e.host}` }))], '', { title: 'Fill from an element logged with the element picker' });
+          logged.addEventListener('change', () => { const e = hooks.elements[Number(logged.value)]; if (!e) return; inp.value = e.selector || e.xpath || ''; logged.value = ''; say(); });
+          return field(label, h('div', { class: 'sel-wrap' }, inp, logged));
+        }
+        return field(label, inp);
+      }));
+      say();
+    };
+    const say = () => {
+      let s; try { s = el.read(true); } catch (_) { s = { action: action.value, data: {} }; }
+      sentence.textContent = describe(s);
+      el.classList.remove('bad');
+      hooks.changed && hooks.changed();
+    };
+    engine.addEventListener('change', fillActions);
+    action.addEventListener('change', buildFields);
+    // extra data from the step that aren't one of this action's fields
+    const leftovers = Object.entries(d0).filter(([k]) => !fieldsFor(step.action).some(([f]) => f === k) && k !== 'payload');
+    if (leftovers.length) { extra.value = leftovers.map(([k, v]) => `${k}=${typeof v === 'string' ? v : JSON.stringify(v)}`).join(', '); moreBox.open = true; }
+    extra.addEventListener('input', say);
+
+    el.append(
+      h('span', { class: 'n' }),
+      h('div', { class: 'step-main' },
+        h('div', { class: 'step-top' }, action, engine, sentence),
+        inputs, moreBox),
+      h('div', { class: 'step-tools' },
+        btn('↑', () => hooks.move(-1), 'sm ghost'), btn('↓', () => hooks.move(1), 'sm ghost'),
+        btn('⧉', () => hooks.duplicate(), 'sm ghost'), btn('✕', () => hooks.remove(), 'sm ghost')));
+    // Fields are built before read() is attached; say() tolerates that.
+    el.read = (loose = false) => {
+      const data = {};
+      for (const part of extra.value.split(',').map(x => x.trim()).filter(Boolean)) {
+        const i = part.indexOf('=');
+        if (i < 1) { if (loose) continue; throw new Error(`Extra data “${part}” needs key=value`); }
+        const k = part.slice(0, i).trim(); let v = part.slice(i + 1).trim();
+        try { v = JSON.parse(v); } catch (_) { /* plain string */ }
+        data[k] = v;
+      }
+      if (engine.value === 'erosmancer') {
+        const t = current.targetUuid && current.targetUuid.value.trim();
+        const p = current.payload && current.payload.value;
+        return { engine: 'erosmancer', action: action.value, targetUuid: t || undefined, data: { ...(p ? { payload: p } : {}), ...data } };
+      }
+      for (const [k, inp] of Object.entries(current)) {
+        if (inp.value === '') continue;
+        data[k] = k === 'ms' ? Number(inp.value) : inp.value;
+      }
+      return { action: action.value, data };
+    };
+    el.check = () => {
+      const s = el.read();
+      const need = s.engine ? null : REQUIRED[s.action];
+      if (need && !s.data[need]) { el.classList.add('bad'); throw new Error(`Step ${[...el.parentNode.children].indexOf(el) + 1} (${describe(s)}) needs a ${need}.`); }
+      return s;
+    };
+    fillActions();
+    return el;
+  }
+
+  // 2026-10-30 ME3 — the elements logged from the element picker (Log element for macro), flat: { name, selector, xpath, host, origin }
+  async function loggedElements() {
+    let r = null; try { r = cg.macros.elementList ? await cg.macros.elementList() : null; } catch (_) {}
+    const out = []; for (const [origin, list] of Object.entries((r && r.macroElements) || {})) for (const e of list) out.push({ ...e, origin, host: origin.replace(/^https?:\/\//, '') });
+    return out;
+  }
+
+  // ── the builder (new / edit / from template / from recording) ─────────
+  async function builder(schema, rerender, initial = null, { editing = null } = {}) {
+    const m = initial || { steps: [{ action: 'navigate', data: {} }] };
+    const name = h('input', { type: 'text', placeholder: 'apply-greenhouse', value: m.name || '' });
+    const url = h('input', { type: 'text', placeholder: 'https://boards.greenhouse.io/*', value: m.urlPattern || '' });
+    const desc = h('input', { type: 'text', placeholder: 'What it does, in a line', value: m.description || '' });
+    const extraParams = h('input', { type: 'text', placeholder: 'other parameters, comma separated' });
+    const found = h('div', { class: 'param-chips' });
+    const profile = select([{ value: '', label: 'Let Erosmancer choose' }, ...schema.profiles.map(p => ({ value: p, label: p }))], m.profile || '');
+    const list = h('div', { class: 'steps' });
+    // the elements logged from the picker, those on this macro's site first
+    const hostOf = (v) => { try { return new URL(String(v).replace(/\*.*$/, '')).host; } catch (_) { return ''; } };
+    const loggedAll = await loggedElements();
+    const elementsFor = () => { const mine = hostOf(url.value || m.urlPattern || ''); return [...loggedAll].map(e => ({ ...e, near: !!mine && e.host === mine })).sort((a, b) => (b.near - a.near) || a.name.localeCompare(b.name)); };
+
+    const refresh = () => {
+      [...list.children].forEach((c, i) => { c.querySelector('.n').textContent = String(i + 1); });
+      let steps = [];
+      try { steps = [...list.children].map(c => c.read(true)); } catch (_) {}
+      const ps = paramsIn(steps, extraParams.value.split(',').map(s => s.trim()));
+      found.replaceChildren(...(ps.length ? ps.map(p => chip(`{{${p}}}`)) : [h('span', { class: 'hint', text: 'Write {{name}} in any field to make it a parameter — you’ll be asked for it when the macro runs.' })]));
+    };
+    extraParams.addEventListener('input', refresh);
+    const add = (step = { action: 'click', data: {} }, after = null) => {
+      let el;
+      el = stepCard(schema, step, {
+        get elements() { return elementsFor(); },
+        changed: () => refresh(),
+        remove: () => { el.remove(); refresh(); },
+        duplicate: () => { let s; try { s = el.read(true); } catch (_) { return; } add(JSON.parse(JSON.stringify(s)), el); },
+        move: (dir) => {
+          const sib = dir < 0 ? el.previousElementSibling : el.nextElementSibling;
+          if (sib) { dir < 0 ? list.insertBefore(el, sib) : list.insertBefore(sib, el); refresh(); }
+        },
+      });
+      after ? after.after(el) : list.append(el);
+      refresh();
+    };
+    m.steps.forEach(s => add(s));
+    if (m.params) extraParams.value = m.params.filter(p => !paramsIn(m.steps).includes(p)).join(', ');
+    refresh();
+
+    const r = await modal({ title: editing ? `Edit “${editing.name}”` : 'New macro', wide: true, body: [
+      h('div', { class: 'grid' }, field('Name', name, 'Letters, numbers and dashes'), field('Runs on (URL pattern)', url, 'Blank = any page. * matches anything.'), field('Behaviour profile', profile, 'Only used by Erosmancer steps')),
+      field('Description', desc),
+      h('div', { class: 'field' }, h('span', { text: 'Steps' }), list),
+      h('div', { class: 'step-add' }, h('span', { class: 'hint', text: 'Add:' }),
+        ['navigate', 'click', 'type', 'wait_for', 'wait', 'screenshot'].filter(a => schema.actions.includes(a)).map(a => btn(`+ ${ACTIONS[a].label}`, () => add({ action: a, data: {} }), 'sm'))),
+      h('div', { class: 'field' }, h('span', { text: 'Parameters' }), found, extraParams),
+      h('p', { class: 'blurb', text: 'Every run takes a rewind snapshot first unless you turn it off at run time, so a macro that goes wrong can be rolled back.' }),
+    ], actions: [{ label: editing ? 'Save changes' : 'Create macro', primary: true, run: async () => {
+      if (!name.value.trim()) throw new Error('Name the macro.');
+      if (!list.children.length) throw new Error('Add at least one step.');
+      const steps = [...list.children].map(c => c.check());
+      const def = { name: name.value.trim(), urlPattern: url.value.trim() || null, description: desc.value.trim() || null,
+        params: paramsIn(steps, extraParams.value.split(',').map(s => s.trim())), profile: profile.value || undefined, steps };
+      if (!editing) return call(() => cg.macros.create(def), 'create macro');
+      // Edit: macro.js has no update. Same name → delete then create, and put
+      // the old one back if the new one is refused. New name → create first.
+      if (def.name !== editing.name) {
+        const made = await call(() => cg.macros.create(def), 'create macro');
+        await call(() => cg.macros.delete(editing.name), 'remove old name');
+        return made;
+      }
+      await call(() => cg.macros.delete(editing.name), 'replace macro');
+      try { return await call(() => cg.macros.create(def), 'save macro'); }
+      catch (e) {
+        await cg.macros.create({ name: editing.name, urlPattern: editing.urlPattern, description: editing.description, params: editing.params, profile: editing.profile || undefined, steps: editing.steps }).catch(() => {});
+        throw new Error(`${e.message} — the previous version was kept.`);
+      }
+    } }] });
+    if (r) { toast(editing ? 'Macro saved' : 'Macro created'); rerender(); }
+  }
+
+  // ── record from a tab ─────────────────────────────────────────────────
+  async function recordFlow(schema, rerender) {
+    if (!cg.macros.recordStart) throw new Error('Recording needs the macro recorder IPC (update Clear Glass).');
+    const agents = await agentOptions();
+    if (!agents.length) throw new Error('Open a tab to record in first.');
+    const agentSel = select(agents);
+    const status = h('p', { class: 'blurb', text: 'Pick the tab, press Start. A .macro file is created right away and grows as you click, type, scroll and page through the tab. Press Stop when done.' });
+    const nameIn = h('input', { type: 'text', placeholder: 'Recording name (optional)' });
+    let recording = null, poll = null, file = null;
+    const startBtn = btn('Start recording', (e) => busy(e.currentTarget, async () => {
+      const r = await call(() => cg.macros.recordStart(agentSel.value, nameIn.value), 'start recording');
+      recording = agentSel.value; file = r.file; agentSel.disabled = true; nameIn.disabled = true; startBtn.disabled = true; startBtn.textContent = 'Recording…';
+      status.classList.add('rec');
+      const paint = (n) => { status.textContent = `● Recording in ${recording}. Saved as ${file} — ${n ? `${n.events} events, ${n.steps} steps` : 'no events yet'}. Clicks, typing, scrolling and arrow/page keys are captured; navigation too; passwords are never stored.`; };
+      paint(null);
+      poll = setInterval(async () => { try { const st = await cg.macros.recordStatus(recording); if (st && st.recording) paint(st); } catch (_) { /* the file is already on disk */ } }, 800);
+    }), 'primary');
+    const out = await modal({ title: 'Record a macro', body: [field('Tab', agentSel), field('Name', nameIn), h('div', {}, startBtn), status], actions: [{ label: 'Stop and edit steps', primary: true, run: async () => {
+      if (!recording) throw new Error('Start recording first.');
+      clearInterval(poll);
+      const r = await call(() => cg.macros.recordStop(recording), 'stop recording');
+      recording = null; return r;
+    } }] });
+    clearInterval(poll);
+    // Cancel / Escape: nothing is thrown away. The recorder keeps running to the file until stopped here, so stop it and keep the draft (§0.3).
+    if (!out) { if (recording) { const r = await cg.macros.recordStop(recording).catch(() => null); if (r && r.file) toast(`Recording kept as ${r.file}`); } return; }
+    if (out.file) toast(`Saved ${out.file}`);
+    if (!out.steps || !out.steps.length) { toast(`Nothing usable was recorded (${out.events || 0} events).`, 'bad'); return; }
+    toast(`Recorded ${out.steps.length} step${out.steps.length === 1 ? '' : 's'}`);
+    const host = (() => { try { return new URL(out.steps.find(s => s.action === 'navigate')?.data.url).host; } catch (_) { return ''; } })();
+    return builder(schema, rerender, { name: host ? `recorded-${host.replace(/[^a-z0-9]+/gi, '-')}` : 'recorded', urlPattern: host ? `https://${host}/*` : '', description: 'Recorded', params: out.params, steps: out.steps });
+  }
+
+  async function templateFlow(schema, rerender) {
+    const pick = await modal({ title: 'Start from a template', body: [h('div', { class: 'tpl-list' }, TEMPLATES.map(t =>
+      h('button', { class: 'tpl', dataset: { id: t.id }, onclick: (e) => { e.currentTarget.closest('.modal').querySelectorAll('.tpl').forEach(x => x.classList.toggle('on', x === e.currentTarget)); } },
+        h('b', { text: t.label }), h('span', { text: t.blurb }))))],
+    actions: [{ label: 'Use template', primary: true, run: () => {
+      const on = document.querySelector('.modal .tpl.on');
+      if (!on) throw new Error('Pick a template.');
+      return on.dataset.id;
+    } }] });
+    if (!pick) return;
+    const t = TEMPLATES.find(x => x.id === pick);
+    const m = JSON.parse(JSON.stringify(t.macro));
+    m.steps = m.steps.filter(s => schema.actions.includes(s.action));
+    return builder(schema, rerender, m);
+  }
+
+  async function runFlow(m) {
+    const agents = await agentOptions();
+    if (!agents.length) throw new Error('Open a tab to run the macro in first.');
+    const agentSel = select(agents);
+    const snap = h('input', { type: 'checkbox', checked: true });
+    const inputs = (m.params || []).map(p => ({ p, el: h('input', { type: /pass|secret|pin|otp/i.test(p) ? 'password' : 'text', autocomplete: 'off' }) }));
+    const r = await modal({ title: `Run “${m.name}”`, body: [
+      field('Run in', agentSel, m.urlPattern ? `Meant for ${m.urlPattern}` : null),
+      ...inputs.map(i => field(i.p, i.el)),
+      h('label', { class: 'check' }, snap, h('span', { text: ' Take a rewind snapshot first' })),
+    ], actions: [{ label: 'Run macro', primary: true, run: () => {
+      const missing = inputs.filter(i => !i.el.value).map(i => i.p);
+      if (missing.length) throw new Error(`Fill ${missing.join(', ')}.`);
+      return call(() => cg.macros.run(m.name, { agentId: agentSel.value, params: Object.fromEntries(inputs.map(i => [i.p, i.el.value])), skipSnapshot: !snap.checked }), 'run macro');
+    } }] });
+    if (r) toast(`“${m.name}” finished — ${(r.results || []).length} steps`);
+  }
+
+  // §0.39.266 — a .macro node file in. A macro with the same name and the same steps is
+  // reused; a different one with a taken name arrives as "<name> (imported)".
+  async function importMacroFile(rerender) {
+    const ta = h('textarea', { rows: 10, class: 'mono', placeholder: 'envelope: 1\ntype: macro\n…' });
+    const file = h('input', { type: 'file', accept: '.macro,.workflow,.yaml,.yml' });
+    file.addEventListener('change', async () => { const f = file.files[0]; if (f) ta.value = await f.text(); });
+    const r = await modal({ title: 'Import a .macro', wide: true, body: [field('From a file', file), field('Or paste it', ta)], actions: [{ label: 'Import', primary: true, run: () => {
+      if (!ta.value.trim()) throw new Error('Pick a file or paste one.');
+      return wire('/automation/import', { method: 'POST', body: { text: ta.value } });
+    } }] });
+    if (!r) return;
+    toast(r.type === 'macro' ? (r.macro.reused ? `“${r.macro.name}” is already here` : `Imported “${r.macro.name}”${r.macro.renamed ? ' (the name was taken)' : ''}`) : `Imported the workflow “${r.workflow.name}” — see Automation`, 'ok', 6000);
+    rerender();
+  }
+
+  section({
+    id: 'macros', group: 'Agents', icon: '⌘', label: 'Macros',
+    keywords: 'macro steps record replay rewind job application erosmancer behavior template',
+    blurb: 'Repeatable sequences of browser actions. Record one from a tab, start from a template, or build it step by step. {{placeholders}} become questions when it runs.',
+    async render({ tools, rerender }) {
+      const [lr, schema] = await Promise.all([call(() => cg.macros.list(), 'macros'), call(() => cg.macros.schema(), 'macro schema')]);
+      const fail = (e) => toast(e.message, 'bad');
+      tools.append(
+        btn('● Record', () => recordFlow(schema, rerender).catch(fail), 'primary'),
+        btn('From template', () => templateFlow(schema, rerender).catch(fail)),
+        btn('New macro', () => builder(schema, rerender).catch(fail)),
+        // §0.39.266 — a .macro node file (or a .workflow, which brings its macros along)
+        btn('Import .macro', () => importMacroFile(rerender).catch(fail), 'ghost'));
+      const macros = lr.macros || [];
+      const full = async (m) => (await call(() => cg.macros.get(m.name), 'macro')).macro;
+      const opts = await cg.options.get().catch(() => ({}));
+      // 0.60.58 — James: "have a simple step by step guide for making a macro on a webpage, and have a optional toast for macro recording when you press the hotkey"
+      const GUIDE = [
+        ['Open the page', 'Go to the website in a tab and get to the point where the macro should begin. Sign in first if you need to. Passwords you type while recording are never stored; they become a {{password}} question.'],
+        ['Press Record', 'Click ● Record above (or press the record hotkey, Alt+Shift+R by default, while on the page). Pick the tab, give it a name, press Start. A .macro file is created at once and grows as you go.'],
+        ['Do the task slowly', 'Click, type, scroll and page with the arrow keys as you normally would. Pause when a page is loading: pauses of 1.5 seconds or more are kept as waits.'],
+        ['Press Stop', 'Click Stop and edit steps, or press the hotkey again. The recording is kept either way.'],
+        ['Check the steps', 'Delete any accidental clicks. Change text you want asked each time to a {{placeholder}}, for example {{search}}. Set the page pattern so the macro only offers itself on that site.'],
+        ['Save and test', 'Save it, then press Run on the page. If a step misses, open Edit and fix its selector with the element picker (Alt+Shift+E).'],
+        ['Give it a key (optional)', 'Settings › Keyboard shortcuts: bind a key to macro:<name> so one press runs it.'],
+      ];
+      const guide = pane({ title: 'Make a macro on a web page', sub: 'seven steps', body: [
+        h('details', { open: macros.length === 0 }, h('summary', { text: 'Show the steps' }),
+          h('ol', { class: 'step-read' }, GUIDE.map(([t, d]) => h('li', {}, h('b', { text: t + '. ' }), h('span', { text: d }))))),
+        row('Toast when the record hotkey is used', 'Shows a small message when the hotkey starts or stops a recording. Off: the co-pilot chat still notes it.',
+          toggle(opts.macroRecordToast !== false, (on) => call(() => cg.options.set({ macroRecordToast: on }), 'save').then(() => toast(on ? 'Hotkey toast on' : 'Hotkey toast off')).catch(fail))),
+      ] });
+      const listPane = pane({ title: 'Macros', sub: `${macros.length} macro${macros.length === 1 ? '' : 's'}`, flush: true, body: macros.length ? macros.map(m => row(m.name,
+        `${m.description ? m.description + ' · ' : ''}${m.urlPattern || 'any page'} · ${m.steps} step${m.steps === 1 ? '' : 's'} · ${m.runCount} run${m.runCount === 1 ? '' : 's'} · last ${ago(m.lastRunAt)}${(m.params || []).length ? ` · asks for ${m.params.join(', ')}` : ''}`,
+        btn('Run', () => runFlow(m).catch(fail), 'sm primary'),
+        btn('Steps', async () => { const g = await full(m); modal({ title: m.name, wide: true, body: [h('ol', { class: 'step-read' }, (g.steps || []).map(s => h('li', { text: describe(s) })))] }); }, 'sm'),
+        btn('Edit', async () => { const g = await full(m); builder(schema, rerender, g, { editing: g }).catch(fail); }, 'sm'),
+        btn('Duplicate', async () => { const g = await full(m); builder(schema, rerender, { ...g, name: `${g.name}-copy` }).catch(fail); }, 'sm'),
+        btn('.macro', (e) => busy(e.currentTarget, async () => {
+          const r = await wire(`/automation/macros/${encodeURIComponent(m.name)}/node`);
+          const a = h('a', { href: URL.createObjectURL(new Blob([r.text], { type: 'text/yaml' })), download: r.filename });
+          document.body.append(a); a.click(); a.remove();
+          toast(`Exported ${r.filename}`);
+        }), 'sm'),
+        btn('Save .macro', (e) => busy(e.currentTarget, async () => { const r = await wire(`/automation/macros/${encodeURIComponent(m.name)}/node/save`, { method: 'POST', body: {} }); toast(`Saved ${r.file} in the automation library`); }), 'sm ghost'),
+        // §0.39.265 — grow it: a workflow can loop, read the page, branch and run on a schedule
+        btn('→ Workflow', (e) => busy(e.currentTarget, async () => {
+          const r = await wire('/automation/from-macro', { method: 'POST', body: { name: m.name } });
+          toast(r.warnings && r.warnings.length ? `Workflow made — steps ${r.warnings.join(', ')} need replacing` : 'Workflow made (switched off) — see Automation', r.warnings && r.warnings.length ? 'warn' : 'ok', 6000);
+          goto('automation');
+        }), 'sm'),
+        btn('Delete', async () => { if (await confirmDo(`Delete “${m.name}”?`, 'It stops appearing here; the history is kept in the macro ledger.', 'Delete')) { await busy(null, () => call(() => cg.macros.delete(m.name), 'delete')); rerender(); } }, 'sm danger')))
+        : empty('No macros yet.', btn('Record one', () => recordFlow(schema, rerender).catch(fail), 'sm primary'), btn('Use a template', () => templateFlow(schema, rerender).catch(fail), 'sm')) });
+      // 2026-10-30 ME3 — what the picker logged for macros; a step's Logged element box fills from these, and logging a name again replaces it
+      const logged = await loggedElements();
+      const loggedPane = pane({ title: 'Logged elements', sub: `${logged.length} from the element picker`, flush: true, body: [
+        h('p', { class: 'blurb', text: 'Fixing a step that misses: open the page, press the element picker (Alt+Shift+E), click the element, then “Log element for macro”. Open the macro’s Edit, and in that step choose the element from “Logged element…”. Logging the same name again replaces it.' }),
+        ...(logged.length ? logged.map(e => row(e.name, `${e.host} · ${e.selector || e.xpath}${e.text ? ` · “${e.text}”` : ''}`,
+          btn('Delete', async () => { await busy(null, () => call(() => cg.macros.elementRemove(e.origin, e.name), 'remove element')); rerender(); }, 'sm danger'))) : [empty('Nothing logged yet.')]),
+      ] });
+      return [guide, listPane, loggedPane];
+    },
+  });
+})();

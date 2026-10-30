@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SD3_cookies_and_logins:bcfcf7f7e188b659
+type: graph
+id: phase:SD3_cookies_and_logins:bcfcf7f7e188b659
+context: dependency graph of phase SD3_cookies_and_logins
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793402130901
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793402130901
+lastSeenAt: 1793402130901
+fingerprint: null
+payload:
+  for: SD3_cookies_and_logins
+  kind: phase
+  repo: null
+  hash: bcfcf7f7e188b659
+  nodes:
+    - path: clear-glass/spec/site-data.spec
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD2_reset_a_site
+    dependents:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD4_history_as_a_full_page
+    upstream:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD2_reset_a_site
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD_D1_reset_is_undoable
+    downstream:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD4_history_as_a_full_page
+    blockedBy:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD2_reset_a_site
+    unlocks:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD4_history_as_a_full_page
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by SD2_reset_a_site
+      - 'depends on (1): SD2_reset_a_site · all upstream 2'
+      - 'needed by (1): SD4_history_as_a_full_page · finishing it unlocks SD4_history_as_a_full_page'
+    edges:
+      - from: docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD2_reset_a_site
+        kind: declared

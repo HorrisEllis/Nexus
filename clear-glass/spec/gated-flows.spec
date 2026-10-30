@@ -657,6 +657,56 @@ spec:
       error_paths: ["index past the end → refused with the options read", "neither option nor index → the step says it needs one"]
       acceptance: ["in Clear Glass: his 'Fiverr gig - choose category' opens with SELECT A CATEGORY, {{category}}, auto in their fields; a step by Menu number 3 picks the third option"]
 
+    # 2026-10-30 GT4–GT6 — James, with the gig editor showing PROGRAMMING & TECH chosen, SELECT A SUBCATEGORY left, Copilot saying "Driver error
+    # [choose]: Element not found: [data-cg-choose="1"]", then SELECT A SERVICE TYPE and the Gig metadata tabs: "almost. more timing in between
+    # drop down menus. then we need the services, then the bullets for each tab for each catagory."
+    - id: MOD-GT4
+      name: dropdown-relocated-after-rerender
+      uuid: nexus-gated-flows-relocate-v1-0000-2026-1030-001
+      path: clear-glass/src/driver/index.js
+      phase: GT4_pace_between_dropdowns_and_find_again
+      description: >-
+        Root cause of his error: choose marks the dropdown it found (data-cg-choose=<n>) and uses that mark after its open wait; choosing the
+        category re-renders the section, the mark is gone, and the next choose fails "Element not found". Between two dropdowns the fill now
+        waits for the page to settle (the DOM quiet for settleMs, the next dropdown present), and choose finds its dropdown again by what it
+        shows (shows, column/row, or selector) whenever its mark is missing, before each open, pick and read back.
+      deps: [{ name: gate-timing-per-part }]
+      exports: ["choose: re-find by shows when the mark is gone", "betweenDropdownsMs (site key, default 1200) and a DOM-quiet wait"]
+      gate_pipeline: ["GATE-GT4-001: previous dropdown held", "GATE-GT4-002: DOM quiet", "GATE-GT4-003: re-find if the mark is gone"]
+      behavioral_contracts: ["the mark is a hint, never the only way to the element"]
+      error_paths: ["not found by mark or by what it shows → the error names both and the dropdowns the page has"]
+      acceptance: ["a fixture page that re-renders its dropdown section after the first choice: the second choose finds its dropdown and picks"]
+
+    - id: MOD-GT5
+      name: service-type
+      uuid: nexus-gated-flows-service-type-v1-0000-2026-1030-001
+      path: clear-glass/src/autofill/gig-pages.js
+      phase: GT5_service_type
+      description: "SELECT A SERVICE TYPE (shown after the subcategory) is a gig part: the gig file carries serviceType; the fill chooses it after the subcategory holds, gated; the chip (AF6) offers it."
+      deps: [{ name: dropdown-relocated-after-rerender }]
+      exports: ["gig part serviceType", "valueOf(gig, 'serviceType')"]
+      gate_pipeline: ["GATE-GT5-001: subcategory held", "GATE-GT5-002: option read back"]
+      behavioral_contracts: ["no service type in the gig → left, said, never guessed"]
+      error_paths: ["the option not in the list → refused with the options read"]
+      acceptance: ["his gig editor: after AI Development, the service type in the gig is chosen and read back"]
+
+    - id: MOD-GT6
+      name: gig-metadata-tabs
+      uuid: nexus-gated-flows-metadata-tabs-v1-0000-2026-1030-001
+      path: clear-glass/src/autofill/gig-fields.js
+      phase: GT6_gig_metadata_bullets_per_tab
+      description: >-
+        Gig metadata is a set of tabs per category (for Programming & Tech: PROGRAMMING LANGUAGE, one choice, radio; FRONTEND FRAMEWORK and
+        BACKEND FRAMEWORK, up to five, checkboxes; EXPERTISE). The gig file carries metadata as { <tab>: [values] } per category; the fill
+        opens each tab, ticks or picks each value by its label (DD1's checkbox fill, main 0.60.316), respects the tab's limit (0 / 5), and reads
+        each back. A value the tab does not offer is said with the tab's own list.
+      deps: [{ name: service-type }]
+      exports: ["gig part metadata: { [tab]: string[] }", "fill: tab by tab, value by value, gated"]
+      gate_pipeline: ["GATE-GT6-001: tab open", "GATE-GT6-002: within the tab's limit", "GATE-GT6-003: each value read back"]
+      behavioral_contracts: ["a required tab (marked *) left empty is said before the fill ends"]
+      error_paths: ["more values than the limit → the first N, the rest said"]
+      acceptance: ["his gig editor: JavaScript in PROGRAMMING LANGUAGE, three frontend frameworks ticked and read back, the counter 3 / 5"]
+
     # 2026-10-30 A11Y2 — James, with a screenshot of fiverr.com still in yellow-on-black links and the reset saying "Nothing on this page is named
     # as accessibility": "look at the accessability. needs to actually hook into the back end settings. looks lazy also."
     - id: MOD-A11Y2

@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793386281619
+exported_at: 1793402129280
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793386281619
-lastSeenAt: 1793386281619
+firstSeenAt: 1793402129280
+lastSeenAt: 1793402129280
 fingerprint: null
 payload:
   for: GF4_friction_goes_to_his_site_keys
@@ -183,6 +183,9 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
       - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
       - docs/2026-10-28-gated-flows-phasemap.spec::UG2_every_driver_write_gated
       - docs/2026-10-28-gated-flows-phasemap.spec::UG3_every_dom_write_gated
@@ -194,6 +197,7 @@ payload:
       - docs/2026-10-29-pipelines-phasemap.spec::PL8_macro_steps_gated_on_elements
       - docs/2026-10-29-pipelines-phasemap.spec::PL9_macros_workflows_pipelines_linked
       - docs/2026-10-29-pipelines-phasemap.spec::PN3_the_editor_picks_from_clear_glass_and_files
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD5_the_dom_map_before_the_fill
     blockedBy: []
     unlocks:
       - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
@@ -205,7 +209,7 @@ payload:
         depends on (3): GF3_text_and_lists_filled_and_read_back, KB2_site_keys, KB3_site_keys_ui ·
         all upstream 15
       - >-
-        needed by (1): GG1_every_part_gated · all downstream 16 · finishing it unlocks
+        needed by (1): GG1_every_part_gated · all downstream 20 · finishing it unlocks
         GG1_every_part_gated
     edges:
       - from: docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back

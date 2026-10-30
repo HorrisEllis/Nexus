@@ -1,0 +1,231 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GT4_pace_between_dropdowns_and_find_again:bd059b851e5193e5
+type: graph
+id: phase:GT4_pace_between_dropdowns_and_find_again:bd059b851e5193e5
+context: dependency graph of phase GT4_pace_between_dropdowns_and_find_again
+intent: null
+summary: 21 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793402129302
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793402129302
+lastSeenAt: 1793402129302
+fingerprint: null
+payload:
+  for: GT4_pace_between_dropdowns_and_find_again
+  kind: phase
+  repo: null
+  hash: bd059b851e5193e5
+  nodes:
+    - path: clear-glass/src/driver/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/keys.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-pipeline-gates.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/profile.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/core/zoom.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/page-resolver.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/element-gate.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/field.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/option-match.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-memory.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-session.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/reader.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/semantic-tree.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/core/zoom.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/reader.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/option-match.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-session.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-memory.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/site-settings/profile.js
+      to: clear-glass/src/site-settings/keys.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 13
+    deps:
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
+    dependents:
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::AF6_the_chip_on_dropdowns
+      - docs/2026-10-28-gated-flows-phasemap.spec::EI1_every_key_and_click_paced_through_eros
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF5_category_and_subcategory_finished
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+    downstream:
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
+    blockedBy:
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
+    unlocks:
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
+    conflicts:
+      - with: docs/2026-10-28-gated-flows-phasemap.spec::FG1_keyboard_mode_switch
+        files:
+          - clear-glass/src/site-settings/keys.js
+      - with: docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
+        files:
+          - clear-glass/src/ipc/bridge.js
+      - with: docs/2026-10-28-gated-flows-phasemap.spec::FG5_fiverr_gig_flow
+        files:
+          - clear-glass/src/ipc/bridge.js
+      - with: docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
+        files:
+          - clear-glass/src/ipc/bridge.js
+      - with: docs/2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
+        files:
+          - clear-glass/src/driver/index.js
+    dangling: []
+    lines:
+      - layer 13 · blocked by GT1_gate_timing_for_dropdowns
+      - 'depends on (1): GT1_gate_timing_for_dropdowns · all upstream 21'
+      - 'needed by (1): GT5_service_type · all downstream 2 · finishing it unlocks GT5_service_type'
+      - >-
+        same files as FG1_keyboard_mode_switch with no order between them:
+        clear-glass/src/site-settings/keys.js
+      - >-
+        same files as FG4_pointer_and_choose_steps with no order between them:
+        clear-glass/src/ipc/bridge.js
+      - 'same files as FG5_fiverr_gig_flow with no order between them: clear-glass/src/ipc/bridge.js'
+      - >-
+        same files as GT2_the_fill_includes_and_reports_dropdowns with no order between them:
+        clear-glass/src/ipc/bridge.js
+      - >-
+        same files as GT3_choose_fields_in_the_macro_editor with no order between them:
+        clear-glass/src/driver/index.js
+    edges:
+      - from: docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
+        kind: declared

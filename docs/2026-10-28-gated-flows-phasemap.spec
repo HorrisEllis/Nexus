@@ -522,3 +522,30 @@ phases_gt:
     status: OPEN
     depends_on: [GT1_gate_timing_for_dropdowns]
     files: [clear-glass/renderer/settings/sections/macros.js, clear-glass/src/driver/index.js, tests/modules/test-pipeline-nodes.test.js]
+
+## ADDENDUM 2026-10-30 (b) — GT4–GT6: pace between dropdowns and find again; service type; the metadata bullets per tab
+James, 2026-10-30, with screenshots of his gig editor: "almost. more timing in between drop down menus. then we need the services, then the bullets
+for each tab for each catagory." Copilot showed "Driver error [choose]: Element not found: [data-cg-choose="1"]" and twice "Driver error [eval]:
+Script failed to execute" (its cause needs the renderer console's text; to read on his machine). Root cause of the first, read in
+src/driver/index.js _choose: the found dropdown is marked and the mark is used after the open wait; the category's choice re-renders the section
+and removes it. Decided by his axioms: the mark is a hint, the element is found again by what it shows (§1.2, §16.3); the pause between dropdowns
+is a site key he can tune (USER_AUTONOMY).
+phases_gt4:
+  GT4_pace_between_dropdowns_and_find_again:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GT4]
+    status: OPEN
+    depends_on: [GT1_gate_timing_for_dropdowns]
+    files: [clear-glass/src/driver/index.js, clear-glass/src/site-settings/keys.js, clear-glass/src/ipc/bridge.js, tests/modules/test-pipeline-gates.test.js]
+  GT5_service_type:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GT5]
+    status: OPEN
+    depends_on: [GT4_pace_between_dropdowns_and_find_again]
+    files: [clear-glass/src/autofill/gig-pages.js, clear-glass/src/autofill/gig.js, clear-glass/src/ipc/bridge.js]
+  GT6_gig_metadata_bullets_per_tab:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GT6]
+    status: OPEN
+    depends_on: [GT5_service_type]
+    files: [clear-glass/src/autofill/gig-fields.js, clear-glass/src/autofill/gig.js, clear-glass/src/ipc/bridge.js]

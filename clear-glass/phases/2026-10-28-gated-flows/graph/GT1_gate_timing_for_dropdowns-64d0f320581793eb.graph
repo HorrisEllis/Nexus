@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793386281633
+exported_at: 1793402129299
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793386281633
-lastSeenAt: 1793386281633
+firstSeenAt: 1793402129299
+lastSeenAt: 1793402129299
 fingerprint: null
 payload:
   for: GT1_gate_timing_for_dropdowns
@@ -168,6 +168,8 @@ payload:
     dependents:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD5_the_dom_map_before_the_fill
     upstream:
       - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
       - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
@@ -192,10 +194,15 @@ payload:
     downstream:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD5_the_dom_map_before_the_fill
     blockedBy: []
     unlocks:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
     conflicts:
       - with: docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
         files:
@@ -210,9 +217,11 @@ payload:
         depends on (2): AF6_the_chip_on_dropdowns, GF5_category_and_subcategory_finished · all
         upstream 20
       - >-
-        needed by (2): GT2_the_fill_includes_and_reports_dropdowns,
-        GT3_choose_fields_in_the_macro_editor · finishing it unlocks
-        GT2_the_fill_includes_and_reports_dropdowns, GT3_choose_fields_in_the_macro_editor
+        needed by (4): GT2_the_fill_includes_and_reports_dropdowns,
+        GT3_choose_fields_in_the_macro_editor, GT4_pace_between_dropdowns_and_find_again,
+        SD5_the_dom_map_before_the_fill · all downstream 6 · finishing it unlocks
+        GT2_the_fill_includes_and_reports_dropdowns, GT3_choose_fields_in_the_macro_editor,
+        GT4_pace_between_dropdowns_and_find_again
       - >-
         same files as FG4_pointer_and_choose_steps with no order between them:
         clear-glass/src/ipc/bridge.js

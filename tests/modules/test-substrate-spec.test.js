@@ -50,6 +50,7 @@ const SPECS = [
   { spec: 'cos/spec/cos-services.spec', map: 'docs/2026-10-24-cos-services-phasemap.spec' },
   { spec: 'cos/spec/cos-manager.spec', map: 'docs/2026-10-24-cos-manager-phasemap.spec' },   // 2026-10-30 MG0b — his "This will be the new orchastrator/autopilot."
   { spec: 'diagnostic/spec/requirements.spec', map: 'docs/2026-10-30-diagnostic-requirements-phasemap.spec' },   // 2026-10-30 DR — his "diagnostic system should be taking care of things like this."
+  { spec: 'clear-glass/spec/site-data.spec', map: 'docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec' },   // 2026-10-30 SD — his reset site, cookies and logins, history page, the DOM map
   { spec: 'docs/automation-pipelines.spec', map: 'docs/2026-10-29-pipelines-phasemap.spec' },
   { spec: 'docs/idearium-history-nodes.spec', map: 'docs/2026-10-29-history-nodes-phasemap.spec' },   // 2026-10-29 HN — his "all the history in idearium saved as nodes per unit"   // 2026-10-29 PL — his "making a pipeline and workflow feature and include the macros and automation"   // 2026-10-24 BCR1 (from brave-cori) — his "this is all the networking backend for anything needed netwroking wise"
   { spec: 'docs/project-spine.spec', map: 'docs/2026-10-29-finish-any-project-phasemap.spec' },   // 2026-10-29 FA — his "create all the capability to finish this or any other project in the repo"

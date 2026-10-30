@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GT5_service_type
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GT5_service_type
+context: pipeline phase GT5_service_type of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GT5_service_type (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793402129304
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793402129304
+lastSeenAt: 1793402129304
+fingerprint: null
+payload:
+  id: GT5_service_type
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/gig-pages.js
+    - clear-glass/src/autofill/gig.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - GT4_pace_between_dropdowns_and_find_again
+  blocks:
+    - MOD-GT5
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 510c1db9cc8ea4a1

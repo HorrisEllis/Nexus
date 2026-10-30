@@ -1,0 +1,12 @@
+/* 2026-10-30 ME1 — the "Log element for macro" bar after an element pick; every rule under #cg-macro-el. It sits above the gate bar. */
+#cg-macro-el { position: fixed; left: 50%; bottom: 218px; transform: translateX(-50%); z-index: 2147483000; width: min(760px, calc(100vw - 32px));
+  background: var(--panel, #15171c); color: var(--text, #e8e8ea); border: 1px solid var(--line, #2b2f38); border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.45); padding: 10px 12px; font: 13px/1.4 system-ui, sans-serif; }
+#cg-macro-el .me-title { font-weight: 600; margin-bottom: 8px; }
+#cg-macro-el .me-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+#cg-macro-el input { padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line, #2b2f38); background: transparent; color: inherit; font: inherit; min-width: 0; }
+#cg-macro-el .me-name { flex: 1 1 200px; } #cg-macro-el .me-sel { flex: 2 1 260px; font-family: ui-monospace, monospace; font-size: 12px; }
+#cg-macro-el button { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line, #2b2f38); background: var(--accent, #3b82f6); color: #fff; cursor: pointer; font: inherit; }
+#cg-macro-el .me-x { background: transparent; color: inherit; padding: 6px 10px; }
+#cg-macro-el .me-say { margin-top: 6px; min-height: 1em; font-size: 12px; }
+#cg-macro-el .me-say.bad { color: #e5534b; } #cg-macro-el .me-say.ok { color: #3fb950; }

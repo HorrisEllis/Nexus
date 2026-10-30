@@ -7,11 +7,11 @@ intent: null
 summary: UG3_every_dom_write_gated (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793386281624
+exported_at: 1793402129288
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793386281624
-lastSeenAt: 1793386281624
+firstSeenAt: 1793402129288
+lastSeenAt: 1793402129288
 fingerprint: null
 payload:
   id: UG3_every_dom_write_gated
@@ -29,4 +29,4 @@ payload:
   blocks:
     - MOD-UG3
   spec: clear-glass/spec/gated-flows.spec
-  graph: fe52db277cfeab98
+  graph: f1e421a28cd6b76a
