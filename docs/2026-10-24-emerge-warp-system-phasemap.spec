@@ -153,3 +153,32 @@ emerge-codegen-v2 compiles requires.
 - **Found while grounding** (lib/system-check.js 2026-09-07): James then called emerge "its just a compiler thats it, the rest is trash".
   On 2026-10-24 he read it again, said "Look at emerge. Deeply Custom", and kept the language. The earlier words are kept with the code
   (§0.3); the later decision supersedes them.
+
+# ── ADDENDUM 2026-10-30 — Emerge is the Emerge repo; the compound build (his); the IDE Emerge already built, in Idearium's work area ──
+# James, 2026-10-30, after github.com/HorrisEllis/Emerge was read into the session: "and that is emerge." Then, asked whether Nexus uses
+# Emerge at a pinned version and archives lib/emerge/: "yes, spec compiler. and chunking can be automatic. each line can be fed back in to the
+# previous gate, and the next line can be built by another agent. making it compount, barely any context, what about integrating the
+# worksurface/workarea? from idearium, the diffs? like a fully built ide that emerge has built already."
+# Read 2026-10-30: the Emerge repo is the newer, whole language (lang/: lexer, parser, checker, interpreter, ledger, native compiler;
+# build-spec.js; llm/; observe/). Nexus's lib/emerge/ is an older copy: 21 files differ, 22 exist only in Emerge. Emerge's rule (BUILDING.md):
+# "Emerge depends on nothing above it ... A project's integrations live in that project's own repo."
+#
+# EW_D2 (his): Nexus uses Emerge, the spec compiler included, at a pinned version; lib/emerge/ and the compiler EW3 moved into Idearium are
+#   superseded by it and archived when the switch is built (§0.3). READING TO CONFIRM: "yes, spec compiler" answers that question, and the
+#   spec compiler Nexus builds with is Emerge's.
+# EW_D3 (his): the compound build. Chunking is automatic; each unit, once written, is fed back to the gate before it, and the next unit is
+#   written by another agent; each agent holds barely any context, and what is accepted compounds.
+#   Stands on: Emerge's chunk format (chunk/index.js: one node, ~400-800 tokens), its T2 gate (compiler/t2-gate.js: a model fills one node,
+#   the checker must pass it, a failure kept as .t2-rejected), his gate walker (lib/gate-walker.js: one step per gate, the packet by
+#   reference, each gate its own agent), CIE-EG's gate (typed gaps with pressure) and RULE D (growing retry, escalation).
+#   The coder's shaping, TO CONFIRM: the unit is one statement Emerge's checker accepts in place (a declaration, a handler, an emit, a
+#   constraint), not a raw text line, because half a line cannot be checked; a body too tangled to split stays one unit with line-level
+#   repair. An accepted statement is hashed and reused when the same slot comes up again (no model call), which is what makes it compound.
+#   Measured before adopted (§17.11): Emerge's bench/ runs whole-node T2 against the statement-gated build on pass rate, tokens and time.
+# EW4 re-read (his "a fully built ide that emerge has built already"): Emerge's IDE (lang/ide.js: diagnostics from the real checker,
+#   autocomplete from the language, run and test with the interpreter, generators; emerge-ide.js: model-assisted on the SISO bus) is the
+#   IDE. Idearium's work area hosts it by route, running in Emerge's own process (its COS compartment), not copied into Idearium; beside it,
+#   Idearium's work surface (idearium/repo/work-surface.js: one card per file, + and - lines) shows the compound build live: each statement
+#   as its gate accepts it, which agent wrote it, the checker's verdict, the rejected attempts. Supersedes EW4's "the IDE into Idearium"
+#   (a move of the old copy); EW4 is kept as written (§0.3).
+# Not built; specs next, in Emerge's repo for what is Emerge's (the compound build), in Idearium's for the work area.
