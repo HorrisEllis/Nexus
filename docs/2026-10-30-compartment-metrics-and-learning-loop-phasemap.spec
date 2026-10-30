@@ -109,3 +109,25 @@ order: >-
   folds Emerge's build edges in through the door. CAUTION: COS, Intelligence and the compartment system are where the parallel
   sessions are actively building (0.60.293–313); coordinate before code. Each phase specced again as .phase + .graph (his
   2026-10-20); DG2/DG3 check the DAG.
+
+# ── ADDENDUM 2026-10-30 (his correction) — the loop IS RAID's SNR + crystallization; supersedes ML_D1's batch-of-10 (§0.3, kept) ──
+# James, 2026-10-30: "wait but the crystalization memory. raid has signal to noise."
+# He is right, and this is reuse-before-build catching the coder drifting: the "what is signal vs noise" and the "learn it durably"
+# steps already exist, so there is no new batching rule and no new relational store.
+#   - RAID's SIGNAL-TO-NOISE is a PER-EDGE pre-gate already (cortex/core/raid + snr-filter.js; read-only view lib/agent-tools/tools/
+#     governance/raid-snr.js). It runs on every dispatch and classifies signal from noise, writing an event_log row. So the answer to
+#     "every edge or batch every 10" is NEITHER: every edge already goes through RAID SNR; noise is dropped there, cheaply, by the gate
+#     that already exists. No arbitrary batch.
+#   - CRYSTALLIZATION is the graduation from short-term to LONG-TERM memory (cortex/memory/tiers.js: working 30m/2h → short 6h/24h →
+#     long, "no decay, requires explicit graduation (crystallization)"), with the WARP crystallizer (lib/warp/plugins/crystallizer-
+#     flatfile.js) and cortex's _crystallizeBEPPatterns / fix-map already doing it for patterns. A primitive-relation that RECURS as
+#     signal in short-term memory crystallizes into long-term — that long-term memory IS the graph that "learns to code better".
+# Corrected loop (supersedes ML_D1 and ML3's batch framing; ML1/ML2 metric points stand as the datum):
+#   every edge → metric point written to short-term memory, and through RAID's SNR pre-gate (exists) → signal kept, noise dropped →
+#   a recurring signal pattern GRADUATES (crystallizes) into long-term memory (the relation graph the build reads). The expensive step
+#   is crystallization on graduation (recurrence-triggered), not a fixed batch and not a new relational pass built from scratch.
+# ML3 is rewritten to: feed metric-point signal (post RAID-SNR) into the crystallization path (cortex/memory + WARP crystallizer),
+# so the long-term graph gains a primitive relation when it graduates; relational-field/causal are READ for the relation shape, not a
+# second learning store. Emerge (ML5) rides the same: its build edges go through RAID SNR and crystallize the same way.
+# Credit: his call. It avoids building a duplicate signal/noise filter and a duplicate learning store beside RAID SNR + crystallization
+# (rule 2, §8.6) — the exact drift class CLAUDE.md names ("building beside something that already existed").
