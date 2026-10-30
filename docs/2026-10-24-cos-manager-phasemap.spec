@@ -120,6 +120,23 @@ decisions:
       component, css, and js file. these needs to be isolated from each other, using the component registry as the event bus." Extends his
       MG_D1 (2026-10-24) from pages to sections and names the bus.
 
+  MG_D8_cos_becomes_nexus_emerge_replaces_it:
+    chosen: >-
+      The direction (his): COS becomes Nexus; it is eventually made into an OS; emerge replaces Nexus. Nothing is renamed or moved by this
+      decision; it orders what follows. The coder's readings, each TO CONFIRM:
+      (a) "cos becomes nexus" — what a person installs and runs is COS (the exe, the manager, the compartments), and it carries the name
+      Nexus; today's systems are compartments inside it. The folders keep their names until a rename is phased (CS12's mover first, §0.3).
+      (b) "make this into a os" — his Compartment OS design (cos/spec/cos-design-v1.6.0/v1.7.0: Rust/Cobalt, its own exe) was always an OS;
+      the steps already mapped point there: COS boots alone (CS4a), machine compartments on QEMU (VM1, CE1), a version is the whole machine
+      state (CS1). Booting on bare hardware (its own kernel, or a minimal Linux with COS as init and shell) is the end-state, not phased.
+      (c) "emerge will be replacing nexus" — the JavaScript implementation is replaced, system by system, by systems written in emerge and
+      rebuilt from their specs (why every spec compiles at full depth). The path is the one MG26 specs: the emerge-built system runs as a
+      branch beside the JS one, benchmarked and friction tested, and merges only when it is as good or better.
+    by: >-
+      his, 2026-10-30: "cos becomes nexus. / i want to eventually make this into a os. / emerge will be replacing nexus." Earlier the same day:
+      "the plan it to rebuild nexus at somepoint. in my emerge coding language. from the bottom up in my own language. almost everything in
+      nexus is my own. I love architecture." · "no cos renamed to emerge."
+
 phases:
   MG0b_the_full_spec:
     status: SPECCED 2026-10-30 — cos/spec/cos-manager.spec
@@ -487,3 +504,8 @@ build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → M
 # IF-SAFE-APPLY, IF-NET-ENGINES, IF-QEMU-RUNTIME, IF-ARCHETYPE-SCHEMA; MOD-MG-BUILDER (+UI), BALANCER, NETWORK, STORAGE, MERGE, UI-TIMELINE,
 # UI-RESOURCES; state manager gains whole-system states. Phases MG22–MG27. MG18 now waits on DB16 (COS's registry accepted): the bus is it.
 # Said: a tap bridge needs host admin rights; without them COS bridges through his proxy or tunnel engines.
+
+# ── ADDENDUM 2026-10-30 (d) — the direction: COS becomes Nexus, an OS in time, emerge replaces the implementation (his) ──────────────
+# James, 2026-10-30: "cos becomes nexus. / i want to eventually make this into a os. / emerge will be replacing nexus."
+# Recorded as MG_D8 with three readings TO CONFIRM. Nothing renamed or built. Open question for him: after (a) and (c), "Nexus" names the
+# product (COS) and emerge names the language its systems are written in; the coder reads it that way.

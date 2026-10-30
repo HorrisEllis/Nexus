@@ -671,3 +671,9 @@ spec:
 #   cycles), cortex/self-heal (escalation, fault-taxonomy, failure-intake), and autopilot's backoff and circuit (moving into COS, MG15).
 #   New: the .dep node type (schema.dep), the retry ladder in the walker, and the walker resuming from its records at boot.
 #   Survive restart: the gate records survive now; whole system states (files and machine) survive once COS's versions do (CS1, MG3).
+
+# ## ADDENDUM 2026-10-30 (b) — the end-state (his)
+# James, 2026-10-30: "cos becomes nexus. / i want to eventually make this into a os. / emerge will be replacing nexus."
+# The architecture this spec states is what carries over: the same registry, contract, handshake, bus and node architecture at every level
+# ("nexus is recursive, builds itself, using itself. the same architecture on every level", 2026-10-12) is what an emerge rebuild compiles
+# from and what an OS made of compartments runs. Readings and order: docs/2026-10-24-cos-manager-phasemap.spec MG_D8.
