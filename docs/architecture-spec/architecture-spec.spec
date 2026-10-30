@@ -677,3 +677,16 @@ spec:
 # The architecture this spec states is what carries over: the same registry, contract, handshake, bus and node architecture at every level
 # ("nexus is recursive, builds itself, using itself. the same architecture on every level", 2026-10-12) is what an emerge rebuild compiles
 # from and what an OS made of compartments runs. Readings and order: docs/2026-10-24-cos-manager-phasemap.spec MG_D8.
+
+# ## ADDENDUM 2026-10-30 (c) — RULE C measured: no system has a data pipe door yet; the door's shape
+# James, 2026-10-30: "just have hooks for the backend storage. like apis or urls for api routes. each system in nexus needs those data flow
+# pipeline apis. do they?"
+# Census 2026-10-30 (the interaction contracts): 12 of the 15 systems in lib/nexus-self/systems.js have a contract (~520 routes; ollama's sits
+# at ollama/, components and core have none). Data moves through each system's own one-off routes (imports, exports, streams); no route
+# shape is shared and no system serves /pipes. So yes: every system needs the door, and none has it.
+# The door, the coder's proposal (TO CONFIRM), three routes the same in every system, so one client, one test and one agent tool serve all:
+#   GET  /api/<system>/pipes                 the pipes it declares: { name, dir: in|out|both, schema, contractId, owner }
+#   GET  /api/<system>/pipes/:name?since=c   records out, oldest first, from cursor c (the system's own ledger seq); { records, next }
+#   POST /api/<system>/pipes/:name           records in; each checked against the pipe's schema; a refusal is a typed gap with its reason
+# Routing between systems: COS's router (RULE C, to confirm) checks both ends' contracts and delivers by these three routes only.
+# Storage behind a system is its own business; another system (the tutor included) reaches it only as a URL to a pipe (§5.15).

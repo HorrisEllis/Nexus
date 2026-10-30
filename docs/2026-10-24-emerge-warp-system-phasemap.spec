@@ -242,3 +242,21 @@ emerge-codegen-v2 compiles requires.
 # Built in Emerge's repo, branch claude/emerge-learn (github.com/HorrisEllis/Emerge): docs/README.md and docs/learn/0-6 + words.md, one
 # sentence taught at seven depths; every lesson program verified interpreted and compiled against its recorded output
 # (node docs/learn/verify.js, 5/5).
+
+# ── ADDENDUM 2026-10-30 (e) — the tutor: dynamic decomposition (his), it learns, and Emerge grows as the learner does ───────────────────
+# James, 2026-10-30: "I'm saying like extremely easy lessons, what about dynamic decomposing/analysis. like dynamic language, then it could
+# adapt for overwhelm and age / tell me what you think. like its a soverign system." Then: "just have hooks for the backend storage. like apis
+# or urls for api routes. ... yes, i love my idea, dynamic deomposition. i want it to learn also, what about the ability to edit and expand
+# emerge, like it can build as you expand you knowledge"
+# EW_D6 (his): the tutor is a sovereign system built on Emerge (outside it). Lessons are one-idea atoms in a concept graph from the one
+# sentence; a step that overwhelms decomposes into smaller steps (his dynamic decomposition); wording adapts to age and to measured overwhelm
+# (time, errors, retries, a "too much" button); deterministic choice first, a local model may only rephrase and must pass the program check.
+# Storage is hooks only: URLs to pipe routes (architecture-spec addendum (c)), no store of its own.
+# It learns (his) — the coder's shaping, TO CONFIRM, three layers kept apart:
+#   1. the tutor learns: where learners stall becomes gaps; a decomposition that worked is verified, tested and crystallized (EW_D4) and
+#      offered to the next learner;
+#   2. the learner's Emerge grows: what they build (components, kinds, templates, prelude functions) becomes their own library, used by later
+#      lessons;
+#   3. Emerge itself grows only through its own door: lang/core is Emerge source, and eg bootstrap (quarantine, prove, integrate, rollback)
+#      already makes a change safe; a learner's addition can be proposed upstream with proof, and taking it is his act.
+# Children's data stays on the device unless a parent agrees otherwise (§4.3). Not built; spec next, after his confirmation.
