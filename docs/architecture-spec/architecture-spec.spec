@@ -690,3 +690,41 @@ spec:
 #   POST /api/<system>/pipes/:name           records in; each checked against the pipe's schema; a refusal is a typed gap with its reason
 # Routing between systems: COS's router (RULE C, to confirm) checks both ends' contracts and delivers by these three routes only.
 # Storage behind a system is its own business; another system (the tutor included) reaches it only as a URL to a pipe (§5.15).
+
+# ## ADDENDUM 2026-10-30 (d) — the pipe door: both (his); RAID routes; too many primitives, and ESS
+# James, 2026-10-30, sending ESS-spec-v0.1.0, Signal_to_Noise1 and Associative_Lattice (kept: _archive/imports/2026-10-30-uploads/):
+# "non-linear / input, which can be any input, any data packet, then the system / way to many primitives i feel like / the data needs to flow
+# into the /input and then moved to the output one by one." Then, on the coder's three pipe routes: "both, one per system using the server.js
+# as a ingest, from the input folder, with the intent as a flag after the command. / and then orchastrator/cos using raid as the routing, for
+# systems, load balancing, and agents"
+#
+# RULE C decided (his): every system has one door, both halves, served by its own server.js:
+#   - an input folder: any data packet dropped there is ingested by the system's server.js, one by one, in order; the three routes
+#     (GET pipes, GET pipes/:name?since, POST pipes/:name) are the same door over HTTP; /input takes any packet, /output gives results one by one;
+#   - each packet carries its intent, given as a flag after the command (READING TO CONFIRM: `<command> <packet> --intent "<what it is for>"`,
+#     and the intent travels with the packet and is recorded with it);
+#   - COS (the orchestrator, MG_D5) routes between systems with RAID: which system, which agent, and the load (CS11, MG23).
+#   Stands on: his SNR Passthrough (INPUT → plugin chain → OUTPUT, POST /snr/input, every stage optional and reorderable) is already this
+#   shape for one stage; it becomes the template of a system's door.
+#
+# "way to many primitives" — the coder's census, his call: CIE-EG names a registry, roads, a gate, gaps and 13 ledger entry kinds; the Emerge
+# language adds compartment, component, kind, template, hook, wire, signal, constraint, boundary, record, gap, promote, whatif, spawn; SISO and
+# WARP add Event, Gate, Axiom, Stream, StreamLog; Nexus keeps 73 node types (lib/node-schemas). His ESS (End-State Signal v0.1.0) has five:
+#   WRITE (a function hashed at write time) · BIND (a role to a hash) · CALLTO (a signal to a hash or a role) · RESOLVE · UNRESOLVE.
+# They are the same kernel as CIE-EG under other names: WRITE = register, BIND = road, CALLTO = emit through the gate, RESOLVE = deliver,
+# UNRESOLVE = a gap. The coder's recommendation, TO CONFIRM: ESS's five are the kernel; everything else is a function registered as a hash,
+# i.e. a library, not a primitive. That is the reduction he asked for, from his own spec.
+# The coder's review of ESS v0.1.0 (his to take or leave):
+#   1. Short hashes: 7 hex characters is 28 bits. The store is append-only and keeps every version, so the odds of two functions sharing a
+#      short hash reach one in two at about 19,000 functions. The full SHA-256 should be the identity; the short form display only, lengthened
+#      when ambiguous, as git does. ("69fn332" is not hex; cosmetic.)
+#   2. A hash pins code, not behaviour: a function that calls `callto:gate` behaves differently after gate is rebound, with the same hash.
+#      Only hash calltos pin behaviour; the spec should say so.
+#   3. BIND is power: any callto can rebind any role, including the roles that load plugins, so every plugin is effectively root. §1.4
+#      protects the registry only. A capability per role (who may rebind it) keeps the non-linear property without that risk.
+#   4. Adaptive I/O: a plugin widening its own contract because its output goes unresolved can turn noise into signal by redefining it.
+#      A CONTRACT_UPDATE should be a proposal that passes a test (or him) before it binds.
+#   5. Replay uses `ts` (the clock); two binds in one millisecond, or a clock change, reorder history. A sequence number, as in Emerge's
+#      ledger, makes replay exact.
+#   Structural noise (§8: noise = what the kernel cannot route) is the strongest idea in it: objective, content-free, and it pairs with the
+#   content SNR in Signal_to_Noise1 (snr.js) as two different measures, kept apart.

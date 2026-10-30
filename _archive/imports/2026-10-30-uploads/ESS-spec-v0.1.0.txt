@@ -1,0 +1,270 @@
+ESS
+END-STATE SIGNAL
+Language Specification  ·  v0.1.0
+James Brooks  ·  Rheon World
+ESS is a content-addressed signal routing language. Its kernel is a live hash table — a mutable map of roles to immutable function hashes. Every function is frozen at write time. The kernel routes signals to end-states. It does not evaluate, transform, or interpret. It resolves.
+A signal either reaches its end-state, or it does not. If it does not, it is unresolved — and unresolved signals are first-class events, not errors. The kernel stays stateless. The bus carries the record.
+§1  AXIOMS
+§1.1  A hash is the identity of a function.
+Computed at write time. Never recomputed. Never mutated.
+The file can be deleted. The hash remains valid.
+§1.2  Nothing silently fails.
+An unresolved signal is emitted to the bus.
+It is not dropped. It is not queued. It is broadcast.
+§1.3  The kernel has no fixed shape.
+Its shape at any moment is its current role→hash binding table.
+Serialize the table. You have serialized the kernel.
+§1.4  The registry is the fixed point.
+Every other binding can be rewritten via callto.
+The registry itself cannot be callto'd away.
+§1.5  Noise is structural, not content-based.
+Noise = a signal the kernel cannot route.
+Signal = a signal that resolves to a hash.
+§2  PRIMITIVES
+ESS has five primitives. Everything else is a function registered as a hash.
+WRITE
+A function is written. Its hash is computed immediately at write time and registered in the global hash store. The filename is an alias — a human-readable label. The kernel never references it again.
+gate.js  →  written  →  hash: 69fn332
+69fn332 IS gate.js, forever.
+The file can be renamed, moved, or deleted.
+69fn332 remains valid.
+BIND
+A role is bound to a hash in the kernel's routing table. This is the act of kernel mutation. A role can be rebound at any time — the old hash is not invalidated, the new binding takes effect immediately.
+gate.js = 69fn332        // bind role "gate" to hash 69fn332
+gate.js = a1b2c3         // rebind — kernel now routes gate → a1b2c3
+                         // 69fn332 still exists. Still callable.
+CALLTO
+A signal is dispatched to a hash. The callto targets the hash directly — not the role name. This is the key invariant: callto:69fn332 will always reach the same function, regardless of what role "gate" currently points to.
+callto:69fn332           // dispatch to exact function, forever
+callto:gate              // dispatch to current binding of role "gate"
+                         // (role calltos are sugar — hash calltos are truth)
+RESOLVE
+A callto finds its target hash in the registry. The function executes. Output is emitted to the bus. Resolution is atomic — the signal either fully resolves or enters UNRESOLVE. No partial execution.
+signal → kernel → hash found → fn executes → output emitted to bus
+UNRESOLVE
+A callto cannot find its target. No hash registered, binding broken, or signal contract mismatch. The signal is re-emitted to the bus as an unresolved event. Downstream listeners can catch, log, reroute, or surface it as a gap.
+signal → kernel → no hash found
+       → emit: UNRESOLVE { signal, role, ts, reason }
+       → kernel state unchanged
+       → bus carries the record
+§3  THE KERNEL
+The kernel is not a runtime. It is not an interpreter. It is a live routing mesh — a mutable hash table that maps roles to content-addressed functions. Its only job is dispatch.
+Kernel State
+At any moment, the kernel is fully described by its binding table. Two kernels with identical binding tables are identical kernels, regardless of how they got there.
+// Kernel state at time T
+{
+  "gate":    "69fn332",
+  "filter":  "a1b2c3",
+  "input":   "f7d991",
+  "output":  "b3e441",
+}
+// This IS the kernel. Nothing else.
+Kernel Mutation
+The kernel mutates via BIND operations. Any callto can trigger a rebind — including calltos that rebind the handlers for other calltos. This is the non-linear property: plugins can rewrite the routing table, including the routes that govern plugin loading.
+// A plugin can rebind any role
+callto:69fn332  →  executes  →  emits: BIND { gate: newHash }
+               →  kernel now routes gate → newHash
+// A plugin can rebind itself
+callto:a1b2c3   →  executes  →  emits: BIND { filter: newerHash }
+               →  kernel now routes filter → newerHash
+               →  a1b2c3 still exists, still callable by hash
+Kernel History
+Every BIND operation is appended to the binding log. The kernel's full history is a sequence of BIND events. Replaying the log from genesis reconstructs any prior kernel state.
+// Binding log
+[
+  { ts: 0,    op: BIND, role: "gate",   hash: "69fn332" },
+  { ts: 1240, op: BIND, role: "filter",  hash: "a1b2c3"  },
+  { ts: 3881, op: BIND, role: "gate",   hash: "newHash"  },
+]
+// Replay to ts:1240 → kernel has gate + filter, gate = 69fn332
+// Replay to ts:3881 → gate = newHash
+§4  PLUGINS
+A plugin is a function registered as a hash and bound to a role. There is no plugin system separate from the kernel — the kernel IS the plugin system. A plugin declares a signal contract: what it expects on input and what it emits on output.
+Plugin Anatomy
+// plugin: filter.js
+// hash:   a1b2c3
+module.exports = {
+  contract: {
+    input:  { type: "signal", axes: ["AFFECT", "COHERENCE"] },
+    output: { type: "signal | UNRESOLVE" },
+  },
+  execute(signal, kernel) {
+    // transform signal
+    // optionally emit BIND to mutate kernel
+    // return resolved signal or null (→ UNRESOLVE)
+  },
+};
+Adaptive I/O
+A plugin's signal contract is not fixed at registration. A plugin can emit a CONTRACT_UPDATE event that causes the kernel to re-register its expected input shape. This is adaptive I/O — the plugin tunes its own interface based on what it observes from its output.
+// Plugin observes downstream UNRESOLVE events for its output
+// Infers its output contract is wrong
+// Emits CONTRACT_UPDATE
+bus.on("UNRESOLVE", (evt) => {
+  if (evt.sourceHash === "a1b2c3") {
+    bus.emit("CONTRACT_UPDATE", {
+      hash:    "a1b2c3",
+      newContract: { output: { type: "signal", schema: updatedSchema } },
+    });
+  }
+});
+Signal-to-Noise Filter Plugin
+The signal-to-noise filter is not a content inspector. It is a routing verifier. It receives a signal and asks the kernel: does a hash exist to handle this? If yes — signal. If no — noise. The filter updates its own weights by watching UNRESOLVE events downstream.
+// filter.js = a1b2c3
+execute(signal, kernel) {
+  const targetHash = kernel.resolve(signal.role);
+  if (!targetHash) {
+    // Structurally unroutable = noise
+    return null; // → UNRESOLVE emitted by kernel
+  }
+  // Hash exists — signal is valid
+  // Adaptive weight update based on downstream resolution rate
+  this._updateWeights(signal, targetHash);
+  return signal;
+},
+§5  CALLTO PROTOCOL
+A callto is a URI. It uniquely identifies either a hash (permanent, version-pinned) or a role (current binding, may change). Hash calltos are truth. Role calltos are convenience.
+Callto Syntax
+callto:69fn332           // hash callto   — permanent, version-pinned
+callto:gate              // role callto   — resolves to current binding
+callto:gate@69fn332      // pinned role   — must match or UNRESOLVE
+callto:gate?fallback=69fn332  // with fallback hash if role unbound
+Callto Resolution Order
+1. Is target a known hash?
+   YES → dispatch directly
+   NO  → treat as role name
+2. Is role bound in kernel table?
+   YES → resolve to hash → dispatch
+   NO  → UNRESOLVE
+3. Is there a fallback?
+   YES → dispatch to fallback hash
+   NO  → UNRESOLVE emitted to bus
+Callto as Kernel Mutation
+A callto can carry a BIND payload — allowing the called function to mutate the kernel's routing table as part of its execution. This is the non-linear property. Any function, via callto, can rewrite any route.
+callto:69fn332 {
+  signal: inputData,
+  bind:   { gate: "newHash" },   // kernel mutation on resolve
+}
+// On resolve:
+// 1. fn executes with inputData
+// 2. kernel binds gate → newHash
+// 3. output emitted to bus
+// Both happen atomically or neither does.
+§6  THE BUS
+The bus is the only shared state in ESS. The kernel is stateless routing. Functions are stateless transforms. The bus carries everything: resolved signals, UNRESOLVE events, BIND operations, CONTRACT_UPDATEs, and plugin telemetry.
+Bus Events
+SIGNAL
+A signal ready for routing.
+RESOLVE
+A signal successfully reached its end-state.
+UNRESOLVE
+A signal could not be routed. Includes reason.
+BIND
+A role→hash binding mutation.
+WRITE
+A new function hash registered.
+CONTRACT_UPDATE
+A plugin's I/O contract has changed.
+KERNEL_SNAPSHOT
+Full binding table serialized at a point in time.
+UNRESOLVE as Signal
+An UNRESOLVE event is not an error log. It is a first-class signal on the bus. Any function can subscribe to UNRESOLVE events and respond — rerouting, logging, surfacing as a gap, or triggering a kernel mutation to fill the missing route.
+bus.on("UNRESOLVE", (evt) => {
+  // evt.signal  — the original signal
+  // evt.role    — the role that had no binding
+  // evt.ts      — timestamp
+  // evt.reason  — NO_BINDING | HASH_MISSING | CONTRACT_MISMATCH
+  // This is the noise. Handle it or surface it.
+});
+§7  HASH STORE
+The hash store is the global registry of all written functions. It is append-only. Hashes are never removed. The store is the permanent record of all functions that have ever existed in the system.
+// Hash store structure
+{
+  "69fn332": {
+    hash:      "69fn332",
+    writtenAt: 1718000000000,
+    alias:     "gate.js",
+    contract:  { input: {...}, output: {...} },
+    size:      2048,       // bytes
+  },
+  "a1b2c3": { ... },
+  "f7d991": { ... },
+}
+// Append-only. Never delete. Never mutate.
+// §INVARIANT: A hash never changes.
+Hash Computation
+Hashes are computed at write time using SHA-256 over the function's source bytes. The first 7 characters of the hex digest are the short hash used in calltos and binding tables. Collision probability across a typical ESS project is negligible.
+hash = SHA256(sourceBytes)[0:7]
+// gate.js source → SHA256 → "69fn33200a4bc..." → short: "69fn332"
+§8  SIGNAL-TO-NOISE
+Noise in ESS is structurally defined. It is not a property of signal content — it is a property of kernel routing. A signal is noise if the kernel cannot resolve a hash for it. This definition is stable, objective, and requires no content inspection.
+SIGNAL  =  a callto that resolves to a hash.
+NOISE   =  a callto that emits UNRESOLVE.
+The filter does not read the signal. It reads the kernel.
+Filter Architecture
+The signal-to-noise filter sits between the input bus and the dispatch layer. It maintains a weight table — per-role resolution rates — updated continuously from downstream UNRESOLVE events. High UNRESOLVE rate for a role = that role's signals are structurally noisy.
+// Filter weight table (adaptive)
+{
+  "gate":   { resolutions: 142, unresolves: 3,  rate: 0.979 },
+  "input":  { resolutions: 98,  unresolves: 41, rate: 0.705 },
+  "legacy": { resolutions: 0,   unresolves: 87, rate: 0.000 },
+}
+// "legacy" role is structurally noisy — no hash can handle it.
+// Filter surfaces this as a gap for kernel attention.
+Filter Plugin Callto
+filter.js = a1b2c3
+callto:a1b2c3
+  input:  SIGNAL event from bus
+  output: SIGNAL (pass through) | null (→ UNRESOLVE)
+// Filter emits to bus on high noise detection:
+bus.emit("NOISE_ALERT", {
+  role:        "legacy",
+  noiseRate:   1.0,
+  suggestion:  "No hash registered for role. Bind or remove.",
+  ts:          Date.now(),
+});
+§9  WORKED EXAMPLE
+A minimal ESS system: an input handler, a signal-to-noise filter, and an output handler. The kernel starts with three bindings. The filter is adaptive.
+Step 1 — Write functions
+// Write at time T=0
+input.js   →  hash: f7d991
+filter.js  →  hash: a1b2c3
+output.js  →  hash: b3e441
+// All three registered in hash store. Immutable forever.
+Step 2 — Bind kernel
+input  = f7d991
+filter = a1b2c3
+output = b3e441
+// Kernel state: 3 bindings. Fully serializable.
+Step 3 — Signal arrives
+bus.emit("SIGNAL", { role: "input", data: rawData })
+// kernel resolves input → f7d991
+// f7d991 executes → emits SIGNAL { role: "filter", data: processed }
+// kernel resolves filter → a1b2c3
+// a1b2c3 checks: does "output" have a hash? YES → pass through
+// a1b2c3 emits SIGNAL { role: "output", data: processed }
+// kernel resolves output → b3e441
+// b3e441 executes → emits RESOLVE { data: finalOutput }
+Step 4 — Unknown role arrives
+bus.emit("SIGNAL", { role: "transform", data: rawData })
+// kernel: no binding for "transform"
+// → emit UNRESOLVE { role: "transform", reason: "NO_BINDING", ts }
+// → filter weight table updated: transform unresolves++
+// → kernel state unchanged
+// → bus carries the record
+Step 5 — Kernel self-modifies
+// Developer writes new transform function
+transform.js  →  hash: cc9812
+// Bind via callto (another function triggers it)
+callto:f7d991 { bind: { transform: "cc9812" } }
+// Kernel now: 4 bindings
+// Next SIGNAL { role: "transform" } → resolves → cc9812
+// Noise rate for "transform" drops to 0
+§10  ROADMAP
+v0.1.0 — Spec. This document.
+v0.2.0 — Hash store implementation. WRITE primitive. SHA-256 at write time.
+v0.3.0 — Kernel routing table. BIND + CALLTO primitives.
+v0.4.0 — Bus. RESOLVE + UNRESOLVE events.
+v0.5.0 — Signal-to-noise filter plugin. Adaptive weight table.
+v0.6.0 — Adaptive I/O. CONTRACT_UPDATE. Plugin self-tuning.
+v1.0.0 — Full ESS runtime. Kernel self-modification. Binding log replay.
+ESS v0.1.0  ·  End-State Signal  ·  James Brooks  ·  Rheon World
