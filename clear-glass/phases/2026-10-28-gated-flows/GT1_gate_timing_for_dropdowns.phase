@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
+context: pipeline phase GT1_gate_timing_for_dropdowns of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GT1_gate_timing_for_dropdowns (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281633
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281633
+lastSeenAt: 1793386281633
+fingerprint: null
+payload:
+  id: GT1_gate_timing_for_dropdowns
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/page/element-gate.js
+    - clear-glass/src/ipc/bridge.js
+    - tests/modules/test-pipeline-gates.test.js
+  depends_on:
+    - AF6_the_chip_on_dropdowns
+    - GF5_category_and_subcategory_finished
+  blocks:
+    - MOD-GT1
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 64d0f320581793eb

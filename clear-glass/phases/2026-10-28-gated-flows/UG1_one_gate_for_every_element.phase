@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+context: pipeline phase UG1_one_gate_for_every_element of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: UG1_one_gate_for_every_element (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281621
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281621
+lastSeenAt: 1793386281621
+fingerprint: null
+payload:
+  id: UG1_one_gate_for_every_element
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.292
+  files:
+    - clear-glass/src/page/element-gate.js
+    - tests/modules/test-element-gates.test.js
+  depends_on:
+    - GG1_every_part_gated
+  blocks:
+    - MOD-UG1
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 87eaaf42d5e86559

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::KB7_pin_the_floating_cli
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::KB7_pin_the_floating_cli
+context: pipeline phase KB7_pin_the_floating_cli of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: KB7_pin_the_floating_cli (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281611
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281611
+lastSeenAt: 1793386281611
+fingerprint: null
+payload:
+  id: KB7_pin_the_floating_cli
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.280
+  files:
+    - clear-glass/src/main/float-cli.js
+    - clear-glass/renderer/float-cli.js
+    - clear-glass/renderer/float-cli.html
+    - clear-glass/renderer/browser.js
+    - clear-glass/renderer/settings/sections/general.js
+  depends_on:
+    - BS6_float_cli
+  blocks:
+    - MOD-KB7
+  spec: clear-glass/spec/gated-flows.spec
+  graph: d675ad2d86a480a6

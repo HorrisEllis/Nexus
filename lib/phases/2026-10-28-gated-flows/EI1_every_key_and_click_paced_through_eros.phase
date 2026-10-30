@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::EI1_every_key_and_click_paced_through_eros
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::EI1_every_key_and_click_paced_through_eros
+context: >-
+  pipeline phase EI1_every_key_and_click_paced_through_eros of
+  docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: EI1_every_key_and_click_paced_through_eros (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281629
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281629
+lastSeenAt: 1793386281629
+fingerprint: null
+payload:
+  id: EI1_every_key_and_click_paced_through_eros
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.294
+  files:
+    - clear-glass/src/driver/index.js
+    - lib/test-sandbox.js
+    - tests/modules/test-pipeline-gates.test.js
+  depends_on:
+    - KB1_choose_waits_and_keys
+  blocks:
+    - MOD-EI1
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 17aa88cf93851de0

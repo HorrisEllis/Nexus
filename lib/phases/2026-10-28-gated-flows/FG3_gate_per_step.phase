@@ -7,11 +7,11 @@ intent: null
 summary: FG3_gate_per_step (backend) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793179560187
+exported_at: 1793386281595
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793179560187
-lastSeenAt: 1793179560187
+firstSeenAt: 1793386281595
+lastSeenAt: 1793386281595
 fingerprint: null
 payload:
   id: FG3_gate_per_step
@@ -24,7 +24,8 @@ payload:
     - lib/agent-tools/tools/clear-glass/macro.js
   depends_on:
     - FG_D1_gate_is_a_step_field
+    - FP3_is_the_gate_open
   blocks:
     - MOD-FG-GATES
   spec: clear-glass/spec/gated-flows.spec
-  graph: f27d7a0f3a2314d7
+  graph: a56cc1d01c4a4027

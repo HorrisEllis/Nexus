@@ -1,0 +1,85 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UG5_gates_made_with_the_picker:d53798a520d884c9
+type: graph
+id: phase:UG5_gates_made_with_the_picker:d53798a520d884c9
+context: dependency graph of phase UG5_gates_made_with_the_picker
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793386281626
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281626
+lastSeenAt: 1793386281626
+fingerprint: null
+payload:
+  for: UG5_gates_made_with_the_picker
+  kind: phase
+  repo: null
+  hash: d53798a520d884c9
+  nodes:
+    - path: clear-glass/renderer/browser.html
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/settings/sections/driver.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/site-gates/gate-bar.css
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/site-gates/gate-bar.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 14
+    deps:
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG4_his_gates_per_site
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+    dependents: []
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG2_every_driver_write_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG4_his_gates_per_site
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 14
+      - 'depends on (2): UG4_his_gates_per_site, KB3_site_keys_ui · all upstream 20'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-28-gated-flows-phasemap.spec::UG4_his_gates_per_site
+        kind: declared
+      - from: docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+        kind: declared
