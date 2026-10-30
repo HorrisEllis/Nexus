@@ -63,7 +63,7 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
   async function driverOn(page) {
     const ClearDriver = require(CG('src/driver/index.js'));
     const d = new ClearDriver({ ctxMgr: {}, dom: {}, vault: {}, sse: { emit: () => {} } });
-    d._getWebContents = () => ({ executeJavaScript: (c) => page._eval(c), getURL: () => 'https://www.fiverr.com/users/x/manage_gigs/y/edit?tab=pricing', isDestroyed: () => false, sendInputEvent: (e) => {
+    d._getWebContents = () => ({ executeJavaScript: (c) => page._eval(c), getURL: () => 'https://www.fiverr.com/users/x/manage_gigs/y/edit?tab=pricing', isDestroyed: () => false, insertText: (t) => page._send('Input.insertText', { text: t }), sendInputEvent: (e) => {
       if (MAP[e.type]) return page._send('Input.dispatchMouseEvent', { type: MAP[e.type], x: e.x, y: e.y, button: e.type === 'mouseMove' ? 'none' : (e.button || 'left'), buttons: e.type === 'mouseDown' ? 1 : 0, clickCount: e.type === 'mouseMove' ? 0 : (e.clickCount || 1) }); } });
     d._waitResponsive = async () => {};
     return d;
