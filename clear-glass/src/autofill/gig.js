@@ -323,7 +323,7 @@ async function fillGig(dom, gig, { agentId = 'default', minConfidence = 'medium'
   for (const m of toFill) {
     try {
       const r = await dom.handleMutate({ agentId, cgId: m.cgId, mutation: { value: m.value } });
-      if (r && r.error) failed.push({ key: m.key, error: r.error }); else filled.push({ key: m.key, confidence: m.confidence, source: m.source });
+      if (r && r.error) failed.push({ key: m.key, error: r.error }); else filled.push({ key: m.key, confidence: m.confidence, source: m.source, cgId: m.cgId, value: m.value });   // cgId, value: the part's gate (2026-10-30 GG1)
     } catch (err) { failed.push({ key: m.key, error: err.message }); }
   }
   const done = new Set(filled.map(f => f.key));

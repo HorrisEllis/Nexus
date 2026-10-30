@@ -1438,3 +1438,21 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
   - `tests/modules/test-intent-flow.test.js`: 5/5, including IF-05 above, and IF-04 driving the Do box in Clear Glass;
   - `docs/2026-10-29-his-loop-phasemap.spec`, decisions HL_D2 and HL_D3 with his words;
   - `lib/intent-flow.js` `causal()`.
+
+### 2026-10-30 — 0.60.290–0.60.291: "if you run into friction use the per site keybindings that I proposed." · "each field/drop down/ or anything should be gated."
+- **His words:**
+  - 2026-10-30: "like can you fix the autofill to work with all fields, and if you run into friction use the per site keybindings that I
+    proposed."
+  - The same day, after it filled every field: "each field/drop down/ or anything should be gated."
+- **The call, against the alternative:**
+  - **Fallback.** The per-site keys (his idea on 2026-10-28: "like elements to keys, per site?") were a shortcut he pressed by hand. He
+    made them the automation's fallback. A field the fill cannot handle becomes something he binds once, which the fill uses on every
+    later run. That turns each failure into a fix he can make himself, instead of a code change.
+  - **Gates.** The usual approach to form autofill is to set the value, read it once, and count the field as done. His rule is that
+    nothing counts until a gate on the page holds. The coder's version reads the field again after the page settles.
+- **What it catches that read-once misses:** `test-gig-all-fields` GF-05, in Clear Glass. The page puts the title back 250 ms after it is
+  typed. A read right after typing sees the gig's title and would count it as filled. The gate reads it again after the page settles,
+  sees the value change, tries twice, and reports the title as not done, with what the page showed.
+- **GF-04:** a description box the fill cannot find by its words is filled through the key he bound to it (part: description), and read
+  back.
+- **Check it:** `node tests/modules/test-gig-all-fields.test.js` → 5 passed.

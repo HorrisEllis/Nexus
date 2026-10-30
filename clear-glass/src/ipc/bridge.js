@@ -2354,15 +2354,18 @@ class IpcBridge {
         named.add(row.toLowerCase());
         if (want && !want.has(`${tier}.feature.${row}`)) continue;   // 0.60.286 GM2 — unticked in the fill menu
         try {
-          if (value === true || value === false) {
-            const c = await this.driver.exec({ agentId, action: 'checkAt', column, row, checked: value, by: 'person' });
-            out.filled.push({ tier, row, value, changed: c.changed });
-          } else {
-            const c = await this.driver.exec({ agentId, action: 'choose', column, row, option: String(value), by: 'person' });
-            const g = await this.driver.exec({ agentId, action: 'readChoice', column, row, is: String(value), by: 'person' });
-            if (!g.matches) throw new Error(`the row shows "${g.shown}" after the pick, not "${value}"`);
-            out.filled.push({ tier, row, value, shown: c.option, clickedBy: c.clickedBy });
+          // 2026-10-30 GG1 — each row gated after the page settles: ticked/clear, or the value shown; a closed gate does the row once more
+          const C = gigChecks(this.driver, agentId);
+          const check = value === true || value === false ? C.checked(column, row, value) : C.choice({ column, row }, String(value));
+          let c = null, g = null;
+          for (let t = 0; t < 2 && !(g && g.open); t++) {
+            c = value === true || value === false ? await this.driver.exec({ agentId, action: 'checkAt', column, row, checked: value, by: 'person' })
+              : await this.driver.exec({ agentId, action: 'choose', column, row, option: String(value), by: 'person' });
+            g = await gigGate(check);
           }
+          (out.gates = out.gates || []).push({ key: `${tier}.feature.${row}`, open: g.open, saw: g.saw });
+          if (!g.open) throw new Error(`its gate stayed closed: ${g.saw}`);
+          out.filled.push(value === true || value === false ? { tier, row, value, changed: c.changed } : { tier, row, value, shown: c.option, clickedBy: c.clickedBy });
         } catch (err) { out.failed.push({ tier, row, value, why: err.message }); }
       }
     }
@@ -2373,6 +2376,10 @@ class IpcBridge {
     } catch (err) { out.rowsWhy = err.message; }
     return out;
   }
+
+  // 2026-10-30 GG1 — the gate and its checks are module functions (gigGate, gigChecks, at the end of this file): one place, any caller
+  async _gigGate(check, opts) { return gigGate(check, opts); }
+  _gigChecks(agentId) { return gigChecks(this.driver, agentId); }
 
   // 2026-10-30 GF3 — James: "fix the autofill to work with all fields". A text part found by its section's words (gig-fields.js), typed in as
   // a keyboard would (driver insertText, so a rich editor takes it), read back. { ok, kind, shown } or throws why.
@@ -2437,14 +2444,16 @@ class IpcBridge {
           if (!m || !m.result) throw new Error('the element it names is not on this page');
           selector = SK.MARKED;
         }
-        let how;
+        let how, gate = verify;   // 2026-10-30 GG1: an element he bound is gated on itself; a key, click or macro on the part's own gate
+        const C = gigChecks(this.driver, agentId);
+        const own = async (check) => { const g = await gigGate(check); return g.open; };
         if (selector && kind === 'text' && binding.do !== 'macro') {
           const t = await this.driver.exec({ agentId, action: 'insertText', selector, text: String(value), by: 'person' });
           if (!GF.readsBack(t && t.shown, value)) throw new Error(`typed, but it shows "${String((t && t.shown) || '').slice(0, 60)}"`);
-          how = 'typed at the element you bound';
+          how = 'typed at the element you bound'; gate = () => own(C.text({ selector }, value));
         } else if (selector && (binding.do === 'choose' || kind === 'choice')) {
           const c = await this.driver.exec({ agentId, action: 'choose', selector, option: binding.option || String(value), by: 'person' });
-          how = `chose "${c && c.option}" at the element you bound`;
+          how = `chose "${c && c.option}" at the element you bound`; gate = () => own(C.choice({ selector }, binding.option || String(value)));
         } else {
           for (const st of SK.steps(binding)) {
             if (st.macro) { const m = await this.runMacroAsPerson({ name: st.macro, agentId, skipSnapshot: true, by: 'person' }); if (m && m.error) throw new Error(`macro ${st.macro}: ${m.error}`); }
@@ -2452,7 +2461,7 @@ class IpcBridge {
           }
           how = SK.describe(binding);
         }
-        if (verify && !(await verify())) throw new Error(`${how}, but the part still does not read back`);
+        if (gate && !(await gate())) throw new Error(`${how}, but its gate stayed closed`);
         return { ok: true, accel, how };
       } catch (err) { tried.push(`${accel}: ${err.message}`); }
     }
@@ -2496,82 +2505,128 @@ class IpcBridge {
     if (where.page === 'gallery') r.gallery = 'the Gallery takes your images, video and documents: yours to add (nothing is uploaded for you)';
     const valueOf = (part) => GP.valueOf(gig, part);   // 0.60.268: one reading of a gig part, shared with the chips
     const filledKeys = new Set((r.filled || []).map(f => f.key));
+    // 2026-10-30 GG1 — James: "each field/drop down/ or anything should be gated." Every part ends at a gate: what the page shows for it is
+    // read until it is right, then read again after the page settles (a page that puts its own value back fails it). A closed gate runs the
+    // part again (retries); still closed → his site keys for the part, gated the same way; else the part says what its gate saw.
+    r.gates = [];
+    const C = gigChecks(this.driver, agentId);
+    const gated = async (key, doIt, check, retries = 1) => {
+      let g = null;
+      for (let t = 0; t <= retries; t++) {
+        const rec = await doIt(t);
+        g = await gigGate(check);
+        if (g.open) { r.gates.push({ key, open: true, tries: t + 1, saw: g.saw }); return rec; }
+      }
+      r.gates.push({ key, open: false, tries: retries + 1, saw: g && g.saw });
+      throw new Error(`its gate stayed closed: ${g && g.saw}`);
+    };
+    const friction = async (part, value, err, check) => {
+      const kind = part === 'category' || /\.(delivery|revisions)$/.test(part) ? 'choice' : part === 'tags' || part === 'faq' || part === 'requirement' ? 'run' : 'text';
+      const verify = check ? async () => { const g = await gigGate(check); r.gates.push({ key: part, open: g.open, via: 'site key', saw: g.saw }); return g.open; } : null;
+      let sk = { ok: false, why: 'no page address to look up your keys' };
+      if (this.driver && read && read.url) { try { sk = await this._gigSiteKey(agentId, read.url, part, value, { kind, verify }); } catch (e) { sk = { ok: false, why: e.message }; } }
+      if (sk.ok) r.siteKeys.push({ key: part, accel: sk.accel, how: sk.how, after: err.message });
+      else r.notFound.push({ key: part, why: `${err.message} · ${sk.why}` });
+    };
+    // the boxes the label-matching pass set: each gated too; a closed one is typed again (as a keyboard), then goes to his keys. With no driver
+    // nothing can read the page: said, never treated as a pass or a failure (§1.2)
+    if (!this.driver) r.gatesWhy = 'no page reader (driver) here: what was set is not gated';
+    for (const f of this.driver ? (r.filled || []).slice() : []) {
+      if (!f.cgId) continue;
+      const check = C.text({ cgId: f.cgId, key: f.key }, f.value);
+      try {
+        await gated(f.key, async (t) => { if (t) await this.driver.exec({ agentId, action: 'insertText', selector: `[data-cg-part="${f.key}"]`, text: f.value, by: 'person' }); }, check);
+      } catch (err) { r.filled.splice(r.filled.indexOf(f), 1); filledKeys.delete(f.key); await friction(f.key, f.value, err, check); }
+    }
     for (const part of (where.page && GP.PARTS[where.page]) || []) {
       if (!wants(part)) continue;
       const value = valueOf(part); if (value === null || value === undefined || value === '') continue;
+      if (filledKeys.has(part)) continue;   // filled and gated above
       const learned = site && mem.target(site, GP.targetKey(where.page, part));
       const isChoice = part === 'category' || part.endsWith('.delivery');
+      const column = /^(basic|standard|premium)\./.test(part) ? part.split('.')[0].toUpperCase() : null;
+      const catShown = gig.subcategory || gig.category;
+      let check = null;
       try {
         // 0.60.283 — James: "i want autofill to do it all if possible." Search tags: each typed and Enter pressed in the tags box (the one he
-        // pointed at, else the box in the Search tags section), gated: the tag must show and leave the box, else typed once more.
-        if (part === 'tags') { r.tags = await this._gigTags(agentId, gig, learned && learned.selector); continue; }
-        // 2026-10-30 GF3 — the lists, item by item; the title and the description by their section's words, typed, read back
+        // pointed at, else the box in the Search tags section), gated per tag; then the part's gate: every tag that took is still shown.
+        if (part === 'tags') {
+          check = C.allShown(() => (r.tags && r.tags.done) || []);
+          await gated(part, async () => { r.tags = await this._gigTags(agentId, gig, learned && learned.selector); }, check, 0);   // typing again would add a tag twice
+          continue;
+        }
+        // 2026-10-30 GF3 — the lists, item by item (each gated on the page showing it); the part's gate: every item it added or found is shown
         if (part === 'faq' || part === 'requirement') {
-          const L = await this._gigList(agentId, part, part === 'faq' ? gig.faq : gig.requirements, want);
-          r[part === 'faq' ? 'faqs' : 'requirements'] = L;
-          if (L.failed.length) throw new Error(L.failed.map(f => `#${f.i + 1}: ${f.why}`).join('; '));
+          const items = part === 'faq' ? (gig.faq || []).map(f => f && f.question) : (gig.requirements || []);
+          check = C.allShown(() => { const L = r[part === 'faq' ? 'faqs' : 'requirements']; return L ? [...L.done, ...L.already].map(i => items[i]).filter(Boolean) : []; });
+          await gated(part, async () => {
+            const L = await this._gigList(agentId, part, part === 'faq' ? gig.faq : gig.requirements, want);
+            r[part === 'faq' ? 'faqs' : 'requirements'] = L;
+            if (L.failed.length) throw new Error(L.failed.map(f => `#${f.i + 1}: ${f.why}`).join('; '));
+          }, check);   // a second run skips what is shown, so it adds nothing twice
           continue;
         }
         if ((part === 'title' || part === 'description') && !learned) {
-          if (filledKeys.has(part)) continue;
-          const t = await this._gigText(agentId, part, value);
+          check = C.text({ selector: `[data-cg-part="${part}"]` }, value);
+          const t = await gated(part, () => this._gigText(agentId, part, value), check);
           r.filled.push({ key: part, confidence: 'high', source: `section words (${t.kind})` }); continue;
         }
         if (learned) {
-          if (isChoice) await this.driver.exec({ agentId, action: 'choose', selector: learned.selector, option: value, by: 'person' });
-          else await this.driver.exec({ agentId, action: 'setValue', selector: learned.selector, value, by: 'person' });
+          check = isChoice ? C.choice({ selector: learned.selector }, value) : C.text({ selector: learned.selector }, value);
+          await gated(part, (t) => isChoice ? this.driver.exec({ agentId, action: 'choose', selector: learned.selector, option: value, by: 'person' })
+            : this.driver.exec({ agentId, action: t ? 'insertText' : 'setValue', selector: learned.selector, ...(t ? { text: value } : { value }), by: 'person' }), check);
           r.learned.push({ key: part, selector: learned.selector }); continue;
         }
-        if (filledKeys.has(part)) continue;
-        // 0.60.286 GM2 — revisions chosen in the tier's column on the Revisions row, read back; price typed in the Price row, read back
+        // 0.60.286 GM2 — revisions chosen in the tier's column on the Revisions row; price typed in the Price row; each gated
         if (part.endsWith('.revisions')) {
-          const column = part.split('.')[0].toUpperCase();
-          const c = await this.driver.exec({ agentId, action: 'choose', column, row: 'Revisions', option: value, by: 'person' });
-          const g = await this.driver.exec({ agentId, action: 'readChoice', column, row: 'Revisions', is: value, by: 'person' });
-          if (!g.matches) throw new Error(`Revisions shows "${g.shown}" after the pick, not "${value}"`);
+          check = C.choice({ column, row: 'Revisions' }, value);
+          const c = await gated(part, () => this.driver.exec({ agentId, action: 'choose', column, row: 'Revisions', option: value, by: 'person' }), check);
           r.dropdowns.push({ key: part, ok: true, option: c.option, via: 'built-in' }); continue;
         }
         if (part.endsWith('.price')) {
-          const column = part.split('.')[0].toUpperCase();
-          const t = await this.driver.exec({ agentId, action: 'typeAt', column, row: 'Price', text: value, by: 'person' });
+          let box = null;
+          check = async () => box ? C.text({ selector: box }, value)() : { open: false, saw: 'no price box yet' };
+          const t = await gated(part, async () => { const x = await this.driver.exec({ agentId, action: 'typeAt', column, row: 'Price', text: value, by: 'person' }); box = x.selector || null; return x; }, check);
           r.filled.push({ key: part, confidence: 'high', source: 'typeAt', value: t.value }); continue;
         }
         if (part.endsWith('.delivery')) {
-          const column = part.split('.')[0].toUpperCase();
           // 0.60.269 — James: "I want to be able to edit what you added." The pick is his node file now: the macro "Fiverr gig - choose
           // delivery" (clear-glass/automation/nodes), run as him; editing it in Settings › Macros changes what this does. The built-in pick
-          // runs only when the macro cannot, and says so.
-          const viaMacro = typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose delivery', { tier: column, delivery: value }) : { ok: false, why: 'node macros not wired here' };
-          if (viaMacro.ok) { r.dropdowns.push({ key: part, ok: true, option: value, via: 'macro' }); continue; }
-          const c = await this.driver.exec({ agentId, action: 'choose', column, shows: 'DELIVERY TIME', option: value, by: 'person' });
-          r.dropdowns.push({ key: part, ok: true, option: c.option, via: 'built-in', why: viaMacro.why }); continue;
+          // runs only when the macro cannot, and says so. Either way the part's gate reads the column.
+          check = C.choice({ column }, value);
+          let via = 'built-in', why = null, option = value;
+          await gated(part, async (t) => {
+            const viaMacro = !t && typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose delivery', { tier: column, delivery: value }) : { ok: false, why: t ? 'the macro ran and the gate stayed closed' : 'node macros not wired here' };
+            if (viaMacro.ok) { via = 'macro'; return; }
+            const c = await this.driver.exec({ agentId, action: 'choose', column, shows: 'DELIVERY TIME', option: value, by: 'person' });
+            via = 'built-in'; why = viaMacro.why; option = c.option;
+          }, check);
+          r.dropdowns.push({ key: part, ok: true, option, via, ...(why ? { why } : {}) }); continue;
         }
         if (part === 'category') {
+          check = C.shown(catShown);
           const sc = GP.suggestedCategory(read.links, gig);
           if (sc.ok) {
-            await this.driver.exec({ agentId, action: 'pointer', selector: sc.link.selector, do: 'click', by: 'person' });
+            await gated(part, () => this.driver.exec({ agentId, action: 'pointer', selector: sc.link.selector, do: 'click', by: 'person' }), check);
             r.dropdowns.push({ key: part, ok: true, option: sc.text, via: 'suggested' }); continue;
           }
           // 0.60.283 — a new gig offers no suggestion, only SELECT A CATEGORY and SELECT A SUBCATEGORY: his node "Fiverr gig - choose
-          // category" (gated, editable in Settings › Macros), else the same two picks built in, each read back
+          // category" (gated, editable in Settings › Macros), else the same two picks built in, each read back; then the part's gate
           if (!/select a category/i.test(String(read.text || ''))) throw new Error(sc.why);
-          const viaMacro = typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose category', { category: gig.category, subcategory: gig.subcategory || '' }) : { ok: false, why: 'node macros not wired here' };
-          if (viaMacro.ok) { r.dropdowns.push({ key: part, ok: true, option: value, via: 'macro' }); continue; }
-          const c1 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A CATEGORY', option: gig.category, by: 'person' });
-          const c2 = gig.subcategory ? await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A SUBCATEGORY', option: gig.subcategory, by: 'person' }) : null;
-          r.dropdowns.push({ key: part, ok: true, option: [c1.option, c2 && c2.option].filter(Boolean).join(' > '), via: 'built-in', why: viaMacro.why }); continue;
+          let rec = null;
+          await gated(part, async (t) => {
+            const viaMacro = !t && typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose category', { category: gig.category, subcategory: gig.subcategory || '' }) : { ok: false, why: t ? 'the macro ran and the gate stayed closed' : 'node macros not wired here' };
+            if (viaMacro.ok) { rec = { key: part, ok: true, option: value, via: 'macro' }; return; }
+            const c1 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A CATEGORY', option: gig.category, by: 'person' });
+            const c2 = gig.subcategory ? await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A SUBCATEGORY', option: gig.subcategory, by: 'person' }) : null;
+            rec = { key: part, ok: true, option: [c1.option, c2 && c2.option].filter(Boolean).join(' > '), via: 'built-in', why: viaMacro.why };
+          }, check);
+          r.dropdowns.push(rec); continue;
         }
         throw new Error('not found on the page');
       } catch (err) {
-        // 2026-10-30 GF4 — friction: his keys for this part on this site, then read back; else said, with how to bind one
-        const GF = require('../autofill/gig-fields');
-        const kind = part === 'category' || /\.(delivery|revisions)$/.test(part) ? 'choice' : part === 'tags' || part === 'faq' || part === 'requirement' ? 'run' : 'text';
-        const shownOf = part === 'faq' ? ((gig.faq || [])[0] || {}).question : part === 'requirement' ? (gig.requirements || [])[0] : part === 'tags' ? (gig.tags || [])[0] : value;
-        const verify = kind === 'run' && shownOf ? async () => { const v = await this.driver.exec({ agentId, action: 'eval', code: GF.shownScript(shownOf), by: 'person' }); return !!(v && v.result); } : null;
-        let sk = { ok: false, why: 'no page address to look up your keys' };
-        if (this.driver && read && read.url) { try { sk = await this._gigSiteKey(agentId, read.url, part, value, { kind, verify }); } catch (e) { sk = { ok: false, why: e.message }; } }
-        if (sk.ok) r.siteKeys.push({ key: part, accel: sk.accel, how: sk.how, after: err.message });
-        else r.notFound.push({ key: part, why: `${err.message} · ${sk.why}` });
+        // 2026-10-30 GF4 — friction: his keys for this part on this site, gated like the part; else said, with how to bind one
+        await friction(part, value, err, check);
       }
     }
     // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." The package rows come from the gig (features), never from code: a number or text
@@ -3163,5 +3218,40 @@ class IpcBridge {
     return new Promise(r => { if (this.server) this.server.close(r); else r(); });
   }
 }
+
+// 2026-10-30 GG1 — James: "each field/drop down/ or anything should be gated." A gate: check() → { open, saw }, read until open (timeoutMs),
+// then read again after settleMs, so a page that puts its own value back is caught. { open, saw, held }
+async function gigGate(check, { timeoutMs = 2500, settleMs = 400, every = 150 } = {}) {
+  const until = Date.now() + timeoutMs; let c = { open: false, saw: 'not read' };
+  for (;;) {
+    try { c = await check(); } catch (e) { c = { open: false, saw: e.message }; }
+    if (c.open || Date.now() >= until) break;
+    await new Promise(res => setTimeout(res, every));
+  }
+  if (!c.open) return { open: false, saw: c.saw, held: false };
+  await new Promise(res => setTimeout(res, settleMs));
+  let d; try { d = await check(); } catch (e) { d = { open: false, saw: e.message }; }
+  return d.open ? { open: true, saw: d.saw, held: true } : { open: false, saw: `it showed ${c.saw}, then the page changed it: ${d.saw}`, held: false };
+}
+
+// the checks a part's gate reads, each → async () => { open, saw }; read only, nothing on the page is changed by them
+function gigChecks(driver, agentId) {
+  const GF = require('../autofill/gig-fields');
+  const ev = async (code) => { const x = await driver.exec({ agentId, action: 'eval', code, by: 'person' }); return x && x.result; };
+  const q = (v) => JSON.stringify(String(v == null ? '' : v).slice(0, 60));
+  return {
+    text: (where, value) => async () => { const x = await ev(GF.valueAtScript(where)); if (!x || !x.found) return { open: false, saw: 'the box is gone' };
+      return { open: GF.readsBack(x.value, value), saw: q(x.value) }; },
+    choice: (where, value) => async () => { const g = await driver.exec({ agentId, action: 'readChoice', ...where, is: String(value), by: 'person' });
+      return { open: !!(g && g.matches), saw: q(g && g.shown != null ? g.shown : (g && g.texts || []).slice(0, 4).join(' | ')) }; },
+    shown: (text) => async () => { const ok = !!(await ev(GF.shownScript(text))); return { open: ok, saw: ok ? `${q(text)} shown` : `${q(text)} not on the page` }; },
+    allShown: (list) => async () => { const want = list(); if (!want.length) return { open: false, saw: 'nothing took' };
+      const miss = []; for (const t of want) if (!(await ev(GF.shownScript(t)))) miss.push(t);
+      return { open: !miss.length, saw: miss.length ? `not shown: ${miss.map(q).join(', ')}` : `${want.length} shown` }; },
+    checked: (column, row, want) => async () => { const c = await driver.exec({ agentId, action: 'checkAt', column, row, read: true, by: 'person' });
+      return { open: !!c && c.checked === !!want, saw: c ? (c.checked ? 'ticked' : 'clear') : 'no checkbox' }; },
+  };
+}
+
 
 module.exports = IpcBridge;

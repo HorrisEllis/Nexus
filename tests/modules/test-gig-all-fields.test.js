@@ -10,6 +10,8 @@
  *          name the gig part it serves
  *   GF-03  in Clear Glass: the fill types the title, a rich description (an editor that ignores a value set from script), two FAQs and two
  *          buyer questions, each read back; one already shown is not added twice; Save & Continue is never pressed
+ *   GF-05  in Clear Glass (GG1, "each field/drop down/ or anything should be gated"): every part filled has an open gate; a page that puts its
+ *          own value back after the fill is caught by the gate's settled read, tried again, and then said with what the page showed
  *   GF-04  in Clear Glass: a description box the fill cannot find by its words is filled through the key he bound to it (part: description);
  *          with no key bound, the part says how to bind one
  */
@@ -46,7 +48,10 @@ const PAGES = {
   // the description box under words the fill does not know: only his bound key reaches it
   odd: `${HEAD}<h2>Description &amp; FAQ</h2><section><h3>Tell buyers what you do</h3>${RICH('ed2')}</section><section><h3>Frequently Asked Questions</h3><button>+ Add FAQ</button></section>${SAVE}</body></html>`,
 };
-const TAB = { overview: 'general', description: 'description', requirements: 'requirements', odd: 'description' };
+// a title box whose page puts its own value back 250 ms after any change (a framework that never took the typing)
+PAGES.revert = `${HEAD}<section><h3>Gig title</h3><textarea id="t">I will </textarea></section>${SAVE}<script>var t = document.getElementById('t');
+t.addEventListener('input', function(){ setTimeout(function(){ t.value = 'I will '; }, 250); });</script></body></html>`;
+const TAB = { overview: 'general', description: 'description', requirements: 'requirements', odd: 'description', revert: 'general' };
 
 (async () => {
   console.log('\n⬡  Fiverr: every field of the gig, and his site keys on friction\n');
@@ -168,6 +173,24 @@ const TAB = { overview: 'general', description: 'description', requirements: 're
     assert.deepStrictEqual(r.siteKeys.map(k => [k.key, k.accel, k.how]), [['description', 'Alt+D', 'typed at the element you bound']], JSON.stringify(r.notFound));
     assert.ok(!r.notFound.some(x => x.key === 'description'));
     assert.ok(/I build AI agents that do real work/.test(await page.evaluate(() => window.model_ed2)), 'typed into the editor he bound');
+    await page.close();
+  });
+
+  if (browser) await test('GF-05', 'in Clear Glass: every part filled has an open gate; a page that puts its value back is caught, retried, said', async () => {
+    const page = await browser.newPage({ viewport: { width: 1000, height: 900 } });
+    await page.goto(base + '/requirements');
+    let r = await Bridge.prototype._gigFill.call(selfOn(page, 'requirements'), { gig: GIG });
+    assert.deepStrictEqual(r.gates.map(g => [g.key, g.open]), [['requirement', true]], JSON.stringify(r.gates));
+    await page.goto(base + '/description');
+    r = await Bridge.prototype._gigFill.call(selfOn(page, 'description'), { gig: GIG });
+    assert.deepStrictEqual(r.gates.map(g => [g.key, g.open]), [['description', true], ['faq', true]], JSON.stringify(r.gates));
+    await page.goto(base + '/revert');
+    r = await Bridge.prototype._gigFill.call(selfOn(page, 'revert'), { gig: { ...GIG, category: '' } });
+    const g = r.gates.find(x => x.key === 'title');
+    assert.ok(g && !g.open && g.tries === 2 && /then the page changed it/.test(g.saw), JSON.stringify(r.gates));
+    const nf = r.notFound.find(x => x.key === 'title');
+    assert.ok(nf && /its gate stayed closed/.test(nf.why), JSON.stringify(r.notFound));
+    assert.ok(!r.filled.some(f => f.key === 'title'), 'a part whose gate stayed closed is never counted as filled');
     await page.close();
   });
 

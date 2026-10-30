@@ -87,7 +87,13 @@ function pageMacroSteps(steps) {
     if (st.action === 'navigate') { dropped.push('navigate (the recording was on another gig\'s address)'); continue; }
     if (st.action === 'click' && HIS_BUTTONS.test(`${(st.data && st.data.selector) || ''} ${st.label || ''}`)) { dropped.push(`click ${st.label ? `"${st.label}"` : st.data.selector} (yours to press)`); continue; }
     if (st.action === 'click' && st.data && st.data.selector) out.push({ action: 'wait_for', data: { selector: st.data.selector } });
-    out.push(st);
+    // 2026-10-30 GG1 — James: "each field/drop down/ or anything should be gated." A typed box is gated on its value, a choice on what its
+    // dropdown shows (macro.js runs the step again when the gate stays closed); a click is gated before it (wait_for its element) and by the
+    // next step's own gate; a tick is read back by the driver's check. A gate he wrote on the step stays his.
+    const d = st.data || {};
+    if (!st.gate && st.action === 'type' && d.selector && typeof d.text === 'string' && d.text.trim() && d.text !== '\n') out.push({ ...st, gate: { selector: d.selector, value: d.text, retries: 2 } });
+    else if (!st.gate && st.action === 'choose' && d.selector && d.option != null && String(d.option).trim()) out.push({ ...st, gate: { choice: { selector: d.selector, is: String(d.option) }, retries: 2 } });
+    else out.push(st);
   }
   return { steps: out, dropped };
 }
