@@ -279,7 +279,7 @@ const DOM_OBSERVER_SCRIPT = `
           const b = boolOf(mutation.value);
           if (b === null && itype === 'checkbox') return { error: 'a checkbox takes yes/no; "' + String(mutation.value) + '" is neither' };
           const want = itype === 'radio' ? (b !== false) : b;   // a radio is selected unless the value is a clear "no"
-          if (el.checked !== want) { el.checked = want; el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); el.dispatchEvent(new MouseEvent('click', { bubbles: true })); }
+          if (el.checked !== want) { el.checked = want; el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); }   // §DD1 fix 2026-10-30: NO synthetic click — a click toggles the box again, undoing the set (found by the glass test)
           return { ok: true, nodeId: cgId, checked: el.checked };
         }
         const proto = tag === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
