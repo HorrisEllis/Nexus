@@ -38,6 +38,8 @@ const FILES = [
   ['clear-glass/src/contexts/human-check.js', I('clear-glass/src/contexts/human-check.js'), [I('clear-glass/src/net/compartment.js')]],   // §HC1 0.60.260
   ['clear-glass/src/main/glass-frame.js', I('clear-glass/src/main/glass-frame.js'), []],   // §GF1 0.60.258 the Clear Glass title bar over a foreign page
   ['clear-glass/src/autofill/transfer.js', I('clear-glass/src/autofill/transfer.js'), [I('clear-glass/src/autofill/learn-pick.js'), I('clear-glass/src/autofill/matcher.js')]],
+  // §DD1 0.60.298 — James, 2026-10-30: "Make sure it works for all elements. Including drop downs." The dropdown/checkbox option matcher (pure, no deps)
+  ['clear-glass/src/dom/select-match.js', I('clear-glass/src/dom/select-match.js'), []],
   ['clear-glass/erosmancer/erosmancer-os/src/replay/index.ts', I('clear-glass/erosmancer/erosmancer-os/src/replay/index.ts'), []],
   ['clear-glass/erosmancer/erosmancer-os/src/api/server.ts', I('clear-glass/erosmancer/erosmancer-os/src/api/server.ts'), [
     I('clear-glass/erosmancer/erosmancer-os/src/replay/index.ts'),         // import { ScriptReplayQueue } — snapshot(), list() (EC10)
@@ -67,6 +69,9 @@ const CONSUMERS = [
   [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.161 autofill.gig -> /cli/autofill/gig/autofill (_gigAutofill)'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig.js'), '_gigAutofill/_gigFill/_gigDraft: write and fill a Fiverr gig'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/store.js'), '0.60.161 GA1a getLastGig/setLastGig: the panel and the co-pilot fill the same gig'],
+  // §DD1 0.60.298 — the dropdown/checkbox option matcher, used by both fill paths (reuse)
+  [I('clear-glass/src/dom/archaeology.js'), I('clear-glass/src/dom/select-match.js'), '0.60.298 DD1 bestOption/boolOf SOURCE interpolated into DOM_OBSERVER_SCRIPT mutate: a <select> selects the matching option, a checkbox/radio sets checked'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/dom/select-match.js'), '0.60.298 DD1 _autofillFillOne: bestOption resolves the profile value to the real option before driver.select'],
   [I('clear-glass/src/main/index.js'), I('clear-glass/erosmancer/erosmancer-os/src/api/server.ts'), '_proxyEros: /eros/* → /api/*'],
   // §JA3 0.60.230 — the element picker on a missed autofill field (James: "have the element picker popup for me to select the element")
   [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.230 autofill.pick -> /cli/autofill/pick (_autofillPick)'],
