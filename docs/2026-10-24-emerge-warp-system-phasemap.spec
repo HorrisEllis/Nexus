@@ -230,3 +230,15 @@ emerge-codegen-v2 compiles requires.
 # the gate, an observer that never gates (Emergence's own law: "rfr2 observes — a lens"); and each is ported to .eg by spec (CIE-EG §0).
 # One owner per reading: observe/ stays the deterministic reading of the ledger; the components build on its output, never beside it.
 # Emergence the text reader is a system built from Emerge, its own repo and compartment.
+
+# ── ADDENDUM 2026-10-30 (d) — memory storage and a learning observer; Emerge by hand; the tutorial (his) ──────────────────────────────
+# James, 2026-10-30, asked what "a ime" meant: "memory storage, and a observer for learning? / this is for my to code by hand when I need to.
+# so i can inspect it and build it." · "i also, for other people. want a fully, enterprise grade, systems thinking, level tutorial and user
+# documantation, for any comprehention level, from kids learning to code, to senior systems engineers or experts at their field. as simple
+# as possible, but the highest amount of leverage. Find that slope, and make it steep.,"
+# EW_D5 amended (his): the pattern engine comes with memory storage and an observer that learns; Emerge stays code he can read, inspect and
+# write by hand. READING TO CONFIRM: memory storage is the crystal store (EW_D4); the learning observer is Emerge's observe/ plus RFR2,
+# reading the ledger and proposing patterns and gaps through the gate, never writing state itself.
+# Built in Emerge's repo, branch claude/emerge-learn (github.com/HorrisEllis/Emerge): docs/README.md and docs/learn/0-6 + words.md, one
+# sentence taught at seven depths; every lesson program verified interpreted and compiled against its recorded output
+# (node docs/learn/verify.js, 5/5).
