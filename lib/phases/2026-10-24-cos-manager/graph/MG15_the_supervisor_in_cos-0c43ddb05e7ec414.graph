@@ -7,11 +7,11 @@ intent: null
 summary: 9 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793376294589
+exported_at: 1793376634344
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793376294589
-lastSeenAt: 1793376294589
+firstSeenAt: 1793376634344
+lastSeenAt: 1793376634344
 fingerprint: null
 payload:
   for: MG15_the_supervisor_in_cos
@@ -79,6 +79,9 @@ payload:
     dependents:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG23_allocation_and_balance
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG24_network_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG25_storage_manager
     upstream:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
       - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
@@ -94,6 +97,11 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
       - docs/2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG22_template_and_archetype_builder
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG23_allocation_and_balance
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG24_network_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG25_storage_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
@@ -108,8 +116,9 @@ payload:
         depends on (3): MG0b_the_full_spec, MG_D4_cos_is_the_autopilot, CS4a_cos_boots_alone · all
         upstream 8
       - >-
-        needed by (2): MG16_the_autopilot_door, MG20_add_deploy_connect · all downstream 5 ·
-        finishing it unlocks MG16_the_autopilot_door
+        needed by (5): MG16_the_autopilot_door, MG20_add_deploy_connect,
+        MG23_allocation_and_balance, MG24_network_manager, MG25_storage_manager · all downstream 10
+        · finishing it unlocks MG16_the_autopilot_door
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
         kind: declared

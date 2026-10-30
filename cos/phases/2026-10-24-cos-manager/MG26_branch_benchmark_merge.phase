@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG26_branch_benchmark_merge
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG26_branch_benchmark_merge
+context: pipeline phase MG26_branch_benchmark_merge of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG26_branch_benchmark_merge (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793376634384
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793376634384
+lastSeenAt: 1793376634384
+fingerprint: null
+payload:
+  id: MG26_branch_benchmark_merge
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/merge.js
+    - cos/manager/state.js
+    - cos/manager/contract.json
+    - tests/modules/test-cos-merge.test.js
+  depends_on:
+    - MG3_the_state_manager
+    - SN0_one_branch
+    - SN2_run_in_parallel
+    - SN3_measured_by_rfr2
+  blocks:
+    - MOD-MG-MERGE
+  spec: cos/spec/cos-manager.spec
+  graph: 75bfd274b617943f

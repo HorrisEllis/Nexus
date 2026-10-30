@@ -86,7 +86,7 @@ spec:
         type: hard
         enforced_by: [GATE-MG-UI-HANDSHAKE]
       - id: MG-005
-        description: "Page per component. Each page is its own folder with its own index.html, page.css and page.js; pages share code only through cos/ui/core, never with each other."
+        description: "Page per component, section per component. Each page is its own folder with its own index.html, page.css and page.js, and each section of a page (a card, a tab, a form, a list) its own sub-folder with section.html, section.css and section.js, bundled with its component. Pages and sections share code only through cos/ui/core, never with each other, and talk only by events on the component registry's bus that their registry entries declare (MG_D7)."
         type: hard
         enforced_by: [GATE-MG-PAGE-ISOLATED]
       - id: MG-006
@@ -167,7 +167,9 @@ spec:
         title:     "string"
         routes:    "string[] — the routes it may call, e.g. 'GET /api/cos/systems'"
         commands:  "string[] — the command rows it may run, e.g. 'cos restart'"
-        events:    "string[] — the events it may hear"
+        emits:     "string[] — the events it may put on the registry bus"
+        listens:   "string[] — the events it may hear from the registry bus"
+        sections:  "string[] — its sections, each its own component (own folder: section.html, section.css, section.js), declared in the registry"
         params:    "string[] — what it takes from the shell (e.g. compartment)"
         version:   "string — semver; the handshake checks it"
       behavioral_contracts: ["a call outside routes/commands is refused by cos/ui/core before it is sent, and shown on the page"]
@@ -249,6 +251,83 @@ spec:
         "an import never overwrites: it makes a new repo, or a new version of the same uuid when he says so"]
       error_paths: ["payload hash mismatch → refused, nothing written", "unknown format → refused naming it", "no payload (a plain .spec) → imported as a spec to build from, said"]
 
+    - id: ResourceAllocation
+      name: ResourceAllocation
+      description: "What one compartment is given from the host's pool, and how it is balanced (MG23)."
+      fields:
+        compartment:  "string"
+        cpu:          "{ share: number (percent of host), cores: number|null, priority: 'critical'|'normal'|'background' }"
+        memoryMB:     "{ reserved: number, limit: number }"
+        storage:      "[{ volume: string, quotaMB: number }] — StorageVolume ids"
+        network:      "[{ network: string, kbps: number|null }] — VirtualNetwork ids"
+        replicas:     "{ min: number, max: number, current: number }"
+        balance:      "{ by: 'raid', rule: string, lastDecision: string|null } — the RAID decision that last moved it"
+        applied:      "{ <part>: 'enforced'|'not-enforced'|'failed', why?: string } — read back (cos-spine CS-004)"
+      behavioral_contracts: ["the sum of reservations never exceeds the host pool; an over-commit is refused with the numbers", "each change names who or which RAID decision made it"]
+      error_paths: ["a part the OS or hypervisor cannot enforce → not-enforced, said; the compartment still runs"]
+
+    - id: VirtualNetwork
+      name: VirtualNetwork
+      description: "A network compartments join (MG24)."
+      fields:
+        id:        "string"
+        name:      "string"
+        mode:      "'isolated'|'nat'|'bridged' — isolated: members only; nat: out through the host; bridged: reachable from the host's LAN"
+        subnet:    "string — CIDR"
+        members:   "[{ compartment, address, ports: [{ inside, outside|null }] }]"
+        bridges:   "[{ to: network id|'host', ports, via: 'proxy'|'tunnel'|'tap' }] — how it reaches another network or the host"
+        dns:       "{ zone: string, names: { name: address } }|null — his dns engine"
+        firewall:  "[{ from, to, port, allow: bool }] — his firewall engine's rules"
+      behavioral_contracts: ["a compartment joins no network unless its allocation names it (isolated by default, the archetype's isolated: true)"]
+      error_paths: ["a bridge needing host admin rights (tap) where COS has none → refused, saying so and offering proxy or tunnel"]
+
+    - id: StorageVolume
+      name: StorageVolume
+      description: "A storage location and the volumes cut from it (MG25)."
+      fields:
+        id:         "string"
+        location:   "{ kind: 'folder'|'drive'|'object' (his storage engine, S3 subset), path|url: string }"
+        quotaMB:    "number"
+        usedMB:     "number|null — read back"
+        mountedIn:  "[{ compartment, at: string (path inside), mode: 'ro'|'rw' }]"
+        snapshot:   "'with-version'|'never' — taken with the compartment's version (CS1) or not"
+        encryption: "'none'|'vault' — cos/vault when chosen"
+        createdBy:  "string"
+      behavioral_contracts: ["a volume mounted in a machine compartment is said to block live checkpoints (vm-control refuses a live snapshot while a host folder is shared in)"]
+      error_paths: ["a location that is gone or full → its volumes marked unavailable, their compartments told, nothing deleted"]
+
+    - id: SystemState
+      name: SystemState
+      description: "The whole system at one moment: one version of every compartment, under one id (the enterprise state manager, MG3)."
+      fields:
+        id:          "string — ss-<shortid>"
+        label:       "string|null"
+        versions:    "{ <compartment>: CompartmentVersion id } (cos-spine.spec)"
+        allocations: "{ <compartment>: ResourceAllocation snapshot }"
+        networks:    "VirtualNetwork[] snapshot"
+        parent:      "string|null"
+        branch:      "string"
+        pinned:      "bool — kept past retention"
+        at:          "number"
+        by:          "string"
+      behavioral_contracts: ["restoring a system state first takes one of the current state (cos-spine CS-003)", "retention never removes a pinned state; removal archives (§0.3)"]
+      error_paths: ["one compartment's version no longer verifies → the restore refuses and names it; the others are untouched"]
+
+    - id: MergeReport
+      name: MergeReport
+      description: "Why a branch may or may not merge back (MG26)."
+      fields:
+        branch:      "string"
+        into:        "string"
+        benchmarks:  "[{ metric, base, branch, sigma, better: bool }] — .benchmark nodes from both, same load"
+        friction:    "{ base: number, branch: number, breakdown } — the architecture spec's FrictionScore"
+        behaviour:   "{ passed: number, failed: number, schemas: string[] } — the behaviour schemas (architecture-spec RULE A)"
+        tests:       "{ passed: number, failed: number }"
+        verdict:     "'merge'|'refuse'|'ask'"
+        why:         "string — the numbers that decided it"
+      behavioral_contracts: ["merge only on verdict merge, or ask taken by a person", "a merge takes a version of the target first"]
+      error_paths: ["a measurement missing → verdict ask, never merge"]
+
   interfaces:
 
     - id: IF-COMPARTMENT-JSON
@@ -322,6 +401,46 @@ spec:
       exports: ["POST /api/repos/import (repo.import-archive: a zip → a repo, materialized, pipeline, baseline snapshot)", "GET /api/repos/:uuid", "the repo versions and diff commands"]
       behavioral_contracts: ["the repo's living model is the .spec in its spec folder (idearium/repo/living-spec.js)"]
       error_paths: ["Idearium down → COS reads the bundle's metadata itself and holds the import until it answers, said"]
+
+    - id: IF-RAID-PORT
+      name: raid-port
+      path: lib/raid-port.js
+      description: "RAID through its port: the one decider (§5.2, §9.1); CS11 brings it into COS with load in its decision."
+      exports: ["provide", "via", "approveTool", "decide(request) → { route, why, load }", "outcome", "listQueue"]
+      behavioral_contracts: ["RAID decides, COS acts; a balance act names RAID's decision"]
+      error_paths: ["RAID not answering → no balance act; the current placement stays, said"]
+
+    - id: IF-SAFE-APPLY
+      name: safe-apply
+      path: lib/safe-apply.js
+      description: "mirror → branch → check → mergeBack, RAID-gated, refusing an unchecked branch; SN0 makes it the one branch interface."
+      exports: ["mirrorCompartment", "proposeChange", "mergeBack"]
+      behavioral_contracts: ["an unchecked branch is never merged"]
+      error_paths: ["the check fails → mergeBack refuses with the check's result"]
+
+    - id: IF-NET-ENGINES
+      name: net-engines
+      path: cos/services/anonymous/engines/proxy.js
+      description: "His network engines in COS (SV0): proxy, tunnel, firewall, dns, storage (S3 subset), webserver, tls; each its own process on its port."
+      exports: ["each engine's own routes and conf (engines/_engine.js: ipc, conf, log, claimPort)"]
+      behavioral_contracts: ["the gate grammar runs no IPC string as code (SV0)"]
+      error_paths: ["an engine not running → the network or volume that needs it says so"]
+
+    - id: IF-QEMU-RUNTIME
+      name: qemu-runtime
+      path: cos/compartment/qemu-runtime.js
+      description: "Machine compartments' QEMU arguments (-m, -smp, -netdev user with hostfwd, or none), overlays and disk snapshots."
+      exports: ["buildQemuArgs", "qemuImgSnapshotSave", "qemuImgSnapshotApply", "qemuImgSnapshotList"]
+      behavioral_contracts: ["isolated by default: no -netdev"]
+      error_paths: ["QEMU absent → machine features said as unavailable"]
+
+    - id: IF-ARCHETYPE-SCHEMA
+      name: archetype-schema
+      path: cos/archetype/schema.js
+      description: "The archetype schema (blueprints: cos/blueprint/schema.js; templates: loom/templates) the builder validates against."
+      exports: ["the schema and its validator"]
+      behavioral_contracts: ["COS owns archetypes and blueprints; loom owns its templates and serves them by route"]
+      error_paths: ["invalid → the errors per field"]
 
   modules:
 
@@ -468,7 +587,7 @@ spec:
       description: "One manager over every compartment's state: versions (CS1: Versionium commit + QEMU snapshot under one id), branches, parallel runs, checkpoints, what runs."
       deps: [{ name: supervisor }, { name: vm-control }, { name: cos-recorder }]
       schema_refs: [SupervisedSystem]
-      exports: ["versions(id)", "take(id, { by })", "restore(id, versionId, { by })", "branch(id, versionId, { by })", "checkpoints(id)", "rewind(id, tag, { by })",
+      exports: ["versions(id)", "take(id, { by })", "takeSystem({ label, by }) → SystemState", "restoreSystem(stateId, { by })", "states({ branch })", "pin(stateId)", "restore(id, versionId, { by })", "branch(id, versionId, { by })", "checkpoints(id)", "rewind(id, tag, { by })",
         "routes GET /api/cos/compartments/:id/versions, POST …/versions, …/restore, …/branch, …/rewind; rows `cos version list|take|restore|branch`, `cos rewind`"]
       gate_pipeline: ["GATE-MG3-001: restore takes a version first (cos-spine CS-003)", "GATE-MG3-002: person act", "GATE-MG3-003: recorded"]
       behavioral_contracts: ["every act on the ledger and in Versionium"]
@@ -571,12 +690,16 @@ spec:
       phase: MG18_the_supervisor_screen
       description: >-
         What every page shares and nothing else: the handshake (fetch GET /api/cos/contract, check the page's version and its declared routes,
-        refuse anything undeclared and show it on the page), call(route, body) and run(row, args) over the contract, the event stream
-        (GET /api/cos/events), the person-act confirm dialog (it names the act and what it will do), and the theme tokens (light and dark).
+        refuse anything undeclared and show it on the page), call(route, body) and run(row, args) over the contract, the registry bus (MG_D7):
+        one bus per window, bridged to COS's registry events (GET /api/cos/events), where a page or section emits and hears only what its
+        registry entry declares (an undeclared emit is refused and shown), the section loader (each section mounted in its own shadow root
+        with its own css, so no style or DOM crosses), the person-act confirm dialog (it names the act and what it will do), and the theme tokens (light and dark).
         Plain JS, HTML and CSS, no framework, no build step, so a page can be rebuilt from this spec alone.
       deps: [{ name: manager-server }, { name: manager-contract }]
       schema_refs: [PageComponent]
-      exports: ["core.js: handshake(pageId) → { ok, refused: string[] }, call(route, body), run(row, args), on(event, fn), confirm(act)", "core.css: tokens, layout primitives"]
+      exports: ["core.js: handshake(pageId) → { ok, refused: string[] }, call(route, body), run(row, args), confirm(act)",
+        "bus.js: emit(event, data), on(event, fn) — the registry bus; declared events only", "section.js: mount(sectionId, el) — a section in its own shadow root",
+        "core.css: tokens, layout primitives"]
       gate_pipeline: ["GATE-MGUI-001: handshake before the first call", "GATE-MGUI-002: undeclared call refused client side"]
       behavioral_contracts: ["a page never fetches a URL core did not check", "a failed call is shown where it happened, never swallowed (§1.2)"]
       error_paths: ["the manager not answering → every page shows 'COS manager not running', with how to start it"]
@@ -809,6 +932,148 @@ spec:
       error_paths: ["a step fails → the step and its error shown; what passed stays"]
       acceptance: ["in Clear Glass: a zip with a .spec dropped, shown, added and running; exported again from its card"]
 
+    # ── builder, resources, network, storage, state and merge (MG22–MG27, his 2026-10-30) ───────────
+
+    - id: MOD-MG-BUILDER
+      name: builder
+      uuid: nexus-cos-manager-builder-v1-0000-2026-1030-001
+      path: cos/manager/builder.js
+      phase: MG22_template_and_archetype_builder
+      description: >-
+        Build a template or an archetype, not only edit one: start blank or from an existing one, add its parts from the component catalog
+        (cos/archetype/components) and its blueprint, declare its runtime, its default allocation, networks and volumes, its settings schema
+        and its UI; validate against its schema; try it in a scratch compartment (built, started, health checked, its behaviour schemas run,
+        then removed) before it is saved as a new version.
+      deps: [{ name: catalog }, { name: factory }, { name: archetype-schema }]
+      schema_refs: [ResourceAllocation, VirtualNetwork, StorageVolume]
+      exports: ["draft({ from? }) → draftId", "set(draftId, patch)", "validate(draftId)", "trial(draftId, { by }) → { ok, health, behaviour, log }", "save(draftId, { by }) → id",
+        "routes /api/cos/builder/*; rows `cos build template|archetype`"]
+      gate_pipeline: ["GATE-MG22-001: schema", "GATE-MG22-002: trial passed before save (or saved as unproven, said)", "GATE-MG22-003: recorded"]
+      behavioral_contracts: ["a trial compartment never outlives the trial", "a draft is kept until saved or discarded"]
+      error_paths: ["the trial fails → the step and its log; the draft kept"]
+      acceptance: ["a web-server template built from parts, tried, saved, and deployed by the factory"]
+
+    - id: MOD-MG-BALANCER
+      name: allocation-and-balance
+      uuid: nexus-cos-manager-balancer-v1-0000-2026-1030-001
+      path: cos/manager/balancer.js
+      phase: MG23_allocation_and_balance
+      description: >-
+        The host is a pool; each compartment is allocated from it (ResourceAllocation) and throttled to it (MG4's caps). RAID is the load
+        balancer: COS hands it the .benchmark nodes and usage, RAID decides (spawn or despawn a replica, move load, throttle a noisy neighbour,
+        within each allocation's min and max), and COS acts and names the decision. A person can pin an allocation; RAID never moves a pin.
+      deps: [{ name: resources }, { name: supervisor }, { name: raid-port }]
+      schema_refs: [ResourceAllocation, SupervisedSystem]
+      exports: ["pool() → { cpu, memoryMB, storageMB, reserved }", "allocate(id, alloc, { by })", "pin(id, { by })", "balance() → [{ act, compartment, decision }]",
+        "routes /api/cos/pool, /api/cos/compartments/:id/allocation, POST /api/cos/balance; rows `cos alloc`, `cos balance`"]
+      gate_pipeline: ["GATE-MG23-001: within the pool", "GATE-MG23-002: RAID decided", "GATE-MG23-003: applied and read back", "GATE-MG23-004: ledger"]
+      behavioral_contracts: ["critical systems are allocated first", "every balance act names the RAID decision and the .benchmark it answered"]
+      error_paths: ["over-commit → refused with the numbers", "RAID down → no balance act, said"]
+      acceptance: ["two fixture compartments under load: RAID moves load to the idle one, the act on the ledger with its decision"]
+
+    - id: MOD-MG-NETWORK
+      name: network-manager
+      uuid: nexus-cos-manager-network-v1-0000-2026-1030-001
+      path: cos/manager/network.js
+      phase: MG24_network_manager
+      description: >-
+        Virtual networks: make one (isolated, nat or bridged), join compartments to it, give them names (his dns engine) and rules (his
+        firewall engine), and bridge it to another network or to the host to run a server or service on it: through his proxy or tunnel
+        engine, or a tap bridge where the host allows it. Machine compartments join by QEMU netdev; process compartments by port mapping
+        through the proxy.
+      deps: [{ name: net-engines }, { name: qemu-runtime }, { name: supervisor }]
+      schema_refs: [VirtualNetwork]
+      exports: ["list()", "create(net, { by })", "join(netId, compartment, { ports }, { by })", "bridge(netId, to, { ports, via }, { by })", "rules(netId, rules, { by })",
+        "routes /api/cos/networks[/:id]; rows `cos net`"]
+      gate_pipeline: ["GATE-MG24-001: person act", "GATE-MG24-002: the engine it needs is up", "GATE-MG24-003: reachability checked after"]
+      behavioral_contracts: ["isolated by default", "a bridge to the host LAN is a person's act, said as exposing it"]
+      error_paths: ["tap without admin → refused, proxy or tunnel offered", "a port taken → refused naming the holder"]
+      acceptance: ["a web-server compartment on an isolated network, bridged to the host on one port, answers from the host and from no other compartment"]
+
+    - id: MOD-MG-STORAGE
+      name: storage-manager
+      uuid: nexus-cos-manager-storage-v1-0000-2026-1030-001
+      path: cos/manager/storage.js
+      phase: MG25_storage_manager
+      description: >-
+        Storage locations (a folder, a drive, his object-storage engine) and volumes cut from them with a quota, mounted into compartments
+        (process: a path the wall allows; machine: a virtio disk), their use read back, taken with the compartment's version when set.
+      deps: [{ name: net-engines }, { name: supervisor }, { name: state-manager }]
+      schema_refs: [StorageVolume]
+      exports: ["locations()", "addLocation(loc, { by })", "createVolume(locId, { quotaMB }, { by })", "mount(volId, compartment, { at, mode }, { by })", "usage(volId)",
+        "routes /api/cos/storage/*; rows `cos storage`"]
+      gate_pipeline: ["GATE-MG25-001: person act", "GATE-MG25-002: quota within the location", "GATE-MG25-003: mounted and read back"]
+      behavioral_contracts: ["removing a volume archives its data (§0.3)"]
+      error_paths: ["location gone or full → volumes unavailable, said, nothing deleted"]
+      acceptance: ["a volume made on a folder location, mounted into a fixture compartment, written, its use read back, taken with a version"]
+
+    - id: MOD-MG-MERGE
+      name: branch-benchmark-merge
+      uuid: nexus-cos-manager-merge-v1-0000-2026-1030-001
+      path: cos/manager/merge.js
+      phase: MG26_branch_benchmark_merge
+      description: >-
+        A branch of a compartment (or of the whole system state) runs beside its base under the same load (SN2), is benchmarked (.benchmark
+        nodes, SN3), friction tested (FrictionScore, the behaviour schemas, the tests), and merged back only when the MergeReport says merge, or
+        a person takes an ask. The merge goes through the one branch interface (lib/safe-apply.js mergeBack, RAID-gated).
+      deps: [{ name: state-manager }, { name: safe-apply }, { name: raid-port }]
+      schema_refs: [MergeReport, SystemState]
+      exports: ["benchmark(branch, { load, durationMs }) → .benchmark ids", "friction(branch) → MergeReport", "merge(branch, { by }) → version",
+        "routes /api/cos/branches/:id/(benchmark|friction|merge); rows `cos branch bench|friction|merge`"]
+      gate_pipeline: ["GATE-MG26-001: same load on both", "GATE-MG26-002: friction and behaviour measured", "GATE-MG26-003: verdict", "GATE-MG26-004: version first, then mergeBack"]
+      behavioral_contracts: ["no merge without a MergeReport", "a refused merge keeps the branch"]
+      error_paths: ["a measurement missing → ask, never merge"]
+      acceptance: ["a slower branch is refused with its numbers; a faster one with equal friction merges, the target versioned first"]
+
+    - id: MOD-MG-UI-TIMELINE
+      name: ui-timeline
+      uuid: nexus-cos-manager-ui-timeline-v1-0000-2026-1030-001
+      path: cos/ui/timeline
+      phase: MG27_state_and_resource_screens
+      description: >-
+        The snapshot browser: a timeline per compartment and one for the whole system (SystemState), branches as lanes, versions and live
+        checkpoints as points. Pick one to see its files (diff to now), its machine, its registry and its allocation; restore, branch, open
+        as a compartment, compare two, label or pin, benchmark a branch, read its MergeReport and merge. Sections: lanes, detail, compare,
+        merge report, each its own component.
+      deps: [{ name: ui-core }, { name: state-manager }, { name: branch-benchmark-merge }]
+      schema_refs: [SystemState, MergeReport]
+      exports: ["index.html, page.css, page.js and sections/ (lanes, detail, compare, merge); routes /api/cos/compartments/:id/versions, /api/cos/states, /api/cos/branches/*"]
+      gate_pipeline: ["GATE-MGUI-TL-001: handshake", "GATE-MGUI-TL-002: restore and merge confirmed"]
+      behavioral_contracts: ["a section talks to another only by the registry bus"]
+      error_paths: ["a version that no longer verifies → shown red with the part that fails"]
+      acceptance: ["in Clear Glass: a system state taken, a compartment branched, benchmarked, refused, changed, merged, and the whole system restored to the first state"]
+
+    - id: MOD-MG-UI-RESOURCES
+      name: ui-resources
+      uuid: nexus-cos-manager-ui-resources-v1-0000-2026-1030-001
+      path: cos/ui/resources
+      phase: MG27_state_and_resource_screens
+      description: >-
+        The host pool and every allocation (sliders for share, memory, quota, replicas; pin), RAID's balance decisions as they happen, the
+        networks as a map (members, bridges, rules), and the storage locations and volumes. Sections: pool, allocations, balancer log, network
+        map, storage, each its own component.
+      deps: [{ name: ui-core }, { name: allocation-and-balance }, { name: network-manager }, { name: storage-manager }]
+      schema_refs: [ResourceAllocation, VirtualNetwork, StorageVolume]
+      exports: ["index.html, page.css, page.js and sections/; routes /api/cos/pool, /api/cos/networks/*, /api/cos/storage/*, /api/cos/balance"]
+      gate_pipeline: ["GATE-MGUI-RS-001: handshake", "GATE-MGUI-RS-002: changes confirmed"]
+      behavioral_contracts: ["every value shows enforced, not-enforced or failed, as read back"]
+      error_paths: ["an over-commit refused → shown on the slider with the numbers"]
+      acceptance: ["in Clear Glass: a compartment's memory cut and read back, a network made and bridged, a volume mounted"]
+
+    - id: MOD-MG-UI-BUILDER
+      name: ui-builder
+      uuid: nexus-cos-manager-ui-builder-v1-0000-2026-1030-001
+      path: cos/ui/builder
+      phase: MG22_template_and_archetype_builder
+      description: "The builder's screen: parts from the catalog, runtime, allocation, networks, volumes, settings schema, UI; validate; Try (the trial's steps and log); Save."
+      deps: [{ name: ui-core }, { name: builder }]
+      schema_refs: [ResourceAllocation]
+      exports: ["index.html, page.css, page.js and sections/ (parts, runtime, resources, settings, trial); routes /api/cos/builder/*"]
+      gate_pipeline: ["GATE-MGUI-BD-001: handshake", "GATE-MGUI-BD-002: validate before Try"]
+      behavioral_contracts: ["the draft is kept between visits"]
+      error_paths: ["a trial fails → the step and its log shown in the trial section"]
+      acceptance: ["in Clear Glass: a template built, tried and saved"]
+
   events:
     cos:
       - "cos.system.state { name, state, pid, by }"
@@ -820,6 +1085,9 @@ spec:
       - "cos.handover { from, version }"
       - "cos.intake.added { kind, compartment, by } / cos.intake.held { file, why }"
       - "cos.export.written { compartment, sha256, by }"
+      - "cos.balance.acted { act, compartment, decision }"
+      - "cos.network.changed { id, by } / cos.storage.changed { id, by }"
+      - "cos.state.taken { id, by } / cos.merge.verdict { branch, verdict }"
 
   enforcement:
     gates:

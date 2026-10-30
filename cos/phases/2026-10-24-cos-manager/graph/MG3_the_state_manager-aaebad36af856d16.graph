@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793376294549
+exported_at: 1793376634297
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793376294549
-lastSeenAt: 1793376294549
+firstSeenAt: 1793376634297
+lastSeenAt: 1793376634297
 fingerprint: null
 payload:
   for: MG3_the_state_manager
@@ -192,6 +192,8 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG25_storage_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG26_branch_benchmark_merge
     upstream:
       - docs/2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
       - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
@@ -205,6 +207,10 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
       - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
       - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG23_allocation_and_balance
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG25_storage_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG26_branch_benchmark_merge
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
       - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
       - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
@@ -231,8 +237,9 @@ payload:
         depends on (5): MG0b_the_full_spec, CS1_a_version_is_a_system_state, SN0_one_branch,
         SN2_run_in_parallel, VM1_control_like_vmware · all upstream 8
       - >-
-        needed by (4): MG4_resources_per_compartment, MG7_automation_macros_and_hats,
-        MG9_the_console_ui, MG12_the_exe_is_the_compartment_manager · all downstream 6
+        needed by (6): MG4_resources_per_compartment, MG7_automation_macros_and_hats,
+        MG9_the_console_ui, MG12_the_exe_is_the_compartment_manager, MG25_storage_manager,
+        MG26_branch_benchmark_merge · all downstream 10
       - >-
         same files as MG10_categories with no order between them: cos/manager/routes.js,
         idearium/cli/route-commands.js

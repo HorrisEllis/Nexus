@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793376294605
+exported_at: 1793376634362
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793376294605
-lastSeenAt: 1793376294605
+firstSeenAt: 1793376634362
+lastSeenAt: 1793376634362
 fingerprint: null
 payload:
   for: MG20_add_deploy_connect
@@ -116,6 +116,24 @@ payload:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
         files:
           - cos/manager/contract.json
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG22_template_and_archetype_builder
+        files:
+          - cos/manager/contract.json
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG23_allocation_and_balance
+        files:
+          - cos/manager/contract.json
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG24_network_manager
+        files:
+          - cos/manager/contract.json
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG25_storage_manager
+        files:
+          - cos/manager/contract.json
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG26_branch_benchmark_merge
+        files:
+          - cos/manager/contract.json
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
+        files:
+          - cos/manager/contract.json
     dangling: []
     lines:
       - >-
@@ -129,6 +147,14 @@ payload:
       - >-
         same files as MG18_the_supervisor_screen with no order between them:
         cos/manager/contract.json
+      - >-
+        same files as MG22_template_and_archetype_builder with no order between them:
+        cos/manager/contract.json
+      - >-
+        same files as MG23_allocation_and_balance with no order between them:
+        cos/manager/contract.json
+      - 'same files as MG24_network_manager with no order between them: cos/manager/contract.json'
+      - … and 3 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
         kind: declared

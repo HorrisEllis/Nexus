@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG25_storage_manager
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG25_storage_manager
+context: pipeline phase MG25_storage_manager of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG25_storage_manager (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793376634380
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793376634380
+lastSeenAt: 1793376634380
+fingerprint: null
+payload:
+  id: MG25_storage_manager
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/storage.js
+    - cos/manager/contract.json
+    - tests/modules/test-cos-storage.test.js
+  depends_on:
+    - MG15_the_supervisor_in_cos
+    - MG3_the_state_manager
+    - SV2_into_a_compartment
+  blocks:
+    - MOD-MG-STORAGE
+  spec: cos/spec/cos-manager.spec
+  graph: b642c222dc90f060

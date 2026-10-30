@@ -109,6 +109,17 @@ decisions:
       those readers. §5.15 places the packer with Idearium (the owner of repos and their history) and keeps COS on its route; §5.15 rule 3:
       with Idearium down, COS still reads the metadata and holds the import.
 
+  MG_D7_pages_and_sections_on_the_registry_bus:
+    chosen: >-
+      Every page and every section of a page is its own component, bundled with its own html, css and js, declared in COS's component
+      registry, and isolated: no shared DOM or style (each section in its own shadow root), no calls between them. They talk only by events
+      on the registry's bus, and only the events their registry entry declares. Depends on COS's registry being accepted (DB16; today
+      cos/registry-components.draft.json, his to accept).
+    by: >-
+      his, 2026-10-30: "each page is isolated from each other, completely decomposed and bundled with each section in relation to its
+      component, css, and js file. these needs to be isolated from each other, using the component registry as the event bus." Extends his
+      MG_D1 (2026-10-24) from pages to sections and names the bus.
+
 phases:
   MG0b_the_full_spec:
     status: SPECCED 2026-10-30 — cos/spec/cos-manager.spec
@@ -311,7 +322,7 @@ phases:
     proof: "npm run start:all boots every system through COS; an old release zip still starts in cos.exe; no second supervisor (ports and pids)"
   MG18_the_supervisor_screen:
     status: OPEN
-    depends_on: [MG16_the_autopilot_door, MG_D1_ui_isolated_per_component]
+    depends_on: [MG16_the_autopilot_door, MG_D1_ui_isolated_per_component, MG_D7_pages_and_sections_on_the_registry_bus, DB16_a_registry_for_each_system]
     files: [cos/ui/core, cos/ui/shell, cos/ui/overview, cos/ui/ledger, cos/ui/proposals, cos/manager/contract.json]
     spec: cos/spec/cos-manager.spec
     blocks: [MOD-MG-UI-CORE, MOD-MG-UI-SHELL, MOD-MG-UI-OVERVIEW, MOD-MG-UI-LEDGER, MOD-MG-UI-PROPOSALS]
@@ -344,6 +355,54 @@ phases:
     blocks: [MOD-MG-UI-ADD]
     does: "the Add page and the window-wide drop: what was found, what will happen, Add, each step shown; Export on every card and compartment"
     proof: "driven in Clear Glass: a zip with a .spec dropped, shown, added and running, then exported from its card"
+  MG22_template_and_archetype_builder:
+    status: OPEN
+    depends_on: [MG5_browsers_and_editors, MG8_the_factory, MG18_the_supervisor_screen]
+    files: [cos/manager/builder.js, cos/ui/builder, cos/manager/contract.json, tests/modules/test-cos-builder.test.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-BUILDER, MOD-MG-UI-BUILDER]
+    does: "build a template or archetype from parts, declare its runtime, allocation, networks, volumes, settings and UI, validate, try it in a scratch compartment, save; backend, route, row, screen"
+    proof: "a web-server template built from parts, tried, saved and deployed; driven in Clear Glass"
+  MG23_allocation_and_balance:
+    status: OPEN
+    depends_on: [MG4_resources_per_compartment, CS7_spawn_despawn_and_balance, CS11_raid_in_the_exe, MG15_the_supervisor_in_cos]
+    files: [cos/manager/balancer.js, cos/manager/contract.json, tests/modules/test-cos-balancer.test.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-BALANCER]
+    does: "the host as a pool, each compartment allocated and throttled from it; RAID decides balance from .benchmark nodes and usage, COS acts and names the decision; pins"
+    proof: "two fixture compartments under load: RAID moves load to the idle one; an over-commit refused with the numbers"
+  MG24_network_manager:
+    status: OPEN
+    depends_on: [MG15_the_supervisor_in_cos, SV2_into_a_compartment]
+    files: [cos/manager/network.js, cos/compartment/qemu-runtime.js, cos/manager/contract.json, tests/modules/test-cos-network.test.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-NETWORK]
+    does: "virtual networks (isolated, nat, bridged), join, names and rules through his dns and firewall engines, bridges to the host through proxy, tunnel or tap, to run a server or service"
+    proof: "a web-server compartment on an isolated network, bridged to the host on one port, answers from the host and from no other compartment"
+  MG25_storage_manager:
+    status: OPEN
+    depends_on: [MG15_the_supervisor_in_cos, MG3_the_state_manager, SV2_into_a_compartment]
+    files: [cos/manager/storage.js, cos/manager/contract.json, tests/modules/test-cos-storage.test.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-STORAGE]
+    does: "storage locations (folder, drive, his object-storage engine), volumes with quotas, mounted into compartments, use read back, taken with versions"
+    proof: "a volume made, mounted into a fixture compartment, written, its use read back, taken with a version"
+  MG26_branch_benchmark_merge:
+    status: OPEN
+    depends_on: [MG3_the_state_manager, SN0_one_branch, SN2_run_in_parallel, SN3_measured_by_rfr2]
+    files: [cos/manager/merge.js, cos/manager/state.js, cos/manager/contract.json, tests/modules/test-cos-merge.test.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-MERGE]
+    does: "a branch runs beside its base under the same load, is benchmarked and friction tested, and merges back only on a MergeReport that says merge (or his ask), through lib/safe-apply.js mergeBack"
+    proof: "a slower branch refused with its numbers; a faster one with equal friction merged, the target versioned first"
+  MG27_state_and_resource_screens:
+    status: OPEN
+    depends_on: [MG23_allocation_and_balance, MG24_network_manager, MG25_storage_manager, MG26_branch_benchmark_merge, MG18_the_supervisor_screen]
+    files: [cos/ui/timeline, cos/ui/resources, cos/manager/contract.json]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-UI-TIMELINE, MOD-MG-UI-RESOURCES]
+    does: "the snapshot browser (per compartment and whole-system timelines, lanes, compare, merge report) and the resources screen (pool, allocations, balancer log, network map, storage), each section its own component on the registry bus"
+    proof: "driven in Clear Glass: a system state taken, a branch benchmarked, refused, changed and merged, the system restored; a memory cut read back, a network bridged, a volume mounted"
 
 build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → MG8 → MG9. Backend → route → command → UI in each, and MG9 (the UI) last, as he said. Sovereignty of Nexus's own systems (SV1–SV7) goes on alongside; COS opening a Nexus system waits on it (CS_D7)."
 
@@ -412,3 +471,19 @@ build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → M
 # and emerge."): emerge and warp one system, the spec compiler and IDE in Idearium (EW1-EW3 done, EW4-EW5 open). Asked again; the coder's
 # answer is in the reply, his call stands until he changes it.
 # build_order addendum: ... MG18 → MG19 → MG20 → MG21.
+
+# ── ADDENDUM 2026-10-30 (c) — builder, resources, network, storage, the state manager's timeline and merge; sections on the bus (his) ──
+# James, 2026-10-30: "full template, architype builder. a resource manager for each compartment in cos. so each system can be throttled,
+# allowcated, balaced using raid as a load balancer, network manager, storage management. like adding storage locations, adding virtual
+# networks and bridging it for running a server or service on. / full enterprise grade system state manager and snapshot browser with the
+# timeline, ability to branch, benchmark and merge after friction testing. / each page is isolated from each other, completely decomposed and
+# bundled with each section in relation to its component, css, and js file. these needs to be isolated from each other, using the component
+# registry as the event bus."
+# Stands on, read 2026-10-30: his network engines in COS (cos/services/anonymous/engines: proxy, tunnel, firewall, dns, storage, webserver,
+# tls; SV0), qemu-runtime's -netdev (user with hostfwd, or none), lib/safe-apply.js (mirror → branch → check → mergeBack, RAID-gated),
+# lib/raid-port.js decide, SN0–SN4 (one branch, open a snapshot, run in parallel, measured by RFR2), CS7 (spawn, despawn, balance), CS11
+# (RAID in the exe, with load), MG4 (caps), MG5 (editors), MG8 (factory), the architecture spec's FrictionScore and RULE A/B.
+# Recorded: MG_D7 (his). New in cos-manager.spec: ResourceAllocation, VirtualNetwork, StorageVolume, SystemState, MergeReport; IF-RAID-PORT,
+# IF-SAFE-APPLY, IF-NET-ENGINES, IF-QEMU-RUNTIME, IF-ARCHETYPE-SCHEMA; MOD-MG-BUILDER (+UI), BALANCER, NETWORK, STORAGE, MERGE, UI-TIMELINE,
+# UI-RESOURCES; state manager gains whole-system states. Phases MG22–MG27. MG18 now waits on DB16 (COS's registry accepted): the bus is it.
+# Said: a tap bridge needs host admin rights; without them COS bridges through his proxy or tunnel engines.

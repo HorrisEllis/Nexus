@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG22_template_and_archetype_builder
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG22_template_and_archetype_builder
+context: pipeline phase MG22_template_and_archetype_builder of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG22_template_and_archetype_builder (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793376634372
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793376634372
+lastSeenAt: 1793376634372
+fingerprint: null
+payload:
+  id: MG22_template_and_archetype_builder
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/builder.js
+    - cos/manager/contract.json
+    - tests/modules/test-cos-builder.test.js
+  depends_on:
+    - MG5_browsers_and_editors
+    - MG8_the_factory
+    - MG18_the_supervisor_screen
+  blocks:
+    - MOD-MG-BUILDER
+    - MOD-MG-UI-BUILDER
+  spec: cos/spec/cos-manager.spec
+  graph: f2afa5f74266d97a
