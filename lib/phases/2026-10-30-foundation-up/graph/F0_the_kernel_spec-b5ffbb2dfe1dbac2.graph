@@ -1,0 +1,90 @@
+envelope: 1
+uuid: nexus-export-graph-phase:F0_the_kernel_spec:b5ffbb2dfe1dbac2
+type: graph
+id: phase:F0_the_kernel_spec:b5ffbb2dfe1dbac2
+context: dependency graph of phase F0_the_kernel_spec
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793382595474
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595474
+lastSeenAt: 1793382595474
+fingerprint: null
+payload:
+  for: F0_the_kernel_spec
+  kind: phase
+  repo: null
+  hash: b5ffbb2dfe1dbac2
+  nodes:
+    - path: CIE-EG_Specification_v0_3_1.md
+      role: changes
+      exists: false
+      system: null
+    - path: emerge/spec/kernel.spec
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D0_foundation_up
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D1_ess_is_the_kernel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+    dependents:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F1_one_vocabulary
+      - docs/2026-10-30-foundation-up-phasemap.spec::F2_the_locked_snapshot
+      - docs/2026-10-30-foundation-up-phasemap.spec::F3_the_door
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D0_foundation_up
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D1_ess_is_the_kernel
+    downstream:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F1_one_vocabulary
+      - docs/2026-10-30-foundation-up-phasemap.spec::F2_the_locked_snapshot
+      - docs/2026-10-30-foundation-up-phasemap.spec::F3_the_door
+      - docs/2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
+      - docs/2026-10-30-foundation-up-phasemap.spec::F5_memory_and_learning
+      - docs/2026-10-30-foundation-up-phasemap.spec::F6_the_compound_build
+      - docs/2026-10-30-foundation-up-phasemap.spec::F7_the_assistant
+      - docs/2026-10-30-foundation-up-phasemap.spec::F8_the_tutor
+    blockedBy:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D0_foundation_up
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D1_ess_is_the_kernel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+    unlocks:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F1_one_vocabulary
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 8 · blocked by F_D0_foundation_up, F_D1_ess_is_the_kernel,
+        DB21_one_registry_schema_every_level
+      - >-
+        depends on (3): F_D0_foundation_up, F_D1_ess_is_the_kernel,
+        DB21_one_registry_schema_every_level · all upstream 13
+      - >-
+        needed by (3): F1_one_vocabulary, F2_the_locked_snapshot, F3_the_door · all downstream 8 ·
+        finishing it unlocks F1_one_vocabulary
+    edges:
+      - from: docs/2026-10-30-foundation-up-phasemap.spec::F_D0_foundation_up
+        kind: declared
+      - from: docs/2026-10-30-foundation-up-phasemap.spec::F_D1_ess_is_the_kernel
+        kind: declared
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+        kind: declared

@@ -1,0 +1,115 @@
+envelope: 1
+uuid: nexus-export-graph-phase:F8_the_tutor:584152ca3ff74bde
+type: graph
+id: phase:F8_the_tutor:584152ca3ff74bde
+context: dependency graph of phase F8_the_tutor
+intent: null
+summary: 4 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793382595497
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595497
+lastSeenAt: 1793382595497
+fingerprint: null
+payload:
+  for: F8_the_tutor
+  kind: phase
+  repo: null
+  hash: 584152ca3ff74bde
+  nodes:
+    - path: lib/end-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-container.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: lib/end-state.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/end-state.js
+      kind: requires
+    - from: lib/project-container.js
+      to: lib/end-state.js
+      kind: requires
+  crossings:
+    - from: lib/end-state.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 13
+    deps:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F7_the_assistant
+      - docs/2026-10-30-foundation-up-phasemap.spec::F3_the_door
+    dependents: []
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW1_emerge_and_warp_one_system
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW2_the_callers_outside_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D0_emerge_and_warp_one_system
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D1_compiler_and_ide_with_idearium
+      - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D2_the_runtime_is_not_a_crossing
+      - docs/2026-10-26-gate-walker-programmable-surface-phasemap.spec::GWK1_the_walker_and_chain_schema
+      - docs/2026-10-30-foundation-up-phasemap.spec::F0_the_kernel_spec
+      - docs/2026-10-30-foundation-up-phasemap.spec::F1_one_vocabulary
+      - docs/2026-10-30-foundation-up-phasemap.spec::F3_the_door
+      - docs/2026-10-30-foundation-up-phasemap.spec::F5_memory_and_learning
+      - docs/2026-10-30-foundation-up-phasemap.spec::F6_the_compound_build
+      - docs/2026-10-30-foundation-up-phasemap.spec::F7_the_assistant
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D0_foundation_up
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D1_ess_is_the_kernel
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D3_the_assistant_watches_structure_not_keystrokes
+    downstream: []
+    blockedBy:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F7_the_assistant
+      - docs/2026-10-30-foundation-up-phasemap.spec::F3_the_door
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 13 · blocked by F7_the_assistant, F3_the_door
+      - 'depends on (2): F7_the_assistant, F3_the_door · all upstream 37'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-30-foundation-up-phasemap.spec::F7_the_assistant
+        kind: declared
+      - from: docs/2026-10-30-foundation-up-phasemap.spec::F3_the_door
+        kind: declared

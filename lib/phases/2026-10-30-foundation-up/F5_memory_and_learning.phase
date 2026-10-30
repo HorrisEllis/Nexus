@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-foundation-up-phasemap.spec::F5_memory_and_learning
+type: phase
+id: docs_2026-10-30-foundation-up-phasemap.spec::F5_memory_and_learning
+context: pipeline phase F5_memory_and_learning of docs/2026-10-30-foundation-up-phasemap.spec
+intent: null
+summary: F5_memory_and_learning (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793382595488
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595488
+lastSeenAt: 1793382595488
+fingerprint: null
+payload:
+  id: F5_memory_and_learning
+  map: docs/2026-10-30-foundation-up-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/components/pattern-engine
+    - emerge/components/crystal
+    - emerge/components/rfr2
+    - emerge/components/cfr
+  depends_on:
+    - F1_one_vocabulary
+  blocks: []
+  spec: null
+  graph: 099fc4242eb20f8a
