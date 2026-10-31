@@ -1,0 +1,172 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DO0_the_handshake_counts_real_routes:d38fd5f11659770c
+type: graph
+id: phase:DO0_the_handshake_counts_real_routes:d38fd5f11659770c
+context: dependency graph of phase DO0_the_handshake_counts_real_routes
+intent: null
+summary: 18 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793421154607
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793421154607
+lastSeenAt: 1793421154607
+fingerprint: null
+payload:
+  for: DO0_the_handshake_counts_real_routes
+  kind: phase
+  repo: null
+  hash: d38fd5f11659770c
+  nodes:
+    - path: orchestrator/lib/contract-handshake.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-contract-handshake-routes.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: lib/cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/peer-relay.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/boot-sequence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cli/boot-systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-cfr-influence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-knowledge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-query.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/event-taxonomy.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/intent-map.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/intent-map.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/boot-sequence.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/cli/boot-systems.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-query.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-knowledge.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-cfr-influence.js
+      kind: requires
+    - from: orchestrator/lib/peer-relay.js
+      to: orchestrator/lib/contract-handshake.js
+      kind: requires
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+  crossings:
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO1_idearium_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
+    upstream: []
+    downstream:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO1_idearium_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO4_boot_js_retired
+      - docs/2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (3): DO1_idearium_door, DO3_cortex_door, DO5_clear_glass_door · all downstream 4'
+    edges: []

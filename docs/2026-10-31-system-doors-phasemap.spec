@@ -22,9 +22,9 @@ decisions:
 
 phases:
   DO0_the_handshake_counts_real_routes:
-    status: OPEN
+    status: BUILT 0.60.324
     depends_on: []
-    files: [orchestrator/lib/contract-handshake.js, tests/modules/test-contract-handshake-routes.test.js]
+    files: [orchestrator/lib/contract-handshake.js, orchestrator/orchestrator.js, tests/modules/test-contract-handshake-routes.test.js, tests/modules/run-all.js]
     spec: docs/system-doors.spec
     blocks: [MOD-DOOR-HANDSHAKE]
     does: "the 0-routes defect: count routes, channels or components with a route, and say which"
@@ -79,3 +79,10 @@ phases:
     proof: "every /cli/* route answers the same; contract from the registry"
 
 order: "DO0 first (it is a defect, and every door's handshake needs it); then DO2 (the smallest system gets its origin first), DO1, DO3 → DO4; DO5 and DO2a after his yes."
+
+# ── ADDENDUM 2026-10-31 — DO0 built (0.60.324) ───────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-10-31: "yes do that also". contract-handshake.js countRoutes(contract) → { count, shape }: routes (array or object),
+# channels, or components[] that carry a route (malformed counted); no known shape → null 'unknown', never 0. verifySystem reports
+# routeCount and routeShape; orchestrator.js's boot line names the shape (added to DO0's files first, his phased-only rule). Measured:
+# Clear Glass 0 → 117, Copilot 0 → 81, Ollama 0 → 9, Versionium 0 → 18; every routes[] contract unchanged.
+# tests/modules/test-contract-handshake-routes.test.js HR-01..04, 4/4.

@@ -254,3 +254,7 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node"
     - "per module: its acceptance lines"
+
+# ── ADDENDUM 2026-10-31 (0.60.324) — MOD-DOOR-HANDSHAKE built ───────────────────────────────────────────────────────────────────────
+# orchestrator/lib/contract-handshake.js exports countRoutes; HandshakeCount as specced (routes | channels | components, 'unknown' → null).
+# Acceptance met: Clear Glass's registry contract reports 117 routes with shape components (HR-03, HR-04).
