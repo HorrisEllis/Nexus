@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793423729770
+exported_at: 1793425834355
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793423729770
-lastSeenAt: 1793423729770
+firstSeenAt: 1793425834355
+lastSeenAt: 1793425834355
 fingerprint: null
 payload:
   for: MG25_storage_manager
@@ -65,9 +65,6 @@ payload:
       - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
     unlocks: []
     conflicts:
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
-        files:
-          - cos/manager/contract.json
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
         files:
           - cos/manager/contract.json
@@ -99,7 +96,6 @@ payload:
         depends on (3): MG15_the_supervisor_in_cos, MG3_the_state_manager, SV2_into_a_compartment ·
         all upstream 15
       - 'needed by (1): MG27_state_and_resource_screens'
-      - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'
       - >-
         same files as MG18_the_supervisor_screen with no order between them:
         cos/manager/contract.json
@@ -108,7 +104,10 @@ payload:
       - >-
         same files as MG22_template_and_archetype_builder with no order between them:
         cos/manager/contract.json
-      - … and 4 more phases sharing its files without an order
+      - >-
+        same files as MG23_allocation_and_balance with no order between them:
+        cos/manager/contract.json
+      - … and 3 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131605
+exported_at: 1793425834359
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131605
-lastSeenAt: 1793383131605
+firstSeenAt: 1793425834359
+lastSeenAt: 1793425834359
 fingerprint: null
 payload:
   for: MG26_branch_benchmark_merge
@@ -67,9 +67,6 @@ payload:
       - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN3_measured_by_rfr2
     unlocks: []
     conflicts:
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
-        files:
-          - cos/manager/contract.json
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
         files:
           - cos/manager/contract.json
@@ -103,7 +100,6 @@ payload:
         depends on (4): MG3_the_state_manager, SN0_one_branch, SN2_run_in_parallel,
         SN3_measured_by_rfr2 · all upstream 10
       - 'needed by (1): MG27_state_and_resource_screens'
-      - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'
       - >-
         same files as MG18_the_supervisor_screen with no order between them:
         cos/manager/contract.json
@@ -112,7 +108,10 @@ payload:
       - >-
         same files as MG22_template_and_archetype_builder with no order between them:
         cos/manager/contract.json
-      - … and 4 more phases sharing its files without an order
+      - >-
+        same files as MG23_allocation_and_balance with no order between them:
+        cos/manager/contract.json
+      - … and 3 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
         kind: declared

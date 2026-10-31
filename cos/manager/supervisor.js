@@ -163,6 +163,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
         write('health', s.decl.name, `phase ${ph}: no health within ${P.phaseGateMs / 1000}s — boot goes on, said`);
       }));
     }
+    api.lastBoot = { started, skipped, at: Date.now() };
     return { started, skipped };
   }
 
@@ -174,7 +175,9 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     const d = s.decl;
     return { name: d.name, system: d.system, state: s.state, pid: s.pid, port: d.healthUrl ? Number((/:(\d+)/.exec(d.healthUrl) || [])[1]) || null : null,
       healthUrl: d.healthUrl || null, critical: !!d.critical, bootPhase: d.onDemand ? null : (d.phase ?? null), onDemand: !!d.onDemand,
-      restarts: { count: s.restarts, last: s.lastExit ? s.lastExit.ts : null, backoffMs: s.backoffMs }, circuit: { ...s.circuit }, startedAt: s.startedAt, by: s.by };
+      restarts: { count: s.restarts, last: s.lastExit ? s.lastExit.ts : null, backoffMs: s.backoffMs }, circuit: { ...s.circuit }, startedAt: s.startedAt, by: s.by,
+      // MG16: what autopilot's /status carried, so the door answers in its shape
+      crashesInWindow: (prune(s), s.crashes.length), lastExit: s.lastExit, downSince: s.state === 'down' || s.state === 'circuit-open' ? (s.lastExit && s.lastExit.ts) : null, lastActivity: s.lastActivity };
   }
   function ledger({ limit = 100, system = null } = {}) {
     let lines = []; try { lines = fs.readFileSync(LEDGER, 'utf8').split('\n').filter(Boolean).map(l => JSON.parse(l)); } catch (_) {}
@@ -182,9 +185,10 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   }
   function shutdown({ by = 'person' } = {}) { clearInterval(reaper); for (const [n, s] of S) if (running(s)) stop(n, { by }); write('stop', null, 'supervisor shutdown', { by }); }
 
-  return { boot, list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
+  const api = { boot, declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
     policy: () => JSON.parse(JSON.stringify(P)), setPolicy: (patch, { by = 'person' } = {}) => { Object.assign(P, patch || {}); write('policy', null, `policy changed: ${JSON.stringify(patch)}`, { by }); return JSON.parse(JSON.stringify(P)); },
-    shutdown, DEFAULTS, ledgerFile: LEDGER };
+    shutdown, DEFAULTS, ledgerFile: LEDGER, lastBoot: null };
+  return api;
 }
 
 module.exports = { createSupervisor, readDeclarations, DEFAULTS, httpOk };

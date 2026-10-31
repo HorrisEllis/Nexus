@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131621
+exported_at: 1793425834371
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131621
-lastSeenAt: 1793383131621
+firstSeenAt: 1793425834371
+lastSeenAt: 1793425834371
 fingerprint: null
 payload:
   for: MG29_the_cockpit
@@ -201,9 +201,6 @@ payload:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG10_categories
         files:
           - idearium/cli/route-commands.js
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
-        files:
-          - cos/manager/contract.json
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
         files:
           - idearium/cli/route-commands.js
@@ -240,12 +237,12 @@ payload:
         same files as MG3_the_state_manager with no order between them:
         idearium/cli/route-commands.js
       - 'same files as MG10_categories with no order between them: idearium/cli/route-commands.js'
-      - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'
       - >-
         same files as MG19_the_spec_bundle with no order between them:
         idearium/cli/route-commands.js
       - 'same files as MG20_add_deploy_connect with no order between them: cos/manager/contract.json'
-      - … and 7 more phases sharing its files without an order
+      - 'same files as MG21_the_add_screen with no order between them: cos/manager/contract.json'
+      - … and 6 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
         kind: declared

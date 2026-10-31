@@ -276,6 +276,7 @@ const SUITES = [
   'test-provider-host-respawn.js',
   'test-userscript-mixed-content-fix.js',
   'test-contract-handshake-paths.js',
+  'test-cos-autopilot-door.test.js',   // 0.60.329 MG16 — autopilot's routes on COS's door, in its shapes; legacy /tables /files counted
   'test-cos-supervisor.test.js',   // 0.60.328 MG15 — COS's supervisor: autopilot's rules on real child processes, read from the declarations
   'test-compartment-declarations.test.js',   // 0.60.326 MG15a — every autopilot process declared by its own system's compartment.json, field for field
   'test-release-tool.test.js',   // 0.60.325 FX2 — one release command; data/ never staged; a red test stops it before the commit

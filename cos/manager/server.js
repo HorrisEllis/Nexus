@@ -14,16 +14,18 @@ const http = require('http');
 const path = require('path');
 const { createSupervisor } = require('./supervisor.js');
 
-function createServer(sup) {
+function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) {
+  const door = require('./autopilot-door.js').mount(sup, { ROOT: root });   // MG16: autopilot's routes, in its shapes (MG-003)
   const send = (res, code, body) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(body)); };
   return http.createServer(async (req, res) => {
     const u = new URL(req.url, 'http://x'), p = u.pathname.replace(/\/+$/, ''), m = req.method;
     let body = {};
-    if (m === 'POST' || m === 'PATCH') { let raw = ''; for await (const c of req) raw += c; try { body = raw ? JSON.parse(raw) : {}; } catch (_) { return send(res, 400, { ok: false, error: 'the body is not JSON' }); } }
+    if ((m === 'POST' || m === 'PATCH') && p.startsWith('/api/cos')) { let raw = ''; for await (const c of req) raw += c; try { body = raw ? JSON.parse(raw) : {}; } catch (_) { return send(res, 400, { ok: false, error: 'the body is not JSON' }); } }
     try {
       if (m === 'GET' && p === '/api/cos/health') return send(res, 200, { ok: true, service: 'cos-manager', systems: sup.list().length, ledger: sup.ledgerFile });
       if (m === 'GET' && p === '/api/cos/systems') return send(res, 200, { ok: true, systems: sup.list() });
       if (m === 'GET' && p === '/api/cos/ledger') return send(res, 200, { ok: true, entries: sup.ledger({ limit: Number(u.searchParams.get('limit')) || 100, system: u.searchParams.get('system') }) });
+      if (m === 'GET' && p === '/api/cos/legacy-callers') return send(res, 200, { ok: true, callers: door.legacyCallers() });   // MG16: who still calls /tables and /files
       if (m === 'GET' && p === '/api/cos/policy') return send(res, 200, { ok: true, policy: sup.policy() });
       const act = /^\/api\/cos\/systems\/([^/]+)(?:\/(start|stop|restart|touch|reset-circuit))?$/.exec(p);
       if (act && m === 'GET' && !act[2]) return send(res, 200, { ok: true, system: sup.get(decodeURIComponent(act[1])) });
@@ -38,6 +40,7 @@ function createServer(sup) {
       }
       if (m === 'POST' && p === '/api/cos/boot') { if (!needBy()) return; return send(res, 200, { ok: true, ...(await sup.boot({ set: body.set, by: body.by })) }); }
       if (m === 'PATCH' && p === '/api/cos/policy') { if (!needBy()) return; return send(res, 200, { ok: true, policy: sup.setPolicy(body.patch || {}, { by: body.by }) }); }
+      if (!p.startsWith('/api/cos') && door(req, res)) return;
       return send(res, 404, { ok: false, error: `no route ${m} ${p}` });
     } catch (e) { return send(res, /no system/.test(e.message) ? 404 : 500, { ok: false, error: e.message }); }
   });

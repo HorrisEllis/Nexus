@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793422031235
+exported_at: 1793425834324
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793422031235
-lastSeenAt: 1793422031235
+firstSeenAt: 1793425834324
+lastSeenAt: 1793425834324
 fingerprint: null
 payload:
   for: MG17_autopilot_hands_over
@@ -251,13 +251,12 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
     blockedBy:
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 5 · blocked by MG16_the_autopilot_door, CS12_the_mover_is_proven
+      - layer 5 · blocked by CS12_the_mover_is_proven
       - 'depends on (2): MG16_the_autopilot_door, CS12_the_mover_is_proven · all upstream 7'
       - 'needed by (1): CS4a_cos_boots_alone · all downstream 22'
     edges:

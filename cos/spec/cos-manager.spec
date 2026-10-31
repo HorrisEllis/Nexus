@@ -1256,3 +1256,9 @@ spec:
 # Policy adds memBackoffMs (15 s), stableMs (60 s), phaseGateMs (30 s), idleCheckMs — autopilot's constants, read by SV-01. States gain
 # 'waiting-memory' (a refused spawn re-armed) and 'external' (Clear Glass exiting 0 within 20 s). Ledger kinds gain 'policy'.
 # tests/modules/test-cos-supervisor.test.js SV-01..08, 8/8, on real child processes.
+
+# ── ADDENDUM 2026-10-31 (0.60.329) — MOD-MG-AUTOPILOT-DOOR built ────────────────────────────────────────────────────────────────────
+# mount(sup, { ROOT }) and createDoorHandlers; legacyCallers() served at GET /api/cos/legacy-callers. The supervisor's view gains
+# crashesInWindow, lastExit, downSince, lastActivity; declarations() and lastBoot. States map to autopilot's (up → online, idle → dormant,
+# circuit-open → circuit_open). Acceptance: tests/modules/test-cos-autopilot-door.test.js AD-01..04 (every route of autopilot's source
+# answered, /status's shape, /control and /spawn shapes, legacy counted).

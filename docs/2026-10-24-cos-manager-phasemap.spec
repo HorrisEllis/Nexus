@@ -367,9 +367,9 @@ phases:
       (cos ps|start|stop|restart|boot|ledger), in that order.
     proof: "fixture systems: boot in phase order, a killed child restarted with backoff, a crash loop opens the circuit, on-demand start and idle stop, each a ledger line; the defaults test reads autopilot's constants and the policy's"
   MG16_the_autopilot_door:
-    status: OPEN
+    status: BUILT 0.60.329
     depends_on: [MG15_the_supervisor_in_cos]
-    files: [cos/manager/autopilot-door.js, cos/manager/contract.json, tests/modules/test-cos-autopilot-door.test.js]
+    files: [cos/manager/autopilot-door.js, cos/manager/contract.json, cos/manager/server.js, cos/manager/supervisor.js, loom/maps/cos-testenv-map.js, tests/modules/test-cos-autopilot-door.test.js, tests/modules/run-all.js]
     spec: cos/spec/cos-manager.spec
     blocks: [MOD-MG-AUTOPILOT-DOOR]
     does: "every route autopilot serves on :7799, answered by the manager in the same shape; /files and /tables kept as legacy with their callers counted"
@@ -610,3 +610,17 @@ decisions_d13:
 # exits while autopilot holds the port — MG-001). Idearium route /api/cos/* and rows cos ps|<act>|boot|ledger ('cos' added to the ports
 # table, the same :7799). Found by the test: a system started outside boot stayed 'starting' (health read once at spawn) — now watched like a
 # boot phase, 'degraded' and said if it never answers. lib/system-shape.js needed no change (MG15a's generator writes the declarations).
+
+# ── ADDENDUM 2026-10-31 — MG16 built (0.60.329); MG_D14 ─────────────────────────────────────────────────────────────────────────────
+# James, 2026-10-31: "go". cos/manager/autopilot-door.js answers every route autopilot serves, in its shapes: supervision routes from COS's
+# supervisor (/status, /spawn, /control, /touch), the data routes by autopilot's own handlers extracted by script (lines 936-957,
+# 1127-1426, 1487-1609; two lib requires re-pointed). /tables and /files carry X-Nexus-Legacy naming their replacement; each call is
+# counted with its caller (GET /api/cos/legacy-callers). cos/manager/contract.json is not written here: the manager's contract is
+# MOD-MG-CONTRACT's; until then the legacy mark rides on each reply.
+decisions_d14:
+  MG_D14_the_door_handlers_twice_until_the_handover:
+    chosen: >-
+      Until MG17, autopilot's data handlers exist in two places: in lib/nexus/autopilot.js (which still serves :7799) and, extracted, in
+      cos/manager/autopilot-door.js. Moving them now would make lib require cos/ (a new crossing); MG17 archives autopilot's body and ends
+      the second copy. The extraction is by script from the same lines, so the two are identical on the day they are made.
+    by: "decided by his axioms: §5.15 (no new crossing; designed out first), §0.3 (MG17 archives, never deletes), §10.3 (the two-copy window said, with its end named)"
