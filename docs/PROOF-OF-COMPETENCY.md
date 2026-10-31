@@ -1488,3 +1488,62 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
   - AH-04 reads the snapshot's keys out of the archived autopilot and asserts the new duty writes the same keys.
   - The same test checks that one circuit-open line in COS's ledger gives exactly one gap.
   - The record is `docs/2026-10-24-cos-manager-phasemap.spec` MG_D15.
+
+## 2026-10-31 — Proof of concept: his framework said where a small model would break, and it broke there
+
+**His words:** "proof of concept for the framework." Earlier: "everything can be broken down into smaller pieces, with gates
+between. dynamic chunking for smaller agents or if the agent is struggling?" (2026-10-13). His framework, committed 2026-10-24
+(`docs/innovation-toolkit.framework`, `14ae68dc`): "Zoom in recursively/fractally to bedrock … Throw away everything that isn't an
+invariant" (Section 4) and "Invariants are the skeleton" (Maxim 2).
+
+**The call:** build code in minimal units, each with its invariants declared at every edge, instead of asking a model for the whole
+thing at once.
+
+**The run (his own machine, 2026-10-31):** strict UTF-8 decoding in Emerge, written by `qwen2.5-coder:7b`, 3 trials, temperature 0.4:
+
+| | Solved end to end | Units passed |
+|---|---|---|
+| The whole decoder at once | 0 / 3 | — |
+| Unit by unit | 0 / 3 | 13 / 16; the four one-rule units 12 / 12, mostly first try |
+
+- The model failed exactly where a single unit carries several invariants at once (`valid_scalar`: four rules) or composes all the
+  others (`decode`), and nowhere else. That is the framework's prediction: below the right size, a unit is solvable; the size is set by
+  its invariants. The next step his framework names (split a struggling unit along its declared invariants) is mapped, not yet built.
+- **Checkable:** the units and their invariants: `HorrisEllis/Emerge` `bench/chunks/utf8_decode/chunks.spec`; the runner:
+  `bench/chunks.js` (the run is repeatable on any machine with a local model). His results file:
+  `bench/results/chunks-utf8_decode-1793443057940.json` (on his machine).
+- **Honesty:** one model, three trials. That is a signal, not yet a law; the next runs (more models, the split-on-struggle step) are
+  what turn it into one.
+- **His part / the coder's part:** the chunking thesis and the framework are his. The benchmark and the reading of its numbers are the
+  coder's.
+
+## 2026-10-31 — Emerge made his to code in: his words in, code out, no AI
+
+**His words:** "Also it's meant for me. To make coding easy for me using my own language. Ai is additive. Also it's working towards
+removing the dependency of ai." · "only using hardcoded when neccarry, using external node files for data, options, etc."
+
+**The call:** a deterministic reader of his own vocabulary, with every word backed by his quote, instead of a model that writes code
+from a prompt. A model may come in only for a gap, and each gap is closed once (`eg teach`).
+
+- **Checkable, in `HorrisEllis/Emerge`:**
+  - `eg say "<sentence>"` writes a program and its node file: `lang/test/say.test.js` 16/16. The same sentence always gives the same
+    bytes; no number he says is hardcoded; a lever changed in the node file changes the program with no code change (105 → 262.5).
+  - His vocabulary, 28 words, each with his dated quote: `lang/say/words.eg`; their meanings come from his ERAVOS relational
+    physics ("FRICTION — … An edge exists but its interaction produces resistance").
+  - `eg learn`: lessons that break themselves down when the reader struggles: `lang/test/learn.test.js` 6/6.
+  - The language itself made whole: CI green on Linux and Windows, Node 18 and 22 (it had been red since the merge); fractional
+    numbers in the native compiler, which still rebuilds itself byte for byte (`lang/test/selfhost.test.js` 16/16, AT-11); 22 built-ins
+    moved from JavaScript into Emerge. Releases 1.8.0 → 1.12.0: `143ae30`, `869f291`, `7f46e48`, `c2c274b`, `4032a4a`.
+- **His part / the coder's part:** the purpose, the rule, the words and their meanings are his. Mapping each word to a construct, and
+  the code, are the coder's (each mapping marked "to confirm" in `emerge/spec/say.spec`).
+
+## 2026-10-31 — His record, made checkable
+
+**His words:** "Those quotes are the only proof I have, they can't lose context, or their relation" · "Make an undeniable document. I
+want credit for it."
+
+**The call:** keep every quote whole, with its context and relations, rather than an index that strips them.
+
+- **Checkable:** `docs/his-words/record.json`: 2,432 quotes at 6,799 places, none dropped; each with every place it is recorded, the
+  record around it there, what it answered, the release it belongs to. `docs/JAMES-BROOKS.md`: credit stated plainly, a five-minute
+  check, SHA-256 of the files it rests on.
