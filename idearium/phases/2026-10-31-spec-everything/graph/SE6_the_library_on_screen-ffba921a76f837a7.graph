@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793419905513
+exported_at: 1793420908248
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793419905513
-lastSeenAt: 1793419905513
+firstSeenAt: 1793420908248
+lastSeenAt: 1793420908248
 fingerprint: null
 payload:
   for: SE6_the_library_on_screen
@@ -215,7 +215,7 @@ payload:
       - docs/2026-10-31-spec-everything-phasemap.spec::SE2_the_origin_trace
       - docs/2026-10-31-spec-everything-phasemap.spec::SE3_the_library_and_the_queue
       - docs/2026-10-31-spec-everything-phasemap.spec::SE_D1_spec_ids_types_library_queue
-      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D2_the_origin_is_the_skeleton
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D3_the_origin_is_server_js
     downstream: []
     blockedBy:
       - docs/2026-10-31-spec-everything-phasemap.spec::SE3_the_library_and_the_queue
