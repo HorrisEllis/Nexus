@@ -7,11 +7,11 @@ intent: null
 summary: DO2_architect_door (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793419906986
+exported_at: 1793420909570
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793419906986
-lastSeenAt: 1793419906986
+firstSeenAt: 1793420909570
+lastSeenAt: 1793420909570
 fingerprint: null
 payload:
   id: DO2_architect_door
@@ -26,9 +26,9 @@ payload:
     - architect/event-taxonomy.js
     - architect/service.js
   depends_on:
-    - DO2a_architect_boots_from_the_core
     - DO_D0_server_floats_on_the_registry
+    - SE_D3_the_origin_is_server_js
   blocks:
     - MOD-DOOR-ARCHITECT
   spec: docs/system-doors.spec
-  graph: 582d34031d8989da
+  graph: 206f42637b578867

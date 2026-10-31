@@ -398,3 +398,7 @@ system.js, which needs the config."
 - **The origin.** Every file traces to the system skeleton (config → lib/system.js → server.js and cli.js → components → UI), to its spec
   module and to its phase (architecture-spec RULE E). The reading of his "system.js" as the skeleton's lib/system.js is the coder's — to
   confirm. On 2026-10-31, 44% of code files had neither a module nor a phase.
+- **Corrected the same day (his).** James: "system.js i meant server.js". The origin is each system's **server.js**, which needs the
+  config: config → server.js → the registry → components → UI. A file traces to its origin when its system's server.js reaches it. The
+  line above read "system.js" as lib/system.js; it is superseded and kept (§0.3). Six systems have no server.js yet (idearium,
+  clear-glass, cortex, architect, orchestrator, cos).

@@ -7,11 +7,11 @@ intent: null
 summary: SE2_the_origin_trace (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793419905505
+exported_at: 1793420908239
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793419905505
-lastSeenAt: 1793419905505
+firstSeenAt: 1793420908239
+lastSeenAt: 1793420908239
 fingerprint: null
 payload:
   id: SE2_the_origin_trace
@@ -25,8 +25,8 @@ payload:
     - tests/modules/test-origin-trace.test.js
   depends_on:
     - SE1_spec_ids_and_types
-    - SE_D2_the_origin_is_the_skeleton
+    - SE_D3_the_origin_is_server_js
   blocks:
     - MOD-SL-TRACE
   spec: idearium/spec/spec-library.spec
-  graph: 9d4a074059dcf4cc
+  graph: 518e86eb63cc7765

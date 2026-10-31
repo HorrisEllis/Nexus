@@ -5,7 +5,7 @@ origin: >-
   James, 2026-10-31: "yes like the server.js floats ontop then the ui ontop of that. then each system interacts through the registry?" ·
   "Idearium idearium/api/index.js — create a server.js for the cli and api, and route to the index.js" · "Cortex cortex/boot.js (:3748) —
   make a server.js for cortex, and reroute the boot.js to component registry and retire the boot.js" · "like it all builds from the origin as
-  a foundation/core like the system.js, which needs the config."
+  a foundation/core like the system.js, which needs the config." · corrected the same day: "system.js i meant server.js"
 
 status: "MAPPED 2026-10-31. Nothing built by this map."
 
@@ -13,6 +13,9 @@ decisions:
   DO_D0_server_floats_on_the_registry:
     chosen: "server.js is the connector: it mounts the system's registry and serves its contract, handshake, API and CLI; the UI floats on the routes; systems interact only through each other's registry contracts"
     by: "his, 2026-10-31 (origin), after the coder's pushback that server.js should not itself be the internal bus (the harness is); the harness spec is its own map — to confirm that this reading is his"
+  DO_D2_a_boot_core_under_server_js:
+    chosen: "TO CONFIRM (the coder's suggestion, no longer his words): under each server.js, the skeleton's lib/system.js as its boot core (config, schemas, store, ledger, bus, node index, heartbeat). Built only after his yes."
+    by: "the coder; it had been read from his \"system.js\", which he corrected the same day: \"system.js i meant server.js\" — the origin is server.js (SE_D3), and these phases (DO1–DO5) are his origin work"
   DO_D1_clear_glass_door:
     chosen: "TO CONFIRM: Clear Glass gets the same door (his line \"create a server.js for the cli and api\" sits under Clear Glass, Idearium and Architect); built only after his yes"
     by: "the coder's reading of where his line applies"
@@ -36,19 +39,19 @@ phases:
     proof: "Idearium's suite green through server.js; /contract hash = registry's"
   DO2a_architect_boots_from_the_core:
     status: OPEN
-    depends_on: [SE_D2_the_origin_is_the_skeleton]
+    depends_on: [DO_D2_a_boot_core_under_server_js]
     files: [architect/lib/system.js, architect/lib/bus.js, architect/lib/ledger.js, architect/lib/node-index.js, architect/lib/heartbeat.js, architect/lib/listener.js, architect/config.js]
     spec: docs/system-doors.spec
     blocks: [MOD-DOOR-CORE]
-    does: "the skeleton's core laid out for Architect, filled from its config; the first system that boots from the origin"
-    proof: "architect boots through lib/system.js; the trace shows config → system.js → server.js"
+    does: "TO CONFIRM (DO_D2): the skeleton's core laid out under Architect's server.js, filled from its config"
+    proof: "architect's server.js boots through lib/system.js"
   DO2_architect_door:
     status: OPEN
-    depends_on: [DO2a_architect_boots_from_the_core, DO_D0_server_floats_on_the_registry]
+    depends_on: [DO_D0_server_floats_on_the_registry, SE_D3_the_origin_is_server_js]
     files: [architect/server.js, architect/compartment.json, architect/cli.js, architect/event-taxonomy.js, architect/service.js]
     spec: docs/system-doors.spec
     blocks: [MOD-DOOR-ARCHITECT]
-    does: "architect/server.js on the core and the registry, with its missing slots"
+    does: "architect/server.js on its config and the registry, with its missing slots: Architect gets its origin"
     proof: "the origin trace shows Architect with no missing slot"
   DO3_cortex_door:
     status: OPEN
@@ -75,4 +78,4 @@ phases:
     does: "TO CONFIRM: the :7702 REST surface out of bridge.js into clear-glass/server.js"
     proof: "every /cli/* route answers the same; contract from the registry"
 
-order: "DO0 first (it is a defect, and every door's handshake needs it); then DO2a → DO2 (the smallest system proves the core), DO1, DO3 → DO4; DO5 after his yes."
+order: "DO0 first (it is a defect, and every door's handshake needs it); then DO2 (the smallest system gets its origin first), DO1, DO3 → DO4; DO5 and DO2a after his yes."

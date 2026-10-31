@@ -21,7 +21,8 @@ spec:
       the server.js and uses the database, like guardian?" · earlier the same day: "yes like the server.js floats ontop then the ui ontop of
       that. then each system interacts through the registry?" The design is his; which file mounts what, and the order, are the coder's.
     purpose: >-
-      One shape for every system's door (genesis.spec 1.5.0's skeleton, Guardian's and Versionium's real shape): server.js serves the
+      Every system's origin is its server.js, which needs the config (his, 2026-10-31: "system.js i meant server.js"). One shape for every
+      system's door (genesis.spec 1.5.0's skeleton, Guardian's and Versionium's real shape): server.js serves the
       contract, the handshake, the API routes and the CLI's calls; it mounts the system's component registry and routes each call to the
       component that owns it; the UI floats on top of the routes. A system's core (Idearium's index.js, Architect's service, Cortex's organs)
       sits under the registry, never reached around it.
@@ -164,7 +165,8 @@ spec:
       path: architect/lib/system.js
       phase: DO2a_architect_boots_from_the_core
       description: >-
-        His "it all builds from the origin as a foundation/core like the system.js, which needs the config": a system's lib/system.js laid out
+        TO CONFIRM, the coder's suggestion (DO_D2): read first from his "like the system.js, which needs the config", which he corrected
+        ("system.js i meant server.js": the origin is server.js). Under a server.js, a system's lib/system.js laid out
         from the skeleton (cos/archetype/nexus-system/lib/system.js and the files it requires: ledger, bus, node-index, listener, heartbeat,
         boundary), filled from the system's own config, schemas and store; its server.js and cli.js start from it. No system has one today;
         Architect (6 files) is the first, then each system in the queue's order (MOD-SL-LIBRARY), one phase each.
@@ -174,7 +176,7 @@ spec:
       gate_pipeline: ["GATE-DO2a-001: the skeleton's tests pass against the system (tests/skeleton.test.js laid out)", "GATE-DO2a-002: the shape check's gaps listed, not hidden"]
       behavioral_contracts: ["laid out from the archetype (lib/file-tree-plan.js fromCosTemplate), never hand-copied"]
       error_paths: ["a part the system already has in another shape (its own ledger) → mapped onto the part, the old one archived after"]
-      acceptance: ["architect boots through lib/system.js; the origin trace shows its config → system.js → server.js line"]
+      acceptance: ["architect's server.js boots through lib/system.js; the skeleton's tests pass"]
 
     - id: MOD-DOOR-ARCHITECT
       name: architect-door
@@ -182,7 +184,7 @@ spec:
       path: architect/server.js
       phase: DO2_architect_door
       description: "architect/server.js: the same door for Architect, mounting service.js's routes behind the registry; with its missing compartment.json, cli.js and event-taxonomy.js (the skeleton's slots), so COS can supervise it."
-      deps: [{ name: architect-service }, { name: guardian-door }, { name: system-core-from-the-skeleton }]
+      deps: [{ name: architect-service }, { name: guardian-door }]
       schema_refs: [DoorManifest]
       exports: ["node architect/server.js", "architect/compartment.json", "architect/cli.js", "architect/event-taxonomy.js"]
       gate_pipeline: ["GATE-DO2-001: :3747 answers the same", "GATE-DO2-002: the skeleton's slots present"]

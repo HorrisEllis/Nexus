@@ -1,0 +1,79 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DO2a_architect_boots_from_the_core:c7f341d88aaeade3
+type: graph
+id: phase:DO2a_architect_boots_from_the_core:c7f341d88aaeade3
+context: dependency graph of phase DO2a_architect_boots_from_the_core
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793420909567
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793420909567
+lastSeenAt: 1793420909567
+fingerprint: null
+payload:
+  for: DO2a_architect_boots_from_the_core
+  kind: phase
+  repo: null
+  hash: c7f341d88aaeade3
+  nodes:
+    - path: architect/config.js
+      role: changes
+      exists: true
+      system: architect
+    - path: architect/lib/bus.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/lib/heartbeat.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/lib/ledger.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/lib/listener.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/lib/node-index.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/lib/system.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+  edges:
+    - from: architect/service.js
+      to: architect/config.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D2_a_boot_core_under_server_js
+    dependents: []
+    upstream:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D2_a_boot_core_under_server_js
+    downstream: []
+    blockedBy:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D2_a_boot_core_under_server_js
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by DO_D2_a_boot_core_under_server_js
+      - 'depends on (1): DO_D2_a_boot_core_under_server_js'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO_D2_a_boot_core_under_server_js
+        kind: declared

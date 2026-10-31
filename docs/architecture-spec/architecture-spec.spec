@@ -775,3 +775,11 @@ spec:
 #   The handshake reports 0 routes for systems that publish components[] (docs/system-doors.spec MOD-DOOR-HANDSHAKE).
 # Mapped 2026-10-31: docs/2026-10-31-spec-everything-phasemap.spec (SE1-SE6), docs/2026-10-31-system-doors-phasemap.spec (DO0-DO5),
 #   docs/2026-10-31-guardian-nodes-phasemap.spec (GND1-GND4), docs/2026-10-31-diagnostic-schemas-phasemap.spec (DSC1-DSC4).
+
+# ── ADDENDUM 2026-10-31 (b) — RULE E corrected by him: the origin is server.js ───────────────────────────────────────────────────────
+# James, 2026-10-31: "system.js i meant server.js". RULE E above read his "like the system.js, which needs the config" as the skeleton's
+# lib/system.js; that reading is superseded (kept, §0.3). RULE E, as he meant it: every code file traces to its system's server.js, which
+# needs the config — config → server.js → the registry → components → UI. A file traces when its system's server.js reaches it (the
+# require graph from the door, or a registry component the door mounts). Six systems have no server.js and so no origin yet: idearium,
+# clear-glass, cortex, architect, orchestrator, cos (docs/2026-10-31-system-doors-phasemap.spec gives them one). "0 of 13 boot from
+# lib/system.js" stays true but is no longer a gap against his rule; the boot core is the coder's suggestion, to confirm (DO_D2).

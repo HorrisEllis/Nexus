@@ -12,8 +12,8 @@ status: "MAPPED 2026-10-31. Nothing built by this map."
 
 census: >-
   2026-10-31, main 0.60.320: 1,876 code files in 14 systems; 233 (12%) owned by a spec module, 1,028 (55%) named in a phase, 203 (11%)
-  both, 818 (44%) neither. 2,239 .phase files from 207 maps; 460 .spec files. No system boots from the skeleton's core
-  (cos/archetype/nexus-system/lib/system.js). Per-system missing skeleton slots in idearium/spec/spec-library.spec's census.
+  both, 818 (44%) neither. 2,239 .phase files from 207 maps; 460 .spec files. Seven systems have a server.js (copilot, diagnostic,
+  guardian, intelligence, loom, ollama, versionium); six have no origin yet (idearium, clear-glass, cortex, architect, orchestrator, cos). Per-system missing skeleton slots in idearium/spec/spec-library.spec's census.
 
 decisions:
   SE_D0_phased_only:
@@ -23,8 +23,16 @@ decisions:
     chosen: "every spec and module has an id and a type (<type>:<system>:<slug>, legacy names kept as aliases); docs/SPEC-REGISTRY.spec becomes the library; one queue of what waits"
     by: "his, 2026-10-31: \"like what if we use spec ids and types, then have a queue/library for specs.\" The grammar, the ten types and building on SPEC-REGISTRY.spec (§8.6, §10.3) are the coder's — to confirm."
   SE_D2_the_origin_is_the_skeleton:
-    chosen: "the origin every piece traces to is the system skeleton: config → lib/system.js → server.js and cli.js → components → UI (genesis.spec 1.5.0, cos/archetype/nexus-system)"
+    superseded_by: SE_D3_the_origin_is_server_js
+    chosen: "SUPERSEDED 2026-10-31 (the coder's reading, corrected by him; kept, §0.3): the origin every piece traces to is the system skeleton: config → lib/system.js → server.js and cli.js → components → UI (genesis.spec 1.5.0, cos/archetype/nexus-system)"
     by: "his \"like it all builds from the origin as a foundation/core like the system.js, which needs the config\"; the reading that his system.js is the skeleton's lib/system.js is the coder's — to confirm"
+
+  SE_D3_the_origin_is_server_js:
+    chosen: >-
+      the origin every piece traces to is its system's server.js, which needs the config: config → server.js → the registry → components →
+      UI. A file traces to its origin when its system's server.js reaches it (the require graph from the door, or a registry component the
+      door mounts). A system with no server.js has no origin yet; the door phases (docs/2026-10-31-system-doors-phasemap.spec) give it one.
+    by: "his, 2026-10-31, correcting SE_D2: \"system.js i meant server.js\" (the coder had read his \"like the system.js, which needs the config\" as the skeleton's lib/system.js)"
 
 phases:
   SE1_spec_ids_and_types:
@@ -37,7 +45,7 @@ phases:
     proof: "over the tree: one id each, none twice"
   SE2_the_origin_trace:
     status: OPEN
-    depends_on: [SE1_spec_ids_and_types, SE_D2_the_origin_is_the_skeleton]
+    depends_on: [SE1_spec_ids_and_types, SE_D3_the_origin_is_server_js]
     files: [scripts/origin-trace.js, scripts/systems-report.js, tests/modules/test-origin-trace.test.js]
     spec: idearium/spec/spec-library.spec
     blocks: [MOD-SL-TRACE]

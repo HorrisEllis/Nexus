@@ -7,11 +7,11 @@ intent: null
 summary: DO2a_architect_boots_from_the_core (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1793419906983
+exported_at: 1793420909567
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793419906983
-lastSeenAt: 1793419906983
+firstSeenAt: 1793420909567
+lastSeenAt: 1793420909567
 fingerprint: null
 payload:
   id: DO2a_architect_boots_from_the_core
@@ -28,8 +28,8 @@ payload:
     - architect/lib/listener.js
     - architect/config.js
   depends_on:
-    - SE_D2_the_origin_is_the_skeleton
+    - DO_D2_a_boot_core_under_server_js
   blocks:
     - MOD-DOOR-CORE
   spec: docs/system-doors.spec
-  graph: 0c884d982cd14c31
+  graph: c7f341d88aaeade3

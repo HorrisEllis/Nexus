@@ -22,9 +22,9 @@ spec:
       types, then have a queue/library for specs." The ideas (ids and types, the library and the queue, phased only, tracing to the origin)
       are his; the census, the module cut and the reuse of what exists are the coder's.
     purpose: >-
-      One answer, for any file, capability or change: where it comes from. The origin is the system skeleton (cos/archetype/nexus-system,
-      genesis.spec 1.5.0: server, cli, config, compartment, registry, contract, event taxonomy, schemas, spec); each file fills a slot of
-      it or is a component under it; each component is owned by a spec module with an id and a type; each module is built by a phase.
+      One answer, for any file, capability or change: where it comes from. The origin is the system's server.js, which needs the config
+      (his, 2026-10-31: "system.js i meant server.js"): config → server.js → the registry → components → UI, the skeleton's shape (genesis
+      1.5.0, cos/archetype/nexus-system); each file is reached from its system's server.js or fills a slot beside it; each component is owned by a spec module with an id and a type; each module is built by a phase.
       Specs live in one library (the spec registry, made a library with ids and types) and work waits in one queue (what is drafted,
       specced, phased, built, verified). Nothing new, no change, fix or addition, is built outside a phase.
     target_runtime: [node]
@@ -40,7 +40,7 @@ spec:
       server.js, cli.js and event-taxonomy.js; clear-glass lacks server.js, cli.js, config.js and event-taxonomy.js; cortex lacks server.js
       and cli.js; architect lacks server.js, cli.js, compartment.json and event-taxonomy.js; orchestrator and cos lack server.js, cli.js,
       config.js, compartment.json, registry-components.js and schemas/index.js; ollama and loom lack cli.js and event-taxonomy.js; versionium
-      and intelligence lack cli.js. No system has the skeleton's boot core (cos/archetype/nexus-system/lib/system.js: config → schemas → store → ledger and bus → node index → listener → heartbeat, which server.js and cli.js start from): every system was built before the archetype. docs/SPEC-REGISTRY.spec is the existing list of specs (§6.3); lib/phase-files.js reads phases;
+      and intelligence lack cli.js. Six systems have no server.js, so no origin to trace to (idearium, clear-glass, cortex, architect, orchestrator, cos). docs/SPEC-REGISTRY.spec is the existing list of specs (§6.3); lib/phase-files.js reads phases;
       lib/emerge/compiler/phase-specs.js writes .phase and .graph files; scripts/systems-report.js measures spec ownership; lib/code-intel
       reads a file's declarations.
 
@@ -105,6 +105,7 @@ spec:
       fields:
         file:      "string"
         system:    "string"
+        fromServer: "boolean | null — reached from its system's server.js (null: the system has no server.js, no origin yet)"
         slot:      "string | null — the skeleton slot it fills (server.js, config, registry …), or null for a component"
         module:    "SpecId | null"
         phases:    "string[] — the phases that name it"
@@ -193,8 +194,9 @@ spec:
       path: scripts/origin-trace.js
       phase: SE2_the_origin_trace
       description: >-
-        Each code file's line to its origin: the skeleton slot it fills (from the archetype), the spec module whose path names it, the phases
-        whose files name it, its Loom component and wires; per system, the skeleton slots it lacks. Built on systems-report's readers (it
+        Each code file's line to its origin: whether its system's server.js reaches it (the require graph walked from the door, and the
+        registry components the door mounts), the skeleton slot it fills, the spec module whose path names it, the phases whose files name
+        it, its Loom component and wires; per system, whether it has a server.js at all and the skeleton slots it lacks. Built on systems-report's readers (it
         becomes their one implementation, not a second one), written as the per-system document and as JSON for the queue.
       deps: [{ name: systems-report }, { name: system-archetype }, { name: phase-files }, { name: spec-ids-and-types }]
       schema_refs: [OriginTrace]
