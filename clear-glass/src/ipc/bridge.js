@@ -2405,11 +2405,15 @@ class IpcBridge {
     const done = [], missed = [];
     for (const t of tags) {
       let shown = false;
+      // 0.60.320 — a tag typed twice (FO-02, 1 run in ~10): the chip was read once, at once, after Enter; a page that draws it a moment later
+      // read "not shown" and the tag was typed again. Now the chip is waited for (the gate's settle), and read again just before a retype:
+      // a tag already shown is never typed a second time.
+      const chip = async () => { const g = await this.driver.exec({ agentId, action: 'eval', code: GP.tagShownScript(t), by: 'person' }); const ok = !!(g && g.result); return { open: ok, saw: ok ? 'shown' : 'not shown' }; };
       for (let attempt = 0; attempt < 2 && !shown; attempt++) {
+        if (attempt > 0 && (await chip()).open) { shown = true; break; }
         await this.driver.exec({ agentId, action: 'type', selector, text: String(t), clearFirst: attempt > 0, by: 'person' });
         await this.driver.exec({ agentId, action: 'pressKey', key: 'Enter', by: 'person' });
-        const g = await this.driver.exec({ agentId, action: 'eval', code: GP.tagShownScript(t), by: 'person' });
-        shown = !!(g && g.result);
+        shown = (await gigGate(chip, { timeoutMs: 2500, settleMs: 300, every: 150 })).open;
       }
       (shown ? done : missed).push(t);
     }
@@ -2448,6 +2452,72 @@ class IpcBridge {
       const known = /^(packages|price|delivery time|revisions?|total|description|name)$/i;
       out.unlisted = (rl.labels || []).filter(l => !named.has(l.toLowerCase()) && !known.test(l));
     } catch (err) { out.rowsWhy = err.message; }
+    return out;
+  }
+
+  // 2026-10-30 GT6 — James: "then the bullets for each tab for each catagory." The gig's metadata, { <tab>: [values] }, tab by tab: the tab
+  // opened with the pointer (GATE-GT6-001: its panel's choices present and holding still), each value ticked or picked on its label within
+  // the tab's limit (GATE-GT6-002: the counter's "/ N", "up to N", or 1 for radio buttons), each read back (GATE-GT6-003). A value the tab
+  // does not offer is said with the tab's own list; past the limit the first N are kept and the rest said; a required tab (*) with nothing
+  // chosen is said before the fill ends. Nothing is unticked that he did not name. → { filled, failed, over, left, tabs }
+  async _gigMetadata(agentId, gig) {
+    const GF = require('../autofill/gig-fields'), OM = require('../page/option-match');
+    const out = { filled: [], failed: [], over: [], left: [], gates: [] };
+    const ev = async (code) => { const x = await this.driver.exec({ agentId, action: 'eval', code, by: 'person' }); return (x && x.result) || {}; };
+    const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+    const panel = async () => {   // read until the same choices twice (a tab's panel renders after the click), at most 4 s
+      let last = null; const until = Date.now() + 4000;
+      for (;;) { const p = await ev(GF.metaPanelScript()); const sig = JSON.stringify((p.options || []).map(o => o.label));
+        if (p.found && p.options && p.options.length && last === sig) return p; last = sig; if (Date.now() > until) return p; await sleep(250); }
+    };
+    const meta = gig && gig.metadata && typeof gig.metadata === 'object' ? gig.metadata : {};
+    let T = await ev(GF.metaTabsScript());
+    if (!T.found) { if (Object.keys(meta).length) out.failed.push({ tab: null, why: T.why || 'no Gig metadata on the page' }); return out; }
+    out.tabs = T.tabs.map(t => t.name);
+    const done = new Set();
+    for (const [tabName, raw] of Object.entries(meta)) {
+      const values = (Array.isArray(raw) ? raw : [raw]).map(v => String(v).trim()).filter(Boolean);
+      if (!values.length) continue;
+      T = await ev(GF.metaTabsScript());   // marked again: the page may have re-rendered since the last tab
+      const tm = OM.matchOption((T.tabs || []).map(t => t.name), tabName);
+      if (!tm.ok) { out.failed.push({ tab: tabName, why: `no tab "${tabName}" in Gig metadata — the tabs: ${(T.tabs || []).map(t => t.name).join(' | ')}` }); continue; }
+      const ti = T.tabs.findIndex(t => t.name === tm.option); done.add(tm.option);
+      try {
+        await this.driver.exec({ agentId, action: 'pointer', selector: `[data-cg-meta-tab="${ti}"]`, do: 'click', by: 'person' });
+        let p = await panel();
+        if (!p.found || !(p.options || []).length) throw new Error(`the tab "${tm.option}" opened no choices`);
+        out.gates.push({ key: `metadata.${tm.option}`, open: true, saw: `${p.options.length} choices${p.counter ? `, ${p.counter}` : ''}` });
+        const labels = p.options.map(o => o.label);
+        for (const v of values) {
+          const m = OM.matchOption(labels, v);
+          if (!m.ok) { out.failed.push({ tab: tm.option, value: v, why: `"${v}" is not offered — the tab's own list: ${labels.join(' | ')}` }); continue; }
+          p = await ev(GF.metaPanelScript());
+          let j = (p.options || []).findIndex(o => o.label === m.option);
+          if (j < 0) { out.failed.push({ tab: tm.option, value: v, why: `"${m.option}" went from the tab before it could be ticked` }); continue; }
+          if (p.options[j].checked) { out.filled.push({ tab: tm.option, value: m.option, changed: false }); continue; }
+          if (p.kind !== 'radio' && p.limit != null && p.count >= p.limit) { out.over.push({ tab: tm.option, value: m.option, why: `the tab takes ${p.limit} and has ${p.count}` }); continue; }
+          let g = null;
+          for (let t = 0; t < 2 && !(g && g.open); t++) {
+            await this.driver.exec({ agentId, action: 'pointer', selector: `[data-cg-meta-opt="${j}"]`, do: 'click', by: 'person' });
+            g = await gigGate(async () => { const q = await ev(GF.metaPanelScript()); const o = (q.options || []).find(x => x.label === m.option);
+              return { open: !!(o && o.checked), saw: o ? (o.checked ? `"${m.option}" ticked${q.counter ? `, ${q.counter}` : ''}` : `"${m.option}" clear`) : `"${m.option}" gone` }; });
+            if (!g.open) { const q = await ev(GF.metaPanelScript()); const k = (q.options || []).findIndex(o => o.label === m.option); if (k >= 0) p = q, j = k; }
+          }
+          out.gates.push({ key: `metadata.${tm.option}.${m.option}`, open: g.open, saw: g.saw });
+          if (g.open) out.filled.push({ tab: tm.option, value: m.option, changed: true }); else out.failed.push({ tab: tm.option, value: m.option, why: `its gate stayed closed: ${g.saw}` });
+        }
+        const last = await ev(GF.metaPanelScript()); if (last.counter) out.filled.filter(f => f.tab === tm.option).forEach(f => { f.counter = last.counter; });
+      } catch (err) { out.failed.push({ tab: tm.option, why: err.message }); }
+    }
+    // a required tab (*) the gig names nothing for: opened and read; nothing chosen there is said, never filled for him
+    // (the tabs are marked again before each click: a click re-renders the tab list, and a mark is a hint, never the only way — GT4)
+    for (const t of (T.tabs || []).slice()) {
+      if (!t.required || done.has(t.name)) continue;
+      try { const now = await ev(GF.metaTabsScript()); const i = (now.tabs || []).findIndex(x => x.name === t.name); if (i < 0) throw new Error('the tab went from the page');
+        await this.driver.exec({ agentId, action: 'pointer', selector: `[data-cg-meta-tab="${i}"]`, do: 'click', by: 'person' });
+        const p = await panel(); if (!(p.options || []).some(o => o.checked)) out.left.push({ tab: t.name, why: `required (*), and your gig names nothing for it — the tab's list: ${(p.options || []).map(o => o.label).join(' | ')}` });
+      } catch (err) { out.left.push({ tab: t.name, why: `required (*); could not be read: ${err.message}` }); }
+    }
     return out;
   }
 
@@ -2777,6 +2847,8 @@ class IpcBridge {
     // is chosen in that tier's column and row (the gated choose, read back), yes/no ticks or clears that row's checkbox (checkAt, read back).
     // The page's rows the gig has no value for are listed (r.features.unlisted), so he can add them to the gig.
     if (where.page === 'pricing' && this.driver) r.features = await this._gigFeatures(agentId, gig, want);
+    // GT6 — the metadata bullets, after the category and service type held (the tabs belong to the subcategory chosen)
+    if (where.page === 'overview' && this.driver && wants('metadata') && typeof this._gigMetadata === 'function' && (gig.metadata && Object.keys(gig.metadata).length || /gig metadata/i.test(String((read && read.text) || '')))) r.metadata = await this._gigMetadata(agentId, gig);
     // 0.60.224 — his recorded choices for this page (Service type, the metadata boxes, the pricing rows …) replayed after the fill, as him
     if (where.page && this.macroTool && replay !== false) {
       let has = null; try { has = await this.macroTool.execute({ action: 'get', name: GP.macroName(where.page) }); } catch (_) {}

@@ -546,9 +546,9 @@ phases_gt4:
   GT6_gig_metadata_bullets_per_tab:
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-GT6]
-    status: OPEN
+    status: BUILT 0.60.320
     depends_on: [GT5_service_type]
-    files: [clear-glass/src/autofill/gig-fields.js, clear-glass/src/autofill/gig.js, clear-glass/src/ipc/bridge.js]
+    files: [clear-glass/src/autofill/gig-fields.js, clear-glass/src/autofill/gig.js, clear-glass/src/autofill/gig-menu.js, clear-glass/src/ipc/bridge.js, tests/modules/test-gig-metadata-glass.test.js]
 
 ## ADDENDUM 2026-10-30 (c) — GT1 and GT4 built (0.60.318)
 James, 2026-10-30: "yes fix it. lets get this working already". GT1 then GT4, in DAG order. Built as specced, with two differences, both said:
@@ -568,3 +568,15 @@ James, 2026-10-30: "then we need the services". Built as MOD-GT5 says, with what
   this fill just chose the subcategory (§1.2: said, never guessed; never silent).
 - The chip menu (gig-menu) offers it as a text row (Fiverr's service types differ per subcategory, and no list of them is kept in code).
 Proof: tests/modules/test-service-type-glass.test.js 5/5 (dropdown, radio, refused with the page's options, left and said).
+
+## ADDENDUM 2026-10-30 (e) — GT6 built (0.60.320)
+James, 2026-10-30: "then the bullets for each tab for each catagory." Built as MOD-GT6 says; what the spec left open, decided by his axioms:
+- The metadata is filled after the category and the service type (the tabs belong to the subcategory chosen), as the pricing page's package
+  rows are (bridge _gigFeatures): one method, _gigMetadata, called from _gigFill on the Overview, not a PARTS entry (§8.6, the shape that
+  exists).
+- Tabs and choices are found under the words "Gig metadata", never by a class name (§16.3). Tabs are marked again before every click: a click
+  re-renders the tab list (the GT4 lesson; MD-05 caught it).
+- Nothing is unticked that he did not name (USER_AUTONOMY): a tab already holding others keeps them, and the limit counts them.
+- "per category": a gig has one category, so its metadata is the gig file's own { TAB: [values] }; a value the tab does not offer is said
+  with the tab's list, so a gig written for another category says where it differs.
+Proof: tests/modules/test-gig-metadata-glass.test.js 6/6, including his acceptance (JavaScript, three frontend frameworks, 3 / 5).

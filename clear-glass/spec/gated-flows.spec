@@ -764,3 +764,10 @@ spec:
 # 'dropdown'|'radio', shown, options, checked, marked } (marks data-cg-service / data-cg-service-opt). gig.js parseGig keeps serviceType
 # (or service_type); gigParts and the template carry it; gig-menu offers it and apply() edits it. bridge.js _gigFill: the serviceType part
 # (choice gate), and "left for you" when the gig has none. Acceptance met: tests/modules/test-service-type-glass.test.js ST-01..05.
+
+# ── ADDENDUM 2026-10-30 (0.60.320) — MOD-GT6 built ────────────────────────────────────────────────────────────────────────────────────
+# gig-fields.js: metaTabsScript() → { found, tabs: [{ name, required, open }] } (marks data-cg-meta-tab); metaPanelScript() → { found, kind,
+# options: [{ label, checked }], limit, count, counter } (marks data-cg-meta-opt). gig.js parseGig keeps metadata { TAB: [values] } (a lone
+# value, a "*" in the name read as the name); gigParts, the template, gig-menu (one row "TAB: a, b; TAB: c") and apply() carry it. bridge.js
+# _gigMetadata(agentId, gig) → { filled, failed, over, left, gates, tabs }, from _gigFill on the Overview as r.metadata.
+# Acceptance met: tests/modules/test-gig-metadata-glass.test.js MD-01..06.

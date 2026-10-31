@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793411674117
+exported_at: 1793412846506
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793411674117
-lastSeenAt: 1793411674117
+firstSeenAt: 1793412846506
+lastSeenAt: 1793412846506
 fingerprint: null
 payload:
   for: GT2_the_fill_includes_and_reports_dropdowns
@@ -216,10 +216,6 @@ payload:
         files:
           - clear-glass/src/autofill/gig.js
           - clear-glass/src/ipc/bridge.js
-      - with: docs/2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
-        files:
-          - clear-glass/src/ipc/bridge.js
-          - clear-glass/src/autofill/gig.js
     dangling: []
     lines:
       - layer 13 · ready
@@ -231,9 +227,6 @@ payload:
       - >-
         same files as FG5_fiverr_gig_flow with no order between them:
         clear-glass/src/autofill/gig.js, clear-glass/src/ipc/bridge.js
-      - >-
-        same files as GT6_gig_metadata_bullets_per_tab with no order between them:
-        clear-glass/src/ipc/bridge.js, clear-glass/src/autofill/gig.js
     edges:
       - from: docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
         kind: declared
