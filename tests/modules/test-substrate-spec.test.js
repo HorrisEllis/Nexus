@@ -59,6 +59,7 @@ const SPECS = [
   { spec: 'guardian/spec/guardian-nodes.spec', map: 'docs/2026-10-31-guardian-nodes-phasemap.spec' },   // 2026-10-31 GND — his "make sure all the nodes, are actual files"
   { spec: 'diagnostic/spec/diagnostic-schemas.spec', map: 'docs/2026-10-31-diagnostic-schemas-phasemap.spec' },   // 2026-10-31 DSC — his "all the schemas for the diagnostic system"
   { spec: 'intelligence/spec/causal-interconnect.spec', map: 'docs/2026-10-31-causal-interconnect-phasemap.spec' },   // 2026-10-31 CI — his "the intelligence system, rfr2 and cfr need to be interconnected"
+  { spec: 'idearium/spec/agent-control.spec', map: 'docs/2026-10-31-agent-control-phasemap.spec' },   // 2026-10-31 AC — his agents' control panel, phase folders, page agents, skip buttons
 ];
 
 console.log('\ntest-substrate-spec — full specs compile at full depth and stay tied to their phases');

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-agent-control-phasemap.spec::AC4_each_phase_its_folder
+type: phase
+id: docs_2026-10-31-agent-control-phasemap.spec::AC4_each_phase_its_folder
+context: pipeline phase AC4_each_phase_its_folder of docs/2026-10-31-agent-control-phasemap.spec
+intent: null
+summary: AC4_each_phase_its_folder (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793444632897
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793444632897
+lastSeenAt: 1793444632897
+fingerprint: null
+payload:
+  id: AC4_each_phase_its_folder
+  map: docs/2026-10-31-agent-control-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/phase-target.js
+    - tests/modules/test-phase-target.test.js
+  depends_on:
+    - AC_D0_control_and_fewer_round_trips
+  blocks:
+    - MOD-AC-TARGET
+  spec: idearium/spec/agent-control.spec
+  graph: 1546d04e4f717ac2

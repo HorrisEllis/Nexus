@@ -1948,3 +1948,9 @@ spec:
 #   loom/spec/loom.node-taxonomy.md → loom/spec/loom.node-taxonomy.spec
 #   ollama/spec/ollama.node-taxonomy.md → ollama/spec/ollama.node-taxonomy.spec
 #   versionium/spec/versionium.node-taxonomy.md → versionium/spec/versionium.node-taxonomy.spec
+
+# ADDENDUM 2026-10-31 (0.60.334) — registered: idearium/spec/agent-control.spec + docs/2026-10-31-agent-control-phasemap.spec (AC1–AC7).
+# James: "can we have a full control panel for the agents intents, and everything they touch in idearium? in the repos specific setting." ·
+# "each phase is a pretermined folder/location of the target directory" · "change the agemnts for the spacial void and spec workshop" ·
+# "spacial void needs to be better, maybe use my framework" · "skip buttons which will autofill generic/default values". AC_D1 (his
+# framework = the Innovation Toolkit) to confirm. The Code tab and Ideas+Notes are docs/2026-10-19-idearium-control-phasemap.spec (open).

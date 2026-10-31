@@ -1,0 +1,64 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC7_skip_buttons:3861c74d0da31f1e
+type: graph
+id: phase:AC7_skip_buttons:3861c74d0da31f1e
+context: dependency graph of phase AC7_skip_buttons
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793444632903
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793444632903
+lastSeenAt: 1793444632903
+fingerprint: null
+payload:
+  for: AC7_skip_buttons
+  kind: phase
+  repo: null
+  hash: 3861c74d0da31f1e
+  nodes:
+    - path: idearium/lib/step-defaults.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/ui/js/workshop.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/void.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/test-step-defaults.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-31-agent-control-phasemap.spec::AC_D0_control_and_fewer_round_trips
+    dependents: []
+    upstream:
+      - docs/2026-10-31-agent-control-phasemap.spec::AC_D0_control_and_fewer_round_trips
+    downstream: []
+    blockedBy:
+      - docs/2026-10-31-agent-control-phasemap.spec::AC_D0_control_and_fewer_round_trips
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-31-agent-control-phasemap.spec::AC6_the_void_on_his_toolkit
+        files:
+          - idearium/ui/void.html
+    dangling: []
+    lines:
+      - layer 1 · blocked by AC_D0_control_and_fewer_round_trips
+      - 'depends on (1): AC_D0_control_and_fewer_round_trips'
+      - 'needed by (0): —'
+      - 'same files as AC6_the_void_on_his_toolkit with no order between them: idearium/ui/void.html'
+    edges:
+      - from: docs/2026-10-31-agent-control-phasemap.spec::AC_D0_control_and_fewer_round_trips
+        kind: declared

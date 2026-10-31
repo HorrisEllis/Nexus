@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC4_each_phase_its_folder:1546d04e4f717ac2
+type: graph
+id: phase:AC4_each_phase_its_folder:1546d04e4f717ac2
+context: dependency graph of phase AC4_each_phase_its_folder
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793444632897
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793444632897
+lastSeenAt: 1793444632897
+fingerprint: null
+payload:
+  for: AC4_each_phase_its_folder
+  kind: phase
+  repo: null
+  hash: 1546d04e4f717ac2
+  nodes:
+    - path: lib/phase-target.js
+      role: changes
+      exists: false
+      system: lib
+    - path: tests/modules/test-phase-target.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-31-agent-control-phasemap.spec::AC_D0_control_and_fewer_round_trips
+    dependents: []
+    upstream:
+      - docs/2026-10-31-agent-control-phasemap.spec::AC_D0_control_and_fewer_round_trips
+    downstream: []
+    blockedBy:
+      - docs/2026-10-31-agent-control-phasemap.spec::AC_D0_control_and_fewer_round_trips
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by AC_D0_control_and_fewer_round_trips
+      - 'depends on (1): AC_D0_control_and_fewer_round_trips'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-31-agent-control-phasemap.spec::AC_D0_control_and_fewer_round_trips
+        kind: declared

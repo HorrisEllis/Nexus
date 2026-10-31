@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-agent-control-phasemap.spec::AC3_the_panel
+type: phase
+id: docs_2026-10-31-agent-control-phasemap.spec::AC3_the_panel
+context: pipeline phase AC3_the_panel of docs/2026-10-31-agent-control-phasemap.spec
+intent: null
+summary: AC3_the_panel (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793444632895
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793444632895
+lastSeenAt: 1793444632895
+fingerprint: null
+payload:
+  id: AC3_the_panel
+  map: docs/2026-10-31-agent-control-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/agent-control.js
+    - idearium/ui/js/repo-settings.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - AC2_the_controls
+  blocks:
+    - MOD-AC-PANEL
+  spec: idearium/spec/agent-control.spec
+  graph: 30b1e55545a0c171

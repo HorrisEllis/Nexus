@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-agent-control-phasemap.spec::AC6_the_void_on_his_toolkit
+type: phase
+id: docs_2026-10-31-agent-control-phasemap.spec::AC6_the_void_on_his_toolkit
+context: pipeline phase AC6_the_void_on_his_toolkit of docs/2026-10-31-agent-control-phasemap.spec
+intent: null
+summary: AC6_the_void_on_his_toolkit (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793444632901
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793444632901
+lastSeenAt: 1793444632901
+fingerprint: null
+payload:
+  id: AC6_the_void_on_his_toolkit
+  map: docs/2026-10-31-agent-control-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/void-toolkit.js
+    - idearium/ui/void.html
+    - tests/modules/test-void-toolkit.test.js
+  depends_on:
+    - AC5_his_agents_for_the_void_and_the_workshop
+    - AC_D1_my_framework_is_the_toolkit
+  blocks:
+    - MOD-AC-VOID-TOOLKIT
+  spec: idearium/spec/agent-control.spec
+  graph: 9bd55b602075890f

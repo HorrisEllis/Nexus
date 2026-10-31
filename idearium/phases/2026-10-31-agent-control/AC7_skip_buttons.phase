@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-agent-control-phasemap.spec::AC7_skip_buttons
+type: phase
+id: docs_2026-10-31-agent-control-phasemap.spec::AC7_skip_buttons
+context: pipeline phase AC7_skip_buttons of docs/2026-10-31-agent-control-phasemap.spec
+intent: null
+summary: AC7_skip_buttons (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793444632903
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793444632903
+lastSeenAt: 1793444632903
+fingerprint: null
+payload:
+  id: AC7_skip_buttons
+  map: docs/2026-10-31-agent-control-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/step-defaults.js
+    - idearium/ui/js/workshop.js
+    - idearium/ui/void.html
+    - tests/modules/test-step-defaults.test.js
+  depends_on:
+    - AC_D0_control_and_fewer_round_trips
+  blocks:
+    - MOD-AC-SKIP
+  spec: idearium/spec/agent-control.spec
+  graph: 3861c74d0da31f1e

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-agent-control-phasemap.spec::AC1_intents_and_what_they_touched
+type: phase
+id: docs_2026-10-31-agent-control-phasemap.spec::AC1_intents_and_what_they_touched
+context: pipeline phase AC1_intents_and_what_they_touched of docs/2026-10-31-agent-control-phasemap.spec
+intent: null
+summary: AC1_intents_and_what_they_touched (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793444632889
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793444632889
+lastSeenAt: 1793444632889
+fingerprint: null
+payload:
+  id: AC1_intents_and_what_they_touched
+  map: docs/2026-10-31-agent-control-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/agent-control.js
+    - idearium/api/index.js
+    - tests/modules/test-agent-control.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - AC_D0_control_and_fewer_round_trips
+  blocks:
+    - MOD-AC-INTENTS
+  spec: idearium/spec/agent-control.spec
+  graph: f478e1cf9880d2d4
