@@ -1288,3 +1288,8 @@ spec:
 # launcher stays in the foreground by default (its export "exit 0" becomes --detach's), it refuses to start beside an old autopilot on the
 # port, and --legacy-supervisor runs the archived body (lib/nexus/autopilot.retired-0.60.330.js). New: MOD-MG-CORE-DUTIES, the duties the
 # first version of this module did not name. The manager server takes --only and --handover=<version> (a 'handover' ledger line).
+
+# ── ADDENDUM 2026-10-31 (0.60.331) — MOD-MG-DECLARE: the files are the systems' own (MG17b) ──────────────────────────────────────
+# Its contract "derived, never hand-written, until MG17 hands over; then each file is its system's own" is now true: system-registry
+# kernels() reads the declarations, and the generator keeps a declared process. test-compartment-declarations CD-05: a hand change shows in
+# kernels() and in COS's supervisor alike. CD-01/02 now compare the declarations with frozenKernels() (the archive at the handover).

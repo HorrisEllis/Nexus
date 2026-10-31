@@ -8,6 +8,10 @@ require('../../lib/test-sandbox.js').ensure();
  *   CD-02  each declaration equals its kernel, field for field ({{root}} filled; Electron by autopilot's own lookup)
  *   CD-03  nothing of one machine in a committed file: no absolute path
  *   CD-04  an older compartment.json keeps its own fields (diagnostic's archetype file); the generator is stable (a second sync changes nothing)
+ *   CD-05  0.60.331 MG17b — the files are the systems' own: a hand change to one compartment.json shows in system-registry kernels() and in
+ *          COS's supervisor alike, and the generator keeps it
+ * Since MG17b kernels() reads these declarations, so CD-01/02 compare them with the list autopilot held, archived at the handover
+ * (frozenKernels): the move changed nothing.
  */
 const assert = require('assert');
 const fs = require('fs');
@@ -18,7 +22,7 @@ const R = require(path.join(ROOT, 'lib', 'system-registry.js'));
 let passed = 0, failed = 0;
 function test(id, d, fn) { try { fn(); console.log(`  ✓ ${id} ${d}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${d}\n    ${e.message}`); failed++; } }
 
-const kernels = R.kernels(), decl = C.declarations(ROOT);
+const kernels = R.frozenKernels(), decl = C.declarations(ROOT);
 test('CD-01', `every autopilot process is declared by its own system (${kernels.length})`, () => {
   assert.deepStrictEqual(decl.map(d => d.name).sort(), kernels.map(k => k.name).sort());
   for (const d of decl) { const k = kernels.find(x => x.name === d.name); assert.strictEqual(d.system, C.systemOfKernel(k), d.name); }
@@ -46,6 +50,24 @@ test('CD-04', "an older file keeps its fields; a second build changes nothing", 
     const a = JSON.parse(fs.readFileSync(path.join(ROOT, s.dir, 'compartment.json'), 'utf8')).runtime, b = M[s.id].runtime;
     assert.deepStrictEqual(b.process, a.process, `${s.id} process stable`); assert.deepStrictEqual(b.processes, a.processes, `${s.id} processes stable`);
   }
+});
+test('CD-05', 'a hand change to one compartment.json shows in kernels() and in COS\'s supervisor, and the generator keeps it', () => {
+  const os = require('os'); const fx = fs.mkdtempSync(path.join(os.tmpdir(), 'mg17b-'));
+  try {
+    fs.mkdirSync(path.join(fx, 'svc'));
+    const proc = { name: 'svc', cmd: 'node', args: ['{{root}}/svc/a.js'], phase: 2, healthUrl: 'http://127.0.0.1:1/health' };
+    const write = (p) => fs.writeFileSync(path.join(fx, 'svc', 'compartment.json'), JSON.stringify({ name: 'svc', runtime: { process: p } }));
+    write(proc);
+    const { readDeclarations } = require(path.join(ROOT, 'cos', 'manager', 'supervisor.js'));
+    assert.strictEqual(R.kernels({ root: fx })[0].phase, 2); assert.strictEqual(readDeclarations(fx)[0].phase, 2);
+    write({ ...proc, phase: 3, critical: true });   // his edit, by hand
+    const k = R.kernels({ root: fx })[0], d = readDeclarations(fx)[0];
+    assert.deepStrictEqual([k.phase, k.critical, d.phase, d.critical], [3, true, 3, true]);
+    assert.strictEqual(k.args[0], path.join(fx, 'svc', 'a.js').split(path.sep).join('/').replace(/^([A-Za-z]:)/, '$1'), '{{root}} filled');
+    assert.ok(!('system' in k), 'the kernel shape: no system field');
+  } finally { fs.rmSync(fx, { recursive: true, force: true }); }
+  const M = C.build(); const real = JSON.parse(fs.readFileSync(path.join(ROOT, 'cortex', 'compartment.json'), 'utf8'));
+  assert.deepStrictEqual(M.cortex.runtime.process, real.runtime.process, 'the generator keeps a declared process as written');
 });
 console.log(`\n  ${passed} passed, ${failed} failed\n`);
 process.exit(failed ? 1 : 0);

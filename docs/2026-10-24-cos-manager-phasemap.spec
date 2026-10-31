@@ -403,7 +403,7 @@ phases:
     does: "MG17 above, with MG_D15: the launcher, core's duties beside it, the body archived, COS's runtime knowing which supervisor a release has"
     proof: "a fixture tree boots through the launcher with COS's manager as the only supervisor (ports and pids); an old autopilot holding :7799 is refused; the duties follow COS's ledger; an old release still starts in COS"
   MG17b_registry_reads_the_declarations:
-    status: OPEN
+    status: BUILT 0.60.331
     depends_on: [MG17_autopilot_hands_over]
     files: [lib/system-registry.js, lib/cli/compartments.js, tests/modules/test-compartment-declarations.test.js, tests/modules/test-system-registry.js]
     spec: cos/spec/cos-manager.spec
@@ -678,3 +678,11 @@ decisions_d14:
 # the archive and the launcher. Not this phase's, and said: the boundary ratchet was already red at 0.60.329 with MG16's two door edges
 # (cos/manager/autopilot-door.js → cortex/memory/jaa-db.js, → intelligence/cfr/field.js), the legacy /tables and /files reads; MG17 adds none.
 # The UI for it is MG18 (the supervisor screen); until then the door keeps every screen that reads :7799.
+
+# ── ADDENDUM 2026-10-31 — MG17b built (0.60.331) ─────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-10-31: "next." (after MG17). lib/system-registry.js kernels() reads each system's compartment.json (runtime.process,
+# runtime.processes) through lib/cli/compartments.js declarations(), in autopilot's kernel shape; with no declarations it falls back to the
+# archive, said. frozenKernels() is the archive's list. lib/cli/compartments.js build() keeps a declared process as written and generates
+# one only for a system with none. Measured: kernels() equals the archive's list field for field, 13 of 13, so the move changed nothing.
+# Decided by his axioms: §5.15 rule 2 (each system declares its own runtime), §10.3 (one list: what COS boots is what the registry says),
+# §0.3 (the archive kept as the fallback and the proof).

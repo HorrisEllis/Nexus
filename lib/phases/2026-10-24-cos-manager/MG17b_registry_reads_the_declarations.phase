@@ -7,18 +7,18 @@ intent: null
 summary: MG17b_registry_reads_the_declarations (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793426750318
+exported_at: 1793429469746
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793426750318
-lastSeenAt: 1793426750318
+firstSeenAt: 1793429469746
+lastSeenAt: 1793429469746
 fingerprint: null
 payload:
   id: MG17b_registry_reads_the_declarations
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: BUILT 0.60.331
   files:
     - lib/system-registry.js
     - lib/cli/compartments.js

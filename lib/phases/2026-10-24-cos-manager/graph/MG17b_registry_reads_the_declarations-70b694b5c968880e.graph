@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793426750318
+exported_at: 1793429469746
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793426750318
-lastSeenAt: 1793426750318
+firstSeenAt: 1793429469746
+lastSeenAt: 1793429469746
 fingerprint: null
 payload:
   for: MG17b_registry_reads_the_declarations
@@ -142,7 +142,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 6 · ready
+      - layer 6
       - 'depends on (1): MG17_autopilot_hands_over · all upstream 8'
       - 'needed by (0): —'
     edges:
