@@ -7,11 +7,11 @@ intent: null
 summary: MG20_add_deploy_connect (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793376294605
+exported_at: 1793423729758
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793376294605
-lastSeenAt: 1793376294605
+firstSeenAt: 1793423729758
+lastSeenAt: 1793423729758
 fingerprint: null
 payload:
   id: MG20_add_deploy_connect
@@ -32,4 +32,4 @@ payload:
   blocks:
     - MOD-MG-INTAKE
   spec: cos/spec/cos-manager.spec
-  graph: 5acb3d96414f1f83
+  graph: a22ee2c3d8698286

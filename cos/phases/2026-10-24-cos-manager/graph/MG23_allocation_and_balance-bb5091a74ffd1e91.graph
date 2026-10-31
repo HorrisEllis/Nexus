@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421772882
+exported_at: 1793423729765
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421772882
-lastSeenAt: 1793421772882
+firstSeenAt: 1793423729765
+lastSeenAt: 1793423729765
 fingerprint: null
 payload:
   for: MG23_allocation_and_balance
@@ -108,7 +108,6 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
     unlocks: []
     conflicts:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
@@ -139,7 +138,7 @@ payload:
     lines:
       - >-
         layer 12 · blocked by MG4_resources_per_compartment, CS7_spawn_despawn_and_balance,
-        CS11_raid_in_the_exe, MG15_the_supervisor_in_cos
+        CS11_raid_in_the_exe
       - >-
         depends on (4): MG4_resources_per_compartment, CS7_spawn_despawn_and_balance,
         CS11_raid_in_the_exe, MG15_the_supervisor_in_cos · all upstream 56

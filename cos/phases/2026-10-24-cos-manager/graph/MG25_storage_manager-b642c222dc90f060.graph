@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421772887
+exported_at: 1793423729770
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421772887
-lastSeenAt: 1793421772887
+firstSeenAt: 1793423729770
+lastSeenAt: 1793423729770
 fingerprint: null
 payload:
   for: MG25_storage_manager
@@ -61,7 +61,6 @@ payload:
     downstream:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
     blockedBy:
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
       - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
       - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
     unlocks: []
@@ -95,9 +94,7 @@ payload:
           - cos/manager/contract.json
     dangling: []
     lines:
-      - >-
-        layer 4 · blocked by MG15_the_supervisor_in_cos, MG3_the_state_manager,
-        SV2_into_a_compartment
+      - layer 4 · blocked by MG3_the_state_manager, SV2_into_a_compartment
       - >-
         depends on (3): MG15_the_supervisor_in_cos, MG3_the_state_manager, SV2_into_a_compartment ·
         all upstream 15

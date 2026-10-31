@@ -355,9 +355,9 @@ phases:
     does: "every system's compartment.json carries its whole process, generated from today's boot list; orchestrator and architect get one; diagnostic's keeps its fields"
     proof: "the declarations reproduce autopilot's 13 processes field for field"
   MG15_the_supervisor_in_cos:
-    status: OPEN
+    status: BUILT 0.60.328
     depends_on: [MG0b_the_full_spec, MG_D4_cos_is_the_autopilot, MG_D13_the_supervisor_before_the_core_boot, MG15a_every_system_declares_its_process]
-    files: [cos/manager/supervisor.js, cos/manager/server.js, lib/system-shape.js, tests/modules/test-cos-supervisor.test.js, tests/modules/run-all.js]
+    files: [cos/manager/supervisor.js, cos/manager/server.js, lib/system-shape.js, idearium/api/index.js, idearium/cli/route-commands.js, orchestrator/orchestrator.config.json, loom/maps/cos-testenv-map.js, tests/modules/test-cos-supervisor.test.js, tests/modules/run-all.js]
     spec: cos/spec/cos-manager.spec
     blocks: [MOD-MG-SUPERVISOR, MOD-MG-SERVER]
     does: >-
@@ -603,3 +603,10 @@ decisions_d13:
       changes nothing; 'core' = CS4a: the core set at boot, every other system on demand). CS4a becomes setting that policy, after the
       handover (MG17). MG15 no longer waits on CS4a.
     by: "decided by his axioms: §8.6 (build once, on what exists), §3.3 (map before build: the order follows the files), MG-004 (defaults equal autopilot's constants)"
+
+# ── ADDENDUM 2026-10-31 — MG15 built (0.60.328) ──────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-10-31: "do it 72% be effecient, and save as much tokens as possible". cos/manager/supervisor.js (autopilot's rules, read from
+# the declarations MG15a wrote; every act ledgered first; bootSet 'core' = CS4a) and cos/manager/server.js (:7799, /api/cos/*, 127.0.0.1,
+# exits while autopilot holds the port — MG-001). Idearium route /api/cos/* and rows cos ps|<act>|boot|ledger ('cos' added to the ports
+# table, the same :7799). Found by the test: a system started outside boot stayed 'starting' (health read once at spawn) — now watched like a
+# boot phase, 'degraded' and said if it never answers. lib/system-shape.js needed no change (MG15a's generator writes the declarations).

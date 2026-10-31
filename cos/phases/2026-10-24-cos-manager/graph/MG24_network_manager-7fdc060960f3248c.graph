@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421772885
+exported_at: 1793423729767
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421772885
-lastSeenAt: 1793421772885
+firstSeenAt: 1793423729767
+lastSeenAt: 1793423729767
 fingerprint: null
 payload:
   for: MG24_network_manager
@@ -127,7 +127,6 @@ payload:
     downstream:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
     blockedBy:
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
       - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
     unlocks: []
     conflicts:
@@ -160,7 +159,7 @@ payload:
           - cos/manager/contract.json
     dangling: []
     lines:
-      - layer 4 · blocked by MG15_the_supervisor_in_cos, SV2_into_a_compartment
+      - layer 4 · blocked by SV2_into_a_compartment
       - 'depends on (2): MG15_the_supervisor_in_cos, SV2_into_a_compartment · all upstream 8'
       - 'needed by (1): MG27_state_and_resource_screens'
       - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'

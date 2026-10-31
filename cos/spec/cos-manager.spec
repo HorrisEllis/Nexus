@@ -1251,3 +1251,8 @@ spec:
 # lib/cli/compartments.js writes runtime.process (and runtime.processes) into every system's compartment.json from system-registry
 # kernels(); orchestrator, architect and diagnostic are generated too (diagnostic keeps its archetype fields); paths are {{root}}/…, Electron
 # by autopilot's lookup (cmdCandidates). declarations(root) reads them back. 13 processes, field for field (test-compartment-declarations).
+
+# ── ADDENDUM 2026-10-31 (0.60.328) — MOD-MG-SUPERVISOR and MOD-MG-SERVER built ─────────────────────────────────────────────────────
+# Policy adds memBackoffMs (15 s), stableMs (60 s), phaseGateMs (30 s), idleCheckMs — autopilot's constants, read by SV-01. States gain
+# 'waiting-memory' (a refused spawn re-armed) and 'external' (Clear Glass exiting 0 within 20 s). Ledger kinds gain 'policy'.
+# tests/modules/test-cos-supervisor.test.js SV-01..08, 8/8, on real child processes.

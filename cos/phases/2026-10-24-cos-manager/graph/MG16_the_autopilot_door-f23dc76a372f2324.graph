@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793422031233
+exported_at: 1793423729744
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793422031233
-lastSeenAt: 1793422031233
+firstSeenAt: 1793423729744
+lastSeenAt: 1793423729744
 fingerprint: null
 payload:
   for: MG16_the_autopilot_door
@@ -70,8 +70,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
-    blockedBy:
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+    blockedBy: []
     unlocks: []
     conflicts:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
@@ -94,7 +93,7 @@ payload:
           - cos/manager/contract.json
     dangling: []
     lines:
-      - layer 4 · blocked by MG15_the_supervisor_in_cos
+      - layer 4 · ready
       - 'depends on (1): MG15_the_supervisor_in_cos · all upstream 5'
       - 'needed by (1): MG17_autopilot_hands_over · all downstream 23'
       - >-

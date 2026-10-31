@@ -3549,6 +3549,10 @@ function matchRoute(method, url) {
     ['GET',    ['api','settings','console'],          'settings.console'],
     // §0.39.281 EC8 — the provider economy lives in guardian (lib/economy/*, guardian/lib/economy-guard.js); the settings
     // console reaches it through here, same-origin — a proxy, not a second copy (§10.1)
+    ['GET',    ['api','cos','systems'],               'cos.systems'],      // 0.60.328 MG15b — COS's supervisor, through its door :7799
+    ['GET',    ['api','cos','ledger'],                'cos.ledger'],
+    ['POST',   ['api','cos','boot'],                  'cos.boot'],
+    ['POST',   ['api','cos','systems',':name',':op'], 'cos.act'],
     ['GET',    ['api','economy'],                     'economy.get'],
     ['POST',   ['api','economy'],                     'economy.set'],
     ['GET',    ['api','economy',':what'],             'economy.view'],
@@ -9755,6 +9759,18 @@ async function handle(req, res, route, query, body) {
         getIdeaOS().emit('idearium.repo.lifted', { repoUuid: params.uuid, wrapper: r.wrapper, moved: r.moved.length, archived: r.archived.length, failed: r.failed.length });
       }
       return ok(res, { repoUuid: params.uuid, ...r, moves: (r.moves || []).length, ...(r.moved ? { moved: r.moved.length } : {}) });
+    }
+    // 0.60.328 MG15b — COS's supervisor (cos/manager/server.js on :7799, 'cos' in the ports table): asked, never required (§5.15)
+    case 'cos.systems': case 'cos.ledger': case 'cos.boot': case 'cos.act': {
+      const by = (body && body.by) || 'person';
+      try {
+        const d = action === 'cos.systems' ? await _nexusClient.get('cos', '/api/cos/systems', { timeout: 10000 })
+          : action === 'cos.ledger' ? await _nexusClient.get('cos', `/api/cos/ledger?limit=${Number(query.limit) || 50}${query.system ? `&system=${encodeURIComponent(query.system)}` : ''}`, { timeout: 10000 })
+          : action === 'cos.boot' ? await _nexusClient.post('cos', '/api/cos/boot', { set: (body && body.set) || undefined, by }, { timeout: 120000 })
+          : await _nexusClient.post('cos', `/api/cos/systems/${encodeURIComponent(params.name)}/${encodeURIComponent(params.op)}`, { by }, { timeout: 15000 });
+        const { ok: _o, ...rest } = d || {};
+        return ok(res, rest);
+      } catch (e) { return err(res, 502, `COS's manager (:7799) did not answer: ${e.message} — until the handover (MG17) autopilot holds :7799; start it with node cos/manager/server.js once autopilot is stopped`); }
     }
     // §0.39.281 EC8 — the economy, from guardian (the one owner)
     case 'economy.get': case 'economy.set': case 'economy.view': {

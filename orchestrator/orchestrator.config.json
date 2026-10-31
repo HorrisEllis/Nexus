@@ -22,7 +22,8 @@
     "ollama": 3749,
     "intelligence": 3753,
     "versionium": 3754,
-    "autopilot": 7799
+    "autopilot": 7799,
+    "cos": 7799
   },
   "raid": {
     "tickMs": 3000,
