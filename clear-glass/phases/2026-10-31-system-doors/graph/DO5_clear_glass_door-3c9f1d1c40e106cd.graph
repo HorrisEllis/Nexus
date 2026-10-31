@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793419906992
+exported_at: 1793421248118
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793419906992
-lastSeenAt: 1793419906992
+firstSeenAt: 1793421248118
+lastSeenAt: 1793421248118
 fingerprint: null
 payload:
   for: DO5_clear_glass_door
@@ -177,12 +177,11 @@ payload:
     downstream: []
     blockedBy:
       - docs/2026-10-31-system-doors-phasemap.spec::DO_D1_clear_glass_door
-      - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 1 · blocked by DO_D1_clear_glass_door, DO0_the_handshake_counts_real_routes
+      - layer 1 · blocked by DO_D1_clear_glass_door
       - 'depends on (2): DO_D1_clear_glass_door, DO0_the_handshake_counts_real_routes'
       - 'needed by (0): —'
     edges:

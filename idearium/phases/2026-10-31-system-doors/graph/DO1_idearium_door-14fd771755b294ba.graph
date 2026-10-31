@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793419906981
+exported_at: 1793421248107
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793419906981
-lastSeenAt: 1793419906981
+firstSeenAt: 1793421248107
+lastSeenAt: 1793421248107
 fingerprint: null
 payload:
   for: DO1_idearium_door
@@ -224,7 +224,6 @@ payload:
     downstream: []
     blockedBy:
       - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
-      - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
     unlocks: []
     conflicts:
       - with: docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
@@ -232,9 +231,7 @@ payload:
           - lib/nexus/autopilot.js
     dangling: []
     lines:
-      - >-
-        layer 1 · blocked by DO_D0_server_floats_on_the_registry,
-        DO0_the_handshake_counts_real_routes
+      - layer 1 · blocked by DO_D0_server_floats_on_the_registry
       - 'depends on (2): DO_D0_server_floats_on_the_registry, DO0_the_handshake_counts_real_routes'
       - 'needed by (0): —'
       - 'same files as DO3_cortex_door with no order between them: lib/nexus/autopilot.js'
