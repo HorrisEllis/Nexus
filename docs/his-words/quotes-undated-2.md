@@ -2,12 +2,12 @@
 
 Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, undated. Each quote is whole, with everything it relates to and the record around it at every place it is kept.
 
-<a id="q2223"></a>
-### Q2223 · undated
+<a id="q2169"></a>
+### Q2169 · undated
 
 > i want to have the element picker, aware of the cleardriver and userscripts, usermesh... could copilot potentially be tasked to fixing it with the element picker?
 
-- **Related by words:** [Q2222](quotes-undated-1.md#q2222) (aware, cleardriver, copilot, element, fixing, picker)
+- **Related by words:** [Q2168](quotes-undated-1.md#q2168) (aware, cleardriver, copilot, element, fixing, picker)
 - **Where it is recorded (1):**
   - `guardian/lib/selector-map.js:5` · whole
 
@@ -22,13 +22,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2224"></a>
-### Q2224 · undated
+<a id="q2170"></a>
+### Q2170 · undated
 
 > i want to see it working
 
-- **Said in the same message:** [Q0752](quotes-2026-09-29.md#q0752), [Q0778](quotes-2026-09-29.md#q0778), [Q2298](quotes-undated-2.md#q2298), [Q2404](quotes-undated-2.md#q2404)
-- **The same words are also in:** [Q2224](quotes-undated-2.md#q2224)
+- **Said in the same message:** [Q0752](quotes-2026-09-29.md#q0752), [Q0778](quotes-2026-09-29.md#q0778), [Q2244](quotes-undated-2.md#q2244), [Q2350](quotes-undated-2.md#q2350)
+- **The same words are also in:** [Q2170](quotes-undated-2.md#q2170)
 - **Where it is recorded (1):**
   - `tests/probe/idearium-coding-flow-chromium.js:6` · whole
 
@@ -42,8 +42,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2225"></a>
-### Q2225 · undated
+<a id="q2171"></a>
+### Q2171 · undated
 
 > i was talking to chatgpt in the code tab and it switched to gemini … if the url of the chat is different, can we inject the previous response … i want persistence across chats, and providers.
 
@@ -61,8 +61,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2226"></a>
-### Q2226 · undated
+<a id="q2172"></a>
+### Q2172 · undated
 
 > idearium Agent tab picking up a late reply from the Responses index, so it stops showing 'thinking…' when a reply arrives after copilot's…
 
@@ -80,8 +80,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
 
   - `docs/atlases/nexus-atlas.md:16714` · under *- 0.39.242. — the Responses index runs on JAA — built: Before · Now · Not changed* · release 0.39.241 · whole
 
-<a id="q2227"></a>
-### Q2227 · undated
+<a id="q2173"></a>
+### Q2173 · undated
 
 > idearium agents should be able to find the context easily … all of the memory systems, graphs
 
@@ -99,8 +99,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2228"></a>
-### Q2228 · undated
+<a id="q2174"></a>
+### Q2174 · undated
 
 > if I ask him what he can do, I want a full list of tools and capability.
 
@@ -135,13 +135,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2229"></a>
-### Q2229 · undated
+<a id="q2175"></a>
+### Q2175 · undated
 
 > if i delete a code repo, the original needs to know, and i cant remove or click build a replacement.
 
 - **The work it belongs to:** release 0.39.280 BS15
-- **Recorded together with:** [Q0616](quotes-2026-09-21.md#q0616), [Q0722](quotes-2026-09-27.md#q0722), [Q2401](quotes-undated-2.md#q2401), [Q2469](quotes-undated-2.md#q2469)
+- **Recorded together with:** [Q0616](quotes-2026-09-21.md#q0616), [Q0722](quotes-2026-09-27.md#q0722), [Q2347](quotes-undated-2.md#q2347), [Q2414](quotes-undated-2.md#q2414)
 - **Where it is recorded (1):**
   - `idearium/api/index.js:463` · under *// ── Repo layer singleton — each idea-as-repo lives here, not in a single* · release 0.39.280 BS15 · whole
 
@@ -155,16 +155,16 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2230"></a>
-### Q2230 · undated
+<a id="q2176"></a>
+### Q2176 · undated
 
 > im scared of regression.
 
 - **The work it belongs to:** release 0.60.33 · release 0.60.33 QA1
-- **Said in the same message:** [Q1255](quotes-2026-10-13.md#q1255)
-- **Recorded together with:** [Q0984](quotes-2026-10-05.md#q0984), [Q1191](quotes-2026-10-12.md#q1191), [Q1224](quotes-2026-10-13.md#q1224), [Q1502](quotes-2026-10-17.md#q1502), [Q2383](quotes-undated-2.md#q2383)
-- **The same words are also in:** [Q1250](quotes-2026-10-13.md#q1250), [Q2230](quotes-undated-2.md#q2230), [Q1247](quotes-2026-10-13.md#q1247), [Q1248](quotes-2026-10-13.md#q1248)
-- **Related by words:** [Q1247](quotes-2026-10-13.md#q1247) (regression, scared), [Q1248](quotes-2026-10-13.md#q1248) (regression, scared), [Q1250](quotes-2026-10-13.md#q1250) (regression, scared)
+- **Said in the same message:** [Q1214](quotes-2026-10-13.md#q1214)
+- **Recorded together with:** [Q0984](quotes-2026-10-05.md#q0984), [Q1150](quotes-2026-10-12.md#q1150), [Q1183](quotes-2026-10-13.md#q1183), [Q1454](quotes-2026-10-17.md#q1454), [Q2329](quotes-undated-2.md#q2329)
+- **The same words are also in:** [Q1209](quotes-2026-10-13.md#q1209), [Q2176](quotes-undated-2.md#q2176), [Q1206](quotes-2026-10-13.md#q1206), [Q1207](quotes-2026-10-13.md#q1207)
+- **Related by words:** [Q1206](quotes-2026-10-13.md#q1206) (regression, scared), [Q1207](quotes-2026-10-13.md#q1207) (regression, scared), [Q1209](quotes-2026-10-13.md#q1209) (regression, scared)
 - **Where it is recorded (2):**
   - `idearium/api/index.js:8234` · release 0.60.33 QA1 · whole
 
@@ -187,8 +187,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2231"></a>
-### Q2231 · undated
+<a id="q2177"></a>
+### Q2177 · undated
 
 > import → unzip → take you to the repo → chunk → toast showing the progress.
 
@@ -218,8 +218,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2232"></a>
-### Q2232 · undated
+<a id="q2178"></a>
+### Q2178 · undated
 
 > imported my mastermind project and now idearium isn't running properly.
 
@@ -237,13 +237,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2233"></a>
-### Q2233 · undated
+<a id="q2179"></a>
+### Q2179 · undated
 
 > importing them as repositories, so i can continue, expand, fix, manage, and test them.
 
 - **The work it belongs to:** release 1.0.0
-- **Said in the same message:** [Q1266](quotes-2026-10-13.md#q1266)
+- **Said in the same message:** [Q1225](quotes-2026-10-13.md#q1225)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1726` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 1.0.0 · whole
 
@@ -253,13 +253,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2234"></a>
-### Q2234 · undated
+<a id="q2180"></a>
+### Q2180 · undated
 
 > in the nodes folder in lib. they all need to be a real yaml file with the node type as the extension.
 
-- **Recorded together with:** [Q2423](quotes-undated-2.md#q2423)
-- **Related by words:** [Q0425](quotes-2026-09-11.md#q0425) (extension, file, node, type, yaml), [Q2408](quotes-undated-2.md#q2408) (extension, file, node, type, yaml), [Q0444](quotes-2026-09-12.md#q0444) (folder, node, type), [Q1183](quotes-2026-10-12.md#q1183) (extension, file, real, yaml)
+- **Recorded together with:** [Q2369](quotes-undated-2.md#q2369)
+- **Related by words:** [Q0425](quotes-2026-09-11.md#q0425) (extension, file, node, type, yaml), [Q2354](quotes-undated-2.md#q2354) (extension, file, node, type, yaml), [Q0444](quotes-2026-09-12.md#q0444) (folder, node, type), [Q1142](quotes-2026-10-12.md#q1142) (extension, file, real, yaml)
 - **Where it is recorded (2):**
   - `lib/agent-tools/generate-tool-nodes.js:3` · whole
 
@@ -288,13 +288,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2235"></a>
-### Q2235 · undated
+<a id="q2181"></a>
+### Q2181 · undated
 
 > include from copilots tools, brainos, and clearglass automatation, and pipeline workflow and macros, and frameworks and programmable. like a lot of this exists
 
 - **The work it belongs to:** release 0.60.17
-- **Related by words:** [Q1904](quotes-2026-10-29.md#q1904) (include, macros, pipeline, workflow)
+- **Related by words:** [Q1851](quotes-2026-10-29.md#q1851) (include, macros, pipeline, workflow)
 - **Where it is recorded (1):**
   - `versionium/changelogs/CHANGELOG-0.60.17.md:3` · under *# 0.60.17 — 2026-10-13* · release 0.60.17 · whole
 
@@ -307,14 +307,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2236"></a>
-### Q2236 · undated
+<a id="q2182"></a>
+### Q2182 · undated
 
 > inject what's needed into agents, and give them the tools to interact with nexus to get anything MORE they need if it's needed.
 
 - **The work it belongs to:** phase AP1
-- **Recorded together with:** [Q0143](quotes-2026-08-22.md#q0143), [Q0722](quotes-2026-09-27.md#q0722), [Q1338](quotes-2026-10-15.md#q1338), [Q1651](quotes-2026-10-21.md#q1651), [Q2022](quotes-undated-1.md#q2022), [Q2280](quotes-undated-2.md#q2280)
-- **Related by words:** [Q2003](quotes-undated-1.md#q2003) (agents, inject, interact, nexus)
+- **Recorded together with:** [Q0143](quotes-2026-08-22.md#q0143), [Q0722](quotes-2026-09-27.md#q0722), [Q1294](quotes-2026-10-15.md#q1294), [Q1603](quotes-2026-10-21.md#q1603), [Q1968](quotes-undated-1.md#q1968), [Q2226](quotes-undated-2.md#q2226)
+- **Related by words:** [Q1949](quotes-undated-1.md#q1949) (agents, inject, interact, nexus)
 - **Where it is recorded (2):**
   - `lib/agent-pull.js:6` · whole
 
@@ -340,13 +340,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2237"></a>
-### Q2237 · undated
+<a id="q2183"></a>
+### Q2183 · undated
 
 > input and
 
-- **Recorded together with:** [Q2372](quotes-undated-2.md#q2372)
-- **The same words are also in:** [Q1951](quotes-2026-10-30.md#q1951), [Q1855](quotes-2026-10-28.md#q1855), [Q0433](quotes-2026-09-12.md#q0433), [Q2240](quotes-undated-2.md#q2240), [Q2238](quotes-undated-2.md#q2238)
+- **Recorded together with:** [Q2318](quotes-undated-2.md#q2318)
+- **The same words are also in:** [Q1897](quotes-2026-10-30.md#q1897), [Q1803](quotes-2026-10-28.md#q1803), [Q0433](quotes-2026-09-12.md#q0433), [Q2186](quotes-undated-2.md#q2186), [Q2184](quotes-undated-2.md#q2184)
 - **Where it is recorded (1):**
   - `docs/atlases/intelligence-atlas.md:163` · under *#### `intelligence/`* · whole
 
@@ -365,13 +365,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2238"></a>
-### Q2238 · undated
+<a id="q2184"></a>
+### Q2184 · undated
 
 > input and output folder
 
-- **The same words are also in:** [Q2240](quotes-undated-2.md#q2240), [Q2238](quotes-undated-2.md#q2238), [Q2239](quotes-undated-2.md#q2239)
-- **Related by words:** [Q2239](quotes-undated-2.md#q2239) (folder, input, output), [Q2240](quotes-undated-2.md#q2240) (folder, input, output)
+- **The same words are also in:** [Q2186](quotes-undated-2.md#q2186), [Q2184](quotes-undated-2.md#q2184), [Q2185](quotes-undated-2.md#q2185)
+- **Related by words:** [Q2185](quotes-undated-2.md#q2185) (folder, input, output), [Q2186](quotes-undated-2.md#q2186) (folder, input, output)
 - **Where it is recorded (1):**
   - `intelligence/spec/intelligence.spec:183` · under *# ── Storage — James: "database in cortex" ──────────────────────────────────* · whole
 
@@ -384,13 +384,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2239"></a>
-### Q2239 · undated
+<a id="q2185"></a>
+### Q2185 · undated
 
 > input and output folder
 
-- **The same words are also in:** [Q2240](quotes-undated-2.md#q2240), [Q2238](quotes-undated-2.md#q2238), [Q2239](quotes-undated-2.md#q2239)
-- **Related by words:** [Q2238](quotes-undated-2.md#q2238) (folder, input, output), [Q2240](quotes-undated-2.md#q2240) (folder, input, output)
+- **The same words are also in:** [Q2186](quotes-undated-2.md#q2186), [Q2184](quotes-undated-2.md#q2184), [Q2185](quotes-undated-2.md#q2185)
+- **Related by words:** [Q2184](quotes-undated-2.md#q2184) (folder, input, output), [Q2186](quotes-undated-2.md#q2186) (folder, input, output)
 - **Where it is recorded (1):**
   - `docs/intelligence.spec:183` · under *# ── Storage — James: "database in cortex" ──────────────────────────────────* · whole
 
@@ -403,12 +403,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2240"></a>
-### Q2240 · undated
+<a id="q2186"></a>
+### Q2186 · undated
 
 > input and output folder, queue system.
 
-- **Related by words:** [Q2238](quotes-undated-2.md#q2238) (folder, input, output), [Q2239](quotes-undated-2.md#q2239) (folder, input, output), [Q0214](quotes-2026-08-28.md#q0214) (folder, input, queue), [Q0215](quotes-2026-08-28.md#q0215) (folder, input, queue)
+- **Related by words:** [Q2184](quotes-undated-2.md#q2184) (folder, input, output), [Q2185](quotes-undated-2.md#q2185) (folder, input, output), [Q0214](quotes-2026-08-28.md#q0214) (folder, input, queue), [Q0215](quotes-2026-08-28.md#q0215) (folder, input, queue)
 - **Where it is recorded (1):**
   - `intelligence/consumer.js:4` · whole
 
@@ -422,8 +422,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2241"></a>
-### Q2241 · undated
+<a id="q2187"></a>
+### Q2187 · undated
 
 > intent map needs to link to hats? .intent to .hat to .agen
 
@@ -438,8 +438,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2242"></a>
-### Q2242 · undated
+<a id="q2188"></a>
+### Q2188 · undated
 
 > is it the sse? or the orchastrator? why is it need the orchastrator?
 
@@ -457,13 +457,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2243"></a>
-### Q2243 · undated
+<a id="q2189"></a>
+### Q2189 · undated
 
 > it cuts down tokens drastically. Makes it more agnostic. Can handle more complex tasks by offloading into the gates.
 
 - **The work it belongs to:** release 1.0.0
-- **Said in the same message:** [Q2035](quotes-undated-1.md#q2035), [Q2189](quotes-undated-1.md#q2189)
+- **Said in the same message:** [Q1981](quotes-undated-1.md#q1981), [Q2135](quotes-undated-1.md#q2135)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1825` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 1.0.0 · whole
 
@@ -473,8 +473,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2244"></a>
-### Q2244 · undated
+<a id="q2190"></a>
+### Q2190 · undated
 
 > it deleted half the router
 
@@ -489,8 +489,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2245"></a>
-### Q2245 · undated
+<a id="q2191"></a>
+### Q2191 · undated
 
 > it doesn't connect... make it like a brain that tracks events, nodes, data, commands, sse, all activity, but only real activity.
 
@@ -509,15 +509,15 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2246"></a>
-### Q2246 · undated
+<a id="q2192"></a>
+### Q2192 · undated
 
 > it keeps freezing
 
 - **The work it belongs to:** release 0.60.275
-- **Recorded together with:** [Q1363](quotes-2026-10-15.md#q1363), [Q1855](quotes-2026-10-28.md#q1855), [Q1856](quotes-2026-10-28.md#q1856), [Q1867](quotes-2026-10-28.md#q1867), [Q1872](quotes-2026-10-28.md#q1872)
-- **The same words are also in:** [Q1867](quotes-2026-10-28.md#q1867), [Q2246](quotes-undated-2.md#q2246)
-- **Related by words:** [Q1867](quotes-2026-10-28.md#q1867) (freezing, keeps)
+- **Recorded together with:** [Q1319](quotes-2026-10-15.md#q1319), [Q1803](quotes-2026-10-28.md#q1803), [Q1804](quotes-2026-10-28.md#q1804), [Q1815](quotes-2026-10-28.md#q1815), [Q1820](quotes-2026-10-28.md#q1820)
+- **The same words are also in:** [Q1815](quotes-2026-10-28.md#q1815), [Q2192](quotes-undated-2.md#q2192)
+- **Related by words:** [Q1815](quotes-2026-10-28.md#q1815) (freezing, keeps)
 - **Where it is recorded (1):**
   - `clear-glass/src/driver/index.js:792` · under *// ── 0.39.259 — read the page, and the form actions typing alone could not do ─────────────────────────────────* · release 0.60.275 · whole
 
@@ -530,8 +530,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2247"></a>
-### Q2247 · undated
+<a id="q2193"></a>
+### Q2193 · undated
 
 > it needs a registry of event types relevant to the system.
 
@@ -549,12 +549,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
 
   - `intelligence/spec/intelligence.spec:92` · under *# ── Real, current scope — traced directly, not estimated ──────────────────* · whole
 
-<a id="q2248"></a>
-### Q2248 · undated
+<a id="q2194"></a>
+### Q2194 · undated
 
 > it needs to update the models of me and itself. each system needs a model? it needs to learn and update its model. Baysesian updating?
 
-- **Related by words:** [Q2480](quotes-undated-3.md#q2480) (baysesian, itself, models, update, updating), [Q1805](quotes-2026-10-25.md#q1805) (itself, update)
+- **Related by words:** [Q2425](quotes-undated-3.md#q2425) (baysesian, itself, models, update, updating), [Q1754](quotes-2026-10-25.md#q1754) (itself, update)
 - **Where it is recorded (1):**
   - `copilot/lib/intent-learning.js:6` · whole
 
@@ -568,13 +568,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2249"></a>
-### Q2249 · undated
+<a id="q2195"></a>
+### Q2195 · undated
 
 > it says 15 ideas and 15 repos … ideas, once promoted to spec should move to the idea tab in the actual repo.
 
 - **The work it belongs to:** release 0.39.263
-- **Related by words:** [Q0697](quotes-2026-09-26.md#q0697) (idea, ideas, move, promoted), [Q0698](quotes-2026-09-26.md#q0698) (idea, ideas, move, promoted), [Q2341](quotes-undated-2.md#q2341) (idea, move, repo, repos, spec)
+- **Related by words:** [Q0697](quotes-2026-09-26.md#q0697) (idea, ideas, move, promoted), [Q0698](quotes-2026-09-26.md#q0698) (idea, ideas, move, promoted), [Q2287](quotes-undated-2.md#q2287) (idea, move, repo, repos, spec)
 - **Where it is recorded (1):**
   - `idearium/ui/js/app.js:450` · release 0.39.263 · whole
 
@@ -586,8 +586,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2250"></a>
-### Q2250 · undated
+<a id="q2196"></a>
+### Q2196 · undated
 
 > it sends the response the wrong location … 'NEXUS CO-PILOT: I'm here and ready to assist you. How can I help you today?' is supposed to be…
 
@@ -605,8 +605,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
 
   - `docs/atlases/nexus-atlas.md:16703` · under *- 0.39.253. — Idearium's agent backend is a three-way switch; Ollama's models are a dropdown — James: "i want the cli in idearium to be like* · release 0.39.252 · whole
 
-<a id="q2251"></a>
-### Q2251 · undated
+<a id="q2197"></a>
+### Q2197 · undated
 
 > it takes forever to load the repos on boot … running really bad.
 
@@ -623,8 +623,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2252"></a>
-### Q2252 · undated
+<a id="q2198"></a>
+### Q2198 · undated
 
 > it worked. though the hat should be repo specific not builder. the agent tab, in idearium is looking for the hash
 
@@ -662,8 +662,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2253"></a>
-### Q2253 · undated
+<a id="q2199"></a>
+### Q2199 · undated
 
 > it's meant to make small llms capable of building entire codebases regardless of the size … thats way too much to inject when we have tools they can use to get context.
 
@@ -705,13 +705,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2254"></a>
-### Q2254 · undated
+<a id="q2200"></a>
+### Q2200 · undated
 
 > it's too big
 
 - **The work it belongs to:** release 0.39.126
-- **The same words are also in:** [Q0241](quotes-2026-08-30.md#q0241), [Q2254](quotes-undated-2.md#q2254)
+- **The same words are also in:** [Q0241](quotes-2026-08-30.md#q0241), [Q2200](quotes-undated-2.md#q2200)
 - **Where it is recorded (1):**
   - `lib/version.js:1215` · release 0.39.126 · whole
 
@@ -722,13 +722,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2255"></a>
-### Q2255 · undated
+<a id="q2201"></a>
+### Q2201 · undated
 
 > its all supposed to interconnect. im a systems thinker.
 
 - **The work it belongs to:** release 1.0.0
-- **Said in the same message:** [Q1353](quotes-2026-10-15.md#q1353)
+- **Said in the same message:** [Q1309](quotes-2026-10-15.md#q1309)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1731` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 1.0.0 · whole
 
@@ -739,14 +739,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2256"></a>
-### Q2256 · undated
+<a id="q2202"></a>
+### Q2202 · undated
 
 > its dumb, isnt persistent
 
 - **The work it belongs to:** release 0.39.278
 - **Recorded together with:** [Q0603](quotes-2026-09-21.md#q0603), [Q0693](quotes-2026-09-26.md#q0693), [Q0710](quotes-2026-09-26.md#q0710), [Q0728](quotes-2026-09-27.md#q0728)
-- **The same words are also in:** [Q0774](quotes-2026-09-29.md#q0774), [Q2256](quotes-undated-2.md#q2256)
+- **The same words are also in:** [Q0774](quotes-2026-09-29.md#q0774), [Q2202](quotes-undated-2.md#q2202)
 - **Where it is recorded (1):**
   - `clear-glass/src/api/settings.js:62` · under *// ── When copilot :3750 is down — §0.39.274 ─────────────────────────────* · release 0.39.278 · whole
 
@@ -759,8 +759,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2257"></a>
-### Q2257 · undated
+<a id="q2203"></a>
+### Q2203 · undated
 
 > its like there are two ideariums or something. like it only has those options, and then when i clikc on the repos it shows all 4 tabs at the top.
 
@@ -778,15 +778,15 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2258"></a>
-### Q2258 · undated
+<a id="q2204"></a>
+### Q2204 · undated
 
 > its really unstable. idearium.
 
 - **The work it belongs to:** release 0.39.265
 - **Recorded together with:** [Q0801](quotes-2026-10-01.md#q0801)
-- **The same words are also in:** [Q2258](quotes-undated-2.md#q2258), [Q2259](quotes-undated-2.md#q2259)
-- **Related by words:** [Q2259](quotes-undated-2.md#q2259) (idearium, unstable)
+- **The same words are also in:** [Q2204](quotes-undated-2.md#q2204), [Q2205](quotes-undated-2.md#q2205)
+- **Related by words:** [Q2205](quotes-undated-2.md#q2205) (idearium, unstable)
 - **Where it is recorded (2):**
   - `idearium/spec-engine/index.js:776` · under *// ── Load spec manifest from disk ──────────────────────────────────────────────* · release 0.39.265 · whole
 
@@ -809,13 +809,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2259"></a>
-### Q2259 · undated
+<a id="q2205"></a>
+### Q2205 · undated
 
 > its really unstable. idearium.
 
-- **The same words are also in:** [Q2258](quotes-undated-2.md#q2258), [Q2259](quotes-undated-2.md#q2259)
-- **Related by words:** [Q2258](quotes-undated-2.md#q2258) (idearium, unstable)
+- **The same words are also in:** [Q2204](quotes-undated-2.md#q2204), [Q2205](quotes-undated-2.md#q2205)
+- **Related by words:** [Q2204](quotes-undated-2.md#q2204) (idearium, unstable)
 - **Where it is recorded (1):**
   - `tests/modules/test-idearium-spec-meta-cache.test.js:7` · whole
 
@@ -828,8 +828,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2260"></a>
-### Q2260 · undated
+<a id="q2206"></a>
+### Q2206 · undated
 
 > its small on the homepage
 
@@ -846,13 +846,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2261"></a>
-### Q2261 · undated
+<a id="q2207"></a>
+### Q2207 · undated
 
 > its supposed to chunk dynamically
 
 - **The work it belongs to:** release 1.0.0
-- **Said in the same message:** [Q1547](quotes-2026-10-19.md#q1547), [Q1588](quotes-2026-10-19.md#q1588), [Q2197](quotes-undated-1.md#q2197), [Q2348](quotes-undated-2.md#q2348), [Q2403](quotes-undated-2.md#q2403)
+- **Said in the same message:** [Q1499](quotes-2026-10-19.md#q1499), [Q1540](quotes-2026-10-19.md#q1540), [Q2143](quotes-undated-1.md#q2143), [Q2294](quotes-undated-2.md#q2294), [Q2349](quotes-undated-2.md#q2349)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1763` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 1.0.0 · whole
 
@@ -863,13 +863,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2262"></a>
-### Q2262 · undated
+<a id="q2208"></a>
+### Q2208 · undated
 
 > jobs aren't resolving to idearium. can reuse, job files. what about using raid?
 
 - **The work it belongs to:** release 0.39.235
-- **Related by words:** [Q1979](quotes-undated-1.md#q1979) (jobs, reuse)
+- **Related by words:** [Q1925](quotes-undated-1.md#q1925) (jobs, reuse)
 - **Where it is recorded (1):**
   - `lib/version.js:415` · release 0.39.235 · whole
 
@@ -879,13 +879,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2263"></a>
-### Q2263 · undated
+<a id="q2209"></a>
+### Q2209 · undated
 
 > just know every system should be sovereign self contained.
 
 - **The work it belongs to:** release 0.39.277 C1
-- **Related by words:** [Q2154](quotes-undated-1.md#q2154) (contained, self, sovereign, system)
+- **Related by words:** [Q2100](quotes-undated-1.md#q2100) (contained, self, sovereign, system)
 - **Where it is recorded (2):**
   - `README.md:16680` · under *- 0.39.278. — tools as layers, a co-pilot pane that remembers, every chat streamed live into the download manager — James: "can you move and* · release 0.39.277 C1 · whole
 
@@ -898,14 +898,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
 
   - `docs/atlases/nexus-atlas.md:16679` · under *- 0.39.278. — tools as layers, a co-pilot pane that remembers, every chat streamed live into the download manager — James: "can you move and* · release 0.39.277 C1 · whole
 
-<a id="q2264"></a>
-### Q2264 · undated
+<a id="q2210"></a>
+### Q2210 · undated
 
 > just prompt for approval.
 
 - **The work it belongs to:** release 0.39.266
-- **Recorded together with:** [Q0612](quotes-2026-09-21.md#q0612), [Q2216](quotes-undated-1.md#q2216)
-- **The same words are also in:** [Q2264](quotes-undated-2.md#q2264)
+- **Recorded together with:** [Q0612](quotes-2026-09-21.md#q0612), [Q2162](quotes-undated-1.md#q2162)
+- **The same words are also in:** [Q2210](quotes-undated-2.md#q2210)
 - **Where it is recorded (1):**
   - `idearium/ui/js/app.js:4613` · under *// ── §LATE 0.39.241 — late replies from the Responses index ───────────────* · release 0.39.266 · whole
 
@@ -918,13 +918,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2265"></a>
-### Q2265 · undated
+<a id="q2211"></a>
+### Q2211 · undated
 
 > keep the theme consistent
 
 - **The work it belongs to:** release 0.39.280
-- **The same words are also in:** [Q2093](quotes-undated-1.md#q2093), [Q2265](quotes-undated-2.md#q2265)
+- **The same words are also in:** [Q2039](quotes-undated-1.md#q2039), [Q2211](quotes-undated-2.md#q2211)
 - **Where it is recorded (1):**
   - `idearium/ui/settings.html:41` · release 0.39.280 · whole
 
@@ -937,8 +937,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2266"></a>
-### Q2266 · undated
+<a id="q2212"></a>
+### Q2212 · undated
 
 > lets do it. anything else from nexus
 
@@ -956,12 +956,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2267"></a>
-### Q2267 · undated
+<a id="q2213"></a>
+### Q2213 · undated
 
 > lets do macros... automating job applications, or emailing therapists on psychology today... full state rewind engine, hook into automate/macro per url, event driven snapshots, bookmarks to capture state.
 
-- **Related by words:** [Q0189](quotes-2026-08-23.md#q0189) (bookmarks, snapshots, state, url), [Q2075](quotes-undated-1.md#q2075) (bookmarks, capture, state)
+- **Related by words:** [Q0189](quotes-2026-08-23.md#q0189) (bookmarks, snapshots, state, url), [Q2021](quotes-undated-1.md#q2021) (bookmarks, capture, state)
 - **Where it is recorded (1):**
   - `lib/agent-tools/tools/clear-glass/macro.js:3` · whole
 
@@ -977,13 +977,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2268"></a>
-### Q2268 · undated
+<a id="q2214"></a>
+### Q2214 · undated
 
 > like anything resuable needs a schema and template … nothing pretends to work, and everything is tangible until completed.
 
-- **Said in the same message:** [Q1198](quotes-2026-10-12.md#q1198), [Q1205](quotes-2026-10-12.md#q1205)
-- **Related by words:** [Q1203](quotes-2026-10-12.md#q1203) (completed, pretends, resuable, schema, tangible, template)
+- **Said in the same message:** [Q1157](quotes-2026-10-12.md#q1157), [Q1164](quotes-2026-10-12.md#q1164)
+- **Related by words:** [Q1162](quotes-2026-10-12.md#q1162) (completed, pretends, resuable, schema, tangible, template)
 - **Where it is recorded (1):**
   - `idearium/spec-engine/templates/genesis.spec:22` · whole
 
@@ -998,8 +998,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2269"></a>
-### Q2269 · undated
+<a id="q2215"></a>
+### Q2215 · undated
 
 > like maybe a cos template called torture chamber, or something. like with the branching and parralel.
 
@@ -1016,12 +1016,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2270"></a>
-### Q2270 · undated
+<a id="q2216"></a>
+### Q2216 · undated
 
 > listeners for them.
 
-- **The same words are also in:** [Q2270](quotes-undated-2.md#q2270), [Q0398](quotes-2026-09-08.md#q0398)
+- **The same words are also in:** [Q2216](quotes-undated-2.md#q2216), [Q0398](quotes-2026-09-08.md#q0398)
 - **Related by words:** [Q0398](quotes-2026-09-08.md#q0398) (listeners)
 - **Where it is recorded (1):**
   - `lib/agent-tools/generate-tool-nodes.js:15` · whole
@@ -1035,12 +1035,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2271"></a>
-### Q2271 · undated
+<a id="q2217"></a>
+### Q2217 · undated
 
 > log every failure mode to cortex
 
-- **Related by words:** [Q2141](quotes-undated-1.md#q2141) (cortex, failure, log, mode), [Q0061](quotes-2026-08-12.md#q0061) (cortex, failure, mode), [Q1430](quotes-2026-10-16.md#q1430) (failure, log, mode)
+- **Related by words:** [Q2087](quotes-undated-1.md#q2087) (cortex, failure, log, mode), [Q0061](quotes-2026-08-12.md#q0061) (cortex, failure, mode), [Q1384](quotes-2026-10-16.md#q1384) (failure, log, mode)
 - **Where it is recorded (1):**
   - `copilot/lib/lifeline-contracts.js:66` · whole
 
@@ -1054,12 +1054,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2272"></a>
-### Q2272 · undated
+<a id="q2218"></a>
+### Q2218 · undated
 
 > login to multiple accounts in ClearGlass like an app password
 
-- **Related by words:** [Q1157](quotes-2026-10-10.md#q1157) (accounts, app, clearglass, login, password), [Q0840](quotes-2026-10-02.md#q0840) (accounts, multiple)
+- **Related by words:** [Q1116](quotes-2026-10-10.md#q1116) (accounts, app, clearglass, login, password), [Q0840](quotes-2026-10-02.md#q0840) (accounts, multiple)
 - **Where it is recorded (1):**
   - `lib/account-registry.js:8` · whole
 
@@ -1073,13 +1073,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2273"></a>
-### Q2273 · undated
+<a id="q2219"></a>
+### Q2219 · undated
 
 > look at all the underlying prmitives, principles, invariants, and compare them across domains, to find, invent, and discover extensive tests … make a huge list
 
 - **The work it belongs to:** release 0.60.33
-- **Related by words:** [Q1255](quotes-2026-10-13.md#q1255) (compare, discover, domains, extensive, find, huge)
+- **Related by words:** [Q1214](quotes-2026-10-13.md#q1214) (compare, discover, domains, extensive, find, huge)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1776` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 0.60.33 · whole
 
@@ -1090,8 +1090,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2274"></a>
-### Q2274 · undated
+<a id="q2220"></a>
+### Q2220 · undated
 
 > look at architect in idearium. rebuild it, fully … open ui
 
@@ -1109,14 +1109,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2275"></a>
-### Q2275 · undated
+<a id="q2221"></a>
+### Q2221 · undated
 
 > look at clearglass download manager
 
 - **The work it belongs to:** release 0.39.269
 - **Said in the same message:** [Q0729](quotes-2026-09-27.md#q0729)
-- **Related by words:** [Q0480](quotes-2026-09-15.md#q0480) (clearglass, download, manager), [Q1651](quotes-2026-10-21.md#q1651) (clearglass, download, manager), [Q0681](quotes-2026-09-25.md#q0681) (clearglass, download, manager), [Q0682](quotes-2026-09-25.md#q0682) (download, manager)
+- **Related by words:** [Q0480](quotes-2026-09-15.md#q0480) (clearglass, download, manager), [Q1603](quotes-2026-10-21.md#q1603) (clearglass, download, manager), [Q0681](quotes-2026-09-25.md#q0681) (clearglass, download, manager), [Q0682](quotes-2026-09-25.md#q0682) (download, manager)
 - **Where it is recorded (1):**
   - `lib/agent-memory.js:8` · release 0.39.269 · whole
 
@@ -1131,15 +1131,15 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2276"></a>
-### Q2276 · undated
+<a id="q2222"></a>
+### Q2222 · undated
 
 > look at siso
 
 - **The work it belongs to:** release 0.60.156 · release 0.60.156 GM5
-- **Said in the same message:** [Q1530](quotes-2026-10-18.md#q1530), [Q1537](quotes-2026-10-18.md#q1537)
-- **The same words are also in:** [Q2276](quotes-undated-2.md#q2276), [Q1532](quotes-2026-10-18.md#q1532), [Q1533](quotes-2026-10-18.md#q1533), [Q1534](quotes-2026-10-18.md#q1534), [Q1535](quotes-2026-10-18.md#q1535)
-- **Related by words:** [Q1532](quotes-2026-10-18.md#q1532) (siso), [Q1533](quotes-2026-10-18.md#q1533) (siso), [Q1534](quotes-2026-10-18.md#q1534) (siso), [Q1535](quotes-2026-10-18.md#q1535) (siso)
+- **Said in the same message:** [Q1482](quotes-2026-10-18.md#q1482), [Q1489](quotes-2026-10-18.md#q1489)
+- **The same words are also in:** [Q2222](quotes-undated-2.md#q2222), [Q1484](quotes-2026-10-18.md#q1484), [Q1485](quotes-2026-10-18.md#q1485), [Q1486](quotes-2026-10-18.md#q1486), [Q1487](quotes-2026-10-18.md#q1487)
+- **Related by words:** [Q1484](quotes-2026-10-18.md#q1484) (siso), [Q1485](quotes-2026-10-18.md#q1485) (siso), [Q1486](quotes-2026-10-18.md#q1486) (siso), [Q1487](quotes-2026-10-18.md#q1487) (siso)
 - **Where it is recorded (2):**
   - `idearium/api/index.js:1423` · release 0.60.156 GM5 · whole
 
@@ -1159,15 +1159,15 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2277"></a>
-### Q2277 · undated
+<a id="q2223"></a>
+### Q2223 · undated
 
 > look at siso
 
 - **The work it belongs to:** release 0.60.154
-- **Said in the same message:** [Q1530](quotes-2026-10-18.md#q1530)
-- **The same words are also in:** [Q2276](quotes-undated-2.md#q2276), [Q1532](quotes-2026-10-18.md#q1532), [Q1533](quotes-2026-10-18.md#q1533), [Q1534](quotes-2026-10-18.md#q1534), [Q1535](quotes-2026-10-18.md#q1535)
-- **Related by words:** [Q1532](quotes-2026-10-18.md#q1532) (siso), [Q1533](quotes-2026-10-18.md#q1533) (siso), [Q1534](quotes-2026-10-18.md#q1534) (siso), [Q1535](quotes-2026-10-18.md#q1535) (siso)
+- **Said in the same message:** [Q1482](quotes-2026-10-18.md#q1482)
+- **The same words are also in:** [Q2222](quotes-undated-2.md#q2222), [Q1484](quotes-2026-10-18.md#q1484), [Q1485](quotes-2026-10-18.md#q1485), [Q1486](quotes-2026-10-18.md#q1486), [Q1487](quotes-2026-10-18.md#q1487)
+- **Related by words:** [Q1484](quotes-2026-10-18.md#q1484) (siso), [Q1485](quotes-2026-10-18.md#q1485) (siso), [Q1486](quotes-2026-10-18.md#q1486) (siso), [Q1487](quotes-2026-10-18.md#q1487) (siso)
 - **Where it is recorded (1):**
   - `lib/version.js:115` · under *// ── SL line (claude/sleepy-gates-9lc085, parallel; merged in 0.60.233): 0.60.230 → 0.60.225 ──* · release 0.60.154 · whole
 
@@ -1177,13 +1177,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2278"></a>
-### Q2278 · undated
+<a id="q2224"></a>
+### Q2224 · undated
 
 > look at versionium... timeline that each system has... sigma and file hashes to snapshot each file change... branch, debug, deltas for bottlenecks, sigma for anomalies.
 
-- **Recorded together with:** [Q0701](quotes-2026-09-26.md#q0701), [Q1108](quotes-2026-10-09.md#q1108), [Q2048](quotes-undated-1.md#q2048), [Q2282](quotes-undated-2.md#q2282), [Q2307](quotes-undated-2.md#q2307), [Q2447](quotes-undated-2.md#q2447)
-- **Related by words:** [Q2415](quotes-undated-2.md#q2415) (bottlenecks, deltas, sigma, system, timeline)
+- **Recorded together with:** [Q0701](quotes-2026-09-26.md#q0701), [Q1064](quotes-2026-10-09.md#q1064), [Q1994](quotes-undated-1.md#q1994), [Q2228](quotes-undated-2.md#q2228), [Q2253](quotes-undated-2.md#q2253), [Q2392](quotes-undated-2.md#q2392)
+- **Related by words:** [Q2361](quotes-undated-2.md#q2361) (bottlenecks, deltas, sigma, system, timeline)
 - **Where it is recorded (1):**
   - `docs/repair-contract-and-loom-hub-phasemap.spec:172` · under *name:        repair-contract-and-loom-hub* · whole
 
@@ -1199,15 +1199,15 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2279"></a>
-### Q2279 · undated
+<a id="q2225"></a>
+### Q2225 · undated
 
 > look in emerge
 
 - **The work it belongs to:** release 0.60.176
-- **Said in the same message:** [Q1609](quotes-2026-10-20.md#q1609)
-- **The same words are also in:** [Q1608](quotes-2026-10-20.md#q1608), [Q2279](quotes-undated-2.md#q2279)
-- **Related by words:** [Q1608](quotes-2026-10-20.md#q1608) (emerge)
+- **Said in the same message:** [Q1561](quotes-2026-10-20.md#q1561)
+- **The same words are also in:** [Q1560](quotes-2026-10-20.md#q1560), [Q2225](quotes-undated-2.md#q2225)
+- **Related by words:** [Q1560](quotes-2026-10-20.md#q1560) (emerge)
 - **Where it is recorded (1):**
   - `lib/version.js:94` · under *// ── SL line (claude/sleepy-gates-9lc085, parallel; merged in 0.60.233): 0.60.230 → 0.60.225 ──* · release 0.60.176 · whole
 
@@ -1216,13 +1216,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2280"></a>
-### Q2280 · undated
+<a id="q2226"></a>
+### Q2226 · undated
 
 > loom is
 
 - **The work it belongs to:** phase R3
-- **Recorded together with:** [Q0143](quotes-2026-08-22.md#q0143), [Q0722](quotes-2026-09-27.md#q0722), [Q1338](quotes-2026-10-15.md#q1338), [Q1651](quotes-2026-10-21.md#q1651), [Q2022](quotes-undated-1.md#q2022), [Q2236](quotes-undated-2.md#q2236)
+- **Recorded together with:** [Q0143](quotes-2026-08-22.md#q0143), [Q0722](quotes-2026-09-27.md#q0722), [Q1294](quotes-2026-10-15.md#q1294), [Q1603](quotes-2026-10-21.md#q1603), [Q1968](quotes-undated-1.md#q1968), [Q2182](quotes-undated-2.md#q2182)
 - **Where it is recorded (1):**
   - `docs/atlases/core-atlas.md:385` · under *#### `lib/`* · phase R3 · whole
 
@@ -1237,8 +1237,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2281"></a>
-### Q2281 · undated
+<a id="q2227"></a>
+### Q2227 · undated
 
 > loom is supposed to be the system to do what your doing... editing, building, expanding nexus.
 
@@ -1257,12 +1257,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2282"></a>
-### Q2282 · undated
+<a id="q2228"></a>
+### Q2228 · undated
 
 > loom should already have a phasemap system? i want all this logged into loom, maybe using cortex to log the phase maps.
 
-- **Recorded together with:** [Q0701](quotes-2026-09-26.md#q0701), [Q1108](quotes-2026-10-09.md#q1108), [Q2048](quotes-undated-1.md#q2048), [Q2278](quotes-undated-2.md#q2278), [Q2307](quotes-undated-2.md#q2307), [Q2447](quotes-undated-2.md#q2447)
+- **Recorded together with:** [Q0701](quotes-2026-09-26.md#q0701), [Q1064](quotes-2026-10-09.md#q1064), [Q1994](quotes-undated-1.md#q1994), [Q2224](quotes-undated-2.md#q2224), [Q2253](quotes-undated-2.md#q2253), [Q2392](quotes-undated-2.md#q2392)
 - **Related by words:** [Q0060](quotes-2026-08-12.md#q0060) (log, loom, maps, phase, phasemap, system), [Q0186](quotes-2026-08-23.md#q0186) (cortex, loom, phasemap, system)
 - **Where it is recorded (2):**
   - `docs/repair-contract-and-loom-hub-phasemap.spec:106` · under *name:        repair-contract-and-loom-hub* · whole
@@ -1288,14 +1288,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2283"></a>
-### Q2283 · undated
+<a id="q2229"></a>
+### Q2229 · undated
 
 > main's two
 
 - **The work it belongs to:** release 0.60.2
-- **Recorded together with:** [Q1323](quotes-2026-10-15.md#q1323), [Q1357](quotes-2026-10-15.md#q1357), [Q2166](quotes-undated-1.md#q2166), [Q2395](quotes-undated-2.md#q2395), [Q2396](quotes-undated-2.md#q2396), [Q2433](quotes-undated-2.md#q2433), [Q2434](quotes-undated-2.md#q2434), [Q2477](quotes-undated-3.md#q2477)
-- **The same words are also in:** [Q2283](quotes-undated-2.md#q2283)
+- **Recorded together with:** [Q1280](quotes-2026-10-15.md#q1280), [Q1313](quotes-2026-10-15.md#q1313), [Q2112](quotes-undated-1.md#q2112), [Q2341](quotes-undated-2.md#q2341), [Q2342](quotes-undated-2.md#q2342), [Q2379](quotes-undated-2.md#q2379), [Q2422](quotes-undated-3.md#q2422)
+- **The same words are also in:** [Q2229](quotes-undated-2.md#q2229)
 - **Where it is recorded (1):**
   - `tests/modules/test-release-notes.test.js:48` · under *// ── the fixture repo ────────────────────────────────────────────────────────────────────────────────────────────────* · release 0.60.2 · whole
 
@@ -1308,8 +1308,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2284"></a>
-### Q2284 · undated
+<a id="q2230"></a>
+### Q2230 · undated
 
 > make
 
@@ -1327,8 +1327,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2285"></a>
-### Q2285 · undated
+<a id="q2231"></a>
+### Q2231 · undated
 
 > make a tool to find stubs, mocks, unwired components/code/ files.
 
@@ -1346,8 +1346,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2286"></a>
-### Q2286 · undated
+<a id="q2232"></a>
+### Q2232 · undated
 
 > make any other tools that reduce tokens from your end. find stubs, orphaned code, dead code.
 
@@ -1364,8 +1364,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2287"></a>
-### Q2287 · undated
+<a id="q2233"></a>
+### Q2233 · undated
 
 > make clearglass downloads manager, a complete artifact and agent chat index... redundant backups, and fallback chains. index.db. and .response.
 
@@ -1384,13 +1384,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2288"></a>
-### Q2288 · undated
+<a id="q2234"></a>
+### Q2234 · undated
 
 > make each agent able to not need the same chat … so we could use a different chat or agent each gate
 
 - **The work it belongs to:** release 0.60.77 GW2
-- **Related by words:** [Q2289](quotes-undated-2.md#q2289) (agent, chat, different, gate)
+- **Related by words:** [Q2235](quotes-undated-2.md#q2235) (agent, chat, different, gate)
 - **Where it is recorded (1):**
   - `tests/modules/test-run-state.test.js:138` · under *// ── RS-4x the response and the lost job ──* · release 0.60.77 GW2 · whole
 
@@ -1403,14 +1403,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2289"></a>
-### Q2289 · undated
+<a id="q2235"></a>
+### Q2235 · undated
 
 > make each agent able to not need the same chat, like the gates, and nexus hold the persistent data, so we could use a different chat or agent each gate
 
 - **The work it belongs to:** release 0.60.77 · release 0.60.77 GW2
-- **Said in the same message:** [Q1303](quotes-2026-10-15.md#q1303), [Q1975](quotes-undated-1.md#q1975), [Q2026](quotes-undated-1.md#q2026)
-- **Related by words:** [Q2288](quotes-undated-2.md#q2288) (agent, chat, different, gate), [Q1525](quotes-2026-10-18.md#q1525) (gate, persistent), [Q1816](quotes-2026-10-26.md#q1816) (gate, gates, persistent)
+- **Said in the same message:** [Q1262](quotes-2026-10-15.md#q1262), [Q1921](quotes-undated-1.md#q1921), [Q1972](quotes-undated-1.md#q1972)
+- **Related by words:** [Q2234](quotes-undated-2.md#q2234) (agent, chat, different, gate), [Q1477](quotes-2026-10-18.md#q1477) (gate, persistent), [Q1765](quotes-2026-10-26.md#q1765) (gate, gates, persistent)
 - **Where it is recorded (2):**
   - `lib/run-state.js:25` · release 0.60.77 GW2 · whole
 
@@ -1431,14 +1431,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2290"></a>
-### Q2290 · undated
+<a id="q2236"></a>
+### Q2236 · undated
 
 > make idearium full screen
 
 - **The work it belongs to:** release 0.39.300 UI1
-- **Recorded together with:** [Q0764](quotes-2026-09-29.md#q0764), [Q0804](quotes-2026-10-01.md#q0804), [Q0806](quotes-2026-10-01.md#q0806), [Q0823](quotes-2026-10-02.md#q0823), [Q0860](quotes-2026-10-02.md#q0860), [Q0861](quotes-2026-10-02.md#q0861), [Q1798](quotes-2026-10-25.md#q1798), [Q2004](quotes-undated-1.md#q2004), [Q2195](quotes-undated-1.md#q2195)
-- **The same words are also in:** [Q2291](quotes-undated-2.md#q2291), [Q2290](quotes-undated-2.md#q2290)
+- **Recorded together with:** [Q0764](quotes-2026-09-29.md#q0764), [Q0804](quotes-2026-10-01.md#q0804), [Q0806](quotes-2026-10-01.md#q0806), [Q0823](quotes-2026-10-02.md#q0823), [Q0860](quotes-2026-10-02.md#q0860), [Q0861](quotes-2026-10-02.md#q0861), [Q1747](quotes-2026-10-25.md#q1747), [Q1950](quotes-undated-1.md#q1950), [Q2141](quotes-undated-1.md#q2141)
+- **The same words are also in:** [Q2237](quotes-undated-2.md#q2237), [Q2236](quotes-undated-2.md#q2236)
 - **Where it is recorded (1):**
   - `idearium/ui/js/app.js:3678` · under *// ── §COMPARTMENT REMOTES — §0.39.265 ──────────────────────────────────────* · release 0.39.300 UI1 · whole
 
@@ -1451,14 +1451,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2291"></a>
-### Q2291 · undated
+<a id="q2237"></a>
+### Q2237 · undated
 
 > make idearium full screen. its cluttered also
 
 - **The work it belongs to:** release 0.39.300 · release 0.39.300 UI1
-- **Said in the same message:** [Q2299](quotes-undated-2.md#q2299)
-- **Recorded together with:** [Q0821](quotes-2026-10-02.md#q0821), [Q0823](quotes-2026-10-02.md#q0823), [Q0826](quotes-2026-10-02.md#q0826), [Q0837](quotes-2026-10-02.md#q0837), [Q0848](quotes-2026-10-02.md#q0848), [Q0859](quotes-2026-10-02.md#q0859), [Q0860](quotes-2026-10-02.md#q0860), [Q0861](quotes-2026-10-02.md#q0861), [Q0869](quotes-2026-10-02.md#q0869), [Q0881](quotes-2026-10-02.md#q0881), [Q2007](quotes-undated-1.md#q2007), [Q2063](quotes-undated-1.md#q2063), [Q2335](quotes-undated-2.md#q2335)
+- **Said in the same message:** [Q2245](quotes-undated-2.md#q2245)
+- **Recorded together with:** [Q0821](quotes-2026-10-02.md#q0821), [Q0823](quotes-2026-10-02.md#q0823), [Q0826](quotes-2026-10-02.md#q0826), [Q0837](quotes-2026-10-02.md#q0837), [Q0848](quotes-2026-10-02.md#q0848), [Q0859](quotes-2026-10-02.md#q0859), [Q0860](quotes-2026-10-02.md#q0860), [Q0861](quotes-2026-10-02.md#q0861), [Q0869](quotes-2026-10-02.md#q0869), [Q0881](quotes-2026-10-02.md#q0881), [Q1953](quotes-undated-1.md#q1953), [Q2009](quotes-undated-1.md#q2009), [Q2281](quotes-undated-2.md#q2281)
 - **Where it is recorded (3):**
   - `docs/atlases/idearium-atlas.md:2628` · under *## Getting it to code a project: plan, phases, the work surface, one look (v0.39.284)* · release 0.39.300 · whole
 
@@ -1488,14 +1488,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2292"></a>
-### Q2292 · undated
+<a id="q2238"></a>
+### Q2238 · undated
 
 > make it buildable
 
 - **The work it belongs to:** release 1.5.0
-- **Recorded together with:** [Q1815](quotes-2026-10-26.md#q1815), [Q2051](quotes-undated-1.md#q2051), [Q2191](quotes-undated-1.md#q2191), [Q2459](quotes-undated-2.md#q2459)
-- **The same words are also in:** [Q2292](quotes-undated-2.md#q2292)
+- **Recorded together with:** [Q1764](quotes-2026-10-26.md#q1764), [Q1997](quotes-undated-1.md#q1997), [Q2137](quotes-undated-1.md#q2137), [Q2404](quotes-undated-2.md#q2404)
+- **The same words are also in:** [Q2238](quotes-undated-2.md#q2238)
 - **Where it is recorded (1):**
   - `Emerge/emerge/lang/emerge-lang.spec:6` · under *name:     emerge-lang* · release 1.5.0 · whole
 
@@ -1506,8 +1506,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2293"></a>
-### Q2293 · undated
+<a id="q2239"></a>
+### Q2239 · undated
 
 > make sure co-pilot can access the new system, commands.
 
@@ -1524,8 +1524,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2294"></a>
-### Q2294 · undated
+<a id="q2240"></a>
+### Q2240 · undated
 
 > make sure friction, gaps, intention, sigmas are all wired into loom's component registry to monitor using the diagnostic system.
 
@@ -1540,12 +1540,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2295"></a>
-### Q2295 · undated
+<a id="q2241"></a>
+### Q2241 · undated
 
 > make sure the graphs are hooked in, and nexus is improving it's understanding.
 
-- **Related by words:** [Q1592](quotes-2026-10-19.md#q1592) (improving, nexus, understanding)
+- **Related by words:** [Q1544](quotes-2026-10-19.md#q1544) (improving, nexus, understanding)
 - **Where it is recorded (1):**
   - `idearium/repo/nexus-self.js:458` · under *// ── understanding: what Nexus knows about itself, measured per sync ─────────* · whole
 
@@ -1559,8 +1559,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2296"></a>
-### Q2296 · undated
+<a id="q2242"></a>
+### Q2242 · undated
 
 > make the cli open in a new window that connects to each system with co-pilot.
 
@@ -1592,13 +1592,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2297"></a>
-### Q2297 · undated
+<a id="q2243"></a>
+### Q2243 · undated
 
 > make the macros and workflow automation, exportable node types. .macro, and maybe .workflow or .framework?
 
 - **The work it belongs to:** release 0.39.266
-- **Related by words:** [Q1904](quotes-2026-10-29.md#q1904) (automation, macros, workflow), [Q1356](quotes-2026-10-15.md#q1356) (automation, macro, macros, node), [Q1964](quotes-2026-10-30.md#q1964) (automation, macro, macros, node)
+- **Related by words:** [Q1851](quotes-2026-10-29.md#q1851) (automation, macros, workflow), [Q1312](quotes-2026-10-15.md#q1312) (automation, macro, macros, node), [Q1910](quotes-2026-10-30.md#q1910) (automation, macro, macros, node)
 - **Where it is recorded (3):**
   - `lib/automation-nodes.js:6` · release 0.39.266 · whole
 
@@ -1634,13 +1634,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2298"></a>
-### Q2298 · undated
+<a id="q2244"></a>
+### Q2244 · undated
 
 > make the navigation more dynamic. i like when its less static.
 
 - **The work it belongs to:** release 0.39.284 W4
-- **Said in the same message:** [Q0752](quotes-2026-09-29.md#q0752), [Q0778](quotes-2026-09-29.md#q0778), [Q2224](quotes-undated-2.md#q2224), [Q2404](quotes-undated-2.md#q2404)
+- **Said in the same message:** [Q0752](quotes-2026-09-29.md#q0752), [Q0778](quotes-2026-09-29.md#q0778), [Q2170](quotes-undated-2.md#q2170), [Q2350](quotes-undated-2.md#q2350)
 - **Where it is recorded (2):**
   - `idearium/ui/index.html:120` · release 0.39.284 W4 · whole
 
@@ -1664,14 +1664,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2299"></a>
-### Q2299 · undated
+<a id="q2245"></a>
+### Q2245 · undated
 
 > make this enterprise, remove the noise, this is for speccing
 
 - **The work it belongs to:** release 0.39.300
-- **Said in the same message:** [Q2291](quotes-undated-2.md#q2291)
-- **Recorded together with:** [Q0821](quotes-2026-10-02.md#q0821), [Q0823](quotes-2026-10-02.md#q0823), [Q0826](quotes-2026-10-02.md#q0826), [Q0837](quotes-2026-10-02.md#q0837), [Q0848](quotes-2026-10-02.md#q0848), [Q0859](quotes-2026-10-02.md#q0859), [Q0860](quotes-2026-10-02.md#q0860), [Q0861](quotes-2026-10-02.md#q0861), [Q0869](quotes-2026-10-02.md#q0869), [Q0881](quotes-2026-10-02.md#q0881), [Q2007](quotes-undated-1.md#q2007), [Q2063](quotes-undated-1.md#q2063), [Q2335](quotes-undated-2.md#q2335)
+- **Said in the same message:** [Q2237](quotes-undated-2.md#q2237)
+- **Recorded together with:** [Q0821](quotes-2026-10-02.md#q0821), [Q0823](quotes-2026-10-02.md#q0823), [Q0826](quotes-2026-10-02.md#q0826), [Q0837](quotes-2026-10-02.md#q0837), [Q0848](quotes-2026-10-02.md#q0848), [Q0859](quotes-2026-10-02.md#q0859), [Q0860](quotes-2026-10-02.md#q0860), [Q0861](quotes-2026-10-02.md#q0861), [Q0869](quotes-2026-10-02.md#q0869), [Q0881](quotes-2026-10-02.md#q0881), [Q1953](quotes-undated-1.md#q1953), [Q2009](quotes-undated-1.md#q2009), [Q2281](quotes-undated-2.md#q2281)
 - **Where it is recorded (2):**
   - `docs/atlases/idearium-atlas.md:2628` · under *## Getting it to code a project: plan, phases, the work surface, one look (v0.39.284)* · release 0.39.300 · whole
 
@@ -1691,12 +1691,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2300"></a>
-### Q2300 · undated
+<a id="q2246"></a>
+### Q2246 · undated
 
 > make this fully configurable in a config file.
 
-- **Related by words:** [Q2055](quotes-undated-1.md#q2055) (config, configurable, file, fully)
+- **Related by words:** [Q2001](quotes-undated-1.md#q2001) (config, configurable, file, fully)
 - **Where it is recorded (1):**
   - `lib/project-import.config.js:7` · whole
 
@@ -1709,8 +1709,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2301"></a>
-### Q2301 · undated
+<a id="q2247"></a>
+### Q2247 · undated
 
 > map clearglass... make a phasemap for clearglass, tab per repo, ui expansion, each ui a seperate file. then make a seperate brain os phasemap.
 
@@ -1723,8 +1723,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2302"></a>
-### Q2302 · undated
+<a id="q2248"></a>
+### Q2248 · undated
 
 > map each system and the data it outputs... to a node type.
 
@@ -1740,13 +1740,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2303"></a>
-### Q2303 · undated
+<a id="q2249"></a>
+### Q2249 · undated
 
 > map first, maybe use lifeline or something, or look at the atlas' and .spec. agent tools
 
 - **The work it belongs to:** release 0.59.11 TN5
-- **Said in the same message:** [Q1158](quotes-2026-10-10.md#q1158)
+- **Said in the same message:** [Q1117](quotes-2026-10-10.md#q1117)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1716` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 0.59.11 TN5 · whole
 
@@ -1758,13 +1758,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2304"></a>
-### Q2304 · undated
+<a id="q2250"></a>
+### Q2250 · undated
 
 > map it to the git
 
 - **The work it belongs to:** release 0.39.23
-- **The same words are also in:** [Q2304](quotes-undated-2.md#q2304)
+- **The same words are also in:** [Q2250](quotes-undated-2.md#q2250)
 - **Where it is recorded (1):**
   - `lib/version.js:1215` · release 0.39.23 · whole
 
@@ -1775,8 +1775,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2305"></a>
-### Q2305 · undated
+<a id="q2251"></a>
+### Q2251 · undated
 
 > marge.
 
@@ -1791,13 +1791,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2306"></a>
-### Q2306 · undated
+<a id="q2252"></a>
+### Q2252 · undated
 
 > maybe add a retry button.
 
 - **The work it belongs to:** release 0.60.22
-- **The same words are also in:** [Q1256](quotes-2026-10-13.md#q1256), [Q2306](quotes-undated-2.md#q2306)
+- **The same words are also in:** [Q1215](quotes-2026-10-13.md#q1215), [Q2252](quotes-undated-2.md#q2252)
 - **Where it is recorded (1):**
   - `idearium/ui/js/repo-tasks.js:383` · release 0.60.22 · whole
 
@@ -1810,12 +1810,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2307"></a>
-### Q2307 · undated
+<a id="q2253"></a>
+### Q2253 · undated
 
 > maybe have this moved up to the top?
 
-- **Recorded together with:** [Q0701](quotes-2026-09-26.md#q0701), [Q1108](quotes-2026-10-09.md#q1108), [Q2048](quotes-undated-1.md#q2048), [Q2278](quotes-undated-2.md#q2278), [Q2282](quotes-undated-2.md#q2282), [Q2447](quotes-undated-2.md#q2447)
+- **Recorded together with:** [Q0701](quotes-2026-09-26.md#q0701), [Q1064](quotes-2026-10-09.md#q1064), [Q1994](quotes-undated-1.md#q1994), [Q2224](quotes-undated-2.md#q2224), [Q2228](quotes-undated-2.md#q2228), [Q2392](quotes-undated-2.md#q2392)
 - **Where it is recorded (1):**
   - `docs/repair-contract-and-loom-hub-phasemap.spec:119` · under *name:        repair-contract-and-loom-hub* · whole
 
@@ -1828,14 +1828,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2308"></a>
-### Q2308 · undated
+<a id="q2254"></a>
+### Q2254 · undated
 
 > maybe just copilot
 
 - **The work it belongs to:** release 0.60.181
-- **Recorded together with:** [Q1631](quotes-2026-10-21.md#q1631), [Q1676](quotes-2026-10-22.md#q1676), [Q1677](quotes-2026-10-22.md#q1677), [Q1681](quotes-2026-10-22.md#q1681), [Q1685](quotes-2026-10-22.md#q1685), [Q1686](quotes-2026-10-22.md#q1686), [Q1688](quotes-2026-10-22.md#q1688)
-- **The same words are also in:** [Q1645](quotes-2026-10-21.md#q1645), [Q2308](quotes-undated-2.md#q2308)
+- **Recorded together with:** [Q1583](quotes-2026-10-21.md#q1583), [Q1628](quotes-2026-10-22.md#q1628), [Q1629](quotes-2026-10-22.md#q1629), [Q1633](quotes-2026-10-22.md#q1633), [Q1637](quotes-2026-10-22.md#q1637), [Q1638](quotes-2026-10-22.md#q1638), [Q1640](quotes-2026-10-22.md#q1640)
+- **The same words are also in:** [Q1597](quotes-2026-10-21.md#q1597), [Q2254](quotes-undated-2.md#q2254)
 - **Where it is recorded (2):**
   - `clear-glass/renderer/browser.js:938` · under *// ── Co-pilot ───────────────────────────────────────────────────────* · release 0.60.181 · whole
 
@@ -1858,8 +1858,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2309"></a>
-### Q2309 · undated
+<a id="q2255"></a>
+### Q2255 · undated
 
 > maybe leverage the most compressed semantix or linguistics for the chunks?
 
@@ -1899,13 +1899,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2310"></a>
-### Q2310 · undated
+<a id="q2256"></a>
+### Q2256 · undated
 
 > maybe only inject onto interactable elements. then the copilot can use nexus nerve to understand where its at in relation to the ui using the injected scrips
 
 - **The work it belongs to:** release 0.60.7
-- **Said in the same message:** [Q1237](quotes-2026-10-13.md#q1237), [Q2089](quotes-undated-1.md#q2089)
+- **Said in the same message:** [Q1196](quotes-2026-10-13.md#q1196), [Q2035](quotes-undated-1.md#q2035)
 - **Where it is recorded (1):**
   - `versionium/changelogs/CHANGELOG-0.60.7.md:95` · under *## Clear Glass: three fixes from his next message, the rest mapped first* · release 0.60.7 · whole
 
@@ -1919,12 +1919,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2311"></a>
-### Q2311 · undated
+<a id="q2257"></a>
+### Q2257 · undated
 
 > maybe you have an editable model in cortex, each agent does, that logs constraints, token limits, anything that helps the system work around token limits, data persistence, anything.
 
-- **Related by words:** [Q2114](quotes-undated-1.md#q2114) (constraints, limits, token), [Q0069](quotes-2026-08-13.md#q0069) (constraints, limits, token)
+- **Related by words:** [Q2060](quotes-undated-1.md#q2060) (constraints, limits, token), [Q0069](quotes-2026-08-13.md#q0069) (constraints, limits, token)
 - **Where it is recorded (1):**
   - `lib/agent-notes.js:10` · whole
 
@@ -1939,13 +1939,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2312"></a>
-### Q2312 · undated
+<a id="q2258"></a>
+### Q2258 · undated
 
 > merge.
 
 - **The work it belongs to:** release 0.39.59
-- **Related by words:** [Q1381](quotes-2026-10-16.md#q1381) (merge), [Q1456](quotes-2026-10-17.md#q1456) (merge), [Q1457](quotes-2026-10-17.md#q1457) (merge), [Q1458](quotes-2026-10-17.md#q1458) (merge)
+- **Related by words:** [Q1337](quotes-2026-10-16.md#q1337) (merge), [Q1409](quotes-2026-10-17.md#q1409) (merge), [Q1410](quotes-2026-10-17.md#q1410) (merge)
 - **Where it is recorded (1):**
   - `lib/version.js:1215` · release 0.39.59 · whole
 
@@ -1956,14 +1956,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2313"></a>
-### Q2313 · undated
+<a id="q2259"></a>
+### Q2259 · undated
 
 > merge. then next phase.
 
 - **The work it belongs to:** release 0.60.115
-- **The same words are also in:** [Q1499](quotes-2026-10-17.md#q1499), [Q1435](quotes-2026-10-16.md#q1435), [Q2313](quotes-undated-2.md#q2313)
-- **Related by words:** [Q1435](quotes-2026-10-16.md#q1435) (merge, phase), [Q1499](quotes-2026-10-17.md#q1499) (merge, phase)
+- **The same words are also in:** [Q1451](quotes-2026-10-17.md#q1451), [Q1389](quotes-2026-10-16.md#q1389), [Q2259](quotes-undated-2.md#q2259)
+- **Related by words:** [Q1389](quotes-2026-10-16.md#q1389) (merge, phase), [Q1451](quotes-2026-10-17.md#q1451) (merge, phase)
 - **Where it is recorded (1):**
   - `lib/version.js:154` · under *// ── SL line (claude/sleepy-gates-9lc085, parallel; merged in 0.60.233): 0.60.230 → 0.60.225 ──* · release 0.60.115 · whole
 
@@ -1973,8 +1973,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2314"></a>
-### Q2314 · undated
+<a id="q2260"></a>
+### Q2260 · undated
 
 > merge. to 264. keep the git, loom relies on it. the nexus atlas in the nexus repo. expand it completely, don't make it just a list. then…
 
@@ -1992,8 +1992,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
 
   - `docs/atlases/nexus-atlas.md:16691` · under *- 0.39.266. — nexus back in Idearium, agents build it through the registry harness, deletes stick — James: "nexus should be in idearium but * · release 0.39.264 · whole
 
-<a id="q2315"></a>
-### Q2315 · undated
+<a id="q2261"></a>
+### Q2261 · undated
 
 > might not be important right now
 
@@ -2009,14 +2009,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2316"></a>
-### Q2316 · undated
+<a id="q2262"></a>
+### Q2262 · undated
 
 > migrate to versionium completely.
 
 - **Recorded together with:** [Q0300](quotes-2026-09-02.md#q0300)
-- **The same words are also in:** [Q0255](quotes-2026-09-01.md#q0255), [Q2316](quotes-undated-2.md#q2316), [Q0256](quotes-2026-09-01.md#q0256), [Q2317](quotes-undated-2.md#q2317)
-- **Related by words:** [Q0255](quotes-2026-09-01.md#q0255) (completely, migrate, versionium), [Q0256](quotes-2026-09-01.md#q0256) (completely, migrate, versionium), [Q2317](quotes-undated-2.md#q2317) (completely, migrate, versionium), [Q0534](quotes-2026-09-19.md#q0534) (migrate, versionium)
+- **The same words are also in:** [Q0255](quotes-2026-09-01.md#q0255), [Q2262](quotes-undated-2.md#q2262), [Q0256](quotes-2026-09-01.md#q0256), [Q2263](quotes-undated-2.md#q2263)
+- **Related by words:** [Q0255](quotes-2026-09-01.md#q0255) (completely, migrate, versionium), [Q0256](quotes-2026-09-01.md#q0256) (completely, migrate, versionium), [Q2263](quotes-undated-2.md#q2263) (completely, migrate, versionium), [Q0534](quotes-2026-09-19.md#q0534) (migrate, versionium)
 - **Where it is recorded (1):**
   - `versionium/spec/versionium.spec:42` · under *name:        versionium* · whole
 
@@ -2029,14 +2029,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2317"></a>
-### Q2317 · undated
+<a id="q2263"></a>
+### Q2263 · undated
 
 > migrate to versionium completely.
 
 - **Recorded together with:** [Q0300](quotes-2026-09-02.md#q0300)
-- **The same words are also in:** [Q0255](quotes-2026-09-01.md#q0255), [Q2316](quotes-undated-2.md#q2316), [Q0256](quotes-2026-09-01.md#q0256), [Q2317](quotes-undated-2.md#q2317)
-- **Related by words:** [Q0255](quotes-2026-09-01.md#q0255) (completely, migrate, versionium), [Q0256](quotes-2026-09-01.md#q0256) (completely, migrate, versionium), [Q2316](quotes-undated-2.md#q2316) (completely, migrate, versionium), [Q0534](quotes-2026-09-19.md#q0534) (migrate, versionium)
+- **The same words are also in:** [Q0255](quotes-2026-09-01.md#q0255), [Q2262](quotes-undated-2.md#q2262), [Q0256](quotes-2026-09-01.md#q0256), [Q2263](quotes-undated-2.md#q2263)
+- **Related by words:** [Q0255](quotes-2026-09-01.md#q0255) (completely, migrate, versionium), [Q0256](quotes-2026-09-01.md#q0256) (completely, migrate, versionium), [Q2262](quotes-undated-2.md#q2262) (completely, migrate, versionium), [Q0534](quotes-2026-09-19.md#q0534) (migrate, versionium)
 - **Where it is recorded (1):**
   - `docs/versionium.spec:42` · under *name:        versionium* · whole
 
@@ -2049,13 +2049,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2318"></a>
-### Q2318 · undated
+<a id="q2264"></a>
+### Q2264 · undated
 
 > music maker
 
 - **The work it belongs to:** release 0.39.268
-- **The same words are also in:** [Q2318](quotes-undated-2.md#q2318)
+- **The same words are also in:** [Q2264](quotes-undated-2.md#q2264)
 - **Where it is recorded (2):**
   - `README.md:16689` · under *- 0.39.269. — agents remember, and the memory is the Clear Glass download manager — James: "ollama is supposed to have persistent memory, sa* · release 0.39.268 · whole
 
@@ -2069,13 +2069,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
 
   - `docs/atlases/nexus-atlas.md:16688` · under *- 0.39.269. — agents remember, and the memory is the Clear Glass download manager — James: "ollama is supposed to have persistent memory, sa* · release 0.39.268 · whole
 
-<a id="q2319"></a>
-### Q2319 · undated
+<a id="q2265"></a>
+### Q2265 · undated
 
 > naming schema... versions... why do you do that?
 
 - **The work it belongs to:** release 0.60.103
-- **Related by words:** [Q1437](quotes-2026-10-16.md#q1437) (naming, schema, versions)
+- **Related by words:** [Q1391](quotes-2026-10-16.md#q1391) (naming, schema, versions)
 - **Where it is recorded (1):**
   - `cos/app/store.js:77` · release 0.60.103 · whole
 
@@ -2088,14 +2088,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2320"></a>
-### Q2320 · undated
+<a id="q2266"></a>
+### Q2266 · undated
 
 > need the accessability settings
 
 - **The work it belongs to:** release 0.60.273
-- **The same words are also in:** [Q1860](quotes-2026-10-28.md#q1860), [Q2320](quotes-undated-2.md#q2320)
-- **Related by words:** [Q1837](quotes-2026-10-28.md#q1837) (accessability, settings), [Q1945](quotes-2026-10-30.md#q1945) (accessability, settings), [Q1860](quotes-2026-10-28.md#q1860) (accessability, settings)
+- **The same words are also in:** [Q1808](quotes-2026-10-28.md#q1808), [Q2266](quotes-undated-2.md#q2266)
+- **Related by words:** [Q1785](quotes-2026-10-28.md#q1785) (accessability, settings), [Q1891](quotes-2026-10-30.md#q1891) (accessability, settings), [Q1808](quotes-2026-10-28.md#q1808) (accessability, settings)
 - **Where it is recorded (1):**
   - `tests/modules/test-changelogs-home.test.js:63` · release 0.60.273 · whole
 
@@ -2108,13 +2108,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2321"></a>
-### Q2321 · undated
+<a id="q2267"></a>
+### Q2267 · undated
 
 > need the specs to be relevant to the system they are for … also the spec workshop uses them, and idearium has the option to choose spec from library to create a repo with.
 
 - **The work it belongs to:** release 0.59.2
-- **Related by words:** [Q1155](quotes-2026-10-10.md#q1155) (relevant, spec, specs, system, workshop)
+- **Related by words:** [Q1114](quotes-2026-10-10.md#q1114) (relevant, spec, specs, system, workshop)
 - **Where it is recorded (2):**
   - `idearium/api/index.js:2940` · release 0.59.2 · whole
 
@@ -2139,14 +2139,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2322"></a>
-### Q2322 · undated
+<a id="q2268"></a>
+### Q2268 · undated
 
 > need this fixed. completely
 
 - **The work it belongs to:** release 0.60.106
-- **The same words are also in:** [Q1438](quotes-2026-10-16.md#q1438), [Q2322](quotes-undated-2.md#q2322)
-- **Related by words:** [Q1438](quotes-2026-10-16.md#q1438) (completely, fixed)
+- **The same words are also in:** [Q1392](quotes-2026-10-16.md#q1392), [Q2268](quotes-undated-2.md#q2268)
+- **Related by words:** [Q1392](quotes-2026-10-16.md#q1392) (completely, fixed)
 - **Where it is recorded (1):**
   - `lib/version.js:163` · under *// ── SL line (claude/sleepy-gates-9lc085, parallel; merged in 0.60.233): 0.60.230 → 0.60.225 ──* · release 0.60.106 · whole
 
@@ -2155,8 +2155,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2323"></a>
-### Q2323 · undated
+<a id="q2269"></a>
+### Q2269 · undated
 
 > need to create a full userscript suite... also a command/tool to disable and re-enable them.
 
@@ -2175,13 +2175,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2324"></a>
-### Q2324 · undated
+<a id="q2270"></a>
+### Q2270 · undated
 
 > need to make them aware that the conversation will capture the code written automatically.
 
 - **The work it belongs to:** release 0.39.278
-- **Recorded together with:** [Q0719](quotes-2026-09-27.md#q0719), [Q0947](quotes-2026-10-05.md#q0947), [Q1021](quotes-2026-10-07.md#q1021), [Q2423](quotes-undated-2.md#q2423)
+- **Recorded together with:** [Q0719](quotes-2026-09-27.md#q0719), [Q0947](quotes-2026-10-05.md#q0947), [Q1021](quotes-2026-10-07.md#q1021), [Q2369](quotes-undated-2.md#q2369)
 - **Where it is recorded (2):**
   - `lib/agent-tools/tools/nexus/tool-layers.js:42` · release 0.39.278 · whole
 
@@ -2204,8 +2204,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2325"></a>
-### Q2325 · undated
+<a id="q2271"></a>
+### Q2271 · undated
 
 > need to try them all, unless it's a system failure... don't just go along with this, you're my partner in this.
 
@@ -2222,8 +2222,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2326"></a>
-### Q2326 · undated
+<a id="q2272"></a>
+### Q2272 · undated
 
 > need to try them all, unless it's a system failure... order still matters, use the same Bayesian pattern as tonight.
 
@@ -2240,8 +2240,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2327"></a>
-### Q2327 · undated
+<a id="q2273"></a>
+### Q2273 · undated
 
 > need user documentation for co-pilot... maybe user docs that co-pilot can also read, so it can navigate the user through using itself.
 
@@ -2259,14 +2259,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2328"></a>
-### Q2328 · undated
+<a id="q2274"></a>
+### Q2274 · undated
 
 > needs escalating retry logic
 
 - **The work it belongs to:** release 0.39.352 CT6
-- **The same words are also in:** [Q0984](quotes-2026-10-05.md#q0984), [Q1051](quotes-2026-10-09.md#q1051), [Q2033](quotes-undated-1.md#q2033), [Q2328](quotes-undated-2.md#q2328)
-- **Related by words:** [Q2033](quotes-undated-1.md#q2033) (escalating, logic, retry), [Q1131](quotes-2026-10-10.md#q1131) (escalating, logic, retry), [Q1051](quotes-2026-10-09.md#q1051) (escalating, logic, retry), [Q0984](quotes-2026-10-05.md#q0984) (escalating, logic, retry)
+- **The same words are also in:** [Q0984](quotes-2026-10-05.md#q0984), [Q1050](quotes-2026-10-09.md#q1050), [Q1979](quotes-undated-1.md#q1979), [Q2274](quotes-undated-2.md#q2274)
+- **Related by words:** [Q1979](quotes-undated-1.md#q1979) (escalating, logic, retry), [Q1090](quotes-2026-10-10.md#q1090) (escalating, logic, retry), [Q1050](quotes-2026-10-09.md#q1050) (escalating, logic, retry), [Q0984](quotes-2026-10-05.md#q0984) (escalating, logic, retry)
 - **Where it is recorded (1):**
   - `lib/agent-tools/index.js:260` · release 0.39.352 CT6 · whole
 
@@ -2279,13 +2279,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2329"></a>
-### Q2329 · undated
+<a id="q2275"></a>
+### Q2275 · undated
 
 > needs play, pause and rewind … like i want to be able to pause the repo activity like the way vmware pauses the state of the vm.
 
 - **The work it belongs to:** release 0.60.0 RS1
-- **Related by words:** [Q1214](quotes-2026-10-12.md#q1214) (activity, pause, pauses, play, repo, rewind), [Q1208](quotes-2026-10-12.md#q1208) (pause, pauses, play, rewind, state, vm), [Q0906](quotes-2026-10-05.md#q0906) (pause, rewind, vmware), [Q0118](quotes-2026-08-18.md#q0118) (rewind, state, vm)
+- **Related by words:** [Q1173](quotes-2026-10-12.md#q1173) (activity, pause, pauses, play, repo, rewind), [Q1167](quotes-2026-10-12.md#q1167) (pause, pauses, play, rewind, state, vm), [Q0906](quotes-2026-10-05.md#q0906) (pause, rewind, vmware), [Q0118](quotes-2026-08-18.md#q0118) (rewind, state, vm)
 - **Where it is recorded (1):**
   - `idearium/ui/js/repo-card-time.js:43` · release 0.60.0 RS1 · whole
 
@@ -2299,12 +2299,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2330"></a>
-### Q2330 · undated
+<a id="q2276"></a>
+### Q2276 · undated
 
 > newest version.
 
-- **The same words are also in:** [Q1403](quotes-2026-10-16.md#q1403), [Q2330](quotes-undated-2.md#q2330)
+- **The same words are also in:** [Q1359](quotes-2026-10-16.md#q1359), [Q2276](quotes-undated-2.md#q2276)
 - **Where it is recorded (1):**
   - `clear-glass/src/mesh/agent-mesh.js:705` · whole
 
@@ -2316,13 +2316,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2331"></a>
-### Q2331 · undated
+<a id="q2277"></a>
+### Q2277 · undated
 
 > next
 
 - **The work it belongs to:** release 0.60.114 · release 0.60.114 FR1
-- **Recorded together with:** [Q1308](quotes-2026-10-15.md#q1308), [Q1372](quotes-2026-10-16.md#q1372), [Q1375](quotes-2026-10-16.md#q1375), [Q1397](quotes-2026-10-16.md#q1397), [Q1490](quotes-2026-10-17.md#q1490), [Q1517](quotes-2026-10-17.md#q1517), [Q1528](quotes-2026-10-18.md#q1528), [Q1554](quotes-2026-10-19.md#q1554)
+- **Recorded together with:** [Q1267](quotes-2026-10-15.md#q1267), [Q1328](quotes-2026-10-16.md#q1328), [Q1331](quotes-2026-10-16.md#q1331), [Q1353](quotes-2026-10-16.md#q1353), [Q1442](quotes-2026-10-17.md#q1442), [Q1469](quotes-2026-10-17.md#q1469), [Q1480](quotes-2026-10-18.md#q1480), [Q1506](quotes-2026-10-19.md#q1506)
 - **Where it is recorded (3):**
   - `idearium/api/index.js:9246` · under *// ── §0.39.271 P2/P3 — the Phases manager ───────────────────────────────* · release 0.60.114 FR1 · whole
 
@@ -2352,13 +2352,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2332"></a>
-### Q2332 · undated
+<a id="q2278"></a>
+### Q2278 · undated
 
 > nexus and nexus/core should be the main repo
 
 - **The work it belongs to:** release 0.39.265
-- **Recorded together with:** [Q1231](quotes-2026-10-13.md#q1231), [Q1990](quotes-undated-1.md#q1990)
+- **Recorded together with:** [Q1190](quotes-2026-10-13.md#q1190), [Q1936](quotes-undated-1.md#q1936)
 - **Where it is recorded (2):**
   - `idearium/ui/js/app.js:1890` · release 0.39.265 · whole
 
@@ -2381,8 +2381,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2333"></a>
-### Q2333 · undated
+<a id="q2279"></a>
+### Q2279 · undated
 
 > nexus should be in idearium but isn't. really close to being able to use idearium to build nexus from inside nexus using you as the agent.
 
@@ -2455,13 +2455,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2334"></a>
-### Q2334 · undated
+<a id="q2280"></a>
+### Q2280 · undated
 
 > no im saying to once proven, email them and tell them i could save them money on repair costs
 
 - **The work it belongs to:** release 0.60.146 · release 0.60.148
-- **Said in the same message:** [Q1517](quotes-2026-10-17.md#q1517)
+- **Said in the same message:** [Q1469](quotes-2026-10-17.md#q1469)
 - **Where it is recorded (2):**
   - `versionium/changelogs/CHANGELOG-0.60.148.md:9` · under *# 0.60.148 — 2026-10-17* · release 0.60.148 · whole
 
@@ -2482,16 +2482,16 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2335"></a>
-### Q2335 · undated
+<a id="q2281"></a>
+### Q2281 · undated
 
 > no lowercase
 
 - **The work it belongs to:** release 0.39.297
 - **Said in the same message:** [Q0823](quotes-2026-10-02.md#q0823)
-- **Recorded together with:** [Q0821](quotes-2026-10-02.md#q0821), [Q0826](quotes-2026-10-02.md#q0826), [Q0837](quotes-2026-10-02.md#q0837), [Q0848](quotes-2026-10-02.md#q0848), [Q0860](quotes-2026-10-02.md#q0860), [Q0861](quotes-2026-10-02.md#q0861), [Q0869](quotes-2026-10-02.md#q0869), [Q0881](quotes-2026-10-02.md#q0881), [Q2007](quotes-undated-1.md#q2007), [Q2063](quotes-undated-1.md#q2063), [Q2291](quotes-undated-2.md#q2291), [Q2299](quotes-undated-2.md#q2299)
-- **The same words are also in:** [Q0839](quotes-2026-10-02.md#q0839), [Q2063](quotes-undated-1.md#q2063), [Q2335](quotes-undated-2.md#q2335)
-- **Related by words:** [Q2063](quotes-undated-1.md#q2063) (lowercase)
+- **Recorded together with:** [Q0821](quotes-2026-10-02.md#q0821), [Q0826](quotes-2026-10-02.md#q0826), [Q0837](quotes-2026-10-02.md#q0837), [Q0848](quotes-2026-10-02.md#q0848), [Q0860](quotes-2026-10-02.md#q0860), [Q0861](quotes-2026-10-02.md#q0861), [Q0869](quotes-2026-10-02.md#q0869), [Q0881](quotes-2026-10-02.md#q0881), [Q1953](quotes-undated-1.md#q1953), [Q2009](quotes-undated-1.md#q2009), [Q2237](quotes-undated-2.md#q2237), [Q2245](quotes-undated-2.md#q2245)
+- **The same words are also in:** [Q0839](quotes-2026-10-02.md#q0839), [Q2009](quotes-undated-1.md#q2009), [Q2281](quotes-undated-2.md#q2281)
+- **Related by words:** [Q2009](quotes-undated-1.md#q2009) (lowercase)
 - **Where it is recorded (1):**
   - `docs/atlases/idearium-atlas.md:2622` · under *## Getting it to code a project: plan, phases, the work surface, one look (v0.39.284)* · release 0.39.297 · whole
 
@@ -2504,14 +2504,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2336"></a>
-### Q2336 · undated
+<a id="q2282"></a>
+### Q2282 · undated
 
 > no. i want warp 2
 
 - **The work it belongs to:** release 2.0.0
 - **Said in the same message:** [Q0879](quotes-2026-10-02.md#q0879)
-- **The same words are also in:** [Q0865](quotes-2026-10-02.md#q0865), [Q0866](quotes-2026-10-02.md#q0866), [Q0971](quotes-2026-10-05.md#q0971), [Q0972](quotes-2026-10-05.md#q0972), [Q2336](quotes-undated-2.md#q2336)
+- **The same words are also in:** [Q0865](quotes-2026-10-02.md#q0865), [Q0866](quotes-2026-10-02.md#q0866), [Q0971](quotes-2026-10-05.md#q0971), [Q0972](quotes-2026-10-05.md#q0972), [Q2282](quotes-undated-2.md#q2282)
 - **Related by words:** [Q0865](quotes-2026-10-02.md#q0865) (warp), [Q0866](quotes-2026-10-02.md#q0866) (warp), [Q0867](quotes-2026-10-02.md#q0867) (warp), [Q0868](quotes-2026-10-02.md#q0868) (warp)
 - **Where it is recorded (1):**
   - `lib/warp/CHANGELOG.md:14` · under *## 2.0.0* · release 2.0.0 · whole
@@ -2525,13 +2525,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2337"></a>
-### Q2337 · undated
+<a id="q2283"></a>
+### Q2283 · undated
 
 > no. i want warp 2
 
 - **Said in the same message:** [Q0879](quotes-2026-10-02.md#q0879)
-- **The same words are also in:** [Q0865](quotes-2026-10-02.md#q0865), [Q0866](quotes-2026-10-02.md#q0866), [Q0971](quotes-2026-10-05.md#q0971), [Q0972](quotes-2026-10-05.md#q0972), [Q2336](quotes-undated-2.md#q2336)
+- **The same words are also in:** [Q0865](quotes-2026-10-02.md#q0865), [Q0866](quotes-2026-10-02.md#q0866), [Q0971](quotes-2026-10-05.md#q0971), [Q0972](quotes-2026-10-05.md#q0972), [Q2282](quotes-undated-2.md#q2282)
 - **Related by words:** [Q0865](quotes-2026-10-02.md#q0865) (warp), [Q0866](quotes-2026-10-02.md#q0866) (warp), [Q0867](quotes-2026-10-02.md#q0867) (warp), [Q0868](quotes-2026-10-02.md#q0868) (warp)
 - **Where it is recorded (1):**
   - `lib/warp/core/Engine.js:2` · whole
@@ -2544,13 +2544,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2338"></a>
-### Q2338 · undated
+<a id="q2284"></a>
+### Q2284 · undated
 
 > no. i want warp 2
 
 - **Said in the same message:** [Q0879](quotes-2026-10-02.md#q0879)
-- **The same words are also in:** [Q0865](quotes-2026-10-02.md#q0865), [Q0866](quotes-2026-10-02.md#q0866), [Q0971](quotes-2026-10-05.md#q0971), [Q0972](quotes-2026-10-05.md#q0972), [Q2336](quotes-undated-2.md#q2336)
+- **The same words are also in:** [Q0865](quotes-2026-10-02.md#q0865), [Q0866](quotes-2026-10-02.md#q0866), [Q0971](quotes-2026-10-05.md#q0971), [Q0972](quotes-2026-10-05.md#q0972), [Q2282](quotes-undated-2.md#q2282)
 - **Related by words:** [Q0865](quotes-2026-10-02.md#q0865) (warp), [Q0866](quotes-2026-10-02.md#q0866) (warp), [Q0867](quotes-2026-10-02.md#q0867) (warp), [Q0868](quotes-2026-10-02.md#q0868) (warp)
 - **Where it is recorded (1):**
   - `docs/atlases/core-atlas.md:4321` · under *#### `lib/warp/core/`* · whole
@@ -2564,12 +2564,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2339"></a>
-### Q2339 · undated
+<a id="q2285"></a>
+### Q2285 · undated
 
 > nodes are free on the canvas... it's not fixed.
 
-- **Recorded together with:** [Q2369](quotes-undated-2.md#q2369)
+- **Recorded together with:** [Q2315](quotes-undated-2.md#q2315)
 - **Where it is recorded (1):**
   - `lib/ui/brainos/brainos-canvas.js:437` · under *// ── Real pulse — called only from a real event, never on a timer ─────────* · whole
 
@@ -2583,14 +2583,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2340"></a>
-### Q2340 · undated
+<a id="q2286"></a>
+### Q2286 · undated
 
 > not great at jobs that persist. only works once. like conversations need back and forth, also persistent chaturl
 
 - **The work it belongs to:** release 0.39.259
-- **Recorded together with:** [Q0151](quotes-2026-08-22.md#q0151), [Q0268](quotes-2026-09-02.md#q0268), [Q0278](quotes-2026-09-02.md#q0278), [Q0448](quotes-2026-09-12.md#q0448), [Q0467](quotes-2026-09-13.md#q0467), [Q0490](quotes-2026-09-15.md#q0490), [Q1210](quotes-2026-10-12.md#q1210)
-- **Related by words:** [Q2355](quotes-undated-2.md#q2355) (chaturl, persistent)
+- **Recorded together with:** [Q0151](quotes-2026-08-22.md#q0151), [Q0268](quotes-2026-09-02.md#q0268), [Q0278](quotes-2026-09-02.md#q0278), [Q0448](quotes-2026-09-12.md#q0448), [Q0467](quotes-2026-09-13.md#q0467), [Q0490](quotes-2026-09-15.md#q0490), [Q1169](quotes-2026-10-12.md#q1169)
+- **Related by words:** [Q2301](quotes-undated-2.md#q2301) (chaturl, persistent)
 - **Where it is recorded (6):**
   - `README.md:16697` · under *- 0.39.260. — dangling hooks cut from 545 to real ones, large imports no longer stall idearium, "online" means idearium — James: "can we fix* · release 0.39.259 · whole
 
@@ -2635,14 +2635,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
 
   - `guardian/userscript-claude.js:1296` · under *// ── NCP connection ────────────────────────────────────────────────────────────* · release 0.39.259 · excerpt, as recorded: "conversations need back and forth, also persistent chaturl"
 
-<a id="q2341"></a>
-### Q2341 · undated
+<a id="q2287"></a>
+### Q2287 · undated
 
 > not make the default state for repos, building … once a idea is a spec, move the idea section to the repo.
 
 - **The work it belongs to:** release 0.39.261
-- **Recorded together with:** [Q0315](quotes-2026-09-03.md#q0315), [Q2419](quotes-undated-2.md#q2419)
-- **Related by words:** [Q2249](quotes-undated-2.md#q2249) (idea, move, repo, repos, spec), [Q2351](quotes-undated-2.md#q2351) (idea, move, repo, section, spec), [Q2352](quotes-undated-2.md#q2352) (idea, move, repo, section, spec)
+- **Recorded together with:** [Q0315](quotes-2026-09-03.md#q0315), [Q2365](quotes-undated-2.md#q2365)
+- **Related by words:** [Q2195](quotes-undated-2.md#q2195) (idea, move, repo, repos, spec), [Q2297](quotes-undated-2.md#q2297) (idea, move, repo, section, spec), [Q2298](quotes-undated-2.md#q2298) (idea, move, repo, section, spec)
 - **Where it is recorded (1):**
   - `idearium/repo/index.js:557` · under *// ── ingest — the single entry point for both convergent paths ──────────────* · release 0.39.261 · whole
 
@@ -2655,13 +2655,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2342"></a>
-### Q2342 · undated
+<a id="q2288"></a>
+### Q2288 · undated
 
 > not to inject anything into it that i cant edit in the agent settings.
 
 - **The work it belongs to:** release 0.39.258
-- **Recorded together with:** [Q0478](quotes-2026-09-13.md#q0478), [Q0808](quotes-2026-10-01.md#q0808), [Q1157](quotes-2026-10-10.md#q1157), [Q1228](quotes-2026-10-13.md#q1228), [Q1245](quotes-2026-10-13.md#q1245), [Q1403](quotes-2026-10-16.md#q1403), [Q1445](quotes-2026-10-16.md#q1445), [Q1490](quotes-2026-10-17.md#q1490)
+- **Recorded together with:** [Q0478](quotes-2026-09-13.md#q0478), [Q0808](quotes-2026-10-01.md#q0808), [Q1116](quotes-2026-10-10.md#q1116), [Q1187](quotes-2026-10-13.md#q1187), [Q1204](quotes-2026-10-13.md#q1204), [Q1359](quotes-2026-10-16.md#q1359), [Q1398](quotes-2026-10-16.md#q1398), [Q1442](quotes-2026-10-17.md#q1442)
 - **Where it is recorded (4):**
   - `copilot/tool-runtime.js:362` · under *// ── 0.39.258 composed mode ──────────────────────────────────────────────────* · release 0.39.258 · whole
 
@@ -2703,8 +2703,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2343"></a>
-### Q2343 · undated
+<a id="q2289"></a>
+### Q2289 · undated
 
 > now what? no code actually generated.
 
@@ -2741,12 +2741,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2344"></a>
-### Q2344 · undated
+<a id="q2290"></a>
+### Q2290 · undated
 
 > npm run start:all --cli for a cli interface — when booting up, a command line tool with a help menu. Add the co-pilot additions.
 
-- **Related by words:** [Q0041](quotes-2026-08-08.md#q0041) (additions, cli, co-pilot, help, interface, menu), [Q1429](quotes-2026-10-16.md#q1429) (cli, command, npm, run, start)
+- **Related by words:** [Q0041](quotes-2026-08-08.md#q0041) (additions, cli, co-pilot, help, interface, menu), [Q1383](quotes-2026-10-16.md#q1383) (cli, command, npm, run, start)
 - **Where it is recorded (1):**
   - `lib/nexus-cli-interface.js:6` · whole
 
@@ -2760,13 +2760,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2345"></a>
-### Q2345 · undated
+<a id="q2291"></a>
+### Q2291 · undated
 
 > okay its stuck.
 
 - **The work it belongs to:** release 0.39.344
-- **The same words are also in:** [Q0974](quotes-2026-10-05.md#q0974), [Q2345](quotes-undated-2.md#q2345)
+- **The same words are also in:** [Q0974](quotes-2026-10-05.md#q0974), [Q2291](quotes-undated-2.md#q2291)
 - **Related by words:** [Q0974](quotes-2026-10-05.md#q0974) (stuck)
 - **Where it is recorded (2):**
   - `cos/testenv/setup-job.js:59` · release 0.39.344 · whole
@@ -2790,13 +2790,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2346"></a>
-### Q2346 · undated
+<a id="q2292"></a>
+### Q2292 · undated
 
 > okay, it
 
 - **The work it belongs to:** release 0.60.105
-- **The same words are also in:** [Q1442](quotes-2026-10-16.md#q1442), [Q2346](quotes-undated-2.md#q2346)
+- **The same words are also in:** [Q1395](quotes-2026-10-16.md#q1395), [Q2292](quotes-undated-2.md#q2292)
 - **Where it is recorded (1):**
   - `lib/version.js:164` · under *// ── SL line (claude/sleepy-gates-9lc085, parallel; merged in 0.60.233): 0.60.230 → 0.60.225 ──* · release 0.60.105 · whole
 
@@ -2805,13 +2805,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2347"></a>
-### Q2347 · undated
+<a id="q2293"></a>
+### Q2293 · undated
 
 > okay. deeply check, nexus idearium guardian and coipilot specs and atals
 
 - **The work it belongs to:** release 2.2.0
-- **Said in the same message:** [Q1050](quotes-2026-10-09.md#q1050), [Q1052](quotes-2026-10-09.md#q1052), [Q1994](quotes-undated-1.md#q1994), [Q2017](quotes-undated-1.md#q2017), [Q2033](quotes-undated-1.md#q2033)
+- **Said in the same message:** [Q1049](quotes-2026-10-09.md#q1049), [Q1051](quotes-2026-10-09.md#q1051), [Q1940](quotes-undated-1.md#q1940), [Q1963](quotes-undated-1.md#q1963), [Q1979](quotes-undated-1.md#q1979)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1720` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 2.2.0 · whole
 
@@ -2822,14 +2822,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2348"></a>
-### Q2348 · undated
+<a id="q2294"></a>
+### Q2294 · undated
 
 > ollama first, but nexus should be learning… the component registry… is the spine that makes components dumb
 
 - **The work it belongs to:** release 1.0.0
-- **Said in the same message:** [Q1547](quotes-2026-10-19.md#q1547), [Q1588](quotes-2026-10-19.md#q1588), [Q2197](quotes-undated-1.md#q2197), [Q2261](quotes-undated-2.md#q2261), [Q2403](quotes-undated-2.md#q2403)
-- **Related by words:** [Q1582](quotes-2026-10-19.md#q1582) (component, components, dumb, registry, spine)
+- **Said in the same message:** [Q1499](quotes-2026-10-19.md#q1499), [Q1540](quotes-2026-10-19.md#q1540), [Q2143](quotes-undated-1.md#q2143), [Q2207](quotes-undated-2.md#q2207), [Q2349](quotes-undated-2.md#q2349)
+- **Related by words:** [Q1534](quotes-2026-10-19.md#q1534) (component, components, dumb, registry, spine)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1763` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 1.0.0 · whole
 
@@ -2840,13 +2840,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2349"></a>
-### Q2349 · undated
+<a id="q2295"></a>
+### Q2295 · undated
 
 > ollama is supposed to have persistent memory ... using the download manager.
 
 - **The work it belongs to:** release 0.39.269
-- **Related by words:** [Q2350](quotes-undated-2.md#q2350) (download, manager, memory, ollama, persistent, supposed), [Q0729](quotes-2026-09-27.md#q0729) (download, manager, memory, ollama, persistent, supposed), [Q0480](quotes-2026-09-15.md#q0480) (download, manager)
+- **Related by words:** [Q2296](quotes-undated-2.md#q2296) (download, manager, memory, ollama, persistent, supposed), [Q0729](quotes-2026-09-27.md#q0729) (download, manager, memory, ollama, persistent, supposed), [Q0480](quotes-2026-09-15.md#q0480) (download, manager)
 - **Where it is recorded (1):**
   - `ollama/lib/dispatch.js:145` · release 0.39.269 · whole
 
@@ -2859,13 +2859,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2350"></a>
-### Q2350 · undated
+<a id="q2296"></a>
+### Q2296 · undated
 
 > ollama is supposed to have persistent memory, same with the agents using the models ... everything is supposed to persist with agents. using the download manager.
 
 - **The work it belongs to:** release 0.39.269
-- **Related by words:** [Q0729](quotes-2026-09-27.md#q0729) (agents, download, manager, memory, models, ollama), [Q2349](quotes-undated-2.md#q2349) (download, manager, memory, ollama, persistent, supposed), [Q0480](quotes-2026-09-15.md#q0480) (download, manager)
+- **Related by words:** [Q0729](quotes-2026-09-27.md#q0729) (agents, download, manager, memory, models, ollama), [Q2295](quotes-undated-2.md#q2295) (download, manager, memory, ollama, persistent, supposed), [Q0480](quotes-2026-09-15.md#q0480) (download, manager)
 - **Where it is recorded (1):**
   - `tests/modules/test-agent-memory.test.js:2` · release 0.39.269 · whole
 
@@ -2878,13 +2878,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2351"></a>
-### Q2351 · undated
+<a id="q2297"></a>
+### Q2297 · undated
 
 > once a idea is a spec, move the idea section to the repo instead … a full idea tab and section for improving/iterating or expanding the project.
 
 - **The work it belongs to:** release 0.39.261
-- **Related by words:** [Q2352](quotes-undated-2.md#q2352) (expanding, full, idea, improving, iterating, move), [Q0697](quotes-2026-09-26.md#q0697) (expanding, idea, improving, move, section), [Q0698](quotes-2026-09-26.md#q0698) (expanding, idea, improving, move, section), [Q2341](quotes-undated-2.md#q2341) (idea, move, repo, section, spec)
+- **Related by words:** [Q2298](quotes-undated-2.md#q2298) (expanding, full, idea, improving, iterating, move), [Q0697](quotes-2026-09-26.md#q0697) (expanding, idea, improving, move, section), [Q0698](quotes-2026-09-26.md#q0698) (expanding, idea, improving, move, section), [Q2287](quotes-undated-2.md#q2287) (idea, move, repo, section, spec)
 - **Where it is recorded (2):**
   - `idearium/ui/js/app.js:2211` · under *// ── PHASEMAP — MCO2's real verification tiers (L0-L8, sync+lazy merged)* · release 0.39.261 · whole
 
@@ -2910,13 +2910,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2352"></a>
-### Q2352 · undated
+<a id="q2298"></a>
+### Q2298 · undated
 
 > once a idea is a spec, move the idea section to the repo … a full idea tab and section for improving/iterating or expanding the project.
 
 - **The work it belongs to:** release 0.39.261
-- **Related by words:** [Q2351](quotes-undated-2.md#q2351) (expanding, full, idea, improving, iterating, move), [Q0697](quotes-2026-09-26.md#q0697) (expanding, idea, improving, move, section), [Q0698](quotes-2026-09-26.md#q0698) (expanding, idea, improving, move, section), [Q2341](quotes-undated-2.md#q2341) (idea, move, repo, section, spec)
+- **Related by words:** [Q2297](quotes-undated-2.md#q2297) (expanding, full, idea, improving, iterating, move), [Q0697](quotes-2026-09-26.md#q0697) (expanding, idea, improving, move, section), [Q0698](quotes-2026-09-26.md#q0698) (expanding, idea, improving, move, section), [Q2287](quotes-undated-2.md#q2287) (idea, move, repo, section, spec)
 - **Where it is recorded (1):**
   - `idearium/api/index.js:7484` · under *// ── §0.39.261 — IDEA: the idea a repo was made from, and every way it* · release 0.39.261 · whole
 
@@ -2931,14 +2931,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2353"></a>
-### Q2353 · undated
+<a id="q2299"></a>
+### Q2299 · undated
 
 > parse the dom, index each element as blocks … synthesize a fucking map in relation to the weboage to use as a map or reference point for inputs from the cli or the intent. learns over time.
 
 - **The work it belongs to:** release 0.60.175 PM5
-- **Recorded together with:** [Q1122](quotes-2026-10-10.md#q1122), [Q1129](quotes-2026-10-10.md#q1129), [Q1157](quotes-2026-10-10.md#q1157), [Q1275](quotes-2026-10-13.md#q1275), [Q1555](quotes-2026-10-19.md#q1555), [Q1694](quotes-2026-10-23.md#q1694), [Q1819](quotes-2026-10-26.md#q1819), [Q2205](quotes-undated-1.md#q2205)
-- **Related by words:** [Q1559](quotes-2026-10-19.md#q1559) (blocks, cli, dom, element, fucking, index), [Q2354](quotes-undated-2.md#q2354) (blocks, dom, element, fucking, index, learns), [Q1548](quotes-2026-10-19.md#q1548) (dom, index, parse, synthesize)
+- **Recorded together with:** [Q1081](quotes-2026-10-10.md#q1081), [Q1088](quotes-2026-10-10.md#q1088), [Q1116](quotes-2026-10-10.md#q1116), [Q1234](quotes-2026-10-13.md#q1234), [Q1507](quotes-2026-10-19.md#q1507), [Q1645](quotes-2026-10-23.md#q1645), [Q1768](quotes-2026-10-26.md#q1768), [Q2151](quotes-undated-1.md#q2151)
+- **Related by words:** [Q1511](quotes-2026-10-19.md#q1511) (blocks, cli, dom, element, fucking, index), [Q2300](quotes-undated-2.md#q2300) (blocks, dom, element, fucking, index, learns), [Q1500](quotes-2026-10-19.md#q1500) (dom, index, parse, synthesize)
 - **Where it is recorded (1):**
   - `idearium/cli/route-commands.js:1190` · under *// ── the machine ───────────────────────────────────────────────────────────────────────────────────────────────────* · release 0.60.175 PM5 · whole
 
@@ -2952,14 +2952,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2354"></a>
-### Q2354 · undated
+<a id="q2300"></a>
+### Q2300 · undated
 
 > parse the dom, index each element as blocks … synthesize a fucking map … learns over time.
 
 - **The work it belongs to:** release 1.0.0
-- **Said in the same message:** [Q1554](quotes-2026-10-19.md#q1554), [Q1557](quotes-2026-10-19.md#q1557)
-- **Related by words:** [Q2353](quotes-undated-2.md#q2353) (blocks, dom, element, fucking, index, learns), [Q1559](quotes-2026-10-19.md#q1559) (blocks, dom, element, fucking, index, learns), [Q1548](quotes-2026-10-19.md#q1548) (dom, index, parse, synthesize)
+- **Said in the same message:** [Q1506](quotes-2026-10-19.md#q1506), [Q1509](quotes-2026-10-19.md#q1509)
+- **Related by words:** [Q2299](quotes-undated-2.md#q2299) (blocks, dom, element, fucking, index, learns), [Q1511](quotes-2026-10-19.md#q1511) (blocks, dom, element, fucking, index, learns), [Q1500](quotes-2026-10-19.md#q1500) (dom, index, parse, synthesize)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1782` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 1.0.0 · whole
 
@@ -2970,14 +2970,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2355"></a>
-### Q2355 · undated
+<a id="q2301"></a>
+### Q2301 · undated
 
 > persistent chaturl
 
 - **The work it belongs to:** release 0.39.259
-- **The same words are also in:** [Q2340](quotes-undated-2.md#q2340), [Q2355](quotes-undated-2.md#q2355)
-- **Related by words:** [Q2340](quotes-undated-2.md#q2340) (chaturl, persistent)
+- **The same words are also in:** [Q2286](quotes-undated-2.md#q2286), [Q2301](quotes-undated-2.md#q2301)
+- **Related by words:** [Q2286](quotes-undated-2.md#q2286) (chaturl, persistent)
 - **Where it is recorded (1):**
   - `guardian/lib/chat-transcripts.js:53` · release 0.39.259 · whole
 
@@ -2990,8 +2990,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2356"></a>
-### Q2356 · undated
+<a id="q2302"></a>
+### Q2302 · undated
 
 > populate real .agent node instances from RAID's live health data (the schema already exists, zero instances populated) — that's the literal foundation the rest of the command/tool/event node vision sits on.
 
@@ -3011,14 +3011,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2357"></a>
-### Q2357 · undated
+<a id="q2303"></a>
+### Q2303 · undated
 
 > prioritize gemini
 
 - **The work it belongs to:** release 0.60.171 CB2
-- **The same words are also in:** [Q1570](quotes-2026-10-19.md#q1570), [Q1571](quotes-2026-10-19.md#q1571), [Q1577](quotes-2026-10-19.md#q1577), [Q1569](quotes-2026-10-19.md#q1569), [Q2357](quotes-undated-2.md#q2357)
-- **Related by words:** [Q1575](quotes-2026-10-19.md#q1575) (gemini, prioritize), [Q1576](quotes-2026-10-19.md#q1576) (gemini, prioritize), [Q1569](quotes-2026-10-19.md#q1569) (gemini, prioritize), [Q1577](quotes-2026-10-19.md#q1577) (gemini, prioritize)
+- **The same words are also in:** [Q1522](quotes-2026-10-19.md#q1522), [Q1523](quotes-2026-10-19.md#q1523), [Q1529](quotes-2026-10-19.md#q1529), [Q1521](quotes-2026-10-19.md#q1521), [Q2303](quotes-undated-2.md#q2303)
+- **Related by words:** [Q1527](quotes-2026-10-19.md#q1527) (gemini, prioritize), [Q1528](quotes-2026-10-19.md#q1528) (gemini, prioritize), [Q1521](quotes-2026-10-19.md#q1521) (gemini, prioritize), [Q1529](quotes-2026-10-19.md#q1529) (gemini, prioritize)
 - **Where it is recorded (1):**
   - `idearium/api/index.js:1764` · release 0.60.171 CB2 · whole
 
@@ -3031,13 +3031,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2358"></a>
-### Q2358 · undated
+<a id="q2304"></a>
+### Q2304 · undated
 
 > progress. didn't work a second time. the paste, shouldn't be injecting. only injecting the persona and the .inject nodes set in the agent…
 
 - **The work it belongs to:** release 0.39.258
-- **Related by words:** [Q0707](quotes-2026-09-26.md#q0707) (agent, inject, injecting, nodes, paste, persona), [Q2410](quotes-undated-2.md#q2410) (agent, inject, injecting, nodes, paste, persona)
+- **Related by words:** [Q0707](quotes-2026-09-26.md#q0707) (agent, inject, injecting, nodes, paste, persona), [Q2356](quotes-undated-2.md#q2356) (agent, inject, injecting, nodes, paste, persona)
 - **Where it is recorded (3):**
   - `README.md:16698` · under *- 0.39.259. — turns 2 and 3 of a conversation now complete, and each agent keeps its chat — James: "not great at jobs that persist. only wor* · release 0.39.258 · whole
 
@@ -3060,14 +3060,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2359"></a>
-### Q2359 · undated
+<a id="q2305"></a>
+### Q2305 · undated
 
 > read and map first.
 
 - **The work it belongs to:** release 1.0.0
-- **Said in the same message:** [Q2099](quotes-undated-1.md#q2099)
-- **The same words are also in:** [Q1782](quotes-2026-10-24.md#q1782), [Q2359](quotes-undated-2.md#q2359)
+- **Said in the same message:** [Q2045](quotes-undated-1.md#q2045)
+- **The same words are also in:** [Q1732](quotes-2026-10-24.md#q1732), [Q2305](quotes-undated-2.md#q2305)
 - **Related by words:** [Q0169](quotes-2026-08-23.md#q0169) (read)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1809` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 1.0.0 · whole
@@ -3078,13 +3078,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2360"></a>
-### Q2360 · undated
+<a id="q2306"></a>
+### Q2306 · undated
 
 > really close to
 
 - **The work it belongs to:** release 0.39.266
-- **The same words are also in:** [Q2333](quotes-undated-2.md#q2333), [Q2360](quotes-undated-2.md#q2360)
+- **The same words are also in:** [Q2279](quotes-undated-2.md#q2279), [Q2306](quotes-undated-2.md#q2306)
 - **Where it is recorded (2):**
   - `README.md:9291` · release 0.39.266 · whole
 
@@ -3100,8 +3100,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
 
   - `docs/atlases/nexus-atlas.md:9290` · release 0.39.266 · whole
 
-<a id="q2361"></a>
-### Q2361 · undated
+<a id="q2307"></a>
+### Q2307 · undated
 
 > rebuild the spec workshop … record the generation process from the agents and create a macro or replayable file to rebuild or reconstruct data using events, snapshots etc.
 
@@ -3117,8 +3117,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2362"></a>
-### Q2362 · undated
+<a id="q2308"></a>
+### Q2308 · undated
 
 > remember its alwasy cli and api first
 
@@ -3135,13 +3135,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2363"></a>
-### Q2363 · undated
+<a id="q2309"></a>
+### Q2309 · undated
 
 > remove as much external dependancies as possible … invent anything needed … it needs to earn its place.
 
 - **The work it belongs to:** release 0.39.261
-- **Related by words:** [Q2209](quotes-undated-1.md#q2209) (dependancies, external, possible, remove)
+- **Related by words:** [Q2155](quotes-undated-1.md#q2155) (dependancies, external, possible, remove)
 - **Where it is recorded (2):**
   - `lib/micro-http.js:7` · release 0.39.261 · whole
 
@@ -3166,14 +3166,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2364"></a>
-### Q2364 · undated
+<a id="q2310"></a>
+### Q2310 · undated
 
 > remove the bookmarks from the menuconsolidate the menu ... use the library for the bookmarks
 
 - **The work it belongs to:** release 0.60.185 BS17
 - **Recorded together with:** [Q0205](quotes-2026-08-28.md#q0205), [Q0217](quotes-2026-08-29.md#q0217)
-- **Related by words:** [Q1664](quotes-2026-10-21.md#q1664) (bookmarks, menu, menuconsolidate, remove), [Q0162](quotes-2026-08-23.md#q0162) (bookmarks, library, menu, menuconsolidate, remove), [Q0669](quotes-2026-09-25.md#q0669) (library, menu), [Q2067](quotes-undated-1.md#q2067) (library, menu)
+- **Related by words:** [Q1616](quotes-2026-10-21.md#q1616) (bookmarks, menu, menuconsolidate, remove), [Q0162](quotes-2026-08-23.md#q0162) (bookmarks, library, menu, menuconsolidate, remove), [Q0669](quotes-2026-09-25.md#q0669) (library, menu), [Q2013](quotes-undated-1.md#q2013) (library, menu)
 - **Where it is recorded (2):**
   - `clear-glass/renderer/browser.js:1935` · under *// ── Customize toolbar (0.60.210 rebuild): a preview, the two lists with what each tool does, pin / unpin on every row, run-once actions ──* · release 0.60.185 BS17 · whole
 
@@ -3196,13 +3196,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2365"></a>
-### Q2365 · undated
+<a id="q2311"></a>
+### Q2311 · undated
 
 > remove the old
 
 - **The work it belongs to:** release 0.39.265
-- **The same words are also in:** [Q1589](quotes-2026-10-19.md#q1589), [Q2365](quotes-undated-2.md#q2365)
+- **The same words are also in:** [Q1541](quotes-2026-10-19.md#q1541), [Q2311](quotes-undated-2.md#q2311)
 - **Where it is recorded (1):**
   - `clear-glass/src/toolbar/commands.js:95` · release 0.39.265 · whole
 
@@ -3215,13 +3215,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2366"></a>
-### Q2366 · undated
+<a id="q2312"></a>
+### Q2312 · undated
 
 > remove the polling then.
 
 - **The work it belongs to:** release 0.39.328 PR2
-- **The same words are also in:** [Q0978](quotes-2026-10-05.md#q0978), [Q2367](quotes-undated-2.md#q2367), [Q2366](quotes-undated-2.md#q2366)
+- **The same words are also in:** [Q0978](quotes-2026-10-05.md#q0978), [Q2313](quotes-undated-2.md#q2313), [Q2312](quotes-undated-2.md#q2312)
 - **Where it is recorded (1):**
   - `tests/modules/test-health-authority.js:117` · release 0.39.328 PR2 · whole
 
@@ -3233,8 +3233,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2367"></a>
-### Q2367 · undated
+<a id="q2313"></a>
+### Q2313 · undated
 
 > remove the polling then. need the systems to anounce themselves … use negative space reasoning for missed heartbeats … with the ability to actual repair nexus.
 
@@ -3249,14 +3249,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2368"></a>
-### Q2368 · undated
+<a id="q2314"></a>
+### Q2314 · undated
 
 > rewind engine for each file.
 
 - **The work it belongs to:** release 0.60.81 CV3
-- **Recorded together with:** [Q1287](quotes-2026-10-14.md#q1287), [Q1304](quotes-2026-10-15.md#q1304), [Q1350](quotes-2026-10-15.md#q1350), [Q1425](quotes-2026-10-16.md#q1425), [Q1445](quotes-2026-10-16.md#q1445), [Q1451](quotes-2026-10-16.md#q1451), [Q1524](quotes-2026-10-18.md#q1524), [Q1798](quotes-2026-10-25.md#q1798), [Q1824](quotes-2026-10-26.md#q1824), [Q1839](quotes-2026-10-28.md#q1839), [Q1893](quotes-2026-10-29.md#q1893)
-- **Related by words:** [Q0183](quotes-2026-08-23.md#q0183) (engine, rewind), [Q1043](quotes-2026-10-07.md#q1043) (engine, rewind), [Q1127](quotes-2026-10-10.md#q1127) (engine, rewind), [Q1447](quotes-2026-10-16.md#q1447) (engine, rewind)
+- **Recorded together with:** [Q1246](quotes-2026-10-14.md#q1246), [Q1263](quotes-2026-10-15.md#q1263), [Q1306](quotes-2026-10-15.md#q1306), [Q1379](quotes-2026-10-16.md#q1379), [Q1398](quotes-2026-10-16.md#q1398), [Q1404](quotes-2026-10-16.md#q1404), [Q1476](quotes-2026-10-18.md#q1476), [Q1747](quotes-2026-10-25.md#q1747), [Q1772](quotes-2026-10-26.md#q1772), [Q1787](quotes-2026-10-28.md#q1787), [Q1840](quotes-2026-10-29.md#q1840)
+- **Related by words:** [Q0183](quotes-2026-08-23.md#q0183) (engine, rewind), [Q1043](quotes-2026-10-07.md#q1043) (engine, rewind), [Q1086](quotes-2026-10-10.md#q1086) (engine, rewind), [Q1400](quotes-2026-10-16.md#q1400) (engine, rewind)
 - **Where it is recorded (2):**
   - `idearium/api/index.js:5779` · release 0.60.81 CV3 · whole
 
@@ -3279,12 +3279,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2369"></a>
-### Q2369 · undated
+<a id="q2315"></a>
+### Q2315 · undated
 
 > right click nodes, with a context menu, ... deploying nodes on the canvas spawn agents.
 
-- **Recorded together with:** [Q0435](quotes-2026-09-12.md#q0435), [Q0437](quotes-2026-09-12.md#q0437), [Q0438](quotes-2026-09-12.md#q0438), [Q2339](quotes-undated-2.md#q2339)
+- **Recorded together with:** [Q0435](quotes-2026-09-12.md#q0435), [Q0437](quotes-2026-09-12.md#q0437), [Q0438](quotes-2026-09-12.md#q0438), [Q2285](quotes-undated-2.md#q2285)
 - **Related by words:** [Q0413](quotes-2026-09-11.md#q0413) (agents, canvas, deploying, nodes, spawn)
 - **Where it is recorded (2):**
   - `lib/ui/brainos/brainos-app.js:167` · under *// ── CANVAS — mount the real, existing dynamic mesh renderer ─────────────* · whole
@@ -3309,12 +3309,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2370"></a>
-### Q2370 · undated
+<a id="q2316"></a>
+### Q2316 · undated
 
 > ring buffer.
 
-- **The same words are also in:** [Q0301](quotes-2026-09-02.md#q0301), [Q0300](quotes-2026-09-02.md#q0300), [Q2370](quotes-undated-2.md#q2370)
+- **The same words are also in:** [Q0301](quotes-2026-09-02.md#q0301), [Q0300](quotes-2026-09-02.md#q0300), [Q2316](quotes-undated-2.md#q2316)
 - **Where it is recorded (1):**
   - `intelligence/server.js:102` · under *// ── Real event ledger — reused directly, not rebuilt (§8.6). onGap is a* · whole
 
@@ -3327,8 +3327,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2371"></a>
-### Q2371 · undated
+<a id="q2317"></a>
+### Q2317 · undated
 
 > running things CONSTANTLY — what-ifs forming connections with intelligence, cortex data, components, polling, diagnosing.
 
@@ -3345,13 +3345,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2372"></a>
-### Q2372 · undated
+<a id="q2318"></a>
+### Q2318 · undated
 
 > schemas for
 
-- **Recorded together with:** [Q2237](quotes-undated-2.md#q2237)
-- **The same words are also in:** [Q1489](quotes-2026-10-17.md#q1489), [Q1488](quotes-2026-10-17.md#q1488), [Q1487](quotes-2026-10-17.md#q1487), [Q1042](quotes-2026-10-07.md#q1042), [Q2373](quotes-undated-2.md#q2373)
+- **Recorded together with:** [Q2183](quotes-undated-2.md#q2183)
+- **The same words are also in:** [Q1441](quotes-2026-10-17.md#q1441), [Q1440](quotes-2026-10-17.md#q1440), [Q1439](quotes-2026-10-17.md#q1439), [Q1042](quotes-2026-10-07.md#q1042), [Q2319](quotes-undated-2.md#q2319)
 - **Where it is recorded (1):**
   - `docs/atlases/intelligence-atlas.md:181` · under *#### `intelligence/`* · whole
 
@@ -3366,8 +3366,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2373"></a>
-### Q2373 · undated
+<a id="q2319"></a>
+### Q2319 · undated
 
 > schemas for each type of data it stores. the rest is probabilistic and fluid.
 
@@ -3384,8 +3384,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2374"></a>
-### Q2374 · undated
+<a id="q2320"></a>
+### Q2320 · undated
 
 > search bars from any website as a search engine in ClearGlass with an intent... GitHub was an example.
 
@@ -3402,13 +3402,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2375"></a>
-### Q2375 · undated
+<a id="q2321"></a>
+### Q2321 · undated
 
 > should be able to retry per chunk, not just phase. we should do the gating for the pipeline, dag on every gates, level, step?
 
 - **The work it belongs to:** release 0.60.167
-- **Related by words:** [Q1560](quotes-2026-10-19.md#q1560) (chunk, dag, gates, phase, pipeline)
+- **Related by words:** [Q1512](quotes-2026-10-19.md#q1512) (chunk, dag, gates, phase, pipeline)
 - **Where it is recorded (1):**
   - `versionium/changelogs/CHANGELOG-0.60.167.md:32` · under *## Open (mapped next, from the same log)* · release 0.60.167 · whole
 
@@ -3419,14 +3419,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2376"></a>
-### Q2376 · undated
+<a id="q2322"></a>
+### Q2322 · undated
 
 > should be automatic
 
 - **The work it belongs to:** release 0.60.254 UP8
-- **The same words are also in:** [Q2376](quotes-undated-2.md#q2376), [Q1824](quotes-2026-10-26.md#q1824)
-- **Related by words:** [Q1824](quotes-2026-10-26.md#q1824) (automatic)
+- **The same words are also in:** [Q2322](quotes-undated-2.md#q2322), [Q1772](quotes-2026-10-26.md#q1772)
+- **Related by words:** [Q1772](quotes-2026-10-26.md#q1772) (automatic)
 - **Where it is recorded (1):**
   - `idearium/ui/update.html:88` · release 0.60.254 UP8 · whole
 
@@ -3439,8 +3439,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2377"></a>
-### Q2377 · undated
+<a id="q2323"></a>
+### Q2323 · undated
 
 > should have had the ui aspects separate files. Including css file per ui file.
 
@@ -3457,8 +3457,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2378"></a>
-### Q2378 · undated
+<a id="q2324"></a>
+### Q2324 · undated
 
 > should not be a compartments tab, repos are compartments … move it where it belongs
 
@@ -3484,8 +3484,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2379"></a>
-### Q2379 · undated
+<a id="q2325"></a>
+### Q2325 · undated
 
 > should not show online at 9000, thats not useful.
 
@@ -3502,8 +3502,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2380"></a>
-### Q2380 · undated
+<a id="q2326"></a>
+### Q2326 · undated
 
 > should we get deep seek working
 
@@ -3520,8 +3520,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2381"></a>
-### Q2381 · undated
+<a id="q2327"></a>
+### Q2327 · undated
 
 > show it first... you approve or edit, then it fills.
 
@@ -3538,8 +3538,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2382"></a>
-### Q2382 · undated
+<a id="q2328"></a>
+### Q2328 · undated
 
 > solidify the coding for repos
 
@@ -3556,14 +3556,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2383"></a>
-### Q2383 · undated
+<a id="q2329"></a>
+### Q2329 · undated
 
 > start the data migration … make each system responsible for it's own data.
 
 - **The work it belongs to:** release 0.60.207 DL2
-- **Recorded together with:** [Q0984](quotes-2026-10-05.md#q0984), [Q1191](quotes-2026-10-12.md#q1191), [Q1224](quotes-2026-10-13.md#q1224), [Q1255](quotes-2026-10-13.md#q1255), [Q1502](quotes-2026-10-17.md#q1502), [Q2230](quotes-undated-2.md#q2230)
-- **Related by words:** [Q1509](quotes-2026-10-17.md#q1509) (data, migration, responsible, start, system)
+- **Recorded together with:** [Q0984](quotes-2026-10-05.md#q0984), [Q1150](quotes-2026-10-12.md#q1150), [Q1183](quotes-2026-10-13.md#q1183), [Q1214](quotes-2026-10-13.md#q1214), [Q1454](quotes-2026-10-17.md#q1454), [Q2176](quotes-undated-2.md#q2176)
+- **Related by words:** [Q1461](quotes-2026-10-17.md#q1461) (data, migration, responsible, start, system)
 - **Where it is recorded (3):**
   - `idearium/api/index.js:6132` · under *// ── §24-26 GRAPH (MCO1) — reads graph.json, the GRAPHING step's own* · release 0.60.207 DL2 · whole
 
@@ -3596,8 +3596,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2384"></a>
-### Q2384 · undated
+<a id="q2330"></a>
+### Q2330 · undated
 
 > stepwise chains + pipeline automation — a sequence of steps (command/agent/http/sse call), with routing between steps.
 
@@ -3614,15 +3614,15 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2385"></a>
-### Q2385 · undated
+<a id="q2331"></a>
+### Q2331 · undated
 
 > still didn't work.
 
 - **The work it belongs to:** release 0.60.202
-- **Said in the same message:** [Q0293](quotes-2026-09-02.md#q0293), [Q1617](quotes-2026-10-21.md#q1617), [Q1637](quotes-2026-10-21.md#q1637), [Q1647](quotes-2026-10-21.md#q1647), [Q1648](quotes-2026-10-21.md#q1648), [Q1652](quotes-2026-10-21.md#q1652), [Q1655](quotes-2026-10-21.md#q1655), [Q1659](quotes-2026-10-21.md#q1659), [Q1669](quotes-2026-10-21.md#q1669), [Q1672](quotes-2026-10-21.md#q1672), [Q1673](quotes-2026-10-22.md#q1673), [Q1677](quotes-2026-10-22.md#q1677), [Q1684](quotes-2026-10-22.md#q1684), [Q1688](quotes-2026-10-22.md#q1688), [Q2178](quotes-undated-1.md#q2178), [Q2428](quotes-undated-2.md#q2428)
-- **The same words are also in:** [Q1667](quotes-2026-10-21.md#q1667), [Q1668](quotes-2026-10-21.md#q1668), [Q2385](quotes-undated-2.md#q2385)
-- **Related by words:** [Q0148](quotes-2026-08-22.md#q0148) (didn't), [Q0149](quotes-2026-08-22.md#q0149) (didn't), [Q1667](quotes-2026-10-21.md#q1667) (didn't), [Q1668](quotes-2026-10-21.md#q1668) (didn't)
+- **Said in the same message:** [Q0293](quotes-2026-09-02.md#q0293), [Q1569](quotes-2026-10-21.md#q1569), [Q1589](quotes-2026-10-21.md#q1589), [Q1599](quotes-2026-10-21.md#q1599), [Q1600](quotes-2026-10-21.md#q1600), [Q1604](quotes-2026-10-21.md#q1604), [Q1607](quotes-2026-10-21.md#q1607), [Q1611](quotes-2026-10-21.md#q1611), [Q1621](quotes-2026-10-21.md#q1621), [Q1624](quotes-2026-10-21.md#q1624), [Q1625](quotes-2026-10-22.md#q1625), [Q1629](quotes-2026-10-22.md#q1629), [Q1636](quotes-2026-10-22.md#q1636), [Q1640](quotes-2026-10-22.md#q1640), [Q2124](quotes-undated-1.md#q2124), [Q2374](quotes-undated-2.md#q2374)
+- **The same words are also in:** [Q1619](quotes-2026-10-21.md#q1619), [Q1620](quotes-2026-10-21.md#q1620), [Q2331](quotes-undated-2.md#q2331)
+- **Related by words:** [Q0148](quotes-2026-08-22.md#q0148) (didn't), [Q0149](quotes-2026-08-22.md#q0149) (didn't), [Q1619](quotes-2026-10-21.md#q1619) (didn't), [Q1620](quotes-2026-10-21.md#q1620) (didn't)
 - **Where it is recorded (1):**
   - `lib/version.js:83` · under *// ── SL line (claude/sleepy-gates-9lc085, parallel; merged in 0.60.233): 0.60.230 → 0.60.225 ──* · release 0.60.202 · whole
 
@@ -3632,13 +3632,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2386"></a>
-### Q2386 · undated
+<a id="q2332"></a>
+### Q2332 · undated
 
 > still says signed out.
 
 - **The work it belongs to:** release 0.60.45
-- **The same words are also in:** [Q1352](quotes-2026-10-15.md#q1352), [Q2386](quotes-undated-2.md#q2386)
+- **The same words are also in:** [Q1308](quotes-2026-10-15.md#q1308), [Q2332](quotes-undated-2.md#q2332)
 - **Where it is recorded (1):**
   - `clear-glass/src/providers/account-switch.js:79` · release 0.60.45 · whole
 
@@ -3651,14 +3651,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2387"></a>
-### Q2387 · undated
+<a id="q2333"></a>
+### Q2333 · undated
 
 > supposed to stream it live as it happens. do you think a delay between gates wouold help? like even just 500 ms?
 
 - **The work it belongs to:** release 0.39.256
-- **Said in the same message:** [Q2084](quotes-undated-1.md#q2084)
-- **Recorded together with:** [Q0519](quotes-2026-09-17.md#q0519), [Q0555](quotes-2026-09-19.md#q0555), [Q0601](quotes-2026-09-21.md#q0601), [Q0698](quotes-2026-09-26.md#q0698), [Q0709](quotes-2026-09-26.md#q0709), [Q1500](quotes-2026-10-17.md#q1500), [Q2057](quotes-undated-1.md#q2057), [Q2088](quotes-undated-1.md#q2088), [Q2216](quotes-undated-1.md#q2216), [Q2400](quotes-undated-2.md#q2400), [Q2423](quotes-undated-2.md#q2423)
+- **Said in the same message:** [Q2030](quotes-undated-1.md#q2030)
+- **Recorded together with:** [Q0519](quotes-2026-09-17.md#q0519), [Q0555](quotes-2026-09-19.md#q0555), [Q0601](quotes-2026-09-21.md#q0601), [Q0698](quotes-2026-09-26.md#q0698), [Q0709](quotes-2026-09-26.md#q0709), [Q1452](quotes-2026-10-17.md#q1452), [Q2003](quotes-undated-1.md#q2003), [Q2034](quotes-undated-1.md#q2034), [Q2162](quotes-undated-1.md#q2162), [Q2346](quotes-undated-2.md#q2346), [Q2369](quotes-undated-2.md#q2369)
 - **Where it is recorded (10):**
   - `README.md:16700` · under *- 0.39.257. — the repo agent gets every tool; plain-language CLI; the graph in context — James: "the toolscope for the agents tab. need the * · release 0.39.256 · whole
 
@@ -3716,14 +3716,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2388"></a>
-### Q2388 · undated
+<a id="q2334"></a>
+### Q2334 · undated
 
 > synthesize as much gaps as possible, and fill the highest amount of leverage first … add that to the intelligence system. like synthesis needs to be expanded, immensly
 
 - **The work it belongs to:** release 0.39.300
-- **Recorded together with:** [Q1540](quotes-2026-10-18.md#q1540)
-- **Related by words:** [Q0858](quotes-2026-10-02.md#q0858) (amount, expanded, fill, gaps, highest, immensly), [Q0859](quotes-2026-10-02.md#q0859) (amount, expanded, fill, gaps, highest, immensly), [Q1063](quotes-2026-10-09.md#q1063) (amount, highest, leverage)
+- **Recorded together with:** [Q1492](quotes-2026-10-18.md#q1492)
+- **Related by words:** [Q0858](quotes-2026-10-02.md#q0858) (amount, expanded, fill, gaps, highest, immensly), [Q0859](quotes-2026-10-02.md#q0859) (amount, expanded, fill, gaps, highest, immensly), [Q1062](quotes-2026-10-09.md#q1062) (amount, highest, leverage)
 - **Where it is recorded (1):**
   - `intelligence/routes.js:284` · under *// ── §0.39.300 SY2 — gap synthesis ──────────────────────────────────────────────────────────────────────────────* · release 0.39.300 · whole
 
@@ -3736,8 +3736,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2389"></a>
-### Q2389 · undated
+<a id="q2335"></a>
+### Q2335 · undated
 
 > systems have to announce themselves, then use the bpm as a health score system.
 
@@ -3753,12 +3753,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2390"></a>
-### Q2390 · undated
+<a id="q2336"></a>
+### Q2336 · undated
 
 > tags.
 
-- **Recorded together with:** [Q2064](quotes-undated-1.md#q2064)
+- **Recorded together with:** [Q2010](quotes-undated-1.md#q2010)
 - **Where it is recorded (1):**
   - `intelligence/framework-builder.js:146` · under *// ── Wire it into a real Stream ──────────────────────────────────────────* · whole
 
@@ -3771,13 +3771,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2391"></a>
-### Q2391 · undated
+<a id="q2337"></a>
+### Q2337 · undated
 
 > tasks need time stamped.
 
 - **The work it belongs to:** release 0.39.361 SB50
-- **The same words are also in:** [Q1011](quotes-2026-10-06.md#q1011), [Q2391](quotes-undated-2.md#q2391)
+- **The same words are also in:** [Q1011](quotes-2026-10-06.md#q1011), [Q2337](quotes-undated-2.md#q2337)
 - **Related by words:** [Q1011](quotes-2026-10-06.md#q1011) (stamped, tasks)
 - **Where it is recorded (2):**
   - `idearium/repo/build-plan.js:25` · release 0.39.361 SB50 · whole
@@ -3801,8 +3801,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2392"></a>
-### Q2392 · undated
+<a id="q2338"></a>
+### Q2338 · undated
 
 > that and manage and histry should be one menu i feel like.
 
@@ -3821,8 +3821,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2393"></a>
-### Q2393 · undated
+<a id="q2339"></a>
+### Q2339 · undated
 
 > the agents are the ones writing code...
 
@@ -3841,14 +3841,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2394"></a>
-### Q2394 · undated
+<a id="q2340"></a>
+### Q2340 · undated
 
 > the bookmark system is supposed to be hooked in to the system state/rewind engine and account. Like a bookmark with a check mark to attach to the account … different accounts in each tab.
 
 - **The work it belongs to:** release 0.39.265
 - **Recorded together with:** [Q0162](quotes-2026-08-23.md#q0162), [Q0212](quotes-2026-08-28.md#q0212)
-- **Related by words:** [Q1216](quotes-2026-10-12.md#q1216) (account, accounts, check, different, state, tab), [Q1262](quotes-2026-10-13.md#q1262) (account, accounts, check)
+- **Related by words:** [Q1175](quotes-2026-10-12.md#q1175) (account, accounts, check, different, state, tab), [Q1221](quotes-2026-10-13.md#q1221) (account, accounts, check)
 - **Where it is recorded (2):**
   - `clear-glass/renderer/browser.js:1481` · under *// ── Bookmarks ──────────────────────────────────────────────────────────* · release 0.39.265 · whole
 
@@ -3874,14 +3874,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2395"></a>
-### Q2395 · undated
+<a id="q2341"></a>
+### Q2341 · undated
 
 > the branch's two
 
 - **The work it belongs to:** release 0.60.2
-- **Recorded together with:** [Q1323](quotes-2026-10-15.md#q1323), [Q1357](quotes-2026-10-15.md#q1357), [Q2166](quotes-undated-1.md#q2166), [Q2283](quotes-undated-2.md#q2283), [Q2396](quotes-undated-2.md#q2396), [Q2433](quotes-undated-2.md#q2433), [Q2434](quotes-undated-2.md#q2434), [Q2477](quotes-undated-3.md#q2477)
-- **The same words are also in:** [Q2395](quotes-undated-2.md#q2395)
+- **Recorded together with:** [Q1280](quotes-2026-10-15.md#q1280), [Q1313](quotes-2026-10-15.md#q1313), [Q2112](quotes-undated-1.md#q2112), [Q2229](quotes-undated-2.md#q2229), [Q2342](quotes-undated-2.md#q2342), [Q2379](quotes-undated-2.md#q2379), [Q2422](quotes-undated-3.md#q2422)
+- **The same words are also in:** [Q2341](quotes-undated-2.md#q2341)
 - **Where it is recorded (2):**
   - `tests/modules/test-release-notes.test.js:49` · under *// ── the fixture repo ────────────────────────────────────────────────────────────────────────────────────────────────* · release 0.60.2 · whole
 
@@ -3904,15 +3904,15 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2396"></a>
-### Q2396 · undated
+<a id="q2342"></a>
+### Q2342 · undated
 
 > the branch\'s two
 
 - **The work it belongs to:** release 0.60.4
-- **Recorded together with:** [Q1323](quotes-2026-10-15.md#q1323), [Q1357](quotes-2026-10-15.md#q1357), [Q2166](quotes-undated-1.md#q2166), [Q2283](quotes-undated-2.md#q2283), [Q2395](quotes-undated-2.md#q2395), [Q2433](quotes-undated-2.md#q2433), [Q2434](quotes-undated-2.md#q2434), [Q2477](quotes-undated-3.md#q2477)
-- **The same words are also in:** [Q2396](quotes-undated-2.md#q2396)
-- **Related by words:** [Q1397](quotes-2026-10-16.md#q1397) (branch)
+- **Recorded together with:** [Q1280](quotes-2026-10-15.md#q1280), [Q1313](quotes-2026-10-15.md#q1313), [Q2112](quotes-undated-1.md#q2112), [Q2229](quotes-undated-2.md#q2229), [Q2341](quotes-undated-2.md#q2341), [Q2379](quotes-undated-2.md#q2379), [Q2422](quotes-undated-3.md#q2422)
+- **The same words are also in:** [Q2342](quotes-undated-2.md#q2342)
+- **Related by words:** [Q1353](quotes-2026-10-16.md#q1353) (branch)
 - **Where it is recorded (1):**
   - `tests/modules/test-release-notes.test.js:90` · under *// ── the fixture repo ────────────────────────────────────────────────────────────────────────────────────────────────* · release 0.60.4 · whole
 
@@ -3924,13 +3924,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2397"></a>
-### Q2397 · undated
+<a id="q2343"></a>
+### Q2343 · undated
 
 > the build surface is supposed to be showing in idearium.
 
 - **The work it belongs to:** release 0.55.0 HP6
-- **Recorded together with:** [Q0778](quotes-2026-09-29.md#q0778), [Q0998](quotes-2026-10-05.md#q0998), [Q1220](quotes-2026-10-13.md#q1220), [Q2010](quotes-undated-1.md#q2010), [Q2109](quotes-undated-1.md#q2109)
+- **Recorded together with:** [Q0778](quotes-2026-09-29.md#q0778), [Q0998](quotes-2026-10-05.md#q0998), [Q1179](quotes-2026-10-13.md#q1179), [Q1956](quotes-undated-1.md#q1956), [Q2055](quotes-undated-1.md#q2055)
 - **Where it is recorded (1):**
   - `idearium/ui/js/phases.js:528` · under *// ── actions ────────────────────────────────────────────────────────────────* · release 0.55.0 HP6 · whole
 
@@ -3943,8 +3943,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2398"></a>
-### Q2398 · undated
+<a id="q2344"></a>
+### Q2344 · undated
 
 > the chats aren't two way. like the tools don't work.
 
@@ -3960,12 +3960,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2399"></a>
-### Q2399 · undated
+<a id="q2345"></a>
+### Q2345 · undated
 
 > the chunk size is crap — 3000 characters isn't useful because it's tokens, the measurement unit with AI. Each agent needs its own. This is why I said move it to the RAID engine — every contract gets sent to the right signal-to-noise filter with fidelity scoring: what agent aligns with this request the best, highest fidelity? The chunking needs to interconnect with the RAID engine's signal-to-noise. RAID is the governing layer; everything goes through it to move to another system.
 
-- **Recorded together with:** [Q1071](quotes-2026-10-09.md#q1071)
+- **Recorded together with:** [Q1066](quotes-2026-10-09.md#q1066)
 - **Where it is recorded (1):**
   - `docs/raid-routing-fidelity-phasemap.spec:21` · under *name:        raid-routing-fidelity* · whole
 
@@ -3983,14 +3983,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2400"></a>
-### Q2400 · undated
+<a id="q2346"></a>
+### Q2346 · undated
 
 > the cli in the agents tab needs to have a live feed of the dom mutation/node anchor.
 
 - **The work it belongs to:** release 0.39.244
-- **Recorded together with:** [Q0555](quotes-2026-09-19.md#q0555), [Q0709](quotes-2026-09-26.md#q0709), [Q1500](quotes-2026-10-17.md#q1500), [Q1524](quotes-2026-10-18.md#q1524), [Q2182](quotes-undated-1.md#q2182), [Q2387](quotes-undated-2.md#q2387)
-- **Related by words:** [Q0923](quotes-2026-10-05.md#q0923) (anchor, dom, live, node, tab), [Q2457](quotes-undated-2.md#q2457) (anchor, node), [Q0477](quotes-2026-09-13.md#q0477) (cli, dom, live, mutation), [Q1647](quotes-2026-10-21.md#q1647) (agents, anchor, dom, node)
+- **Recorded together with:** [Q0555](quotes-2026-09-19.md#q0555), [Q0709](quotes-2026-09-26.md#q0709), [Q1452](quotes-2026-10-17.md#q1452), [Q1476](quotes-2026-10-18.md#q1476), [Q2128](quotes-undated-1.md#q2128), [Q2333](quotes-undated-2.md#q2333)
+- **Related by words:** [Q0923](quotes-2026-10-05.md#q0923) (anchor, dom, live, node, tab), [Q2402](quotes-undated-2.md#q2402) (anchor, node), [Q0477](quotes-2026-09-13.md#q0477) (cli, dom, live, mutation), [Q1599](quotes-2026-10-21.md#q1599) (agents, anchor, dom, node)
 - **Where it is recorded (6):**
   - `guardian/userscript-chatgpt.js:499` · under *// ── DOM observation ───────────────────────────────────────────────────────────* · release 0.39.244 · whole
 
@@ -4027,14 +4027,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2401"></a>
-### Q2401 · undated
+<a id="q2347"></a>
+### Q2347 · undated
 
 > the code tab needs to use the same hat from the original repo ... full agent settings in the original repo.
 
 - **The work it belongs to:** release 0.39.276
-- **Recorded together with:** [Q0616](quotes-2026-09-21.md#q0616), [Q0722](quotes-2026-09-27.md#q0722), [Q2229](quotes-undated-2.md#q2229), [Q2469](quotes-undated-2.md#q2469)
-- **Related by words:** [Q0739](quotes-2026-09-28.md#q0739) (agent, code, full, hat, original, repo), [Q2402](quotes-undated-2.md#q2402) (agent, code, full, hat, original, repo), [Q0693](quotes-2026-09-26.md#q0693) (hat, settings)
+- **Recorded together with:** [Q0616](quotes-2026-09-21.md#q0616), [Q0722](quotes-2026-09-27.md#q0722), [Q2175](quotes-undated-2.md#q2175), [Q2414](quotes-undated-2.md#q2414)
+- **Related by words:** [Q0739](quotes-2026-09-28.md#q0739) (agent, code, full, hat, original, repo), [Q2348](quotes-undated-2.md#q2348) (agent, code, full, hat, original, repo), [Q0693](quotes-2026-09-26.md#q0693) (hat, settings)
 - **Where it is recorded (2):**
   - `idearium/api/index.js:434` · under *// ── Repo layer singleton — each idea-as-repo lives here, not in a single* · release 0.39.276 · whole
 
@@ -4059,13 +4059,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2402"></a>
-### Q2402 · undated
+<a id="q2348"></a>
+### Q2348 · undated
 
 > the code tab needs to use the same hat from the original repo. when you click code in the original spec, it creates a new repo, i need that repo to use the same hat ... full agent settings in the original repo.
 
 - **The work it belongs to:** release 0.39.276
-- **Related by words:** [Q0739](quotes-2026-09-28.md#q0739) (agent, click, code, creates, full, hat), [Q2401](quotes-undated-2.md#q2401) (agent, code, full, hat, original, repo), [Q0693](quotes-2026-09-26.md#q0693) (hat, settings)
+- **Related by words:** [Q0739](quotes-2026-09-28.md#q0739) (agent, click, code, creates, full, hat), [Q2347](quotes-undated-2.md#q2347) (agent, code, full, hat, original, repo), [Q0693](quotes-2026-09-26.md#q0693) (hat, settings)
 - **Where it is recorded (1):**
   - `tests/modules/test-code-repo-wears-original-hat.test.js:3` · release 0.39.276 · whole
 
@@ -4080,14 +4080,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2403"></a>
-### Q2403 · undated
+<a id="q2349"></a>
+### Q2349 · undated
 
 > the core foundation needs to be solid… gate should use siso or warp logic
 
 - **The work it belongs to:** release 1.0.0
-- **Said in the same message:** [Q1547](quotes-2026-10-19.md#q1547), [Q1588](quotes-2026-10-19.md#q1588), [Q2197](quotes-undated-1.md#q2197), [Q2261](quotes-undated-2.md#q2261), [Q2348](quotes-undated-2.md#q2348)
-- **Related by words:** [Q1565](quotes-2026-10-19.md#q1565) (core, foundation, gate, logic, siso, solid), [Q1566](quotes-2026-10-19.md#q1566) (gate, logic, siso, warp)
+- **Said in the same message:** [Q1499](quotes-2026-10-19.md#q1499), [Q1540](quotes-2026-10-19.md#q1540), [Q2143](quotes-undated-1.md#q2143), [Q2207](quotes-undated-2.md#q2207), [Q2294](quotes-undated-2.md#q2294)
+- **Related by words:** [Q1517](quotes-2026-10-19.md#q1517) (core, foundation, gate, logic, siso, solid), [Q1518](quotes-2026-10-19.md#q1518) (gate, logic, siso, warp)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1763` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 1.0.0 · whole
 
@@ -4098,13 +4098,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2404"></a>
-### Q2404 · undated
+<a id="q2350"></a>
+### Q2350 · undated
 
 > the create and build tabs should be removed from the repos and moved back to the main navbar.
 
 - **The work it belongs to:** release 0.39.284 W4
-- **Said in the same message:** [Q0752](quotes-2026-09-29.md#q0752), [Q0778](quotes-2026-09-29.md#q0778), [Q2224](quotes-undated-2.md#q2224), [Q2298](quotes-undated-2.md#q2298)
+- **Said in the same message:** [Q0752](quotes-2026-09-29.md#q0752), [Q0778](quotes-2026-09-29.md#q0778), [Q2170](quotes-undated-2.md#q2170), [Q2244](quotes-undated-2.md#q2244)
 - **Related by words:** [Q0775](quotes-2026-09-29.md#q0775) (build, create, main, navbar, tabs)
 - **Where it is recorded (4):**
   - `idearium/ui/index.html:1079` · release 0.39.284 W4 · whole
@@ -4149,8 +4149,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2405"></a>
-### Q2405 · undated
+<a id="q2351"></a>
+### Q2351 · undated
 
 > the eravos options need to be removed from this prompt.
 
@@ -4177,8 +4177,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2406"></a>
-### Q2406 · undated
+<a id="q2352"></a>
+### Q2352 · undated
 
 > the gap from idea to a complete spec in the workshop … Can you populate each block section with full multiple choice options with a custom option.
 
@@ -4195,13 +4195,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2407"></a>
-### Q2407 · undated
+<a id="q2353"></a>
+### Q2353 · undated
 
 > the inject dom observer/mutation listern should stream live the reponse. jobid, jobstatus. the floating menu cli, and copilot dont get a response.
 
 - **The work it belongs to:** release 0.39.118
-- **Related by words:** [Q0477](quotes-2026-09-13.md#q0477) (cli, copilot, dom, floating, inject, jobid), [Q2400](quotes-undated-2.md#q2400) (cli, dom, live, mutation)
+- **Related by words:** [Q0477](quotes-2026-09-13.md#q0477) (cli, copilot, dom, floating, inject, jobid), [Q2346](quotes-undated-2.md#q2346) (cli, dom, live, mutation)
 - **Where it is recorded (1):**
   - `lib/version.js:1215` · release 0.39.118 · whole
 
@@ -4212,13 +4212,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2408"></a>
-### Q2408 · undated
+<a id="q2354"></a>
+### Q2354 · undated
 
 > the node type is the file extension, not js -- a yaml file with the node type as the extension, like the .nex files.
 
 - **The work it belongs to:** release 0.39.77 P16
-- **Related by words:** [Q0425](quotes-2026-09-11.md#q0425) (extension, file, files, js, nex, node), [Q2234](quotes-undated-2.md#q2234) (extension, file, node, type, yaml), [Q0455](quotes-2026-09-12.md#q0455) (extension, file, nex, node, type), [Q0753](quotes-2026-09-29.md#q0753) (files, nex, node, yaml)
+- **Related by words:** [Q0425](quotes-2026-09-11.md#q0425) (extension, file, files, js, nex, node), [Q2180](quotes-undated-2.md#q2180) (extension, file, node, type, yaml), [Q0455](quotes-2026-09-12.md#q0455) (extension, file, nex, node, type), [Q0753](quotes-2026-09-29.md#q0753) (files, nex, node, yaml)
 - **Where it is recorded (1):**
   - `lib/version.js:1215` · release 0.39.77 P16 · whole
 
@@ -4229,15 +4229,15 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2409"></a>
-### Q2409 · undated
+<a id="q2355"></a>
+### Q2355 · undated
 
 > the orchastrator
 
 - **The work it belongs to:** release 0.60.256 AE5
-- **Said in the same message:** [Q1801](quotes-2026-10-25.md#q1801), [Q1806](quotes-2026-10-25.md#q1806), [Q1811](quotes-2026-10-25.md#q1811), [Q1812](quotes-2026-10-25.md#q1812)
-- **The same words are also in:** [Q1949](quotes-2026-10-30.md#q1949), [Q1811](quotes-2026-10-25.md#q1811), [Q2242](quotes-undated-2.md#q2242), [Q0724](quotes-2026-09-27.md#q0724), [Q1813](quotes-2026-10-25.md#q1813)
-- **Related by words:** [Q1813](quotes-2026-10-25.md#q1813) (orchastrator)
+- **Said in the same message:** [Q1750](quotes-2026-10-25.md#q1750), [Q1755](quotes-2026-10-25.md#q1755), [Q1760](quotes-2026-10-25.md#q1760), [Q1761](quotes-2026-10-25.md#q1761)
+- **The same words are also in:** [Q1895](quotes-2026-10-30.md#q1895), [Q1760](quotes-2026-10-25.md#q1760), [Q2188](quotes-undated-2.md#q2188), [Q0724](quotes-2026-09-27.md#q0724), [Q1762](quotes-2026-10-25.md#q1762)
+- **Related by words:** [Q1762](quotes-2026-10-25.md#q1762) (orchastrator)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1820` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 0.60.256 AE5 · whole
 
@@ -4248,14 +4248,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2410"></a>
-### Q2410 · undated
+<a id="q2356"></a>
+### Q2356 · undated
 
 > the paste shouldn't be injecting. only injecting the persona and the .inject nodes set in the agent tab and settings.
 
 - **The work it belongs to:** release 0.39.258
 - **Recorded together with:** [Q0264](quotes-2026-09-02.md#q0264)
-- **Related by words:** [Q0707](quotes-2026-09-26.md#q0707) (agent, inject, injecting, nodes, paste, persona), [Q2358](quotes-undated-2.md#q2358) (agent, inject, injecting, nodes, paste, persona)
+- **Related by words:** [Q0707](quotes-2026-09-26.md#q0707) (agent, inject, injecting, nodes, paste, persona), [Q2304](quotes-undated-2.md#q2304) (agent, inject, injecting, nodes, paste, persona)
 - **Where it is recorded (5):**
   - `guardian/userscript-chatgpt.js:1002` · under *// ── Job handler ───────────────────────────────────────────────────────────────* · release 0.39.258 · whole
 
@@ -4283,13 +4283,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
   - `guardian/userscript-gemini.js:944` · under *// ── Job handler ───────────────────────────────────────────────────────────────* · release 0.39.258 · whole
   - `guardian/userscript-perplexity.js:941` · under *// ── Job handler ───────────────────────────────────────────────────────────────* · release 0.39.258 · whole
 
-<a id="q2411"></a>
-### Q2411 · undated
+<a id="q2357"></a>
+### Q2357 · undated
 
 > the persistent memory, graphs, cross domain verification and borrowing
 
 - **The work it belongs to:** release 1.0.0
-- **Said in the same message:** [Q1581](quotes-2026-10-19.md#q1581), [Q1603](quotes-2026-10-20.md#q1603), [Q1607](quotes-2026-10-20.md#q1607)
+- **Said in the same message:** [Q1533](quotes-2026-10-19.md#q1533), [Q1555](quotes-2026-10-20.md#q1555), [Q1559](quotes-2026-10-20.md#q1559)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1784` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 1.0.0 · whole
 
@@ -4299,8 +4299,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2412"></a>
-### Q2412 · undated
+<a id="q2358"></a>
+### Q2358 · undated
 
 > the pipeline tab with all steps. automation with all the tasker, automate, and all the conditions, triggers, delays, scheduled, events etc.
 
@@ -4318,14 +4318,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2413"></a>
-### Q2413 · undated
+<a id="q2359"></a>
+### Q2359 · undated
 
 > the popup … cant close it.
 
 - **The work it belongs to:** release 0.59.2
-- **The same words are also in:** [Q2413](quotes-undated-2.md#q2413)
-- **Related by words:** [Q1129](quotes-2026-10-10.md#q1129) (close, popup)
+- **The same words are also in:** [Q2359](quotes-undated-2.md#q2359)
 - **Where it is recorded (1):**
   - `clear-glass/renderer/guardian-picker.js:4` · release 0.59.2 · whole
 
@@ -4338,12 +4337,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2414"></a>
-### Q2414 · undated
+<a id="q2360"></a>
+### Q2360 · undated
 
 > the queue needs a drainer, loops it back into the queue with escalating retry and diagnostic strategies each loop... let's make it solid.
 
-- **Related by words:** [Q1131](quotes-2026-10-10.md#q1131) (diagnostic, drainer, escalating, loops, queue, retry)
+- **Related by words:** [Q1090](quotes-2026-10-10.md#q1090) (diagnostic, drainer, escalating, loops, queue, retry)
 - **Where it is recorded (3):**
   - `tests/modules/agent-mesh-drainer.test.js:2` · whole
 
@@ -4380,13 +4379,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2415"></a>
-### Q2415 · undated
+<a id="q2361"></a>
+### Q2361 · undated
 
 > the replay engine snapshots any time a sigma is detected in the system, and also used to find bottlenecks, using deltas, and use the timeline as a tool for debugging and reverting if needed.
 
 - **The work it belongs to:** nexus-live-mind-phasemap.spec P2
-- **Related by words:** [Q2147](quotes-undated-1.md#q2147) (detected, engine, replay, sigma, timeline), [Q2278](quotes-undated-2.md#q2278) (bottlenecks, deltas, sigma, system, timeline)
+- **Related by words:** [Q2093](quotes-undated-1.md#q2093) (detected, engine, replay, sigma, timeline), [Q2224](quotes-undated-2.md#q2224) (bottlenecks, deltas, sigma, system, timeline)
 - **Where it is recorded (3):**
   - `intelligence/snapshot-trigger.js:6` · whole
 
@@ -4420,14 +4419,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2416"></a>
-### Q2416 · undated
+<a id="q2362"></a>
+### Q2362 · undated
 
 > the run button in cos to work fully … like a bunch of options for cos.
 
 - **The work it belongs to:** release 0.39.261
-- **Recorded together with:** [Q0623](quotes-2026-09-21.md#q0623), [Q0706](quotes-2026-09-26.md#q0706), [Q2175](quotes-undated-1.md#q2175)
-- **Related by words:** [Q0609](quotes-2026-09-21.md#q0609) (bunch, button, cos, fully, options, run), [Q2218](quotes-undated-1.md#q2218) (button, cos, fully, run)
+- **Recorded together with:** [Q0623](quotes-2026-09-21.md#q0623), [Q0706](quotes-2026-09-26.md#q0706), [Q2121](quotes-undated-1.md#q2121)
+- **Related by words:** [Q0609](quotes-2026-09-21.md#q0609) (bunch, button, cos, fully, options, run), [Q2164](quotes-undated-1.md#q2164) (button, cos, fully, run)
 - **Where it is recorded (1):**
   - `idearium/api/index.js:6951` · under *// ── §0.39.261 — the Nexus repo (Nexus, managed from inside Nexus) ────────* · release 0.39.261 · whole
 
@@ -4441,8 +4440,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2417"></a>
-### Q2417 · undated
+<a id="q2363"></a>
+### Q2363 · undated
 
 > the run button in repos. can you have a prompt telling me to set it up, and have it completely in a step by step process for me to set up cos qemu for vms
 
@@ -4473,13 +4472,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2418"></a>
-### Q2418 · undated
+<a id="q2364"></a>
+### Q2364 · undated
 
 > the spec workshop was supposed to use blocks … the spacial void is supposed to feed into the spec workshop pipeline … edit, save, and remove spec templates.
 
 - **The work it belongs to:** release 0.39.345 UI0
-- **Related by words:** [Q0979](quotes-2026-10-05.md#q0979) (blocks, edit, feed, pipeline, remove, save), [Q0873](quotes-2026-10-02.md#q0873) (feed, pipeline, spec, workshop), [Q1425](quotes-2026-10-16.md#q1425) (remove, spec, templates, workshop)
+- **Related by words:** [Q0979](quotes-2026-10-05.md#q0979) (blocks, edit, feed, pipeline, remove, save), [Q0873](quotes-2026-10-02.md#q0873) (feed, pipeline, spec, workshop), [Q1379](quotes-2026-10-16.md#q1379) (remove, spec, templates, workshop)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1695` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 0.39.345 UI0 · whole
 
@@ -4488,13 +4487,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2419"></a>
-### Q2419 · undated
+<a id="q2365"></a>
+### Q2365 · undated
 
 > the specs aren't supposed to stay ideas … supposed to only be nexus and the nested repos.
 
 - **The work it belongs to:** release 0.39.266
-- **Recorded together with:** [Q0315](quotes-2026-09-03.md#q0315), [Q2341](quotes-undated-2.md#q2341)
+- **Recorded together with:** [Q0315](quotes-2026-09-03.md#q0315), [Q2287](quotes-undated-2.md#q2287)
 - **Related by words:** [Q0713](quotes-2026-09-27.md#q0713) (aren't, ideas, nested, nexus, repos, specs)
 - **Where it is recorded (1):**
   - `idearium/repo/index.js:567` · under *// ── ingest — the single entry point for both convergent paths ──────────────* · release 0.39.266 · whole
@@ -4509,8 +4508,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2420"></a>
-### Q2420 · undated
+<a id="q2366"></a>
+### Q2366 · undated
 
 > the system is at co-pilot's disposal, not the other way around. it's all built for bridging the system with the co-pilot, the user, and nexus.
 
@@ -4527,8 +4526,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2421"></a>
-### Q2421 · undated
+<a id="q2367"></a>
+### Q2367 · undated
 
 > the three lines menu. its not here. at all. getting fuming angry at this. fix it. the index.html.
 
@@ -4543,12 +4542,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2422"></a>
-### Q2422 · undated
+<a id="q2368"></a>
+### Q2368 · undated
 
 > the toolscope for the agents tab. need the full capabilities … tool awareness
 
-- **Related by words:** [Q2424](quotes-undated-2.md#q2424) (agents, awareness, capabilities, full, tab, tool), [Q2423](quotes-undated-2.md#q2423) (agents, awareness, capabilities, full, tab, tool)
+- **Related by words:** [Q2370](quotes-undated-2.md#q2370) (agents, awareness, capabilities, full, tab, tool), [Q2369](quotes-undated-2.md#q2369) (agents, awareness, capabilities, full, tab, tool)
 - **Where it is recorded (1):**
   - `copilot/spec/copilot.spec:312` · under *#   - fluid agent routing (extractExplicitAgent) + lifeline /command transport fix (was posting to a removed route, every escalation silentl* · whole
 
@@ -4561,14 +4560,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2423"></a>
-### Q2423 · undated
+<a id="q2369"></a>
+### Q2369 · undated
 
 > the toolscope for the agents tab. need the full capabilities, with the /help and tool awareness to help. need the commands as user friendly as possible. including debugging, using the intelligence system … also context on by default and wire in the graph
 
 - **The work it belongs to:** release 0.39.257
-- **Recorded together with:** [Q0408](quotes-2026-09-11.md#q0408), [Q0601](quotes-2026-09-21.md#q0601), [Q0698](quotes-2026-09-26.md#q0698), [Q0719](quotes-2026-09-27.md#q0719), [Q0947](quotes-2026-10-05.md#q0947), [Q1021](quotes-2026-10-07.md#q1021), [Q2057](quotes-undated-1.md#q2057), [Q2084](quotes-undated-1.md#q2084), [Q2216](quotes-undated-1.md#q2216), [Q2234](quotes-undated-2.md#q2234), [Q2324](quotes-undated-2.md#q2324), [Q2387](quotes-undated-2.md#q2387)
-- **Related by words:** [Q2424](quotes-undated-2.md#q2424) (agents, awareness, capabilities, debugging, full, help), [Q2422](quotes-undated-2.md#q2422) (agents, awareness, capabilities, full, tab, tool)
+- **Recorded together with:** [Q0408](quotes-2026-09-11.md#q0408), [Q0601](quotes-2026-09-21.md#q0601), [Q0698](quotes-2026-09-26.md#q0698), [Q0719](quotes-2026-09-27.md#q0719), [Q0947](quotes-2026-10-05.md#q0947), [Q1021](quotes-2026-10-07.md#q1021), [Q2003](quotes-undated-1.md#q2003), [Q2030](quotes-undated-1.md#q2030), [Q2162](quotes-undated-1.md#q2162), [Q2180](quotes-undated-2.md#q2180), [Q2270](quotes-undated-2.md#q2270), [Q2333](quotes-undated-2.md#q2333)
+- **Related by words:** [Q2370](quotes-undated-2.md#q2370) (agents, awareness, capabilities, debugging, full, help), [Q2368](quotes-undated-2.md#q2368) (agents, awareness, capabilities, full, tab, tool)
 - **Where it is recorded (11):**
   - `idearium/spec/idearium.spec:243` · under *- id: "idearium.lattice.view"* · whole
 
@@ -4681,13 +4680,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2424"></a>
-### Q2424 · undated
+<a id="q2370"></a>
+### Q2370 · undated
 
 > the toolscope for the agents tab. need the full capabilities, with the /help and tool awareness … debugging, using the intelligence system…
 
 - **The work it belongs to:** release 0.39.257
-- **Related by words:** [Q2423](quotes-undated-2.md#q2423) (agents, awareness, capabilities, debugging, full, help), [Q2422](quotes-undated-2.md#q2422) (agents, awareness, capabilities, full, tab, tool)
+- **Related by words:** [Q2369](quotes-undated-2.md#q2369) (agents, awareness, capabilities, debugging, full, help), [Q2368](quotes-undated-2.md#q2368) (agents, awareness, capabilities, full, tab, tool)
 - **Where it is recorded (2):**
   - `README.md:16699` · under *- 0.39.258. — the second job completes; the agent is sent only what you can edit — James: "progress. didn't work a second time. the paste, s* · release 0.39.257 · whole
 
@@ -4701,8 +4700,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
 
   - `docs/atlases/nexus-atlas.md:16698` · under *- 0.39.258. — the second job completes; the agent is sent only what you can edit — James: "progress. didn't work a second time. the paste, s* · release 0.39.257 · whole
 
-<a id="q2425"></a>
-### Q2425 · undated
+<a id="q2371"></a>
+### Q2371 · undated
 
 > then a dropzone... once it uploads you can hit 'import repository'
 
@@ -4718,8 +4717,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2426"></a>
-### Q2426 · undated
+<a id="q2372"></a>
+### Q2372 · undated
 
 > then bundle each capability node, in relation to any other relevant node.
 
@@ -4737,14 +4736,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2427"></a>
-### Q2427 · undated
+<a id="q2373"></a>
+### Q2373 · undated
 
 > then resume data migratino
 
 - **The work it belongs to:** release 0.60.212 DL3
-- **The same words are also in:** [Q2427](quotes-undated-2.md#q2427), [Q1687](quotes-2026-10-22.md#q1687), [Q2428](quotes-undated-2.md#q2428)
-- **Related by words:** [Q1687](quotes-2026-10-22.md#q1687) (data, migratino, resume), [Q2428](quotes-undated-2.md#q2428) (data, migratino, resume)
+- **The same words are also in:** [Q2373](quotes-undated-2.md#q2373), [Q1639](quotes-2026-10-22.md#q1639), [Q2374](quotes-undated-2.md#q2374)
+- **Related by words:** [Q1639](quotes-2026-10-22.md#q1639) (data, migratino, resume), [Q2374](quotes-undated-2.md#q2374) (data, migratino, resume)
 - **Where it is recorded (2):**
   - `README.md:16206` · under *- 0.60.213. — no second box inside the start page's search* · release 0.60.212 DL3 · whole
 
@@ -4758,15 +4757,15 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
 
   - `docs/atlases/nexus-atlas.md:16205` · under *- 0.60.213. — no second box inside the start page's search* · release 0.60.212 DL3 · whole
 
-<a id="q2428"></a>
-### Q2428 · undated
+<a id="q2374"></a>
+### Q2374 · undated
 
 > then resume data migratino
 
 - **The work it belongs to:** release 0.60.213
-- **Said in the same message:** [Q0293](quotes-2026-09-02.md#q0293), [Q1617](quotes-2026-10-21.md#q1617), [Q1637](quotes-2026-10-21.md#q1637), [Q1647](quotes-2026-10-21.md#q1647), [Q1648](quotes-2026-10-21.md#q1648), [Q1652](quotes-2026-10-21.md#q1652), [Q1655](quotes-2026-10-21.md#q1655), [Q1659](quotes-2026-10-21.md#q1659), [Q1669](quotes-2026-10-21.md#q1669), [Q1672](quotes-2026-10-21.md#q1672), [Q1673](quotes-2026-10-22.md#q1673), [Q1677](quotes-2026-10-22.md#q1677), [Q1684](quotes-2026-10-22.md#q1684), [Q1688](quotes-2026-10-22.md#q1688), [Q2178](quotes-undated-1.md#q2178), [Q2385](quotes-undated-2.md#q2385)
-- **The same words are also in:** [Q2427](quotes-undated-2.md#q2427), [Q1687](quotes-2026-10-22.md#q1687), [Q2428](quotes-undated-2.md#q2428)
-- **Related by words:** [Q1687](quotes-2026-10-22.md#q1687) (data, migratino, resume), [Q2427](quotes-undated-2.md#q2427) (data, migratino, resume)
+- **Said in the same message:** [Q0293](quotes-2026-09-02.md#q0293), [Q1569](quotes-2026-10-21.md#q1569), [Q1589](quotes-2026-10-21.md#q1589), [Q1599](quotes-2026-10-21.md#q1599), [Q1600](quotes-2026-10-21.md#q1600), [Q1604](quotes-2026-10-21.md#q1604), [Q1607](quotes-2026-10-21.md#q1607), [Q1611](quotes-2026-10-21.md#q1611), [Q1621](quotes-2026-10-21.md#q1621), [Q1624](quotes-2026-10-21.md#q1624), [Q1625](quotes-2026-10-22.md#q1625), [Q1629](quotes-2026-10-22.md#q1629), [Q1636](quotes-2026-10-22.md#q1636), [Q1640](quotes-2026-10-22.md#q1640), [Q2124](quotes-undated-1.md#q2124), [Q2331](quotes-undated-2.md#q2331)
+- **The same words are also in:** [Q2373](quotes-undated-2.md#q2373), [Q1639](quotes-2026-10-22.md#q1639), [Q2374](quotes-undated-2.md#q2374)
+- **Related by words:** [Q1639](quotes-2026-10-22.md#q1639) (data, migratino, resume), [Q2373](quotes-undated-2.md#q2373) (data, migratino, resume)
 - **Where it is recorded (1):**
   - `lib/version.js:83` · under *// ── SL line (claude/sleepy-gates-9lc085, parallel; merged in 0.60.233): 0.60.230 → 0.60.225 ──* · release 0.60.213 · whole
 
@@ -4776,8 +4775,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2429"></a>
-### Q2429 · undated
+<a id="q2375"></a>
+### Q2375 · undated
 
 > this is hard to understand how to actually build the code base
 
@@ -4795,13 +4794,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2430"></a>
-### Q2430 · undated
+<a id="q2376"></a>
+### Q2376 · undated
 
 > this is literally what nexus is built for... reduce tokens... everything exists in relation to something, like words in relation to their surroundings.
 
 - **The work it belongs to:** phase R10
-- **Related by words:** [Q2431](quotes-undated-2.md#q2431) (built, nexus, reduce, tokens)
+- **Related by words:** [Q2377](quotes-undated-2.md#q2377) (built, nexus, reduce, tokens)
 - **Where it is recorded (1):**
   - `lib/relational-context.js:7` · phase R10 · whole
 
@@ -4816,13 +4815,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2431"></a>
-### Q2431 · undated
+<a id="q2377"></a>
+### Q2377 · undated
 
 > this is literally what nexus is built for... the features to reduce tokens. like reusing architecture. querying cortex for already existing code.
 
-- **Recorded together with:** [Q0062](quotes-2026-08-12.md#q0062), [Q2203](quotes-undated-1.md#q2203), [Q2436](quotes-undated-2.md#q2436)
-- **Related by words:** [Q2430](quotes-undated-2.md#q2430) (built, nexus, reduce, tokens)
+- **Recorded together with:** [Q0062](quotes-2026-08-12.md#q0062), [Q2149](quotes-undated-1.md#q2149), [Q2381](quotes-undated-2.md#q2381)
+- **Related by words:** [Q2376](quotes-undated-2.md#q2376) (built, nexus, reduce, tokens)
 - **Where it is recorded (1):**
   - `docs/repair-contract-and-loom-hub-phasemap.spec:334` · under *phase: fix the require path to cortex/self-heal, and build a real* · whole
 
@@ -4837,8 +4836,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2432"></a>
-### Q2432 · undated
+<a id="q2378"></a>
+### Q2378 · undated
 
 > thought you took care of bridge man...
 
@@ -4864,15 +4863,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2433"></a>
-### Q2433 · undated
+<a id="q2379"></a>
+### Q2379 · undated
 
 > three
 
 - **The work it belongs to:** release 0.60.3
-- **Recorded together with:** [Q1323](quotes-2026-10-15.md#q1323), [Q1357](quotes-2026-10-15.md#q1357), [Q2166](quotes-undated-1.md#q2166), [Q2283](quotes-undated-2.md#q2283), [Q2395](quotes-undated-2.md#q2395), [Q2396](quotes-undated-2.md#q2396), [Q2434](quotes-undated-2.md#q2434), [Q2477](quotes-undated-3.md#q2477)
-- **Related by words:** [Q2434](quotes-undated-2.md#q2434) (three)
-- **Where it is recorded (3):**
+- **Recorded together with:** [Q1280](quotes-2026-10-15.md#q1280), [Q1313](quotes-2026-10-15.md#q1313), [Q2112](quotes-undated-1.md#q2112), [Q2229](quotes-undated-2.md#q2229), [Q2341](quotes-undated-2.md#q2341), [Q2342](quotes-undated-2.md#q2342), [Q2422](quotes-undated-3.md#q2422)
+- **Where it is recorded (4):**
   - `tests/modules/test-release-notes.test.js:50` · under *// ── the fixture repo ────────────────────────────────────────────────────────────────────────────────────────────────* · release 0.60.3 · whole
 
     ```text
@@ -4893,6 +4891,16 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
           assert.strictEqual(p, '/api/versionium/releases');
     ```
 
+  - `tests/modules/test-release-notes.test.js:125` · under *// ── the fixture repo ────────────────────────────────────────────────────────────────────────────────────────────────* · release 0.60.3 · whole
+
+    ```text
+    const r3 = REL.get({ repository: 'nexus', version: '0.60.3' });
+        assert.deepStrictEqual(r3.commits.map(c => c.sha), [c3, cMap], 'filled in');
+        assert.strictEqual(r3.quote, 'James: "three"', 'what was recorded stays');
+        assert.deepStrictEqual(Object.keys(r3.files).sort(), ['docs', 'lib', 'root']);
+      });
+    ```
+
   - `tests/modules/test-release-notes.test.js:144` · under *// ── the fixture repo ────────────────────────────────────────────────────────────────────────────────────────────────* · release 0.60.3 · whole
 
     ```text
@@ -4904,27 +4912,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2434"></a>
-### Q2434 · undated
-
-> three
-
-- **Recorded together with:** [Q1323](quotes-2026-10-15.md#q1323), [Q1357](quotes-2026-10-15.md#q1357), [Q2166](quotes-undated-1.md#q2166), [Q2283](quotes-undated-2.md#q2283), [Q2395](quotes-undated-2.md#q2395), [Q2396](quotes-undated-2.md#q2396), [Q2433](quotes-undated-2.md#q2433), [Q2477](quotes-undated-3.md#q2477)
-- **Related by words:** [Q2433](quotes-undated-2.md#q2433) (three)
-- **Where it is recorded (1):**
-  - `tests/modules/test-release-notes.test.js:125` · under *// ── the fixture repo ────────────────────────────────────────────────────────────────────────────────────────────────* · whole
-
-    ```text
-    const r3 = REL.get({ repository: 'nexus', version: '0.60.3' });
-        assert.deepStrictEqual(r3.commits.map(c => c.sha), [c3, cMap], 'filled in');
-        assert.strictEqual(r3.quote, 'James: "three"', 'what was recorded stays');
-        assert.deepStrictEqual(Object.keys(r3.files).sort(), ['docs', 'lib', 'root']);
-      });
-    ```
-
-
-<a id="q2435"></a>
-### Q2435 · undated
+<a id="q2380"></a>
+### Q2380 · undated
 
 > tool index in cortex with file dir and consumer and intent or edge cases that populate over time.
 
@@ -4942,13 +4931,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2436"></a>
-### Q2436 · undated
+<a id="q2381"></a>
+### Q2381 · undated
 
 > ui has a design philosophy.
 
-- **Recorded together with:** [Q0062](quotes-2026-08-12.md#q0062), [Q2203](quotes-undated-1.md#q2203), [Q2431](quotes-undated-2.md#q2431)
-- **Related by words:** [Q2163](quotes-undated-1.md#q2163) (design, philosophy)
+- **Recorded together with:** [Q0062](quotes-2026-08-12.md#q0062), [Q2149](quotes-undated-1.md#q2149), [Q2377](quotes-undated-2.md#q2377)
+- **Related by words:** [Q2109](quotes-undated-1.md#q2109) (design, philosophy)
 - **Where it is recorded (1):**
   - `docs/repair-contract-and-loom-hub-phasemap.spec:316` · under *phase: fix the require path to cortex/self-heal, and build a real* · whole
 
@@ -4961,8 +4950,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2437"></a>
-### Q2437 · undated
+<a id="q2382"></a>
+### Q2382 · undated
 
 > use component registery logic, component type, everything that makes chunks understood. Coding syntax.
 
@@ -4990,13 +4979,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2438"></a>
-### Q2438 · undated
+<a id="q2383"></a>
+### Q2383 · undated
 
 > use it for ... creating macros/automation
 
 - **The work it belongs to:** release 0.60.224
-- **Related by words:** [Q1859](quotes-2026-10-28.md#q1859) (automation, creating, macros)
+- **Related by words:** [Q1807](quotes-2026-10-28.md#q1807) (automation, creating, macros)
 - **Where it is recorded (2):**
   - `clear-glass/renderer/gig-panel.js:154` · release 0.60.224 · whole
 
@@ -5019,14 +5008,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2439"></a>
-### Q2439 · undated
+<a id="q2384"></a>
+### Q2384 · undated
 
 > use jaa for the database
 
 - **The work it belongs to:** release 0.39.241
-- **The same words are also in:** [Q2439](quotes-undated-2.md#q2439), [Q2440](quotes-undated-2.md#q2440), [Q0686](quotes-2026-09-25.md#q0686), [Q2441](quotes-undated-2.md#q2441)
-- **Related by words:** [Q0686](quotes-2026-09-25.md#q0686) (database, jaa), [Q2440](quotes-undated-2.md#q2440) (database, jaa), [Q2441](quotes-undated-2.md#q2441) (database, jaa), [Q0444](quotes-2026-09-12.md#q0444) (database, jaa)
+- **The same words are also in:** [Q2384](quotes-undated-2.md#q2384), [Q2385](quotes-undated-2.md#q2385), [Q0686](quotes-2026-09-25.md#q0686), [Q2386](quotes-undated-2.md#q2386)
+- **Related by words:** [Q0686](quotes-2026-09-25.md#q0686) (database, jaa), [Q2385](quotes-undated-2.md#q2385) (database, jaa), [Q2386](quotes-undated-2.md#q2386) (database, jaa), [Q0444](quotes-2026-09-12.md#q0444) (database, jaa)
 - **Where it is recorded (2):**
   - `clear-glass/src/downloads/artifact-chat-index.js:26` · release 0.39.241 · whole
 
@@ -5050,14 +5039,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2440"></a>
-### Q2440 · undated
+<a id="q2385"></a>
+### Q2385 · undated
 
 > use jaa for the database
 
 - **The work it belongs to:** release 0.39.243
-- **The same words are also in:** [Q2439](quotes-undated-2.md#q2439), [Q2440](quotes-undated-2.md#q2440), [Q0686](quotes-2026-09-25.md#q0686), [Q2441](quotes-undated-2.md#q2441)
-- **Related by words:** [Q0686](quotes-2026-09-25.md#q0686) (database, jaa), [Q2439](quotes-undated-2.md#q2439) (database, jaa), [Q2441](quotes-undated-2.md#q2441) (database, jaa), [Q0444](quotes-2026-09-12.md#q0444) (database, jaa)
+- **The same words are also in:** [Q2384](quotes-undated-2.md#q2384), [Q2385](quotes-undated-2.md#q2385), [Q0686](quotes-2026-09-25.md#q0686), [Q2386](quotes-undated-2.md#q2386)
+- **Related by words:** [Q0686](quotes-2026-09-25.md#q0686) (database, jaa), [Q2384](quotes-undated-2.md#q2384) (database, jaa), [Q2386](quotes-undated-2.md#q2386) (database, jaa), [Q0444](quotes-2026-09-12.md#q0444) (database, jaa)
 - **Where it is recorded (1):**
   - `clear-glass/src/cookies/vault.js:9` · release 0.39.243 · whole
 
@@ -5070,13 +5059,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2441"></a>
-### Q2441 · undated
+<a id="q2386"></a>
+### Q2386 · undated
 
 > use jaa for the database
 
-- **The same words are also in:** [Q2439](quotes-undated-2.md#q2439), [Q2440](quotes-undated-2.md#q2440), [Q0686](quotes-2026-09-25.md#q0686), [Q2441](quotes-undated-2.md#q2441)
-- **Related by words:** [Q0686](quotes-2026-09-25.md#q0686) (database, jaa), [Q2439](quotes-undated-2.md#q2439) (database, jaa), [Q2440](quotes-undated-2.md#q2440) (database, jaa), [Q0444](quotes-2026-09-12.md#q0444) (database, jaa)
+- **The same words are also in:** [Q2384](quotes-undated-2.md#q2384), [Q2385](quotes-undated-2.md#q2385), [Q0686](quotes-2026-09-25.md#q0686), [Q2386](quotes-undated-2.md#q2386)
+- **Related by words:** [Q0686](quotes-2026-09-25.md#q0686) (database, jaa), [Q2384](quotes-undated-2.md#q2384) (database, jaa), [Q2385](quotes-undated-2.md#q2385) (database, jaa), [Q0444](quotes-2026-09-12.md#q0444) (database, jaa)
 - **Where it is recorded (1):**
   - `tests/modules/test-cookie-vault-jaa.test.js:4` · whole
 
@@ -5089,13 +5078,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2442"></a>
-### Q2442 · undated
+<a id="q2387"></a>
+### Q2387 · undated
 
 > use the axioms in the docs for each disicio nthat doesn\'t show my competence
 
 - **The work it belongs to:** release 0.60.135
-- **Related by words:** [Q1516](quotes-2026-10-17.md#q1516) (axioms, competence, disicio, docs, nthat, show)
+- **Related by words:** [Q1468](quotes-2026-10-17.md#q1468) (axioms, competence, disicio, docs, nthat, show)
 - **Where it is recorded (1):**
   - `lib/version.js:134` · under *// ── SL line (claude/sleepy-gates-9lc085, parallel; merged in 0.60.233): 0.60.230 → 0.60.225 ──* · release 0.60.135 · whole
 
@@ -5105,14 +5094,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2443"></a>
-### Q2443 · undated
+<a id="q2388"></a>
+### Q2388 · undated
 
 > use the component registry as the wiring harness … so chunks can have minial context … thats way too much to inject when we have tools they can use to get context.
 
 - **The work it belongs to:** release 0.39.266
-- **Recorded together with:** [Q0787](quotes-2026-10-01.md#q0787), [Q2050](quotes-undated-1.md#q2050), [Q2121](quotes-undated-1.md#q2121)
-- **Related by words:** [Q0732](quotes-2026-09-27.md#q0732) (chunks, component, context, harness, minial, registry), [Q2444](quotes-undated-2.md#q2444) (component, harness, registry, wiring)
+- **Recorded together with:** [Q0787](quotes-2026-10-01.md#q0787), [Q1996](quotes-undated-1.md#q1996), [Q2067](quotes-undated-1.md#q2067)
+- **Related by words:** [Q0732](quotes-2026-09-27.md#q0732) (chunks, component, context, harness, minial, registry), [Q2389](quotes-undated-2.md#q2389) (component, harness, registry, wiring)
 - **Where it is recorded (1):**
   - `idearium/api/index.js:7592` · under *// ── §0.39.261 — DEBUG: everything that is wrong with this repo, in one read.* · release 0.39.266 · whole
 
@@ -5126,13 +5115,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2444"></a>
-### Q2444 · undated
+<a id="q2389"></a>
+### Q2389 · undated
 
 > use the component registry as the wiring harness … that way it makes the registry a map and event bus.
 
 - **The work it belongs to:** release 0.39.266
-- **Related by words:** [Q0732](quotes-2026-09-27.md#q0732) (bus, component, event, harness, map, registry), [Q1508](quotes-2026-10-17.md#q1508) (bus, component, event, harness, registry, wiring), [Q1497](quotes-2026-10-17.md#q1497) (bus, component, event, registry, wiring), [Q2443](quotes-undated-2.md#q2443) (component, harness, registry, wiring)
+- **Related by words:** [Q0732](quotes-2026-09-27.md#q0732) (bus, component, event, harness, map, registry), [Q1460](quotes-2026-10-17.md#q1460) (bus, component, event, harness, registry, wiring), [Q1449](quotes-2026-10-17.md#q1449) (bus, component, event, registry, wiring), [Q2388](quotes-undated-2.md#q2388) (component, harness, registry, wiring)
 - **Where it is recorded (1):**
   - `loom/scanners/source-map.js:102` · release 0.39.266 · whole
 
@@ -5146,8 +5135,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2445"></a>
-### Q2445 · undated
+<a id="q2390"></a>
+### Q2390 · undated
 
 > using copilot as the bridge for ollama and guardian... like a railroad switch to switch tracks. default is ollama, then routing to chatgpt would switch to guardian like a toggle switch.
 
@@ -5166,8 +5155,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2446"></a>
-### Q2446 · undated
+<a id="q2391"></a>
+### Q2391 · undated
 
 > using hotkey. right click, answer question context option. can also implement the element picker/guardian picker... full ui to configure this... show it first in the co pilot cli in clearglass. and a toast isolated from clearglass process.
 
@@ -5188,12 +5177,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2447"></a>
-### Q2447 · undated
+<a id="q2392"></a>
+### Q2392 · undated
 
 > utilizes the git commit history?
 
-- **Recorded together with:** [Q0701](quotes-2026-09-26.md#q0701), [Q1108](quotes-2026-10-09.md#q1108), [Q2048](quotes-undated-1.md#q2048), [Q2278](quotes-undated-2.md#q2278), [Q2282](quotes-undated-2.md#q2282), [Q2307](quotes-undated-2.md#q2307)
+- **Recorded together with:** [Q0701](quotes-2026-09-26.md#q0701), [Q1064](quotes-2026-10-09.md#q1064), [Q1994](quotes-undated-1.md#q1994), [Q2224](quotes-undated-2.md#q2224), [Q2228](quotes-undated-2.md#q2228), [Q2253](quotes-undated-2.md#q2253)
 - **Where it is recorded (2):**
   - `docs/repair-contract-and-loom-hub-phasemap.spec:132` · under *name:        repair-contract-and-loom-hub* · whole
 
@@ -5216,8 +5205,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2448"></a>
-### Q2448 · undated
+<a id="q2393"></a>
+### Q2393 · undated
 
 > vector memory? like semantic memory help reduce dedups
 
@@ -5233,14 +5222,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2449"></a>
-### Q2449 · undated
+<a id="q2394"></a>
+### Q2394 · undated
 
 > versioning each diff using versionium
 
 - **The work it belongs to:** release 0.60.81 CV2
-- **Said in the same message:** [Q2171](quotes-undated-1.md#q2171)
-- **Related by words:** [Q1340](quotes-2026-10-15.md#q1340) (diff, versioning, versionium)
+- **Said in the same message:** [Q2117](quotes-undated-1.md#q2117)
+- **Related by words:** [Q1296](quotes-2026-10-15.md#q1296) (diff, versioning, versionium)
 - **Where it is recorded (1):**
   - `lib/repo-versions.js:71` · release 0.60.81 CV2 · whole
 
@@ -5253,8 +5242,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2450"></a>
-### Q2450 · undated
+<a id="q2395"></a>
+### Q2395 · undated
 
 > wake relay needs to be wired in also, and injected into job contents.
 
@@ -5272,13 +5261,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2451"></a>
-### Q2451 · undated
+<a id="q2396"></a>
+### Q2396 · undated
 
 > was supposed to be ollama, set in the settings.
 
 - **The work it belongs to:** release 0.39.282
-- **Recorded together with:** [Q0611](quotes-2026-09-21.md#q0611), [Q0942](quotes-2026-10-05.md#q0942), [Q2018](quotes-undated-1.md#q2018), [Q2216](quotes-undated-1.md#q2216)
+- **Recorded together with:** [Q0611](quotes-2026-09-21.md#q0611), [Q0942](quotes-2026-10-05.md#q0942), [Q1964](quotes-undated-1.md#q1964), [Q2162](quotes-undated-1.md#q2162)
 - **Related by words:** [Q0227](quotes-2026-08-30.md#q0227) (ollama, supposed)
 - **Where it is recorded (2):**
   - `idearium/api/index.js:34` · whole
@@ -5302,12 +5291,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2452"></a>
-### Q2452 · undated
+<a id="q2397"></a>
+### Q2397 · undated
 
 > we can use the chat logs
 
-- **The same words are also in:** [Q0340](quotes-2026-09-06.md#q0340), [Q2452](quotes-undated-2.md#q2452)
+- **The same words are also in:** [Q0340](quotes-2026-09-06.md#q0340), [Q2397](quotes-undated-2.md#q2397)
 - **Related by words:** [Q0340](quotes-2026-09-06.md#q0340) (chat, logs), [Q0502](quotes-2026-09-16.md#q0502) (chat, logs)
 - **Where it is recorded (1):**
   - `lib/ui/brainos/index.html:31` · whole
@@ -5322,8 +5311,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2453"></a>
-### Q2453 · undated
+<a id="q2398"></a>
+### Q2398 · undated
 
 > we need the responses to save to the downloads manager. also can you make sure the 3 graphs are hooked in?
 
@@ -5372,8 +5361,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2454"></a>
-### Q2454 · undated
+<a id="q2399"></a>
+### Q2399 · undated
 
 > we need to architecture for each system, i feel like that would help it.
 
@@ -5390,13 +5379,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2455"></a>
-### Q2455 · undated
+<a id="q2400"></a>
+### Q2400 · undated
 
 > we need to get deepseek userscript, and gemini
 
 - **The work it belongs to:** release 1.0.0 IA5
-- **Related by words:** [Q2088](quotes-undated-1.md#q2088) (deepseek, gemini), [Q0621](quotes-2026-09-21.md#q0621) (deepseek, gemini)
+- **Related by words:** [Q2034](quotes-undated-1.md#q2034) (deepseek, gemini), [Q0621](quotes-2026-09-21.md#q0621) (deepseek, gemini)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1709` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 1.0.0 IA5 · whole
 
@@ -5409,13 +5398,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2456"></a>
-### Q2456 · undated
+<a id="q2401"></a>
+### Q2401 · undated
 
 > we need versionium,
 
 - **The work it belongs to:** release 0.39.32 ET6
-- **The same words are also in:** [Q2456](quotes-undated-2.md#q2456)
+- **The same words are also in:** [Q2401](quotes-undated-2.md#q2401)
 - **Where it is recorded (1):**
   - `lib/version.js:1215` · release 0.39.32 ET6 · whole
 
@@ -5426,14 +5415,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2457"></a>
-### Q2457 · undated
+<a id="q2402"></a>
+### Q2402 · undated
 
 > what a node anchor
 
 - **The work it belongs to:** release 0.60.268 AF5
-- **The same words are also in:** [Q1870](quotes-2026-10-28.md#q1870), [Q2457](quotes-undated-2.md#q2457)
-- **Related by words:** [Q1870](quotes-2026-10-28.md#q1870) (anchor, node), [Q2400](quotes-undated-2.md#q2400) (anchor, node), [Q1647](quotes-2026-10-21.md#q1647) (anchor, node)
+- **The same words are also in:** [Q1818](quotes-2026-10-28.md#q1818), [Q2402](quotes-undated-2.md#q2402)
+- **Related by words:** [Q1818](quotes-2026-10-28.md#q1818) (anchor, node), [Q2346](quotes-undated-2.md#q2346) (anchor, node), [Q1599](quotes-2026-10-21.md#q1599) (anchor, node)
 - **Where it is recorded (1):**
   - `clear-glass/src/ipc/bridge.js:2890` · release 0.60.268 AF5 · whole
 
@@ -5446,14 +5435,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2458"></a>
-### Q2458 · undated
+<a id="q2403"></a>
+### Q2403 · undated
 
 > what aboiut 34000 lines?
 
 - **The work it belongs to:** release 0.60.157
-- **The same words are also in:** [Q1279](quotes-2026-10-13.md#q1279), [Q2458](quotes-undated-2.md#q2458)
-- **Related by words:** [Q1279](quotes-2026-10-13.md#q1279) (aboiut, lines)
+- **The same words are also in:** [Q1238](quotes-2026-10-13.md#q1238), [Q2403](quotes-undated-2.md#q2403)
+- **Related by words:** [Q1238](quotes-2026-10-13.md#q1238) (aboiut, lines)
 - **Where it is recorded (1):**
   - `lib/version.js:112` · under *// ── SL line (claude/sleepy-gates-9lc085, parallel; merged in 0.60.233): 0.60.230 → 0.60.225 ──* · release 0.60.157 · whole
 
@@ -5463,13 +5452,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2459"></a>
-### Q2459 · undated
+<a id="q2404"></a>
+### Q2404 · undated
 
 > what about adding the component logic?
 
 - **The work it belongs to:** release 1.3.0
-- **Recorded together with:** [Q1815](quotes-2026-10-26.md#q1815), [Q2051](quotes-undated-1.md#q2051), [Q2191](quotes-undated-1.md#q2191), [Q2292](quotes-undated-2.md#q2292)
+- **Recorded together with:** [Q1764](quotes-2026-10-26.md#q1764), [Q1997](quotes-undated-1.md#q1997), [Q2137](quotes-undated-1.md#q2137), [Q2238](quotes-undated-2.md#q2238)
 - **Where it is recorded (1):**
   - `Emerge/emerge/lang/emerge-lang.spec:6` · under *name:     emerge-lang* · release 1.3.0 · whole
 
@@ -5480,13 +5469,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2460"></a>
-### Q2460 · undated
+<a id="q2405"></a>
+### Q2405 · undated
 
 > what about push pull, cd ci, ssh, and git support?
 
 - **The work it belongs to:** release 0.39.265
-- **Related by words:** [Q2195](quotes-undated-1.md#q2195) (git, pull, push), [Q0572](quotes-2026-09-20.md#q0572) (ssh, support)
+- **Related by words:** [Q2141](quotes-undated-1.md#q2141) (git, pull, push), [Q0572](quotes-2026-09-20.md#q0572) (ssh, support)
 - **Where it is recorded (4):**
   - `idearium/api/index.js:4153` · release 0.39.265 · whole
 
@@ -5528,12 +5517,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2461"></a>
-### Q2461 · undated
+<a id="q2406"></a>
+### Q2406 · undated
 
 > what about queueing co-pilot inputs, and locking ollama to one instance?
 
-- **Related by words:** [Q2181](quotes-undated-1.md#q2181) (co-pilot, inputs, ollama)
+- **Related by words:** [Q2127](quotes-undated-1.md#q2127) (co-pilot, inputs, ollama)
 - **Where it is recorded (1):**
   - `lib/work-queue.js:9` · under *// ─────────────────────────────────────────────────────────────────────────────* · whole
 
@@ -5547,13 +5536,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2462"></a>
-### Q2462 · undated
+<a id="q2407"></a>
+### Q2407 · undated
 
 > what about using verctor memory or associative memory or the pattern engine. intuition to find context if needed. … gates hold context for each gate, maintain persistence, maybe with ids, in a table in the precommit compartment. … everything reused from the inside out, then build only when necessary.
 
 - **The work it belongs to:** release 0.60.146
-- **Related by words:** [Q1540](quotes-2026-10-18.md#q1540) (associative, build, compartment, context, engine, find), [Q1328](quotes-2026-10-15.md#q1328) (gates, maintain, memory, persistence)
+- **Related by words:** [Q1492](quotes-2026-10-18.md#q1492) (associative, build, compartment, context, engine, find), [Q1285](quotes-2026-10-15.md#q1285) (gates, maintain, memory, persistence)
 - **Where it is recorded (1):**
   - `lib/version.js:117` · under *// ── SL line (claude/sleepy-gates-9lc085, parallel; merged in 0.60.233): 0.60.230 → 0.60.225 ──* · release 0.60.146 · whole
 
@@ -5563,8 +5552,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2463"></a>
-### Q2463 · undated
+<a id="q2408"></a>
+### Q2408 · undated
 
 > what does it need an atlas for?
 
@@ -5581,13 +5570,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2464"></a>
-### Q2464 · undated
+<a id="q2409"></a>
+### Q2409 · undated
 
 > whats next
 
 - **The work it belongs to:** release 0.60.193
-- **The same words are also in:** [Q1434](quotes-2026-10-16.md#q1434), [Q1671](quotes-2026-10-21.md#q1671), [Q2464](quotes-undated-2.md#q2464)
+- **The same words are also in:** [Q1388](quotes-2026-10-16.md#q1388), [Q1623](quotes-2026-10-21.md#q1623), [Q2409](quotes-undated-2.md#q2409)
 - **Where it is recorded (1):**
   - `lib/version.js:83` · under *// ── SL line (claude/sleepy-gates-9lc085, parallel; merged in 0.60.233): 0.60.230 → 0.60.225 ──* · release 0.60.193 · whole
 
@@ -5597,12 +5586,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2465"></a>
-### Q2465 · undated
+<a id="q2410"></a>
+### Q2410 · undated
 
 > when X, do Y
 
-- **The same words are also in:** [Q2465](quotes-undated-2.md#q2465)
+- **The same words are also in:** [Q2410](quotes-undated-2.md#q2410)
 - **Where it is recorded (1):**
   - `lib/triggers.js:6` · whole
 
@@ -5615,8 +5604,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2466"></a>
-### Q2466 · undated
+<a id="q2411"></a>
+### Q2411 · undated
 
 > when importing a repo the system rewind menu pops up when clicking continue
 
@@ -5634,8 +5623,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2467"></a>
-### Q2467 · undated
+<a id="q2412"></a>
+### Q2412 · undated
 
 > where is any of this? like i dont see any changes. like what have you been adding? also next make sure these are all commands first, api routes if applicaple. also where is the background tasks? it hasnt built any phase yet.
 
@@ -5721,8 +5710,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2468"></a>
-### Q2468 · undated
+<a id="q2413"></a>
+### Q2413 · undated
 
 > why are there the folders for the ledgers. i hate shit clumped together. all this data is needs to be dealt with. make data management tools for... checking file integrity, etc. that way you dont have to spend as much tokens.
 
@@ -5742,13 +5731,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2469"></a>
-### Q2469 · undated
+<a id="q2414"></a>
+### Q2414 · undated
 
 > why claude? set to chatgpt. it hasn't build one line yet.
 
 - **The work it belongs to:** release 0.39.280 BS13
-- **Recorded together with:** [Q0616](quotes-2026-09-21.md#q0616), [Q0722](quotes-2026-09-27.md#q0722), [Q2229](quotes-undated-2.md#q2229), [Q2401](quotes-undated-2.md#q2401)
+- **Recorded together with:** [Q0616](quotes-2026-09-21.md#q0616), [Q0722](quotes-2026-09-27.md#q0722), [Q2175](quotes-undated-2.md#q2175), [Q2347](quotes-undated-2.md#q2347)
 - **Where it is recorded (3):**
   - `lib/seam/adapters/warp-cascade.js:80` · release 0.39.280 BS13 · whole
 
@@ -5781,8 +5770,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2470"></a>
-### Q2470 · undated
+<a id="q2415"></a>
+### Q2415 · undated
 
 > why not combine nexus and nexus core?
 
@@ -5799,14 +5788,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2471"></a>
-### Q2471 · undated
+<a id="q2416"></a>
+### Q2416 · undated
 
 > why so much regression?
 
 - **The work it belongs to:** release 0.60.105 RL3
 - **Recorded together with:** [Q0293](quotes-2026-09-02.md#q0293), [Q0618](quotes-2026-09-21.md#q0618), [Q1006](quotes-2026-10-06.md#q1006)
-- **The same words are also in:** [Q2471](quotes-undated-2.md#q2471)
+- **The same words are also in:** [Q2416](quotes-undated-2.md#q2416)
 - **Where it is recorded (1):**
   - `lib/repo-inject.js:642` · under *// ── Understanding where code goes ────────────────────────────────────────────* · release 0.60.105 RL3 · whole
 
@@ -5819,13 +5808,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
     ```
 
 
-<a id="q2472"></a>
-### Q2472 · undated
+<a id="q2417"></a>
+### Q2417 · undated
 
 > wire Idearium's phase build through the contract scheduler... make the first real phase build produce an auditable record of every brick, dependency, checkpoint and gate.
 
 - **The work it belongs to:** release 0.60.18 EX0e
-- **Related by words:** [Q1222](quotes-2026-10-13.md#q1222) (auditable, brick, build, checkpoint, dependency, gate), [Q1223](quotes-2026-10-13.md#q1223) (build, contract, idearium's, phase, scheduler, wire)
+- **Related by words:** [Q1181](quotes-2026-10-13.md#q1181) (auditable, brick, build, checkpoint, dependency, gate), [Q1182](quotes-2026-10-13.md#q1182) (build, contract, idearium's, phase, scheduler, wire)
 - **Where it is recorded (1):**
   - `idearium/api/index.js:1802` · release 0.60.18 EX0e · whole
 
@@ -5836,6 +5825,25 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 250 quotes, unda
       // produce an auditable record of every brick, dependency, checkpoint and gate." A held plan runs as a .contract
       // (cortex/core/raid/contract-adapters.js fromPhasePlan): a brick per planned file, the plan's imports as its edges.
       // Independent bricks run at once (routing.contract_concurrency) through the scheduler; each brick's agent is the
+    ```
+
+
+<a id="q2418"></a>
+### Q2418 · undated
+
+> wire them in, then update registry, then spec addendums. NEXUS model in cortex.
+
+- **Related by words:** [Q0997](quotes-2026-10-05.md#q0997) (update, wire)
+- **Where it is recorded (1):**
+  - `copilot/lib/self-model.js:7` · whole
+
+    ```text
+    * UUID: nexus-copilot-self-model-v1-0000-2026-0807-001
+     *
+     * James: "wire them in, then update registry, then spec addendums. NEXUS model in
+     * cortex."
+     *
+     * Pure §8.6 composition of modules that ALREADY EXIST in lib/ — nothing new built:
     ```
 
 

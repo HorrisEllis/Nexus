@@ -1,28 +1,9 @@
 # His words — undated, part 3
 
-Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undated. Each quote is whole, with everything it relates to and the record around it at every place it is kept.
+Part of [his words, indexed](../2026-10-31-his-words-index.md). 14 quotes, undated. Each quote is whole, with everything it relates to and the record around it at every place it is kept.
 
-<a id="q2473"></a>
-### Q2473 · undated
-
-> wire them in, then update registry, then spec addendums. NEXUS model in cortex.
-
-- **Related by words:** [Q0997](quotes-2026-10-05.md#q0997) (update, wire)
-- **Where it is recorded (1):**
-  - `copilot/lib/self-model.js:7` · whole
-
-    ```text
-    * UUID: nexus-copilot-self-model-v1-0000-2026-0807-001
-     *
-     * James: "wire them in, then update registry, then spec addendums. NEXUS model in
-     * cortex."
-     *
-     * Pure §8.6 composition of modules that ALREADY EXIST in lib/ — nothing new built:
-    ```
-
-
-<a id="q2474"></a>
-### Q2474 · undated
+<a id="q2419"></a>
+### Q2419 · undated
 
 > wires tools for copilot for... guardian.
 
@@ -48,13 +29,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
     ```
 
 
-<a id="q2475"></a>
-### Q2475 · undated
+<a id="q2420"></a>
+### Q2420 · undated
 
 > with cos we can use that to route agents also. like agents need to be able to be like drones with tasks.
 
 - **The work it belongs to:** release 1.0.0
-- **Said in the same message:** [Q2081](quotes-undated-1.md#q2081), [Q2120](quotes-undated-1.md#q2120)
+- **Said in the same message:** [Q2027](quotes-undated-1.md#q2027), [Q2066](quotes-undated-1.md#q2066)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1821` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 1.0.0 · whole
 
@@ -64,13 +45,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
     ```
 
 
-<a id="q2476"></a>
-### Q2476 · undated
+<a id="q2421"></a>
+### Q2421 · undated
 
 > x
 
+- **The work it belongs to:** release 9.9.9
 - **Where it is recorded (1):**
-  - `tests/modules/test-repo-carve.test.js:69` · whole
+  - `tests/modules/test-repo-carve.test.js:69` · release 9.9.9 · whole
 
     ```text
     const carved = JSON.parse(files.find(f => f.path === 'CARVED.json').content);
@@ -80,13 +62,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
     ```
 
 
-<a id="q2477"></a>
-### Q2477 · undated
+<a id="q2422"></a>
+### Q2422 · undated
 
 > y
 
 - **The work it belongs to:** release 0.41.0
-- **Recorded together with:** [Q1323](quotes-2026-10-15.md#q1323), [Q1357](quotes-2026-10-15.md#q1357), [Q2166](quotes-undated-1.md#q2166), [Q2283](quotes-undated-2.md#q2283), [Q2395](quotes-undated-2.md#q2395), [Q2396](quotes-undated-2.md#q2396), [Q2433](quotes-undated-2.md#q2433), [Q2434](quotes-undated-2.md#q2434)
+- **Recorded together with:** [Q1280](quotes-2026-10-15.md#q1280), [Q1313](quotes-2026-10-15.md#q1313), [Q2112](quotes-undated-1.md#q2112), [Q2229](quotes-undated-2.md#q2229), [Q2341](quotes-undated-2.md#q2341), [Q2342](quotes-undated-2.md#q2342), [Q2379](quotes-undated-2.md#q2379)
 - **Where it is recorded (1):**
   - `tests/modules/test-release-notes.test.js:75` · under *// ── the fixture repo ────────────────────────────────────────────────────────────────────────────────────────────────* · release 0.41.0 · whole
 
@@ -99,14 +81,14 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
     ```
 
 
-<a id="q2478"></a>
-### Q2478 · undated
+<a id="q2423"></a>
+### Q2423 · undated
 
 > yes
 
 - **His answer to:** "When the route is pinned to Ollama but free memory is critical or the model can't load on the GPU, the build should go to the browser agents (Gemini or ChatGPT) and say why."
 - **The work it belongs to:** release 0.60.203 SD20
-- **Recorded together with:** [Q0813](quotes-2026-10-01.md#q0813), [Q1992](quotes-undated-1.md#q1992)
+- **Recorded together with:** [Q0813](quotes-2026-10-01.md#q0813), [Q1938](quotes-undated-1.md#q1938)
 - **Where it is recorded (1):**
   - `lib/pipeline-routing.js:303` · under *// ── breaker: per provider, in process ─────────────────────────────────────────* · release 0.60.203 SD20 · whole
 
@@ -119,8 +101,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
     ```
 
 
-<a id="q2479"></a>
-### Q2479 · undated
+<a id="q2424"></a>
+### Q2424 · undated
 
 > yes
 
@@ -135,12 +117,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
     ```
 
 
-<a id="q2480"></a>
-### Q2480 · undated
+<a id="q2425"></a>
+### Q2425 · undated
 
 > yes [loosen it]. but have it a process, like ask for confirmation before committing, to account for misunderstandings. it also needs to update the models of me and itself... Baysesian updating?
 
-- **Related by words:** [Q2248](quotes-undated-2.md#q2248) (baysesian, itself, models, update, updating)
+- **Related by words:** [Q2194](quotes-undated-2.md#q2194) (baysesian, itself, models, update, updating)
 - **Where it is recorded (1):**
   - `copilot/lib/autonomy-router.js:7` · whole
 
@@ -155,13 +137,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
     ```
 
 
-<a id="q2481"></a>
-### Q2481 · undated
+<a id="q2426"></a>
+### Q2426 · undated
 
 > yes do it
 
 - **The work it belongs to:** release 0.39.20
-- **The same words are also in:** [Q0520](quotes-2026-09-17.md#q0520), [Q1705](quotes-2026-10-23.md#q1705), [Q0479](quotes-2026-09-13.md#q0479), [Q1794](quotes-2026-10-24.md#q1794), [Q0251](quotes-2026-08-30.md#q0251)
+- **The same words are also in:** [Q0520](quotes-2026-09-17.md#q0520), [Q1656](quotes-2026-10-23.md#q1656), [Q0479](quotes-2026-09-13.md#q0479), [Q1744](quotes-2026-10-24.md#q1744), [Q0251](quotes-2026-08-30.md#q0251)
 - **Where it is recorded (1):**
   - `lib/version.js:1215` · release 0.39.20 · whole
 
@@ -172,8 +154,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
     ```
 
 
-<a id="q2482"></a>
-### Q2482 · undated
+<a id="q2427"></a>
+### Q2427 · undated
 
 > yes jaa
 
@@ -192,15 +174,15 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
 
   - `docs/atlases/nexus-atlas.md:16712` · under *- 0.39.244. — repo jobs reach their own tab; the Agent tab shows the provider tab live — built: 1. Why "hello" failed instantly · 2. The liv* · release 0.39.243 · whole
 
-<a id="q2483"></a>
-### Q2483 · undated
+<a id="q2428"></a>
+### Q2428 · undated
 
 > yes start QA1
 
 - **The work it belongs to:** release 0.60.19 QA1
-- **Said in the same message:** [Q1250](quotes-2026-10-13.md#q1250)
-- **The same words are also in:** [Q1282](quotes-2026-10-13.md#q1282), [Q1289](quotes-2026-10-14.md#q1289), [Q2483](quotes-undated-3.md#q2483)
-- **Related by words:** [Q1282](quotes-2026-10-13.md#q1282) (qa1, start), [Q1289](quotes-2026-10-14.md#q1289) (qa1, start)
+- **Said in the same message:** [Q1209](quotes-2026-10-13.md#q1209)
+- **The same words are also in:** [Q1241](quotes-2026-10-13.md#q1241), [Q1248](quotes-2026-10-14.md#q1248), [Q2428](quotes-undated-3.md#q2428)
+- **Related by words:** [Q1241](quotes-2026-10-13.md#q1241) (qa1, start), [Q1248](quotes-2026-10-14.md#q1248) (qa1, start)
 - **Where it is recorded (1):**
   - `docs/SPEC-REGISTRY.spec:1777` · under *## §REGISTERED 2026-09-30 — mapped on 0.39.283, built toward 0.39.284* · release 0.60.19 QA1 · whole
 
@@ -210,13 +192,13 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
     ```
 
 
-<a id="q2484"></a>
-### Q2484 · undated
+<a id="q2429"></a>
+### Q2429 · undated
 
 > yes, do it.
 
 - **Said in the same message:** [Q0642](quotes-2026-09-22.md#q0642)
-- **The same words are also in:** [Q0645](quotes-2026-09-22.md#q0645), [Q0646](quotes-2026-09-22.md#q0646), [Q0647](quotes-2026-09-22.md#q0647), [Q2484](quotes-undated-3.md#q2484)
+- **The same words are also in:** [Q0645](quotes-2026-09-22.md#q0645), [Q0646](quotes-2026-09-22.md#q0646), [Q0647](quotes-2026-09-22.md#q0647), [Q2429](quotes-undated-3.md#q2429)
 - **Where it is recorded (1):**
   - `lib/version.js:554` · whole
 
@@ -230,8 +212,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
     ```
 
 
-<a id="q2485"></a>
-### Q2485 · undated
+<a id="q2430"></a>
+### Q2430 · undated
 
 > you patch it. make sure you follow the axioms
 
@@ -249,8 +231,8 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
     ```
 
 
-<a id="q2486"></a>
-### Q2486 · undated
+<a id="q2431"></a>
+### Q2431 · undated
 
 > …should be /ui/idearium … what about the architect ui?
 
@@ -266,12 +248,12 @@ Part of [his words, indexed](../2026-10-31-his-words-index.md). 15 quotes, undat
     ```
 
 
-<a id="q2487"></a>
-### Q2487 · undated
+<a id="q2432"></a>
+### Q2432 · undated
 
 > …with event ledger that matches the event ledger schema. error.log.
 
-- **Related by words:** [Q2204](quotes-undated-1.md#q2204) (event, ledger, matches, schema)
+- **Related by words:** [Q2150](quotes-undated-1.md#q2150) (event, ledger, matches, schema)
 - **Where it is recorded (1):**
   - `lib/error-log.js:9` · under *// ─────────────────────────────────────────────────────────────────────────────* · whole
 

@@ -3,7 +3,7 @@
 
 > **status: full map (0.60.153)** · 15 systems (12 kernels + components + cos + core; cos since 0.39.341, ERAVOS deleted 0.60.83 at his call), every top-level directory placed, every system with an atlas of its own, and below the narrative every module and every file, every phase, the data structure, all of Idearium's routes and commands, and every release in his words, generated from the tree · each system is a module of NEXUS, and each module is its own modular system with components: the same shape, one zoom level further out.
 
-**Author:** James Brooks (Erosmancer) · rheon.world
+**Author:** James Brooks (Erosmancer) · rheon.world · [The work, and the proof that it is his](docs/JAMES-BROOKS.md)
 
 ---
 
