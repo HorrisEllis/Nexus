@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-spec-everything-phasemap.spec::SE2_the_origin_trace
+type: phase
+id: docs_2026-10-31-spec-everything-phasemap.spec::SE2_the_origin_trace
+context: pipeline phase SE2_the_origin_trace of docs/2026-10-31-spec-everything-phasemap.spec
+intent: null
+summary: SE2_the_origin_trace (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793419905505
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419905505
+lastSeenAt: 1793419905505
+fingerprint: null
+payload:
+  id: SE2_the_origin_trace
+  map: docs/2026-10-31-spec-everything-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - scripts/origin-trace.js
+    - scripts/systems-report.js
+    - tests/modules/test-origin-trace.test.js
+  depends_on:
+    - SE1_spec_ids_and_types
+    - SE_D2_the_origin_is_the_skeleton
+  blocks:
+    - MOD-SL-TRACE
+  spec: idearium/spec/spec-library.spec
+  graph: 9d4a074059dcf4cc

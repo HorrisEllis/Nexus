@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-diagnostic-schemas-phasemap.spec::DSC3_the_fix_from_the_declaration
+type: phase
+id: docs_2026-10-31-diagnostic-schemas-phasemap.spec::DSC3_the_fix_from_the_declaration
+context: >-
+  pipeline phase DSC3_the_fix_from_the_declaration of
+  docs/2026-10-31-diagnostic-schemas-phasemap.spec
+intent: null
+summary: DSC3_the_fix_from_the_declaration (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793419909861
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419909861
+lastSeenAt: 1793419909861
+fingerprint: null
+payload:
+  id: DSC3_the_fix_from_the_declaration
+  map: docs/2026-10-31-diagnostic-schemas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/nexus-diagnostic.js
+  depends_on:
+    - DSC2_findings_in_one_shape
+  blocks:
+    - MOD-DS-FIXHINT
+  spec: diagnostic/spec/diagnostic-schemas.spec
+  graph: 0313fef5e9cd926a

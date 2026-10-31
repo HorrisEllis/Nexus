@@ -54,6 +54,10 @@ const SPECS = [
   { spec: 'docs/automation-pipelines.spec', map: 'docs/2026-10-29-pipelines-phasemap.spec' },
   { spec: 'docs/idearium-history-nodes.spec', map: 'docs/2026-10-29-history-nodes-phasemap.spec' },   // 2026-10-29 HN — his "all the history in idearium saved as nodes per unit"   // 2026-10-29 PL — his "making a pipeline and workflow feature and include the macros and automation"   // 2026-10-24 BCR1 (from brave-cori) — his "this is all the networking backend for anything needed netwroking wise"
   { spec: 'docs/project-spine.spec', map: 'docs/2026-10-29-finish-any-project-phasemap.spec' },   // 2026-10-29 FA — his "create all the capability to finish this or any other project in the repo"
+  { spec: 'idearium/spec/spec-library.spec', map: 'docs/2026-10-31-spec-everything-phasemap.spec' },   // 2026-10-31 SE — his spec ids and types, the library and queue, phased only, traced to the origin
+  { spec: 'docs/system-doors.spec', map: 'docs/2026-10-31-system-doors-phasemap.spec' },   // 2026-10-31 DO — his server.js per system on the registry; Cortex's boot.js retired
+  { spec: 'guardian/spec/guardian-nodes.spec', map: 'docs/2026-10-31-guardian-nodes-phasemap.spec' },   // 2026-10-31 GND — his "make sure all the nodes, are actual files"
+  { spec: 'diagnostic/spec/diagnostic-schemas.spec', map: 'docs/2026-10-31-diagnostic-schemas-phasemap.spec' },   // 2026-10-31 DSC — his "all the schemas for the diagnostic system"
 ];
 
 console.log('\ntest-substrate-spec — full specs compile at full depth and stay tied to their phases');

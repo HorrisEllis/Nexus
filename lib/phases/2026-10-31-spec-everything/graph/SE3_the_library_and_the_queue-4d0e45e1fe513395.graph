@@ -1,0 +1,94 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SE3_the_library_and_the_queue:4d0e45e1fe513395
+type: graph
+id: phase:SE3_the_library_and_the_queue:4d0e45e1fe513395
+context: dependency graph of phase SE3_the_library_and_the_queue
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793419905508
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419905508
+lastSeenAt: 1793419905508
+fingerprint: null
+payload:
+  for: SE3_the_library_and_the_queue
+  kind: phase
+  repo: null
+  hash: 4d0e45e1fe513395
+  nodes:
+    - path: docs/SPEC-REGISTRY.spec
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/spec-engine/library.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: tests/modules/test-spec-library.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/chunker/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-library.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/zip.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-spec-library.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: tests/modules/test-spec-library.test.js
+      to: lib/zip.js
+      kind: requires
+    - from: tests/modules/test-spec-library.test.js
+      to: lib/spec-library.js
+      kind: requires
+    - from: tests/modules/test-spec-library.test.js
+      to: lib/chunker/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE2_the_origin_trace
+    dependents:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE4_drafts_from_code
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE6_the_library_on_screen
+    upstream:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE1_spec_ids_and_types
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE2_the_origin_trace
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D1_spec_ids_types_library_queue
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D2_the_origin_is_the_skeleton
+    downstream:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE4_drafts_from_code
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE6_the_library_on_screen
+    blockedBy:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE2_the_origin_trace
+    unlocks:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE4_drafts_from_code
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by SE2_the_origin_trace
+      - 'depends on (1): SE2_the_origin_trace · all upstream 4'
+      - >-
+        needed by (2): SE4_drafts_from_code, SE6_the_library_on_screen · finishing it unlocks
+        SE4_drafts_from_code
+    edges:
+      - from: docs/2026-10-31-spec-everything-phasemap.spec::SE2_the_origin_trace
+        kind: declared

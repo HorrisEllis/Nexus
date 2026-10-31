@@ -5,6 +5,19 @@
 // Status: proposed. Foundation domains freeze at v1.0.0 per COS-5 pattern.
 
 version 1.5.0
+// PROPOSED 1.6.0 (2026-10-31, NEXUS 0.60.322 — mapped, not applied; the version line moves when SE2 and DO2a are built). James: "map all of
+// whats missing from all of this, to the architecture spec and genesis spec." · "like it all builds from the origin as a foundation/core like
+// the system.js, which needs the config." · "anything new, spec, any changes, fixes, or additions is phased only." What genesis lacks, and what
+// the real systems lack against genesis (measured on main 0.60.320; architecture-spec 0.14.0 addendum holds the numbers):
+//   - axiom TRACED_TO_THE_ORIGIN (proposed): every file fills a skeleton slot or is a component under one, is owned by a spec module with an
+//     id and a type, and is built by a phase (RULE E). Today 44% of code files have neither a module nor a phase.
+//   - axiom PHASED_ONLY (proposed, his): nothing is built outside a phase (RULE F).
+//   - the boot core: genesis's lib/system.js is the origin, but 0 of 13 systems boot from it; every system predates the archetype. Laid
+//     out system by system, Architect first (docs/2026-10-31-system-doors-phasemap.spec DO2a).
+//   - the registry as the harness: REGISTRY_IS_THE_DRAWBRIDGE names the door; CIE-EG's roads, gate and typed gaps (DB21, his) are not in the
+//     catalog yet, and the skeleton's lib/bus.js is not what the systems use (they share lib nexus-bus). The harness spec is its own map.
+//   - ALL_DATA_ARE_NODES: the reference system, Guardian, keeps 12 tables with no node files (docs/2026-10-31-guardian-nodes-phasemap.spec).
+//   - schemas/: every system has the folder's index; what a system records about itself (Diagnostic's findings) has no schema (DSC1).
 // 1.5.0 + NEXUS 0.60.132 (2026-10-17): the registry as the drawbridge, the system sovereign. James: "i want to eventually have
 // the component registry for each system be the interaction contract and event bus, with handshake verification. basically
 // the spine of each system ... the drawbridge for each compartment for each system, the only way to interact between

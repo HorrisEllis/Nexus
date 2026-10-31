@@ -1894,3 +1894,17 @@ spec:
 # his axioms): per-edge CHEAP metric collection + BATCHED Intelligence learning (every ~10 edges or a sigma event). Reuse: proc-stats,
 # economy ledger (model/agent usage), baseline.js (sigma), relational-field + causal (the learning graph), code-intel (primitives).
 # CAUTION: COS/Intelligence/compartments are where the parallel sessions are live — coordinate before code.
+
+# ADDENDUM 2026-10-31 (0.60.322) — registered four full specs, each with its map (all compile at specDepth 1.0, no BLACK; SS-01/02 green):
+#   idearium/spec/spec-library.spec + docs/2026-10-31-spec-everything-phasemap.spec (SE1–SE6) — his spec ids and types, this registry as the
+#     library, one queue, the origin trace, drafts from code, phased only. James: "like what if we use spec ids and types, then have a
+#     queue/library for specs." · "how about anything new, spec, any changes, fixes, or additions is phased only."
+#   docs/system-doors.spec + docs/2026-10-31-system-doors-phasemap.spec (DO0–DO5, DO2a) — server.js per system on its registry, booting from
+#     the skeleton's lib/system.js; Cortex's boot.js retired; the 0-routes handshake. James: "make a server.js for cortex, and reroute the
+#     boot.js to component registry and retire the boot.js".
+#   guardian/spec/guardian-nodes.spec + docs/2026-10-31-guardian-nodes-phasemap.spec (GND1–GND4) — every Guardian record a node file, its
+#     table the index. James: "make sure all the nodes, are actual files, in the data folder, the database per server.js".
+#   diagnostic/spec/diagnostic-schemas.spec + docs/2026-10-31-diagnostic-schemas-phasemap.spec (DSC1–DSC4) — a schema for everything
+#     Diagnostic records. James: "then all the schemas for the diagnostic system".
+# Addended the same release: docs/architecture-spec/architecture-spec.spec 0.14.0 (RULE E, RULE F, the gaps measured) and
+#   idearium/spec-engine/templates/genesis.spec (PROPOSED 1.6.0 note; version line unchanged until SE2 and DO2a are built).

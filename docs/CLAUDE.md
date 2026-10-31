@@ -383,3 +383,18 @@ James, 2026-10-29: "Each component needs to be wired to the module component, an
 - Measured by `node scripts/systems-report.js`. On 2026-10-29: Loom 80–100% registered; spec modules 0–36% (the gap); Idearium's routes
   79% with a screen, 33% with a command, 14% with neither. The per-system document is `docs/NEXUS-SYSTEMS-FOR-CODING.md`.
 - Held forward on every new component. Closed backward with the Finish tool (`repo convert`, `repo spine`), the coding loop's systems first.
+
+## ADDENDUM 2026-10-31 (0.60.322) — phased only; spec ids and types; everything traced to its origin
+James, 2026-10-31: "how about anything new, spec, any changes, fixes, or additions is phased only." · "like what if we use spec ids and
+types, then have a queue/library for specs." · "spec out everything that is a module, capability, or new component? that way we can have
+every component traced to its origin, and each piece tracked also. like it all builds from the origin as a foundation/core like the
+system.js, which needs the config."
+- **Phased only (his).** Anything new, and every spec, change, fix and addition, is a phase of a map with its `spec:` and `blocks:` before a
+  line of code. A fix found mid-work gets its phase first (it can be one line in the owning map). `scripts/phased-only.js` (SE5) will report
+  a code change outside every phase.
+- **Spec ids and types (his).** Every spec and module has an id `<type>:<system>:<slug>` and a type (system, module, capability, component,
+  schema, interface, phase, decision, fix, change). Legacy names (MOD-GT4, GT4_…) stay as aliases. docs/SPEC-REGISTRY.spec is the library;
+  the queue (SE3) is what waits, foundation first. Map: docs/2026-10-31-spec-everything-phasemap.spec.
+- **The origin.** Every file traces to the system skeleton (config → lib/system.js → server.js and cli.js → components → UI), to its spec
+  module and to its phase (architecture-spec RULE E). The reading of his "system.js" as the skeleton's lib/system.js is the coder's — to
+  confirm. On 2026-10-31, 44% of code files had neither a module nor a phase.

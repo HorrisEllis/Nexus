@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-spec-everything-phasemap.spec::SE4_drafts_from_code
+type: phase
+id: docs_2026-10-31-spec-everything-phasemap.spec::SE4_drafts_from_code
+context: pipeline phase SE4_drafts_from_code of docs/2026-10-31-spec-everything-phasemap.spec
+intent: null
+summary: SE4_drafts_from_code (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793419905510
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419905510
+lastSeenAt: 1793419905510
+fingerprint: null
+payload:
+  id: SE4_drafts_from_code
+  map: docs/2026-10-31-spec-everything-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/draft-from-code.js
+    - tests/modules/test-draft-from-code.test.js
+  depends_on:
+    - SE3_the_library_and_the_queue
+  blocks:
+    - MOD-SL-DRAFT
+  spec: idearium/spec/spec-library.spec
+  graph: 1a843403e3232980

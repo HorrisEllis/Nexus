@@ -1,0 +1,174 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DO2_architect_door:582d34031d8989da
+type: graph
+id: phase:DO2_architect_door:582d34031d8989da
+context: dependency graph of phase DO2_architect_door
+intent: null
+summary: 17 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793419906986
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419906986
+lastSeenAt: 1793419906986
+fingerprint: null
+payload:
+  for: DO2_architect_door
+  kind: phase
+  repo: null
+  hash: 582d34031d8989da
+  nodes:
+    - path: architect/cli.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/compartment.json
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/event-taxonomy.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/server.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/service.js
+      role: changes
+      exists: true
+      system: architect
+    - path: architect/compile-route.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/config.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/registry-components.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/src/spec/Blueprint.js
+      role: uses
+      exists: true
+      system: architect
+    - path: cortex/core/raid/contract-intake.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hook-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-connect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: architect/service.js
+      to: lib/data-home.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/hook-registry.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/src/spec/Blueprint.js
+      kind: requires
+    - from: architect/service.js
+      to: intelligence/cfr/index.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/compile-route.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/config.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/registry-components.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: architect/service.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/node-registry.js
+      kind: requires
+  crossings:
+    - from: architect/service.js
+      to: intelligence/cfr/index.js
+      fromSystem: architect
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: intelligence/alk/index.js
+      fromSystem: architect
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO2a_architect_boots_from_the_core
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
+    dependents: []
+    upstream:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D2_the_origin_is_the_skeleton
+      - docs/2026-10-31-system-doors-phasemap.spec::DO2a_architect_boots_from_the_core
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
+    downstream: []
+    blockedBy:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO2a_architect_boots_from_the_core
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by DO2a_architect_boots_from_the_core, DO_D0_server_floats_on_the_registry
+      - >-
+        depends on (2): DO2a_architect_boots_from_the_core, DO_D0_server_floats_on_the_registry ·
+        all upstream 3
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO2a_architect_boots_from_the_core
+        kind: declared
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
+        kind: declared

@@ -1,0 +1,81 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DO2a_architect_boots_from_the_core:0c884d982cd14c31
+type: graph
+id: phase:DO2a_architect_boots_from_the_core:0c884d982cd14c31
+context: dependency graph of phase DO2a_architect_boots_from_the_core
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793419906983
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419906983
+lastSeenAt: 1793419906983
+fingerprint: null
+payload:
+  for: DO2a_architect_boots_from_the_core
+  kind: phase
+  repo: null
+  hash: 0c884d982cd14c31
+  nodes:
+    - path: architect/config.js
+      role: changes
+      exists: true
+      system: architect
+    - path: architect/lib/bus.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/lib/heartbeat.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/lib/ledger.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/lib/listener.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/lib/node-index.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/lib/system.js
+      role: changes
+      exists: false
+      system: architect
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+  edges:
+    - from: architect/service.js
+      to: architect/config.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D2_the_origin_is_the_skeleton
+    dependents:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO2_architect_door
+    upstream:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D2_the_origin_is_the_skeleton
+    downstream:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO2_architect_door
+    blockedBy:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D2_the_origin_is_the_skeleton
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by SE_D2_the_origin_is_the_skeleton
+      - 'depends on (1): SE_D2_the_origin_is_the_skeleton'
+      - 'needed by (1): DO2_architect_door'
+    edges:
+      - from: docs/2026-10-31-spec-everything-phasemap.spec::SE_D2_the_origin_is_the_skeleton
+        kind: declared

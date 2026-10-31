@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-spec-everything-phasemap.spec::SE6_the_library_on_screen
+type: phase
+id: docs_2026-10-31-spec-everything-phasemap.spec::SE6_the_library_on_screen
+context: pipeline phase SE6_the_library_on_screen of docs/2026-10-31-spec-everything-phasemap.spec
+intent: null
+summary: SE6_the_library_on_screen (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793419905513
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419905513
+lastSeenAt: 1793419905513
+fingerprint: null
+payload:
+  id: SE6_the_library_on_screen
+  map: docs/2026-10-31-spec-everything-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - SE3_the_library_and_the_queue
+    - SE2_the_origin_trace
+  blocks:
+    - MOD-SL-SURFACE
+  spec: idearium/spec/spec-library.spec
+  graph: ffba921a76f837a7
