@@ -1,0 +1,99 @@
+# docs/2026-10-31-system-doors-phasemap.spec — every system's server.js on its registry, from the skeleton's core; Cortex's boot.js retired
+# The design is James's (quoted); the order and the cut are the coder's. Spec: docs/system-doors.spec.
+
+origin: >-
+  James, 2026-10-31: "yes like the server.js floats ontop then the ui ontop of that. then each system interacts through the registry?" ·
+  "Idearium idearium/api/index.js — create a server.js for the cli and api, and route to the index.js" · "Cortex cortex/boot.js (:3748) —
+  make a server.js for cortex, and reroute the boot.js to component registry and retire the boot.js" · "like it all builds from the origin as
+  a foundation/core like the system.js, which needs the config." · corrected the same day: "system.js i meant server.js"
+
+status: "MAPPED 2026-10-31. Nothing built by this map."
+
+decisions:
+  DO_D0_server_floats_on_the_registry:
+    chosen: "server.js is the connector: it mounts the system's registry and serves its contract, handshake, API and CLI; the UI floats on the routes; systems interact only through each other's registry contracts"
+    by: "his, 2026-10-31 (origin), after the coder's pushback that server.js should not itself be the internal bus (the harness is); the harness spec is its own map — to confirm that this reading is his"
+  DO_D2_a_boot_core_under_server_js:
+    chosen: "TO CONFIRM (the coder's suggestion, no longer his words): under each server.js, the skeleton's lib/system.js as its boot core (config, schemas, store, ledger, bus, node index, heartbeat). Built only after his yes."
+    by: "the coder; it had been read from his \"system.js\", which he corrected the same day: \"system.js i meant server.js\" — the origin is server.js (SE_D3), and these phases (DO1–DO5) are his origin work"
+  DO_D3_architect_into_idearium_and_loom:
+    chosen: >-
+      TO CONFIRM (the coder's recommendation, asked by him: "should we migrate architect to idearium or loom?"): neither whole — Architect
+      splits along what each part is. Its hook registry (/api/hooks …) and map scan (/api/map/scan) duplicate Loom's registry and
+      scanners: two hook registries are two truths (§10.3), so they fold into Loom. Its authoring (spec wizard, blueprint scan/diff,
+      translate, compile, the arch/spec builder pages) and his "move and route component using architect" are Idearium's: Idearium
+      already has the refactor tool (lib/architecture-apply.js, lib/project-refactor.js, `repo refactor`, `system migrate`) and an Architect
+      sub-tab, so they land there (§8.6). Its ALK lattice goes to Intelligence (lib/emergence's associative lattice); its SNR gate is his SNR
+      passthrough, the door template (architecture-spec RULE C). architect/ is archived after its callers (9 files) are moved (§0.3).
+      DO2 (an Architect server.js) waits on his answer: if he agrees, it is not built.
+    by: "the coder, by §10.3 (one truth), §8.6 (reuse) and §5.15 (each part to the system that owns its kind); his question, his call"
+  DO_D1_clear_glass_door:
+    chosen: "TO CONFIRM: Clear Glass gets the same door (his line \"create a server.js for the cli and api\" sits under Clear Glass, Idearium and Architect); built only after his yes"
+    by: "the coder's reading of where his line applies"
+
+phases:
+  DO0_the_handshake_counts_real_routes:
+    status: BUILT 0.60.324
+    depends_on: []
+    files: [orchestrator/lib/contract-handshake.js, orchestrator/orchestrator.js, tests/modules/test-contract-handshake-routes.test.js, tests/modules/run-all.js]
+    spec: docs/system-doors.spec
+    blocks: [MOD-DOOR-HANDSHAKE]
+    does: "the 0-routes defect: count routes, channels or components with a route, and say which"
+    proof: "Clear Glass's contract reports its routes with shape components"
+  DO1_idearium_door:
+    status: OPEN
+    depends_on: [DO_D0_server_floats_on_the_registry, DO0_the_handshake_counts_real_routes]
+    files: [idearium/server.js, idearium/api/index.js, idearium/compartment.json, lib/nexus/autopilot.js]
+    spec: docs/system-doors.spec
+    blocks: [MOD-DOOR-IDEARIUM]
+    does: "idearium/server.js: the API's listen moves here; contract from the registry; launchers switched"
+    proof: "Idearium's suite green through server.js; /contract hash = registry's"
+  DO2a_architect_boots_from_the_core:
+    status: OPEN
+    depends_on: [DO_D2_a_boot_core_under_server_js]
+    files: [architect/lib/system.js, architect/lib/bus.js, architect/lib/ledger.js, architect/lib/node-index.js, architect/lib/heartbeat.js, architect/lib/listener.js, architect/config.js]
+    spec: docs/system-doors.spec
+    blocks: [MOD-DOOR-CORE]
+    does: "TO CONFIRM (DO_D2): the skeleton's core laid out under Architect's server.js, filled from its config"
+    proof: "architect's server.js boots through lib/system.js"
+  DO2_architect_door:
+    status: OPEN
+    depends_on: [DO_D0_server_floats_on_the_registry, SE_D3_the_origin_is_server_js, DO_D3_architect_into_idearium_and_loom]
+    files: [architect/server.js, architect/compartment.json, architect/cli.js, architect/event-taxonomy.js, architect/service.js]
+    spec: docs/system-doors.spec
+    blocks: [MOD-DOOR-ARCHITECT]
+    does: "architect/server.js on its config and the registry, with its missing slots: Architect gets its origin"
+    proof: "the origin trace shows Architect with no missing slot"
+  DO3_cortex_door:
+    status: OPEN
+    depends_on: [DO_D0_server_floats_on_the_registry, DO0_the_handshake_counts_real_routes]
+    files: [cortex/server.js, cortex/routes, cortex/registry-components.js, cortex/compartment.json, lib/nexus/autopilot.js, cortex/boot.js]
+    spec: docs/system-doors.spec
+    blocks: [MOD-DOOR-CORTEX]
+    does: "boot.js's routes become registry components with handlers in cortex/routes; server.js mounts them; launchers switched"
+    proof: "a route table recorded before, replayed after: the same"
+  DO4_boot_js_retired:
+    status: OPEN
+    depends_on: [DO3_cortex_door]
+    files: [_archive/cortex/boot.js, cortex/boot.js]
+    spec: docs/system-doors.spec
+    blocks: [MOD-DOOR-CORTEX-RETIRE]
+    does: "boot.js archived; a one-release stub that starts server.js"
+    proof: "no launcher names boot.js but the stub"
+  DO5_clear_glass_door:
+    status: OPEN
+    depends_on: [DO_D1_clear_glass_door, DO0_the_handshake_counts_real_routes]
+    files: [clear-glass/server.js, clear-glass/src/ipc/bridge.js, clear-glass/src/main/index.js, clear-glass/cli.js, clear-glass/config.js, clear-glass/event-taxonomy.js]
+    spec: docs/system-doors.spec
+    blocks: [MOD-DOOR-CG]
+    does: "TO CONFIRM: the :7702 REST surface out of bridge.js into clear-glass/server.js"
+    proof: "every /cli/* route answers the same; contract from the registry"
+
+order: "DO0 first (it is a defect, and every door's handshake needs it); then DO2 (the smallest system gets its origin first), DO1, DO3 → DO4; DO5 and DO2a after his yes."
+
+# ── ADDENDUM 2026-10-31 — DO0 built (0.60.324) ───────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-10-31: "yes do that also". contract-handshake.js countRoutes(contract) → { count, shape }: routes (array or object),
+# channels, or components[] that carry a route (malformed counted); no known shape → null 'unknown', never 0. verifySystem reports
+# routeCount and routeShape; orchestrator.js's boot line names the shape (added to DO0's files first, his phased-only rule). Measured:
+# Clear Glass 0 → 117, Copilot 0 → 81, Ollama 0 → 9, Versionium 0 → 18; every routes[] contract unchanged.
+# tests/modules/test-contract-handshake-routes.test.js HR-01..04, 4/4.

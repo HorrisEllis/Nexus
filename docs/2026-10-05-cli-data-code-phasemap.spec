@@ -32,7 +32,7 @@ spec:
       in the root data/<system>/ or in cortex. docs/2026-09-11-sovereign-node-architecture-phasemap.spec P5
       "data_folder_completion" (OPEN) already says it: "cortex becomes the real bookkeeper it's meant to be rather than
       the primary store … the largest, highest-risk phase … per system, not attempted in one sweep."
-      docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.md maps each system's memory needs.
+      docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.spec maps each system's memory needs.
     code_tab: >-
       Today: the Code tab is search and chunk cards (0.39.273). The work surface (idearium/ui/js/work-surface.js,
       GET /api/repos/:uuid/worksurface — a projection, 0.39.284) sits under the plan panel; the agent's pending code

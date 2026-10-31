@@ -20,6 +20,9 @@ const MODULES_DIR = __dirname;
 const SUITES = [
   'test-select-match.test.js',            // 0.60.298 DD1 — bestOption/boolOf: a dropdown/checkbox fills from a profile value that isn't the option's raw value ("United States"→US)
   'test-portfolio-node.test.js',          // 0.60.299 PF1 — the .portfolio node: PortfolioStore + export/import a clearglass.portfolio/1 file (merge by id, newer-wins)
+  'test-gig-metadata-glass.test.js',      // 0.60.320 GT6 — Gig metadata tab by tab: radio/checkboxes by label within the tab's limit, read back; not offered, over the limit, required-and-empty, said
+  'test-service-type-glass.test.js',      // 0.60.319 GT5 — Service type after the subcategory: dropdown or radios, chosen and read back; none offered or none in the gig, said
+  'test-choose-refind-glass.test.js',     // 0.60.318 GT1+GT4 — real choose on a live page: a re-rendered dropdown found again (his "Element not found: [data-cg-choose=\"1\"]"), gates timed per part
   'test-dropdown-fill-glass.test.js',     // 0.60.316 DD1-verify — real browser (glass.js): a <select>/checkbox/radio/text/contenteditable actually fills; caught the checkbox double-toggle
   'test-autofill-active.test.js',         // 0.60.257 AF1 — activeProfile (default/sole/first, never null) + setDefault + matchOne; the "no profile 'null'" fix
   'test-autofill-fill-active.test.js',    // 0.60.258 AF2 — fillFields/detectFields default to the active profile (copilot/agents stop passing null); zero profiles → clean error
@@ -273,6 +276,12 @@ const SUITES = [
   'test-provider-host-respawn.js',
   'test-userscript-mixed-content-fix.js',
   'test-contract-handshake-paths.js',
+  'test-autopilot-handover.test.js',   // 0.60.330 MG17 — autopilot hands over: the launcher, one supervisor, core's duties kept, the body archived
+  'test-cos-autopilot-door.test.js',   // 0.60.329 MG16 — autopilot's routes on COS's door, in its shapes; legacy /tables /files counted
+  'test-cos-supervisor.test.js',   // 0.60.328 MG15 — COS's supervisor: autopilot's rules on real child processes, read from the declarations
+  'test-compartment-declarations.test.js',   // 0.60.326 MG15a — every autopilot process declared by its own system's compartment.json, field for field
+  'test-release-tool.test.js',   // 0.60.325 FX2 — one release command; data/ never staged; a red test stops it before the commit
+  'test-contract-handshake-routes.test.js',   // 0.60.324 DO0 — the handshake counts components[] routes (Clear Glass 117, Copilot 81, Ollama 9, Versionium 18 were 0); unknown is null, never 0
   'autonomous-loop.test.js',
   // FIX (James, 2026-06-19): these six suites existed, passed standalone,
   // and were never registered here — `node tests/modules/run-all.js` was

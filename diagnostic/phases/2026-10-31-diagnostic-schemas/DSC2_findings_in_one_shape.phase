@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-diagnostic-schemas-phasemap.spec::DSC2_findings_in_one_shape
+type: phase
+id: docs_2026-10-31-diagnostic-schemas-phasemap.spec::DSC2_findings_in_one_shape
+context: pipeline phase DSC2_findings_in_one_shape of docs/2026-10-31-diagnostic-schemas-phasemap.spec
+intent: null
+summary: DSC2_findings_in_one_shape (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793419909859
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419909859
+lastSeenAt: 1793419909859
+fingerprint: null
+payload:
+  id: DSC2_findings_in_one_shape
+  map: docs/2026-10-31-diagnostic-schemas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/lib/finding.js
+    - diagnostic/nexus-diagnostic.js
+    - diagnostic/lib/wire-integrity.js
+    - tests/modules/test-diagnostic-findings.test.js
+  depends_on:
+    - DSC1_the_schema_files
+  blocks:
+    - MOD-DS-FINDINGS
+  spec: diagnostic/spec/diagnostic-schemas.spec
+  graph: 20e7ee9cd3947477

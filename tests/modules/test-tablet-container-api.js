@@ -33,7 +33,7 @@ async function test(id, desc, fn) {
 const ROOT = path.join(__dirname, '../..');
 const {
   _handleContractProxy, _handleTablesRead, _handleFilesRead, _handleRunTests,
-} = require('../../lib/nexus/autopilot.js');
+} = require('../../lib/nexus/autopilot.retired-0.60.330.js');
 
 let server, PORT;
 const REQ = (method, p) => new Promise((resolve) => {
@@ -75,7 +75,7 @@ const REQ = (method, p) => new Promise((resolve) => {
     });
 
     await test('T2-003', 'a corrupt table reports rows:-1 rather than being hidden (§1.2) — checked by contract, not by corrupting the live store', async () => {
-      const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
+      const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.retired-0.60.330.js'), 'utf8');
       assert.ok(/rows = -1/.test(src), 'unparseable tables must surface as -1, never be silently skipped');
     });
 
@@ -110,7 +110,7 @@ const REQ = (method, p) => new Promise((resolve) => {
     });
 
     await test('T2-008', 'the contract proxy takes its port from the kernel\'s own healthUrl — no second topology map to drift (§5.14)', async () => {
-      const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
+      const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.retired-0.60.330.js'), 'utf8');
       const fn = src.match(/function _handleContractProxy[\s\S]*?\n\}/)[0];
       assert.ok(/new URL\(kernel\.healthUrl\)/.test(fn), 'port must derive from healthUrl');
       assert.ok(!/\b(3748|3747|7820|9000|4800)\b/.test(fn), 'no hardcoded ports in the proxy');
@@ -135,20 +135,20 @@ const REQ = (method, p) => new Promise((resolve) => {
     await test('T2-010', 'run-all.js --filter is REAL and selective — the container route cannot be running a parallel test definition', async () => {
       const runner = fs.readFileSync(path.join(ROOT, 'tests/modules/run-all.js'), 'utf8');
       assert.ok(/--filter=/.test(runner), 'the real runner must implement --filter');
-      const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
+      const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.retired-0.60.330.js'), 'utf8');
       const fn = src.slice(src.indexOf('function _handleRunTests'), src.indexOf('// ── §TABLET T1'));
       assert.ok(/run-all\.js/.test(fn), 'must spawn the real runner');
       assert.ok(/--filter=/.test(fn), 'must pass the filter through');
     });
 
     await test('T2-011', 'concurrent test runs are refused (409), not allowed to corrupt each other', async () => {
-      const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
+      const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.retired-0.60.330.js'), 'utf8');
       const fn = src.slice(src.indexOf('function _handleRunTests'), src.indexOf('// ── §TABLET T1'));
       assert.ok(/_testRunActive/.test(fn) && /409/.test(fn), 'must guard against overlapping runs');
     });
 
     await test('T2-014', 'ARCHITECTURAL: the route refuses to spawn a runner from inside a runner — recursion killed at the class, not per-test', async () => {
-      const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
+      const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.retired-0.60.330.js'), 'utf8');
       const fn = src.slice(src.indexOf('function _handleRunTests'), src.indexOf('// ── §TABLET T1'));
       assert.ok(/NEXUS_TEST_RUN_DEPTH/.test(fn), 'depth guard must exist');
       assert.ok(/NEXUS_TEST_RUN_DEPTH:\s*'1'/.test(fn), 'spawned runs must be stamped with depth so they cannot spawn further');

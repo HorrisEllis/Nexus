@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
+context: pipeline phase GT6_gig_metadata_bullets_per_tab of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GT6_gig_metadata_bullets_per_tab (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793412846511
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793412846511
+lastSeenAt: 1793412846511
+fingerprint: null
+payload:
+  id: GT6_gig_metadata_bullets_per_tab
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.320
+  files:
+    - clear-glass/src/autofill/gig-fields.js
+    - clear-glass/src/autofill/gig.js
+    - clear-glass/src/autofill/gig-menu.js
+    - clear-glass/src/ipc/bridge.js
+    - tests/modules/test-gig-metadata-glass.test.js
+  depends_on:
+    - GT5_service_type
+  blocks:
+    - MOD-GT6
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 0d1eff7b0fcef569

@@ -271,7 +271,7 @@ function _defaultChecker() {
 // every live window (electron's), for the popup check; a test passes its own
 function _allWindows() { let w = []; try { w = require('electron').BrowserWindow.getAllWindows(); } catch (_) {} try { w = w.concat(require('../main/glass-frame.js').all()); } catch (_) {} return w; }   // §GF1 0.60.258: Glass frames too
 
-function createAttentionHandler({ providerHost, assign, getProvider = null, accounts = () => null, checkerSource, pickerSource, signedOutWaitMs = 2500, log = () => {}, allWindows = _allWindows } = {}) {
+function createAttentionHandler({ providerHost, assign, getProvider = null, accounts = () => null, checkerSource, pickerSource, signedOutWaitMs = 2500, sendBackEveryMs = 60000, log = () => {}, allWindows = _allWindows } = {}) {
   const guardianPicker = () => (pickerSource === undefined ? _guardianPicker() : pickerSource);
   const _active = new Map();   // window id -> { providerId, rec }
   const checker = checkerSource === undefined ? _defaultChecker() : checkerSource;
@@ -285,6 +285,13 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
     return w && !w.isDestroyed() ? { win: w, which: `${providerId} tab` } : null;
   }
   const _lastBack = new Map();   // providerId -> ts of the last send-back-to-chat reload
+  // 0.60.321 — James, 2026-10-31, with two pictures of ChatGPT's tab: the sign-in page, then a spinner, "over and over". ChatGPT is
+  // registered loginOptional (his 0.60.2 "chatgpt doesn't need a login currently"), so a tab on a sign-in page was sent back to the
+  // chat (the spinner) — and chatgpt.com now sends a signed-out visitor straight to its sign-in page, so it came back, and a minute
+  // later was sent back again, under him as he typed. The run is the evidence (§0.1): once a send-back lands on a sign-in page again,
+  // the provider does not work signed out on this machine now. It is remembered, the sign-in page is left alone and he is asked
+  // (the panel); it is forgotten when he says he signed in or chose to go on signed out.
+  const _needsSignin = new Map();   // providerId -> ts a send-back landed on a sign-in page again
   // §0.60.45 — James: "i click login and it closes the login. like i cant click anywhere without closing any popup".
   // Every attention request called show() + focus() on the tab, and a provider that flaps (connects, drops, connects)
   // asks again each time — focus was pulled off whatever the person was clicking (a sign-in popup, a dropdown), which
@@ -348,6 +355,7 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
         const def = _def(providerId);
         if (act.action === 'reload') { try { await (def && def.url && _onSignin(win.webContents.getURL()) ? win.loadURL(def.url) : win.webContents.reload()); } catch (_) {} await new Promise(r => setTimeout(r, 1500)); continue; }
         if (act.action === 'signed-in' || act.action === 'skip-signin') {
+          _needsSignin.delete(providerId);   // 0.60.321: his answer; the next sign-in page is judged afresh
           try { if (def && def.url && _onSignin(win.webContents.getURL())) await win.loadURL(def.url); } catch (_) {}
           log(`[attention] ${providerId} — ${act.action === 'skip-signin' ? 'used signed out' : 'the person says they signed in'}; the tab reloads its chat and hides`);
           setTimeout(() => { try { if (!win.isDestroyed()) win.hide(); } catch (_) {} }, 1500);
@@ -416,13 +424,18 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
         return { ok: true, window: which, resolved: 'signed-out', reloaded: false };
       }
       const last = _lastBack.get(providerId) || 0;
-      if (Date.now() - last < 60000) return { ok: true, window: which, resolved: 'signed-out', reloaded: false, throttled: true };
-      _lastBack.set(providerId, Date.now());
-      try { await win.loadURL(def.url); } catch (_) {}
-      await new Promise(r => setTimeout(r, signedOutWaitMs));
-      if (!win.isDestroyed() && !_onSignin(win.webContents.getURL())) {
-        log(`[attention] ${providerId} — on a sign-in page, but ${def.name || providerId} works signed out: back to ${def.url}, no sign-in asked`);
-        return { ok: true, window: which, resolved: 'signed-out' };
+      if (_needsSignin.has(providerId)) {
+        log(`[attention] ${providerId} — on a sign-in page; it went back there the last time it was sent to ${def.url}, so it is left for you to sign in`);
+      } else {   // the panel below shows the sign-in; the page itself is never navigated
+        if (Date.now() - last < sendBackEveryMs) return { ok: true, window: which, resolved: 'signed-out', reloaded: false, throttled: true };
+        _lastBack.set(providerId, Date.now());
+        try { await win.loadURL(def.url); } catch (_) {}
+        await new Promise(r => setTimeout(r, signedOutWaitMs));
+        if (!win.isDestroyed() && !_onSignin(win.webContents.getURL())) {
+          log(`[attention] ${providerId} — on a sign-in page, but ${def.name || providerId} works signed out: back to ${def.url}, no sign-in asked`);
+          return { ok: true, window: which, resolved: 'signed-out' };
+        }
+        if (!win.isDestroyed()) { _needsSignin.set(providerId, Date.now()); log(`[attention] ${providerId} — sent to ${def.url} and back on a sign-in page: it does not work signed out now; asking you to sign in, and not sending it back again`); }
       }
     }
     try { win.setSkipTaskbar(false); } catch (_) {}

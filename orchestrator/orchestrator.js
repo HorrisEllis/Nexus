@@ -1458,11 +1458,13 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
           jaaInsert: null, // cortex not guaranteed up during early boot
           onResult: (e) => {
             registryUpdate(systemId, { contractTrust: e.trust, contractHash: e.hash, contractVerifiedAt: e.checkedAt });
-            const routeStr = e.routeCount !== undefined ? e.routeCount + ' routes' : e.error || 'unreachable';
+            // 0.60.324 DO0 — the shape the count was read from is said; a contract in no known shape says so, never "0 routes"
+            const routeStr = e.routeCount === null ? 'routes unknown (contract shape not recognised)'
+              : e.routeCount !== undefined ? e.routeCount + ' routes' + (e.routeShape && e.routeShape !== 'routes' ? ' (as ' + e.routeShape + ')' : '') : e.error || 'unreachable';
             const hashStr  = e.hash ? e.hash.slice(0,8) : '—';
             console.log('[orch] contract.' + e.trust.toLowerCase() + ' — ' + systemId + ' (' + routeStr + ', hash:' + hashStr + ')');
             // Broadcast trust state over SSE so UIs can show it
-            broadcast('system.contract.verified', { systemId, trust: e.trust, hash: e.hash, routeCount: e.routeCount });
+            broadcast('system.contract.verified', { systemId, trust: e.trust, hash: e.hash, routeCount: e.routeCount, routeShape: e.routeShape });
           },
         });
       } catch(e) {

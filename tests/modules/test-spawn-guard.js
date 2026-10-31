@@ -6,7 +6,7 @@ let passed = 0, failed = 0;
 const _t = [];
 function test(id, desc, fn) { _t.push({ id, desc, fn }); }
 
-const ap = require('../../lib/nexus/autopilot.js');
+const ap = require('../../lib/nexus/autopilot.retired-0.60.330.js');
 
 // requestSpawn reads _state[name].status and, for alive/spawning states, must
 // return alreadyRunning WITHOUT calling _spawnKernel. We can't launch a real
@@ -58,7 +58,7 @@ test('T-004', 'an idle despawn (dormant) is NOT counted as a crash — the resta
   // Live log 2026-07-24: "idle for 630s — despawning (on-demand)" was followed
   // one line later by "crashes in window: 1/6", then a restart that raced the
   // dying Electron's lock -> 6 crashes -> CIRCUIT BREAKER TRIPPED.
-  const src = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'lib', 'nexus', 'autopilot.js'),'utf8');
+  const src = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'lib', 'nexus', 'autopilot.retired-0.60.330.js'),'utf8');
   assert.ok(/s\.status === 'stopping' \|\| s\.status === 'dormant'/.test(src),
     'exit handler must treat dormant (idle despawn) as an intentional stop, not a crash');
   // and the status must be set BEFORE the kill, or the exit can race it

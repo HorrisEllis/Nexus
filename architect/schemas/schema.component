@@ -17,7 +17,7 @@ payload:
   source: >-
     loom/schema/component.js — COMPONENT_SCHEMA (real, checked directly: requiredKeys
     ['id','namespace','name','version'], uuid enforced separately by the loom.uuid-present Axiom in
-    driver.js, not duplicated here). architect's own use: architect.node-taxonomy.md marks this VIA
+    driver.js, not duplicated here). architect's own use: architect.node-taxonomy.spec marks this VIA
     LOOM — architect doesn't author .component records itself, capability-map.js derives them from
     architect's own real capability registry ('architect' is confirmed present in
     capability-map.js's own SYSTEMS map). This local copy exists so architect can validate/interpret

@@ -363,7 +363,7 @@ spec:
       version:          '1.0.0'
       last_drift_check: '2026-09-19'
       status: >
-        ✓ CHECKED, extended (not rewritten) — added built_2026_09_19_pulse_and_nodes: intelligence/server.js wired into the real orchestrator pulse/heartbeat system (was the one sovereign system relying on active polling), and intelligence/lib/domain-nodes.js closes intelligence.node-taxonomy.md's own "node: NOT USED" finding — real, schema-validated .gap/.bep_pattern/.pattern_sequence/.resonance_crystal node exports at every real construction site. See intelligence/spec/intelligence.spec's own new section for the full record, including two pre-existing schema mismatches and one unrelated blocking YAML bug (lib/node-schemas/schema.repository) found and fixed along the way.
+        ✓ CHECKED, extended (not rewritten) — added built_2026_09_19_pulse_and_nodes: intelligence/server.js wired into the real orchestrator pulse/heartbeat system (was the one sovereign system relying on active polling), and intelligence/lib/domain-nodes.js closes intelligence.node-taxonomy.spec's own "node: NOT USED" finding — real, schema-validated .gap/.bep_pattern/.pattern_sequence/.resonance_crystal node exports at every real construction site. See intelligence/spec/intelligence.spec's own new section for the full record, including two pre-existing schema mismatches and one unrelated blocking YAML bug (lib/node-schemas/schema.repository) found and fixed along the way.
     - spec:             'jaa-db.spec'
       version:          '6.0.0'
       last_drift_check: '2026-07-24'
@@ -1583,7 +1583,7 @@ spec:
     seven related docs (`NEXUS.md`, `NEXUS-SPEC.md`, `NEXUS-SYSTEM.md`,
     `NEXUS-ENCYCLOPEDIA.md`, `NEXUS-PLAIN-ENGLISH.md`,
     `NEXUS-PHASE-MAP-CROSSREF.md`, `phase-map.spec` — the last already named
-    "a dead, pre-v3.0-axiom ancestor" by `docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.md`
+    "a dead, pre-v3.0-axiom ancestor" by `docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.spec`
     itself) moved to `_archive/superseded-docs-2026-09-10/`. All predate the
     per-system `*-phasemap.spec` convention this registry now indexes; none
     of it was the *current* living picture even before this move, per their
@@ -1762,7 +1762,7 @@ spec:
     | `docs/2026-10-19-gate-quality-checks-phasemap.spec` | 1.0.0 (SUPERSEDED-and-kept §0.3 by docs/2026-10-19-solid-build-foundation-phasemap.spec) — quality checks per gate on SISO, using the test file. Its gate ran the test on the host; the superseding map runs it in COS and after dynamic chunking. Kept as the earlier reading | superseded | James: "need quality checks per gate, using the test file and anything else we can. … gate should use siso or warp logic" |
     | `docs/2026-10-19-solid-build-foundation-phasemap.spec` | 1.0.0 (mapped, nothing built) — the solid build foundation, local-first & free, no paid APIs, bottom-up: MF1 model-fit routing (pick the largest ollama model that fits free RAM, before dispatch — kills the OOM churn); DC1 dynamic chunking at plan→contract time sized to the fitting model (wired-but-dormant today); CR1 the built project's component registry as the spine so components stay dumb (rule 3 per project); CT1 COS process-sandbox test runner (VM only where KVM exists); GQ1–GQ4 quality checks per gate on SISO run IN COS, brick gate proves behaviour not shape, phase gate stops dropping the test-first; AB1 the autobuild loop + real resume (confirmed today a failed phase HALTS, no setting); AB2 hat-aware ladder (routing is hat-blind today); SET1/SET2 autobuild settings config+command+UI. Ground-truth verified file:line. Ollama-first, guardian only if strictly necessary, Nexus learns (Beta ladder) | mapped | James: "the core foundation needs to be solid… gate should use siso or warp logic" · "we need as much qulaity checks… then we need cos to work for test env." · "its supposed to chunk dynamically" · "do not add apis. i dont have money for that" · "i dont think it resumes." · "ollama first, but nexus should be learning… the component registry… is the spine that makes components dumb" |
     | `docs/2026-10-18-debugging-product-phasemap.spec` | 1.0.0 (mapped, nothing built) — the product for debugging: one question ("what went wrong, why, and how do I go back") joined across intelligence crystals and fix_map, the rewinds, versionium, COS, RFR2, deviation (detector), friction (diagnostic, phase-faults), gap-field and the diagnostic system, on one key. DBG0a synchronized by a derived key, not one uuid (D10, by his axioms); DBG0b dependency edges as gap evidence (D11, by his axioms); DBG0c which product (his, open); DBG1 the key, DBG2 the case, DBG3 deviation and friction per run, DBG4 dependency gaps (first), DBG5 rewind from a case (TL4), DBG6 cases crystallize, DBG7 route/command/UI, DBG8 in the flight recorder | mapped | James: "can we spec the product for debugging. the intelligence system crystalization  memory, rewind engine, versionium, cos, rfr2, cos, runtime deviation and friction detection, gap detection, diagnostic system? look at the specs." |
-    | `docs/looking-glass/SPEC.md` + `PHASEMAP.md` | 0.3 (his, draft, kept verbatim) — Looking Glass: a UI renderer and app host, not Chromium; UI as typed data, layers as a runtime operation, event bus with per-layer contracts, motion as data, signal providers, shared prefs; 13 phases (0-12), one exe | concept (his, uploaded 2026-10-17; origin 2026-10-13) | James's spec, uploaded 2026-10-17: "Also Look at this." |
+    | `docs/looking-glass/SPEC.spec` + `PHASEMAP.md` | 0.3 (his, draft, kept verbatim) — Looking Glass: a UI renderer and app host, not Chromium; UI as typed data, layers as a runtime operation, event bus with per-layer contracts, motion as data, signal providers, shared prefs; 13 phases (0-12), one exe | concept (his, uploaded 2026-10-17; origin 2026-10-13) | James's spec, uploaded 2026-10-17: "Also Look at this." |
     | `docs/2026-10-16-nexus-git-sync-phasemap.spec` | 1.0.0 (mapped, nothing built) — Nexus synced with GitHub through Versionium/Idearium: GS1 git command rows (routes exist, commands do not); GS2 Nexus as an Idearium repo; GS3 pull is a snapshot-first switch; GS4 push policy (branch, never main); GS5 release alignment; GS6 update notice |
     | `docs/2026-10-16-cos-console-phasemap.spec` | 1.0.0 (mapped, nothing built) — the COS console: a Nexus-specific terminal replacing PowerShell, a front-end on the one command table; CON1 client with local fallback, CON2 grammar, CON3 per-system controls, CON4 safety gate, CON5 pane, CON6 shell escape, CON7 enterprise checklist, CON8 server control surface. |
     | `docs/2026-10-16-code-tab-rebuild-phasemap.spec` | 1.0.0 (mapped, nothing built) — the Code tab rebuilt as five tabs (Files, Changes, Plans, COS, Runs) because four regions at once overwhelmed him; the Runs tab persists every gate, output, response, job and contract and can offer a stored response again (TB0-TB8). Absorbs CE6/CE9/CE11/CE12 and GW9's panel; the data and events stay owned by the run-state and gate-held-work maps. |
@@ -1894,3 +1894,57 @@ spec:
 # his axioms): per-edge CHEAP metric collection + BATCHED Intelligence learning (every ~10 edges or a sigma event). Reuse: proc-stats,
 # economy ledger (model/agent usage), baseline.js (sigma), relational-field + causal (the learning graph), code-intel (primitives).
 # CAUTION: COS/Intelligence/compartments are where the parallel sessions are live — coordinate before code.
+
+# ADDENDUM 2026-10-31 (0.60.322) — registered four full specs, each with its map (all compile at specDepth 1.0, no BLACK; SS-01/02 green):
+#   idearium/spec/spec-library.spec + docs/2026-10-31-spec-everything-phasemap.spec (SE1–SE6) — his spec ids and types, this registry as the
+#     library, one queue, the origin trace, drafts from code, phased only. James: "like what if we use spec ids and types, then have a
+#     queue/library for specs." · "how about anything new, spec, any changes, fixes, or additions is phased only."
+#   docs/system-doors.spec + docs/2026-10-31-system-doors-phasemap.spec (DO0–DO5, DO2a) — server.js per system on its registry, booting from
+#     the skeleton's lib/system.js; Cortex's boot.js retired; the 0-routes handshake. James: "make a server.js for cortex, and reroute the
+#     boot.js to component registry and retire the boot.js".
+#   guardian/spec/guardian-nodes.spec + docs/2026-10-31-guardian-nodes-phasemap.spec (GND1–GND4) — every Guardian record a node file, its
+#     table the index. James: "make sure all the nodes, are actual files, in the data folder, the database per server.js".
+#   diagnostic/spec/diagnostic-schemas.spec + docs/2026-10-31-diagnostic-schemas-phasemap.spec (DSC1–DSC4) — a schema for everything
+#     Diagnostic records. James: "then all the schemas for the diagnostic system".
+# Addended the same release: docs/architecture-spec/architecture-spec.spec 0.14.0 (RULE E, RULE F, the gaps measured) and
+#   idearium/spec-engine/templates/genesis.spec (PROPOSED 1.6.0 note; version line unchanged until SE2 and DO2a are built).
+
+# ADDENDUM 2026-10-31 (0.60.327) — registered: intelligence/spec/causal-interconnect.spec + docs/2026-10-31-causal-interconnect-phasemap.spec
+# (CI1–CI5). James: "also the intelligence system, rfr2 and cfr need to be interconnected." One causal graph: CFR builds it from the ledger,
+# RFR2 reads and measures it, relational-field's chains walk it, the sigmas chained but kept apart, the batched learning loop learns from
+# both. Compiles at specDepth 1.0; MAPPED, not built. CI_D1 (the reading of "interconnected") is his to confirm.
+
+# ADDENDUM 2026-10-31 (SE0) — 31 specs kept as .md became .spec, text unchanged (git mv). James: "before i forget. convert all md specs to .spec
+# files". Map: docs/2026-10-31-spec-everything-phasemap.spec SE0, SE_D4. Their YAML block form (his "machine readable yaml.
+# multidimentional, block files.") is the next step, SE0b. Renamed:
+#   architect/docs/ARCHITECT-SPEC-v1.1.0.md → architect/docs/ARCHITECT-SPEC-v1.1.0.spec
+#   architect/spec/architect.node-taxonomy.md → architect/spec/architect.node-taxonomy.spec
+#   clear-glass/docs/clear-glass-seam.spec.md → clear-glass/docs/clear-glass-seam.spec
+#   clear-glass/spec/clear-glass.node-taxonomy.md → clear-glass/spec/clear-glass.node-taxonomy.spec
+#   copilot/spec/copilot.node-taxonomy.md → copilot/spec/copilot.node-taxonomy.spec
+#   cortex/spec/cortex.node-taxonomy.md → cortex/spec/cortex.node-taxonomy.spec
+#   cos/archetype/nexus-system/spec/{{slug}}.node-taxonomy.md → cos/archetype/nexus-system/spec/{{slug}}.node-taxonomy.spec
+#   cos/spec/cos-design-v1.7.0.md → cos/spec/cos-design-v1.7.0.spec
+#   diagnostic/spec/diagnostic.node-taxonomy.md → diagnostic/spec/diagnostic.node-taxonomy.spec
+#   diagnostic/spec/healer.node-taxonomy.md → diagnostic/spec/healer.node-taxonomy.spec
+#   diagnostic/spec/healer.spec.md → diagnostic/spec/healer.spec
+#   docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.md → docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.spec
+#   docs/looking-glass/SPEC.md → docs/looking-glass/SPEC.spec
+#   docs/specs/CAUSAL-NEXUS.spec.md → docs/specs/CAUSAL-NEXUS.spec
+#   docs/specs/COBALT-CORE.spec.md → docs/specs/COBALT-CORE.spec
+#   docs/specs/CONTROL-PANEL.spec.md → docs/specs/CONTROL-PANEL.spec
+#   docs/specs/CORTEX.spec.md → docs/specs/CORTEX.spec
+#   docs/specs/GUARDIAN.spec.md → docs/specs/GUARDIAN.spec
+#   docs/specs/IDEARIUM.spec.md → docs/specs/IDEARIUM.spec
+#   docs/specs/MODULES.spec.md → docs/specs/MODULES.spec
+#   docs/specs/NEXUS-SELF.spec.md → docs/specs/NEXUS-SELF.spec
+#   docs/specs/ORCHESTRATOR-COS.spec.md → docs/specs/ORCHESTRATOR-COS.spec
+#   docs/specs/SYSTEM-MAP.spec.md → docs/specs/SYSTEM-MAP.spec
+#   docs/specs/VERSIONIUM.spec.md → docs/specs/VERSIONIUM.spec
+#   guardian/spec/guardian.node-taxonomy.md → guardian/spec/guardian.node-taxonomy.spec
+#   idearium/spec/idearium.node-taxonomy.md → idearium/spec/idearium.node-taxonomy.spec
+#   intelligence/spec/intelligence.node-taxonomy.md → intelligence/spec/intelligence.node-taxonomy.spec
+#   lib/emerge/spec/emerge.node-taxonomy.md → lib/emerge/spec/emerge.node-taxonomy.spec
+#   loom/spec/loom.node-taxonomy.md → loom/spec/loom.node-taxonomy.spec
+#   ollama/spec/ollama.node-taxonomy.md → ollama/spec/ollama.node-taxonomy.spec
+#   versionium/spec/versionium.node-taxonomy.md → versionium/spec/versionium.node-taxonomy.spec

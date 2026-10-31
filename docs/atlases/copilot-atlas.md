@@ -792,7 +792,7 @@ Not read this session.
 
 2 other file(s).
 
-- other: `copilot/spec/copilot.node-taxonomy.md`, `copilot/spec/copilot.spec`
+- other: `copilot/spec/copilot.node-taxonomy.spec`, `copilot/spec/copilot.spec`
 
 #### `copilot/ui/`
 

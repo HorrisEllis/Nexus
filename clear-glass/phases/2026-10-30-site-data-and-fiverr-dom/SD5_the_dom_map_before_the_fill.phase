@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD5_the_dom_map_before_the_fill
+type: phase
+id: docs_2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD5_the_dom_map_before_the_fill
+context: >-
+  pipeline phase SD5_the_dom_map_before_the_fill of
+  docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec
+intent: null
+summary: SD5_the_dom_map_before_the_fill (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793402130904
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793402130904
+lastSeenAt: 1793402130904
+fingerprint: null
+payload:
+  id: SD5_the_dom_map_before_the_fill
+  map: docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/gig-pages.js
+    - clear-glass/src/dom/archaeology.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - SD0_his_machine_work_onto_main
+    - GT1_gate_timing_for_dropdowns
+  blocks:
+    - MOD-SD-DOMMAP
+  spec: clear-glass/spec/site-data.spec
+  graph: dfd87260b176b3f5

@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131615
+exported_at: 1793423729777
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131615
-lastSeenAt: 1793383131615
+firstSeenAt: 1793423729777
+lastSeenAt: 1793423729777
 fingerprint: null
 payload:
   for: MG28_cos_dependencies
@@ -56,18 +56,12 @@ payload:
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D9_cos_dependencies
     unlocks: []
-    conflicts:
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
-        files:
-          - tests/modules/run-all.js
+    conflicts: []
     dangling: []
     lines:
       - layer 1 · blocked by MG_D9_cos_dependencies
       - 'depends on (1): MG_D9_cos_dependencies'
       - 'needed by (0): —'
-      - >-
-        same files as MG15_the_supervisor_in_cos with no order between them:
-        tests/modules/run-all.js
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG_D9_cos_dependencies
         kind: declared

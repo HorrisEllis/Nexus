@@ -39,6 +39,9 @@ const KEYS = Object.freeze([
   // 2026-10-30 PL6/PL10 — James: "gates are for the pipelines for macro atuomation" · "with the option for per site pipelines". A gate block's timing
   // on this site, and whether this site's pipelines run (0.60.292's gates.enabled / gates.retries, for the archived write gates, are gone).
   { key: 'gates.settleMs',       feature: 'gates',     type: 'int',      min: 0,    max: 10000,  default: 400,  does: 'How long the page settles before a gate block is read again' },
+  // 2026-10-30 GT4 — James: "more timing in between drop down menus." The pause after one dropdown holds, before the next is opened (then the
+  // DOM must go quiet and the next dropdown show).
+  { key: 'gates.betweenDropdownsMs', feature: 'gates', type: 'int',    min: 0,    max: 15000,  default: 1200, does: 'How long to wait after one dropdown holds before the next is opened' },
   { key: 'gates.timeoutMs',      feature: 'gates',     type: 'int',      min: 100,  max: 60000,  default: 2500, does: 'How long a gate block waits to open, unless the step says' },
   { key: 'pipelines.enabled',    feature: 'pipelines', type: 'bool',     default: true,   does: 'Pipelines may run on this site, including the ones that run when a page of it opens' },
   { key: 'guardian.capture',     feature: 'guardian',  type: 'bool',     default: true,   global: 'guardian.capture', does: 'Chats on this site are captured' },

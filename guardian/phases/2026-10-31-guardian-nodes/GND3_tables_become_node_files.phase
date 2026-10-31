@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-guardian-nodes-phasemap.spec::GND3_tables_become_node_files
+type: phase
+id: docs_2026-10-31-guardian-nodes-phasemap.spec::GND3_tables_become_node_files
+context: pipeline phase GND3_tables_become_node_files of docs/2026-10-31-guardian-nodes-phasemap.spec
+intent: null
+summary: GND3_tables_become_node_files (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793419908443
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419908443
+lastSeenAt: 1793419908443
+fingerprint: null
+payload:
+  id: GND3_tables_become_node_files
+  map: docs/2026-10-31-guardian-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/node-tables.js
+    - guardian/server.js
+    - tests/modules/test-guardian-node-tables.test.js
+  depends_on:
+    - GND2_every_type_indexed
+  blocks:
+    - MOD-GN-TABLES
+  spec: guardian/spec/guardian-nodes.spec
+  graph: 152e92aad270e39e

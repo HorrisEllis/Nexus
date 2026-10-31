@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        architecture-spec
-    version:     0.13.0   # 0.13.0 2026-10-30: addendum — behaviour schemas, .benchmark, data pipelines, the dependency gate (his); 0.12.0 2026-10-17: addendum — the registry as the drawbridge; NODE_SYSTEM begun (P33a)
+    version:     0.14.0   # 0.14.0 2026-10-31: addendum — every piece traced to its origin; phased only (his); the gaps measured; 0.13.0 2026-10-30: addendum — behaviour schemas, .benchmark, data pipelines, the dependency gate (his); 0.12.0 2026-10-17: addendum — the registry as the drawbridge; NODE_SYSTEM begun (P33a)
     extends:     genesis-devkit-v1-0000-2026-0710-jamesbrooks-001  # idearium/spec-engine/templates/genesis.spec v1.3.0 — the default template of a system spec since 0.39.286; since 1.3.0 the architecture of the system template, section by section (Domain 0a)
     foundation:  TBD — no runtime exists yet, unassigned until first real implementation
     port:        TBD — no runtime process exists yet
@@ -349,6 +349,12 @@ spec:
         opened: 2026-10-01
 
   version_history:
+    - version: 0.14.0
+      date: 2026-10-31
+      summary: >-
+        Additive (ADDENDUM 2026-10-31 at the end): RULE E, every piece traced to its origin (skeleton slot → spec module with an id and a
+        type → phase), and RULE F, phased only (his); with what is missing from rules A-F and from genesis, measured on main 0.60.320.
+        Nothing removed or renamed.
     - version: 0.13.0
       date: 2026-10-30
       summary: >-
@@ -728,3 +734,52 @@ spec:
 #      ledger, makes replay exact.
 #   Structural noise (§8: noise = what the kernel cannot route) is the strongest idea in it: objective, content-free, and it pairs with the
 #   content SNR in Signal_to_Noise1 (snr.js) as two different measures, kept apart.
+
+# ── ADDENDUM 2026-10-31 — RULE E: every piece traced to its origin; RULE F: phased only (his); what is missing, measured ──────────────
+# James, 2026-10-31: "Spec it all out. go through the .phases. and spec out everything that is a module, capability, or new component? that
+# way we can have every component traced to its origin, and each piece tracked also. like it all builds from the origin as a foundation/core
+# like the system.js, which needs the config. map all of whats missing from all of this, to the architecture spec and genesis spec." ·
+# "how about anything new, spec, any changes, fixes, or additions is phased only." · "like what if we use spec ids and types, then have a
+# queue/library for specs."
+#
+# RULE E (his; the reading of his system.js as the skeleton's lib/system.js is the coder's, TO CONFIRM): every code file traces to its origin.
+#   origin = the system skeleton (genesis 1.5.0, cos/archetype/nexus-system): config → lib/system.js (schemas, store, ledger and bus, node
+#   index, listener, heartbeat) → server.js and cli.js → components → UI. Each file fills a slot of it or is a component under it; each is
+#   owned by a spec module with an id and a type (<type>:<system>:<slug>); each module is built by a phase. Specs are one library
+#   (docs/SPEC-REGISTRY.spec, given ids and types) and the work one queue, foundation first. Spec: idearium/spec/spec-library.spec;
+#   map: docs/2026-10-31-spec-everything-phasemap.spec.
+# RULE F (his): nothing is built outside a phase. Anything new, every spec, change, fix and addition is a phase of a map, with its spec and
+#   blocks; a code change outside every phase is reported (MOD-SL-PHASED).
+#
+# What is missing, measured on main 0.60.320 (a one-off trace; MOD-SL-TRACE makes it repeatable):
+#   RULE A behaviour schemas ......... 0 systems have <system>/schemas/behaviour.
+#   RULE B .benchmark nodes .......... 0 .benchmark files.
+#   RULE C the door .................. 3 systems have an input/ folder; 0 have the pipe routes (addendum (c)'s census stands).
+#   RULE D the dependency gate ....... 0 .dep files.
+#   RULE E origin trace .............. 1,876 code files: 233 (12%) owned by a spec module, 1,028 (55%) in a phase, 203 (11%) both, 818 (44%)
+#                                      neither. No system boots from the skeleton's core (lib/system.js): 0 of 13.
+#   RULE F phased only ............... not checked anywhere yet (SE5).
+#   Skeleton slots missing:
+#     idearium      server.js, cli.js, event-taxonomy.js
+#     clear-glass   server.js, cli.js, config.js, event-taxonomy.js
+#     cortex        server.js, cli.js (boot.js is its server)
+#     architect     server.js, cli.js, compartment.json, event-taxonomy.js
+#     orchestrator  server.js, cli.js, config.js, compartment.json, registry-components.js, schemas/index.js
+#     cos           server.js, cli.js, config.js, compartment.json, registry-components.js, schemas/index.js
+#     ollama, loom  cli.js, event-taxonomy.js
+#     versionium, intelligence   cli.js
+#   The reference system breaks its own axiom: Guardian keeps 12 JAA tables with no node files (genesis ALL_DATA_ARE_NODES), indexes 10 of
+#   the 12 node types it writes, and writes twice outside its folder (guardian/spec/guardian-nodes.spec).
+#   Diagnostic records findings (16 kinds), beats, pulse, causality, heal attempts and a wire report with no schema (NC0 schema rule;
+#   diagnostic/spec/diagnostic-schemas.spec).
+#   The handshake reports 0 routes for systems that publish components[] (docs/system-doors.spec MOD-DOOR-HANDSHAKE).
+# Mapped 2026-10-31: docs/2026-10-31-spec-everything-phasemap.spec (SE1-SE6), docs/2026-10-31-system-doors-phasemap.spec (DO0-DO5),
+#   docs/2026-10-31-guardian-nodes-phasemap.spec (GND1-GND4), docs/2026-10-31-diagnostic-schemas-phasemap.spec (DSC1-DSC4).
+
+# ── ADDENDUM 2026-10-31 (b) — RULE E corrected by him: the origin is server.js ───────────────────────────────────────────────────────
+# James, 2026-10-31: "system.js i meant server.js". RULE E above read his "like the system.js, which needs the config" as the skeleton's
+# lib/system.js; that reading is superseded (kept, §0.3). RULE E, as he meant it: every code file traces to its system's server.js, which
+# needs the config — config → server.js → the registry → components → UI. A file traces when its system's server.js reaches it (the
+# require graph from the door, or a registry component the door mounts). Six systems have no server.js and so no origin yet: idearium,
+# clear-glass, cortex, architect, orchestrator, cos (docs/2026-10-31-system-doors-phasemap.spec gives them one). "0 of 13 boot from
+# lib/system.js" stays true but is no longer a gap against his rule; the boot core is the coder's suggestion, to confirm (DO_D2).

@@ -8,10 +8,9 @@
     "kind": "virtual",
     "id": "repo.nexus.loom",
     "scope": [
-      "loom/",
-      "data/loom/"
+      "loom/"
     ],
-    "versionLine": "1.5.0",
+    "versionLine": "1.5.1",
     "versionNote": "from lib/version.js modules"
   },
   "cos": {
@@ -25,28 +24,35 @@
     "phase": 3,
     "critical": false,
     "optional": true,
-    "healthUrl": "http://127.0.0.1:3752/health"
+    "healthUrl": "http://127.0.0.1:3752/health",
+    "process": {
+      "name": "loom",
+      "cmd": "node",
+      "args": [
+        "loom/server.js"
+      ],
+      "phase": 3,
+      "optional": true,
+      "healthUrl": "http://127.0.0.1:3752/health"
+    }
   },
   "data": {
-    "dataDir": "data/loom",
+    "dataDir": "loom/data",
     "ledgerDir": "loom/data/ledger",
     "nodeIndexDir": "loom/data/node-index"
   },
   "spec": "loom/spec/",
   "dependsOn": {
-    "cortex": 4
+    "cortex": 1
   },
-  "sharedLibRequires": 13,
+  "sharedLibRequires": 33,
   "stats": {
-    "jsFiles": 52,
-    "jsLines": 8431
+    "jsFiles": 69,
+    "jsLines": 11366
   },
   "boundaryFindings": {
-    "count": 4,
+    "count": 1,
     "sample": [
-      "loom/lib/changelog.js -> cortex/memory/jaa-db",
-      "loom/scanners/phasemap-map.js -> cortex/memory/jaa-db",
-      "loom/server.js -> cortex/memory/jaa-db",
       "loom/test/phasemap-map.test.js -> cortex/memory/jaa-db"
     ]
   }

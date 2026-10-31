@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793386281629
+exported_at: 1793402129294
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793386281629
-lastSeenAt: 1793386281629
+firstSeenAt: 1793402129294
+lastSeenAt: 1793402129294
 fingerprint: null
 payload:
   for: EI1_every_key_and_click_paced_through_eros
@@ -212,6 +212,10 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD5_the_dom_map_before_the_fill
     blockedBy: []
     unlocks:
       - docs/2026-10-28-gated-flows-phasemap.spec::AF6_the_chip_on_dropdowns
@@ -221,7 +225,7 @@ payload:
       - layer 4
       - 'depends on (1): KB1_choose_waits_and_keys · all upstream 5'
       - >-
-        needed by (1): AF6_the_chip_on_dropdowns · all downstream 4 · finishing it unlocks
+        needed by (1): AF6_the_chip_on_dropdowns · all downstream 8 · finishing it unlocks
         AF6_the_chip_on_dropdowns
     edges:
       - from: docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys

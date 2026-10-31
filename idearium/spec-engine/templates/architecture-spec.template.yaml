@@ -63,7 +63,7 @@ tree: |
   │                                handshake, hashes and snapshots
   ├── spec/
   │   ├── <system>.spec
-  │   └── <system>.node-taxonomy.md
+  │   └── <system>.node-taxonomy.spec
   └── ui/                          floats on top — each element gated by a listener on its command
 
 registry: |

@@ -7,11 +7,11 @@ intent: null
 summary: CS8_the_cos_screen (ui) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792757382225
+exported_at: 1793421631208
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382225
-lastSeenAt: 1792757382225
+firstSeenAt: 1793421631208
+lastSeenAt: 1793421631208
 fingerprint: null
 payload:
   id: CS8_the_cos_screen
@@ -30,4 +30,4 @@ payload:
   blocks:
     - MOD-CS-UI
   spec: cos/spec/cos-spine.spec
-  graph: 75756ab60cc23333
+  graph: 98c11f97c95ea491

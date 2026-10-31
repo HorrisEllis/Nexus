@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-diagnostic-schemas-phasemap.spec::DSC4_beats_heals_and_measures_checked
+type: phase
+id: docs_2026-10-31-diagnostic-schemas-phasemap.spec::DSC4_beats_heals_and_measures_checked
+context: >-
+  pipeline phase DSC4_beats_heals_and_measures_checked of
+  docs/2026-10-31-diagnostic-schemas-phasemap.spec
+intent: null
+summary: DSC4_beats_heals_and_measures_checked (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793419909862
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419909862
+lastSeenAt: 1793419909862
+fingerprint: null
+payload:
+  id: DSC4_beats_heals_and_measures_checked
+  map: docs/2026-10-31-diagnostic-schemas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/lib/heal-loop.js
+    - diagnostic/lib/causality.js
+    - diagnostic/nexus-diagnostic.js
+  depends_on:
+    - DSC1_the_schema_files
+  blocks:
+    - MOD-DS-RECORDS
+  spec: diagnostic/spec/diagnostic-schemas.spec
+  graph: f45ce414ac48b939

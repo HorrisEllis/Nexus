@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-guardian-nodes-phasemap.spec::GND4_writes_stay_home
+type: phase
+id: docs_2026-10-31-guardian-nodes-phasemap.spec::GND4_writes_stay_home
+context: pipeline phase GND4_writes_stay_home of docs/2026-10-31-guardian-nodes-phasemap.spec
+intent: null
+summary: GND4_writes_stay_home (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793419908445
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419908445
+lastSeenAt: 1793419908445
+fingerprint: null
+payload:
+  id: GND4_writes_stay_home
+  map: docs/2026-10-31-guardian-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/code-artifact.js
+    - guardian/server.js
+  depends_on:
+    - GND1_the_audit_on_his_machine
+  blocks:
+    - MOD-GN-HOME
+  spec: guardian/spec/guardian-nodes.spec
+  graph: 6bd889b817412c41

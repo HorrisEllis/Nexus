@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
+type: phase
+id: docs_2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
+context: pipeline phase DO0_the_handshake_counts_real_routes of docs/2026-10-31-system-doors-phasemap.spec
+intent: null
+summary: DO0_the_handshake_counts_real_routes (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793421248103
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793421248103
+lastSeenAt: 1793421248103
+fingerprint: null
+payload:
+  id: DO0_the_handshake_counts_real_routes
+  map: docs/2026-10-31-system-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.324
+  files:
+    - orchestrator/lib/contract-handshake.js
+    - orchestrator/orchestrator.js
+    - tests/modules/test-contract-handshake-routes.test.js
+    - tests/modules/run-all.js
+  depends_on: []
+  blocks:
+    - MOD-DOOR-HANDSHAKE
+  spec: docs/system-doors.spec
+  graph: 4f4c9d149aa9b331

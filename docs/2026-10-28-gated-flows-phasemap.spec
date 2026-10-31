@@ -507,7 +507,7 @@ phases_gt:
   GT1_gate_timing_for_dropdowns:
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-GT1]
-    status: OPEN
+    status: BUILT 0.60.318
     depends_on: [AF6_the_chip_on_dropdowns, GF5_category_and_subcategory_finished]
     files: [clear-glass/src/page/element-gate.js, clear-glass/src/ipc/bridge.js, tests/modules/test-pipeline-gates.test.js]
   GT2_the_fill_includes_and_reports_dropdowns:
@@ -522,3 +522,61 @@ phases_gt:
     status: OPEN
     depends_on: [GT1_gate_timing_for_dropdowns]
     files: [clear-glass/renderer/settings/sections/macros.js, clear-glass/src/driver/index.js, tests/modules/test-pipeline-nodes.test.js]
+
+## ADDENDUM 2026-10-30 (b) — GT4–GT6: pace between dropdowns and find again; service type; the metadata bullets per tab
+James, 2026-10-30, with screenshots of his gig editor: "almost. more timing in between drop down menus. then we need the services, then the bullets
+for each tab for each catagory." Copilot showed "Driver error [choose]: Element not found: [data-cg-choose="1"]" and twice "Driver error [eval]:
+Script failed to execute" (its cause needs the renderer console's text; to read on his machine). Root cause of the first, read in
+src/driver/index.js _choose: the found dropdown is marked and the mark is used after the open wait; the category's choice re-renders the section
+and removes it. Decided by his axioms: the mark is a hint, the element is found again by what it shows (§1.2, §16.3); the pause between dropdowns
+is a site key he can tune (USER_AUTONOMY).
+phases_gt4:
+  GT4_pace_between_dropdowns_and_find_again:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GT4]
+    status: BUILT 0.60.318
+    depends_on: [GT1_gate_timing_for_dropdowns]
+    files: [clear-glass/src/driver/index.js, clear-glass/src/site-settings/keys.js, clear-glass/src/ipc/bridge.js, clear-glass/src/page/element-gate.js, tests/modules/test-choose-refind-glass.test.js]
+  GT5_service_type:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GT5]
+    status: BUILT 0.60.319
+    depends_on: [GT4_pace_between_dropdowns_and_find_again]
+    files: [clear-glass/src/autofill/gig-pages.js, clear-glass/src/autofill/gig.js, clear-glass/src/autofill/gig-menu.js, clear-glass/src/ipc/bridge.js, tests/modules/test-service-type-glass.test.js]
+  GT6_gig_metadata_bullets_per_tab:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GT6]
+    status: BUILT 0.60.320
+    depends_on: [GT5_service_type]
+    files: [clear-glass/src/autofill/gig-fields.js, clear-glass/src/autofill/gig.js, clear-glass/src/autofill/gig-menu.js, clear-glass/src/ipc/bridge.js, tests/modules/test-gig-metadata-glass.test.js]
+
+## ADDENDUM 2026-10-30 (c) — GT1 and GT4 built (0.60.318)
+James, 2026-10-30: "yes fix it. lets get this working already". GT1 then GT4, in DAG order. Built as specced, with two differences, both said:
+- GT1's test is tests/modules/test-choose-refind-glass.test.js (GR-04, GR-05), not test-pipeline-gates (which stays green, 7/7). The `after`
+  field (a gate that depends on another) is carried by gateTiming; the one dependent pair today, category → subcategory, is ordered in the
+  bridge's category part (pace), not by a general `after` walker. A general one is GT3's, with the step fields.
+- GT4 also excludes Clear Glass's own spotlight overlay from a dropdown's options: the live fixture read its label "open undefined" as the
+  only option (found by GR-03; a defect of choose's scan since 0.60.222b's plain-div fallback).
+Proof: test-choose-refind-glass 7/7 on a live page; against the old driver GR-01 fails with his exact error.
+
+## ADDENDUM 2026-10-30 (d) — GT5 built (0.60.319)
+James, 2026-10-30: "then we need the services". Built as MOD-GT5 says, with what the spec left open, decided by his axioms:
+- Fiverr shows Service type as a dropdown (SELECT A SERVICE TYPE) for some subcategories and as radio buttons for others; both are handled,
+  found by the section's heading, never by a class name (§16.3). A radio is clicked on its label with the pointer, as a hand would (his
+  "erosmanceros is for all copilot and guardian agents. any input not from me"), then read back.
+- No serviceType in the gig while the page asks for one: the part says so with the page's options, after waiting 3 s for the section when
+  this fill just chose the subcategory (§1.2: said, never guessed; never silent).
+- The chip menu (gig-menu) offers it as a text row (Fiverr's service types differ per subcategory, and no list of them is kept in code).
+Proof: tests/modules/test-service-type-glass.test.js 5/5 (dropdown, radio, refused with the page's options, left and said).
+
+## ADDENDUM 2026-10-30 (e) — GT6 built (0.60.320)
+James, 2026-10-30: "then the bullets for each tab for each catagory." Built as MOD-GT6 says; what the spec left open, decided by his axioms:
+- The metadata is filled after the category and the service type (the tabs belong to the subcategory chosen), as the pricing page's package
+  rows are (bridge _gigFeatures): one method, _gigMetadata, called from _gigFill on the Overview, not a PARTS entry (§8.6, the shape that
+  exists).
+- Tabs and choices are found under the words "Gig metadata", never by a class name (§16.3). Tabs are marked again before every click: a click
+  re-renders the tab list (the GT4 lesson; MD-05 caught it).
+- Nothing is unticked that he did not name (USER_AUTONOMY): a tab already holding others keeps them, and the limit counts them.
+- "per category": a gig has one category, so its metadata is the gig file's own { TAB: [values] }; a value the tab does not offer is said
+  with the tab's list, so a gig written for another category says where it differs.
+Proof: tests/modules/test-gig-metadata-glass.test.js 6/6, including his acceptance (JavaScript, three frontend frameworks, 3 / 5).

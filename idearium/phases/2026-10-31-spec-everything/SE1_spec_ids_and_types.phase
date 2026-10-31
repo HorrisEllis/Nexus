@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-spec-everything-phasemap.spec::SE1_spec_ids_and_types
+type: phase
+id: docs_2026-10-31-spec-everything-phasemap.spec::SE1_spec_ids_and_types
+context: pipeline phase SE1_spec_ids_and_types of docs/2026-10-31-spec-everything-phasemap.spec
+intent: null
+summary: SE1_spec_ids_and_types (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793419905502
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419905502
+lastSeenAt: 1793419905502
+fingerprint: null
+payload:
+  id: SE1_spec_ids_and_types
+  map: docs/2026-10-31-spec-everything-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/spec-id.js
+    - tests/modules/test-spec-id.test.js
+  depends_on:
+    - SE_D1_spec_ids_types_library_queue
+  blocks:
+    - MOD-SL-IDS
+  spec: idearium/spec/spec-library.spec
+  graph: c6fcfc3d2a76ded7

@@ -2405,11 +2405,15 @@ class IpcBridge {
     const done = [], missed = [];
     for (const t of tags) {
       let shown = false;
+      // 0.60.320 — a tag typed twice (FO-02, 1 run in ~10): the chip was read once, at once, after Enter; a page that draws it a moment later
+      // read "not shown" and the tag was typed again. Now the chip is waited for (the gate's settle), and read again just before a retype:
+      // a tag already shown is never typed a second time.
+      const chip = async () => { const g = await this.driver.exec({ agentId, action: 'eval', code: GP.tagShownScript(t), by: 'person' }); const ok = !!(g && g.result); return { open: ok, saw: ok ? 'shown' : 'not shown' }; };
       for (let attempt = 0; attempt < 2 && !shown; attempt++) {
+        if (attempt > 0 && (await chip()).open) { shown = true; break; }
         await this.driver.exec({ agentId, action: 'type', selector, text: String(t), clearFirst: attempt > 0, by: 'person' });
         await this.driver.exec({ agentId, action: 'pressKey', key: 'Enter', by: 'person' });
-        const g = await this.driver.exec({ agentId, action: 'eval', code: GP.tagShownScript(t), by: 'person' });
-        shown = !!(g && g.result);
+        shown = (await gigGate(chip, { timeoutMs: 2500, settleMs: 300, every: 150 })).open;
       }
       (shown ? done : missed).push(t);
     }
@@ -2448,6 +2452,72 @@ class IpcBridge {
       const known = /^(packages|price|delivery time|revisions?|total|description|name)$/i;
       out.unlisted = (rl.labels || []).filter(l => !named.has(l.toLowerCase()) && !known.test(l));
     } catch (err) { out.rowsWhy = err.message; }
+    return out;
+  }
+
+  // 2026-10-30 GT6 — James: "then the bullets for each tab for each catagory." The gig's metadata, { <tab>: [values] }, tab by tab: the tab
+  // opened with the pointer (GATE-GT6-001: its panel's choices present and holding still), each value ticked or picked on its label within
+  // the tab's limit (GATE-GT6-002: the counter's "/ N", "up to N", or 1 for radio buttons), each read back (GATE-GT6-003). A value the tab
+  // does not offer is said with the tab's own list; past the limit the first N are kept and the rest said; a required tab (*) with nothing
+  // chosen is said before the fill ends. Nothing is unticked that he did not name. → { filled, failed, over, left, tabs }
+  async _gigMetadata(agentId, gig) {
+    const GF = require('../autofill/gig-fields'), OM = require('../page/option-match');
+    const out = { filled: [], failed: [], over: [], left: [], gates: [] };
+    const ev = async (code) => { const x = await this.driver.exec({ agentId, action: 'eval', code, by: 'person' }); return (x && x.result) || {}; };
+    const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+    const panel = async () => {   // read until the same choices twice (a tab's panel renders after the click), at most 4 s
+      let last = null; const until = Date.now() + 4000;
+      for (;;) { const p = await ev(GF.metaPanelScript()); const sig = JSON.stringify((p.options || []).map(o => o.label));
+        if (p.found && p.options && p.options.length && last === sig) return p; last = sig; if (Date.now() > until) return p; await sleep(250); }
+    };
+    const meta = gig && gig.metadata && typeof gig.metadata === 'object' ? gig.metadata : {};
+    let T = await ev(GF.metaTabsScript());
+    if (!T.found) { if (Object.keys(meta).length) out.failed.push({ tab: null, why: T.why || 'no Gig metadata on the page' }); return out; }
+    out.tabs = T.tabs.map(t => t.name);
+    const done = new Set();
+    for (const [tabName, raw] of Object.entries(meta)) {
+      const values = (Array.isArray(raw) ? raw : [raw]).map(v => String(v).trim()).filter(Boolean);
+      if (!values.length) continue;
+      T = await ev(GF.metaTabsScript());   // marked again: the page may have re-rendered since the last tab
+      const tm = OM.matchOption((T.tabs || []).map(t => t.name), tabName);
+      if (!tm.ok) { out.failed.push({ tab: tabName, why: `no tab "${tabName}" in Gig metadata — the tabs: ${(T.tabs || []).map(t => t.name).join(' | ')}` }); continue; }
+      const ti = T.tabs.findIndex(t => t.name === tm.option); done.add(tm.option);
+      try {
+        await this.driver.exec({ agentId, action: 'pointer', selector: `[data-cg-meta-tab="${ti}"]`, do: 'click', by: 'person' });
+        let p = await panel();
+        if (!p.found || !(p.options || []).length) throw new Error(`the tab "${tm.option}" opened no choices`);
+        out.gates.push({ key: `metadata.${tm.option}`, open: true, saw: `${p.options.length} choices${p.counter ? `, ${p.counter}` : ''}` });
+        const labels = p.options.map(o => o.label);
+        for (const v of values) {
+          const m = OM.matchOption(labels, v);
+          if (!m.ok) { out.failed.push({ tab: tm.option, value: v, why: `"${v}" is not offered — the tab's own list: ${labels.join(' | ')}` }); continue; }
+          p = await ev(GF.metaPanelScript());
+          let j = (p.options || []).findIndex(o => o.label === m.option);
+          if (j < 0) { out.failed.push({ tab: tm.option, value: v, why: `"${m.option}" went from the tab before it could be ticked` }); continue; }
+          if (p.options[j].checked) { out.filled.push({ tab: tm.option, value: m.option, changed: false }); continue; }
+          if (p.kind !== 'radio' && p.limit != null && p.count >= p.limit) { out.over.push({ tab: tm.option, value: m.option, why: `the tab takes ${p.limit} and has ${p.count}` }); continue; }
+          let g = null;
+          for (let t = 0; t < 2 && !(g && g.open); t++) {
+            await this.driver.exec({ agentId, action: 'pointer', selector: `[data-cg-meta-opt="${j}"]`, do: 'click', by: 'person' });
+            g = await gigGate(async () => { const q = await ev(GF.metaPanelScript()); const o = (q.options || []).find(x => x.label === m.option);
+              return { open: !!(o && o.checked), saw: o ? (o.checked ? `"${m.option}" ticked${q.counter ? `, ${q.counter}` : ''}` : `"${m.option}" clear`) : `"${m.option}" gone` }; });
+            if (!g.open) { const q = await ev(GF.metaPanelScript()); const k = (q.options || []).findIndex(o => o.label === m.option); if (k >= 0) p = q, j = k; }
+          }
+          out.gates.push({ key: `metadata.${tm.option}.${m.option}`, open: g.open, saw: g.saw });
+          if (g.open) out.filled.push({ tab: tm.option, value: m.option, changed: true }); else out.failed.push({ tab: tm.option, value: m.option, why: `its gate stayed closed: ${g.saw}` });
+        }
+        const last = await ev(GF.metaPanelScript()); if (last.counter) out.filled.filter(f => f.tab === tm.option).forEach(f => { f.counter = last.counter; });
+      } catch (err) { out.failed.push({ tab: tm.option, why: err.message }); }
+    }
+    // a required tab (*) the gig names nothing for: opened and read; nothing chosen there is said, never filled for him
+    // (the tabs are marked again before each click: a click re-renders the tab list, and a mark is a hint, never the only way — GT4)
+    for (const t of (T.tabs || []).slice()) {
+      if (!t.required || done.has(t.name)) continue;
+      try { const now = await ev(GF.metaTabsScript()); const i = (now.tabs || []).findIndex(x => x.name === t.name); if (i < 0) throw new Error('the tab went from the page');
+        await this.driver.exec({ agentId, action: 'pointer', selector: `[data-cg-meta-tab="${i}"]`, do: 'click', by: 'person' });
+        const p = await panel(); if (!(p.options || []).some(o => o.checked)) out.left.push({ tab: t.name, why: `required (*), and your gig names nothing for it — the tab's list: ${(p.options || []).map(o => o.label).join(' | ')}` });
+      } catch (err) { out.left.push({ tab: t.name, why: `required (*); could not be read: ${err.message}` }); }
+    }
     return out;
   }
 
@@ -2584,21 +2654,30 @@ class IpcBridge {
     // part again (retries); still closed → his site keys for the part, gated the same way; else the part says what its gate saw.
     r.gates = [];
     const C = gigChecks(this.driver, agentId);
-    const gated = async (key, doIt, check, retries = 1) => {
-      let g = null;
-      for (let t = 0; t <= retries; t++) {
+    // 2026-10-30 GT1 — the gate's timing is the part's (element-gate gateTiming): a choice waits for its options and retries with a growing
+    // delay; text keeps today's. His site keys gates.timeoutMs / gates.settleMs lift the floor. Every try, what it saw and the wait before
+    // the next are on the part's gate record, so a run says how long it waited and why (§1.2).
+    const EG = require('../page/element-gate');
+    const siteTiming = { timeoutMs: this.siteSettings && read && read.url ? this.siteSettings.get(read.url, 'gates.timeoutMs') : null,
+      settleMs: this.siteSettings && read && read.url ? this.siteSettings.get(read.url, 'gates.settleMs') : null };
+    const gated = async (key, doIt, check, retries = null, kind = 'text') => {
+      const tm = EG.gateTiming({ kind, ...(retries != null ? { retries } : {}) }, siteTiming);
+      const triesSaw = []; let g = null;
+      for (let t = 0; t <= tm.retries; t++) {
+        if (t > 0) { const wait = EG.backoffMs(tm, t - 1); if (wait) await new Promise(res => setTimeout(res, wait)); triesSaw[t - 1].waitMs = wait; }
         const rec = await doIt(t);
         // a page that does not answer the read at all is unknown: recorded as unchecked, never a pass and never retried as closed (NC0)
         const first = await (async () => { try { return await check(); } catch (_) { return null; } })();
         if (first && first.unread) { r.gates.push({ key, unchecked: first.saw, tries: t + 1 }); return rec; }
-        g = await gigGate(check);
-        if (g.open) { r.gates.push({ key, open: true, tries: t + 1, saw: g.saw }); return rec; }
+        g = await gigGate(check, { timeoutMs: tm.timeoutMs, settleMs: tm.settleMs, every: tm.every });
+        triesSaw.push({ try: t + 1, open: g.open, saw: g.saw });
+        if (g.open) { r.gates.push({ key, open: true, tries: t + 1, saw: g.saw, kind: tm.kind, ...(t ? { each: triesSaw } : {}) }); return rec; }
       }
-      r.gates.push({ key, open: false, tries: retries + 1, saw: g && g.saw });
-      throw new Error(`its gate stayed closed: ${g && g.saw}`);
+      r.gates.push({ key, open: false, tries: tm.retries + 1, saw: g && g.saw, kind: tm.kind, each: triesSaw });
+      throw new Error(`its gate stayed closed after ${tm.retries + 1} tries: ${triesSaw.map(x => `${x.try}: ${x.saw}`).join(' · ')}`);
     };
     const friction = async (part, value, err, check) => {
-      const kind = part === 'category' || /\.(delivery|revisions)$/.test(part) ? 'choice' : part === 'tags' || part === 'faq' || part === 'requirement' ? 'run' : 'text';
+      const kind = part === 'category' || part === 'serviceType' || /\.(delivery|revisions)$/.test(part) ? 'choice' : part === 'tags' || part === 'faq' || part === 'requirement' ? 'run' : 'text';
       const verify = check ? async () => { const g = await gigGate(check); r.gates.push({ key: part, open: g.open, via: 'site key', saw: g.saw }); return g.open; } : null;
       let sk = { ok: false, why: 'no page address to look up your keys' };
       if (this.driver && read && read.url) { try { sk = await this._gigSiteKey(agentId, read.url, part, value, { kind, verify }); } catch (e) { sk = { ok: false, why: e.message }; } }
@@ -2620,7 +2699,7 @@ class IpcBridge {
       const value = valueOf(part); if (value === null || value === undefined || value === '') continue;
       if (filledKeys.has(part)) continue;   // filled and gated above
       const learned = site && mem.target(site, GP.targetKey(where.page, part));
-      const isChoice = part === 'category' || part.endsWith('.delivery');
+      const isChoice = part === 'category' || part === 'serviceType' || part.endsWith('.delivery');
       const column = /^(basic|standard|premium)\./.test(part) ? part.split('.')[0].toUpperCase() : null;
       const catShown = gig.subcategory || gig.category;
       let check = null;
@@ -2651,13 +2730,13 @@ class IpcBridge {
         if (learned) {
           check = isChoice ? C.choice({ selector: learned.selector }, value) : C.text({ selector: learned.selector }, value);
           await gated(part, (t) => isChoice ? this.driver.exec({ agentId, action: 'choose', selector: learned.selector, option: value, by: 'person' })
-            : this.driver.exec({ agentId, action: t ? 'insertText' : 'setValue', selector: learned.selector, ...(t ? { text: value } : { value }), by: 'person' }), check);
+            : this.driver.exec({ agentId, action: t ? 'insertText' : 'setValue', selector: learned.selector, ...(t ? { text: value } : { value }), by: 'person' }), check, null, isChoice ? 'choice' : 'text');
           r.learned.push({ key: part, selector: learned.selector }); continue;
         }
         // 0.60.286 GM2 — revisions chosen in the tier's column on the Revisions row; price typed in the Price row; each gated
         if (part.endsWith('.revisions')) {
           check = C.choice({ column, row: 'Revisions' }, value);
-          const c = await gated(part, () => this.driver.exec({ agentId, action: 'choose', column, row: 'Revisions', option: value, by: 'person' }), check);
+          const c = await gated(part, () => this.driver.exec({ agentId, action: 'choose', column, row: 'Revisions', option: value, by: 'person' }), check, null, 'choice');
           r.dropdowns.push({ key: part, ok: true, option: c.option, via: 'built-in' }); continue;
         }
         if (part.endsWith('.price')) {
@@ -2682,6 +2761,34 @@ class IpcBridge {
           }, check);
           r.dropdowns.push({ key: part, ok: true, option, via, ...(why ? { why } : {}) }); continue;
         }
+        // 2026-10-30 GT5 — James: "then we need the services". The Service type section appears once the subcategory holds (GATE-GT5-001: the
+        // category part ran first, gated; here the section is waited for as long as a choice gate waits). A dropdown is chosen with the gated
+        // choose; radio buttons are clicked by their label, as a hand would. Either way read back (GATE-GT5-002); an option the page does not
+        // offer is refused with the options it does.
+        if (part === 'serviceType' && !learned) {
+          const GF = require('../autofill/gig-fields');
+          const ST = (want) => this.driver.exec({ agentId, action: 'eval', code: GP.serviceTypeScript(want), by: 'person' }).then(x => (x && x.result) || { found: false });
+          const OM = require('../page/option-match');
+          const until = Date.now() + EG.gateTiming({ kind: 'choice' }, siteTiming).timeoutMs;
+          let st = await ST(value);
+          while (!st.found && Date.now() < until) { await new Promise(res => setTimeout(res, 300)); st = await ST(value); }
+          if (!st.found) throw new Error('no Service type on the page (it shows after the subcategory, for subcategories that have one)');
+          if (!st.kind) throw new Error(st.why);
+          if (st.kind === 'radio') {
+            const m = OM.matchOption(st.options || [], value);
+            if (!m.ok) throw new Error(`service type: ${m.why} — the page offers: ${(st.options || []).join(' | ')}`);
+            check = async () => { const x = await ST(m.option); return { open: !!x.checked && OM.shows(x.checked, m.option), saw: x.checked ? JSON.stringify(x.checked) : 'none ticked' }; };
+            await gated(part, async () => { const x = await ST(m.option); if (OM.shows(x.checked || '', m.option)) return; if (!x.marked) throw new Error(`service type "${m.option}" is not on the page`);
+              await this.driver.exec({ agentId, action: 'pointer', selector: '[data-cg-service-opt="1"]', do: 'click', by: 'person' }); }, check, null, 'choice');
+            r.dropdowns.push({ key: part, ok: true, option: m.option, via: 'radio' }); continue;
+          }
+          check = async () => { const x = await this.driver.exec({ agentId, action: 'eval', code: GF.shownScript(value), by: 'person' }); const ok = !!(x && x.result);
+            return { open: ok, saw: ok ? `${JSON.stringify(value)} shown` : `${JSON.stringify(value)} not shown` }; };
+          const c = await gated(part, async () => { const x = await ST(value); if (x.kind !== 'dropdown') throw new Error('the service type dropdown is gone');
+            if (x.shown && OM.shows(x.shown, value)) return { option: x.shown };
+            return this.driver.exec({ agentId, action: 'choose', ...(x.shown ? { selector: '[data-cg-service="1"]' } : { shows: 'SELECT A SERVICE TYPE' }), option: value, by: 'person' }); }, check, null, 'choice');
+          r.dropdowns.push({ key: part, ok: true, option: (c && c.option) || value, via: 'dropdown' }); continue;
+        }
         if (part === 'category') {
           check = C.shown(catShown);
           const sc = GP.suggestedCategory(read.links, gig);
@@ -2701,10 +2808,24 @@ class IpcBridge {
           const GF = require('../autofill/gig-fields');
           const shows = async (t) => { const x = await this.driver.exec({ agentId, action: 'eval', code: GF.shownScript(t), by: 'person' }); return !!(x && x.result); };
           const picked = [];
+          // 2026-10-30 GT4 — James: "more timing in between drop down menus." After the category holds, the page re-renders its section and
+          // loads the subcategory's list: the fill waits his betweenDropdownsMs, then for the DOM to go quiet and SELECT A SUBCATEGORY to show
+          // (GATE-GT4-001/002), before the next choose. choose itself finds its dropdown again if the re-render took its mark (GATE-GT4-003).
+          const pace = async () => {
+            const between = (this.siteSettings && read && read.url ? this.siteSettings.get(read.url, 'gates.betweenDropdownsMs') : null) ?? 1200;
+            await new Promise(res => setTimeout(res, between));
+            const q = await this.driver.exec({ agentId, action: 'eval', code: EG.quietScript(siteTiming.settleMs || 400, 4000), by: 'person' }).catch(() => null);
+            const until = Date.now() + EG.gateTiming({ kind: 'choice' }, siteTiming).timeoutMs;
+            while (Date.now() < until && !(await shows('SELECT A SUBCATEGORY'))) await new Promise(res => setTimeout(res, 250));
+            return { betweenMs: between, quiet: q && q.result, subcategoryShown: await shows('SELECT A SUBCATEGORY') };
+          };
           await gated(part, async () => {
-            if (await shows('SELECT A CATEGORY')) { const c1 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A CATEGORY', option: gig.category, by: 'person' }); picked.push(c1.option); }
+            if (await shows('SELECT A CATEGORY')) {
+              const c1 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A CATEGORY', option: gig.category, by: 'person' }); picked.push(c1.option);
+              if (gig.subcategory) r.paced = await pace();
+            }
             if (gig.subcategory && await shows('SELECT A SUBCATEGORY')) { const c2 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A SUBCATEGORY', option: gig.subcategory, by: 'person' }); picked.push(c2.option); }
-          }, check);
+          }, check, null, 'choice');
           const rec = { key: part, ok: true, option: picked.length ? picked.join(' > ') : value, via: 'built-in', why: viaMacro.why, ...(picked.length < (gig.subcategory ? 2 : 1) ? { kept: 'what the page already showed' } : {}) };
           r.dropdowns.push(rec); continue;
         }
@@ -2714,10 +2835,20 @@ class IpcBridge {
         await friction(part, value, err, check);
       }
     }
+    // GT5 — no service type in the gig while the page asks for one: left for him and said, never guessed (MOD-GT5 behavioral contract)
+    if (this.driver && where.page === 'overview' && !valueOf('serviceType') && wants('serviceType')) {
+      // the section shows a moment after the subcategory: when this fill just chose one, it is waited for (3 s) before saying nothing asked
+      try { const read1 = async () => (await this.driver.exec({ agentId, action: 'eval', code: GP.serviceTypeScript(null), by: 'person' })) || {};
+        let x = await read1(); const until = Date.now() + (r.dropdowns.some(dd => dd.key === 'category') ? 3000 : 0);
+        while (!(x.result && x.result.found) && Date.now() < until) { await new Promise(res => setTimeout(res, 300)); x = await read1(); }
+        if (x && x.result && x.result.found) r.notFound.push({ key: 'serviceType', why: `the page asks for a service type${x.result.options ? ` (${x.result.options.join(' | ')})` : ''}; your gig has none (serviceType), so it is left for you` }); } catch (_) {}
+    }
     // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." The package rows come from the gig (features), never from code: a number or text
     // is chosen in that tier's column and row (the gated choose, read back), yes/no ticks or clears that row's checkbox (checkAt, read back).
     // The page's rows the gig has no value for are listed (r.features.unlisted), so he can add them to the gig.
     if (where.page === 'pricing' && this.driver) r.features = await this._gigFeatures(agentId, gig, want);
+    // GT6 — the metadata bullets, after the category and service type held (the tabs belong to the subcategory chosen)
+    if (where.page === 'overview' && this.driver && wants('metadata') && typeof this._gigMetadata === 'function' && (gig.metadata && Object.keys(gig.metadata).length || /gig metadata/i.test(String((read && read.text) || '')))) r.metadata = await this._gigMetadata(agentId, gig);
     // 0.60.224 — his recorded choices for this page (Service type, the metadata boxes, the pricing rows …) replayed after the fill, as him
     if (where.page && this.macroTool && replay !== false) {
       let has = null; try { has = await this.macroTool.execute({ action: 'get', name: GP.macroName(where.page) }); } catch (_) {}

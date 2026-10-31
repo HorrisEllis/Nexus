@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-diagnostic-schemas-phasemap.spec::DSC1_the_schema_files
+type: phase
+id: docs_2026-10-31-diagnostic-schemas-phasemap.spec::DSC1_the_schema_files
+context: pipeline phase DSC1_the_schema_files of docs/2026-10-31-diagnostic-schemas-phasemap.spec
+intent: null
+summary: DSC1_the_schema_files (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793419909856
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419909856
+lastSeenAt: 1793419909856
+fingerprint: null
+payload:
+  id: DSC1_the_schema_files
+  map: docs/2026-10-31-diagnostic-schemas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/schemas/index.js
+  depends_on:
+    - DSC_D0_a_schema_for_everything
+  blocks:
+    - MOD-DS-FILES
+  spec: diagnostic/spec/diagnostic-schemas.spec
+  graph: 9c5d4a1a25292755

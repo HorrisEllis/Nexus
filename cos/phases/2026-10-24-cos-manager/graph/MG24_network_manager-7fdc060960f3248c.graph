@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131596
+exported_at: 1793425834351
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131596
-lastSeenAt: 1793383131596
+firstSeenAt: 1793425834351
+lastSeenAt: 1793425834351
 fingerprint: null
 payload:
   for: MG24_network_manager
@@ -109,20 +109,16 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 5
+    layer: 4
     deps:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
       - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
     dependents:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
     upstream:
-      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
-      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
-      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
-      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
-      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
@@ -131,13 +127,9 @@ payload:
     downstream:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
     blockedBy:
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
       - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
     unlocks: []
     conflicts:
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
-        files:
-          - cos/manager/contract.json
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
         files:
           - cos/manager/contract.json
@@ -164,10 +156,9 @@ payload:
           - cos/manager/contract.json
     dangling: []
     lines:
-      - layer 5 · blocked by MG15_the_supervisor_in_cos, SV2_into_a_compartment
-      - 'depends on (2): MG15_the_supervisor_in_cos, SV2_into_a_compartment · all upstream 12'
+      - layer 4 · blocked by SV2_into_a_compartment
+      - 'depends on (2): MG15_the_supervisor_in_cos, SV2_into_a_compartment · all upstream 8'
       - 'needed by (1): MG27_state_and_resource_screens'
-      - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'
       - >-
         same files as MG18_the_supervisor_screen with no order between them:
         cos/manager/contract.json
@@ -176,7 +167,10 @@ payload:
       - >-
         same files as MG22_template_and_archetype_builder with no order between them:
         cos/manager/contract.json
-      - … and 4 more phases sharing its files without an order
+      - >-
+        same files as MG23_allocation_and_balance with no order between them:
+        cos/manager/contract.json
+      - … and 3 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
         kind: declared

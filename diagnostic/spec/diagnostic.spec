@@ -121,7 +121,7 @@ spec:
 #   config.js + diagnostic.config.json   port 7825 and heartbeat from the file, DIAGNOSTIC_PORT / _HEARTBEAT_MS over it
 #   compartment.json         its COS compartment, nexus-self-diagnostic (entry server.js, health /health)
 #   event-taxonomy.js        its 13 events in ET1 shape, each a real broadcast in nexus-diagnostic.js
-#   spec/diagnostic.spec, spec/diagnostic.node-taxonomy.md, spec/healer.*
+#   spec/diagnostic.spec, spec/diagnostic.node-taxonomy.spec, spec/healer.*
 #   lib/                     its components: heal-loop.js (was nexus-heal-loop.js), wire-integrity.js, and pulse-watch.js,
 #                            diagnostic-contract.js (moved from lib/: used only by diagnostic, DB17)
 #   healer/                  the healer (api, cli), served under /healer

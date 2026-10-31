@@ -11,15 +11,12 @@
       "idearium/",
       "data/idearium/"
     ],
-    "versionLine": "4.1.0",
+    "versionLine": "4.35.0",
     "versionNote": "from lib/version.js modules"
   },
   "cos": {
     "compartmentId": "cos.nexus.idearium",
-    "axioms": [
-      "cos is the source of all compartments. nothing less."
-    ],
-    "_note_2026_09_20": "This compartmentId (identity-level, per-system) is NOT what 'idearium uses cos' turned out to mean in practice — confirmed with James directly. Real target: idearium spec builds / spawned compilers-workers become real cos compartments (idearium/spec-engine/compiler-t0.js emitStructure(), via lib/agent-tools/tools/sandbox/cos-compartment.js, the same tool copilot already uses), going through cos/host's real SISO gate pipeline, not skipped. This field is left as the shared governing axiom for if/when system-identity-level compartments are built later."
+    "axioms": []
   },
   "runtime": {
     "entry": "idearium/api/index.js",
@@ -28,7 +25,16 @@
     "phase": 3,
     "critical": false,
     "optional": false,
-    "healthUrl": "http://127.0.0.1:4800/health"
+    "healthUrl": "http://127.0.0.1:4800/health",
+    "process": {
+      "name": "idearium",
+      "cmd": "node",
+      "args": [
+        "idearium/api/index.js"
+      ],
+      "phase": 3,
+      "healthUrl": "http://127.0.0.1:4800/health"
+    }
   },
   "data": {
     "dataDir": "data/idearium",
@@ -37,19 +43,22 @@
   },
   "spec": "idearium/spec/",
   "dependsOn": {
-    "ollama": 2,
-    "intelligence": 3,
-    "cortex": 8
+    "ollama": 3,
+    "intelligence": 4,
+    "cortex": 32,
+    "copilot": 1,
+    "loom": 10
   },
-  "sharedLibRequires": 25,
+  "sharedLibRequires": 538,
   "stats": {
-    "jsFiles": 33,
-    "jsLines": 13906
+    "jsFiles": 144,
+    "jsLines": 50819
   },
   "boundaryFindings": {
-    "count": 13,
+    "count": 50,
     "sample": [
       "idearium/agent-suite/index.js -> ollama/config.js",
+      "idearium/agent-suite/index.js -> ollama/lib/ollama-client.js",
       "idearium/agent-suite/index.js -> ollama/ollama-runtime",
       "idearium/api/index.js -> intelligence/spatial/lattice.js",
       "idearium/api/index.js -> cortex/core/raid",
@@ -57,8 +66,7 @@
       "idearium/api/index.js -> cortex/core/raid",
       "idearium/api/index.js -> cortex/core/raid",
       "idearium/api/index.js -> cortex/core/raid",
-      "idearium/index.js -> intelligence/spatial/lattice.js",
-      "idearium/index.js -> intelligence/cfr/ledger"
+      "idearium/api/index.js -> cortex/core/raid"
     ]
   }
 }

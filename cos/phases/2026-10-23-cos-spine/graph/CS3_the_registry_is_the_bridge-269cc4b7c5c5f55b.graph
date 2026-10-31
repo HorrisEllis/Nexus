@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792880100796
+exported_at: 1793421631194
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100796
-lastSeenAt: 1792880100796
+firstSeenAt: 1793421631194
+lastSeenAt: 1793421631194
 fingerprint: null
 payload:
   for: CS3_the_registry_is_the_bridge
@@ -115,6 +115,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
       - docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
       - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     upstream:
@@ -145,13 +146,23 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG10_categories
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG11_category_manager_ui
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
       - docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG23_allocation_and_balance
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
       - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
       - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
       - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
+      - docs/2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
       - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
@@ -171,9 +182,9 @@ payload:
         depends on (4): CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake,
         DB16_a_registry_for_each_system · all upstream 18
       - >-
-        needed by (5): CS4_every_system_a_compartment, CS10_hats_bound_to_the_compartment,
-        MG1_loom_on_its_registry_spine, SV3_on_the_cos_bus, GD8_guardian_in_its_compartment · all
-        downstream 15
+        needed by (6): CS4_every_system_a_compartment, CS10_hats_bound_to_the_compartment,
+        MG1_loom_on_its_registry_spine, MG14_live_thumbnails, SV3_on_the_cos_bus,
+        GD8_guardian_in_its_compartment · all downstream 25
       - >-
         same files as CS1_a_version_is_a_system_state with no order between them:
         idearium/repo/snapshot.js

@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131601
+exported_at: 1793425834355
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131601
-lastSeenAt: 1793383131601
+firstSeenAt: 1793425834355
+lastSeenAt: 1793425834355
 fingerprint: null
 payload:
   for: MG25_storage_manager
@@ -35,7 +35,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 5
+    layer: 4
     deps:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
       - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
@@ -47,15 +47,11 @@ payload:
       - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
       - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
       - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN2_run_in_parallel
-      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
-      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
-      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
       - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
-      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
-      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
       - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
@@ -65,14 +61,10 @@ payload:
     downstream:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
     blockedBy:
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
       - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
       - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
     unlocks: []
     conflicts:
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
-        files:
-          - cos/manager/contract.json
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
         files:
           - cos/manager/contract.json
@@ -99,14 +91,11 @@ payload:
           - cos/manager/contract.json
     dangling: []
     lines:
-      - >-
-        layer 5 · blocked by MG15_the_supervisor_in_cos, MG3_the_state_manager,
-        SV2_into_a_compartment
+      - layer 4 · blocked by MG3_the_state_manager, SV2_into_a_compartment
       - >-
         depends on (3): MG15_the_supervisor_in_cos, MG3_the_state_manager, SV2_into_a_compartment ·
-        all upstream 19
+        all upstream 15
       - 'needed by (1): MG27_state_and_resource_screens'
-      - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'
       - >-
         same files as MG18_the_supervisor_screen with no order between them:
         cos/manager/contract.json
@@ -115,7 +104,10 @@ payload:
       - >-
         same files as MG22_template_and_archetype_builder with no order between them:
         cos/manager/contract.json
-      - … and 4 more phases sharing its files without an order
+      - >-
+        same files as MG23_allocation_and_balance with no order between them:
+        cos/manager/contract.json
+      - … and 3 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
         kind: declared

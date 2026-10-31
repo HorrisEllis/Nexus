@@ -97,7 +97,7 @@ function buildGigPrompt({ profile, offer, extra = '' } = {}) {
     'Write ONE Fiverr gig for the seller described below. Output ONLY a JSON object, no prose before or after it.',
     `What the gig offers (the seller's own words): ${what}`,
     'The JSON shape, exactly:',
-    '{"title": "I will …", "category": "…", "subcategory": "…", "tags": ["…"], "description": "…",',
+    '{"title": "I will …", "category": "…", "subcategory": "…", "serviceType": "… (only if the subcategory asks for one)", "tags": ["…"], "description": "…",',
     ' "packages": {"basic": {"name": "…", "description": "…", "deliveryDays": 3, "revisions": 1, "price": 30},',
     '              "standard": {…same keys…}, "premium": {…same keys…}},',
     ' "faq": [{"question": "…", "answer": "…"}], "requirements": ["…"]}',
@@ -181,13 +181,28 @@ function parseGig(text) {
   const requirements = (Array.isArray(raw.requirements) ? raw.requirements : []).map(r => _clip(typeof r === 'string' ? r : r && (r.question || r.text), LIMITS.requirement, 'a buyer question', warnings)).filter(Boolean);
   if (requirements.length > LIMITS.requirements) { warnings.push(`${requirements.length} buyer questions; kept ${LIMITS.requirements}`); requirements.length = LIMITS.requirements; }
 
-  const gig = { title, category: String(raw.category || '').trim(), subcategory: String(raw.subcategory || '').trim(), tags, description, packages, faq, requirements };
+  // 2026-10-30 GT5 — James: "then we need the services". SELECT A SERVICE TYPE, shown after the subcategory: kept as written, never guessed
+  const serviceType = String(raw.serviceType || raw.service_type || '').trim();
+  // 2026-10-30 GT6 — James: "the bullets for each tab for each catagory". Gig metadata as the page names it: { "<TAB>": ["value", …] }
+  const metadata = _metadata(raw.metadata, warnings);
+  const gig = { title, category: String(raw.category || '').trim(), subcategory: String(raw.subcategory || '').trim(), ...(serviceType ? { serviceType } : {}), ...(Object.keys(metadata).length ? { metadata } : {}), tags, description, packages, faq, requirements };
   return { ok: true, gig, warnings };
 }
 
 // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." Fiverr's package rows (Number of APIs integrated, Data Syncing …) differ by
 // subcategory, so they are data in the gig, never code: features: { "<the row label as Fiverr shows it>": value }. A number or text picks that
 // option in the row's dropdown; yes/no (true/false) ticks or clears the row's checkbox. A row the page shows and the gig lacks is listed back.
+// GT6 — { tab: value | [values] } → { tab: [values] }; the tab's limit is the page's to say (the fill keeps the first N), never assumed here
+function _metadata(raw, warnings) {
+  if (raw == null || raw === '') return {};
+  if (typeof raw !== 'object' || Array.isArray(raw)) { warnings.push('metadata is not "TAB: [values]" pairs; ignored'); return {}; }
+  const out = {};
+  for (const [tab, v] of Object.entries(raw)) {
+    const vals = (Array.isArray(v) ? v : [v]).map(x => String(x == null ? '' : x).trim()).filter(Boolean);
+    const t = String(tab).replace(/\*/g, '').trim(); if (t && vals.length) out[t] = vals;
+  }
+  return out;
+}
 function _features(raw, tier, warnings) {
   if (raw == null || raw === '') return {};
   if (typeof raw !== 'object' || Array.isArray(raw)) { warnings.push(`the ${tier} features are not "row label: value" pairs; ignored`); return {}; }
@@ -209,6 +224,8 @@ function gigParts(gig) {
   if (!gig) return [];
   const out = [{ key: 'title', label: 'Gig title', text: gig.title }];
   if (gig.category) out.push({ key: 'category', label: 'Category', text: gig.subcategory ? `${gig.category} › ${gig.subcategory}` : gig.category });
+  if (gig.serviceType) out.push({ key: 'serviceType', label: 'Service type', text: gig.serviceType });   // GT5
+  if (gig.metadata) out.push({ key: 'metadata', label: 'Gig metadata', text: Object.entries(gig.metadata).map(([t, v]) => `${t}: ${v.join(', ')}`).join(' · ') });   // GT6
   if (gig.tags && gig.tags.length) out.push({ key: 'tags', label: 'Search tags', text: gig.tags.join(', ') });
   for (const t of TIERS) {
     const p = gig.packages && gig.packages[t];
@@ -374,6 +391,8 @@ function gigTemplate() {
     `title: "I will "        # starts with "I will", at most ${L.title} characters, the words a buyer would search for`,
     'category: ""',
     'subcategory: ""',
+    'serviceType: ""        # SELECT A SERVICE TYPE, when your subcategory shows one (as the page words it); empty = left for you',
+    'metadata: {}           # Gig metadata, tab by tab as the page names them: { "PROGRAMMING LANGUAGE": ["JavaScript"], "FRONTEND FRAMEWORK": ["React", "Vue.js"] }',
     `tags: []                # at most ${L.tags} tags, each at most ${L.tag} characters, lowercase, no #`,
     `description: |          # at most ${L.description} characters: what the buyer gets, how it works, why it is reliable`,
     '  Write the description here. Keep the two-space indent on every line.',

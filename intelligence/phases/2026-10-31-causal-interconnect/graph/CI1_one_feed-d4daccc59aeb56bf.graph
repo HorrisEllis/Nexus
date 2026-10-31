@@ -1,0 +1,276 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CI1_one_feed:d4daccc59aeb56bf
+type: graph
+id: phase:CI1_one_feed:d4daccc59aeb56bf
+context: dependency graph of phase CI1_one_feed
+intent: null
+summary: 29 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793422837072
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793422837072
+lastSeenAt: 1793422837072
+fingerprint: null
+payload:
+  for: CI1_one_feed
+  kind: phase
+  repo: null
+  hash: d4daccc59aeb56bf
+  nodes:
+    - path: intelligence/causal-bridge.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/server.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-causal-bridge.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/cfr/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/intuition-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mastermind-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-config-governance.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dynamic-tension.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-cfr-consolidation.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/adversarial.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/compound.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/delta.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/graph.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/sigma.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/intuition.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/mastermind.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: intelligence/cfr/ledger.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+    - from: intelligence/cfr/ledger.js
+      to: intelligence/cfr/delta.js
+      kind: requires
+    - from: intelligence/cfr/ledger.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: intelligence/cfr/ledger.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/cfr/ledger.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/cfr/ledger.js
+      to: intelligence/causal/compound.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/intuition.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/mastermind.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/gap/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: idearium/index.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: intelligence/cfr/index.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: tests/modules/test-config-governance.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: tests/modules/test-dynamic-tension.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: tests/modules/test-guardian-cfr-consolidation.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: tests/modules/intuition-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/mastermind-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: intelligence/routes.js
+      kind: requires
+  crossings:
+    - from: intelligence/cfr/ledger.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: idearium/index.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D0_interconnected
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D1_one_graph_cfr_builds_rfr2_reads
+    dependents:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI2_one_graph_for_queries_and_chains
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI5_seen_and_asked
+    upstream:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D0_interconnected
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D1_one_graph_cfr_builds_rfr2_reads
+    downstream:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI2_one_graph_for_queries_and_chains
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI4_learning_from_both
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI5_seen_and_asked
+    blockedBy:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D0_interconnected
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D1_one_graph_cfr_builds_rfr2_reads
+    unlocks:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI2_one_graph_for_queries_and_chains
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by CI_D0_interconnected, CI_D1_one_graph_cfr_builds_rfr2_reads
+      - 'depends on (2): CI_D0_interconnected, CI_D1_one_graph_cfr_builds_rfr2_reads'
+      - >-
+        needed by (3): CI2_one_graph_for_queries_and_chains, CI3_the_measures_chained,
+        CI5_seen_and_asked · all downstream 4 · finishing it unlocks
+        CI2_one_graph_for_queries_and_chains, CI3_the_measures_chained
+    edges:
+      - from: docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D0_interconnected
+        kind: declared
+      - from: docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D1_one_graph_cfr_builds_rfr2_reads
+        kind: declared

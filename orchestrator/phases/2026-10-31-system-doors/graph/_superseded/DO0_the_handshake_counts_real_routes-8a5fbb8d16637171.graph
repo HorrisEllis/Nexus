@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DO0_the_handshake_counts_real_routes:8a5fbb8d16637171
+type: graph
+id: phase:DO0_the_handshake_counts_real_routes:8a5fbb8d16637171
+context: dependency graph of phase DO0_the_handshake_counts_real_routes
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793419906976
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419906976
+lastSeenAt: 1793419906976
+fingerprint: null
+payload:
+  for: DO0_the_handshake_counts_real_routes
+  kind: phase
+  repo: null
+  hash: 8a5fbb8d16637171
+  nodes:
+    - path: orchestrator/lib/contract-handshake.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-contract-handshake-routes.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: orchestrator/lib/peer-relay.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/lib/peer-relay.js
+      to: orchestrator/lib/contract-handshake.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/contract-handshake.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO1_idearium_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
+    upstream: []
+    downstream:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO1_idearium_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO4_boot_js_retired
+      - docs/2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (3): DO1_idearium_door, DO3_cortex_door, DO5_clear_glass_door · all downstream 4'
+    edges: []

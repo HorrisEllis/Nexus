@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793386281608
+exported_at: 1793402129264
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793386281608
-lastSeenAt: 1793386281608
+firstSeenAt: 1793402129264
+lastSeenAt: 1793402129264
 fingerprint: null
 payload:
   for: KB4_gates_on_macro_steps
@@ -225,6 +225,9 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
       - docs/2026-10-28-gated-flows-phasemap.spec::KB5_keys_in_macros_and_automation
       - docs/2026-10-28-gated-flows-phasemap.spec::KB6_bundled_nodes_upgrade
       - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
@@ -240,6 +243,7 @@ payload:
       - docs/2026-10-29-pipelines-phasemap.spec::PL8_macro_steps_gated_on_elements
       - docs/2026-10-29-pipelines-phasemap.spec::PL9_macros_workflows_pipelines_linked
       - docs/2026-10-29-pipelines-phasemap.spec::PN3_the_editor_picks_from_clear_glass_and_files
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD5_the_dom_map_before_the_fill
     blockedBy:
       - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
       - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
@@ -259,7 +263,7 @@ payload:
       - >-
         needed by (6): KB5_keys_in_macros_and_automation, KB6_bundled_nodes_upgrade,
         GM1_the_fill_menu_model, GG1_every_part_gated, AP1_gig_features,
-        PL8_macro_steps_gated_on_elements · all downstream 27 · finishing it unlocks
+        PL8_macro_steps_gated_on_elements · all downstream 31 · finishing it unlocks
         KB5_keys_in_macros_and_automation, KB6_bundled_nodes_upgrade, GM1_the_fill_menu_model,
         GG1_every_part_gated, PL8_macro_steps_gated_on_elements
     edges:

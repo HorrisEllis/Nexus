@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-guardian-nodes-phasemap.spec::GND2_every_type_indexed
+type: phase
+id: docs_2026-10-31-guardian-nodes-phasemap.spec::GND2_every_type_indexed
+context: pipeline phase GND2_every_type_indexed of docs/2026-10-31-guardian-nodes-phasemap.spec
+intent: null
+summary: GND2_every_type_indexed (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793419908441
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419908441
+lastSeenAt: 1793419908441
+fingerprint: null
+payload:
+  id: GND2_every_type_indexed
+  map: docs/2026-10-31-guardian-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/node-registry.js
+  depends_on:
+    - GND1_the_audit_on_his_machine
+  blocks:
+    - MOD-GN-INDEX
+  spec: guardian/spec/guardian-nodes.spec
+  graph: 80802db4bf983182

@@ -461,7 +461,7 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
       } catch (_) {}
 
       const commits = [];
-      const commitsNote = 'not built — no Versionium commit-tracking implementation exists in this tree (confirmed by grep; only docs/specs/VERSIONIUM.spec.md, no .js source)';
+      const commitsNote = 'not built — no Versionium commit-tracking implementation exists in this tree (confirmed by grep; only docs/specs/VERSIONIUM.spec, no .js source)';
 
       const labs = [];
       const labsNote = 'not built — no LabSession tracking matching this spec exists (cos/playground/llm-lab.js and eravos edm-lab are unrelated systems)';

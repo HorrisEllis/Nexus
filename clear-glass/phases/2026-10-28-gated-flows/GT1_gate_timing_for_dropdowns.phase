@@ -7,18 +7,18 @@ intent: null
 summary: GT1_gate_timing_for_dropdowns (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793386281633
+exported_at: 1793402929598
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793386281633
-lastSeenAt: 1793386281633
+firstSeenAt: 1793402929598
+lastSeenAt: 1793402929598
 fingerprint: null
 payload:
   id: GT1_gate_timing_for_dropdowns
   map: docs/2026-10-28-gated-flows-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: BUILT 0.60.318
   files:
     - clear-glass/src/page/element-gate.js
     - clear-glass/src/ipc/bridge.js

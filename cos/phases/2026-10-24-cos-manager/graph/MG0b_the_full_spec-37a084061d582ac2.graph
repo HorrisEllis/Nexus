@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131438
+exported_at: 1793426750232
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131438
-lastSeenAt: 1793383131438
+firstSeenAt: 1793426750232
+lastSeenAt: 1793426750232
 fingerprint: null
 payload:
   for: MG0b_the_full_spec
@@ -47,20 +47,32 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
       - docs/2026-10-24-cos-manager-phasemap.spec::MG6_settings_by_template_and_type
       - docs/2026-10-24-cos-manager-phasemap.spec::MG10_categories
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
     upstream:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
     downstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
       - docs/2026-10-24-cos-manager-phasemap.spec::MG10_categories
       - docs/2026-10-24-cos-manager-phasemap.spec::MG11_category_manager_ui
       - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
       - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
       - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
       - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17b_registry_reads_the_declarations
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
       - docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
@@ -89,16 +101,18 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
     unlocks:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
     conflicts: []
     dangling: []
     lines:
       - layer 1 · blocked by MG_D0_order
       - 'depends on (1): MG_D0_order'
       - >-
-        needed by (8): MG1_loom_on_its_registry_spine, MG3_the_state_manager,
+        needed by (9): MG1_loom_on_its_registry_spine, MG3_the_state_manager,
         MG5_browsers_and_editors, MG6_settings_by_template_and_type, MG10_categories,
-        MG15_the_supervisor_in_cos, MG18_the_supervisor_screen, MG19_the_spec_bundle · all
-        downstream 32 · finishing it unlocks MG5_browsers_and_editors
+        MG15a_every_system_declares_its_process, MG15_the_supervisor_in_cos,
+        MG18_the_supervisor_screen, MG19_the_spec_bundle · all downstream 43 · finishing it unlocks
+        MG5_browsers_and_editors, MG15a_every_system_declares_its_process
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
         kind: declared

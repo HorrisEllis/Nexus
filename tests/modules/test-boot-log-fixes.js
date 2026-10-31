@@ -31,7 +31,7 @@ const DIAG = fs.readFileSync(path.join(ROOT, 'diagnostic/nexus-diagnostic.js'), 
 const CLI  = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'diagnose.js'), 'utf8');
 const LEDG = fs.readFileSync(path.join(ROOT, 'lib/component-ledger.js'), 'utf8');
 const NC   = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'nexus-connect.js'), 'utf8');
-const AP   = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
+const AP   = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.retired-0.60.330.js'), 'utf8');
 
 // ── BUG 1: the diagnostic service never served /health ─────────────────────
 test('BL-001', 'CRITICAL: diagnostic serves /health — the route autopilot has ALWAYS gated it on', () => {
@@ -73,7 +73,8 @@ test('BL-004', 'an unknown diagnostic target now RUNS cross-system checks instea
 
 test('BL-005', 'the generic port check reads autopilot\'s OWN kernel table — no second topology map to drift', () => {
   const fn = CLI.slice(CLI.indexOf('async function diagPortsFor'), CLI.indexOf('if (TARGET === \'all\')'));
-  assert.ok(/ALL_KERNELS/.test(fn), 'must source ports from the supervisor, not a hardcoded copy (§10.3)');
+  // 0.60.330 MG17 — the supervisor's list is system-registry kernels() now (since MG17b each system's compartment.json, what COS boots)
+  assert.ok(/ALL_KERNELS|system-registry\.js'\)\)\.kernels\(\)/.test(fn), 'must source ports from the supervisor, not a hardcoded copy (§10.3)');
   assert.ok(/is NOT SERVED/.test(fn),
     'and must name the most likely cause when a port is open but health does not answer — which is exactly what happened here');
 });

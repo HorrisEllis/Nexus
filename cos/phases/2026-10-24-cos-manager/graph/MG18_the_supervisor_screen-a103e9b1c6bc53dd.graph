@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131560
+exported_at: 1793426750321
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131560
-lastSeenAt: 1793383131560
+firstSeenAt: 1793426750321
+lastSeenAt: 1793426750321
 fingerprint: null
 payload:
   for: MG18_the_supervisor_screen
@@ -65,13 +65,9 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D10_the_cockpit_has_its_own_server
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D11_idearium_look_forked
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D12_pages_in_frames_bus_declared
     unlocks:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
     conflicts:
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
-        files:
-          - cos/manager/contract.json
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
         files:
           - cos/manager/contract.json
@@ -91,8 +87,7 @@ payload:
     lines:
       - >-
         layer 2 · blocked by MG0b_the_full_spec, MG_D1_ui_isolated_per_component,
-        MG_D10_the_cockpit_has_its_own_server, MG_D11_idearium_look_forked,
-        MG_D12_pages_in_frames_bus_declared
+        MG_D10_the_cockpit_has_its_own_server, MG_D11_idearium_look_forked
       - >-
         depends on (5): MG0b_the_full_spec, MG_D1_ui_isolated_per_component,
         MG_D10_the_cockpit_has_its_own_server, MG_D11_idearium_look_forked,
@@ -101,14 +96,15 @@ payload:
         needed by (4): MG21_the_add_screen, MG22_template_and_archetype_builder,
         MG27_state_and_resource_screens, MG29_the_cockpit · all downstream 5 · finishing it unlocks
         MG29_the_cockpit
-      - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'
       - 'same files as MG20_add_deploy_connect with no order between them: cos/manager/contract.json'
       - >-
         same files as MG23_allocation_and_balance with no order between them:
         cos/manager/contract.json
       - 'same files as MG24_network_manager with no order between them: cos/manager/contract.json'
       - 'same files as MG25_storage_manager with no order between them: cos/manager/contract.json'
-      - … and 1 more phases sharing its files without an order
+      - >-
+        same files as MG26_branch_benchmark_merge with no order between them:
+        cos/manager/contract.json
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
         kind: declared

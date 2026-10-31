@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131586
+exported_at: 1793425834343
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131586
-lastSeenAt: 1793383131586
+firstSeenAt: 1793425834343
+lastSeenAt: 1793425834343
 fingerprint: null
 payload:
   for: MG22_template_and_archetype_builder
@@ -67,9 +67,6 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
     unlocks: []
     conflicts:
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
-        files:
-          - cos/manager/contract.json
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
         files:
           - cos/manager/contract.json
@@ -101,14 +98,14 @@ payload:
         depends on (3): MG5_browsers_and_editors, MG8_the_factory, MG18_the_supervisor_screen · all
         upstream 18
       - 'needed by (0): —'
-      - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'
       - 'same files as MG20_add_deploy_connect with no order between them: cos/manager/contract.json'
       - 'same files as MG21_the_add_screen with no order between them: cos/manager/contract.json'
       - >-
         same files as MG23_allocation_and_balance with no order between them:
         cos/manager/contract.json
       - 'same files as MG24_network_manager with no order between them: cos/manager/contract.json'
-      - … and 4 more phases sharing its files without an order
+      - 'same files as MG25_storage_manager with no order between them: cos/manager/contract.json'
+      - … and 3 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
         kind: declared

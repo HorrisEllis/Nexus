@@ -1,0 +1,88 @@
+envelope: 1
+uuid: nexus-export-failure_mode-7d702538-4547-474c-bd2f-1b43d0f0c224
+type: failure_mode
+id: 7d702538-4547-474c-bd2f-1b43d0f0c224
+context: real failure_modes row, enriched with real causal chain + sigma delta by failure-mode-forensics.js
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1793426882155
+source: cortex.self-heal.failure-mode-forensics
+occurrences: 1
+firstSeenAt: 1793426882155
+lastSeenAt: 1793426882155
+fingerprint: null
+payload:
+  uuid: 7d702538-4547-474c-bd2f-1b43d0f0c224
+  faultClass: test-failed
+  gapUuid: null
+  friction: null
+  enteredAt: 1793426882154
+  source: lib/cos-run.js
+  signature: test-failed::demo:tests/x.test.js
+  where: demo:tests/x.test.js
+  system: cos
+  summary: 'AssertionError [ERR_ASSERTION]: 1 == 2'
+  anchor: null
+  evidence:
+    mode: test-failed
+    file: tests/x.test.js
+    exitCode: 1
+    debug:
+      file: tests/x.test.js
+      exitCode: 1
+      error: 'AssertionError [ERR_ASSERTION]: 1 == 2'
+      errorLines:
+        - 'AssertionError [ERR_ASSERTION]: 1 == 2'
+      frames:
+        - file: tests/x.test.js
+          line: 3
+          col: 8
+          fn: Object.<anonymous>
+          lang: js
+          inRepo: true
+          excerpt: null
+      outside: 0
+      timedOut: false
+      hint: null
+    repoUuid: repo-1
+  occurrences: 1
+  firstSeenAt: 1793426882154
+  lastSeenAt: 1793426882154
+  status: open
+  via: intake
+  cfrAtEntry:
+    coherence: 0.6
+    friction: 0.2
+    resonance: 0.3
+    entropy: 0.2
+    regime: stable
+    updatedAt: 1793426881888
+    at: 1793426882154
+  viewAtEntry:
+    label: view — what was on screen (Nerve); never evidence of a cause
+    regime: null
+    windows: []
+  env:
+    nexus: 0.60.330
+    node: v22.23.4
+    platform: linux
+  id: 82292d5d-de92-4ffa-bcfe-d4a932eaccca
+  root: null
+  conditions: []
+  siblingDanglingHooks: []
+  sigmaBefore: null
+  sigmaAtEntry: null
+  sigmaDelta: null
+  compound:
+    status: unavailable
+    reason: 'no anchor: gap carries no (ledgerSystem, entryUuid) pair'
+    class: null
+    factors: null
+    sigmaProgression: null
+    deltaProgression: null
+    peakSigma: null
+    rootUuid: null
+    anchor: null
+  enrichedAt: 1793426882155

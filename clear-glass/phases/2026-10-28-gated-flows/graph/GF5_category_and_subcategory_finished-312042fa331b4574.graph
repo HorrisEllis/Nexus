@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793386281628
+exported_at: 1793402129292
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793386281628
-lastSeenAt: 1793386281628
+firstSeenAt: 1793402129292
+lastSeenAt: 1793402129292
 fingerprint: null
 payload:
   for: GF5_category_and_subcategory_finished
@@ -171,6 +171,10 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD5_the_dom_map_before_the_fill
     blockedBy: []
     unlocks:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
@@ -180,7 +184,7 @@ payload:
       - layer 11
       - 'depends on (2): GF2_every_editor_page_known, GG1_every_part_gated · all upstream 17'
       - >-
-        needed by (1): GT1_gate_timing_for_dropdowns · all downstream 3 · finishing it unlocks
+        needed by (1): GT1_gate_timing_for_dropdowns · all downstream 7 · finishing it unlocks
         GT1_gate_timing_for_dropdowns
     edges:
       - from: docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known

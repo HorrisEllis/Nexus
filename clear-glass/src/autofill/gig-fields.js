@@ -17,6 +17,8 @@
  *                              data-cg-part=<kind>.question / <kind>.answer → { found, why }
  *   valueAtScript({ selector | cgId, key })  what a box shows now, marked data-cg-part=<key> → { found, value }   (GG1, a part's gate)
  *   shownScript(text)          the page shows this text (an FAQ or a question once added) → boolean
+ *   metaTabsScript()           Gig metadata's tabs, marked data-cg-meta-tab=<i> → { found, tabs: [{ name, required, open }] }   (GT6)
+ *   metaPanelScript()          the open tab's choices, marked data-cg-meta-opt=<j> → { found, kind, options, limit, count, counter } (GT6)
  * Fiverr's other editor pages are not on record (gig-pages.js); the words matched here are the editor's own labels, a reading to confirm on
  * his machine. What does not match falls to his site keys (bridge _gigSiteKey), then to "point at it".
  */
@@ -125,4 +127,56 @@ function readsBack(shown, value) {
   return n(shown).includes(v.slice(0, 60));
 }
 
-module.exports = { MODULE_ID, VERSION, HIS_BUTTONS, SECTIONS, fieldScript, readScript, clickButtonScript, listBoxesScript, valueAtScript, shownScript, readsBack };
+// 2026-10-30 GT6 — James: "then the bullets for each tab for each catagory." Fiverr's Gig metadata is a list of tabs (PROGRAMMING LANGUAGE*,
+// FRONTEND FRAMEWORK …) beside a panel of choices for the open tab: radio buttons (one) or checkboxes (up to a limit, a counter "3 / 5").
+// Both are found under the words "Gig metadata", never by a class name; the tab list is the visible text in the section that is not a
+// choice's label. Read only, except the marks for the driver: data-cg-meta-tab=<i> on each tab, data-cg-meta-opt=<j> on each choice.
+const META_PRELUDE = `var re = /gig metadata/i;
+  function vis(el){ if (!el) return false; var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+  function txt(el){ return String(el.innerText || el.textContent || '').replace(/\\s+/g, ' ').trim(); }
+  function name(t){ return String(t || '').replace(/\\*/g, '').replace(/\\s+/g, ' ').trim(); }
+  var head = Array.prototype.find.call(document.querySelectorAll('h1,h2,h3,h4,h5,h6,label,legend,p,span,div,strong,b'), function(e){ return vis(e) && !e.children.length && re.test(txt(e)); });
+  var root = null;
+  for (var p = head && head.parentElement, i = 0; p && i < 6; p = p.parentElement, i++) if (p.querySelector('input[type="checkbox"],input[type="radio"],[role="checkbox"],[role="radio"]')) { root = p; break; }
+  function boxes(){ return Array.prototype.filter.call(root.querySelectorAll('input[type="checkbox"],input[type="radio"],[role="checkbox"],[role="radio"]'), function(b){ return vis(b) || vis(b.closest('label') || b.parentElement); }); }
+  function labelOf(b){ return b.closest('label') || (b.id && document.querySelector('label[for="' + b.id + '"]')) || b.parentElement; }
+  function isOn(b){ return b.tagName === 'INPUT' ? !!b.checked : b.getAttribute('aria-checked') === 'true'; }`;
+
+// metaTabsScript() → { found, tabs: [{ name, required, open }], why } — each tab marked data-cg-meta-tab=<i>
+function metaTabsScript() {
+  return `(function(){ ${META_PRELUDE}
+  if (!head) return { found: false, why: 'no "Gig metadata" section on the page' };
+  if (!root) return { found: false, why: 'a "Gig metadata" heading with no choices under it' };
+  document.querySelectorAll('[data-cg-meta-tab]').forEach(function(e){ e.removeAttribute('data-cg-meta-tab'); });
+  var inChoice = function(el){ return boxes().some(function(b){ var l = labelOf(b); return l && (l === el || l.contains(el) || el.contains(b)); }); };
+  var seen = {}, tabs = [];
+  Array.prototype.forEach.call(root.querySelectorAll('li,button,[role="tab"],a,div,span,p'), function(el){
+    if (!vis(el) || el === head || el.contains(head) || inChoice(el)) return;
+    var t = txt(el); if (!t || t.length > 60 || re.test(t) || /\\d+\\s*\\/\\s*\\d+/.test(t) || /select up to|choose up to/i.test(t)) return;
+    if (Array.prototype.some.call(el.children, function(c){ return vis(c) && txt(c) === t; })) return;   // the innermost element with this text
+    if (Array.prototype.some.call(el.querySelectorAll('*'), function(c){ return vis(c) && txt(c) && txt(c) !== t && c.children.length === 0; })) return;   // one label, not a group
+    var n = name(t); if (!n || seen[n.toLowerCase()]) return;
+    if (t !== t.toUpperCase() && !el.closest('[role="tablist"],ul,ol,nav')) return;   // tab names are shown in capitals, or sit in a list
+    seen[n.toLowerCase()] = 1;
+    var open = el.getAttribute('aria-selected') === 'true' || /(^|[\\s_-])(active|selected|current)([\\s_-]|$)/i.test(String(el.className || '')) || /(^|[\\s_-])(active|selected|current)([\\s_-]|$)/i.test(String((el.parentElement || {}).className || ''));
+    el.setAttribute('data-cg-meta-tab', String(tabs.length)); tabs.push({ name: n, required: /\\*/.test(t), open: open });
+  });
+  return { found: true, tabs: tabs };
+})()`;
+}
+
+// metaPanelScript() → { found, kind: 'radio'|'checkbox', options: [{ label, checked }], limit, count, counter } — each choice's label marked
+// data-cg-meta-opt=<j>. limit: the counter's "/ N", else "up to N" in the section, else 1 for radio buttons, else null (none said).
+function metaPanelScript() {
+  return `(function(){ ${META_PRELUDE}
+  if (!root) return { found: false, why: head ? 'a "Gig metadata" heading with no choices under it' : 'no "Gig metadata" section on the page' };
+  document.querySelectorAll('[data-cg-meta-opt]').forEach(function(e){ e.removeAttribute('data-cg-meta-opt'); });
+  var bs = boxes(), radio = bs.length && bs.every(function(b){ return b.type === 'radio' || b.getAttribute('role') === 'radio'; });
+  var options = bs.map(function(b, j){ var l = labelOf(b); var t = name(txt(l) || b.value || b.getAttribute('aria-label') || ''); (vis(l) ? l : b).setAttribute('data-cg-meta-opt', String(j)); return { label: t, checked: isOn(b) }; });
+  var all = txt(root), c = /(\\d+)\\s*\\/\\s*(\\d+)/.exec(all), u = /(?:select|choose) up to (\\d+)/i.exec(all);
+  var limit = c ? Number(c[2]) : u ? Number(u[1]) : radio ? 1 : null;
+  return { found: true, kind: radio ? 'radio' : 'checkbox', options: options, limit: limit, count: options.filter(function(o){ return o.checked; }).length, counter: c ? c[0].replace(/\\s+/g, ' ') : null };
+})()`;
+}
+
+module.exports = { MODULE_ID, VERSION, HIS_BUTTONS, SECTIONS, fieldScript, readScript, clickButtonScript, listBoxesScript, valueAtScript, shownScript, readsBack, metaTabsScript, metaPanelScript };

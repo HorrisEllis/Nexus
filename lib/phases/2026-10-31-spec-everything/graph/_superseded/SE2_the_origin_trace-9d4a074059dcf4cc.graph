@@ -1,0 +1,70 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SE2_the_origin_trace:9d4a074059dcf4cc
+type: graph
+id: phase:SE2_the_origin_trace:9d4a074059dcf4cc
+context: dependency graph of phase SE2_the_origin_trace
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793419905505
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419905505
+lastSeenAt: 1793419905505
+fingerprint: null
+payload:
+  for: SE2_the_origin_trace
+  kind: phase
+  repo: null
+  hash: 9d4a074059dcf4cc
+  nodes:
+    - path: scripts/origin-trace.js
+      role: changes
+      exists: false
+      system: null
+    - path: scripts/systems-report.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-origin-trace.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE1_spec_ids_and_types
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D2_the_origin_is_the_skeleton
+    dependents:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE3_the_library_and_the_queue
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE6_the_library_on_screen
+    upstream:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE1_spec_ids_and_types
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D1_spec_ids_types_library_queue
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D2_the_origin_is_the_skeleton
+    downstream:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE3_the_library_and_the_queue
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE4_drafts_from_code
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE6_the_library_on_screen
+    blockedBy:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE1_spec_ids_and_types
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D2_the_origin_is_the_skeleton
+    unlocks:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE3_the_library_and_the_queue
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by SE1_spec_ids_and_types, SE_D2_the_origin_is_the_skeleton
+      - 'depends on (2): SE1_spec_ids_and_types, SE_D2_the_origin_is_the_skeleton · all upstream 3'
+      - >-
+        needed by (2): SE3_the_library_and_the_queue, SE6_the_library_on_screen · all downstream 3 ·
+        finishing it unlocks SE3_the_library_and_the_queue
+    edges:
+      - from: docs/2026-10-31-spec-everything-phasemap.spec::SE1_spec_ids_and_types
+        kind: declared
+      - from: docs/2026-10-31-spec-everything-phasemap.spec::SE_D2_the_origin_is_the_skeleton
+        kind: declared

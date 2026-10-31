@@ -3,7 +3,7 @@
 **Status:** update. Supersedes v1.0 (2026-07-09) for Parts 0–1; v1.0's Parts 2–3
 pushback and phase ordering are kept below as historical record, not rewritten.
 **Compiled:** 2026-09-13, from `.git` history, `idearium/spec/idearium.spec`,
-`idearium/spec/idearium.node-taxonomy.md`, the `loom/` maps, `docs/AXIOMS-v3.1.md`,
+`idearium/spec/idearium.node-taxonomy.spec`, the `loom/` maps, `docs/AXIOMS-v3.1.md`,
 and the dated phasemaps in `docs/` (2026-08-19 through 2026-09-13).
 **Governing law:** unchanged spine — §3.1 bottom-up, §1.1/§1.2/§1.3, AX-010/011/012 —
 plus AXIOMS v3.1's Group 0 (Truth & Reality) and the new §5.2/§17.10/§17.11 this
@@ -168,7 +168,7 @@ disagree badly:
 - **`idearium/spec/idearium.spec`** (v3.2.0/pkg 4.1.0) — the real one. Matches
   the code: idea-store, project-repo, lattice, queue-listener; 72 real,
   verified routes; phases `seed→...→complete`.
-- **`docs/specs/IDEARIUM.spec.md`** ("v9.0", last touched 2026-07-20, commit
+- **`docs/specs/IDEARIUM.spec`** ("v9.0", last touched 2026-07-20, commit
   `16502d7`) — describes `.map`/`.spec`/`.nex` file formats, a `NEX0` binary
   header, a miniworld manager, a revision manager, LAW_VIII/LAW_IX/§A-1–§A-4
   axioms not present anywhere else in this doc set, and 25 server routes none
@@ -178,7 +178,7 @@ disagree badly:
   named repeatedly this session: real-sounding, unwired, and — per §1.3 — not
   a valid description of anything in production.
 
-**Recommendation, not yet actioned:** mark `docs/specs/IDEARIUM.spec.md` as
+**Recommendation, not yet actioned:** mark `docs/specs/IDEARIUM.spec` as
 superseded/aspirational in its own header, or delete it, rather than let a
 future session treat it as ground truth. This phase map and
 `idearium/spec/idearium.spec` are the two documents that currently agree with
@@ -202,7 +202,7 @@ what runs.
 
 1. **Version drift**: `idearium/spec/idearium.spec`'s `meta.version` (3.2.0)
    vs `idearium/package.json` (4.1.0) — pick one, fix the other.
-2. **`docs/specs/IDEARIUM.spec.md`** — resolve per Part 3 (mark superseded or
+2. **`docs/specs/IDEARIUM.spec`** — resolve per Part 3 (mark superseded or
    delete); it is actively misleading in its current, un-flagged state.
 3. **RFR2 kernel** (`meta/rfr2/kernel/`) — still absent as of this pass;
    Phase 7 (repo compartment compress/decompress) stays blocked on it, exactly

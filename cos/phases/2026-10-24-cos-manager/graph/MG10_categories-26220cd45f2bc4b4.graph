@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131518
+exported_at: 1793426750284
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131518
-lastSeenAt: 1793383131518
+firstSeenAt: 1793426750284
+lastSeenAt: 1793426750284
 fingerprint: null
 payload:
   for: MG10_categories
@@ -217,10 +217,16 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
       - docs/2026-10-24-cos-manager-phasemap.spec::MG6_settings_by_template_and_type
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D2_category_is_a_registry_record
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0d_layers
       - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
@@ -264,7 +270,7 @@ payload:
       - >-
         depends on (5): MG0b_the_full_spec, MG5_browsers_and_editors,
         MG6_settings_by_template_and_type, CS4_every_system_a_compartment,
-        MG_D2_category_is_a_registry_record · all upstream 42
+        MG_D2_category_is_a_registry_record · all upstream 48
       - 'needed by (1): MG11_category_manager_ui · all downstream 4'
       - >-
         same files as MG3_the_state_manager with no order between them: cos/manager/routes.js,

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-guardian-nodes-phasemap.spec::GND1_the_audit_on_his_machine
+type: phase
+id: docs_2026-10-31-guardian-nodes-phasemap.spec::GND1_the_audit_on_his_machine
+context: pipeline phase GND1_the_audit_on_his_machine of docs/2026-10-31-guardian-nodes-phasemap.spec
+intent: null
+summary: GND1_the_audit_on_his_machine (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793419908438
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419908438
+lastSeenAt: 1793419908438
+fingerprint: null
+payload:
+  id: GND1_the_audit_on_his_machine
+  map: docs/2026-10-31-guardian-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/node-audit.js
+    - guardian/server.js
+    - guardian/cli.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-guardian-node-audit.test.js
+  depends_on:
+    - GND_D0_files_are_the_truth
+  blocks:
+    - MOD-GN-AUDIT
+  spec: guardian/spec/guardian-nodes.spec
+  graph: b701b11270d5d14a

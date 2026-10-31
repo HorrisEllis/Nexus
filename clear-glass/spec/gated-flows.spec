@@ -657,6 +657,56 @@ spec:
       error_paths: ["index past the end → refused with the options read", "neither option nor index → the step says it needs one"]
       acceptance: ["in Clear Glass: his 'Fiverr gig - choose category' opens with SELECT A CATEGORY, {{category}}, auto in their fields; a step by Menu number 3 picks the third option"]
 
+    # 2026-10-30 GT4–GT6 — James, with the gig editor showing PROGRAMMING & TECH chosen, SELECT A SUBCATEGORY left, Copilot saying "Driver error
+    # [choose]: Element not found: [data-cg-choose="1"]", then SELECT A SERVICE TYPE and the Gig metadata tabs: "almost. more timing in between
+    # drop down menus. then we need the services, then the bullets for each tab for each catagory."
+    - id: MOD-GT4
+      name: dropdown-relocated-after-rerender
+      uuid: nexus-gated-flows-relocate-v1-0000-2026-1030-001
+      path: clear-glass/src/driver/index.js
+      phase: GT4_pace_between_dropdowns_and_find_again
+      description: >-
+        Root cause of his error: choose marks the dropdown it found (data-cg-choose=<n>) and uses that mark after its open wait; choosing the
+        category re-renders the section, the mark is gone, and the next choose fails "Element not found". Between two dropdowns the fill now
+        waits for the page to settle (the DOM quiet for settleMs, the next dropdown present), and choose finds its dropdown again by what it
+        shows (shows, column/row, or selector) whenever its mark is missing, before each open, pick and read back.
+      deps: [{ name: gate-timing-per-part }]
+      exports: ["choose: re-find by shows when the mark is gone", "betweenDropdownsMs (site key, default 1200) and a DOM-quiet wait"]
+      gate_pipeline: ["GATE-GT4-001: previous dropdown held", "GATE-GT4-002: DOM quiet", "GATE-GT4-003: re-find if the mark is gone"]
+      behavioral_contracts: ["the mark is a hint, never the only way to the element"]
+      error_paths: ["not found by mark or by what it shows → the error names both and the dropdowns the page has"]
+      acceptance: ["a fixture page that re-renders its dropdown section after the first choice: the second choose finds its dropdown and picks"]
+
+    - id: MOD-GT5
+      name: service-type
+      uuid: nexus-gated-flows-service-type-v1-0000-2026-1030-001
+      path: clear-glass/src/autofill/gig-pages.js
+      phase: GT5_service_type
+      description: "SELECT A SERVICE TYPE (shown after the subcategory) is a gig part: the gig file carries serviceType; the fill chooses it after the subcategory holds, gated; the chip (AF6) offers it."
+      deps: [{ name: dropdown-relocated-after-rerender }]
+      exports: ["gig part serviceType", "valueOf(gig, 'serviceType')"]
+      gate_pipeline: ["GATE-GT5-001: subcategory held", "GATE-GT5-002: option read back"]
+      behavioral_contracts: ["no service type in the gig → left, said, never guessed"]
+      error_paths: ["the option not in the list → refused with the options read"]
+      acceptance: ["his gig editor: after AI Development, the service type in the gig is chosen and read back"]
+
+    - id: MOD-GT6
+      name: gig-metadata-tabs
+      uuid: nexus-gated-flows-metadata-tabs-v1-0000-2026-1030-001
+      path: clear-glass/src/autofill/gig-fields.js
+      phase: GT6_gig_metadata_bullets_per_tab
+      description: >-
+        Gig metadata is a set of tabs per category (for Programming & Tech: PROGRAMMING LANGUAGE, one choice, radio; FRONTEND FRAMEWORK and
+        BACKEND FRAMEWORK, up to five, checkboxes; EXPERTISE). The gig file carries metadata as { <tab>: [values] } per category; the fill
+        opens each tab, ticks or picks each value by its label (DD1's checkbox fill, main 0.60.316), respects the tab's limit (0 / 5), and reads
+        each back. A value the tab does not offer is said with the tab's own list.
+      deps: [{ name: service-type }]
+      exports: ["gig part metadata: { [tab]: string[] }", "fill: tab by tab, value by value, gated"]
+      gate_pipeline: ["GATE-GT6-001: tab open", "GATE-GT6-002: within the tab's limit", "GATE-GT6-003: each value read back"]
+      behavioral_contracts: ["a required tab (marked *) left empty is said before the fill ends"]
+      error_paths: ["more values than the limit → the first N, the rest said"]
+      acceptance: ["his gig editor: JavaScript in PROGRAMMING LANGUAGE, three frontend frameworks ticked and read back, the counter 3 / 5"]
+
     # 2026-10-30 A11Y2 — James, with a screenshot of fiverr.com still in yellow-on-black links and the reset saying "Nothing on this page is named
     # as accessibility": "look at the accessability. needs to actually hook into the back end settings. looks lazy also."
     - id: MOD-A11Y2
@@ -701,3 +751,23 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node"
     - "per module: its acceptance lines, the UI ones in Clear Glass"
+
+# ── ADDENDUM 2026-10-30 (0.60.318) — MOD-GT1 and MOD-GT4 built ─────────────────────────────────────────────────────────────────────────
+# MOD-GT1: element-gate.js exports gateTiming(step, site) and backoffMs(timing, n); TIMING.text = today's, TIMING.choice = 8000/600/200, 2
+# retries, backoff 600 × 2^n capped 4000. bridge.js gated(key, doIt, check, retries, kind) reads it; each try is on the gate record (each).
+# MOD-GT4: driver/index.js choose: findScript(shows, reuse) re-run by ensureMark before each open and read-back; lost() names the mark, the
+# text and the page's dropdowns. element-gate.js quietScript(quietMs, capMs). Site key gates.betweenDropdownsMs (int, 0..15000, 1200).
+# The options scan excludes [id^="__cg_"] (Clear Glass's spotlight). Acceptance met: tests/modules/test-choose-refind-glass.test.js GR-01..07.
+
+# ── ADDENDUM 2026-10-30 (0.60.319) — MOD-GT5 built ────────────────────────────────────────────────────────────────────────────────────
+# gig-pages.js: PARTS.overview = [title, category, serviceType, tags]; valueOf(gig, 'serviceType'); serviceTypeScript(want) → { found, kind:
+# 'dropdown'|'radio', shown, options, checked, marked } (marks data-cg-service / data-cg-service-opt). gig.js parseGig keeps serviceType
+# (or service_type); gigParts and the template carry it; gig-menu offers it and apply() edits it. bridge.js _gigFill: the serviceType part
+# (choice gate), and "left for you" when the gig has none. Acceptance met: tests/modules/test-service-type-glass.test.js ST-01..05.
+
+# ── ADDENDUM 2026-10-30 (0.60.320) — MOD-GT6 built ────────────────────────────────────────────────────────────────────────────────────
+# gig-fields.js: metaTabsScript() → { found, tabs: [{ name, required, open }] } (marks data-cg-meta-tab); metaPanelScript() → { found, kind,
+# options: [{ label, checked }], limit, count, counter } (marks data-cg-meta-opt). gig.js parseGig keeps metadata { TAB: [values] } (a lone
+# value, a "*" in the name read as the name); gigParts, the template, gig-menu (one row "TAB: a, b; TAB: c") and apply() carry it. bridge.js
+# _gigMetadata(agentId, gig) → { filled, failed, over, left, gates, tabs }, from _gigFill on the Overview as r.metadata.
+# Acceptance met: tests/modules/test-gig-metadata-glass.test.js MD-01..06.

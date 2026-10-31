@@ -1053,7 +1053,7 @@ Not confirmed.
 
 4 other file(s).
 
-- other: `guardian/spec/agents-and-accounts.spec`, `guardian/spec/guardian.code-artifact.spec`, `guardian/spec/guardian.node-taxonomy.md`, `guardian/spec/guardian.spec`
+- other: `guardian/spec/agents-and-accounts.spec`, `guardian/spec/guardian.code-artifact.spec`, `guardian/spec/guardian.node-taxonomy.spec`, `guardian/spec/guardian.spec`
 
 <!-- generated:registry:end -->
 

@@ -1,0 +1,242 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SD2_reset_a_site:dad127e53f547abc
+type: graph
+id: phase:SD2_reset_a_site:dad127e53f547abc
+context: dependency graph of phase SD2_reset_a_site
+intent: null
+summary: 27 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793402130899
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793402130899
+lastSeenAt: 1793402130899
+fingerprint: null
+payload:
+  for: SD2_reset_a_site
+  kind: phase
+  repo: null
+  hash: dad127e53f547abc
+  nodes:
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-data/reset.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/adblock/lists.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/handler-registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/bridge-sources.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/host-import.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/kill-switch.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/ipc/handler-registry.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/screen-qa/detector.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/bridge-sources.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/kill-switch.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/host-import.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD_D1_reset_is_undoable
+    dependents:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD3_cookies_and_logins
+    upstream:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD_D1_reset_is_undoable
+    downstream:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD3_cookies_and_logins
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD4_history_as_a_full_page
+    blockedBy:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD_D1_reset_is_undoable
+    unlocks:
+      - docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD3_cookies_and_logins
+    conflicts:
+      - with: docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD0_his_machine_work_onto_main
+        files:
+          - clear-glass/src/ipc/bridge.js
+      - with: docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD5_the_dom_map_before_the_fill
+        files:
+          - clear-glass/src/ipc/bridge.js
+    dangling: []
+    lines:
+      - layer 1 · blocked by SD_D1_reset_is_undoable
+      - 'depends on (1): SD_D1_reset_is_undoable'
+      - >-
+        needed by (1): SD3_cookies_and_logins · all downstream 2 · finishing it unlocks
+        SD3_cookies_and_logins
+      - >-
+        same files as SD0_his_machine_work_onto_main with no order between them:
+        clear-glass/src/ipc/bridge.js
+      - >-
+        same files as SD5_the_dom_map_before_the_fill with no order between them:
+        clear-glass/src/ipc/bridge.js
+    edges:
+      - from: docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD_D1_reset_is_undoable
+        kind: declared

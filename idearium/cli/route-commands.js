@@ -803,6 +803,15 @@ export const SPEC = [
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/finish`, timeoutMs: 120000 }),
     print: (d, a, h) => { console.log(`${h.c.bold(d.name || '')} — ${d.open ? h.c.amber(`${d.open} open`) : h.c.green('nothing open')} · ${(d.stats || {}).components || 0} components · ${(d.stats || {}).wires || 0} wires`);
       for (const i of d.items || []) console.log(`  ${i.done ? h.c.green('✓') : h.c.amber('·')} ${i.id.padEnd(14)} ${i.say}${!i.done && i.cmd ? h.c.dim(`   → ${i.cmd}`) : ''}`); } },
+  // 0.60.328 MG15b — COS's supervisor (James: "lets do the orchastration. that needs to be done completely.")
+  { key: 'cos.ps', repo: false, usage: 'cos ps', about: 'every declared system as COS\'s supervisor sees it: state, pid, restarts, circuit',
+    req: () => ({ method: 'GET', path: '/api/cos/systems' }) },
+  { key: 'cos.act', repo: false, usage: 'cos <start|stop|restart|touch|reset-circuit> <system>', about: 'a person\'s act on one system, through COS\'s supervisor (ledgered before it happens)',
+    req: (a) => ({ method: 'POST', path: `/api/cos/systems/${encodeURIComponent(a.args[1] || '')}/${encodeURIComponent(a.args[0] || 'start')}`, body: { by: 'person' } }) },
+  { key: 'cos.boot', repo: false, usage: 'cos boot [all|core]', about: 'boot the declared systems phase by phase (core = the critical set, CS4a)',
+    req: (a) => ({ method: 'POST', path: '/api/cos/boot', timeoutMs: 120000, body: { set: a.args[0] || undefined, by: 'person' } }) },
+  { key: 'cos.ledger', repo: false, usage: 'cos ledger [system] [--limit n]', about: 'the supervisor\'s ledger: every spawn, crash, restart, refusal and stop, with why',
+    req: (a) => ({ method: 'GET', path: `/api/cos/ledger?limit=${Number(a.flags.limit) || 50}${a.args[0] ? `&system=${encodeURIComponent(a.args[0])}` : ''}` }) },
   { key: 'repo.spine', repo: true, usage: 'repo spine <repo> [--write] [--unknown] [--limit n]', about: 'the project\'s component registry as its spine: every component and every wire with its evidence (discovered by which adapter, declared, or unknown), and the drift against nexus.spine.json; --write writes it',
     req: (a) => (a.flags.write ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/spine`, body: {}, timeoutMs: 120000 } : { method: 'GET', path: `/api/repos/${a.repo.uuid}/spine${a.flags.limit ? `?limit=${parseInt(a.flags.limit, 10)}` : ''}`, timeoutMs: 120000 }),
     print: (d, a, h) => {

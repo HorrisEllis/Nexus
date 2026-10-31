@@ -9,6 +9,11 @@ stranger can check in this repository. **Nothing here is claimed without a point
 with an AI coder. The ideas, the architecture, the direction, and the calls about what is right are his; each entry
 says which part is which (docs/CLAUDE.md, "His decisions, quoted with their context").
 
+> **2026-10-31 — start at [`docs/JAMES-BROOKS.md`](JAMES-BROOKS.md).** James: "Make an undeniable document. I want credit
+> for it. Everything that's me." That page is the front door: credit stated plainly, a five-minute check, his INNOVATION
+> TOOLKIT (now kept whole in [`innovation-toolkit-main.md`](innovation-toolkit-main.md)) traced to the code it became,
+> and the numbers as of 2026-10-31. The table just below is kept as written; its numbers are from an earlier release.
+
 ## The work, in numbers you can check
 
 | What | Number | How to check |
@@ -1468,3 +1473,18 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
 - **Check it:** `node tests/modules/test-pipeline-gates.test.js` → 6 passed. In PG-04, a macro runs a workflow, which runs a pipeline,
   whose task runs a macro gated on a gate he made with the picker. The value is typed at the bottom of the chain, and the run shows up in
   the same store the Pipelines screen reads.
+
+### 2026-10-31 — 0.60.330: "Starting the mg-17" — his "lose nothing" caught what the spec missed
+- **His words:** "Starting the mg-17", after "lets do the orchastration. that needs to be done completely." The rules that decided it are
+  his: "map before build" and "nothing gets lost unless redundant" (docs/CLAUDE.md rules 1 and 5, AXIOMS §3.3 and §0.3).
+- **The call, against the alternative.** The coder's spec for the handover (MOD-MG-AUTOPILOT-HANDOVER, 2026-10-30) said: start COS's
+  manager, then exit. Mapping the phase again under his rules, before any code, found eight duties autopilot performed that the spec
+  never named. Two examples:
+  - the per-minute memory snapshot, which `lib/pressure-window.js` needs to name the system causing memory pressure;
+  - the circuit gap, which the fault taxonomy reads.
+  Built as specced, the handover would have dropped all eight without a sound. Under his rules they were kept, in lib, reached over
+  COS's routes.
+- **Check it:** `node tests/modules/test-autopilot-handover.test.js` → 6 passed.
+  - AH-04 reads the snapshot's keys out of the archived autopilot and asserts the new duty writes the same keys.
+  - The same test checks that one circuit-open line in COS's ledger gives exactly one gap.
+  - The record is `docs/2026-10-24-cos-manager-phasemap.spec` MG_D15.

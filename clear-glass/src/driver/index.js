@@ -751,7 +751,9 @@ class ClearDriver {
     if (option === undefined || option === null || option === '') throw new Error('choose requires option');
     if (!selector && !column && !showsText) throw new Error('choose requires selector, column with row or shows, or shows alone');   // 0.60.283: shows alone (the Overview's SELECT A CATEGORY)
     const OM = require('../page/option-match');
-    const found = await this._evalJs(wc, `(function(sel, col, row, showsText){
+    // 2026-10-30 GT4 — the finder is a script run again whenever the mark is gone: a re-render (Fiverr's section after the category is
+    // chosen) drops data-cg-choose, and the mark is a hint, never the only way to the element. reuse: the mark's number, kept; no new snapshot.
+    const findScript = (showsNow, reuse) => `(function(sel, col, row, showsText, reuse){
       function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
       function norm(t){ return String(t || '').replace(/\\s+/g, ' ').trim().toLowerCase(); }
       function ownText(el){ return norm(Array.prototype.map.call(el.childNodes, function(n){ return n.nodeType === 3 ? n.textContent : ''; }).join(' ')) || (el.children.length ? '' : norm(el.textContent)); }
@@ -779,6 +781,8 @@ class ClearDriver {
             || cands.filter(function(el){ return !cands.some(function(o){ return o !== el && el.contains(o); }); })[0] || null;
         if (!trig) return { error: (col ? 'no dropdown in column "' + col + '"' : 'no dropdown') + (row ? ' and row "' + row + '"' : ' showing "' + showsText + '"') };
       }
+      if (reuse) { var n0 = Number(reuse); trig.setAttribute('data-cg-choose', String(n0)); var nat0 = trig.tagName === 'SELECT' ? trig : trig.querySelector('select');
+        if (nat0) nat0.setAttribute('data-cg-choose-native', String(n0)); return { n: n0, refound: true, shown: norm(trig.innerText || trig.textContent).slice(0, 200) }; }
       window.__cgChooseN = (window.__cgChooseN || 0) + 1;
       trig.setAttribute('data-cg-choose', String(window.__cgChooseN));
       trig.scrollIntoView({ block: 'center' });
@@ -791,9 +795,27 @@ class ClearDriver {
       document.querySelectorAll('body *').forEach(function(el){ window.__cgPre.add(el); });
       return { n: window.__cgChooseN, native: !!native, shown: norm(trig.innerText || trig.textContent).slice(0, 200),
         options: native ? Array.prototype.map.call(native.options, function(o){ return o.textContent.trim(); }) : null };
-    })(${JSON.stringify(selector || null)}, ${JSON.stringify(column || null)}, ${JSON.stringify(row || null)}, ${JSON.stringify(showsText || null)})`);
+    })(${JSON.stringify(selector || null)}, ${JSON.stringify(column || null)}, ${JSON.stringify(row || null)}, ${JSON.stringify(showsNow || null)}, ${JSON.stringify(reuse || null)})`;
+    const found = await this._evalJs(wc, findScript(showsText, null));
     if (!found || found.error) throw new Error(`choose: ${(found && found.error) || 'page did not answer'}`);
     const trigSel = `[data-cg-choose="${found.n}"]`;
+    // GATE-GT4-003 — before each open, pick and read back: the mark still on the page, else the dropdown found again by what it showed
+    // (or, once picked, by the option it now shows), and marked again. Not found either way → the error names both and the page's dropdowns.
+    const refound = [];
+    const ensureMark = async (alsoShows) => {
+      const here = await this._evalJs(wc, `!!document.querySelector(${JSON.stringify(trigSel)})`).catch(() => false);
+      if (here) return true;
+      for (const t of [showsText, alsoShows].filter((x, i, a) => x && a.indexOf(x) === i).concat(showsText ? [] : [null])) {
+        const f = await this._evalJs(wc, findScript(t, found.n)).catch(() => null);
+        if (f && !f.error) { refound.push(t ? `found again by "${t}"` : 'found again'); return true; }
+      }
+      return false;
+    };
+    const dropdownsOnPage = () => this._evalJs(wc, `(function(){ function vis(el){ var r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; }
+      return Array.prototype.filter.call(document.querySelectorAll('select,[role="combobox"],[aria-haspopup="listbox"],[aria-haspopup="true"]'), vis)
+        .slice(0, 12).map(function(el){ return String(el.innerText || el.textContent || el.getAttribute('aria-label') || el.name || '').replace(/\s+/g, ' ').trim().slice(0, 60); }); })()`).catch(() => []);
+    const lost = async () => { const d = await dropdownsOnPage();
+      return new Error(`choose: the dropdown is gone — not by its mark ${trigSel}${showsText ? `, nor by what it showed ("${showsText}")` : ''}${column ? ` nor at column "${column}"${row ? `, row "${row}"` : ''}` : ''}${selector ? ` nor by ${selector}` : ''}; dropdowns on the page: ${(d && d.length) ? d.map(x => `"${x}"`).join(', ') : 'none'}`); };
     if (found.native) {
       const m = OM.matchOption(found.options, option);
       if (!m.ok) throw new Error(`choose: ${m.why} — options: ${m.candidates.join(' | ')}`);
@@ -806,7 +828,9 @@ class ClearDriver {
     // the option and Enter, then the option's number typed and Enter — and last a direct click. Each is read back; the result says which took.
     const scan = () => this._evalJs(wc, `(function(){
         function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
-        function fresh(el){ return !(window.__cgPre && window.__cgPre.has(el)); }
+        // 2026-10-30 GT4 — Clear Glass's own overlay (the spotlight and its label, ids __cg_*) is never one of the page's options: the test
+        // fixture read "open undefined", the spotlight's label, as the dropdown's only option
+        function fresh(el){ return !(window.__cgPre && window.__cgPre.has(el)) && !el.closest('[id^="__cg_"]'); }
         var all = Array.prototype.filter.call(document.querySelectorAll('[role="option"],[role="menuitem"],li,[class*="option" i],[class*="item" i]'), function(el){ return fresh(el) && vis(el); });
         // 0.60.222b — a site whose options are plain divs: what appeared on opening, with short text of its own
         if (!all.length) all = Array.prototype.filter.call(document.querySelectorAll('body *'), function(el){ if (!fresh(el)) return false; var t = (el.innerText || '').trim(); return t && t.length <= 80 && t.indexOf('\\n') < 0 && vis(el); });
@@ -826,19 +850,21 @@ class ClearDriver {
     };
     const open = async () => {
       await this._waitResponsive(wc);
-      const r = await this._humanPointer(agentId, { selector: trigSel, do: 'click', via, label: `open ${column || selector}` });
+      if (!(await ensureMark())) throw await lost();
+      const r = await this._humanPointer(agentId, { selector: trigSel, do: 'click', via, label: `open ${column || showsText || selector}` });
       await this._pause(openWait);   // drop down … (his words) — the menu animates in before anything is read
       return r;
     };
     const opened = await open();
     let opts = await readOptions(optionsWaitMs);
     if (!opts || !opts.length) { await open(); opts = await readOptions(optionsWaitMs); }   // the first click may have landed while the page was busy
-    if (!opts || !opts.length) throw new Error(`choose: the dropdown did not open (no new options after clicking ${column || selector}, twice)`);
+    if (!opts || !opts.length) throw new Error(`choose: the dropdown did not open (no new options after clicking ${column || showsText || selector}, twice)`);
     const m = OM.matchOption(opts, option);
     if (!m.ok) throw new Error(`choose: ${m.why} — options: ${m.candidates.slice(0, 40).join(' | ')}`);
     await this._pause(pickWait);   // … and then click
     const optSel = `[data-cg-opt="${m.index}"]`;
-    const readShown = () => this._evalJs(wc, `(function(){ var t = document.querySelector(${JSON.stringify(trigSel)}); return t ? (t.innerText || t.textContent || '').replace(/\\s+/g, ' ').trim() : null; })()`);
+    const readShown = async () => { await ensureMark(m.option);
+      return this._evalJs(wc, `(function(){ var t = document.querySelector(${JSON.stringify(trigSel)}); return t ? (t.innerText || t.textContent || '').replace(/\\s+/g, ' ').trim() : null; })()`); };
     const isOpen = () => this._evalJs(wc, `(function(){ var o = document.querySelector(${JSON.stringify(optSel)}); return !!(o && o.isConnected); })()`).catch(() => false);
     // 0.60.280 KB5 — James, 2026-10-29: "bind arrow keys, or numbers to each drop down menu value". The ways to pick, in the order `pick` says
     // (not `by`: every person's run already passes by: 'person', who acted):
@@ -896,7 +922,7 @@ class ClearDriver {
       if (label && OM.shows(shown, m.option)) { clickedBy = label; break; }
     }
     if (!clickedBy) throw new Error(`choose: "${m.option}" did not take — the dropdown shows "${shown}" (tried: ${tried.join('; ')})`);
-    return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, clickedBy, tried, ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
+    return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, clickedBy, tried, ...(refound.length ? { refound } : {}), ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
   }
 
   // 0.60.281 SN1 — James, 2026-10-29: "also snowflake plugin support to macros and automation." route/unroute this tab's site, start, stop,

@@ -1,20 +1,30 @@
-# 0.60.317 — AE3: the orchestrator's automation dispatches agent work (through RAID → Guardian)
+# 0.60.317 — site data, the widget kept off, the DOM map; pace between dropdowns, service type, metadata bullets
 
-James, 2026-10-30: **"need to finish the automation in orchestrator."**
+James, 2026-10-30:
+> "the accessability man... need a reset site, and a history manger rebuilt into a full page, and then a cookie manager for the logins and a way to clear cookies per site and reset it. continue. fiverr still not working. we need to inject the dom mapping tool i feel like."
+> "almost. more timing in between drop down menus. then we need the services, then the bullets for each tab for each catagory."
 
-The automation engine already runs inside the orchestrator (AE1, 0.60.256), but its agent-step hooks were stubs. Now they're real: an automation can dispatch actual agent work from the orchestrator.
+## Found
+- **His machine runs 0.60.297, plus another session's unpushed `macro-elements` work.** That work is kept whole in `_archive/imports/2026-10-30-local-clear-glass`. His Fiverr test ran without DD1 (`main`, 0.60.316).
+- **The yellow-on-black look on Fiverr is UserWay.** The panel's six "site's own settings" were the page's own links: the matcher read class names, and UserWay stamps its classes on everything it restyles.
+- **"Element not found: [data-cg-choose="1"]".** `choose` marks the dropdown, then uses the mark after its open wait. The category's choice re-renders the section and removes the mark.
 
-## What was wired (`orchestrator/automation/index.js`)
-- An **`agent` step's provider is decided by RAID** (`lib/raid-port.js` `decide` — the routing decision stays RAID's, §5.2), then the task is **dispatched to Guardian** (`:7820 /command`), the orchestrator's existing runner. Both `enqueue` (fire-and-forget) and `askAgent` (awaited reply) paths.
-- **Fail-soft** (§1.2): RAID down → the step's own `agentKey` is the provider; Guardian down → the step says so and the rest of the workflow keeps running.
-- **`busEmit`** streams the engine's run events through the orchestrator's own SSE (`setBus(broadcast)` at boot — the bus is the orchestrator's, injected, no cross-system reach).
-- Browser/macro steps keep their fail-soft Clear Glass port (`:7704`).
+## Specced
+**`clear-glass/spec/site-data.spec`:**
+- **SD0:** reconcile his machine's work onto `main`.
+- **SD1:** a per-site switch blocks the widget. Controls are no longer matched by class names.
+- **SD2:** an undoable site reset.
+- **SD3:** a cookie and login manager, with values masked.
+- **SD4:** history as a full page.
+- **SD5:** the DOM map is read before the fill.
 
-## Sovereignty held
-No new static cross-system require — RAID is core `lib`, Guardian is reached by a runtime port. `test-system-boundary` 10/10.
+**`gated-flows.spec`:**
+- **GT4:** a pause between dropdowns, and the dropdown is found again when its mark is lost.
+- **GT5:** service type.
+- **GT6:** the metadata bullets per tab.
 
-## Proof (headless)
-`tests/modules/test-orchestrator-automation.test.js` 7/7 (injected Guardian/RAID): RAID picks the provider, Guardian gets it with the prompt, a down peer is a clean error (not a throw), a task with no `agentKey` is refused, the bus and browser ports fire. `automation-engine` 16/16, `automation-v2` 18/18, `automation-nodes` 8/8, `automation-registry` 11/11 unchanged.
+## Proof
+- `test-substrate-spec` 3/3.
+- The DAG has no dangling references and no cycles.
 
-## Remaining (his machine)
-The awaited-reply completion-watch (poll Guardian's job to done for `askAgent`), AE2 (Clear Glass serving `:7704`), and AE5 (the automation UI).
+Spec and map only.

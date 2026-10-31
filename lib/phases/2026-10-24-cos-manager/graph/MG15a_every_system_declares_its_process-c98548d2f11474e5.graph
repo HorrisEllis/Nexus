@@ -1,0 +1,233 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MG15a_every_system_declares_its_process:c98548d2f11474e5
+type: graph
+id: phase:MG15a_every_system_declares_its_process:c98548d2f11474e5
+context: dependency graph of phase MG15a_every_system_declares_its_process
+intent: null
+summary: 29 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793426750301
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793426750301
+lastSeenAt: 1793426750301
+fingerprint: null
+payload:
+  for: MG15a_every_system_declares_its_process
+  kind: phase
+  repo: null
+  hash: c98548d2f11474e5
+  nodes:
+    - path: architect/compartment.json
+      role: changes
+      exists: true
+      system: architect
+    - path: clear-glass/compartment.json
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: copilot/compartment.json
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/compartment.json
+      role: changes
+      exists: true
+      system: cortex
+    - path: diagnostic/compartment.json
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: guardian/compartment.json
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/compartment.json
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/compartment.json
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/cli/compartments.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/compartment.json
+      role: changes
+      exists: true
+      system: loom
+    - path: ollama/compartment.json
+      role: changes
+      exists: true
+      system: ollama
+    - path: orchestrator/compartment.json
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-compartment-declarations.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: versionium/compartment.json
+      role: changes
+      exists: true
+      system: versionium
+    - path: diagnostic/healer/api/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/diagnostic/nexus-heal.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-status.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-registry.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-tunnel.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cos-bridge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/system-registry.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: lib/system-registry.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: tests/modules/test-compartment-declarations.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: diagnostic/healer/api/index.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/nexus-heal.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-status.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-system-registry.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-system-tunnel.test.js
+      to: lib/system-registry.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+    upstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+    downstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG10_categories
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG11_category_manager_ui
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17b_registry_reads_the_declarations
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG23_allocation_and_balance
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG24_network_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG25_storage_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+      - docs/2026-10-30-foundation-up-phasemap.spec::F3_the_door
+      - docs/2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
+      - docs/2026-10-30-foundation-up-phasemap.spec::F8_the_tutor
+    blockedBy:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+    unlocks: []
+    conflicts: []
+    dangling:
+      - MG_D13_the_supervisor_before_the_core_boot
+    lines:
+      - layer 2 · blocked by MG0b_the_full_spec
+      - 'depends on (1): MG0b_the_full_spec · all upstream 2'
+      - 'needed by (1): MG15_the_supervisor_in_cos · all downstream 30'
+      - 'DANGLING depends_on: MG_D13_the_supervisor_before_the_core_boot'
+    edges:
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+        kind: declared

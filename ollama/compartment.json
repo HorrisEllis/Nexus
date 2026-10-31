@@ -8,10 +8,9 @@
     "kind": "virtual",
     "id": "repo.nexus.ollama",
     "scope": [
-      "ollama/",
-      "data/ollama/"
+      "ollama/"
     ],
-    "versionLine": "1.0.0",
+    "versionLine": "1.4.0",
     "versionNote": "from lib/version.js modules"
   },
   "cos": {
@@ -25,19 +24,29 @@
     "phase": 3,
     "critical": false,
     "optional": true,
-    "healthUrl": "http://127.0.0.1:3749/health"
+    "healthUrl": "http://127.0.0.1:3749/health",
+    "process": {
+      "name": "ollama-bridge",
+      "cmd": "node",
+      "args": [
+        "ollama/server.js"
+      ],
+      "phase": 3,
+      "optional": true,
+      "healthUrl": "http://127.0.0.1:3749/health"
+    }
   },
   "data": {
-    "dataDir": "data/ollama",
+    "dataDir": "ollama/data",
     "ledgerDir": "ollama/data/ledger",
     "nodeIndexDir": "ollama/data/node-index"
   },
   "spec": "ollama/spec/",
   "dependsOn": {},
-  "sharedLibRequires": 3,
+  "sharedLibRequires": 23,
   "stats": {
-    "jsFiles": 17,
-    "jsLines": 1482
+    "jsFiles": 22,
+    "jsLines": 2085
   },
   "boundaryFindings": {
     "count": 0,

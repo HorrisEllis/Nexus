@@ -451,7 +451,7 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/prevention.js'), '0.60.123 MP _guardedSync heavyAllowedHere; GET /system/lean prevention; POST /system/prevention/clear'],
   [I('clear-glass/src/main/index.js'), I('lib/prevention.js'), '0.60.123 MP Eros and the NCP prewarm held under prevention'],
   [I('cortex/core/raid/officiator.js'), I('lib/prevention.js'), '0.60.123 MP the tick asks heavyAllowedHere'],
-  [I('lib/nexus/autopilot.js'), I('lib/prevention.js'), '0.60.123 MP the loom refresh waits for heavyAllowed'],
+  [I('lib/nexus/autopilot.js'), I('lib/prevention.js'), '0.60.123 MP the loom refresh waits for heavyAllowed'],   // until 0.60.330; since MG17 core-duties' (cos-testenv-map)
   // SD20 0.60.203 — a starved machine does not spin (docs/2026-10-10-idearium-solid-phasemap.spec)
   [I('cortex/core/raid/worker.js'), I('lib/prevention.js'), 'SD20 0.60.203 the drain waits on heavyAllowedHere(raid-worker)'],
   [I('cortex/core/raid/officiator.js'), I('cortex/core/raid/contract-intake.js'), 'SD20 0.60.203 listQueue: sameGoal (no second contract for one goal) and failStreak (its own failing contracts hold synthesis)'],

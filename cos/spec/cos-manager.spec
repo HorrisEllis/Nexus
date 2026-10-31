@@ -480,6 +480,25 @@ spec:
 
     # ── the one supervisor: what autopilot does, in COS (MG15–MG17) ───────
 
+    - id: MOD-MG-DECLARE
+      name: every-system-declares-its-process
+      uuid: nexus-cos-manager-declare-v1-0000-2026-1031-001
+      path: lib/cli/compartments.js
+      phase: MG15a_every_system_declares_its_process
+      description: >-
+        MG-002 made true before the supervisor reads it: every system's compartment.json carries its whole process, generated from what
+        boots it today (lib/system-registry.js kernels(), autopilot's ALL_KERNELS): cmd, args, cwd, env, bootPhase, critical, optional,
+        onDemand, healthUrl, maxOldSpaceMB, minRestartDelay, haltPctOverride, and processes[] for a second process a system runs
+        (intelligence's consumer). The three with no compartment.json get one (orchestrator, architect) and diagnostic's archetype file
+        keeps its fields with the runtime added. A check proves the declarations reproduce autopilot's boot list, process for process.
+      deps: [{ name: compartment-json }]
+      schema_refs: [SupervisedSystem]
+      exports: ["node lib/cli/compartments.js sync --write (runtime.process, runtime.processes)", "declarations(root) → [{ name, system, cmd, args, cwd, env, bootPhase, critical, optional, onDemand, healthUrl, maxOldSpaceMB, minRestartDelay, haltPctOverride }]", "system-registry kernels()"]
+      gate_pipeline: ["GATE-MG15a-001: every autopilot kernel has a declaration", "GATE-MG15a-002: each declaration equals its kernel field for field"]
+      behavioral_contracts: ["derived, never hand-written, until MG17 hands over; then each file is its system's own", "an existing file's other fields are kept (§0.3)"]
+      error_paths: ["a kernel with no system folder → named, declared under the system that owns its entry file"]
+      acceptance: ["declarations(root) equals system-registry kernels() for all 13 processes; orchestrator, architect and diagnostic have runtime declarations"]
+
     - id: MOD-MG-SUPERVISOR
       name: supervisor
       uuid: nexus-cos-manager-supervisor-v1-0000-2026-1030-001
@@ -563,6 +582,26 @@ spec:
       behavioral_contracts: ["npm run start:all boots every system the same as before", "an old release in COS still starts with its own autopilot"]
       error_paths: ["the manager cannot start → the launcher says why and exits non-zero; it never falls back to supervising silently"]
       acceptance: ["npm run start:all boots the system; /status lists every system; an old release zip still starts in cos.exe"]
+
+    - id: MOD-MG-CORE-DUTIES
+      name: core-duties
+      uuid: nexus-cos-manager-core-duties-v1-0000-2026-1031-001
+      path: lib/nexus/core-duties.js
+      phase: MG17_autopilot_hands_over
+      description: >-
+        What autopilot did besides supervising, kept in lib and run by the launcher after the handover (MG_D15): the fan-in, the ledger
+        wire, error.log and the intelligence substrate wired in the launcher's process; the post-boot vitals check; automatic updates
+        (restart by COS's route, idle by the door's /idle); the loom registry refresh when memory allows; an instance snapshot every minute
+        (event_log autopilot.instance_snapshot, the shape lib/pressure-window.js reads); and, following COS's ledger, a kernel_circuit_open
+        gap (lib/gap-field.js) for each circuit-open line and a diagnostic run (lib/cli/diagnose.js) for each boot phase that stalled.
+        It reaches COS only by its routes.
+      deps: [{ name: manager-server }, { name: autopilot-door }, { name: supervisor }]
+      schema_refs: [SupervisorLedgerEntry, SupervisedSystem]
+      exports: ["cosClient(base) → { health, systems, ledger, boot, restart, idle }", "start({ base, log, afterBoot }) → { stop }", "snapshot(systems) → the instance_snapshot payload", "follow(entries, seen) → the acts a ledger line asks for"]
+      gate_pipeline: ["GATE-MG17-003: each duty skipped in a test run says so", "GATE-MG17-004: a ledger line acted on once (its id remembered)"]
+      behavioral_contracts: ["the instance snapshot keeps autopilot's type and payload keys", "a circuit-open line makes one kernel_circuit_open gap", "nothing here starts, stops or restarts a system except by COS's route with by = rule:<duty>"]
+      error_paths: ["COS does not answer → the duty says so and tries at its next tick; it never supervises in COS's place", "a duty's module cannot load → said once, the others go on"]
+      acceptance: ["test-autopilot-handover: the snapshot's keys equal autopilot's, a circuit-open line makes one gap, a stall line runs one diagnostic"]
 
     # ── the backend the pages stand on (MG1–MG8, MG10) ────────────────────
 
@@ -1227,3 +1266,30 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node; every MG phase names it and its blocks"
     - "per module: its acceptance lines; UI acceptance in Clear Glass (clear-glass/src/driver/glass.js), never Playwright"
+
+# ── ADDENDUM 2026-10-31 (0.60.326) — MOD-MG-DECLARE built ──────────────────────────────────────────────────────────────────────────
+# lib/cli/compartments.js writes runtime.process (and runtime.processes) into every system's compartment.json from system-registry
+# kernels(); orchestrator, architect and diagnostic are generated too (diagnostic keeps its archetype fields); paths are {{root}}/…, Electron
+# by autopilot's lookup (cmdCandidates). declarations(root) reads them back. 13 processes, field for field (test-compartment-declarations).
+
+# ── ADDENDUM 2026-10-31 (0.60.328) — MOD-MG-SUPERVISOR and MOD-MG-SERVER built ─────────────────────────────────────────────────────
+# Policy adds memBackoffMs (15 s), stableMs (60 s), phaseGateMs (30 s), idleCheckMs — autopilot's constants, read by SV-01. States gain
+# 'waiting-memory' (a refused spawn re-armed) and 'external' (Clear Glass exiting 0 within 20 s). Ledger kinds gain 'policy'.
+# tests/modules/test-cos-supervisor.test.js SV-01..08, 8/8, on real child processes.
+
+# ── ADDENDUM 2026-10-31 (0.60.329) — MOD-MG-AUTOPILOT-DOOR built ────────────────────────────────────────────────────────────────────
+# mount(sup, { ROOT }) and createDoorHandlers; legacyCallers() served at GET /api/cos/legacy-callers. The supervisor's view gains
+# crashesInWindow, lastExit, downSince, lastActivity; declarations() and lastBoot. States map to autopilot's (up → online, idle → dormant,
+# circuit-open → circuit_open). Acceptance: tests/modules/test-cos-autopilot-door.test.js AD-01..04 (every route of autopilot's source
+# answered, /status's shape, /control and /spawn shapes, legacy counted).
+
+# ── ADDENDUM 2026-10-31 (0.60.330) — MG17: the handover, with every duty kept (MG_D15) ─────────────────────────────────────────────
+# James, 2026-10-31: "Starting the mg-17". MOD-MG-AUTOPILOT-HANDOVER changed by MG_D15 (docs/2026-10-24-cos-manager-phasemap.spec): the
+# launcher stays in the foreground by default (its export "exit 0" becomes --detach's), it refuses to start beside an old autopilot on the
+# port, and --legacy-supervisor runs the archived body (lib/nexus/autopilot.retired-0.60.330.js). New: MOD-MG-CORE-DUTIES, the duties the
+# first version of this module did not name. The manager server takes --only and --handover=<version> (a 'handover' ledger line).
+
+# ── ADDENDUM 2026-10-31 (0.60.331) — MOD-MG-DECLARE: the files are the systems' own (MG17b) ──────────────────────────────────────
+# Its contract "derived, never hand-written, until MG17 hands over; then each file is its system's own" is now true: system-registry
+# kernels() reads the declarations, and the generator keeps a declared process. test-compartment-declarations CD-05: a hand change shows in
+# kernels() and in COS's supervisor alike. CD-01/02 now compare the declarations with frozenKernels() (the archive at the handover).
