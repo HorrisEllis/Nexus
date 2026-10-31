@@ -3036,6 +3036,9 @@ if (nexusBus) {
 
 const BIND_HOST = process.env.NEXUS_BIND_HOST || '127.0.0.1'; // §REMOTE-15
 server.listen(PORT, BIND_HOST, async () => {
+  // §AE3 0.60.317 — the automation engine (orchestrator/automation) streams its run events through this server's SSE.
+  // The bus is the orchestrator's; the host receives it (no cross-system reach). Off the boot path, never fatal.
+  try { require('./automation/index.js').setBus((type, data) => broadcast(type, data)); } catch (e) { console.warn(`[orc] automation bus: ${e.message}`); }
   // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
   // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
   try { require('../lib/node-registry.js').startForSystem('orchestrator', { bus: nexusBus }); } catch (e) { console.warn(`[orc] node registry: ${e.message}`); }

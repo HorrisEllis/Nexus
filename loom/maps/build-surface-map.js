@@ -233,7 +233,7 @@ const FILES = [
   ['lib/automation-nodes.js', I('lib/automation-nodes.js'), [I('lib/node-export.js')]],   // core node-file utility + the one source of NODES_DIR
   [I('lib/automation/routes.js'), I('lib/automation-nodes.js'), '§AE1 — the door lists/imports .macro/.workflow node files through the core utility'],
   [I('clear-glass/src/mesh/agent-mesh.js'), I('lib/automation/engine.js'), '§AE1 — Clear Glass runs its OWN engine instance from core for browser automation (local, standalone); its namespace is brainos'],
-  ['orchestrator/automation/index.js', I('orchestrator/automation/index.js'), [I('lib/automation/engine.js'), I('lib/automation/routes.js')]],   // the orchestrator's OWN instance for platform orchestration; its own namespace
+  ['orchestrator/automation/index.js', I('orchestrator/automation/index.js'), [I('lib/automation/engine.js'), I('lib/automation/routes.js'), I('lib/raid-port.js')]],   // the orchestrator's OWN instance; §AE3 agent steps RAID-decide then dispatch to Guardian by port
   [I('orchestrator/orchestrator.js'), I('orchestrator/automation/index.js'), '§AE1/AE3 — the :9000 server mounts the orchestrator engine door (/automation/*)'],
   [I('idearium/api/index.js'), I('lib/context-stream.js'), '0.60.156 makeAttempt: the stream note per gate; POST /api/context/find, /api/repos/:uuid/context/find'],
   [I('idearium/api/index.js'), I('lib/context-sources.js'), '0.60.156 GET /api/context/sources'],
