@@ -2822,8 +2822,12 @@ async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium',
   const jobType = kind || `page:${String(channel).replace(/^idearium-/, '')}`;
   const policy = _routingPolicy();
   let route = null, routeNote = null;
-  const rr = await _postJson(`${RA.COPILOT_URL}/api/route`, { kind: jobType, preferAgent: RA.defaultProvider(), policy }, 5000);
+  // 0.60.335 AC5 — James: "so i can change the agemnts for the spacial void and spec workshop": his choice for the page goes first
+  let his = null; try { his = (await import('../lib/page-agents.js')).routeFirst(jobType); } catch (_) {}
+  const rr = await _postJson(`${RA.COPILOT_URL}/api/route`, { kind: jobType, preferAgent: (his && his.provider) || RA.defaultProvider(), policy }, 5000);
   if (rr.status === 200 && rr.json && rr.json.ok && Array.isArray(rr.json.route) && rr.json.route.length) route = rr.json.route;
+  if (his) { const r0 = RA.routeFor(his.provider); route = [{ provider: his.provider, backend: r0.backend, agent: r0.agent || null, model: his.model, why: 'his choice for this page (Idearium settings)' },
+    ...(route || []).filter(h => !(h.provider === his.provider && (h.model || null) === his.model))]; }
   else {
     const prov = RA.defaultProvider(), r = RA.routeFor(prov);
     route = [{ provider: prov, backend: r.backend, agent: r.agent || null, model: null, why: 'the default provider' }];
@@ -4094,6 +4098,9 @@ function matchRoute(method, url) {
     ['POST',   ['api','workshop',':id','feed'],                  'workshop.feed'],
     ['POST',   ['api','workshop',':id','proposal',':pid'],       'workshop.decide'],
     ['POST',   ['api','workshop',':id','save'],                  'workshop.save'],
+    ['GET',    ['api','settings','page-agents'],                 'settings.page-agents'],   // 0.60.335 AC5 — his agent per page
+    ['POST',   ['api','settings','page-agents'],                 'settings.page-agents.set'],
+    ['POST',   ['api','workshop',':id','skip'],                  'workshop.skip'],      // 0.60.335 AC7 — his skip: fill a step's defaults, marked
     // §0.39.298 AR2 — ARCHITECT (idearium/lib/architect.js): the spec laid out as components, matched against loom's
     // registry and the component store, saved beside the spec as spec/<name>.architecture.yaml
     ['GET',    ['api','architect'],                              'architect.list'],
@@ -7227,6 +7234,26 @@ async function handle(req, res, route, query, body) {
       }
       syncTable(WS.TABLE, [w]);
       return ok(res, { workshop: w, parts: await _workshopParts(WS, w) });
+    }
+    // 0.60.335 AC5 — James: "so i can change the agemnts for the spacial void and spec workshop"
+    case 'settings.page-agents': case 'settings.page-agents.set': {
+      const PA = await import('../lib/page-agents.js');
+      if (action === 'settings.page-agents') return ok(res, { pages: PA.PAGES, agents: PA.get() });
+      let providers = null; try { providers = (_require('../../lib/agent-providers.js').all() || []).map(p => p.id || p.name || p); } catch (_) {}
+      const r = PA.set((body && body.agents) || {}, { by: (body && body.by) || 'person', providers });
+      if (r.error) return err(res, 400, r.error);
+      return ok(res, { pages: PA.PAGES, agents: r });
+    }
+    // 0.60.335 AC7 — James: "I also want skip buttons which will autofill generic/default values in each step of the pipeline."
+    case 'workshop.skip': {
+      const WS = await _workshop(), SD = await import('../lib/step-defaults.js');
+      const w = _workshopGet(WS, params.id); if (!w) return err(res, 404, `workshop not found: ${params.id}`);
+      const d = SD.defaultsFor(String((body && body.step) || 'workshop.sections'), { session: w });
+      if (d.none) return ok(res, { workshop: w, skipped: d });
+      for (const e of d.values.sections || []) { const r = WS.editSection(w, { id: e.id, body: e.body }); if (r.error) return err(res, 400, r.error); }
+      if (d.values.sections) { w.history.push({ at: Date.now(), what: `skip: ${d.values.sections.length} section(s) filled with defaults`, by: (body && body.by) || 'person' }); syncTable(WS.TABLE, [w]); }
+      getIdeaOS().emit('idearium.step.skipped', { step: d.step, filled: (d.values.sections || []).length || 1 });
+      return ok(res, { workshop: w, parts: await _workshopParts(WS, w), skipped: d });
     }
     case 'workshop.feed': {
       const WS = await _workshop();

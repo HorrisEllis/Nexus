@@ -804,6 +804,11 @@ export const SPEC = [
     print: (d, a, h) => { console.log(`${h.c.bold(d.name || '')} — ${d.open ? h.c.amber(`${d.open} open`) : h.c.green('nothing open')} · ${(d.stats || {}).components || 0} components · ${(d.stats || {}).wires || 0} wires`);
       for (const i of d.items || []) console.log(`  ${i.done ? h.c.green('✓') : h.c.amber('·')} ${i.id.padEnd(14)} ${i.say}${!i.done && i.cmd ? h.c.dim(`   → ${i.cmd}`) : ''}`); } },
   // 0.60.328 MG15b — COS's supervisor (James: "lets do the orchastration. that needs to be done completely.")
+  // 0.60.335 AC5 / AC7 — James: "change the agemnts for the spacial void and spec workshop" · "skip buttons which will autofill"
+  { key: 'settings.page-agents', repo: false, usage: 'page-agents [void|workshop] [provider[:model]|learned]', about: 'his agent for the Spatial Void and the Spec Workshop (learned = Copilot\'s router picks)',
+    req: (a) => (a.args[1] ? { method: 'POST', path: '/api/settings/page-agents', body: { agents: { [a.args[0]]: a.args[1] }, by: 'person' } } : { method: 'GET', path: '/api/settings/page-agents' }) },
+  { key: 'workshop.skip', repo: false, usage: 'workshop skip <workshop-id>', about: 'fill every empty section of a spec workshop with a generic default, marked (default); his text is never touched',
+    req: (a) => ({ method: 'POST', path: `/api/workshop/${encodeURIComponent(a.args[0] || '')}/skip`, body: { step: 'workshop.sections', by: 'person' } }) },
   { key: 'cos.ps', repo: false, usage: 'cos ps', about: 'every declared system as COS\'s supervisor sees it: state, pid, restarts, circuit',
     req: () => ({ method: 'GET', path: '/api/cos/systems' }) },
   { key: 'cos.act', repo: false, usage: 'cos <start|stop|restart|touch|reset-circuit> <system>', about: 'a person\'s act on one system, through COS\'s supervisor (ledgered before it happens)',

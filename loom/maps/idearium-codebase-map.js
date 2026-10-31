@@ -20,6 +20,9 @@ const I = (rel) => idFor(rel);
 
 // [file, id, requires (ids)] — each edge names why it is real
 const FILES = [
+  // 0.60.335 AC5/AC7 — his agent per page; skip buttons (idearium/spec/agent-control.spec); idearium/api/index.js imports both
+  ['idearium/lib/step-defaults.js', I('idearium/lib/step-defaults.js'), []],
+  ['idearium/lib/page-agents.js', I('idearium/lib/page-agents.js'), [I('idearium/lib/data-dir.cjs')]],
   ['lib/code-intel/structure.js', I('lib/code-intel/structure.js'), []],
   ['lib/code-intel/decls.js', I('lib/code-intel/decls.js'), []],
   ['lib/code-intel/text.js', I('lib/code-intel/text.js'), []],

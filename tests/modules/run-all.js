@@ -277,6 +277,7 @@ const SUITES = [
   'test-userscript-mixed-content-fix.js',
   'test-contract-handshake-paths.js',
   'test-autopilot-handover.test.js',   // 0.60.330 MG17 — autopilot hands over: the launcher, one supervisor, core's duties kept, the body archived
+  'test-skip-and-page-agents.test.js',   // 0.60.335 AC7/AC5 — skip fills marked defaults; his agent per page goes first
   'test-automation-driver-port.test.js',   // 0.60.333 AE2 — the orchestrator's engine drives Clear Glass's browser through the port
   'test-cos-autopilot-door.test.js',   // 0.60.329 MG16 — autopilot's routes on COS's door, in its shapes; legacy /tables /files counted
   'test-cos-supervisor.test.js',   // 0.60.328 MG15 — COS's supervisor: autopilot's rules on real child processes, read from the declarations

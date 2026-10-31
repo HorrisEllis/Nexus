@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793444632901
+exported_at: 1793444857042
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793444632901
-lastSeenAt: 1793444632901
+firstSeenAt: 1793444857042
+lastSeenAt: 1793444857042
 fingerprint: null
 payload:
   for: AC6_the_void_on_his_toolkit
@@ -46,23 +46,16 @@ payload:
       - docs/2026-10-31-agent-control-phasemap.spec::AC_D1_my_framework_is_the_toolkit
     downstream: []
     blockedBy:
-      - docs/2026-10-31-agent-control-phasemap.spec::AC5_his_agents_for_the_void_and_the_workshop
       - docs/2026-10-31-agent-control-phasemap.spec::AC_D1_my_framework_is_the_toolkit
     unlocks: []
-    conflicts:
-      - with: docs/2026-10-31-agent-control-phasemap.spec::AC7_skip_buttons
-        files:
-          - idearium/ui/void.html
+    conflicts: []
     dangling: []
     lines:
-      - >-
-        layer 2 · blocked by AC5_his_agents_for_the_void_and_the_workshop,
-        AC_D1_my_framework_is_the_toolkit
+      - layer 2 · blocked by AC_D1_my_framework_is_the_toolkit
       - >-
         depends on (2): AC5_his_agents_for_the_void_and_the_workshop,
         AC_D1_my_framework_is_the_toolkit · all upstream 3
       - 'needed by (0): —'
-      - 'same files as AC7_skip_buttons with no order between them: idearium/ui/void.html'
     edges:
       - from: docs/2026-10-31-agent-control-phasemap.spec::AC5_his_agents_for_the_void_and_the_workshop
         kind: declared

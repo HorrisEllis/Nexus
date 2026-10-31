@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793444632892
+exported_at: 1793444857033
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793444632892
-lastSeenAt: 1793444632892
+firstSeenAt: 1793444857033
+lastSeenAt: 1793444857033
 fingerprint: null
 payload:
   for: AC2_the_controls
@@ -227,18 +227,12 @@ payload:
       - docs/2026-10-31-agent-control-phasemap.spec::AC1_intents_and_what_they_touched
     unlocks:
       - docs/2026-10-31-agent-control-phasemap.spec::AC3_the_panel
-    conflicts:
-      - with: docs/2026-10-31-agent-control-phasemap.spec::AC5_his_agents_for_the_void_and_the_workshop
-        files:
-          - idearium/api/index.js
+    conflicts: []
     dangling: []
     lines:
       - layer 2 · blocked by AC1_intents_and_what_they_touched
       - 'depends on (1): AC1_intents_and_what_they_touched · all upstream 2'
       - 'needed by (1): AC3_the_panel · finishing it unlocks AC3_the_panel'
-      - >-
-        same files as AC5_his_agents_for_the_void_and_the_workshop with no order between them:
-        idearium/api/index.js
     edges:
       - from: docs/2026-10-31-agent-control-phasemap.spec::AC1_intents_and_what_they_touched
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793444632889
+exported_at: 1793444857028
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793444632889
-lastSeenAt: 1793444632889
+firstSeenAt: 1793444857028
+lastSeenAt: 1793444857028
 fingerprint: null
 payload:
   for: AC1_intents_and_what_they_touched
@@ -227,18 +227,12 @@ payload:
       - docs/2026-10-31-agent-control-phasemap.spec::AC_D0_control_and_fewer_round_trips
     unlocks:
       - docs/2026-10-31-agent-control-phasemap.spec::AC2_the_controls
-    conflicts:
-      - with: docs/2026-10-31-agent-control-phasemap.spec::AC5_his_agents_for_the_void_and_the_workshop
-        files:
-          - idearium/api/index.js
+    conflicts: []
     dangling: []
     lines:
       - layer 1 · blocked by AC_D0_control_and_fewer_round_trips
       - 'depends on (1): AC_D0_control_and_fewer_round_trips'
       - 'needed by (1): AC2_the_controls · all downstream 2 · finishing it unlocks AC2_the_controls'
-      - >-
-        same files as AC5_his_agents_for_the_void_and_the_workshop with no order between them:
-        idearium/api/index.js
     edges:
       - from: docs/2026-10-31-agent-control-phasemap.spec::AC_D0_control_and_fewer_round_trips
         kind: declared
