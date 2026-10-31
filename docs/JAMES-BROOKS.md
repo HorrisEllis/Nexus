@@ -54,8 +54,9 @@ Innovation Lens, the Polymath Dice with Meta-Dice, and the Cognitive OS (the One
 Time Box Constraint).
 
 - **The whole toolkit, verbatim:** [`docs/innovation-toolkit-main.md`](innovation-toolkit-main.md) (received
-  2026-10-31). One personal section is held back from this public repository (marked in place); his authorship of it
-  stands.
+  2026-10-31). Personal material is included only where it is evidence of the method, with identity stripped, by his
+  rule: "If they’re proof or evidence for competency or validity, yes but strip identity if not, no." Three personal
+  poems are held back under that rule and marked in place; his authorship of them stands.
 - **The earlier method-only version:** [`docs/innovation-toolkit.framework`](innovation-toolkit.framework)
   (committed 2026-10-24, `14ae68dc`).
 
@@ -146,7 +147,7 @@ SHA-256 of the files this document rests on, at the commit that added it. Anyone
 
 | File | SHA-256 |
 |---|---|
-| `docs/innovation-toolkit-main.md` | `2870df08f260e0278f6f89a66e75a96057b16a141e653f3efde79f182768f0d4` |
+| `docs/innovation-toolkit-main.md` | `c86ff710e264831e261a3c15a60b0b4cfad68732d312287285881e6ce0cd16e6` |
 | `docs/innovation-toolkit.framework` | `34ee079e333fffd0ac5c2361eb5e1ba2374fdfc79c878a45696f8e33440b4378` |
 | `docs/his-words/record.json` | `8bc355a6730d558e620c4d85b5c703ee07b571d941ff5bf98645fc6a464ef104` |
 

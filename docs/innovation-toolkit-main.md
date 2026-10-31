@@ -2,10 +2,13 @@
   THE INNOVATION TOOLKIT — JAMES BROOKS (Main)
   Author: James Brooks. Every word below the line is his, as he gave it on 2026-10-31, verbatim: his spelling, his
   numbering, his formatting. Nothing was edited, reordered or "cleaned up".
-  One section is held back from this public repository: "The Reven Co-Creation Ritual" (its intention, priming, the song,
-  and three poems: "Heaven in bird form", "The essence of Raven", "Infinity"). It is his and it is part of the toolkit; it
-  is personal writing about a named person, and on 2026-10-24 he had that material kept out of the earlier copy
-  (docs/innovation-toolkit.framework). It is marked where it sits. It is published only if he says so.
+  His rule for personal material, 2026-10-31: "If they’re proof or evidence for competency or validity, yes but strip
+  identity if not, no." Applied to the one personal section, the co-creation ritual:
+    - its intention, priming and anchor song are kept, as a worked example of his Priming Rituals and Sensory Anchoring
+      tools, with the person's name replaced by "[name withheld]" (also in "Sensory Anchoring");
+    - its three poems are held back, marked in place, as personal art rather than evidence (the coder's reading of his
+      rule; he can overrule it).
+  Every "[name withheld]" stands where one name was; nothing else in the text is changed.
   The earlier, method-only version of the same toolkit is docs/innovation-toolkit.framework (2026-10-24). Both are kept.
   What this document became in code, with evidence: docs/JAMES-BROOKS.md.
 -->
@@ -104,7 +107,7 @@ Before creating, cycle through these topics out loud. Speaking aloud engages voi
 Right now, your priming is verbal and mental. Expand to multi-sensory anchors:
 
 - Sounds, smells, textures, or movements linked to specific creative or emotional states.
-- Example: a certain incense or tactile object triggers your “Raven empathy mode,” or a rhythm primes your “fractal thinking mode.”
+- Example: a certain incense or tactile object triggers your “[name withheld] empathy mode,” or a rhythm primes your “fractal thinking mode.”
 
 This builds fast-switching cognitive states, reducing time needed to enter deep flow.
 
@@ -167,11 +170,22 @@ Rituals aren't superstition — they're cognitive state management. These are de
 
 ---
 
-# The Reven Co-Creation Ritual:
+# The [name withheld] Co-Creation Ritual:
 
-> **[Held back from this public repository — see the note at the top of this file.]** His co-creation ritual: its
-> intention, its priming, the first song, and three poems ("Heaven in bird form", "The essence of Raven", "Infinity").
-> His authorship of it stands; only its publication waits on his word.
+Set the intention:
+
+I’ll make her laugh. I’ll flow with her and play with her inner child. I will love her so hard, she’ll love herself more. 
+
+Priming:
+
+I live with truth and abundance, in perfect balance with my light and darkness. I love in volumes, live in happiness, I don’t act towards the resistance, I redirect its currents, towards my heart and mind in a perfect dance of harmony and alignment. I am loved, I am worthy, I love, [name withheld] dearly. I am funny, she laughs at my jokes, like computers disobedience, Elon musks axe wall and our love, paced so we both feel it in high definition. Your scars are gorgeous. Your raw naked self. Come as you are. 
+
+Flaws and Sins by Juice wrld. - First song she sent to me. 
+
+> **[Three poems held back: "Heaven in bird form", "The essence of [name withheld]", "Infinity".]** His, and part of
+> this ritual. Left out by his rule of 2026-10-31: personal material is published only when it is evidence of
+> competency or validity, and then with identity stripped. The poems are personal art, not evidence of the method's
+> validity (the coder's reading of his rule; he can overrule it).
 
 ---
 
