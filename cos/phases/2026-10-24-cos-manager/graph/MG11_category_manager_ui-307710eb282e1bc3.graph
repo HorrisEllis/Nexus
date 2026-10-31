@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793365823374
+exported_at: 1793421629702
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823374
-lastSeenAt: 1793365823374
+firstSeenAt: 1793421629702
+lastSeenAt: 1793421629702
 fingerprint: null
 payload:
   for: MG11_category_manager_ui
@@ -68,11 +68,15 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG10_categories
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
       - docs/2026-10-24-cos-manager-phasemap.spec::MG6_settings_by_template_and_type
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D2_category_is_a_registry_record
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0d_layers
       - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
@@ -104,7 +108,7 @@ payload:
         DB26_the_ui_floats_on_the_registry
       - >-
         depends on (3): MG10_categories, MG_D1_ui_isolated_per_component,
-        DB26_the_ui_floats_on_the_registry · all upstream 49
+        DB26_the_ui_floats_on_the_registry · all upstream 53
       - 'needed by (1): MG12_the_exe_is_the_compartment_manager · all downstream 3'
       - 'same files as MG9_the_console_ui with no order between them: cos/spec/cos-manager.spec'
     edges:

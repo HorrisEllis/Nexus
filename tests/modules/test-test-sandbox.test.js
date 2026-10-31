@@ -123,5 +123,15 @@ check('every test that starts a NEXUS process puts it in a sandbox first', ungua
 const SLM = fs.readFileSync(path.join(ROOT, 'tests', 'modules', 'spec-list-merge.test.mjs'), 'utf8');
 check('spec-list-merge never talks to the real port 4800', !/port:\s*4800/.test(SLM) && /IDEARIUM_PORT: String\(PORT\)/.test(SLM));
 
+// 0.60.325 FX1 — a component registered in a test process: its ledger lands in the sandbox, never data/ledger (test-mutation-contract wrote
+// data/ledger/test/test.widget.panel/<day>.jsonl into the real tree because component-ledger never called ensure())
+{
+  const cp = require('child_process');
+  const probe = `delete process.env.NEXUS_DATA_ROOT; delete process.env.NEXUS_TEST_SANDBOX; process.env.NEXUS_TEST_RUN_DEPTH = '1';
+    require(${JSON.stringify(path.join(ROOT, 'lib', 'component-ledger.js'))}); process.stdout.write(String(process.env.NEXUS_DATA_ROOT || ''));`;
+  let root = ''; try { root = cp.execFileSync(process.execPath, ['-e', probe], { encoding: 'utf8', env: { ...process.env, NEXUS_DATA_ROOT: '', NEXUS_TEST_SANDBOX: '' } }); } catch (e) { root = 'error: ' + e.message; }
+  check('FX1 component-ledger points a test process at the sandbox, not the real data/', !!root && !root.startsWith('error') && path.resolve(root) !== path.join(ROOT, 'data') && !path.resolve(root).startsWith(ROOT + path.sep), root);
+}
+
 console.log(`\n  ${pass} passed, ${fail} failed\n`);
 process.exitCode = fail ? 1 : 0;

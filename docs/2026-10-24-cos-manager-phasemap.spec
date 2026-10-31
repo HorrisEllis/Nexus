@@ -348,7 +348,7 @@ phases:
 
   MG15_the_supervisor_in_cos:
     status: OPEN
-    depends_on: [MG0b_the_full_spec, MG_D4_cos_is_the_autopilot, CS4a_cos_boots_alone]
+    depends_on: [MG0b_the_full_spec, MG_D4_cos_is_the_autopilot, MG_D13_the_supervisor_before_the_core_boot]
     files: [cos/manager/supervisor.js, cos/manager/server.js, lib/system-shape.js, tests/modules/test-cos-supervisor.test.js, tests/modules/run-all.js]
     spec: cos/spec/cos-manager.spec
     blocks: [MOD-MG-SUPERVISOR, MOD-MG-SERVER]
@@ -583,3 +583,15 @@ build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → M
 # autopilot's door already serves the routes the screens need in the same shape (MG-003), and the registry bus moves to MG30 (which waits
 # on DB16). The earlier line is kept here (§0.3).
 # The assistant (F_D3): his answer recorded in docs/2026-10-30-foundation-up-phasemap.spec.
+
+# ── ADDENDUM 2026-10-31 — MG_D13: the supervisor first, CS4a as its policy ───────────────────────────────────────────────────────────
+# James, 2026-10-31: "lets do the orchastration. that needs to be done completely." MG15 depended on CS4a (COS boots alone: the core set
+# first, every other system on demand), and CS4a's files are autopilot's (lib/nexus/autopilot.js), the code MG15–MG17 replace. Building
+# CS4a into autopilot and then moving it would do the work twice.
+decisions_d13:
+  MG_D13_the_supervisor_before_the_core_boot:
+    chosen: >-
+      MG15 builds the supervisor with CS4a's behaviour as a policy (bootSet: 'all' by default, today's autopilot behaviour, so the move
+      changes nothing; 'core' = CS4a: the core set at boot, every other system on demand). CS4a becomes setting that policy, after the
+      handover (MG17). MG15 no longer waits on CS4a.
+    by: "decided by his axioms: §8.6 (build once, on what exists), §3.3 (map before build: the order follows the files), MG-004 (defaults equal autopilot's constants)"

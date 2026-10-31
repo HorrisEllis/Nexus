@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131582
+exported_at: 1793421629730
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131582
-lastSeenAt: 1793383131582
+firstSeenAt: 1793421629730
+lastSeenAt: 1793421629730
 fingerprint: null
 payload:
   for: MG21_the_add_screen
@@ -68,6 +68,8 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
       - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
@@ -98,9 +100,6 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
     unlocks: []
     conflicts:
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
-        files:
-          - cos/manager/contract.json
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG22_template_and_archetype_builder
         files:
           - cos/manager/contract.json
@@ -125,9 +124,8 @@ payload:
     dangling: []
     lines:
       - layer 11 · blocked by MG20_add_deploy_connect, MG18_the_supervisor_screen
-      - 'depends on (2): MG20_add_deploy_connect, MG18_the_supervisor_screen · all upstream 59'
+      - 'depends on (2): MG20_add_deploy_connect, MG18_the_supervisor_screen · all upstream 61'
       - 'needed by (0): —'
-      - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'
       - >-
         same files as MG22_template_and_archetype_builder with no order between them:
         cos/manager/contract.json
@@ -136,7 +134,10 @@ payload:
         cos/manager/contract.json
       - 'same files as MG24_network_manager with no order between them: cos/manager/contract.json'
       - 'same files as MG25_storage_manager with no order between them: cos/manager/contract.json'
-      - … and 3 more phases sharing its files without an order
+      - >-
+        same files as MG26_branch_benchmark_merge with no order between them:
+        cos/manager/contract.json
+      - … and 2 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877682408
+exported_at: 1793421631201
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682408
-lastSeenAt: 1792877682408
+firstSeenAt: 1793421631201
+lastSeenAt: 1793421631201
 fingerprint: null
 payload:
   for: CS6_rebuild_from_the_spec
@@ -245,6 +245,12 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D3_the_spec_rebuilds_the_system
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
@@ -271,7 +277,7 @@ payload:
         CS_D3_the_spec_rebuilds_the_system
       - >-
         depends on (3): CS1_a_version_is_a_system_state, CS4_every_system_a_compartment,
-        CS_D3_the_spec_rebuilds_the_system · all upstream 38
+        CS_D3_the_spec_rebuilds_the_system · all upstream 44
       - 'needed by (0): —'
       - 'same files as CS2_test_every_version with no order between them: cos/workspace/index.js'
     edges:

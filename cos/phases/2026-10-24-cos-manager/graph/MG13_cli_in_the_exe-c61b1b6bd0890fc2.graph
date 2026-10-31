@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793365823378
+exported_at: 1793421629708
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823378
-lastSeenAt: 1793365823378
+firstSeenAt: 1793421629708
+lastSeenAt: 1793421629708
 fingerprint: null
 payload:
   for: MG13_cli_in_the_exe
@@ -162,6 +162,9 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG10_categories
       - docs/2026-10-24-cos-manager-phasemap.spec::MG11_category_manager_ui
       - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
       - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
@@ -173,6 +176,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D2_category_is_a_registry_record
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D3_data_through_the_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
       - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
       - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
@@ -202,7 +206,7 @@ payload:
         CON2_grammar_and_completion, CON5_pane, MG12_the_exe_is_the_compartment_manager
       - >-
         depends on (4): CON1_one_door_client, CON2_grammar_and_completion, CON5_pane,
-        MG12_the_exe_is_the_compartment_manager · all upstream 85
+        MG12_the_exe_is_the_compartment_manager · all upstream 89
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client

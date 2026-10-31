@@ -144,7 +144,7 @@ phases:
   CS4a_cos_boots_alone:
     layer: foundation
     status: OPEN
-    depends_on: [CS_D7_sovereign_first, COSA3_run_and_supervise]
+    depends_on: [CS_D7_sovereign_first, COSA3_run_and_supervise, MG17_autopilot_hands_over]
     files: [cos/spine/boot.js, cos/app/runtime.js, lib/nexus/autopilot.js, cos/compartment/process-runner.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-BOOT]
@@ -409,3 +409,6 @@ are not boundary work, so they are deferred too; the coder will flag one if it s
 # - CS8_the_cos_screen is gathered into MG12, the exe as the compartment manager: one window, not two. CS8's Systems, Versions and Links
 #   become MG12's tree and its Versions tab.
 # - CS1 (a version is the Versionium commit plus the QEMU snapshot) is what MG12's Rewind and Versions tabs drive.
+
+# ── ADDENDUM 2026-10-31 — CS4a is the supervisor's bootSet 'core' (MG_D13, docs/2026-10-24-cos-manager-phasemap.spec) ─────────────
+# CS4a now follows MG17: once COS's supervisor runs the system, "COS boots alone" is its policy bootSet = 'core', not a change to autopilot.
