@@ -116,7 +116,7 @@ phases:
       browser steps and the neutral steps still complete
 
   AE3_the_engine_door:
-    status: OPEN
+    status: DONE (headless) 0.60.317 — orchestrator/automation/index.js wires the agent-step hooks: RAID decides the provider (lib/raid-port.js, §5.2), Guardian runs it (:7820 /command), fail-soft; enqueue (fire-and-forget) + askAgent (awaited reply); busEmit streams through the orchestrator's SSE (setBus(broadcast) at boot); browser/macro keep their Clear Glass port. No new cross-system static require (RAID is core lib; Guardian is a runtime port) — test-system-boundary 10/10. Proof: test-orchestrator-automation 7/7 (injected Guardian/RAID). The /automation/* door already served (routes.js). AWAITED-reply completion-watch (poll Guardian's job to completion) and AE2 (Clear Glass serving :7704) / AE5 (the UI) remain his-machine.
     layer: integration
     depends_on: [AE1_move_the_core]
     files:
