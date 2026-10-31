@@ -44,12 +44,20 @@ decisions:
 phases:
   EAS1_the_skeleton_in_emerge:
     status: OPEN
-    depends_on: [EAS_D0_a_system_not_an_idearium_module, EAS_D2_two_contracts_two_names]
+    depends_on: [EAS_D0_a_system_not_an_idearium_module, EAS_D2_two_contracts_two_names, EAS1a_the_boundary_reads_code_not_text]
     files: [Emerge:emerge/server.js, Emerge:emerge/cli.js, Emerge:emerge/lib/system.js, Emerge:emerge/config.js, Emerge:emerge/emerge.config.json, Emerge:emerge/package.json, Emerge:emerge/registry-components.js, Emerge:emerge/ide-registry.js, Emerge:emerge/interaction-contract.json, Emerge:emerge/ide-contract.json, Emerge:emerge/event-taxonomy.js, Emerge:emerge/events-compiler.js, Emerge:emerge/schemas, Emerge:emerge/schemas/records, Emerge:emerge/lang/components.js, Emerge:emerge/emerge-ide.js, Emerge:emerge/spec/emerge.spec, Emerge:emerge/tests/skeleton.test.js]
     spec: docs/emerge-system.spec
     blocks: [MOD-EAS-SKELETON]
     does: "genesis's skeleton laid out from the archetype in the Emerge repo's emerge/, the 13 shared paths merged by EAS_D2"
     proof: "skeleton test green in emerge/; every existing Emerge suite unchanged"
+  EAS1a_the_boundary_reads_code_not_text:
+    status: OPEN
+    depends_on: []
+    files: [cos/archetype/nexus-system/lib/boundary.js, Emerge:emerge/lib/boundary.js]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-BOUNDARY-TEXT]
+    does: "found in EAS1: genesis's boundary check read template-string text as requires; it now reads code only"
+    proof: "the archetype's skeleton test and Emerge's, green"
   EAS2_the_language_through_the_door:
     status: OPEN
     depends_on: [EAS1_the_skeleton_in_emerge, EAS_D3_handlers_run_the_cli]

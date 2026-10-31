@@ -7,11 +7,11 @@ intent: null
 summary: EAS1_the_skeleton_in_emerge (?) — 20 file(s)
 system: idearium
 tags: []
-exported_at: 1793447691363
+exported_at: 1793448283182
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793447691363
-lastSeenAt: 1793447691363
+firstSeenAt: 1793448283182
+lastSeenAt: 1793448283182
 fingerprint: null
 payload:
   id: EAS1_the_skeleton_in_emerge
@@ -43,7 +43,8 @@ payload:
   depends_on:
     - EAS_D0_a_system_not_an_idearium_module
     - EAS_D2_two_contracts_two_names
+    - EAS1a_the_boundary_reads_code_not_text
   blocks:
     - MOD-EAS-SKELETON
   spec: docs/emerge-system.spec
-  graph: c6d40143ba786c1c
+  graph: b9a76e025ece0988

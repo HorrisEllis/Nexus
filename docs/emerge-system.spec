@@ -147,6 +147,24 @@ spec:
       error_paths: ["a shared path not in the merge list → the layout stops and names it"]
       acceptance: ["skeleton test green in emerge/; npm test, npm run test:lang, docs/learn/verify.js and bench/chunks.js derive unchanged"]
 
+    - id: MOD-EAS-BOUNDARY-TEXT
+      name: boundary-reads-code-not-text
+      uuid: nexus-emerge-system-boundary-text-v1-0000-2026-1031-001
+      path: cos/archetype/nexus-system/lib/boundary.js
+      phase: EAS1a_the_boundary_reads_code_not_text
+      description: >-
+        Genesis's sovereignty check (lib/boundary.js outside()) matched require('../x') inside template strings, so a code generator's
+        output text was reported as the system leaving its folder (found laying Emerge out: emerge-codegen-v2.js writes
+        "require('../siso')" into the files it generates). The check now blanks template-literal text (not its ${...} expressions)
+        and comments before matching. Fixed in the archetype, so every system laid out after it has it; Emerge's copy is laid out from it.
+      deps: [{ name: genesis-archetype }]
+      schema_refs: [EmergePlacement]
+      exports: ["outside(root) → [{ file, requires }] — unchanged shape", "codeOnly(src) — the source with template text and comments blanked, same length"]
+      gate_pipeline: ["GATE-EAS1a-001: a require inside a template string is not reported", "GATE-EAS1a-002: a real require that leaves the folder still is, also inside a template's ${...}"]
+      behavioral_contracts: ["blanking keeps every offset and newline, so positions stay the real ones"]
+      error_paths: ["an unterminated template or comment → that file is scanned raw, so nothing is hidden"]
+      acceptance: ["the archetype's tests/skeleton.test.js green; Emerge's skeleton test green with emerge-codegen-v2.js present"]
+
     - id: MOD-EAS-LANG-DOOR
       name: emerge-lang-door
       uuid: nexus-emerge-system-lang-door-v1-0000-2026-1031-001

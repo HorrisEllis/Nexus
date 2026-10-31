@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793447691369
+exported_at: 1793448283189
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793447691369
-lastSeenAt: 1793447691369
+firstSeenAt: 1793448283189
+lastSeenAt: 1793448283189
 fingerprint: null
 payload:
   for: EAS4_callers_through_the_door
@@ -252,6 +252,7 @@ payload:
     dependents: []
     upstream:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
@@ -269,7 +270,7 @@ payload:
       - layer 3 · blocked by EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus
       - >-
         depends on (2): EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus · all
-        upstream 7
+        upstream 8
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door

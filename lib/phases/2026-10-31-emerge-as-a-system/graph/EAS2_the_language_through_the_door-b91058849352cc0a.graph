@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793447691365
+exported_at: 1793448283185
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793447691365
-lastSeenAt: 1793447691365
+firstSeenAt: 1793448283185
+lastSeenAt: 1793448283185
 fingerprint: null
 payload:
   for: EAS2_the_language_through_the_door
@@ -36,6 +36,7 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS5_a_system_of_systems
     upstream:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
@@ -51,7 +52,7 @@ payload:
     dangling: []
     lines:
       - layer 2 · blocked by EAS1_the_skeleton_in_emerge, EAS_D3_handlers_run_the_cli
-      - 'depends on (2): EAS1_the_skeleton_in_emerge, EAS_D3_handlers_run_the_cli · all upstream 4'
+      - 'depends on (2): EAS1_the_skeleton_in_emerge, EAS_D3_handlers_run_the_cli · all upstream 5'
       - >-
         needed by (2): EAS4_callers_through_the_door, EAS5_a_system_of_systems · finishing it
         unlocks EAS5_a_system_of_systems
