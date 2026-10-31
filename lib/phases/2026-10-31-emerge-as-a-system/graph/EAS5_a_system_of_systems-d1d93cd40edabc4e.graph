@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EAS5_a_system_of_systems:d1d93cd40edabc4e
+type: graph
+id: phase:EAS5_a_system_of_systems:d1d93cd40edabc4e
+context: dependency graph of phase EAS5_a_system_of_systems
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793447691370
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793447691370
+lastSeenAt: 1793447691370
+fingerprint: null
+payload:
+  for: EAS5_a_system_of_systems
+  kind: phase
+  repo: null
+  hash: d1d93cd40edabc4e
+  nodes:
+    - path: docs/emerge-system.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+    dependents: []
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+    downstream: []
+    blockedBy:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by EAS2_the_language_through_the_door
+      - 'depends on (1): EAS2_the_language_through_the_door · all upstream 5'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+        kind: declared

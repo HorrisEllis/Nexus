@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+type: phase
+id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+context: pipeline phase EAS4_callers_through_the_door of docs/2026-10-31-emerge-as-a-system-phasemap.spec
+intent: null
+summary: EAS4_callers_through_the_door (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1793447691369
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793447691369
+lastSeenAt: 1793447691369
+fingerprint: null
+payload:
+  id: EAS4_callers_through_the_door
+  map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/server.js
+    - idearium/compiler-bridge.js
+    - copilot/module-builder.js
+    - cortex/core/raid/contract-intake.js
+    - lib/hooks/emerge.hooks.js
+    - tests/modules/test-substrate-spec.test.js
+  depends_on:
+    - EAS2_the_language_through_the_door
+    - EAS3_emerge_at_the_top_of_nexus
+  blocks:
+    - MOD-EAS-CALLERS
+  spec: docs/emerge-system.spec
+  graph: fc9964fecf5c8519

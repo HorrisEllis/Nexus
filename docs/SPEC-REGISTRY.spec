@@ -1954,3 +1954,7 @@ spec:
 # "each phase is a pretermined folder/location of the target directory" · "change the agemnts for the spacial void and spec workshop" ·
 # "spacial void needs to be better, maybe use my framework" · "skip buttons which will autofill generic/default values". AC_D1 (his
 # framework = the Innovation Toolkit) to confirm. The Code tab and Ideas+Notes are docs/2026-10-19-idearium-control-phasemap.spec (open).
+# ADDENDUM 2026-10-31 — registered: docs/emerge-system.spec + docs/2026-10-31-emerge-as-a-system-phasemap.spec (EAS1–EAS5). Emerge as a
+# sovereign system in genesis's shape (server.js, its language through its door, one Emerge at Nexus's top level, lib/emerge's callers
+# switched, a system of systems three deep). James: "emerge needs either to be a module for idearium, or a system with a server.js, etc." ·
+# "okay. do it as long as it gets up closer to building large projects, like i want to be buyilding an operating systems".

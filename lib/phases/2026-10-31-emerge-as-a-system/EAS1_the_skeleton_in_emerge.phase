@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+type: phase
+id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+context: pipeline phase EAS1_the_skeleton_in_emerge of docs/2026-10-31-emerge-as-a-system-phasemap.spec
+intent: null
+summary: EAS1_the_skeleton_in_emerge (?) — 20 file(s)
+system: idearium
+tags: []
+exported_at: 1793447691363
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793447691363
+lastSeenAt: 1793447691363
+fingerprint: null
+payload:
+  id: EAS1_the_skeleton_in_emerge
+  map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - Emerge:emerge/server.js
+    - Emerge:emerge/cli.js
+    - Emerge:emerge/lib/system.js
+    - Emerge:emerge/config.js
+    - Emerge:emerge/emerge.config.json
+    - Emerge:emerge/package.json
+    - Emerge:emerge/registry-components.js
+    - Emerge:emerge/ide-registry.js
+    - Emerge:emerge/interaction-contract.json
+    - Emerge:emerge/ide-contract.json
+    - Emerge:emerge/event-taxonomy.js
+    - Emerge:emerge/events-compiler.js
+    - Emerge:emerge/schemas
+    - Emerge:emerge/schemas/records
+    - Emerge:emerge/lang/components.js
+    - Emerge:emerge/emerge-ide.js
+    - Emerge:emerge/spec/emerge.spec
+    - Emerge:emerge/tests/skeleton.test.js
+    - docs/emerge-system.spec
+    - lib/emerge/emerge-ide.js
+  depends_on:
+    - EAS_D0_a_system_not_an_idearium_module
+    - EAS_D2_two_contracts_two_names
+  blocks:
+    - MOD-EAS-SKELETON
+  spec: docs/emerge-system.spec
+  graph: c6d40143ba786c1c
