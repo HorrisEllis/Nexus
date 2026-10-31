@@ -14,7 +14,7 @@ spec:
     axioms:   >-
       docs/AXIOMS-v3.1.md — §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost, §1.1 nothing pretends,
       §1.2 nothing silently fails, §10.2 projections derived, §10.3 one source of truth. Rheon Kernel v2.1.0 laws as
-      written in architect/docs/ARCHITECT-SPEC-v1.1.0.md: §CF "NO ENGINE CONSUMES RAW MEANING. All engines consume
+      written in architect/docs/ARCHITECT-SPEC-v1.1.0.spec: §CF "NO ENGINE CONSUMES RAW MEANING. All engines consume
       ConstraintField. Meaning is emergent. Never primitive." · §UNFLATTEN "NEVER COLLAPSE COMPETING STRUCTURES EARLY".
     origin: >-
       James, 2026-10-02 — "im a systems thinker, i want this to help me build systems, but i do the ideas." ·
@@ -56,7 +56,7 @@ spec:
   # ── What exists — read, not assumed ───────────────────────────────────────────────────────────────────────────
   found:
     his_kernel: >-
-      Rheon Kernel v2.1.0's irreducible kernel, as written in architect/docs/ARCHITECT-SPEC-v1.1.0.md §0: Field
+      Rheon Kernel v2.1.0's irreducible kernel, as written in architect/docs/ARCHITECT-SPEC-v1.1.0.spec §0: Field
       (possible states) · Constraint (reduces valid future states) · Transition · Observation (evidence) · Lens
       (read-only projection, never modifies the field) · Gap (missing information needed to evaluate a constraint) ·
       History (constraint-consistent transition paths) · Meaning (human interpretation, late-stage, derived). The

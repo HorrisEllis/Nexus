@@ -36,9 +36,9 @@ architect/
       Blueprint.js            the blueprint model
   spec/
     architect.spec            what it is supposed to be
-    architect.node-taxonomy.md
+    architect.node-taxonomy.spec
   docs/
-    ARCHITECT-SPEC-v1.1.0.md  the earlier full specification
+    ARCHITECT-SPEC-v1.1.0.spec  the earlier full specification
 ```
 
 ---
@@ -142,7 +142,7 @@ A blueprint turns a path into a map of what is there and what is missing. That i
 
 1 other file(s).
 
-- other: `architect/docs/ARCHITECT-SPEC-v1.1.0.md`
+- other: `architect/docs/ARCHITECT-SPEC-v1.1.0.spec`
 
 #### `architect/output/`
 
@@ -228,7 +228,7 @@ A blueprint turns a path into a map of what is there and what is missing. That i
 
 2 other file(s).
 
-- other: `architect/spec/architect.node-taxonomy.md`, `architect/spec/architect.spec`
+- other: `architect/spec/architect.node-taxonomy.spec`, `architect/spec/architect.spec`
 
 #### `architect/src/spec/`
 

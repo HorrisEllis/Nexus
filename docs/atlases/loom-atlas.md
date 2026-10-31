@@ -30,7 +30,7 @@ LOOM_PORT=3752 node loom/server.js
 [boot output not captured in the files reviewed this session]
 ```
 
-**Tested:** not run this session — this atlas is built entirely from real source files (`loom/schema/registry.js`, `loom/registry-components.js`, `loom/spec/loom.spec`, `loom/spec/loom.node-taxonomy.md`), not from an executed boot. Stated plainly rather than implied.
+**Tested:** not run this session — this atlas is built entirely from real source files (`loom/schema/registry.js`, `loom/registry-components.js`, `loom/spec/loom.spec`, `loom/spec/loom.node-taxonomy.spec`), not from an executed boot. Stated plainly rather than implied.
 
 ---
 
@@ -69,7 +69,7 @@ loom/
   registry-components.js     real — loom's own declared capability list (25 entries)
   spec/
     loom.spec                real
-    loom.node-taxonomy.md      real
+    loom.node-taxonomy.spec      real
   server.js                     referenced by loom.spec and registry.js comments; not read directly this session
 ```
 
@@ -1067,7 +1067,7 @@ Not expanded further — this session did not read `loom/server.js` or `package.
 
 2 other file(s).
 
-- other: `loom/spec/loom.node-taxonomy.md`, `loom/spec/loom.spec`
+- other: `loom/spec/loom.node-taxonomy.spec`, `loom/spec/loom.spec`
 
 #### `loom/templates/`
 

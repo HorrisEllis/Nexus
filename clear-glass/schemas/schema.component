@@ -25,7 +25,7 @@ payload:
     axiom... max 5 — keep identity tight") is the real precedent for "a component as a compartment
     with boundaries." Not merged into `.cos` — a cos Compartment is a live, running, stateful thing
     (gates, buses, context); a `.component` node is a static declaration. Same boundary concept,
-    borrowed field, two different real things. Clear-glass's own use: clear-glass.node-taxonomy.md
+    borrowed field, two different real things. Clear-glass's own use: clear-glass.node-taxonomy.spec
     marks this VIA LOOM, confirmed — both 'clear-glass' and 'clear-glass/seam' are separate real
     entries in capability-map.js's own SYSTEMS map, so both get their components derived the same
     way guardian's are. This local copy exists so clear-glass can validate/interpret component-shaped

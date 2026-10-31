@@ -279,7 +279,7 @@ Before building anything against "the diagnostic system," confirm which of these
 
 4 other file(s).
 
-- other: `diagnostic/spec/diagnostic.node-taxonomy.md`, `diagnostic/spec/diagnostic.spec`, `diagnostic/spec/healer.node-taxonomy.md`, `diagnostic/spec/healer.spec.md`
+- other: `diagnostic/spec/diagnostic.node-taxonomy.spec`, `diagnostic/spec/diagnostic.spec`, `diagnostic/spec/healer.node-taxonomy.spec`, `diagnostic/spec/healer.spec`
 
 #### `diagnostic/tests/`
 

@@ -729,7 +729,7 @@ Cortex is 359 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cort
 <details>
 <summary>`cortex/spec/` · 2 files</summary>
 
-- `cortex/spec/cortex.node-taxonomy.md` — Node type → system map — Cortex
+- `cortex/spec/cortex.node-taxonomy.spec` — Node type → system map — Cortex
 - `cortex/spec/cortex.spec` — ── ADDENDUM 2026-09-29 (0.39.282) — cortex 3.6.0 ──
 
 </details>
@@ -1471,7 +1471,7 @@ Guardian is 437 files in 47 modules, entry `guardian/server.js`, port 7820, spec
 
 - `guardian/spec/agents-and-accounts.spec` — Agents and accounts — made in the spec workshop (idearium)
 - `guardian/spec/guardian.code-artifact.spec`
-- `guardian/spec/guardian.node-taxonomy.md` — Node type → system map — Guardian
+- `guardian/spec/guardian.node-taxonomy.spec` — Node type → system map — Guardian
 - `guardian/spec/guardian.spec` — ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
 
 </details>
@@ -3266,7 +3266,7 @@ Idearium is 1227 files in 113 modules, entry `idearium/api/index.js`, port 4800,
 <summary>`idearium/spec/` · 8 files</summary>
 
 - `idearium/spec/idea-to-spec.spec` — Idea to spec — made in the spec workshop (idearium)
-- `idearium/spec/idearium.node-taxonomy.md` — Node type → system map — Idearium
+- `idearium/spec/idearium.node-taxonomy.spec` — Node type → system map — Idearium
 - `idearium/spec/idearium.repo-graph.spec` — ── ADDENDUM 2026-09-27 (0.39.273) ───────────────────────────────────────────────────────────────────────
 - `idearium/spec/idearium.repo-roadmap.spec` — ── ADDENDUM 2026-09-28 (0.39.275) — cross-spec dependencies (idearium/repo/roadmap.js buildRoadmap) ──
 - `idearium/spec/idearium.repo-snapshot.spec` — # ADDENDUM 2026-10-07 — 0.40.0 VR1: every change is a snapshot
@@ -3426,7 +3426,7 @@ Architect is 35 files in 7 modules, entry `architect/service.js`, port 3747, spe
 <details>
 <summary>`architect/docs/` · 1 file</summary>
 
-- `architect/docs/ARCHITECT-SPEC-v1.1.0.md` — THE ARCHITECT
+- `architect/docs/ARCHITECT-SPEC-v1.1.0.spec` — THE ARCHITECT
 
 </details>
 
@@ -3471,7 +3471,7 @@ Architect is 35 files in 7 modules, entry `architect/service.js`, port 3747, spe
 <details>
 <summary>`architect/spec/` · 2 files</summary>
 
-- `architect/spec/architect.node-taxonomy.md` — Node type → system map — Architect
+- `architect/spec/architect.node-taxonomy.spec` — Node type → system map — Architect
 - `architect/spec/architect.spec`
 
 </details>
@@ -3608,10 +3608,10 @@ Diagnostic is 75 files in 8 modules, entry `diagnostic/nexus-diagnostic.js`, por
 <details>
 <summary>`diagnostic/spec/` · 4 files</summary>
 
-- `diagnostic/spec/diagnostic.node-taxonomy.md` — Node type → system map — Diagnostic
+- `diagnostic/spec/diagnostic.node-taxonomy.spec` — Node type → system map — Diagnostic
 - `diagnostic/spec/diagnostic.spec` — # ADDENDUM 2026-10-05 — 0.39.342, the diagnostic listens to the pulse; no polling (announce-pulse-repair…
-- `diagnostic/spec/healer.node-taxonomy.md` — Node type → system map — Nexus-Healer
-- `diagnostic/spec/healer.spec.md` — nexus-healer
+- `diagnostic/spec/healer.node-taxonomy.spec` — Node type → system map — Nexus-Healer
+- `diagnostic/spec/healer.spec` — nexus-healer
 
 </details>
 
@@ -4165,7 +4165,7 @@ Intelligence is 208 files in 60 modules, entry `intelligence/server.js`, port 37
 <details>
 <summary>`intelligence/spec/` · 3 files</summary>
 
-- `intelligence/spec/intelligence.node-taxonomy.md` — Node type → system map — Intelligence
+- `intelligence/spec/intelligence.node-taxonomy.spec` — Node type → system map — Intelligence
 - `intelligence/spec/intelligence.spec` — ── ADDENDUM 2026-10-17 (0.60.146) — CFR's delta offered through the contract…
 - `intelligence/spec/self-awareness.spec` — Self-awareness — made in the spec workshop (idearium)
 
@@ -4339,7 +4339,7 @@ Ollama-bridge is 78 files in 8 modules, entry `ollama/server.js`, port 3749. Eac
 <details>
 <summary>`ollama/spec/` · 2 files</summary>
 
-- `ollama/spec/ollama.node-taxonomy.md` — Node type → system map — Ollama
+- `ollama/spec/ollama.node-taxonomy.spec` — Node type → system map — Ollama
 - `ollama/spec/ollama.spec`
 
 </details>
@@ -4437,7 +4437,7 @@ Versionium is 49 files in 6 modules, entry `versionium/server.js`, port 3754, sp
 <summary>`versionium/spec/` · 3 files</summary>
 
 - `versionium/spec/versionium.file-versioning.spec` — # ADDENDUM 2026-10-10 — 0.56.0 SD0: over the limit is a 413, not a reset…
-- `versionium/spec/versionium.node-taxonomy.md` — Node type → system map — Versionium
+- `versionium/spec/versionium.node-taxonomy.spec` — Node type → system map — Versionium
 - `versionium/spec/versionium.spec` — ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
 
 </details>
@@ -4691,7 +4691,7 @@ Copilot is 200 files in 8 modules, entry `copilot/server.js`, port 3750, spec `c
 <details>
 <summary>`copilot/spec/` · 2 files</summary>
 
-- `copilot/spec/copilot.node-taxonomy.md` — Node type → system map — Copilot
+- `copilot/spec/copilot.node-taxonomy.spec` — Node type → system map — Copilot
 - `copilot/spec/copilot.spec` — ── ADDENDUM 2026-07-09 (v3.2.0) — what changed this session ──
 
 </details>
@@ -5182,7 +5182,7 @@ Loom is 250 files in 42 modules, entry `loom/server.js`, port 3752, spec `loom/s
 <details>
 <summary>`loom/spec/` · 2 files</summary>
 
-- `loom/spec/loom.node-taxonomy.md` — Node type → system map — Loom
+- `loom/spec/loom.node-taxonomy.spec` — Node type → system map — Loom
 - `loom/spec/loom.spec` — ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
 
 </details>
@@ -5246,7 +5246,7 @@ Clear-glass is 968 files in 131 modules, port 7704, spec `clear-glass/spec/clear
 <details>
 <summary>`clear-glass/docs/` · 1 file</summary>
 
-- `clear-glass/docs/clear-glass-seam.spec.md` — CLEAR GLASS — NEXUS SEAM Integration Spec
+- `clear-glass/docs/clear-glass-seam.spec` — CLEAR GLASS — NEXUS SEAM Integration Spec
 
 </details>
 
@@ -6472,7 +6472,7 @@ Clear-glass is 968 files in 131 modules, port 7704, spec `clear-glass/spec/clear
 
 - `clear-glass/spec/adblock.spec`
 - `clear-glass/spec/browser-shell.spec`
-- `clear-glass/spec/clear-glass.node-taxonomy.md`
+- `clear-glass/spec/clear-glass.node-taxonomy.spec`
 - `clear-glass/spec/clear-glass.spec`
 - `clear-glass/spec/compartment-downloads.spec`
 - `clear-glass/spec/design-surface.spec`
@@ -7234,7 +7234,7 @@ Cos is 552 files in 73 modules, spec `cos/spec/cos.spec`. Each module below open
 - `cos/archetype/nexus-system/schemas/index.js`
 - `cos/archetype/nexus-system/server.js`
 - `cos/archetype/nexus-system/skeleton.json`
-- `cos/archetype/nexus-system/spec/{{slug}}.node-taxonomy.md`
+- `cos/archetype/nexus-system/spec/{{slug}}.node-taxonomy.spec`
 - `cos/archetype/nexus-system/spec/{{slug}}.spec`
 - `cos/archetype/nexus-system/tests/skeleton.test.js`
 - `cos/archetype/nexus-system/{{slug}}.config.json`
@@ -7926,7 +7926,7 @@ Cos is 552 files in 73 modules, spec `cos/spec/cos.spec`. Each module below open
 <summary>`cos/spec/` · 10 files</summary>
 
 - `cos/spec/check-catalogue.spec`
-- `cos/spec/cos-design-v1.7.0.md`
+- `cos/spec/cos-design-v1.7.0.spec`
 - `cos/spec/cos-spine.spec`
 - `cos/spec/cos.spec`
 - `cos/spec/deny-list.spec`
@@ -8234,7 +8234,7 @@ Core is 4719 files in 39 modules. Each module below opens to its files. In a mod
 - `docs/INTERACTION_CONTRACTS.md`
 - `docs/MAP-2026-08-18-pressure-and-toolkit.md`
 - `docs/MAP-2026-08-19-idearium-agent-pipeline.md`
-- `docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.md`
+- `docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.spec`
 - `docs/NEXUS-IMPROVEMENT-MAP.md`
 - `docs/NEXUS-INTEGRATION-MAP.md`
 - `docs/NEXUS-INTELLIGENCE-LAYER-INDEX.md`
@@ -8375,7 +8375,7 @@ Core is 4719 files in 39 modules. Each module below opens to its files. In a mod
 - `docs/living-spec.spec`
 - `docs/looking-glass/PHASEMAP.md`
 - `docs/looking-glass/README.md`
-- `docs/looking-glass/SPEC.md`
+- `docs/looking-glass/SPEC.spec`
 - `docs/loom-phasemap-section-phasemap.spec`
 - `docs/loom.spec`
 - `docs/loop-topology.spec`
@@ -8463,18 +8463,18 @@ Core is 4719 files in 39 modules. Each module below opens to its files. In a mod
 - `docs/spec-compiler.spec`
 - `docs/spec-drift.spec`
 - `docs/specs/BRIDGE-CAUSAL-SPINE-v1.0.0.md`
-- `docs/specs/CAUSAL-NEXUS.spec.md`
-- `docs/specs/COBALT-CORE.spec.md`
-- `docs/specs/CONTROL-PANEL.spec.md`
-- `docs/specs/CORTEX.spec.md`
+- `docs/specs/CAUSAL-NEXUS.spec`
+- `docs/specs/COBALT-CORE.spec`
+- `docs/specs/CONTROL-PANEL.spec`
+- `docs/specs/CORTEX.spec`
 - `docs/specs/GUARDIAN-COMPLETE.md`
-- `docs/specs/GUARDIAN.spec.md`
-- `docs/specs/IDEARIUM.spec.md`
-- `docs/specs/MODULES.spec.md`
-- `docs/specs/NEXUS-SELF.spec.md`
-- `docs/specs/ORCHESTRATOR-COS.spec.md`
-- `docs/specs/SYSTEM-MAP.spec.md`
-- `docs/specs/VERSIONIUM.spec.md`
+- `docs/specs/GUARDIAN.spec`
+- `docs/specs/IDEARIUM.spec`
+- `docs/specs/MODULES.spec`
+- `docs/specs/NEXUS-SELF.spec`
+- `docs/specs/ORCHESTRATOR-COS.spec`
+- `docs/specs/SYSTEM-MAP.spec`
+- `docs/specs/VERSIONIUM.spec`
 - `docs/substrate.spec`
 - `docs/system-architecture.spec`
 - `docs/system-node-db.spec`
@@ -9115,7 +9115,7 @@ Core is 4719 files in 39 modules. Each module below opens to its files. In a mod
 - `lib/emerge/siso/StreamLog.js`
 - `lib/emerge/siso/index.js`
 - `lib/emerge/spec/emerge-core.spec`
-- `lib/emerge/spec/emerge.node-taxonomy.md`
+- `lib/emerge/spec/emerge.node-taxonomy.spec`
 - `lib/emerge/spec/emerge.spec`
 - `lib/emerge/test/gap-field.test.js`
 - `lib/emerge/test/invariants.test.js`

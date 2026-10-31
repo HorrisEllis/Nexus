@@ -11,7 +11,7 @@ WRITES / READS / VIA LOOM / PARTICIPATES / NOT USED — same as Guardian/Version
 | `hook` | VIA LOOM | Same scan. |
 | `wire` | VIA LOOM | Same scan. |
 | `node` | VIA LOOM | Same scan. |
-| `spec` | REAL, but not the standard form | `nexus-healer/docs/nexus-healer.spec.md` — a Markdown doc named `.spec.md`, not a real `.spec` file matching every other system's convention. Flagged as a naming near-miss, not counted as a real `.spec` node. |
+| `spec` | REAL, but not the standard form | `nexus-healer/docs/nexus-healer.spec` — a Markdown doc named `.spec.md`, not a real `.spec` file matching every other system's convention. Flagged as a naming near-miss, not counted as a real `.spec` node. |
 | `system` | IS ONE | `nexus-healer` is a real, named system in `NEXUS_MAP.md` and `capability-map.js`'s `SYSTEMS` map. |
 | Everything else in the 32 | NOT CHECKED EXHAUSTIVELY | Not swept for every remaining type this pass. |
 

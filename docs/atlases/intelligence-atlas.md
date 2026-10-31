@@ -803,7 +803,7 @@ The entire consolidation is, by the spec's own admission, not yet executed — n
 
 3 other file(s).
 
-- other: `intelligence/spec/intelligence.node-taxonomy.md`, `intelligence/spec/intelligence.spec`, `intelligence/spec/self-awareness.spec`
+- other: `intelligence/spec/intelligence.node-taxonomy.spec`, `intelligence/spec/intelligence.spec`, `intelligence/spec/self-awareness.spec`
 
 #### `intelligence/synthesis/`
 

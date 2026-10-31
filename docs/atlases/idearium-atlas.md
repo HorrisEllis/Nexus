@@ -2316,7 +2316,7 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 
 8 other file(s).
 
-- other: `idearium/spec/idea-to-spec.spec`, `idearium/spec/idearium.node-taxonomy.md`, `idearium/spec/idearium.repo-graph.spec`, `idearium/spec/idearium.repo-roadmap.spec`, `idearium/spec/idearium.repo-snapshot.spec`, `idearium/spec/idearium.spec`, `idearium/spec/nexus-repository-system.spec`, `idearium/spec/void.spec`
+- other: `idearium/spec/idea-to-spec.spec`, `idearium/spec/idearium.node-taxonomy.spec`, `idearium/spec/idearium.repo-graph.spec`, `idearium/spec/idearium.repo-roadmap.spec`, `idearium/spec/idearium.repo-snapshot.spec`, `idearium/spec/idearium.spec`, `idearium/spec/nexus-repository-system.spec`, `idearium/spec/void.spec`
 
 #### `idearium/spec-engine/`
 

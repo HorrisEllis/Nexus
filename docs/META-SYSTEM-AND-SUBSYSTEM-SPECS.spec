@@ -342,7 +342,7 @@ gives parallel/resumable job dispatch — torrent-style swarm distribution
 should be scoped against what that already covers before being built fresh.
 
 **Found, not real:** "Versionium" (causal version control, temporal replay,
-sigma-gated auto-commit per `docs/specs/VERSIONIUM.spec.md`) has no
+sigma-gated auto-commit per `docs/specs/VERSIONIUM.spec`) has no
 implementation — `lib/version.js` is a flat version-string registry, not
 that. idearium's `branch` field doesn't fork — `parentId` always points at
 the most recent snapshot regardless of declared branch; it's a label on a

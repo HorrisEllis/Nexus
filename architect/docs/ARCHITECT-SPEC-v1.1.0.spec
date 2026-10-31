@@ -2075,7 +2075,7 @@ architect/
     integration.test.js
 
   docs/
-    ARCHITECT-SPEC-v1.1.0.md    ← this document
+    ARCHITECT-SPEC-v1.1.0.spec    ← this document
     hooks/                      ← one .md per hook type (22 files)
     schemas/                    ← one .md per schema (all §4 objects)
     examples/

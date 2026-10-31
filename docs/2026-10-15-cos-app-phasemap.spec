@@ -15,7 +15,7 @@ origin:
     sandbox for Nexus (that is the compartment system, different), and not read as auto-running whatever Clear Glass downloads without his say.
   already_mapped_not_built:
     - "cos/spec/cos.spec section GAP 2026-08-14: the '.cos' portable archive (a tar.gz of a compartment's file contents with the snapshot chain and spec). Mapped, not built. It is a compartment's source artifact, not an app updater."
-    - "cos/spec/cos.spec and cos-design-v1.7.0.md: an 'exe' runtime archetype (Windows native EXE runtime, section 46): runs an exe INSIDE a compartment. Not an exe that IS COS."
+    - "cos/spec/cos.spec and cos-design-v1.7.0.spec: an 'exe' runtime archetype (Windows native EXE runtime, section 46): runs an exe INSIDE a compartment. Not an exe that IS COS."
     - "docs/2026-10-05-cos-machines-phasemap.spec: downloads and verifies OS images; offered, never forced onto running compartments. Its update rule is reused here."
     - "So 'its phased already' is true for the pieces (archive, exe runtime, verified downloads) and not for COS as an application."
   reuse:

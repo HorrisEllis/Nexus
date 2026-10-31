@@ -204,4 +204,4 @@ runtime to install.
 
 ## 7. Bundle contents
 
-`SPEC.md` (this file), `PHASEMAP.md` (phased build plan), and `README.md`.
+`SPEC.spec` (this file), `PHASEMAP.md` (phased build plan), and `README.md`.

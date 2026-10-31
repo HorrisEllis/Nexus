@@ -253,7 +253,7 @@ phases:
 # The coder's reading, by his NC0 evidence rule: the spec is what is declared and the component registry is what is discovered. The bridge
 # (CS3) passes a call only where both agree. Rebuild (CS6) and drift compare the same two.
 # Found in the specs, not built in code:
-#   - docs/specs/IDEARIUM.spec.md, Miniworld Manager: "Each miniworld is a .nex file opened as a COS compartment sandbox" — nexus miniworld
+#   - docs/specs/IDEARIUM.spec, Miniworld Manager: "Each miniworld is a .nex file opened as a COS compartment sandbox" — nexus miniworld
 #     list | boot | fork | snapshot | discard. No code names a miniworld.
 #   - docs/cos.spec §GAP 2026-08-14: the ".cos portable archive" — a tar.gz of manifest.json, spec/compartment.spec, code/ and
 #     history/*.nex.gz, "a blueprint's SOURCE artifact". Mapped, not built.

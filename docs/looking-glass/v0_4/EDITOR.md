@@ -1,6 +1,6 @@
 # Looking Glass — Editor Spec (v0.2, draft)
 
-Companion to `SPEC.md` (v0.3) and `PHASEMAP.md` (v0.3). Status: concept stage, nothing built.
+Companion to `SPEC.spec` (v0.3) and `PHASEMAP.md` (v0.3). Status: concept stage, nothing built.
 Origin: design conversation, 2026-10-18. v0.2 removes AI generation and replaces it with
 deterministic code generation from the elements, in the way the WordPress block editor
 builds a page from its blocks.
@@ -9,7 +9,7 @@ Structured in the spec-engine's ten slots (meta, purpose, schema, api, events, i
 failure_modes, build_order, axioms, tests) with `## SECTION: <id>` markers, so it can be
 seeded slot by slot. Open questions sit after the last slot.
 
-Legend (same as `SPEC.md`):
+Legend (same as `SPEC.spec`):
 - **DECIDED** = you said it or agreed to it directly.
 - **PROPOSED** = a suggestion you have not confirmed.
 - **OPEN** = unresolved question.
@@ -20,7 +20,7 @@ Legend (same as `SPEC.md`):
 
 - Name: **Looking Glass Editor** (working name, see E-OQ8).
 - Version: `0.2.0-draft`. Status: proposed.
-- Depends on `SPEC.md` §2.1 (UI is typed data), §2.2 (layers), §2.3 (bus/contract),
+- Depends on `SPEC.spec` §2.1 (UI is typed data), §2.2 (layers), §2.3 (bus/contract),
   §2.6 (variables, bindings, motion), §2.7 (signal providers).
 - Touches `PHASEMAP.md` phases 2, 3, 4, 5, 8, 9, and 11. Proposed amendments are listed in
   `build_order`.
@@ -53,7 +53,7 @@ crates/
 - "Agnostic" (what the editor's output can target): **on hold** at your request. See E-OQ1.
 
 ### What "automatically code" means here (PROPOSED)
-Looking Glass has no markup and no code-as-source (`SPEC.md` §2.1). The scene document
+Looking Glass has no markup and no code-as-source (`SPEC.spec` §2.1). The scene document
 *is* the program. So the editor does not write code; it writes **typed scene data**, which
 the runtime executes directly. "Code" in any other language is an *export*, a projection
 of the document (E-OQ1).
@@ -94,7 +94,7 @@ Looking Glass does the same with elements:
    plugin elements) are editable without new editor code.
 
 ### Non-goals (for now)
-- A web or Chromium-based editor shell (conflicts with `SPEC.md` goals; see E-OQ2).
+- A web or Chromium-based editor shell (conflicts with `SPEC.spec` goals; see E-OQ2).
 - Exporters before E-OQ1 is decided.
 - Multi-user real-time collaboration before single-user op logs are proven (E-OQ5).
 
@@ -114,7 +114,7 @@ refinements of the phase 2 element schema. They are runtime schema, not editor-o
   "opacity": { "$var": "toast.visible", "mix": [0, 1] }
 }
 ```
-Expression set stays at map-range, clamp, and mix (`SPEC.md` OQ10). Style rules need
+Expression set stays at map-range, clamp, and mix (`SPEC.spec` OQ10). Style rules need
 comparisons; see E-OQ7.
 
 ### 2. Style rules (variable- and event-driven styles)
@@ -129,7 +129,7 @@ or a recent event. The last matching rule wins per prop. Changes animate with th
 ]
 ```
 
-### 3. Motion (from `SPEC.md` §2.6, made concrete)
+### 3. Motion (from `SPEC.spec` §2.6, made concrete)
 ```json
 "motion": {
   "spring.snappy": { "kind": "spring", "stiffness": 420, "damping": 32, "mass": 1 },
@@ -278,7 +278,7 @@ cannot map; particles to canvas can). There is no silent degradation.
 
 ### 4. Plugin API
 Plugins can register element schemas, custom inspector widgets for a prop type, signal
-providers (`SPEC.md` §2.7), emitters, and targets. Plugins run under the phase 9
+providers (`SPEC.spec` §2.7), emitters, and targets. Plugins run under the phase 9
 permission model.
 
 ---
@@ -300,10 +300,10 @@ Accepts: `scene:*` change notifications from the runtime, `prefs:*` (theme), and
 `runtime:frame:stats` (performance HUD).
 
 Live editing of another app's scene requires a capability to rewrite lower layers. That is
-`SPEC.md` OQ3, so **the editor forces OQ3 to be decided** (E-OQ3). Until then the editor
+`SPEC.spec` OQ3, so **the editor forces OQ3 to be decided** (E-OQ3). Until then the editor
 edits its own scene and scenes loaded as documents.
 
-Wiring (`wire.add`) produces the bus primitive **element + target + action** (`SPEC.md`
+Wiring (`wire.add`) produces the bus primitive **element + target + action** (`SPEC.spec`
 §2.3). The editor validates each wire against the target layer's contract and refuses
 undeclared events at edit time, not run time.
 
@@ -412,7 +412,7 @@ renderer can host an editor UI. Both are testable from the CLI (`lg-edit emit`,
 7. **Output runs without the editor.**
 8. **Determinism.** Seeded randomness only. Same document plus same event stream gives the
    same pixels.
-9. **No hard-coded layer names** (inherited from `SPEC.md` §2.2).
+9. **No hard-coded layer names** (inherited from `SPEC.spec` §2.2).
 10. **Motion obeys the budget.** Intensity 0 means fully off, for ambient motion and
     particles alike.
 11. **Loud, named failures.** Every rejection names its code, target, and cause.
@@ -455,16 +455,16 @@ renderer can host an editor UI. Both are testable from the CLI (`lg-edit emit`,
    self-host until phases 8 and 9. Proposed: build the headless core (E0, E4) early, and no
    temporary web shell, since that would contradict "not Chromium-based." The alternative is
    a throwaway preview shell for earlier hands-on use.
-3. **E-OQ3. Permissions (`SPEC.md` OQ3).** Live-editing another app's scene requires the meta
+3. **E-OQ3. Permissions (`SPEC.spec` OQ3).** Live-editing another app's scene requires the meta
    layer to rewrite lower layers. The editor cannot fully exist without deciding this.
 4. **E-OQ4. Is the code view editable?** WordPress lets you edit a page's markup directly.
    Proposed: yes, with read-back and drift handling as specified. The alternative is a
    read-only code view, which removes `E_CODE_DRIFT` and read-back entirely.
 5. **E-OQ5. Collaboration:** single user first, then multi-user merge over the op log?
    Proposed: single user; ops already carry `base_rev`, which leaves room for merging later.
-6. **E-OQ6. Visual feel (`SPEC.md` OQ9):** decides default tokens, particle presets, and the
+6. **E-OQ6. Visual feel (`SPEC.spec` OQ9):** decides default tokens, particle presets, and the
    editor's own look.
-7. **E-OQ7. Expressions (`SPEC.md` OQ10):** style rules need comparisons (`gt`, `lt`, `eq`,
+7. **E-OQ7. Expressions (`SPEC.spec` OQ10):** style rules need comparisons (`gt`, `lt`, `eq`,
    `between`) and event recency (`within_ms`). Proposed: add these to phase 2's set, still
    no general scripting.
 8. **E-OQ8. Name.**
