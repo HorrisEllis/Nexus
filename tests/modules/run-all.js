@@ -18,6 +18,7 @@ const fs   = require('fs');
 const MODULES_DIR = __dirname;
 
 const SUITES = [
+  'test-macro-toast-glass.test.js',    // 0.60.335 MT1 — the macro recording/playing toast (breathing red dot + player), driven in Clear Glass
   'test-select-match.test.js',            // 0.60.298 DD1 — bestOption/boolOf: a dropdown/checkbox fills from a profile value that isn't the option's raw value ("United States"→US)
   'test-portfolio-node.test.js',          // 0.60.299 PF1 — the .portfolio node: PortfolioStore + export/import a clearglass.portfolio/1 file (merge by id, newer-wins)
   'test-gig-metadata-glass.test.js',      // 0.60.320 GT6 — Gig metadata tab by tab: radio/checkboxes by label within the tab's limit, read back; not offered, over the limit, required-and-empty, said

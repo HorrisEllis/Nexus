@@ -2132,10 +2132,13 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       if (!_recordingMacro) {
         const r = await cg.macros.recordStart(agentId).catch(e => ({ error: e.message }));
         if (r && r.error) { addMsg('assistant', `Recording: ${r.error}`); return say(`Recording could not start: ${r.error}`, 'error'); }
-        _recordingMacro = true; addMsg('assistant', '\u25CF Recording a macro \u2014 press the shortcut again to stop.');
+        _recordingMacro = true;
+        try { window.CGMacroToast && window.CGMacroToast.recording(true, { onStop: () => { try { SHORTCUT_ACTIONS['cg.macroRecord'](); } catch (_) {} } }); } catch (_) {}   // \u00A7MT1 0.60.335 \u2014 the breathing red-dot toast
+        addMsg('assistant', '\u25CF Recording a macro \u2014 press the shortcut again to stop.');
         return say('\u25CF Recording a macro \u2014 press the same shortcut to stop');
       }
       _recordingMacro = false;
+      try { window.CGMacroToast && window.CGMacroToast.hide(); } catch (_) {}   // \u00A7MT1 0.60.335 \u2014 hide the recording toast on stop
       const r = await cg.macros.recordStop(agentId).catch(e => ({ error: e.message }));
       if (r && r.error) { addMsg('assistant', `Recording: ${r.error}`); return say(`Recording: ${r.error}`, 'error'); }
       // the hotkey has no editor to open, so keep the recording as a real macro now; the .macro file is already on disk
