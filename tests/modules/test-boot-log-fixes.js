@@ -73,7 +73,8 @@ test('BL-004', 'an unknown diagnostic target now RUNS cross-system checks instea
 
 test('BL-005', 'the generic port check reads autopilot\'s OWN kernel table — no second topology map to drift', () => {
   const fn = CLI.slice(CLI.indexOf('async function diagPortsFor'), CLI.indexOf('if (TARGET === \'all\')'));
-  assert.ok(/ALL_KERNELS/.test(fn), 'must source ports from the supervisor, not a hardcoded copy (§10.3)');
+  // 0.60.330 MG17 — the supervisor's list is system-registry kernels() now (since MG17b each system's compartment.json, what COS boots)
+  assert.ok(/ALL_KERNELS|system-registry\.js'\)\)\.kernels\(\)/.test(fn), 'must source ports from the supervisor, not a hardcoded copy (§10.3)');
   assert.ok(/is NOT SERVED/.test(fn),
     'and must name the most likely cause when a port is open but health does not answer — which is exactly what happened here');
 });
