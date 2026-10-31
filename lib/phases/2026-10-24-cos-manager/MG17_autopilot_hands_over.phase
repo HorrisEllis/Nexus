@@ -4,30 +4,39 @@ type: phase
 id: docs_2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
 context: pipeline phase MG17_autopilot_hands_over of docs/2026-10-24-cos-manager-phasemap.spec
 intent: null
-summary: MG17_autopilot_hands_over (?) — 4 file(s)
+summary: MG17_autopilot_hands_over (?) — 12 file(s)
 system: idearium
 tags: []
-exported_at: 1793365823387
+exported_at: 1793426750315
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823387
-lastSeenAt: 1793365823387
+firstSeenAt: 1793426750315
+lastSeenAt: 1793426750315
 fingerprint: null
 payload:
   id: MG17_autopilot_hands_over
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: BUILT 0.60.330
   files:
     - lib/nexus/autopilot.js
+    - lib/nexus/autopilot.retired-0.60.330.js
+    - lib/nexus/core-duties.js
+    - cos/manager/server.js
+    - cos/manager/supervisor.js
     - cos/app/runtime.js
     - package.json
     - lib/nexus-self/systems.js
+    - lib/contracts/drawbridge-baseline.json
+    - loom/maps/cos-testenv-map.js
+    - tests/modules/test-autopilot-handover.test.js
+    - tests/modules/run-all.js
   depends_on:
     - MG16_the_autopilot_door
-    - CS12_the_mover_is_proven
+    - MG_D15_the_handover_keeps_every_duty
   blocks:
     - MOD-MG-AUTOPILOT-HANDOVER
+    - MOD-MG-CORE-DUTIES
   spec: cos/spec/cos-manager.spec
-  graph: ca8cc4ce5d744555
+  graph: e5c79dd3edd6f88a

@@ -2,7 +2,7 @@
 // ID-01..07 (0.60.92): the autopilot's idle signal, GET /idle. Real _state, Guardian's job list faked (its own tests cover the queue).
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), fs = require('fs'), path = require('path');
-const _l = console.log, _e = console.error; console.log = console.error = () => {}; const AP = require('../../lib/nexus/autopilot.js'); console.log = _l; console.error = _e;   // the autopilot announces itself on load; the runner counts lines
+const _l = console.log, _e = console.error; console.log = console.error = () => {}; const AP = require('../../lib/nexus/autopilot.retired-0.60.330.js'); console.log = _l; console.error = _e;   // the autopilot announces itself on load; the runner counts lines
 let passed = 0, failed = 0;
 const SEEDED = ['guardian', 'alpha', 'beta'];
 async function test(name, fn) { for (const k of SEEDED) if (!AP._state[k]) AP._state[k] = { status: 'stable', proc: null, crashes: [] }; const snap = JSON.stringify(Object.fromEntries(Object.entries(AP._state).map(([k, s]) => [k, s.status]))); const procs = Object.fromEntries(Object.entries(AP._state).map(([k, s]) => [k, s.proc]));
@@ -18,7 +18,7 @@ const live = () => ({ exitCode: null, killed: false });
   });
   await test('ID-04 Guardian running with only finished jobs (complete, error): idle', async () => { settle(); AP._state.guardian.proc = live(); const r = await AP._idleReport({ fetchJobs: async () => ({ jobs: [{ status: 'complete' }, { status: 'error' }, { status: 'ignored' }] }) }); assert.strictEqual(r.idle, true); assert.strictEqual(r.guardian.active, 0); assert.strictEqual(r.guardian.total, 3); });
   await test('ID-05 Guardian is running but does not answer: NOT idle, and it says it cannot tell (never a guess)', async () => { settle(); AP._state.guardian.proc = live(); const r = await AP._idleReport({ fetchJobs: async () => { throw new Error('timed out'); } }); assert.strictEqual(r.idle, false); assert.match(r.reasons[0], /cannot tell.*did not answer \/jobs.*timed out/); });
-  await test('ID-06 the route exists on the status server, is read-only (GET), and is exported', () => { const src = fs.readFileSync(path.join(__dirname, '..', '..', 'lib', 'nexus', 'autopilot.js'), 'utf8'); assert.match(src, /req\.method === 'GET' && req\.url === '\/idle'/); assert.strictEqual(typeof AP._idleReport, 'function'); });
+  await test('ID-06 the route exists on the status server, is read-only (GET), and is exported', () => { const src = fs.readFileSync(path.join(__dirname, '..', '..', 'lib', 'nexus', 'autopilot.retired-0.60.330.js'), 'utf8'); assert.match(src, /req\.method === 'GET' && req\.url === '\/idle'/); assert.strictEqual(typeof AP._idleReport, 'function'); });
   await test('ID-07 the active-job words are the ones Guardian really writes (queued, pending, dispatched, started, responding)', () => { const g = fs.readFileSync(path.join(__dirname, '..', '..', 'guardian', 'server.js'), 'utf8'); for (const w of ['queued', 'pending', 'dispatched', 'started', 'responding']) assert.ok(new RegExp(`status\\s*[:=]\\s*'${w}'|status: '${w}'`).test(g), w); });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);
 })();

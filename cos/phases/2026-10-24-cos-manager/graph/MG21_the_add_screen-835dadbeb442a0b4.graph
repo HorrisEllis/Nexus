@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421772877
+exported_at: 1793426750330
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421772877
-lastSeenAt: 1793421772877
+firstSeenAt: 1793426750330
+lastSeenAt: 1793426750330
 fingerprint: null
 payload:
   for: MG21_the_add_screen
@@ -80,6 +80,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D10_the_cockpit_has_its_own_server
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D11_idearium_look_forked
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D12_pages_in_frames_bus_declared
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D6_the_spec_is_the_system
@@ -125,7 +126,7 @@ payload:
     dangling: []
     lines:
       - layer 11 · blocked by MG20_add_deploy_connect, MG18_the_supervisor_screen
-      - 'depends on (2): MG20_add_deploy_connect, MG18_the_supervisor_screen · all upstream 62'
+      - 'depends on (2): MG20_add_deploy_connect, MG18_the_supervisor_screen · all upstream 63'
       - 'needed by (0): —'
       - >-
         same files as MG22_template_and_archetype_builder with no order between them:

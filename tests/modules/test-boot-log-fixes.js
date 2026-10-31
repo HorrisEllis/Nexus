@@ -31,7 +31,7 @@ const DIAG = fs.readFileSync(path.join(ROOT, 'diagnostic/nexus-diagnostic.js'), 
 const CLI  = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'diagnose.js'), 'utf8');
 const LEDG = fs.readFileSync(path.join(ROOT, 'lib/component-ledger.js'), 'utf8');
 const NC   = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'nexus-connect.js'), 'utf8');
-const AP   = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
+const AP   = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.retired-0.60.330.js'), 'utf8');
 
 // ── BUG 1: the diagnostic service never served /health ─────────────────────
 test('BL-001', 'CRITICAL: diagnostic serves /health — the route autopilot has ALWAYS gated it on', () => {

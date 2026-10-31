@@ -8,6 +8,9 @@
  * James, 2026-10-16: "cos app for windows"  (the app that "runs nexus on my pc", so the zip can just be replaced)
  *
  * COS does not become a second supervisor: it starts the project's OWN supervisor (nexus/autopilot.js, status on :7799) and waits for it to say it is up.
+ * 0.60.330 MG17 — from 0.60.330 on, a release's lib/nexus/autopilot.js is the launcher that starts COS's manager (cos/manager/server.js) as its one
+ * supervisor; an older release's autopilot still supervises itself. The entry is the same file either way, so ENTRIES is unchanged;
+ * supervisorOf() says which one a release has, run.json and status() carry it, and both answer /status on the same port (MG-003).
  * No Node install is needed: when COS is the Electron app it runs the project with its own runtime (ELECTRON_RUN_AS_NODE). The release zip has no node_modules, and
  * Nexus's whole runtime dependency list is one package (js-yaml): COS bundles it and hands it over through NODE_PATH. A version that needs anything COS does not bundle
  * is refused BEFORE it starts, naming the module (preflight), not left to crash.
@@ -21,6 +24,8 @@ const MODULE_ID = 'cos.app.runtime';
 // installed release, so it uses the one the release has (an explicit entry still wins)
 const ENTRIES = ['lib/nexus/autopilot.js', 'nexus/autopilot.js'];
 function entryOf(versionDir, entry) { if (entry) return entry; return ENTRIES.find(e => fs.existsSync(path.join(versionDir, e))) || ENTRIES[0]; }
+/** supervisorOf(versionDir) → 'cos-manager' (0.60.330 on: the launcher hands over) | 'autopilot' (an older release supervises itself) */
+function supervisorOf(versionDir) { return fs.existsSync(path.join(versionDir, 'cos', 'manager', 'server.js')) && fs.existsSync(path.join(versionDir, 'lib', 'nexus', 'core-duties.js')) ? 'cos-manager' : 'autopilot'; }
 const DEFAULTS = { entry: null, statusPort: 7799, ports: [7799, 7820, 4800, 9000], healthTimeoutMs: 60000, graceMs: 8000, keepLogs: 10 };
 const paths = (root, project) => { const p = path.join(root, 'projects', project); return { project: p, logs: path.join(p, 'logs'), run: path.join(p, 'run.json') }; };
 const rmf = (f) => { try { fs.unlinkSync(f); } catch (_) {} };
@@ -77,10 +82,10 @@ async function start(root, project, version, opts = {}) {
   let child; try { child = spawn(o.node || process.execPath, [o.entry, `--status-port=${o.statusPort}`], { cwd: dir, env, detached: true, stdio: ['ignore', fd, fd], windowsHide: true }); }
   catch (e) { fs.closeSync(fd); return { ok: false, reason: 'spawn', error: `could not start: ${e.message}` }; }
   fs.closeSync(fd); const t0 = Date.now(); let exited = null; child.once('exit', (code, sig) => { exited = { code, sig }; }); child.once('error', (e) => { exited = { code: null, sig: null, error: e.message }; }); child.unref();
-  fs.writeFileSync(P.run, JSON.stringify({ pid: child.pid, project, version, statusPort: o.statusPort, startedAt: new Date().toISOString(), log }));
+  fs.writeFileSync(P.run, JSON.stringify({ pid: child.pid, project, version, statusPort: o.statusPort, supervisor: supervisorOf(dir), startedAt: new Date().toISOString(), log }));
   while (Date.now() - t0 < o.healthTimeoutMs) {
     if (exited) { rmf(P.run); return { ok: false, reason: 'exited', error: `${project} ${version} exited during start (${exited.error || `code ${exited.code}${exited.sig ? ', ' + exited.sig : ''}`}). Last log lines:\n${tail(log)}`, logTail: tail(log), log }; }
-    if (await probe(o.statusPort)) return { ok: true, pid: child.pid, version, healthyAfterMs: Date.now() - t0, log };
+    if (await probe(o.statusPort)) return { ok: true, pid: child.pid, version, supervisor: supervisorOf(dir), healthyAfterMs: Date.now() - t0, log };
     await new Promise(r => setTimeout(r, o.pollMs || 300));
   }
   await stop(root, project, { graceMs: o.graceMs });
@@ -106,8 +111,8 @@ async function stop(root, project, { graceMs = DEFAULTS.graceMs } = {}) {
 async function status(root, project) {
   const run = readRun(root, project); if (!run) return { running: false };
   if (!alive(run.pid)) { rmf(paths(root, project).run); return { running: false, note: `${run.version} was running (pid ${run.pid}) and has exited` }; }
-  return { running: true, pid: run.pid, version: run.version, startedAt: run.startedAt, statusPort: run.statusPort, healthy: await probe(run.statusPort), log: run.log };
+  return { running: true, pid: run.pid, version: run.version, supervisor: run.supervisor || 'autopilot', startedAt: run.startedAt, statusPort: run.statusPort, healthy: await probe(run.statusPort), log: run.log };
 }
 function logs(root, project, { lines = 50 } = {}) { const r = readRun(root, project); let f = r && r.log; if (!f) { try { const d = paths(root, project).logs; const n = fs.readdirSync(d).filter(x => /\.log$/.test(x)).sort().pop(); f = n && path.join(d, n); } catch (_) {} } return f ? { file: f, text: tail(f, lines) } : { file: null, text: '' }; }
 
-module.exports = { MODULE_ID, DEFAULTS, defaultModulesDir, preflight, portsBusy, start, stop, status, logs, readRun, killTree: _killTree };
+module.exports = { MODULE_ID, DEFAULTS, ENTRIES, supervisorOf, defaultModulesDir, preflight, portsBusy, start, stop, status, logs, readRun, killTree: _killTree };

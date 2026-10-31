@@ -34,7 +34,7 @@ const mk = (declarations, extra = {}) => { const s = createSupervisor({ root: di
 (async () => {
   console.log('\n⬡  COS\'s supervisor — autopilot\'s rules, read from what each system declares (MG15b)\n');
   await test('SV-01', "the defaults equal autopilot's constants", () => {
-    const src = fs.readFileSync(path.join(ROOT, 'lib/nexus/autopilot.js'), 'utf8');
+    const src = fs.readFileSync(path.join(ROOT, 'lib/nexus/autopilot.retired-0.60.330.js'), 'utf8');
     const c = (n) => Number(eval((new RegExp(`const ${n}\\s*=\\s*([^;\\n]+)`).exec(src) || [])[1].replace(/Number\(process\.env\.\w+ \|\| ([\d.]+)\)/, '$1')));
     assert.deepStrictEqual(DEFAULTS.restart.backoffMs, [c('BACKOFF_BASE_MS'), c('BACKOFF_MAX_MS')]);
     assert.deepStrictEqual([DEFAULTS.stableMs, DEFAULTS.circuit.maxRestarts, DEFAULTS.circuit.windowMs], [c('STABLE_MS'), c('CIRCUIT_MAX_CRASHES'), c('CIRCUIT_WINDOW_MS')]);

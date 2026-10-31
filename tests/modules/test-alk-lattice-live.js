@@ -38,7 +38,7 @@ async function test(id, desc, fn) {
 
 const ROOT = path.join(__dirname, '../..');
 const HTML = fs.readFileSync(path.join(ROOT, 'architect/src/ui/alk-lattice.html'), 'utf8');
-const { _handleGraphRead } = require('../../lib/nexus/autopilot.js');
+const { _handleGraphRead } = require('../../lib/nexus/autopilot.retired-0.60.330.js');
 
 let server, PORT;
 const GET = (p) => new Promise((resolve) => {

@@ -3,9 +3,10 @@
  * cos/manager/server.js — COS's manager as its own process: `node cos/manager/server.js [--boot]`.
  * Spec: cos/spec/cos-manager.spec MOD-MG-SERVER · Map: docs/2026-10-24-cos-manager-phasemap.spec MG15_the_supervisor_in_cos
  *
- * The supervisor's routes under /api/cos/ on :7799 (COS_MANAGER_PORT overrides), 127.0.0.1 only, headless. :7799 is autopilot's door; until
- * the handover (MG17) autopilot holds it, so this server says so and exits instead of starting a second supervisor (MG-001). autopilot's
- * own routes on this door are MG16's.
+ * The supervisor's routes under /api/cos/ on :7799 (COS_MANAGER_PORT overrides), 127.0.0.1 only, headless. :7799 is autopilot's door; while
+ * an old autopilot holds it this server says so and exits instead of starting a second supervisor (MG-001). autopilot's own routes on this
+ * door are MG16's. Since MG17 (0.60.330) lib/nexus/autopilot.js launches it: --only=a,b is the boot set for --boot, --handover=<version>
+ * writes the 'handover' line naming the release, --root=<dir> reads another tree's declarations (a fixture).
  *   GET  /api/cos/health · /api/cos/systems · /api/cos/systems/:name · /api/cos/ledger[?system&limit] · /api/cos/policy
  *   POST /api/cos/boot · /api/cos/systems/:name/(start|stop|restart|touch|reset-circuit) — each act carries { by } (MG-006)
  *   PATCH /api/cos/policy
@@ -22,7 +23,7 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
     let body = {};
     if ((m === 'POST' || m === 'PATCH') && p.startsWith('/api/cos')) { let raw = ''; for await (const c of req) raw += c; try { body = raw ? JSON.parse(raw) : {}; } catch (_) { return send(res, 400, { ok: false, error: 'the body is not JSON' }); } }
     try {
-      if (m === 'GET' && p === '/api/cos/health') return send(res, 200, { ok: true, service: 'cos-manager', systems: sup.list().length, ledger: sup.ledgerFile });
+      if (m === 'GET' && p === '/api/cos/health') return send(res, 200, { ok: true, service: 'cos-manager', pid: process.pid, systems: sup.list().length, ledger: sup.ledgerFile });   // MG17: pid, so a launcher can prove it is the one it started
       if (m === 'GET' && p === '/api/cos/systems') return send(res, 200, { ok: true, systems: sup.list() });
       if (m === 'GET' && p === '/api/cos/ledger') return send(res, 200, { ok: true, entries: sup.ledger({ limit: Number(u.searchParams.get('limit')) || 100, system: u.searchParams.get('system') }) });
       if (m === 'GET' && p === '/api/cos/legacy-callers') return send(res, 200, { ok: true, callers: door.legacyCallers() });   // MG16: who still calls /tables and /files
@@ -46,20 +47,23 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
   });
 }
 
-function listen(sup, port = Number(process.env.COS_MANAGER_PORT) || 7799) {
+function listen(sup, port = Number(process.env.COS_MANAGER_PORT) || 7799, opts = {}) {
   return new Promise((resolve, reject) => {
-    const srv = createServer(sup);
+    const srv = createServer(sup, opts);
     srv.once('error', (e) => reject(e.code === 'EADDRINUSE' ? new Error(`:${port} is held — autopilot's door until the handover (MG17); COS does not start a second supervisor (MG-001)`) : e));
     srv.listen(port, '127.0.0.1', () => resolve(srv));
   });
 }
 
 if (require.main === module) {
-  const root = path.resolve(__dirname, '..', '..');
+  const arg = (k) => { const a = process.argv.find(x => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : null; };
+  const root = arg('root') ? path.resolve(arg('root')) : path.resolve(__dirname, '..', '..');
+  const only = arg('only') ? arg('only').split(',').map(s => s.trim()).filter(Boolean) : null;
   const sup = createSupervisor({ root });
-  listen(sup).then(async (srv) => {
+  listen(sup, undefined, { root }).then(async (srv) => {
     console.log(`[cos] manager on 127.0.0.1:${srv.address().port} — ${sup.list().length} systems declared`);
-    if (process.argv.includes('--boot')) { const r = await sup.boot({ by: 'boot' }); console.log(`[cos] booted ${r.started.length}, skipped ${r.skipped.length}`); }
+    if (arg('handover')) sup.note('handover', `autopilot ${arg('handover')} handed supervision to COS's manager (MG17); its body is archived`, { by: 'boot' });
+    if (process.argv.includes('--boot')) { const r = await sup.boot({ by: 'boot', ...(only ? { set: only } : {}) }); console.log(`[cos] booted ${r.started.length}, skipped ${r.skipped.length}`); }
     const bye = () => { sup.shutdown({ by: 'boot' }); srv.close(); setTimeout(() => process.exit(0), 500).unref(); };
     process.on('SIGINT', bye); process.on('SIGTERM', bye);
   }).catch((e) => { console.error(`[cos] ${e.message}`); process.exit(1); });

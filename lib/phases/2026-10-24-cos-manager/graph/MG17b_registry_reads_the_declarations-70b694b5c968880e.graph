@@ -1,0 +1,150 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MG17b_registry_reads_the_declarations:70b694b5c968880e
+type: graph
+id: phase:MG17b_registry_reads_the_declarations:70b694b5c968880e
+context: dependency graph of phase MG17b_registry_reads_the_declarations
+intent: null
+summary: 16 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793426750318
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793426750318
+lastSeenAt: 1793426750318
+fingerprint: null
+payload:
+  for: MG17b_registry_reads_the_declarations
+  kind: phase
+  repo: null
+  hash: 70b694b5c968880e
+  nodes:
+    - path: lib/cli/compartments.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-compartment-declarations.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-system-registry.js
+      role: changes
+      exists: true
+      system: null
+    - path: diagnostic/healer/api/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/diagnostic/nexus-heal.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-status.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-tunnel.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cos-bridge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/system-registry.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: lib/system-registry.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: tests/modules/test-compartment-declarations.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: diagnostic/healer/api/index.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/nexus-heal.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-status.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-system-tunnel.test.js
+      to: lib/system-registry.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+    dependents: []
+    upstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · ready
+      - 'depends on (1): MG17_autopilot_hands_over · all upstream 8'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+        kind: declared

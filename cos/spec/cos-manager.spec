@@ -583,6 +583,26 @@ spec:
       error_paths: ["the manager cannot start → the launcher says why and exits non-zero; it never falls back to supervising silently"]
       acceptance: ["npm run start:all boots the system; /status lists every system; an old release zip still starts in cos.exe"]
 
+    - id: MOD-MG-CORE-DUTIES
+      name: core-duties
+      uuid: nexus-cos-manager-core-duties-v1-0000-2026-1031-001
+      path: lib/nexus/core-duties.js
+      phase: MG17_autopilot_hands_over
+      description: >-
+        What autopilot did besides supervising, kept in lib and run by the launcher after the handover (MG_D15): the fan-in, the ledger
+        wire, error.log and the intelligence substrate wired in the launcher's process; the post-boot vitals check; automatic updates
+        (restart by COS's route, idle by the door's /idle); the loom registry refresh when memory allows; an instance snapshot every minute
+        (event_log autopilot.instance_snapshot, the shape lib/pressure-window.js reads); and, following COS's ledger, a kernel_circuit_open
+        gap (lib/gap-field.js) for each circuit-open line and a diagnostic run (lib/cli/diagnose.js) for each boot phase that stalled.
+        It reaches COS only by its routes.
+      deps: [{ name: manager-server }, { name: autopilot-door }, { name: supervisor }]
+      schema_refs: [SupervisorLedgerEntry, SupervisedSystem]
+      exports: ["cosClient(base) → { health, systems, ledger, boot, restart, idle }", "start({ base, log, afterBoot }) → { stop }", "snapshot(systems) → the instance_snapshot payload", "follow(entries, seen) → the acts a ledger line asks for"]
+      gate_pipeline: ["GATE-MG17-003: each duty skipped in a test run says so", "GATE-MG17-004: a ledger line acted on once (its id remembered)"]
+      behavioral_contracts: ["the instance snapshot keeps autopilot's type and payload keys", "a circuit-open line makes one kernel_circuit_open gap", "nothing here starts, stops or restarts a system except by COS's route with by = rule:<duty>"]
+      error_paths: ["COS does not answer → the duty says so and tries at its next tick; it never supervises in COS's place", "a duty's module cannot load → said once, the others go on"]
+      acceptance: ["test-autopilot-handover: the snapshot's keys equal autopilot's, a circuit-open line makes one gap, a stall line runs one diagnostic"]
+
     # ── the backend the pages stand on (MG1–MG8, MG10) ────────────────────
 
     - id: MOD-MG-LOOM-SPINE
@@ -1262,3 +1282,9 @@ spec:
 # crashesInWindow, lastExit, downSince, lastActivity; declarations() and lastBoot. States map to autopilot's (up → online, idle → dormant,
 # circuit-open → circuit_open). Acceptance: tests/modules/test-cos-autopilot-door.test.js AD-01..04 (every route of autopilot's source
 # answered, /status's shape, /control and /spawn shapes, legacy counted).
+
+# ── ADDENDUM 2026-10-31 (0.60.330) — MG17: the handover, with every duty kept (MG_D15) ─────────────────────────────────────────────
+# James, 2026-10-31: "Starting the mg-17". MOD-MG-AUTOPILOT-HANDOVER changed by MG_D15 (docs/2026-10-24-cos-manager-phasemap.spec): the
+# launcher stays in the foreground by default (its export "exit 0" becomes --detach's), it refuses to start beside an old autopilot on the
+# port, and --legacy-supervisor runs the archived body (lib/nexus/autopilot.retired-0.60.330.js). New: MOD-MG-CORE-DUTIES, the duties the
+# first version of this module did not name. The manager server takes --only and --handover=<version> (a 'handover' ledger line).

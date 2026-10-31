@@ -29,7 +29,7 @@ const freePort = () => new Promise(r => { const s = http.createServer().listen(0
   const call = (m, p, h = {}) => new Promise((ok) => { const r = http.request(base + p, { method: m, headers: h }, (res) => { let t = ''; res.on('data', c => t += c); res.on('end', () => { let b = null; try { b = JSON.parse(t); } catch (_) { b = t; } ok({ code: res.statusCode, body: b, headers: res.headers }); }); }); r.end(); });
   try {
     await test('AD-01', 'every route autopilot serves is answered (none 404), read from its own source', async () => {
-      const src = fs.readFileSync(path.join(ROOT, 'lib/nexus/autopilot.js'), 'utf8');
+      const src = fs.readFileSync(path.join(ROOT, 'lib/nexus/autopilot.retired-0.60.330.js'), 'utf8');
       const block = src.slice(src.indexOf('function _startStatusServer'), src.indexOf("res.end('not found"));
       const routes = [...new Set([...block.matchAll(/req\.url === '([^']+)'|req\.url\.startsWith\('([^']+)'\)|\^\\\/(\w[\w-]*)\\\//g)].map(m => m[1] || m[2] || `/${m[3]}/`))];
       assert.ok(routes.length >= 11, routes.join(' '));

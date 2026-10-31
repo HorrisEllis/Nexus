@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793425834320
+exported_at: 1793426750311
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793425834320
-lastSeenAt: 1793425834320
+firstSeenAt: 1793426750311
+lastSeenAt: 1793426750311
 fingerprint: null
 payload:
   for: MG16_the_autopilot_door
@@ -146,6 +146,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
       - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
       - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17b_registry_reads_the_declarations
       - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
       - docs/2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG23_allocation_and_balance
@@ -155,13 +156,16 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
     conflicts: []
     dangling: []
     lines:
       - layer 4
       - 'depends on (1): MG15_the_supervisor_in_cos · all upstream 5'
-      - 'needed by (1): MG17_autopilot_hands_over · all downstream 23'
+      - >-
+        needed by (1): MG17_autopilot_hands_over · all downstream 24 · finishing it unlocks
+        MG17_autopilot_hands_over
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
         kind: declared

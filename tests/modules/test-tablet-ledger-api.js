@@ -34,7 +34,7 @@ async function test(id, desc, fn) {
 // real tree for the duration of the test, then remove it — read-only
 // everywhere else, and the planted dir name can never collide with a real
 // system (uuid suffix).
-const { _handleLedgerRead } = require('../../lib/nexus/autopilot.js');
+const { _handleLedgerRead } = require('../../lib/nexus/autopilot.retired-0.60.330.js');
 const REPO_LEDGER = path.join(__dirname, '../../data/ledger');
 const SYS = `t1test-${Date.now()}`;
 const HOOK = 'unit.hook.name';
