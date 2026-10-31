@@ -9,6 +9,11 @@ stranger can check in this repository. **Nothing here is claimed without a point
 with an AI coder. The ideas, the architecture, the direction, and the calls about what is right are his; each entry
 says which part is which (docs/CLAUDE.md, "His decisions, quoted with their context").
 
+> **2026-10-31 — start at [`docs/JAMES-BROOKS.md`](JAMES-BROOKS.md).** James: "Make an undeniable document. I want credit
+> for it. Everything that's me." That page is the front door: credit stated plainly, a five-minute check, his INNOVATION
+> TOOLKIT (now kept whole in [`innovation-toolkit-main.md`](innovation-toolkit-main.md)) traced to the code it became,
+> and the numbers as of 2026-10-31. The table just below is kept as written; its numbers are from an earlier release.
+
 ## The work, in numbers you can check
 
 | What | Number | How to check |
