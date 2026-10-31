@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421629657
+exported_at: 1793422031171
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421629657
-lastSeenAt: 1793421629657
+firstSeenAt: 1793422031171
+lastSeenAt: 1793422031171
 fingerprint: null
 payload:
   for: MG0b_the_full_spec
@@ -47,6 +47,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
       - docs/2026-10-24-cos-manager-phasemap.spec::MG6_settings_by_template_and_type
       - docs/2026-10-24-cos-manager-phasemap.spec::MG10_categories
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
@@ -68,6 +69,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
       - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
       - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
@@ -98,16 +100,18 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
     unlocks:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
     conflicts: []
     dangling: []
     lines:
       - layer 1 · blocked by MG_D0_order
       - 'depends on (1): MG_D0_order'
       - >-
-        needed by (8): MG1_loom_on_its_registry_spine, MG3_the_state_manager,
+        needed by (9): MG1_loom_on_its_registry_spine, MG3_the_state_manager,
         MG5_browsers_and_editors, MG6_settings_by_template_and_type, MG10_categories,
-        MG15_the_supervisor_in_cos, MG18_the_supervisor_screen, MG19_the_spec_bundle · all
-        downstream 41 · finishing it unlocks MG5_browsers_and_editors
+        MG15a_every_system_declares_its_process, MG15_the_supervisor_in_cos,
+        MG18_the_supervisor_screen, MG19_the_spec_bundle · all downstream 42 · finishing it unlocks
+        MG5_browsers_and_editors, MG15a_every_system_declares_its_process
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
         kind: declared

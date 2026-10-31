@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421629677
+exported_at: 1793421772823
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421629677
-lastSeenAt: 1793421629677
+firstSeenAt: 1793421772823
+lastSeenAt: 1793421772823
 fingerprint: null
 payload:
   for: MG4_resources_per_compartment
@@ -77,6 +77,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D8_raid_home
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
       - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
@@ -112,7 +113,7 @@ payload:
         CS5_caps_per_compartment, CS7_spawn_despawn_and_balance
       - >-
         depends on (3): MG3_the_state_manager, CS5_caps_per_compartment,
-        CS7_spawn_despawn_and_balance · all upstream 54
+        CS7_spawn_despawn_and_balance · all upstream 55
       - >-
         needed by (3): MG9_the_console_ui, MG12_the_exe_is_the_compartment_manager,
         MG23_allocation_and_balance · all downstream 7

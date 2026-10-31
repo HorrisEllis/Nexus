@@ -346,9 +346,17 @@ phases:
       its status card instead, and says so.
     proof: "a fixture compartment's index.html appears as its thumbnail and updates after a change; one with no UI says it has none"
 
+  MG15a_every_system_declares_its_process:
+    status: BUILT 0.60.326
+    depends_on: [MG0b_the_full_spec, MG_D13_the_supervisor_before_the_core_boot]
+    files: [lib/cli/compartments.js, lib/system-registry.js, orchestrator/compartment.json, architect/compartment.json, diagnostic/compartment.json, cortex/compartment.json, guardian/compartment.json, idearium/compartment.json, intelligence/compartment.json, ollama/compartment.json, versionium/compartment.json, copilot/compartment.json, loom/compartment.json, clear-glass/compartment.json, tests/modules/test-compartment-declarations.test.js, tests/modules/run-all.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-DECLARE]
+    does: "every system's compartment.json carries its whole process, generated from today's boot list; orchestrator and architect get one; diagnostic's keeps its fields"
+    proof: "the declarations reproduce autopilot's 13 processes field for field"
   MG15_the_supervisor_in_cos:
     status: OPEN
-    depends_on: [MG0b_the_full_spec, MG_D4_cos_is_the_autopilot, MG_D13_the_supervisor_before_the_core_boot]
+    depends_on: [MG0b_the_full_spec, MG_D4_cos_is_the_autopilot, MG_D13_the_supervisor_before_the_core_boot, MG15a_every_system_declares_its_process]
     files: [cos/manager/supervisor.js, cos/manager/server.js, lib/system-shape.js, tests/modules/test-cos-supervisor.test.js, tests/modules/run-all.js]
     spec: cos/spec/cos-manager.spec
     blocks: [MOD-MG-SUPERVISOR, MOD-MG-SERVER]

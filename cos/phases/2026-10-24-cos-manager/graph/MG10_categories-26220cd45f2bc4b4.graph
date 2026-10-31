@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421629700
+exported_at: 1793421772844
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421629700
-lastSeenAt: 1793421629700
+firstSeenAt: 1793421772844
+lastSeenAt: 1793421772844
 fingerprint: null
 payload:
   for: MG10_categories
@@ -218,6 +218,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
       - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
@@ -268,7 +269,7 @@ payload:
       - >-
         depends on (5): MG0b_the_full_spec, MG5_browsers_and_editors,
         MG6_settings_by_template_and_type, CS4_every_system_a_compartment,
-        MG_D2_category_is_a_registry_record · all upstream 46
+        MG_D2_category_is_a_registry_record · all upstream 47
       - 'needed by (1): MG11_category_manager_ui · all downstream 4'
       - >-
         same files as MG3_the_state_manager with no order between them: cos/manager/routes.js,

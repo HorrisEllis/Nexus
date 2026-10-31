@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421629741
+exported_at: 1793421772887
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421629741
-lastSeenAt: 1793421629741
+firstSeenAt: 1793421772887
+lastSeenAt: 1793421772887
 fingerprint: null
 payload:
   for: MG25_storage_manager
@@ -51,6 +51,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
       - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
@@ -99,7 +100,7 @@ payload:
         SV2_into_a_compartment
       - >-
         depends on (3): MG15_the_supervisor_in_cos, MG3_the_state_manager, SV2_into_a_compartment ·
-        all upstream 14
+        all upstream 15
       - 'needed by (1): MG27_state_and_resource_screens'
       - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'
       - >-

@@ -8,10 +8,9 @@
     "kind": "virtual",
     "id": "repo.nexus.clear-glass",
     "scope": [
-      "clear-glass/",
-      "data/clear-glass/"
+      "clear-glass/"
     ],
-    "versionLine": "3.1.0",
+    "versionLine": "3.24.0",
     "versionNote": "from lib/version.js modules"
   },
   "cos": {
@@ -25,26 +24,52 @@
     "phase": 3,
     "critical": false,
     "optional": true,
-    "healthUrl": "http://127.0.0.1:7704/health"
+    "healthUrl": "http://127.0.0.1:7704/health",
+    "process": {
+      "name": "clear-glass",
+      "cmd": "electron",
+      "args": [
+        "."
+      ],
+      "cwd": "clear-glass",
+      "env": {
+        "GUARDIAN_DIR": "{{root}}/guardian"
+      },
+      "phase": 3,
+      "optional": true,
+      "healthUrl": "http://127.0.0.1:7704/health",
+      "minRestartDelay": 3000,
+      "haltPctOverride": 0.15,
+      "cmdCandidates": [
+        "{{root}}/clear-glass/node_modules/.bin/electron",
+        "{{root}}/node_modules/.bin/electron"
+      ]
+    }
   },
   "data": {
-    "dataDir": "data/clear-glass",
+    "dataDir": "clear-glass/data",
     "ledgerDir": "clear-glass/data/ledger",
     "nodeIndexDir": "clear-glass/data/node-index"
   },
   "spec": "clear-glass/spec/",
   "dependsOn": {
-    "copilot": 1
+    "copilot": 2,
+    "ollama": 2,
+    "cortex": 1
   },
-  "sharedLibRequires": 11,
+  "sharedLibRequires": 61,
   "stats": {
-    "jsFiles": 82,
-    "jsLines": 27535
+    "jsFiles": 265,
+    "jsLines": 56757
   },
   "boundaryFindings": {
-    "count": 1,
+    "count": 5,
     "sample": [
-      "clear-glass/src/mesh/agent-mesh.js -> copilot/lifeline.js"
+      "clear-glass/src/copilot/bridge.js -> copilot/lib/nexus-ask.js",
+      "clear-glass/src/copilot/bridge.js -> ollama/ollama-runtime.js",
+      "clear-glass/src/copilot/bridge.js -> ollama/ollama-runtime.js",
+      "clear-glass/src/mesh/agent-mesh.js -> copilot/lifeline.js",
+      "clear-glass/test/copilot-cli.test.js -> cortex/memory/jaa-db.js"
     ]
   }
 }

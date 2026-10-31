@@ -10,7 +10,7 @@
     "scope": [
       "versionium/"
     ],
-    "versionLine": "3.2.0",
+    "versionLine": "3.4.0",
     "versionNote": "from lib/version.js modules"
   },
   "cos": {
@@ -24,7 +24,17 @@
     "phase": 3,
     "critical": false,
     "optional": true,
-    "healthUrl": "http://127.0.0.1:3754/health"
+    "healthUrl": "http://127.0.0.1:3754/health",
+    "process": {
+      "name": "versionium",
+      "cmd": "node",
+      "args": [
+        "versionium/server.js"
+      ],
+      "phase": 3,
+      "optional": true,
+      "healthUrl": "http://127.0.0.1:3754/health"
+    }
   },
   "data": {
     "dataDir": null,
@@ -34,13 +44,12 @@
   "spec": "versionium/spec/",
   "dependsOn": {
     "intelligence": 4,
-    "cortex": 7,
-    "guardian": 1
+    "cortex": 8
   },
-  "sharedLibRequires": 2,
+  "sharedLibRequires": 15,
   "stats": {
-    "jsFiles": 15,
-    "jsLines": 1742
+    "jsFiles": 25,
+    "jsLines": 3188
   },
   "boundaryFindings": {
     "count": 12,
@@ -52,9 +61,9 @@
       "versionium/lib/engine.js -> intelligence/rfr2/context",
       "versionium/lib/engine.js -> cortex/memory/jaa-db",
       "versionium/lib/engine.js -> cortex/memory/jaa-db",
+      "versionium/lib/engine.js -> cortex/memory/jaa-db",
       "versionium/lib/migrate-idearium-snapshots.js -> cortex/memory/jaa-db",
-      "versionium/lib/migrate-legacy-data.js -> cortex/memory/jaa-db",
-      "versionium/lib/snapshot.js -> cortex/memory/jaa-db"
+      "versionium/lib/migrate-legacy-data.js -> cortex/memory/jaa-db"
     ]
   }
 }

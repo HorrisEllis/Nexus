@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421629718
+exported_at: 1793422031235
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421629718
-lastSeenAt: 1793421629718
+firstSeenAt: 1793422031235
+lastSeenAt: 1793422031235
 fingerprint: null
 payload:
   for: MG17_autopilot_hands_over
@@ -213,7 +213,7 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 4
+    layer: 5
     deps:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
@@ -222,6 +222,7 @@ payload:
     upstream:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
       - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
@@ -256,8 +257,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 4 · blocked by MG16_the_autopilot_door, CS12_the_mover_is_proven
-      - 'depends on (2): MG16_the_autopilot_door, CS12_the_mover_is_proven · all upstream 6'
+      - layer 5 · blocked by MG16_the_autopilot_door, CS12_the_mover_is_proven
+      - 'depends on (2): MG16_the_autopilot_door, CS12_the_mover_is_proven · all upstream 7'
       - 'needed by (1): CS4a_cos_boots_alone · all downstream 22'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door

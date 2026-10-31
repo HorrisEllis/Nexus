@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+context: >-
+  pipeline phase MG15a_every_system_declares_its_process of
+  docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG15a_every_system_declares_its_process (?) — 16 file(s)
+system: idearium
+tags: []
+exported_at: 1793422031227
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793422031227
+lastSeenAt: 1793422031227
+fingerprint: null
+payload:
+  id: MG15a_every_system_declares_its_process
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.326
+  files:
+    - lib/cli/compartments.js
+    - lib/system-registry.js
+    - orchestrator/compartment.json
+    - architect/compartment.json
+    - diagnostic/compartment.json
+    - cortex/compartment.json
+    - guardian/compartment.json
+    - idearium/compartment.json
+    - intelligence/compartment.json
+    - ollama/compartment.json
+    - versionium/compartment.json
+    - copilot/compartment.json
+    - loom/compartment.json
+    - clear-glass/compartment.json
+    - tests/modules/test-compartment-declarations.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - MG0b_the_full_spec
+  blocks:
+    - MOD-MG-DECLARE
+  spec: cos/spec/cos-manager.spec
+  graph: c98548d2f11474e5

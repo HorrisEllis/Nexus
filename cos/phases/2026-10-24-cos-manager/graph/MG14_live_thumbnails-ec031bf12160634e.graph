@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421629710
+exported_at: 1793421772855
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421629710
-lastSeenAt: 1793421629710
+firstSeenAt: 1793421772855
+lastSeenAt: 1793421772855
 fingerprint: null
 payload:
   for: MG14_live_thumbnails
@@ -92,6 +92,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG11_category_manager_ui
       - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
       - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
@@ -133,7 +134,7 @@ payload:
         CS3_the_registry_is_the_bridge
       - >-
         depends on (2): MG12_the_exe_is_the_compartment_manager, CS3_the_registry_is_the_bridge ·
-        all upstream 87
+        all upstream 88
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager

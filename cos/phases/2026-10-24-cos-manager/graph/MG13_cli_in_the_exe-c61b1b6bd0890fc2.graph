@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421629708
+exported_at: 1793421772853
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421629708
-lastSeenAt: 1793421629708
+firstSeenAt: 1793421772853
+lastSeenAt: 1793421772853
 fingerprint: null
 payload:
   for: MG13_cli_in_the_exe
@@ -163,6 +163,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG11_category_manager_ui
       - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
       - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
@@ -206,7 +207,7 @@ payload:
         CON2_grammar_and_completion, CON5_pane, MG12_the_exe_is_the_compartment_manager
       - >-
         depends on (4): CON1_one_door_client, CON2_grammar_and_completion, CON5_pane,
-        MG12_the_exe_is_the_compartment_manager · all upstream 89
+        MG12_the_exe_is_the_compartment_manager · all upstream 90
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client

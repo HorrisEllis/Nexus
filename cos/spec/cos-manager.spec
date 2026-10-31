@@ -480,6 +480,25 @@ spec:
 
     # ── the one supervisor: what autopilot does, in COS (MG15–MG17) ───────
 
+    - id: MOD-MG-DECLARE
+      name: every-system-declares-its-process
+      uuid: nexus-cos-manager-declare-v1-0000-2026-1031-001
+      path: lib/cli/compartments.js
+      phase: MG15a_every_system_declares_its_process
+      description: >-
+        MG-002 made true before the supervisor reads it: every system's compartment.json carries its whole process, generated from what
+        boots it today (lib/system-registry.js kernels(), autopilot's ALL_KERNELS): cmd, args, cwd, env, bootPhase, critical, optional,
+        onDemand, healthUrl, maxOldSpaceMB, minRestartDelay, haltPctOverride, and processes[] for a second process a system runs
+        (intelligence's consumer). The three with no compartment.json get one (orchestrator, architect) and diagnostic's archetype file
+        keeps its fields with the runtime added. A check proves the declarations reproduce autopilot's boot list, process for process.
+      deps: [{ name: compartment-json }]
+      schema_refs: [SupervisedSystem]
+      exports: ["node lib/cli/compartments.js sync --write (runtime.process, runtime.processes)", "declarations(root) → [{ name, system, cmd, args, cwd, env, bootPhase, critical, optional, onDemand, healthUrl, maxOldSpaceMB, minRestartDelay, haltPctOverride }]", "system-registry kernels()"]
+      gate_pipeline: ["GATE-MG15a-001: every autopilot kernel has a declaration", "GATE-MG15a-002: each declaration equals its kernel field for field"]
+      behavioral_contracts: ["derived, never hand-written, until MG17 hands over; then each file is its system's own", "an existing file's other fields are kept (§0.3)"]
+      error_paths: ["a kernel with no system folder → named, declared under the system that owns its entry file"]
+      acceptance: ["declarations(root) equals system-registry kernels() for all 13 processes; orchestrator, architect and diagnostic have runtime declarations"]
+
     - id: MOD-MG-SUPERVISOR
       name: supervisor
       uuid: nexus-cos-manager-supervisor-v1-0000-2026-1030-001
@@ -1227,3 +1246,8 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node; every MG phase names it and its blocks"
     - "per module: its acceptance lines; UI acceptance in Clear Glass (clear-glass/src/driver/glass.js), never Playwright"
+
+# ── ADDENDUM 2026-10-31 (0.60.326) — MOD-MG-DECLARE built ──────────────────────────────────────────────────────────────────────────
+# lib/cli/compartments.js writes runtime.process (and runtime.processes) into every system's compartment.json from system-registry
+# kernels(); orchestrator, architect and diagnostic are generated too (diagnostic keeps its archetype fields); paths are {{root}}/…, Electron
+# by autopilot's lookup (cmdCandidates). declarations(root) reads them back. 13 processes, field for field (test-compartment-declarations).
