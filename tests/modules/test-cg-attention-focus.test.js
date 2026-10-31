@@ -9,6 +9,7 @@
  *   AF-01  a panel already up on the tab: a repeat attention request (a provider that flaps) neither shows nor focuses it
  *   AF-02  while the person is using the tab (their input in the last 2 min): no focus taken, and a sign-in page is NOT
  *          sent back to the chat (the person is signing in); untouched, a loginOptional tab still goes back to its chat
+ *   AF-02d a provider that bounces a signed-out visitor to sign-in is sent back once, then left for the person (0.60.321)
  *   AF-03  "Save sign-in to vault" refuses a signed-out tab (no sign-in cookie on the site) and saves a signed-in one
  *   AF-04  the picker always has a way out: Escape on window in the capture phase, right-click, a click on the banner
  *   AF-05  the provider window: no menu bar, dark before the first paint
@@ -78,6 +79,30 @@ function fakeWin(id, url) {
     const H2 = CA.createAttentionHandler({ providerHost: { windows: new Map([['chatgpt', w2]]), agentTabs: new Map() }, assign: async () => ({ ok: true }), checkerSource: null, getProvider: () => def, signedOutWaitMs: 5 });
     await H2.attend('chatgpt', { reason: 'signin' });
     assert.deepStrictEqual(w2.loaded, ['https://chatgpt.com'], 'not focused and untouched: back to the chat, as before');
+  });
+
+  await test('AF-02d', 'ChatGPT sends a signed-out visitor back to sign-in: sent to the chat once, then left on the sign-in page for him (0.60.321)', async () => {
+    // James, 2026-10-31, two pictures of the ChatGPT tab: the sign-in page, then a spinner, "over and over". chatgpt.com now answers a
+    // signed-out visitor with its sign-in page, so each send-back (the spinner) came straight back, and the next request sent it again.
+    const def = { name: 'ChatGPT', url: 'https://chatgpt.com', loginOptional: true };
+    const w = fakeWin(11, 'https://chatgpt.com/auth/login');
+    w.loadURL = async (u) => { w.loaded.push(u); w.url = 'https://chatgpt.com/auth/login?next=%2F'; };   // the chat bounces to sign-in
+    let answer = { action: 'hide' }; w.webContents.executeJavaScript = async () => answer;   // the panel: closed at once
+    const logs = [];
+    const H = CA.createAttentionHandler({ providerHost: { windows: new Map([['chatgpt', w]]), agentTabs: new Map() }, assign: async () => ({ ok: true }), checkerSource: null,
+      getProvider: () => def, signedOutWaitMs: 5, sendBackEveryMs: 0, log: (m) => logs.push(m) });
+    const r1 = await H.attend('chatgpt', { reason: 'signin' }); await wait(20);
+    assert.deepStrictEqual(w.loaded, ['https://chatgpt.com'], 'sent back once, as before');
+    assert.ok(!r1.resolved, 'not "signed-out": it came back to sign-in, so the panel asks him');
+    for (let i = 0; i < 4; i++) { await H.attend('chatgpt', { reason: 'signin' }); await wait(20); }
+    assert.deepStrictEqual(w.loaded, ['https://chatgpt.com'], 'never again: his sign-in page is left alone (before: a send-back every request)');
+    assert.ok(logs.some(l => /does not work signed out now/.test(l)), logs.join('\n'));
+    // he says he signed in (the panel): judged afresh next time
+    answer = { action: 'signed-in' }; w.url = 'https://chatgpt.com/auth/login';
+    await H.attend('chatgpt', { reason: 'signin' }); await wait(1600);
+    answer = { action: 'hide' }; w.url = 'https://chatgpt.com/auth/login';
+    await H.attend('chatgpt', { reason: 'signin' }); await wait(20);
+    assert.strictEqual(w.loaded.filter(u => u === 'https://chatgpt.com').length >= 2, true, 'after his answer the rule applies afresh: ' + JSON.stringify(w.loaded));
   });
 
   await test('AF-02c', 'a ChatGPT window with its own sign-in popup open is his: not bounced, not hidden (0.60.204)', async () => {
