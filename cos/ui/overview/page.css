@@ -1,0 +1,40 @@
+/* cos/ui/overview/page.css — the Overview's own look (MOD-MG-UI-OVERVIEW). MG18, 0.60.336. Open: generous gaps, one idea per card. */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s4); margin-bottom: var(--s5); }
+.stat { position: relative; padding: var(--s5) var(--s5) var(--s4); overflow: hidden; cursor: pointer; transition: transform .2s var(--ease), border-color .2s; }
+.stat:hover { transform: translateY(-2px); border-color: var(--line); }
+.stat::after { content: ''; position: absolute; left: var(--s5); right: var(--s5); top: 0; height: 2px; border-radius: 0 0 2px 2px; background: var(--c, var(--nx-muted)); box-shadow: 0 0 18px var(--c, transparent); opacity: .9; }
+.stat .num { display: block; margin: var(--s3) 0 var(--s1); }
+.stat .eyebrow { color: var(--nx-dim); }
+.stat .sub { font-size: 12.5px; color: var(--nx-muted); min-height: 1.4em; }
+.stat[data-k="up"] { --c: var(--st-up); } .stat[data-k="attention"] { --c: var(--st-warn); } .stat[data-k="down"] { --c: var(--st-down); } .stat[data-k="resting"] { --c: var(--nx-muted); }
+.stat[aria-pressed="true"] { border-color: color-mix(in srgb, var(--c) 50%, transparent); }
+
+.callout { display: flex; align-items: center; gap: var(--s4); padding: var(--s4) var(--s5); margin-bottom: var(--s5); cursor: pointer; border-color: color-mix(in srgb, var(--nx-violet) 35%, transparent); }
+.callout .ic { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; color: var(--nx-violet); background: color-mix(in srgb, var(--nx-violet) 12%, transparent); flex: none; }
+.callout .ic svg { width: 18px; height: 18px; } .callout b { color: var(--nx-bright); font-weight: 600; } .callout .go { margin-left: auto; color: var(--nx-dim); } .callout .go svg { width: 18px; }
+.callout:hover .go { color: var(--nx-bright); }
+
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); margin-bottom: var(--s4); flex-wrap: wrap; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--s4); }
+
+.card { display: flex; flex-direction: column; min-height: 228px; transition: border-color .2s var(--ease), transform .2s var(--ease); }
+.card:hover { border-color: var(--line); transform: translateY(-2px); }
+.card[data-s="down"], .card[data-s="circuit-open"] { border-color: color-mix(in srgb, var(--nx-err) 32%, transparent); }
+.card[data-s="up"] { border-color: color-mix(in srgb, var(--nx-ok) 14%, transparent); }
+.card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s3); padding: var(--s5) var(--s5) var(--s3); }
+.card-name { display: flex; align-items: center; gap: var(--s3); min-width: 0; }
+.card-name a { font: 600 16px/1.2 var(--font); color: var(--nx-bright); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-name a:hover { color: var(--ac-soft); }
+.card-tags { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 var(--s5); min-height: 20px; }
+.metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s4) var(--s3); padding: var(--s4) var(--s5); margin-top: auto; }
+.metric .k { display: block; font: 500 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--nx-muted); margin-bottom: 7px; }
+.metric .v { font: 500 13.5px/1.2 var(--mono); color: var(--nx-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.metric .v.none { color: var(--nx-muted); }
+.why { margin: 0 var(--s5) var(--s3); padding: var(--s3) var(--s4); border-radius: var(--r2); font-size: 12.5px; line-height: 1.5; color: var(--nx-text);
+  background: color-mix(in srgb, var(--nx-err) 8%, transparent); border: 1px solid color-mix(in srgb, var(--nx-err) 28%, transparent); }
+.why.warn { background: color-mix(in srgb, var(--nx-warn) 7%, transparent); border-color: color-mix(in srgb, var(--nx-warn) 26%, transparent); }
+.card-foot { display: flex; align-items: center; gap: var(--s2); padding: var(--s3) var(--s4) var(--s4) var(--s5); border-top: 1px solid var(--line-soft); }
+.card-foot .spacer { flex: 1; }
+.card.busy { opacity: .7; pointer-events: none; }
+
+@media (max-width: 1180px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

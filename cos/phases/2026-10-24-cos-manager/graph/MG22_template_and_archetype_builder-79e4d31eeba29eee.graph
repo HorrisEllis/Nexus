@@ -1,23 +1,23 @@
 envelope: 1
-uuid: nexus-export-graph-phase:MG22_template_and_archetype_builder:f2afa5f74266d97a
+uuid: nexus-export-graph-phase:MG22_template_and_archetype_builder:79e4d31eeba29eee
 type: graph
-id: phase:MG22_template_and_archetype_builder:f2afa5f74266d97a
+id: phase:MG22_template_and_archetype_builder:79e4d31eeba29eee
 context: dependency graph of phase MG22_template_and_archetype_builder
 intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793425834343
+exported_at: 1793449750408
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793425834343
-lastSeenAt: 1793425834343
+firstSeenAt: 1793449750408
+lastSeenAt: 1793449750408
 fingerprint: null
 payload:
   for: MG22_template_and_archetype_builder
   kind: phase
   repo: null
-  hash: f2afa5f74266d97a
+  hash: 79e4d31eeba29eee
   nodes:
     - path: cos/manager/builder.js
       role: changes
@@ -25,7 +25,7 @@ payload:
       system: cos
     - path: cos/manager/contract.json
       role: changes
-      exists: false
+      exists: true
       system: cos
     - path: tests/modules/test-cos-builder.test.js
       role: changes
@@ -56,6 +56,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D10_the_cockpit_has_its_own_server
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D11_idearium_look_forked
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D12_pages_in_frames_bus_declared
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D16_the_ui_floats_above_the_bus
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
       - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
       - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
@@ -64,7 +65,6 @@ payload:
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
       - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
     unlocks: []
     conflicts:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
@@ -88,15 +88,12 @@ payload:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG27_state_and_resource_screens
         files:
           - cos/manager/contract.json
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
-        files:
-          - cos/manager/contract.json
     dangling: []
     lines:
-      - layer 4 · blocked by MG5_browsers_and_editors, MG8_the_factory, MG18_the_supervisor_screen
+      - layer 4 · blocked by MG5_browsers_and_editors, MG8_the_factory
       - >-
         depends on (3): MG5_browsers_and_editors, MG8_the_factory, MG18_the_supervisor_screen · all
-        upstream 18
+        upstream 19
       - 'needed by (0): —'
       - 'same files as MG20_add_deploy_connect with no order between them: cos/manager/contract.json'
       - 'same files as MG21_the_add_screen with no order between them: cos/manager/contract.json'
@@ -105,7 +102,7 @@ payload:
         cos/manager/contract.json
       - 'same files as MG24_network_manager with no order between them: cos/manager/contract.json'
       - 'same files as MG25_storage_manager with no order between them: cos/manager/contract.json'
-      - … and 3 more phases sharing its files without an order
+      - … and 2 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
         kind: declared

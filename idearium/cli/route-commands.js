@@ -817,6 +817,17 @@ export const SPEC = [
     req: (a) => ({ method: 'POST', path: '/api/cos/boot', timeoutMs: 120000, body: { set: a.args[0] || undefined, by: 'person' } }) },
   { key: 'cos.ledger', repo: false, usage: 'cos ledger [system] [--limit n]', about: 'the supervisor\'s ledger: every spawn, crash, restart, refusal and stop, with why',
     req: (a) => ({ method: 'GET', path: `/api/cos/ledger?limit=${Number(a.flags.limit) || 50}${a.args[0] ? `&system=${encodeURIComponent(a.args[0])}` : ''}` }) },
+  // 0.60.336 MG18 — what COS's UI shows, as rows (agents get every read a person gets; taking a proposal is a person's act)
+  { key: 'cos.proposals', repo: false, usage: 'cos proposals [--open]', about: 'agents\' held acts on COS: who, what, on which system, why, and whether a person took or dropped it',
+    req: (a) => ({ method: 'GET', path: `/api/cos/proposals${a.flags.open ? '?open=1' : ''}` }) },
+  { key: 'cos.proposal.act', repo: false, personOnly: () => 'taking or dropping a proposal is the person\'s: Take or Drop on COS\'s Proposals page, or ask them', usage: 'cos <take|drop> <proposal-id>', about: 'take an agent\'s proposal (it runs as your act) or drop it; both ledgered',
+    req: (a) => ({ method: 'POST', path: `/api/cos/proposals/${encodeURIComponent(a.args[1] || '')}/${a.args[0] === 'drop' ? 'drop' : 'take'}`, body: { by: 'person' } }) },
+  { key: 'cos.logs', repo: false, usage: 'cos logs <system> [--limit n]', about: 'a system\'s own recent output, as COS\'s supervisor kept it (stdout and stderr, with times)',
+    req: (a) => ({ method: 'GET', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/logs?limit=${Number(a.flags.limit) || 100}` }) },
+  { key: 'cos.usage', repo: false, usage: 'cos usage', about: 'each supervised system\'s memory and CPU read back from the OS, and the host\'s load and free memory against the halt floor',
+    req: () => ({ method: 'GET', path: '/api/cos/usage' }) },
+  { key: 'cos.policy', repo: false, usage: 'cos policy', about: 'the supervisor\'s rules (boot set, restart backoff, circuit, memory floors, idle) with their defaults',
+    req: () => ({ method: 'GET', path: '/api/cos/policy' }) },
   { key: 'repo.spine', repo: true, usage: 'repo spine <repo> [--write] [--unknown] [--limit n]', about: 'the project\'s component registry as its spine: every component and every wire with its evidence (discovered by which adapter, declared, or unknown), and the drift against nexus.spine.json; --write writes it',
     req: (a) => (a.flags.write ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/spine`, body: {}, timeoutMs: 120000 } : { method: 'GET', path: `/api/repos/${a.repo.uuid}/spine${a.flags.limit ? `?limit=${parseInt(a.flags.limit, 10)}` : ''}`, timeoutMs: 120000 }),
     print: (d, a, h) => {

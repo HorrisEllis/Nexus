@@ -7,18 +7,18 @@ intent: null
 summary: MG29_the_cockpit (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793383131621
+exported_at: 1793449750429
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131621
-lastSeenAt: 1793383131621
+firstSeenAt: 1793449750429
+lastSeenAt: 1793449750429
 fingerprint: null
 payload:
   id: MG29_the_cockpit
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: BUILT 0.60.336
   files:
     - idearium/cli/route-commands.js
     - cos/manager/contract.json
@@ -28,4 +28,4 @@ payload:
     - MOD-MG-CONTAINER-ROWS
     - MOD-MG-UI-COCKPIT
   spec: cos/spec/cos-manager.spec
-  graph: 5b12f47d1e8a5aef
+  graph: 41fbbc875afc882c

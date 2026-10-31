@@ -1,0 +1,5 @@
+/* cos/ui/cockpit/sections/events/section.css — the events tab, in its own shadow root. MG29, 0.60.336. */
+.crumbs{display:flex;gap:6px;align-items:center;font:500 12px/1 var(--mono)}.crumbs a{color:var(--ac-soft);cursor:pointer}.crumbs span{color:var(--nx-muted)}
+.body{padding:var(--s3) 0;max-height:calc(100vh - 340px);overflow:auto}.dir{display:flex;align-items:center;gap:var(--s3);padding:10px var(--s5);cursor:pointer;color:var(--nx-text);font-size:13px}
+.dir:hover{background:var(--ac-ghost)}.dir svg{width:16px;height:16px;color:var(--nx-dim)}.ev{display:grid;grid-template-columns:76px 220px 1fr;gap:var(--s3);padding:8px var(--s5);font-size:12.5px;border-bottom:1px solid color-mix(in srgb,var(--nx-edge) 50%,transparent)}
+.ev .t{font:400 11.5px/1.5 var(--mono);color:var(--nx-muted)}.ev .a{font:500 12px/1.5 var(--mono);color:var(--ac-soft);overflow-wrap:anywhere}.ev .d{font:400 12px/1.5 var(--mono);color:var(--nx-dim);overflow-wrap:anywhere}.note{padding:var(--s4) var(--s5);color:var(--nx-dim)}

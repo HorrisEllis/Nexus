@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131625
+exported_at: 1793449750432
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131625
-lastSeenAt: 1793383131625
+firstSeenAt: 1793449750432
+lastSeenAt: 1793449750432
 fingerprint: null
 payload:
   for: MG30_pages_on_the_registry_bus
@@ -51,11 +51,11 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D10_the_cockpit_has_its_own_server
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D11_idearium_look_forked
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D12_pages_in_frames_bus_declared
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D16_the_ui_floats_above_the_bus
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D7_pages_and_sections_on_the_registry_bus
     downstream: []
     blockedBy:
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D7_pages_and_sections_on_the_registry_bus
     unlocks: []
@@ -63,11 +63,11 @@ payload:
     dangling: []
     lines:
       - >-
-        layer 7 · blocked by MG29_the_cockpit, DB16_a_registry_for_each_system,
+        layer 7 · blocked by DB16_a_registry_for_each_system,
         MG_D7_pages_and_sections_on_the_registry_bus
       - >-
         depends on (3): MG29_the_cockpit, DB16_a_registry_for_each_system,
-        MG_D7_pages_and_sections_on_the_registry_bus · all upstream 19
+        MG_D7_pages_and_sections_on_the_registry_bus · all upstream 20
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit

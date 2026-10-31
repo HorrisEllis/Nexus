@@ -1293,3 +1293,14 @@ spec:
 # Its contract "derived, never hand-written, until MG17 hands over; then each file is its system's own" is now true: system-registry
 # kernels() reads the declarations, and the generator keeps a declared process. test-compartment-declarations CD-05: a hand change shows in
 # kernels() and in COS's supervisor alike. CD-01/02 now compare the declarations with frozenKernels() (the archive at the handover).
+
+# ── ADDENDUM 2026-10-31 (0.60.336) — the UI floats above the event bus: MG18 and MG29 built, Automation's policy form (MG_D16) ──────
+# James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered,
+# cheap, or lazy". Built: MOD-MG-CONTRACT (cos/manager/contract.json, with a shell page and a planned: list), MOD-MG-UI-SERVE, -THEME, -CORE,
+# -SHELL, -OVERVIEW, -LEDGER, -PROPOSALS, -COCKPIT, -AUTOMATION (its policy form only; macros wait on MG7). The manager gains GET
+# /api/cos/contract, /api/cos/events (server-sent: cos.hello, cos.ledger, cos.system.state), /api/cos/usage, /api/cos/systems/:name/logs,
+# /api/cos/proposals and POST /api/cos/proposals[/:id/(take|drop)]; GET /api/cos/policy returns the defaults too. The supervisor keeps each
+# system's last 400 output lines and announces every ledger line. Drift from the module text, said: MOD-MG-UI-SERVE forwards /api/cos/* as
+# well as /ap/* (the manager is the one endpoint since MG17), and checks routes against the contract rather than a fixed list; the shell's
+# "command line" is a Go-to list (⌘K) over pages and systems: running command rows from the shell waits on the round table's CLI (MG_D17).
+# Proof: tests/modules/test-cos-ui.test.js CU-01..06 (CU-06 in Clear Glass), test-cos-ui-theme.test.js TH-01..03.

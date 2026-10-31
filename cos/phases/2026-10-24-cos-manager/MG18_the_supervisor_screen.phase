@@ -4,31 +4,41 @@ type: phase
 id: docs_2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
 context: pipeline phase MG18_the_supervisor_screen of docs/2026-10-24-cos-manager-phasemap.spec
 intent: null
-summary: MG18_the_supervisor_screen (?) — 3 file(s)
+summary: MG18_the_supervisor_screen (?) — 12 file(s)
 system: idearium
 tags: []
-exported_at: 1793383131560
+exported_at: 1793449750396
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131560
-lastSeenAt: 1793383131560
+firstSeenAt: 1793449750396
+lastSeenAt: 1793449750396
 fingerprint: null
 payload:
   id: MG18_the_supervisor_screen
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: BUILT 0.60.336
   files:
     - cos/ui/serve.js
     - cos/manager/contract.json
+    - cos/manager/server.js
+    - cos/manager/supervisor.js
+    - cos/manager/proposals.js
+    - cos/manager/usage.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - loom/maps/cos-testenv-map.js
+    - tests/modules/test-cos-ui.test.js
     - tests/modules/test-cos-ui-theme.test.js
+    - tests/modules/run-all.js
   depends_on:
     - MG0b_the_full_spec
     - MG_D1_ui_isolated_per_component
     - MG_D10_the_cockpit_has_its_own_server
     - MG_D11_idearium_look_forked
     - MG_D12_pages_in_frames_bus_declared
+    - MG_D16_the_ui_floats_above_the_bus
   blocks:
     - MOD-MG-UI-CORE
     - MOD-MG-UI-SHELL
@@ -38,4 +48,4 @@ payload:
     - MOD-MG-UI-SERVE
     - MOD-MG-UI-THEME
   spec: cos/spec/cos-manager.spec
-  graph: a103e9b1c6bc53dd
+  graph: d9b862b2f36f05ac

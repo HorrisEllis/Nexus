@@ -1,0 +1,17 @@
+/* cos/ui/cockpit/page.css — one system's cockpit (MOD-MG-UI-COCKPIT). MG29, 0.60.336. */
+.hero { display: grid; grid-template-columns: 1fr auto; gap: var(--s5); padding: var(--s6); margin-bottom: var(--s4); position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background: radial-gradient(600px 220px at 0% 0%, color-mix(in srgb, var(--c, var(--ac)) 14%, transparent), transparent 70%); }
+.hero[data-s="up"] { --c: var(--nx-ok); } .hero[data-s="down"], .hero[data-s="circuit-open"] { --c: var(--nx-err); } .hero[data-s="degraded"], .hero[data-s="starting"], .hero[data-s="restarting"] { --c: var(--nx-warn); }
+.hero .name { display: flex; align-items: center; gap: var(--s3); }
+.hero h1 { margin: 0; font: 400 46px/.9 var(--display); letter-spacing: .04em; color: var(--nx-bright); }
+.hero .sub { margin-top: var(--s3); display: flex; gap: var(--s5); flex-wrap: wrap; font: 400 12.5px/1.3 var(--mono); color: var(--nx-dim); }
+.hero .sub b { color: var(--nx-text); font-weight: 500; }
+.hero .acts { display: flex; gap: var(--s2); align-items: flex-start; flex-wrap: wrap; justify-content: flex-end; }
+.tabs { display: flex; gap: 2px; padding: 4px; margin-bottom: var(--s4); border-radius: 999px; width: max-content; max-width: 100%; overflow-x: auto;
+  background: var(--glass); border: 1px solid var(--line-soft); backdrop-filter: blur(18px); }
+.tabs button { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 var(--s4); border: 0; border-radius: 999px; background: transparent; color: var(--nx-dim);
+  font: 500 13px/1 var(--font); cursor: pointer; white-space: nowrap; transition: all .18s var(--ease); }
+.tabs button svg { width: 14px; height: 14px; } .tabs button:hover { color: var(--nx-bright); }
+.tabs button[aria-selected="true"] { color: var(--nx-bright); background: var(--ac-dim); box-shadow: 0 0 0 1px var(--ac-border) inset; }
+.sections > div { display: none; } .sections > div.on { display: block; animation: cos-in .35s var(--ease) both; }

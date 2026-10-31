@@ -10,14 +10,29 @@
  *   GET  /api/cos/health · /api/cos/systems · /api/cos/systems/:name · /api/cos/ledger[?system&limit] · /api/cos/policy
  *   POST /api/cos/boot · /api/cos/systems/:name/(start|stop|restart|touch|reset-circuit) — each act carries { by } (MG-006)
  *   PATCH /api/cos/policy
+ * MG18 (0.60.336, MG_D16): GET /api/cos/contract · /api/cos/events (server-sent: cos.ledger, cos.system.state) · /api/cos/usage ·
+ *   /api/cos/systems/:name/logs · /api/cos/proposals; POST /api/cos/proposals (an agent's) · /api/cos/proposals/:id/(take|drop) (a person's)
  */
 const http = require('http');
 const path = require('path');
 const { createSupervisor } = require('./supervisor.js');
+const { createProposals } = require('./proposals.js');
+const usage = require('./usage.js');
+const CONTRACT = path.join(__dirname, 'contract.json');
 
 function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) {
   const door = require('./autopilot-door.js').mount(sup, { ROOT: root });   // MG16: autopilot's routes, in its shapes (MG-003)
   const send = (res, code, body) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(body)); };
+  const proposals = createProposals(sup);   // MG18: agents' held acts
+  // MG18 (MG_D16): the one event stream the UI floats on. Every ledger line as it is written; a system's state when it changes (read each
+  // second from the supervisor's own view, so a state reached without a ledger line, 'up' after health, is heard too).
+  const streams = new Set(); let last = new Map();
+  const broadcast = (event, data) => { const f = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`; for (const r of streams) { try { r.write(f); } catch (_) { streams.delete(r); } } };
+  sup.on('ledger', (entry) => broadcast('cos.ledger', { entry }));
+  const watch = setInterval(() => { if (!streams.size) return; const now = new Map();
+    for (const v of sup.list()) { now.set(v.name, `${v.state}|${v.pid}`); if (last.get(v.name) !== `${v.state}|${v.pid}`) broadcast('cos.system.state', { name: v.name, state: v.state, pid: v.pid }); }
+    last = now; }, 1000); if (watch.unref) watch.unref();
+  const beat = setInterval(() => { for (const r of streams) { try { r.write(': beat\n\n'); } catch (_) {} } }, 15000); if (beat.unref) beat.unref();
   return http.createServer(async (req, res) => {
     const u = new URL(req.url, 'http://x'), p = u.pathname.replace(/\/+$/, ''), m = req.method;
     let body = {};
@@ -27,7 +42,22 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
       if (m === 'GET' && p === '/api/cos/systems') return send(res, 200, { ok: true, systems: sup.list() });
       if (m === 'GET' && p === '/api/cos/ledger') return send(res, 200, { ok: true, entries: sup.ledger({ limit: Number(u.searchParams.get('limit')) || 100, system: u.searchParams.get('system') }) });
       if (m === 'GET' && p === '/api/cos/legacy-callers') return send(res, 200, { ok: true, callers: door.legacyCallers() });   // MG16: who still calls /tables and /files
-      if (m === 'GET' && p === '/api/cos/policy') return send(res, 200, { ok: true, policy: sup.policy() });
+      if (m === 'GET' && p === '/api/cos/policy') return send(res, 200, { ok: true, policy: sup.policy(), defaults: sup.DEFAULTS });   // MG18: the defaults too, so a page can say each value's layer
+      // MG18 — the contract, the stream, usage, logs, proposals
+      if (m === 'GET' && p === '/api/cos/contract') { try { return send(res, 200, { ok: true, contract: JSON.parse(require('fs').readFileSync(CONTRACT, 'utf8')) }); } catch (e) { return send(res, 500, { ok: false, error: `the contract is unreadable: ${e.message}` }); } }
+      if (m === 'GET' && p === '/api/cos/events') {
+        res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
+        res.write(`event: cos.hello\ndata: ${JSON.stringify({ systems: sup.list().map(v => ({ name: v.name, state: v.state, pid: v.pid })), at: Date.now() })}\n\n`);
+        streams.add(res); req.on('close', () => streams.delete(res)); return;
+      }
+      if (m === 'GET' && p === '/api/cos/usage') return send(res, 200, { ok: true, usage: usage.read(sup.list(), sup.policy()) });
+      const lg = /^\/api\/cos\/systems\/([^/]+)\/logs$/.exec(p);
+      if (lg && m === 'GET') return send(res, 200, { ok: true, system: decodeURIComponent(lg[1]), lines: sup.logs(decodeURIComponent(lg[1]), { limit: Number(u.searchParams.get('limit')) || 200 }) });
+      if (m === 'GET' && p === '/api/cos/proposals') return send(res, 200, { ok: true, proposals: proposals.list({ open: u.searchParams.get('open') === '1' }) });
+      if (m === 'POST' && p === '/api/cos/proposals') { try { return send(res, 200, { ok: true, proposal: proposals.hold(body) }); } catch (e) { return send(res, e.code === 400 ? 400 : /no system/.test(e.message) ? 404 : 500, { ok: false, error: e.message }); } }
+      const pr = /^\/api\/cos\/proposals\/([^/]+)\/(take|drop)$/.exec(p);
+      if (pr && m === 'POST') { try { return send(res, 200, { ok: true, ...(pr[2] === 'take' ? proposals.take(decodeURIComponent(pr[1]), { by: body.by }) : proposals.drop(decodeURIComponent(pr[1]), { by: body.by, why: body.why })) }); }
+        catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
       const act = /^\/api\/cos\/systems\/([^/]+)(?:\/(start|stop|restart|touch|reset-circuit))?$/.exec(p);
       if (act && m === 'GET' && !act[2]) return send(res, 200, { ok: true, system: sup.get(decodeURIComponent(act[1])) });
       // MG-006: a start, stop, restart, boot or policy change is a person's act or a rule's, and says whose; touch is a request for the system

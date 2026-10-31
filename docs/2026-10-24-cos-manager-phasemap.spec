@@ -194,6 +194,21 @@ decisions:
       default keeps the boot visible; every skip said), §3.3 (the order follows the files: no file moves, so no mover), MG-003 (the door keeps
       the screens), REVERSIBILITY (the archive and --legacy-supervisor).
 
+  MG_D16_the_ui_floats_above_the_bus:
+    status: DECIDED 2026-10-31 (his; the reading of "floating, above the event bus" to confirm)
+    chosen: >-
+      COS's UI is built now, every page whose backend stands: MG18 (core, shell, Overview, Ledger, Proposals, the cockpit server, the theme),
+      MG29 (each system's cockpit and its command rows) and, from MG9, Automation's policy form (its backend, /api/cos/policy, stands since
+      MG15). The pages float above the event bus: COS's manager serves one stream (GET /api/cos/events, server-sent), the shell holds it and
+      relays to each page only the events the page declares in the contract (MG_D12's interim bus until DB16), and the shell draws the bus
+      itself as a quiet live field behind the floating panels, one pulse per event. The backends the pages need and the spec names but no
+      phase built are built with them: the contract (MOD-MG-CONTRACT) and GET /api/cos/contract, the events stream, Proposals (store, take,
+      drop), each system's recent output (logs) and its memory and CPU read back from the OS (usage). Pages whose backend phase is not built
+      (compartment tabs past the cockpit, catalog, categories, add, timeline, resources, builder) are listed once, on a Planned page, each with
+      its phase and what it will do: said, never hidden, never faked (§1.2, §0.1). READING TO CONFIRM (the coder's): "floating, above the event
+      bus" read as panels over a live layer of the bus's events, and the pages as subscribers to it, never pollers while it is up.
+    by: "his, 2026-10-31: \"okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered, cheap, or lazy\" (after the coder's options a/b/c for where the screen runs; his \"okay\" read as (c): as mapped, data-first)."
+    by_the_axioms: "§1.2 and §0.1 (a page with no backend says so), §5.7 (pages talk only through the bus), §5.12 (the UI is disposable), §5.15 (COS serves COS's pages), §3.4 (backend → route → command → UI)"
 phases:
   MG0b_the_full_spec:
     status: SPECCED 2026-10-30 — cos/spec/cos-manager.spec
@@ -414,9 +429,9 @@ phases:
       "then each file is its system's own"), and lib/cli/compartments.js stops deriving them from autopilot.
     proof: "kernels() equals the declarations for all 13 processes; a hand change to one compartment.json shows in kernels() and in COS's supervisor alike"
   MG18_the_supervisor_screen:
-    status: OPEN
-    depends_on: [MG0b_the_full_spec, MG_D1_ui_isolated_per_component, MG_D10_the_cockpit_has_its_own_server, MG_D11_idearium_look_forked, MG_D12_pages_in_frames_bus_declared]
-    files: [cos/ui/serve.js, cos/ui/core, cos/ui/shell, cos/ui/overview, cos/ui/ledger, cos/ui/proposals, cos/manager/contract.json, tests/modules/test-cos-ui-theme.test.js]
+    status: BUILT 0.60.336
+    depends_on: [MG0b_the_full_spec, MG_D1_ui_isolated_per_component, MG_D10_the_cockpit_has_its_own_server, MG_D11_idearium_look_forked, MG_D12_pages_in_frames_bus_declared, MG_D16_the_ui_floats_above_the_bus]
+    files: [cos/ui/serve.js, cos/ui/core, cos/ui/shell, cos/ui/overview, cos/ui/ledger, cos/ui/proposals, cos/ui/automation, cos/ui/planned, cos/manager/contract.json, cos/manager/server.js, cos/manager/supervisor.js, cos/manager/proposals.js, cos/manager/usage.js, idearium/api/index.js, idearium/cli/route-commands.js, loom/maps/cos-testenv-map.js, tests/modules/test-cos-ui.test.js, tests/modules/test-cos-ui-theme.test.js, tests/modules/run-all.js]
     spec: cos/spec/cos-manager.spec
     blocks: [MOD-MG-UI-CORE, MOD-MG-UI-SHELL, MOD-MG-UI-OVERVIEW, MOD-MG-UI-LEDGER, MOD-MG-UI-PROPOSALS, MOD-MG-UI-SERVE, MOD-MG-UI-THEME]
     does: >-
@@ -505,7 +520,7 @@ phases:
     does: "copy the five sets with their lock; check.js; a test that runs the check and proves a one-byte edit fails it"
     proof: "the check passes on the copy; an edited byte fails it naming the file"
   MG29_the_cockpit:
-    status: OPEN
+    status: BUILT 0.60.336
     depends_on: [MG18_the_supervisor_screen]
     files: [cos/ui/cockpit, idearium/cli/route-commands.js, cos/manager/contract.json]
     spec: cos/spec/cos-manager.spec
@@ -686,3 +701,32 @@ decisions_d14:
 # one only for a system with none. Measured: kernels() equals the archive's list field for field, 13 of 13, so the move changed nothing.
 # Decided by his axioms: §5.15 rule 2 (each system declares its own runtime), §10.3 (one list: what COS boots is what the registry says),
 # §0.3 (the archive kept as the fallback and the proof).
+
+# ── ADDENDUM 2026-10-31 — the COS UI, mapped before its code (MG_D16) ───────────────────────────────────────────────────────────────
+# James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered,
+# cheap, or lazy". Asked before it: (a) as mapped, (b) on the ERAVOS canvas, (c) as mapped but data-first so Looking Glass can host it
+# later (the coder's recommendation). His "okay" is read as (c): the pages declare what they show and do in the contract.
+# MG18's files grew from [cos/ui/serve.js, cos/ui/core, cos/ui/shell, cos/ui/overview, cos/ui/ledger, cos/ui/proposals,
+# cos/manager/contract.json, tests/modules/test-cos-ui-theme.test.js] to the line above (§0.3): the backends its pages read (events,
+# proposals, logs, usage, the contract route) had no phase. MG29 (the cockpit) and Automation's policy form (from MG9) are built in the same
+# release; MG9's other tabs, MG11, MG21, MG22, MG27 and MG30 stay open and are listed on the Planned page.
+
+# ── ADDENDUM 2026-10-31 — his vision for the COS UI, said while MG18 was being built (MG_D17, to be mapped into phases) ──────────────
+# James, 2026-10-31, mid-build: "why not make each isolated html page also a compartment? this will be a full meta control panel, reploymet,
+# cli interface for the round table, be able to address specific agents, oarchastration pipeline workflow and cli interface. like this needs to
+# be fully, built, deploy agents to systems, have them do tasks, jobs, map them to each system like a drone. / completely dynamic canvas?
+# eravos? completely fluid and dynamic and changes with use, like emergence"
+# Recorded here first (lose nothing); the coder's reading, TO CONFIRM, and the phases follow in the next addendum, after MG18's base ships:
+#   - each page a compartment (its own process boundary and registry entry, not only its own frame);
+#   - a meta control panel: deployment, the round table's CLI, addressing one agent, orchestration pipelines and workflows with their CLI;
+#   - agents deployed to systems as drones: tasks and jobs mapped to each system;
+#   - the canvas fully dynamic (ERAVOS's, already a COS archetype since 0.60.104), changing with use, like emergence.
+# Stands on, to read before mapping (reuse before build): the agents' control panel AC1–AC7 (0.60.334–0.60.335), orchestrator automation
+# AE3–AE4 (0.60.317, 0.60.333), Guardian's jobs, the ERAVOS canvas archetypes (cos/archetype/eravos-*), Emergence (his 2026-10-30 upload).
+
+# ── ADDENDUM 2026-10-31 — MG18 and MG29 built (0.60.336) ─────────────────────────────────────────────────────────────────────────────
+# As MG_D16 says. Found while building, said: the cockpit server served the shell at "/", so its relative links resolved from "/" and its
+# stylesheet did not load; "/" now redirects to "/shell/". The glass was too opaque for the bus to be seen through it (his "floating, above the
+# event bus"); it is lighter, and the lanes and pulses brighter. Clear Glass drove every page against real processes under COS's manager, with
+# no page error. Not built here, and listed on the Planned page: MG9's other tabs, MG11, MG21, MG22, MG27, MG30. His mid-build vision
+# (MG_D17) is mapped next.

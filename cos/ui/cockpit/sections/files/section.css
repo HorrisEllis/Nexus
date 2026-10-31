@@ -1,0 +1,4 @@
+/* cos/ui/cockpit/sections/files/section.css — the files tab, in its own shadow root. MG29, 0.60.336. */
+.crumbs{display:flex;gap:6px;font:500 12px/1 var(--mono)}.crumbs a{color:var(--ac-soft);cursor:pointer}.crumbs span{color:var(--nx-muted)}.body{padding:var(--s2) 0;max-height:calc(100vh - 340px);overflow:auto}
+.f{display:grid;grid-template-columns:22px 1fr 110px 120px;gap:var(--s3);align-items:center;padding:9px var(--s5);font-size:13px}.f.d{cursor:pointer}.f:hover{background:var(--ac-ghost)}.f svg{width:16px;height:16px;color:var(--nx-dim)}
+.f .s,.f .m{font:400 11.5px/1 var(--mono);color:var(--nx-muted);text-align:right}.note{padding:var(--s5);color:var(--nx-dim)}

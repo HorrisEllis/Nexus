@@ -1,0 +1,4 @@
+/* cos/ui/cockpit/sections/tests/section.css — the tests tab, in its own shadow root. MG29, 0.60.336. */
+.body{padding:var(--s5)}.verdict{display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s4);font:600 15px/1.2 var(--font)}.verdict.ok{color:var(--nx-ok)}.verdict.bad{color:var(--nx-err)}
+pre{margin:0;padding:var(--s4);border-radius:var(--r2);background:color-mix(in srgb,var(--nx-ink) 80%,transparent);border:1px solid var(--line-soft);font:12px/1.6 var(--mono);color:var(--nx-text);white-space:pre-wrap;max-height:55vh;overflow:auto}
+.note{color:var(--nx-dim);line-height:1.6;max-width:70ch}

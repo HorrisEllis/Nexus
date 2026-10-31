@@ -1,0 +1,14 @@
+/* cos/ui/automation/page.css — the policy form (MOD-MG-UI-AUTOMATION). MG18 release, 0.60.336. */
+.groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: var(--s4); margin-bottom: var(--s4); align-items: start; }
+.group .panel-body { display: grid; gap: var(--s5); }
+.group .panel-head p { margin: 4px 0 0; font-size: 12.5px; color: var(--nx-dim); font-weight: 400; }
+.rule { display: grid; grid-template-columns: 1fr 150px; gap: var(--s2) var(--s4); align-items: center; }
+.rule .what b { display: block; color: var(--nx-bright); font-weight: 600; font-size: 13.5px; }
+.rule .what span { display: block; color: var(--nx-dim); font-size: 12.5px; line-height: 1.5; margin-top: 2px; }
+.rule .val { position: relative; }
+.rule .val .unit { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font: 400 11.5px/1 var(--mono); color: var(--nx-muted); pointer-events: none; }
+.rule .val .input { padding-right: 46px; text-align: right; }
+.rule .layer { grid-column: 2; justify-self: end; font: 500 10.5px/1 var(--mono); letter-spacing: .08em; color: var(--nx-muted); }
+.rule.changed .layer { color: var(--ac-soft); } .rule.dirty .input { border-color: var(--ac-border-hi); }
+.rule.dirty .layer { color: var(--nx-warn); }
+.later { max-width: 980px; }

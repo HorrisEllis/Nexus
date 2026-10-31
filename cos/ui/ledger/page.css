@@ -1,0 +1,22 @@
+/* cos/ui/ledger/page.css — the Ledger (MOD-MG-UI-LEDGER). MG18, 0.60.336. A timeline, one line per act, quiet until something matters. */
+.live { display: inline-flex; align-items: center; gap: 8px; font: 500 12px/1 var(--mono); color: var(--nx-dim); padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line-soft); }
+.filters { display: grid; grid-template-columns: 220px 1fr 260px; gap: var(--s5); align-items: end; padding: var(--s5); margin-bottom: var(--s4); }
+.feed { padding: var(--s2) 0; }
+.day { position: sticky; top: 0; z-index: 1; padding: var(--s4) var(--s5) var(--s2); font: 500 10.5px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--nx-muted);
+  background: linear-gradient(var(--glass-hi), transparent); }
+.row { display: grid; grid-template-columns: 82px 18px 132px 150px 1fr auto; align-items: baseline; gap: var(--s3); padding: 11px var(--s5); position: relative; transition: background .15s; }
+.row:hover { background: var(--ac-ghost); }
+.row .t { font: 400 12px/1 var(--mono); color: var(--nx-muted); }
+.row .mk { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--nx-muted)); box-shadow: 0 0 10px color-mix(in srgb, var(--c, transparent) 60%, transparent); align-self: center; }
+.row .rail { position: absolute; left: calc(var(--s5) + 82px + var(--s3) + 3px); top: 0; bottom: 0; width: 1px; background: var(--line-soft); z-index: -1; }
+.row .kind { font: 500 11.5px/1 var(--mono); letter-spacing: .04em; color: var(--c, var(--nx-dim)); }
+.row .sys { font-weight: 600; color: var(--nx-bright); font-size: 13px; cursor: pointer; } .row .sys:hover { color: var(--ac-soft); }
+.row .why { color: var(--nx-text); font-size: 13px; line-height: 1.5; min-width: 0; overflow-wrap: anywhere; }
+.row .by { font: 400 11.5px/1 var(--mono); color: var(--nx-muted); white-space: nowrap; }
+.row .by.person { color: var(--nx-violet); } .row .by.agent { color: var(--nx-warn); }
+.row.fresh { animation: fresh 1.6s var(--ease); } @keyframes fresh { from { background: var(--ac-dim); } }
+.row[data-k="crash"], .row[data-k="circuit-open"] { --c: var(--nx-err); } .row[data-k="refused"], .row[data-k="health"] { --c: var(--nx-warn); }
+.row[data-k="spawn"], .row[data-k="restart"], .row[data-k="boot"] { --c: var(--ac); } .row[data-k="stop"], .row[data-k="idle-stop"], .row[data-k="exit"] { --c: var(--nx-dim); }
+.row[data-k^="proposal"], .row[data-k="policy"], .row[data-k="handover"], .row[data-k="circuit-close"] { --c: var(--nx-violet); }
+.more { display: flex; justify-content: center; padding: var(--s4); }
+@media (max-width: 1100px) { .filters { grid-template-columns: 1fr; } .row { grid-template-columns: 70px 14px 110px 1fr; } .row .why { grid-column: 3 / -1; } .row .by { grid-column: 3 / -1; } .row .rail { display: none; } }

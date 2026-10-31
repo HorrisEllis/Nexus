@@ -1,0 +1,123 @@
+/**
+ * cos/ui/core/core.css — what every COS page shares: the spacing scale, type, floating panels, buttons, chips, state dots, tables.
+ * MG18, 0.60.336. Spec: cos/spec/cos-manager.spec MOD-MG-UI-CORE. Map: docs/2026-10-24-cos-manager-phasemap.spec MG_D16.
+ * James, 2026-10-31: "floating, above the event bus … do not make this ugly, cluttered, cheap, or lazy". Pages are transparent: the shell's
+ * bus field shows between them; what a page draws floats on it as glass.
+ */
+:root {
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 64px;
+  --r1: 8px; --r2: 12px; --r3: 18px; --r4: 24px;
+  --font: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --display: 'Bebas Neue', 'Space Grotesk', sans-serif;
+  --glass: color-mix(in srgb, var(--nx-plate) 62%, transparent);
+  --glass-hi: color-mix(in srgb, var(--nx-panel) 82%, transparent);
+  --line: color-mix(in srgb, var(--nx-rim) 70%, transparent);
+  --line-soft: color-mix(in srgb, var(--nx-edge) 80%, transparent);
+  --shadow: 0 1px 0 color-mix(in srgb, var(--nx-bright) 4%, transparent) inset, 0 24px 60px -24px rgba(0, 0, 0, .65), 0 2px 8px rgba(0, 0, 0, .25);
+  --st-up: var(--nx-ok); --st-warn: var(--nx-warn); --st-down: var(--nx-err); --st-idle: var(--nx-muted); --st-ext: var(--nx-violet);
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { font: 400 14px/1.55 var(--font); color: var(--nx-text); background: transparent; -webkit-font-smoothing: antialiased; letter-spacing: .005em; }
+body.cos-page { padding: var(--s6) var(--s6) var(--s8); overflow-y: auto; scrollbar-gutter: stable; }
+::selection { background: var(--ac-dim); color: var(--nx-bright); }
+a { color: var(--ac-soft); text-decoration: none; } a:hover { color: var(--nx-bright); }
+:focus-visible { outline: 2px solid var(--ac-border-hi); outline-offset: 2px; border-radius: 6px; }
+::-webkit-scrollbar { width: 10px; height: 10px; } ::-webkit-scrollbar-thumb { background: var(--nx-edge); border-radius: 10px; border: 3px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--nx-rim); background-clip: padding-box; } ::-webkit-scrollbar-track { background: transparent; }
+
+/* ── type ── */
+.eyebrow { font: 500 11px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--nx-dim); }
+.title { font: 600 26px/1.15 var(--font); color: var(--nx-bright); letter-spacing: -.01em; margin: 0; }
+.lede { color: var(--nx-dim); max-width: 64ch; margin: var(--s2) 0 0; }
+.mono { font-family: var(--mono); font-size: 12.5px; }
+.num { font-family: var(--display); font-size: 44px; line-height: .9; color: var(--nx-bright); letter-spacing: .02em; }
+.muted { color: var(--nx-dim); } .faint { color: var(--nx-muted); }
+
+/* ── page head ── */
+.page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s5); margin-bottom: var(--s6); flex-wrap: wrap; }
+.page-head .eyebrow { margin-bottom: var(--s3); display: block; }
+.page-head .actions { display: flex; gap: var(--s2); flex-wrap: wrap; }
+
+/* ── floating glass ── */
+.panel { background: var(--glass); border: 1px solid var(--line-soft); border-radius: var(--r3); box-shadow: var(--shadow);
+  backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2); }
+.panel.pad { padding: var(--s5); }
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); padding: var(--s4) var(--s5); border-bottom: 1px solid var(--line-soft); }
+.panel-head h2 { font: 600 14px/1.2 var(--font); margin: 0; color: var(--nx-bright); letter-spacing: .01em; }
+.panel-body { padding: var(--s5); }
+
+/* ── buttons ── */
+.btn { --b: var(--line); display: inline-flex; align-items: center; justify-content: center; gap: var(--s2); height: 36px; padding: 0 var(--s4);
+  border-radius: 999px; border: 1px solid var(--b); background: color-mix(in srgb, var(--nx-panel) 60%, transparent); color: var(--nx-text);
+  font: 500 13px/1 var(--font); letter-spacing: .01em; cursor: pointer; transition: background .18s var(--ease), border-color .18s var(--ease), color .18s, transform .12s var(--ease); white-space: nowrap; }
+.btn:hover { --b: var(--ac-border-hi); color: var(--nx-bright); background: var(--ac-ghost); }
+.btn:active { transform: translateY(1px); }
+.btn[disabled] { opacity: .4; pointer-events: none; }
+.btn.primary { --b: var(--ac-border-hi); background: var(--ac-dim); color: var(--nx-bright); }
+.btn.primary:hover { background: color-mix(in srgb, var(--ac) 30%, transparent); }
+.btn.danger:hover { --b: color-mix(in srgb, var(--nx-err) 55%, transparent); background: color-mix(in srgb, var(--nx-err) 12%, transparent); }
+.btn.quiet { background: transparent; border-color: transparent; color: var(--nx-dim); }
+.btn.quiet:hover { color: var(--nx-bright); background: var(--ac-ghost); border-color: var(--line-soft); }
+.btn.sm { height: 30px; padding: 0 var(--s3); font-size: 12.5px; }
+.btn.icon { width: 34px; height: 34px; padding: 0; }
+.btn svg { width: 15px; height: 15px; flex: none; }
+
+/* ── chips, filters ── */
+.chips { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.chip { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 var(--s3); border-radius: 999px; border: 1px solid var(--line-soft);
+  color: var(--nx-dim); background: transparent; font: 500 12.5px/1 var(--font); cursor: pointer; transition: all .18s var(--ease); }
+.chip:hover { color: var(--nx-text); border-color: var(--line); }
+.chip[aria-pressed="true"] { color: var(--nx-bright); border-color: var(--ac-border-hi); background: var(--ac-ghost); }
+.chip .n { font: 500 11px/1 var(--mono); color: var(--nx-muted); }
+.chip[aria-pressed="true"] .n { color: var(--ac-soft); }
+.tag { display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: 999px; font: 500 10.5px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--nx-dim); border: 1px solid var(--line-soft); background: color-mix(in srgb, var(--nx-ink) 50%, transparent); }
+.tag.ac { color: var(--ac-soft); border-color: var(--ac-border); }
+.tag.warn { color: var(--nx-warn); border-color: color-mix(in srgb, var(--nx-warn) 35%, transparent); }
+.tag.err { color: var(--nx-err); border-color: color-mix(in srgb, var(--nx-err) 35%, transparent); }
+
+/* ── state ── */
+.dot { --c: var(--st-idle); width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 16%, transparent); }
+.dot[data-s="up"] { --c: var(--st-up); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 16%, transparent), 0 0 12px color-mix(in srgb, var(--c) 60%, transparent); }
+.dot[data-s="starting"], .dot[data-s="restarting"], .dot[data-s="degraded"], .dot[data-s="waiting-memory"], .dot[data-s="stopping"], .dot[data-s="idling"] { --c: var(--st-warn); animation: cos-breathe 1.6s ease-in-out infinite; }
+.dot[data-s="down"], .dot[data-s="circuit-open"] { --c: var(--st-down); }
+.dot[data-s="external"] { --c: var(--st-ext); }
+@keyframes cos-breathe { 50% { opacity: .35; } }
+.state { display: inline-flex; align-items: center; gap: var(--s2); font: 500 12px/1 var(--mono); letter-spacing: .04em; color: var(--nx-dim); }
+
+/* ── tables, lists ── */
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th { text-align: left; font: 500 10.5px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--nx-muted); padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line-soft); }
+.table td { padding: var(--s3) var(--s4); border-bottom: 1px solid color-mix(in srgb, var(--nx-edge) 50%, transparent); vertical-align: top; }
+.table tr:last-child td { border-bottom: 0; }
+.table tbody tr { transition: background .15s; } .table tbody tr:hover { background: var(--ac-ghost); }
+
+/* ── forms ── */
+.field { display: grid; gap: 6px; }
+.field label { font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--nx-dim); }
+.input, select.input { height: 38px; padding: 0 var(--s3); border-radius: var(--r1); border: 1px solid var(--line); background: color-mix(in srgb, var(--nx-ink) 70%, transparent);
+  color: var(--nx-bright); font: 400 13.5px/1 var(--font); transition: border-color .15s; width: 100%; }
+.input:focus { outline: none; border-color: var(--ac-border-hi); box-shadow: 0 0 0 3px var(--ac-ghost); }
+.input.mono { font-family: var(--mono); font-size: 13px; }
+
+/* ── said, never silent: empty, refused, down ── */
+.say { display: grid; place-items: center; text-align: center; gap: var(--s3); padding: var(--s8) var(--s5); color: var(--nx-dim); }
+.say .glyph { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--ac-soft); background: var(--ac-ghost); }
+.say h3 { margin: 0; font: 600 16px/1.3 var(--font); color: var(--nx-bright); }
+.say p { margin: 0; max-width: 52ch; }
+.say code, .code { font: 12.5px/1.6 var(--mono); color: var(--nx-bright); background: color-mix(in srgb, var(--nx-ink) 80%, transparent); border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 7px; }
+.refused { display: flex; gap: var(--s3); align-items: flex-start; padding: var(--s3) var(--s4); border-radius: var(--r2); margin-bottom: var(--s4);
+  border: 1px solid color-mix(in srgb, var(--nx-err) 35%, transparent); background: color-mix(in srgb, var(--nx-err) 8%, transparent); color: var(--nx-text); font-size: 13px; }
+.refused b { color: var(--nx-err); font-weight: 600; }
+
+/* ── motion ── */
+@keyframes cos-in { from { opacity: 0; transform: translateY(6px); } }
+.rise { animation: cos-in .45s var(--ease) both; }
+.rise:nth-child(2) { animation-delay: .03s; } .rise:nth-child(3) { animation-delay: .06s; } .rise:nth-child(4) { animation-delay: .09s; }
+.rise:nth-child(5) { animation-delay: .12s; } .rise:nth-child(6) { animation-delay: .15s; } .rise:nth-child(n+7) { animation-delay: .18s; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; } }
+:root[data-motion="reduced"] .rise { animation: none; }

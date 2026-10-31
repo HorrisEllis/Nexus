@@ -1,0 +1,26 @@
+<!doctype html>
+<!-- cos/ui/automation/index.html — the supervisor's policy (MOD-MG-UI-AUTOMATION, its policy form). MG18 release, 0.60.336. -->
+<html lang="en" data-theme="nexus" data-accent="cycle">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Automation · COS</title>
+  <link rel="stylesheet" href="../core/theme.css"><link rel="stylesheet" href="../core/core.css"><link rel="stylesheet" href="page.css">
+</head>
+<body class="cos-page">
+  <div data-refusals></div>
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">Compartment OS · rules</span>
+      <h1 class="title">How COS supervises</h1>
+      <p class="lede">The rules the supervisor follows for every system: what boots, how a crash is retried, when it stops trying, and the memory it keeps free. A change applies at once and is written to the ledger as yours.</p>
+    </div>
+    <div class="actions"><button class="btn" id="revert" disabled>Revert</button><button class="btn primary" id="save" disabled>Apply changes</button></div>
+  </header>
+  <form id="form" class="groups" autocomplete="off"></form>
+  <section class="panel later rise">
+    <div class="panel-head"><h2>Macros and rules</h2><span class="tag">MG7 · not built</span></div>
+    <div class="panel-body muted">Macros of COS commands, run on one compartment or many, by hand or by rule, and hats bound to a compartment, wait on MG7 (automation, macros and hats). This page grows them when it is built; until then the supervisor's own rules above are what automates COS.</div>
+  </section>
+  <script src="../core/core.js"></script>
+  <script src="page.js"></script>
+</body>
+</html>

@@ -276,6 +276,8 @@ const SUITES = [
   'test-provider-host-respawn.js',
   'test-userscript-mixed-content-fix.js',
   'test-contract-handshake-paths.js',
+  'test-cos-ui.test.js',   // 0.60.336 MG18/MG29 — COS's UI above the event bus: the cockpit server's gates, the contract, the stream, proposals, logs, usage, an act in Clear Glass
+  'test-cos-ui-theme.test.js',   // 0.60.336 MG_D11 — COS's look equals Idearium's, token by token
   'test-autopilot-handover.test.js',   // 0.60.330 MG17 — autopilot hands over: the launcher, one supervisor, core's duties kept, the body archived
   'test-skip-and-page-agents.test.js',   // 0.60.335 AC7/AC5 — skip fills marked defaults; his agent per page goes first
   'test-automation-driver-port.test.js',   // 0.60.333 AE2 — the orchestrator's engine drives Clear Glass's browser through the port

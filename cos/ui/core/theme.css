@@ -1,0 +1,92 @@
+/**
+ * cos/ui/core/theme.css — Idearium's look, forked for COS (MG_D11). MG18, 0.60.336. Spec: MOD-MG-UI-THEME.
+ * James, 2026-10-30: "what about using forking idearium specifically for cos for now … i want it to look beautiful, not cramped, open".
+ * The block between FORK START and FORK END is idearium/ui/css/nexus-theme.css's palettes, accents and motion, copied whole;
+ * tests/modules/test-cos-ui-theme.test.js fails naming the token if the two ever differ. The fonts are Idearium's, self-hosted, with their licenses.
+ */
+@font-face { font-family: 'Bebas Neue'; src: url(fonts/bebas-neue-400.woff2) format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'DM Mono'; src: url(fonts/dm-mono-400.woff2) format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'DM Mono'; src: url(fonts/dm-mono-500.woff2) format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Space Grotesk'; src: url(fonts/space-grotesk-400.woff2) format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Space Grotesk'; src: url(fonts/space-grotesk-600.woff2) format('woff2'); font-weight: 600; font-display: swap; }
+
+/* FORK START — idearium/ui/css/nexus-theme.css */
+:root, :root[data-theme="nexus"] {
+  --nx-void:   #00000f;
+  --nx-ink:    #080814;
+  --nx-plate:  #0d0d1f;
+  --nx-panel:  #111128;
+  --nx-edge:   #1e1e3a;
+  --nx-rim:    #2a2a4a;
+  --nx-muted:  #4a4a7a;
+  --nx-dim:    #7070a0;
+  --nx-text:   #d0d4f0;
+  --nx-bright: #eeeeff;
+  --nx-ok:     #00ff88;
+  --nx-err:    #ff3355;
+  --nx-warn:   #ffaa00;
+  --nx-violet: #a78bfa;   /* --sys-em */
+  --nx-emerald:#34d399;   /* --sys-cx */
+  --nx-card:   #0d0d1f;   /* raised surfaces (panels, cards) */
+  --nx-card2:  #111128;
+}
+:root[data-theme="midnight"] {
+  --nx-void:   #05070b;
+  --nx-ink:    #07090e;
+  --nx-plate:  #0b0f18;
+  --nx-panel:  #0f1520;
+  --nx-edge:   #141c2e;
+  --nx-rim:    #1e2a40;
+  --nx-muted:  #334560;
+  --nx-dim:    #607898;
+  --nx-text:   #c4d4ee;
+  --nx-bright: #e6f0ff;
+  --nx-ok:     #34d399;
+  --nx-err:    #f87171;
+  --nx-warn:   #fbbf24;
+  --nx-violet: #a78bfa;
+  --nx-emerald:#34d399;
+  --nx-card:   #0d1219;
+  --nx-card2:  #141c2e;
+}
+:root[data-theme="graphite"] {
+  --nx-void:   #0b0b0c;
+  --nx-ink:    #111113;
+  --nx-plate:  #17171a;
+  --nx-panel:  #1d1d21;
+  --nx-edge:   #26262b;
+  --nx-rim:    #34343a;
+  --nx-muted:  #5c5c66;
+  --nx-dim:    #8e8e99;
+  --nx-text:   #e4e4e8;
+  --nx-bright: #ffffff;
+  --nx-ok:     #3fb950;
+  --nx-err:    #f85149;
+  --nx-warn:   #d29922;
+  --nx-violet: #bc8cff;
+  --nx-emerald:#3fb950;
+  --nx-card:   #17171a;
+  --nx-card2:  #1d1d21;
+}
+
+/* ── the accent: the main UI's cyan, its hue a registered property so it can cycle ─────────────────────────── */
+@property --ac-h { syntax: '<number>'; inherits: true; initial-value: 192; }
+:root { --ac-h: 192; --ac-s: 100%; --ac-l: 56%; }
+:root[data-accent="violet"]  { --ac-h: 255; --ac-s: 90%; --ac-l: 70%; }
+:root[data-accent="emerald"] { --ac-h: 158; --ac-s: 64%; --ac-l: 52%; }
+:root[data-accent="amber"]   { --ac-h: 40;  --ac-s: 96%; --ac-l: 56%; }
+:root {
+  --ac:           hsl(var(--ac-h), var(--ac-s), var(--ac-l));
+  --ac-soft:      hsl(var(--ac-h), var(--ac-s), 74%);
+  --ac-dim:       hsla(var(--ac-h), var(--ac-s), var(--ac-l), .18);
+  --ac-ghost:     hsla(var(--ac-h), var(--ac-s), var(--ac-l), .07);
+  --ac-border:    hsla(var(--ac-h), var(--ac-s), var(--ac-l), .22);
+  --ac-border-hi: hsla(var(--ac-h), var(--ac-s), var(--ac-l), .4);
+}
+/* the main UI's slow cycle (ui/home/home.css accent-cycle): cyan → sky → blue-violet → sky → cyan, 8 s */
+@keyframes nx-accent-cycle { 0% { --ac-h: 192; } 25% { --ac-h: 210; } 50% { --ac-h: 240; } 75% { --ac-h: 210; } 100% { --ac-h: 192; } }
+:root[data-accent="cycle"] { animation: nx-accent-cycle 8s ease-in-out infinite; }
+:root[data-motion="reduced"] { animation: none !important; }
+:root[data-motion="reduced"] *, :root[data-motion="reduced"] *::before, :root[data-motion="reduced"] *::after {
+  animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+/* FORK END */

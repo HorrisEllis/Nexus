@@ -3557,6 +3557,12 @@ function matchRoute(method, url) {
     ['GET',    ['api','cos','ledger'],                'cos.ledger'],
     ['POST',   ['api','cos','boot'],                  'cos.boot'],
     ['POST',   ['api','cos','systems',':name',':op'], 'cos.act'],
+    // 0.60.336 MG18 — what COS's UI reads, for every agent too (§3.4: route → command → UI)
+    ['GET',    ['api','cos','proposals'],             'cos.proposals'],
+    ['POST',   ['api','cos','proposals',':id',':op'], 'cos.proposal.act'],
+    ['GET',    ['api','cos','systems',':name','logs'],'cos.logs'],
+    ['GET',    ['api','cos','usage'],                 'cos.usage'],
+    ['GET',    ['api','cos','policy'],                'cos.policy'],
     ['GET',    ['api','economy'],                     'economy.get'],
     ['POST',   ['api','economy'],                     'economy.set'],
     ['GET',    ['api','economy',':what'],             'economy.view'],
@@ -9788,16 +9794,22 @@ async function handle(req, res, route, query, body) {
       return ok(res, { repoUuid: params.uuid, ...r, moves: (r.moves || []).length, ...(r.moved ? { moved: r.moved.length } : {}) });
     }
     // 0.60.328 MG15b — COS's supervisor (cos/manager/server.js on :7799, 'cos' in the ports table): asked, never required (§5.15)
-    case 'cos.systems': case 'cos.ledger': case 'cos.boot': case 'cos.act': {
+    case 'cos.systems': case 'cos.ledger': case 'cos.boot': case 'cos.act':
+    case 'cos.proposals': case 'cos.proposal.act': case 'cos.logs': case 'cos.usage': case 'cos.policy': {
       const by = (body && body.by) || 'person';
       try {
         const d = action === 'cos.systems' ? await _nexusClient.get('cos', '/api/cos/systems', { timeout: 10000 })
+          : action === 'cos.proposals' ? await _nexusClient.get('cos', `/api/cos/proposals${query.open ? '?open=1' : ''}`, { timeout: 10000 })
+          : action === 'cos.proposal.act' ? await _nexusClient.post('cos', `/api/cos/proposals/${encodeURIComponent(params.id)}/${encodeURIComponent(params.op)}`, { by, why: body && body.why }, { timeout: 15000 })
+          : action === 'cos.logs' ? await _nexusClient.get('cos', `/api/cos/systems/${encodeURIComponent(params.name)}/logs?limit=${Number(query.limit) || 100}`, { timeout: 10000 })
+          : action === 'cos.usage' ? await _nexusClient.get('cos', '/api/cos/usage', { timeout: 10000 })
+          : action === 'cos.policy' ? await _nexusClient.get('cos', '/api/cos/policy', { timeout: 10000 })
           : action === 'cos.ledger' ? await _nexusClient.get('cos', `/api/cos/ledger?limit=${Number(query.limit) || 50}${query.system ? `&system=${encodeURIComponent(query.system)}` : ''}`, { timeout: 10000 })
           : action === 'cos.boot' ? await _nexusClient.post('cos', '/api/cos/boot', { set: (body && body.set) || undefined, by }, { timeout: 120000 })
           : await _nexusClient.post('cos', `/api/cos/systems/${encodeURIComponent(params.name)}/${encodeURIComponent(params.op)}`, { by }, { timeout: 15000 });
         const { ok: _o, ...rest } = d || {};
         return ok(res, rest);
-      } catch (e) { return err(res, 502, `COS's manager (:7799) did not answer: ${e.message} — until the handover (MG17) autopilot holds :7799; start it with node cos/manager/server.js once autopilot is stopped`); }
+      } catch (e) { return err(res, 502, `COS's manager (:7799) did not answer: ${e.message} — start it with npm run start:all (since 0.60.330 the launcher starts COS's manager)`); }
     }
     // §0.39.281 EC8 — the economy, from guardian (the one owner)
     case 'economy.get': case 'economy.set': case 'economy.view': {

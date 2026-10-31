@@ -7,11 +7,11 @@ intent: null
 summary: MG23_allocation_and_balance (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793376634375
+exported_at: 1793449750411
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793376634375
-lastSeenAt: 1793376634375
+firstSeenAt: 1793449750411
+lastSeenAt: 1793449750411
 fingerprint: null
 payload:
   id: MG23_allocation_and_balance
@@ -31,4 +31,4 @@ payload:
   blocks:
     - MOD-MG-BALANCER
   spec: cos/spec/cos-manager.spec
-  graph: bb5091a74ffd1e91
+  graph: b438697d04cc0a64

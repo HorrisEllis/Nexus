@@ -1,0 +1,71 @@
+<!doctype html>
+<!-- cos/ui/shell/index.html — COS's frame (MOD-MG-UI-SHELL). MG18, 0.60.336. James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus." -->
+<html lang="en" data-theme="nexus" data-accent="cycle">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>COS</title>
+  <link rel="icon" href="../core/mark.svg">
+  <link rel="stylesheet" href="../core/theme.css">
+  <link rel="stylesheet" href="../core/core.css">
+  <link rel="stylesheet" href="page.css">
+</head>
+<body class="shell">
+  <canvas id="bus" aria-hidden="true"></canvas>
+  <div class="veil" aria-hidden="true"></div>
+
+  <aside class="rail panel" aria-label="COS">
+    <a class="brand" href="#/overview">
+      <img src="../core/mark.svg" alt="">
+      <span><b>COS</b><small>Compartment OS</small></span>
+    </a>
+    <nav class="nav" id="nav-main" aria-label="Pages"></nav>
+    <div class="nav-group">
+      <div class="nav-label"><span>Systems</span><span class="mono faint" id="sys-count"></span></div>
+      <nav class="nav systems" id="nav-systems" aria-label="Systems"></nav>
+    </div>
+    <div class="rail-foot">
+      <nav class="nav" id="nav-foot"></nav>
+      <div class="bus-state" id="bus-state" title="the manager's event stream">
+        <span class="dot" data-s="declared"></span><span class="label">connecting</span><span class="mono faint" id="bus-count"></span>
+      </div>
+    </div>
+  </aside>
+
+  <header class="top panel">
+    <div class="crumb"><span class="eyebrow" id="crumb-eyebrow">COS</span><h1 id="crumb-title">Overview</h1></div>
+    <div class="manager" id="manager"><span class="dot" data-s="declared"></span><span id="manager-text">reaching the manager…</span></div>
+    <div class="meters" id="meters">
+      <div class="meter" id="m-cpu" title="host load (1 min) per core"><span class="k">CPU</span><span class="bar"><i></i></span><span class="v mono">—</span></div>
+      <div class="meter" id="m-mem" title="host memory in use; the tick is the supervisor's halt floor"><span class="k">MEM</span><span class="bar"><i></i><b class="floor"></b></span><span class="v mono">—</span></div>
+    </div>
+    <div class="top-actions">
+      <button class="btn quiet sm" id="theme" title="palette"></button>
+      <button class="btn sm goto-btn" id="goto-open"><span class="ic"></span><span>Go to</span><kbd>⌘K</kbd></button>
+    </div>
+  </header>
+
+  <main class="stage" id="stage"></main>
+  <div class="notices" id="notices" aria-live="polite"></div>
+
+  <div class="scrim" id="confirm" hidden>
+    <div class="dialog panel" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+      <div class="dialog-ic" id="confirm-ic"></div>
+      <h2 id="confirm-title"></h2>
+      <p id="confirm-body"></p>
+      <div class="dialog-foot"><button class="btn quiet" id="confirm-no">Cancel</button><button class="btn primary" id="confirm-yes">Confirm</button></div>
+    </div>
+  </div>
+
+  <div class="scrim" id="goto" hidden>
+    <div class="palette panel" role="dialog" aria-label="Go to">
+      <div class="palette-in"><span class="ic"></span><input id="goto-q" placeholder="Go to a page or a system…" autocomplete="off" spellcheck="false"></div>
+      <div class="palette-list" id="goto-list"></div>
+    </div>
+  </div>
+
+  <script src="../core/core.js"></script>
+  <script src="bus.js"></script>
+  <script src="page.js"></script>
+</body>
+</html>

@@ -22,7 +22,19 @@ const FILES = [
   ['clear-glass/src/automation/driver-port.js', I('clear-glass/src/automation/driver-port.js'), []],   // 0.60.333 AE2 — reached by orchestrator/automation over HTTP :7704
   ['cos/manager/supervisor.js', I('cos/manager/supervisor.js'), []],
   ['cos/manager/autopilot-door.js', I('cos/manager/autopilot-door.js'), [I('lib/test-sandbox.js'), I('lib/bus-subscriptions.js'), I('cortex/memory/jaa-db.js'), I('intelligence/cfr/field.js'), I('lib/ledger-sse.js'), I('lib/error-log.js')]],   // 0.60.329 MG16; cortex/intelligence: the legacy /tables /files reads
-  ['cos/manager/server.js',     I('cos/manager/server.js'),     [I('cos/manager/supervisor.js'), I('cos/manager/autopilot-door.js')]],   // require('./supervisor.js'), require('./autopilot-door.js')
+  ['cos/manager/server.js',     I('cos/manager/server.js'),     [I('cos/manager/supervisor.js'), I('cos/manager/autopilot-door.js'), I('cos/manager/proposals.js'), I('cos/manager/usage.js'), I('cos/manager/contract.json')]],   // requires; the contract read per request (MG18)
+  // 0.60.336 MG18/MG29 (MG_D16) — COS's UI: the cockpit server forwards to the manager over HTTP by the contract's allowlist; each page loads
+  // core by <script>, talks to the shell only by postMessage (the bus), and to the manager only through the cockpit server's same-origin routes
+  ['cos/manager/proposals.js',  I('cos/manager/proposals.js'),  []],   // given the supervisor; notes on its ledger
+  ['cos/manager/usage.js',      I('cos/manager/usage.js'),      []],
+  ['cos/manager/contract.json', I('cos/manager/contract.json'), []],
+  ['cos/ui/serve.js',           I('cos/ui/serve.js'),           [I('cos/manager/contract.json'), I('cos/manager/server.js')]],   // reads the contract; HTTP to the manager
+  ['cos/ui/core/core.js',       I('cos/ui/core/core.js'),       [I('cos/ui/serve.js')]],   // fetch, same-origin
+  ['cos/ui/core/section.js',    I('cos/ui/core/section.js'),    [I('cos/ui/core/core.js')]],
+  ['cos/ui/shell/bus.js',       I('cos/ui/shell/bus.js'),       []],
+  ['cos/ui/shell/page.js',      I('cos/ui/shell/page.js'),      [I('cos/ui/core/core.js'), I('cos/ui/shell/bus.js'), I('cos/ui/serve.js')]],   // the event stream; frames by postMessage
+  ...['overview', 'ledger', 'proposals', 'automation', 'planned', 'cockpit'].map(p => [`cos/ui/${p}/page.js`, I(`cos/ui/${p}/page.js`), [I('cos/ui/core/core.js'), I('cos/ui/shell/page.js'), ...(p === 'cockpit' ? [I('cos/ui/core/section.js')] : [])]]),
+  ...['overview', 'logs', 'events', 'api', 'data', 'files', 'tests', 'snapshot'].map(s => [`cos/ui/cockpit/sections/${s}/section.js`, I(`cos/ui/cockpit/sections/${s}/section.js`), [I('cos/ui/core/section.js'), I('cos/ui/cockpit/page.js')]]),
   // 0.60.330 MG17 — autopilot hands over: the launcher spawns COS's manager by path (and the archive with --legacy-supervisor) and reaches it over
   // HTTP; core's duties reach COS only by its routes, and run lib's own pieces (the fan-in, ledger wire, error.log, intelligence, gaps, updates)
   ['lib/nexus/autopilot.js',    I('lib/nexus/autopilot.js'),    [I('cos/manager/server.js'), I('lib/nexus/autopilot.retired-0.60.330.js'), I('lib/nexus/core-duties.js'), I('lib/version.js'), I('lib/nexus-cli-interface.js')]],
