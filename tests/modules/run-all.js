@@ -18,6 +18,7 @@ const fs   = require('fs');
 const MODULES_DIR = __dirname;
 
 const SUITES = [
+  'test-autofill-page-chip-glass.test.js', // 0.60.336 AC1 — the page-level "Autofill this page" pill shows automatically / fills / hides, driven in Clear Glass
   'test-macro-toast-glass.test.js',    // 0.60.335 MT1 — the macro recording/playing toast (breathing red dot + player), driven in Clear Glass
   'test-select-match.test.js',            // 0.60.298 DD1 — bestOption/boolOf: a dropdown/checkbox fills from a profile value that isn't the option's raw value ("United States"→US)
   'test-portfolio-node.test.js',          // 0.60.299 PF1 — the .portfolio node: PortfolioStore + export/import a clearglass.portfolio/1 file (merge by id, newer-wins)
