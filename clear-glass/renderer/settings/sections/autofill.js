@@ -259,6 +259,35 @@
       h('div', { class: 'af-acts' }, exp, imp, undo, tmpl, file), out] });
   }
 
+  // §PF 0.60.333 — James: "nodes you can upload and import to the settings page." Import/export a .portfolio node (project items, headline, bio, skills).
+  function portfolioPane(portfolios, rerender) {
+    const out = h('div', { class: 'blurb', 'aria-live': 'polite' });
+    const say = (t) => { out.textContent = t; };
+    const file = h('input', { type: 'file', accept: '.portfolio,.yaml,.yml,.json', style: 'display:none' });
+    file.addEventListener('change', async () => {
+      const f = file.files && file.files[0]; file.value = '';
+      if (!f) return;
+      if (f.size > 5000000) return toast('That file is too large to be a portfolio', 'bad');
+      try {
+        const text = await f.text();
+        const r = await call(() => cg.portfolio.import(text), 'import portfolio');
+        if (!(r.imported && r.imported.length)) throw new Error(r.error || (r.errors && r.errors[0] && r.errors[0].error) || 'nothing imported');
+        const names = r.imported.map(x => x.name).join(', ');
+        toast('Imported'); await rerender();
+        say(`Imported ${f.name}: ${r.imported.length} portfolio(s)${names ? ` (${names})` : ''}${r.errors && r.errors.length ? ` · ${r.errors.length} refused` : ''}.`);
+      } catch (e) { toast(e.message, 'bad'); say(`Not imported: ${e.message}`); }
+    });
+    const imp = btn('Import a file…', () => file.click(), 'sm primary');
+    const exp = btn('Export', async () => {
+      try { const r = await call(() => cg.portfolio.export(), 'export portfolio'); if (!r.ok) throw new Error(r.error); say(`Saved ${saveFile(r)} — ${r.count} portfolio(s).`); }
+      catch (e) { toast(e.message, 'bad'); }
+    }, 'sm');
+    const rows = (portfolios || []).map(p => row(p.name, `${(p.items || []).length} project(s)${p.headline ? ' · ' + p.headline : ''}`,
+      btn('Delete', async () => { if (await confirmDo(`Delete "${p.name}"?`, 'The portfolio is removed.', 'Delete')) { await call(() => cg.portfolio.remove(p.id), 'delete'); await rerender(); } }, 'sm danger')));
+    return pane({ title: 'Portfolio', sub: 'Your portfolio as a .portfolio node — project items, headline, bio and skills. Import a file to load one.', flush: true, body: [
+      h('div', { class: 'af-acts' }, imp, exp, file), ...(rows.length ? rows : [empty('No portfolio yet — import a .portfolio file.', imp)]), out] });
+  }
+
   function gigPane(profiles) {
     if (!profiles.length) return pane({ title: 'Fiverr gigs', body: h('p', { class: 'blurb', text: 'Create a profile first — the gig is written only from what it says about you.' }) });
     const prof = select(profiles.map(p => ({ value: p.id, label: p.label })), profiles[0].id);
@@ -381,8 +410,9 @@
     keywords: 'autofill profile job application screen question answer ctrl shift a resume cover letter address phone email fill form detect upwork fiverr freelance proposal gig salary',
     blurb: 'Profiles Clear Glass fills forms from, and how it answers open questions on a page (Ctrl+Shift+A or right-click \u2192 Answer this question).',
     async render({ tools, rerender }) {
-      const [profiles, s, lr] = await Promise.all([call(() => cg.autofill.listProfiles(), 'profiles'), call(() => cg.api.get(), 'settings'),
-        cg.autofill.learned ? call(() => cg.autofill.learned(), 'learned fields').catch(() => ({ learned: [] })) : Promise.resolve({ learned: [] })]);
+      const [profiles, s, lr, pf] = await Promise.all([call(() => cg.autofill.listProfiles(), 'profiles'), call(() => cg.api.get(), 'settings'),
+        cg.autofill.learned ? call(() => cg.autofill.learned(), 'learned fields').catch(() => ({ learned: [] })) : Promise.resolve({ learned: [] }),
+        cg.portfolio ? call(() => cg.portfolio.list(), 'portfolios').catch(() => ({ portfolios: [] })) : Promise.resolve({ portfolios: [] })]);   // §PF 0.60.333
       tools.append(btn('New profile', () => profileEditor(null, rerender), 'primary'));
       const save = (patch) => call(() => cg.api.set(patch), 'save');
       const minConf = select([{ value: 'high', label: 'High only' }, { value: 'medium', label: 'Medium and up' }, { value: 'low', label: 'Low and up' }], s.screenQaMinConfidence || 'medium');
@@ -393,6 +423,7 @@
       ctx.addEventListener('change', () => save({ screenQaContext: ctx.value }).then(() => toast('Context saved'), e => toast(e.message, 'bad')));
       return [
         transferPane(rerender),
+        portfolioPane((pf && pf.portfolios) || [], rerender),
         pane({ title: 'Profiles', sub: 'Filling never submits a form. Low-confidence matches are left for you.', flush: true, body: profiles.length ? profiles.map(p => row(p.label, `${Object.keys(p.fields || {}).length} fields${p.documents && Object.keys(p.documents).length ? ` \u00B7 ${Object.keys(p.documents).join(', ')}` : ''} \u00B7 updated ${ago(p.updatedAt)}${s.screenQaProfileId === p.id ? ' \u00B7 used for answers' : ''}`,
           chip(`${completeness(p)}% complete`, completeness(p) >= 75 ? 'ok' : 'warn'),
           btn('Fill a tab', () => fillFlow(p, rerender).catch(e => toast(e.message, 'bad')), 'sm primary'),

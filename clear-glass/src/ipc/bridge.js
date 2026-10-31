@@ -678,6 +678,13 @@ class IpcBridge {
       const r = this._autofillImportUndo();
       res.status(r.ok ? 200 : (this.autofillStore ? 404 : 503)).json(r);
     });
+    // §PF 0.60.333 — the .portfolio node through the one door too, so agents get it (his order of delivery)
+    this.app.get('/cli/portfolio', (req, res) => res.json({ ok: true, portfolios: this._portfolioStore().list() }));
+    this.app.get('/cli/portfolio/export', (req, res) => res.json(require('../autofill/portfolio.js').exportNode(this._portfolioStore())));
+    this.app.post('/cli/portfolio/import', (req, res) => {
+      const r = require('../autofill/portfolio.js').importNode({ store: this._portfolioStore(), text: String(req.body?.text == null ? '' : req.body.text).slice(0, 5000000) });
+      res.status(r.ok ? 200 : 400).json(r);
+    });
     this.app.post('/cli/autofill/pick', async (req, res) => {
       if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
       const r = await this._autofillPick(req.body || {});
@@ -1796,6 +1803,13 @@ class IpcBridge {
     ipcMain.handle('autofill:export', async () => this._autofillExport());                                    // §AT2 the .autofill file
     ipcMain.handle('autofill:import', async (e, { text } = {}) => this._autofillImport(text, { by: 'settings' }));
     ipcMain.handle('autofill:import:undo', async () => this._autofillImportUndo());
+    // §PF 0.60.333 — the .portfolio node: list / import (upsert by id) / export, like the .autofill transfer. His "nodes you can upload and import to the settings page."
+    ipcMain.handle('portfolio:list',   async () => ({ ok: true, portfolios: this._portfolioStore().list() }));
+    ipcMain.handle('portfolio:get',    async (e, { id } = {}) => ({ ok: true, portfolio: this._portfolioStore().get(id) }));
+    ipcMain.handle('portfolio:import', async (e, { text } = {}) => require('../autofill/portfolio.js').importNode({ store: this._portfolioStore(), text: String(text == null ? '' : text).slice(0, 5000000) }));
+    ipcMain.handle('portfolio:export', async () => require('../autofill/portfolio.js').exportNode(this._portfolioStore()));
+    ipcMain.handle('portfolio:create', async (e, payload = {}) => { const r = this._portfolioStore().create(payload); return r && r.error ? { ok: false, error: r.error } : { ok: true, portfolio: r }; });
+    ipcMain.handle('portfolio:delete', async (e, { id } = {}) => this._portfolioStore().remove(id));
     ipcMain.handle('autofill:gig:import', async (e, { text } = {}) => {
       const G = require('../autofill/gig.js');
       const r = G.parseGig(String(text == null ? '' : text).slice(0, 200000));
@@ -2235,6 +2249,12 @@ class IpcBridge {
     const r = require('../autofill/transfer.js').undoLast({ store: this.autofillStore, siteSettings: this.siteSettings || null, undoRows: this._autofillUndoRows() });
     if (r.ok) this.postEvent('autofill.import.undone', { ...r.restored, ts: Date.now() });
     return r;
+  }
+
+  // §PF 0.60.333 — the portfolio store (.portfolio node), lazily loaded like the autofill store; its own JAA table (cg_portfolio).
+  _portfolioStore() {
+    if (!this._portfolio) { const { PortfolioStore } = require('../autofill/portfolio.js'); this._portfolio = new PortfolioStore(); try { this._portfolio.load(); } catch (_) {} }
+    return this._portfolio;
   }
 
   async _autofillForget(url, fieldKey) {

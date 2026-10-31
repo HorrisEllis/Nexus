@@ -98,6 +98,8 @@ phases:
       separate investigation before code; mapped here so it is not lost, PF_D2 reading to confirm.
     proof: "a recorded UI macro replays a Clear Glass UI action (open Library, switch a tab); scoped ui, listed apart from site macros; test TBD after grounding"
 
+  PF_routes_commands_ui_DONE_import_export:
+    status: DONE (import/export) 0.60.333 — clear-glass/src/ipc/bridge.js portfolio:list/get/import/export/create/delete IPC + /cli/portfolio[/export,/import] for agents; preload cg.portfolio.*; a Portfolio pane in settings/autofill.js (Import a file… reading a .portfolio, Export, the list with Delete), so his .portfolio nodes load in the settings page. Store import proven headless (test-portfolio-node 8/8); the pane mirrors the proven .autofill transfer pane; UI verified live on his machine (Electron). Remaining in this phase: the per-site portfolio picker + a route-commands row.
   PF_routes_commands_ui:
     status: OPEN
     layer: ui

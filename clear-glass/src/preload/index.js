@@ -413,6 +413,16 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     gigToIdearium: (payload)                 => ipcRenderer.invoke('autofill:gig:to-idearium', payload),   // §0.59.3 a buyer's answers → a spec in Idearium
   },
 
+  // §PF 0.60.333 — the .portfolio node (James: "nodes you can upload and import to the settings page"); clearglass.portfolio/1 files (src/autofill/portfolio.js)
+  portfolio: {
+    list:   ()        => ipcRenderer.invoke('portfolio:list'),
+    get:    (id)      => ipcRenderer.invoke('portfolio:get', { id }),
+    import: (text)    => ipcRenderer.invoke('portfolio:import', { text }),   // upsert by id, newer-wins
+    export: ()        => ipcRenderer.invoke('portfolio:export'),            // { ok, text, filename, count }
+    create: (payload) => ipcRenderer.invoke('portfolio:create', payload),
+    remove: (id)      => ipcRenderer.invoke('portfolio:delete', { id }),
+  },
+
   // §BUILT 2026-09-21 — James: "clearglass needs to help me with job
   // applications, answering on screen questions... using hotkey.
   // right click, answer question context option."
