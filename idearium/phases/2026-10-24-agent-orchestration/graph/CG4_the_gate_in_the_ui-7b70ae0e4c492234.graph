@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CG4_the_gate_in_the_ui:7b70ae0e4c492234
+type: graph
+id: phase:CG4_the_gate_in_the_ui:7b70ae0e4c492234
+context: dependency graph of phase CG4_the_gate_in_the_ui
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793442586694
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793442586694
+lastSeenAt: 1793442586694
+fingerprint: null
+payload:
+  for: CG4_the_gate_in_the_ui
+  kind: phase
+  repo: null
+  hash: 7b70ae0e4c492234
+  nodes:
+    - path: idearium/ui/js/code-surface.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG3_route_and_command
+    dependents: []
+    upstream:
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG1_the_confidence_gate_backend
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG2_the_gate_on_every_dispatch
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG3_route_and_command
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG_D1_gate_home
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG_D2_threshold
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG_D3_order
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · ready
+      - 'depends on (1): CG3_route_and_command · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-agent-orchestration-phasemap.spec::CG3_route_and_command
+        kind: declared

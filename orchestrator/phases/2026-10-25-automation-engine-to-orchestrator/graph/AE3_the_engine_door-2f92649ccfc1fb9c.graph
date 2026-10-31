@@ -1,23 +1,23 @@
 envelope: 1
-uuid: nexus-export-graph-phase:AE3_the_engine_door:9bf639bab4f8b3d0
+uuid: nexus-export-graph-phase:AE3_the_engine_door:2f92649ccfc1fb9c
 type: graph
-id: phase:AE3_the_engine_door:9bf639bab4f8b3d0
+id: phase:AE3_the_engine_door:2f92649ccfc1fb9c
 context: dependency graph of phase AE3_the_engine_door
 intent: null
 summary: 15 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792962436819
+exported_at: 1793442585136
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792962436819
-lastSeenAt: 1792962436819
+firstSeenAt: 1793442585136
+lastSeenAt: 1793442585136
 fingerprint: null
 payload:
   for: AE3_the_engine_door
   kind: phase
   repo: null
-  hash: 9bf639bab4f8b3d0
+  hash: 2f92649ccfc1fb9c
   nodes:
     - path: orchestrator/automation/routes.js
       role: changes
@@ -139,6 +139,7 @@ payload:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
     dependents:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+      - docs/2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
     upstream:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
@@ -146,14 +147,19 @@ payload:
     downstream:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
+      - docs/2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+      - docs/2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
     conflicts: []
     dangling: []
     lines:
-      - layer 2 · ready
+      - layer 2
       - 'depends on (1): AE1_move_the_core · all upstream 3'
-      - 'needed by (1): AE4_repoint_the_registry · all downstream 2'
+      - >-
+        needed by (2): AE4_repoint_the_registry, PL5_orchestrator_runs_pipelines · all downstream 3
+        · finishing it unlocks AE4_repoint_the_registry, PL5_orchestrator_runs_pipelines
     edges:
       - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
         kind: declared

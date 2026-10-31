@@ -19,6 +19,7 @@ const I = (rel) => idFor(rel);
 // [file, id, requires (ids)] — each edge names why it is real
 const FILES = [
   // 0.60.328 MG15b — COS's one supervisor and its server (docs/2026-10-24-cos-manager-phasemap.spec); Idearium reaches it over HTTP :7799 (/api/cos/*)
+  ['clear-glass/src/automation/driver-port.js', I('clear-glass/src/automation/driver-port.js'), []],   // 0.60.333 AE2 — reached by orchestrator/automation over HTTP :7704
   ['cos/manager/supervisor.js', I('cos/manager/supervisor.js'), []],
   ['cos/manager/autopilot-door.js', I('cos/manager/autopilot-door.js'), [I('lib/test-sandbox.js'), I('lib/bus-subscriptions.js'), I('cortex/memory/jaa-db.js'), I('intelligence/cfr/field.js'), I('lib/ledger-sse.js'), I('lib/error-log.js')]],   // 0.60.329 MG16; cortex/intelligence: the legacy /tables /files reads
   ['cos/manager/server.js',     I('cos/manager/server.js'),     [I('cos/manager/supervisor.js'), I('cos/manager/autopilot-door.js')]],   // require('./supervisor.js'), require('./autopilot-door.js')

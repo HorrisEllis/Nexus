@@ -1,32 +1,36 @@
 envelope: 1
-uuid: nexus-export-graph-phase:AE2_browser_driver_port:3468e7c564c440e7
+uuid: nexus-export-graph-phase:AE2_browser_driver_port:8eaafb2503ac1af0
 type: graph
-id: phase:AE2_browser_driver_port:3468e7c564c440e7
+id: phase:AE2_browser_driver_port:8eaafb2503ac1af0
 context: dependency graph of phase AE2_browser_driver_port
 intent: null
-summary: 17 node(s), 0 crossing(s)
+summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792962436815
+exported_at: 1793442585133
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792962436815
-lastSeenAt: 1792962436815
+firstSeenAt: 1793442585133
+lastSeenAt: 1793442585133
 fingerprint: null
 payload:
   for: AE2_browser_driver_port
   kind: phase
   repo: null
-  hash: 3468e7c564c440e7
+  hash: 8eaafb2503ac1af0
   nodes:
     - path: clear-glass/src/automation/driver-port.js
       role: changes
-      exists: false
+      exists: true
       system: clear-glass
     - path: clear-glass/src/main/index.js
       role: changes
       exists: true
       system: clear-glass
+    - path: tests/modules/test-automation-driver-port.test.js
+      role: changes
+      exists: true
+      system: null
     - path: clear-glass/src/driver/index.js
       role: used-by
       exists: true
@@ -141,6 +145,7 @@ payload:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
     dependents:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+      - docs/2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
     upstream:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
@@ -148,14 +153,19 @@ payload:
     downstream:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
+      - docs/2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+      - docs/2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
     conflicts: []
     dangling: []
     lines:
-      - layer 2 · ready
+      - layer 2
       - 'depends on (1): AE1_move_the_core · all upstream 3'
-      - 'needed by (1): AE4_repoint_the_registry · all downstream 2'
+      - >-
+        needed by (2): AE4_repoint_the_registry, PL5_orchestrator_runs_pipelines · all downstream 3
+        · finishing it unlocks AE4_repoint_the_registry, PL5_orchestrator_runs_pipelines
     edges:
       - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
         kind: declared

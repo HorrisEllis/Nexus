@@ -7,11 +7,11 @@ intent: null
 summary: CG3_route_and_command (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792874371315
+exported_at: 1793442586692
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874371315
-lastSeenAt: 1792874371315
+firstSeenAt: 1793442586692
+lastSeenAt: 1793442586692
 fingerprint: null
 payload:
   id: CG3_route_and_command
@@ -27,4 +27,4 @@ payload:
     - CG2_the_gate_on_every_dispatch
   blocks: []
   spec: docs/brainos-in-idearium.spec
-  graph: 095112dc157b2607
+  graph: eeab25abd3ee80e7

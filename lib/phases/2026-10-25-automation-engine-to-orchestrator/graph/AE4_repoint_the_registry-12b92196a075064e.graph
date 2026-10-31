@@ -1,23 +1,23 @@
 envelope: 1
-uuid: nexus-export-graph-phase:AE4_repoint_the_registry:139a7c4e2a7971c9
+uuid: nexus-export-graph-phase:AE4_repoint_the_registry:12b92196a075064e
 type: graph
-id: phase:AE4_repoint_the_registry:139a7c4e2a7971c9
+id: phase:AE4_repoint_the_registry:12b92196a075064e
 context: dependency graph of phase AE4_repoint_the_registry
 intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792962436834
+exported_at: 1793442585148
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792962436834
-lastSeenAt: 1792962436834
+firstSeenAt: 1793442585148
+lastSeenAt: 1793442585148
 fingerprint: null
 payload:
   for: AE4_repoint_the_registry
   kind: phase
   repo: null
-  hash: 139a7c4e2a7971c9
+  hash: 12b92196a075064e
   nodes:
     - path: lib/automation-registry.js
       role: changes
@@ -52,15 +52,13 @@ payload:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
     downstream:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
-    blockedBy:
-      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
-      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+    blockedBy: []
     unlocks:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
     conflicts: []
     dangling: []
     lines:
-      - layer 3 · blocked by AE2_browser_driver_port, AE3_the_engine_door
+      - layer 3
       - 'depends on (2): AE2_browser_driver_port, AE3_the_engine_door · all upstream 5'
       - 'needed by (1): AE5_ui_and_cleanup · finishing it unlocks AE5_ui_and_cleanup'
     edges:

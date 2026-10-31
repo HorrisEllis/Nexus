@@ -19,8 +19,8 @@ function test(id, desc, fn) { reg.push({ id, desc, fn }); }
 function fakeEngine({ up = true, ran = [] } = {}) {
   return async function http(system, { method = 'GET', path = '/' } = {}) {
     if (system === 'copilot') return up && path === '/health' ? { ok: true } : { ok: false, error: 'co-pilot not reachable on :3750' };
-    if (system !== 'clear-glass' && system !== 'clearglass') return { ok: false, error: `${system} not reachable` };
-    if (!up) return { ok: false, error: 'Clear Glass is not reachable on :7704 (ECONNREFUSED)' };
+    if (system !== 'orchestrator') return { ok: false, error: `${system} not reachable` };   // 0.60.333 AE4: the engine is the orchestrator's
+    if (!up) return { ok: false, error: 'orchestrator is not reachable on :9000 (ECONNREFUSED)' };
     if (path === '/automation/active') return { ok: true, runs: [] };
     if (path === '/automation/workflows') return { ok: true, workflows: [{ id: 'wf-1', name: 'Nightly scrape', status: 'active', runCount: 3 }] };
     if (path === '/automation/nodes') return { ok: true, nodes: [{ file: 'login.macro', name: 'Login' }, { file: 'x.workflow', name: 'X' }] };
@@ -38,7 +38,8 @@ test('A1', 'exports the neutral door (sources, list, run, describe)', () => {
 test('A2', 'describe() is the honest self-model: one engine, drivers, in-process, absent', () => {
   const d = REG.describe();
   const byId = Object.fromEntries(d.sources.map(s => [s.id, s]));
-  assert.strictEqual(byId['clear-glass'].kind, 'engine');
+  assert.strictEqual(byId['clear-glass'].kind, 'driver', 'AE4: Clear Glass is the browser driver');
+  assert.deepStrictEqual(d.engine, { system: 'orchestrator', port: 9000, door: '/automation/*' }, 'AE4: the engine is the orchestrator\'s');
   assert.strictEqual(byId.brainos.kind, 'engine-store');
   assert.strictEqual(byId.copilot.kind, 'driver');
   assert.strictEqual(byId.idearium.kind, 'driver');

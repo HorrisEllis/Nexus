@@ -947,6 +947,12 @@ async function _startWire() {
       // tests): workflows and steps, runs and cancel, catalogue, templates,
       // import/export, validate, one-off steps, events, webhooks, cron preview.
       // Local pages only, except webhooks (they carry their own secret).
+      // 0.60.333 AE2 — the orchestrator's engine drives this browser through the port (browserFn, runMacroFn)
+      if (u === '/automation/driver' || u === '/automation/macro-run') {
+        const r = await require('../automation/driver-port.js').handle({ method: req.method, url: u, body: parsed }, {
+          browser: (a) => _automationBrowser(a), runMacro: ({ name, agentId, params }) => macroTool.execute({ action: 'run', name, agentId, params }) });
+        if (r) { res.writeHead(r.status, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify(r.body)); }
+      }
       if (u.startsWith('/automation/')) {
         const r = await require('../../../lib/automation/routes.js').handle(   // 0.60.266: the routes moved to lib/automation in AE1 (0.60.251)
           mesh && mesh._automation, { method: req.method, url: u, body: parsed, headers: req.headers, rawBody: body }, {

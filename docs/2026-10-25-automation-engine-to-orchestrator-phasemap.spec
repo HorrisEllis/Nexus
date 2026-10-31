@@ -96,12 +96,13 @@ phases:
       orchestrator with no clear-glass static dep; lib/system-boundary.js shows NO orchestrator→clear-glass static crossing
 
   AE2_browser_driver_port:
-    status: OPEN
+    status: BUILT 0.60.333
     layer: integration
     depends_on: [AE1_move_the_core]
     files:
       - clear-glass/src/automation/driver-port.js
       - clear-glass/src/main/index.js
+      - tests/modules/test-automation-driver-port.test.js
     spec: docs/2026-10-25-automation-engine-sovereignty-graph.md
     does: >-
       The one piece of NEW code, not a move: wire the engine's browserFn (now in the orchestrator's process) to Clear Glass's
@@ -134,7 +135,7 @@ phases:
       decider); a cron/webhook trigger fires from the orchestrator's tick
 
   AE4_repoint_the_registry:
-    status: OPEN
+    status: BUILT 0.60.333
     layer: library
     depends_on: [AE2_browser_driver_port, AE3_the_engine_door]
     files:
@@ -198,3 +199,10 @@ order: >-
 # kernel: no crossing. Per-process store namespace (NEXUS_AUTOMATION_NS) so neither ticks the other's workflows. The orchestrator
 # still orchestrates (its instance); the engine is simply the kernel's because more than one system needs it. The move destinations
 # above are lib/automation/ (not orchestrator/automation/, which keeps only the orchestrator's host index.js).
+
+# ── ADDENDUM 2026-10-31 — AE2 and AE4 built (0.60.333) ──────────────────────────────────────────────────────────────────────────────
+# James, 2026-10-31: "merge and finish automation and cos backend". AE2: clear-glass/src/automation/driver-port.js serves POST
+# /automation/driver and /automation/macro-run on the wire server (:7704) with what Clear Glass had (_automationBrowser, its macro tool);
+# the orchestrator's browserFn/runMacroFn reach it; Clear Glass down → only browser steps named (test-automation-driver-port 3/3, a real page
+# through glass.js). AE4: lib/automation-registry.js sends every engine call to the orchestrator (:9000 /automation/*); clear-glass is a
+# driver; describe() names the engine (test-automation-registry 11/11). AE5 (UI and cleanup) stays open.

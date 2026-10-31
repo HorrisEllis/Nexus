@@ -1,23 +1,23 @@
 envelope: 1
-uuid: nexus-export-graph-phase:AE5_ui_and_cleanup:5a72664f0efb17ff
+uuid: nexus-export-graph-phase:AE5_ui_and_cleanup:4fffeac7c14189ab
 type: graph
-id: phase:AE5_ui_and_cleanup:5a72664f0efb17ff
+id: phase:AE5_ui_and_cleanup:4fffeac7c14189ab
 context: dependency graph of phase AE5_ui_and_cleanup
 intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792962436837
+exported_at: 1793442585150
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792962436837
-lastSeenAt: 1792962436837
+firstSeenAt: 1793442585150
+lastSeenAt: 1793442585150
 fingerprint: null
 payload:
   for: AE5_ui_and_cleanup
   kind: phase
   repo: null
-  hash: 5a72664f0efb17ff
+  hash: 4fffeac7c14189ab
   nodes:
     - path: clear-glass/renderer/settings/sections/automation.js
       role: changes
@@ -47,13 +47,12 @@ payload:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
     downstream: []
-    blockedBy:
-      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 4 · blocked by AE4_repoint_the_registry
+      - layer 4 · ready
       - 'depends on (1): AE4_repoint_the_registry · all upstream 6'
       - 'needed by (0): —'
     edges:

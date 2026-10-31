@@ -1,0 +1,91 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CG1_the_confidence_gate_backend:c5f39c6ab81085bb
+type: graph
+id: phase:CG1_the_confidence_gate_backend:c5f39c6ab81085bb
+context: dependency graph of phase CG1_the_confidence_gate_backend
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793442586687
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793442586687
+lastSeenAt: 1793442586687
+fingerprint: null
+payload:
+  for: CG1_the_confidence_gate_backend
+  kind: phase
+  repo: null
+  hash: c5f39c6ab81085bb
+  nodes:
+    - path: lib/agent-confidence-gate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-confidence-gate.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-agent-confidence-gate.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/run-all.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-confidence-gate.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG_D1_gate_home
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG_D2_threshold
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG_D3_order
+    dependents:
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG2_the_gate_on_every_dispatch
+    upstream:
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG_D1_gate_home
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG_D2_threshold
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG_D3_order
+    downstream:
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG2_the_gate_on_every_dispatch
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG3_route_and_command
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG4_the_gate_in_the_ui
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::CG2_the_gate_on_every_dispatch
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (3): CG_D1_gate_home, CG_D2_threshold, CG_D3_order'
+      - >-
+        needed by (1): CG2_the_gate_on_every_dispatch · all downstream 3 · finishing it unlocks
+        CG2_the_gate_on_every_dispatch
+    edges:
+      - from: docs/2026-10-24-agent-orchestration-phasemap.spec::CG_D1_gate_home
+        kind: declared
+      - from: docs/2026-10-24-agent-orchestration-phasemap.spec::CG_D2_threshold
+        kind: declared
+      - from: docs/2026-10-24-agent-orchestration-phasemap.spec::CG_D3_order
+        kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: CG2_the_gate_on_every_dispatch (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792874371312
+exported_at: 1793442586690
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874371312
-lastSeenAt: 1792874371312
+firstSeenAt: 1793442586690
+lastSeenAt: 1793442586690
 fingerprint: null
 payload:
   id: CG2_the_gate_on_every_dispatch
@@ -26,4 +26,4 @@ payload:
     - CG1_the_confidence_gate_backend
   blocks: []
   spec: docs/brainos-in-idearium.spec
-  graph: 478789e0af56d297
+  graph: 2ba4cbe813c5fe5f
