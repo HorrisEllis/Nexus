@@ -1908,3 +1908,8 @@ spec:
 #     Diagnostic records. James: "then all the schemas for the diagnostic system".
 # Addended the same release: docs/architecture-spec/architecture-spec.spec 0.14.0 (RULE E, RULE F, the gaps measured) and
 #   idearium/spec-engine/templates/genesis.spec (PROPOSED 1.6.0 note; version line unchanged until SE2 and DO2a are built).
+
+# ADDENDUM 2026-10-31 (0.60.327) — registered: intelligence/spec/causal-interconnect.spec + docs/2026-10-31-causal-interconnect-phasemap.spec
+# (CI1–CI5). James: "also the intelligence system, rfr2 and cfr need to be interconnected." One causal graph: CFR builds it from the ledger,
+# RFR2 reads and measures it, relational-field's chains walk it, the sigmas chained but kept apart, the batched learning loop learns from
+# both. Compiles at specDepth 1.0; MAPPED, not built. CI_D1 (the reading of "interconnected") is his to confirm.

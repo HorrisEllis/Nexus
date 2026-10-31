@@ -1,0 +1,243 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CI5_seen_and_asked:38f7462b28a06f61
+type: graph
+id: phase:CI5_seen_and_asked:38f7462b28a06f61
+context: dependency graph of phase CI5_seen_and_asked
+intent: null
+summary: 27 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793422837081
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793422837081
+lastSeenAt: 1793422837081
+fingerprint: null
+payload:
+  for: CI5_seen_and_asked
+  kind: phase
+  repo: null
+  hash: 38f7462b28a06f61
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/registry-components.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/coordination/intelligence-query.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/intuition-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mastermind-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/adversarial.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk-perception/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/anomaly.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/compound.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/config.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/intuition.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/mastermind.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: intelligence/routes.js
+      to: intelligence/intuition.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/mastermind.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/gap/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/anomaly.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/compound.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk-perception/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/config.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/registry-components.js
+      kind: requires
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/registry-components.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: intelligence/registry-components.js
+      kind: requires
+    - from: tests/modules/intuition-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/mastermind-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/registry-components.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+    dependents: []
+    upstream:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D0_interconnected
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D1_one_graph_cfr_builds_rfr2_reads
+    downstream: []
+    blockedBy:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-31-causal-interconnect-phasemap.spec::CI2_one_graph_for_queries_and_chains
+        files:
+          - intelligence/routes.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by CI1_one_feed, CI3_the_measures_chained
+      - 'depends on (2): CI1_one_feed, CI3_the_measures_chained · all upstream 4'
+      - 'needed by (0): —'
+      - >-
+        same files as CI2_one_graph_for_queries_and_chains with no order between them:
+        intelligence/routes.js
+    edges:
+      - from: docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+        kind: declared
+      - from: docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+        kind: declared

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-causal-interconnect-phasemap.spec::CI5_seen_and_asked
+type: phase
+id: docs_2026-10-31-causal-interconnect-phasemap.spec::CI5_seen_and_asked
+context: pipeline phase CI5_seen_and_asked of docs/2026-10-31-causal-interconnect-phasemap.spec
+intent: null
+summary: CI5_seen_and_asked (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793422837081
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793422837081
+lastSeenAt: 1793422837081
+fingerprint: null
+payload:
+  id: CI5_seen_and_asked
+  map: docs/2026-10-31-causal-interconnect-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/registry-components.js
+    - intelligence/routes.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - CI1_one_feed
+    - CI3_the_measures_chained
+  blocks:
+    - MOD-CI-SURFACE
+  spec: intelligence/spec/causal-interconnect.spec
+  graph: 38f7462b28a06f61

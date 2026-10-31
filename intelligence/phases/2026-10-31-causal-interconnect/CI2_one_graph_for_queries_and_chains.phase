@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-causal-interconnect-phasemap.spec::CI2_one_graph_for_queries_and_chains
+type: phase
+id: docs_2026-10-31-causal-interconnect-phasemap.spec::CI2_one_graph_for_queries_and_chains
+context: >-
+  pipeline phase CI2_one_graph_for_queries_and_chains of
+  docs/2026-10-31-causal-interconnect-phasemap.spec
+intent: null
+summary: CI2_one_graph_for_queries_and_chains (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793422837075
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793422837075
+lastSeenAt: 1793422837075
+fingerprint: null
+payload:
+  id: CI2_one_graph_for_queries_and_chains
+  map: docs/2026-10-31-causal-interconnect-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/routes.js
+    - intelligence/relational-field.js
+    - cortex/self-heal/failure-mode-forensics.js
+    - tests/modules/test-causal-bridge.test.js
+  depends_on:
+    - CI1_one_feed
+  blocks:
+    - MOD-CI-QUERY
+  spec: intelligence/spec/causal-interconnect.spec
+  graph: 0fb5f091a0372119
