@@ -2,7 +2,7 @@
 
 James, 2026-10-31: "Compile a list and index all of the meaning in my quotes. All the most important words"
 
-Every quote of James found in the Nexus and Emerge repositories: **2,109 distinct quotes**, 2026-01-02 to 2026-10-30 (406 undated), drawn from 2,069 files. The words that carry his meaning are indexed below, with his own spellings, how often he used each, when, and the quotes that define it. Every quote is listed whole, numbered Q0001 to Q2109, in [the companion file](2026-10-31-his-words-quotes.md).
+Every quote of James found in the Nexus and Emerge repositories: **2,109 distinct quotes**, 2026-01-02 to 2026-10-30 (406 undated), drawn from 2,069 files. The words that carry his meaning are indexed below, with his own spellings, how often he used each, when, and the quotes that define it. Every quote is listed whole, numbered Q0001 to Q2109, in [the companion file](2026-10-31-his-words-quotes.md). Every quote cut to its key words, and every one of those words indexed, is in [the stripped index](2026-10-31-his-words-stripped.md).
 
 **What is his and what is the coder's.** The quotes are his, verbatim (his spelling, his phrasing). The grouping into themes and the one-paragraph summary at the top of each theme are the coder's reading of those quotes, marked *reading*. They are there to be corrected, not to speak for him.
 
