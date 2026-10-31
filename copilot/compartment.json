@@ -8,10 +8,9 @@
     "kind": "virtual",
     "id": "repo.nexus.copilot",
     "scope": [
-      "copilot/",
-      "data/copilot/"
+      "copilot/"
     ],
-    "versionLine": "3.5.1",
+    "versionLine": "3.9.0",
     "versionNote": "from lib/version.js modules"
   },
   "cos": {
@@ -25,38 +24,48 @@
     "phase": 3,
     "critical": false,
     "optional": true,
-    "healthUrl": "http://127.0.0.1:3750/health"
+    "healthUrl": "http://127.0.0.1:3750/health",
+    "process": {
+      "name": "copilot",
+      "cmd": "node",
+      "args": [
+        "copilot/server.js"
+      ],
+      "phase": 3,
+      "optional": true,
+      "healthUrl": "http://127.0.0.1:3750/health"
+    }
   },
   "data": {
-    "dataDir": "data/copilot",
+    "dataDir": "copilot/data",
     "ledgerDir": "copilot/data/ledger",
     "nodeIndexDir": "copilot/data/node-index"
   },
   "spec": "copilot/spec/",
   "dependsOn": {
     "intelligence": 6,
-    "cortex": 21,
+    "cortex": 22,
     "loom": 2,
-    "guardian": 1
+    "orchestrator": 1
   },
-  "sharedLibRequires": 96,
+  "sharedLibRequires": 142,
   "stats": {
-    "jsFiles": 39,
-    "jsLines": 11661
+    "jsFiles": 45,
+    "jsLines": 13272
   },
   "boundaryFindings": {
-    "count": 30,
+    "count": 31,
     "sample": [
       "copilot/adversarial.js -> intelligence/adversarial",
       "copilot/axiom-manager.js -> cortex/memory/jaa-db",
       "copilot/diagnostic-sweep.js -> intelligence/gap/hunter.js",
       "copilot/diagnostics.js -> cortex/memory/jaa-db",
       "copilot/diagnostics.js -> intelligence/cfr/field",
+      "copilot/lib/activity-recall.js -> cortex/memory/jaa-db",
       "copilot/lib/capabilities.js -> loom/scanners/capability-map",
       "copilot/lib/grammar-router.js -> cortex/memory/jaa-db",
-      "copilot/lib/grammar-router.js -> cortex/memory/jaa-db",
-      "copilot/lib/inject-config.js -> guardian/jaa-store.js",
-      "copilot/lib/intent-learning.js -> cortex/memory/jaa-db"
+      "copilot/lib/grammar-router.js -> orchestrator/lib/grammar-misfire-tracker",
+      "copilot/lib/grammar-router.js -> cortex/memory/jaa-db"
     ]
   }
 }

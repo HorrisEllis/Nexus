@@ -276,6 +276,8 @@ const SUITES = [
   'test-provider-host-respawn.js',
   'test-userscript-mixed-content-fix.js',
   'test-contract-handshake-paths.js',
+  'test-compartment-declarations.test.js',   // 0.60.326 MG15a — every autopilot process declared by its own system's compartment.json, field for field
+  'test-release-tool.test.js',   // 0.60.325 FX2 — one release command; data/ never staged; a red test stops it before the commit
   'test-contract-handshake-routes.test.js',   // 0.60.324 DO0 — the handshake counts components[] routes (Clear Glass 117, Copilot 81, Ollama 9, Versionium 18 were 0); unknown is null, never 0
   'autonomous-loop.test.js',
   // FIX (James, 2026-06-19): these six suites existed, passed standalone,

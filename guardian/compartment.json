@@ -8,10 +8,9 @@
     "kind": "virtual",
     "id": "repo.nexus.guardian",
     "scope": [
-      "guardian/",
-      "data/guardian/"
+      "guardian/"
     ],
-    "versionLine": "3.6.2",
+    "versionLine": "3.21.0",
     "versionNote": "from lib/version.js modules"
   },
   "cos": {
@@ -25,38 +24,49 @@
     "phase": 2,
     "critical": true,
     "optional": false,
-    "healthUrl": "http://127.0.0.1:7820/health"
+    "healthUrl": "http://127.0.0.1:7820/health",
+    "process": {
+      "name": "guardian",
+      "cmd": "node",
+      "args": [
+        "guardian/server.js"
+      ],
+      "phase": 2,
+      "critical": true,
+      "healthUrl": "http://127.0.0.1:7820/health"
+    }
   },
   "data": {
-    "dataDir": "data/guardian",
+    "dataDir": "guardian/data",
     "ledgerDir": "guardian/data/ledger",
     "nodeIndexDir": "guardian/data/node-index"
   },
   "spec": "guardian/spec/",
   "dependsOn": {
-    "cortex": 13,
-    "intelligence": 9,
-    "clear-glass": 1,
-    "copilot": 1
+    "intelligence": 10,
+    "clear-glass": 4,
+    "ollama": 1,
+    "copilot": 1,
+    "cortex": 1
   },
-  "sharedLibRequires": 61,
+  "sharedLibRequires": 125,
   "stats": {
-    "jsFiles": 51,
-    "jsLines": 25221
+    "jsFiles": 67,
+    "jsLines": 30447
   },
   "boundaryFindings": {
-    "count": 24,
+    "count": 17,
     "sample": [
-      "guardian/agents/index.js -> cortex/memory/jaa-db",
-      "guardian/api-dispatch.js -> cortex/core/raid",
       "guardian/api-dispatch.js -> intelligence/liminal",
-      "guardian/api-dispatch.js -> cortex/core/raid",
-      "guardian/ask.js -> cortex/memory/jaa-db.js",
       "guardian/cli.js -> clear-glass/src/downloads",
-      "guardian/lib/dispatcher.js -> cortex/core/raid",
+      "guardian/guardian-service.js -> intelligence/baseline",
+      "guardian/lib/chat-transcripts.js -> clear-glass/src/downloads",
+      "guardian/lib/code-artifact.js -> clear-glass/src/downloads",
+      "guardian/lib/dispatcher.js -> ollama/lib/model-inventory.js",
       "guardian/lib/dispatcher.js -> intelligence/alk",
       "guardian/lib/gap-hunter.js -> intelligence/gap/hunter.js",
-      "guardian/lib/ncp-handler.js -> intelligence/gap/hunter"
+      "guardian/lib/ncp-handler.js -> intelligence/gap/hunter",
+      "guardian/lib/ncp.js -> intelligence/gap/predicate"
     ]
   }
 }

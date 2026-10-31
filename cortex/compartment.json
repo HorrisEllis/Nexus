@@ -10,7 +10,7 @@
     "scope": [
       "cortex/"
     ],
-    "versionLine": "3.5.0",
+    "versionLine": "3.6.0",
     "versionNote": "from lib/version.js modules"
   },
   "cos": {
@@ -24,7 +24,17 @@
     "phase": 1,
     "critical": true,
     "optional": false,
-    "healthUrl": "http://127.0.0.1:3748/health"
+    "healthUrl": "http://127.0.0.1:3748/health",
+    "process": {
+      "name": "cortex",
+      "cmd": "node",
+      "args": [
+        "cortex/boot.js"
+      ],
+      "phase": 1,
+      "critical": true,
+      "healthUrl": "http://127.0.0.1:3748/health"
+    }
   },
   "data": {
     "dataDir": "cortex/data",
@@ -33,17 +43,16 @@
   },
   "spec": "cortex/spec/",
   "dependsOn": {
-    "intelligence": 5,
+    "intelligence": 6,
     "idearium": 1,
     "copilot": 2,
-    "guardian": 1,
     "versionium": 1,
     "loom": 1
   },
-  "sharedLibRequires": 51,
+  "sharedLibRequires": 83,
   "stats": {
-    "jsFiles": 39,
-    "jsLines": 10777
+    "jsFiles": 46,
+    "jsLines": 13077
   },
   "boundaryFindings": {
     "count": 11,
@@ -54,8 +63,8 @@
       "cortex/core/raid/index.js -> intelligence/cfr/sigma",
       "cortex/core/raid/index.js -> intelligence/bda",
       "cortex/core/raid/officiator.js -> copilot/lifeline.js",
+      "cortex/cortex-service.js -> intelligence/baseline",
       "cortex/memory/causal-lookup.js -> intelligence/cfr/graph.js",
-      "cortex/memory/jaa-db.js -> guardian/jaa-store",
       "cortex/self-heal/escalation.js -> intelligence/telemetry-codec/engines.js",
       "cortex/snapshot/index.js -> versionium/lib/snapshot.js"
     ]

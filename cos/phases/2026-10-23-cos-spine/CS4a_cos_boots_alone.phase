@@ -7,11 +7,11 @@ intent: null
 summary: CS4a_cos_boots_alone (foundation) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792841756197
+exported_at: 1793421631198
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841756197
-lastSeenAt: 1792841756197
+firstSeenAt: 1793421631198
+lastSeenAt: 1793421631198
 fingerprint: null
 payload:
   id: CS4a_cos_boots_alone
@@ -27,6 +27,7 @@ payload:
   depends_on:
     - CS_D7_sovereign_first
     - COSA3_run_and_supervise
+    - MG17_autopilot_hands_over
   blocks:
     - MOD-CS-BOOT
   spec: cos/spec/cos-spine.spec

@@ -1,0 +1,78 @@
+{
+  "schema": "nexus.compartment/1",
+  "id": "nexus.orchestrator",
+  "name": "orchestrator",
+  "label": "Orchestrator",
+  "dir": "orchestrator",
+  "repo": {
+    "kind": "virtual",
+    "id": "repo.nexus.orchestrator",
+    "scope": [
+      "orchestrator/"
+    ],
+    "versionLine": "2.2.2",
+    "versionNote": "from lib/version.js modules"
+  },
+  "cos": {
+    "compartmentId": "cos.nexus.orchestrator",
+    "axioms": []
+  },
+  "runtime": {
+    "entry": "orchestrator/orchestrator.js",
+    "entryExists": true,
+    "port": 9000,
+    "phase": 2,
+    "critical": true,
+    "optional": false,
+    "healthUrl": "http://127.0.0.1:9000/health",
+    "process": {
+      "name": "orchestrator",
+      "cmd": "node",
+      "args": [
+        "orchestrator/orchestrator.js"
+      ],
+      "env": {
+        "NEXUS_SUPERVISED": "1"
+      },
+      "phase": 2,
+      "critical": true,
+      "healthUrl": "http://127.0.0.1:9000/health"
+    }
+  },
+  "data": {
+    "dataDir": "orchestrator/data",
+    "ledgerDir": "orchestrator/data/ledger",
+    "nodeIndexDir": "orchestrator/data/node-index"
+  },
+  "spec": "orchestrator/spec/",
+  "dependsOn": {
+    "ollama": 1,
+    "cortex": 29,
+    "intelligence": 5,
+    "copilot": 2,
+    "idearium": 1,
+    "diagnostic": 1,
+    "clear-glass": 1,
+    "guardian": 1
+  },
+  "sharedLibRequires": 70,
+  "stats": {
+    "jsFiles": 26,
+    "jsLines": 10288
+  },
+  "boundaryFindings": {
+    "count": 41,
+    "sample": [
+      "orchestrator/lib/autonomous-loop.js -> ollama/ollama-runtime",
+      "orchestrator/lib/autonomous-loop.js -> cortex/snapshot/index",
+      "orchestrator/lib/autonomous-loop.js -> cortex/memory/jaa-db",
+      "orchestrator/lib/request-handler.js -> cortex/memory/jaa-db",
+      "orchestrator/lib/request-handler.js -> cortex/core/raid",
+      "orchestrator/lib/request-handler.js -> cortex/core/raid",
+      "orchestrator/lib/request-handler.js -> intelligence/liminal-space/index",
+      "orchestrator/lib/request-handler.js -> copilot/lib/user-model",
+      "orchestrator/lib/request-handler.js -> cortex/snapshot/index",
+      "orchestrator/lib/sigma-compaction.js -> cortex/memory/tiers.js"
+    ]
+  }
+}

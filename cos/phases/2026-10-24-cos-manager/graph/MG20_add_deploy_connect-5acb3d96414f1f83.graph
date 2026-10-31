@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131577
+exported_at: 1793421772875
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131577
-lastSeenAt: 1793383131577
+firstSeenAt: 1793421772875
+lastSeenAt: 1793421772875
 fingerprint: null
 payload:
   for: MG20_add_deploy_connect
@@ -83,6 +83,9 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
       - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
@@ -110,9 +113,6 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
     unlocks: []
     conflicts:
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
-        files:
-          - cos/manager/contract.json
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
         files:
           - cos/manager/contract.json
@@ -144,9 +144,8 @@ payload:
         CS9_every_project_a_compartment
       - >-
         depends on (4): MG19_the_spec_bundle, MG15_the_supervisor_in_cos, MG8_the_factory,
-        CS9_every_project_a_compartment · all upstream 53
+        CS9_every_project_a_compartment · all upstream 56
       - 'needed by (1): MG21_the_add_screen'
-      - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'
       - >-
         same files as MG18_the_supervisor_screen with no order between them:
         cos/manager/contract.json
@@ -157,7 +156,8 @@ payload:
         same files as MG23_allocation_and_balance with no order between them:
         cos/manager/contract.json
       - 'same files as MG24_network_manager with no order between them: cos/manager/contract.json'
-      - … and 4 more phases sharing its files without an order
+      - 'same files as MG25_storage_manager with no order between them: cos/manager/contract.json'
+      - … and 3 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
         kind: declared

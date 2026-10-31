@@ -16,6 +16,17 @@ decisions:
   DO_D2_a_boot_core_under_server_js:
     chosen: "TO CONFIRM (the coder's suggestion, no longer his words): under each server.js, the skeleton's lib/system.js as its boot core (config, schemas, store, ledger, bus, node index, heartbeat). Built only after his yes."
     by: "the coder; it had been read from his \"system.js\", which he corrected the same day: \"system.js i meant server.js\" — the origin is server.js (SE_D3), and these phases (DO1–DO5) are his origin work"
+  DO_D3_architect_into_idearium_and_loom:
+    chosen: >-
+      TO CONFIRM (the coder's recommendation, asked by him: "should we migrate architect to idearium or loom?"): neither whole — Architect
+      splits along what each part is. Its hook registry (/api/hooks …) and map scan (/api/map/scan) duplicate Loom's registry and
+      scanners: two hook registries are two truths (§10.3), so they fold into Loom. Its authoring (spec wizard, blueprint scan/diff,
+      translate, compile, the arch/spec builder pages) and his "move and route component using architect" are Idearium's: Idearium
+      already has the refactor tool (lib/architecture-apply.js, lib/project-refactor.js, `repo refactor`, `system migrate`) and an Architect
+      sub-tab, so they land there (§8.6). Its ALK lattice goes to Intelligence (lib/emergence's associative lattice); its SNR gate is his SNR
+      passthrough, the door template (architecture-spec RULE C). architect/ is archived after its callers (9 files) are moved (§0.3).
+      DO2 (an Architect server.js) waits on his answer: if he agrees, it is not built.
+    by: "the coder, by §10.3 (one truth), §8.6 (reuse) and §5.15 (each part to the system that owns its kind); his question, his call"
   DO_D1_clear_glass_door:
     chosen: "TO CONFIRM: Clear Glass gets the same door (his line \"create a server.js for the cli and api\" sits under Clear Glass, Idearium and Architect); built only after his yes"
     by: "the coder's reading of where his line applies"
@@ -47,7 +58,7 @@ phases:
     proof: "architect's server.js boots through lib/system.js"
   DO2_architect_door:
     status: OPEN
-    depends_on: [DO_D0_server_floats_on_the_registry, SE_D3_the_origin_is_server_js]
+    depends_on: [DO_D0_server_floats_on_the_registry, SE_D3_the_origin_is_server_js, DO_D3_architect_into_idearium_and_loom]
     files: [architect/server.js, architect/compartment.json, architect/cli.js, architect/event-taxonomy.js, architect/service.js]
     spec: docs/system-doors.spec
     blocks: [MOD-DOOR-ARCHITECT]

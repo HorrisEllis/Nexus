@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793383131610
+exported_at: 1793421772892
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131610
-lastSeenAt: 1793383131610
+firstSeenAt: 1793421772892
+lastSeenAt: 1793421772892
 fingerprint: null
 payload:
   for: MG27_state_and_resource_screens
@@ -77,6 +77,9 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D8_raid_home
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG23_allocation_and_balance
       - docs/2026-10-24-cos-manager-phasemap.spec::MG24_network_manager
@@ -111,9 +114,6 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
     unlocks: []
     conflicts:
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
-        files:
-          - cos/manager/contract.json
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
         files:
           - cos/manager/contract.json
@@ -133,9 +133,8 @@ payload:
         MG25_storage_manager, MG26_branch_benchmark_merge, MG18_the_supervisor_screen
       - >-
         depends on (5): MG23_allocation_and_balance, MG24_network_manager, MG25_storage_manager,
-        MG26_branch_benchmark_merge, MG18_the_supervisor_screen · all upstream 66
+        MG26_branch_benchmark_merge, MG18_the_supervisor_screen · all upstream 69
       - 'needed by (0): —'
-      - 'same files as MG16_the_autopilot_door with no order between them: cos/manager/contract.json'
       - 'same files as MG20_add_deploy_connect with no order between them: cos/manager/contract.json'
       - 'same files as MG21_the_add_screen with no order between them: cos/manager/contract.json'
       - >-

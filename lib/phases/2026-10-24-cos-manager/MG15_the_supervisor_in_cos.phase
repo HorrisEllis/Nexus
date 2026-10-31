@@ -7,11 +7,11 @@ intent: null
 summary: MG15_the_supervisor_in_cos (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793365865912
+exported_at: 1793421772861
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365865912
-lastSeenAt: 1793365865912
+firstSeenAt: 1793421772861
+lastSeenAt: 1793421772861
 fingerprint: null
 payload:
   id: MG15_the_supervisor_in_cos
@@ -28,9 +28,9 @@ payload:
   depends_on:
     - MG0b_the_full_spec
     - MG_D4_cos_is_the_autopilot
-    - CS4a_cos_boots_alone
+    - MG15a_every_system_declares_its_process
   blocks:
     - MOD-MG-SUPERVISOR
     - MOD-MG-SERVER
   spec: cos/spec/cos-manager.spec
-  graph: 0c43ddb05e7ec414
+  graph: 33615cf35f7871f3

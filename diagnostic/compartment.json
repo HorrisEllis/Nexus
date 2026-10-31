@@ -3,7 +3,78 @@
   "archetype": "nexus-system",
   "runtimeId": "node",
   "entry": "server.js",
-  "healthCheck": { "path": "/health", "expectedStatus": 200 },
+  "healthCheck": {
+    "path": "/health",
+    "expectedStatus": 200
+  },
   "compartment": "nexus-self-diagnostic",
-  "note": "genesis 1.5.0's compartment.json: the COS compartment it runs in (loom/templates/cos-compartment.js describes it in full: GET /api/compartments/diagnostic on loom)"
+  "note": "genesis 1.5.0's compartment.json: the COS compartment it runs in (loom/templates/cos-compartment.js describes it in full: GET /api/compartments/diagnostic on loom)",
+  "schema": "nexus.compartment/1",
+  "id": "nexus.diagnostic",
+  "label": "Diagnostic",
+  "dir": "diagnostic",
+  "repo": {
+    "kind": "virtual",
+    "id": "repo.nexus.diagnostic",
+    "scope": [
+      "diagnostic/"
+    ],
+    "versionLine": "1.1.0",
+    "versionNote": "from lib/version.js modules"
+  },
+  "cos": {
+    "compartmentId": "cos.nexus.diagnostic",
+    "axioms": []
+  },
+  "runtime": {
+    "entry": "diagnostic/nexus-diagnostic.js",
+    "entryExists": true,
+    "port": 7825,
+    "phase": 2,
+    "critical": true,
+    "optional": false,
+    "healthUrl": "http://127.0.0.1:7825/health",
+    "process": {
+      "name": "diagnostic",
+      "cmd": "node",
+      "args": [
+        "diagnostic/nexus-diagnostic.js"
+      ],
+      "phase": 2,
+      "critical": true,
+      "healthUrl": "http://127.0.0.1:7825/health"
+    }
+  },
+  "data": {
+    "dataDir": "diagnostic/data",
+    "ledgerDir": "diagnostic/data/ledger",
+    "nodeIndexDir": "diagnostic/data/node-index"
+  },
+  "spec": "diagnostic/spec/",
+  "dependsOn": {
+    "cortex": 7,
+    "intelligence": 8,
+    "loom": 1,
+    "idearium": 1
+  },
+  "sharedLibRequires": 27,
+  "stats": {
+    "jsFiles": 18,
+    "jsLines": 4218
+  },
+  "boundaryFindings": {
+    "count": 17,
+    "sample": [
+      "diagnostic/lib/diagnostic-contract.js -> cortex/memory/jaa-db",
+      "diagnostic/lib/heal-loop.js -> cortex/core/raid",
+      "diagnostic/nexus-diagnostic.js -> intelligence/cfr/contract-verifier",
+      "diagnostic/nexus-diagnostic.js -> intelligence/cfr/field",
+      "diagnostic/nexus-diagnostic.js -> intelligence/baseline",
+      "diagnostic/nexus-diagnostic.js -> intelligence/baseline",
+      "diagnostic/nexus-diagnostic.js -> loom/schema/index.js",
+      "diagnostic/nexus-diagnostic.js -> intelligence/telemetry-codec/index.js",
+      "diagnostic/nexus-diagnostic.js -> intelligence/gap/predicate",
+      "diagnostic/nexus-diagnostic.js -> cortex/memory/jaa-db"
+    ]
+  }
 }

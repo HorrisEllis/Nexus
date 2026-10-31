@@ -1,0 +1,68 @@
+{
+  "schema": "nexus.compartment/1",
+  "id": "nexus.architect",
+  "name": "architect",
+  "label": "Architect",
+  "dir": "architect",
+  "repo": {
+    "kind": "virtual",
+    "id": "repo.nexus.architect",
+    "scope": [
+      "architect/"
+    ],
+    "versionLine": "1.0.0",
+    "versionNote": "from lib/version.js modules"
+  },
+  "cos": {
+    "compartmentId": "cos.nexus.architect",
+    "axioms": []
+  },
+  "runtime": {
+    "entry": "architect/service.js",
+    "entryExists": true,
+    "port": 3747,
+    "phase": 3,
+    "critical": false,
+    "optional": false,
+    "healthUrl": "http://127.0.0.1:3747/health",
+    "process": {
+      "name": "architect",
+      "cmd": "node",
+      "args": [
+        "architect/service.js"
+      ],
+      "phase": 3,
+      "healthUrl": "http://127.0.0.1:3747/health"
+    }
+  },
+  "data": {
+    "dataDir": "architect/data",
+    "ledgerDir": "architect/data/ledger",
+    "nodeIndexDir": "architect/data/node-index"
+  },
+  "spec": "architect/spec/",
+  "dependsOn": {
+    "intelligence": 2,
+    "cortex": 10
+  },
+  "sharedLibRequires": 7,
+  "stats": {
+    "jsFiles": 6,
+    "jsLines": 1870
+  },
+  "boundaryFindings": {
+    "count": 12,
+    "sample": [
+      "architect/service.js -> intelligence/cfr",
+      "architect/service.js -> cortex/core/raid",
+      "architect/service.js -> cortex/core/raid",
+      "architect/service.js -> cortex/core/raid",
+      "architect/service.js -> cortex/core/raid",
+      "architect/service.js -> cortex/core/raid",
+      "architect/service.js -> intelligence/alk",
+      "architect/service.js -> cortex/core/raid",
+      "architect/service.js -> cortex/core/raid",
+      "architect/service.js -> cortex/core/raid"
+    ]
+  }
+}
