@@ -758,3 +758,9 @@ spec:
 # MOD-GT4: driver/index.js choose: findScript(shows, reuse) re-run by ensureMark before each open and read-back; lost() names the mark, the
 # text and the page's dropdowns. element-gate.js quietScript(quietMs, capMs). Site key gates.betweenDropdownsMs (int, 0..15000, 1200).
 # The options scan excludes [id^="__cg_"] (Clear Glass's spotlight). Acceptance met: tests/modules/test-choose-refind-glass.test.js GR-01..07.
+
+# ── ADDENDUM 2026-10-30 (0.60.319) — MOD-GT5 built ────────────────────────────────────────────────────────────────────────────────────
+# gig-pages.js: PARTS.overview = [title, category, serviceType, tags]; valueOf(gig, 'serviceType'); serviceTypeScript(want) → { found, kind:
+# 'dropdown'|'radio', shown, options, checked, marked } (marks data-cg-service / data-cg-service-opt). gig.js parseGig keeps serviceType
+# (or service_type); gigParts and the template carry it; gig-menu offers it and apply() edits it. bridge.js _gigFill: the serviceType part
+# (choice gate), and "left for you" when the gig has none. Acceptance met: tests/modules/test-service-type-glass.test.js ST-01..05.

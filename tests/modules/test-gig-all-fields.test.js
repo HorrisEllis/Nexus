@@ -68,7 +68,7 @@ const TAB = { overview: 'general', description: 'description', requirements: 're
     assert.strictEqual(at('gallery', 'Showcase your services in a Gig Gallery'), 'gallery');
     assert.strictEqual(GP.gigPage({ url: 'https://www.fiverr.com/x', text: 'Frequently Asked Questions + Add FAQ' }).page, 'description', 'two of its words without the address');
     assert.strictEqual(GP.gigPage({ url: 'https://www.fiverr.com/x', text: 'hello' }).page, null, 'unknown is said, never guessed');
-    assert.deepStrictEqual([GP.PARTS.overview, GP.PARTS.description, GP.PARTS.requirements, GP.PARTS.gallery], [['title', 'category', 'tags'], ['description', 'faq'], ['requirement'], []]);
+    assert.deepStrictEqual([GP.PARTS.overview, GP.PARTS.description, GP.PARTS.requirements, GP.PARTS.gallery], [['title', 'category', 'serviceType', 'tags'], ['description', 'faq'], ['requirement'], []]);   // 0.60.319 GT5: the service type
     assert.strictEqual(GP.valueOf({ title: 'I will build your bot' }, 'title'), 'build your bot', 'the editor shows "I will" itself');
     const b = SK.bind({}, 'https://www.fiverr.com/a', 'Alt+D', { do: 'click', selector: '//div[@id="ed2"]', part: 'description' });
     assert.deepStrictEqual(b.binding, { do: 'click', selector: '//div[@id="ed2"]', part: 'description' });

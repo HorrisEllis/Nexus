@@ -540,9 +540,9 @@ phases_gt4:
   GT5_service_type:
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-GT5]
-    status: OPEN
+    status: BUILT 0.60.319
     depends_on: [GT4_pace_between_dropdowns_and_find_again]
-    files: [clear-glass/src/autofill/gig-pages.js, clear-glass/src/autofill/gig.js, clear-glass/src/ipc/bridge.js]
+    files: [clear-glass/src/autofill/gig-pages.js, clear-glass/src/autofill/gig.js, clear-glass/src/autofill/gig-menu.js, clear-glass/src/ipc/bridge.js, tests/modules/test-service-type-glass.test.js]
   GT6_gig_metadata_bullets_per_tab:
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-GT6]
@@ -558,3 +558,13 @@ James, 2026-10-30: "yes fix it. lets get this working already". GT1 then GT4, in
 - GT4 also excludes Clear Glass's own spotlight overlay from a dropdown's options: the live fixture read its label "open undefined" as the
   only option (found by GR-03; a defect of choose's scan since 0.60.222b's plain-div fallback).
 Proof: test-choose-refind-glass 7/7 on a live page; against the old driver GR-01 fails with his exact error.
+
+## ADDENDUM 2026-10-30 (d) — GT5 built (0.60.319)
+James, 2026-10-30: "then we need the services". Built as MOD-GT5 says, with what the spec left open, decided by his axioms:
+- Fiverr shows Service type as a dropdown (SELECT A SERVICE TYPE) for some subcategories and as radio buttons for others; both are handled,
+  found by the section's heading, never by a class name (§16.3). A radio is clicked on its label with the pointer, as a hand would (his
+  "erosmanceros is for all copilot and guardian agents. any input not from me"), then read back.
+- No serviceType in the gig while the page asks for one: the part says so with the page's options, after waiting 3 s for the section when
+  this fill just chose the subcategory (§1.2: said, never guessed; never silent).
+- The chip menu (gig-menu) offers it as a text row (Fiverr's service types differ per subcategory, and no list of them is kept in code).
+Proof: tests/modules/test-service-type-glass.test.js 5/5 (dropdown, radio, refused with the page's options, left and said).

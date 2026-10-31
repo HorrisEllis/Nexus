@@ -37,7 +37,8 @@ const SIGNS = Object.freeze({
 const TAB_OF = { general: 'overview', pricing: 'pricing', description: 'description', requirements: 'requirements', gallery: 'gallery' };
 
 const PARTS = Object.freeze({
-  overview: ['title', 'category', 'tags'],   // 0.60.283: tags too (Search tags, typed one by one); 2026-10-30 GF2: the title
+  overview: ['title', 'category', 'serviceType', 'tags'],   // 2026-10-30 GT5: the service type, after the subcategory holds
+   // 0.60.283: tags too (Search tags, typed one by one); 2026-10-30 GF2: the title
   pricing: ['basic.name', 'standard.name', 'premium.name', 'basic.description', 'standard.description', 'premium.description',
     'basic.delivery', 'standard.delivery', 'premium.delivery',
     // 0.60.286 GM2 — James: "do everything you can ... to get fiverr operational": revisions and price were never filled
@@ -102,6 +103,7 @@ function pageMacroSteps(steps) {
 function valueOf(gig, part) {
   if (!gig) return null;
   if (part === 'category') return gig.category ? (gig.subcategory ? `${gig.category} > ${gig.subcategory}` : gig.category) : null;
+  if (part === 'serviceType') return gig.serviceType ? String(gig.serviceType) : null;   // GT5
   if (part === 'tags') return Array.isArray(gig.tags) && gig.tags.length ? gig.tags.slice(0, 5).join(', ') : null;   // 0.60.283
   // 2026-10-30 GF2 — the title without the "I will" the editor shows itself; the description; the lists as a count (filled item by item)
   if (part === 'title') return gig.title ? String(gig.title).replace(/^I will\s+/i, '') : null;
@@ -138,4 +140,35 @@ function tagShownScript(tag) {
 })(${JSON.stringify(String(tag))})`;
 }
 
-module.exports = { gigPage, PARTS, targetKey, suggestedCategory, macroName, pageMacroSteps, valueOf, tagInputScript, tagShownScript };
+// 2026-10-30 GT5 — the Service type section: a dropdown (SELECT A SERVICE TYPE, or what it shows once chosen) or radio buttons, found by its
+// heading, never by a class name. Read only, except it marks the dropdown data-cg-service="1" or the radio label it was asked for
+// data-cg-service-opt="1", for the driver. → { found, kind: 'dropdown'|'radio', shown, options, checked, marked }
+const SERVICE_SECTION = /^\s*(select a )?service type\s*$/i;
+function serviceTypeScript(want) {
+  return `(function(want){
+  var re = ${SERVICE_SECTION.toString()};
+  function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+  function txt(el){ return String(el.innerText || el.textContent || '').replace(/\\s+/g, ' ').trim(); }
+  function norm(t){ return String(t || '').replace(/\\s+/g, ' ').trim().toLowerCase(); }
+  document.querySelectorAll('[data-cg-service],[data-cg-service-opt]').forEach(function(e){ e.removeAttribute('data-cg-service'); e.removeAttribute('data-cg-service-opt'); });
+  var dd = Array.prototype.find.call(document.querySelectorAll('[role="combobox"],[aria-haspopup],select,button,div,span'), function(e){ return vis(e) && !e.children.length && /^select a service type$/i.test(txt(e)); });
+  if (dd) { dd.setAttribute('data-cg-service', '1'); return { found: true, kind: 'dropdown', shown: null, marked: true }; }
+  var head = Array.prototype.find.call(document.querySelectorAll('h1,h2,h3,h4,h5,h6,label,legend,p,span,div,strong,b'), function(e){ return vis(e) && re.test(txt(e)); });
+  if (!head) return { found: false };
+  for (var box = head.parentElement, i = 0; box && i < 4; box = box.parentElement, i++) {
+    var radios = Array.prototype.filter.call(box.querySelectorAll('input[type="radio"],[role="radio"]'), function(r){ return vis(r) || vis(r.closest('label') || r.parentElement); });
+    if (radios.length) {
+      var opts = radios.map(function(r){ var l = r.closest('label') || (r.id && document.querySelector('label[for="' + r.id + '"]')) || r.parentElement; return { r: r, l: l, t: txt(l) || r.value || r.getAttribute('aria-label') || '' }; });
+      var on = opts.find(function(o){ return o.r.type === 'radio' ? o.r.checked : o.r.getAttribute('aria-checked') === 'true'; });
+      var hit = want ? opts.find(function(o){ return norm(o.t) === norm(want); }) || opts.find(function(o){ return norm(o.t).indexOf(norm(want)) === 0; }) : null;
+      if (hit) hit.l.setAttribute('data-cg-service-opt', '1');
+      return { found: true, kind: 'radio', options: opts.map(function(o){ return o.t; }), checked: on ? on.t : null, marked: !!hit };
+    }
+    var cands = Array.prototype.filter.call(box.querySelectorAll('[role="combobox"],[aria-haspopup],select'), vis);
+    if (cands.length) { cands[0].setAttribute('data-cg-service', '1'); return { found: true, kind: 'dropdown', shown: txt(cands[0]), marked: true }; }
+  }
+  return { found: true, kind: null, why: 'a Service type heading with no dropdown or radio buttons under it' };
+})(${JSON.stringify(want == null ? null : String(want))})`;
+}
+
+module.exports = { gigPage, PARTS, targetKey, suggestedCategory, macroName, pageMacroSteps, valueOf, tagInputScript, tagShownScript, serviceTypeScript };

@@ -97,7 +97,7 @@ function buildGigPrompt({ profile, offer, extra = '' } = {}) {
     'Write ONE Fiverr gig for the seller described below. Output ONLY a JSON object, no prose before or after it.',
     `What the gig offers (the seller's own words): ${what}`,
     'The JSON shape, exactly:',
-    '{"title": "I will …", "category": "…", "subcategory": "…", "tags": ["…"], "description": "…",',
+    '{"title": "I will …", "category": "…", "subcategory": "…", "serviceType": "… (only if the subcategory asks for one)", "tags": ["…"], "description": "…",',
     ' "packages": {"basic": {"name": "…", "description": "…", "deliveryDays": 3, "revisions": 1, "price": 30},',
     '              "standard": {…same keys…}, "premium": {…same keys…}},',
     ' "faq": [{"question": "…", "answer": "…"}], "requirements": ["…"]}',
@@ -181,7 +181,9 @@ function parseGig(text) {
   const requirements = (Array.isArray(raw.requirements) ? raw.requirements : []).map(r => _clip(typeof r === 'string' ? r : r && (r.question || r.text), LIMITS.requirement, 'a buyer question', warnings)).filter(Boolean);
   if (requirements.length > LIMITS.requirements) { warnings.push(`${requirements.length} buyer questions; kept ${LIMITS.requirements}`); requirements.length = LIMITS.requirements; }
 
-  const gig = { title, category: String(raw.category || '').trim(), subcategory: String(raw.subcategory || '').trim(), tags, description, packages, faq, requirements };
+  // 2026-10-30 GT5 — James: "then we need the services". SELECT A SERVICE TYPE, shown after the subcategory: kept as written, never guessed
+  const serviceType = String(raw.serviceType || raw.service_type || '').trim();
+  const gig = { title, category: String(raw.category || '').trim(), subcategory: String(raw.subcategory || '').trim(), ...(serviceType ? { serviceType } : {}), tags, description, packages, faq, requirements };
   return { ok: true, gig, warnings };
 }
 
@@ -209,6 +211,7 @@ function gigParts(gig) {
   if (!gig) return [];
   const out = [{ key: 'title', label: 'Gig title', text: gig.title }];
   if (gig.category) out.push({ key: 'category', label: 'Category', text: gig.subcategory ? `${gig.category} › ${gig.subcategory}` : gig.category });
+  if (gig.serviceType) out.push({ key: 'serviceType', label: 'Service type', text: gig.serviceType });   // GT5
   if (gig.tags && gig.tags.length) out.push({ key: 'tags', label: 'Search tags', text: gig.tags.join(', ') });
   for (const t of TIERS) {
     const p = gig.packages && gig.packages[t];
@@ -374,6 +377,7 @@ function gigTemplate() {
     `title: "I will "        # starts with "I will", at most ${L.title} characters, the words a buyer would search for`,
     'category: ""',
     'subcategory: ""',
+    'serviceType: ""        # SELECT A SERVICE TYPE, when your subcategory shows one (as the page words it); empty = left for you',
     `tags: []                # at most ${L.tags} tags, each at most ${L.tag} characters, lowercase, no #`,
     `description: |          # at most ${L.description} characters: what the buyer gets, how it works, why it is reliable`,
     '  Write the description here. Keep the two-space indent on every line.',

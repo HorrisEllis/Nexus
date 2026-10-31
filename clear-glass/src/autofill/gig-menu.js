@@ -53,6 +53,7 @@ function menu(gig, page = null) {
   const cats = Object.keys(CATEGORIES);
   add({ key: 'category', label: 'Category', group: 'Overview', page: 'overview', kind: 'choice', value: gig.category || '', options: _withOwn(cats, gig.category) });
   add({ key: 'subcategory', label: 'Subcategory', group: 'Overview', page: 'overview', kind: 'choice', value: gig.subcategory || '', options: _withOwn(CATEGORIES[gig.category] || [], gig.subcategory), free: true });
+  add({ key: 'serviceType', label: 'Service type', group: 'Overview', page: 'overview', kind: 'text', value: gig.serviceType || '' });   // GT5
   add({ key: 'tags', label: 'Search tags (up to 5)', group: 'Overview', page: 'overview', kind: 'tags', value: (gig.tags || []).slice(0, 5).join(', ') });
   for (const t of TIERS) {
     const p = gig.packages && gig.packages[t]; if (!p) continue;
@@ -80,7 +81,7 @@ function apply(gig, edits = {}) {
   const g = JSON.parse(JSON.stringify(gig || {}));
   for (const [key, raw] of Object.entries(edits || {})) {
     const v = typeof raw === 'string' ? raw : raw;
-    if (key === 'title' || key === 'category' || key === 'subcategory' || key === 'description') { g[key] = String(v); continue; }
+    if (key === 'title' || key === 'category' || key === 'subcategory' || key === 'description' || key === 'serviceType') { g[key] = String(v); continue; }
     if (key === 'tags') { g.tags = String(v).split(',').map(s => s.trim()).filter(Boolean).slice(0, 5); continue; }
     let m = /^faq\.(\d+)\.(question|answer)$/.exec(key);
     if (m) { g.faq = g.faq || []; g.faq[+m[1]] = { ...(g.faq[+m[1]] || {}), [m[2]]: String(v) }; continue; }

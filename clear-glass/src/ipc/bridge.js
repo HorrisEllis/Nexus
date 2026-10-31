@@ -2607,7 +2607,7 @@ class IpcBridge {
       throw new Error(`its gate stayed closed after ${tm.retries + 1} tries: ${triesSaw.map(x => `${x.try}: ${x.saw}`).join(' · ')}`);
     };
     const friction = async (part, value, err, check) => {
-      const kind = part === 'category' || /\.(delivery|revisions)$/.test(part) ? 'choice' : part === 'tags' || part === 'faq' || part === 'requirement' ? 'run' : 'text';
+      const kind = part === 'category' || part === 'serviceType' || /\.(delivery|revisions)$/.test(part) ? 'choice' : part === 'tags' || part === 'faq' || part === 'requirement' ? 'run' : 'text';
       const verify = check ? async () => { const g = await gigGate(check); r.gates.push({ key: part, open: g.open, via: 'site key', saw: g.saw }); return g.open; } : null;
       let sk = { ok: false, why: 'no page address to look up your keys' };
       if (this.driver && read && read.url) { try { sk = await this._gigSiteKey(agentId, read.url, part, value, { kind, verify }); } catch (e) { sk = { ok: false, why: e.message }; } }
@@ -2629,7 +2629,7 @@ class IpcBridge {
       const value = valueOf(part); if (value === null || value === undefined || value === '') continue;
       if (filledKeys.has(part)) continue;   // filled and gated above
       const learned = site && mem.target(site, GP.targetKey(where.page, part));
-      const isChoice = part === 'category' || part.endsWith('.delivery');
+      const isChoice = part === 'category' || part === 'serviceType' || part.endsWith('.delivery');
       const column = /^(basic|standard|premium)\./.test(part) ? part.split('.')[0].toUpperCase() : null;
       const catShown = gig.subcategory || gig.category;
       let check = null;
@@ -2691,6 +2691,34 @@ class IpcBridge {
           }, check);
           r.dropdowns.push({ key: part, ok: true, option, via, ...(why ? { why } : {}) }); continue;
         }
+        // 2026-10-30 GT5 — James: "then we need the services". The Service type section appears once the subcategory holds (GATE-GT5-001: the
+        // category part ran first, gated; here the section is waited for as long as a choice gate waits). A dropdown is chosen with the gated
+        // choose; radio buttons are clicked by their label, as a hand would. Either way read back (GATE-GT5-002); an option the page does not
+        // offer is refused with the options it does.
+        if (part === 'serviceType' && !learned) {
+          const GF = require('../autofill/gig-fields');
+          const ST = (want) => this.driver.exec({ agentId, action: 'eval', code: GP.serviceTypeScript(want), by: 'person' }).then(x => (x && x.result) || { found: false });
+          const OM = require('../page/option-match');
+          const until = Date.now() + EG.gateTiming({ kind: 'choice' }, siteTiming).timeoutMs;
+          let st = await ST(value);
+          while (!st.found && Date.now() < until) { await new Promise(res => setTimeout(res, 300)); st = await ST(value); }
+          if (!st.found) throw new Error('no Service type on the page (it shows after the subcategory, for subcategories that have one)');
+          if (!st.kind) throw new Error(st.why);
+          if (st.kind === 'radio') {
+            const m = OM.matchOption(st.options || [], value);
+            if (!m.ok) throw new Error(`service type: ${m.why} — the page offers: ${(st.options || []).join(' | ')}`);
+            check = async () => { const x = await ST(m.option); return { open: !!x.checked && OM.shows(x.checked, m.option), saw: x.checked ? JSON.stringify(x.checked) : 'none ticked' }; };
+            await gated(part, async () => { const x = await ST(m.option); if (OM.shows(x.checked || '', m.option)) return; if (!x.marked) throw new Error(`service type "${m.option}" is not on the page`);
+              await this.driver.exec({ agentId, action: 'pointer', selector: '[data-cg-service-opt="1"]', do: 'click', by: 'person' }); }, check, null, 'choice');
+            r.dropdowns.push({ key: part, ok: true, option: m.option, via: 'radio' }); continue;
+          }
+          check = async () => { const x = await this.driver.exec({ agentId, action: 'eval', code: GF.shownScript(value), by: 'person' }); const ok = !!(x && x.result);
+            return { open: ok, saw: ok ? `${JSON.stringify(value)} shown` : `${JSON.stringify(value)} not shown` }; };
+          const c = await gated(part, async () => { const x = await ST(value); if (x.kind !== 'dropdown') throw new Error('the service type dropdown is gone');
+            if (x.shown && OM.shows(x.shown, value)) return { option: x.shown };
+            return this.driver.exec({ agentId, action: 'choose', ...(x.shown ? { selector: '[data-cg-service="1"]' } : { shows: 'SELECT A SERVICE TYPE' }), option: value, by: 'person' }); }, check, null, 'choice');
+          r.dropdowns.push({ key: part, ok: true, option: (c && c.option) || value, via: 'dropdown' }); continue;
+        }
         if (part === 'category') {
           check = C.shown(catShown);
           const sc = GP.suggestedCategory(read.links, gig);
@@ -2736,6 +2764,14 @@ class IpcBridge {
         // 2026-10-30 GF4 — friction: his keys for this part on this site, gated like the part; else said, with how to bind one
         await friction(part, value, err, check);
       }
+    }
+    // GT5 — no service type in the gig while the page asks for one: left for him and said, never guessed (MOD-GT5 behavioral contract)
+    if (this.driver && where.page === 'overview' && !valueOf('serviceType') && wants('serviceType')) {
+      // the section shows a moment after the subcategory: when this fill just chose one, it is waited for (3 s) before saying nothing asked
+      try { const read1 = async () => (await this.driver.exec({ agentId, action: 'eval', code: GP.serviceTypeScript(null), by: 'person' })) || {};
+        let x = await read1(); const until = Date.now() + (r.dropdowns.some(dd => dd.key === 'category') ? 3000 : 0);
+        while (!(x.result && x.result.found) && Date.now() < until) { await new Promise(res => setTimeout(res, 300)); x = await read1(); }
+        if (x && x.result && x.result.found) r.notFound.push({ key: 'serviceType', why: `the page asks for a service type${x.result.options ? ` (${x.result.options.join(' | ')})` : ''}; your gig has none (serviceType), so it is left for you` }); } catch (_) {}
     }
     // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." The package rows come from the gig (features), never from code: a number or text
     // is chosen in that tier's column and row (the gated choose, read back), yes/no ticks or clears that row's checkbox (checkAt, read back).
