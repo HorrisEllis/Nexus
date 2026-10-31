@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG17b_registry_reads_the_declarations
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG17b_registry_reads_the_declarations
+context: pipeline phase MG17b_registry_reads_the_declarations of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG17b_registry_reads_the_declarations (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793429469746
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793429469746
+lastSeenAt: 1793429469746
+fingerprint: null
+payload:
+  id: MG17b_registry_reads_the_declarations
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.331
+  files:
+    - lib/system-registry.js
+    - lib/cli/compartments.js
+    - tests/modules/test-compartment-declarations.test.js
+    - tests/modules/test-system-registry.js
+  depends_on:
+    - MG17_autopilot_hands_over
+  blocks:
+    - MOD-MG-DECLARE
+  spec: cos/spec/cos-manager.spec
+  graph: 70b694b5c968880e

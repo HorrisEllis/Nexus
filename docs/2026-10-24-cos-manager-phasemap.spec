@@ -174,6 +174,26 @@ decisions:
       registry in MG30 without a page changing.
     by_the_axioms: "§5.7 (all inter-module communication through the bus; siblings never call each other); §5.12; §5.13 (html, css, js separate per section); his MG_D1 and MG_D7"
 
+  MG_D15_the_handover_keeps_every_duty:
+    status: DECIDED 2026-10-31 (by his axioms)
+    chosen: >-
+      (1) autopilot's duties that are not supervision stay lib's, in lib/nexus/core-duties.js, run by the launcher; they reach COS only by
+      its routes (/api/cos/systems, /api/cos/ledger, /api/cos/systems/:name/restart, the door's /idle), never its files. The snapshot and the
+      gap rows keep their types and shapes; the gap goes through lib/gap-field.js (the one gap writer), the snapshot through the fan-in
+      (activity-log posts it to cortex's event_log by route), so core-duties requires nothing of cortex (no new crossing). The circuit gap and the stall diagnostic are driven by COS's ledger lines
+      (circuit-open, a boot phase's health line). Autopilot's in-process warp stream is not carried: COS's ledger is the record now (said).
+      (2) The launcher stays in the foreground by default, as `npm run start:all` always did (the terminal shows the logs, Ctrl+C stops every
+      system); --detach is the spec's "start, say where, exit". (3) CS12 is dropped from MG17's depends_on; it stays open for CS13–CS21.
+      (4) The MG18-before-MG17 order is superseded by MG16's door. (5) The old body is archived beside the launcher as
+      lib/nexus/autopilot.retired-0.60.330.js; the tests that read or require it are pointed at the archive (they now prove the archive is
+      intact, not that the live boot does it: the live boot's rules are test-cos-supervisor's), and its six baseline edges are renamed with
+      it. `--legacy-supervisor` runs the archive, said loudly, so the handover can be undone without a release (REVERSIBILITY).
+    by: >-
+      decided by his axioms: §0.3 (nothing lost: every duty kept, the body archived), §5.15 and §5.9 (lib's duties stay lib's; COS reached by
+      route), §10.3 (one supervisor: the launcher supervises nothing, and refuses to start beside an old autopilot), §1.2 (the foreground
+      default keeps the boot visible; every skip said), §3.3 (the order follows the files: no file moves, so no mover), MG-003 (the door keeps
+      the screens), REVERSIBILITY (the archive and --legacy-supervisor).
+
 phases:
   MG0b_the_full_spec:
     status: SPECCED 2026-10-30 — cos/spec/cos-manager.spec
@@ -375,13 +395,24 @@ phases:
     does: "every route autopilot serves on :7799, answered by the manager in the same shape; /files and /tables kept as legacy with their callers counted"
     proof: "each route's answer matches a recorded autopilot fixture; orchestrator /api/autopilot/status and Clear Glass's spawn of clear-glass work unchanged"
   MG17_autopilot_hands_over:
-    status: OPEN
-    depends_on: [MG16_the_autopilot_door, CS12_the_mover_is_proven]
-    files: [lib/nexus/autopilot.js, cos/app/runtime.js, package.json, lib/nexus-self/systems.js]
+    status: BUILT 0.60.330
+    depends_on: [MG16_the_autopilot_door, MG_D15_the_handover_keeps_every_duty]
+    files: [lib/nexus/autopilot.js, lib/nexus/autopilot.retired-0.60.330.js, lib/nexus/core-duties.js, cos/manager/server.js, cos/manager/supervisor.js, cos/app/runtime.js, package.json, lib/nexus-self/systems.js, lib/contracts/drawbridge-baseline.json, loom/maps/cos-testenv-map.js, tests/modules/test-autopilot-handover.test.js, tests/modules/run-all.js]
     spec: cos/spec/cos-manager.spec
-    blocks: [MOD-MG-AUTOPILOT-HANDOVER]
-    does: "autopilot becomes the launcher of COS's manager (its old body archived with the version that retired it); runtime.js starts the manager for new releases and keeps ENTRIES for old ones"
-    proof: "npm run start:all boots every system through COS; an old release zip still starts in cos.exe; no second supervisor (ports and pids)"
+    blocks: [MOD-MG-AUTOPILOT-HANDOVER, MOD-MG-CORE-DUTIES]
+    does: "MG17 above, with MG_D15: the launcher, core's duties beside it, the body archived, COS's runtime knowing which supervisor a release has"
+    proof: "a fixture tree boots through the launcher with COS's manager as the only supervisor (ports and pids); an old autopilot holding :7799 is refused; the duties follow COS's ledger; an old release still starts in COS"
+  MG17b_registry_reads_the_declarations:
+    status: BUILT 0.60.331
+    depends_on: [MG17_autopilot_hands_over]
+    files: [lib/system-registry.js, lib/cli/compartments.js, tests/modules/test-compartment-declarations.test.js, tests/modules/test-system-registry.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-DECLARE]
+    does: >-
+      Found by MG17's run: lib/system-registry.js (nine consumers) read ALL_KERNELS out of autopilot.js's source. MG17 points it at the
+      archive, so the boot list is frozen at the handover. Here it reads each system's compartment.json runtime.process (MOD-MG-DECLARE's
+      "then each file is its system's own"), and lib/cli/compartments.js stops deriving them from autopilot.
+    proof: "kernels() equals the declarations for all 13 processes; a hand change to one compartment.json shows in kernels() and in COS's supervisor alike"
   MG18_the_supervisor_screen:
     status: OPEN
     depends_on: [MG0b_the_full_spec, MG_D1_ui_isolated_per_component, MG_D10_the_cockpit_has_its_own_server, MG_D11_idearium_look_forked, MG_D12_pages_in_frames_bus_declared]
@@ -624,3 +655,34 @@ decisions_d14:
       cos/manager/autopilot-door.js. Moving them now would make lib require cos/ (a new crossing); MG17 archives autopilot's body and ends
       the second copy. The extraction is by script from the same lines, so the two are identical on the day they are made.
     by: "decided by his axioms: §5.15 (no new crossing; designed out first), §0.3 (MG17 archives, never deletes), §10.3 (the two-copy window said, with its end named)"
+
+# ── ADDENDUM 2026-10-31 — MG17 mapped again before its code; MG_D15 ─────────────────────────────────────────────────────────────────
+# James, 2026-10-31: "Starting the mg-17". Read first: MG17's .phase and .graph, MOD-MG-AUTOPILOT-HANDOVER, autopilot's 2022 lines, COS's
+# runtime.js, the supervisor and its door, and the 28 tests that require or read lib/nexus/autopilot.js.
+# Found while mapping:
+#   - autopilot does more than supervise, and the spec named none of it: the fan-in, the ledger wire, error.log and the intelligence
+#     substrate wired in its process; the post-boot vitals check; automatic updates; the loom registry refresh; an instance snapshot every
+#     minute (autopilot.instance_snapshot, read by lib/pressure-window.js); a kernel_circuit_open gap when a circuit opens (read by the
+#     fault taxonomy); a diagnostic run when a boot phase stalls. Handing over the supervision alone would have dropped all of them.
+#   - MG17 depended on CS12 (the mover). MG17 moves no file: lib/nexus/autopilot.js keeps its path, and the old body is copied beside it.
+#   - The 2026-10-30 build order put MG18 before MG17 "so his stack never runs without a way to see it". MG16 already keeps every screen
+#     that reads :7799 (the tablet, Idearium's control panel, the COS app) answering in the same shape, which is what that order protected.
+# The phase entry above was: depends_on [MG16_the_autopilot_door, CS12_the_mover_is_proven]; files [lib/nexus/autopilot.js, cos/app/runtime.js,
+# package.json, lib/nexus-self/systems.js]. It is changed in place to the line below and the earlier one is kept here (§0.3).
+# MG_D15 is in the decisions: block and MG17 changed in the phases: block (where lib/phase-dag.js reads them).
+
+# ── ADDENDUM 2026-10-31 — MG17 built (0.60.330) ──────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-10-31: "Starting the mg-17". Built as MG_D15 says. Found by the run, said: lib/system-registry.js read ALL_KERNELS from
+# autopilot.js's source (nine consumers, test-compartment-declarations went red) — pointed at the archive, so the boot list is frozen at the
+# handover until MG17b; lib/cli/diagnose.js required autopilot's ALL_KERNELS (now system-registry's kernels()); lib/cli/find-orphans.js reads
+# the archive and the launcher. Not this phase's, and said: the boundary ratchet was already red at 0.60.329 with MG16's two door edges
+# (cos/manager/autopilot-door.js → cortex/memory/jaa-db.js, → intelligence/cfr/field.js), the legacy /tables and /files reads; MG17 adds none.
+# The UI for it is MG18 (the supervisor screen); until then the door keeps every screen that reads :7799.
+
+# ── ADDENDUM 2026-10-31 — MG17b built (0.60.331) ─────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-10-31: "next." (after MG17). lib/system-registry.js kernels() reads each system's compartment.json (runtime.process,
+# runtime.processes) through lib/cli/compartments.js declarations(), in autopilot's kernel shape; with no declarations it falls back to the
+# archive, said. frozenKernels() is the archive's list. lib/cli/compartments.js build() keeps a declared process as written and generates
+# one only for a system with none. Measured: kernels() equals the archive's list field for field, 13 of 13, so the move changed nothing.
+# Decided by his axioms: §5.15 rule 2 (each system declares its own runtime), §10.3 (one list: what COS boots is what the registry says),
+# §0.3 (the archive kept as the fallback and the proof).

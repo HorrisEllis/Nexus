@@ -34,7 +34,41 @@ decisions:
       door mounts). A system with no server.js has no origin yet; the door phases (docs/2026-10-31-system-doors-phasemap.spec) give it one.
     by: "his, 2026-10-31, correcting SE_D2: \"system.js i meant server.js\" (the coder had read his \"like the system.js, which needs the config\" as the skeleton's lib/system.js)"
 
+  SE_D4_md_specs_become_spec_files:
+    status: DECIDED 2026-10-31 (his)
+    chosen: >-
+      Every spec kept as a .md becomes a .spec, its text unchanged (98 of docs' 374 .spec files already hold markdown, so the format is
+      the house one; nothing is retyped). 31 files: the *.spec.md files (docs/specs/, Clear Glass's seam spec, Diagnostic's healer spec),
+      the specs named SPEC in a .md (architect's ARCHITECT-SPEC-v1.1.0, Looking Glass's SPEC, the meta-system specs), COS's design spec
+      v1.7.0, and every system's node taxonomy in its spec/ folder (and the genesis template's). Live references follow; history (the
+      changelogs, the version lines, his words) keeps the names it was written with (§0.3). READING TO CONFIRM (the coder's): what counts
+      as a spec. Left as .md: the atlases, the spec-coverage report and the phasemaps written as .md (docs/looking-glass PHASEMAP.md,
+      docs/IDEARIUM-PHASE-MAP-v2.md) — a phasemap is not a spec in his own order ("specs, then phases").
+    by: "his, 2026-10-31: \"before i forget. convert all md specs to .spec files\" (said while MG18 waited)."
+  SE_D5_specs_are_yaml_blocks:
+    status: DECIDED 2026-10-31 (his)
+    chosen: "a .spec is machine-readable YAML, multidimensional, in block files; SE0's rename is the first step, SE0b the form. READING TO CONFIRM: \"at 93%\" read as the share of .spec files already YAML (measured by SE0b's census), not a target"
+    by: "his, 2026-10-31, while SE0 ran: \"at 93% machine readable yaml. multidimentional, block files. where are we?\""
 phases:
+  SE0_md_specs_to_spec:
+    status: BUILT 2026-10-31
+    depends_on: [SE_D4_md_specs_become_spec_files]
+    files: [docs/specs, clear-glass/docs/clear-glass-seam.spec, diagnostic/spec/healer.spec, architect/docs/ARCHITECT-SPEC-v1.1.0.spec, docs/looking-glass/SPEC.spec, docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.spec, cos/spec/cos-design-v1.7.0.spec, lib/system-shape.js, cos/archetype/genesis-catalog.js, docs/SPEC-REGISTRY.spec]
+    spec: idearium/spec/spec-library.spec
+    blocks: [MOD-SL-LIBRARY]
+    does: "the 31 .md specs renamed to .spec (git mv, text unchanged), live references repointed, the node-taxonomy role named .spec in the system shape and genesis, each registered in the library"
+    proof: "no tracked .md spec left outside _archive; no live reference to an old name; the system-shape, genesis and spec tests pass"
+  SE0b_specs_as_yaml_blocks:
+    status: OPEN
+    depends_on: [SE0_md_specs_to_spec, SE_D5_specs_are_yaml_blocks]
+    files: [docs/specs, docs/SPEC-REGISTRY.spec, lib/spec-census.js]
+    spec: idearium/spec/spec-library.spec
+    blocks: [MOD-SL-LIBRARY]
+    does: >-
+      Each .spec that holds markdown (the 31 of SE0 and the 98 older ones) becomes machine-readable YAML in blocks: meta, purpose, schema,
+      api, events, integration, failure_modes, build_order, axioms, tests (the spec engine's ten slots), each block its own addressable
+      part; the original text kept in the file as original_full_text (the SPEC-REGISTRY conversion's method, 2026-09-02), so nothing is lost.
+    proof: "every converted .spec parses as YAML; its blocks are found by id; original_full_text equals the old file byte for byte; a census of how many .spec files are YAML (his 93%)"
   SE1_spec_ids_and_types:
     status: OPEN
     depends_on: [SE_D1_spec_ids_types_library_queue]

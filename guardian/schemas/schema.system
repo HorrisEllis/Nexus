@@ -18,7 +18,7 @@ payload:
     Grounded in loom/scanners/capability-map.js's real SYSTEMS map (guardian is a real, checked
     entry: 'guardian': 'guardian') and nexus/autopilot.js's per-kernel definitions. Marked OPEN, not
     REAL — no real code anywhere constructs a persisted "system" record with these fields; SYSTEMS
-    is a plain object literal, not a node file. guardian.node-taxonomy.md marks this 'IS ONE
+    is a plain object literal, not a node file. guardian.node-taxonomy.spec marks this 'IS ONE
     (subject, not writer)' — guardian is itself mapped by other code (capability-map.js), not
     something guardian authors about itself. This local copy exists purely for guardian's own
     sovereign schema completeness (every other real system in this taxonomy pass already carries a

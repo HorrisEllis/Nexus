@@ -21,7 +21,7 @@ spec:
       code actually does today.
 
   # ── §DESIGN-VS-CODE 2026-08-14 — real, verified boundary ───────────────────
-  # The person's own real design document (cos/spec/cos-design-v1.7.0.md,
+  # The person's own real design document (cos/spec/cos-design-v1.7.0.spec,
   # §59-§80, v1.6.0+v1.7.0) describes this system in Rust/Cobalt terms
   # (cobalt/crates/cobalt-service, Windows CNG TPM, .exe packaging). The
   # ACTUAL running code in this repo is Node.js — confirmed by checking for
@@ -43,7 +43,7 @@ spec:
   #   - TPM integration (design doc §65)
   #   - Torture Chamber (design doc §68)
   # Full detail for every subsystem lives in the real design document
-  # itself (cos-design-v1.7.0.md, section numbers below), not duplicated
+  # itself (cos-design-v1.7.0.spec, section numbers below), not duplicated
   # here a second time — this spec is the compact, code-verified index.
 
   core:
@@ -97,7 +97,7 @@ spec:
         just name matching), "assign" forces a compartment to one, "create"
         imports a custom archetype from a JSON file. Real hooks hk-a-001
         through hk-a-005, real events. Full JSON Schema + all 16 archetypes
-        as complete TypeScript objects: cos-design-v1.7.0.md §60.
+        as complete TypeScript objects: cos-design-v1.7.0.spec §60.
 
     - id: blueprint
       description: >
@@ -108,7 +108,7 @@ spec:
         (map) are confirmed deferred in the real code's own header, not
         secretly built — noted here so this spec doesn't overclaim them.
         Full JSON Schema + all 11 blueprints as complete TypeScript
-        objects: cos-design-v1.7.0.md §61 (schema) and §61.3 (all 11).
+        objects: cos-design-v1.7.0.spec §61 (schema) and §61.3 (all 11).
 
     - id: vault
       description: >
@@ -117,7 +117,7 @@ spec:
         (hk-va-001..009). cos/vaultd/server.js is the one real HTTP surface
         in COS, an optional daemon for this subsystem specifically —
         confirmed real, 186 lines. Full VaultdConfig/VaultdState types and
-        vaultd CLI: cos-design-v1.7.0.md §66.
+        vaultd CLI: cos-design-v1.7.0.spec §66.
 
     - id: plugin
       description: >
@@ -127,7 +127,7 @@ spec:
         §77 (Plugin Authoring Guide, with the real PluginHostAPI a plugin's
         index.js uses), and §78 (Master Hook Table, 126 hooks total) all
         exist in the person's own real design document
-        (cos-design-v1.7.0.md), previously just not present in THIS repo.
+        (cos-design-v1.7.0.spec), previously just not present in THIS repo.
         The dangling reference is closed, but the full subsystem (Plugin
         Manager's hot-install folder watcher, sandboxing, permission
         enforcement) is design-only past what cos/cli/commands/plugin.js's
@@ -138,7 +138,7 @@ spec:
     - id: vault-hardware-binding
       priority: DESIGN-ONLY — confirmed absent, zero real files.
       description: >
-        TPM integration (cos-design-v1.7.0.md §65) — hardware-backed vault
+        TPM integration (cos-design-v1.7.0.spec §65) — hardware-backed vault
         key storage via Windows CNG, PCR-sealed, compartment identity
         attestation. Checked directly: no tpm/, no CNG references, no .rs
         files anywhere in this repo. COS functions fully without it today
@@ -148,7 +148,7 @@ spec:
     - id: torture-chamber
       priority: DESIGN-ONLY — confirmed absent, zero real files.
       description: >
-        Fault injection / chaos engineering (cos-design-v1.7.0.md §68) —
+        Fault injection / chaos engineering (cos-design-v1.7.0.spec §68) —
         memory-flood, cpu-spike, crash-injection, hang-injection, and 8
         other real test types, always run inside a Playground by default.
         Checked directly: no torture/, no TorturePlan references anywhere

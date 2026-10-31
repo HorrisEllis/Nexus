@@ -281,7 +281,7 @@ spec:
       missed-beat axes, weighted, clamped 0-100, exposed on /api/heartbeat
       and /api/status. Refuses to fabricate a score with zero real beats.
     domain_nodes: >
-      intelligence.node-taxonomy.md's own "node: NOT USED" row is closed:
+      intelligence.node-taxonomy.spec's own "node: NOT USED" row is closed:
       intelligence/lib/domain-nodes.js exports real .gap/.bep_pattern/
       .pattern_sequence/.resonance_crystal files and indexes them into
       real jaaDB tables, wired at every real construction site. Schema-

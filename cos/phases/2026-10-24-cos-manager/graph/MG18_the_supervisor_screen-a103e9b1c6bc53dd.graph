@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793425834328
+exported_at: 1793426750321
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793425834328
-lastSeenAt: 1793425834328
+firstSeenAt: 1793426750321
+lastSeenAt: 1793426750321
 fingerprint: null
 payload:
   for: MG18_the_supervisor_screen
@@ -65,7 +65,6 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D10_the_cockpit_has_its_own_server
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D11_idearium_look_forked
-      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D12_pages_in_frames_bus_declared
     unlocks:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
     conflicts:
@@ -88,8 +87,7 @@ payload:
     lines:
       - >-
         layer 2 · blocked by MG0b_the_full_spec, MG_D1_ui_isolated_per_component,
-        MG_D10_the_cockpit_has_its_own_server, MG_D11_idearium_look_forked,
-        MG_D12_pages_in_frames_bus_declared
+        MG_D10_the_cockpit_has_its_own_server, MG_D11_idearium_look_forked
       - >-
         depends on (5): MG0b_the_full_spec, MG_D1_ui_isolated_per_component,
         MG_D10_the_cockpit_has_its_own_server, MG_D11_idearium_look_forked,

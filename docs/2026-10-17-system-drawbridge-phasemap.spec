@@ -331,7 +331,7 @@ spec:
       - "idearium/spec-engine/templates/architecture-spec.template.yaml and cos/archetype/nexus-system: the target shape,
         built once as a template, used by no existing system."
       - "NODE-TAXONOMY.md (repo root, not lib/ — the coder's correction of 'in lib'): 39 slots; per-system
-        <system>/spec/<system>.node-taxonomy.md in 13 systems."
+        <system>/spec/<system>.node-taxonomy.spec in 13 systems."
     this_map_from_here: "DB phases that duplicate an owning phase above are carried by it; DB13/DB17/DB18 stay (built here).
       New work names the owning phase id first."
     found_d:

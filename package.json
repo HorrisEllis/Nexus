@@ -1,6 +1,6 @@
 {
   "name": "nexus",
-  "version": "0.60.329",
+  "version": "0.60.331",
   "author": "James Brooks (Erosmancer)",
   "license": "MIT",
   "private": true,
@@ -25,6 +25,8 @@
     "autopilot": "node lib/nexus/autopilot.js",
     "autopilot:status": "node lib/nexus/autopilot.js --status-port=7799",
     "start:all:cli": "node lib/nexus/autopilot.js --cli",
+    "start:all:detach": "node lib/nexus/autopilot.js --detach",
+    "autopilot:legacy": "node lib/nexus/autopilot.js --legacy-supervisor",
     "movement": "node lib/cli/nexus-movement.js",
     "cos:vm-setup": "node cos/testenv/provision.js",
     "cos:vm-status": "node cos/testenv/provision.js --status",

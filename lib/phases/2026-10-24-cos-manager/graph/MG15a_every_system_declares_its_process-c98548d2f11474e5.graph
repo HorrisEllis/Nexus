@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793422031227
+exported_at: 1793426750301
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793422031227
-lastSeenAt: 1793422031227
+firstSeenAt: 1793426750301
+lastSeenAt: 1793426750301
 fingerprint: null
 payload:
   for: MG15a_every_system_declares_its_process
@@ -204,6 +204,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
       - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
       - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17b_registry_reads_the_declarations
       - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
       - docs/2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG23_allocation_and_balance
@@ -225,7 +226,7 @@ payload:
     lines:
       - layer 2 · blocked by MG0b_the_full_spec
       - 'depends on (1): MG0b_the_full_spec · all upstream 2'
-      - 'needed by (1): MG15_the_supervisor_in_cos · all downstream 29'
+      - 'needed by (1): MG15_the_supervisor_in_cos · all downstream 30'
       - 'DANGLING depends_on: MG_D13_the_supervisor_before_the_core_boot'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec

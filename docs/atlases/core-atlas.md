@@ -134,7 +134,7 @@ Since 0.39.341 (SY2 — James: "cos needs to be a nested compartment", then "Its
 
 `clear-glass/erosmancer/erosmancer-os/` is ErosmancerOS, a TypeScript engine that drives a browser over the Chrome DevTools Protocol: behavior profiles for human-like input, routing, hostile-page detection, replay and adaptive memory, served on port 7432 by `clear-glass/erosmancer/erosmancer-os/src/api/server.ts`. Since 0.39.264 Clear Glass starts it with itself and connects it to its own DevTools port (`clear-glass/src/eros/supervisor.js`). Its spec is `clear-glass/erosmancer/spec/erosmancer.spec`.
 
-`lib/cockpit/cockpit.spec` is the forge IDE's full specification, with its core in `lib/cockpit/core.js` and its pipeline in `lib/cockpit/pipeline.js`. The healer, once a system scaffolded by loom's generator beside these, moved into diagnostic in 0.60.136 (his call: diagnostic and the healer are one system): `diagnostic/healer/api/index.js`, with its spec in `diagnostic/spec/healer.spec.md`.
+`lib/cockpit/cockpit.spec` is the forge IDE's full specification, with its core in `lib/cockpit/core.js` and its pipeline in `lib/cockpit/pipeline.js`. The healer, once a system scaffolded by loom's generator beside these, moved into diagnostic in 0.60.136 (his call: diagnostic and the healer are one system): `diagnostic/healer/api/index.js`, with its spec in `diagnostic/spec/healer.spec`.
 
 `idearium/architecture-spec/` is the base a new sovereign system is built on before it has features: components, hooks and wires compiled into a lattice (`idearium/architecture-spec/registry/lattice.js`), a watcher per node type (`idearium/architecture-spec/registry/watcher.js`), friction (`idearium/architecture-spec/registry/friction.js`), decomposition (`idearium/architecture-spec/registry/decompose.js`), phases (`idearium/architecture-spec/registry/phases.js`), and the atlas tools (`idearium/architecture-spec/registry/create-atlas.js`, `idearium/architecture-spec/registry/edit-atlas.js`, `idearium/architecture-spec/registry/nexus-atlas-aggregate.js`). Its own atlas is `architecture-spec-atlas.md`.
 
@@ -314,7 +314,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 3 other file(s).
 
-- other: `docs/looking-glass/PHASEMAP.md`, `docs/looking-glass/README.md`, `docs/looking-glass/SPEC.md`
+- other: `docs/looking-glass/PHASEMAP.md`, `docs/looking-glass/README.md`, `docs/looking-glass/SPEC.spec`
 
 #### `docs/roadmap/`
 
@@ -1175,7 +1175,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 3 other file(s).
 
-- other: `lib/emerge/spec/emerge-core.spec`, `lib/emerge/spec/emerge.node-taxonomy.md`, `lib/emerge/spec/emerge.spec`
+- other: `lib/emerge/spec/emerge-core.spec`, `lib/emerge/spec/emerge.node-taxonomy.spec`, `lib/emerge/spec/emerge.spec`
 
 #### `lib/emerge/test/`
 

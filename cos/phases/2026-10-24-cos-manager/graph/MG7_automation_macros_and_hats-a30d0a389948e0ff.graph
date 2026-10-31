@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421772834
+exported_at: 1793426750272
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421772834
-lastSeenAt: 1793421772834
+firstSeenAt: 1793426750272
+lastSeenAt: 1793426750272
 fingerprint: null
 payload:
   for: MG7_automation_macros_and_hats
@@ -126,6 +126,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
       - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
@@ -154,7 +155,7 @@ payload:
         CON8_nexus_server_hook
       - >-
         depends on (3): MG3_the_state_manager, CS10_hats_bound_to_the_compartment,
-        CON8_nexus_server_hook · all upstream 56
+        CON8_nexus_server_hook · all upstream 57
       - 'needed by (1): MG9_the_console_ui · all downstream 4'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager

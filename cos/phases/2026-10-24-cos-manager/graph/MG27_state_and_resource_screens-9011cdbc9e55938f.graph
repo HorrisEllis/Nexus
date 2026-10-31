@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421772892
+exported_at: 1793426750350
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421772892
-lastSeenAt: 1793421772892
+firstSeenAt: 1793426750350
+lastSeenAt: 1793426750350
 fingerprint: null
 payload:
   for: MG27_state_and_resource_screens
@@ -91,6 +91,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D10_the_cockpit_has_its_own_server
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D11_idearium_look_forked
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D12_pages_in_frames_bus_declared
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
@@ -133,7 +134,7 @@ payload:
         MG25_storage_manager, MG26_branch_benchmark_merge, MG18_the_supervisor_screen
       - >-
         depends on (5): MG23_allocation_and_balance, MG24_network_manager, MG25_storage_manager,
-        MG26_branch_benchmark_merge, MG18_the_supervisor_screen · all upstream 69
+        MG26_branch_benchmark_merge, MG18_the_supervisor_screen · all upstream 70
       - 'needed by (0): —'
       - 'same files as MG20_add_deploy_connect with no order between them: cos/manager/contract.json'
       - 'same files as MG21_the_add_screen with no order between them: cos/manager/contract.json'

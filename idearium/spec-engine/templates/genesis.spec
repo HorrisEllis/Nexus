@@ -1047,7 +1047,7 @@ catalog GENESIS_FILE_TREE {
     source  = skeleton
     depends = []
   }
-  file "spec/<system>.node-taxonomy.md" {
+  file "spec/<system>.node-taxonomy.spec" {
     uuid    = gs0045-skele-4000-8000-000000000045
     intent  = the_node_types
     summary = "Each node type, what it is and its required fields."

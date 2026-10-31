@@ -1,8 +1,8 @@
 # Node type → system map — Diagnostic
 
-James, 2026-10-17: "the diagnostic needs to be a real system matching genasis." Genesis 1.5.0's `spec/<system>.node-taxonomy.md`:
+James, 2026-10-17: "the diagnostic needs to be a real system matching genasis." Genesis 1.5.0's `spec/<system>.node-taxonomy.spec`:
 each node type diagnostic holds, and where it comes from. The legend is the same as Guardian's, Versionium's and the healer's
-(`healer.node-taxonomy.md`, kept beside this one: the healer joined diagnostic in 0.60.136).
+(`healer.node-taxonomy.spec`, kept beside this one: the healer joined diagnostic in 0.60.136).
 
 | Type | Status | Grounding |
 |---|---|---|

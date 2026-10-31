@@ -1,6 +1,6 @@
 # Looking Glass — Phase Map (v0.3, draft)
 
-Companion to `SPEC.md`. Looking Glass is a UI renderer and app host. It is self-contained
+Companion to `SPEC.spec`. Looking Glass is a UI renderer and app host. It is self-contained
 and depends on nothing outside itself.
 
 Legend: **DECIDED** = you said it. **PROPOSED** = suggestion, not confirmed. Sizes are
@@ -258,5 +258,5 @@ ports behind the thin platform layer.
   controller simple.
 - **Folding back in.** The self-hosting editor stays in phase 11, after a working scene,
   bus, and runtime.
-- **Open questions** (see `SPEC.md`): 1 and 2 to phases 0, 6, and 10; 3 to phase 9;
+- **Open questions** (see `SPEC.spec`): 1 and 2 to phases 0, 6, and 10; 3 to phase 9;
   4 to phase 6; 6 to phase 11; 7 and 8 to phase 10; 9 (the look) to phase 4.

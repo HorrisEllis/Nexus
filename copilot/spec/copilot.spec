@@ -294,7 +294,7 @@ spec:
       (a real, different, per-call audit record of priming behavior — checked directly before naming the
       new type, avoiding the exact pat/bep_pattern collision class from earlier the same session).
       enabled:false on a real node skips that site's own network call entirely, not just its output.
-      copilot.node-taxonomy.md gained rows for both inject_rule and the pre-existing, previously-
+      copilot.node-taxonomy.spec gained rows for both inject_rule and the pre-existing, previously-
       undocumented injection type.
     proven: >-
       Seed (5 created), idempotent re-seed (never overwrites a real edit), a real direct YAML edit

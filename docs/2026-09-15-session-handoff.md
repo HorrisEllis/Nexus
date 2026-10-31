@@ -28,7 +28,7 @@
    shared one duplicate MCO — git+credentials — and one dependency chain);
    do **not** fold into `idearium.spec` — phasemaps are dated work-logs,
    specs are canonical structure, mixing them is the exact pattern that got
-   `docs/specs/IDEARIUM.spec.md` marked SUPERSEDED. Produced the merged
+   `docs/specs/IDEARIUM.spec` marked SUPERSEDED. Produced the merged
    `idearium-repository-overhaul-phasemap.spec` (13 MCOs, one build order).
 8. Produced the canonical spec those MCOs build toward:
    `idearium-creative-repo.spec` — depends on `nexus-repository-system.spec` /

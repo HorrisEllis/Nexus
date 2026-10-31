@@ -185,7 +185,10 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   }
   function shutdown({ by = 'person' } = {}) { clearInterval(reaper); for (const [n, s] of S) if (running(s)) stop(n, { by }); write('stop', null, 'supervisor shutdown', { by }); }
 
-  const api = { boot, declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
+  // MG17: a line the supervisor did not act on but must keep (the handover, naming the version that made it)
+  function note(kind, why, { by = 'person', system = null } = {}) { if (!/^[a-z][a-z-]{1,30}$/.test(String(kind))) throw new Error(`a note's kind is a word: ${kind}`); return write(kind, system, why, { by }); }
+
+  const api = { boot, note, declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
     policy: () => JSON.parse(JSON.stringify(P)), setPolicy: (patch, { by = 'person' } = {}) => { Object.assign(P, patch || {}); write('policy', null, `policy changed: ${JSON.stringify(patch)}`, { by }); return JSON.parse(JSON.stringify(P)); },
     shutdown, DEFAULTS, ledgerFile: LEDGER, lastBoot: null };
   return api;

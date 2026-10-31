@@ -38,7 +38,7 @@ const INTENT = {
   'server.js': ['serve_the_route_nodes', '/health, /contract (with the toasts the registry declares), /nodes/:type[/:id], and every route node — a new route is a node, this file does not change.'],
   'cli.js': ['run_the_command_nodes', 'node cli.js <command> [--flag value] — the same command nodes the routes run.'],
   'spec/<system>.spec': ['the_living_spec', 'identity, context, file_structure, modules, components, generated — the architecture template\'s sections; grows with the system.'],
-  'spec/<system>.node-taxonomy.md': ['the_node_types', 'Each node type, what it is and its required fields.'],
+  'spec/<system>.node-taxonomy.spec': ['the_node_types', 'Each node type, what it is and its required fields.'],
   'tests/skeleton.test.js': ['prove_the_skeleton_is_alive', 'Boots, indexes, checks the shape, serves routes, runs the CLI, serves a route node dropped in without a restart, lays out a module that lays out its own, and hands work to it as a verified file.'],
   // §0.60.1 — the drawbridge and the recursion
   'lib/handoff.js': ['hand_work_to_another_system_as_a_verified_file', 'Registry + handshake + schema checked before anything moves; refused = a receipt saying why. Queued in the target\'s input/, taken to processing/, done/ or failed/ with why; the receipt back in the sender\'s output/; processing/ recovered at boot.'],

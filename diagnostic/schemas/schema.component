@@ -17,7 +17,7 @@ payload:
   source: >-
     loom/schema/component.js — COMPONENT_SCHEMA (real, checked directly: requiredKeys
     ['id','namespace','name','version'], uuid enforced separately by the loom.uuid-present Axiom in
-    driver.js, not duplicated here). nexus-healer's own use: nexus-healer.node-taxonomy.md marks
+    driver.js, not duplicated here). nexus-healer's own use: nexus-healer.node-taxonomy.spec marks
     this VIA LOOM — nexus-healer doesn't author .component records itself, capability-map.js derives
     them from nexus-healer's own real capability registry ('nexus-healer' is confirmed present in
     capability-map.js's own SYSTEMS map). This local copy exists so nexus-healer can

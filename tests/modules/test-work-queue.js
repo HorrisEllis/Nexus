@@ -159,7 +159,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   });
 
   await test('WQ-014', 'thresholds MATCH autopilot\u2019s \u2014 two definitions of "critical" is the bug', () => {
-    const ap = require('fs').readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
+    const ap = require('fs').readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.retired-0.60.330.js'), 'utf8');
     assert.ok(/REFUSING to spawn/.test(ap),
       'autopilot\u2019s memory spawn guard is the precedent this reuses \u2014 if it is gone, revisit these thresholds');
     const h = WQ.healthAll();

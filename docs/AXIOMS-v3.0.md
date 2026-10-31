@@ -199,7 +199,7 @@ Each prompt carries its session UUID as `causedBy`. A broken session chain is a 
 
 **§10.1 Each Data Type Has Exactly One Write Authority**
 Bridge ledger owns requests. Cortex event_log owns events. Idearium owns ideas/specs/gaps. Guardian owns execution state.
-*↳ Each sovereign system's own memory needs (which JAA tables, which lib/ memory primitives) are mapped in `docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.md` — this law states the ownership rule, that doc states the per-system map.*
+*↳ Each sovereign system's own memory needs (which JAA tables, which lib/ memory primitives) are mapped in `docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.spec` — this law states the ownership rule, that doc states the per-system map.*
 
 **§10.2 Projections Are Derived, Not Written**
 A projection table is never written directly. Any direct write to a projection table is a §FAULTS.CLASS.ROGUE_WRITE fault.
