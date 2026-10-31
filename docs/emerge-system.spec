@@ -254,3 +254,17 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node"
     - "per module: its acceptance lines"
+
+# ── ADDENDUM 2026-10-31 (0.60.336) — MOD-EAS-SKELETON, MOD-EAS-BOUNDARY-TEXT, MOD-EAS-LANG-DOOR, MOD-EAS-NESTING built ─────────────────────
+# Emerge repo, branch claude/emerge-as-a-system: 19200ff (EAS1), 8ca9aa3 (EAS2, emerge 1.13.0), 58a12d8 (EAS5). Here: EAS1a.
+# Drift from the spec, said:
+#   - MOD-EAS-SKELETON: also archived emerge/data/nodes and data/node-index (a 2026-09 export of the IDE's routes in the old node shape,
+#     read by nothing), which the skeleton's node index would have refused; run-time state (data/ledger, data/node-index, bundles,
+#     modules/, *.handoff) is git-ignored.
+#   - MOD-EAS-LANG-DOOR: the six commands also run from the CLI (node cli.js lang-<verb>); emerge.config.json lang.timeoutMs = 20000.
+#   - MOD-EAS-NESTING: the tree is emerge → os → kernel → scheduler (three levels below emerge), with shell beside the kernel; siblings reach
+#     each other by a peer the sender declares in its own config (handoff.peers reads modules, parent and config peers). A level's code
+#     written in Emerge is installed by its author (the built files and a three-line adapter that calls them through the runtime the
+#     standalone build ships); an install command (build through emerge's door into a module, with its nodes) is not built — the next step
+#     for building large projects in Emerge.
+# Acceptance met: skeleton test "all checks passed"; lang-door 8/8; nesting 5/5; test-boundary-code-only 5/5; every older Emerge suite green.

@@ -8,7 +8,7 @@ origin: >-
   genesis and architecture spec in idearium. needs to be one" · on the coder's answer: "okay. do it as long as it gets up closer to building
   large projects, like i want to be buyilding an operating systems"
 
-status: "MAPPED 2026-10-31."
+status: "EAS1, EAS1a, EAS2, EAS5 BUILT 0.60.336; EAS3, EAS4 OPEN."
 
 decisions:
   EAS_D0_a_system_not_an_idearium_module:
@@ -43,7 +43,7 @@ decisions:
 
 phases:
   EAS1_the_skeleton_in_emerge:
-    status: OPEN
+    status: BUILT 0.60.336 (Emerge 19200ff)
     depends_on: [EAS_D0_a_system_not_an_idearium_module, EAS_D2_two_contracts_two_names, EAS1a_the_boundary_reads_code_not_text]
     files: [Emerge:emerge/server.js, Emerge:emerge/cli.js, Emerge:emerge/lib/system.js, Emerge:emerge/config.js, Emerge:emerge/emerge.config.json, Emerge:emerge/package.json, Emerge:emerge/registry-components.js, Emerge:emerge/ide-registry.js, Emerge:emerge/interaction-contract.json, Emerge:emerge/ide-contract.json, Emerge:emerge/event-taxonomy.js, Emerge:emerge/events-compiler.js, Emerge:emerge/schemas, Emerge:emerge/schemas/records, Emerge:emerge/lang/components.js, Emerge:emerge/emerge-ide.js, Emerge:emerge/spec/emerge.spec, Emerge:emerge/tests/skeleton.test.js]
     spec: docs/emerge-system.spec
@@ -51,7 +51,7 @@ phases:
     does: "genesis's skeleton laid out from the archetype in the Emerge repo's emerge/, the 13 shared paths merged by EAS_D2"
     proof: "skeleton test green in emerge/; every existing Emerge suite unchanged"
   EAS1a_the_boundary_reads_code_not_text:
-    status: OPEN
+    status: BUILT 0.60.336
     depends_on: []
     files: [cos/archetype/nexus-system/lib/boundary.js, Emerge:emerge/lib/boundary.js]
     spec: docs/emerge-system.spec
@@ -59,7 +59,7 @@ phases:
     does: "found in EAS1: genesis's boundary check read template-string text as requires; it now reads code only"
     proof: "the archetype's skeleton test and Emerge's, green"
   EAS2_the_language_through_the_door:
-    status: OPEN
+    status: BUILT 0.60.336 (Emerge 1.13.0, 8ca9aa3)
     depends_on: [EAS1_the_skeleton_in_emerge, EAS_D3_handlers_run_the_cli]
     files: [Emerge:emerge/lib/lang.js, Emerge:emerge/registry-components.js, Emerge:emerge/data/nodes, Emerge:emerge/tests/lang-door.test.js]
     spec: docs/emerge-system.spec
@@ -83,7 +83,7 @@ phases:
     does: "run-time callers to Emerge's door, build-time ones to the snapshot; lib/emerge archived"
     proof: "nothing requires lib/emerge; the module suite green"
   EAS5_a_system_of_systems:
-    status: OPEN
+    status: BUILT 0.60.336 (Emerge 58a12d8)
     depends_on: [EAS2_the_language_through_the_door]
     files: [Emerge:emerge/tests/nesting.test.js, Emerge:emerge/lib/modules.js, Emerge:emerge/lib/handoff.js]
     spec: docs/emerge-system.spec
