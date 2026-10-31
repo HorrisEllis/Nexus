@@ -1,0 +1,35 @@
+envelope: 1
+uuid: >-
+  nexus-export-phase-docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+type: phase
+id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+context: pipeline phase EAS3_emerge_at_the_top_of_nexus of docs/2026-10-31-emerge-as-a-system-phasemap.spec
+intent: null
+summary: EAS3_emerge_at_the_top_of_nexus (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793447691366
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793447691366
+lastSeenAt: 1793447691366
+fingerprint: null
+payload:
+  id: EAS3_emerge_at_the_top_of_nexus
+  map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/EMERGE.lock.json
+    - scripts/emerge-lock.js
+    - lib/nexus-self/systems.js
+    - lib/nexus/autopilot.js
+    - loom/maps/observability-map.js
+  depends_on:
+    - EAS1_the_skeleton_in_emerge
+    - EAS_D1_top_level_not_cos_vendor
+  blocks:
+    - MOD-EAS-NEXUS-PLACE
+  spec: docs/emerge-system.spec
+  graph: b04904ec405d2b82

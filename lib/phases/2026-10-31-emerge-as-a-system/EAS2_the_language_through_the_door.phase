@@ -1,0 +1,37 @@
+envelope: 1
+uuid: >-
+  nexus-export-phase-docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+type: phase
+id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+context: >-
+  pipeline phase EAS2_the_language_through_the_door of
+  docs/2026-10-31-emerge-as-a-system-phasemap.spec
+intent: null
+summary: EAS2_the_language_through_the_door (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793447691365
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793447691365
+lastSeenAt: 1793447691365
+fingerprint: null
+payload:
+  id: EAS2_the_language_through_the_door
+  map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - Emerge:emerge/lib/lang.js
+    - Emerge:emerge/registry-components.js
+    - Emerge:emerge/data/nodes
+    - Emerge:emerge/tests/lang-door.test.js
+    - docs/emerge-system.spec
+  depends_on:
+    - EAS1_the_skeleton_in_emerge
+    - EAS_D3_handlers_run_the_cli
+  blocks:
+    - MOD-EAS-LANG-DOOR
+  spec: docs/emerge-system.spec
+  graph: b91058849352cc0a

@@ -144,3 +144,11 @@ pushback_recorded:
 # F_D3 (his): the assistant acts only when it is needed, on the continuous event stream (the structural moments are events on it); how
 # eagerly it acts is a setting. "copy every file you need to a cos/dependancies folder": MG28 (cos-manager map, MG_D9) copies with a lock;
 # F2 still switches lib/emerge's callers and archives it, so the two copies of Emerge stay a named gap until F2.
+
+# ── ADDENDUM 2026-10-31 — F2's place for Emerge: the top level, emerge/ (docs/2026-10-31-emerge-as-a-system-phasemap.spec EAS_D1) ─────────
+# James, 2026-10-31: "emerge needs either to be a module for idearium, or a system with a server.js, etc. ... needs to be one" · "okay. do it
+# as long as it gets up closer to building large projects, like i want to be buyilding an operating systems".
+# Emerge is a sovereign system (EAS_D0, by §5.15). F2's switch of lib/emerge's callers and its archive stand; where they switch to changes:
+# the one locked snapshot of Emerge sits at Nexus's top level, emerge/, as a system (EAS3, EAS4), not under cos/vendor, so COS does not own
+# it (§5.15 rule 2). COS's own locked copies (his MG28, "copy every file you need to a cos/dependancies folder") are unaffected.
+# TO CONFIRM with him: if he meant Emerge itself under cos/, EAS3 changes its folder only. F_D2 above is kept as written (§0.3).

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS5_a_system_of_systems
+type: phase
+id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS5_a_system_of_systems
+context: pipeline phase EAS5_a_system_of_systems of docs/2026-10-31-emerge-as-a-system-phasemap.spec
+intent: null
+summary: EAS5_a_system_of_systems (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793447691370
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793447691370
+lastSeenAt: 1793447691370
+fingerprint: null
+payload:
+  id: EAS5_a_system_of_systems
+  map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - Emerge:emerge/tests/nesting.test.js
+    - Emerge:emerge/lib/modules.js
+    - Emerge:emerge/lib/handoff.js
+    - docs/emerge-system.spec
+  depends_on:
+    - EAS2_the_language_through_the_door
+  blocks:
+    - MOD-EAS-NESTING
+  spec: docs/emerge-system.spec
+  graph: d1d93cd40edabc4e

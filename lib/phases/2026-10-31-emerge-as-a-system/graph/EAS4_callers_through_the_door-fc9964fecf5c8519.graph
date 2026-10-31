@@ -1,0 +1,279 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EAS4_callers_through_the_door:fc9964fecf5c8519
+type: graph
+id: phase:EAS4_callers_through_the_door:fc9964fecf5c8519
+context: dependency graph of phase EAS4_callers_through_the_door
+intent: null
+summary: 30 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793448283189
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793448283189
+lastSeenAt: 1793448283189
+fingerprint: null
+payload:
+  for: EAS4_callers_through_the_door
+  kind: phase
+  repo: null
+  hash: fc9964fecf5c8519
+  nodes:
+    - path: copilot/module-builder.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/compiler-bridge.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/hooks/emerge.hooks.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-substrate-spec.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/worker.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/faculty/faculty-tools.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: scripts/mco5-one-real-job.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/mco6-ic9-kill-and-restart.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/spec-parser.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/compiler-bridge.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/worker.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco5-one-real-job.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco6-ic9-kill-and-restart.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+  crossings:
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/module-builder.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+    dependents: []
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+    downstream: []
+    blockedBy:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus
+      - >-
+        depends on (2): EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus · all
+        upstream 8
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+        kind: declared
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+        kind: declared
