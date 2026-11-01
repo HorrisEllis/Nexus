@@ -14,6 +14,9 @@ require('../../lib/test-sandbox.js').ensure();
  *   MD-04  a value the tab does not offer and a tab the page does not have: each said with the page's own list
  *   MD-05  a required tab (*) the gig names nothing for: said before the fill ends, with its list; nothing chosen for him
  *   MD-06  through the fill (_gigFill on the Overview): r.metadata carries it, and a gate per value
+ *   MD-07  GT6b 0.60.342 — James, 2026-11-01: "still not doing the metadata. everything but the meta data." His screen: AI ENGINE*, whose
+ *          choices are a "CHOOSE ..." dropdown and an "Other" radio. Two engines picked through the dropdown and read back; one not offered,
+ *          said with the dropdown's own list; nothing ticked that he did not name
  */
 const assert = require('assert');
 const http = require('http');
@@ -48,6 +51,25 @@ function renderPanel(){ var t = TABS[cur], p = document.getElementById('panel');
 renderTabs(); renderPanel();
 </script></body></html>`;
 
+const PAGE_DD = `<!doctype html><html><head><style>body{font:14px sans-serif;margin:30px} #tabs li{cursor:pointer;padding:6px;list-style:none} #tabs li.active{font-weight:bold}
+#meta{display:flex;gap:30px} .dd{border:1px solid #999;padding:6px;cursor:pointer;width:120px} .list div{padding:4px;cursor:pointer} .chip{margin-right:6px}</style></head><body>
+<section id="gm"><h3>Gig metadata</h3><div id="meta"><ul id="tabs"></ul><div id="panel"></div></div></section>
+<script>
+var TABS = [{ n: 'AI ENGINE', req: true, opts: ['ChatGPT', 'Claude', 'Gemini', 'Llama'] }, { n: 'DELIVERY TYPE', req: true, opts: ['Code', 'Hosted app'] }];
+var chosen = {}, other = {}, cur = 0, open = false; TABS.forEach(function(t){ chosen[t.n] = []; other[t.n] = false; });
+function renderTabs(){ var ul = document.getElementById('tabs'); ul.innerHTML = '';
+  TABS.forEach(function(t, i){ var li = document.createElement('li'); li.textContent = t.n + (t.req ? ' *' : ''); if (i === cur) li.className = 'active'; li.onclick = function(){ cur = i; open = false; renderTabs(); renderPanel(); }; ul.appendChild(li); }); }
+function renderPanel(){ var t = TABS[cur], p = document.getElementById('panel'); p.innerHTML = '';
+  var h = document.createElement('p'); h.textContent = 'Please choose which AI engine(s) you have experience working with:'; p.appendChild(h);
+  var chips = document.createElement('div'); chosen[t.n].forEach(function(o){ var c = document.createElement('span'); c.className = 'chip'; c.textContent = o; chips.appendChild(c); }); p.appendChild(chips);
+  var dd = document.createElement('div'); dd.className = 'dd'; dd.textContent = 'CHOOSE ...'; dd.onclick = function(){ open = !open; renderPanel(); }; p.appendChild(dd);
+  if (open) { var l = document.createElement('div'); l.className = 'list'; t.opts.filter(function(o){ return chosen[t.n].indexOf(o) < 0; }).forEach(function(o){ var d = document.createElement('div'); d.textContent = o;
+    d.onclick = function(){ chosen[t.n].push(o); open = false; setTimeout(renderPanel, 50); }; l.appendChild(d); }); p.appendChild(l); }
+  var lab = document.createElement('label'), b = document.createElement('input'); b.type = 'radio'; b.checked = other[t.n]; b.onchange = function(){ other[t.n] = true; renderPanel(); };
+  lab.appendChild(b); lab.appendChild(document.createTextNode(' Other')); p.appendChild(lab); }
+renderTabs(); renderPanel();
+</script></body></html>`;
+
 (async () => {
   console.log('\n⬡  Fiverr: the Gig metadata bullets, tab by tab — driven in Clear Glass on a live page\n');
   const G = require(CG('src/autofill/gig.js')), M = require(CG('src/autofill/gig-menu.js'));
@@ -63,7 +85,7 @@ renderTabs(); renderPanel();
     assert.ok(/metadata:/.test(G.gigTemplate().text));
   });
 
-  const srv = http.createServer((req, res) => { res.setHeader('Content-Type', 'text/html'); res.end(PAGE); });
+  const srv = http.createServer((req, res) => { res.setHeader('Content-Type', 'text/html'); res.end(/[?&]dd=1/.test(req.url) ? PAGE_DD : PAGE); });
   await new Promise(r => srv.listen(0, '127.0.0.1', r));
   const base = `http://127.0.0.1:${srv.address().port}`;
   const glass = require(CG('src/driver/glass.js'));
@@ -71,9 +93,9 @@ renderTabs(); renderPanel();
   const MAP = { mouseMove: 'mouseMoved', mouseDown: 'mousePressed', mouseUp: 'mouseReleased' };
   const FIVERR = 'https://www.fiverr.com/users/x/manage_gigs/new?wizard=0&tab=general';
   const Bridge = require(CG('src/ipc/bridge.js'));
-  const on = async () => {
+  const on = async (dd = false) => {
     const page = await browser.newPage({ viewport: { width: 1000, height: 900 } });
-    await page.goto(base + '/users/x/manage_gigs/new?wizard=0&tab=general');
+    await page.goto(base + '/users/x/manage_gigs/new?wizard=0&tab=general' + (dd ? '&dd=1' : ''));
     const ClearDriver = require(CG('src/driver/index.js'));
     const d = new ClearDriver({ ctxMgr: {}, dom: {}, vault: {}, sse: { emit: () => {} } });
     d._getWebContents = () => ({ executeJavaScript: (c) => page._eval(c), getURL: () => base, sendInputEvent: (e) => {
@@ -129,6 +151,19 @@ renderTabs(); renderPanel();
       assert.strictEqual(r.page, 'overview', JSON.stringify(r).slice(0, 300));
       assert.ok(r.metadata && r.metadata.filled.length === 2, JSON.stringify(r.metadata));
       const c = await chosen(page); assert.deepStrictEqual([c['PROGRAMMING LANGUAGE'], c.EXPERTISE], [['Python'], ['RAG']]);
+      await page.close();
+    });
+    await test('MD-07', 'GT6b: AI ENGINE as on his screen — a CHOOSE dropdown and an Other radio; two engines picked and read back, one not offered said', async () => {
+      const { page, self } = await on(true);
+      const r = await Bridge.prototype._gigMetadata.call(self, 'w', { metadata: { 'AI ENGINE': ['Claude', 'ChatGPT', 'Grok'], 'DELIVERY TYPE': ['Code'] } });
+      const c = await page.evaluate(() => ({ chosen, other }));
+      assert.deepStrictEqual(c.chosen['AI ENGINE'], ['Claude', 'ChatGPT'], JSON.stringify(r));
+      assert.deepStrictEqual(c.chosen['DELIVERY TYPE'], ['Code'], JSON.stringify(r));
+      assert.deepStrictEqual([c.other['AI ENGINE'], c.other['DELIVERY TYPE']], [false, false], 'Other is never ticked for him');
+      assert.deepStrictEqual(r.filled.map(f => `${f.tab}:${f.value}:${f.via}`), ['AI ENGINE:Claude:dropdown', 'AI ENGINE:ChatGPT:dropdown', 'DELIVERY TYPE:Code:dropdown'], JSON.stringify(r));
+      assert.strictEqual(r.gates.filter(g => /^metadata\.AI ENGINE\./.test(g.key) && g.open).length, 2, JSON.stringify(r.gates));
+      const grok = r.failed.find(f => f.value === 'Grok');
+      assert.ok(grok && /Gemini/.test(grok.why), `Grok said with the dropdown's own list: ${JSON.stringify(r.failed)}`);
       await page.close();
     });
     await browser.close();

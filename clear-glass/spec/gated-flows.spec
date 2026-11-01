@@ -771,3 +771,16 @@ spec:
 # value, a "*" in the name read as the name); gigParts, the template, gig-menu (one row "TAB: a, b; TAB: c") and apply() carry it. bridge.js
 # _gigMetadata(agentId, gig) → { filled, failed, over, left, gates, tabs }, from _gigFill on the Overview as r.metadata.
 # Acceptance met: tests/modules/test-gig-metadata-glass.test.js MD-01..06.
+
+# ── ADDENDUM 2026-11-01 (0.60.342) — MOD-GT6: a tab whose choices are a dropdown (GT6b) ──────────────────────────────────────────────
+# James, 2026-11-01: "still not doing the metadata. everything but the meta data." Fiverr's AI ENGINE tab is a "CHOOSE ..." dropdown with an
+# "Other" radio. Added to MOD-GT6's contract:
+# - metaPanelScript also returns { dropdown: { native, shown }, text }, with the dropdown marked data-cg-meta-dd. It is found as a <select>, a
+#   combobox or aria-haspopup, else by the words it shows (CHOOSE / SELECT …). text is what the panel shows, never an open list's own options.
+# - metaTabsScript never takes a dropdown's "CHOOSE ..." for a tab.
+# - A value the boxes do not offer, on a tab with a dropdown, is picked there:
+#   - a <select> through the driver's choose;
+#   - Fiverr's own widget: opened with the pointer, the options taken as what appeared (gig-fields leavesScript / ddOptionsScript), the
+#     option clicked, and the chip read back with a choice's timing (8 s, 600 ms settle).
+#   - Not offered: said with the dropdown's own list.
+# - "Other" is never ticked for him. Proof: tests/modules/test-gig-metadata-glass.test.js MD-07.

@@ -580,3 +580,18 @@ James, 2026-10-30: "then the bullets for each tab for each catagory." Built as M
 - "per category": a gig has one category, so its metadata is the gig file's own { TAB: [values] }; a value the tab does not offer is said
   with the tab's list, so a gig written for another category says where it differs.
 Proof: tests/modules/test-gig-metadata-glass.test.js 6/6, including his acceptance (JavaScript, three frontend frameworks, 3 / 5).
+
+# ── ADDENDUM 2026-11-01 (0.60.342) — GT6b: a metadata tab whose choices are a dropdown ─────────────────────────────────────────────────
+# James, 2026-11-01, on Fiverr's Overview in Clear Glass (his screenshot: Gig metadata, tabs AI ENGINE*, DELIVERY TYPE*, PROGRAMMING
+# LANGUAGE*; the AI ENGINE panel is a "CHOOSE ..." dropdown and an "Other" radio): "still not doing the metadata. everything but the meta data."
+# Root cause (read in clear-glass/src/autofill/gig-fields.js metaPanelScript and bridge.js _gigMetadata): GT6 knew a tab's choices only as
+# checkboxes or radio buttons. On AI ENGINE it saw one choice, "Other", so every engine he named was "not offered". MD-01…06 had no dropdown tab.
+phases_addendum_2026_11_01:
+  GT6b_metadata_dropdown_tab:
+    status: "DONE 0.60.342"
+    depends_on: [GT6_gig_metadata_bullets_per_tab]
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GT6]
+    files: [clear-glass/src/autofill/gig-fields.js, clear-glass/src/ipc/bridge.js, tests/modules/test-gig-metadata-glass.test.js]
+    does: "metaPanelScript also finds a dropdown in the open tab (a <select>, a combobox, or what shows CHOOSE / SELECT), marked data-cg-meta-dd; _gigMetadata picks a value the boxes do not offer through the driver's own choose (the one Service type uses), one value at a time, each read back in the panel (GATE-GT6-003)"
+    proof: "MD-07: a tab with a CHOOSE dropdown and an Other radio, as on his screen — two engines chosen and read back; one not offered, said with the dropdown's list"
