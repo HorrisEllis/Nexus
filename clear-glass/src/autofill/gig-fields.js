@@ -156,7 +156,11 @@ function metaTabsScript() {
     if (Array.prototype.some.call(el.children, function(c){ return vis(c) && txt(c) === t; })) return;   // the innermost element with this text
     if (Array.prototype.some.call(el.querySelectorAll('*'), function(c){ return vis(c) && txt(c) && txt(c) !== t && c.children.length === 0; })) return;   // one label, not a group
     var n = name(t); if (!n || seen[n.toLowerCase()]) return;
-    if (t !== t.toUpperCase() && !el.closest('[role="tablist"],ul,ol,nav')) return;   // tab names are shown in capitals, or sit in a list
+    // a tab name is a short label: in capitals, sitting in a list/tablist, OR Title Case like Fiverr's real metadata tabs (2026-10-31, his
+    // Edit Gig page: "Programming language", "Expertise", "Frontend framework", "Backend framework", "AI & low/no code builders"). Prose is
+    // not a tab — it ends in sentence punctuation or runs long ("Make your Gig easy to find.", "Select up to five areas you are an expert in").
+    var inList = !!el.closest('[role="tablist"],ul,ol,nav,[role="tab"]');
+    if (!(t === t.toUpperCase() || inList || (n.length <= 40 && !/[.!?:]$/.test(t)))) return;
     seen[n.toLowerCase()] = 1;
     var open = el.getAttribute('aria-selected') === 'true' || /(^|[\\s_-])(active|selected|current)([\\s_-]|$)/i.test(String(el.className || '')) || /(^|[\\s_-])(active|selected|current)([\\s_-]|$)/i.test(String((el.parentElement || {}).className || ''));
     el.setAttribute('data-cg-meta-tab', String(tabs.length)); tabs.push({ name: n, required: /\\*/.test(t), open: open });
