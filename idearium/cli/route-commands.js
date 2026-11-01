@@ -235,6 +235,19 @@ export const SPEC = [
   // 0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match."
   // §0.60.252 UP3 — James, 2026-10-25: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?"
   // · "first one but the second one needs to be the end state" (git now, COS later). lib/nexus-update.js; restarting stays his.
+  // 0.60.354 PD1 — James, 2026-11-01: "a command like a batch but a .framework or .macro that me and copilot can use" · ".procedure"
+  { key: 'procedure.list', repo: false, usage: 'procedure list', about: 'the Nexus procedures: steps you or copilot run like a .bat, your yes where they change Nexus (idearium/procedures; a repo\'s own: repo procedures)',
+    req: () => ({ method: 'GET', path: '/api/procedures' }),
+    print: (d, a, h) => { for (const p of d.procedures || []) console.log(`  ${h.c.sky(p.id.padEnd(18))} ${p.name}  ${h.c.dim(p.steps.join(' → '))}`); for (const b of d.bad || []) console.log(h.c.amber(`  ${b.file}: ${b.why}`)); if (!(d.procedures || []).length) console.log(h.c.gray('  no procedures')); } },
+  { key: 'procedure.show', repo: false, usage: 'procedure show <id>', about: 'a procedure’s steps, in order',
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ method: 'GET', path: `/api/procedures/${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => { const p = d.procedure || {}; console.log(`${h.c.bold(p.name || p.id)}${p.about ? `\n  ${h.c.dim(p.about)}` : ''}`); (p.steps || []).forEach((st, i) => console.log(`  ${String(i + 1).padStart(2)}. ${st.confirm != null ? `confirm  ${st.confirm}` : st.check ? `check    step ${st.check.of} ${Object.entries(st.check).filter(([k]) => k !== 'of').map(([k, v]) => `${k} ${v}`).join(' ')}` : `command  ${(st.args && st.args.command) || st.tool}`}`)); } },
+  { key: 'procedure.run', repo: false, usage: 'procedure run <id> [--yes]', about: 'run a procedure; it stops at each step that needs your yes unless you pass --yes',
+    personOnly: (a) => (a.flags.yes ? 'passing a procedure’s yes is the person’s — run it without --yes; it stops at the step that needs them' : null),
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ method: 'POST', path: `/api/procedures/${encodeURIComponent(a.args[0])}/run`, body: { yes: !!a.flags.yes }, timeoutMs: 30 * 60000 }),
+    print: (d, a, h) => { const r = d.run || {}; (r.results || []).forEach((st, i) => console.log(`  ${st.ok ? h.c.mint('✓') : st.waiting ? h.c.amber('…') : h.c.coral('✗')} ${String(i + 1).padStart(2)}. ${h.c.dim(st.confirm || (st.check ? `check step ${st.check.of}` : st.tool))}${st.error ? `  ${h.c.coral(st.error)}` : ''}`)); console.log(d.finished ? h.c.mint('  done') : r.waiting ? h.c.amber(`  waiting for your yes — procedure run ${a.args[0]} --yes`) : h.c.coral(`  stopped at step ${r.stoppedAt} of ${r.of}`)); } },
   { key: 'update', repo: false, usage: 'update [--no-fetch]', about: 'is there a newer Nexus on GitHub: this version and origin\'s, each release in between with James\'s words, the systems it changes, what an update would set aside or refuse',
     req: (a) => ({ method: 'GET', path: `/api/update${a.flags['no-fetch'] ? '?fetch=0' : ''}`, timeoutMs: 150000 }),
     print: (d, a, h) => {
@@ -828,6 +841,25 @@ export const SPEC = [
     req: () => ({ method: 'GET', path: '/api/cos/usage' }) },
   { key: 'cos.policy', repo: false, usage: 'cos policy', about: 'the supervisor\'s rules (boot set, restart backoff, circuit, memory floors, idle) with their defaults',
     req: () => ({ method: 'GET', path: '/api/cos/policy' }) },
+  // 2026-11-01 CP1a — James: "continue moving the rest of the systems into cos." Every compartment's wall, asked of COS's manager (:7799)
+  { key: 'cos.walls', repo: false, usage: 'cos walls', about: 'every compartment\'s wall: enforce, audit or bare, how it is put up, and the crossings an audit wall has said since the process started (enforce-ready when none)',
+    req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/walls' }),
+    print: (d, a, h) => { const c = d.counts || {}; h.header(`walls — ${c.enforce || 0} enforce · ${c.audit || 0} audit · ${c.bare || 0} bare · ${c.enforceReady || 0} ready for enforce`);
+      for (const w of d.walls || []) console.log(`  ${w.name.padEnd(22)} ${w.mode.padEnd(8)} ${String(w.via).padEnd(13)} ${w.said}${w.crossings.length ? `\n      ${w.crossings.slice(0, 5).map(x => `${x.file} (from ${x.from})`).join('\n      ')}` : ''}`); } },
+  // 2026-11-01 CP6a — James: "then i want resource management for each cos compartment". Caps by layer, read back from the OS; the account
+  { key: 'cos.resources', repo: false, usage: 'cos resources', about: 'each compartment\'s caps (heap, resident limit, priority) as applied by the OS, its resident memory and CPU now, peak and average',
+    req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/resources?fresh=1', timeoutMs: 20000 }),
+    print: (d, a, h) => { const r = d.resources || {}; h.header(`resources — host ${r.host ? `${r.host.freeMemPct}% free of ${r.host.totalMB} MB` : '?'} · reader ${r.reader || 'none'}${r.incident ? ' · under the halt floor: a proposal is held' : ''}`);
+      for (const s of r.systems || []) console.log(`  ${s.name.padEnd(22)} ${String(s.now && s.now.rssMB != null ? s.now.rssMB + ' MB' : '—').padStart(8)} ${String(s.now && s.now.cpuPct != null ? s.now.cpuPct + '%' : '—').padStart(7)}  heap ${s.caps.heapMB} (${s.caps.applied.heap.state}) · ${s.caps.priority} (${s.caps.applied.priority.state})${s.caps.rssLimitMB ? ` · limit ${s.caps.rssLimitMB} MB ${s.caps.onOver}` : ''}`); } },
+  { key: 'cos.caps', repo: false, usage: 'cos caps <system> [heapMB=<n>] [rssLimitMB=<n>|none] [onOver=warn|restart] [priority=low|below-normal|normal|above-normal|high]', about: 'a compartment\'s caps: read, or set by you (each value with its layer; applied and read back)',
+    req: (a) => { const kv = a.args.slice(1).filter(x => x.includes('=')); if (!kv.length) return { system: 'cos', method: 'GET', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/caps` };
+      const patch = Object.fromEntries(kv.map(x => { const [k, v] = x.split('='); return [k, v === 'none' ? null : /MB$/.test(k) ? Number(v) : v]; }));
+      return { system: 'cos', method: 'PATCH', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/caps`, body: { patch, by: 'person' } }; },
+    print: (d) => { const c = d.caps; console.log(`${c.name}: ${['heapMB', 'rssLimitMB', 'onOver', 'priority'].map(k => `${k} ${c[k]} (${c.layers[k]})`).join(' · ')}`); for (const [k, v] of Object.entries(c.applied)) console.log(`  ${k.padEnd(9)} ${v.state}${v.readBack != null ? ` → ${v.readBack}` : ''}${v.why ? ` — ${v.why}` : ''}`); } },
+  // 2026-11-01 UP12 — James: "Open the PR" · "okay but for all agents, as a agent tool". Run here (local): push, then gh or the compare URL
+  { key: 'pr.open', repo: false, usage: 'pr open [dir] [--base main] [--title "…"] [--body "…"]', about: 'push the current branch and open its pull request (gh when installed and signed in; else GitHub\'s compare link, prefilled, to click)',
+    local: async (a) => require('../../lib/git-pr.js').open({ dir: a.args[0] || process.cwd(), base: a.flags.base || 'main', title: a.flags.title || null, body: a.flags.body || '' }),
+    print: (d) => console.log(d.ok ? `${d.branch} → ${d.base} (${d.repo}) · ${d.pushed ? 'pushed · ' : ''}${d.said}\n  ${d.url}` : `refused: ${d.error}`) },
   // 2026-11-01 CI8 — James: "72% so make sure it is tv ui and i can access it,". The TENSION channel's read, for agents and the CLI.
   { key: 'tension', repo: false, usage: 'tension [friction]', about: 'every system\'s tension and regime, computed by Intelligence (intelligence/friction.js) from Diagnostic\'s friction and Cortex\'s open gaps; each source said',
     req: (a) => ({ system: 'orchestrator', method: 'GET', path: `/api/tension-field/${a.args[0] === 'friction' ? 'friction' : 'tension'}` }) },

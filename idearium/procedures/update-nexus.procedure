@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-procedure-update-nexus
+type: procedure
+id: update-nexus
+context: a Nexus procedure — steps run in order, his yes where it changes Nexus (PD1)
+intent: null
+summary: Update Nexus from GitHub · 5 steps
+system: idearium
+tags:
+  - library
+  - update
+exported_at: 1793561658068
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793561658068
+lastSeenAt: 1793561658068
+fingerprint: null
+payload:
+  id: update-nexus
+  repoUuid: null
+  name: Update Nexus from GitHub
+  about: >-
+    James, 2026-11-01, after updating by hand (git branch --set-upstream-to, git pull, type VERSION,
+    start:all): "can you make that a macro or framework and then into a command like a batch". What
+    is newer, his yes, the update, then the version it left. Restarting what changed is still the
+    Updates page (no command row restarts a system yet).
+  steps:
+    - tool: nexus.command
+      args:
+        command: update
+    - confirm: >-
+        Bring in the newer Nexus from GitHub (fast-forward only; your changed data files are copied
+        aside first)
+    - tool: nexus.command
+      args:
+        command: update apply
+        flags:
+          'yes': true
+    - tool: nexus.command
+      args:
+        command: system version
+    - check:
+        of: 4
+        matches: Nexus \d+\.\d+\.\d+
+  from:
+    kind: library
+  runs: []
+  runCount: 0
+  createdAt: 1793577600000
+  updatedAt: 1793577600000

@@ -26,7 +26,7 @@ function createProposals(sup, { file } = {}) {
   const view = (p) => ({ ...p, ageMs: Date.now() - p.at });
 
   function hold({ by, verb, target, why } = {}) {
-    if (!by || !/^agent:/.test(String(by))) throw Object.assign(new Error('a proposal is an agent\'s: { "by": "agent:<name>" }'), { code: 400 });
+    if (!by || !/^(agent|rule):/.test(String(by))) throw Object.assign(new Error('a proposal is an agent\'s: { "by": "agent:<name>" }'), { code: 400 });
     if (!VERBS[verb]) throw Object.assign(new Error(`no such act "${verb}": ${Object.keys(VERBS).join(', ')}`), { code: 400 });
     const sys = sup.get(target);   // throws for an undeclared system
     if (!why || String(why).trim().length < 3) throw Object.assign(new Error('say why: an agent\'s reason is part of its proposal'), { code: 400 });

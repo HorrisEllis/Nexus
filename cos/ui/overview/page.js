@@ -86,7 +86,7 @@
     const u = S.usage && S.usage.systems[s.name];
     const mem = u && u.rssMB != null ? `${u.rssMB} MB` : null, cpu = u && u.cpuPct != null ? `${u.cpuPct.toFixed(1)}%` : null;
     const notRead = u && u.notRead && s.pid ? `not read: ${u.notRead}` : '';
-    const tags = [s.walled && h('span', { class: 'tag ac', title: `runs in its compartment ${s.compartment || ''}, behind its wall (${s.wallMode})` }, `walled · ${s.compartment || 'compartment'}`), s.critical && h('span', { class: 'tag ac' }, 'critical'), s.onDemand && h('span', { class: 'tag' }, 'on demand'), s.bootPhase != null && h('span', { class: 'tag' }, `phase ${s.bootPhase}`),
+    const tags = [s.walled && h('span', { class: s.wallMode === 'audit' ? 'tag' : 'tag ac', title: s.wallMode === 'audit' ? `runs in its compartment ${s.compartment || ''} behind a wall in audit: crossings are said on the ledger, not refused (CP1a; enforce when its audit is empty)` : `runs in its compartment ${s.compartment || ''}, behind its wall (enforce)` }, `${s.wallMode === 'audit' ? 'audit wall' : 'walled'} · ${s.compartment || 'compartment'}`), s.critical && h('span', { class: 'tag ac' }, 'critical'), s.onDemand && h('span', { class: 'tag' }, 'on demand'), s.bootPhase != null && h('span', { class: 'tag' }, `phase ${s.bootPhase}`),
       s.system && s.system !== s.name && h('span', { class: 'tag' }, s.system)].filter(Boolean);
     const running = !!s.pid;
     const el = h('article', { class: 'card panel rise', 'data-s': s.state },

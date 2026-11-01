@@ -9,7 +9,7 @@ require('../../lib/test-sandbox.js').ensure();
  *   CH-03  start() with the manager up and the cockpit down: the real cockpit (cos/ui/serve.js) is started and answers
  *   CH-04  the channel page in Clear Glass: down → the reason and Start COS; Start → the cockpit framed
  *   CH-05  the TV: ⬢ COS loads channels/cos/cos.html; TENSION hidden from the rail, kept
- *   CH-06  TV4 (0.60.354), the real TV page in Clear Glass: the overview shows Idearium and COS only; "all systems" shows the other eleven;
+ *   CH-06  TV4 (0.60.360), the real TV page in Clear Glass: the overview shows Idearium and COS only; "all systems" shows the other eleven;
  *          the COS tile reads its status from the orchestrator ("cos is not there still … clear it all if possible and add ideearium and cos")
  */
 const assert = require('assert'), http = require('http'), path = require('path'), fs = require('fs'), os = require('os');

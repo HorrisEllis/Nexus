@@ -32,7 +32,17 @@
         "intelligence/server.js"
       ],
       "phase": 3,
-      "healthUrl": "http://127.0.0.1:3753/health"
+      "healthUrl": "http://127.0.0.1:3753/health",
+      "compartment": "nexus-self-intelligence",
+      "boundary": {
+        "mode": "audit",
+        "allow": [
+          "{{root}}/intelligence/",
+          "{{root}}/lib/",
+          "{{root}}/node_modules/"
+        ],
+        "about": "intelligence's wall, declared by intelligence (CP1a, 2026-11-01): COS's supervisor starts it behind this; equal to the census's boundaryFor('intelligence'); audit: 7 way(s) out still open, so the wall says what it would refuse (DO_D9); enforce when the audit is empty"
+      }
     },
     "processes": [
       {
@@ -42,7 +52,17 @@
           "intelligence/consumer.js"
         ],
         "phase": 4,
-        "optional": true
+        "optional": true,
+        "compartment": "nexus-self-intelligence",
+        "boundary": {
+          "mode": "audit",
+          "allow": [
+            "{{root}}/intelligence/",
+            "{{root}}/lib/",
+            "{{root}}/node_modules/"
+          ],
+          "about": "intelligence's wall, declared by intelligence (CP1a, 2026-11-01): COS's supervisor starts it behind this; equal to the census's boundaryFor('intelligence'); audit: 7 way(s) out still open, so the wall says what it would refuse (DO_D9); enforce when the audit is empty"
+        }
       }
     ]
   },

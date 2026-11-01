@@ -66,7 +66,7 @@ phases:
     proof: "in Clear Glass, every channel opens and shows what it showed before (screenshots before and after); a channel added by a folder and a line in channels.json, one removed by deleting its line, nothing else breaks"
 
   TV4_the_overview_idearium_and_cos:
-    status: "DONE 0.60.354"
+    status: "DONE 0.60.360"
     depends_on: [TV3_the_emergence_channel, MG34_the_cos_channel_always_has_a_way_in]
     files: [lib/ui/tv-shell/index.html, tests/modules/test-cos-channel.test.js]
     interface: [html]

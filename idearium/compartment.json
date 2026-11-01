@@ -33,7 +33,17 @@
         "idearium/api/index.js"
       ],
       "phase": 3,
-      "healthUrl": "http://127.0.0.1:4800/health"
+      "healthUrl": "http://127.0.0.1:4800/health",
+      "compartment": "nexus-self-idearium",
+      "boundary": {
+        "mode": "audit",
+        "allow": [
+          "{{root}}/idearium/",
+          "{{root}}/lib/",
+          "{{root}}/node_modules/"
+        ],
+        "about": "idearium's wall, declared by idearium (CP1a, 2026-11-01): COS's supervisor starts it behind this; equal to the census's boundaryFor('idearium'); audit: 31 way(s) out still open, so the wall says what it would refuse (DO_D9); enforce when the audit is empty"
+      }
     }
   },
   "data": {

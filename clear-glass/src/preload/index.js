@@ -172,6 +172,9 @@ contextBridge.exposeInMainWorld('ClearGlass', {
       return ipcRenderer.invoke('macros:run', { name, agentId: o.agentId, params: o.params, skipSnapshot: o.skipSnapshot });
     },
     create: (payload) => ipcRenderer.invoke('macros:create', payload),
+    // 0.60.359 MB4 — the macro toast: step i of n, pause, skip, back one step (playback and recording)
+    control: (op, agentId) => ipcRenderer.invoke('macros:control', { op, agentId }),
+    onProgress: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('macros:progress', f); return () => ipcRenderer.removeListener('macros:progress', f); },
     delete: (name)    => ipcRenderer.invoke('macros:delete', { name }),
     schema: ()        => ipcRenderer.invoke('macros:schema'),
   },
