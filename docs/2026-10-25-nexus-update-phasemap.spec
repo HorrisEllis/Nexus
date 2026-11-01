@@ -130,5 +130,13 @@ spec:
         orchestrator forwards GET /api/update/check and POST /api/update/apply to Idearium's /api/update and /api/update/apply, so the tree is
         still changed in one place (lib/nexus-update.js through Idearium). Restarting stays his (the reply names what to restart).
         No module spec exists for this map yet (its phases predate the rule); said, a gap.
+    UP11_an_attached_folder_tracks_origin:
+      status: DONE (0.60.353)
+      depends_on: [UP6_attach_in_place]
+      files: [lib/nexus-update.js, tests/modules/test-nexus-update.test.js]
+      does: >-
+        A fix, phased (his rule). James, 2026-11-01, pasting his `git pull` in D:\Backups\Downloads\nexus-0.60.346: "There is no tracking
+        information for the current branch." attachInPlace (UP6) made his unzipped folder a git tree on main but never set main's upstream; the
+        update tool names origin/main itself so it worked, his own git pull did not. attachInPlace now runs git branch --set-upstream-to=origin/main.
 
   verification_here: "Proven against real git repos built in a temp folder (an origin with a newer release, a clone behind it): check, a refused code collision, an archived data collision, apply, rollback. Not run on his machine; GitHub itself is reached by git, not by this test."
