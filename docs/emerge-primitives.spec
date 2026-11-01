@@ -135,3 +135,20 @@ walkthrough_gaps_2026_11_01:
   - "`eg check echo.eg` warns its hooks have no wire, though main.eg wires them: the checker does not see across `use`"
   - "`on` is top level only (not inside a test); no `a ? b : c`"
   - "components from a module are named with its prefix (`echo.Echo`), as the language intends — not a gap, said so it is not mistaken for one"
+
+# ── ADDENDUM 2026-11-01 — the registry as the contract that branches are tested against (proposed, TO CONFIRM) ─────────────────────
+# Context: James pasted an outside analysis of the walkthrough, which asked: "Could the registry become the source against which different
+# execution branches are tested? … several implementations could be evaluated against the same component contract, with invariants checked
+# across their outputs and state transitions." The question is the analysis's; it is recorded here as proposed, not as his decision.
+# What Emerge already has (read 2026-11-01, Emerge f0232402), so the idea is mostly composition (§8.6):
+#   - the contract: a `kind` (doors, state, `require`, `boundary_count`), exported by `eg components` as a kinds record;
+#   - invariants: `boundary` rules on each component, checked on every change;
+#   - isolated branches: `whatif` and `test` run in a fork; the checker refuses a branch that writes outside itself (lang/checker.js);
+#   - the same tests over several implementations: bench/chunks.js (monolith vs chunked) and bench.js (Emerge vs JS).
+# Missing: running N components of one kind on the same inputs, side by side, and comparing their outputs, state changes and invariants.
+proposed:
+  EP3_branches_against_one_contract:
+    status: "PROPOSED — waits on his word, and on EP2 (a contract must be read from the whole project first)"
+    depends_on: [EP2_the_registry_first]
+    does: "`eg verify <kind>`: every component of a kind, each in its own fork, fed the same inputs; their outputs, deltas and boundary invariants compared; a disagreement is a gap with the input that caused it"
+    proof: "two Echo implementations of Command, one wrong on loud; verify names the input that tells them apart"
