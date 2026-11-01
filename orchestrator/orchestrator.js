@@ -2478,6 +2478,15 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     catch (e) { return json(res, 500, { ok: false, error: e.message }); }
   }
 
+  // ── Tension — /api/tension-field/{tension,friction} (2026-11-01 CI8) ─────────────────────────────────────────────────────────────────
+  // James, 2026-11-01: "72% so make sure it is tv ui and i can access it,". The TENSION channel asks only :9000 (TV_D1); the meaning is
+  // Intelligence's (CI7, intelligence/friction.js), asked through its route. A silent Intelligence is a 503 that names it.
+  if (top === 'api' && sub === 'tension-field' && M === 'GET') {
+    const what = seg[2] || 'tension';
+    if (what !== 'tension' && what !== 'friction') return json(res, 404, { ok: false, error: 'tension-field: tension | friction' });
+    const r = await GET('intelligence', `/api/intelligence/${what}`, 6000);
+    return json(res, r && r.ok !== false ? 200 : 503, r && r.ok !== false ? r : { ok: false, error: `intelligence did not answer: ${(r && r.error) || 'no reply'}`, sources: r && r.sources });
+  }
   // ── Emergence — /api/emergence/{patterns,liminal,sessions} (2026-11-01 TV3) ───────────────────────────────────────────────
   // James, 2026-11-01: "the tv ui needs the emergence channel". The TV asks only :9000 (TV_D1); what emerges is Intelligence's (its
   // crystallised patterns, its liminal spaces), asked through its routes; his emergence runs are lib/emergence.js's (the kernel). A system

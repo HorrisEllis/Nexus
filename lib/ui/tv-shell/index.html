@@ -572,6 +572,10 @@
   <div class="ch" id="ch-emergence" style="padding:0;overflow:hidden;">
     <iframe id="emergence-iframe" src="" style="width:100%;height:100%;border:none;background:#05060a" title="Emergence"></iframe>
   </div>
+  <!-- 2026-11-01 CI8 — the tension channel, its own page: channels/tension/ (Intelligence's friction and tension) -->
+  <div class="ch" id="ch-tension" style="padding:0;overflow:hidden;">
+    <iframe id="tension-iframe" src="" style="width:100%;height:100%;border:none;background:#05060a" title="Tension"></iframe>
+  </div>
 
 <!-- Top bar — channel name, visible when menu open -->
 <div id="top-bar">
@@ -789,6 +793,8 @@ const CH_META=[
   {id:'ch-emergence',  name:'EMERGENCE',  accent:'Crystallised · Forming · Runs', railLabel:'✦ Emergence'},
   // 2026-11-01 MG33 — James: "where is cos ui?". COS's own screen (its cockpit, :7797), framed like the full Guardian/Cortex screens; appended.
   {id:'ch-cos',        name:'COS',        accent:':7797 · Compartments · Ledger · Proposals', railLabel:'⬢ COS'},
+  // 2026-11-01 CI8 — James: "72% so make sure it is tv ui and i can access it,". Intelligence's friction and tension; appended.
+  {id:'ch-tension',    name:'TENSION',    accent:'Friction · Tension · Open loops · Intelligence', railLabel:'◬ Tension'},
 ];
 // §EDITABLE 2026-09-20 — window.CH_META was never set (menu.js's own
 // _buildNavButtons() already expected it: `window.CH_META || []` always
@@ -903,6 +909,7 @@ function tune(n){
   if(chId==='ch-conversations'){convLoad();}
   if(chId==='ch-emerge'){const f=document.getElementById('emerge-iframe');if(f&&!f.src)f.src='../emerge/emerge-ide.html';}
   if(chId==='ch-cos'){const f=document.getElementById('cos-iframe');if(f&&!f.getAttribute('src'))f.src='http://127.0.0.1:7797/';}
+  if(chId==='ch-tension'){const f=document.getElementById('tension-iframe');if(f&&!f.getAttribute('src'))f.src='channels/tension/tension.html';else if(f&&f.contentWindow&&f.contentWindow.TENSION)f.contentWindow.TENSION.load();}
   if(chId==='ch-emergence'){const f=document.getElementById('emergence-iframe');if(f&&!f.getAttribute('src'))f.src='channels/emergence/emergence.html';else if(f&&f.contentWindow&&f.contentWindow.EMERGENCE)f.contentWindow.EMERGENCE.load();}
 }
 

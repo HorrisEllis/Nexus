@@ -81,4 +81,13 @@ phases:
     does: "James, 2026-11-01: \"migrating looms friction and tension system to the intelligence system\". The tension formula in Intelligence; Cortex scores its open gaps behind a route; Diagnostic only measures; Loom forwards"
     proof: "MOD-CI-TENSION's acceptance"
 
+  CI8_tension_on_the_tv:
+    status: "DONE 0.60.351"
+    depends_on: [CI7_the_tension_formula_home]
+    files: [orchestrator/orchestrator.js, lib/ui/tv-shell/channels/tension/tension.html, lib/ui/tv-shell/channels/tension/tension.js, lib/ui/tv-shell/channels/tension/tension.css, lib/ui/tv-shell/index.html, idearium/cli/route-commands.js, tests/modules/test-tension-channel.test.js]
+    spec: intelligence/spec/causal-interconnect.spec
+    blocks: [MOD-CI-TENSION-TV]
+    does: "James, 2026-11-01, after CI7: \"72% so make sure it is tv ui and i can access it,\". A TENSION channel on the TV rail: every system's tension, its regime, what it is made of (monitor and open loops), the worst open loops, and each source said. Reads the orchestrator (:9000, TV_D1), which asks Intelligence"
+    proof: "MOD-CI-TENSION-TV's acceptance"
+
 order: "CI6 depends on the decision only and goes first, by his word. CI1 → (CI2, CI3) → CI5; CI4 after ML3 (the batched learning loop) is built."

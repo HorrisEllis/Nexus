@@ -828,6 +828,9 @@ export const SPEC = [
     req: () => ({ method: 'GET', path: '/api/cos/usage' }) },
   { key: 'cos.policy', repo: false, usage: 'cos policy', about: 'the supervisor\'s rules (boot set, restart backoff, circuit, memory floors, idle) with their defaults',
     req: () => ({ method: 'GET', path: '/api/cos/policy' }) },
+  // 2026-11-01 CI8 — James: "72% so make sure it is tv ui and i can access it,". The TENSION channel's read, for agents and the CLI.
+  { key: 'tension', repo: false, usage: 'tension [friction]', about: 'every system\'s tension and regime, computed by Intelligence (intelligence/friction.js) from Diagnostic\'s friction and Cortex\'s open gaps; each source said',
+    req: (a) => ({ system: 'orchestrator', method: 'GET', path: `/api/tension-field/${a.args[0] === 'friction' ? 'friction' : 'tension'}` }) },
   // 2026-11-01 TV3 — James: "the tv ui needs the emergence channel". The same three reads the channel makes, for agents and the CLI.
   { key: 'emergence.patterns', repo: false, usage: 'emergence patterns', about: 'what Intelligence has crystallised: co-occurrence, failure precursors, bottlenecks, cross-system causes — each with its count and confidence',
     req: () => ({ system: 'orchestrator', method: 'GET', path: '/api/emergence/patterns' }) },

@@ -434,6 +434,7 @@ const SUITES = [
   'test-macro-blocks.test.js',
   'test-macro-blocks-ui.test.js',
   'test-emergence-channel.test.js',
+  'test-tension-channel.test.js',
   'test-friction-home.test.js',
   'test-cos-ui-starts.test.js',
   'test-task-nodes.test.js',
