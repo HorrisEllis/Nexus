@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP2_the_window
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP2_the_window
+context: pipeline phase CP2_the_window of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP2_the_window (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793564674541
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793564674541
+lastSeenAt: 1793564674541
+fingerprint: null
+payload:
+  id: CP2_the_window
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/app/main.js
+  depends_on:
+    - CP1_the_machine_and_its_door
+    - MG29_the_cockpit
+    - MG_D19_only_compartments_have_a_control_panel
+  blocks: []
+  spec: null
+  graph: e7281ee2da46472e

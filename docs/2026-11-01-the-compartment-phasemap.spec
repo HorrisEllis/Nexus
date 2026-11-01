@@ -58,6 +58,48 @@ decisions:
       map's CI5 (another session's map, read, not superseded); it supersedes the TV UI's Nerve channel (lib/ui/tv-shell/nerve), whose
       snapshot route 404s (TV audit 2026-11-01), kept and archived when this is built.
     by: "his, 2026-11-01: \"I want cfr and rfr2 as a visual diagnostic map of the system, the tension and friction, showing real data moving through the system. using the eravos canvas.\""
+  # ── ADDENDUM 2026-11-01 (CP_D5–CP_D8) — James: "continue moving the rest of the systems into cos. then i want resource management for
+  # each cos compartment, and snapsjot" · later the same day, his boot logs pasted: "also can you add the nexus-sync options to the control
+  # panel". The census and the evidence are in the phases addendum below (CP1a).
+  CP_D5_every_system_into_cos:
+    status: DECIDED 2026-11-01 (his)
+    chosen: >-
+      Every process COS boots runs in its compartment, behind its wall, started by COS's supervisor (LM6's way). A system with ways still
+      open out is walled in audit mode, so the wall says on COS's ledger what it would refuse; enforce when the audit is empty (DO_D9). Each
+      system declares its own wall in its own compartment.json, equal to the census's boundaryFor; COS reads those files and never writes them.
+    by: "his, 2026-11-01: \"continue moving the rest of the systems into cos.\" (DO_D9, his the same day: \"isolated and sandboxed\")"
+    by_the_axioms: "§5.9/§5.15 (each declaration is the system's own; COS reads it), §0.0 (audit is said as audit, never called isolation), §1.2 (every crossing a ledger line)"
+  CP_D6_resources_per_compartment:
+    status: DECIDED 2026-11-01 (his; the enforcement split is decided by his axioms)
+    chosen: >-
+      Each compartment has caps (heap memory, a resident-memory limit with an act, CPU priority), set in three layers (COS's default, the
+      system's declaration, his) and read back from the OS. The OS enforces the heap cap (V8 --max-old-space-size at spawn) and the CPU
+      priority (os.setPriority, read back with os.getPriority). Without a native job object it cannot hard-cap resident memory or a CPU
+      share, so COS watches resident memory each sample and acts as he set (warn, or restart by rule), and says that CPU share is not
+      enforced. Under the halt floor COS stops nothing by itself: it holds a proposal to stop the lowest-priority, largest compartment, for
+      him. Accounting is a ring of samples per compartment (resident MB, CPU %), with peaks and averages.
+    by: "his, 2026-11-01: \"then i want resource management for each cos compartment\" (BC_D3, his the same day: \"once each system is in cos, we can have resource management per system\")"
+    by_the_axioms: "§0.0 and ResourceAllocation's own error path (a part the OS cannot enforce is not-enforced, said), §5.2/§9.1 (acts on a system are a person's or his rule's; COS proposes), §2.3 (all state observable)"
+  CP_D7_snapshots_per_compartment:
+    status: DECIDED 2026-11-01 (his; what a snapshot holds is the coder's reading, to confirm)
+    chosen: >-
+      A compartment's snapshot is its state: its data folder (compartment.json data.dataDir), with every file's bytes, taken by COS's own
+      SnapshotEngine (cos/foundation/snapshot.js), which now keeps the bytes content-addressed beside its manifest. Its code is already
+      versioned by git and Versionium. Restore stops the system, takes a snapshot of now first, archives every file it replaces or removes
+      (§0.3), writes the snapshot's files, and starts the system again if it was running. Take and restore are recorded in Versionium.
+      The coder's reading, to confirm: COS reading a compartment's state folder to snapshot it is the compartment's manager doing its job
+      (CP_D0: a compartment's states are the compartment's), not one system reaching into another's files.
+    by: "his, 2026-11-01: \"and snapsjot\""
+    by_the_axioms: "§0.3 (restore archives, never deletes), REVERSIBILITY (a snapshot before every restore), §17.12 (recorded), §8.6 (COS's SnapshotEngine extended, not a second engine)"
+  CP_D8_the_nexus_sync_in_the_panel:
+    status: DECIDED 2026-11-01 (his)
+    chosen: >-
+      The Nexus repo sync's options (on or off, how often, the first run after boot, the free-memory floor it waits for, the systems left
+      out) are Idearium's. Idearium keeps them (idearium/repo/nexus-self-settings.js, each value saying its layer: default, environment, his)
+      and serves them on its routes. COS's control panel shows and edits them through COS's manager, which asks Idearium's route and never
+      reads its files. The panel also shows what each system's part of the last sync cost.
+    by: "his, 2026-11-01: \"also can you add the nexus-sync options to the control panel\""
+    by_the_axioms: "§5.15 (Idearium owns its sync; COS asks its route), BC_D6 (each value with its layer), §17.12 (a change of them recorded)"
 stands_on: >-
   Built: COS's supervisor, its door, the handover, its UI and the cockpit (MG15–MG18, MG29); Loom run behind its wall (LM6); a repo's desktop
   (idearium/ui/desktop.html on cos/workspace); checkpoints, activity and Nexus's systems as compartments (compartment-control-and-activity);
@@ -179,4 +221,62 @@ phases:
       window (CP2). Read through each system's door: Intelligence's routes for CFR and RFR2, COS's for the compartments.
     proof: "in Clear Glass, on the running stack: a restart in COS shows as a pulse on its edges and a sigma rise on its node; a forced slow route shows as friction on its edge; every number on the map equals its owner's route at that time"
 
+  # ── ADDENDUM 2026-11-01 (CP1a, CP6a, CP5a, CP7a) — the parts of CP1, CP6, CP5 and CP7 that can be built now, not second copies of them.
+  # Census the same day (cos/manager/supervisor.js readDeclarations, 0.60.354): 14 processes declared, 2 behind a wall (loom, emerge), 12
+  # bare (architect, clear-glass, copilot, cortex, diagnostic, guardian, idearium, intelligence, intelligence-consumer, ollama-bridge,
+  # orchestrator, versionium). Ways out (compartmentFor's sovereignty): loom 0, ollama 0, every other system 3–31. His boot logs the same day:
+  # free memory down to 0.2%; cortex's memory_pressure in FAILURE_MODE; Ollama's GPU out of memory; Idearium's nexus-self sync 211 s for
+  # 11,455 files (core 58.9 MB); Versionium silent 165 s at boot. Measured here: wmic is not on his Windows 11 (26200), so
+  # cos/manager/usage.js read no system's memory on his machine ("wmic did not answer").
+  CP1a_every_system_walled_by_cos:
+    status: DONE 0.60.355 — test-cos-walls CW-01..05 (the real Ollama bridge behind its enforcing wall; a real Electron main walled through NODE_OPTIONS)
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-WALLS]
+    depends_on: [CP_D5_every_system_into_cos, LM6_cos_runs_loom_in_its_compartment, DO_D9_registry_then_cos_through_the_door]
+    files: [scripts/cos-walls.js, cos/manager/walls.js, cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, loom/templates/cos-compartment.js, architect/compartment.json, clear-glass/compartment.json, copilot/compartment.json, cortex/compartment.json, diagnostic/compartment.json, guardian/compartment.json, idearium/compartment.json, intelligence/compartment.json, ollama/compartment.json, orchestrator/compartment.json, versionium/compartment.json, idearium/cli/route-commands.js, cos/ui/overview/page.js, loom/maps/cos-testenv-map.js, tests/modules/test-cos-walls.test.js, tests/modules/test-cos-supervisor.test.js, tests/modules/run-all.js]
+    does: >-
+      Each remaining system's compartment.json declares its compartment (nexus-self-<system>) and its wall, equal to boundaryFor: mode
+      enforce where the system has no way out (ollama), audit elsewhere. COS's supervisor starts each one behind it; Clear Glass (Electron)
+      through NODE_OPTIONS. walls.js reports per system its mode, the crossings its audit has said since its last start, and whether it is
+      ready for enforce. Route GET /api/cos/walls; row `cos walls`; the Overview card says walled or audit.
+    proof: "every declared process walled, each wall equal to boundaryFor; an audit wall lets a crossing through and ledgers it; the real Ollama bridge starts behind an enforcing wall and answers /health"
+  CP6a_caps_priority_accounting:
+    status: DONE 0.60.356 — test-cos-resources CR-01..05
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-USAGE, MOD-CP-RESOURCES]
+    depends_on: [CP1a_every_system_walled_by_cos, CP_D6_resources_per_compartment]
+    files: [cos/manager/resources.js, cos/manager/usage.js, cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/cockpit/page.js, cos/ui/cockpit/sections/resources, cos/manager/proposals.js, loom/maps/cos-testenv-map.js, idearium/cli/route-commands.js, tests/modules/test-cos-resources.test.js, tests/modules/run-all.js]
+    does: >-
+      caps(name) and setCaps(name, patch, { by }), with layers and read-back. The heap cap is applied at spawn; the priority is applied and
+      read back at spawn and on change. Usage is read on Windows without wmic (PowerShell Get-Process, then tasklist). A ring of samples per
+      compartment. Resident memory over its limit gives a ledger line and the act he set; the host under the halt floor gives a proposal to
+      stop the lowest-priority, largest compartment. Routes GET /api/cos/resources and GET|PATCH /api/cos/systems/:name/caps; rows
+      `cos resources` and `cos caps`; the cockpit's Resources tab.
+    proof: "a fixture compartment's priority set and read back from the OS; its heap cap on its command line; a resident limit crossed gives the ledger line and a restart; the halt floor gives one proposal; usage reads a real pid on this Windows"
+  CP5a_snapshots_per_compartment:
+    status: OPEN
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-SNAPSHOTS]
+    depends_on: [CP1a_every_system_walled_by_cos, CP_D7_snapshots_per_compartment]
+    files: [cos/foundation/snapshot.js, cos/manager/snapshots.js, cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/cockpit/sections/snapshot, idearium/cli/route-commands.js, tests/modules/test-cos-snapshots.test.js, tests/modules/run-all.js]
+    does: >-
+      take(name, { label, by }), list(name) and restore(name, snapId, { by }) over each compartment's data folder, through SnapshotEngine
+      (includeContents, restoreFiles, a store folder of its own). Restore stops the system, snapshots now, archives, writes, and restarts.
+      Each take and restore is recorded in Versionium (lib/versionium-record.js). Routes GET|POST /api/cos/systems/:name/snapshots and
+      POST /api/cos/systems/:name/snapshots/:id/restore; row `cos snapshot`; the cockpit's Snapshot tab, no longer "not built yet".
+    proof: "a fixture compartment snapshotted, its data changed, restored: every byte back, the replaced and added files in the archive, the safety snapshot listed, the system running again"
+  CP7a_the_nexus_sync_options:
+    status: OPEN
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-NEXUS-SYNC]
+    depends_on: [CP_D8_the_nexus_sync_in_the_panel, MG29_the_cockpit]
+    files: [idearium/repo/nexus-self-settings.js, idearium/api/index.js, cos/manager/nexus-sync.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/cockpit/page.js, cos/ui/cockpit/sections/sync, idearium/cli/route-commands.js, tests/modules/test-nexus-sync-settings.test.js, tests/modules/run-all.js]
+    does: >-
+      Idearium keeps the sync's options (auto, everyMin, firstAfterSec, minFreePct, exclude) by layer, and applies them on its next tick:
+      the interval is re-armed on a change and excluded systems are left out. It serves GET|PATCH /api/nexus-self/settings with the last
+      sync's timing. COS's manager asks it (GET|PATCH /api/cos/nexus-sync, POST /api/cos/nexus-sync/run). The cockpit's Sync tab shows the
+      options and this system's part of the last sync, and leaves the system in or out. Rows `cos sync` and `cos sync set`.
+    proof: "a setting changed through COS's route lands in Idearium's file with its layer and is read back; an excluded system is left out of the next sync's set; Idearium down → the tab says so"
+
 build_order: "CP0 → CP1 → (CP9, with EAS3) → CP2 → (CP3, CP5, CP6, CP7) → CP4, CP8. The open canvas (MG_D18) and Add → Build (BC4) sit on CP2."
+# ADDENDUM 2026-11-01 — build order of the parts: CP1a → (CP6a, CP5a) ; CP7a stands alone (on MG29).

@@ -1,0 +1,321 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP5a_snapshots_per_compartment:c9224f50b10dadbc
+type: graph
+id: phase:CP5a_snapshots_per_compartment:c9224f50b10dadbc
+context: dependency graph of phase CP5a_snapshots_per_compartment
+intent: null
+summary: 32 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793564674588
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793564674588
+lastSeenAt: 1793564674588
+fingerprint: null
+payload:
+  for: CP5a_snapshots_per_compartment
+  kind: phase
+  repo: null
+  hash: c9224f50b10dadbc
+  nodes:
+    - path: cos/foundation/snapshot.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/snapshots.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-snapshots.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/snapshot.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/watchdog/actions.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/sandbox/self-repair.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/compartment/process-runner.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/axioms.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/ui/serve.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/emergence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-update.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/foundation/snapshot.js
+      to: cos/foundation/axioms.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/emergence.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/ui/serve.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cos/foundation/snapshot.js
+      kind: requires
+    - from: cos/cli/commands/snapshot.js
+      to: cos/foundation/snapshot.js
+      kind: requires
+    - from: cos/watchdog/actions.js
+      to: cos/foundation/snapshot.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/self-repair.js
+      to: cos/foundation/snapshot.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: cos/foundation/snapshot.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/sandbox/self-repair.js
+      to: cos/foundation/snapshot.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D7_snapshots_per_compartment
+    dependents: []
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D9_registry_then_cos_through_the_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D5_every_system_into_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D7_snapshots_per_compartment
+    downstream: []
+    blockedBy:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP3_one_terminal_one_cli
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP9_cos_and_idearium_one_link
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
+        files:
+          - cos/manager/server.js
+          - cos/manager/contract.json
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP6a_caps_priority_accounting
+        files:
+          - cos/manager/supervisor.js
+          - cos/manager/server.js
+          - cos/manager/contract.json
+          - idearium/cli/route-commands.js
+          - tests/modules/run-all.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP7a_the_nexus_sync_options
+        files:
+          - cos/manager/server.js
+          - cos/manager/contract.json
+          - idearium/cli/route-commands.js
+          - tests/modules/run-all.js
+    dangling: []
+    lines:
+      - layer 6 · blocked by CP1a_every_system_walled_by_cos
+      - >-
+        depends on (2): CP1a_every_system_walled_by_cos, CP_D7_snapshots_per_compartment · all
+        upstream 13
+      - 'needed by (0): —'
+      - 'same files as CP1_the_machine_and_its_door with no order between them: cos/manager/server.js'
+      - >-
+        same files as CP3_one_terminal_one_cli with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as CP9_cos_and_idearium_one_link with no order between them:
+        cos/manager/server.js
+      - >-
+        same files as CP10_miniworlds with no order between them: cos/manager/server.js,
+        cos/manager/contract.json, idearium/cli/route-commands.js
+      - 'same files as CP11_the_diagnostic_map with no order between them: cos/manager/server.js'
+      - … and 2 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+        kind: declared
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP_D7_snapshots_per_compartment
+        kind: declared

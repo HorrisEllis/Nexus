@@ -2001,3 +2001,8 @@ spec:
 # deploy to any system through COS proposals, every agent tool from the index as a step, run history with replay and rewind, the taxonomy
 # expanded (schedule, occurrence, deployment, run_history; orchestration.* events). Patterns from Temporal, Airflow, Kestra, Dagster, n8n,
 # CrewAI and Maxim, each mapped to a Nexus part. James, 2026-11-01: "rebuild brianos/orchastration ui with enterprise grade code".
+
+# ── ADDENDUM 2026-11-01 — procedures (PD) ─────────────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-11-01: "can you make that a macro or framework and then into a command like a batch but a .framework or .macro that me and copilot
+# can use. i feel we need more proceedures. maybe also have the update and diff plug into versionium. including the changelog and versoins."
+# docs/2026-11-01-procedures-phasemap.spec — PD_D0 (a procedure is a node file run by the existing engine; the name his), PD1–PD5. Mapped, not built.

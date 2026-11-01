@@ -63,6 +63,7 @@ const SPECS = [
   { spec: 'docs/emerge-system.spec', map: 'docs/2026-10-31-emerge-as-a-system-phasemap.spec' },
   { spec: 'docs/outperform.spec', map: 'docs/2026-11-01-outperform-phasemap.spec' },
   { spec: 'docs/friction-map.spec', map: 'docs/2026-11-01-friction-map-phasemap.spec' },
+  { spec: 'cos/spec/compartment.spec', map: null },   // 2026-11-01 CP0 begun — his 'continue moving the rest of the systems into cos ... resource management ... snapsjot'; compile only until every CP phase names it
   { spec: 'docs/orchestration-console.spec', map: 'docs/2026-11-01-orchestration-console-phasemap.spec' },   // 2026-11-01 OC — his "rebuild brianos/orchastration ui with enterprise grade code"   // 2026-11-01 FT — his "the friction and tension mapping, between functions and primitives"   // 2026-11-01 OP — his "could it outperform you? use guardian also. can you spec this?"   // 2026-10-31 EAS — his "a system with a server.js": Emerge sovereign, through its door, nesting
 ];
 

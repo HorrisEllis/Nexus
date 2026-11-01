@@ -24,6 +24,7 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
   const door = require('./autopilot-door.js').mount(sup, { ROOT: root });   // MG16: autopilot's routes, in its shapes (MG-003)
   const send = (res, code, body) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(body)); };
   const proposals = createProposals(sup);   // MG18: agents' held acts
+  const resources = require('./resources.js').createResources(sup, { proposals });   // CP6a: caps by layer, read back; the account; pressure → a proposal
   // MG18 (MG_D16): the one event stream the UI floats on. Every ledger line as it is written; a system's state when it changes (read each
   // second from the supervisor's own view, so a state reached without a ledger line, 'up' after health, is heard too).
   const streams = new Set(); let last = new Map();
@@ -66,7 +67,14 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
       }
       // 2026-11-01 UP9 — the same update notice for COS's UI (the kernel's lib/nexus-update.js notice)
       if (m === 'GET' && p === '/api/cos/update/notice') { try { return send(res, 200, { ok: true, ...require('../../lib/nexus-update.js').notice({ root }), updatesPage: 'http://127.0.0.1:4800/update.html' }); } catch (e) { return send(res, 500, { ok: false, error: e.message }); } }
-      if (m === 'GET' && p === '/api/cos/usage') return send(res, 200, { ok: true, usage: usage.read(sup.list(), sup.policy()) });
+      if (m === 'GET' && p === '/api/cos/usage') return send(res, 200, { ok: true, usage: await usage.readAsync(sup.list(), sup.policy()) });
+      // CP6a (his 2026-11-01: "then i want resource management for each cos compartment") — caps by layer, read back; the account
+      if (m === 'GET' && p === '/api/cos/resources') { if (u.searchParams.get('fresh') === '1') await resources.sample(); return send(res, 200, { ok: true, resources: resources.all() }); }
+      const cp = /^\/api\/cos\/systems\/([^/]+)\/caps$/.exec(p);
+      if (cp && m === 'GET') return send(res, 200, { ok: true, caps: resources.caps(decodeURIComponent(cp[1])), history: resources.history(decodeURIComponent(cp[1])) });
+      if (cp && m === 'PATCH') { try { return send(res, 200, { ok: true, caps: resources.setCaps(decodeURIComponent(cp[1]), body.patch || {}, { by: body.by }) }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
+      // CP1a (his 2026-11-01: "continue moving the rest of the systems into cos.") — every compartment's wall and what it has said
+      if (m === 'GET' && p === '/api/cos/walls') { const w = require('./walls.js').report(sup); return send(res, 200, { ok: true, walls: w, counts: { enforce: w.filter(x => x.mode === 'enforce').length, audit: w.filter(x => x.mode === 'audit').length, bare: w.filter(x => x.mode === 'none').length, enforceReady: w.filter(x => x.enforceReady).length } }); }
       const lg = /^\/api\/cos\/systems\/([^/]+)\/logs$/.exec(p);
       if (lg && m === 'GET') return send(res, 200, { ok: true, system: decodeURIComponent(lg[1]), lines: sup.logs(decodeURIComponent(lg[1]), { limit: Number(u.searchParams.get('limit')) || 200 }) });
       if (m === 'GET' && p === '/api/cos/proposals') return send(res, 200, { ok: true, proposals: proposals.list({ open: u.searchParams.get('open') === '1' }) });

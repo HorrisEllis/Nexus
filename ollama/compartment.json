@@ -33,7 +33,17 @@
       ],
       "phase": 3,
       "optional": true,
-      "healthUrl": "http://127.0.0.1:3749/health"
+      "healthUrl": "http://127.0.0.1:3749/health",
+      "compartment": "nexus-self-ollama",
+      "boundary": {
+        "mode": "enforce",
+        "allow": [
+          "{{root}}/ollama/",
+          "{{root}}/lib/",
+          "{{root}}/node_modules/"
+        ],
+        "about": "ollama's wall, declared by ollama (CP1a, 2026-11-01): COS's supervisor starts it behind this; equal to the census's boundaryFor('ollama'); enforce: it has no way out"
+      }
     }
   },
   "data": {

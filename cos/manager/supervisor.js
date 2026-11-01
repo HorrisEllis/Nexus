@@ -54,7 +54,9 @@ function httpOk(url, timeoutMs = 1500) {
 }
 
 function createSupervisor({ root, declarations = null, policy = {}, ledgerFile = null, spawnFn = spawn,
-  freeMemPct = () => os.freemem() / os.totalmem(), checkHealth = httpOk, log = (s) => console.log(`[cos] ${s}`) } = {}) {
+  freeMemPct = () => os.freemem() / os.totalmem(), checkHealth = httpOk, log = (s) => console.log(`[cos] ${s}`), hooks = {} } = {}) {
+  // hooks (CP6a): heapMB(decl) → his heap cap for a spawn; spawned(name, pid) after each spawn (the priority is applied there). Settable later
+  // with setHooks, because resources.js is made from the supervisor it serves.
   const P = { ...DEFAULTS, ...policy, restart: { ...DEFAULTS.restart, ...(policy.restart || {}) }, circuit: { ...DEFAULTS.circuit, ...(policy.circuit || {}) } };
   const decls = declarations || readDeclarations(root);
   const LEDGER = ledgerFile || path.join(process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager'), 'ledger.jsonl');
@@ -85,18 +87,26 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       const hit = d.cmdCandidates.map(c => c + ext).find(c => fs.existsSync(c));
       if (hit) cmd = hit; else if (ext) cmd += ext;
     } else if (d.cwd && !path.isAbsolute(cmd) && /[\\/]/.test(cmd)) cmd = path.join(cwd, cmd);
-    let args = [...(d.args || [])]; let env = null;
+    let args = [...(d.args || [])]; let env = null, via = null;
+    const BOUNDARY = path.join(__dirname, '..', 'compartment', 'boundary.js');
+    const walled = d.boundary && Array.isArray(d.boundary.allow);
+    // CP1a — an allowed mount reached through a junction or symlink (a worktree's node_modules) is the same mount: its real path is allowed too
+    const wall = () => { const allow = [...d.boundary.allow]; for (const a of d.boundary.allow) { try { const r = fs.realpathSync(a); if (path.resolve(r) !== path.resolve(a)) allow.push(r + path.sep); } catch (_) {} }
+      return JSON.stringify({ name: d.compartment || d.name, allow, mode: d.boundary.mode === 'audit' ? 'audit' : 'enforce' }); };
     if (/(^|[\\/])node(\.exe)?$/i.test(cmd)) {
-      if (!args.some(a => String(a).startsWith('--max-old-space-size'))) args = [`--max-old-space-size=${d.maxOldSpaceMB || P.maxOldSpaceMB}`, ...args];
+      const heap = typeof hooks.heapMB === 'function' ? hooks.heapMB(d) : null;   // CP6a: his cap, else the declaration's, else the policy's
+      if (!args.some(a => String(a).startsWith('--max-old-space-size'))) args = [`--max-old-space-size=${heap || d.maxOldSpaceMB || P.maxOldSpaceMB}`, ...args];
       if (!args.includes('--expose-gc')) args = ['--expose-gc', ...args];
       // LM6 (his 2026-11-01: "loom is already in a compartment. it needs to be managed by cos") — a process that declares its compartment's
       // wall is started behind it: cos/compartment/boundary.js preloaded, COS_BOUNDARY from its own declaration (LM4's wall)
-      if (d.boundary && Array.isArray(d.boundary.allow)) {
-        args = ['--require', path.join(__dirname, '..', 'compartment', 'boundary.js'), ...args];
-        env = { COS_BOUNDARY: JSON.stringify({ name: d.compartment || d.name, allow: d.boundary.allow, mode: d.boundary.mode === 'audit' ? 'audit' : 'enforce' }) };
-      }
+      if (walled) { args = ['--require', BOUNDARY, ...args]; env = { COS_BOUNDARY: wall() }; via = '--require'; }
+    } else if (walled && /electron/i.test(path.basename(cmd))) {
+      // CP1a (his 2026-11-01: "continue moving the rest of the systems into cos.") — Electron takes no --require on its command line; its main
+      // process reads NODE_OPTIONS (unpackaged), so the wall goes in there, its path with forward slashes (NODE_OPTIONS reads a backslash inside
+      // quotes as an escape: found by running it, the preload failed with the path's separators gone). Its children inherit it, said.
+      env = { COS_BOUNDARY: wall(), NODE_OPTIONS: `${process.env.NODE_OPTIONS ? process.env.NODE_OPTIONS + ' ' : ''}--require "${BOUNDARY.split(path.sep).join('/')}"` }; via = 'NODE_OPTIONS';
     }
-    return { cmd, args, cwd, env, shell: process.platform === 'win32' && cmd.endsWith('.cmd') };
+    return { cmd, args, cwd, env, via, shell: process.platform === 'win32' && cmd.endsWith('.cmd') };
   }
 
   function spawnNow(name, by) {
@@ -109,11 +119,12 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       s.state = 'waiting-memory'; later(s, P.memBackoffMs, () => { if (s.state === 'waiting-memory') spawnNow(name, by); }); return false;
     }
     const c = commandOf(d);
-    if (!write('spawn', name, `${c.env ? `in compartment ${d.compartment || d.name}, behind its wall (${(d.boundary.mode || 'enforce')}): ` : ''}${c.cmd} ${c.args.join(' ')}`, { by })) return false;
+    if (!write('spawn', name, `${c.via ? `in compartment ${d.compartment || d.name}, behind its wall (${(d.boundary.mode || 'enforce')}${c.via === 'NODE_OPTIONS' ? ', through NODE_OPTIONS' : ''}): ` : ''}${c.cmd} ${c.args.join(' ')}`, { by })) return false;
     let proc;
     try { proc = spawnFn(c.cmd, c.args, { cwd: c.cwd, env: { ...process.env, ...(d.env || {}), ...(c.env || {}) }, stdio: ['ignore', 'pipe', 'pipe'], shell: c.shell }); }
     catch (err) { onExit(name, proc, null, null, `spawn threw: ${err.message}`); return false; }
     s.proc = proc; s.pid = proc.pid || null; s.state = 'starting'; s.startedAt = Date.now(); s.by = by; s.sawAddrInUse = false;
+    if (typeof hooks.spawned === 'function' && s.pid) { try { hooks.spawned(name, s.pid); } catch (e) { log(`[${name}] the spawn hook threw: ${e.message}`); } }
     const pipe = (st, stream) => st && st.on('data', (b) => { const t = b.toString(); if (/EADDRINUSE/.test(t)) s.sawAddrInUse = true;
       for (const l of t.split('\n')) if (l.trim()) { log(`[${name}] ${l}`); if (/^\[cos-boundary\] /.test(l)) write('wall', name, l.replace(/^\[cos-boundary\] /, '')); s.out.push({ ts: Date.now(), stream, line: l.slice(0, 2000) }); if (s.out.length > LOG_KEEP) s.out.shift(); } });
     pipe(proc.stdout, 'out'); pipe(proc.stderr, 'err');
@@ -188,7 +199,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   function view(s) {
     const d = s.decl;
     return { name: d.name, system: d.system, state: s.state, pid: s.pid, port: d.healthUrl ? Number((/:(\d+)/.exec(d.healthUrl) || [])[1]) || null : null,
-      healthUrl: d.healthUrl || null, critical: !!d.critical, compartment: d.compartment || null, walled: !!(d.boundary && d.boundary.allow), wallMode: d.boundary ? (d.boundary.mode || 'enforce') : null, bootPhase: d.onDemand ? null : (d.phase ?? null), onDemand: !!d.onDemand,
+      healthUrl: d.healthUrl || null, critical: !!d.critical, compartment: d.compartment || null, walled: !!(d.boundary && d.boundary.allow), wallMode: d.boundary ? (d.boundary.mode || 'enforce') : null, wallVia: d.boundary && d.boundary.allow ? (/electron/i.test(String(d.cmd)) ? 'NODE_OPTIONS' : '--require') : null, bootPhase: d.onDemand ? null : (d.phase ?? null), onDemand: !!d.onDemand,
       restarts: { count: s.restarts, last: s.lastExit ? s.lastExit.ts : null, backoffMs: s.backoffMs }, circuit: { ...s.circuit }, startedAt: s.startedAt, by: s.by,
       // MG16: what autopilot's /status carried, so the door answers in its shape
       crashesInWindow: (prune(s), s.crashes.length), lastExit: s.lastExit, downSince: s.state === 'down' || s.state === 'circuit-open' ? (s.lastExit && s.lastExit.ts) : null, lastActivity: s.lastActivity };
@@ -206,7 +217,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
 
   const api = { boot, note, logs, on: (ev, fn) => bus.on(ev, fn), off: (ev, fn) => bus.off(ev, fn), declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
     policy: () => JSON.parse(JSON.stringify(P)), setPolicy: (patch, { by = 'person' } = {}) => { Object.assign(P, patch || {}); write('policy', null, `policy changed: ${JSON.stringify(patch)}`, { by }); return JSON.parse(JSON.stringify(P)); },
-    shutdown, DEFAULTS, ledgerFile: LEDGER, lastBoot: null };
+    shutdown, DEFAULTS, ledgerFile: LEDGER, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); }, commandOf: (n) => commandOf(must(n).decl), root };
   return api;
 }
 

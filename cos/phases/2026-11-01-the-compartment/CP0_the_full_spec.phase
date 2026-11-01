@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+context: pipeline phase CP0_the_full_spec of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP0_the_full_spec (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793564674532
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793564674532
+lastSeenAt: 1793564674532
+fingerprint: null
+payload:
+  id: CP0_the_full_spec
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/spec/compartment.spec
+    - docs/SPEC-REGISTRY.spec
+  depends_on:
+    - CP_D0_a_compartment_is_all_of_it
+  blocks: []
+  spec: null
+  graph: 21395dec955aba61

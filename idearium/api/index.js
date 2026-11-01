@@ -3479,6 +3479,7 @@ const ROUTE_CAP = {
   'system.homes': CAPS.READ_IDEAS,   // 0.60.129 DB17
   'system.sovereign': CAPS.READ_IDEAS,   // 0.60.133 IM1
   'system.tables': CAPS.READ_IDEAS,   // 0.60.250 SV1 — which system writes and reads which table of the shared store
+  'procedure.list': CAPS.READ_IDEAS, 'procedure.show': CAPS.READ_IDEAS, 'procedure.run': CAPS.ADMIN,   // 0.60.354 PD1 — a procedure can change Nexus's code (behind his yes)
   'update.check': CAPS.READ_IDEAS, 'update.history': CAPS.READ_IDEAS, 'update.apply': CAPS.ADMIN, 'update.rollback': CAPS.ADMIN, 'update.restart': CAPS.ADMIN, 'update.policy.get': CAPS.READ_IDEAS, 'update.policy.set': CAPS.ADMIN, 'update.auto': CAPS.READ_IDEAS,   // 0.60.252 UP3 — changing Nexus's own code is an admin act
   'system.shape': CAPS.READ_IDEAS,   // 0.60.138 IM5
   'system.nodes': CAPS.READ_IDEAS,   // 0.60.130 P33a
@@ -3794,6 +3795,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','homes'], 'system.homes'],
     ['GET',    ['api','system','sovereign'], 'system.sovereign'],
     ['GET',    ['api','system','tables'], 'system.tables'],
+    ['GET',    ['api','procedures'], 'procedure.list'],              // 0.60.354 PD1 — the .procedure library (idearium/procedures)
+    ['GET',    ['api','procedures',':id'], 'procedure.show'],
+    ['POST',   ['api','procedures',':id','run'], 'procedure.run'],   // { yes } — his yes passes its confirm steps; the CLI row refuses --yes to an agent
     ['GET',    ['api','update'], 'update.check'],                   // 0.60.252 UP3 — what is newer on GitHub, his words per release (?fetch=0 reads what was last fetched)
     ['GET',    ['api','update','history'], 'update.history'],
     ['POST',   ['api','update','apply'], 'update.apply'],           // {confirm:true} — fast-forward, data collisions archived, npm install if the lockfile changed
@@ -6233,6 +6237,24 @@ async function handle(req, res, route, query, body) {
       const out = [];
       for (const k of names) { let r; try { r = await _nexusClient.post('autopilot', `/control/${encodeURIComponent(k)}/restart`, {}, { timeout: 8000 }); } catch (e) { r = { ok: false, error: e.message }; } out.push({ process: k, ok: !!(r && r.ok), status: r && r.status, error: r && r.ok ? null : (r && r.error) || 'no answer' }); }
       return ok(res, { system: sys, restarted: out });
+    }
+    // 0.60.354 PD1 — James, 2026-11-01: "a command like a batch but a .framework or .macro that me and copilot can use" · ".procedure".
+    // Idearium serves the library it holds (idearium/procedures, §5.15); lib/automation/procedure.js runs it with exec = the one command door.
+    case 'procedure.list': case 'procedure.show': case 'procedure.run': {
+      const RP = _require('../../lib/repo-procedures.js');   // his 0.60.118 .procedure, extended (PD1): one type, one module
+      const dir = process.env.NEXUS_PROCEDURES_DIR || path.join(path.dirname(_fileURLToPath(import.meta.url)), '..', 'procedures');   // the env: a test's own folder
+      if (action === 'procedure.list') { const l = RP.library({ dir }); return ok(res, { procedures: l.map(x => ({ id: x.id, name: x.name, about: x.about, steps: x.steps.map(st => st.confirm != null ? 'confirm' : st.check ? 'check' : (st.args && st.args.command) || st.tool) })), bad: l.bad }); }
+      const proc = RP.fromLibrary(String(params.id || ''), { dir });
+      if (!proc) return err(res, 404, `no procedure ${params.id} — procedure list shows them`);
+      if (action === 'procedure.show') return ok(res, { procedure: proc });
+      const yes = !!(body && body.yes === true);
+      const T = _require('../../lib/agent-tools/tools/nexus/command.js');
+      // a step's tool is nexus.command (the one door); after his yes it runs as the person, else with an agent's limits
+      const runTool = (tool, args) => tool !== 'nexus.command' ? { ok: false, error: `a library procedure's steps are nexus.command (got ${tool})` }
+        : yes ? T.runAsPerson(args || {}, 'person') : T.command.execute(args || {}, { agent: 'procedure' });
+      const r = await RP.runSteps(proc, { runTool, yes, by: yes ? 'person' : 'procedure' });
+      try { _require('../../lib/versionium-record.js').record({ kind: 'procedure.run', system: 'idearium', by: r.run && r.run.by, message: `procedure ${proc.id}: ${r.ok ? 'done' : r.waiting ? 'waiting for his yes' : `stopped at step ${r.run && r.run.stoppedAt}`}`, change: { run: r.run } }).catch(() => {}); } catch (_) {}
+      return ok(res, { ...r, ok: true, finished: r.ok });   // the request worked; how the run ended is in run (waiting is not a refusal)
     }
     case 'update.history': { const U = _require('../../lib/nexus-update.js'); return ok(res, { history: U.history({}) }); }
     case 'update.apply': case 'update.rollback': {

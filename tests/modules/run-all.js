@@ -440,6 +440,9 @@ const SUITES = [
   'test-friction-home.test.js',
   'test-cos-ui-starts.test.js',
   'test-task-nodes.test.js',
+  'test-cos-resources.test.js',            // 0.60.356 CP6a — caps per compartment read back from the OS (priority, heap), resident limit watched, pressure → a proposal; usage without wmic
+  'test-cos-walls.test.js',                // 0.60.355 CP1a — every system walled by COS (audit where ways are open, enforce for Ollama); Electron through NODE_OPTIONS
+  'test-procedures.test.js',               // 0.60.354 PD1 — .procedure nodes: run in order, stopped at his yes, copilot the same; list/show/run from a terminal
   'test-update-popup.test.js',             // 0.60.349 UP9 — the update popup on the TV and in COS's UI; a failed check saved and shown               // 0.60.348 OC1 — the .task node: written, validated (every problem), listed, archived            // 0.60.347 MG33 — COS's manager starts its cockpit (:7797); the TV's COS channel frames it            // 0.60.346 CI6 — friction and tension are Intelligence's; Diagnostic measures; Loom asks Intelligence        // 0.60.344 TV3 — the EMERGENCE channel: patterns, liminal spaces, his runs; route, rows, page          // 0.60.343 MB2 — Settings › Macros as blocks with the gate between them, in Clear Glass             // 0.60.343 MB1 — the gate between two macro blocks: delay (fixed, range, human), backoff, onClosed          // 0.60.280 KB4–KB7 — gated dropdowns in the node, keys in macros and automation, the node upgraded, the CLI pinned
   'test-gig-features.test.js',             // 0.60.281 AP1 — a gig's package rows: features in the .gig, checkAt/rowLabels, the fill's rows
   'test-opportunity-contacts.test.js',     // 0.60.281 AP2–AP4 — contacts behind job applications: captured from the page, routes, command, tool, Settings › Applications

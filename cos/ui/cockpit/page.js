@@ -8,7 +8,7 @@
   'use strict';
   const { h, icon, esc } = COS; const $ = (id) => document.getElementById(id);
   const name = COS.param('system'); let tab = COS.param('tab') || 'overview';
-  const TABS = [['overview', 'Overview', 'grid'], ['logs', 'Logs', 'terminal'], ['events', 'Events', 'pulse'], ['api', 'API', 'api'], ['data', 'Data', 'db'], ['files', 'Files', 'folder'], ['tests', 'Tests', 'flask'], ['snapshot', 'Snapshot', 'camera']];
+  const TABS = [['overview', 'Overview', 'grid'], ['logs', 'Logs', 'terminal'], ['events', 'Events', 'pulse'], ['api', 'API', 'api'], ['data', 'Data', 'db'], ['files', 'Files', 'folder'], ['tests', 'Tests', 'flask'], ['resources', 'Resources', 'pulse'], ['snapshot', 'Snapshot', 'camera']];   // Resources: CP6a, 0.60.356
   const S = { sys: null, mounted: new Map(), subs: { state: new Set(), ledger: new Set() } };
   try { await COS.page('cockpit'); } catch (e) { return e.down ? COS.down($('sections'), e.message) : COS.say($('sections'), { glyph: 'x', title: 'This page could not start', text: esc(e.message) }); }
 
