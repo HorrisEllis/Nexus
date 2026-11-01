@@ -183,4 +183,76 @@ function metaPanelScript() {
 })()`;
 }
 
-module.exports = { MODULE_ID, VERSION, HIS_BUTTONS, SECTIONS, fieldScript, readScript, clickButtonScript, listBoxesScript, valueAtScript, shownScript, readsBack, metaTabsScript, metaPanelScript };
+// 2026-11-01 FP6 — James: "do it, I need it fiverr ready, take screenshots if you have to … I need this working for a fact." His live AI
+// Development page: Gig metadata is a table where AI ENGINE is a multi-select DROPDOWN ("Choose…"), not the radio/checkbox panels metaPanelScript
+// reads. metaDropdownScript() finds, within the "Gig metadata" section, the field rows whose control is a dropdown (a <select>, a combobox /
+// aria-haspopup, or a "Choose…"/"Select…" trigger), names each by its row label, and marks each trigger data-cg-meta-dd=<i> and the section
+// data-cg-meta-root. Read only, but for those marks. → { found, fields: [{ name, idx, native, shown }], why }
+function metaDropdownScript() {
+  return `(function(){
+  function vis(el){ if (!el) return false; var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+  function txt(el){ return String((el && (el.innerText || el.textContent)) || '').replace(/\\s+/g, ' ').trim(); }
+  function name(t){ return String(t || '').replace(/\\*/g, '').replace(/\\s+/g, ' ').trim(); }
+  var re = /gig metadata/i;
+  var head = Array.prototype.find.call(document.querySelectorAll('h1,h2,h3,h4,h5,h6,label,legend,p,span,div,strong,b'), function(e){ return vis(e) && !e.children.length && re.test(txt(e)); });
+  if (!head) return { found: false, why: 'no "Gig metadata" section on the page' };
+  function isDD(el){
+    if (el.tagName === 'SELECT') return true;
+    var role = el.getAttribute('role'); if (role === 'combobox' || role === 'listbox') return true;
+    if (el.hasAttribute('aria-haspopup')) return true;
+    if ((!el.children.length || el.querySelector('select'))) { var t = txt(el); if (/^(choose|select)\\b/i.test(t) && t.length <= 40) return true; }
+    return false;
+  }
+  var sel = 'select,[role="combobox"],[role="listbox"],[aria-haspopup],button,div,span';
+  var secEl = null;
+  for (var p = head.parentElement, i = 0; p && i < 8; p = p.parentElement, i++) {
+    if (Array.prototype.some.call(p.querySelectorAll(sel), function(e){ return vis(e) && isDD(e); })) { secEl = p; break; }
+  }
+  if (!secEl) return { found: true, fields: [], why: 'no dropdown control in the Gig metadata section' };
+  document.querySelectorAll('[data-cg-meta-dd]').forEach(function(e){ e.removeAttribute('data-cg-meta-dd'); });
+  document.querySelectorAll('[data-cg-meta-root]').forEach(function(e){ e.removeAttribute('data-cg-meta-root'); });
+  secEl.setAttribute('data-cg-meta-root', '1');
+  var cands = Array.prototype.filter.call(secEl.querySelectorAll(sel), function(e){ return vis(e) && isDD(e); });
+  // the outermost control (a widget wrapper, not its inner <select> or caret), each counted once
+  var picked = [];
+  cands.forEach(function(el){ if (picked.some(function(o){ return o.contains(el) || el.contains(o); })) return; picked.push(el); });
+  function labelFor(el){
+    var shown = txt(el);
+    for (var a = el.parentElement, k = 0; a && k < 6; a = a.parentElement, k++) {
+      var leaf = Array.prototype.find.call(a.querySelectorAll('label,legend,span,div,p,strong,b,th,td'), function(c){
+        if (!vis(c) || c.children.length || el.contains(c) || c.contains(el)) return false;
+        // never the dropdown's own innards: an option on offer, a chosen chip, or anything inside an open menu/listbox is not the field's name
+        if (c.matches('[role="option"]') || c.closest('[role="listbox"],[role="menu"],[class*="menu" i],[class*="dropdown" i],[class*="chip" i],[class*="tag" i]')) return false;
+        var t = txt(c); if (!t || t.length > 40) return false;
+        if (t === shown || /^(choose|select)\\b/i.test(t)) return false;
+        if (/\\d+\\s*\\/\\s*\\d+/.test(t) || /select up to|choose up to/i.test(t) || re.test(t)) return false;
+        return true;
+      });
+      if (leaf) return name(txt(leaf));
+    }
+    return '';
+  }
+  var fields = [];
+  picked.forEach(function(el, idx){ el.setAttribute('data-cg-meta-dd', String(idx)); var nm = labelFor(el); if (nm) fields.push({ name: nm, idx: idx, native: el.tagName === 'SELECT' || !!el.querySelector('select'), shown: txt(el).slice(0, 80) }); });
+  return { found: true, fields: fields };
+})()`;
+}
+
+// metaChosenScript(idx, value) — the honest read-back for a metadata dropdown: is `value` a CHOSEN value of the field marked data-cg-meta-dd=<idx>?
+// A selected option / checked input bearing it, OR a chip/tag with its text within the field's row but NOT inside the open menu (whose option list
+// is full of the wanted words — those are choices on offer, not choices made). → boolean. Used as choose's confirmScript and for the final read.
+function metaChosenScript(idx, value) {
+  return `(function(){
+  function norm(s){ return String(s == null ? '' : s).normalize('NFKD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim(); }
+  var want = norm(${JSON.stringify(String(value))}); if (!want) return false;
+  var trig = document.querySelector('[data-cg-meta-dd="${Number(idx)}"]'); if (!trig) return false;
+  var scope = trig.closest('tr,fieldset,[class*="row" i],li') || (trig.parentElement && trig.parentElement.parentElement) || trig.parentElement || trig;
+  function has(t){ t = norm(t); return t === want || (' ' + t + ' ').indexOf(' ' + want + ' ') >= 0; }
+  function inMenu(el){ return !!el.closest('[role="listbox"],[role="menu"],[class*="menu" i],[class*="dropdown" i],[class*="option" i]'); }
+  var sel = Array.prototype.some.call(scope.querySelectorAll('[role="option"][aria-selected="true"],[aria-checked="true"],option,input:checked'), function(e){ return (e.tagName !== 'OPTION' || e.selected) && has(e.textContent || e.value || e.getAttribute('aria-label') || ''); });
+  if (sel) return true;
+  return Array.prototype.some.call(scope.querySelectorAll('span,div,li,button,a'), function(e){ if (e.children.length > 2) return false; if (e.matches('[role="option"]') || inMenu(e)) return false; return norm(e.textContent) === want; });
+})()`;
+}
+
+module.exports = { MODULE_ID, VERSION, HIS_BUTTONS, SECTIONS, fieldScript, readScript, clickButtonScript, listBoxesScript, valueAtScript, shownScript, readsBack, metaTabsScript, metaPanelScript, metaDropdownScript, metaChosenScript };

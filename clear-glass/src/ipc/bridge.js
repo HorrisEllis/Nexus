@@ -2484,6 +2484,7 @@ class IpcBridge {
     const GF = require('../autofill/gig-fields'), OM = require('../page/option-match');
     const out = { filled: [], failed: [], over: [], left: [], gates: [] };
     const ev = async (code) => { const x = await this.driver.exec({ agentId, action: 'eval', code, by: 'person' }); return (x && x.result) || {}; };
+    const evb = async (code) => { const x = await this.driver.exec({ agentId, action: 'eval', code, by: 'person' }); return !!(x && x.result); };   // FP6 — a boolean read-back (ev wraps objects)
     const sleep = (ms) => new Promise(res => setTimeout(res, ms));
     const panel = async () => {   // read until the same choices twice (a tab's panel renders after the click), at most 4 s
       let last = null; const until = Date.now() + 4000;
@@ -2498,6 +2499,31 @@ class IpcBridge {
     for (const [tabName, raw] of Object.entries(meta)) {
       const values = (Array.isArray(raw) ? raw : [raw]).map(v => String(v).trim()).filter(Boolean);
       if (!values.length) continue;
+      // 2026-11-01 FP6 — a metadata field whose control is a dropdown (his live AI ENGINE, a multi-select "Choose…"): each value chosen through
+      // the driver's proven choose, gated on the field's chosen state (its chips), not the trigger text (which stays "Choose…"). Re-found and
+      // re-marked before each value, since a pick re-renders the row. A field that is radio/checkbox falls through to the tab-and-panel path below.
+      let DD = await ev(GF.metaDropdownScript());
+      const ddm = OM.matchOption(((DD && DD.fields) || []).map(f => f.name), tabName);
+      if (ddm.ok) {
+        const nameOf = ddm.option; done.add(nameOf);
+        out.gates.push({ key: `metadata.${nameOf}`, open: true, saw: 'dropdown' });
+        for (const v of values) {
+          DD = await ev(GF.metaDropdownScript());
+          const f = ((DD && DD.fields) || []).find(x => x.name === nameOf);
+          if (!f) { out.failed.push({ tab: nameOf, value: v, why: 'the dropdown left the page before it could be filled' }); continue; }
+          const confirmScript = GF.metaChosenScript(f.idx, v);
+          try {
+            const c = await this.driver.exec({ agentId, action: 'choose', selector: `[data-cg-meta-dd="${f.idx}"]`, option: v, confirmScript, by: 'person' });
+            if (!(await evb(confirmScript))) throw new Error(`"${(c && c.option) || v}" did not stay chosen`);   // §0.1 read it back on the page
+            out.filled.push({ tab: nameOf, value: (c && c.option) || v, changed: !(c && c.already), via: 'dropdown' });
+            out.gates.push({ key: `metadata.${nameOf}.${(c && c.option) || v}`, open: true, saw: (c && c.already) ? 'already chosen' : `chosen (${(c && (c.clickedBy || c.kind)) || 'ok'})` });
+          } catch (err) {
+            out.failed.push({ tab: nameOf, value: v, why: err.message });
+            out.gates.push({ key: `metadata.${nameOf}.${v}`, open: false, saw: err.message });
+          }
+        }
+        continue;
+      }
       T = await ev(GF.metaTabsScript());   // marked again: the page may have re-rendered since the last tab
       const tm = OM.matchOption((T.tabs || []).map(t => t.name), tabName);
       if (!tm.ok) { out.failed.push({ tab: tabName, why: `no tab "${tabName}" in Gig metadata — the tabs: ${(T.tabs || []).map(t => t.name).join(' | ')}` }); continue; }

@@ -771,3 +771,14 @@ spec:
 # value, a "*" in the name read as the name); gigParts, the template, gig-menu (one row "TAB: a, b; TAB: c") and apply() carry it. bridge.js
 # _gigMetadata(agentId, gig) → { filled, failed, over, left, gates, tabs }, from _gigFill on the Overview as r.metadata.
 # Acceptance met: tests/modules/test-gig-metadata-glass.test.js MD-01..06.
+
+# ── ADDENDUM 2026-11-01 (0.60.339 FP6) — MOD-GT6 fills metadata DROPDOWNS too ─────────────────────────────────────────────────────────────
+# James, 2026-11-01: "do it, I need it fiverr ready, take screenshots if you have to. use idearium as a map if you need, or in the docs the
+# atlas. I need this working for a fact." His live AI Development page: Gig metadata is a table where AI ENGINE is a multi-select DROPDOWN
+# ("Choose…"), not the radio/checkbox panels metaPanelScript reads. gig-fields.js gains metaDropdownScript() → { found, fields: [{ name, idx,
+# native, shown }] } (marks each trigger data-cg-meta-dd, the section data-cg-meta-root) and metaChosenScript(idx, value) → boolean (a selected
+# option / checked input, or a chip with the value outside the open menu). bridge.js _gigMetadata routes a field that matches a dropdown through
+# the driver's choose with confirmScript = metaChosenScript (one value at a time, re-found before each), read back on the page; a radio/checkbox
+# field still takes the tab-and-panel path, and a value not offered is said with the field's own list (§1.2). In production the prior field's
+# menu is dismissed by the click on the next control (universal click-away); a left-open menu is the one failure mode, named not silent.
+# Acceptance met in Clear Glass's own engine: tests/modules/test-gig-metadata-dropdown-glass.test.js DD-01..05, with a screenshot.

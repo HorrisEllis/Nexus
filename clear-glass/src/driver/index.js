@@ -745,12 +745,19 @@ class ClearDriver {
   }
   _pause(span) { const [a, b] = Array.isArray(span) ? span : [span, span]; return this._sleep(a + Math.random() * Math.max(0, b - a)); }
 
-  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'auto', openWait = [600, 1100], pickWait = [300, 650], settleWait = [500, 900], optionsWaitMs = 8000, pick = 'auto', keys = null, keysFor = null } = {}) {
+  // 2026-11-01 FP6 — James: "do it, I need it fiverr ready … I need this working for a fact." confirmScript: an optional page-side predicate
+  // (a JS string returning a boolean) that says whether the pick took, used in place of reading the trigger's own text. A multi-select (Fiverr's
+  // AI ENGINE) keeps the trigger on "Choose…" and shows the pick as a chip, while the open menu is full of the wanted words — so neither the
+  // trigger nor the section text is an honest gate; the predicate reads the chosen state. When it already reads true before opening (the value is
+  // chosen), the dropdown is left alone (opening and clicking it again would toggle the value off) and { already: true } is returned.
+  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'auto', openWait = [600, 1100], pickWait = [300, 650], settleWait = [500, 900], optionsWaitMs = 8000, pick = 'auto', keys = null, keysFor = null, confirmScript = null } = {}) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
     if (option === undefined || option === null || option === '') throw new Error('choose requires option');
     if (!selector && !column && !showsText) throw new Error('choose requires selector, column with row or shows, or shows alone');   // 0.60.283: shows alone (the Overview's SELECT A CATEGORY)
     const OM = require('../page/option-match');
+    const confirmPage = async () => { if (!confirmScript) return null; try { return !!(await this._evalJs(wc, confirmScript)); } catch (_) { return false; } };
+    if (confirmScript && (await confirmPage())) return { kind: 'widget', option, shown: '(already chosen)', already: true, via };
     // 2026-10-30 GT4 — the finder is a script run again whenever the mark is gone: a re-render (Fiverr's section after the category is
     // chosen) drops data-cg-choose, and the mark is a hint, never the only way to the element. reuse: the mark's number, kept; no new snapshot.
     const findScript = (showsNow, reuse) => `(function(sel, col, row, showsText, reuse){
@@ -919,9 +926,10 @@ class ClearDriver {
     if (!bound && !ORDER[pick]) throw new Error(`choose: pick is auto, pointer, keys or number (got ${JSON.stringify(pick)})`);
     for (const way of (bound ? ['bound'] : ORDER[pick])) {
       const label = await WAYS[way]();
-      if (label && OM.shows(shown, m.option)) { clickedBy = label; break; }
+      const took = confirmScript ? await confirmPage() : OM.shows(shown, m.option);
+      if (label && took) { clickedBy = label; break; }
     }
-    if (!clickedBy) throw new Error(`choose: "${m.option}" did not take — the dropdown shows "${shown}" (tried: ${tried.join('; ')})`);
+    if (!clickedBy) throw new Error(`choose: "${m.option}" did not take — ${confirmScript ? 'it is not chosen for its field' : `the dropdown shows "${shown}"`} (tried: ${tried.join('; ')})`);
     return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, clickedBy, tried, ...(refound.length ? { refound } : {}), ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
   }
 
