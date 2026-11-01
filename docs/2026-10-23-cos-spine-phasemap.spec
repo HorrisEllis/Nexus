@@ -91,7 +91,8 @@ phases:
 
   CS1_a_version_is_a_system_state:
     layer: foundation
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP5_states_rewind_versions in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [CS_D2_a_version_is_the_whole_state]
     files: [cos/spine/version.js, idearium/repo/snapshot.js, cos/workspace/vm-control.js, cos/compartment/qemu-runtime.js, versionium/lib/files.js]
     spec: cos/spec/cos-spine.spec
@@ -107,7 +108,7 @@ phases:
   CS2_test_every_version:
     layer: integration
     status: OPEN
-    depends_on: [CS1_a_version_is_a_system_state, SN1_open_a_snapshot_as_a_compartment]
+    depends_on: [CS1_a_version_is_a_system_state, SN1_open_a_snapshot_as_a_compartment, CP5_states_rewind_versions]
     files: [cos/spine/test-version.js, cos/testenv/index.js, cos/workspace/index.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-TEST]
@@ -119,7 +120,7 @@ phases:
   CS3_the_registry_is_the_bridge:
     layer: integration
     status: OPEN
-    depends_on: [CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake, DB16_a_registry_for_each_system]
+    depends_on: [CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake, DB16_a_registry_for_each_system, CP1_the_machine_and_its_door]
     files: [cos/spine/bridge.js, orchestrator/lib/contract-handshake.js, idearium/repo/snapshot.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-BRIDGE]
@@ -169,7 +170,7 @@ phases:
   CS6_rebuild_from_the_spec:
     layer: integration
     status: OPEN
-    depends_on: [CS1_a_version_is_a_system_state, CS4_every_system_a_compartment, CS_D3_the_spec_rebuilds_the_system]
+    depends_on: [CS1_a_version_is_a_system_state, CS4_every_system_a_compartment, CS_D3_the_spec_rebuilds_the_system, CP5_states_rewind_versions]
     files: [cos/spine/rebuild.js, cos/spine/version.js, cos/workspace/index.js, lib/emerge/compiler/kg-builder.js, lib/emerge/compiler/phase-specs.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-REBUILD]
@@ -195,7 +196,7 @@ phases:
   CS9_every_project_a_compartment:
     layer: integration
     status: OPEN
-    depends_on: [CS4_every_system_a_compartment, CS1_a_version_is_a_system_state, CS_D6_every_project_a_compartment]
+    depends_on: [CS4_every_system_a_compartment, CS1_a_version_is_a_system_state, CS_D6_every_project_a_compartment, CP5_states_rewind_versions]
     files: [cos/spine/projects.js, idearium/repo/index.js, lib/cos-bridge.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-PROJECTS]

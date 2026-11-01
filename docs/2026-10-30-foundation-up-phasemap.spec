@@ -84,7 +84,7 @@ phases:
     proof: "two systems' doors: a packet dropped in one's input folder comes out of its output, one by one, with its intent; a bad packet refused with its reason"
   F4_raid_routes_the_doors:
     status: OPEN
-    depends_on: [F3_the_door, CS11_raid_in_the_exe, MG23_allocation_and_balance]
+    depends_on: [F3_the_door, CS11_raid_in_the_exe, MG23_allocation_and_balance, CP6_resources]
     files: [cos/manager/router.js]
     does: "COS routes packets between doors with RAID: which system, which agent, and the load; each route a RESOLVE or an UNRESOLVE on the ledger"
     proof: "a packet routed across two systems by RAID's decision, the decision named on the ledger; an unroutable packet surfaces as noise (ESS §8)"

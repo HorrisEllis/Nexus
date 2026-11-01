@@ -228,7 +228,8 @@ decisions:
     by_the_axioms: "§5.10 (the contract is what a UI reads), §5.12 (the UI is disposable: the panel is generated), §8.6 (Idearium's desktop and MG29's cockpit reused), §5.15 (reached only through its door)"
 phases:
   MG31_the_compartment_window:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP2_the_window in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [MG_D19_only_compartments_have_a_control_panel, MG29_the_cockpit, MG_D18_no_side_bar_every_compartment]
     files: [cos/ui/window, cos/ui/cockpit, cos/manager/server.js, cos/manager/contract.json, cos/app/main.js]
     spec: cos/spec/cos-manager.spec
@@ -277,7 +278,8 @@ phases:
     proof: "a genesis compartment's data is read through its routes; a direct file read from outside it is not used anywhere (the census)"
 
   MG3_the_state_manager:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP5_states_rewind_versions in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [MG0b_the_full_spec, CS1_a_version_is_a_system_state, SN0_one_branch, SN2_run_in_parallel, VM1_control_like_vmware]
     files: [cos/manager/state.js, cos/manager/routes.js, idearium/cli/route-commands.js]
     spec: cos/spec/cos-manager.spec
@@ -288,7 +290,8 @@ phases:
     proof: "a compartment versioned, branched, rewound and run beside its branch, each act on the ledger, through the route and the command"
 
   MG4_resources_per_compartment:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP6_resources in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [MG3_the_state_manager, CS5_caps_per_compartment, CS7_spawn_despawn_and_balance]
     files: [cos/manager/resources.js]
     spec: cos/spec/cos-manager.spec
@@ -308,7 +311,8 @@ phases:
     proof: "each kind listed, edited, validated, versioned and reverted through its routes and commands"
 
   MG6_settings_by_template_and_type:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP7_settings in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [MG0b_the_full_spec, AS1_one_resolver_global_then_repo]
     files: [cos/manager/settings.js]
     spec: cos/spec/cos-manager.spec
@@ -318,7 +322,7 @@ phases:
 
   MG7_automation_macros_and_hats:
     status: OPEN
-    depends_on: [MG3_the_state_manager, CS10_hats_bound_to_the_compartment, CON8_nexus_server_hook]
+    depends_on: [MG3_the_state_manager, CS10_hats_bound_to_the_compartment, CON8_nexus_server_hook, CP1_the_machine_and_its_door, CP5_states_rewind_versions]
     files: [cos/manager/macros.js, lib/hat-seed.js]
     spec: cos/spec/cos-manager.spec
     blocks: [MOD-MG-MACROS]
@@ -330,7 +334,7 @@ phases:
 
   MG8_the_factory:
     status: OPEN
-    depends_on: [MG5_browsers_and_editors, SV2_into_a_compartment, CE1_the_compartment_machine, EL1_electron_compiler]
+    depends_on: [MG5_browsers_and_editors, SV2_into_a_compartment, CE1_the_compartment_machine, EL1_electron_compiler, CP1_the_machine_and_its_door]
     files: [cos/manager/factory.js]
     spec: cos/spec/cos-manager.spec
     blocks: [MOD-MG-FACTORY]
@@ -338,7 +342,8 @@ phases:
     proof: "a web-server compartment and a test-env compartment made from templates, each answering its health route"
 
   MG9_the_console_ui:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP2_the_window in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [MG3_the_state_manager, MG4_resources_per_compartment, MG5_browsers_and_editors, MG6_settings_by_template_and_type, MG7_automation_macros_and_hats, MG8_the_factory, MG_D1_ui_isolated_per_component, DB26_the_ui_floats_on_the_registry, COSA12_vmware_window]
     files: [cos/ui]
     spec: cos/spec/cos-manager.spec
@@ -351,7 +356,7 @@ phases:
 
   MG10_categories:
     status: OPEN
-    depends_on: [MG0b_the_full_spec, MG5_browsers_and_editors, MG6_settings_by_template_and_type, CS4_every_system_a_compartment, MG_D2_category_is_a_registry_record]
+    depends_on: [MG0b_the_full_spec, MG5_browsers_and_editors, MG6_settings_by_template_and_type, CS4_every_system_a_compartment, MG_D2_category_is_a_registry_record, CP7_settings]
     files: [cos/manager/categories.js, cos/manager/routes.js, idearium/cli/route-commands.js]
     spec: cos/spec/cos-manager.spec
     blocks: [MOD-MG-CATEGORIES]
@@ -374,7 +379,7 @@ phases:
     proof: "driven in Clear Glass: a category made, edited against its schema, and removed; systems shows every system compartment"
   MG12_the_exe_is_the_compartment_manager:
     status: OPEN
-    depends_on: [MG3_the_state_manager, MG4_resources_per_compartment, MG9_the_console_ui, MG11_category_manager_ui, MG_D3_data_through_the_compartment, COSA6_the_exe, COSA12_vmware_window, CS8_the_cos_screen, VM1_control_like_vmware]
+    depends_on: [MG3_the_state_manager, MG4_resources_per_compartment, MG9_the_console_ui, MG11_category_manager_ui, MG_D3_data_through_the_compartment, COSA6_the_exe, COSA12_vmware_window, CS8_the_cos_screen, VM1_control_like_vmware, CP2_the_window, CP5_states_rewind_versions, CP6_resources]
     files: [cos/app/desktop/main.js, cos/app/desktop/ui, cos/app/controller.js, cos/manager/routes.js]
     spec: cos/spec/cos-manager.spec
     blocks: [MOD-MG-EXE-MANAGER]
@@ -390,7 +395,8 @@ phases:
       It gathers CS8's screen into it rather than building a second one.
     proof: "driven in Clear Glass on the exe's UI: a fixture compartment rewound to a checkpoint, its diagnostics read, a version restored, its data browsed through its route, a tool run"
   MG13_cli_in_the_exe:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP3_one_terminal_one_cli in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [CON1_one_door_client, CON2_grammar_and_completion, CON5_pane, MG12_the_exe_is_the_compartment_manager]
     files: [cos/app/cli.js, cos/app/desktop/main.js]
     spec: cos/spec/cos-manager.spec
@@ -400,7 +406,8 @@ phases:
       through CON1's one door when Idearium is up, and the local COS verbs when it is not.
     proof: "`COS.exe status` and `COS.exe cos category list` print without opening a window; the pane runs the same rows"
   MG14_live_thumbnails:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP2_the_window in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [MG12_the_exe_is_the_compartment_manager, CS3_the_registry_is_the_bridge]
     files: [cos/app/desktop/thumbnails.js, cos/app/desktop/ui]
     spec: cos/spec/cos-manager.spec
@@ -502,7 +509,8 @@ phases:
     does: "build a template or archetype from parts, declare its runtime, allocation, networks, volumes, settings and UI, validate, try it in a scratch compartment, save; backend, route, row, screen"
     proof: "a web-server template built from parts, tried, saved and deployed; driven in Clear Glass"
   MG23_allocation_and_balance:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP6_resources in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [MG4_resources_per_compartment, CS7_spawn_despawn_and_balance, CS11_raid_in_the_exe, MG15_the_supervisor_in_cos]
     files: [cos/manager/balancer.js, cos/manager/contract.json, tests/modules/test-cos-balancer.test.js]
     spec: cos/spec/cos-manager.spec
@@ -510,7 +518,8 @@ phases:
     does: "the host as a pool, each compartment allocated and throttled from it; RAID decides balance from .benchmark nodes and usage, COS acts and names the decision; pins"
     proof: "two fixture compartments under load: RAID moves load to the idle one; an over-commit refused with the numbers"
   MG24_network_manager:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP6_resources in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [MG15_the_supervisor_in_cos, SV2_into_a_compartment]
     files: [cos/manager/network.js, cos/compartment/qemu-runtime.js, cos/manager/contract.json, tests/modules/test-cos-network.test.js]
     spec: cos/spec/cos-manager.spec
@@ -518,7 +527,8 @@ phases:
     does: "virtual networks (isolated, nat, bridged), join, names and rules through his dns and firewall engines, bridges to the host through proxy, tunnel or tap, to run a server or service"
     proof: "a web-server compartment on an isolated network, bridged to the host on one port, answers from the host and from no other compartment"
   MG25_storage_manager:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP6_resources in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [MG15_the_supervisor_in_cos, MG3_the_state_manager, SV2_into_a_compartment]
     files: [cos/manager/storage.js, cos/manager/contract.json, tests/modules/test-cos-storage.test.js]
     spec: cos/spec/cos-manager.spec
@@ -526,7 +536,8 @@ phases:
     does: "storage locations (folder, drive, his object-storage engine), volumes with quotas, mounted into compartments, use read back, taken with versions"
     proof: "a volume made, mounted into a fixture compartment, written, its use read back, taken with a version"
   MG26_branch_benchmark_merge:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP5_states_rewind_versions in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [MG3_the_state_manager, SN0_one_branch, SN2_run_in_parallel, SN3_measured_by_rfr2]
     files: [cos/manager/merge.js, cos/manager/state.js, cos/manager/contract.json, tests/modules/test-cos-merge.test.js]
     spec: cos/spec/cos-manager.spec
@@ -534,7 +545,8 @@ phases:
     does: "a branch runs beside its base under the same load, is benchmarked and friction tested, and merges back only on a MergeReport that says merge (or his ask), through lib/safe-apply.js mergeBack"
     proof: "a slower branch refused with its numbers; a faster one with equal friction merged, the target versioned first"
   MG27_state_and_resource_screens:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP2_the_window in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [MG23_allocation_and_balance, MG24_network_manager, MG25_storage_manager, MG26_branch_benchmark_merge, MG18_the_supervisor_screen]
     files: [cos/ui/timeline, cos/ui/resources, cos/manager/contract.json]
     spec: cos/spec/cos-manager.spec
