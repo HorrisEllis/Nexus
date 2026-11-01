@@ -160,6 +160,14 @@ spec:
       behavioral_contracts: ["Diagnostic probes and measures; it is asked through its route, never its files"]
       error_paths: ["Diagnostic down → no answer; said by the caller"]
 
+    - id: IF-CORTEX-GAPS
+      name: cortex-gaps
+      path: cortex/boot.js
+      description: "Cortex, which owns the gaps table and the fault taxonomy: GET /api/gaps?status=open, and (CI7) GET /api/gaps/tension — the open gaps scored by its own fault taxonomy, grouped by system."
+      exports: ["GET /api/gaps/tension → { ok, bySystem: { <system>: { total, count, top } }, scoredBy }"]
+      behavioral_contracts: ["the fault taxonomy is Cortex's; others ask its route"]
+      error_paths: ["Cortex down → no answer; the caller says so"]
+
   modules:
 
     - id: MOD-CI-FEED
@@ -256,6 +264,25 @@ spec:
       behavioral_contracts: ["Diagnostic stays the measurer; Intelligence the meaning", "the per-system shape Loom's callers read is unchanged"]
       error_paths: ["Diagnostic down → 502 naming it, with CFR's field still given"]
       acceptance: ["with a stand-in Diagnostic: Intelligence's friction names diagnostic and cfr as sources; Loom's /api/friction answers the same per-system values through Intelligence"]
+
+    - id: MOD-CI-TENSION
+      name: tension-computed-here
+      uuid: nexus-intelligence-tension-v1-0000-2026-1101-001
+      path: intelligence/friction.js
+      phase: CI7_the_tension_formula_home
+      description: >-
+        James, 2026-11-01: "migrating looms friction and tension system to the intelligence system". The tension formula moves from Diagnostic
+        (its §TENSION-05: monitor tension = friction × (1 + monitor gaps × 0.2) × (1 + max(0, slope) × 2); loop tension = the open gaps scored by
+        the fault taxonomy; tension = monitor + 0.3 × loop; regime critical > 2, turbulent > 1, elevated > 0.4) into Intelligence. Inputs only
+        through routes: Diagnostic's GET /friction (friction, slope, sigma and now its monitor gap count, per system — it measures) and Cortex's
+        GET /api/gaps/tension (every open gap, scored by its own fault taxonomy). Diagnostic's /tension is kept, superseded: Loom's fallback only.
+      deps: [{ name: diagnostic-measure }, { name: cortex-gaps }]
+      schema_refs: [InterconnectStatus]
+      exports: ["tensionOf(frictionBySystem, loopsBySystem) → { bySystem, max, regime }", "REGIMES"]
+      gate_pipeline: ["GATE-CI7-001: friction per system from Diagnostic", "GATE-CI7-002: open loops per system from Cortex (all of them, not the newest 20)", "GATE-CI7-003: the formula, each part kept; a missing source said"]
+      behavioral_contracts: ["the same numbers as Diagnostic's formula for the same inputs", "Cortex down → loop tension null, said; monitor tension still given"]
+      error_paths: ["Diagnostic down → 502 naming it"]
+      acceptance: ["with stand-ins: tension per system equals Diagnostic's formula; every open gap counted (25 gaps → 25, not 20); Cortex down → loops null, said"]
 
   events:
     causal:

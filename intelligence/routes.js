@@ -410,11 +410,18 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
       let field = null, fieldWhy = null;
       try { const f = getField(); field = { friction: f.friction ?? null, coherence: f.coherence ?? null, regime: f.regime ?? null }; } catch (e) { fieldWhy = e.message; }
       let d = null, why = null;
-      try { d = await require('../lib/nexus-client.js').call('diagnostic', 'GET', `/${what}`, undefined, { timeout: 4000 }); } catch (e) { why = e.message; }
+      // 2026-11-01 CI7 — tension is computed here (intelligence/friction.js) from Diagnostic's /friction; Diagnostic's /tension is superseded
+      try { d = await require('../lib/nexus-client.js').call('diagnostic', 'GET', '/friction', undefined, { timeout: 4000 }); } catch (e) { why = e.message; }
       const sources = [{ source: 'diagnostic', what: `per-system ${what} (measured)`, ok: !!(d && d.ok !== false), ...(d && d.ok !== false ? {} : { why: why || (d && d.error) || 'no answer' }) },
         { source: 'cfr', what: 'the field\'s friction and coherence (Intelligence)', ok: !!field, ...(field ? {} : { why: fieldWhy || 'no field' }) }];
       if (!d || d.ok === false) { json(502, { ok: false, error: `diagnostic did not answer: ${why || (d && d.error) || 'no answer'}`, field, sources }); return true; }
-      json(200, { ok: true, [what]: d[what] || {}, field, sources, ts: d.ts || Date.now(), by: 'intelligence' });
+      if (what === 'friction') { json(200, { ok: true, friction: d.friction || {}, field, sources, ts: d.ts || Date.now(), by: 'intelligence' }); return true; }
+      // tension: Cortex's open gaps scored by its fault taxonomy (its route), then the formula, here
+      let loops = null, lwhy = null;
+      try { const g = await require('../lib/nexus-client.js').call('cortex', 'GET', '/api/gaps/tension', undefined, { timeout: 4000 }); if (g && g.ok !== false) loops = g.bySystem || {}; else lwhy = (g && g.error) || 'no answer'; } catch (e) { lwhy = e.message; }
+      sources.splice(1, 0, { source: 'cortex', what: 'open gaps scored by its fault taxonomy', ok: !!loops, ...(loops ? {} : { why: lwhy }) });
+      const T = require('./friction.js').tensionOf(d.friction || {}, loops);
+      json(200, { ok: true, tension: T.bySystem, max: T.max, regime: T.regime, loopsKnown: T.loopsKnown, field, sources, ts: Date.now(), by: 'intelligence', formula: 'intelligence/friction.js (Diagnostic §TENSION-05, moved)' });
       return true;
     }
 

@@ -624,6 +624,15 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // 2026-11-01 CI7 — every open gap scored by Cortex's own fault taxonomy, grouped by system, for Intelligence's tension (Intelligence asks this
+  // route; it never requires Cortex's files)
+  if (p === '/api/gaps/tension' && method === 'GET') {
+    try {
+      const rows = jaaDB.query('gaps', { status: 'open' }, { orderBy: 'ts', order: 'DESC', limit: 100000 });
+      json(res, 200, { ok: true, bySystem: require('./self-heal/fault-taxonomy').tensionBySystem(rows), open: rows.length, scoredBy: 'cortex fault taxonomy (scoreTension)' });
+    } catch (e) { json(res, 500, { ok: false, error: `gaps tension: ${e.message}` }); }
+    return;
+  }
   if (p === '/api/gaps') {
     if (method === 'POST') {
       const body = await readBody(req);

@@ -38,6 +38,13 @@ Not applicable — no files have moved yet per the spec's own statement; there i
 
 `meta/cfr/` is very likely the real source of the sigma/friction/regime math `loom`'s own `GET /api/friction`/`GET /api/tension` proxy from — this atlas does not confirm that link directly (would require reading `meta/cfr/`'s own source), but it is the most plausible candidate found this session for the ":7825 diagnostic kernel" `loom.spec` and `registry-components.js` disagree about (see `loom-atlas.md`'s own note on this). Flagged as a lead, not a confirmed answer.
 
+**The formula moved too, 2026-11-01 (CI7, 0.60.350).** James: "migrating looms friction and tension system to the intelligence system".
+- **Intelligence computes tension.** `intelligence/friction.js` holds the formula, Diagnostic's §TENSION-05 moved unchanged. Its inputs come by
+  route: Diagnostic's `/friction` (it measures) and Cortex's new `/api/gaps/tension` (every open gap, scored by Cortex's own fault taxonomy).
+- **Two bugs gone.** Diagnostic's `/tension` counted only the newest 20 open gaps, and it required a Cortex file directly. Both went with the
+  move.
+- **Diagnostic's `/tension` is superseded and kept,** as Loom's fallback.
+
 **Confirmed and moved, 2026-11-01 (CI6, 0.60.346).** James: "Working, but it lives outside Intelligence, and Intelligence's atlas still marks
 Loom's friction source as unconfirmed. move that to the intelligence system.." Read in the tree:
 - **Where Loom's numbers came from.** Loom's `/api/friction` and `/api/tension` were the Diagnostic kernel's per-system monitors
