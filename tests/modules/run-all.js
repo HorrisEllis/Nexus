@@ -276,6 +276,7 @@ const SUITES = [
   'test-provider-host-respawn.js',
   'test-userscript-mixed-content-fix.js',
   'test-contract-handshake-paths.js',
+  'test-emerge-in-nexus.test.js',   // 0.60.339 EAS3 — Emerge from its own repo, locked, run by COS behind its wall, used through its door
   'test-cos-walled.test.js',   // 0.60.338 LM6 — COS's supervisor runs Loom in its compartment, behind its wall
   'test-cos-ui.test.js',   // 0.60.337 MG18/MG29 — COS's UI above the event bus: the cockpit server's gates, the contract, the stream, proposals, logs, usage, an act in Clear Glass
   'test-cos-ui-theme.test.js',   // 0.60.337 MG_D11 — COS's look equals Idearium's, token by token

@@ -184,7 +184,7 @@ const SYS = {
   guardian:   { port:7820,  host:'127.0.0.1', label:'Guardian',    color:'#9b7fe8' },
   idearium:   { port:4800,  host:'127.0.0.1', label:'Idearium',    color:'#4a9eff' },
   architect:  { port:3747,  host:'127.0.0.1', label:'Architect',   color:'#ef9f27' },
-  emerge:     { port:4242,  host:'127.0.0.1', label:'Emerge IDE',  color:'#3ecf8e' },
+  emerge:     { port:4900,  host:'127.0.0.1', label:'Emerge',      color:'#3ecf8e' },   // 0.60.339 EAS3: Emerge's own door (emerge/server.js), was the old IDE's :4242
   diagnostic: { port:7825,  host:'127.0.0.1', label:'Diagnostic',  color:'#ff6b35', healthPath:'/status' },
   ollama:     { port:3749, host:'127.0.0.1', label:'Ollama Bridge', color:'#00ff88', healthPath:'/health' },
   copilot:    { port:3750, host:'127.0.0.1', label:'Co-pilot',      color:'#cc44ff', healthPath:'/health' },
@@ -2446,7 +2446,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     return json(res,404,{ok:false,error:`idearium route not found: ${M} /api/idearium/${action}`});
   }
 
-  // ── Emerge proxy — /api/emerge/* → emerge-ide.js :4242 ─────────────────────
+  // ── Emerge proxy — /api/emerge/* → Emerge's door :4900 (0.60.339 EAS3; was emerge-ide.js :4242) ───────────
   // emerge-ide.js no longer auto-opens its own browser window.
   // All emerge API calls route through orchestrator.
   if (top === 'api' && sub === 'emerge') {
@@ -2455,7 +2455,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
 
     // SSE stream from emerge
     if (M === 'GET' && action === 'events') {
-      const r = http.request({ hostname:'127.0.0.1', port:4242, path:'/events', method:'GET',
+      const r = http.request({ hostname:'127.0.0.1', port:4900, path:'/events', method:'GET',
         headers:{'Accept':'text/event-stream'} }, upstream => {
         res.writeHead(upstream.statusCode, upstream.headers);
         upstream.pipe(res);
