@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP8_agents_in_the_compartment
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP8_agents_in_the_compartment
+context: pipeline phase CP8_agents_in_the_compartment of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP8_agents_in_the_compartment (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793564674558
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793564674558
+lastSeenAt: 1793564674558
+fingerprint: null
+payload:
+  id: CP8_agents_in_the_compartment
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager
+    - guardian
+  depends_on:
+    - CP1_the_machine_and_its_door
+    - CP3_one_terminal_one_cli
+  blocks: []
+  spec: null
+  graph: 6c114e2072db6bcf

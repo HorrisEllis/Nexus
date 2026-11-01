@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP9_cos_and_idearium_one_link
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP9_cos_and_idearium_one_link
+context: pipeline phase CP9_cos_and_idearium_one_link of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP9_cos_and_idearium_one_link (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793564674561
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793564674561
+lastSeenAt: 1793564674561
+fingerprint: null
+payload:
+  id: CP9_cos_and_idearium_one_link
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/host/index.js
+    - cos/manager/server.js
+    - idearium/repo/index.js
+    - idearium/api/index.js
+    - idearium/repo/nexus-self.js
+  depends_on:
+    - CP1_the_machine_and_its_door
+    - CP_D1_cos_and_idearium_one_link
+    - EAS3_emerge_at_the_top_of_nexus
+  blocks: []
+  spec: null
+  graph: 406d625d940555aa

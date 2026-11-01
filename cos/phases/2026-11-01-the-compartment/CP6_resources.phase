@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP6_resources
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP6_resources
+context: pipeline phase CP6_resources of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP6_resources (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793564674554
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793564674554
+lastSeenAt: 1793564674554
+fingerprint: null
+payload:
+  id: CP6_resources
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager
+    - cos/services
+  depends_on:
+    - CP1_the_machine_and_its_door
+  blocks: []
+  spec: null
+  graph: f8e2c75e061c0011

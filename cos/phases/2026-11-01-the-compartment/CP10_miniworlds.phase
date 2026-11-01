@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
+context: pipeline phase CP10_miniworlds of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP10_miniworlds (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793564674564
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793564674564
+lastSeenAt: 1793564674564
+fingerprint: null
+payload:
+  id: CP10_miniworlds
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - idearium/cli/route-commands.js
+  depends_on:
+    - CP_D2_the_miniworld_is_the_meta_layer
+    - CP1_the_machine_and_its_door
+    - CP5_states_rewind_versions
+    - CP9_cos_and_idearium_one_link
+  blocks: []
+  spec: null
+  graph: 3e02c548eb7fd1aa

@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+context: pipeline phase CP1a_every_system_walled_by_cos of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP1a_every_system_walled_by_cos (?) — 21 file(s)
+system: idearium
+tags: []
+exported_at: 1793564674580
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793564674580
+lastSeenAt: 1793564674580
+fingerprint: null
+payload:
+  id: CP1a_every_system_walled_by_cos
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - scripts/cos-walls.js
+    - cos/manager/walls.js
+    - cos/manager/supervisor.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - loom/templates/cos-compartment.js
+    - architect/compartment.json
+    - clear-glass/compartment.json
+    - copilot/compartment.json
+    - cortex/compartment.json
+    - diagnostic/compartment.json
+    - guardian/compartment.json
+    - idearium/compartment.json
+    - intelligence/compartment.json
+    - ollama/compartment.json
+    - orchestrator/compartment.json
+    - versionium/compartment.json
+    - idearium/cli/route-commands.js
+    - cos/ui/overview/page.js
+    - tests/modules/test-cos-walls.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - CP_D5_every_system_into_cos
+    - LM6_cos_runs_loom_in_its_compartment
+    - DO_D9_registry_then_cos_through_the_door
+  blocks:
+    - MOD-CP-WALLS
+  spec: cos/spec/compartment.spec
+  graph: abbe83577a3b5a96

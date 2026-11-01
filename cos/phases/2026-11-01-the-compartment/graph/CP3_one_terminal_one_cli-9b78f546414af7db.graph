@@ -1,0 +1,234 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP3_one_terminal_one_cli:9b78f546414af7db
+type: graph
+id: phase:CP3_one_terminal_one_cli:9b78f546414af7db
+context: dependency graph of phase CP3_one_terminal_one_cli
+intent: null
+summary: 20 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793564674546
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793564674546
+lastSeenAt: 1793564674546
+fingerprint: null
+payload:
+  for: CP3_one_terminal_one_cli
+  kind: phase
+  repo: null
+  hash: 9b78f546414af7db
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+    dependents:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP8_agents_in_the_compartment
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
+    downstream:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP8_agents_in_the_compartment
+    blockedBy:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP6a_caps_priority_accounting
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP7a_the_nexus_sync_options
+        files:
+          - idearium/cli/route-commands.js
+    dangling: []
+    lines:
+      - layer 6 · blocked by CP1_the_machine_and_its_door
+      - 'depends on (1): CP1_the_machine_and_its_door · all upstream 12'
+      - 'needed by (1): CP8_agents_in_the_compartment'
+      - 'same files as CP10_miniworlds with no order between them: idearium/cli/route-commands.js'
+      - >-
+        same files as CP1a_every_system_walled_by_cos with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as CP6a_caps_priority_accounting with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as CP5a_snapshots_per_compartment with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as CP7a_the_nexus_sync_options with no order between them:
+        idearium/cli/route-commands.js
+    edges:
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+        kind: declared
