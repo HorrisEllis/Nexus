@@ -433,7 +433,8 @@ const SUITES = [
   'test-gated-dropdowns.test.js',
   'test-macro-blocks.test.js',
   'test-macro-blocks-ui.test.js',
-  'test-emergence-channel.test.js',        // 0.60.344 TV3 — the EMERGENCE channel: patterns, liminal spaces, his runs; route, rows, page          // 0.60.343 MB2 — Settings › Macros as blocks with the gate between them, in Clear Glass             // 0.60.343 MB1 — the gate between two macro blocks: delay (fixed, range, human), backoff, onClosed          // 0.60.280 KB4–KB7 — gated dropdowns in the node, keys in macros and automation, the node upgraded, the CLI pinned
+  'test-emergence-channel.test.js',
+  'test-friction-home.test.js',            // 0.60.346 CI6 — friction and tension are Intelligence's; Diagnostic measures; Loom asks Intelligence        // 0.60.344 TV3 — the EMERGENCE channel: patterns, liminal spaces, his runs; route, rows, page          // 0.60.343 MB2 — Settings › Macros as blocks with the gate between them, in Clear Glass             // 0.60.343 MB1 — the gate between two macro blocks: delay (fixed, range, human), backoff, onClosed          // 0.60.280 KB4–KB7 — gated dropdowns in the node, keys in macros and automation, the node upgraded, the CLI pinned
   'test-gig-features.test.js',             // 0.60.281 AP1 — a gig's package rows: features in the .gig, checkAt/rowLabels, the fill's rows
   'test-opportunity-contacts.test.js',     // 0.60.281 AP2–AP4 — contacts behind job applications: captured from the page, routes, command, tool, Settings › Applications
   'test-snowflake-steps.test.js',          // 0.60.281 SN1 — Snowflake as a step in macros and workflows (route, unroute, start, wait, check, stop)

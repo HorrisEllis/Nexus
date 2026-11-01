@@ -73,6 +73,6 @@ module.exports = [
   _c('gaps.domain',        'GET', '/api/gaps/:domain',       'Open gaps for one domain (system | user-model)', { tags: ['analysis'] }),
 
   // ── Friction + tension (2026-08-09 — live-proxied from the real diagnostic kernel) ─
-  _c('friction',           'GET', '/api/friction',           'Per-system friction score, proxied live from the diagnostic kernel (:7825)', { tags: ['analysis'] }),
-  _c('tension',            'GET', '/api/tension',            'Per-system tension (friction + gap accumulation), proxied live from the diagnostic kernel', { tags: ['analysis'] }),
+  _c('friction',           'GET', '/api/friction',           'Per-system friction, Intelligence\'s (CI6, 2026-11-01): asked of /api/intelligence/friction, Diagnostic\'s raw measure if Intelligence is down', { tags: ['analysis'] }),
+  _c('tension',            'GET', '/api/tension',            'Per-system tension, Intelligence\'s (CI6, 2026-11-01), from the diagnostic kernel', { tags: ['analysis'] }),
 ];

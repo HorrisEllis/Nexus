@@ -264,6 +264,8 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
     // §0.39.300 SY2 — gap synthesis (intelligence/synthesis): Nexus's own gaps, read as one set, ranked by leverage
     '/api/intelligence/synthesis', '/api/intelligence/synthesis/run', '/api/intelligence/synthesis/ingest',
     '/api/intelligence/synthesis/history', '/api/intelligence/synthesis/fill', '/api/intelligence/synthesis/themes',
+    // 2026-11-01 CI6 — James: "move that to the intelligence system". Friction and tension are Intelligence's to mean (Diagnostic measures)
+    '/api/intelligence/friction', '/api/intelligence/tension',
   ]);
   const liminal = require('./liminal-space');
   const nexusBus = require('../lib/nexus/nexus-bus');
@@ -398,6 +400,21 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
       }
       nexusBus.emit(type, body.payload || {}, { source: body.source || 'relay', causedBy: body.causedBy || null });
       json(200, { ok: true });
+      return true;
+    }
+
+    // 2026-11-01 CI6 (MOD-CI-FRICTION) — one meaning of friction and tension, here. Diagnostic measures each system (asked through its door,
+    // :7825 GET /friction, /tension); CFR's field friction is Intelligence's own. Each part names its source; a silent source is said, never 0.
+    if (pathname === '/api/intelligence/friction' || pathname === '/api/intelligence/tension') {
+      const what = pathname.endsWith('friction') ? 'friction' : 'tension';
+      let field = null, fieldWhy = null;
+      try { const f = getField(); field = { friction: f.friction ?? null, coherence: f.coherence ?? null, regime: f.regime ?? null }; } catch (e) { fieldWhy = e.message; }
+      let d = null, why = null;
+      try { d = await require('../lib/nexus-client.js').call('diagnostic', 'GET', `/${what}`, undefined, { timeout: 4000 }); } catch (e) { why = e.message; }
+      const sources = [{ source: 'diagnostic', what: `per-system ${what} (measured)`, ok: !!(d && d.ok !== false), ...(d && d.ok !== false ? {} : { why: why || (d && d.error) || 'no answer' }) },
+        { source: 'cfr', what: 'the field\'s friction and coherence (Intelligence)', ok: !!field, ...(field ? {} : { why: fieldWhy || 'no field' }) }];
+      if (!d || d.ok === false) { json(502, { ok: false, error: `diagnostic did not answer: ${why || (d && d.error) || 'no answer'}`, field, sources }); return true; }
+      json(200, { ok: true, [what]: d[what] || {}, field, sources, ts: d.ts || Date.now(), by: 'intelligence' });
       return true;
     }
 

@@ -20,6 +20,8 @@ module.exports = [
   _c('health',       'GET',  '/health',                            'Intelligence system health'),
   _c('topo-kernel',  'GET',  '/api/intelligence/topo-kernel/stats', 'Sovereign SISO topology kernel — signal/field/shape/trust stats'),
   _c('telemetry',    'GET',  '/api/intelligence/telemetry/status',  'Telemetry-codec runtime module status'),
+  _c('friction',     'GET',  '/api/intelligence/friction',          'Per-system friction (Diagnostic measures, Intelligence means) with CFR\'s field friction; each part names its source (CI6)'),
+  _c('tension',      'GET',  '/api/intelligence/tension',           'Per-system tension (Diagnostic measures, Intelligence means), each part sourced (CI6)'),
   _c('patterns',     'GET',  '/api/intelligence/patterns',          'Crystallised behavioral patterns'),
   _c('context',      'GET',  '/api/intelligence/context',           'Assembled intelligence context'),
   _c('status',       'GET',  '/api/intelligence/status',            'Intelligence subsystem health'),
