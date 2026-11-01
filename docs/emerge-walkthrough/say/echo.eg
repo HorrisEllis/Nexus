@@ -1,0 +1,28 @@
+// echo.eg — the Command primitive and one command that claims it. (A kind is claimed in the file that defines it: Emerge does not carry kinds across files yet.)
+kind Command {
+  require version
+  in run(x: { text: string, loud: bool })
+  out done: { said: string }
+  state { count: num }
+  boundary_count 1..2
+}
+
+component Echo is Command {
+  id = "say.echo"
+  namespace = "say"
+  version = "1.0.0"
+  intent = "say a line back"
+  state { count: 0 }
+  boundary counts_up { state.count >= 0 }
+
+  in run(x: { text: string, loud: bool }) {
+    if x.text == "" { gap "nothing to say" pressure 0.5 }
+    else {
+      state.count += 1
+      var said = x.text
+      if x.loud { said = upper(x.text) }
+      emit out done { said: said }
+    }
+  }
+  out done: { said: string }
+}

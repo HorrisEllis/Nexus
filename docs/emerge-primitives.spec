@@ -122,3 +122,16 @@ spec:
       interface: [cli, route]
       does: "eg build writes the project's component registry first (the eight primitives as its records), then the code from it; Idearium's repo spine reads that registry; a built project becomes a COS compartment from it (CP9)"
       proof: "the garden built: its registry first, the code second; repo spine finds no drift; COS runs it through the doors the registry declares"
+
+# ── ADDENDUM 2026-11-01 — the blank-project walkthrough, and the gaps it found ─────────────────────────────────────────────────────
+# James, 2026-11-01: "no. in emerge. a blank project with no files. write a new file, then the emerge code, then. i need like defining a
+# new primitive, how to connect the files, what it looks like. also what about uysing a component registry as the spine like the cie-eg"
+# Kept at docs/emerge-walkthrough/say/ (echo.eg: `kind Command` + `component Echo is Command`; main.eg: `use`, `wire`, a compartment, a test).
+# Run with Emerge at f0232402: run → "said: hello from emerge / said: LOUDER / gap: nothing to say @ 0.5 / echo ran 2 times"; test 1/1;
+# `eg components echo.eg` → 1 component (say.echo), 2 hooks (in run, out done), kind Command — the registry records (EP2's starting point).
+walkthrough_gaps_2026_11_01:
+  - "a kind does not cross files: `component X is Command` in another file than `kind Command` → 'Command is not a kind'; `m.Command` is a parse error"
+  - "`eg components main.eg` exports 0 components: the export reads only the file's own declarations, not those it `use`s, and so no wires either — the spine cannot yet be read from a whole program (EP2)"
+  - "`eg check echo.eg` warns its hooks have no wire, though main.eg wires them: the checker does not see across `use`"
+  - "`on` is top level only (not inside a test); no `a ? b : c`"
+  - "components from a module are named with its prefix (`echo.Echo`), as the language intends — not a gap, said so it is not mistaken for one"
