@@ -132,3 +132,9 @@ phases_addendum_2026_11_01:
     interface: [html]
     does: "EB4 as Idearium's own work: nexus/emerge's phases built local-first through Idearium, the pivots and candidates from EB4a/EB4b, each run in the flight recorder; replaces EB4's 'rebuild loop' wording (kept above, §0.3)"
     proof: "as EB4's, read from the flight recorder"
+
+# ── ADDENDUM 2026-11-01 — EB4a and EB4b specced as OP1 and OP3 ───────────────────────────────────────────────────────────────────────
+# James, 2026-11-01: "can we plan that out. could it outperform you? use guardian also. can you spec this? make a dependancy graph."
+# EB4a (innovate the method) and EB4b (many cheap tries) are now specced modules: MOD-OP-PIVOT and MOD-OP-CANDIDATES in docs/outperform.spec,
+# built by OP1 and OP3 of docs/2026-11-01-outperform-phasemap.spec. EB4a and EB4b are superseded by those phases (kept above, §0.3).
+# EB5 (better measured) is OP4–OP8: the arena, with Guardian as the frontier.

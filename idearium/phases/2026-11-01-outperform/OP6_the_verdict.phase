@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-outperform-phasemap.spec::OP6_the_verdict
+type: phase
+id: docs_2026-11-01-outperform-phasemap.spec::OP6_the_verdict
+context: pipeline phase OP6_the_verdict of docs/2026-11-01-outperform-phasemap.spec
+intent: null
+summary: OP6_the_verdict (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793551440160
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440160
+lastSeenAt: 1793551440160
+fingerprint: null
+payload:
+  id: OP6_the_verdict
+  map: docs/2026-11-01-outperform-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/arena/score.js
+    - tests/modules/test-outperform-score.test.js
+  depends_on:
+    - OP5_the_arms
+  blocks:
+    - MOD-OP-SCORE
+  spec: docs/outperform.spec
+  graph: 3644da86fe2187e7

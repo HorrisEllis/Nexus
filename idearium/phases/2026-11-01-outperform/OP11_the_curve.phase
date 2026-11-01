@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-outperform-phasemap.spec::OP11_the_curve
+type: phase
+id: docs_2026-11-01-outperform-phasemap.spec::OP11_the_curve
+context: pipeline phase OP11_the_curve of docs/2026-11-01-outperform-phasemap.spec
+intent: null
+summary: OP11_the_curve (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793551440165
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440165
+lastSeenAt: 1793551440165
+fingerprint: null
+payload:
+  id: OP11_the_curve
+  map: docs/2026-11-01-outperform-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/arena/curve.js
+    - idearium/ui/js/arena.js
+    - tests/modules/test-outperform-curve.test.js
+  depends_on:
+    - OP9_it_learns
+    - OP7_the_screen
+  blocks:
+    - MOD-OP-CURVE
+  spec: docs/outperform.spec
+  graph: 2bedaff5a3ed46eb

@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OP4_the_suite:2a71bf2665329ae3
+type: graph
+id: phase:OP4_the_suite:2a71bf2665329ae3
+context: dependency graph of phase OP4_the_suite
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793551440158
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440158
+lastSeenAt: 1793551440158
+fingerprint: null
+payload:
+  for: OP4_the_suite
+  kind: phase
+  repo: null
+  hash: 2a71bf2665329ae3
+  nodes:
+    - path: idearium/arena/suite.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: tests/modules/test-outperform-suite.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-01-outperform-phasemap.spec::OP_D0_measured_not_asserted
+      - docs/2026-11-01-emerge-bottom-up-phasemap.spec::EB1_the_registry_whole
+    dependents:
+      - docs/2026-11-01-outperform-phasemap.spec::OP5_the_arms
+    upstream:
+      - docs/2026-11-01-emerge-bottom-up-phasemap.spec::EB1_the_registry_whole
+      - docs/2026-11-01-emerge-bottom-up-phasemap.spec::EB_D0_his_bar
+      - docs/2026-11-01-outperform-phasemap.spec::OP_D0_measured_not_asserted
+    downstream:
+      - docs/2026-11-01-outperform-phasemap.spec::OP10_it_improves_itself
+      - docs/2026-11-01-outperform-phasemap.spec::OP11_the_curve
+      - docs/2026-11-01-outperform-phasemap.spec::OP5_the_arms
+      - docs/2026-11-01-outperform-phasemap.spec::OP6_the_verdict
+      - docs/2026-11-01-outperform-phasemap.spec::OP7_the_screen
+      - docs/2026-11-01-outperform-phasemap.spec::OP8_the_first_real_run
+      - docs/2026-11-01-outperform-phasemap.spec::OP9_it_learns
+    blockedBy:
+      - docs/2026-11-01-emerge-bottom-up-phasemap.spec::EB1_the_registry_whole
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by EB1_the_registry_whole
+      - 'depends on (2): OP_D0_measured_not_asserted, EB1_the_registry_whole · all upstream 3'
+      - 'needed by (1): OP5_the_arms · all downstream 7'
+    edges:
+      - from: docs/2026-11-01-outperform-phasemap.spec::OP_D0_measured_not_asserted
+        kind: declared
+      - from: docs/2026-11-01-emerge-bottom-up-phasemap.spec::EB1_the_registry_whole
+        kind: declared

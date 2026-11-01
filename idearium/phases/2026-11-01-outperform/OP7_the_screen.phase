@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-outperform-phasemap.spec::OP7_the_screen
+type: phase
+id: docs_2026-11-01-outperform-phasemap.spec::OP7_the_screen
+context: pipeline phase OP7_the_screen of docs/2026-11-01-outperform-phasemap.spec
+intent: null
+summary: OP7_the_screen (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793551440161
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440161
+lastSeenAt: 1793551440161
+fingerprint: null
+payload:
+  id: OP7_the_screen
+  map: docs/2026-11-01-outperform-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/arena.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/arena.js
+    - cos/ui/emergence/index.html
+    - tests/modules/test-outperform-screen.test.js
+  depends_on:
+    - OP6_the_verdict
+  blocks:
+    - MOD-OP-DOOR
+  spec: docs/outperform.spec
+  graph: ce35184033cf17fd

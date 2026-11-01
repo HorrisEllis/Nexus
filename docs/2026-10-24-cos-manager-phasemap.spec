@@ -792,6 +792,8 @@ phases_addendum_2026_11_01:
   MG32_autopilot_door_through_doors:
     status: OPEN
     depends_on: [MG17_autopilot_hands_over]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-AUTOPILOT-DOOR]
     files: [cos/manager/autopilot-door.js]
     interface: [route]
     does: "the graph read and the event log go through Cortex's routes (its event log and bus subscriptions), the CFR regime through Intelligence's route; with either down, the route says which and answers what it has"

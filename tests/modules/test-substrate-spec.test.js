@@ -60,7 +60,8 @@ const SPECS = [
   { spec: 'diagnostic/spec/diagnostic-schemas.spec', map: 'docs/2026-10-31-diagnostic-schemas-phasemap.spec' },   // 2026-10-31 DSC — his "all the schemas for the diagnostic system"
   { spec: 'intelligence/spec/causal-interconnect.spec', map: 'docs/2026-10-31-causal-interconnect-phasemap.spec' },   // 2026-10-31 CI — his "the intelligence system, rfr2 and cfr need to be interconnected"
   { spec: 'idearium/spec/agent-control.spec', map: 'docs/2026-10-31-agent-control-phasemap.spec' },   // 2026-10-31 AC — his agents' control panel, phase folders, page agents, skip buttons
-  { spec: 'docs/emerge-system.spec', map: 'docs/2026-10-31-emerge-as-a-system-phasemap.spec' },   // 2026-10-31 EAS — his "a system with a server.js": Emerge sovereign, through its door, nesting
+  { spec: 'docs/emerge-system.spec', map: 'docs/2026-10-31-emerge-as-a-system-phasemap.spec' },
+  { spec: 'docs/outperform.spec', map: 'docs/2026-11-01-outperform-phasemap.spec' },   // 2026-11-01 OP — his "could it outperform you? use guardian also. can you spec this?"   // 2026-10-31 EAS — his "a system with a server.js": Emerge sovereign, through its door, nesting
 ];
 
 console.log('\ntest-substrate-spec — full specs compile at full depth and stay tied to their phases');
