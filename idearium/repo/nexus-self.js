@@ -48,7 +48,9 @@ const repoName = (system) => `${PARENT_REPO}/${system}`;
 const READ_MAX_BYTES = 8 * 1024 * 1024;
 function _isText(rel, buf, max = MAX_TEXT_BYTES) {
   const ext = path.extname(rel).toLowerCase();
-  if (!TEXT_EXT.has(ext)) return false;
+  // 0.60.340 — Emerge's language (.eg) and node files (an envelope: in YAML or JSON, whatever their type's extension) are text too
+  const node = buf.length < max && /^\s*(envelope:|\{\s*"envelope")/.test(buf.slice(0, 64).toString('utf8'));
+  if (!TEXT_EXT.has(ext) && !['.eg', '.out', '.say', '.sha256'].includes(ext) && !node) return false;
   if (buf.length > max) return false;
   const { _isProbablyText } = require('../../lib/zip-ingest.js');
   return _isProbablyText(buf) && buf.toString('utf8').trim().length > 0;

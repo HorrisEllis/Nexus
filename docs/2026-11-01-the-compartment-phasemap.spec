@@ -30,6 +30,18 @@ decisions:
       repo's files are the compartment's project folder. Emerge (EAS3) is the first.
     by: "his, 2026-11-01: \"lets make it a compartment. i want compartments in cos to automatically become nested compartments in idearium. like cos needs to be connected with ideariums repos\" (about HorrisEllis/Emerge, just cloned)"
     by_the_axioms: "§5.15 (COS announces, Idearium owns its repos: each through the other's route, never its files), §10.3 (one link, not two lists), §0.3 (a destroyed compartment's repo archived, never deleted)"
+  CP_D2_the_miniworld_is_the_meta_layer:
+    status: DECIDED 2026-11-01 (his; the reading of .cos as the miniworld's node to confirm)
+    chosen: >-
+      COS runs entire systems as miniworlds: the miniworld is the meta layer above the spec and the repo and the compartments, one per
+      system, holding all of it (its spec, its repo at a commit, its compartments, its states). It is how he runs counterfactuals, mental
+      simulations: fork a miniworld, change something in the fork, run it beside the original, compare, keep or discard. Each system is a
+      model in his head, so each is its own folder, nice and tidy. Read as (the coder's, to confirm): a system's <name>.cos node is its
+      miniworld's node — what his IDEARIUM.spec Miniworld Manager names ("each miniworld is a .nex file opened as a COS compartment
+      sandbox", list | boot | fork | snapshot | discard) and the COS spine map's open question (c), "the miniworld as the .cos archive",
+      answered by his "use .cos … look for the miniworlds" the same day. Emerge's emerge/emerge.cos is the first.
+    by: "his, 2026-11-01: \"i want cos to use miniworlds for entire systems. one layer above the spec/repo. miniworld is the meta layer for compartments. its how i run counterfactuals, or mental simulations. each system in my head is a model. thats why each system is its own folder. i like it nic eand tidy.\""
+    by_the_axioms: "§0.3 (a fork never touches what it came from; a discard archives), §10.3 (one miniworld per system, not a second record of it), §5.15 (each system's folder its own)"
 stands_on: >-
   Built: COS's supervisor, its door, the handover, its UI and the cockpit (MG15–MG18, MG29); Loom run behind its wall (LM6); a repo's desktop
   (idearium/ui/desktop.html on cos/workspace); checkpoints, activity and Nexus's systems as compartments (compartment-control-and-activity);
@@ -126,5 +138,17 @@ phases:
       compartment under its repo's id (CS9's half). One link, checked both ways: no compartment without its repo, no repo with a compartmentId
       that COS does not hold. Emerge's compartment (EAS3) is the first to appear in Idearium by itself.
     proof: "a compartment made in COS appears in Idearium as a repo under its parent's repo within one event; destroyed, the repo is archived; an Idearium import gets its compartment; the check over both lists finds nothing missing; Emerge appears nested with its files"
+
+  CP10_miniworlds:
+    status: OPEN
+    depends_on: [CP_D2_the_miniworld_is_the_meta_layer, CP1_the_machine_and_its_door, CP5_states_rewind_versions, CP9_cos_and_idearium_one_link]
+    files: [cos/miniworld, "*/<name>.cos", cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js]
+    interface: [route, cli, html]
+    does: >-
+      A miniworld per system, its .cos node the meta layer (spec, repo at a commit, compartments, states). COS: miniworld list | boot | fork
+      | snapshot | discard, his Miniworld Manager. A counterfactual: fork a miniworld (a copy-on-write copy of its folder, or a new qcow2
+      overlay for a machine), change it, run the fork beside the original behind its own wall, compare them (their ledgers, their tests,
+      RFR2's measure), then keep (merge) or discard (archived). The fork shows in Idearium as a branch of the system's repo.
+    proof: "Emerge's miniworld forked, a change made in the fork, both run side by side, the comparison shown, the fork discarded, the original untouched byte for byte (its lock)"
 
 build_order: "CP0 → CP1 → (CP9, with EAS3) → CP2 → (CP3, CP5, CP6, CP7) → CP4, CP8. The open canvas (MG_D18) and Add → Build (BC4) sit on CP2."
