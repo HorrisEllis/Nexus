@@ -846,6 +846,16 @@ export const SPEC = [
     req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/walls' }),
     print: (d, a, h) => { const c = d.counts || {}; h.header(`walls — ${c.enforce || 0} enforce · ${c.audit || 0} audit · ${c.bare || 0} bare · ${c.enforceReady || 0} ready for enforce`);
       for (const w of d.walls || []) console.log(`  ${w.name.padEnd(22)} ${w.mode.padEnd(8)} ${String(w.via).padEnd(13)} ${w.said}${w.crossings.length ? `\n      ${w.crossings.slice(0, 5).map(x => `${x.file} (from ${x.from})`).join('\n      ')}` : ''}`); } },
+  // 2026-11-01 CP6a — James: "then i want resource management for each cos compartment". Caps by layer, read back from the OS; the account
+  { key: 'cos.resources', repo: false, usage: 'cos resources', about: 'each compartment\'s caps (heap, resident limit, priority) as applied by the OS, its resident memory and CPU now, peak and average',
+    req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/resources?fresh=1', timeoutMs: 20000 }),
+    print: (d, a, h) => { const r = d.resources || {}; h.header(`resources — host ${r.host ? `${r.host.freeMemPct}% free of ${r.host.totalMB} MB` : '?'} · reader ${r.reader || 'none'}${r.incident ? ' · under the halt floor: a proposal is held' : ''}`);
+      for (const s of r.systems || []) console.log(`  ${s.name.padEnd(22)} ${String(s.now && s.now.rssMB != null ? s.now.rssMB + ' MB' : '—').padStart(8)} ${String(s.now && s.now.cpuPct != null ? s.now.cpuPct + '%' : '—').padStart(7)}  heap ${s.caps.heapMB} (${s.caps.applied.heap.state}) · ${s.caps.priority} (${s.caps.applied.priority.state})${s.caps.rssLimitMB ? ` · limit ${s.caps.rssLimitMB} MB ${s.caps.onOver}` : ''}`); } },
+  { key: 'cos.caps', repo: false, usage: 'cos caps <system> [heapMB=<n>] [rssLimitMB=<n>|none] [onOver=warn|restart] [priority=low|below-normal|normal|above-normal|high]', about: 'a compartment\'s caps: read, or set by you (each value with its layer; applied and read back)',
+    req: (a) => { const kv = a.args.slice(1).filter(x => x.includes('=')); if (!kv.length) return { system: 'cos', method: 'GET', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/caps` };
+      const patch = Object.fromEntries(kv.map(x => { const [k, v] = x.split('='); return [k, v === 'none' ? null : /MB$/.test(k) ? Number(v) : v]; }));
+      return { system: 'cos', method: 'PATCH', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/caps`, body: { patch, by: 'person' } }; },
+    print: (d) => { const c = d.caps; console.log(`${c.name}: ${['heapMB', 'rssLimitMB', 'onOver', 'priority'].map(k => `${k} ${c[k]} (${c.layers[k]})`).join(' · ')}`); for (const [k, v] of Object.entries(c.applied)) console.log(`  ${k.padEnd(9)} ${v.state}${v.readBack != null ? ` → ${v.readBack}` : ''}${v.why ? ` — ${v.why}` : ''}`); } },
   // 2026-11-01 CI8 — James: "72% so make sure it is tv ui and i can access it,". The TENSION channel's read, for agents and the CLI.
   { key: 'tension', repo: false, usage: 'tension [friction]', about: 'every system\'s tension and regime, computed by Intelligence (intelligence/friction.js) from Diagnostic\'s friction and Cortex\'s open gaps; each source said',
     req: (a) => ({ system: 'orchestrator', method: 'GET', path: `/api/tension-field/${a.args[0] === 'friction' ? 'friction' : 'tension'}` }) },

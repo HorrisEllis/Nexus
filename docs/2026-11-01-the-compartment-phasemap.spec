@@ -241,11 +241,11 @@ phases:
       ready for enforce. Route GET /api/cos/walls; row `cos walls`; the Overview card says walled or audit.
     proof: "every declared process walled, each wall equal to boundaryFor; an audit wall lets a crossing through and ledgers it; the real Ollama bridge starts behind an enforcing wall and answers /health"
   CP6a_caps_priority_accounting:
-    status: OPEN
+    status: DONE 0.60.356 — test-cos-resources CR-01..05
     spec: cos/spec/compartment.spec
     blocks: [MOD-CP-USAGE, MOD-CP-RESOURCES]
     depends_on: [CP1a_every_system_walled_by_cos, CP_D6_resources_per_compartment]
-    files: [cos/manager/resources.js, cos/manager/usage.js, cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/cockpit/page.js, cos/ui/cockpit/sections/resources, idearium/cli/route-commands.js, tests/modules/test-cos-resources.test.js, tests/modules/run-all.js]
+    files: [cos/manager/resources.js, cos/manager/usage.js, cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/cockpit/page.js, cos/ui/cockpit/sections/resources, cos/manager/proposals.js, loom/maps/cos-testenv-map.js, idearium/cli/route-commands.js, tests/modules/test-cos-resources.test.js, tests/modules/run-all.js]
     does: >-
       caps(name) and setCaps(name, patch, { by }), with layers and read-back. The heap cap is applied at spawn; the priority is applied and
       read back at spawn and on change. Usage is read on Windows without wmic (PowerShell Get-Process, then tasklist). A ring of samples per

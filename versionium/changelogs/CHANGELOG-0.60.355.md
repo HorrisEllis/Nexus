@@ -64,4 +64,4 @@ list is the work left before enforce.
 
 ## Versionium
 
-This session cannot reach his Versionium. On his machine, the boot sync records this release.
+His Versionium runs on this machine, but this release is on a branch, not his running tree. The boot sync records it when it lands.

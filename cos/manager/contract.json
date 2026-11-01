@@ -70,6 +70,22 @@
     },
     {
       "method": "GET",
+      "path": "/api/cos/resources",
+      "out": "{ resources: { host, reader, incident, systems: [{ caps, now, account }] } } — CP6a; ?fresh=1 samples first"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/systems/:name/caps",
+      "out": "{ caps: CompartmentCaps, history: UsageSample[] }"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/cos/systems/:name/caps",
+      "in": "{ patch: { heapMB?, rssLimitMB?, onOver?, priority? }, by }",
+      "personAct": true
+    },
+    {
+      "method": "GET",
       "path": "/api/cos/policy",
       "out": "{ policy: SupervisorPolicy }"
     },
@@ -289,7 +305,9 @@
         "GET /files/:system",
         "GET /files/:system/*",
         "POST /run-tests/:name",
-        "GET /api/cos/walls"
+        "GET /api/cos/walls",
+        "GET /api/cos/systems/:name/caps",
+        "PATCH /api/cos/systems/:name/caps"
       ],
       "listens": [
         "cos.system.state",
@@ -308,7 +326,8 @@
         "data",
         "files",
         "tests",
-        "snapshot"
+        "snapshot",
+        "resources"
       ]
     },
     {
