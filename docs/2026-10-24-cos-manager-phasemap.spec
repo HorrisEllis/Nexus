@@ -216,7 +216,30 @@ decisions:
       floats as a tile; adding, deploying and building a compartment happen on it; pages open as floating windows; every page and section is
       its own .html at its own address (his answer, same day).
     by: "his, 2026-10-31: \"okay but no side bar, and its for all compartments. deplaying, adding, building, not static, open it up\" · \"im saying each dsection should be its own html. like settings.html index.html like each page\""
+  MG_D19_only_compartments_have_a_control_panel:
+    status: DECIDED 2026-11-01 (his)
+    chosen: >-
+      A control panel belongs to a compartment, nothing else: COS's main screen is the canvas of compartments (MG_D18), and each compartment
+      opens its own full pop-out window, like a VM's in VMware: a toolbar (power, pause, restart, snapshot, rewind, versions, settings, deploy
+      an agent), its screen (its own UI, or its desktop as Idearium shows a repo's VM, idearium/ui/desktop.html), and its controls generated
+      from its server.js's interaction contract (each declared route a control, each declared event a live feed), so a new system gets a
+      panel without anyone writing one. MG29's cockpit becomes this window's tabs.
+    by: "his, 2026-11-01: \"only compartments have control panels. hooks into the server.js using the interaction contract. they each have what idearium has with the desktop envirement. a full popout window with controls. like vmware is kind of. look at all of the cos phases.\""
+    by_the_axioms: "§5.10 (the contract is what a UI reads), §5.12 (the UI is disposable: the panel is generated), §8.6 (Idearium's desktop and MG29's cockpit reused), §5.15 (reached only through its door)"
 phases:
+  MG31_the_compartment_window:
+    status: OPEN
+    depends_on: [MG_D19_only_compartments_have_a_control_panel, MG29_the_cockpit, MG_D18_no_side_bar_every_compartment]
+    files: [cos/ui/window, cos/ui/cockpit, cos/manager/server.js, cos/manager/contract.json, cos/app/main.js]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-UI-COCKPIT]
+    interface: [html, route]
+    does: >-
+      One pop-out window per compartment (a browser window, a BrowserWindow in the COS exe): the toolbar's acts through COS's routes; the
+      screen its own UI or its desktop (noVNC, as idearium/ui/desktop.html); the controls generated from its door's interaction contract;
+      MG29's tabs inside it (Logs, Events, API, Data, Files, Tests); Rewind and Versions from CS1/MG3 and Versionium, said as not built until
+      they are; Terminal from CE4/CON5 when built.
+    proof: "in Clear Glass: a compartment's window opened from its tile; its contract's routes listed as controls and one run; power and restart from the toolbar on COS's ledger; a system added with a contract gets its window with no new UI code"
   MG0b_the_full_spec:
     status: SPECCED 2026-10-30 — cos/spec/cos-manager.spec
     depends_on: [MG_D0_order]
