@@ -33,14 +33,14 @@ decisions:
 
 phases:
   MB1_the_gate_between:
-    status: OPEN
+    status: "DONE 0.60.343"
     depends_on: [MB_D0_blocks_and_gates]
     files: [clear-glass/src/macros/recording.js, clear-glass/src/driver/index.js, clear-glass/src/page/element-gate.js]
     interface: [cli]
     does: "the macro runner honours steps[i].after: the delay by kind, then the gate (EG.settle with the step's timing), then onClosed; a recording's pauses become fixed delays in the new shape"
     proof: "a macro with a fixed, a range, a human and an until gate runs on a fixture page; a closed gate stops, retries or skips as set; an old macro runs the same"
   MB2_the_blocks_ui:
-    status: OPEN
+    status: "DONE 0.60.343"
     depends_on: [MB1_the_gate_between]
     files: [clear-glass/renderer/settings/sections/macros.js, clear-glass/renderer/settings/sections/macros.css]
     interface: [html]
@@ -53,3 +53,15 @@ phases:
     interface: [html]
     does: "pipelines' task gate and the macro's gate are one editor (the same fields, one file), so a gate made in one reads the same in the other"
     proof: "the same gate shown in a pipeline task and between two macro blocks"
+
+# ── ADDENDUM 2026-11-01 (0.60.343) — MB1 and MB2 built; James: "do it" ────────────────────────────────────────────────────────────────
+# Read first: the runner (lib/agent-tools/tools/clear-glass/macro.js) already checked a gate after each step (KB4: the condition, choice,
+# timeoutMs, retries). So the gate after a step IS the gate between two blocks, and MB1 added only the missing parts:
+# - delay {kind fixed|range|human}: waited after the step, before the check. A gate with only a delay is a pause.
+# - backoff {baseMs, factor, capMs}: the wait before each retry.
+# - onClosed stop|skip.
+# Validated in gate-eval.js validateGate when the macro is made; the node schema (lib/node-schemas/schema.macro) says the shape.
+# "until" is not a delay kind: it is the gate's condition with its timeout, as before.
+# Found while building MB2: the Settings editor rebuilt each step from its fields and DROPPED step.gate on every save, so editing a gated macro
+# in Settings removed its gates. It is kept now (MBU-02); keys the editor does not show (choice, settleMs) are kept as they were.
+# Open: MB3 (one gate editor shared with pipelines); "ask him" as an onClosed (needs a prompt surface; not built, said).
