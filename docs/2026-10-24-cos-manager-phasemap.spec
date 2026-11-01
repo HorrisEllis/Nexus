@@ -798,3 +798,17 @@ phases_addendum_2026_11_01:
     interface: [route]
     does: "the graph read and the event log go through Cortex's routes (its event log and bus subscriptions), the CFR regime through Intelligence's route; with either down, the route says which and answers what it has"
     proof: "VO-03, RD-01, FD-09 and FM-07 green; the census adds nothing past its baseline; with Cortex stopped, the graph route answers with cortex: down"
+
+# ── ADDENDUM 2026-11-01 (0.60.347) — MG33: COS's UI had no way in ───────────────────────────────────────────────────────────────────────
+# James, 2026-11-01: "where is cos ui?" Found: nothing started the cockpit (cos/ui/serve.js, :7797) or linked to it; `npm run start:all` started
+# only the manager (:7799). A screen reachable only by a typed command (his 2026-10-29 rule: a way in for a person).
+phases_addendum_2026_11_01_mg33:
+  MG33_cos_ui_has_a_way_in:
+    status: "DONE 0.60.347"
+    depends_on: [MG17_autopilot_hands_over]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-UI-SERVE]
+    files: [cos/manager/server.js, lib/ui/tv-shell/index.html, tests/modules/test-cos-ui-starts.test.js]
+    interface: [html]
+    does: "the manager starts its cockpit beside itself (COS_UI_PORT, default 7797; --no-ui to leave it off; a held port said, the manager runs on); the TV gains a COS channel framing it"
+    proof: "test-cos-ui-starts: the manager started as start:all starts it serves the cockpit and its contract; with the port held, the manager still answers and says why"

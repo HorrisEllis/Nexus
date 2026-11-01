@@ -107,8 +107,17 @@ if (require.main === module) {
   listen(sup, undefined, { root }).then(async (srv) => {
     console.log(`[cos] manager on 127.0.0.1:${srv.address().port} — ${sup.list().length} systems declared`);
     if (arg('handover')) sup.note('handover', `autopilot ${arg('handover')} handed supervision to COS's manager (MG17); its body is archived`, { by: 'boot' });
+    // 2026-11-01 MG33 — James: "where is cos ui?". Nothing started the cockpit (cos/ui/serve.js) or linked to it: a screen with no way in. The
+    // manager now starts it beside itself (COS_UI_PORT, default 7797; --no-ui to leave it off). Its port held → said once, the manager runs on.
+    let ui = null;
+    if (!process.argv.includes('--no-ui')) {
+      const uiPort = Number(process.env.COS_UI_PORT) || 7797;
+      ui = require('../ui/serve.js').createServer({ port: uiPort, manager: `http://127.0.0.1:${srv.address().port}` });
+      ui.once('error', (e) => { console.log(`[cos] the cockpit did not start on :${uiPort} (${e.code || e.message}) — the manager runs on without it; node cos/ui/serve.js --port <n> starts it by hand`); ui = null; });
+      ui.listen(uiPort, '127.0.0.1', () => console.log(`[cos] cockpit on http://127.0.0.1:${ui.address().port}/ (COS's UI)`));
+    }
     if (process.argv.includes('--boot')) { const r = await sup.boot({ by: 'boot', ...(only ? { set: only } : {}) }); console.log(`[cos] booted ${r.started.length}, skipped ${r.skipped.length}`); }
-    const bye = () => { sup.shutdown({ by: 'boot' }); srv.close(); setTimeout(() => process.exit(0), 500).unref(); };
+    const bye = () => { sup.shutdown({ by: 'boot' }); srv.close(); if (ui) ui.close(); setTimeout(() => process.exit(0), 500).unref(); };
     process.on('SIGINT', bye); process.on('SIGTERM', bye);
   }).catch((e) => { console.error(`[cos] ${e.message}`); process.exit(1); });
 }
