@@ -1963,3 +1963,7 @@ spec:
 # workshop as Nexus's one document editor (templates, schemas, nodes, specs, code; sorted by type, date or recent). James: "i want the spec
 # workshop to also include templates, schemas, nodes, ide, for all of nexus. like make a generalized document editor." MAPPED, not built; its
 # full spec is BC0. Also placed: docs/open-loops/OPEN-LOOPS.spec (his Open Loops spec, a sovereign project, text unchanged).
+
+# ADDENDUM 2026-11-01 — registered: docs/2026-11-01-tv-ui-cleanup-phasemap.spec (TV0–TV2): the TV UI audited against its backend in Clear
+# Glass (91 requests, 28 failed with every system up: bridge :9999, emerge :4242, guardian nerve/hooks not forwarded, contracts asked of
+# servers with none), then its noise out and each channel its own page. James: "then i need tv ui cleaned out ... there is some noise."
