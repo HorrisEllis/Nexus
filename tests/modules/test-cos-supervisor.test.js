@@ -95,7 +95,9 @@ const mk = (declarations, extra = {}) => { const s = createSupervisor({ root: di
     } finally { srv.close(); }
   });
   await test('SV-08', "the real tree's declarations; a Node child's heap cap and --expose-gc", () => {
-    assert.strictEqual(readDeclarations(ROOT).length, 13);
+    // 13 autopilot booted at the handover; systems added since are declared by their own compartment.json (0.60.339 EAS3: emerge)
+    const SINCE_THE_HANDOVER = ['emerge'];
+    assert.strictEqual(readDeclarations(ROOT).length, 13 + SINCE_THE_HANDOVER.length);
     const calls = []; const fake = { pid: 1, on() {}, stdout: null, stderr: null, kill() {} };
     const s = createSupervisor({ root: ROOT, policy: FAST, ledgerFile: path.join(dir, 'real.jsonl'), log: () => {}, freeMemPct: () => 0.9, checkHealth: async () => false, spawnFn: (c, a, o) => { calls.push({ c, a, o }); return fake; } });
     sups.push(s); s.start('cortex');

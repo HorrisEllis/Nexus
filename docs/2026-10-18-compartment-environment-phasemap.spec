@@ -76,7 +76,8 @@ spec:
 
   phases:
     CE1a_cos_answers_on_a_route:
-      status: OPEN
+      status: "SUPERSEDED 2026-11-01 by CP0_the_full_spec in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: OPEN
       depends_on: []
       files: [cos/server.js, cos/registry-components.js, cos/interaction-contract.json, lib/system-registry.js]
       does: >-
@@ -86,7 +87,8 @@ spec:
         capabilities (the existing lib/cos-bridge.js crossings stay in the baseline, to move later under DB6).
       proof: "the server answers /health and /api/contract; tunnel('cos') reaches it; the boundary census shows no new crossing"
     CE1_the_compartment_machine:
-      status: OPEN
+      status: "SUPERSEDED 2026-11-01 by CP0_the_full_spec in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: OPEN
       depends_on: [CE1a_cos_answers_on_a_route]
       files: [cos/compartment/qemu-runtime.js, cos/testenv/provision.js, lib/cos-bridge.js]
       does: >-
@@ -97,7 +99,8 @@ spec:
         `cos testenv provision` named as the fix).
       proof: "with a fake runtime: first ask starts it, the second reuses it, idle stops it and keeps the disk; no qemu → said, with the command that fixes it"
     CE2_the_shell_is_declared:
-      status: OPEN
+      status: "SUPERSEDED 2026-11-01 by CP0_the_full_spec in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: OPEN
       depends_on: [CE1_the_compartment_machine]
       files: [cos/registry-components.js, lib/system-registry.js]
       does: >-
@@ -106,7 +109,8 @@ spec:
         them and the commands that reach them. What is not declared cannot be reached (DB3's rule).
       proof: "tunnel('cos') lists the four; a capability not declared is not in it"
     CE3_the_handshake:
-      status: OPEN
+      status: "SUPERSEDED 2026-11-01 by CP0_the_full_spec in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: OPEN
       depends_on: [CE2_the_shell_is_declared]
       files: [lib/contract-handshake.js, orchestrator/lib/contract-handshake.js, lib/drawbridge.js]
       does: >-
@@ -117,7 +121,8 @@ spec:
         said why. DB3/DB5 stay open for every other system; this is their first instance.
       proof: "VERIFIED opens; a changed declaration or machine manifest is MISMATCH and refused with the difference; an unreachable machine is UNREACHABLE; every attempt is a crossing record"
     CE4_the_terminal_bridge:
-      status: OPEN
+      status: "SUPERSEDED 2026-11-01 by CP3_one_terminal_one_cli in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: OPEN
       depends_on: [CE3_the_handshake]
       files: [cos/compartment/terminal.js, cos/server.js, idearium/api/index.js, package.json]
       does: >-
@@ -129,7 +134,8 @@ spec:
         work is in the compartment — his words). The key is per compartment and never leaves the host (§5.9).
       proof: "with a fake transport: bytes both ways, resize, exit code back, the ledger capped; refused before any byte when the handshake is not VERIFIED"
     CE5_the_guest_file_tree:
-      status: OPEN
+      status: "SUPERSEDED 2026-11-01 by CP4_files_and_code in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: OPEN
       depends_on: [CE3_the_handshake]
       files: [cos/compartment/guest-files.js, cos/compartment/guest-agent.js, cos/server.js, idearium/api/index.js]
       does: >-
@@ -139,7 +145,8 @@ spec:
         a change to the compartment's work still goes through the proposal path (lib/repo-inject.js), never written behind it.
       proof: "a listing and a read through a fake guest agent; a path that climbs out of the root refused; an unreachable guest said"
     CE6_the_code_tab:
-      status: OPEN
+      status: "SUPERSEDED 2026-11-01 by CP4_files_and_code in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: OPEN
       depends_on: [CE4_the_terminal_bridge, CE5_the_guest_file_tree]
       files: [idearium/ui/js/code-surface.js, idearium/ui/js/code-tab-panels.js, idearium/ui/js/compartment-terminal.js, idearium/ui/css/compartment-terminal.css, idearium/ui/vendor/xterm.js]
       does: >-
@@ -148,7 +155,8 @@ spec:
         prompt. Logic stays in the backend (DB7: the UI floats on top). Tested in Clear Glass.
       proof: "Clear Glass: the two roots render; the terminal shows the trust state, then echoes through a fake session; a refused handshake shows why and opens nothing"
     CE7_agents_and_commands:
-      status: OPEN
+      status: "SUPERSEDED 2026-11-01 by CP8_agents_in_the_compartment in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: OPEN
       depends_on: [CE4_the_terminal_bridge, CE5_the_guest_file_tree]
       files: [idearium/cli/route-commands.js, lib/agent-tools/tool-catalog.js]
       does: >-

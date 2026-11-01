@@ -1,0 +1,32 @@
+{
+  "name": "emerge",
+  "archetype": "nexus-system",
+  "runtimeId": "node",
+  "entry": "server.js",
+  "healthCheck": {
+    "path": "/health",
+    "expectedStatus": 200
+  },
+  "runtime": {
+    "process": {
+      "name": "emerge",
+      "cmd": "node",
+      "args": [
+        "{{root}}/emerge/server.js"
+      ],
+      "cwd": "emerge",
+      "phase": 3,
+      "optional": true,
+      "healthUrl": "http://127.0.0.1:4900/health",
+      "compartment": "nexus-self-emerge",
+      "boundary": {
+        "mode": "enforce",
+        "allow": [
+          "{{root}}/emerge/",
+          "{{root}}/node_modules/"
+        ],
+        "about": "Nexus overlay (EAS3, 2026-11-01): COS runs Emerge behind its wall, its folder and node_modules (js-yaml) only"
+      }
+    }
+  }
+}

@@ -3563,6 +3563,11 @@ function matchRoute(method, url) {
     ['GET',    ['api','cos','systems',':name','logs'],'cos.logs'],
     ['GET',    ['api','cos','usage'],                 'cos.usage'],
     ['GET',    ['api','cos','policy'],                'cos.policy'],
+    // 0.60.339 EAS3 — Emerge, through its own door (emerge/server.js :4900), asked by route, never required (§5.15)
+    ['GET',    ['api','emerge-system','status'],      'emerge.status'],
+    ['GET',    ['api','emerge-system','modules'],     'emerge.modules'],
+    ['POST',   ['api','emerge-system','modules'],     'emerge.module.new'],
+    ['POST',   ['api','emerge-system','lang',':op'],  'emerge.lang'],
     ['GET',    ['api','economy'],                     'economy.get'],
     ['POST',   ['api','economy'],                     'economy.set'],
     ['GET',    ['api','economy',':what'],             'economy.view'],
@@ -9810,6 +9815,18 @@ async function handle(req, res, route, query, body) {
         const { ok: _o, ...rest } = d || {};
         return ok(res, rest);
       } catch (e) { return err(res, 502, `COS's manager (:7799) did not answer: ${e.message} — start it with npm run start:all (since 0.60.330 the launcher starts COS's manager)`); }
+    }
+    // 0.60.339 EAS3 — James: "the github repo not the one in lib already. i want that done now. then i want to start being able to use it."
+    case 'emerge.status': case 'emerge.modules': case 'emerge.module.new': case 'emerge.lang': {
+      const OPS = ['check', 'run', 'build', 'test', 'say', 'synth'];
+      if (action === 'emerge.lang' && !OPS.includes(params.op)) return err(res, 404, `no Emerge language op "${params.op}": ${OPS.join(', ')}`);
+      try {
+        const d = action === 'emerge.status' ? await _nexusClient.get('emerge', '/status', { timeout: 10000 })
+          : action === 'emerge.modules' ? await _nexusClient.get('emerge', '/modules', { timeout: 10000 })
+          : action === 'emerge.module.new' ? await _nexusClient.post('emerge', '/modules', body || {}, { timeout: 30000 })
+          : await _nexusClient.post('emerge', `/lang/${params.op}`, body || {}, { timeout: 60000 });
+        return ok(res, d || {});
+      } catch (e) { return err(res, 502, `Emerge's door (:4900) did not answer: ${e.message} — COS starts it (npm run start:all), or: node emerge/server.js`); }
     }
     // §0.39.281 EC8 — the economy, from guardian (the one owner)
     case 'economy.get': case 'economy.set': case 'economy.view': {

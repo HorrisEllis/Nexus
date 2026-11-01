@@ -226,7 +226,7 @@ spec:
     FMR6_run_it_in_cos:
       status: OPEN
       owned_by: "FM3 (failure-reproduction) + SN1 (snapshot as compartment)"
-      depends_on: [FMR5_replay_routes, "SN0_one_branch (snapshot-compartments)"]
+      depends_on: [FMR5_replay_routes, "SN0_one_branch (snapshot-compartments)", CP5_states_rewind_versions]
       files: [cos/testenv/index.js, cos/testenv/replay.js]   # 0.60.147 DG2: moved into cos, the system it serves (addendum b)
       does: >-
         cos/testenv/replay.js run(macro): open the snapshot as a lazy branch (SN0's mechanism), start the systems the macro

@@ -67,7 +67,7 @@ phases:
     does: "emerge.lang: check, run, test, build, say and synth as nodes, served at POST /lang/*"
     proof: "lang-door.test.js: build returns JS; synth through the door reproduces utf8_decode's six code hashes"
   EAS3_emerge_at_the_top_of_nexus:
-    status: OPEN
+    status: BUILT 0.60.339 (Emerge f023240; test-emerge-in-nexus EN-01..04)
     depends_on: [EAS1_the_skeleton_in_emerge, EAS_D1_top_level_not_cos_vendor]
     files: [emerge, emerge/EMERGE.lock.json, scripts/emerge-lock.js, lib/nexus-self/systems.js, lib/nexus/autopilot.js, loom/maps/observability-map.js]
     spec: docs/emerge-system.spec
@@ -94,3 +94,11 @@ phases:
 order: |
   EAS1 → EAS2 → EAS5 in the Emerge repo (Emerge becomes a system, speaks through its door, and nests);
   EAS3 → EAS4 in Nexus (one Emerge, and every caller through it). EAS5 is what his "building an operating system" asks of Emerge first.
+
+# ── ADDENDUM 2026-11-01 — EAS3 built (0.60.339) ──────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-11-01: "the github repo not the one in lib already. i want that done now. then i want to start being able to use it."
+# emerge/ from github.com/HorrisEllis/emerge at f02324025d60b9fe8a38e201f65770e2f13f0079, 269 files locked; COS runs it behind its wall
+# (the compartment map's CP1 mechanism, LM6); systems.js names it; the ports table and the orchestrator's proxy point at :4900. Drift, said:
+# MOD-EAS-NEXUS-PLACE named lib/nexus/autopilot.js for the boot plan; since MG17 the boot plan is each compartment.json, so Emerge's runtime
+# is a Nexus overlay on its compartment.json, recorded in the lock. Loom's wires for emerge/ come from its source scanner (no hand map yet).
+# lib/emerge stays until EAS4 moves its callers to the door.

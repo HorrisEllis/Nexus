@@ -1,5 +1,5 @@
 {
-  "_comment": "NEXUS Orchestrator runtime config \u2014 edit here, never in orchestrator.js",
+  "_comment": "NEXUS Orchestrator runtime config — edit here, never in orchestrator.js",
   "openUIOnBoot": true,
   "openTerminalOnBoot": false,
   "uiURL": "http://127.0.0.1:9000",
@@ -15,7 +15,7 @@
     "guardian": 7820,
     "architect": 3747,
     "idearium": 4800,
-    "emerge": 4242,
+    "emerge": 4900,
     "copilot": 3750,
     "loom": 3752,
     "diagnostic": 7825,
@@ -57,7 +57,7 @@
     }
   },
   "heal": {
-    "_comment": "Single source of truth for self-healing. Replaces NEXUS_HEAL_DRY and NEXUS_FORGE_APPLY env vars \u2014 those are now ignored if this block is present.",
+    "_comment": "Single source of truth for self-healing. Replaces NEXUS_HEAL_DRY and NEXUS_FORGE_APPLY env vars — those are now ignored if this block is present.",
     "mode": "live",
     "maxAttempts": 3,
     "requireRaidApproval": true,
@@ -75,5 +75,5 @@
     "saveIntervalMs": 10000,
     "resumeOnBoot": true
   },
-  "_ports_comment": "Single source of truth for system->port. Sovereign systems resolve each other through lib/nexus-client.js, never a hardcoded port. NOTE: 'ollama' is the NEXUS ollama-bridge (:3749), NOT the ollama daemon (:11434) \u2014 this key previously said 11434, which contradicted orchestrator.js's SYS map. Nothing read it, so nothing broke; fixed here before anything started depending on it."
+  "_ports_comment": "Single source of truth for system->port. Sovereign systems resolve each other through lib/nexus-client.js, never a hardcoded port. NOTE: 'ollama' is the NEXUS ollama-bridge (:3749), NOT the ollama daemon (:11434) — this key previously said 11434, which contradicted orchestrator.js's SYS map. Nothing read it, so nothing broke; fixed here before anything started depending on it."
 }

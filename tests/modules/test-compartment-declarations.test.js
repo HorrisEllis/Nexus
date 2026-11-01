@@ -24,8 +24,10 @@ function test(id, d, fn) { try { fn(); console.log(`  ✓ ${id} ${d}`); passed++
 
 const kernels = R.frozenKernels(), decl = C.declarations(ROOT);
 test('CD-01', `every autopilot process is declared by its own system (${kernels.length})`, () => {
-  assert.deepStrictEqual(decl.map(d => d.name).sort(), kernels.map(k => k.name).sort());
-  for (const d of decl) { const k = kernels.find(x => x.name === d.name); assert.strictEqual(d.system, C.systemOfKernel(k), d.name); }
+  // a system added after the handover (MG17) is declared by its own compartment.json and was never in autopilot's list (0.60.339 EAS3: emerge)
+  const SINCE_THE_HANDOVER = ['emerge'];
+  assert.deepStrictEqual(decl.map(d => d.name).filter(n => !SINCE_THE_HANDOVER.includes(n)).sort(), kernels.map(k => k.name).sort());
+  for (const d of decl.filter(x => !SINCE_THE_HANDOVER.includes(x.name))) { const k = kernels.find(x => x.name === d.name); assert.strictEqual(d.system, C.systemOfKernel(k), d.name); }
 });
 test('CD-02', 'each declaration equals its kernel, field for field', () => {
   const FIELDS = ['args', 'cwd', 'env', 'phase', 'critical', 'optional', 'onDemand', 'healthUrl', 'maxOldSpaceMB', 'minRestartDelay', 'haltPctOverride', 'idleTimeoutMs'];

@@ -828,6 +828,18 @@ export const SPEC = [
     req: () => ({ method: 'GET', path: '/api/cos/usage' }) },
   { key: 'cos.policy', repo: false, usage: 'cos policy', about: 'the supervisor\'s rules (boot set, restart backoff, circuit, memory floors, idle) with their defaults',
     req: () => ({ method: 'GET', path: '/api/cos/policy' }) },
+  // 0.60.339 EAS3 — Emerge (github.com/HorrisEllis/emerge, in Nexus at emerge/), through its own door
+  { key: 'emerge.status', repo: false, usage: 'emerge status', about: 'Emerge\'s own status, from its door (:4900): its nodes, commands, routes and modules',
+    req: () => ({ method: 'GET', path: '/api/emerge-system/status' }) },
+  { key: 'emerge.modules', repo: false, usage: 'emerge modules', about: 'the modules Emerge holds (a system of systems, nested)',
+    req: () => ({ method: 'GET', path: '/api/emerge-system/modules' }) },
+  { key: 'emerge.module.new', repo: false, usage: 'emerge module <name> [--parent p]', about: 'lay out a new Emerge module (its folder and its nodes)',
+    req: (a) => ({ method: 'POST', path: '/api/emerge-system/modules', body: { name: a.args[1] || a.args[0], parent: a.flags.parent || undefined } }) },
+  { key: 'emerge.lang', repo: false, usage: 'emerge <check|run|build|test|synth> <file.eg> [args…] · emerge say "<your words>"',
+    about: 'the Emerge language through its door: check (errors, nothing runs), run, build (to CommonJS), test (each test block in its own fork), synth (blocks to code, no model), say (your words, each understood word with your quote)',
+    req: (a) => { const op = a.args[0]; if (op === 'say') return { method: 'POST', path: '/api/emerge-system/lang/say', body: { sentence: a.args.slice(1).join(' ') } };
+      let source = ''; try { source = require('fs').readFileSync(require('path').resolve(a.args[1] || ''), 'utf8'); } catch (e) { source = a.flags.source || ''; }
+      return { method: 'POST', path: `/api/emerge-system/lang/${encodeURIComponent(op || 'check')}`, timeoutMs: 60000, body: { source, args: a.args.slice(2) } }; } },
   { key: 'repo.spine', repo: true, usage: 'repo spine <repo> [--write] [--unknown] [--limit n]', about: 'the project\'s component registry as its spine: every component and every wire with its evidence (discovered by which adapter, declared, or unknown), and the drift against nexus.spine.json; --write writes it',
     req: (a) => (a.flags.write ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/spine`, body: {}, timeoutMs: 120000 } : { method: 'GET', path: `/api/repos/${a.repo.uuid}/spine${a.flags.limit ? `?limit=${parseInt(a.flags.limit, 10)}` : ''}`, timeoutMs: 120000 }),
     print: (d, a, h) => {

@@ -1967,3 +1967,12 @@ spec:
 # ADDENDUM 2026-11-01 — registered: docs/2026-11-01-tv-ui-cleanup-phasemap.spec (TV0–TV2): the TV UI audited against its backend in Clear
 # Glass (91 requests, 28 failed with every system up: bridge :9999, emerge :4242, guardian nerve/hooks not forwarded, contracts asked of
 # servers with none), then its noise out and each channel its own page. James: "then i need tv ui cleaned out ... there is some noise."
+
+# ADDENDUM 2026-11-01 — registered: docs/2026-11-01-systems-as-modules-phasemap.spec (SM0–SM3): every system a folder and a module,
+# recursively, core at the root and modules/<name>/ in the same shape; COS runs them. James: "each system should be its own folder but also a
+# module. the each system has its own modules. recursive." MAPPED; his "merging to cos" read as COS running every system, to confirm.
+
+# ADDENDUM 2026-11-01 — registered: docs/2026-11-01-the-compartment-phasemap.spec (CP0–CP8): the compartment, whole, in one place.
+# James: "just dont have redundancy. like each compartment should be all of it. not split up every where." It supersedes 35 open phases
+# of six maps (CE1–CE7, CE1a, CON1–CON9, CS1_a_version_is_a_system_state, SN0–SN4, MG3, MG4, MG6, MG9, MG13, MG14, MG23–MG27, MG31), each
+# kept with its status naming its successor; ten phases that waited on them now also wait on their successor.

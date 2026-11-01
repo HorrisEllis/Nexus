@@ -38,3 +38,8 @@ _archive/update/
 cos/services/anonymous/state/
 cos/services/anonymous/conf/
 cos/services/anonymous/logs/
+
+# 0.60.339 EAS3 — Emerge's run state (it writes these while it runs; the locked snapshot is emerge/EMERGE.lock.json)
+emerge/data/ledger/
+emerge/data/node-index/
+emerge/data/nodes/bundle/
