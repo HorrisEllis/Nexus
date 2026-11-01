@@ -64,6 +64,10 @@ decisions:
       module resolver.
     axioms: "§0.0 (a boundary that is only a record must not be called isolation), §1.2 (each refusal said, with the route to use), his 2026-10-07 'prefer novel if it's stable'"
 
+  LM_D4_cos_manages_loom_s_compartment:
+    status: DECIDED 2026-11-01 (his)
+    chosen: "Loom's compartment (nexus-self-loom, the wall of LM4) is how Loom runs: COS's supervisor starts it there, not as a bare process beside it. Found: only test LI-08 ever started Loom in its compartment; autopilot, and COS's supervisor after MG17, started node loom/server.js with no wall."
+    by: "his, 2026-11-01: \"loom is already in a compartment. it needs to be managed by cos\""
 phases:
 
   LM0_the_heartbeat:
@@ -106,6 +110,17 @@ phases:
     does: "the seal reads ready for loom; Loom boots inside nexus-self-loom (its folder read-write, the kernel read-only, nothing of another system) and is reached through its routes."
     proof: "Loom's health answers from inside its compartment; a hook written through its route is read back"
 
+  LM6_cos_runs_loom_in_its_compartment:
+    layer: integration
+    status: DONE 0.60.338 — test-cos-walled WL-01..03
+    depends_on: [LM4_the_seal_and_into_its_compartment, LM_D4_cos_manages_loom_s_compartment]
+    files: [loom/compartment.json, cos/manager/supervisor.js, cos/ui/overview/page.js, tests/modules/test-cos-walled.test.js, tests/modules/run-all.js]
+    does: >-
+      Loom declares its compartment and its wall in its own compartment.json (runtime.process.compartment nexus-self-loom; boundary: mode
+      enforce, allow its folder, the kernel, node_modules — the census's boundaryFor). COS's supervisor starts every declared process that
+      has a wall behind it (node --require cos/compartment/boundary.js, COS_BOUNDARY), every refusal the wall makes is a ledger line, and the
+      UI says the system is walled.
+    proof: "the declaration equals boundaryFor(loom); a walled fixture's reach into another folder is refused and ledgered; the real Loom, started by COS's supervisor, answers /health with the wall refusing nothing"
   LM5_the_ways_in:
     layer: backend
     status: OPEN

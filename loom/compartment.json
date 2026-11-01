@@ -33,7 +33,17 @@
       ],
       "phase": 3,
       "optional": true,
-      "healthUrl": "http://127.0.0.1:3752/health"
+      "healthUrl": "http://127.0.0.1:3752/health",
+      "compartment": "nexus-self-loom",
+      "boundary": {
+        "mode": "enforce",
+        "allow": [
+          "{{root}}/loom/",
+          "{{root}}/lib/",
+          "{{root}}/node_modules/"
+        ],
+        "about": "LM4's wall, declared by Loom (LM6, 2026-11-01): COS's supervisor starts it behind this; equal to the census's boundaryFor('loom')"
+      }
     }
   },
   "data": {
