@@ -195,7 +195,8 @@ phases:
 
   CS9_every_project_a_compartment:
     layer: integration
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP9_cos_and_idearium_one_link in docs/2026-11-01-the-compartment-phasemap.spec (his: compartments in COS become nested repos in Idearium; one link both ways); the text below is kept"
+    status_before: OPEN
     depends_on: [CS4_every_system_a_compartment, CS1_a_version_is_a_system_state, CS_D6_every_project_a_compartment, CP5_states_rewind_versions]
     files: [cos/spine/projects.js, idearium/repo/index.js, lib/cos-bridge.js]
     spec: cos/spec/cos-spine.spec

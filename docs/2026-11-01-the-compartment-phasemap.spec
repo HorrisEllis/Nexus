@@ -22,6 +22,14 @@ decisions:
     by: "his, 2026-11-01: \"just dont have redundancy. like each compartment should be all of it. not split up every where.\""
     by_the_axioms: "§10.3 (one truth, not competing copies), §8.6 (build once on what exists), §0.3 (each superseded phase kept, its successor named)"
 
+  CP_D1_cos_and_idearium_one_link:
+    status: DECIDED 2026-11-01 (his)
+    chosen: >-
+      COS and Idearium's repos are one link, both ways: a compartment made in COS becomes, by itself, a repo in Idearium, nested under its
+      parent compartment's repo; an Idearium project gets its compartment (CS9's half). The link is the compartment's id on the repo; the
+      repo's files are the compartment's project folder. Emerge (EAS3) is the first.
+    by: "his, 2026-11-01: \"lets make it a compartment. i want compartments in cos to automatically become nested compartments in idearium. like cos needs to be connected with ideariums repos\" (about HorrisEllis/Emerge, just cloned)"
+    by_the_axioms: "§5.15 (COS announces, Idearium owns its repos: each through the other's route, never its files), §10.3 (one link, not two lists), §0.3 (a destroyed compartment's repo archived, never deleted)"
 stands_on: >-
   Built: COS's supervisor, its door, the handover, its UI and the cockpit (MG15–MG18, MG29); Loom run behind its wall (LM6); a repo's desktop
   (idearium/ui/desktop.html on cos/workspace); checkpoints, activity and Nexus's systems as compartments (compartment-control-and-activity);
@@ -105,4 +113,18 @@ phases:
     does: "an agent deployed into any compartment: diagnose, test, diagnose again, as Idearium's pipeline does for a repo; a module found broken fixed and replaced in place while the rest runs; each fix held as a proposal for him (MG-006); built on the agents' control panel and orchestrator automation, not beside them"
     proof: "an agent deployed into a fixture compartment finds a broken module, its fix proposed, taken, the module replaced in place, the compartment never stopped"
 
-build_order: "CP0 → CP1 → CP2 → (CP3, CP5, CP6, CP7) → CP4, CP8. The open canvas (MG_D18) and Add → Build (BC4) sit on CP2."
+  CP9_cos_and_idearium_one_link:
+    status: OPEN
+    depends_on: [CP1_the_machine_and_its_door, CP_D1_cos_and_idearium_one_link, EAS3_emerge_at_the_top_of_nexus]
+    supersedes: [CS9_every_project_a_compartment]
+    files: [cos/host/index.js, cos/manager/server.js, idearium/repo/index.js, idearium/api/index.js, idearium/repo/nexus-self.js]
+    interface: [route, html]
+    does: >-
+      Compartment → repo: COS announces each compartment created, nested, renamed or destroyed (its host already emits them; it posts them to
+      Idearium's route), and Idearium ingests a repo for it (ingest's parent = the parent compartment's repo, compartmentId set, files from the
+      compartment's project folder), renames it, or archives it. Repo → compartment: every import and every new specced project gets its
+      compartment under its repo's id (CS9's half). One link, checked both ways: no compartment without its repo, no repo with a compartmentId
+      that COS does not hold. Emerge's compartment (EAS3) is the first to appear in Idearium by itself.
+    proof: "a compartment made in COS appears in Idearium as a repo under its parent's repo within one event; destroyed, the repo is archived; an Idearium import gets its compartment; the check over both lists finds nothing missing; Emerge appears nested with its files"
+
+build_order: "CP0 → CP1 → (CP9, with EAS3) → CP2 → (CP3, CP5, CP6, CP7) → CP4, CP8. The open canvas (MG_D18) and Add → Build (BC4) sit on CP2."
