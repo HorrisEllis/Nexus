@@ -1976,3 +1976,8 @@ spec:
 # James: "just dont have redundancy. like each compartment should be all of it. not split up every where." It supersedes 35 open phases
 # of six maps (CE1–CE7, CE1a, CON1–CON9, CS1_a_version_is_a_system_state, SN0–SN4, MG3, MG4, MG6, MG9, MG13, MG14, MG23–MG27, MG31), each
 # kept with its status naming its successor; ten phases that waited on them now also wait on their successor.
+
+# ADDENDUM 2026-11-01 — registered: docs/emerge-primitives.spec (EP_D0, EP_D1; EP1, EP2): Emerge in his words. His eight primitives (input,
+# event, gate, process, delta, state, sigma, output) mapped to Emerge and Nexus, his words → code saved (the garden walk-back), and the
+# component registry as the spine of every project the compiler builds. James: "okay that needs to be saves or specced. thats much easier
+# for me to understand." DRAFT; the coder's mappings marked to confirm.
