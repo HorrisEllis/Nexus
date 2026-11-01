@@ -9,6 +9,8 @@ require('../../lib/test-sandbox.js').ensure();
  *   CH-03  start() with the manager up and the cockpit down: the real cockpit (cos/ui/serve.js) is started and answers
  *   CH-04  the channel page in Clear Glass: down → the reason and Start COS; Start → the cockpit framed
  *   CH-05  the TV: ⬢ COS loads channels/cos/cos.html; TENSION hidden from the rail, kept
+ *   CH-06  TV4 (0.60.354), the real TV page in Clear Glass: the overview shows Idearium and COS only; "all systems" shows the other eleven;
+ *          the COS tile reads its status from the orchestrator ("cos is not there still … clear it all if possible and add ideearium and cos")
  */
 const assert = require('assert'), http = require('http'), path = require('path'), fs = require('fs'), os = require('os');
 const ROOT = path.join(__dirname, '..', '..'), UI = path.join(ROOT, 'lib/ui/tv-shell');
@@ -56,7 +58,7 @@ const logDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-ch-'));
     if (u === '/api/cos-ui/status') return j(st());
     if (u === '/api/cos-ui/start' && req.method === 'POST') { up = true; return j({ ...st(), started: 'manager', pid: 99 }); }
     const f = path.join(UI, u); if (!f.startsWith(UI) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.statusCode = 404; return res.end(); }
-    res.setHeader('Content-Type', f.endsWith('.js') ? 'application/javascript' : 'text/html'); res.end(fs.readFileSync(f));
+    res.setHeader('Content-Type', f.endsWith('.js') ? 'application/javascript; charset=utf-8' : f.endsWith('.css') ? 'text/css; charset=utf-8' : 'text/html; charset=utf-8'); res.end(fs.readFileSync(f));
   });
   const origin = `http://127.0.0.1:${orch.address().port}`;
   const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));
@@ -74,6 +76,19 @@ const logDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-ch-'));
       await page.waitForFunction(() => document.getElementById('frame').style.display === 'block');
       assert.strictEqual(await page.evaluate(() => document.getElementById('frame').getAttribute('src')), cockUrl);
       assert.ok(/started COS's manager \(pid 99\)/.test(await page.evaluate(() => document.getElementById('msg').textContent)));
+    });
+    await test('CH-06', 'the overview: Idearium and COS only; all systems shows the rest; COS reads its status', async () => {
+      up = true;
+      const p2 = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+      await p2.goto(`${origin}/index.html`);
+      await p2.waitForFunction(() => document.getElementById('ts-cos') && document.getElementById('ts-cos').textContent !== '—', null, { timeout: 15000 }).catch(() => {});
+      const vis = () => p2.evaluate(() => [...document.querySelectorAll('#sys-grid .sys-tile')].filter(t => getComputedStyle(t).display !== 'none').map(t => t.id));
+      assert.deepStrictEqual(await vis(), ['tile-idr', 'tile-cos']);
+      if (process.env.CH_SHOTS) await p2.screenshot({ path: path.join(process.env.CH_SHOTS, 'tv-overview.png') });
+      await p2.evaluate(() => { const c = document.getElementById('ov-all-systems'); c.checked = true; c.dispatchEvent(new Event('change')); });
+      assert.strictEqual((await vis()).length, 13, 'the eleven hidden, not removed');
+      await p2.evaluate(() => { const c = document.getElementById('ov-all-systems'); c.checked = false; c.dispatchEvent(new Event('change')); });
+      await p2.close();
     });
     await browser.close();
   }
