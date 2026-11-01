@@ -31,7 +31,24 @@ decisions:
     chosen: "TO CONFIRM: Clear Glass gets the same door (his line \"create a server.js for the cli and api\" sits under Clear Glass, Idearium and Architect); built only after his yes"
     by: "the coder's reading of where his line applies"
 
+  DO_D9_registry_then_cos_through_the_door:
+    status: DECIDED 2026-11-01 (his)
+    chosen: >-
+      Every system's server.js connects to its own component registry (the registry is what the door serves and checks calls against); COS
+      connects to each system only through its server.js (health, handshake, its routes), and runs each system in its own compartment behind
+      its wall, as Loom runs since 0.60.338 (LM6). A system with ways still open out is first walled in audit mode, so the wall says what it
+      would break; enforce follows when the audit is empty.
+    by: "his, 2026-11-01: \"each server.js in each system needs to connect to the component registry, then cos connects to the server.js. isolated and sandboxed.\""
 phases:
+  DO6_every_door_on_its_registry_and_walled_by_cos:
+    status: OPEN
+    depends_on: [DO_D9_registry_then_cos_through_the_door, DO1_idearium_door, DO2_architect_door, DO3_cortex_door, DO5_clear_glass_door]
+    files: [cos/manager/supervisor.js, cos/manager/server.js, guardian/server.js, copilot/server.js, loom/server.js, versionium/server.js, intelligence/server.js, ollama/server.js, diagnostic/server.js, "*/compartment.json"]
+    does: >-
+      Each server.js mounts its registry (registry-components.js) and answers the handshake from it; diagnostic's does not yet (measured
+      2026-11-01). Each compartment.json declares its compartment and its wall; COS starts each system behind it (audit first, enforce
+      when the audit is empty) and reads each system only through its door.
+    proof: "per system: its door's handshake lists only its registry's routes; COS's supervisor starts it walled; its audit lines on COS's ledger, then none"
   DO0_the_handshake_counts_real_routes:
     status: BUILT 0.60.324
     depends_on: []
@@ -97,3 +114,8 @@ order: "DO0 first (it is a defect, and every door's handshake needs it); then DO
 # routeCount and routeShape; orchestrator.js's boot line names the shape (added to DO0's files first, his phased-only rule). Measured:
 # Clear Glass 0 → 117, Copilot 0 → 81, Ollama 0 → 9, Versionium 0 → 18; every routes[] contract unchanged.
 # tests/modules/test-contract-handshake-routes.test.js HR-01..04, 4/4.
+
+# ── ADDENDUM 2026-11-01 — his "server.js … component registry, then cos connects to the server.js. isolated and sandboxed." (DO_D9, DO6) ─
+# Measured the same day: server.js in guardian, copilot, loom, versionium, intelligence, ollama, diagnostic (diagnostic's names no
+# registry); none yet in cortex, idearium, orchestrator, clear-glass, architect, cos (DO1–DO5 open). Loom runs walled under COS since
+# 0.60.338 (LM6); DO6 does the same for every system, audit before enforce.
