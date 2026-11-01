@@ -202,6 +202,7 @@ function setup() {
     assert.strictEqual(fs.readFileSync(path.join(folder, 'a.js'), 'utf8'), before, 'no file touched');
     assert.strictEqual(fs.readFileSync(path.join(folder, 'data/x/state.json'), 'utf8'), '{"n":"his runtime"}\n', 'his data stays');
     assert.strictEqual(U.attachInPlace({ root: folder, url: origin }).action, 'none', 'once');
+    assert.strictEqual(G(folder, 'rev-parse', '--abbrev-ref', 'main@{upstream}'), 'origin/main', 'UP11: his own git pull knows where to pull from');   // 0.60.353 — "There is no tracking information for the current branch"
     const c = U.check({ root: folder, fetch: true });
     assert.ok(c.ok && c.behind === 1 && c.latest === '0.1.1', JSON.stringify(c));
     assert.deepStrictEqual(c.plan.archive.map(a => a.file), ['data/x/state.json'], 'his runtime data is set aside, not lost');
