@@ -564,6 +564,10 @@
   <div class="ch" id="ch-emerge">
     <iframe id="emerge-iframe" src="" style="width:100%;height:100%;border:none;background:#0d0d0f" title="Emerge IDE"></iframe>
   </div>
+  <!-- 2026-11-01 MG33 — COS's own screen, framed (its cockpit serves it on :7797; COS's manager starts it) -->
+  <div class="ch" id="ch-cos" style="padding:0;overflow:hidden;">
+    <iframe id="cos-iframe" src="" style="width:100%;height:100%;border:none;background:#05070b" title="COS"></iframe>
+  </div>
   <!-- 2026-11-01 TV3 — the emergence channel, its own page (TV_D2): channels/emergence/ -->
   <div class="ch" id="ch-emergence" style="padding:0;overflow:hidden;">
     <iframe id="emergence-iframe" src="" style="width:100%;height:100%;border:none;background:#05060a" title="Emergence"></iframe>
@@ -783,6 +787,8 @@ const CH_META=[
   {id:'ch-perplexity-agent', name:'PERPLEXITY',  accent:'Web-grounded · citations · NCP', hidden:true},
   // 2026-11-01 TV3 — James: "the tv ui needs the emergence channel". Appended, never inserted: CH_INSPECT is read by position.
   {id:'ch-emergence',  name:'EMERGENCE',  accent:'Crystallised · Forming · Runs', railLabel:'✦ Emergence'},
+  // 2026-11-01 MG33 — James: "where is cos ui?". COS's own screen (its cockpit, :7797), framed like the full Guardian/Cortex screens; appended.
+  {id:'ch-cos',        name:'COS',        accent:':7797 · Compartments · Ledger · Proposals', railLabel:'⬢ COS'},
 ];
 // §EDITABLE 2026-09-20 — window.CH_META was never set (menu.js's own
 // _buildNavButtons() already expected it: `window.CH_META || []` always
@@ -896,6 +902,7 @@ function tune(n){
   if(chId==='ch-causal'){cgLoad();}
   if(chId==='ch-conversations'){convLoad();}
   if(chId==='ch-emerge'){const f=document.getElementById('emerge-iframe');if(f&&!f.src)f.src='../emerge/emerge-ide.html';}
+  if(chId==='ch-cos'){const f=document.getElementById('cos-iframe');if(f&&!f.getAttribute('src'))f.src='http://127.0.0.1:7797/';}
   if(chId==='ch-emergence'){const f=document.getElementById('emergence-iframe');if(f&&!f.getAttribute('src'))f.src='channels/emergence/emergence.html';else if(f&&f.contentWindow&&f.contentWindow.EMERGENCE)f.contentWindow.EMERGENCE.load();}
 }
 
