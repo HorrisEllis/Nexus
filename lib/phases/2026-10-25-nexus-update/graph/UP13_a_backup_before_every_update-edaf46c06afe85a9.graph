@@ -1,0 +1,263 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UP13_a_backup_before_every_update:edaf46c06afe85a9
+type: graph
+id: phase:UP13_a_backup_before_every_update:edaf46c06afe85a9
+context: dependency graph of phase UP13_a_backup_before_every_update
+intent: null
+summary: 31 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793576813268
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576813268
+lastSeenAt: 1793576813268
+fingerprint: null
+payload:
+  for: UP13_a_backup_before_every_update
+  kind: phase
+  repo: null
+  hash: edaf46c06afe85a9
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/update.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/update.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-update.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus/core-duties.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-nexus-update.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/nexus/autopilot.retired-0.60.330.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: intelligence/spatial/lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus-update.js
+      to: lib/release-version.js
+      kind: requires
+    - from: lib/nexus-update.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/nexus/autopilot.retired-0.60.330.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP12_open_a_pull_request_for_any_agent
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP11_an_attached_folder_tracks_origin
+    dependents: []
+    upstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP11_an_attached_folder_tracks_origin
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP12_open_a_pull_request_for_any_agent
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2a_adopt_the_old_folder
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP6_attach_in_place
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D1_how_an_update_lands
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D2_who_applies
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D3_runtime_data
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D4_automatic
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-25-nexus-update-phasemap.spec::UP5_the_cos_driver
+        files:
+          - lib/nexus-update.js
+    dangling: []
+    lines:
+      - layer 6 · ready
+      - >-
+        depends on (2): UP12_open_a_pull_request_for_any_agent,
+        UP11_an_attached_folder_tracks_origin · all upstream 10
+      - 'needed by (0): —'
+      - 'same files as UP5_the_cos_driver with no order between them: lib/nexus-update.js'
+    edges:
+      - from: docs/2026-10-25-nexus-update-phasemap.spec::UP12_open_a_pull_request_for_any_agent
+        kind: declared
+      - from: docs/2026-10-25-nexus-update-phasemap.spec::UP11_an_attached_folder_tracks_origin
+        kind: declared

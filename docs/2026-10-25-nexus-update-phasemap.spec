@@ -150,5 +150,17 @@ spec:
         never reads or holds a token), then opens the PR with gh when gh is installed and signed in; otherwise it answers with GitHub's
         compare URL, title and body prefilled, for him to open and click. Refused on the base branch itself and on a dirty tree (said, never
         stashed). The coder's reading, decided by the axioms (§5.15: GitHub auth stays git's and gh's; §1.2: the fallback is said).
+    UP13_a_backup_before_every_update:
+      status: "DONE (0.60.363) — test-nexus-update 12/12 (UP-13 new; UP-08 drives the toggle and the backup line in Clear Glass)"
+      depends_on: [UP12_open_a_pull_request_for_any_agent, UP11_an_attached_folder_tracks_origin]
+      spec: docs/nexus-update.spec
+      blocks: [MOD-UP-BACKUP-ROUTE, MOD-UP-APPLY-BACKED, MOD-UP-POLICY-TOGGLE]
+      files: [lib/nexus-update.js, idearium/api/index.js, idearium/ui/update.html, idearium/cli/route-commands.js, lib/agent-tools/tools/nexus/update.js, lib/nexus/core-duties.js, tests/modules/test-nexus-update.test.js]
+      does: >-
+        James, 2026-11-01, on the Updates page: "can you fix the drop down? make it look better? make sure it hooks into idearium versionium, to
+        backup the system". Before any update: Idearium snapshots the whole tree into its Nexus repo store and records it in Versionium (POST
+        /api/nexus-self/backup); the update names the snapshot; no backup, no update (REVERSIBILITY). The store is Idearium's, so the
+        automatic update and the agent tool ask its route (§5.15). The native white dropdown becomes three buttons in the page's theme. A fetch
+        dropped mid-way (his page: "read ECONNRESET") is tried once more.
 
   verification_here: "Proven against real git repos built in a temp folder (an origin with a newer release, a clone behind it): check, a refused code collision, an archived data collision, apply, rollback. Not run on his machine; GitHub itself is reached by git, not by this test."

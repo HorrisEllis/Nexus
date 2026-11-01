@@ -246,6 +246,9 @@ const FILES = [
   ['lib/node-edges.js', I('lib/node-edges.js'), [I('lib/node-export.js')]],   // importFromFile — each node read from its file
   ['intelligence/lattice/node-lattice.js', I('intelligence/lattice/node-lattice.js'), [I('lib/nexus-client.js')]],   // Idearium's GET /api/system/nodes(/:system?edges=1)
   [I('orchestrator/orchestrator.js'), I('orchestrator/cos-ui-door.js'), '0.60.352 MG34 GET /api/cos-ui/status, POST /api/cos-ui/start'],
+  [I('lib/nexus-update.js'), I('lib/nexus-client.js'), '0.60.363 UP13 applyBacked asks Idearium POST /api/nexus-self/backup before every update (the store is Idearium\'s)'],
+  [I('idearium/api/index.js'), I('lib/nexus-self/store.js'), '0.60.363 UP13 _updateBackup: the whole tree snapshotted in Idearium\'s process'],
+  [I('idearium/api/index.js'), I('lib/versionium-record.js'), '0.60.363 UP13 the backup recorded in Versionium (kind nexus.backup)'],
   [I('lib/ui/tv-shell/index.html'), I('orchestrator/orchestrator.js'), '0.60.360 TV4 the overview COS tile: GET /api/cos-ui/status (TV_D1)'],
   [I('lib/ui/tv-shell/channels/cos/cos.js'), I('orchestrator/orchestrator.js'), '0.60.352 MG34 GET /api/cos-ui/status, POST /api/cos-ui/start (TV_D1)'],
   [I('lib/ui/tv-shell/menu.js'), I('orchestrator/orchestrator.js'), '0.60.352 UP10 ⇪ UPDATE: GET /api/update/check, POST /api/update/apply (TV_D1)'],

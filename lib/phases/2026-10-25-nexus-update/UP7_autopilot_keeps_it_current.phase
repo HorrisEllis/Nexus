@@ -7,11 +7,11 @@ intent: null
 summary: UP7_autopilot_keeps_it_current (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792973890115
+exported_at: 1793576813260
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792973890115
-lastSeenAt: 1792973890115
+firstSeenAt: 1793576813260
+lastSeenAt: 1793576813260
 fingerprint: null
 payload:
   id: UP7_autopilot_keeps_it_current
@@ -26,4 +26,4 @@ payload:
     - UP6_attach_in_place
   blocks: []
   spec: null
-  graph: 1953e005843f391f
+  graph: 2e2fa0a3698d7603

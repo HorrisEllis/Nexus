@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792973890117
+exported_at: 1793576813261
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792973890117
-lastSeenAt: 1792973890117
+firstSeenAt: 1793576813261
+lastSeenAt: 1793576813261
 fingerprint: null
 payload:
   for: UP8_policy_on_the_page
@@ -216,7 +216,8 @@ payload:
     layer: 6
     deps:
       - docs/2026-10-25-nexus-update-phasemap.spec::UP7_autopilot_keeps_it_current
-    dependents: []
+    dependents:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP9_a_popup_when_there_is_an_update
     upstream:
       - docs/2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
       - docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
@@ -227,15 +228,21 @@ payload:
       - docs/2026-10-25-nexus-update-phasemap.spec::UP_D2_who_applies
       - docs/2026-10-25-nexus-update-phasemap.spec::UP_D3_runtime_data
       - docs/2026-10-25-nexus-update-phasemap.spec::UP_D4_automatic
-    downstream: []
+    downstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP10_update_from_the_floating_menu
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP9_a_popup_when_there_is_an_update
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC11_the_cos_app_runs_alone
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP9_a_popup_when_there_is_an_update
     conflicts: []
     dangling: []
     lines:
       - layer 6
       - 'depends on (1): UP7_autopilot_keeps_it_current · all upstream 9'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): UP9_a_popup_when_there_is_an_update · all downstream 3 · finishing it unlocks
+        UP9_a_popup_when_there_is_an_update
     edges:
       - from: docs/2026-10-25-nexus-update-phasemap.spec::UP7_autopilot_keeps_it_current
         kind: declared

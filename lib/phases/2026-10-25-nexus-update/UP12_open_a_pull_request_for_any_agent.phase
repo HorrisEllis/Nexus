@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP12_open_a_pull_request_for_any_agent
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP12_open_a_pull_request_for_any_agent
+context: >-
+  pipeline phase UP12_open_a_pull_request_for_any_agent of
+  docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP12_open_a_pull_request_for_any_agent (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793576813267
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576813267
+lastSeenAt: 1793576813267
+fingerprint: null
+payload:
+  id: UP12_open_a_pull_request_for_any_agent
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/git-pr.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-git-pr.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - UP6_attach_in_place
+  blocks: []
+  spec: null
+  graph: 668f4927fdf2e47d

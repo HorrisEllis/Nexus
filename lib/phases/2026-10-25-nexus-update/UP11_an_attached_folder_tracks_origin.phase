@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP11_an_attached_folder_tracks_origin
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP11_an_attached_folder_tracks_origin
+context: pipeline phase UP11_an_attached_folder_tracks_origin of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP11_an_attached_folder_tracks_origin (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793576813266
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576813266
+lastSeenAt: 1793576813266
+fingerprint: null
+payload:
+  id: UP11_an_attached_folder_tracks_origin
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-update.js
+    - tests/modules/test-nexus-update.test.js
+  depends_on:
+    - UP6_attach_in_place
+  blocks: []
+  spec: null
+  graph: 57d07b108fa15445

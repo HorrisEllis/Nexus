@@ -1,0 +1,159 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UP11_an_attached_folder_tracks_origin:57d07b108fa15445
+type: graph
+id: phase:UP11_an_attached_folder_tracks_origin:57d07b108fa15445
+context: dependency graph of phase UP11_an_attached_folder_tracks_origin
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793576813266
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576813266
+lastSeenAt: 1793576813266
+fingerprint: null
+payload:
+  for: UP11_an_attached_folder_tracks_origin
+  kind: phase
+  repo: null
+  hash: 57d07b108fa15445
+  nodes:
+    - path: lib/nexus-update.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-nexus-update.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/update.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.retired-0.60.330.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/core-duties.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: clear-glass/src/copilot/tools.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/verbs.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: idearium/cli/route-commands.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus-update.js
+      to: lib/release-version.js
+      kind: requires
+    - from: lib/nexus-update.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: clear-glass/src/copilot/verbs.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: clear-glass/src/copilot/tools.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/update.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/nexus/autopilot.retired-0.60.330.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/nexus/core-duties.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus-update.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP6_attach_in_place
+    dependents:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP13_a_backup_before_every_update
+      - docs/2026-11-01-procedures-phasemap.spec::PD2_updates_by_hand_are_recorded
+    upstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2a_adopt_the_old_folder
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP6_attach_in_place
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D1_how_an_update_lands
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D2_who_applies
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D3_runtime_data
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D4_automatic
+    downstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP13_a_backup_before_every_update
+      - docs/2026-11-01-procedures-phasemap.spec::PD2_updates_by_hand_are_recorded
+      - docs/2026-11-01-procedures-phasemap.spec::PD3_versionium_holds_the_whole_update
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP13_a_backup_before_every_update
+      - docs/2026-11-01-procedures-phasemap.spec::PD2_updates_by_hand_are_recorded
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5
+      - 'depends on (1): UP6_attach_in_place · all upstream 8'
+      - >-
+        needed by (2): UP13_a_backup_before_every_update, PD2_updates_by_hand_are_recorded · all
+        downstream 3 · finishing it unlocks UP13_a_backup_before_every_update,
+        PD2_updates_by_hand_are_recorded
+    edges:
+      - from: docs/2026-10-25-nexus-update-phasemap.spec::UP6_attach_in_place
+        kind: declared
