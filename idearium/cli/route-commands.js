@@ -841,6 +841,11 @@ export const SPEC = [
     req: () => ({ method: 'GET', path: '/api/cos/usage' }) },
   { key: 'cos.policy', repo: false, usage: 'cos policy', about: 'the supervisor\'s rules (boot set, restart backoff, circuit, memory floors, idle) with their defaults',
     req: () => ({ method: 'GET', path: '/api/cos/policy' }) },
+  // 2026-11-01 CP1a — James: "continue moving the rest of the systems into cos." Every compartment's wall, asked of COS's manager (:7799)
+  { key: 'cos.walls', repo: false, usage: 'cos walls', about: 'every compartment\'s wall: enforce, audit or bare, how it is put up, and the crossings an audit wall has said since the process started (enforce-ready when none)',
+    req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/walls' }),
+    print: (d, a, h) => { const c = d.counts || {}; h.header(`walls — ${c.enforce || 0} enforce · ${c.audit || 0} audit · ${c.bare || 0} bare · ${c.enforceReady || 0} ready for enforce`);
+      for (const w of d.walls || []) console.log(`  ${w.name.padEnd(22)} ${w.mode.padEnd(8)} ${String(w.via).padEnd(13)} ${w.said}${w.crossings.length ? `\n      ${w.crossings.slice(0, 5).map(x => `${x.file} (from ${x.from})`).join('\n      ')}` : ''}`); } },
   // 2026-11-01 CI8 — James: "72% so make sure it is tv ui and i can access it,". The TENSION channel's read, for agents and the CLI.
   { key: 'tension', repo: false, usage: 'tension [friction]', about: 'every system\'s tension and regime, computed by Intelligence (intelligence/friction.js) from Diagnostic\'s friction and Cortex\'s open gaps; each source said',
     req: (a) => ({ system: 'orchestrator', method: 'GET', path: `/api/tension-field/${a.args[0] === 'friction' ? 'friction' : 'tension'}` }) },

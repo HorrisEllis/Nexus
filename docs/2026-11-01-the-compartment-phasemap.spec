@@ -229,11 +229,11 @@ phases:
   # 11,455 files (core 58.9 MB); Versionium silent 165 s at boot. Measured here: wmic is not on his Windows 11 (26200), so
   # cos/manager/usage.js read no system's memory on his machine ("wmic did not answer").
   CP1a_every_system_walled_by_cos:
-    status: OPEN
+    status: DONE 0.60.355 — test-cos-walls CW-01..05 (the real Ollama bridge behind its enforcing wall; a real Electron main walled through NODE_OPTIONS)
     spec: cos/spec/compartment.spec
     blocks: [MOD-CP-WALLS]
     depends_on: [CP_D5_every_system_into_cos, LM6_cos_runs_loom_in_its_compartment, DO_D9_registry_then_cos_through_the_door]
-    files: [scripts/cos-walls.js, cos/manager/walls.js, cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, loom/templates/cos-compartment.js, architect/compartment.json, clear-glass/compartment.json, copilot/compartment.json, cortex/compartment.json, diagnostic/compartment.json, guardian/compartment.json, idearium/compartment.json, intelligence/compartment.json, ollama/compartment.json, orchestrator/compartment.json, versionium/compartment.json, idearium/cli/route-commands.js, cos/ui/overview/page.js, tests/modules/test-cos-walls.test.js, tests/modules/run-all.js]
+    files: [scripts/cos-walls.js, cos/manager/walls.js, cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, loom/templates/cos-compartment.js, architect/compartment.json, clear-glass/compartment.json, copilot/compartment.json, cortex/compartment.json, diagnostic/compartment.json, guardian/compartment.json, idearium/compartment.json, intelligence/compartment.json, ollama/compartment.json, orchestrator/compartment.json, versionium/compartment.json, idearium/cli/route-commands.js, cos/ui/overview/page.js, loom/maps/cos-testenv-map.js, tests/modules/test-cos-walls.test.js, tests/modules/test-cos-supervisor.test.js, tests/modules/run-all.js]
     does: >-
       Each remaining system's compartment.json declares its compartment (nexus-self-<system>) and its wall, equal to boundaryFor: mode
       enforce where the system has no way out (ollama), audit elsewhere. COS's supervisor starts each one behind it; Clear Glass (Electron)

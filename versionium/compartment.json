@@ -33,7 +33,17 @@
       ],
       "phase": 3,
       "optional": true,
-      "healthUrl": "http://127.0.0.1:3754/health"
+      "healthUrl": "http://127.0.0.1:3754/health",
+      "compartment": "nexus-self-versionium",
+      "boundary": {
+        "mode": "audit",
+        "allow": [
+          "{{root}}/versionium/",
+          "{{root}}/lib/",
+          "{{root}}/node_modules/"
+        ],
+        "about": "versionium's wall, declared by versionium (CP1a, 2026-11-01): COS's supervisor starts it behind this; equal to the census's boundaryFor('versionium'); audit: 9 way(s) out still open, so the wall says what it would refuse (DO_D9); enforce when the audit is empty"
+      }
     }
   },
   "data": {
