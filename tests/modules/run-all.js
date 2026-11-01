@@ -24,6 +24,7 @@ const SUITES = [
   'test-portfolio-node.test.js',          // 0.60.299 PF1 — the .portfolio node: PortfolioStore + export/import a clearglass.portfolio/1 file (merge by id, newer-wins)
   'test-gig-metadata-glass.test.js',      // 0.60.320 GT6 — Gig metadata tab by tab: radio/checkboxes by label within the tab's limit, read back; not offered, over the limit, required-and-empty, said
   'test-gig-metadata-dropdown-glass.test.js', // 0.60.339 FP6 — Gig metadata multi-select DROPDOWNS (AI ENGINE "Choose…"): each value chosen via the driver's choose, gated on the field's chips; not offered said, idempotent, dropdown+radio in one call
+  'test-autofill-radio-checkbox-glass.test.js', // 0.60.340 CR1 — the general autofill fills RADIOS + CHECKBOXES (matchChoiceFields): a radio group's option by label, a checkbox from yes/no; unknown group left for the picker; end-to-end in Clear Glass
   'test-service-type-glass.test.js',      // 0.60.319 GT5 — Service type after the subcategory: dropdown or radios, chosen and read back; none offered or none in the gig, said
   'test-choose-refind-glass.test.js',     // 0.60.318 GT1+GT4 — real choose on a live page: a re-rendered dropdown found again (his "Element not found: [data-cg-choose=\"1\"]"), gates timed per part
   'test-dropdown-fill-glass.test.js',     // 0.60.316 DD1-verify — real browser (glass.js): a <select>/checkbox/radio/text/contenteditable actually fills; caught the checkbox double-toggle
