@@ -89,5 +89,6 @@ phases:
     blocks: [MOD-CI-TENSION-TV]
     does: "James, 2026-11-01, after CI7: \"72% so make sure it is tv ui and i can access it,\". A TENSION channel on the TV rail: every system's tension, its regime, what it is made of (monitor and open loops), the worst open loops, and each source said. Reads the orchestrator (:9000, TV_D1), which asks Intelligence"
     proof: "MOD-CI-TENSION-TV's acceptance"
+    superseded: "0.60.352 — James, 2026-11-01: \"not tension, thats noise. cos ui needs a channel.\" The TENSION channel is hidden from the rail (kept: the channel editor shows it, the route and the `tension` command stay). What he meant by 72% was the COS UI (MG34)."
 
 order: "CI6 depends on the decision only and goes first, by his word. CI1 → (CI2, CI3) → CI5; CI4 after ML3 (the batched learning loop) is built."

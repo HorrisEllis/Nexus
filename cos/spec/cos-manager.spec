@@ -1167,6 +1167,25 @@ spec:
       error_paths: ["a disallowed route → 404 naming it", "a cross-origin POST → 403 naming the origin"]
       acceptance: ["a page reads /ap/status same-origin; a POST with another Origin is refused 403; ../ in a path is refused"]
 
+    - id: MOD-MG-COS-CHANNEL
+      name: cos-channel
+      uuid: nexus-cos-channel-v1-0000-2026-1101-001
+      path: lib/ui/tv-shell/channels/cos/cos.js
+      phase: MG34_the_cos_channel_always_has_a_way_in
+      description: >-
+        James, 2026-11-01: "not tension, thats noise. cos ui needs a channel." The TV's COS channel as a page: it asks the orchestrator
+        (GET /api/cos-ui/status: the cockpit on :7797 and the manager's /api/cos/health on :7799, each probed) and frames the cockpit when it
+        answers. When it does not, it says which is down and why, and offers Start COS (POST /api/cos-ui/start): no manager → the orchestrator
+        starts `node cos/manager/server.js` (the launcher's way in, MG17: it knows only the server's path; the manager starts its cockpit and boots
+        nothing); manager up, cockpit down → `node cos/ui/serve.js --port 7797 --manager <manager>`; an old autopilot on :7799 → refused, said.
+      deps: [{ name: cockpit-server }]
+      schema_refs: [SupervisedSystem]
+      exports: ["window.COSCH.load()", "GET /api/cos-ui/status → { cockpit:{up,url}, manager:{up,service,why} }", "POST /api/cos-ui/start → { ok, started, pid, log } | { ok:false, error }"]
+      gate_pipeline: ["GATE-MG34-001: both probed, each said", "GATE-MG34-002: start only what is down", "GATE-MG34-003: never a second supervisor beside an old autopilot"]
+      behavioral_contracts: ["cockpit up → framed, nothing else shown", "cockpit down → the reason by name and Start COS; never a blank frame"]
+      error_paths: ["start fails → the error and the log path, said"]
+      acceptance: ["with stand-ins: cockpit up → the frame; down → the reason and the button; an old autopilot → start refused"]
+
     - id: MOD-MG-UI-THEME
       name: cockpit-theme
       uuid: nexus-cos-manager-ui-theme-v1-0000-2026-1030-001

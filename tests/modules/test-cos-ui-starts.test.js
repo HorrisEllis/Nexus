@@ -5,7 +5,8 @@
  * The manager, started the way `npm run start:all` starts it (node cos/manager/server.js), starts COS's cockpit beside itself.
  *   CS-01  the cockpit answers on COS_UI_PORT: / → /shell/, the shell's page, and the manager's contract through it
  *   CS-02  the cockpit's port held by something else: the manager still answers and says why the cockpit did not start
- *   CS-03  the TV has a COS channel framing http://127.0.0.1:7797/, appended (CH_INSPECT is read by position)
+ *   CS-03  the TV has a COS channel, appended (CH_INSPECT is read by position); since 0.60.352 (MG34) it frames the cockpit through
+ *          channels/cos/cos.html, which says when :7797 is down (test-cos-channel); channels appended after it (TENSION) are allowed
  */
 const assert = require('assert'), http = require('http'), path = require('path'), fs = require('fs'), net = require('net');
 const { spawn } = require('child_process');
@@ -49,8 +50,9 @@ const stop = (p) => new Promise(r => { if (p.child.exitCode != null) return r();
     const html = fs.readFileSync(path.join(ROOT, 'lib/ui/tv-shell/index.html'), 'utf8');
     const meta = html.slice(html.indexOf('const CH_META=['), html.indexOf('];', html.indexOf('const CH_META=[')));
     const ids = [...meta.matchAll(/\{id:'([^']+)'/g)].map(m => m[1]);
-    assert.strictEqual(ids[ids.length - 1], 'ch-cos');
-    assert.ok(/id="ch-cos"/.test(html) && /f\.src='http:\/\/127\.0\.0\.1:7797\/'/.test(html));
+    assert.ok(ids.indexOf('ch-cos') > ids.indexOf('ch-emergence'), 'appended after EMERGENCE, never inserted');
+    assert.ok(/id="ch-cos"/.test(html) && /f\.src='channels\/cos\/cos\.html'/.test(html));
+    assert.ok(/http:\/\/127\.0\.0\.1:\$\{uiPort\}\//.test(fs.readFileSync(path.join(ROOT, 'orchestrator/cos-ui-door.js'), 'utf8')), 'the cockpit it frames is :7797 (COS_UI_PORT)');
   });
   console.log(`\n  ${passed} passed, ${failed} failed\n`);
   process.exit(failed ? 1 : 0);
