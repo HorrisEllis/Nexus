@@ -812,3 +812,13 @@ phases_addendum_2026_11_01_mg33:
     interface: [html]
     does: "the manager starts its cockpit beside itself (COS_UI_PORT, default 7797; --no-ui to leave it off; a held port said, the manager runs on); the TV gains a COS channel framing it"
     proof: "test-cos-ui-starts: the manager started as start:all starts it serves the cockpit and its contract; with the port held, the manager still answers and says why"
+
+  MG34_the_cos_channel_always_has_a_way_in:
+    status: "DONE 0.60.352"
+    depends_on: [MG33_cos_ui_has_a_way_in]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-COS-CHANNEL]
+    files: [lib/ui/tv-shell/channels/cos/cos.html, lib/ui/tv-shell/channels/cos/cos.js, lib/ui/tv-shell/index.html, orchestrator/orchestrator.js, tests/modules/test-cos-channel.test.js]
+    interface: [html]
+    does: "James, 2026-11-01: \"not tension, thats noise. cos ui needs a channel.\" (TENSION, 0.60.351, hidden from the rail, kept.) The COS channel framed :7797 blind: when the cockpit was not running (Nexus started without start:all, or before 0.60.347) the frame was a browser error. The channel is now a page that asks the orchestrator whether the cockpit and the manager answer; it shows the cockpit when it does, and when it does not says which is down and why, with Start COS: the orchestrator starts COS's manager (which starts its cockpit, boots nothing), or only the cockpit when the manager is up, and refuses beside an old autopilot on :7799, said"
+    proof: "test-cos-channel: status read from stand-ins; the page shows the cockpit when up, the reason and the button when down; start refused beside an old autopilot"

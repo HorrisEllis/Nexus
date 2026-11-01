@@ -2470,6 +2470,29 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     return json(res, r.ok ? 200 : (r.error==='emerge offline'?503:500), r);
   }
 
+  // ── Update from the floating menu — GET /api/update/check, POST /api/update/apply (2026-11-01 UP10) ──────────────────────────────────
+  // James, 2026-11-01: "can i update nexus from the floating menu button.?". The TV asks only :9000 (TV_D1); the tree is still changed in one
+  // place, Idearium's /api/update (lib/nexus-update.js). Applying needs his yes (confirm:true), said back if missing. Restarting stays his.
+  if (top === 'api' && sub === 'update' && (seg[2] === 'check' || seg[2] === 'apply')) {
+    if (seg[2] === 'check' && M === 'GET') { const r = await GET('idearium', `/api/update${QS.get('fetch') === '0' ? '?fetch=0' : ''}`, 90000); return json(res, r && r.error && r.ok === false && !('behind' in r) ? 502 : 200, r || { ok: false, error: 'idearium did not answer' }); }
+    if (seg[2] === 'apply' && M === 'POST') {
+      const b = await readBody(req).catch(() => ({}));
+      if (!b || b.confirm !== true) return json(res, 428, { ok: false, needsConfirm: true, error: 'updating changes Nexus\'s code: send confirm:true once he has said yes' });
+      const r = await POST('idearium', '/api/update/apply', { confirm: true, by: 'person' }, 16 * 60000);   // npm install may run (its own limit is 15 min)
+      return json(res, r && r.ok ? 200 : 409, r || { ok: false, error: 'idearium did not answer' });
+    }
+    return json(res, 405, { ok: false, error: 'update: GET check | POST apply' });
+  }
+  // ── The COS channel's door — GET /api/cos-ui/status, POST /api/cos-ui/start (2026-11-01 MG34) ─────────────────────────────────────────
+  // James, 2026-11-01: "not tension, thats noise. cos ui needs a channel." The channel framed :7797 blind; a cockpit that was not running was a
+  // browser error. Now: both probed and said; Start COS starts only what is down — the manager (it starts its cockpit, boots nothing; the
+  // launcher's way in, MG17: only the server's path is known) or the cockpit alone — and never a second supervisor beside an old autopilot.
+  if (top === 'api' && sub === 'cos-ui') {
+    const D = require('./cos-ui-door.js');
+    if (seg[2] === 'status' && M === 'GET') return json(res, 200, await D.status());
+    if (seg[2] === 'start' && M === 'POST') { const r = await D.start(); return json(res, r.code || (r.ok ? 200 : 500), r); }
+    return json(res, 404, { ok: false, error: 'cos-ui: GET status | POST start' });
+  }
   // ── Update notice — GET /api/update/notice (2026-11-01 UP9) ───────────────────────────────────────────────────────────────────
   // James, 2026-11-01: "can you have it have a popup when it has an update availanel". What the last automatic check means (lib/nexus-update.js
   // notice, the kernel's); the TV shows it as a popup. The apply stays on Idearium's Updates page (one place that changes the tree).

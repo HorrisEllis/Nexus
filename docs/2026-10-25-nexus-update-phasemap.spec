@@ -119,5 +119,16 @@ spec:
         notice() reads the last check for a person (available, waiting, blocked, refused, error, updated); a check that throws is now saved as
         an error; GET /api/update/notice (the orchestrator, for the TV) and GET /api/cos/update/notice (COS, in its contract); one popup script
         (lib/ui/update-popup) on the TV and in COS's UI: Open updates (Idearium's Updates page applies), Later (6 h, per version and kind).
+    UP10_update_from_the_floating_menu:
+      status: DONE (0.60.352)
+      depends_on: [UP9_a_popup_when_there_is_an_update]
+      files: [orchestrator/orchestrator.js, lib/ui/tv-shell/menu.js, tests/modules/test-update-menu.test.js]
+      does: >-
+        James, 2026-11-01: "can i update nexus from the floating menu button.?" — he could not: the floating menu (lib/ui/tv-shell/menu.js) had
+        Diagnose, Rewind and Inspect, and the update applied only on Idearium's Updates page. An ⇪ UPDATE button in the menu: it checks (what is
+        current, what is waiting, how many commits, what blocks), and Update now (after his yes) applies. The TV asks only :9000 (TV_D1): the
+        orchestrator forwards GET /api/update/check and POST /api/update/apply to Idearium's /api/update and /api/update/apply, so the tree is
+        still changed in one place (lib/nexus-update.js through Idearium). Restarting stays his (the reply names what to restart).
+        No module spec exists for this map yet (its phases predate the rule); said, a gap.
 
   verification_here: "Proven against real git repos built in a temp folder (an origin with a newer release, a clone behind it): check, a refused code collision, an archived data collision, apply, rollback. Not run on his machine; GitHub itself is reached by git, not by this test."
