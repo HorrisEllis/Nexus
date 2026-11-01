@@ -2006,3 +2006,7 @@ spec:
 # James, 2026-11-01: "can you make that a macro or framework and then into a command like a batch but a .framework or .macro that me and copilot
 # can use. i feel we need more proceedures. maybe also have the update and diff plug into versionium. including the changelog and versoins."
 # docs/2026-11-01-procedures-phasemap.spec — PD_D0 (a procedure is a node file run by the existing engine; the name his), PD1–PD5. Mapped, not built.
+
+# ── ADDENDUM 2026-11-01 (0.60.363 UP13) — docs/nexus-update.spec ───────────────────────────────────────────────────────────────────
+# James, 2026-11-01: "make sure it hooks into idearium versionium, to backup the system". The update tool's module spec, begun: UpdateBackup;
+# MOD-UP-BACKUP-ROUTE, MOD-UP-APPLY-BACKED, MOD-UP-POLICY-TOGGLE. Compile-only in SS-01 until UP0–UP12 (which predate the spec rule) name it.

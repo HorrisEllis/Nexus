@@ -15,6 +15,8 @@ require('../../lib/test-sandbox.js').ensure();
  *   UP-07  wired: the tool, the co-pilot hat, the rows (apply/rollback the person's), the routes, the page, the co-pilot's names, loom
  *   UP-09  adopt: from an unzipped folder into the clone, his state comes across (ignored files, tracked data), code never does
  *   UP-10  attach in place: an unzipped release folder becomes its release's working tree (no file touched), then updates like a clone
+ *   UP-13  (0.60.363) no backup, no update: refused and nothing moved; Idearium not answering → refused, said; the backup's snapshot on
+ *          the history row (his 'make sure it hooks into idearium versionium, to backup the system')
  *   UP-11  automatic: auto applies when idle and restarts what changed (never Clear Glass); not idle waits; notify only says; off nothing
  *   UP-08  the Updates page, driven in Clear Glass (glass.js) over the real lib/nexus-update.js: his words, Update, Roll back, history
  */
@@ -49,6 +51,7 @@ function setup() {
   G(seed, 'add', '-A'); G(seed, 'commit', '-q', '-m', '0.1.1'); G(seed, 'tag', 'v0.1.1'); G(seed, 'push', '-q', 'origin', 'HEAD:main', 'v0.1.1');
 }
 
+const BK = { ok: true, snapshot: 'test-backup-0001', created: true, files: 3 };   // UP13: a backup every update now needs (Idearium's, stood in)
 (async () => {
   setup();
   const head0 = G(install, 'rev-parse', 'HEAD');
@@ -74,7 +77,7 @@ function setup() {
   await test('UP-03', 'apply refuses without confirm, and refuses his edit to code the update changes — naming it, touching nothing', async () => {
     const n = U.apply({ root: install }); assert.strictEqual(n.needsConfirm, true);
     W(install, 'a.js', 'mine\n');
-    const r = U.apply({ root: install, confirm: true, runNpm: false });
+    const r = U.apply({ root: install, confirm: true, runNpm: false , backup: BK });
     assert.strictEqual(r.ok, false); assert.match(r.error, /a\.js/);
     assert.strictEqual(G(install, 'rev-parse', 'HEAD'), head0, 'nothing moved');
     assert.strictEqual(fs.readFileSync(path.join(install, 'a.js'), 'utf8'), 'mine\n', 'his edit is untouched');
@@ -83,7 +86,7 @@ function setup() {
 
   await test('UP-04', 'his changed data file is copied aside, then the update fast-forwards; recorded', async () => {
     W(install, 'data/x/state.json', '{"n":"his"}\n');
-    const r = U.apply({ root: install, confirm: true, by: 'person', runNpm: false });
+    const r = U.apply({ root: install, confirm: true, by: 'person', runNpm: false , backup: BK });
     assert.ok(r.ok, r.error);
     assert.deepStrictEqual([r.from.version, r.to.version, r.archived], ['0.1.0', '0.1.1', ['data/x/state.json']]);
     assert.strictEqual(fs.readFileSync(path.join(install, r.archivedTo, 'data/x/state.json'), 'utf8'), '{"n":"his"}\n', 'his copy kept');
@@ -107,7 +110,7 @@ function setup() {
 
   await test('UP-06', 'local commits are refused: merging is his', async () => {
     W(install, 'b.js', 'local\n'); G(install, 'add', 'b.js'); G(install, 'commit', '-q', '-m', 'local');
-    const r = U.apply({ root: install, confirm: true, runNpm: false });
+    const r = U.apply({ root: install, confirm: true, runNpm: false , backup: BK });
     assert.strictEqual(r.ok, false); assert.match(r.error, /diverged: 1 local commit/);
   });
 
@@ -145,7 +148,9 @@ function setup() {
         if (u === '/update.html') return send(res, 200, page, 'text/html');
         if (u.startsWith('/js/')) return send(res, 200, '', 'application/javascript');
         if (u.startsWith('/api/update/history')) return send(res, 200, { ok: true, history: U.history({ root: ui }) });
-        if (u.startsWith('/api/update/apply')) return send(res, 200, U.apply({ root: ui, confirm: b.confirm === true, runNpm: false }));
+        if (u.startsWith('/api/update/auto')) return send(res, 200, { ok: true, policy: U.getPolicy({ root: ui }), last: null });   // UP13: the toggle reads and sets the real policy
+        if (u.startsWith('/api/update/policy')) return send(res, 200, U.setPolicy({ root: ui, policy: b.policy }));
+        if (u.startsWith('/api/update/apply')) return send(res, 200, U.apply({ root: ui, confirm: b.confirm === true, runNpm: false , backup: BK }));
         if (u.startsWith('/api/update/rollback')) return send(res, 200, U.rollback({ root: ui, confirm: b.confirm === true, runNpm: false }));
         if (u.startsWith('/api/update')) return send(res, 200, U.check({ root: ui, fetch: !u.includes('fetch=0') }));
         send(res, 404, { ok: false });
@@ -161,14 +166,25 @@ function setup() {
       await pg.waitForFunction(() => /Update to 0\.1\.1/.test(document.body.innerText), null, { timeout: 10000 });
       const t0 = await pg.evaluate(() => document.body.innerText);
       assert.ok(/1 commit\(s\) behind/.test(t0) && /make it update itself/.test(t0), 'his words for the release are on the page');
+      // UP13 — "can you fix the drop down? make it look better?": three buttons in the page's theme, the policy read and set through them
+      await pg.waitForFunction(() => document.querySelectorAll('#pol [data-pol]').length === 3, null, { timeout: 10000 });
+      assert.strictEqual(await pg.evaluate(() => !!document.querySelector('select')), false, 'no native dropdown');
+      assert.strictEqual(await pg.evaluate(() => document.querySelector('#pol [aria-checked="true"]').dataset.pol), U.getPolicy({ root: ui }).policy);
+      await pg.click('#pol [data-pol="notify"]');
+      await pg.waitForFunction(() => /automatic updates: notify/.test(document.getElementById('msg').innerText), null, { timeout: 10000 });
+      assert.strictEqual(U.getPolicy({ root: ui }).policy, 'notify', 'set through the page');
+      if (process.env.UP_SHOTS) await pg.screenshot({ path: path.join(process.env.UP_SHOTS, 'update-page.png'), fullPage: true });
+      U.setPolicy({ root: ui, policy: 'auto' });
       await pg.click('#b-apply');
       await pg.waitForFunction(() => /0\.1\.0 → 0\.1\.1/.test(document.getElementById('msg').innerText), null, { timeout: 10000 });
+      assert.ok(/backed up first \(snapshot test-bac/.test(await pg.evaluate(() => document.getElementById('msg').innerText)), 'the backup said');
       assert.ok(await pg.evaluate(() => !!document.querySelector('[data-restart="lib"]')), 'Restart buttons for the systems it changed');
       await pg.waitForFunction(() => /up to date/.test(document.body.innerText) && !!document.getElementById('b-rollback'), null, { timeout: 10000 });
       assert.strictEqual(G(ui, 'rev-parse', 'HEAD'), G(seed, 'rev-parse', 'HEAD'), 'the page really updated it');
       await pg.click('#b-rollback');
       await pg.waitForFunction(() => /rolled back 0\.1\.1 → 0\.1\.0/.test(document.body.innerText), null, { timeout: 10000 });
       await pg.waitForFunction(() => /rollback 0\.1\.1 → 0\.1\.0/.test(document.getElementById('history').innerText), null, { timeout: 10000 });
+      assert.ok(/update 0\.1\.0 → 0\.1\.1 · by person · backup test-bac/.test(await pg.evaluate(() => document.getElementById('history').innerText)), 'the update\'s backup on its history line');
       assert.deepStrictEqual(errors, []); await pg.close();
     } finally { await browser.close(); srv.close(); }
   });
@@ -206,7 +222,7 @@ function setup() {
     const c = U.check({ root: folder, fetch: true });
     assert.ok(c.ok && c.behind === 1 && c.latest === '0.1.1', JSON.stringify(c));
     assert.deepStrictEqual(c.plan.archive.map(a => a.file), ['data/x/state.json'], 'his runtime data is set aside, not lost');
-    const r = U.apply({ root: folder, confirm: true, runNpm: false, fetch: false });
+    const r = U.apply({ root: folder, confirm: true, runNpm: false, fetch: false , backup: BK });
     assert.ok(r.ok && r.to.version === '0.1.1', r.error);
     assert.strictEqual(fs.readFileSync(path.join(folder, 'data/mem/store.jaa'), 'utf8'), 'his memory\n');
     const no = path.join(tmp, 'not-nexus'); fs.mkdirSync(no);
@@ -221,7 +237,7 @@ function setup() {
     const kernels = ['cortex', 'idearium', 'clear-glass'];
     const logs = [];
     const a = mk('auto1'); const restarted = [];
-    const r = await U.autoTick({ root: a, idle: async () => ({ idle: true }), restart: async (k) => { restarted.push(k); return { ok: true }; }, npmAsync: async () => ({ ok: true }), kernels, log: (m) => logs.push(m) });
+    const r = await U.autoTick({ root: a, backupFn: async () => BK, idle: async () => ({ idle: true }), restart: async (k) => { restarted.push(k); return { ok: true }; }, npmAsync: async () => ({ ok: true }), kernels, log: (m) => logs.push(m) });
     assert.strictEqual(r.action, 'updated', JSON.stringify(r)); assert.strictEqual(r.to, '0.1.1');
     assert.deepStrictEqual(restarted, ['cortex', 'idearium'], 'lib/ changed: every supervised system but Clear Glass');
     assert.deepStrictEqual(r.waitForHim, ['clear-glass']); assert.ok(r.npm.ran && r.npm.ok, 'the lockfile changed: npm install ran');
@@ -244,6 +260,23 @@ function setup() {
     assert.match(cd, /if \(inTestRun\(\)\) log\('vitals check, automatic updates/); assert.match(cd, /update = autoUpdate\(cos,/);
   });
 
+  await test('UP-13', 'no backup, no update; Idearium not answering is said; the backup is on the history row', async () => {
+    const d = path.join(tmp, 'bk1'); G(tmp, 'clone', '-q', '--branch', 'main', origin, d); G(d, 'reset', '-q', '--hard', 'HEAD~1');
+    const head0 = G(d, 'rev-parse', 'HEAD');
+    const n = U.apply({ root: d, confirm: true, runNpm: false, fetch: false });
+    assert.strictEqual(n.ok, false); assert.match(n.error, /no backup of Nexus was taken/); assert.strictEqual(G(d, 'rev-parse', 'HEAD'), head0, 'nothing moved');
+    const bad = U.apply({ root: d, confirm: true, runNpm: false, fetch: false, backup: { ok: false, error: 'the store is full' } });
+    assert.match(bad.error, /no backup of Nexus was taken: the store is full/);
+    const un = await U.applyBacked({ root: d, confirm: true, runNpm: false, fetch: false, backupFn: async () => { throw new Error('connect ECONNREFUSED 127.0.0.1:4800'); } });
+    assert.strictEqual(un.ok, false); assert.match(un.error, /Idearium did not answer \(connect ECONNREFUSED/); assert.strictEqual(G(d, 'rev-parse', 'HEAD'), head0);
+    let asked = null;
+    const ok = await U.applyBacked({ root: d, confirm: true, by: 'person', runNpm: false, fetch: false, backupFn: async (o) => { asked = o; return BK; } });
+    assert.ok(ok.ok, ok.error); assert.deepStrictEqual(asked, { by: 'person', why: 'before update 0.1.0 → 0.1.1' }, 'asked with who and why');
+    assert.deepStrictEqual(ok.backup, { snapshot: 'test-backup-0001', created: true, files: 3 });
+    assert.strictEqual(U.history({ root: d })[0].backup.snapshot, 'test-backup-0001', 'on the history row (and so on the Versionium record)');
+    const none = await U.applyBacked({ root: d, confirm: true, fetch: false, backupFn: async () => { throw new Error('must not back up when up to date'); } });
+    assert.strictEqual(none.action, 'none');
+  });
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);

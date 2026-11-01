@@ -707,6 +707,19 @@ function _phaseRuns(repoUuid) {
 // Write one phasemap's new text: an ordinary repo through its repo layer; a nexus
 // repo through the apply gate (the live tree, recorded and reversible), then a sync
 // of the owning system so the nexus repos move to the new base.
+
+// 0.60.363 UP13 — a backup of the whole Nexus tree before an update: lib/nexus-self/store.js snapshot() in Idearium's own process (the store is
+// Idearium's), then a Versionium record (§17.12). Answers UpdateBackup (docs/nexus-update.spec).
+function _updateBackup({ by = 'person', why = '' } = {}) {
+  let version = null; try { version = _require('../../lib/release-version.js').current().version; } catch (_) {}
+  try {
+    const snap = _require('../../lib/nexus-self/store.js').snapshot({});
+    const files = Object.values(snap.systems || {}).reduce((n, x) => n + (x.fileCount || 0), 0);
+    try { _require('../../lib/versionium-record.js').record({ kind: 'nexus.backup', message: `Nexus backed up (${version || '?'}): ${why}`, change: { snapshot: snap.hash, created: !!snap.created, files, store: 'idearium nexus-self' }, causedBy: 'nexus-update:backup', by, version }).catch(() => null); } catch (_) {}
+    return { ok: true, snapshot: snap.hash, created: !!snap.created, files, version, by, why };
+  } catch (e) { return { ok: false, error: e.message, version, by, why }; }
+}
+
 async function _phaseWrite(repo, scope, mapPath, text, base, reason) {
   if (scope.source !== 'nexus') {
     const w = getRepoLayer().writeTextFile(repo.uuid, mapPath, text);
@@ -3480,7 +3493,7 @@ const ROUTE_CAP = {
   'system.sovereign': CAPS.READ_IDEAS,   // 0.60.133 IM1
   'system.tables': CAPS.READ_IDEAS,   // 0.60.250 SV1 — which system writes and reads which table of the shared store
   'procedure.list': CAPS.READ_IDEAS, 'procedure.show': CAPS.READ_IDEAS, 'procedure.run': CAPS.ADMIN,   // 0.60.354 PD1 — a procedure can change Nexus's code (behind his yes)
-  'update.check': CAPS.READ_IDEAS, 'update.history': CAPS.READ_IDEAS, 'update.apply': CAPS.ADMIN, 'update.rollback': CAPS.ADMIN, 'update.restart': CAPS.ADMIN, 'update.policy.get': CAPS.READ_IDEAS, 'update.policy.set': CAPS.ADMIN, 'update.auto': CAPS.READ_IDEAS,   // 0.60.252 UP3 — changing Nexus's own code is an admin act
+  'update.check': CAPS.READ_IDEAS, 'update.history': CAPS.READ_IDEAS, 'update.apply': CAPS.ADMIN, 'update.rollback': CAPS.ADMIN, 'update.restart': CAPS.ADMIN, 'update.policy.get': CAPS.READ_IDEAS, 'update.policy.set': CAPS.ADMIN, 'update.auto': CAPS.READ_IDEAS, 'update.backup': CAPS.ADMIN,   /* 0.60.363 UP13 — a backup of Nexus before an update */   // 0.60.252 UP3 — changing Nexus's own code is an admin act
   'system.shape': CAPS.READ_IDEAS,   // 0.60.138 IM5
   'system.nodes': CAPS.READ_IDEAS,   // 0.60.130 P33a
   'system.nodes.list': CAPS.READ_IDEAS,   // 0.60.157 GM4
@@ -4033,6 +4046,7 @@ function matchRoute(method, url) {
     // lib/nexus-self/*). Static paths first so they never match :system.
     ['GET',    ['api','nexus-self'],                                  'nexus-self.status'],
     ['POST',   ['api','nexus-self','sync'],                           'nexus-self.sync'],
+    ['POST',   ['api','nexus-self','backup'],                         'update.backup'],   // 0.60.363 UP13 — the whole tree snapshotted into Idearium's store, recorded in Versionium
     ['GET',    ['api','nexus-self','understanding'],                  'nexus-self.understanding'],
     ['GET',    ['api','nexus-self','applies'],                        'nexus-self.applies'],
     ['GET',    ['api','nexus-self','atlas'],                          'nexus-self.atlas'],     // 0.39.263 — the nexus repo's Home
@@ -6257,9 +6271,18 @@ async function handle(req, res, route, query, body) {
       return ok(res, { ...r, ok: true, finished: r.ok });   // the request worked; how the run ended is in run (waiting is not a refusal)
     }
     case 'update.history': { const U = _require('../../lib/nexus-update.js'); return ok(res, { history: U.history({}) }); }
+    // 0.60.363 UP13 (docs/nexus-update.spec MOD-UP-BACKUP-ROUTE) — James: "make sure it hooks into idearium versionium, to backup the system".
+    // The store is Idearium's (it lives in Idearium's data, §5.15): the snapshot is taken here, in Idearium's process, and recorded in Versionium.
+    case 'update.backup': {
+      const r = _updateBackup({ by: (body && body.by) || 'person', why: (body && body.why) || 'asked' });
+      res.writeHead(r.ok ? 200 : 500, { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r));
+    }
     case 'update.apply': case 'update.rollback': {
       const U = _require('../../lib/nexus-update.js');
-      const r = (action === 'update.apply' ? U.apply : U.rollback)({ confirm: !!(body && body.confirm === true), by: (body && body.by === 'agent') ? 'agent' : 'person' });
+      const who = (body && body.by === 'agent') ? 'agent' : 'person';
+      const r = action === 'update.apply'
+        ? await U.applyBacked({ confirm: !!(body && body.confirm === true), by: who, backupFn: (o) => _updateBackup(o) })   // UP13: backed up here first
+        : U.rollback({ confirm: !!(body && body.confirm === true), by: who });
       res.writeHead(r.ok ? 200 : (r.needsConfirm ? 428 : 409), { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r));
     }
     case 'system.tables': {   // 0.60.250 SV1 — James: "i want to get each system soveriegn and inside a cos compartment". Evidence only.

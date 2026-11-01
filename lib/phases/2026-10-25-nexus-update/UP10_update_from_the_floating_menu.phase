@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP10_update_from_the_floating_menu
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP10_update_from_the_floating_menu
+context: pipeline phase UP10_update_from_the_floating_menu of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP10_update_from_the_floating_menu (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793576813264
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576813264
+lastSeenAt: 1793576813264
+fingerprint: null
+payload:
+  id: UP10_update_from_the_floating_menu
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/orchestrator.js
+    - lib/ui/tv-shell/menu.js
+    - tests/modules/test-update-menu.test.js
+  depends_on:
+    - UP9_a_popup_when_there_is_an_update
+  blocks: []
+  spec: null
+  graph: f98925992dd41cc8

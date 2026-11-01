@@ -36,13 +36,21 @@
   .rel .v { font: 600 12px var(--mono); color: var(--sky); } .rel .q { color: var(--text); } .rel .q.none { color: var(--text2); font-style: italic; }
   .d { font: 12px var(--mono); color: var(--text2); } .warnline { color: var(--amber); } .badline { color: var(--coral); } .okline { color: var(--mint); }
   #msg:empty { display: none; }
+  /* 0.60.363 UP13 — James: "can you fix the drop down? make it look better?" The browser's white native list becomes three buttons in the page's theme */
+  .seg { display: inline-flex; padding: 3px; gap: 3px; border: 1px solid var(--b1); border-radius: 11px; background: rgba(0,0,0,.25); }
+  .seg button { border: 0; border-radius: 8px; background: transparent; color: var(--text2); padding: 7px 12px; font: 600 11px/1 var(--mono); }
+  .seg button:hover { color: var(--text); background: rgba(56,189,248,.06); }
+  .seg button[aria-checked="true"] { color: #04111c; background: linear-gradient(180deg, #38bdf8, #0ea5e9); }
+  .seg button[data-pol="off"][aria-checked="true"] { background: linear-gradient(180deg, #94a3b8, #64748b); }
+  .seg button:focus-visible { outline: 2px solid var(--sky); outline-offset: 1px; }
+  .polnote { margin-top: 8px; }
 </style>
 </head>
 <body>
 <script src="js/window-chrome.js" data-kind="update" data-title="Update Nexus"></script>
 <main>
   <div><div class="kicker">Nexus · updates</div><h1>Update Nexus from GitHub</h1>
-    <p class="lead">What is newer on GitHub, in your own words for each release. Update and Roll back each ask first; your changed data files are copied to <code>_archive/update/</code> before anything is replaced.</p></div>
+    <p class="lead">What is newer on GitHub, in your own words for each release. Update and Roll back each ask first. Before any update, Idearium backs up the whole of Nexus (a snapshot in its Nexus repo, recorded in Versionium), and your changed data files are copied to <code>_archive/update/</code>; no backup, no update.</p></div>
   <div class="card" id="state"><div class="d">checking GitHub…</div></div>
   <div class="card" id="msg"></div>
   <div class="card" id="releases" hidden></div>
@@ -86,16 +94,20 @@ async function check(fetchIt = true) {
 }
 
 // §UP8 0.60.254 — James: "should be automatic". The policy, and what the last automatic check did
+const POLS = [['auto', 'auto · when idle', 'updates by itself when Nexus is idle, after a backup; restarts what changed'],
+  ['notify', 'notify · tell me only', 'tells you an update is waiting; you bring it in here'], ['off', 'off', 'never checks GitHub by itself']];
 async function auto() {
   const d = await api('/api/update/auto'); const p = (d && d.policy) || { policy: 'auto', everyHours: 6 }; const l = d && d.last;
   $('auto').innerHTML = `<div class="row"><div class="kicker" style="flex:1">automatic updates</div>
-      <select id="pol">${['auto', 'notify', 'off'].map(v => `<option value="${v}" ${v === p.policy ? 'selected' : ''}>${v === 'auto' ? 'auto — when idle' : v === 'notify' ? 'notify — tell me only' : 'off'}</option>`).join('')}</select></div>
-    <div class="d">checks GitHub every ${esc(p.everyHours)} h; auto updates only when Nexus is idle, then restarts what changed — never Clear Glass while you use it</div>
+      <div class="seg" id="pol" role="radiogroup" aria-label="automatic updates">${POLS.map(([v, label]) => `<button type="button" role="radio" data-pol="${v}" aria-checked="${v === p.policy}">${label}</button>`).join('')}</div></div>
+    <div class="d polnote">${esc((POLS.find(x => x[0] === p.policy) || POLS[0])[2])}</div>
+    <div class="d">${p.policy === 'off' ? 'GitHub is not checked by itself' : `checks GitHub every ${esc(p.everyHours)} h`}${p.policy === 'auto' ? ' · never restarts Clear Glass while you use it' : ''}</div>
     ${l ? `<div class="d">last check ${esc(String(l.at).slice(0, 16).replace('T', ' '))}: <b>${esc(l.action)}</b>${l.to ? ` → ${esc(l.to)}` : l.latest ? ` (${esc(l.latest)} on GitHub)` : ''}${l.error || l.why ? ` — ${esc(l.error || [].concat(l.why).join('; '))}` : ''}${(l.waitForHim || []).length ? ' · restart Clear Glass when you are not using it' : ''}</div>` : '<div class="d">no automatic check yet (the first runs 2 minutes after Nexus starts)</div>'}`;
 }
-document.addEventListener('change', async (e) => {
-  if (e.target.id !== 'pol') return;
-  const r = await post('/api/update/policy', { policy: e.target.value });
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('#pol [data-pol]'); if (!b || b.getAttribute('aria-checked') === 'true') return;
+  document.querySelectorAll('#pol [data-pol]').forEach(x => x.setAttribute('aria-checked', String(x === b)));
+  const r = await post('/api/update/policy', { policy: b.dataset.pol });
   say(r.ok === false ? `<div class="badline">${esc(r.error)}</div>` : `<div class="okline">automatic updates: ${esc(r.policy)}</div>`); auto();
 });
 
@@ -103,17 +115,17 @@ async function history() {
   const d = await api('/api/update/history'); const l = (d && d.history) || [];
   const last = l[0];
   $('history').innerHTML = `<div class="row"><div class="kicker" style="flex:1">history</div>${last && last.kind === 'update' ? '<button id="b-rollback">Roll back the last update</button>' : ''}</div>` +
-    (l.length ? l.slice(0, 20).map(r => `<div class="d">${esc(r.at.slice(0, 16).replace('T', ' '))} · ${esc(r.kind)} ${esc(r.from.version)} → ${esc(r.to.version)} · by ${esc(r.by)}${(r.archived || []).length ? ` · ${r.archived.length} set aside in ${esc(r.archivedTo)}` : ''}${r.npm && r.npm.ran ? ` · npm install ${r.npm.ok ? 'ok' : 'FAILED'}` : ''}</div>`).join('') : '<div class="d">no updates yet</div>');
+    (l.length ? l.slice(0, 20).map(r => `<div class="d">${esc(r.at.slice(0, 16).replace('T', ' '))} · ${esc(r.kind)} ${esc(r.from.version)} → ${esc(r.to.version)} · by ${esc(r.by)}${r.backup && r.backup.snapshot ? ` · backup ${esc(String(r.backup.snapshot).slice(0, 8))}` : ''}${(r.archived || []).length ? ` · ${r.archived.length} set aside in ${esc(r.archivedTo)}` : ''}${r.npm && r.npm.ran ? ` · npm install ${r.npm.ok ? 'ok' : 'FAILED'}` : ''}</div>`).join('') : '<div class="d">no updates yet</div>');
 }
 
 document.addEventListener('click', async (e) => {
   const t = e.target.closest('button'); if (!t) return;
   if (t.id === 'b-check') return check(true);
   if (t.id === 'b-apply') {
-    if (!confirm(`Update Nexus ${LAST.current} → ${LAST.latest}?\n\nIt fast-forwards to GitHub's main${LAST.lockChanged ? ', runs npm install' : ''}, and copies any of your data files it replaces to _archive/update/ first. Roll back is one click after.`)) return;
+    if (!confirm(`Update Nexus ${LAST.current} → ${LAST.latest}?\n\nIt fast-forwards to GitHub's main${LAST.lockChanged ? ', runs npm install' : ''}, and copies any of your data files it replaces to _archive/update/ first. Idearium backs up the whole of Nexus before anything changes. Roll back is one click after.`)) return;
     t.disabled = true; say('<div class="d">updating… (npm install can take a few minutes)</div>');
     const r = await post('/api/update/apply', { confirm: true });
-    say(r.ok ? (r.action === 'none' ? `<div class="okline">${esc(r.why)}</div>` : `<div class="okline">${esc(r.from.version)} → ${esc(r.to.version)}${(r.archived || []).length ? ` · ${r.archived.length} data file(s) set aside in ${esc(r.archivedTo)}` : ''}</div>${r.npm && r.npm.ran && !r.npm.ok ? `<div class="badline">npm install failed: ${esc(r.npm.error)}</div>` : ''}${restartButtons(r.restart && r.restart.systems)}`) : `<div class="badline">${esc(r.error)}</div>`);
+    say(r.ok ? (r.action === 'none' ? `<div class="okline">${esc(r.why)}</div>` : `<div class="okline">${esc(r.from.version)} → ${esc(r.to.version)}${r.backup ? ` · backed up first (snapshot ${esc(String(r.backup.snapshot).slice(0, 8))})` : ''}${(r.archived || []).length ? ` · ${r.archived.length} data file(s) set aside in ${esc(r.archivedTo)}` : ''}</div>${r.npm && r.npm.ran && !r.npm.ok ? `<div class="badline">npm install failed: ${esc(r.npm.error)}</div>` : ''}${restartButtons(r.restart && r.restart.systems)}`) : `<div class="badline">${esc(r.error)}</div>`);
     await check(false); return history();
   }
   if (t.id === 'b-rollback') {

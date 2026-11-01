@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP9_a_popup_when_there_is_an_update
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP9_a_popup_when_there_is_an_update
+context: pipeline phase UP9_a_popup_when_there_is_an_update of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP9_a_popup_when_there_is_an_update (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1793576813263
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576813263
+lastSeenAt: 1793576813263
+fingerprint: null
+payload:
+  id: UP9_a_popup_when_there_is_an_update
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-update.js
+    - orchestrator/orchestrator.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - cos/ui/serve.js
+    - cos/ui/shell/index.html
+    - lib/ui/update-popup/update-popup.js
+    - lib/ui/tv-shell/index.html
+    - tests/modules/test-update-popup.test.js
+  depends_on:
+    - UP8_policy_on_the_page
+  blocks: []
+  spec: null
+  graph: 48a58d175274df28
