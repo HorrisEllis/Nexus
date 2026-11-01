@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-orchestration-console-phasemap.spec::OC6_history_and_replay
+type: phase
+id: docs_2026-11-01-orchestration-console-phasemap.spec::OC6_history_and_replay
+context: pipeline phase OC6_history_and_replay of docs/2026-11-01-orchestration-console-phasemap.spec
+intent: null
+summary: OC6_history_and_replay (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793556958992
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793556958992
+lastSeenAt: 1793556958992
+fingerprint: null
+payload:
+  id: OC6_history_and_replay
+  map: docs/2026-11-01-orchestration-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/automation/history.js
+    - tests/modules/test-run-history.test.js
+  depends_on:
+    - OC2_scheduler_on_nodes
+  blocks:
+    - MOD-OC-HISTORY
+  spec: docs/orchestration-console.spec
+  graph: 75a7aca32baa244b

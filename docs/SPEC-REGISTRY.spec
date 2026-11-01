@@ -1995,3 +1995,9 @@ spec:
 # map between functions and primitives: every function placed against his eight primitives from its code; joints measured (friction from fault
 # records, shapes, crossings; tension from open gaps, RFR2 traces, Versionium churn, Loom fan-in); "what fits" answered by the one traversal.
 # Intelligence's (CI6). James, 2026-11-01: "the friction and tension mapping, between functions and primitives." Compiles at specDepth 1.0.
+
+# ADDENDUM 2026-11-01 — registered: docs/orchestration-console.spec + docs/2026-11-01-orchestration-console-phasemap.spec (OC_D0; OC1–OC8).
+# BrainOS rebuilt as COS's orchestration console: .task and .pipeline nodes as the record, the scheduler on them with catch-up, a calendar,
+# deploy to any system through COS proposals, every agent tool from the index as a step, run history with replay and rewind, the taxonomy
+# expanded (schedule, occurrence, deployment, run_history; orchestration.* events). Patterns from Temporal, Airflow, Kestra, Dagster, n8n,
+# CrewAI and Maxim, each mapped to a Nexus part. James, 2026-11-01: "rebuild brianos/orchastration ui with enterprise grade code".

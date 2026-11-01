@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-orchestration-console-phasemap.spec::OC3_the_calendar
+type: phase
+id: docs_2026-11-01-orchestration-console-phasemap.spec::OC3_the_calendar
+context: pipeline phase OC3_the_calendar of docs/2026-11-01-orchestration-console-phasemap.spec
+intent: null
+summary: OC3_the_calendar (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793556958986
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793556958986
+lastSeenAt: 1793556958986
+fingerprint: null
+payload:
+  id: OC3_the_calendar
+  map: docs/2026-11-01-orchestration-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/automation/calendar.js
+    - lib/automation/routes.js
+    - tests/modules/test-calendar.test.js
+  depends_on:
+    - OC2_scheduler_on_nodes
+  blocks:
+    - MOD-OC-CALENDAR
+  spec: docs/orchestration-console.spec
+  graph: 93e61dd0b8ae30d7

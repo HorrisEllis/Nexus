@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-orchestration-console-phasemap.spec::OC2_scheduler_on_nodes
+type: phase
+id: docs_2026-11-01-orchestration-console-phasemap.spec::OC2_scheduler_on_nodes
+context: pipeline phase OC2_scheduler_on_nodes of docs/2026-11-01-orchestration-console-phasemap.spec
+intent: null
+summary: OC2_scheduler_on_nodes (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793556958983
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793556958983
+lastSeenAt: 1793556958983
+fingerprint: null
+payload:
+  id: OC2_scheduler_on_nodes
+  map: docs/2026-11-01-orchestration-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/scheduler.js
+    - lib/automation/cron.js
+    - tests/modules/test-scheduler-nodes.test.js
+  depends_on:
+    - OC1_task_nodes
+  blocks:
+    - MOD-OC-SCHEDULER
+  spec: docs/orchestration-console.spec
+  graph: a6ebd7adce1e693d

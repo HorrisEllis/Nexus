@@ -1,0 +1,169 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OC2_scheduler_on_nodes:a6ebd7adce1e693d
+type: graph
+id: phase:OC2_scheduler_on_nodes:a6ebd7adce1e693d
+context: dependency graph of phase OC2_scheduler_on_nodes
+intent: null
+summary: 16 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793556958983
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793556958983
+lastSeenAt: 1793556958983
+fingerprint: null
+payload:
+  for: OC2_scheduler_on_nodes
+  kind: phase
+  repo: null
+  hash: a6ebd7adce1e693d
+  nodes:
+    - path: lib/automation/cron.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/scheduler.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-scheduler-nodes.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: copilot/lib/activity-recall.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/autonomy-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tools/governance/schedule-task.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/steps.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/constant-autonomy.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: copilot/lib/self-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-pull.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/run-command.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/scheduler.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/scheduler.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/scheduler.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/scheduler.js
+      to: lib/agent-pull.js
+      kind: requires
+    - from: lib/scheduler.js
+      to: lib/agent-tools/tools/execution/run-command.js
+      kind: requires
+    - from: copilot/lib/activity-recall.js
+      to: lib/scheduler.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: lib/scheduler.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/scheduler.js
+      kind: requires
+    - from: lib/agent-tools/tools/governance/schedule-task.js
+      to: lib/scheduler.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: lib/scheduler.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/cron.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/cron.js
+      kind: requires
+    - from: lib/automation/steps.js
+      to: lib/automation/cron.js
+      kind: requires
+  crossings:
+    - from: lib/scheduler.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/scheduler.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+    dependents:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC3_the_calendar
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC6_history_and_replay
+    upstream:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+    downstream:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC3_the_calendar
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC6_history_and_replay
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+    blockedBy:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+    unlocks:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC3_the_calendar
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC6_history_and_replay
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by OC1_task_nodes
+      - 'depends on (1): OC1_task_nodes · all upstream 2'
+      - >-
+        needed by (2): OC3_the_calendar, OC6_history_and_replay · all downstream 3 · finishing it
+        unlocks OC3_the_calendar, OC6_history_and_replay
+    edges:
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+        kind: declared

@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+type: phase
+id: docs_2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+context: pipeline phase OC8_the_console of docs/2026-11-01-orchestration-console-phasemap.spec
+intent: null
+summary: OC8_the_console (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1793556958993
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793556958993
+lastSeenAt: 1793556958993
+fingerprint: null
+payload:
+  id: OC8_the_console
+  map: docs/2026-11-01-orchestration-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/ui/orchestration/index.html
+    - cos/ui/orchestration/page.css
+    - cos/ui/orchestration/page.js
+    - cos/manager/contract.json
+    - lib/ui/brainos/index.html
+    - tests/modules/test-orchestration-console.test.js
+  depends_on:
+    - OC3_the_calendar
+    - OC4_deploy_to_any_system
+    - OC5_every_agent_tool
+    - OC6_history_and_replay
+    - OC7_the_taxonomy_expanded
+    - MG33_cos_ui_has_a_way_in
+  blocks:
+    - MOD-OC-CONSOLE
+  spec: docs/orchestration-console.spec
+  graph: b219e48cb6a6e0cb

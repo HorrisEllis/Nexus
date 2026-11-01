@@ -74,7 +74,8 @@ const FILES = [
   ['clear-glass/renderer/site-gates/gate-bar.js', I('clear-glass/renderer/site-gates/gate-bar.js'), []],
   ['clear-glass/renderer/a11y-panel.js', I('clear-glass/renderer/a11y-panel.js'), []],   // 2026-10-30 AC2 a browser script: cg.siteProfile.a11yTrace / a11yKeepOff / a11yOpenControl over IPC   // a browser script: cg.shortcuts.gateAdd over IPC
   ['lib/repo-history-nodes.js', I('lib/repo-history-nodes.js'), [I('lib/node-export.js'), I('lib/test-sandbox.js')]],   // 0.60.285 HN1 — Idearium's history as nodes, one per unit
-  ['lib/automation/pipeline.js', I('lib/automation/pipeline.js'), [I('lib/automation/engine.js'), I('lib/automation/steps.js')]],   // 0.60.284 PL1 — WORKFLOWS_DIR; byType, validateStep
+  ['lib/automation/pipeline.js', I('lib/automation/pipeline.js'), [I('lib/automation/engine.js'), I('lib/automation/steps.js')]],
+  ['lib/automation/task-node.js', I('lib/automation/task-node.js'), [I('lib/automation/cron.js'), I('lib/versionium-record.js')]],   // 0.60.348 OC1 — the .task node (lazy requires)   // 0.60.284 PL1 — WORKFLOWS_DIR; byType, validateStep
   ['clear-glass/renderer/settings/sections/pipelines.js', I('clear-glass/renderer/settings/sections/pipelines.js'), [I('lib/automation/routes.js')]],   // 0.60.284 PL4 — wire /automation/pipelines*
   ['clear-glass/src/page/state-diff.js', I('clear-glass/src/page/state-diff.js'), []],      // 0.60.221 FP4 — pure; first used 0.60.273
   ['clear-glass/src/about/index.js', I('clear-glass/src/about/index.js'), []],   // 0.60.269 — versions and the update check (fetch, no requires)
@@ -514,6 +515,8 @@ const CONSUMERS = [
   [I('clear-glass/renderer/browser.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.283 the Site settings popup\'s Reset (cg.siteProfile.a11yReset → IPC site:a11yReset)'],
   [I('lib/automation/routes.js'), I('lib/automation/pipeline.js'), '0.60.284 PL2 /automation/pipelines* and /automation/pipeline-runs* (A.pipelines, lazy)'],
   [I('lib/automation/pipeline.js'), I('lib/automation/engine.js'), '0.60.284 PL1 each task → engine.runStep(step, { vars, scope: { tasks } })'],
+  [I('lib/automation/task-node.js'), I('lib/automation/cron.js'), '0.60.348 OC1 validateTask: schedule.cron → cron.parse (its why on a bad field)'],
+  [I('lib/automation/task-node.js'), I('lib/versionium-record.js'), '0.60.348 OC1 saveTask / archiveTask → record({ kind: orchestration.task.* }) (§17.12)'],
   [I('idearium/cli/route-commands.js'), I('lib/automation/routes.js'), '0.60.284 PL3 pipeline.* rows → Clear Glass :7704 /automation/pipelines*'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig-pages.js'), '0.60.283 _gigTags: tagInputScript / tagShownScript (each tag gated)'],
   [I('lib/repo-agent.js'), I('lib/repo-history-nodes.js'), '0.60.285 HN2 _log → record(row, { text, message, toolCalls, model }): every exchange as nodes (lazy require)'],
