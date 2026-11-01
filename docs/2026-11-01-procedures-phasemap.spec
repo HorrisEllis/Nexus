@@ -22,7 +22,7 @@ found_while_mapping:
 
 decisions:
   PD_D0_a_procedure_is_a_node_file:
-    status: "PROPOSED 2026-11-01 (the name his: .procedure recommended)"
+    status: "DECIDED 2026-11-01 — James chose .procedure; built on his own 0.60.118 .procedure (see PD_D0_addendum, which supersedes the engine reading below)"
     chosen: >-
       A procedure is a node file (<id>.procedure) in the same YAML envelope as .task and .pipeline (lib/automation-nodes.js), run by the existing
       engine (lib/automation/engine.js): its steps are the engine's own kinds (command — a row of the one command table; gate — wait for his yes;
@@ -31,11 +31,42 @@ decisions:
     by_the_axioms: "§8.6 reuse before build (engine, node envelope, command table); §5.2/§9.1 every step through the one door; §0.3 archive, never
       delete; §17.12; USER_AUTONOMY for the gates"
 
+  PD_D0_addendum_one_procedure_type:
+    status: "DECIDED 2026-11-01 (0.60.354), by his axioms; the name his"
+    his_words: >-
+      Asked "the file name: .macro is taken … I recommend .procedure, or .framework if you prefer that word. Which one, and shall I start building?",
+      James, 2026-11-01: ".procedure"
+    found_when_building: >-
+      .procedure is already his: lib/repo-procedures.js, 0.60.118 DK1 (James, 2026-10-17: "maybe buttons for agent tools, for the repo, to execute.
+      replayable proceedures?") — a repo's tool calls kept as <idearium data>/procedures/<repo>/<id>.procedure, replayed through copilot's one tool door,
+      with lib/node-schemas/schema.procedure, the Code tab's dock and the repo procedures / repo procedure rows. Neither the map nor the coder's first draft
+      found it (a §8.6 miss, caught by the schema file being there). Also: the engine's 'command' step is an HTTP call to one system, not a row of the
+      command table, and its 'gate' waits on a page element, not on his yes — so PD_D0's "the engine's own kinds" did not hold.
+    chosen: >-
+      One .procedure type, his (§8.6 reuse before build; §10.3 two truths for one type are a failure). lib/repo-procedures.js gains two step kinds beside
+      { tool, args } — { confirm } (his yes; without it the run waits there, copilot too) and { check: { of, contains|equals|matches|notEmpty } }
+      (pipeline.js gateOpen) — plus a library of procedures shipped with the code. A library step is { tool: nexus.command, args: { command, args?, flags? } }:
+      the one door. After his yes it runs as the person (command.js runAsPerson); without it, with an agent's limits, so a person's row is refused.
+      The coder's first draft (lib/automation/procedure.js, never committed) duplicated this and was dropped; nothing of his was lost (§0.3: a true
+      duplicate, reported here).
+    placement: >-
+      The library is idearium/procedures/ (not a root procedures/ folder no system owns): Idearium serves it at /api/procedures (§5.9, §5.15), and
+      hands the folder to lib/repo-procedures.js, so lib reads no system's folder itself.
+    by_the_axioms: "§8.6, §10.3, §5.15, §5.2/§9.1 (one door), USER_AUTONOMY (the confirm step; --yes refused to an agent), §0.3, §17.12 (each library run recorded)"
+
 phases:
   PD1_procedure_nodes_and_commands:
-    status: OPEN
-    depends_on: [PD_D0_a_procedure_is_a_node_file, OC1_task_nodes]
-    files: [lib/automation/procedure.js, lib/node-schemas/schema.procedure, procedures/update-nexus.procedure, idearium/cli/route-commands.js, tests/modules/test-procedures.test.js]
+    status: "DONE (0.60.354) — test-procedures PD-01..09 9/9; test-repo-procedures 7/7 unchanged. Built per PD_D0_addendum, not the files first listed."
+    depends_on: [PD_D0_a_procedure_is_a_node_file, PD_D0_addendum_one_procedure_type, OC1_task_nodes]
+    files_first_mapped: [lib/automation/procedure.js, lib/node-schemas/schema.procedure, procedures/update-nexus.procedure, idearium/cli/route-commands.js, tests/modules/test-procedures.test.js]
+    files: [lib/repo-procedures.js, lib/agent-tools/tools/nexus/command.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/procedures/update-nexus.procedure, loom/maps/build-surface-map.js, tests/modules/test-procedures.test.js, tests/modules/run-all.js]
+    graph: >-
+      Run by hand before code (2026-11-01): lib/repo-procedures.js (kernel) → lib/automation/pipeline.js (kernel, lazy); idearium/api/index.js → kernel
+      (allowed); command.js → idearium/cli/route-commands.js (already in the baseline). No new crossing. test-system-boundary SB-06 reports two
+      crossings, both cos/manager/autopilot-door.js, there before this phase; SB-08 fails on Windows (ESM 'd:' scheme), also before it.
+    left_for_later: >-
+      No command row restarts a system, so update-nexus says "restart what changed" as a step's text rather than doing it (PD5 / the Updates page). The
+      version check is a pattern, not "equals the version the update brought" (a check cannot read two steps yet).
     does: >-
       The .procedure node (parse, validate, save, list, archive — task-node.js's shape) and its command rows: procedure list | show <id> |
       run <id> [--yes], for him and copilot alike. The first one, update-nexus: update check → (gate: his yes) → update apply → restart what changed

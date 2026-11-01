@@ -235,6 +235,19 @@ export const SPEC = [
   // 0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match."
   // §0.60.252 UP3 — James, 2026-10-25: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?"
   // · "first one but the second one needs to be the end state" (git now, COS later). lib/nexus-update.js; restarting stays his.
+  // 0.60.354 PD1 — James, 2026-11-01: "a command like a batch but a .framework or .macro that me and copilot can use" · ".procedure"
+  { key: 'procedure.list', repo: false, usage: 'procedure list', about: 'the Nexus procedures: steps you or copilot run like a .bat, your yes where they change Nexus (idearium/procedures; a repo\'s own: repo procedures)',
+    req: () => ({ method: 'GET', path: '/api/procedures' }),
+    print: (d, a, h) => { for (const p of d.procedures || []) console.log(`  ${h.c.sky(p.id.padEnd(18))} ${p.name}  ${h.c.dim(p.steps.join(' → '))}`); for (const b of d.bad || []) console.log(h.c.amber(`  ${b.file}: ${b.why}`)); if (!(d.procedures || []).length) console.log(h.c.gray('  no procedures')); } },
+  { key: 'procedure.show', repo: false, usage: 'procedure show <id>', about: 'a procedure’s steps, in order',
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ method: 'GET', path: `/api/procedures/${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => { const p = d.procedure || {}; console.log(`${h.c.bold(p.name || p.id)}${p.about ? `\n  ${h.c.dim(p.about)}` : ''}`); (p.steps || []).forEach((st, i) => console.log(`  ${String(i + 1).padStart(2)}. ${st.confirm != null ? `confirm  ${st.confirm}` : st.check ? `check    step ${st.check.of} ${Object.entries(st.check).filter(([k]) => k !== 'of').map(([k, v]) => `${k} ${v}`).join(' ')}` : `command  ${(st.args && st.args.command) || st.tool}`}`)); } },
+  { key: 'procedure.run', repo: false, usage: 'procedure run <id> [--yes]', about: 'run a procedure; it stops at each step that needs your yes unless you pass --yes',
+    personOnly: (a) => (a.flags.yes ? 'passing a procedure’s yes is the person’s — run it without --yes; it stops at the step that needs them' : null),
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ method: 'POST', path: `/api/procedures/${encodeURIComponent(a.args[0])}/run`, body: { yes: !!a.flags.yes }, timeoutMs: 30 * 60000 }),
+    print: (d, a, h) => { const r = d.run || {}; (r.results || []).forEach((st, i) => console.log(`  ${st.ok ? h.c.mint('✓') : st.waiting ? h.c.amber('…') : h.c.coral('✗')} ${String(i + 1).padStart(2)}. ${h.c.dim(st.confirm || (st.check ? `check step ${st.check.of}` : st.tool))}${st.error ? `  ${h.c.coral(st.error)}` : ''}`)); console.log(d.finished ? h.c.mint('  done') : r.waiting ? h.c.amber(`  waiting for your yes — procedure run ${a.args[0]} --yes`) : h.c.coral(`  stopped at step ${r.stoppedAt} of ${r.of}`)); } },
   { key: 'update', repo: false, usage: 'update [--no-fetch]', about: 'is there a newer Nexus on GitHub: this version and origin\'s, each release in between with James\'s words, the systems it changes, what an update would set aside or refuse',
     req: (a) => ({ method: 'GET', path: `/api/update${a.flags['no-fetch'] ? '?fetch=0' : ''}`, timeoutMs: 150000 }),
     print: (d, a, h) => {

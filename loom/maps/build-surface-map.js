@@ -75,7 +75,7 @@ const FILES = [
   ['clear-glass/renderer/a11y-panel.js', I('clear-glass/renderer/a11y-panel.js'), []],   // 2026-10-30 AC2 a browser script: cg.siteProfile.a11yTrace / a11yKeepOff / a11yOpenControl over IPC   // a browser script: cg.shortcuts.gateAdd over IPC
   ['lib/repo-history-nodes.js', I('lib/repo-history-nodes.js'), [I('lib/node-export.js'), I('lib/test-sandbox.js')]],   // 0.60.285 HN1 — Idearium's history as nodes, one per unit
   ['lib/automation/pipeline.js', I('lib/automation/pipeline.js'), [I('lib/automation/engine.js'), I('lib/automation/steps.js')]],
-  ['lib/automation/task-node.js', I('lib/automation/task-node.js'), [I('lib/automation/cron.js'), I('lib/versionium-record.js')]],   // 0.60.348 OC1 — the .task node (lazy requires)
+  ['lib/automation/task-node.js', I('lib/automation/task-node.js'), [I('lib/automation/cron.js'), I('lib/versionium-record.js')]],
   ['orchestrator/cos-ui-door.js', I('orchestrator/cos-ui-door.js'), []],   // 0.60.352 MG34 — the COS channel's door: probes :7797/:7799, starts only what is down (spawns by path, never requires COS)
   ['lib/ui/tv-shell/channels/cos/cos.js', I('lib/ui/tv-shell/channels/cos/cos.js'), []],   // 0.60.352 MG34 — the COS channel page (a browser script; reads the orchestrator by route)
   ['lib/ui/tv-shell/channels/tension/tension.js', I('lib/ui/tv-shell/channels/tension/tension.js'), []],   // 0.60.351 CI8 — the TENSION channel (a browser script; reads the orchestrator by route)
@@ -531,6 +531,10 @@ const CONSUMERS = [
   [I('lib/automation/pipeline.js'), I('lib/automation/engine.js'), '0.60.284 PL1 each task → engine.runStep(step, { vars, scope: { tasks } })'],
   [I('lib/automation/task-node.js'), I('lib/automation/cron.js'), '0.60.348 OC1 validateTask: schedule.cron → cron.parse (its why on a bad field)'],
   [I('lib/automation/task-node.js'), I('lib/versionium-record.js'), '0.60.348 OC1 saveTask / archiveTask → record({ kind: orchestration.task.* }) (§17.12)'],
+  [I('lib/repo-procedures.js'), I('lib/automation/pipeline.js'), '0.60.354 PD1 a check step → gateOpen(contains|equals|matches|notEmpty, an earlier step’s output) (lazy)'],
+  [I('idearium/api/index.js'), I('lib/repo-procedures.js'), '0.60.354 PD1 /api/procedures, /:id, /:id/run → library, fromLibrary, runSteps (idearium/procedures)'],
+  [I('idearium/api/index.js'), I('lib/agent-tools/tools/nexus/command.js'), '0.60.354 PD1 a library procedure’s nexus.command step → command.execute (no yes) | runAsPerson (after his yes)'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '0.60.354 PD1 procedure list | show | run rows → /api/procedures*'],
   [I('idearium/cli/route-commands.js'), I('lib/automation/routes.js'), '0.60.284 PL3 pipeline.* rows → Clear Glass :7704 /automation/pipelines*'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig-pages.js'), '0.60.283 _gigTags: tagInputScript / tagShownScript (each tag gated)'],
   [I('lib/repo-agent.js'), I('lib/repo-history-nodes.js'), '0.60.285 HN2 _log → record(row, { text, message, toolCalls, model }): every exchange as nodes (lazy require)'],
