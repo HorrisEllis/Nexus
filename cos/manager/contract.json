@@ -1,0 +1,412 @@
+{
+  "schema": "nexus.cos.manager-contract/1",
+  "version": "1.0.0",
+  "about": "COS's manager: every route, event and page it serves. The UI and agents read this, not the code (§5.10). Spec: cos/spec/cos-manager.spec MOD-MG-CONTRACT. Map: docs/2026-10-24-cos-manager-phasemap.spec MG18, MG_D16.",
+  "origin": "James, 2026-10-31: \"okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered, cheap, or lazy\"",
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/cos/health",
+      "out": "{ service, pid, systems, ledger }"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/contract",
+      "out": "this file"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/events",
+      "out": "text/event-stream: cos.ledger, cos.system.state"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/systems",
+      "out": "{ systems: SupervisedSystem[] }"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/systems/:name",
+      "out": "{ system: SupervisedSystem }"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/systems/:name/logs",
+      "out": "{ lines: [{ ts, stream, line }] }"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/systems/:name/:op",
+      "in": "{ by }",
+      "personAct": true,
+      "ops": [
+        "start",
+        "stop",
+        "restart",
+        "reset-circuit",
+        "touch"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/boot",
+      "in": "{ set: 'all'|'core'|string[], by }",
+      "personAct": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/ledger",
+      "out": "{ entries: SupervisorLedgerEntry[] }"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/usage",
+      "out": "{ usage: { at, host, systems } }"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/policy",
+      "out": "{ policy: SupervisorPolicy }"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/cos/policy",
+      "in": "{ patch, by }",
+      "personAct": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/proposals",
+      "out": "{ proposals: Proposal[] }"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/proposals",
+      "in": "{ by: 'agent:<name>', verb, target, why }"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/proposals/:id/:op",
+      "in": "{ by }",
+      "personAct": true,
+      "ops": [
+        "take",
+        "drop"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/legacy-callers",
+      "out": "{ callers }"
+    }
+  ],
+  "door": {
+    "about": "autopilot's routes, answered in its shapes (MG16, MG-003). The cockpit server forwards them under /ap.",
+    "routes": [
+      {
+        "method": "GET",
+        "path": "/status"
+      },
+      {
+        "method": "GET",
+        "path": "/ledger"
+      },
+      {
+        "method": "GET",
+        "path": "/ledger/:system"
+      },
+      {
+        "method": "GET",
+        "path": "/ledger/:system/:hook"
+      },
+      {
+        "method": "GET",
+        "path": "/ledger/:system/:hook/:day"
+      },
+      {
+        "method": "GET",
+        "path": "/contract-map/:name"
+      },
+      {
+        "method": "GET",
+        "path": "/tables",
+        "legacy": true
+      },
+      {
+        "method": "GET",
+        "path": "/tables/:name",
+        "legacy": true
+      },
+      {
+        "method": "GET",
+        "path": "/files/:system",
+        "legacy": true
+      },
+      {
+        "method": "GET",
+        "path": "/files/:system/*",
+        "legacy": true
+      },
+      {
+        "method": "POST",
+        "path": "/run-tests/:name",
+        "personAct": true
+      }
+    ]
+  },
+  "events": {
+    "cos.ledger": "{ entry: SupervisorLedgerEntry } — every line the supervisor writes, as it is written",
+    "cos.system.state": "{ name, state, pid } — a system's state changed",
+    "cos.ui.navigate": "{ to } — a page asks the shell to open a route",
+    "cos.ui.notice": "{ level, text } — a page asks the shell to say something",
+    "cos.ui.tab": "{ tab } — the shell tells a cockpit which tab the address names"
+  },
+  "pages": [
+    {
+      "id": "shell",
+      "title": "COS",
+      "path": "shell/",
+      "route": "#/",
+      "nav": "none",
+      "built": true,
+      "phase": "MG18_the_supervisor_screen",
+      "routes": [
+        "GET /api/cos/contract",
+        "GET /api/cos/events",
+        "GET /api/cos/health",
+        "GET /api/cos/systems",
+        "GET /api/cos/usage",
+        "GET /api/cos/proposals"
+      ],
+      "listens": [],
+      "emits": [
+        "cos.system.state",
+        "cos.ledger"
+      ],
+      "about": "the frame: holds the one event stream and relays each event only to the pages that declare it"
+    },
+    {
+      "id": "overview",
+      "title": "Overview",
+      "path": "overview/",
+      "route": "#/overview",
+      "nav": "main",
+      "built": true,
+      "phase": "MG18_the_supervisor_screen",
+      "routes": [
+        "GET /api/cos/systems",
+        "GET /api/cos/usage",
+        "POST /api/cos/systems/:name/:op",
+        "POST /api/cos/boot",
+        "GET /api/cos/proposals"
+      ],
+      "listens": [
+        "cos.system.state",
+        "cos.ledger"
+      ],
+      "emits": [
+        "cos.ui.navigate",
+        "cos.ui.notice"
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "Ledger",
+      "path": "ledger/",
+      "route": "#/ledger",
+      "nav": "main",
+      "built": true,
+      "phase": "MG18_the_supervisor_screen",
+      "routes": [
+        "GET /api/cos/ledger",
+        "GET /api/cos/systems"
+      ],
+      "listens": [
+        "cos.ledger"
+      ],
+      "emits": [
+        "cos.ui.navigate"
+      ]
+    },
+    {
+      "id": "proposals",
+      "title": "Proposals",
+      "path": "proposals/",
+      "route": "#/proposals",
+      "nav": "main",
+      "built": true,
+      "phase": "MG18_the_supervisor_screen",
+      "routes": [
+        "GET /api/cos/proposals",
+        "POST /api/cos/proposals/:id/:op",
+        "GET /api/cos/systems/:name"
+      ],
+      "listens": [
+        "cos.ledger"
+      ],
+      "emits": [
+        "cos.ui.navigate",
+        "cos.ui.notice"
+      ]
+    },
+    {
+      "id": "cockpit",
+      "title": "System",
+      "path": "cockpit/",
+      "route": "#/c/:system",
+      "nav": "systems",
+      "built": true,
+      "phase": "MG29_the_cockpit",
+      "routes": [
+        "GET /api/cos/systems/:name",
+        "GET /api/cos/systems/:name/logs",
+        "GET /api/cos/usage",
+        "GET /api/cos/ledger",
+        "POST /api/cos/systems/:name/:op",
+        "GET /ledger/:system",
+        "GET /ledger/:system/:hook",
+        "GET /ledger/:system/:hook/:day",
+        "GET /contract-map/:name",
+        "GET /tables",
+        "GET /tables/:name",
+        "GET /files/:system",
+        "GET /files/:system/*",
+        "POST /run-tests/:name"
+      ],
+      "listens": [
+        "cos.system.state",
+        "cos.ledger",
+        "cos.ui.tab"
+      ],
+      "emits": [
+        "cos.ui.navigate",
+        "cos.ui.notice"
+      ],
+      "sections": [
+        "overview",
+        "logs",
+        "events",
+        "api",
+        "data",
+        "files",
+        "tests",
+        "snapshot"
+      ]
+    },
+    {
+      "id": "automation",
+      "title": "Automation",
+      "path": "automation/",
+      "route": "#/automation",
+      "nav": "main",
+      "built": true,
+      "phase": "MG9_the_console_ui (the policy form)",
+      "routes": [
+        "GET /api/cos/policy",
+        "PATCH /api/cos/policy"
+      ],
+      "listens": [
+        "cos.ledger"
+      ],
+      "emits": [
+        "cos.ui.notice"
+      ]
+    },
+    {
+      "id": "planned",
+      "title": "Planned",
+      "path": "planned/",
+      "route": "#/planned",
+      "nav": "foot",
+      "built": true,
+      "phase": "MG18_the_supervisor_screen",
+      "routes": [
+        "GET /api/cos/contract"
+      ],
+      "listens": [],
+      "emits": [
+        "cos.ui.navigate"
+      ]
+    }
+  ],
+  "planned": [
+    {
+      "id": "compartment-tabs",
+      "title": "Compartment tabs",
+      "phase": "MG9_the_console_ui",
+      "waitsOn": [
+        "MG3_the_state_manager",
+        "MG4_resources_per_compartment",
+        "MG6_settings_by_template_and_type",
+        "MG7_automation_macros_and_hats"
+      ],
+      "does": "Rewind, Versions, Diagnostics, Data, Resources, Settings, Macros and Tools for any compartment, not only Nexus's systems."
+    },
+    {
+      "id": "catalog",
+      "title": "Catalog",
+      "phase": "MG9_the_console_ui",
+      "waitsOn": [
+        "MG5_browsers_and_editors",
+        "MG8_the_factory"
+      ],
+      "does": "Archetypes, schemas, blueprints and templates: read, edit against the schema, diff, fork, and make a compartment from one."
+    },
+    {
+      "id": "categories",
+      "title": "Categories",
+      "phase": "MG11_category_manager_ui",
+      "waitsOn": [
+        "MG10_categories"
+      ],
+      "does": "Categories as registry records, each with its archetype, schema, settings and members. Systems becomes one of them."
+    },
+    {
+      "id": "add",
+      "title": "Add",
+      "phase": "MG21_the_add_screen",
+      "waitsOn": [
+        "MG20_add_deploy_connect"
+      ],
+      "does": "Drop a zip or a .spec, deploy from a template, or connect to an address: COS says what it is and adds it, each step a gate."
+    },
+    {
+      "id": "timeline",
+      "title": "Timeline",
+      "phase": "MG27_state_and_resource_screens",
+      "waitsOn": [
+        "MG25_storage_manager",
+        "MG26_branch_benchmark_merge"
+      ],
+      "does": "Every system state on one timeline: snapshot, branch, benchmark, merge after friction testing."
+    },
+    {
+      "id": "resources",
+      "title": "Resources",
+      "phase": "MG27_state_and_resource_screens",
+      "waitsOn": [
+        "MG23_allocation_and_balance",
+        "MG24_network_manager"
+      ],
+      "does": "Caps, allocation and balance per compartment, virtual networks and storage locations."
+    },
+    {
+      "id": "builder",
+      "title": "Builder",
+      "phase": "MG22_template_and_archetype_builder",
+      "waitsOn": [
+        "MG22_template_and_archetype_builder"
+      ],
+      "does": "Make templates and archetypes visually, every field from its schema."
+    },
+    {
+      "id": "registry-bus",
+      "title": "Pages on the registry bus",
+      "phase": "MG30_pages_on_the_registry_bus",
+      "waitsOn": [
+        "DB16_a_registry_for_each_system"
+      ],
+      "does": "Each page and section declared in COS's registry; the bus checks the registry instead of this contract. Waits on his acceptance of COS's registry."
+    }
+  ]
+}

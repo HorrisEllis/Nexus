@@ -7,11 +7,11 @@ intent: null
 summary: MG15_the_supervisor_in_cos (?) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1793425834317
+exported_at: 1793449750382
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793425834317
-lastSeenAt: 1793425834317
+firstSeenAt: 1793449750382
+lastSeenAt: 1793449750382
 fingerprint: null
 payload:
   id: MG15_the_supervisor_in_cos
@@ -37,4 +37,4 @@ payload:
     - MOD-MG-SUPERVISOR
     - MOD-MG-SERVER
   spec: cos/spec/cos-manager.spec
-  graph: 7a60cf3aefeca19f
+  graph: d54c3bf8ed14475d

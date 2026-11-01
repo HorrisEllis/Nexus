@@ -22,6 +22,7 @@ const path = require('path');
 const os = require('os');
 const http = require('http');
 const { spawn } = require('child_process');
+const { EventEmitter } = require('events');
 
 const DEFAULTS = Object.freeze({   // autopilot's constants (the test reads both)
   bootSet: 'all', restart: { on: 'crash', backoffMs: [1000, 30000], factor: 2 }, stableMs: 60000,
@@ -57,13 +58,17 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   const LEDGER = ledgerFile || path.join(process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager'), 'ledger.jsonl');
   const S = new Map();   // name → { decl, state, proc, pid, crashes[], restarts, backoffMs, timers, lastActivity, startedAt, by, circuit, lastExit }
   for (const d of decls) S.set(d.name, { decl: d, state: 'declared', proc: null, pid: null, crashes: [], restarts: 0, backoffMs: P.restart.backoffMs[0],
-    timers: new Set(), lastActivity: null, startedAt: null, by: null, circuit: { open: false, openedAt: null, why: null }, lastExit: null, health: null });
+    timers: new Set(), lastActivity: null, startedAt: null, by: null, circuit: { open: false, openedAt: null, why: null }, lastExit: null, health: null,
+    out: [] });   // MG18: its recent output, newest last (LOG_KEEP lines), for the cockpit's Logs
+  const LOG_KEEP = 400;
+  const bus = new EventEmitter(); bus.setMaxListeners(100);   // MG18: every ledger line is announced, so the UI hears it instead of polling
 
   let seq = 0;
   function write(kind, system, why, extra = {}) {   // the ledger, before the act; if it cannot be written the act does not happen
     const e = { id: `${Date.now().toString(36)}${(seq++).toString(36)}`, ts: Date.now(), kind, system, pid: extra.pid ?? null, code: extra.code ?? null, why, by: extra.by || 'rule:supervisor' };
     try { fs.mkdirSync(path.dirname(LEDGER), { recursive: true }); fs.appendFileSync(LEDGER, JSON.stringify(e) + '\n'); }
     catch (err) { console.log(`[cos] the ledger cannot be written (${err.message}): ${kind} ${system || ''} refused`); return null; }
+    bus.emit('ledger', e);
     return e;
   }
   const later = (s, ms, fn) => { const t = setTimeout(() => { s.timers.delete(t); fn(); }, ms); if (t.unref) t.unref(); s.timers.add(t); };
@@ -101,8 +106,9 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     try { proc = spawnFn(c.cmd, c.args, { cwd: c.cwd, env: { ...process.env, ...(d.env || {}) }, stdio: ['ignore', 'pipe', 'pipe'], shell: c.shell }); }
     catch (err) { onExit(name, proc, null, null, `spawn threw: ${err.message}`); return false; }
     s.proc = proc; s.pid = proc.pid || null; s.state = 'starting'; s.startedAt = Date.now(); s.by = by; s.sawAddrInUse = false;
-    const pipe = (st) => st && st.on('data', (b) => { const t = b.toString(); if (/EADDRINUSE/.test(t)) s.sawAddrInUse = true; for (const l of t.split('\n')) if (l.trim()) log(`[${name}] ${l}`); });
-    pipe(proc.stdout); pipe(proc.stderr);
+    const pipe = (st, stream) => st && st.on('data', (b) => { const t = b.toString(); if (/EADDRINUSE/.test(t)) s.sawAddrInUse = true;
+      for (const l of t.split('\n')) if (l.trim()) { log(`[${name}] ${l}`); s.out.push({ ts: Date.now(), stream, line: l.slice(0, 2000) }); if (s.out.length > LOG_KEEP) s.out.shift(); } });
+    pipe(proc.stdout, 'out'); pipe(proc.stderr, 'err');
     later(s, P.stableMs, () => { if (s.proc === proc) s.backoffMs = P.restart.backoffMs[0]; });
     proc.on('exit', (code, signal) => onExit(name, proc, code, signal));
     proc.on('error', (err) => log(`[${name}] failed to spawn: ${err.message}`));
@@ -188,7 +194,9 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   // MG17: a line the supervisor did not act on but must keep (the handover, naming the version that made it)
   function note(kind, why, { by = 'person', system = null } = {}) { if (!/^[a-z][a-z-]{1,30}$/.test(String(kind))) throw new Error(`a note's kind is a word: ${kind}`); return write(kind, system, why, { by }); }
 
-  const api = { boot, note, declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
+  function logs(name, { limit = 200 } = {}) { const s = must(name); return s.out.slice(-Math.max(1, Math.min(LOG_KEEP, limit))); }
+
+  const api = { boot, note, logs, on: (ev, fn) => bus.on(ev, fn), off: (ev, fn) => bus.off(ev, fn), declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
     policy: () => JSON.parse(JSON.stringify(P)), setPolicy: (patch, { by = 'person' } = {}) => { Object.assign(P, patch || {}); write('policy', null, `policy changed: ${JSON.stringify(patch)}`, { by }); return JSON.parse(JSON.stringify(P)); },
     shutdown, DEFAULTS, ledgerFile: LEDGER, lastBoot: null };
   return api;

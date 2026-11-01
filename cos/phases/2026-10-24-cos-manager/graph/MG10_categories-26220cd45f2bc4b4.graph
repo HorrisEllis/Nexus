@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793426750284
+exported_at: 1793449750360
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793426750284
-lastSeenAt: 1793426750284
+firstSeenAt: 1793449750360
+lastSeenAt: 1793449750360
 fingerprint: null
 payload:
   for: MG10_categories
@@ -258,9 +258,6 @@ payload:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
         files:
           - idearium/cli/route-commands.js
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG29_the_cockpit
-        files:
-          - idearium/cli/route-commands.js
     dangling: []
     lines:
       - >-
@@ -278,7 +275,6 @@ payload:
       - >-
         same files as MG19_the_spec_bundle with no order between them:
         idearium/cli/route-commands.js
-      - 'same files as MG29_the_cockpit with no order between them: idearium/cli/route-commands.js'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
         kind: declared

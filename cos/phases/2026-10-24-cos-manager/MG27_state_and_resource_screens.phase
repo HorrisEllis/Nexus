@@ -7,11 +7,11 @@ intent: null
 summary: MG27_state_and_resource_screens (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793376634387
+exported_at: 1793449750423
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793376634387
-lastSeenAt: 1793376634387
+firstSeenAt: 1793449750423
+lastSeenAt: 1793449750423
 fingerprint: null
 payload:
   id: MG27_state_and_resource_screens
@@ -31,4 +31,4 @@ payload:
     - MOD-MG-UI-TIMELINE
     - MOD-MG-UI-RESOURCES
   spec: cos/spec/cos-manager.spec
-  graph: 9011cdbc9e55938f
+  graph: bbf84c4bf6058887

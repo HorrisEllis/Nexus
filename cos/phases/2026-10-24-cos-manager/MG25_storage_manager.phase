@@ -7,11 +7,11 @@ intent: null
 summary: MG25_storage_manager (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793376634380
+exported_at: 1793449750417
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793376634380
-lastSeenAt: 1793376634380
+firstSeenAt: 1793449750417
+lastSeenAt: 1793449750417
 fingerprint: null
 payload:
   id: MG25_storage_manager
@@ -30,4 +30,4 @@ payload:
   blocks:
     - MOD-MG-STORAGE
   spec: cos/spec/cos-manager.spec
-  graph: b642c222dc90f060
+  graph: 605cb65aff719aae

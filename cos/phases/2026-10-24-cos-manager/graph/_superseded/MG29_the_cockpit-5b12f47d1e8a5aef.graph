@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793425834371
+exported_at: 1793448524728
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793425834371
-lastSeenAt: 1793425834371
+firstSeenAt: 1793448524728
+lastSeenAt: 1793448524728
 fingerprint: null
 payload:
   for: MG29_the_cockpit
@@ -188,6 +188,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D10_the_cockpit_has_its_own_server
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D11_idearium_look_forked
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D12_pages_in_frames_bus_declared
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D16_the_ui_floats_above_the_bus
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
     downstream:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG30_pages_on_the_registry_bus
@@ -231,7 +232,7 @@ payload:
     dangling: []
     lines:
       - layer 3 · blocked by MG18_the_supervisor_screen
-      - 'depends on (1): MG18_the_supervisor_screen · all upstream 7'
+      - 'depends on (1): MG18_the_supervisor_screen · all upstream 8'
       - 'needed by (1): MG30_pages_on_the_registry_bus'
       - >-
         same files as MG3_the_state_manager with no order between them:

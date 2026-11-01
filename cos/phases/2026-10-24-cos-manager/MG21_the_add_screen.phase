@@ -7,11 +7,11 @@ intent: null
 summary: MG21_the_add_screen (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793376294608
+exported_at: 1793449750406
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793376294608
-lastSeenAt: 1793376294608
+firstSeenAt: 1793449750406
+lastSeenAt: 1793449750406
 fingerprint: null
 payload:
   id: MG21_the_add_screen
@@ -27,4 +27,4 @@ payload:
   blocks:
     - MOD-MG-UI-ADD
   spec: cos/spec/cos-manager.spec
-  graph: 835dadbeb442a0b4
+  graph: 42d837c14af124d9
