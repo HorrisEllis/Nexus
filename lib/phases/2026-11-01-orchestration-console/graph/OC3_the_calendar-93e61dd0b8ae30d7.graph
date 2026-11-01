@@ -1,0 +1,116 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OC3_the_calendar:93e61dd0b8ae30d7
+type: graph
+id: phase:OC3_the_calendar:93e61dd0b8ae30d7
+context: dependency graph of phase OC3_the_calendar
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793556958986
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793556958986
+lastSeenAt: 1793556958986
+fingerprint: null
+payload:
+  for: OC3_the_calendar
+  kind: phase
+  repo: null
+  hash: 93e61dd0b8ae30d7
+  nodes:
+    - path: lib/automation/calendar.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/automation/routes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-calendar.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: orchestrator/automation/index.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: lib/automation-nodes.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/cron.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/from-macro.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/steps.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/templates.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/automation/routes.js
+      to: lib/automation/steps.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/templates.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation-nodes.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/cron.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/from-macro.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/automation/routes.js
+      kind: requires
+    - from: orchestrator/automation/index.js
+      to: lib/automation/routes.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC2_scheduler_on_nodes
+    dependents:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+    upstream:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC2_scheduler_on_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+    downstream:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+    blockedBy:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC2_scheduler_on_nodes
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by OC2_scheduler_on_nodes
+      - 'depends on (1): OC2_scheduler_on_nodes · all upstream 3'
+      - 'needed by (1): OC8_the_console'
+    edges:
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC2_scheduler_on_nodes
+        kind: declared
