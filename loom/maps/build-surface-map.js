@@ -246,6 +246,7 @@ const FILES = [
   ['lib/node-edges.js', I('lib/node-edges.js'), [I('lib/node-export.js')]],   // importFromFile — each node read from its file
   ['intelligence/lattice/node-lattice.js', I('intelligence/lattice/node-lattice.js'), [I('lib/nexus-client.js')]],   // Idearium's GET /api/system/nodes(/:system?edges=1)
   [I('orchestrator/orchestrator.js'), I('orchestrator/cos-ui-door.js'), '0.60.352 MG34 GET /api/cos-ui/status, POST /api/cos-ui/start'],
+  [I('lib/ui/tv-shell/index.html'), I('orchestrator/orchestrator.js'), '0.60.360 TV4 the overview COS tile: GET /api/cos-ui/status (TV_D1)'],
   [I('lib/ui/tv-shell/channels/cos/cos.js'), I('orchestrator/orchestrator.js'), '0.60.352 MG34 GET /api/cos-ui/status, POST /api/cos-ui/start (TV_D1)'],
   [I('lib/ui/tv-shell/menu.js'), I('orchestrator/orchestrator.js'), '0.60.352 UP10 ⇪ UPDATE: GET /api/update/check, POST /api/update/apply (TV_D1)'],
   [I('orchestrator/orchestrator.js'), I('idearium/api/index.js'), '0.60.352 UP10 /api/update/{check,apply} → Idearium GET /api/update, POST /api/update/apply, by route (the one place the tree changes)'],

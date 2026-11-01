@@ -38,7 +38,7 @@ const plant = (x) => { fs.mkdirSync(path.join(root, 'data', 'update'), { recursi
   });
   await test('UP-02', 'COS\'s door and the orchestrator answer the same notice', async () => {
     plant({ action: 'available', current: '0.60.346', latest: '0.60.348' });
-    const sup = { on() {}, list: () => [], ledgerFile: path.join(root, 'cos', 'ledger.jsonl'), declarations: () => [] };
+    const sup = { on() {}, setHooks() {}, list: () => [], ledgerFile: path.join(root, 'cos', 'ledger.jsonl'), declarations: () => [] };
     const srv = await require(path.join(ROOT, 'cos/manager/server.js')).listen(sup, 0, { root });
     try {
       const body = await new Promise(r => http.get({ host: '127.0.0.1', port: srv.address().port, path: '/api/cos/update/notice' }, (x) => { let t = ''; x.on('data', c => t += c); x.on('end', () => r(JSON.parse(t))); }));

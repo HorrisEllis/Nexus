@@ -231,23 +231,24 @@
       <span>VIEW:</span>
       <button onclick="_setOverviewMode('legacy')" id="btn-legacy-view" style="background:rgba(0,229,255,.15);border:1px solid rgba(0,229,255,.3);color:#00e5ff;font-family:'Space Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;cursor:pointer;letter-spacing:.06em">TILES</button>
       <button onclick="_setOverviewMode('warp')" id="btn-warp-view" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3);font-family:'Space Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;cursor:pointer;letter-spacing:.06em">CONTRACT ✦</button>
+      <label style="cursor:pointer;display:flex;align-items:center;gap:4px" title="2026-11-01 TV4 — the other systems' tiles, hidden, not removed"><input type="checkbox" id="ov-all-systems" onchange="_ovAllSystems(this.checked)"> all systems</label>
       <span id="warp-view-status" style="margin-left:auto;color:rgba(255,255,255,.2)"></span>
     </div>
     <div id="warp-overview-container" style="display:none"></div>
     <div class="sys-grid" id="sys-grid">
-      <div class="sys-tile" onclick="tuneById('ch-orch-full')" id="tile-orch">
+      <div class="sys-tile tile-retired" onclick="tuneById('ch-orch-full')" id="tile-orch">
         <div class="tile-head"><span class="tile-icon">⬡</span><span class="tile-port">:9000</span><span class="tile-status" id="ts-orch">—</span></div>
         <div class="tile-name" style="color:#00e5ff">Orchestrator</div>
         <div class="tile-desc">Root kernel. Unified API, SSE bus, subsystem lifecycle management.</div>
         <div class="tile-metrics"><div><div class="tm-val" id="tm-routes">—</div><div class="tm-lbl">Routes</div></div><div><div class="tm-val" id="tm-uptime">—</div><div class="tm-lbl">Uptime</div></div></div>
       </div>
-      <div class="sys-tile" onclick="tuneById('ch-gd-full')" id="tile-gd">
+      <div class="sys-tile tile-retired" onclick="tuneById('ch-gd-full')" id="tile-gd">
         <div class="tile-head"><span class="tile-icon">⚡</span><span class="tile-port">:7820</span><span class="tile-status" id="ts-gd">—</span></div>
         <div class="tile-name" style="color:#ffaa00">Guardian</div>
         <div class="tile-desc">NCP channel server. Routes AI jobs to browser tab providers via SSE.</div>
         <div class="tile-metrics"><div><div class="tm-val" id="tm-jobs">—</div><div class="tm-lbl">Jobs</div></div><div><div class="tm-val" id="tm-provs">—</div><div class="tm-lbl">Providers</div></div></div>
       </div>
-      <div class="sys-tile" onclick="tuneById('ch-cx-full')" id="tile-cx">
+      <div class="sys-tile tile-retired" onclick="tuneById('ch-cx-full')" id="tile-cx">
         <div class="tile-head"><span class="tile-icon">◈</span><span class="tile-port">:3748</span><span class="tile-status" id="ts-cx">—</span></div>
         <div class="tile-name" style="color:var(--ok)">Cortex</div>
         <div class="tile-desc">Sovereign memory. 28 JAA tables, gap engine, self-heal, RAID routing.</div>
@@ -259,37 +260,44 @@
         <div class="tile-desc">Idea lattice. Captures, tensions, and promotes ideas to specs.</div>
         <div class="tile-metrics"><div><div class="tm-val" id="tm-ideas">—</div><div class="tm-lbl">Ideas</div></div><div><div class="tm-val" id="tm-specs">—</div><div class="tm-lbl">Specs</div></div></div>
       </div>
-      <div class="sys-tile" onclick="tuneById('ch-br-full')" id="tile-br">
+      <!-- 2026-11-01 TV4 — James: "actually clear it all if possible and add ideearium and cos." COS's tile; its status from the orchestrator. -->
+      <div class="sys-tile" onclick="tuneById('ch-cos')" id="tile-cos">
+        <div class="tile-head"><span class="tile-icon">⬢</span><span class="tile-port">:7797</span><span class="tile-status" id="ts-cos">—</span></div>
+        <div class="tile-name" style="color:#38bdf8">COS</div>
+        <div class="tile-desc">Supervises every system. Cockpit, ledger, proposals, compartments.</div>
+        <div class="tile-metrics"><div><div class="tm-val" id="tm-cos-systems">—</div><div class="tm-lbl">Systems</div></div><div><div class="tm-val" id="tm-cos-ui">—</div><div class="tm-lbl">Cockpit</div></div></div>
+      </div>
+      <div class="sys-tile tile-retired" onclick="tuneById('ch-br-full')" id="tile-br">
         <div class="tile-head"><span class="tile-icon">⟁</span><span class="tile-port">:9999</span><span class="tile-status" id="ts-br">—</span></div>
         <div class="tile-name" style="color:#8890bb">Bridge</div>
         <div class="tile-desc">P2P trust relay. Routes inter-system requests with identity + circuit breaker.</div>
         <div class="tile-metrics"><div><div class="tm-val" id="tm-reqs">—</div><div class="tm-lbl">Requests</div></div><div><div class="tm-val" id="tm-nodes">—</div><div class="tm-lbl">Nodes</div></div></div>
       </div>
-      <div class="sys-tile" onclick="tuneById('ch-diagnose')" id="tile-dg">
+      <div class="sys-tile tile-retired" onclick="tuneById('ch-diagnose')" id="tile-dg">
         <div class="tile-head"><span class="tile-icon">⊕</span><span class="tile-port">diagnostics</span><span class="tile-status" id="ts-dg">—</span></div>
         <div class="tile-name" style="color:#8890bb">Diagnose</div>
         <div class="tile-desc">Live health checks across all systems. Run at any time.</div>
         <div class="tile-metrics"></div>
       </div>
-      <div class="sys-tile" id="tile-arch" onclick="window.open('http://127.0.0.1:3747../spec-builder', '_blank')">
+      <div class="sys-tile tile-retired" id="tile-arch" onclick="window.open('http://127.0.0.1:3747../spec-builder', '_blank')">
         <div class="tile-head"><span class="tile-icon">▲</span><span class="tile-port">:3747</span><span class="tile-status" id="ts-arch">—</span></div>
         <div class="tile-name" style="color:#ff8844">Architect</div>
         <div class="tile-desc">Builds architecture for specs and repositories. Spec blueprint engine, source SNR quality gate, spec topology scan.</div>
         <div class="tile-metrics"><div><div class="tm-val" id="tm-blueprints">—</div><div class="tm-lbl">Blueprints</div></div><div><div class="tm-val" id="tm-specs-built">—</div><div class="tm-lbl">Specs</div></div></div>
       </div>
-      <div class="sys-tile" id="tile-loom" onclick="window.open('http://127.0.0.1:3752', '_blank')">
+      <div class="sys-tile tile-retired" id="tile-loom" onclick="window.open('http://127.0.0.1:3752', '_blank')">
         <div class="tile-head"><span class="tile-icon">◈</span><span class="tile-port">:3752</span><span class="tile-status" id="ts-loom">—</span></div>
         <div class="tile-name" style="color:#e879f9">Loom</div>
         <div class="tile-desc">Builds and maps NEXUS. Component, hook, wire, and seam registry + contracts.</div>
         <div class="tile-metrics"><div><div class="tm-val" id="tm-loom-hooks">—</div><div class="tm-lbl">Hooks</div></div><div><div class="tm-val" id="tm-loom-components">—</div><div class="tm-lbl">Components</div></div></div>
       </div>
-      <div class="sys-tile" id="tile-em" onclick="tuneById('ch-emerge')">
+      <div class="sys-tile tile-retired" id="tile-em" onclick="tuneById('ch-emerge')">
         <div class="tile-head"><span class="tile-icon">◆</span><span class="tile-port">:4242</span><span class="tile-status" id="ts-em">—</span></div>
         <div class="tile-name" style="color:#44ddaa">Emerge IDE</div>
         <div class="tile-desc">SEAM compiler + codegen. Spec-driven .eg / .emerge editing.</div>
         <div class="tile-metrics"><div><div class="tm-val" id="tm-em-keywords">—</div><div class="tm-lbl">Keywords</div></div><div><div class="tm-val" id="tm-em-axioms">—</div><div class="tm-lbl">Axioms</div></div></div>
       </div>
-      <div class="sys-tile" onclick="openForgeShell()" id="tile-forge">
+      <div class="sys-tile tile-retired" onclick="openForgeShell()" id="tile-forge">
         <div class="tile-head">
           <span class="tile-icon" id="forge-heart">✦</span>
           <span class="tile-port">ui/forge-shell</span>
@@ -302,7 +310,7 @@
           <div><div class="tm-val" id="tm-forge-gaps">—</div><div class="tm-lbl">Open Gaps</div></div>
         </div>
       </div>
-      <div class="sys-tile" onclick="openModeSelector()" id="tile-agent">
+      <div class="sys-tile tile-retired" onclick="openModeSelector()" id="tile-agent">
         <div class="tile-head">
           <span class="tile-icon">⇄</span>
           <span class="tile-port">agent mode</span>
@@ -312,7 +320,7 @@
         <div class="tile-desc" id="tile-agent-desc">Choose AI provider — Claude, ChatGPT, Mistral, Gemini, Perplexity, or Orchestrator.</div>
         <div class="tile-metrics"></div>
       </div>
-      <div class="sys-tile" onclick="openBlueprintBuilder()" id="tile-blueprint">
+      <div class="sys-tile tile-retired" onclick="openBlueprintBuilder()" id="tile-blueprint">
         <div class="tile-head">
           <span class="tile-icon">⬡</span>
           <span class="tile-port">ui/blueprint-builder</span>
@@ -2104,6 +2112,26 @@ if (typeof CP === 'undefined') {
 
 document.addEventListener('DOMContentLoaded', () => typeof CP !== 'undefined' && CP.init());
 
+// 2026-11-01 TV4 — James: "actually clear it all if possible and add ideearium and cos." Two tiles; the rest hidden (§0.3), shown by "all systems".
+function _ovAllSystems(on) {
+  document.querySelectorAll('#sys-grid .tile-retired').forEach(t => { t.style.display = on ? '' : 'none'; });
+  try { localStorage.setItem('nexus.tv.overview.all', on ? '1' : '0'); } catch (_) {}
+}
+async function _ovCos() {
+  const st = document.getElementById('ts-cos'); if (!st) return;
+  try {
+    const r = await fetch((location.port === '9000' ? '' : 'http://127.0.0.1:9000') + '/api/cos-ui/status'); const d = await r.json();
+    const up = !!(d.manager && d.manager.up), ui = !!(d.cockpit && d.cockpit.up);
+    st.textContent = up && ui ? 'ONLINE' : up ? 'NO COCKPIT' : 'OFFLINE'; st.className = 'tile-status ' + (up && ui ? 'online' : 'offline');
+    document.getElementById('tm-cos-systems').textContent = up ? (d.manager.systems ?? '—') : '—';
+    document.getElementById('tm-cos-ui').textContent = ui ? 'up' : 'down';
+  } catch (e) { st.textContent = 'OFFLINE'; st.className = 'tile-status offline'; }
+}
+(function () {
+  const go = () => { let on = false; try { on = localStorage.getItem('nexus.tv.overview.all') === '1'; } catch (_) {}
+    const cb = document.getElementById('ov-all-systems'); if (cb) cb.checked = on; _ovAllSystems(on); _ovCos(); setInterval(() => { if (!document.hidden) _ovCos(); }, 15000); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
 function _setOverviewMode(mode) {
   const legacyGrid = document.getElementById('sys-grid');
   const warpGrid   = document.getElementById('warp-overview-container');

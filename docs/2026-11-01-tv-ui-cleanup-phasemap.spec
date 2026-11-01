@@ -65,6 +65,17 @@ phases:
     does: "each of ~20 channels and the overlays (menu, rewind, inspect, the spec wizard) moved into lib/ui/tv-shell/channels/<name>/ as .html, .css, .js; index.html keeps the shell; channels.json drives the rail; the 187 inline styles into each channel's css; the old index.html archived"
     proof: "in Clear Glass, every channel opens and shows what it showed before (screenshots before and after); a channel added by a folder and a line in channels.json, one removed by deleting its line, nothing else breaks"
 
+  TV4_the_overview_idearium_and_cos:
+    status: "DONE 0.60.360"
+    depends_on: [TV3_the_emergence_channel, MG34_the_cos_channel_always_has_a_way_in]
+    files: [lib/ui/tv-shell/index.html, tests/modules/test-cos-channel.test.js]
+    interface: [html]
+    does: >-
+      James, 2026-11-01, on the overview tiles after updating to 0.60.353: "cos is not there still. also need to remove bridge, diagnostic,
+      orchastrator. actually clear it all if possible and add ideearium and cos." The overview shows two tiles: Idearium and COS (new; its
+      status from the orchestrator's GET /api/cos-ui/status, a click tunes the COS channel). The other eleven are hidden, not removed (§0.3):
+      "all systems" beside VIEW shows them again, remembered per screen. Their ids stay, so the code that fills them is untouched.
+
   TV3_the_emergence_channel:
     status: "DONE 0.60.344"
     depends_on: [TV_D1_one_endpoint, TV_D2_each_channel_its_own_page]
