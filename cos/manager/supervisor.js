@@ -83,12 +83,18 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       const hit = d.cmdCandidates.map(c => c + ext).find(c => fs.existsSync(c));
       if (hit) cmd = hit; else if (ext) cmd += ext;
     } else if (d.cwd && !path.isAbsolute(cmd) && /[\\/]/.test(cmd)) cmd = path.join(cwd, cmd);
-    let args = [...(d.args || [])];
+    let args = [...(d.args || [])]; let env = null;
     if (/(^|[\\/])node(\.exe)?$/i.test(cmd)) {
       if (!args.some(a => String(a).startsWith('--max-old-space-size'))) args = [`--max-old-space-size=${d.maxOldSpaceMB || P.maxOldSpaceMB}`, ...args];
       if (!args.includes('--expose-gc')) args = ['--expose-gc', ...args];
+      // LM6 (his 2026-11-01: "loom is already in a compartment. it needs to be managed by cos") — a process that declares its compartment's
+      // wall is started behind it: cos/compartment/boundary.js preloaded, COS_BOUNDARY from its own declaration (LM4's wall)
+      if (d.boundary && Array.isArray(d.boundary.allow)) {
+        args = ['--require', path.join(__dirname, '..', 'compartment', 'boundary.js'), ...args];
+        env = { COS_BOUNDARY: JSON.stringify({ name: d.compartment || d.name, allow: d.boundary.allow, mode: d.boundary.mode === 'audit' ? 'audit' : 'enforce' }) };
+      }
     }
-    return { cmd, args, cwd, shell: process.platform === 'win32' && cmd.endsWith('.cmd') };
+    return { cmd, args, cwd, env, shell: process.platform === 'win32' && cmd.endsWith('.cmd') };
   }
 
   function spawnNow(name, by) {
@@ -101,13 +107,13 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       s.state = 'waiting-memory'; later(s, P.memBackoffMs, () => { if (s.state === 'waiting-memory') spawnNow(name, by); }); return false;
     }
     const c = commandOf(d);
-    if (!write('spawn', name, `${c.cmd} ${c.args.join(' ')}`, { by })) return false;
+    if (!write('spawn', name, `${c.env ? `in compartment ${d.compartment || d.name}, behind its wall (${(d.boundary.mode || 'enforce')}): ` : ''}${c.cmd} ${c.args.join(' ')}`, { by })) return false;
     let proc;
-    try { proc = spawnFn(c.cmd, c.args, { cwd: c.cwd, env: { ...process.env, ...(d.env || {}) }, stdio: ['ignore', 'pipe', 'pipe'], shell: c.shell }); }
+    try { proc = spawnFn(c.cmd, c.args, { cwd: c.cwd, env: { ...process.env, ...(d.env || {}), ...(c.env || {}) }, stdio: ['ignore', 'pipe', 'pipe'], shell: c.shell }); }
     catch (err) { onExit(name, proc, null, null, `spawn threw: ${err.message}`); return false; }
     s.proc = proc; s.pid = proc.pid || null; s.state = 'starting'; s.startedAt = Date.now(); s.by = by; s.sawAddrInUse = false;
     const pipe = (st, stream) => st && st.on('data', (b) => { const t = b.toString(); if (/EADDRINUSE/.test(t)) s.sawAddrInUse = true;
-      for (const l of t.split('\n')) if (l.trim()) { log(`[${name}] ${l}`); s.out.push({ ts: Date.now(), stream, line: l.slice(0, 2000) }); if (s.out.length > LOG_KEEP) s.out.shift(); } });
+      for (const l of t.split('\n')) if (l.trim()) { log(`[${name}] ${l}`); if (/^\[cos-boundary\] /.test(l)) write('wall', name, l.replace(/^\[cos-boundary\] /, '')); s.out.push({ ts: Date.now(), stream, line: l.slice(0, 2000) }); if (s.out.length > LOG_KEEP) s.out.shift(); } });
     pipe(proc.stdout, 'out'); pipe(proc.stderr, 'err');
     later(s, P.stableMs, () => { if (s.proc === proc) s.backoffMs = P.restart.backoffMs[0]; });
     proc.on('exit', (code, signal) => onExit(name, proc, code, signal));
@@ -180,7 +186,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   function view(s) {
     const d = s.decl;
     return { name: d.name, system: d.system, state: s.state, pid: s.pid, port: d.healthUrl ? Number((/:(\d+)/.exec(d.healthUrl) || [])[1]) || null : null,
-      healthUrl: d.healthUrl || null, critical: !!d.critical, bootPhase: d.onDemand ? null : (d.phase ?? null), onDemand: !!d.onDemand,
+      healthUrl: d.healthUrl || null, critical: !!d.critical, compartment: d.compartment || null, walled: !!(d.boundary && d.boundary.allow), wallMode: d.boundary ? (d.boundary.mode || 'enforce') : null, bootPhase: d.onDemand ? null : (d.phase ?? null), onDemand: !!d.onDemand,
       restarts: { count: s.restarts, last: s.lastExit ? s.lastExit.ts : null, backoffMs: s.backoffMs }, circuit: { ...s.circuit }, startedAt: s.startedAt, by: s.by,
       // MG16: what autopilot's /status carried, so the door answers in its shape
       crashesInWindow: (prune(s), s.crashes.length), lastExit: s.lastExit, downSince: s.state === 'down' || s.state === 'circuit-open' ? (s.lastExit && s.lastExit.ts) : null, lastActivity: s.lastActivity };

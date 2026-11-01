@@ -47,6 +47,31 @@ decisions:
       written anew.
     by: "his, 2026-11-01: \"maybe expand the spec workshop using the zip\""
 
+  BC_D3_create_opens_templates_prefilled:
+    status: DECIDED 2026-11-01 (his)
+    chosen: >-
+      Create compartment opens the templates; each template is built out as far as it can be (structure, skeleton, spec sections, defaults),
+      and his need or idea is slotted into it, so he writes only what is his. Once a system is in COS it gets resource management of its own.
+    by: "his, 2026-11-01: \"once each system is in cos, we can have resource management per system. Like i want the create compartment to open the templates. i also want to have the templates built as much as possible, and the need or idea slotted into it.\""
+  BC_D4_the_workshop_is_an_idearium_module:
+    status: DECIDED 2026-11-01 (his; "maybe" — to confirm)
+    chosen: >-
+      The spec workshop becomes a full module of Idearium (its own folder, server routes, registry entry and pages). COS hooks into Idearium's
+      compartments; RAID balances the load; the copilot works on whatever page he is on, with the same Clear Glass features (page map, element
+      picker, fill, macros) it has in the browser.
+    by: "his, 2026-11-01: \"the spec workshop, aybe make it a full module of idearium. like cos hooks into the idearium compartments, raid for load balancing, copilot for the whatever page im on, can we specific using the same clearglass features.\""
+  BC_D5_organized_by_module_core_at_the_root:
+    status: PROPOSED 2026-11-01 (his question, the coder's answer; his to decide)
+    chosen: >-
+      One folder per system; everything a system owns inside it; at each system's root the core it is built from, the same skeleton for all
+      (genesis's nexus-system archetype: server.js, config, compartment.json, registry-components.js, spec/, data/, ui/, settings). lib/ keeps
+      only what every system is built from (the kernel and the primitives); a lib file used by one system moves into that system (measured
+      2026-11-01: 98 such files, 52 of them Idearium's), and the 146 lib files nothing requires are archived after a check.
+    by: "his, 2026-11-01: \"we need nexus to be more organized, by module, then all relevant components in each module folder. like the core for each module, what each system is built from, should be in the root. what do you think?\""
+  BC_D6_settings_in_every_system:
+    status: DECIDED 2026-11-01 (his)
+    chosen: "Every system has its settings at its root and a settings page; COS shows and edits any system's settings, each value with its layer (default, template, system, his)."
+    by: "his, 2026-11-01: \"also settings, are always important of managing systems.\""
 phases:
   BC0_the_full_spec:
     status: OPEN
@@ -86,3 +111,12 @@ phases:
     proof: "Open Loops appears as its own compartment with its tests run from its cockpit"
 
 build_order: "BC0 → BC1 → (BC2, BC3) → BC4. BC4 also waits on the open canvas (MG_D18), where Add lives. BC5 waits on MG19/MG20."
+
+# ── ADDENDUM 2026-11-01 (b) — measured for his decoupling question, before any move ────────────────────────────────────────────────────
+# James: "tell me how close we are to decoupling each system. which systems fully use the node based memory, database, and aligns with the
+# architecture docs." Measured with lib/system-boundary.js sovereignty() and homes(), scripts/systems-report.js and each folder, on main
+# after #206. Sovereign (no crossing out, none in, a registry): only components. No crossings out: ollama, loom. Furthest: idearium (31 out),
+# orchestrator (26), copilot (21), guardian (19), cortex (15 out, 129 in: everyone reaches into it). lib reaches up into systems 250 times.
+# Files requiring cortex's shared database (cortex/memory/jaa-db.js) directly: lib 61, copilot 11, intelligence 6, versionium 5,
+# orchestrator 4, diagnostic 2, idearium 2, cos 1. A server.js door: guardian, copilot, loom, versionium, intelligence, ollama, diagnostic;
+# none yet: cortex, idearium, orchestrator, clear-glass, architect, cos. Phases for BC_D3–BC_D6 follow once he answers BC_D5.
