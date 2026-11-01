@@ -65,3 +65,17 @@ phases:
     proof: "per system: SM0's check passes, its suite and the boundary ratchet hold, COS runs it as before"
 
 build_order: "SM0 → SM1 (CS12) → SM2 (loom) → SM3, one system per release. Each system's door (DO1–DO6) and settings (BC_D6) land in its release where they are missing."
+
+# ── ADDENDUM 2026-11-01 — his answer: every system, Nexus too, managed by COS; agents deployable to any system (SM_D1) ────────────────────
+# James, 2026-11-01: "each system including nexus. like they are all managed by cos. like each run sandboxed compartment with rewind engine,
+# versions, i want the agents to be able to be deployed to any system. like diagnose, test, diagnose, like how they can in idearium. thats why
+# they need to be isolated, each module and component, so they can be fixed and replaced in place. autonomous orchastration. i need a main
+# control panel for a system wide cli. show me the orchastration ui"
+# This confirms the reading of "merging to cos" as COS running every system (each in its own sandboxed compartment), and adds:
+#   - Nexus itself (its core, lib/) is one of the systems COS runs, not only the twelve;
+#   - each compartment has the rewind engine and versions (CS1 checkpoints, MG3 state manager, Versionium);
+#   - agents deploy to any system to diagnose, test, diagnose again, as Idearium's pipeline does for a repo; a module or component found
+#     broken is fixed and replaced in place, the rest running (the reason for isolation at every level);
+#   - autonomous orchestration over all of it;
+#   - one main control panel with a system-wide CLI.
+# To be mapped into phases with the agents' control panel (AC1–AC7), orchestrator automation (AE2–AE4), COS's UI and the round table.
