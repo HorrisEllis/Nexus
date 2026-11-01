@@ -183,7 +183,22 @@ function scoreTension(gap) {
   return FRICTION_DELTA_BY_LEVEL[level];
 }
 
+// 2026-11-01 CI7 — the open gaps scored and grouped by system, Cortex's own (its fault taxonomy), for Intelligence's tension through
+// GET /api/gaps/tension. Was done inside Diagnostic by requiring this file (a crossing) over only the newest 20 open gaps (Cortex's default limit).
+function tensionBySystem(gaps = []) {
+  const by = {};
+  for (const gap of Array.isArray(gaps) ? gaps : []) {
+    const sys = (gap.source && String(gap.source).split('/')[0]) || gap.system || 'unknown';
+    const t = scoreTension(gap);
+    const e = by[sys] || (by[sys] = { total: 0, count: 0, top: [] });
+    e.total += t; e.count++; e.top.push({ uuid: gap.uuid || gap.id, type: gap.type, tension: t, severity: gap.severity });
+  }
+  for (const e of Object.values(by)) { e.total = Math.round(e.total * 1000) / 1000; e.top = e.top.sort((a, b) => b.tension - a.tension).slice(0, 3); }
+  return by;
+}
+
 module.exports = {
+  tensionBySystem,
   MODULE_ID,
   TABLE,
   FRICTION_THRESHOLDS,

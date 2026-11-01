@@ -75,7 +75,8 @@ const FILES = [
   ['clear-glass/renderer/a11y-panel.js', I('clear-glass/renderer/a11y-panel.js'), []],   // 2026-10-30 AC2 a browser script: cg.siteProfile.a11yTrace / a11yKeepOff / a11yOpenControl over IPC   // a browser script: cg.shortcuts.gateAdd over IPC
   ['lib/repo-history-nodes.js', I('lib/repo-history-nodes.js'), [I('lib/node-export.js'), I('lib/test-sandbox.js')]],   // 0.60.285 HN1 — Idearium's history as nodes, one per unit
   ['lib/automation/pipeline.js', I('lib/automation/pipeline.js'), [I('lib/automation/engine.js'), I('lib/automation/steps.js')]],
-  ['lib/automation/task-node.js', I('lib/automation/task-node.js'), [I('lib/automation/cron.js'), I('lib/versionium-record.js')]],   // 0.60.348 OC1 — the .task node (lazy requires)   // 0.60.284 PL1 — WORKFLOWS_DIR; byType, validateStep
+  ['lib/automation/task-node.js', I('lib/automation/task-node.js'), [I('lib/automation/cron.js'), I('lib/versionium-record.js')]],   // 0.60.348 OC1 — the .task node (lazy requires)
+  ['intelligence/friction.js', I('intelligence/friction.js'), []],   // 0.60.350 CI7 — the tension formula, Intelligence's (pure; its inputs come by route in routes.js)   // 0.60.284 PL1 — WORKFLOWS_DIR; byType, validateStep
   ['clear-glass/renderer/settings/sections/pipelines.js', I('clear-glass/renderer/settings/sections/pipelines.js'), [I('lib/automation/routes.js')]],   // 0.60.284 PL4 — wire /automation/pipelines*
   ['clear-glass/src/page/state-diff.js', I('clear-glass/src/page/state-diff.js'), []],      // 0.60.221 FP4 — pure; first used 0.60.273
   ['clear-glass/src/about/index.js', I('clear-glass/src/about/index.js'), []],   // 0.60.269 — versions and the update check (fetch, no requires)
@@ -241,6 +242,10 @@ const FILES = [
   // §0.60.157 GM4 — the node lattice: every data node of every system, edges typed; read by route, never the files
   ['lib/node-edges.js', I('lib/node-edges.js'), [I('lib/node-export.js')]],   // importFromFile — each node read from its file
   ['intelligence/lattice/node-lattice.js', I('intelligence/lattice/node-lattice.js'), [I('lib/nexus-client.js')]],   // Idearium's GET /api/system/nodes(/:system?edges=1)
+  [I('intelligence/routes.js'), I('intelligence/friction.js'), '0.60.350 CI7 GET /api/intelligence/tension → tensionOf(Diagnostic /friction, Cortex /api/gaps/tension)'],
+  [I('intelligence/routes.js'), I('lib/nexus-client.js'), '0.60.346 CI6 / 0.60.350 CI7 Diagnostic GET /friction and Cortex GET /api/gaps/tension, by route'],
+  [I('loom/server.js'), I('intelligence/routes.js'), '0.60.346 CI6 Loom /api/friction and /api/tension ask GET /api/intelligence/{friction,tension} (Diagnostic the said fallback)'],
+  [I('cortex/boot.js'), I('cortex/self-heal/fault-taxonomy.js'), '0.60.350 CI7 GET /api/gaps/tension → tensionBySystem(open gaps)'],
   [I('intelligence/routes.js'), I('intelligence/lattice/node-lattice.js'), '0.60.157 POST /api/intelligence/lattice/neighbours · GET /api/intelligence/lattice/nodes'],
   [I('idearium/api/index.js'), I('lib/node-edges.js'), '0.60.157 GET /api/system/nodes/:system?edges=1'],
   // §0.60.157 QA1 — four more catalogue checks run (the gating census, layer 1)

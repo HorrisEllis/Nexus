@@ -72,4 +72,13 @@ phases:
     does: "James, 2026-11-01: \"move that to the intelligence system\". Friction and tension owned by Intelligence (Diagnostic measures, Intelligence means); Loom's routes ask Intelligence"
     proof: "MOD-CI-FRICTION's acceptance"
 
+  CI7_the_tension_formula_home:
+    status: "DONE 0.60.350"
+    depends_on: [CI6_friction_and_tension_home]
+    files: [intelligence/friction.js, intelligence/routes.js, cortex/boot.js, cortex/self-heal/fault-taxonomy.js, diagnostic/nexus-diagnostic.js, loom/spec/loom.spec, tests/modules/test-friction-home.test.js]
+    spec: intelligence/spec/causal-interconnect.spec
+    blocks: [MOD-CI-TENSION]
+    does: "James, 2026-11-01: \"migrating looms friction and tension system to the intelligence system\". The tension formula in Intelligence; Cortex scores its open gaps behind a route; Diagnostic only measures; Loom forwards"
+    proof: "MOD-CI-TENSION's acceptance"
+
 order: "CI6 depends on the decision only and goes first, by his word. CI1 → (CI2, CI3) → CI5; CI4 after ML3 (the batched learning loop) is built."

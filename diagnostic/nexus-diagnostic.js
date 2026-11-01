@@ -1921,7 +1921,8 @@ function startService() {
       const friction = {};
       for (const [name, mon] of Object.entries(monitors)) {
         friction[name] = { friction: mon.friction(), sigma: mon.stats().sigma,
-          errorRate: mon.stats().errorRate, slope: mon.stats().slope };
+          errorRate: mon.stats().errorRate, slope: mon.stats().slope,
+          monitorGaps: mon.gaps().length };   // 2026-11-01 CI7 — the raw count Intelligence's tension needs (Diagnostic measures; Intelligence means)
       }
       res.writeHead(200, CORS);
       res.end(JSON.stringify({ ok: true, friction, ts: Date.now() }));
@@ -2145,6 +2146,8 @@ function startService() {
   }
 
   if (url.pathname === '/tension') {
+    // 2026-11-01 CI7 — SUPERSEDED, kept (§0.3): the tension formula is Intelligence's now (intelligence/friction.js, GET /api/intelligence/tension),
+    // fed by this kernel's /friction and Cortex's /api/gaps/tension. This route stays for Loom's fallback when Intelligence is down.
     // §TENSION-05: per-system tension score
     // tension = friction × (1 + openGaps × 0.2) × (1 + max(0, slope) × 2)
     // Open gaps are open loops — they accumulate tension via healer.scoreTension()

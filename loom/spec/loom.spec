@@ -193,3 +193,10 @@ loom/scanners/phasemap-map.js reads a phase's `specs:` list (key and list forms)
 
 ## ADDENDUM 2026-10-15 — 0.60.64 PT2: a phase's systems include its files' owners
 _systemsOf: declared systems, plus lib/nexus-self/systems.js ownerOf of each file in `files:` ("(new)" stripped; globs skipped) → systemsFrom 'declared+files' with systemsFromFiles; no systems line but files → 'files'; neither → 'guessed' as before. James: "phases tags by system/nested repo". test-phase-specs-tag PT-05..07.
+
+# ── ADDENDUM 2026-11-01 (0.60.346 CI6, 0.60.350 CI7) — friction and tension are Intelligence's ────────────────────────────────────────────
+# James, 2026-11-01: "move that to the intelligence system.." · "migrating looms friction and tension system to the intelligence system"
+# GET /api/friction and GET /api/tension above keep their paths and the per-system shape their callers read, but Loom computes nothing and
+# owns nothing here: it asks Intelligence (GET /api/intelligence/friction, /tension), which means them (intelligence/friction.js, the
+# formula moved from Diagnostic §TENSION-05) from Diagnostic's measurements and Cortex's scored open gaps, all by route. With Intelligence
+# down, Loom answers from Diagnostic's own (superseded) routes and says so in `via`. The 2026-08-09 lines above are kept as they were (§0.3).
