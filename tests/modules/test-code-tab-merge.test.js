@@ -195,7 +195,7 @@ function harness() {
     });
 
     await test('MG-14', 'runs: the route; each run a pipeline; opened, its files; rewind asks with a dry run first', async () => {
-      await page.click('.cs-vtab:has-text("runs")');   // 0.60.103 TB5: the bottom panels are the Runs view
+      await page.click('.cs-vtab:has-text("flight")');   // CC1 2026-11-01: the history panels are the Flight view (0.60.103 TB5: they were the Runs view)
       await page.click('.cx-tab:has-text("runs")');
       await page.waitForSelector('.cx-run');
       assert.deepStrictEqual(await page.$$eval('.cx-route .cx-hop', els => els.map(e => e.textContent)), ['ollama:big', 'gemini']);
@@ -212,6 +212,7 @@ function harness() {
 
     // §FN4 0.60.95 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk."
     await test('MG-16', 'work: the open file\'s dependencies, spec, phase and chunks, in his order; where it stops is said', async () => {
+      await page.click('.cs-vtab:has-text("build")');   // CC1: work is Build's (input → plan → run)
       await page.click('.cx-tab:has-text("work")');
       await page.waitForSelector('.cx-work-step');
       const steps = await page.$$eval('.cx-work-step', els => els.map(e => [e.querySelector('b').textContent, e.classList.contains('cx-work-off')]));
@@ -224,6 +225,7 @@ function harness() {
     });
 
     await test('MG-15', 'responses: the exchanges; tasks and log: the Plan panel\'s views drawn in the Code tab', async () => {
+      await page.click('.cs-vtab:has-text("flight")');   // CC1: responses, tasks, log and activity are Flight's
       await page.click('.cx-tab:has-text("responses")');
       await page.waitForSelector('.cx-resp');
       assert.ok(/it returns two/.test(await page.$eval('.cx-resp', e => e.textContent)));
@@ -235,6 +237,24 @@ function harness() {
       await page.click('.cx-tab:has-text("activity")');
       await page.waitForSelector('#cs-activity');
       await wait(100);
+      assert.deepStrictEqual(errors, []);
+    });
+    // §CC1 2026-11-01 — James: "also the code tab, can we consolidate it more. idearium is the system. it can build those projects. thats the
+    // point the outputs. also the flight recorder". Three views; all fifteen panels and the five old view ids still reach their home.
+    await test('MG-17', 'three views (files, build, flight); every old view id and every panel opens in its new home, none lost', async () => {
+      assert.deepStrictEqual(await page.$$eval('.cs-vtab', e => e.map(x => x.dataset.view)), ['files', 'build', 'flight']);
+      const views = await page.evaluate(() => ['files', 'changes', 'plans', 'runs', 'cos', 'build', 'flight'].map(k => { csView(k); return [k, CS.view]; }));
+      assert.deepStrictEqual(views, [['files', 'files'], ['changes', 'files'], ['plans', 'build'], ['runs', 'flight'], ['cos', 'build'], ['build', 'build'], ['flight', 'flight']]);
+      const homes = await page.evaluate(() => CX_PANELS.map(([k]) => { cxPanel(k); const on = document.querySelector('.cx-tab.on'); return [k, CS.view, on ? on.textContent : null]; }));
+      for (const [k, v, on] of homes) { assert.ok(v === 'build' || v === 'flight', `${k} → ${v}`); assert.strictEqual(on, k, `${k} is the lit tab in ${v}`); }
+      assert.deepStrictEqual(homes.filter(h => h[1] === 'build').map(h => h[0]), ['work', 'upload', 'control', 'charter', 'agents', 'jobs']);
+      await page.evaluate(() => csView('flight'));
+      assert.strictEqual(await page.$$eval('.cx-tab', e => e.length), 9, 'flight holds nine panels, flight recorder first');
+      assert.deepStrictEqual(await page.$$eval('.cx-tab', e => e.map(x => x.textContent)), ['flight', 'activity', 'runs', 'responses', 'changes', 'tasks', 'log', 'versions', 'machine']);
+      await page.evaluate(() => csView('build'));
+      assert.deepStrictEqual(await page.$$eval('.cx-tab', e => e.map(x => x.textContent)), ['upload', 'work', 'charter', 'agents', 'jobs', 'control'], 'build: input → plan → run');
+      if (process.env.CC1_SHOTS) { await page.setViewportSize?.({ width: 1280, height: 760 }); await page.screenshot({ path: require('path').join(process.env.CC1_SHOTS, 'cc1-build.png') }); await page.evaluate(() => csView('flight')); await page.screenshot({ path: require('path').join(process.env.CC1_SHOTS, 'cc1-flight.png') }); await page.evaluate(() => csView('build')); }
+      assert.ok(/tested in COS before it reaches you/.test(await page.textContent('.cs-cos-step')), 'the COS line is a step of the build, not a tab');
       assert.deepStrictEqual(errors, []);
     });
   } finally { await browser.close(); }

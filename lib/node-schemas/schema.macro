@@ -32,7 +32,11 @@ payload:
       required: true
       description: >-
         real [{action, data}] or [{engine:"erosmancer", action, targetUuid, data}] — each a real,
-        valid browser_action name
+        valid browser_action name. A step may carry gate: the gate between it and the next block
+        (lib/agent-tools/tools/clear-glass/gate-eval.js validateGate) — what must hold (url, selector,
+        text, value, gone, choice, use, xpath, shows, checked, matches, equals, visible), timeoutMs,
+        settleMs, retries, and since 2026-11-01 (MB1) delay {kind fixed|range|human, ms | min,max},
+        backoff {baseMs, factor, capMs} and onClosed stop|skip
     params:
       type: array
       required: false

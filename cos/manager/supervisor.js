@@ -37,7 +37,9 @@ function readDeclarations(root) {
   const out = [];
   for (const d of fs.readdirSync(root, { withFileTypes: true })) {
     if (!d.isDirectory() || /^(\.|node_modules$|data$|_archive$)/.test(d.name)) continue;
-    let c; try { c = JSON.parse(fs.readFileSync(path.join(root, d.name, 'compartment.json'), 'utf8')); } catch (_) { continue; }
+    // 0.60.340 — his "no .json files. only nodes. use .cos": a system's <name>.cos node is its declaration; compartment.json where none is yet
+    let c = null; try { const n = require('js-yaml').load(fs.readFileSync(path.join(root, d.name, `${d.name}.cos`), 'utf8')); if (n && n.type === 'cos') c = n.payload; } catch (_) {}
+    if (!c) { try { c = JSON.parse(fs.readFileSync(path.join(root, d.name, 'compartment.json'), 'utf8')); } catch (_) { continue; } }
     const rt = c.runtime || {};
     for (const p of [rt.process, ...(rt.processes || [])].filter(Boolean)) out.push({ system: c.name || d.name, ...fill(p) });
   }

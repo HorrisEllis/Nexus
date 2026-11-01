@@ -138,7 +138,7 @@ function harness() {
       await page.evaluate(() => _planPaint());
       assert.ok(await page.$('.pp-card[data-card="plan"].folded'), 'the fold survives a repaint');
       await page.evaluate(() => ppOpenChanges());
-      assert.deepStrictEqual(await page.evaluate(() => [CURRENT_REPO_SUBTAB, CS.view]), ['code', 'changes']);
+      assert.deepStrictEqual(await page.evaluate(() => [CURRENT_REPO_SUBTAB, CS.view, CS.showChanges]), ['code', 'files', true]);   // CC1: the changes are Files'
     });
 
     await test('PS-04', 'charter, agents (with lessons) and jobs are their own panels in the Code tab; activity opens there', async () => {

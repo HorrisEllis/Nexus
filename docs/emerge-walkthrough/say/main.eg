@@ -1,0 +1,28 @@
+// main.eg — connects the files and runs the system.
+use "./echo.eg" as echo
+
+wire "input" -> echo.Echo.run
+wire echo.Echo.done -> "output"
+
+on "output" (o) { print("said:", o.said) }
+compartment Heard {
+  id = "say.heard"
+  state { said: [] }
+  on "output" (o) { state.said = push(state.said, o.said) }
+}
+on "gap.opened" (g) { print("gap:", g.message, "@", g.pressure) }
+
+emit "input" { text: "hello from emerge", loud: false }
+emit "input" { text: "louder", loud: true }
+emit "input" { text: "", loud: false }
+print("echo ran", echo.Echo.state.count, "times")
+
+test "echo says it back, loud when asked, and an empty line is a gap" {
+  let before = echo.Echo.state.count
+  emit "input" { text: "a", loud: false }
+  emit "input" { text: "b", loud: true }
+  emit "input" { text: "", loud: false }
+  expect echo.Echo.state.count == before + 2
+  expect Heard.state.said[-2] == "a"
+  expect Heard.state.said[-1] == "B"
+}

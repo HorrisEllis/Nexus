@@ -30,6 +30,34 @@ decisions:
       repo's files are the compartment's project folder. Emerge (EAS3) is the first.
     by: "his, 2026-11-01: \"lets make it a compartment. i want compartments in cos to automatically become nested compartments in idearium. like cos needs to be connected with ideariums repos\" (about HorrisEllis/Emerge, just cloned)"
     by_the_axioms: "§5.15 (COS announces, Idearium owns its repos: each through the other's route, never its files), §10.3 (one link, not two lists), §0.3 (a destroyed compartment's repo archived, never deleted)"
+  CP_D2_the_miniworld_is_the_meta_layer:
+    status: DECIDED 2026-11-01 (his; the reading of .cos as the miniworld's node to confirm)
+    chosen: >-
+      COS runs entire systems as miniworlds: the miniworld is the meta layer above the spec and the repo and the compartments, one per
+      system, holding all of it (its spec, its repo at a commit, its compartments, its states). It is how he runs counterfactuals, mental
+      simulations: fork a miniworld, change something in the fork, run it beside the original, compare, keep or discard. Each system is a
+      model in his head, so each is its own folder, nice and tidy. Read as (the coder's, to confirm): a system's <name>.cos node is its
+      miniworld's node — what his IDEARIUM.spec Miniworld Manager names ("each miniworld is a .nex file opened as a COS compartment
+      sandbox", list | boot | fork | snapshot | discard) and the COS spine map's open question (c), "the miniworld as the .cos archive",
+      answered by his "use .cos … look for the miniworlds" the same day. Emerge's emerge/emerge.cos is the first.
+    by: "his, 2026-11-01: \"i want cos to use miniworlds for entire systems. one layer above the spec/repo. miniworld is the meta layer for compartments. its how i run counterfactuals, or mental simulations. each system in my head is a model. thats why each system is its own folder. i like it nic eand tidy.\""
+    by_the_axioms: "§0.3 (a fork never touches what it came from; a discard archives), §10.3 (one miniworld per system, not a second record of it), §5.15 (each system's folder its own)"
+  CP_D3_the_miniworld_is_the_compartment:
+    status: DECIDED 2026-11-01 (his; supersedes the coder's reading in CP_D2, which is kept)
+    chosen: >-
+      A miniworld and a COS compartment are the same thing; COS is the orchestrator. There is no layer above: the compartment, whole (CP_D0),
+      is the miniworld, and a counterfactual is a forked compartment run beside its original (CP10). The coder had read the .cos node as a
+      layer above the spec and repo (CP_D2); that reading is superseded here. The .cos node stays the compartment's node.
+    by: "his, 2026-11-01: \"the miniworld would be the same as the cos compartments. basically cos is the orchatrator.\""
+  CP_D4_the_diagnostic_map_on_the_eravos_canvas:
+    status: DECIDED 2026-11-01 (his)
+    chosen: >-
+      CFR and RFR2 seen as one visual diagnostic map of the whole system on the ERAVOS canvas (cos/archetype/eravos-canvas): each compartment
+      a node, each real wire an edge, the tension (CFR's field, sigma) and the friction (RFR2's bottlenecks, the FrictionScore) drawn on them,
+      and the real events moving along the edges as they happen — nothing drawn that did not happen. It is the view of the causal-interconnect
+      map's CI5 (another session's map, read, not superseded); it supersedes the TV UI's Nerve channel (lib/ui/tv-shell/nerve), whose
+      snapshot route 404s (TV audit 2026-11-01), kept and archived when this is built.
+    by: "his, 2026-11-01: \"I want cfr and rfr2 as a visual diagnostic map of the system, the tension and friction, showing real data moving through the system. using the eravos canvas.\""
 stands_on: >-
   Built: COS's supervisor, its door, the handover, its UI and the cockpit (MG15–MG18, MG29); Loom run behind its wall (LM6); a repo's desktop
   (idearium/ui/desktop.html on cos/workspace); checkpoints, activity and Nexus's systems as compartments (compartment-control-and-activity);
@@ -126,5 +154,29 @@ phases:
       compartment under its repo's id (CS9's half). One link, checked both ways: no compartment without its repo, no repo with a compartmentId
       that COS does not hold. Emerge's compartment (EAS3) is the first to appear in Idearium by itself.
     proof: "a compartment made in COS appears in Idearium as a repo under its parent's repo within one event; destroyed, the repo is archived; an Idearium import gets its compartment; the check over both lists finds nothing missing; Emerge appears nested with its files"
+
+  CP10_miniworlds:
+    status: OPEN
+    depends_on: [CP_D2_the_miniworld_is_the_meta_layer, CP1_the_machine_and_its_door, CP5_states_rewind_versions, CP9_cos_and_idearium_one_link]
+    files: [cos/miniworld, "*/<name>.cos", cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js]
+    interface: [route, cli, html]
+    does: >-
+      A miniworld per system, its .cos node the meta layer (spec, repo at a commit, compartments, states). COS: miniworld list | boot | fork
+      | snapshot | discard, his Miniworld Manager. A counterfactual: fork a miniworld (a copy-on-write copy of its folder, or a new qcow2
+      overlay for a machine), change it, run the fork beside the original behind its own wall, compare them (their ledgers, their tests,
+      RFR2's measure), then keep (merge) or discard (archived). The fork shows in Idearium as a branch of the system's repo.
+    proof: "Emerge's miniworld forked, a change made in the fork, both run side by side, the comparison shown, the fork discarded, the original untouched byte for byte (its lock)"
+
+  CP11_the_diagnostic_map:
+    status: OPEN
+    depends_on: [CP_D4_the_diagnostic_map_on_the_eravos_canvas, CI1_one_feed, CI3_the_measures_chained, CP1_the_machine_and_its_door]
+    files: [cos/ui/map, cos/archetype/eravos-canvas, intelligence/cfr, intelligence/rfr2, cos/manager/server.js]
+    interface: [html, route]
+    does: >-
+      The map, on the ERAVOS canvas, opened from COS: compartments as nodes (their state from COS's supervisor), wires as edges (Loom's
+      registry), CFR's sigma as each node's tension, RFR2's bottlenecks and friction as each edge's weight, the event stream (COS's bus,
+      the ledger fan-in) as pulses travelling the edges; a node or edge opened shows its numbers, its causal chain (CI2) and its compartment
+      window (CP2). Read through each system's door: Intelligence's routes for CFR and RFR2, COS's for the compartments.
+    proof: "in Clear Glass, on the running stack: a restart in COS shows as a pulse on its edges and a sigma rise on its node; a forced slow route shows as friction on its edge; every number on the map equals its owner's route at that time"
 
 build_order: "CP0 → CP1 → (CP9, with EAS3) → CP2 → (CP3, CP5, CP6, CP7) → CP4, CP8. The open canvas (MG_D18) and Add → Build (BC4) sit on CP2."

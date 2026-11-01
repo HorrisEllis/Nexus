@@ -107,6 +107,88 @@
   };
 
   // ── one step card ─────────────────────────────────────────────────────
+  // ── 2026-11-01 MB2 — the gate between two blocks ─────────────────────
+  // James, 2026-11-01: "i want the macros in the settings to be blocks with settings, gates between them with the delays type and everything
+  // else the gates can do". A step's gate (the node's steps[i].gate, run by macro.js after the step: lib/agent-tools/tools/clear-glass/
+  // gate-eval.js) is drawn under its block as the gate to the next one: a line that says what it does, opened to set it. Keys this editor
+  // does not show (a dropdown check, choice) are kept as they are. Before MB2 an edit here dropped every step's gate.
+  const DELAYS = [['', 'no pause'], ['fixed', 'a fixed pause'], ['range', 'a random pause between'], ['human', 'a person’s pace, around']];
+  const HOLDS = [['', 'nothing (a pause only)'], ['text', 'the page shows the text…'], ['url', 'the address matches…'], ['value', 'the element holds…'],
+    ['shows', 'the element shows the choice…'], ['equals', 'the element holds exactly…'], ['matches', 'the element matches the pattern…'],
+    ['checked', 'the element is ticked'], ['unchecked', 'the element is clear'], ['visible', 'the element is visible'], ['gone', 'this element is gone'], ['use', 'one of my gates on this site (id)']];
+  const NEEDS_EL = new Set(['value', 'shows', 'equals', 'matches', 'checked', 'unchecked', 'visible']);
+  const holdOf = (g) => !g ? '' : g.use ? 'use' : g.checked === true ? 'checked' : g.checked === false ? 'unchecked' : g.visible ? 'visible'
+    : ['shows', 'equals', 'matches', 'value', 'gone', 'text', 'url'].find(k => g[k] != null) || '';
+  function describeGate(g) {
+    if (!g || !Object.keys(g).length) return '＋ gate to the next block';
+    const parts = [];
+    const d = g.delay;
+    if (d) parts.push(d.kind === 'range' ? `pause ${d.min}–${d.max} ms` : d.kind === 'human' ? `pause at a person’s pace (~${d.ms} ms)` : `pause ${d.ms} ms`);
+    const k = holdOf(g), el = g.selector || g.xpath || '';
+    if (k === 'use') parts.push(`wait for my gate “${g.use}”`);
+    else if (k === 'text') parts.push(`wait for “${g.text}” on the page`);
+    else if (k === 'url') parts.push(`wait for the address ${g.url}`);
+    else if (k === 'gone') parts.push(`wait until ${g.gone} is gone`);
+    else if (k === 'checked' || k === 'unchecked') parts.push(`wait until ${el} is ${k === 'checked' ? 'ticked' : 'clear'}`);
+    else if (k === 'visible') parts.push(`wait until ${el} is visible`);
+    else if (k) parts.push(`wait until ${el} ${k === 'shows' ? 'shows' : k === 'matches' ? 'matches' : 'holds'} “${g[k]}”`);
+    if (g.choice) parts.push(`a dropdown check (${g.choice.is})`);
+    if (k || g.choice) {
+      parts.push(`${Math.round((g.timeoutMs || 4000) / 100) / 10} s, ${g.retries != null ? g.retries : 2} retr${(g.retries != null ? g.retries : 2) === 1 ? 'y' : 'ies'}${g.backoff ? `, backoff ${g.backoff.baseMs} ms ×${g.backoff.factor}` : ''}`);
+      parts.push(g.onClosed === 'skip' ? 'if closed: skip' : 'if closed: stop');
+    }
+    return '⧗ ' + parts.join(' · ');
+  }
+  function gateEditor(initial, onChange) {
+    let g = initial ? JSON.parse(JSON.stringify(initial)) : null;
+    const num = (v, ph) => h('input', { type: 'number', min: '0', placeholder: ph, value: v != null ? String(v) : '' });
+    const wrap = h('details', { class: 'gate-between' });
+    const head = h('summary', { class: 'gate-say' });
+    const dk = select(DELAYS.map(([value, label]) => ({ value, label })), g && g.delay ? g.delay.kind : '', { title: 'The pause before the gate is checked' });
+    const dms = num(g && g.delay && g.delay.ms, 'ms'), dmin = num(g && g.delay && g.delay.min, 'min ms'), dmax = num(g && g.delay && g.delay.max, 'max ms');
+    const hold = select(HOLDS.map(([value, label]) => ({ value, label })), holdOf(g), { title: 'What must hold before the next block' });
+    const where = h('input', { type: 'text', class: 'mono', placeholder: 'selector or xpath', value: g ? (g.selector || g.xpath || '') : '' });
+    const want = h('input', { type: 'text', placeholder: 'value, text, pattern or gate id', value: (() => { const k = holdOf(g); return g && k && !['checked', 'unchecked', 'visible'].includes(k) ? String(g[k]) : ''; })() });
+    const tmo = num(g && g.timeoutMs, '4000'), rts = num(g && g.retries, '2'), bb = num(g && g.backoff && g.backoff.baseMs, 'base ms'), bf = num(g && g.backoff && g.backoff.factor, '×'), bc = num(g && g.backoff && g.backoff.capMs, 'cap ms');
+    const closed = select([{ value: 'stop', label: 'stop the macro' }, { value: 'skip', label: 'skip it and go on' }], g && g.onClosed === 'skip' ? 'skip' : 'stop');
+    const delayRow = h('div', { class: 'gate-row' }, field('Pause', dk), field('ms', dms), field('from', dmin), field('to', dmax));
+    const holdRow = h('div', { class: 'gate-row' }, field('Then wait until', hold), field('Element', where), field('Holds', want));
+    const timeRow = h('div', { class: 'gate-row' }, field('Wait up to (ms)', tmo), field('Retries', rts), field('Backoff base', bb), field('×', bf), field('cap', bc), field('If it stays closed', closed));
+    const read = () => {
+      const keep = g ? Object.fromEntries(Object.entries(g).filter(([k]) => ['choice', 'settleMs'].includes(k))) : {};   // what this editor does not show
+      const out = { ...keep };
+      const n = (i) => (i.value === '' ? null : Number(i.value));
+      if (dk.value === 'range') out.delay = { kind: 'range', min: n(dmin) ?? 0, max: n(dmax) ?? 0 };
+      else if (dk.value) out.delay = { kind: dk.value, ms: n(dms) ?? 0 };
+      const k = hold.value, w = where.value.trim(), v = want.value;
+      if (k) {
+        if (NEEDS_EL.has(k) && w) out[/^(\(|\/)/.test(w) ? 'xpath' : 'selector'] = w;
+        if (k === 'checked') out.checked = true; else if (k === 'unchecked') out.checked = false; else if (k === 'visible') out.visible = true;
+        else out[k] = v;
+        if (n(tmo) != null) out.timeoutMs = n(tmo);
+        if (n(rts) != null) out.retries = n(rts);
+        if (n(bb) != null && n(bf) != null) out.backoff = { baseMs: n(bb), factor: n(bf), ...(n(bc) != null ? { capMs: n(bc) } : {}) };
+        if (closed.value === 'skip') out.onClosed = 'skip';
+      }
+      return Object.keys(out).length ? out : null;
+    };
+    const paint = () => {
+      const k = hold.value;
+      dms.parentNode.style.display = dk.value && dk.value !== 'range' ? '' : 'none';
+      dmin.parentNode.style.display = dmax.parentNode.style.display = dk.value === 'range' ? '' : 'none';
+      where.parentNode.style.display = NEEDS_EL.has(k) ? '' : 'none';
+      want.parentNode.style.display = k && !['checked', 'unchecked', 'visible'].includes(k) ? '' : 'none';
+      timeRow.style.display = k ? '' : 'none';
+      g = read(); head.textContent = describeGate(g); wrap.classList.toggle('set', !!g);
+      onChange && onChange();
+    };
+    [dk, dms, dmin, dmax, hold, where, want, tmo, rts, bb, bf, bc, closed].forEach(i => { i.addEventListener('input', paint); i.addEventListener('change', paint); });
+    wrap.append(head, h('div', { class: 'gate-body' }, delayRow, holdRow, timeRow));
+    wrap.read = () => g;
+    paint();
+    return wrap;
+  }
+
   function stepCard(schema, step, hooks) {
     const el = h('div', { class: 'step' });
     const engine = select([{ value: 'browser', label: 'Browser' }, { value: 'erosmancer', label: 'Erosmancer (human-like)' }], step.engine === 'erosmancer' ? 'erosmancer' : 'browser', { title: 'Engine' });
@@ -161,11 +243,12 @@
     if (leftovers.length) { extra.value = leftovers.map(([k, v]) => `${k}=${typeof v === 'string' ? v : JSON.stringify(v)}`).join(', '); moreBox.open = true; }
     extra.addEventListener('input', say);
 
+    const gateEl = gateEditor(step.gate || null, () => hooks.changed && hooks.changed());   // MB2 — the gate to the next block
     el.append(
       h('span', { class: 'n' }),
       h('div', { class: 'step-main' },
         h('div', { class: 'step-top' }, action, engine, sentence),
-        inputs, moreBox),
+        inputs, moreBox, gateEl),
       h('div', { class: 'step-tools' },
         btn('↑', () => hooks.move(-1), 'sm ghost'), btn('↓', () => hooks.move(1), 'sm ghost'),
         btn('⧉', () => hooks.duplicate(), 'sm ghost'), btn('✕', () => hooks.remove(), 'sm ghost')));
@@ -182,13 +265,15 @@
       if (engine.value === 'erosmancer') {
         const t = current.targetUuid && current.targetUuid.value.trim();
         const p = current.payload && current.payload.value;
-        return { engine: 'erosmancer', action: action.value, targetUuid: t || undefined, data: { ...(p ? { payload: p } : {}), ...data } };
+        const gt = gateEl.read();
+        return { engine: 'erosmancer', action: action.value, targetUuid: t || undefined, data: { ...(p ? { payload: p } : {}), ...data }, ...(gt ? { gate: gt } : {}) };
       }
       for (const [k, inp] of Object.entries(current)) {
         if (inp.value === '') continue;
         data[k] = k === 'ms' ? Number(inp.value) : inp.value;
       }
-      return { action: action.value, data };
+      const gt = gateEl.read();   // MB2 — kept: before, an edit here dropped the step's gate
+      return { action: action.value, data, ...(gt ? { gate: gt } : {}) };
     };
     el.check = () => {
       const s = el.read();

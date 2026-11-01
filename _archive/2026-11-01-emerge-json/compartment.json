@@ -1,0 +1,24 @@
+{
+  "name": "emerge",
+  "label": "Emerge",
+  "archetype": "nexus-system",
+  "about": "Nexus's declaration for Emerge (EAS3, 0.60.339): the Emerge repo (github.com/HorrisEllis/emerge) sits below it whole, at the commit in EMERGE.lock.json; its own compartment.json is emerge/emerge/compartment.json, unchanged. This file is Nexus's, not the repo's.",
+  "source": { "repo": "https://github.com/HorrisEllis/emerge", "lock": "emerge/EMERGE.lock.json" },
+  "runtime": {
+    "process": {
+      "name": "emerge",
+      "cmd": "node",
+      "args": ["{{root}}/emerge/emerge/server.js"],
+      "cwd": "emerge/emerge",
+      "phase": 3,
+      "optional": true,
+      "healthUrl": "http://127.0.0.1:4900/health",
+      "compartment": "nexus-self-emerge",
+      "boundary": {
+        "mode": "enforce",
+        "allow": ["{{root}}/emerge/", "{{root}}/node_modules/"],
+        "about": "COS runs Emerge behind its wall: its whole repo (emerge/, docs/learn, bench) and node_modules (js-yaml) only"
+      }
+    }
+  }
+}

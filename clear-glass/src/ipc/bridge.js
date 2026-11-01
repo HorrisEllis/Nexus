@@ -2467,8 +2467,8 @@ class IpcBridge {
     const sleep = (ms) => new Promise(res => setTimeout(res, ms));
     const panel = async () => {   // read until the same choices twice (a tab's panel renders after the click), at most 4 s
       let last = null; const until = Date.now() + 4000;
-      for (;;) { const p = await ev(GF.metaPanelScript()); const sig = JSON.stringify((p.options || []).map(o => o.label));
-        if (p.found && p.options && p.options.length && last === sig) return p; last = sig; if (Date.now() > until) return p; await sleep(250); }
+      for (;;) { const p = await ev(GF.metaPanelScript()); const sig = JSON.stringify([(p.options || []).map(o => o.label), p.dropdown && p.dropdown.shown]);
+        if (p.found && ((p.options && p.options.length) || p.dropdown) && last === sig) return p; last = sig; if (Date.now() > until) return p; await sleep(250); }
     };
     const meta = gig && gig.metadata && typeof gig.metadata === 'object' ? gig.metadata : {};
     let T = await ev(GF.metaTabsScript());
@@ -2485,11 +2485,45 @@ class IpcBridge {
       try {
         await this.driver.exec({ agentId, action: 'pointer', selector: `[data-cg-meta-tab="${ti}"]`, do: 'click', by: 'person' });
         let p = await panel();
-        if (!p.found || !(p.options || []).length) throw new Error(`the tab "${tm.option}" opened no choices`);
-        out.gates.push({ key: `metadata.${tm.option}`, open: true, saw: `${p.options.length} choices${p.counter ? `, ${p.counter}` : ''}` });
+        if (!p.found || !((p.options || []).length || p.dropdown)) throw new Error(`the tab "${tm.option}" opened no choices`);
+        out.gates.push({ key: `metadata.${tm.option}`, open: true, saw: `${p.options.length} choices${p.dropdown ? ', a dropdown' : ''}${p.counter ? `, ${p.counter}` : ''}` });
         const labels = p.options.map(o => o.label);
         for (const v of values) {
           const m = OM.matchOption(labels, v);
+          // 2026-11-01 GT6b — not one of the boxes, and the tab has a dropdown: picked there with the driver's choose, read back in the panel
+          if (!m.ok && p.dropdown) {
+            try {
+              const now = await ev(GF.metaPanelScript());
+              if (OM.shows(String(now.text || '').replace(now.dropdown ? now.dropdown.shown : '', ' '), v)) { out.filled.push({ tab: tm.option, value: v, changed: false, via: 'dropdown' }); continue; }
+              let picked = v, g = null;
+              for (let t = 0; t < 2 && !(g && g.open); t++) {
+                let why = null;
+                if (now.dropdown && now.dropdown.native) {   // a real <select>: the driver's choose, as Service type
+                  try { const c = await this.driver.exec({ agentId, action: 'choose', selector: '[data-cg-meta-dd="1"]', option: v, by: 'person' }); picked = (c && c.option) || v; }
+                  catch (e) { why = e.message; if (/no option matches/i.test(why)) throw e; }
+                } else {
+                  // Fiverr's own widget, many choices: opened with the pointer, the option clicked where it appeared, the chip read back.
+                  // (choose assumes the box shows the pick; here it keeps "CHOOSE ..." and the panel re-renders after each pick.)
+                  await ev(GF.metaPanelScript());   // marked again: the panel may have re-rendered
+                  const before = await ev(GF.leavesScript());
+                  await this.driver.exec({ agentId, action: 'pointer', selector: '[data-cg-meta-dd="1"]', do: 'click', by: 'person' });
+                  let L = { options: [] }; const until = Date.now() + 3000;
+                  while (Date.now() < until) { await sleep(250); L = await ev(GF.ddOptionsScript(before)); if ((L.options || []).length) break; }
+                  const om = OM.matchOption(L.options || [], v);
+                  if (!om.ok) { await this.driver.exec({ agentId, action: 'key', key: 'Escape', by: 'person' }).catch(() => {});
+                    throw new Error(`"${v}" is not offered — the dropdown's own list: ${(L.options || []).join(' | ') || 'nothing opened'}`); }
+                  picked = om.option;
+                  await this.driver.exec({ agentId, action: 'pointer', selector: `[data-cg-meta-ddopt="${om.index}"]`, do: 'click', by: 'person' });
+                }
+                g = await gigGate(async () => { const q = await ev(GF.metaPanelScript()); const ok = OM.shows(String(q.text || '').replace(q.dropdown ? q.dropdown.shown : '', ' '), picked);
+                  return { open: ok, saw: ok ? `"${picked}" shown in ${tm.option}` : `"${picked}" not shown in ${tm.option}${why ? ` (${why})` : ''}` }; }, { timeoutMs: 8000, settleMs: 600, every: 200 });   // a choice's timing (GT1)
+                if (!g.open) await ev(GF.metaPanelScript());   // marked again: the panel may have re-rendered
+              }
+              out.gates.push({ key: `metadata.${tm.option}.${picked}`, open: g.open, saw: g.saw });
+              if (g.open) out.filled.push({ tab: tm.option, value: picked, changed: true, via: 'dropdown' }); else out.failed.push({ tab: tm.option, value: v, why: `its gate stayed closed: ${g.saw}` });
+            } catch (err) { out.failed.push({ tab: tm.option, value: v, why: /is not offered/.test(err.message) ? err.message : `the dropdown: ${err.message}` }); }
+            continue;
+          }
           if (!m.ok) { out.failed.push({ tab: tm.option, value: v, why: `"${v}" is not offered — the tab's own list: ${labels.join(' | ')}` }); continue; }
           p = await ev(GF.metaPanelScript());
           let j = (p.options || []).findIndex(o => o.label === m.option);

@@ -782,3 +782,17 @@ decisions_d14:
 # His answer to the coder's question ("each page a compartment": its own process, or its own registry entry and data?), 2026-10-31:
 # "im saying each dsection should be its own html. like settings.html index.html like each page". So: every page and every section is its
 # own .html file, openable at its own address as well as inside the canvas (MG_D1's "separate .html, .css and .js files", now addressable).
+
+# ── ADDENDUM 2026-11-01 — MG32: COS's autopilot door reaches into Cortex and Intelligence (a fix, phased first) ─────────────────────────
+# Found by three tests on 2026-11-01 (test-versionium-owns-releases VO-03, test-registry-draft RD-01, the drawbridge census FD-09/FM-07):
+# cos/manager/autopilot-door.js, moved into COS by MG17, requires cortex/memory/jaa-db.js (the event-graph read and the on-demand event log)
+# and intelligence/cfr/field.js (computeRegime), and reads data/guardian/ledger/cfr/cfr_state.json. That is COS reaching into three systems'
+# files (§5.9, §5.15): with Cortex down, COS's graph route breaks.
+phases_addendum_2026_11_01:
+  MG32_autopilot_door_through_doors:
+    status: OPEN
+    depends_on: [MG17_autopilot_hands_over]
+    files: [cos/manager/autopilot-door.js]
+    interface: [route]
+    does: "the graph read and the event log go through Cortex's routes (its event log and bus subscriptions), the CFR regime through Intelligence's route; with either down, the route says which and answers what it has"
+    proof: "VO-03, RD-01, FD-09 and FM-07 green; the census adds nothing past its baseline; with Cortex stopped, the graph route answers with cortex: down"

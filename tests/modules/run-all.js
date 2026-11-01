@@ -430,7 +430,9 @@ const SUITES = [
   'test-autofill-chips.test.js',         // 0.60.267 AF3 — the page reader always there; a chip under each input
   'test-about-and-nodes.test.js',
   'test-run-log-fixes.test.js',
-  'test-gated-dropdowns.test.js',          // 0.60.280 KB4–KB7 — gated dropdowns in the node, keys in macros and automation, the node upgraded, the CLI pinned
+  'test-gated-dropdowns.test.js',
+  'test-macro-blocks.test.js',
+  'test-macro-blocks-ui.test.js',          // 0.60.343 MB2 — Settings › Macros as blocks with the gate between them, in Clear Glass             // 0.60.343 MB1 — the gate between two macro blocks: delay (fixed, range, human), backoff, onClosed          // 0.60.280 KB4–KB7 — gated dropdowns in the node, keys in macros and automation, the node upgraded, the CLI pinned
   'test-gig-features.test.js',             // 0.60.281 AP1 — a gig's package rows: features in the .gig, checkAt/rowLabels, the fill's rows
   'test-opportunity-contacts.test.js',     // 0.60.281 AP2–AP4 — contacts behind job applications: captured from the page, routes, command, tool, Settings › Applications
   'test-snowflake-steps.test.js',          // 0.60.281 SN1 — Snowflake as a step in macros and workflows (route, unroute, start, wait, check, stop)

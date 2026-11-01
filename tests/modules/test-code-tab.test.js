@@ -303,7 +303,7 @@ function harness() {
       await page.waitForSelector('#pp-body .pp-card[data-card="progress"]');
       assert.strictEqual(await page.$('#pp-ws'), null, 'no second work surface in the Plan panel');
       await page.evaluate(() => ppOpenChanges());
-      await page.waitForFunction(() => CURRENT_REPO_SUBTAB === 'code' && CS.view === 'changes');
+      await page.waitForFunction(() => CURRENT_REPO_SUBTAB === 'code' && CS.view === 'files' && CS.showChanges);   // CC1: the changes are Files'
       await page.evaluate(() => csOpen('src/b.js'));
       await page.waitForFunction(() => CS.open === 'src/b.js');
       await page.evaluate(() => { PLANP.showDone = true; PLANP.open.add('docs/k-phasemap.spec::KE0_core'); _planPaint(); });   // KE0 is complete: shown (CT7 folds it by default)
@@ -335,7 +335,7 @@ function harness() {
       await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'r1', session: 'phrun-2', name: 'idearium.code_read.tool', state: 'running', args: '{"path":"src/b.js"}', iteration: 1, at: Date.now() } }));
       await page.waitForSelector('.cs-file[data-path="src/b.js"] .cs-livedot');
       assert.strictEqual(await page.$$eval('.cs-file[data-path="src/a.js"] .cs-livedot', e => e.length), 0);
-      assert.strictEqual(await page.textContent('.cs-vtab[data-view="runs"] .cs-badge.live'), '1', 'the runs tab says a call is running, from the files view');
+      assert.strictEqual(await page.textContent('.cs-vtab[data-view="flight"] .cs-badge.live'), '1', 'the runs tab says a call is running, from the files view');
       assert.strictEqual(await page.evaluate(() => document.getElementById('cs-ask').value), 'half typed', 'the agent box was not repainted');
       assert.strictEqual(await page.evaluate(() => CALLS.length), n0, 'live calls arrive by event: nothing was fetched');
       await page.evaluate(() => csView('runs'));
@@ -344,7 +344,7 @@ function harness() {
       assert.strictEqual(await page.$eval('.cs-act-head .cs-livedot', e => getComputedStyle(e).animationName), 'cs-blink');
       await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'r1', session: 'phrun-2', name: 'idearium.code_read.tool', state: 'ok', args: '{"path":"src/b.js"}', iteration: 1, at: Date.now() } }));
       await page.waitForFunction(() => !document.querySelector('.cs-act-head .cs-now'));
-      assert.strictEqual(await page.$$eval('.cs-vtab[data-view="runs"] .cs-badge', e => e.length), 0, 'no badge once nothing runs');
+      assert.strictEqual(await page.$$eval('.cs-vtab[data-view="flight"] .cs-badge', e => e.length), 0, 'no badge once nothing runs');
       await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'r1', session: 'phrun-2', name: 'idearium.code_edit.tool', state: 'failed', args: '{"changes":[]}', error: 'edits is required', iteration: 2, at: Date.now() } }));
       await page.evaluate(() => { CS.activity = true; _csPaintLive(); });
       const body = await page.textContent('.cs-act-body');

@@ -137,7 +137,7 @@ const META_PRELUDE = `var re = /gig metadata/i;
   function name(t){ return String(t || '').replace(/\\*/g, '').replace(/\\s+/g, ' ').trim(); }
   var head = Array.prototype.find.call(document.querySelectorAll('h1,h2,h3,h4,h5,h6,label,legend,p,span,div,strong,b'), function(e){ return vis(e) && !e.children.length && re.test(txt(e)); });
   var root = null;
-  for (var p = head && head.parentElement, i = 0; p && i < 6; p = p.parentElement, i++) if (p.querySelector('input[type="checkbox"],input[type="radio"],[role="checkbox"],[role="radio"]')) { root = p; break; }
+  for (var p = head && head.parentElement, i = 0; p && i < 6; p = p.parentElement, i++) if (p.querySelector('input[type="checkbox"],input[type="radio"],[role="checkbox"],[role="radio"],select,[role="combobox"],[aria-haspopup="listbox"]')) { root = p; break; }
   function boxes(){ return Array.prototype.filter.call(root.querySelectorAll('input[type="checkbox"],input[type="radio"],[role="checkbox"],[role="radio"]'), function(b){ return vis(b) || vis(b.closest('label') || b.parentElement); }); }
   function labelOf(b){ return b.closest('label') || (b.id && document.querySelector('label[for="' + b.id + '"]')) || b.parentElement; }
   function isOn(b){ return b.tagName === 'INPUT' ? !!b.checked : b.getAttribute('aria-checked') === 'true'; }`;
@@ -152,7 +152,7 @@ function metaTabsScript() {
   var seen = {}, tabs = [];
   Array.prototype.forEach.call(root.querySelectorAll('li,button,[role="tab"],a,div,span,p'), function(el){
     if (!vis(el) || el === head || el.contains(head) || inChoice(el)) return;
-    var t = txt(el); if (!t || t.length > 60 || re.test(t) || /\\d+\\s*\\/\\s*\\d+/.test(t) || /select up to|choose up to/i.test(t)) return;
+    var t = txt(el); if (!t || t.length > 60 || re.test(t) || /\\d+\\s*\\/\\s*\\d+/.test(t) || /select up to|choose up to/i.test(t) || /^(choose|select)\\b/i.test(t)) return;   // GT6b: a dropdown's "CHOOSE ..." is not a tab
     if (Array.prototype.some.call(el.children, function(c){ return vis(c) && txt(c) === t; })) return;   // the innermost element with this text
     if (Array.prototype.some.call(el.querySelectorAll('*'), function(c){ return vis(c) && txt(c) && txt(c) !== t && c.children.length === 0; })) return;   // one label, not a group
     var n = name(t); if (!n || seen[n.toLowerCase()]) return;
@@ -175,8 +175,34 @@ function metaPanelScript() {
   var options = bs.map(function(b, j){ var l = labelOf(b); var t = name(txt(l) || b.value || b.getAttribute('aria-label') || ''); (vis(l) ? l : b).setAttribute('data-cg-meta-opt', String(j)); return { label: t, checked: isOn(b) }; });
   var all = txt(root), c = /(\\d+)\\s*\\/\\s*(\\d+)/.exec(all), u = /(?:select|choose) up to (\\d+)/i.exec(all);
   var limit = c ? Number(c[2]) : u ? Number(u[1]) : radio ? 1 : null;
-  return { found: true, kind: radio ? 'radio' : 'checkbox', options: options, limit: limit, count: options.filter(function(o){ return o.checked; }).length, counter: c ? c[0].replace(/\\s+/g, ' ') : null };
+  // 2026-11-01 GT6b — a tab whose choices are a dropdown (Fiverr's AI ENGINE: "CHOOSE ..." beside an "Other" radio). Found by what it is
+  // (a <select>, a combobox) or by what it shows (CHOOSE / SELECT …), never by a class; marked data-cg-meta-dd for the driver's choose.
+  document.querySelectorAll('[data-cg-meta-dd]').forEach(function(e){ e.removeAttribute('data-cg-meta-dd'); });
+  var notTab = function(el){ return !el.closest('[data-cg-meta-tab]') && !el.querySelector('[data-cg-meta-tab]') && !bs.some(function(b){ var l = labelOf(b); return l && (l.contains(el) || el.contains(b)); }); };
+  var dd = Array.prototype.find.call(root.querySelectorAll('select,[role="combobox"],[aria-haspopup="listbox"],[aria-haspopup="true"]'), function(e){ return vis(e) && notTab(e); }) || null;
+  if (!dd) dd = Array.prototype.find.call(root.querySelectorAll('button,div,span,p'), function(e){ var t = txt(e); return vis(e) && notTab(e) && t.length < 40 && /^(choose|select)\\b/i.test(t) && !Array.prototype.some.call(e.children, function(c){ return vis(c) && txt(c) === t; }); }) || null;
+  if (dd) dd.setAttribute('data-cg-meta-dd', '1');
+  // what the panel shows, without an open dropdown's own list (data-cg-meta-ddopt): a pick is read back from the chips, never from the list
+  function shownText(){ return Array.prototype.filter.call(root.querySelectorAll('*'), function(e){ return vis(e) && !Array.prototype.some.call(e.children, vis) && !e.closest('[data-cg-meta-ddopt]'); }).map(txt).join(' '); }
+  var dropdown = dd ? { native: dd.tagName === 'SELECT', shown: dd.tagName === 'SELECT' ? txt(dd.options[dd.selectedIndex] || {}) : txt(dd) } : null;
+  return { found: true, kind: bs.length ? (radio ? 'radio' : 'checkbox') : dd ? 'dropdown' : 'none', options: options, dropdown: dropdown, text: shownText(), limit: limit, count: options.filter(function(o){ return o.checked; }).length, counter: c ? c[0].replace(/\\s+/g, ' ') : null };
 })()`;
 }
 
-module.exports = { MODULE_ID, VERSION, HIS_BUTTONS, SECTIONS, fieldScript, readScript, clickButtonScript, listBoxesScript, valueAtScript, shownScript, readsBack, metaTabsScript, metaPanelScript };
+// 2026-11-01 GT6b — a multi-choice dropdown in a metadata tab (Fiverr's AI ENGINE: each pick becomes a chip, the box keeps "CHOOSE ...").
+// leavesScript() → the visible texts on the page now, before the dropdown is opened. ddOptionsScript(before) → after it is opened: the
+// texts that appeared (the dropdown's own list), each marked data-cg-meta-ddopt=<k>. Found by what is shown, never by a class.
+const LEAVES = `function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+  function txt(el){ return String(el.innerText || el.textContent || '').replace(/\\s+/g, ' ').trim(); }
+  function leaves(){ return Array.prototype.filter.call(document.querySelectorAll('body *'), function(e){ var t; return vis(e) && !Array.prototype.some.call(e.children, vis) && (t = txt(e)) && t.length < 80; }); }`;
+function leavesScript() { return `(function(){ ${LEAVES} return leaves().map(txt); })()`; }
+function ddOptionsScript(before) {
+  return `(function(before){ ${LEAVES}
+  document.querySelectorAll('[data-cg-meta-ddopt]').forEach(function(e){ e.removeAttribute('data-cg-meta-ddopt'); });
+  var seen = {}; (before || []).forEach(function(t){ seen[t] = 1; });
+  var out = []; leaves().forEach(function(e){ var t = txt(e); if (seen[t]) return; seen[t] = 1; e.setAttribute('data-cg-meta-ddopt', String(out.length)); out.push(t); });
+  return { options: out };
+})(${JSON.stringify(before || [])})`;
+}
+
+module.exports = { MODULE_ID, VERSION, HIS_BUTTONS, SECTIONS, fieldScript, readScript, clickButtonScript, listBoxesScript, valueAtScript, shownScript, readsBack, metaTabsScript, metaPanelScript, leavesScript, ddOptionsScript };
