@@ -1,4 +1,4 @@
-// cos/ui/cockpit/sections/api/section.js — the api tab: run as a function of (root, COS, ctx). MG29, 0.60.336.
+// cos/ui/cockpit/sections/api/section.js — the api tab: run as a function of (root, COS, ctx). MG29, 0.60.337.
 const $=(s)=>root.querySelector(s);const {h}=COS;
 async function load(){$('#src').textContent=`GET /contract on ${ctx.name}, through the door`;
 try{const c=await COS.call('GET',`/contract-map/${encodeURIComponent(ctx.name)}`);const routes=c.routes||(c.contract&&c.contract.routes)||c.endpoints||null;

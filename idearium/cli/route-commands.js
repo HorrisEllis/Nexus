@@ -817,7 +817,7 @@ export const SPEC = [
     req: (a) => ({ method: 'POST', path: '/api/cos/boot', timeoutMs: 120000, body: { set: a.args[0] || undefined, by: 'person' } }) },
   { key: 'cos.ledger', repo: false, usage: 'cos ledger [system] [--limit n]', about: 'the supervisor\'s ledger: every spawn, crash, restart, refusal and stop, with why',
     req: (a) => ({ method: 'GET', path: `/api/cos/ledger?limit=${Number(a.flags.limit) || 50}${a.args[0] ? `&system=${encodeURIComponent(a.args[0])}` : ''}` }) },
-  // 0.60.336 MG18 — what COS's UI shows, as rows (agents get every read a person gets; taking a proposal is a person's act)
+  // 0.60.337 MG18 — what COS's UI shows, as rows (agents get every read a person gets; taking a proposal is a person's act)
   { key: 'cos.proposals', repo: false, usage: 'cos proposals [--open]', about: 'agents\' held acts on COS: who, what, on which system, why, and whether a person took or dropped it',
     req: (a) => ({ method: 'GET', path: `/api/cos/proposals${a.flags.open ? '?open=1' : ''}` }) },
   { key: 'cos.proposal.act', repo: false, personOnly: () => 'taking or dropping a proposal is the person\'s: Take or Drop on COS\'s Proposals page, or ask them', usage: 'cos <take|drop> <proposal-id>', about: 'take an agent\'s proposal (it runs as your act) or drop it; both ledgered',

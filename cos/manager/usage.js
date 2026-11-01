@@ -1,7 +1,7 @@
 'use strict';
 /**
  * cos/manager/usage.js — each supervised process's memory and CPU, read back from the OS; the host's load and free memory against the
- * supervisor's halt floors. MG18, 0.60.336. Spec: cos/spec/cos-manager.spec MOD-MG-UI-OVERVIEW ("every number on a card is the supervisor's,
+ * supervisor's halt floors. MG18, 0.60.337. Spec: cos/spec/cos-manager.spec MOD-MG-UI-OVERVIEW ("every number on a card is the supervisor's,
  * with its time"; "usage null → shown as 'not read' with the why, never 0").
  *   read(systems, policy) → { at, host: { cpus, load1, freeMemPct, freeMB, totalMB, haltPct, criticalHaltPct }, systems: { name: { rssMB, cpuPct } | { notRead } } }
  */

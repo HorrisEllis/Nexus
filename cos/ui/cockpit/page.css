@@ -1,4 +1,4 @@
-/* cos/ui/cockpit/page.css — one system's cockpit (MOD-MG-UI-COCKPIT). MG29, 0.60.336. */
+/* cos/ui/cockpit/page.css — one system's cockpit (MOD-MG-UI-COCKPIT). MG29, 0.60.337. */
 .hero { display: grid; grid-template-columns: 1fr auto; gap: var(--s5); padding: var(--s6); margin-bottom: var(--s4); position: relative; overflow: hidden; }
 .hero::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .5;
   background: radial-gradient(600px 220px at 0% 0%, color-mix(in srgb, var(--c, var(--ac)) 14%, transparent), transparent 70%); }

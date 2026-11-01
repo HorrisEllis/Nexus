@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/ui/serve.js — COS's cockpit server (MG_D10). MG18, 0.60.336.
+ * cos/ui/serve.js — COS's cockpit server (MG_D10). MG18, 0.60.337.
  * Spec: cos/spec/cos-manager.spec MOD-MG-UI-SERVE · Map: docs/2026-10-24-cos-manager-phasemap.spec MG18_the_supervisor_screen, MG_D16
  *
  * James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered,

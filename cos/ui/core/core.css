@@ -1,6 +1,6 @@
 /**
  * cos/ui/core/core.css — what every COS page shares: the spacing scale, type, floating panels, buttons, chips, state dots, tables.
- * MG18, 0.60.336. Spec: cos/spec/cos-manager.spec MOD-MG-UI-CORE. Map: docs/2026-10-24-cos-manager-phasemap.spec MG_D16.
+ * MG18, 0.60.337. Spec: cos/spec/cos-manager.spec MOD-MG-UI-CORE. Map: docs/2026-10-24-cos-manager-phasemap.spec MG_D16.
  * James, 2026-10-31: "floating, above the event bus … do not make this ugly, cluttered, cheap, or lazy". Pages are transparent: the shell's
  * bus field shows between them; what a page draws floats on it as glass.
  */

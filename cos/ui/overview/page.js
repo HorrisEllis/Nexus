@@ -1,5 +1,5 @@
 /**
- * cos/ui/overview/page.js — every system COS supervises (MOD-MG-UI-OVERVIEW). MG18, 0.60.336.
+ * cos/ui/overview/page.js — every system COS supervises (MOD-MG-UI-OVERVIEW). MG18, 0.60.337.
  * James, 2026-10-30: "look at tablet except it uses the compartments as a way to manage the compartments for each system" ·
  * 2026-10-31: "okay. lets build cos ui. floating, above the event bus."
  * A card per system, what needs him first; every number is the supervisor's with the time it was read; usage the OS did not report says

@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/manager/proposals.js — agents' held acts (MG-006), taken or dropped by a person. MG18, 0.60.336.
+ * cos/manager/proposals.js — agents' held acts (MG-006), taken or dropped by a person. MG18, 0.60.337.
  * Spec: cos/spec/cos-manager.spec MOD-MG-UI-PROPOSALS (schema Proposal) · Map: docs/2026-10-24-cos-manager-phasemap.spec MG18, MG_D16
  *
  * James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus. all of the phases, build it."

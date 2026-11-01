@@ -18,7 +18,7 @@ payload:
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: BUILT 0.60.336
+  status: BUILT 0.60.337
   files:
     - idearium/cli/route-commands.js
     - cos/manager/contract.json

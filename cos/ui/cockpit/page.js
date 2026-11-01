@@ -1,5 +1,5 @@
 /**
- * cos/ui/cockpit/page.js — one system's cockpit (MOD-MG-UI-COCKPIT, MG29). MG release 0.60.336.
+ * cos/ui/cockpit/page.js — one system's cockpit (MOD-MG-UI-COCKPIT, MG29). MG release 0.60.337.
  * James, 2026-10-30: "full control panel/cockpit for each system." · 2026-10-31: "okay. lets build cos ui. floating, above the event bus."
  * The hero says the system's state and holds its acts (each confirmed, by = person); each tab is a section folder (section.html, .css, .js)
  * in its own shadow root (MG_D7/MG_D12), mounted the first time it is opened. Writes go only through COS's routes or the door.

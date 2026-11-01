@@ -1,6 +1,6 @@
 /**
  * cos/ui/automation/page.js — the supervisor's policy as a form (MOD-MG-UI-AUTOMATION: "including the supervisor's policy (SupervisorPolicy)
- * as a settings form"). MG18 release, 0.60.336. Each value says its layer (the default, or set at runtime); a change is confirmed, sent as one
+ * as a settings form"). MG18 release, 0.60.337. Each value says its layer (the default, or set at runtime); a change is confirmed, sent as one
  * PATCH with by = person, and read back (GATE-MGUI-AU-002). Macros and rules wait on MG7, said on the page.
  */
 (async function () {

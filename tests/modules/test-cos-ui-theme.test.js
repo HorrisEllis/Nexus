@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/modules/test-cos-ui-theme.test.js — COS's look is Idearium's, forked (MG_D11, MOD-MG-UI-THEME). MG18, 0.60.336.
+ * tests/modules/test-cos-ui-theme.test.js — COS's look is Idearium's, forked (MG_D11, MOD-MG-UI-THEME). MG18, 0.60.337.
  * James, 2026-10-30: "what about using forking idearium specifically for cos for now … i want it to look beautiful, not cramped, open".
  *   TH-01 every palette, accent and motion rule in cos/ui/core/theme.css's fork equals idearium/ui/css/nexus-theme.css's, token by token
  *   TH-02 the fonts are Idearium's own files, byte for byte, with their licenses

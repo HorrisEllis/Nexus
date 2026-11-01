@@ -1,4 +1,4 @@
-/* cos/ui/ledger/page.css — the Ledger (MOD-MG-UI-LEDGER). MG18, 0.60.336. A timeline, one line per act, quiet until something matters. */
+/* cos/ui/ledger/page.css — the Ledger (MOD-MG-UI-LEDGER). MG18, 0.60.337. A timeline, one line per act, quiet until something matters. */
 .live { display: inline-flex; align-items: center; gap: 8px; font: 500 12px/1 var(--mono); color: var(--nx-dim); padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line-soft); }
 .filters { display: grid; grid-template-columns: 220px 1fr 260px; gap: var(--s5); align-items: end; padding: var(--s5); margin-bottom: var(--s4); }
 .feed { padding: var(--s2) 0; }

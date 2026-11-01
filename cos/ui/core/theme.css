@@ -1,5 +1,5 @@
 /**
- * cos/ui/core/theme.css — Idearium's look, forked for COS (MG_D11). MG18, 0.60.336. Spec: MOD-MG-UI-THEME.
+ * cos/ui/core/theme.css — Idearium's look, forked for COS (MG_D11). MG18, 0.60.337. Spec: MOD-MG-UI-THEME.
  * James, 2026-10-30: "what about using forking idearium specifically for cos for now … i want it to look beautiful, not cramped, open".
  * The block between FORK START and FORK END is idearium/ui/css/nexus-theme.css's palettes, accents and motion, copied whole;
  * tests/modules/test-cos-ui-theme.test.js fails naming the token if the two ever differ. The fonts are Idearium's, self-hosted, with their licenses.

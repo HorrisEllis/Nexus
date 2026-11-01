@@ -1,5 +1,5 @@
 /**
- * cos/ui/core/section.js — a section in its own shadow root (MOD-MG-UI-CORE, MG_D7/MG_D12). MG18, 0.60.336.
+ * cos/ui/core/section.js — a section in its own shadow root (MOD-MG-UI-CORE, MG_D7/MG_D12). MG18, 0.60.337.
  * A page's tab is a folder: section.html, section.css, section.js. mount() loads all three into a shadow root on the element, so no style or
  * DOM crosses between sections; the section's script runs as a function of (root, COS, ctx) and returns an optional { refresh, stop }.
  *   await COS.mount(el, base, ctx) → { refresh, stop }

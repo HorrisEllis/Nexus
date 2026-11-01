@@ -10,7 +10,7 @@
  *   GET  /api/cos/health · /api/cos/systems · /api/cos/systems/:name · /api/cos/ledger[?system&limit] · /api/cos/policy
  *   POST /api/cos/boot · /api/cos/systems/:name/(start|stop|restart|touch|reset-circuit) — each act carries { by } (MG-006)
  *   PATCH /api/cos/policy
- * MG18 (0.60.336, MG_D16): GET /api/cos/contract · /api/cos/events (server-sent: cos.ledger, cos.system.state) · /api/cos/usage ·
+ * MG18 (0.60.337, MG_D16): GET /api/cos/contract · /api/cos/events (server-sent: cos.ledger, cos.system.state) · /api/cos/usage ·
  *   /api/cos/systems/:name/logs · /api/cos/proposals; POST /api/cos/proposals (an agent's) · /api/cos/proposals/:id/(take|drop) (a person's)
  */
 const http = require('http');

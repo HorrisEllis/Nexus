@@ -1,7 +1,7 @@
 'use strict';
 require('../../lib/test-sandbox.js').ensure();
 /**
- * tests/modules/test-cos-ui.test.js — COS's UI, floating above the event bus (MG18, MG29; MG_D16). 0.60.336.
+ * tests/modules/test-cos-ui.test.js — COS's UI, floating above the event bus (MG18, MG29; MG_D16). 0.60.337.
  * James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered,
  * cheap, or lazy". Spec: cos/spec/cos-manager.spec MOD-MG-UI-*, MOD-MG-CONTRACT.
  *   CU-01 the cockpit server: pages served, / goes to the shell, ../ refused, a route outside the contract 404, a write from another origin 403

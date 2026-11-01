@@ -1,4 +1,4 @@
-// cos/ui/cockpit/sections/tests/section.js — the tests tab: run as a function of (root, COS, ctx). MG29, 0.60.336.
+// cos/ui/cockpit/sections/tests/section.js — the tests tab: run as a function of (root, COS, ctx). MG29, 0.60.337.
 const $=(s)=>root.querySelector(s);const {h}=COS;
 $('#body').replaceChildren(h('p',{class:'note'},`Runs Nexus's real test runner filtered to ${ctx.name} (one run at a time on this machine), sandboxed so it cannot touch live data. It can take minutes.`));
 $('#run').onclick=async()=>{if(!await COS.confirm({title:`Run ${ctx.name}'s tests?`,body:'The real runner, filtered to this system. One run at a time; it can take minutes.',act:'Run'}))return;

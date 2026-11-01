@@ -1,4 +1,4 @@
-/* cos/ui/overview/page.css — the Overview's own look (MOD-MG-UI-OVERVIEW). MG18, 0.60.336. Open: generous gaps, one idea per card. */
+/* cos/ui/overview/page.css — the Overview's own look (MOD-MG-UI-OVERVIEW). MG18, 0.60.337. Open: generous gaps, one idea per card. */
 .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s4); margin-bottom: var(--s5); }
 .stat { position: relative; padding: var(--s5) var(--s5) var(--s4); overflow: hidden; cursor: pointer; transition: transform .2s var(--ease), border-color .2s; }
 .stat:hover { transform: translateY(-2px); border-color: var(--line); }

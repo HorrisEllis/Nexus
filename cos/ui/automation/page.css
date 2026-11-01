@@ -1,4 +1,4 @@
-/* cos/ui/automation/page.css — the policy form (MOD-MG-UI-AUTOMATION). MG18 release, 0.60.336. */
+/* cos/ui/automation/page.css — the policy form (MOD-MG-UI-AUTOMATION). MG18 release, 0.60.337. */
 .groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: var(--s4); margin-bottom: var(--s4); align-items: start; }
 .group .panel-body { display: grid; gap: var(--s5); }
 .group .panel-head p { margin: 4px 0 0; font-size: 12.5px; color: var(--nx-dim); font-weight: 400; }

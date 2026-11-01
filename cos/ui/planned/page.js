@@ -1,5 +1,5 @@
 /**
- * cos/ui/planned/page.js — the contract's planned pages, each with its phase, what it will do and what it waits on. MG18, 0.60.336.
+ * cos/ui/planned/page.js — the contract's planned pages, each with its phase, what it will do and what it waits on. MG18, 0.60.337.
  * Read from the manager's contract (GET /api/cos/contract), so this list and the rail cannot disagree.
  */
 (async function () {

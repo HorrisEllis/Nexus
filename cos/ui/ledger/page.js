@@ -1,5 +1,5 @@
 /**
- * cos/ui/ledger/page.js — the supervisor's ledger, newest first, live from the bus (MOD-MG-UI-LEDGER). MG18, 0.60.336.
+ * cos/ui/ledger/page.js — the supervisor's ledger, newest first, live from the bus (MOD-MG-UI-LEDGER). MG18, 0.60.337.
  * James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus." Read-only: it hears cos.ledger and never polls.
  */
 (async function () {

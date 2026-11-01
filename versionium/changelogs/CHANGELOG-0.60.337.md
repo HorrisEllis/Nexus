@@ -1,4 +1,4 @@
-# 0.60.336 — COS's UI, floating above the event bus (MG18, MG29)
+# 0.60.337 — COS's UI, floating above the event bus (MG18, MG29)
 
 James, 2026-10-31:
 > "okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered, cheap, or lazy"

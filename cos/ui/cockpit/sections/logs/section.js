@@ -1,4 +1,4 @@
-// cos/ui/cockpit/sections/logs/section.js — the logs tab: run as a function of (root, COS, ctx). MG29, 0.60.336.
+// cos/ui/cockpit/sections/logs/section.js — the logs tab: run as a function of (root, COS, ctx). MG29, 0.60.337.
 const $=(s)=>root.querySelector(s);const {h}=COS;let lines=[],follow=true,errOnly=false,q='';
 async function load(){try{lines=(await COS.call('GET',`/api/cos/systems/${encodeURIComponent(ctx.name)}/logs?limit=400`)).lines;render();}catch(e){$('#out').textContent=e.message;}}
 function render(){const list=lines.filter(l=>(!errOnly||l.stream==='err')&&(!q||l.line.toLowerCase().includes(q)));$('#n').textContent=`${list.length} lines · read every 2 s`;

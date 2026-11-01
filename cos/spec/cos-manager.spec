@@ -1294,7 +1294,7 @@ spec:
 # kernels() reads the declarations, and the generator keeps a declared process. test-compartment-declarations CD-05: a hand change shows in
 # kernels() and in COS's supervisor alike. CD-01/02 now compare the declarations with frozenKernels() (the archive at the handover).
 
-# ── ADDENDUM 2026-10-31 (0.60.336) — the UI floats above the event bus: MG18 and MG29 built, Automation's policy form (MG_D16) ──────
+# ── ADDENDUM 2026-10-31 (0.60.337) — the UI floats above the event bus: MG18 and MG29 built, Automation's policy form (MG_D16) ──────
 # James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered,
 # cheap, or lazy". Built: MOD-MG-CONTRACT (cos/manager/contract.json, with a shell page and a planned: list), MOD-MG-UI-SERVE, -THEME, -CORE,
 # -SHELL, -OVERVIEW, -LEDGER, -PROPOSALS, -COCKPIT, -AUTOMATION (its policy form only; macros wait on MG7). The manager gains GET

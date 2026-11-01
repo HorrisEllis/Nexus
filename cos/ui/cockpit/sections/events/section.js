@@ -1,4 +1,4 @@
-// cos/ui/cockpit/sections/events/section.js — the events tab: run as a function of (root, COS, ctx). MG29, 0.60.336.
+// cos/ui/cockpit/sections/events/section.js — the events tab: run as a function of (root, COS, ctx). MG29, 0.60.337.
 const $=(s)=>root.querySelector(s);const {h,icon}=COS;let path=[ctx.name];
 async function open(p){path=p;crumbs();$('#body').replaceChildren(h('div',{class:'note'},'reading…'));
 try{const r=await COS.call('GET',`/ledger/${p.map(encodeURIComponent).join('/')}`);

@@ -1,5 +1,5 @@
 /**
- * cos/ui/shell/bus.js — the event bus, drawn: the live layer everything in COS floats above. MG18, 0.60.336 (MG_D16).
+ * cos/ui/shell/bus.js — the event bus, drawn: the live layer everything in COS floats above. MG18, 0.60.337 (MG_D16).
  * James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus."
  * One quiet lane per supervised system; every event the manager announces travels its system's lane as a pulse, coloured by what happened
  * (a spawn or a recovery in the accent, a crash or an open circuit red, a refusal amber, an act by a person or an agent violet). Nothing is

@@ -1,4 +1,4 @@
-// cos/ui/cockpit/sections/overview/section.js — the overview tab: run as a function of (root, COS, ctx). MG29, 0.60.336.
+// cos/ui/cockpit/sections/overview/section.js — the overview tab: run as a function of (root, COS, ctx). MG29, 0.60.337.
 const $=(s)=>root.querySelector(s);const {h}=COS;
 function facts(){const s=ctx.sys;if(!s)return;const f=(k,v)=>[h('dt',{},k),h('dd',{class:v==null||v===''?'none':''},v==null||v===''?'—':String(v))];
 $('#at').textContent=`read ${COS.clock(Date.now())}`;

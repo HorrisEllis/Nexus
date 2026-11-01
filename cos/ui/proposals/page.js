@@ -1,5 +1,5 @@
 /**
- * cos/ui/proposals/page.js — agents' held acts (MOD-MG-UI-PROPOSALS, MG-006). MG18, 0.60.336.
+ * cos/ui/proposals/page.js — agents' held acts (MOD-MG-UI-PROPOSALS, MG-006). MG18, 0.60.337.
  * James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus." A proposal shows the agent, the act, the target, the agent's
  * reason and its age; if the target's state changed since the agent asked, that is shown before Take (GATE-MGUI-PR-002: take confirmed).
  */

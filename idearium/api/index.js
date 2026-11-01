@@ -3557,7 +3557,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','cos','ledger'],                'cos.ledger'],
     ['POST',   ['api','cos','boot'],                  'cos.boot'],
     ['POST',   ['api','cos','systems',':name',':op'], 'cos.act'],
-    // 0.60.336 MG18 — what COS's UI reads, for every agent too (§3.4: route → command → UI)
+    // 0.60.337 MG18 — what COS's UI reads, for every agent too (§3.4: route → command → UI)
     ['GET',    ['api','cos','proposals'],             'cos.proposals'],
     ['POST',   ['api','cos','proposals',':id',':op'], 'cos.proposal.act'],
     ['GET',    ['api','cos','systems',':name','logs'],'cos.logs'],

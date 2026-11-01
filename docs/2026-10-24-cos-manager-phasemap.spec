@@ -429,7 +429,7 @@ phases:
       "then each file is its system's own"), and lib/cli/compartments.js stops deriving them from autopilot.
     proof: "kernels() equals the declarations for all 13 processes; a hand change to one compartment.json shows in kernels() and in COS's supervisor alike"
   MG18_the_supervisor_screen:
-    status: BUILT 0.60.336
+    status: BUILT 0.60.337
     depends_on: [MG0b_the_full_spec, MG_D1_ui_isolated_per_component, MG_D10_the_cockpit_has_its_own_server, MG_D11_idearium_look_forked, MG_D12_pages_in_frames_bus_declared, MG_D16_the_ui_floats_above_the_bus]
     files: [cos/ui/serve.js, cos/ui/core, cos/ui/shell, cos/ui/overview, cos/ui/ledger, cos/ui/proposals, cos/ui/automation, cos/ui/planned, cos/manager/contract.json, cos/manager/server.js, cos/manager/supervisor.js, cos/manager/proposals.js, cos/manager/usage.js, idearium/api/index.js, idearium/cli/route-commands.js, loom/maps/cos-testenv-map.js, tests/modules/test-cos-ui.test.js, tests/modules/test-cos-ui-theme.test.js, tests/modules/run-all.js]
     spec: cos/spec/cos-manager.spec
@@ -520,7 +520,7 @@ phases:
     does: "copy the five sets with their lock; check.js; a test that runs the check and proves a one-byte edit fails it"
     proof: "the check passes on the copy; an edited byte fails it naming the file"
   MG29_the_cockpit:
-    status: BUILT 0.60.336
+    status: BUILT 0.60.337
     depends_on: [MG18_the_supervisor_screen]
     files: [cos/ui/cockpit, idearium/cli/route-commands.js, cos/manager/contract.json]
     spec: cos/spec/cos-manager.spec
@@ -724,7 +724,7 @@ decisions_d14:
 # Stands on, to read before mapping (reuse before build): the agents' control panel AC1–AC7 (0.60.334–0.60.335), orchestrator automation
 # AE3–AE4 (0.60.317, 0.60.333), Guardian's jobs, the ERAVOS canvas archetypes (cos/archetype/eravos-*), Emergence (his 2026-10-30 upload).
 
-# ── ADDENDUM 2026-10-31 — MG18 and MG29 built (0.60.336) ─────────────────────────────────────────────────────────────────────────────
+# ── ADDENDUM 2026-10-31 — MG18 and MG29 built (0.60.337) ─────────────────────────────────────────────────────────────────────────────
 # As MG_D16 says. Found while building, said: the cockpit server served the shell at "/", so its relative links resolved from "/" and its
 # stylesheet did not load; "/" now redirects to "/shell/". The glass was too opaque for the bus to be seen through it (his "floating, above the
 # event bus"); it is lighter, and the lanes and pulses brighter. Clear Glass drove every page against real processes under COS's manager, with
@@ -732,7 +732,7 @@ decisions_d14:
 # (MG_D17) is mapped next.
 
 # ── ADDENDUM 2026-10-31 — his answer on the UI: no side bar, every compartment, deploy/add/build, open (MG_D18) ─────────────────────
-# James, 2026-10-31, after seeing 0.60.336's screenshots: "okay but no side bar, and its for all compartments. deplaying, adding, building,
+# James, 2026-10-31, after seeing 0.60.337's screenshots: "okay but no side bar, and its for all compartments. deplaying, adding, building,
 # not static, open it up"
 # Read as (the coder's, to confirm where marked): the rail goes; the screen is an open canvas over the bus where every compartment COS holds
 # (Nexus's systems, VMs, projects, canvases — not only supervised processes) floats as a tile; adding, deploying and building a compartment

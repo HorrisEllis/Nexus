@@ -1,4 +1,4 @@
-// cos/ui/cockpit/sections/files/section.js — the files tab: run as a function of (root, COS, ctx). MG29, 0.60.336.
+// cos/ui/cockpit/sections/files/section.js — the files tab: run as a function of (root, COS, ctx). MG29, 0.60.337.
 const $=(s)=>root.querySelector(s);const {h,icon}=COS;let path=[ctx.name];const kb=(b)=>b<1024?`${b} B`:b<1048576?`${(b/1024).toFixed(1)} KB`:`${(b/1048576).toFixed(1)} MB`;
 async function open(p){path=p;$('#crumbs').replaceChildren(...['data',...p].flatMap((x,i)=>[i?h('span',{},'/'):null,i?h('a',{onclick:()=>open(p.slice(0,i))},x):h('span',{},x)]).filter(Boolean));
 try{const r=await COS.call('GET',`/files/${p.map(encodeURIComponent).join('/')}`);

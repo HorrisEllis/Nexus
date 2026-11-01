@@ -1,4 +1,4 @@
-/* cos/ui/proposals/page.css — Proposals (MOD-MG-UI-PROPOSALS). MG18, 0.60.336. */
+/* cos/ui/proposals/page.css — Proposals (MOD-MG-UI-PROPOSALS). MG18, 0.60.337. */
 .list { display: grid; gap: var(--s4); max-width: 980px; }
 .prop { display: grid; grid-template-columns: auto 1fr auto; gap: var(--s5); align-items: start; padding: var(--s5); }
 .prop .who { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; font: 400 20px/1 var(--display); letter-spacing: .04em;

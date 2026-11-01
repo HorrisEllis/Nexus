@@ -1,4 +1,4 @@
-// cos/ui/cockpit/sections/data/section.js — the data tab: run as a function of (root, COS, ctx). MG29, 0.60.336.
+// cos/ui/cockpit/sections/data/section.js — the data tab: run as a function of (root, COS, ctx). MG29, 0.60.337.
 const $=(s)=>root.querySelector(s);const {h}=COS;
 async function list(){try{const r=await COS.call('GET','/tables');if(r._legacy){$('#legacy').hidden=false;$('#legacy').title=r._legacy;}
 $('#list').replaceChildren(...r.tables.map(t=>h('div',{class:'t',onclick:(e)=>{root.querySelectorAll('.t').forEach(x=>x.classList.remove('on'));e.currentTarget.classList.add('on');rows(t.name);}},h('span',{},t.name),h('span',{class:'n'},t.rows==null?'—':t.rows<0?'unreadable':String(t.rows)))));

@@ -1,5 +1,5 @@
 /**
- * cos/ui/shell/page.js — the frame, the tree, the router, and the bus (MOD-MG-UI-SHELL). MG18, 0.60.336.
+ * cos/ui/shell/page.js — the frame, the tree, the router, and the bus (MOD-MG-UI-SHELL). MG18, 0.60.337.
  * Map: docs/2026-10-24-cos-manager-phasemap.spec MG18_the_supervisor_screen, MG_D12, MG_D16.
  * James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus. all of the phases, build it."
  *

@@ -23,7 +23,7 @@ const FILES = [
   ['cos/manager/supervisor.js', I('cos/manager/supervisor.js'), []],
   ['cos/manager/autopilot-door.js', I('cos/manager/autopilot-door.js'), [I('lib/test-sandbox.js'), I('lib/bus-subscriptions.js'), I('cortex/memory/jaa-db.js'), I('intelligence/cfr/field.js'), I('lib/ledger-sse.js'), I('lib/error-log.js')]],   // 0.60.329 MG16; cortex/intelligence: the legacy /tables /files reads
   ['cos/manager/server.js',     I('cos/manager/server.js'),     [I('cos/manager/supervisor.js'), I('cos/manager/autopilot-door.js'), I('cos/manager/proposals.js'), I('cos/manager/usage.js'), I('cos/manager/contract.json')]],   // requires; the contract read per request (MG18)
-  // 0.60.336 MG18/MG29 (MG_D16) — COS's UI: the cockpit server forwards to the manager over HTTP by the contract's allowlist; each page loads
+  // 0.60.337 MG18/MG29 (MG_D16) — COS's UI: the cockpit server forwards to the manager over HTTP by the contract's allowlist; each page loads
   // core by <script>, talks to the shell only by postMessage (the bus), and to the manager only through the cockpit server's same-origin routes
   ['cos/manager/proposals.js',  I('cos/manager/proposals.js'),  []],   // given the supervisor; notes on its ledger
   ['cos/manager/usage.js',      I('cos/manager/usage.js'),      []],

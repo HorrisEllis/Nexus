@@ -1,5 +1,5 @@
 /**
- * cos/ui/core/core.js — what every COS page shares and nothing else (MOD-MG-UI-CORE). MG18, 0.60.336.
+ * cos/ui/core/core.js — what every COS page shares and nothing else (MOD-MG-UI-CORE). MG18, 0.60.337.
  * Map: docs/2026-10-24-cos-manager-phasemap.spec MG18_the_supervisor_screen, MG_D12, MG_D16.
  * James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus."
  *
