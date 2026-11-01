@@ -139,6 +139,14 @@ spec:
       behavioral_contracts: ["every act a ledger line written before it happens"]
       error_paths: ["the ledger cannot be written → the act does not happen, said"]
 
+    - id: IF-RAID-PORT
+      name: raid-port
+      path: lib/raid-port.js
+      description: "The one door to RAID for every system that is not Cortex. approveTool fails closed: RAID unreachable → not approved, with the reason."
+      exports: ["approveTool(source, command, opts) → { approved, reason, ... }   POST /api/raid/approve-tool"]
+      behavioral_contracts: ["RAID cannot be asked → { approved: false, reason: 'RAID unreachable: …' }"]
+      error_paths: ["no answer → not approved, said"]
+
     - id: IF-BOUNDARY
       name: boundary
       path: cos/compartment/boundary.js
@@ -244,6 +252,24 @@ spec:
       behavioral_contracts: ["CPU share is said not-enforced, with why", "COS stops nothing on pressure by itself: it proposes"]
       error_paths: ["setPriority throws → failed with the error", "a sample with no reading → the ring keeps a null, said"]
       acceptance: ["a fixture's priority set and read back from the OS; its heap cap on its command line; its resident limit crossed → ledger line and restart; the halt floor → one proposal"]
+
+    - id: MOD-CP-RAID-GATE
+      name: raid-gates-the-rules
+      uuid: nexus-cos-compartment-raid-gate-v1-0000-2026-1101-001
+      path: cos/manager/resources.js
+      phase: CP6b_raid_approves_what_cos_does_by_rule
+      description: >-
+        James, 2026-11-01: "cos backend, and hooking into idearium and raid. cos resource manager per compartment". An act COS takes by rule on a
+        compartment (a restart over its resident limit, onOver restart) is asked of RAID first through IF-RAID-PORT (approveTool('cos',
+        'cos.restart <name>', { action, intent, causedBy: 'rule:resources' })). Approved → 'raid-approved' on the ledger, then the restart. Refused,
+        or RAID unreachable (fails closed) → 'raid-refused' with RAID's reason, nothing restarted. A proposal held for him is not gated: his act.
+      deps: [{ name: resources }, { name: raid-port }]
+      schema_refs: [CompartmentCaps]
+      exports: ["createResources(sup, { …, approve }) — approve(command, opts) → { approved, reason }; default lib/raid-port.js approveTool"]
+      gate_pipeline: ["GATE-CP6b-001: the rule's act named as a command", "GATE-CP6b-002: RAID asked; no answer is a refusal", "GATE-CP6b-003: the answer on the ledger before the act"]
+      behavioral_contracts: ["no restart by rule without RAID's yes", "his proposals stay his (USER_AUTONOMY)"]
+      error_paths: ["RAID refuses or does not answer → not restarted, 'raid-refused' with the reason"]
+      acceptance: ["approved → restarted, 'raid-approved' on the ledger; refused or unreachable → not restarted, the reason on the ledger"]
 
     - id: MOD-CP-SNAPSHOTS
       name: snapshots
