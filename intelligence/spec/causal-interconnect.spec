@@ -284,6 +284,24 @@ spec:
       error_paths: ["Diagnostic down → 502 naming it"]
       acceptance: ["with stand-ins: tension per system equals Diagnostic's formula; every open gap counted (25 gaps → 25, not 20); Cortex down → loops null, said"]
 
+    - id: MOD-CI-TENSION-TV
+      name: tension-on-the-tv
+      uuid: nexus-intelligence-tension-tv-v1-0000-2026-1101-001
+      path: lib/ui/tv-shell/channels/tension/tension.js
+      phase: CI8_tension_on_the_tv
+      description: >-
+        James, 2026-11-01: "72% so make sure it is tv ui and i can access it,". The TENSION channel on the TV: per system its tension and regime,
+        the parts (monitor tension, loop tension, friction, monitor gaps, open loops, slope), the worst open loops Cortex scored, the field's
+        friction, and each source with whether it answered. The page asks only the orchestrator (GET /api/tension-field/tension), which asks
+        Intelligence's /api/intelligence/tension; the same read is the command row `tension` for agents.
+      deps: [{ name: tension-computed-here }]
+      schema_refs: [InterconnectStatus]
+      exports: ["window.TENSION.load()"]
+      gate_pipeline: ["GATE-CI8-001: the orchestrator forwards to Intelligence; a silent Intelligence is a 503 naming it", "GATE-CI8-002: systems sorted by tension, each with its regime and parts", "GATE-CI8-003: a silent source is said by name, never painted as 0"]
+      behavioral_contracts: ["Cortex down → loop tension shown as unknown, not 0", "the channel is appended to the rail, never inserted (CH_INSPECT is read by position)"]
+      error_paths: ["Intelligence down → the page says so in red, by name"]
+      acceptance: ["in Clear Glass against a stand-in orchestrator: systems sorted by tension with regimes; Cortex down said; Intelligence down said", "the TV lists TENSION after EMERGENCE and loads its page on tune"]
+
   events:
     causal:
       - "intelligence.causal.dropped { count, why }"
