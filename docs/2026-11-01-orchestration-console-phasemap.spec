@@ -19,7 +19,7 @@ decisions:
 
 phases:
   OC1_task_nodes:
-    status: OPEN
+    status: "DONE 0.60.348"
     depends_on: [OC_D0_one_console_in_cos]
     spec: docs/orchestration-console.spec
     blocks: [MOD-OC-TASK-NODE]

@@ -1,0 +1,73 @@
+envelope: 1
+uuid: nexus-export-schema-task
+type: schema
+id: task
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1793577600000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/automation/task-node.js — the .task node (OC1, 0.60.348): one unit of work Nexus runs now or on a schedule, against any system; one file
+    per task under the owning system's data/nodes/task/, the store of record (docs/orchestration-console.spec MOD-OC-TASK-NODE). James,
+    2026-11-01: "scheduler with a calender with persistent data, .task nodes. .pipeline nodes  expand the taxonomy".
+  fields:
+    id:
+      type: string
+      required: true
+      description: lowercase letters, digits, . _ - (1–64); the file is <id>.task
+    title:
+      type: string
+      required: false
+      description: what the console shows
+    do:
+      type: object
+      required: true
+      description: >-
+        { kind: macro | workflow | pipeline | agent | command | tool | system-op | build-phase, ref: what it runs, args: {} } — the first five
+        are the automation engine's own steps (lib/automation/steps.js)
+    target:
+      type: object
+      required: false
+      description: '{ system, compartment? } where it runs; COS deploys it there (OC4)'
+    schedule:
+      type: object
+      required: false
+      description: >-
+        { cron | at | every (exactly one), tz (IANA, default America/Los_Angeles), catchUp: skip | once | all, window?: { from, to }, paused }
+    by:
+      type: string
+      required: true
+      description: person | rule:<id> | agent:<hat> — whose task it is; every fire passes RAID with it (OC-002)
+    gate:
+      type: object
+      required: false
+      description: what its output must hold (lib/automation/pipeline.js gateOpen keys; element gates)
+    retries:
+      type: object
+      required: false
+      description: '{ max: 0..10, backoff: { baseMs, factor, capMs } }'
+    timeoutMs:
+      type: number
+      required: false
+      description: 1000 to 86400000 (default 600000)
+    concurrency:
+      type: string
+      required: false
+      description: allow | skip-if-running (default) | queue
+    priority:
+      type: number
+      required: false
+      description: 0..9 (default 5)
+    tags:
+      type: array
+      required: false
+      description: free tags for the console's filters
+    createdAt:
+      type: number
+      required: false
+      description: epoch ms, kept across edits
