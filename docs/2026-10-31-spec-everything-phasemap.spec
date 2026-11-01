@@ -49,7 +49,23 @@ decisions:
     status: DECIDED 2026-10-31 (his)
     chosen: "a .spec is machine-readable YAML, multidimensional, in block files; SE0's rename is the first step, SE0b the form. READING TO CONFIRM: \"at 93%\" read as the share of .spec files already YAML (measured by SE0b's census), not a target"
     by: "his, 2026-10-31, while SE0 ran: \"at 93% machine readable yaml. multidimentional, block files. where are we?\""
+  SE_D6_every_system_has_a_door_in_the_dag:
+    status: DECIDED 2026-11-01 (his)
+    chosen: >-
+      In the DAG, an interface is a requirement: a phase that builds a system or a capability names its way in (interface: cli, html, route,
+      or another kind it declares), or depends on a phase that gives it one. lib/phase-dag.js reports a system or capability with no way in,
+      as it reports a phase with no depends_on. A new system is not built until it has a door (his rule of 2026-10-29, "each component needs
+      to be wired to the module component, and ui", made a DAG check).
+    by: "his, 2026-11-01: \"also what about with the dag having, interface as a requirement, like cli, html or something else. like new systems need a door way in.\""
 phases:
+  SE7_the_door_in_the_dag:
+    status: OPEN
+    depends_on: [SE_D6_every_system_has_a_door_in_the_dag]
+    files: [lib/phase-dag.js, tests/modules/test-phase-dag.test.js]
+    spec: idearium/spec/spec-library.spec
+    blocks: [MOD-SL-PHASED]
+    does: "phases gain interface: [cli|html|route|…]; the DAG reports a system or capability phase with no way in (its own or an upstream phase's); the build refuses it as it refuses DAG_INVALID"
+    proof: "a fixture map with a system phase and no interface is reported, and passes once it names one or depends on a door phase"
   SE0_md_specs_to_spec:
     status: BUILT 2026-10-31
     depends_on: [SE_D4_md_specs_become_spec_files]

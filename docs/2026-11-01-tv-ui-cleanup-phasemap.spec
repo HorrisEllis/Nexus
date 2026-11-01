@@ -38,6 +38,10 @@ audit_2026_11_01: >-
   the repository although sandboxed (architect, cortex, every system's baseline/invariant files, blueprint-index.json, docs/CHANGELOG.md):
   writers that ignore the sandbox, kept in the coder's scratchpad and the tree restored; FX3's map is where that belongs.
 
+  TV_D3_new_systems_appear_in_the_menu:
+    status: DECIDED 2026-11-01 (his)
+    chosen: "The TV UI's menu is built from the systems COS knows (each compartment.json, through COS's door), so a new system appears in it without anyone editing the UI; channels.json only overrides (order, name, icon, colour, hidden)."
+    by: "his, 2026-11-01: \"no i mean, i want new systems to appear in that menu.\""
 phases:
   TV0_the_audit_as_a_test:
     status: OPEN
@@ -56,7 +60,7 @@ phases:
     proof: "TV0 passes: with every system up, no request fails; with one stopped, only its own requests fail, named"
   TV2_each_channel_its_own_page:
     status: OPEN
-    depends_on: [TV1_the_noise_out, TV_D2_each_channel_its_own_page]
+    depends_on: [TV1_the_noise_out, TV_D2_each_channel_its_own_page, TV_D3_new_systems_appear_in_the_menu]
     files: [lib/ui/tv-shell/index.html, lib/ui/tv-shell/channels, lib/ui/tv-shell/channels.json]
     does: "each of ~20 channels and the overlays (menu, rewind, inspect, the spec wizard) moved into lib/ui/tv-shell/channels/<name>/ as .html, .css, .js; index.html keeps the shell; channels.json drives the rail; the 187 inline styles into each channel's css; the old index.html archived"
     proof: "in Clear Glass, every channel opens and shows what it showed before (screenshots before and after); a channel added by a folder and a line in channels.json, one removed by deleting its line, nothing else breaks"
