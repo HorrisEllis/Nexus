@@ -9,7 +9,7 @@
  */
 const fs = require('fs'), path = require('path');
 const POLICIES = ['off', 'ask', 'auto'];
-const DEFAULTS = Object.freeze({ update: { policy: 'ask' }, window: { width: 1000, height: 720, x: null, y: null, maximized: false } });
+const DEFAULTS = Object.freeze({ update: { policy: 'ask' }, startOnLaunch: null, window: { width: 1000, height: 720, x: null, y: null, maximized: false } });   // MG35 startOnLaunch: the project COS starts when it opens (his choice), or null
 const file = (root) => path.join(root, 'settings.json');
 const clone = (o) => JSON.parse(JSON.stringify(o));
 const num = (v, d, lo, hi) => (Number.isFinite(v) && v >= lo && v <= hi ? Math.round(v) : d);
@@ -18,6 +18,7 @@ const num = (v, d, lo, hi) => (Number.isFinite(v) && v >= lo && v <= hi ? Math.r
 function normalize(raw) {
   const s = clone(DEFAULTS), dropped = []; raw = raw && typeof raw === 'object' ? raw : {};
   if (raw.update && raw.update.policy !== undefined) { if (POLICIES.includes(raw.update.policy)) s.update.policy = raw.update.policy; else dropped.push(`update.policy "${raw.update.policy}"`); }
+  if (raw.startOnLaunch !== undefined && raw.startOnLaunch !== null) { if (/^[a-z0-9][a-z0-9_-]{0,40}$/.test(String(raw.startOnLaunch))) s.startOnLaunch = String(raw.startOnLaunch); else dropped.push(`startOnLaunch "${raw.startOnLaunch}"`); }
   const w = raw.window || {};
   s.window.width = num(w.width, DEFAULTS.window.width, 480, 10000); s.window.height = num(w.height, DEFAULTS.window.height, 320, 10000);
   s.window.x = Number.isFinite(w.x) ? Math.round(w.x) : null; s.window.y = Number.isFinite(w.y) ? Math.round(w.y) : null; s.window.maximized = w.maximized === true;
@@ -34,7 +35,11 @@ function save(root, settings) {
 }
 /** set(root, 'update.policy', 'auto') → { ok, settings } | { ok:false, error } — only keys a person can choose; the window is remembered through saveWindow */
 function set(root, key, value) {
-  if (key !== 'update.policy') return { ok: false, error: `unknown setting "${key}" (update.policy)` };
+  if (key === 'startOnLaunch') {   // MG35 — the exe is how Nexus starts: the project to start when COS opens, or null for none
+    if (value !== null && value !== '' && !/^[a-z0-9][a-z0-9_-]{0,40}$/.test(String(value))) return { ok: false, error: `startOnLaunch is a project name or none, not "${value}"` };
+    const cur = load(root).settings; cur.startOnLaunch = value ? String(value) : null; save(root, cur); return { ok: true, settings: cur };
+  }
+  if (key !== 'update.policy') return { ok: false, error: `unknown setting "${key}" (update.policy, startOnLaunch)` };
   if (!POLICIES.includes(value)) return { ok: false, error: `update.policy must be one of ${POLICIES.join(', ')}, not "${value}"` };
   const cur = load(root).settings; cur.update.policy = value; save(root, cur); return { ok: true, settings: cur };
 }

@@ -822,3 +822,15 @@ phases_addendum_2026_11_01_mg33:
     interface: [html]
     does: "James, 2026-11-01: \"not tension, thats noise. cos ui needs a channel.\" (TENSION, 0.60.351, hidden from the rail, kept.) The COS channel framed :7797 blind: when the cockpit was not running (Nexus started without start:all, or before 0.60.347) the frame was a browser error. The channel is now a page that asks the orchestrator whether the cockpit and the manager answer; it shows the cockpit when it does, and when it does not says which is down and why, with Start COS: the orchestrator starts COS's manager (which starts its cockpit, boots nothing), or only the cockpit when the manager is up, and refuses beside an old autopilot on :7799, said"
     proof: "test-cos-channel: status read from stand-ins; the page shows the cockpit when up, the reason and the button when down; start refused beside an old autopilot"
+
+  MG35_the_exe_starts_nexus:
+    status: "DONE 0.60.364 (COS 0.2.0) — test-cos-app-link 4/4, test-cos-app-ui 22/22 (UI-06b). Windows: the folder picker, the tray notification and where node is found are unverified until it runs on his machine; the exe is built by the cos-app workflow on a Windows runner"
+    depends_on: [MG34_the_cos_channel_always_has_a_way_in, COSA14_versionium_record, OC_D4_the_cos_app_is_the_application]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-COSA-LINK, MOD-COSA-LINKED-RUN, MOD-COSA-START-ON-LAUNCH]
+    files: [cos/app/store.js, cos/app/runtime.js, cos/app/controller.js, cos/app/settings.js, cos/app/cli.js, cos/app/desktop/main.js, cos/app/desktop/preload.js, cos/app/desktop/ui, cos/app/version.js, tests/modules/test-cos-app-link.test.js]
+    does: >-
+      James, 2026-11-01: "need the exe for cos. its how were going to start nexus from now on". His Nexus is the git folder he updates in place,
+      so the exe links it (Link a Nexus folder…) and starts it with the system node (never Electron-as-node, which would break Clear Glass),
+      on launch when he sets it. COS 0.2.0: the workflow publishes cos-v0.2.0 (portable exe and installer) when this reaches main.
+    proof: "test-cos-app-link: a fixture folder linked, started with the system node and no ELECTRON_RUN_AS_NODE, up on /status, stopped; start on launch on and off"

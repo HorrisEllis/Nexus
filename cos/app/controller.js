@@ -85,7 +85,13 @@ class Controller {
   scanInbox(o = {}) { const rs = this.store.scanInbox(this.root, o); for (const r of rs) if (r.ok && !r.already) this.emit({ type: 'imported', project: r.project, version: r.version }); return { ok: true, results: rs }; }
   switchTo(project, version) { return this._exclusive(project, `switching to ${version}`, () => this.sw.switchTo(this.root, project, version, this.opts)); }
   rollback(project, { restoreData = false } = {}) { return this._exclusive(project, 'rolling back', () => this.sw.rollback(this.root, project, { ...this.opts, restoreData })); }
-  async start(project) { const st = this.store.list(this.root, project)[0]; if (!st || !st.current) return { ok: false, error: `${project} has no current version: switch to one first` }; return this._exclusive(project, `starting ${st.current}`, () => this.rt.start(this.root, project, st.current, this.opts)); }
+  // MG35 — a linked folder (his own Nexus) is started in place, before any zip version
+  link(project, folder) { const r = this.store.link(this.root, project, folder); if (r.ok) this.emit({ type: 'linked', project, dir: r.dir, version: r.version }); return r; }
+  unlink(project) { const r = this.store.unlink(this.root, project); if (r.ok) this.emit({ type: 'unlinked', project }); return r; }
+  async start(project) { const st = this.store.list(this.root, project)[0];
+    if (st && st.linked) { if (!st.linked.present) return { ok: false, error: `the linked folder is gone: ${st.linked.dir} — link it again` };
+      return this._exclusive(project, `starting ${st.linked.version || 'the linked folder'}`, () => this.rt.start(this.root, project, 'linked', { ...this.opts, dir: st.linked.dir })); }
+    if (!st || !st.current) return { ok: false, error: `${project} has no current version: switch to one first` }; return this._exclusive(project, `starting ${st.current}`, () => this.rt.start(this.root, project, st.current, this.opts)); }
   stop(project) { return this._exclusive(project, 'stopping', () => this.rt.stop(this.root, project, this.opts)); }
   remove(project, version) { return this._exclusive(project, `removing ${version}`, async () => this.store.remove(this.root, project, version)); }
   logs(project, lines = 80) { return { ok: true, ...this.rt.logs(this.root, project, { lines }) }; }

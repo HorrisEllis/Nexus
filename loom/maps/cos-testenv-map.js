@@ -21,6 +21,10 @@ const FILES = [
   // 0.60.328 MG15b — COS's one supervisor and its server (docs/2026-10-24-cos-manager-phasemap.spec); Idearium reaches it over HTTP :7799 (/api/cos/*)
   ['clear-glass/src/automation/driver-port.js', I('clear-glass/src/automation/driver-port.js'), []],   // 0.60.333 AE2 — reached by orchestrator/automation over HTTP :7704
   ['cos/manager/supervisor.js', I('cos/manager/supervisor.js'), [I('cos/compartment/boundary.js'), I('cos/manager/suspend.js')]],   // CP5b 0.60.362: pause/resume (lazy require)   // CP1a 0.60.355: preloads the wall into each walled child by path (--require, or NODE_OPTIONS for Electron)
+  ['cos/app/store.js',   I('cos/app/store.js'),   [I('cos/app/versionium.js')]],   // MG35 0.60.364: link/unlink his own Nexus folder (nothing written in it)
+  ['cos/app/runtime.js', I('cos/app/runtime.js'), []],   // MG35 0.60.364: a linked folder run in place with the system node (nodeBinary), never ELECTRON_RUN_AS_NODE
+  ['cos/app/controller.js', I('cos/app/controller.js'), [I('cos/app/store.js'), I('cos/app/runtime.js'), I('cos/app/switch.js'), I('cos/app/settings.js')]],   // MG35: link, start a linked folder
+  ['cos/app/desktop/main.js', I('cos/app/desktop/main.js'), [I('cos/app/controller.js'), I('cos/app/store.js'), I('cos/app/settings.js'), I('cos/app/shell.js')]],   // MG35: startOnLaunch, pickFolder, link
   ['cos/manager/suspend.js',    I('cos/manager/suspend.js'),    []],   // CP5b 0.60.362: a process tree suspended/resumed and read back from the OS (SIGSTOP/SIGCONT; Windows NtSuspendProcess via PowerShell, unproven there)
   ['cos/manager/resources.js',  I('cos/manager/resources.js'),  [I('cos/manager/usage.js'), I('lib/versionium-record.js'), I('lib/raid-port.js')]],   // CP6a 0.60.356: caps, read back; the account; pressure → a proposal · CP6b 0.60.361: a restart by rule asks RAID (approveTool, fails closed)
   ['lib/agent-tools/tools/clear-glass/macro-control.js', I('lib/agent-tools/tools/clear-glass/macro-control.js'), []],   // MB4 0.60.359: made by clear-glass/src/ipc/bridge.js runMacroAsPerson, passed to macro.js run as control

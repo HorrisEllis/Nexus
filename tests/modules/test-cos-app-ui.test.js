@@ -44,8 +44,22 @@ const click = (w, e) => e.dispatchEvent(new w.MouseEvent('click', { bubbles: tru
   });
   await test('UI-06 Stop and Start: Stop when running, Start when stopped; Start is off with no current version', async () => {
     const u = await boot(S([P()])); const b = u.$('[data-act="stop"]'); assert.ok(b); click(u.w, b); await tick(); assert.ok(u.calls.some(c => c[0] === 'stop' && c[1] === 'nexus'));
-    const u2 = await boot(S([P({ run: { running: false }, current: null })])); assert.strictEqual(u2.$('[data-act="start"]').disabled, true); assert.match(u2.$('[data-act="start"]').title, /Switch to a version first/);
+    const u2 = await boot(S([P({ run: { running: false }, current: null })])); assert.strictEqual(u2.$('[data-act="start"]').disabled, true); assert.match(u2.$('[data-act="start"]').title, /Switch to a version, or link your Nexus folder, first/);   // 0.60.364 MG35: a linked folder starts too
     const u3 = await boot(S([P({ run: { running: false } })])); click(u3.w, u3.$('[data-act="start"]')); await tick(); assert.ok(u3.calls.some(c => c[0] === 'start'));
+  });
+  await test('UI-06b MG35: a linked folder — its row, Start on with no zip version, Start Nexus when COS opens, Link a Nexus folder…', async () => {
+    const calls2 = [];
+    const lk = { linked: { dir: 'D:\\Backups\\Downloads\\nexus-0.60.346', version: '0.60.363', present: true }, current: null, versions: [], run: { running: false } };
+    const st = { ...S([P(lk)]), settings: { update: { policy: 'ask' }, startOnLaunch: 'nexus' } };
+    const u = await boot(st, { setSetting: async (k, v) => { calls2.push(['setSetting', k, v]); return { ok: true }; }, unlink: async (p) => { calls2.push(['unlink', p]); return { ok: true }; },
+      pickFolder: async () => ({ path: 'D:\\nexus' }), link: async (p, f) => { calls2.push(['link', p, f]); return { ok: true, dir: f, version: '0.60.363' }; } });
+    assert.match(u.$('.linked').textContent, /linked folder.*0\.60\.363.*nexus-0\.60\.346/s);
+    assert.strictEqual(u.$('[data-act="start"]').disabled, false, 'a linked folder can be started with no zip version');
+    const cb = u.$('[data-act="startOnLaunch"]'); assert.strictEqual(cb.checked, true);
+    cb.checked = false; cb.dispatchEvent(new u.w.Event('change', { bubbles: true })); await tick();
+    assert.deepStrictEqual(calls2.find(c => c[0] === 'setSetting'), ['setSetting', 'startOnLaunch', null]);
+    click(u.w, u.$('#btn-link')); await tick(); await tick();
+    assert.deepStrictEqual(calls2.find(c => c[0] === 'link'), ['link', 'nexus', 'D:\\nexus']);
   });
   await test('UI-07 Remove asks first, is off for the current version, and calls remove; Roll back is off without a previous version', async () => {
     const u = await boot(S([P()])); assert.strictEqual(u.$('tr[data-version="0.60.67"] [data-act="remove"]').disabled, true); let asked = 0; u.w.confirm = () => { asked++; return false; };

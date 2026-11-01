@@ -7,11 +7,11 @@ intent: null
 summary: MG8_the_factory (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793365823368
+exported_at: 1793577139966
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823368
-lastSeenAt: 1793365823368
+firstSeenAt: 1793577139966
+lastSeenAt: 1793577139966
 fingerprint: null
 payload:
   id: MG8_the_factory
@@ -26,7 +26,8 @@ payload:
     - SV2_into_a_compartment
     - CE1_the_compartment_machine
     - EL1_electron_compiler
+    - CP1_the_machine_and_its_door
   blocks:
     - MOD-MG-FACTORY
   spec: cos/spec/cos-manager.spec
-  graph: bb32f86a72592754
+  graph: b09e251f8ffec502

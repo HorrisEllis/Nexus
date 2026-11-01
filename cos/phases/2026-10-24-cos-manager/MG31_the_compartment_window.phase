@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG31_the_compartment_window
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG31_the_compartment_window
+context: pipeline phase MG31_the_compartment_window of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG31_the_compartment_window (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793577139941
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793577139941
+lastSeenAt: 1793577139941
+fingerprint: null
+payload:
+  id: MG31_the_compartment_window
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "SUPERSEDED 2026-11-01 by CP2_the_window in docs/2026-11-01-the-compartment-phasemap.spec (his
+    "just dont have redundancy. like each compartment should be all of it."); the text below is
+    kept"
+  files:
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - cos/app/main.js
+  depends_on:
+    - MG_D19_only_compartments_have_a_control_panel
+    - MG29_the_cockpit
+    - MG_D18_no_side_bar_every_compartment
+  blocks:
+    - MOD-MG-UI-COCKPIT
+  spec: cos/spec/cos-manager.spec
+  graph: 1c6fed32a4d8759b

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
+context: pipeline phase MG33_cos_ui_has_a_way_in of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG33_cos_ui_has_a_way_in (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793577140028
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793577140028
+lastSeenAt: 1793577140028
+fingerprint: null
+payload:
+  id: MG33_cos_ui_has_a_way_in
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE 0.60.347"'
+  files:
+    - cos/manager/server.js
+    - lib/ui/tv-shell/index.html
+    - tests/modules/test-cos-ui-starts.test.js
+  depends_on:
+    - MG17_autopilot_hands_over
+  blocks:
+    - MOD-MG-UI-SERVE
+  spec: cos/spec/cos-manager.spec
+  graph: ab7d9a9008d311b8

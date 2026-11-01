@@ -7,11 +7,11 @@ intent: null
 summary: MG11_category_manager_ui (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793365823374
+exported_at: 1793577139975
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823374
-lastSeenAt: 1793365823374
+firstSeenAt: 1793577139975
+lastSeenAt: 1793577139975
 fingerprint: null
 payload:
   id: MG11_category_manager_ui
@@ -29,4 +29,4 @@ payload:
   blocks:
     - MOD-MG-UI-CATEGORIES
   spec: cos/spec/cos-manager.spec
-  graph: 307710eb282e1bc3
+  graph: 5fedba8852f29d3c

@@ -7,11 +7,11 @@ intent: null
 summary: MG28_cos_dependencies (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793383131615
+exported_at: 1793577140020
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793383131615
-lastSeenAt: 1793383131615
+firstSeenAt: 1793577140020
+lastSeenAt: 1793577140020
 fingerprint: null
 payload:
   id: MG28_cos_dependencies
@@ -29,4 +29,4 @@ payload:
   blocks:
     - MOD-MG-DEPS
   spec: cos/spec/cos-manager.spec
-  graph: fbc97cbd5f671aa8
+  graph: f6ccdd50325b73ce

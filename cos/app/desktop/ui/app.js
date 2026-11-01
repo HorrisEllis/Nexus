@@ -21,12 +21,23 @@
     const card = el('section', 'project'); card.dataset.project = p.project; const top = el('div', 'top'); top.appendChild(el('h2', '', p.project));
     const [k, t] = pill(p); top.appendChild(el('span', 'pill ' + k, t)); top.appendChild(el('span', 'grow'));
     const running = p.run && p.run.running, busy = !!p.busy;
-    const startStop = el('button', '', running ? 'Stop' : 'Start'); startStop.dataset.act = running ? 'stop' : 'start'; startStop.disabled = busy || (!running && !p.current);
-    startStop.title = !running && !p.current ? 'Switch to a version first' : ''; startStop.addEventListener('click', () => act(() => running ? api().stop(p.project) : api().start(p.project), running ? 'Stopped.' : null)); top.appendChild(startStop);
+    const startStop = el('button', '', running ? 'Stop' : 'Start'); startStop.dataset.act = running ? 'stop' : 'start'; startStop.disabled = busy || (!running && !p.current && !p.linked);
+    startStop.title = !running && !p.current && !p.linked ? 'Switch to a version, or link your Nexus folder, first' : ''; startStop.addEventListener('click', () => act(() => running ? api().stop(p.project) : api().start(p.project), running ? 'Stopped.' : null)); top.appendChild(startStop);
     const rb = el('button', '', 'Roll back'); rb.dataset.act = 'rollback'; rb.disabled = busy || !p.previous; rb.title = p.previous ? `Go back to ${p.previous} (your data is left as it is)` : 'There is no previous version';
     rb.addEventListener('click', () => { if (window.confirm(`Go back to ${p.previous}? Your data is left as it is.`)) act(() => api().rollback(p.project, {}), (r) => `Back on ${r.to}.`); }); top.appendChild(rb);
     const lg = el('button', '', 'Log'); lg.dataset.act = 'logs'; lg.addEventListener('click', () => showLogs(p.project)); top.appendChild(lg); card.appendChild(top);
     if (p.busy) card.appendChild(el('div', 'busy', p.busy + '… (the buttons are off until it finishes)'));
+    // MG35 — his own Nexus folder, linked: started in place with the system node; COS can start it when it opens
+    if (p.linked) {
+      const lk = el('div', 'linked'); lk.appendChild(el('span', 'tag cur', 'linked folder')); lk.appendChild(el('span', 'v', ` ${p.linked.version || '?'} `)); lk.appendChild(el('span', 'path', p.linked.dir));
+      if (!p.linked.present) lk.appendChild(el('span', 'tag bad', 'folder missing'));
+      const auto = el('label', 'auto'); const cb = el('input'); cb.type = 'checkbox'; cb.dataset.act = 'startOnLaunch'; cb.checked = !!(state.settings && state.settings.startOnLaunch === p.project);
+      cb.addEventListener('change', async () => { const r = await api().setSetting('startOnLaunch', cb.checked ? p.project : null); if (r && r.ok === false) banner('err', r.error); else banner('ok', cb.checked ? `COS starts ${p.project} when it opens.` : 'COS starts nothing when it opens.'); await refresh(); });
+      auto.appendChild(cb); auto.appendChild(document.createTextNode(' Start Nexus when COS opens')); lk.appendChild(auto);
+      const ul = el('button', '', 'Unlink'); ul.dataset.act = 'unlink'; ul.disabled = busy || running; ul.title = running ? 'Stop it first' : 'COS forgets the link; the folder is untouched';
+      ul.addEventListener('click', () => { if (window.confirm(`Unlink ${p.linked.dir}? The folder itself is not touched.`)) act(() => api().unlink(p.project), 'Unlinked. The folder is untouched.'); }); lk.appendChild(ul);
+      card.appendChild(lk);
+    }
     const tb = el('table'); const head = el('tr'); for (const h of ['Version', '', '']) head.appendChild(el('th', '', h)); tb.appendChild(head);
     for (const v of p.versions) {
       const tr = el('tr'); tr.dataset.version = v.version; tr.appendChild(el('td', 'v', v.version)); const tags = el('td');
@@ -93,12 +104,13 @@
     wireConsole();
     const pol = $('#policy'); if (pol) pol.addEventListener('change', async () => { const r = await api().setSetting('update.policy', pol.value); if (r && r.ok === false) banner('err', r.error); else banner('ok', `Update policy: ${pol.value}.`); await refresh(); });
     $('#btn-import').addEventListener('click', async () => { const r = await api().pickZip(); if (r && r.path) await importPath(r.path); });
+    $('#btn-link').addEventListener('click', async () => { const r = await api().pickFolder(); if (!r || !r.path) return; await act(() => api().link('nexus', r.path), (x) => `Linked ${x.dir} (${x.version || '?'}). Press Start, or tick “Start Nexus when COS opens”.`); });
     $('#btn-logs-close').addEventListener('click', () => { openLogs = null; $('#logs-panel').hidden = true; });
     let depth = 0; const show = (on) => { $('#drop').hidden = !on; };
     document.addEventListener('dragenter', (e) => { e.preventDefault(); depth++; show(true); }); document.addEventListener('dragover', (e) => e.preventDefault());
     document.addEventListener('dragleave', () => { depth = Math.max(0, depth - 1); if (!depth) show(false); });
     document.addEventListener('drop', async (e) => { e.preventDefault(); depth = 0; show(false); for (const f of Array.from((e.dataTransfer && e.dataTransfer.files) || [])) { const p = api().pathFor(f); if (/\.zip$/i.test(p || f.name || '')) await importPath(p); else banner('err', `${f.name} is not a .zip`); } });
-    if (api().onEvent) api().onEvent((ev) => { if (ev.type === 'sh.data') shAppend(ev.text); else if (ev.type === 'sh.exit') shState(false); else if (ev.type === 'policy' && ev.action !== 'none') { policyBanner({ project: ev.project, version: ev.version, verified: true }, ev); refresh(); } else if (ev.type === 'settings') refresh(); });
+    if (api().onEvent) api().onEvent((ev) => { if (ev.type === 'sh.data') shAppend(ev.text); else if (ev.type === 'sh.exit') shState(false); else if (ev.type === 'launch.start') { banner(ev.ok ? 'ok' : 'err', ev.ok ? `${ev.project} started when COS opened.` : `${ev.project} did not start when COS opened: ${ev.error || 'no answer'}`); refresh(); } else if (ev.type === 'policy' && ev.action !== 'none') { policyBanner({ project: ev.project, version: ev.version, verified: true }, ev); refresh(); } else if (ev.type === 'settings') refresh(); });
     setInterval(refresh, 4000);
   }
   window.COSUI = { shRun, refresh, importPath, banner, showLogs, get state() { return state; } };

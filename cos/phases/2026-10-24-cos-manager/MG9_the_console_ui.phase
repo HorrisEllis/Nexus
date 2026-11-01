@@ -4,23 +4,27 @@ type: phase
 id: docs_2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
 context: pipeline phase MG9_the_console_ui of docs/2026-10-24-cos-manager-phasemap.spec
 intent: null
-summary: MG9_the_console_ui (?) — 2 file(s)
+summary: MG9_the_console_ui (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793365823370
+exported_at: 1793577139970
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823370
-lastSeenAt: 1793365823370
+firstSeenAt: 1793577139970
+lastSeenAt: 1793577139970
 fingerprint: null
 payload:
   id: MG9_the_console_ui
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "SUPERSEDED 2026-11-01 by CP2_the_window in docs/2026-11-01-the-compartment-phasemap.spec (his
+    "just dont have redundancy. like each compartment should be all of it."); the text below is
+    kept"
   files:
     - cos/ui
+    - docs/2026-11-01-the-compartment-phasemap.spec
     - cos/spec/cos-manager.spec
   depends_on:
     - MG3_the_state_manager
@@ -37,4 +41,4 @@ payload:
     - MOD-MG-UI-CATALOG
     - MOD-MG-UI-AUTOMATION
   spec: cos/spec/cos-manager.spec
-  graph: 7e29ba0757fc4361
+  graph: 707178fce00d520c

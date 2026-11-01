@@ -224,6 +224,8 @@ addendum_e:
       depends_on: [COSA9_idearium_sync, COSA13_auto_update]
       does: "Every install, switch, rollback and remove is written to Versionium through Idearium (the one write door, RAID is the only write authority), with checksum, outcome, reason and the data-snapshot reference; queued and replayed when Idearium is down. COS's version list can be shown from the record (Nexus's own history in Idearium's repo view), and `repo diff` between two Nexus releases works from it."
       proof: "a switch while Idearium is down is recorded once, in order, after it returns; the record and COS's store agree (a test compares them); Idearium shows the switch and any rollback with its reason."
+    # COSA15 (2026-11-01, his "need the exe for cos. its how were going to start nexus from now on") is built as MG35_the_exe_starts_nexus in
+    # docs/2026-10-24-cos-manager-phasemap.spec, where cos/spec/cos-manager.spec (which specs cos/app) keeps its phases.
   failure_modes:
     - "Auto-switch during a running job: idle check plus the normal snapshot and rollback."
     - "Record and store disagree (record says v2 running, store says v1): the test compares them and COS's store wins, the difference is reported, never silently fixed."
