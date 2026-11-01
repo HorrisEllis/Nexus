@@ -1958,3 +1958,8 @@ spec:
 # sovereign system in genesis's shape (server.js, its language through its door, one Emerge at Nexus's top level, lib/emerge's callers
 # switched, a system of systems three deep). James: "emerge needs either to be a module for idearium, or a system with a server.js, etc." ·
 # "okay. do it as long as it gets up closer to building large projects, like i want to be buyilding an operating systems".
+
+# ADDENDUM 2026-11-01 — registered: docs/2026-11-01-build-from-cos-phasemap.spec (BC0–BC5): COS's Add → Build → the spec workshop, and the
+# workshop as Nexus's one document editor (templates, schemas, nodes, specs, code; sorted by type, date or recent). James: "i want the spec
+# workshop to also include templates, schemas, nodes, ide, for all of nexus. like make a generalized document editor." MAPPED, not built; its
+# full spec is BC0. Also placed: docs/open-loops/OPEN-LOOPS.spec (his Open Loops spec, a sovereign project, text unchanged).

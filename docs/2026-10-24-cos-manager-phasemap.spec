@@ -209,6 +209,13 @@ decisions:
       bus" read as panels over a live layer of the bus's events, and the pages as subscribers to it, never pollers while it is up.
     by: "his, 2026-10-31: \"okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered, cheap, or lazy\" (after the coder's options a/b/c for where the screen runs; his \"okay\" read as (c): as mapped, data-first)."
     by_the_axioms: "§1.2 and §0.1 (a page with no backend says so), §5.7 (pages talk only through the bus), §5.12 (the UI is disposable), §5.15 (COS serves COS's pages), §3.4 (backend → route → command → UI)"
+  MG_D18_no_side_bar_every_compartment:
+    status: DECIDED 2026-10-31 (his; the canvas reading to confirm)
+    chosen: >-
+      No side bar. COS's screen is an open canvas over the bus where every compartment COS holds (Nexus's systems, VMs, projects, canvases)
+      floats as a tile; adding, deploying and building a compartment happen on it; pages open as floating windows; every page and section is
+      its own .html at its own address (his answer, same day).
+    by: "his, 2026-10-31: \"okay but no side bar, and its for all compartments. deplaying, adding, building, not static, open it up\" · \"im saying each dsection should be its own html. like settings.html index.html like each page\""
 phases:
   MG0b_the_full_spec:
     status: SPECCED 2026-10-30 — cos/spec/cos-manager.spec
