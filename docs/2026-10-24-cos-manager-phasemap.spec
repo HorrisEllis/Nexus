@@ -730,3 +730,13 @@ decisions_d14:
 # event bus"); it is lighter, and the lanes and pulses brighter. Clear Glass drove every page against real processes under COS's manager, with
 # no page error. Not built here, and listed on the Planned page: MG9's other tabs, MG11, MG21, MG22, MG27, MG30. His mid-build vision
 # (MG_D17) is mapped next.
+
+# ── ADDENDUM 2026-10-31 — his answer on the UI: no side bar, every compartment, deploy/add/build, open (MG_D18) ─────────────────────
+# James, 2026-10-31, after seeing 0.60.336's screenshots: "okay but no side bar, and its for all compartments. deplaying, adding, building,
+# not static, open it up"
+# Read as (the coder's, to confirm where marked): the rail goes; the screen is an open canvas over the bus where every compartment COS holds
+# (Nexus's systems, VMs, projects, canvases — not only supervised processes) floats as a tile; adding, deploying and building a compartment
+# happen on that canvas; pages open as floating windows over it instead of a fixed frame. Mapped before code in the decisions block (MG_D18).
+# His answer to the coder's question ("each page a compartment": its own process, or its own registry entry and data?), 2026-10-31:
+# "im saying each dsection should be its own html. like settings.html index.html like each page". So: every page and every section is its
+# own .html file, openable at its own address as well as inside the canvas (MG_D1's "separate .html, .css and .js files", now addressable).
