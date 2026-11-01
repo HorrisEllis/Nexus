@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-friction-map-phasemap.spec::FT4_what_fits
+type: phase
+id: docs_2026-11-01-friction-map-phasemap.spec::FT4_what_fits
+context: pipeline phase FT4_what_fits of docs/2026-11-01-friction-map-phasemap.spec
+intent: null
+summary: FT4_what_fits (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793552212449
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793552212449
+lastSeenAt: 1793552212449
+fingerprint: null
+payload:
+  id: FT4_what_fits
+  map: docs/2026-11-01-friction-map-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/friction-map/fit.js
+    - lib/core/traverse.js
+    - tests/modules/test-friction-map-fit.test.js
+  depends_on:
+    - FT2_joints_measured
+    - FT3_tension_measured
+    - TV1_traversal_primitive
+  blocks:
+    - MOD-FT-FIT
+  spec: docs/friction-map.spec
+  graph: 168fcd08203ba342

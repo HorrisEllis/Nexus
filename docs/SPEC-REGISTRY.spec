@@ -1990,3 +1990,8 @@ spec:
 # (OP11). James, 2026-11-01: "could it outperform you? use guardian also. can you spec this? make a dependancy graph." · "could beat you in what
 # metrics" · "not only that but the system learns better code to optimize itself, which gives better code." Compiles at specDepth 1.0
 # (test-substrate-spec). Phase files: idearium/phases/2026-11-01-outperform/, lib/phases/2026-11-01-outperform/.
+
+# ADDENDUM 2026-11-01 — registered: docs/friction-map.spec + docs/2026-11-01-friction-map-phasemap.spec (FT_D0; FT1–FT5). The friction and tension
+# map between functions and primitives: every function placed against his eight primitives from its code; joints measured (friction from fault
+# records, shapes, crossings; tension from open gaps, RFR2 traces, Versionium churn, Loom fan-in); "what fits" answered by the one traversal.
+# Intelligence's (CI6). James, 2026-11-01: "the friction and tension mapping, between functions and primitives." Compiles at specDepth 1.0.
