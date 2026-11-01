@@ -1713,7 +1713,7 @@ It will write and install it for you.`);
     const pinnedSet = new Set(currentPinned);
     TOOLBAR_COMMANDS.forEach(cmd => {
       if (!cmd.pinnable) return;
-      const isPinned = pinnedSet.has(cmd.id);
+      const isPinned = pinnedSet.has(cmd.id) && !cmd.retired;   // 0.60.358: a retired command leaves the toolbar even where a saved pin names it
       const el = document.getElementById(cmd.id);
       if (el) el.style.display = isPinned ? '' : 'none';
       // §BUGFIX 2026-08-24 — elements listed in pairsWith (e.g. Element

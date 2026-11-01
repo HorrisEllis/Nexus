@@ -65,3 +65,10 @@ phases:
 # Found while building MB2: the Settings editor rebuilt each step from its fields and DROPPED step.gate on every save, so editing a gated macro
 # in Settings removed its gates. It is kept now (MBU-02); keys the editor does not show (choice, settleMs) are kept as they were.
 # Open: MB3 (one gate editor shared with pipelines); "ask him" as an onClosed (needs a prompt surface; not built, said).
+
+# ── ADDENDUM 2026-11-01 (MB4) — the macro toast: which step, out of how many, with pause, skip and back ─────────────────────────────────
+# James, 2026-11-01: "also the macro toast for playback and recording, shows what step your on, out of how many. with a pause and skip, goes
+# back one step." Mapped, not built (his budget that day, his "do the most you can for the least amount of tokens"): the player's step loop
+# reports step i of n to one toast for playback and for recording; pause holds before the next step; skip moves past one; back reruns the
+# step before. Proof in Clear Glass (never Playwright).
+#   MB4_the_macro_toast: { status: OPEN, depends_on: [MB2_the_blocks_ui], files: [clear-glass/src/macros, clear-glass/src/automation] }

@@ -783,3 +783,22 @@ spec:
 # require graph from the door, or a registry component the door mounts). Six systems have no server.js and so no origin yet: idearium,
 # clear-glass, cortex, architect, orchestrator, cos (docs/2026-10-31-system-doors-phasemap.spec gives them one). "0 of 13 boot from
 # lib/system.js" stays true but is no longer a gap against his rule; the boot core is the coder's suggestion, to confirm (DO_D2).
+
+# ── ADDENDUM 2026-11-01 — RULE THE_AGENT_CLI: one command line for agents, a mode per agent, built live from every system's command nodes ──
+# James, 2026-11-01: "just give the copilot the ability to update. wait, what if we create a cli, literally for the agents to use, a mode made
+# for each of them, dynamic, and spectific in relation to them. give them as much power as possible. connects to each system using the
+# commands, then each command index for each systems database that the server.js uses with the command nodes. that way it updates when any of
+# the systems do. add what of that is missing to genesis and architecture spec."
+# What exists (read, not assumed): each system's command nodes (<system>/data/nodes/command/*.command, indexed in its node database); the
+# genesis server.js builds its routes from them (cos/archetype/nexus-system/server.js); GET /commands on guardian and ollama
+# (docs/command-index-per-system.spec); the one command table (idearium/cli/route-commands.js) behind nexus.command; procedures (PD1) give
+# copilot the update (`procedure run update-nexus`, his yes at the confirm step).
+# The rule, as his design (the cut into three parts is the coder's):
+#   1. THE INDEX IS THE SYSTEM'S. Every system's server.js serves GET /commands from its own command nodes (the same index its routes are built
+#      from), with each command's route, args, capability, owner component and personOnly. Genesis gains this route, so every system built from it
+#      has it; a system without it is a gap the system-check names. A new command node changes the index; nothing else is edited (§5.15, §10.2).
+#   2. THE AGENT CLI READS THEM LIVE. One CLI for agents asks each system's door for its /commands (through the registry's ports, never their
+#      files) and merges them with the one command table: every command any system has, the moment it has it.
+#   3. A MODE PER AGENT. Each agent's mode is that live set filtered and ordered by the agent's own scope (its hat's tools, its system, its
+#      trust), "as much power as possible": everything a person can run, except a row marked personOnly, which is held for him (MG-006).
+# Map: docs/2026-11-01-the-compartment-phasemap.spec CP3a (part of CP3, one terminal one CLI). Not built yet.

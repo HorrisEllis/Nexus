@@ -280,3 +280,17 @@ phases:
 
 build_order: "CP0 → CP1 → (CP9, with EAS3) → CP2 → (CP3, CP5, CP6, CP7) → CP4, CP8. The open canvas (MG_D18) and Add → Build (BC4) sit on CP2."
 # ADDENDUM 2026-11-01 — build order of the parts: CP1a → (CP6a, CP5a) ; CP7a stands alone (on MG29).
+
+# ── ADDENDUM 2026-11-01 (CP3a) — his agent CLI, a mode per agent, live from every system's command nodes ─────────────────────────────────
+# James, 2026-11-01: "what if we create a cli, literally for the agents to use, a mode made for each of them, dynamic, and spectific in relation
+# to them. give them as much power as possible. connects to each system using the commands, then each command index for each systems database
+# that the server.js uses with the command nodes. that way it updates when any of the systems do." Rule: architecture-spec THE_AGENT_CLI.
+phases_addendum_cp3a:
+  CP3a_the_agent_cli:
+    status: OPEN
+    depends_on: [CP3_one_terminal_one_cli, PD1_procedure_nodes_and_commands]
+    files: [cos/archetype/nexus-system/server.js, cos/archetype/nexus-system/lib/commands.js, lib/agent-tools/tools/nexus/command.js, idearium/cli/route-commands.js, docs/command-index-per-system.spec]
+    does: >-
+      Genesis serves GET /commands from its command nodes; every running system's /commands is merged live with the one table; each agent's
+      mode is that set filtered by its hat's scope, personOnly rows held for him. Copilot's update already runs as procedure update-nexus (PD1).
+    proof: "a command node added to a running system appears in an agent's mode without a restart of that agent; a personOnly row is held"
