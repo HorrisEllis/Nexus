@@ -383,3 +383,8 @@ addendum_c:
 #   LV4_stable_picks: a picked selector is stored without volatile parts (Angular ng-tns-/_ngcontent- classes, state
 #     classes like processing-state-*, *-visible, active/hover/focus, and the reply's :nth-of-type/:nth-child); read the
 #     same way, so a pick already saved on his PC is repaired without picking again.
+
+# ── ADDENDUM 2026-11-01 — the five views to be folded into three (proposed) ────────────────────────────────────────────────────────
+# James, 2026-11-01: "also the code tab, can we consolidate it more. idearium is the system. it can build those projects. thats the point the
+# outputs. also the flight recorder". TB5/TB6's five views (files, changes, plans, runs, COS) stand until CC1 ships; the proposed fold
+# (Files, Build, Flight; the COS view gone into a run's COS step) is docs/2026-11-01-code-tab-consolidation-phasemap.spec. Kept, not rewritten (§0.3).
