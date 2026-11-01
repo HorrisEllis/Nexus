@@ -22,6 +22,7 @@ const FILES = [
   ['clear-glass/src/automation/driver-port.js', I('clear-glass/src/automation/driver-port.js'), []],   // 0.60.333 AE2 — reached by orchestrator/automation over HTTP :7704
   ['cos/manager/supervisor.js', I('cos/manager/supervisor.js'), [I('cos/compartment/boundary.js')]],   // CP1a 0.60.355: preloads the wall into each walled child by path (--require, or NODE_OPTIONS for Electron)
   ['cos/manager/resources.js',  I('cos/manager/resources.js'),  [I('cos/manager/usage.js'), I('lib/versionium-record.js')]],   // CP6a 0.60.356: caps, read back; the account; pressure → a proposal
+  ['lib/git-pr.js',             I('lib/git-pr.js'),             []],   // UP12 0.60.357: run by idearium/cli/route-commands.js row pr.open (local); git and gh by child process
   ['cos/manager/walls.js',      I('cos/manager/walls.js'),      []],   // CP1a: reads the supervisor it is given (declarations, ledger); no require
   ['scripts/cos-walls.js',      I('scripts/cos-walls.js'),      [I('loom/templates/cos-compartment.js'), I('lib/system-boundary.js')]],   // CP1a: writes each system's wall into its own compartment.json from the census
   ['cos/manager/autopilot-door.js', I('cos/manager/autopilot-door.js'), [I('lib/test-sandbox.js'), I('lib/bus-subscriptions.js'), I('cortex/memory/jaa-db.js'), I('intelligence/cfr/field.js'), I('lib/ledger-sse.js'), I('lib/error-log.js')]],   // 0.60.329 MG16; cortex/intelligence: the legacy /tables /files reads

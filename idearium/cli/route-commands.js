@@ -856,6 +856,10 @@ export const SPEC = [
       const patch = Object.fromEntries(kv.map(x => { const [k, v] = x.split('='); return [k, v === 'none' ? null : /MB$/.test(k) ? Number(v) : v]; }));
       return { system: 'cos', method: 'PATCH', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/caps`, body: { patch, by: 'person' } }; },
     print: (d) => { const c = d.caps; console.log(`${c.name}: ${['heapMB', 'rssLimitMB', 'onOver', 'priority'].map(k => `${k} ${c[k]} (${c.layers[k]})`).join(' · ')}`); for (const [k, v] of Object.entries(c.applied)) console.log(`  ${k.padEnd(9)} ${v.state}${v.readBack != null ? ` → ${v.readBack}` : ''}${v.why ? ` — ${v.why}` : ''}`); } },
+  // 2026-11-01 UP12 — James: "Open the PR" · "okay but for all agents, as a agent tool". Run here (local): push, then gh or the compare URL
+  { key: 'pr.open', repo: false, usage: 'pr open [dir] [--base main] [--title "…"] [--body "…"]', about: 'push the current branch and open its pull request (gh when installed and signed in; else GitHub\'s compare link, prefilled, to click)',
+    local: async (a) => require('../../lib/git-pr.js').open({ dir: a.args[0] || process.cwd(), base: a.flags.base || 'main', title: a.flags.title || null, body: a.flags.body || '' }),
+    print: (d) => console.log(d.ok ? `${d.branch} → ${d.base} (${d.repo}) · ${d.pushed ? 'pushed · ' : ''}${d.said}\n  ${d.url}` : `refused: ${d.error}`) },
   // 2026-11-01 CI8 — James: "72% so make sure it is tv ui and i can access it,". The TENSION channel's read, for agents and the CLI.
   { key: 'tension', repo: false, usage: 'tension [friction]', about: 'every system\'s tension and regime, computed by Intelligence (intelligence/friction.js) from Diagnostic\'s friction and Cortex\'s open gaps; each source said',
     req: (a) => ({ system: 'orchestrator', method: 'GET', path: `/api/tension-field/${a.args[0] === 'friction' ? 'friction' : 'tension'}` }) },
