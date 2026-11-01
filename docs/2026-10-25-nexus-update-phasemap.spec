@@ -139,4 +139,16 @@ spec:
         information for the current branch." attachInPlace (UP6) made his unzipped folder a git tree on main but never set main's upstream; the
         update tool names origin/main itself so it worked, his own git pull did not. attachInPlace now runs git branch --set-upstream-to=origin/main.
 
+    UP12_open_a_pull_request_for_any_agent:
+      status: DONE (0.60.357)
+      depends_on: [UP6_attach_in_place]
+      files: [lib/git-pr.js, idearium/cli/route-commands.js, tests/modules/test-git-pr.test.js, tests/modules/run-all.js]
+      does: >-
+        James, 2026-11-01, after the coder could not open a PR (no gh on his machine, the built-in browser not signed in to GitHub): "Open the
+        PR" · "okay but for all agents, as a agent tool". One row, `pr open [dir] [--base main] [--title …] [--body …]`, in the one command
+        table, so every agent and the person have it through nexus.command. It pushes the branch (git, with his own credential helper: Nexus
+        never reads or holds a token), then opens the PR with gh when gh is installed and signed in; otherwise it answers with GitHub's
+        compare URL, title and body prefilled, for him to open and click. Refused on the base branch itself and on a dirty tree (said, never
+        stashed). The coder's reading, decided by the axioms (§5.15: GitHub auth stays git's and gh's; §1.2: the fallback is said).
+
   verification_here: "Proven against real git repos built in a temp folder (an origin with a newer release, a clone behind it): check, a refused code collision, an archived data collision, apply, rollback. Not run on his machine; GitHub itself is reached by git, not by this test."
