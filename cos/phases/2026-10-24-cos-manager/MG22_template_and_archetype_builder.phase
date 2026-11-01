@@ -7,11 +7,11 @@ intent: null
 summary: MG22_template_and_archetype_builder (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793449750408
+exported_at: 1793577140008
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793449750408
-lastSeenAt: 1793449750408
+firstSeenAt: 1793577140008
+lastSeenAt: 1793577140008
 fingerprint: null
 payload:
   id: MG22_template_and_archetype_builder
@@ -31,4 +31,4 @@ payload:
     - MOD-MG-BUILDER
     - MOD-MG-UI-BUILDER
   spec: cos/spec/cos-manager.spec
-  graph: 79e4d31eeba29eee
+  graph: 2767ccd5946ee1dc

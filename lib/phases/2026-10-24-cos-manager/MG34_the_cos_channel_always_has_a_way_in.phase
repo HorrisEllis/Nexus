@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
+context: >-
+  pipeline phase MG34_the_cos_channel_always_has_a_way_in of
+  docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG34_the_cos_channel_always_has_a_way_in (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793577140030
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793577140030
+lastSeenAt: 1793577140030
+fingerprint: null
+payload:
+  id: MG34_the_cos_channel_always_has_a_way_in
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE 0.60.352"'
+  files:
+    - lib/ui/tv-shell/channels/cos/cos.html
+    - lib/ui/tv-shell/channels/cos/cos.js
+    - lib/ui/tv-shell/index.html
+    - orchestrator/orchestrator.js
+    - tests/modules/test-cos-channel.test.js
+  depends_on:
+    - MG33_cos_ui_has_a_way_in
+  blocks:
+    - MOD-MG-COS-CHANNEL
+  spec: cos/spec/cos-manager.spec
+  graph: c1ab6af9bbee537d

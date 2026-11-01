@@ -7,11 +7,11 @@ intent: null
 summary: MG19_the_spec_bundle (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793376294602
+exported_at: 1793577140002
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793376294602
-lastSeenAt: 1793376294602
+firstSeenAt: 1793577140002
+lastSeenAt: 1793577140002
 fingerprint: null
 payload:
   id: MG19_the_spec_bundle
@@ -30,4 +30,4 @@ payload:
   blocks:
     - MOD-MG-SPEC-BUNDLE
   spec: cos/spec/cos-manager.spec
-  graph: a86ef0aa328b41e4
+  graph: b044a00a847c9497

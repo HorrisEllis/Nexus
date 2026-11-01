@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG32_autopilot_door_through_doors
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG32_autopilot_door_through_doors
+context: pipeline phase MG32_autopilot_door_through_doors of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG32_autopilot_door_through_doors (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793577140026
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793577140026
+lastSeenAt: 1793577140026
+fingerprint: null
+payload:
+  id: MG32_autopilot_door_through_doors
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/autopilot-door.js
+  depends_on:
+    - MG17_autopilot_hands_over
+  blocks:
+    - MOD-MG-AUTOPILOT-DOOR
+  spec: cos/spec/cos-manager.spec
+  graph: 49c8762935d57ced

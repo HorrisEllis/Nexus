@@ -1,0 +1,115 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MG32_autopilot_door_through_doors:49c8762935d57ced
+type: graph
+id: phase:MG32_autopilot_door_through_doors:49c8762935d57ced
+context: dependency graph of phase MG32_autopilot_door_through_doors
+intent: null
+summary: 8 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793577140026
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793577140026
+lastSeenAt: 1793577140026
+fingerprint: null
+payload:
+  for: MG32_autopilot_door_through_doors
+  kind: phase
+  repo: null
+  hash: 49c8762935d57ced
+  nodes:
+    - path: cos/manager/autopilot-door.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/bus-subscriptions.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/error-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-sse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/autopilot-door.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cos/manager/autopilot-door.js
+      to: lib/bus-subscriptions.js
+      kind: requires
+    - from: cos/manager/autopilot-door.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: cos/manager/autopilot-door.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cos/manager/autopilot-door.js
+      to: lib/ledger-sse.js
+      kind: requires
+    - from: cos/manager/autopilot-door.js
+      to: lib/error-log.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+  crossings:
+    - from: cos/manager/autopilot-door.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: cos
+      toSystem: cortex
+      kind: system
+      known: false
+    - from: cos/manager/autopilot-door.js
+      to: intelligence/cfr/field.js
+      fromSystem: cos
+      toSystem: intelligence
+      kind: system
+      known: false
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+    dependents: []
+    upstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · ready
+      - 'depends on (1): MG17_autopilot_hands_over · all upstream 8'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+        kind: declared

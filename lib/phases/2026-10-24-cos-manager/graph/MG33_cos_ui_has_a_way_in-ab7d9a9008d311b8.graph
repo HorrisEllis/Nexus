@@ -1,0 +1,145 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MG33_cos_ui_has_a_way_in:ab7d9a9008d311b8
+type: graph
+id: phase:MG33_cos_ui_has_a_way_in:ab7d9a9008d311b8
+context: dependency graph of phase MG33_cos_ui_has_a_way_in
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793577140028
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793577140028
+lastSeenAt: 1793577140028
+fingerprint: null
+payload:
+  for: MG33_cos_ui_has_a_way_in
+  kind: phase
+  repo: null
+  hash: ab7d9a9008d311b8
+  nodes:
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/ui/tv-shell/index.html
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-ui-starts.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/walls.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/ui/serve.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/emergence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-update.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/emergence.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/walls.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/ui/serve.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC11_the_cos_app_runs_alone
+    upstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+    downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG35_the_exe_starts_nexus
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC11_the_cos_app_runs_alone
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+      - docs/2026-11-01-tv-ui-cleanup-phasemap.spec::TV4_the_overview_idearium_and_cos
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC11_the_cos_app_runs_alone
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6
+      - 'depends on (1): MG17_autopilot_hands_over · all upstream 8'
+      - >-
+        needed by (3): MG34_the_cos_channel_always_has_a_way_in, OC8_the_console,
+        OC11_the_cos_app_runs_alone · all downstream 5 · finishing it unlocks
+        MG34_the_cos_channel_always_has_a_way_in, OC11_the_cos_app_runs_alone
+    edges:
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+        kind: declared

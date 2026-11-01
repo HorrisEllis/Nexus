@@ -41,3 +41,8 @@ td.act { text-align:right; white-space:nowrap; display:flex; gap:6px; justify-co
 #sh-out { margin:0; padding:10px 14px; overflow:auto; flex:1; font:12px/1.4 Consolas, monospace; color:#c9cde0; white-space:pre-wrap; }
 #sh-form { display:flex; gap:8px; align-items:center; padding:6px 14px; border-top:1px solid #1f2230; } #sh-form .prompt { color:#6aa2ff; font:13px Consolas, monospace; }
 #sh-in { flex:1; background:transparent; border:0; outline:0; color:#e6e8f2; font:13px Consolas, monospace; } #sh-in:focus-visible { outline:1px solid #6aa2ff; }
+
+/* MG35 — the linked folder row */
+.linked { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 8px 0 4px; padding: 8px 10px; border: 1px solid rgba(56,189,248,.18); border-radius: 8px; background: rgba(56,189,248,.04); }
+.linked .path { font-family: ui-monospace, Consolas, monospace; font-size: 11px; opacity: .75; word-break: break-all; flex: 1; min-width: 200px; }
+.linked .auto { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; cursor: pointer; }

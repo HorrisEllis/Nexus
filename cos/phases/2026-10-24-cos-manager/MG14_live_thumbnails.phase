@@ -7,18 +7,21 @@ intent: null
 summary: MG14_live_thumbnails (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793365823380
+exported_at: 1793577139985
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823380
-lastSeenAt: 1793365823380
+firstSeenAt: 1793577139985
+lastSeenAt: 1793577139985
 fingerprint: null
 payload:
   id: MG14_live_thumbnails
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "SUPERSEDED 2026-11-01 by CP2_the_window in docs/2026-11-01-the-compartment-phasemap.spec (his
+    "just dont have redundancy. like each compartment should be all of it."); the text below is
+    kept"
   files:
     - cos/app/desktop/thumbnails.js
   depends_on:
@@ -27,4 +30,4 @@ payload:
   blocks:
     - MOD-MG-THUMBS
   spec: cos/spec/cos-manager.spec
-  graph: ec031bf12160634e
+  graph: bca5c302b773c7a8

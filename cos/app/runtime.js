@@ -30,6 +30,12 @@ const DEFAULTS = { entry: null, statusPort: 7799, ports: [7799, 7820, 4800, 9000
 const paths = (root, project) => { const p = path.join(root, 'projects', project); return { project: p, logs: path.join(p, 'logs'), run: path.join(p, 'run.json') }; };
 const rmf = (f) => { try { fs.unlinkSync(f); } catch (_) {} };
 
+/** nodeBinary() → the system's node (MG35: a linked folder runs with it), or null. Under plain node it is this node. */
+function nodeBinary() {
+  if (!process.versions.electron) return process.execPath;
+  try { const out = execFileSync(process.platform === 'win32' ? 'where' : 'which', ['node'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], windowsHide: true });
+    const first = out.split(/\r?\n/).map(x => x.trim()).find(Boolean); return first && fs.existsSync(first) ? first : null; } catch (_) { return null; }
+}
 /** defaultModulesDir() → the node_modules folder that holds js-yaml (COS's own, bundled), or null */
 function defaultModulesDir() { try { return path.dirname(path.dirname(require.resolve('js-yaml/package.json'))); } catch (_) { return null; } }
 
@@ -67,7 +73,12 @@ function readRun(root, project) { try { return JSON.parse(fs.readFileSync(paths(
  * reason: 'already-running' | 'preflight' | 'port-busy' | 'exited' | 'not-healthy' | 'spawn'
  */
 async function start(root, project, version, opts = {}) {
-  const o = { ...DEFAULTS, ...opts }; const P = paths(root, project); const dir = path.join(root, 'projects', project, 'versions', version);
+  const o = { ...DEFAULTS, ...opts }; const P = paths(root, project);
+  // MG35 (MOD-COSA-LINKED-RUN) — 'linked': his own Nexus folder (store.link), run in place with its own data and node_modules
+  const linked = version === 'linked';
+  if (linked && !o.dir) return { ok: false, reason: 'preflight', error: `${project} has no linked folder: link one first (Link a Nexus folder…)` };
+  const dir = linked ? o.dir : path.join(root, 'projects', project, 'versions', version);
+  if (linked) { o.node = o.node || nodeBinary(); if (!o.node) return { ok: false, reason: 'preflight', error: 'no node on this machine: a linked Nexus folder runs with the system Node.js (its Clear Glass needs its own Electron, so COS does not run it as Electron-as-node) — install Node.js 20+ from https://nodejs.org and open COS again' }; o.modulesDir = path.join(dir, 'node_modules'); }
   const cur = readRun(root, project); if (cur && alive(cur.pid)) return { ok: false, reason: 'already-running', error: `${project} ${cur.version} is already running (pid ${cur.pid}): stop it first` };
   rmf(P.run);
   o.entry = entryOf(dir, o.entry);
@@ -75,14 +86,18 @@ async function start(root, project, version, opts = {}) {
   const busy = await portsBusy(o.ports); if (busy.length) return { ok: false, reason: 'port-busy', error: `port${busy.length > 1 ? 's' : ''} ${busy.join(', ')} already in use by another program: ${project} cannot start until ${busy.length > 1 ? 'they are' : 'it is'} free (only one version runs at a time; is another copy still running?)`, busy };
   fs.mkdirSync(P.logs, { recursive: true }); pruneLogs(P.logs, o.keepLogs);
   const log = path.join(P.logs, `${version}-${new Date().toISOString().replace(/[:.]/g, '-')}.log`); const fd = fs.openSync(log, 'a');
-  const env = { ...process.env, ...(o.env || {}), NEXUS_SUPERVISED: undefined, NEXUS_DATA_ROOT: path.join(root, 'projects', project, 'data'), AUTOPILOT_STATUS_PORT: String(o.statusPort),
+  const env = linked
+    // a linked folder: its own data/ (no NEXUS_DATA_ROOT), its own node_modules (no NODE_PATH), and never ELECTRON_RUN_AS_NODE, which every child would
+    // inherit and which turns Clear Glass's Electron into a plain node (MOD-COSA-LINKED-RUN)
+    ? { ...process.env, ...(o.env || {}), NEXUS_SUPERVISED: undefined, NEXUS_DATA_ROOT: undefined, NODE_PATH: undefined, ELECTRON_RUN_AS_NODE: undefined, AUTOPILOT_STATUS_PORT: String(o.statusPort) }
+    : { ...process.env, ...(o.env || {}), NEXUS_SUPERVISED: undefined, NEXUS_DATA_ROOT: path.join(root, 'projects', project, 'data'), AUTOPILOT_STATUS_PORT: String(o.statusPort),
     ...(o.modulesDir === null ? {} : { NODE_PATH: [o.modulesDir === undefined ? defaultModulesDir() : o.modulesDir, process.env.NODE_PATH].filter(Boolean).join(path.delimiter) }),
     ...(process.versions.electron ? { ELECTRON_RUN_AS_NODE: '1' } : {}) };
   Object.keys(env).forEach(k => env[k] === undefined && delete env[k]);
   let child; try { child = spawn(o.node || process.execPath, [o.entry, `--status-port=${o.statusPort}`], { cwd: dir, env, detached: true, stdio: ['ignore', fd, fd], windowsHide: true }); }
   catch (e) { fs.closeSync(fd); return { ok: false, reason: 'spawn', error: `could not start: ${e.message}` }; }
   fs.closeSync(fd); const t0 = Date.now(); let exited = null; child.once('exit', (code, sig) => { exited = { code, sig }; }); child.once('error', (e) => { exited = { code: null, sig: null, error: e.message }; }); child.unref();
-  fs.writeFileSync(P.run, JSON.stringify({ pid: child.pid, project, version, statusPort: o.statusPort, supervisor: supervisorOf(dir), startedAt: new Date().toISOString(), log }));
+  fs.writeFileSync(P.run, JSON.stringify({ pid: child.pid, project, version, ...(linked ? { dir, node: o.node } : {}), statusPort: o.statusPort, supervisor: supervisorOf(dir), startedAt: new Date().toISOString(), log }));
   while (Date.now() - t0 < o.healthTimeoutMs) {
     if (exited) { rmf(P.run); return { ok: false, reason: 'exited', error: `${project} ${version} exited during start (${exited.error || `code ${exited.code}${exited.sig ? ', ' + exited.sig : ''}`}). Last log lines:\n${tail(log)}`, logTail: tail(log), log }; }
     if (await probe(o.statusPort)) return { ok: true, pid: child.pid, version, supervisor: supervisorOf(dir), healthyAfterMs: Date.now() - t0, log };
@@ -115,4 +130,4 @@ async function status(root, project) {
 }
 function logs(root, project, { lines = 50 } = {}) { const r = readRun(root, project); let f = r && r.log; if (!f) { try { const d = paths(root, project).logs; const n = fs.readdirSync(d).filter(x => /\.log$/.test(x)).sort().pop(); f = n && path.join(d, n); } catch (_) {} } return f ? { file: f, text: tail(f, lines) } : { file: null, text: '' }; }
 
-module.exports = { MODULE_ID, DEFAULTS, ENTRIES, supervisorOf, defaultModulesDir, preflight, portsBusy, start, stop, status, logs, readRun, killTree: _killTree };
+module.exports = { MODULE_ID, DEFAULTS, ENTRIES, supervisorOf, defaultModulesDir, nodeBinary, preflight, portsBusy, start, stop, status, logs, readRun, killTree: _killTree };

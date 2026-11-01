@@ -79,13 +79,27 @@ function ipc() {
   h('shCancel', () => ({ ok: true, cancelled: sh.cancel() }));
   h('getSettings', () => ctl.settings()); h('setSetting', (k, v) => ctl.setSetting(String(k), v));
   h('switchTo', (project, v) => ctl.switchTo(String(project), String(v))); h('rollback', (project, o) => ctl.rollback(String(project), o || {}));
-  h('start', (project) => ctl.start(String(project))); h('stop', (project) => ctl.stop(String(project))); h('remove', (project, v) => ctl.remove(String(project), String(v))); h('logs', (project) => ctl.logs(String(project)));
+  // MG35 — "need the exe for cos. its how were going to start nexus from now on": his own Nexus folder linked, and started when COS opens
+  h('pickFolder', async () => { const r = await dialog.showOpenDialog(win, { title: 'Pick your Nexus folder (the one with VERSION and lib/nexus/autopilot.js)', properties: ['openDirectory'] }); return r.canceled ? {} : { path: r.filePaths[0] }; });
+  h('link', (project, folder) => { const r = ctl.link(String(project || 'nexus'), String(folder || '')); if (r.ok && !ctl.settings().settings.startOnLaunch) ctl.setSetting('startOnLaunch', r.project); return r; });
+  h('unlink', (project) => ctl.unlink(String(project)));
+    h('start', (project) => ctl.start(String(project))); h('stop', (project) => ctl.stop(String(project))); h('remove', (project, v) => ctl.remove(String(project), String(v))); h('logs', (project) => ctl.logs(String(project)));
 }
 
 app.on('second-instance', show);
 app.whenReady().then(() => {
   ctl = new Controller({ root: process.env.COS_APP_ROOT || Store.defaultRoot(), onEvent: send }); fs.mkdirSync(ctl.root, { recursive: true });
   sh = new Shell({ root: ctl.root, project: 'nexus', stdio: 'pipe', out: (t) => send({ type: 'sh.data', text: t }) }); ipc(); createWindow(); buildTray(); watchInbox();
+  startOnLaunch();
 });
+// MG35 (MOD-COSA-START-ON-LAUNCH) — the exe is how Nexus starts: the project he chose starts when COS opens; a failure is said, never silent
+async function startOnLaunch() {
+  const p = ctl.settings().settings.startOnLaunch; if (!p) return;
+  send({ type: 'op.start', project: p, what: 'starting when COS opened' });
+  const r = await ctl.start(p);
+  if (r && r.ok) notify('Nexus is running', `${p} started (${r.version || 'linked folder'}) — COS supervises it; closing this window keeps it running`);
+  else notify('Nexus did not start', String((r && r.error) || 'no answer').split('\n')[0].slice(0, 200));
+  send({ type: 'launch.start', project: p, ok: !!(r && r.ok), error: r && r.error });
+}
 app.on('window-all-closed', () => { /* stays in the tray */ });
 app.on('before-quit', () => { quitting = true; });

@@ -7,18 +7,21 @@ intent: null
 summary: MG26_branch_benchmark_merge (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793449750421
+exported_at: 1793577140016
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793449750421
-lastSeenAt: 1793449750421
+firstSeenAt: 1793577140016
+lastSeenAt: 1793577140016
 fingerprint: null
 payload:
   id: MG26_branch_benchmark_merge
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "SUPERSEDED 2026-11-01 by CP5_states_rewind_versions in
+    docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each
+    compartment should be all of it."); the text below is kept"
   files:
     - cos/manager/merge.js
     - cos/manager/state.js
@@ -32,4 +35,4 @@ payload:
   blocks:
     - MOD-MG-MERGE
   spec: cos/spec/cos-manager.spec
-  graph: 98009391d15b5259
+  graph: 6eb99b87cbd6a930

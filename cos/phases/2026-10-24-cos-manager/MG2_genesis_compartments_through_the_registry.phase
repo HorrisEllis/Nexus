@@ -9,11 +9,11 @@ intent: null
 summary: MG2_genesis_compartments_through_the_registry (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793365823347
+exported_at: 1793577139951
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823347
-lastSeenAt: 1793365823347
+firstSeenAt: 1793577139951
+lastSeenAt: 1793577139951
 fingerprint: null
 payload:
   id: MG2_genesis_compartments_through_the_registry
@@ -32,4 +32,4 @@ payload:
   blocks:
     - MOD-MG-GENESIS
   spec: cos/spec/cos-manager.spec
-  graph: 131d5c39fbd1cf58
+  graph: df701580265a4139

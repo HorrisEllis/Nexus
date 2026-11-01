@@ -1256,6 +1256,59 @@ spec:
       error_paths: ["a page not in the registry → the shell does not load it and says which"]
       acceptance: ["in Clear Glass: a section emitting an undeclared event is refused and shows it"]
 
+
+    - id: MOD-COSA-LINK
+      name: linked-folder
+      uuid: nexus-cos-app-linked-folder-v1-0000-2026-1101-001
+      path: cos/app/store.js
+      phase: MG35_the_exe_starts_nexus
+      description: >-
+        James, 2026-11-01: "need the exe for cos. its how were going to start nexus from now on". His Nexus is a git folder he updates in place
+        (UP6/UP11/UP13), not a release zip in COS's store. link(root, project, folder) registers that folder as the project's current version
+        'linked': the folder must hold VERSION and lib/nexus/autopilot.js; nothing in it is copied, moved or written. list() shows a linked
+        project's version read from its folder's VERSION, and that it is linked. unlink() forgets the link (the folder untouched).
+      deps: [{ name: cos-runtime }]
+      schema_refs: [SupervisedSystem]
+      exports: ["link(root, project, folder) → { ok, project, dir, version } | { ok:false, error }", "unlink(root, project)", "list() → … { linked: { dir, version } }"]
+      gate_pipeline: ["GATE-COSA15-001: the folder is a Nexus (VERSION, lib/nexus/autopilot.js)", "GATE-COSA15-002: nothing written inside it", "GATE-COSA15-003: recorded (cos/app/versionium.js)"]
+      behavioral_contracts: ["a linked folder is never copied, moved or deleted by COS", "zip versions and a link can coexist; the link is current while set"]
+      error_paths: ["not a Nexus folder → refused, naming what is missing"]
+      acceptance: ["a fixture folder linked: list shows it current, its VERSION; a folder without autopilot refused"]
+
+    - id: MOD-COSA-LINKED-RUN
+      name: linked-run
+      uuid: nexus-cos-app-linked-run-v1-0000-2026-1101-001
+      path: cos/app/runtime.js
+      phase: MG35_the_exe_starts_nexus
+      description: >-
+        Starting a linked project runs its own launcher (lib/nexus/autopilot.js) in its folder with the system's node (the folder has its own
+        node_modules, Electron included, which Clear Glass needs): never Electron-as-node, whose ELECTRON_RUN_AS_NODE would reach Clear Glass and
+        break it. Its data stays its own data/ (no NEXUS_DATA_ROOT, no NODE_PATH from COS). No node on PATH → refused, said with where to get it.
+        Stop, status and logs are the same as for a zip version.
+      deps: [{ name: linked-folder }, { name: cos-runtime }]
+      schema_refs: [SupervisedSystem]
+      exports: ["start(root, project, 'linked', opts)", "nodeBinary() → path | null"]
+      gate_pipeline: ["GATE-COSA15-010: node found", "GATE-COSA15-011: its ports free", "GATE-COSA15-012: up when its supervisor answers /status"]
+      behavioral_contracts: ["ELECTRON_RUN_AS_NODE never set for a linked folder", "the folder's own data and node_modules are used"]
+      error_paths: ["no node → refused with the reason", "health not reached → said with the log tail"]
+      acceptance: ["a linked fixture whose launcher answers /status is started with the system node, without ELECTRON_RUN_AS_NODE, and stopped"]
+
+    - id: MOD-COSA-START-ON-LAUNCH
+      name: start-on-launch
+      uuid: nexus-cos-app-start-on-launch-v1-0000-2026-1101-001
+      path: cos/app/desktop/main.js
+      phase: MG35_the_exe_starts_nexus
+      description: >-
+        The exe is how Nexus starts: a setting startOnLaunch (a project name, or none) starts that project when COS opens, a person's choice in the
+        window ("Start Nexus when COS opens"); linking a folder from the window (Link a Nexus folder…) sets it. Quitting COS stops what it started
+        (COSA6, unchanged). The window shows the start as it happens and opens Nexus's TV when it is up.
+      deps: [{ name: linked-run }]
+      schema_refs: [SupervisedSystem]
+      exports: ["settings startOnLaunch", "window: Link a Nexus folder…, Start Nexus when COS opens", "cli: link <folder>, unlink"]
+      gate_pipeline: ["GATE-COSA15-020: the setting set by a person", "GATE-COSA15-021: started through the controller (exclusive per project)"]
+      behavioral_contracts: ["no start on launch unless set", "a start that fails is said in the window and a notification"]
+      error_paths: ["the linked folder gone → said, the setting kept"]
+      acceptance: ["with startOnLaunch set, the controller starts the linked project at launch; unset, nothing starts"]
   events:
     cos:
       - "cos.system.state { name, state, pid, by }"

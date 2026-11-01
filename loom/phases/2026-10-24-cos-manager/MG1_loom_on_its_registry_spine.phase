@@ -7,11 +7,11 @@ intent: null
 summary: MG1_loom_on_its_registry_spine (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793365823343
+exported_at: 1793577139948
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823343
-lastSeenAt: 1793365823343
+firstSeenAt: 1793577139948
+lastSeenAt: 1793577139948
 fingerprint: null
 payload:
   id: MG1_loom_on_its_registry_spine
@@ -31,4 +31,4 @@ payload:
   blocks:
     - MOD-MG-LOOM-SPINE
   spec: cos/spec/cos-manager.spec
-  graph: b94506b8e5eebd15
+  graph: 33526feb4b9fecb8

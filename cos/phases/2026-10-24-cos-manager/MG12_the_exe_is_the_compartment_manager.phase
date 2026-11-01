@@ -9,11 +9,11 @@ intent: null
 summary: MG12_the_exe_is_the_compartment_manager (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793365823376
+exported_at: 1793577139978
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823376
-lastSeenAt: 1793365823376
+firstSeenAt: 1793577139978
+lastSeenAt: 1793577139978
 fingerprint: null
 payload:
   id: MG12_the_exe_is_the_compartment_manager
@@ -35,7 +35,10 @@ payload:
     - COSA12_vmware_window
     - CS8_the_cos_screen
     - VM1_control_like_vmware
+    - CP2_the_window
+    - CP5_states_rewind_versions
+    - CP6_resources
   blocks:
     - MOD-MG-EXE-MANAGER
   spec: cos/spec/cos-manager.spec
-  graph: 7350f98407b97c68
+  graph: a45cf0eb47b7fc80

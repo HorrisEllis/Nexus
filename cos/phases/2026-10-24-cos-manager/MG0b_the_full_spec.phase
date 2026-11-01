@@ -7,11 +7,11 @@ intent: null
 summary: MG0b_the_full_spec (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793365823337
+exported_at: 1793577139945
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823337
-lastSeenAt: 1793365823337
+firstSeenAt: 1793577139945
+lastSeenAt: 1793577139945
 fingerprint: null
 payload:
   id: MG0b_the_full_spec
@@ -27,4 +27,4 @@ payload:
   blocks:
     - MOD-MG-CONTRACT
   spec: cos/spec/cos-manager.spec
-  graph: 37a084061d582ac2
+  graph: b9ea6d6e010d2df8

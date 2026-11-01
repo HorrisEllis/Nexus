@@ -160,7 +160,8 @@ function list(root, project = null) {
   return names.map(name => { const st = readState(root, name), p = P(root, name);
     const versions = Object.keys(st.versions).sort((a, b) => cmpVer(b, a)).map(v => { const d = path.join(p.versions, v); let linked = false; try { linked = fs.realpathSync(path.join(d, 'data')) === fs.realpathSync(p.data); } catch (_) {}
       return { version: v, present: fs.existsSync(d), current: st.current === v, previous: st.previous === v, verified: !!st.versions[v].verified, dataLinked: linked, importedAt: st.versions[v].importedAt }; });
-    return { project: name, current: st.current, previous: st.previous, data: p.data, versions }; });
+    const linked = st.linked ? { dir: st.linked.dir, at: st.linked.at, present: fs.existsSync(st.linked.dir), version: _versionOf(st.linked.dir) } : null;   // MG35
+    return { project: name, current: st.current, previous: st.previous, data: p.data, versions, linked }; });
 }
 
 /** remove(root, project, version) — moves it to trash/ (never deletes); refuses the current version. The record stays, marked removed, so nothing is silently forgotten. */
@@ -192,6 +193,25 @@ function status(root) {
 
 // 0.60.279 VE7 / COSA14 — James, 2026-10-29: "full changes, and versions have to be pushed to versionium?" (§17.12). Each install and remove
 // is recorded in Versionium (cos/app/versionium.js: its own outbox, because the exe ships without lib). The act never waits on it.
+// ── MG35 (cos/spec/cos-manager.spec MOD-COSA-LINK) — James, 2026-11-01: "need the exe for cos. its how were going to start nexus from now on".
+// His Nexus is a git folder he updates in place, not a zip in this store: link() registers it. Nothing inside it is copied, moved or written.
+function _versionOf(dir) { try { return fs.readFileSync(path.join(dir, 'VERSION'), 'utf8').trim() || null; } catch (_) { return null; } }
+function link(root, project, folder) {
+  if (!PROJECT.test(String(project || ''))) return { ok: false, error: `a project name is letters, digits and dashes: ${JSON.stringify(project)}` };
+  const dir = path.resolve(String(folder || ''));
+  if (!folder || !fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) return { ok: false, error: `no folder at ${dir}` };
+  const missing = ['VERSION', path.join('lib', 'nexus', 'autopilot.js')].filter(f => !fs.existsSync(path.join(dir, f)));
+  if (missing.length) return { ok: false, error: `${dir} is not a Nexus folder: it has no ${missing.join(' and no ')}` };
+  const st = readState(root, project); st.linked = { dir, at: new Date().toISOString() }; writeState(root, project, st);
+  const version = _versionOf(dir); _rec(root, { op: 'link', project, version, detail: { dir } });
+  return { ok: true, project, dir, version };
+}
+function unlink(root, project) {
+  const st = readState(root, project); if (!st.linked) return { ok: true, note: 'no folder was linked' };
+  const was = st.linked; delete st.linked; writeState(root, project, st); _rec(root, { op: 'unlink', project, version: _versionOf(was.dir), detail: { dir: was.dir } });
+  return { ok: true, unlinked: was.dir, note: 'the folder itself is untouched' };
+}
+
 function _rec(root, entry) { try { require('./versionium.js').record(root, entry).catch(() => {}); } catch (_) {} }
 const _importZip = importZip, _remove = remove;
 function importZipRecorded(root, zipPath, opts = {}) {
@@ -205,4 +225,4 @@ function removeRecorded(root, project, version) {
   return r;
 }
 
-module.exports = { MODULE_ID, LIMITS, defaultRoot, checksumFor, inspect, importZip: importZipRecorded, linkData, list, remove: removeRecorded, scanInbox, status, cmpVer };
+module.exports = { MODULE_ID, LIMITS, defaultRoot, checksumFor, inspect, importZip: importZipRecorded, linkData, link, unlink, list, remove: removeRecorded, scanInbox, status, cmpVer };

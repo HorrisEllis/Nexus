@@ -7,18 +7,21 @@ intent: null
 summary: MG13_cli_in_the_exe (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793365823378
+exported_at: 1793577139982
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793365823378
-lastSeenAt: 1793365823378
+firstSeenAt: 1793577139982
+lastSeenAt: 1793577139982
 fingerprint: null
 payload:
   id: MG13_cli_in_the_exe
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "SUPERSEDED 2026-11-01 by CP3_one_terminal_one_cli in
+    docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each
+    compartment should be all of it."); the text below is kept"
   files:
     - cos/app/cli.js
     - cos/app/desktop/main.js
@@ -30,4 +33,4 @@ payload:
   blocks:
     - MOD-MG-EXE-CLI
   spec: cos/spec/cos-manager.spec
-  graph: c61b1b6bd0890fc2
+  graph: 78748a7efe75ff5d
