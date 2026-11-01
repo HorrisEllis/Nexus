@@ -64,6 +64,8 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
         if (!st || st.ok === false) return send(res, 503, { ok: false, error: `intelligence did not answer: ${(st && st.error) || 'no reply'}` });
         return send(res, 200, { ok: true, status: st, items: (ls && ls.items) || [] });
       }
+      // 2026-11-01 UP9 — the same update notice for COS's UI (the kernel's lib/nexus-update.js notice)
+      if (m === 'GET' && p === '/api/cos/update/notice') { try { return send(res, 200, { ok: true, ...require('../../lib/nexus-update.js').notice({ root }), updatesPage: 'http://127.0.0.1:4800/update.html' }); } catch (e) { return send(res, 500, { ok: false, error: e.message }); } }
       if (m === 'GET' && p === '/api/cos/usage') return send(res, 200, { ok: true, usage: usage.read(sup.list(), sup.policy()) });
       const lg = /^\/api\/cos\/systems\/([^/]+)\/logs$/.exec(p);
       if (lg && m === 'GET') return send(res, 200, { ok: true, system: decodeURIComponent(lg[1]), lines: sup.logs(decodeURIComponent(lg[1]), { limit: Number(u.searchParams.get('limit')) || 200 }) });

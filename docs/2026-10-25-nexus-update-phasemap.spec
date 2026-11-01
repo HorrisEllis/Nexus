@@ -109,5 +109,15 @@ spec:
       depends_on: [UP7_autopilot_keeps_it_current]
       files: [idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/update.html, tests/modules/test-nexus-update.test.js]
       does: "GET|POST /api/update/policy and GET /api/update/auto; the row `update policy [auto|notify|off]`; the Updates page shows the policy, the last automatic check and what it did."
+    UP9_a_popup_when_there_is_an_update:
+      status: DONE (0.60.349)
+      depends_on: [UP8_policy_on_the_page]
+      files: [lib/nexus-update.js, orchestrator/orchestrator.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/serve.js, cos/ui/shell/index.html, lib/ui/update-popup/update-popup.js, lib/ui/tv-shell/index.html, tests/modules/test-update-popup.test.js]
+      does: >-
+        James, 2026-11-01: "can you have it have a popup when it has an update availanel" — said with his screen of COS's UI unreachable: his
+        folder was 0.60.346, the COS UI came in 0.60.347, and the automatic check had thrown ("write ECONNABORTED") without leaving a record.
+        notice() reads the last check for a person (available, waiting, blocked, refused, error, updated); a check that throws is now saved as
+        an error; GET /api/update/notice (the orchestrator, for the TV) and GET /api/cos/update/notice (COS, in its contract); one popup script
+        (lib/ui/update-popup) on the TV and in COS's UI: Open updates (Idearium's Updates page applies), Later (6 h, per version and kind).
 
   verification_here: "Proven against real git repos built in a temp folder (an origin with a newer release, a clone behind it): check, a refused code collision, an archived data collision, apply, rollback. Not run on his machine; GitHub itself is reached by git, not by this test."

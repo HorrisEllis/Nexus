@@ -2470,6 +2470,14 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     return json(res, r.ok ? 200 : (r.error==='emerge offline'?503:500), r);
   }
 
+  // ── Update notice — GET /api/update/notice (2026-11-01 UP9) ───────────────────────────────────────────────────────────────────
+  // James, 2026-11-01: "can you have it have a popup when it has an update availanel". What the last automatic check means (lib/nexus-update.js
+  // notice, the kernel's); the TV shows it as a popup. The apply stays on Idearium's Updates page (one place that changes the tree).
+  if (top === 'api' && sub === 'update' && seg[2] === 'notice' && M === 'GET') {
+    try { return json(res, 200, { ok: true, ...require('../lib/nexus-update.js').notice({}), updatesPage: 'http://127.0.0.1:4800/update.html' }); }
+    catch (e) { return json(res, 500, { ok: false, error: e.message }); }
+  }
+
   // ── Emergence — /api/emergence/{patterns,liminal,sessions} (2026-11-01 TV3) ───────────────────────────────────────────────
   // James, 2026-11-01: "the tv ui needs the emergence channel". The TV asks only :9000 (TV_D1); what emerges is Intelligence's (its
   // crystallised patterns, its liminal spaces), asked through its routes; his emergence runs are lib/emergence.js's (the kernel). A system

@@ -1,0 +1,67 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OC10_pipelines_on_the_canvas:25d81bb1639e7f1d
+type: graph
+id: phase:OC10_pipelines_on_the_canvas:25d81bb1639e7f1d
+context: dependency graph of phase OC10_pipelines_on_the_canvas
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793557554809
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793557554809
+lastSeenAt: 1793557554809
+fingerprint: null
+payload:
+  for: OC10_pipelines_on_the_canvas
+  kind: phase
+  repo: null
+  hash: 25d81bb1639e7f1d
+  nodes:
+    - path: lib/ui/brainos/index.html
+      role: changes
+      exists: true
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D2_the_eravos_canvas_replaces_brainos
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC2_scheduler_on_nodes
+    dependents: []
+    upstream:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO_D0_one_door
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC2_scheduler_on_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D2_the_eravos_canvas_replaces_brainos
+    downstream: []
+    blockedBy:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC2_scheduler_on_nodes
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+        files:
+          - lib/ui/brainos/index.html
+    dangling: []
+    lines:
+      - layer 3 · blocked by EO2_cos_tools, OC2_scheduler_on_nodes
+      - >-
+        depends on (3): OC_D2_the_eravos_canvas_replaces_brainos, EO2_cos_tools,
+        OC2_scheduler_on_nodes · all upstream 7
+      - 'needed by (0): —'
+      - 'same files as OC8_the_console with no order between them: lib/ui/brainos/index.html'
+    edges:
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC_D2_the_eravos_canvas_replaces_brainos
+        kind: declared
+      - from: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+        kind: declared
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC2_scheduler_on_nodes
+        kind: declared

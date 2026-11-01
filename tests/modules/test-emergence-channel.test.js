@@ -108,7 +108,9 @@ const PATTERNS = [
     const html = fs.readFileSync(path.join(UI, 'index.html'), 'utf8');
     const meta = html.slice(html.indexOf('const CH_META=['), html.indexOf('];', html.indexOf('const CH_META=[')));
     const ids = [...meta.matchAll(/\{id:'([^']+)'/g)].map(m => m[1]);
-    assert.strictEqual(ids[ids.length - 1], 'ch-emergence', 'appended, never inserted');
+    // appended after the original channels (the last of them is ch-perplexity-agent), never inserted among them: CH_INSPECT is read by
+    // position. Later channels (ch-cos, 0.60.347) are appended after it, which is why this is not "the last one".
+    assert.ok(ids.indexOf('ch-emergence') > ids.indexOf('ch-perplexity-agent'), 'appended, never inserted');
     assert.ok(/id="ch-emergence"/.test(html) && /f\.src='channels\/emergence\/emergence\.html'/.test(html));
     const fnSrc = html.slice(html.indexOf('function loadChannelList()'), html.indexOf('function saveChannelList'));
     const store = { 'nexus.tv.channels': JSON.stringify([{ id: 'ch-log', name: 'LOG' }, { id: 'ch-overview', name: 'NEXUS', hidden: true }]) };

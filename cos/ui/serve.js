@@ -85,6 +85,11 @@ function createServer({ port = 7797, manager = 'http://127.0.0.1:7799', contract
     if (p === '/favicon.ico') return serveStatic(req, res, '/core/mark.svg');
     // 2026-11-01 TV3 — the emergence page is one page with the TV's channel: its script and style are served from the kernel's folder,
     // read-only, that folder only, .js and .css only (no copy kept here)
+    // 2026-11-01 UP9 — and the update popup's one script, the same way (lib/ui/update-popup/update-popup.js only)
+    if (p === '/kernel/update-popup/update-popup.js') {
+      return fs.readFile(path.join(UI, '..', '..', 'lib', 'ui', 'update-popup', 'update-popup.js'), (err, buf) => { if (err) return send(res, 404, { ok: false, error: 'no update popup' });
+        res.writeHead(200, { 'Content-Type': TYPES['.js'], 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff' }); res.end(buf); });
+    }
     if (p.startsWith('/kernel/emergence/')) {
       const name = path.basename(p); const dir = path.join(UI, '..', '..', 'lib', 'ui', 'tv-shell', 'channels', 'emergence');
       if (!/^emergence\.(js|css)$/.test(name)) return send(res, 404, { ok: false, error: `not served: ${name}` });

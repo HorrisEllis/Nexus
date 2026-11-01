@@ -7,18 +7,18 @@ intent: null
 summary: OC1_task_nodes (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793556958978
+exported_at: 1793557554786
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793556958978
-lastSeenAt: 1793556958978
+firstSeenAt: 1793557554786
+lastSeenAt: 1793557554786
 fingerprint: null
 payload:
   id: OC1_task_nodes
   map: docs/2026-11-01-orchestration-console-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: '"DONE 0.60.348"'
   files:
     - lib/automation/task-node.js
     - tests/modules/test-task-nodes.test.js
@@ -27,4 +27,4 @@ payload:
   blocks:
     - MOD-OC-TASK-NODE
   spec: docs/orchestration-console.spec
-  graph: 7dcb63766777e133
+  graph: 5a337dfee0522a66

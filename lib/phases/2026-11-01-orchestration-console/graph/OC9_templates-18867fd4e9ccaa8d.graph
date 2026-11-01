@@ -1,0 +1,75 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OC9_templates:18867fd4e9ccaa8d
+type: graph
+id: phase:OC9_templates:18867fd4e9ccaa8d
+context: dependency graph of phase OC9_templates
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793557554807
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793557554807
+lastSeenAt: 1793557554807
+fingerprint: null
+payload:
+  for: OC9_templates
+  kind: phase
+  repo: null
+  hash: 18867fd4e9ccaa8d
+  nodes:
+    - path: lib/automation/templates.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-chatgpt-scrape-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: lib/automation/routes.js
+      to: lib/automation/templates.js
+      kind: requires
+    - from: tests/modules/test-chatgpt-scrape-template.test.js
+      to: lib/automation/templates.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: lib/automation/templates.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D1_templates_and_schemas
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC7_the_taxonomy_expanded
+    dependents: []
+    upstream:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC7_the_taxonomy_expanded
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D1_templates_and_schemas
+    downstream: []
+    blockedBy:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC7_the_taxonomy_expanded
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by OC7_the_taxonomy_expanded
+      - 'depends on (2): OC_D1_templates_and_schemas, OC7_the_taxonomy_expanded · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC_D1_templates_and_schemas
+        kind: declared
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC7_the_taxonomy_expanded
+        kind: declared
