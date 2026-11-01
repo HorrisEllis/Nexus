@@ -440,6 +440,7 @@ const SUITES = [
   'test-friction-home.test.js',
   'test-cos-ui-starts.test.js',
   'test-task-nodes.test.js',
+  'test-macro-toast.test.js',              // 0.60.359 MB4 — the macro toast: step i of n, pause, skip, back one step, stop (playback); pause and back (recording)
   'test-git-pr.test.js',                   // 0.60.357 UP12 — open a PR for any agent: push, gh or the prefilled compare link; refused on main or a dirty tree
   'test-cos-resources.test.js',            // 0.60.356 CP6a — caps per compartment read back from the OS (priority, heap), resident limit watched, pressure → a proposal; usage without wmic
   'test-cos-walls.test.js',                // 0.60.355 CP1a — every system walled by COS (audit where ways are open, enforce for Ollama); Electron through NODE_OPTIONS

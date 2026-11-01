@@ -71,4 +71,4 @@ phases:
 # back one step." Mapped, not built (his budget that day, his "do the most you can for the least amount of tokens"): the player's step loop
 # reports step i of n to one toast for playback and for recording; pause holds before the next step; skip moves past one; back reruns the
 # step before. Proof in Clear Glass (never Playwright).
-#   MB4_the_macro_toast: { status: OPEN, depends_on: [MB2_the_blocks_ui], files: [clear-glass/src/macros, clear-glass/src/automation] }
+#   MB4_the_macro_toast: { status: BUILT 0.60.359 (test-macro-toast 5/5; the toast itself not yet driven in Clear Glass), depends_on: [MB2_the_blocks_ui], files: [lib/agent-tools/tools/clear-glass/macro-control.js, lib/agent-tools/tools/clear-glass/macro.js, clear-glass/src/macros/live-recording.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/src/bookmarks/browser.js, tests/modules/test-macro-toast.test.js] }

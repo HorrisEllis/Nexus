@@ -175,6 +175,30 @@
   // wiring this, not assumed).
   window.__cgToast = toast;
 
+  // 0.60.359 MB4 — James, 2026-11-01: "also the macro toast for playback and recording, shows what step your on, out of how many. with a pause
+  // and skip, goes back one step." One toast, fed by the bridge (macros:progress): step i of n, with Pause/Resume, Back, Skip (playback) and Stop.
+  (function macroToast() {
+    const M = window.ClearGlass && window.ClearGlass.macros; if (!M || !M.onProgress) return;
+    let el = null, hideT = null;
+    const btn = (label, op, agentId) => { const b = document.createElement('button'); b.textContent = label; b.dataset.op = op;
+      b.style.cssText = 'background:transparent;border:1px solid #2a2a3a;color:#cfe;border-radius:6px;padding:2px 8px;margin-left:6px;font:11px ui-monospace,monospace;cursor:pointer';
+      b.onclick = (e) => { e.stopPropagation(); M.control(op, agentId).then(r => { if (r && r.ok === false) toast(r.error, 'warn'); }); }; return b; };
+    M.onProgress((s) => {
+      if (!el) { el = document.createElement('div'); el.id = 'cg-macro-toast'; el.style.cssText = 'background:#0e0e18;border:1px solid #00f5ff;color:#00f5ff;padding:8px 12px;border-radius:8px;font:11px ui-monospace,monospace;pointer-events:auto;display:flex;align-items:center;flex-wrap:wrap;gap:2px'; _toastContainer.appendChild(el); }
+      clearTimeout(hideT);
+      const rec = s.kind === 'recording';
+      const what = rec ? `● Recording ${s.name || ''} · step ${s.i}` : `▶ ${s.name || 'macro'} · step ${Math.min(s.i + 1, s.n)} of ${s.n}`;
+      const text = document.createElement('span'); text.className = 'mt-text';
+      text.textContent = s.done ? (rec ? `Recorded ${s.name || ''} · ${s.i} step(s)` : s.ok ? `✓ ${s.name} · ${s.n} step(s) done` : `✕ ${s.name}: ${s.error || 'stopped'}`) : `${what}${s.paused ? ' · paused' : ''}${!rec && s.label ? ' · ' + s.label : ''}`;
+      el.replaceChildren(text);
+      el.style.borderColor = s.done && s.ok === false ? '#ff4466' : s.paused ? '#ffb454' : '#00f5ff';
+      if (!s.done) {
+        el.append(btn(s.paused ? 'Resume' : 'Pause', s.paused ? 'resume' : 'pause', s.agentId), btn('Back', 'back', s.agentId));
+        if (!rec) el.append(btn('Skip', 'skip', s.agentId), btn('Stop', 'stop', s.agentId));
+      } else hideT = setTimeout(() => { if (el) { el.remove(); el = null; } }, 4000);
+    });
+  })();
+
   // Flush any cg.* errors that happened before toast() existed (the Proxy
   // wrapper is set up earlier in this script than toast() is defined).
   while (toastQueue.length) toast(...toastQueue.shift());

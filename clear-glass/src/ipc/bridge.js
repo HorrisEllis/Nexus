@@ -1060,7 +1060,11 @@ class IpcBridge {
       if (!this.driver) return { error: 'driver not wired' };
       try { return { ok: true, action, result: await this.driver.exec({ agentId, ...call, by: 'person' }) }; } catch (err) { return { error: err.message }; }
     };
-    const r = await this.macroTool.execute({ action: 'run', name: d.name, agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep });
+    // MB4: his run carries a control, so the toast can pause, skip, go back one step or stop it
+    const control = require('../../../lib/agent-tools/tools/clear-glass/macro-control.js').createControl({ name: d.name, onChange: (s) => this._macroProgress({ ...s, agentId }) });
+    this._macroRun = control;
+    const r = await this.macroTool.execute({ action: 'run', name: d.name, agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep, control });
+    if (!control.state().done) control.done(r || {});
     try { require('../processes').activity().push({ kind: 'macro', what: `macro "${d.name}" ${r && r.error ? `did not run: ${r.error}` : 'ran'}`, url, by: d.by || 'person', level: r && r.error ? 'warn' : 'info', ref: d.name }); } catch (_) {}   // SP5
     return r;
   }
@@ -1394,10 +1398,19 @@ class IpcBridge {
     // builder opens pre-filled (passwords become a {{password}} parameter).
     // §0.60.57 MR1 — James, 2026-10-15: "needs to start recording a macro node file." The recording IS a .macro file from the first
     // second (src/macros/live-recording.js); recordStop returns the same steps the file holds, so the step editor opens on what was saved.
-    let _live = null;
-    const live = () => _live || (_live = new (require('../macros/live-recording').LiveRecorder)({
-      getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
-      dir: require('../../../lib/automation-nodes.js').NODES_DIR }));
+    // 0.60.359 MB4 — the panel's recorder is the copilot's (AD_D2 said one; there were two, found wiring the toast)
+    const live = () => this._recorder();
+    // MB4 — James: "the macro toast for playback and recording ... with a pause and skip, goes back one step." One channel for both:
+    // a recording on this tab takes pause/resume/back; otherwise his running macro takes pause/resume/skip/back/stop.
+    ipcMain.handle('macros:control', async (e, { op, agentId = 'default' } = {}) => {
+      try {
+        const rec = this._liveRecorder && this._liveRecorder.sessions.has(agentId) ? this._liveRecorder : null;
+        if (rec) { if (!['pause', 'resume', 'back'].includes(op)) return { ok: false, error: `a recording takes pause, resume or back, not "${op}"` }; return rec[op](agentId); }
+        const c = this._macroRun; if (!c || c.state().done) return { ok: false, error: 'no macro is running' };
+        if (!['pause', 'resume', 'skip', 'back', 'stop'].includes(op)) return { ok: false, error: `no op "${op}": pause, resume, skip, back, stop` };
+        return { ok: true, state: c[op]() };
+      } catch (err) { return { ok: false, error: err.message }; }
+    });
     ipcMain.handle('macros:recordStart', async (e, { agentId, name } = {}) => {
       if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
       try { return await live().start({ agentId, name }); } catch (err) { return { ok: false, error: err.message }; }
@@ -2197,13 +2210,21 @@ class IpcBridge {
     return this.macroTool.execute({ action: 'create', name: d.name, urlPattern: d.urlPattern, steps: d.steps, params: d.params, profile: d.profile || undefined, description: d.description });
   }
 
-  // One LiveRecorder (AD_D2): a recording the co-pilot starts can be stopped from the panel, and the reverse.
+  // One LiveRecorder (AD_D2): a recording the co-pilot starts can be stopped from the panel, and the reverse. MB4: it reports its step to the toast.
+  _recorder() {
+    if (!this._liveRecorder) this._liveRecorder = new (require('../macros/live-recording').LiveRecorder)({
+      getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
+      dir: require('../../../lib/automation-nodes.js').NODES_DIR, onProgress: (s) => this._macroProgress(s) });   // 0.60.266: AE1 moved NODES_DIR
+    return this._liveRecorder;
+  }
+  /** MB4 — the toast's state, to every Clear Glass window */
+  _macroProgress(s) {
+    try { const { BrowserWindow } = require('electron'); for (const w of BrowserWindow.getAllWindows()) if (!w.isDestroyed() && !w.webContents.isDestroyed()) w.webContents.send('macros:progress', s); } catch (_) {}
+  }
   async _macroRecord(op, { agentId, name } = {}) {
     if (op !== 'status' && !this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
     try {
-      if (!this._liveRecorder) this._liveRecorder = new (require('../macros/live-recording').LiveRecorder)({
-        getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
-        dir: require('../../../lib/automation-nodes.js').NODES_DIR });   // 0.60.266: AE1 (0.60.251) moved NODES_DIR here; this call still named the old file
+      this._recorder();
       if (op === 'start') return await this._liveRecorder.start({ agentId, name });
       if (op === 'stop') return await this._liveRecorder.stop(agentId);
       if (op === 'status') return this._liveRecorder.status(agentId);
