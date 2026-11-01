@@ -253,6 +253,20 @@ phases:
       stop the lowest-priority, largest compartment. Routes GET /api/cos/resources and GET|PATCH /api/cos/systems/:name/caps; rows
       `cos resources` and `cos caps`; the cockpit's Resources tab.
     proof: "a fixture compartment's priority set and read back from the OS; its heap cap on its command line; a resident limit crossed gives the ledger line and a restart; the halt floor gives one proposal; usage reads a real pid on this Windows"
+  CP6b_raid_approves_what_cos_does_by_rule:
+    status: "DONE 0.60.361 — test-cos-resources CR-06, CR-07"
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-RAID-GATE]
+    depends_on: [CP6a_caps_priority_accounting]
+    files: [cos/manager/resources.js, cos/spec/compartment.spec, tests/modules/test-cos-resources.test.js]
+    does: >-
+      James, 2026-11-01: "cos backend, and hooking into idearium and raid. cos resource manager per compartment". CP6's "allocation and balance
+      by RAID", its first part: what COS's resource manager does by rule on a compartment (restart over its resident limit) is RAID's to approve
+      (§9.1, §5.2), through lib/raid-port.js (fails closed). Approved → on the ledger, then done; refused or unanswered → not done, the reason on
+      the ledger. Proposals held for him are not gated (USER_AUTONOMY). Still open of CP6: RAID balancing load across compartments, networks,
+      storage. The Idearium half of his ask is CP9 (depends on CP1, open).
+    proof: "CR-06 approved → restarted with 'raid-approved'; CR-07 refused/unreachable → not restarted, 'raid-refused' with the reason"
+
   CP5a_snapshots_per_compartment:
     status: OPEN
     spec: cos/spec/compartment.spec

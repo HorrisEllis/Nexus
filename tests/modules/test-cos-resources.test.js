@@ -9,6 +9,8 @@ require('../../lib/test-sandbox.js').ensure();
  *   CR-03 over its resident limit with onOver restart → an over-limit ledger line and a restart by rule:resources
  *   CR-04 under the halt floor → one held proposal by rule:resources to stop the lowest-priority compartment; COS stops nothing itself
  *   CR-05 an agent cannot set a cap; a value out of range is refused with the range
+ *   CR-06 CP6b (0.60.361): RAID's yes is asked before a restart by rule — approved → restarted, the approval on the ledger
+ *   CR-07 CP6b: RAID refuses, or does not answer (fails closed) → not restarted, its reason on the ledger
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
@@ -50,7 +52,7 @@ const until = async (fn, ms = 15000) => { const t = Date.now() + ms; while (Date
 
     await test('CR-03', 'over its resident limit with onOver restart: an over-limit line and a restart by rule', async () => {
       const sup = mk(['b']); sups.push(sup);
-      const res = createResources(sup, { store: path.join(dir, 'caps-b.json'), sampleMs: 0, read: async (list) => ({ at: Date.now(), reader: 'stub', host: { freeMemPct: 80 }, systems: Object.fromEntries(list.map(v => [v.name, v.pid ? { rssMB: 999, reader: 'stub' } : { notRead: 'not running' }])) }) });
+      const res = createResources(sup, { store: path.join(dir, 'caps-b.json'), sampleMs: 0, approve: async () => ({ approved: true, reason: 'test RAID' }), read: async (list) => ({ at: Date.now(), reader: 'stub', host: { freeMemPct: 80 }, systems: Object.fromEntries(list.map(v => [v.name, v.pid ? { rssMB: 999, reader: 'stub' } : { notRead: 'not running' }])) }) });
       res.setCaps('b', { rssLimitMB: 100, onOver: 'restart' }, { by: 'person' });
       sup.start('b', { by: 'test' }); const pid0 = await until(() => sup.get('b').pid);
       await res.sample();
@@ -60,6 +62,30 @@ const until = async (fn, ms = 15000) => { const t = Date.now() + ms; while (Date
       res.stop(); sup.shutdown({ by: 'test' });
     });
 
+    await test('CR-06', 'RAID\'s yes asked first: approved → restarted, the approval on the ledger', async () => {
+      const sup = mk(['c']); sups.push(sup);
+      const res = createResources(sup, { store: path.join(dir, 'caps-c.json'), sampleMs: 0, approve: async (cmd) => ({ approved: cmd === 'cos.restart c', reason: 'test RAID' }), read: async (list) => ({ at: Date.now(), reader: 'stub', host: { freeMemPct: 80 }, systems: Object.fromEntries(list.map(v => [v.name, v.pid ? { rssMB: 999, reader: 'stub' } : { notRead: 'not running' }])) }) });
+      res.setCaps('c', { rssLimitMB: 100, onOver: 'restart' }, { by: 'person' });
+      sup.start('c', { by: 'test' }); const pid0 = await until(() => sup.get('c').pid);
+      await res.sample();
+      const led = sup.ledger({ system: 'c' });
+      assert.ok(led.some(e => e.kind === 'over-limit' && /999 MB over its limit 100 MB/.test(e.why)), JSON.stringify(led.map(e => e.kind)));
+      assert.ok(await until(() => { const p = sup.get('c').pid; return p && p !== pid0; }), 'not restarted');
+      assert.ok(led.some(e => e.kind === 'raid-approved'), 'the approval on the ledger');
+      res.stop(); sup.shutdown({ by: 'test' });
+    });
+    await test('CR-07', 'RAID refuses, or does not answer (fails closed) → not restarted, its reason said', async () => {
+      const sup = mk(['d']); sups.push(sup);
+      const res = createResources(sup, { store: path.join(dir, 'caps-d.json'), sampleMs: 0, approve: async () => ({ approved: false, reason: 'RAID unreachable: ECONNREFUSED' }), read: async (list) => ({ at: Date.now(), reader: 'stub', host: { freeMemPct: 80 }, systems: Object.fromEntries(list.map(v => [v.name, v.pid ? { rssMB: 999, reader: 'stub' } : { notRead: 'not running' }])) }) });
+      res.setCaps('d', { rssLimitMB: 100, onOver: 'restart' }, { by: 'person' });
+      sup.start('d', { by: 'test' }); const pid0 = await until(() => sup.get('d').pid);
+      await res.sample();
+      const led = sup.ledger({ system: 'd' });
+      assert.ok(led.some(e => e.kind === 'over-limit' && /999 MB over its limit 100 MB/.test(e.why)), JSON.stringify(led.map(e => e.kind)));
+      const r = led.find(e => e.kind === 'raid-refused'); assert.ok(r && /RAID did not approve restarting d: RAID unreachable: ECONNREFUSED/.test(r.why), JSON.stringify(led.map(e => [e.kind, e.why])));
+      await new Promise(r => setTimeout(r, 600)); assert.strictEqual(sup.get('d').pid, pid0, 'not restarted');
+      res.stop(); sup.shutdown({ by: 'test' });
+    });
     await test('CR-04', 'under the halt floor: one held proposal by rule:resources for the lowest-priority compartment; nothing stopped', async () => {
       const sup = mk(['c', 'd']); sups.push(sup);
       const props = createProposals(sup);

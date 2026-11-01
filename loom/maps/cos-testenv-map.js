@@ -21,7 +21,7 @@ const FILES = [
   // 0.60.328 MG15b — COS's one supervisor and its server (docs/2026-10-24-cos-manager-phasemap.spec); Idearium reaches it over HTTP :7799 (/api/cos/*)
   ['clear-glass/src/automation/driver-port.js', I('clear-glass/src/automation/driver-port.js'), []],   // 0.60.333 AE2 — reached by orchestrator/automation over HTTP :7704
   ['cos/manager/supervisor.js', I('cos/manager/supervisor.js'), [I('cos/compartment/boundary.js')]],   // CP1a 0.60.355: preloads the wall into each walled child by path (--require, or NODE_OPTIONS for Electron)
-  ['cos/manager/resources.js',  I('cos/manager/resources.js'),  [I('cos/manager/usage.js'), I('lib/versionium-record.js')]],   // CP6a 0.60.356: caps, read back; the account; pressure → a proposal
+  ['cos/manager/resources.js',  I('cos/manager/resources.js'),  [I('cos/manager/usage.js'), I('lib/versionium-record.js'), I('lib/raid-port.js')]],   // CP6a 0.60.356: caps, read back; the account; pressure → a proposal · CP6b 0.60.361: a restart by rule asks RAID (approveTool, fails closed)
   ['lib/agent-tools/tools/clear-glass/macro-control.js', I('lib/agent-tools/tools/clear-glass/macro-control.js'), []],   // MB4 0.60.359: made by clear-glass/src/ipc/bridge.js runMacroAsPerson, passed to macro.js run as control
   ['lib/git-pr.js',             I('lib/git-pr.js'),             []],   // UP12 0.60.357: run by idearium/cli/route-commands.js row pr.open (local); git and gh by child process
   ['cos/manager/walls.js',      I('cos/manager/walls.js'),      []],   // CP1a: reads the supervisor it is given (declarations, ledger); no require

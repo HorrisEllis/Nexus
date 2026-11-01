@@ -18,7 +18,7 @@
  * compartment, for him to take or drop. Layers: default (the supervisor's policy) → declared (compartment.json runtime.process.resources,
  * maxOldSpaceMB) → his (cos/data/manager/caps.json, COS's own).
  *
- *   createResources(sup, { root, store, sampleMs, read, setPriority, getPriority, proposals, ring }) →
+ *   createResources(sup, { root, store, sampleMs, read, setPriority, getPriority, proposals, ring, approve }) →   approve: RAID's gate (CP6b; default lib/raid-port.js)
  *     { caps(name), setCaps(name, patch, { by }), all(), sample(), history(name), spawned(name, pid), heapMB(decl), stop() }
  */
 const fs = require('fs');
@@ -51,7 +51,11 @@ function validate(patch) {
 }
 
 function createResources(sup, { root = sup.root, store = null, sampleMs = 30000, read = null, setPriority = os.setPriority, getPriority = os.getPriority,
-  proposals = null, ring = 120 } = {}) {
+  proposals = null, ring = 120, approve = null } = {}) {
+  // 2026-11-01 CP6b — James: "cos backend, and hooking into idearium and raid. cos resource manager per compartment". An act COS takes by rule
+  // on a compartment is RAID's to approve (§9.1 the only write authority for the system's own decisions, §5.2): lib/raid-port.js approveTool,
+  // which fails closed (RAID unreachable → not approved). A proposal held for him stays his (USER_AUTONOMY): RAID gates rules, not him.
+  const askRaid = approve || ((command, opts) => require('../../lib/raid-port.js').approveTool('cos', command, opts));
   const FILE = store || path.join(process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager'), 'caps.json');
   const reader = read || require('./usage.js').readAsync;
   let his = {}; try { his = JSON.parse(fs.readFileSync(FILE, 'utf8')) || {}; } catch (_) {}
@@ -127,7 +131,11 @@ function createResources(sup, { root = sup.root, store = null, sampleMs = 30000,
         if (c.rssLimitMB != null && s.rssMB > c.rssLimitMB && !run.over) {
           run.over = true;
           sup.note('over-limit', `resident ${s.rssMB} MB over its limit ${c.rssLimitMB} MB (${s.reader})${c.onOver === 'restart' ? ' — restarted by rule' : ' — said; onOver is warn'}`, { by: 'rule:resources', system: v.name });
-          if (c.onOver === 'restart') { try { sup.restart(v.name, { by: 'rule:resources' }); } catch (_) {} }
+          if (c.onOver === 'restart') {
+            let ok = null; try { ok = await askRaid(`cos.restart ${v.name}`, { action: 'restart', intent: { action: 'restart', target: v.name }, causedBy: 'rule:resources', why: `resident ${s.rssMB} MB over ${c.rssLimitMB} MB` }); } catch (e) { ok = { approved: false, reason: `RAID unreachable: ${e.message}` }; }
+            if (ok && ok.approved) { sup.note('raid-approved', `RAID approved restarting ${v.name} by rule:resources${ok.reason ? ` (${ok.reason})` : ''}`, { by: 'rule:resources', system: v.name }); try { sup.restart(v.name, { by: 'rule:resources' }); } catch (_) {} }
+            else sup.note('raid-refused', `RAID did not approve restarting ${v.name}: ${(ok && ok.reason) || 'no answer'} — not restarted; it stays over its limit, said`, { by: 'rule:resources', system: v.name });
+          }
         }
       }
     }
