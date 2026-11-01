@@ -33,7 +33,7 @@ decisions:
 
 phases:
   CC1_one_model:
-    status: OPEN
+    status: "DONE 0.60.341 — three views; the dock's rails moved to CC2 (they carry outputs and control, which CC2 moves into build)"
     depends_on: [CC_D0_three_views]
     files: [idearium/ui/js/code-surface.js, idearium/ui/js/code-tab-panels.js, idearium/ui/js/code-dock.js]
     interface: [html]
@@ -60,3 +60,7 @@ phases:
     interface: [html]
     does: "driven in Clear Glass (never Playwright): three views, no duplicate ids, the COS line inside a run"
     proof: "the Clear Glass run's screenshots and counts (27 → 3 views + filters)"
+
+# ── ADDENDUM 2026-11-01 (0.60.341) — CC1 built; James said "do it phase 1" ──────────────────────────────────────────────────────────────
+# Built as mapped, with one part deferred: the dock's duplicate rails (plan, outputs, changes, tasks, control) stay until CC2. Their panels
+# (outputs above all) have no other home yet, and test-code-dock DK-13…18 drives them. "phase 1" was read as CC1, the phase just shown.
