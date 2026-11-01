@@ -7,11 +7,11 @@ intent: null
 summary: CP11_the_diagnostic_map (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793564674566
+exported_at: 1793576104468
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793564674566
-lastSeenAt: 1793564674566
+firstSeenAt: 1793576104468
+lastSeenAt: 1793576104468
 fingerprint: null
 payload:
   id: CP11_the_diagnostic_map
@@ -28,4 +28,4 @@ payload:
     - CP1_the_machine_and_its_door
   blocks: []
   spec: null
-  graph: 905f30f07bff5069
+  graph: bccdc8f84285b773

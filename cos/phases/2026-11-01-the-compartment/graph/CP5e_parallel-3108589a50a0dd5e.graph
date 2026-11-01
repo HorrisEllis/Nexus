@@ -1,0 +1,86 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP5e_parallel:3108589a50a0dd5e
+type: graph
+id: phase:CP5e_parallel:3108589a50a0dd5e
+context: dependency graph of phase CP5e_parallel
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793576104502
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104502
+lastSeenAt: 1793576104502
+fingerprint: null
+payload:
+  for: CP5e_parallel
+  kind: phase
+  repo: null
+  hash: 3108589a50a0dd5e
+  nodes:
+    - path: cos/spec/compartment.spec
+      role: changes
+      exists: true
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 9
+    deps:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5d_rewind_and_branch
+    dependents:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5f_benchmark
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D9_registry_then_cos_through_the_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5c_recording_the_deltas
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5d_rewind_and_branch
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D5_every_system_into_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D7_snapshots_per_compartment
+    downstream:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5f_benchmark
+    blockedBy:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5d_rewind_and_branch
+    unlocks:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5f_benchmark
+    conflicts:
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+        files:
+          - cos/spec/compartment.spec
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP6_resources
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP7_settings
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP8_agents_in_the_compartment
+        files:
+          - cos/manager
+    dangling: []
+    lines:
+      - layer 9 · blocked by CP5d_rewind_and_branch
+      - 'depends on (1): CP5d_rewind_and_branch · all upstream 16'
+      - 'needed by (1): CP5f_benchmark · finishing it unlocks CP5f_benchmark'
+      - 'same files as CP0_the_full_spec with no order between them: cos/spec/compartment.spec'
+      - 'same files as CP5_states_rewind_versions with no order between them: cos/manager'
+      - 'same files as CP6_resources with no order between them: cos/manager'
+      - 'same files as CP7_settings with no order between them: cos/manager'
+      - 'same files as CP8_agents_in_the_compartment with no order between them: cos/manager'
+    edges:
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP5d_rewind_and_branch
+        kind: declared

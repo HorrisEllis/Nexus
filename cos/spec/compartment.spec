@@ -74,6 +74,20 @@ spec:
       behavioral_contracts: ["allow equals the census's boundaryFor(system) when the declaration is written", "crossings come only from the wall's own lines on COS's ledger"]
       error_paths: ["no declaration → mode none, said as bare", "a wall line that does not parse → kept as a line, not a crossing"]
 
+    - id: PauseState
+      name: PauseState
+      description: "Whether a compartment's process tree is suspended, as COS set it and as the OS reads it back (CP5b)."
+      fields:
+        system:    "string — the declared process"
+        state:     "string — paused | running (the supervisor's view)"
+        pids:      "number[] — the process and its children, suspended or resumed together"
+        os:        "string — suspended | running | mixed | unknown — read back from the OS (Linux /proc/<pid>/stat T, macOS ps T, Windows every thread's WaitReason Suspended)"
+        via:       "string — SIGSTOP/SIGCONT | NtSuspendProcess/NtResumeProcess"
+        by:        "string — person | rule:<id> (a rule's pause approved by RAID)"
+        since:     "number — ms epoch the pause was asked"
+      behavioral_contracts: ["os is read from the OS after every act, never assumed", "a paused system is not restarted, crashed or idled by COS"]
+      error_paths: ["the OS cannot be asked → os unknown, said; the act's error kept"]
+
     - id: CompartmentCaps
       name: CompartmentCaps
       description: "What one compartment may use, by layer, and how each part was applied (ResourceAllocation's memory and cpu parts, cos-manager.spec)."
@@ -270,6 +284,42 @@ spec:
       behavioral_contracts: ["no restart by rule without RAID's yes", "his proposals stay his (USER_AUTONOMY)"]
       error_paths: ["RAID refuses or does not answer → not restarted, 'raid-refused' with the reason"]
       acceptance: ["approved → restarted, 'raid-approved' on the ledger; refused or unreachable → not restarted, the reason on the ledger"]
+
+    - id: MOD-CP-SUSPEND
+      name: suspend
+      uuid: nexus-cos-compartment-suspend-v1-0000-2026-1101-001
+      path: cos/manager/suspend.js
+      phase: CP5b_pause_resume
+      description: >-
+        The OS primitive under pause: the process and its children (Linux and macOS by ps ppid, Windows by Win32_Process ParentProcessId)
+        suspended or resumed together. Linux and macOS: SIGSTOP / SIGCONT. Windows: NtSuspendProcess / NtResumeProcess through PowerShell
+        (Add-Type over ntdll), no native module. Every act read back from the OS (PauseState.os).
+      deps: []
+      schema_refs: [PauseState]
+      exports: ["tree(pid) → Promise<number[]>", "suspend(pid) → Promise<{ ok, pids, via, os, error? }>", "resume(pid) → Promise<{ ok, pids, via, os, error? }>", "osState(pids) → Promise<'suspended'|'running'|'mixed'|'unknown'>"]
+      gate_pipeline: ["GATE-CP5b-001: the tree found", "GATE-CP5b-002: each pid acted on, children first for resume last", "GATE-CP5b-003: read back from the OS"]
+      behavioral_contracts: ["no pid outside the tree is touched", "the read-back decides ok, not the call's return"]
+      error_paths: ["PowerShell or ps missing → ok false, the error, os unknown", "a pid gone → skipped, said"]
+      acceptance: ["a fixture's tree suspended reads back suspended; resumed reads back running"]
+
+    - id: MOD-CP-PAUSE
+      name: pause
+      uuid: nexus-cos-compartment-pause-v1-0000-2026-1101-001
+      path: cos/manager/supervisor.js
+      phase: CP5b_pause_resume
+      description: >-
+        James, 2026-11-01: "the entire sandbox is rewindable/pausable/…". pause(name, { by }) and resume(name, { by }) on the supervisor: the
+        ledger line written first (§9.2), then MOD-CP-SUSPEND; state 'paused' with its PauseState; the idle reaper and the crash path leave a
+        paused system alone; stop or restart of a paused system resumes it first so its exit is real. The manager's route POST
+        /api/cos/systems/:name/(pause|resume) { by }: a person's act is his; a rule's is RAID's to approve (lib/raid-port.js, fails closed,
+        CP6b); an agent proposes (CP-005, 403). Rows `cos pause <system>`, `cos resume <system>`.
+      deps: [{ name: suspend }, { name: supervisor }, { name: raid-port }]
+      schema_refs: [PauseState]
+      exports: ["sup.pause(name, { by }) → Promise<view>", "sup.resume(name, { by }) → Promise<view>", "POST /api/cos/systems/:name/pause|resume", "rows `cos pause`, `cos resume`"]
+      gate_pipeline: ["GATE-CP5b-010: running, and not already paused", "GATE-CP5b-011: by a person, or a rule RAID approved; an agent refused", "GATE-CP5b-012: ledger first, then the act, then the read-back"]
+      behavioral_contracts: ["a paused system is never restarted by rule, idled or counted as crashed", "the state says paused only when the OS reads suspended"]
+      error_paths: ["the OS act fails → state unchanged, 'pause-failed' on the ledger with the error", "not running → nothing done, said"]
+      acceptance: ["a fixture paused: the OS reads it suspended, its heartbeat stops, nothing restarts it; resumed: it beats again from where it was"]
 
     - id: MOD-CP-SNAPSHOTS
       name: snapshots

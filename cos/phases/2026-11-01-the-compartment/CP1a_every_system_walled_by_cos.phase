@@ -4,21 +4,23 @@ type: phase
 id: docs_2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
 context: pipeline phase CP1a_every_system_walled_by_cos of docs/2026-11-01-the-compartment-phasemap.spec
 intent: null
-summary: CP1a_every_system_walled_by_cos (?) — 21 file(s)
+summary: CP1a_every_system_walled_by_cos (?) — 23 file(s)
 system: idearium
 tags: []
-exported_at: 1793564674580
+exported_at: 1793576104478
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793564674580
-lastSeenAt: 1793564674580
+firstSeenAt: 1793576104478
+lastSeenAt: 1793576104478
 fingerprint: null
 payload:
   id: CP1a_every_system_walled_by_cos
   map: docs/2026-11-01-the-compartment-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    DONE 0.60.355 — test-cos-walls CW-01..05 (the real Ollama bridge behind its enforcing wall; a
+    real Electron main walled through NODE_OPTIONS)
   files:
     - scripts/cos-walls.js
     - cos/manager/walls.js
@@ -39,7 +41,9 @@ payload:
     - versionium/compartment.json
     - idearium/cli/route-commands.js
     - cos/ui/overview/page.js
+    - loom/maps/cos-testenv-map.js
     - tests/modules/test-cos-walls.test.js
+    - tests/modules/test-cos-supervisor.test.js
     - tests/modules/run-all.js
   depends_on:
     - CP_D5_every_system_into_cos
@@ -48,4 +52,4 @@ payload:
   blocks:
     - MOD-CP-WALLS
   spec: cos/spec/compartment.spec
-  graph: abbe83577a3b5a96
+  graph: 5adedc7b8e26351b

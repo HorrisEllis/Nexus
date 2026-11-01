@@ -44,7 +44,9 @@
         "stop",
         "restart",
         "reset-circuit",
-        "touch"
+        "touch",
+        "pause",
+        "resume"
       ]
     },
     {

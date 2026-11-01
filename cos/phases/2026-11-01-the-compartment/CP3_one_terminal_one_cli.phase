@@ -7,11 +7,11 @@ intent: null
 summary: CP3_one_terminal_one_cli (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793564674546
+exported_at: 1793576104443
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793564674546
-lastSeenAt: 1793564674546
+firstSeenAt: 1793576104443
+lastSeenAt: 1793576104443
 fingerprint: null
 payload:
   id: CP3_one_terminal_one_cli
@@ -25,4 +25,4 @@ payload:
     - CP1_the_machine_and_its_door
   blocks: []
   spec: null
-  graph: 9b78f546414af7db
+  graph: 3cee4d1262232a5b

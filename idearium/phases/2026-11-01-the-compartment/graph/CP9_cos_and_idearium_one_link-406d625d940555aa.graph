@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 9 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793564674561
+exported_at: 1793576104460
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793564674561
-lastSeenAt: 1793564674561
+firstSeenAt: 1793576104460
+lastSeenAt: 1793576104460
 fingerprint: null
 payload:
   for: CP9_cos_and_idearium_one_link
@@ -301,10 +301,7 @@ payload:
       - with: docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
         files:
           - cos/manager/server.js
-      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
-        files:
-          - cos/manager/server.js
-      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP6a_caps_priority_accounting
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5b_pause_resume
         files:
           - cos/manager/server.js
       - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
@@ -322,12 +319,7 @@ payload:
         EAS3_emerge_at_the_top_of_nexus · all upstream 19
       - 'needed by (1): CP10_miniworlds'
       - 'same files as CP11_the_diagnostic_map with no order between them: cos/manager/server.js'
-      - >-
-        same files as CP1a_every_system_walled_by_cos with no order between them:
-        cos/manager/server.js
-      - >-
-        same files as CP6a_caps_priority_accounting with no order between them:
-        cos/manager/server.js
+      - 'same files as CP5b_pause_resume with no order between them: cos/manager/server.js'
       - >-
         same files as CP5a_snapshots_per_compartment with no order between them:
         cos/manager/server.js

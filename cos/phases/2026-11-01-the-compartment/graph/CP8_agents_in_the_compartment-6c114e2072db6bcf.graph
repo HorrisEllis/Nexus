@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1793564674558
+exported_at: 1793576104457
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793564674558
-lastSeenAt: 1793564674558
+firstSeenAt: 1793576104457
+lastSeenAt: 1793576104457
 fingerprint: null
 payload:
   for: CP8_agents_in_the_compartment
@@ -57,6 +57,18 @@ payload:
       - with: docs/2026-11-01-the-compartment-phasemap.spec::CP7_settings
         files:
           - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5c_recording_the_deltas
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5d_rewind_and_branch
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5e_parallel
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5f_benchmark
+        files:
+          - cos/manager
     dangling: []
     lines:
       - layer 7 · blocked by CP1_the_machine_and_its_door, CP3_one_terminal_one_cli
@@ -65,6 +77,9 @@ payload:
       - 'same files as CP5_states_rewind_versions with no order between them: cos/manager'
       - 'same files as CP6_resources with no order between them: cos/manager'
       - 'same files as CP7_settings with no order between them: cos/manager'
+      - 'same files as CP5c_recording_the_deltas with no order between them: cos/manager'
+      - 'same files as CP5d_rewind_and_branch with no order between them: cos/manager'
+      - … and 2 more phases sharing its files without an order
     edges:
       - from: docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
         kind: declared

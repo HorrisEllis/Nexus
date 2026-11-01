@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP5c_recording_the_deltas
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP5c_recording_the_deltas
+context: pipeline phase CP5c_recording_the_deltas of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP5c_recording_the_deltas (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793576104498
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104498
+lastSeenAt: 1793576104498
+fingerprint: null
+payload:
+  id: CP5c_recording_the_deltas
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/foundation/snapshot.js
+  depends_on:
+    - CP5a_snapshots_per_compartment
+  blocks:
+    - MOD-CP-DELTAS
+  spec: cos/spec/compartment.spec
+  graph: 7e96d7a5ed968cb9

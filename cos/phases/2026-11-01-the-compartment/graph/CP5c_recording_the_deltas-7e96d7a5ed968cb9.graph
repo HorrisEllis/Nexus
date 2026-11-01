@@ -1,0 +1,152 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP5c_recording_the_deltas:7e96d7a5ed968cb9
+type: graph
+id: phase:CP5c_recording_the_deltas:7e96d7a5ed968cb9
+context: dependency graph of phase CP5c_recording_the_deltas
+intent: null
+summary: 9 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793576104498
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104498
+lastSeenAt: 1793576104498
+fingerprint: null
+payload:
+  for: CP5c_recording_the_deltas
+  kind: phase
+  repo: null
+  hash: 7e96d7a5ed968cb9
+  nodes:
+    - path: cos/foundation/snapshot.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/snapshot.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/watchdog/actions.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/agent-tools/tools/sandbox/self-repair.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/compartment/process-runner.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/axioms.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/foundation/snapshot.js
+      to: cos/foundation/axioms.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cos/foundation/snapshot.js
+      kind: requires
+    - from: cos/cli/commands/snapshot.js
+      to: cos/foundation/snapshot.js
+      kind: requires
+    - from: cos/watchdog/actions.js
+      to: cos/foundation/snapshot.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/self-repair.js
+      to: cos/foundation/snapshot.js
+      kind: requires
+  crossings:
+    - from: cortex/boot.js
+      to: cos/foundation/snapshot.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/sandbox/self-repair.js
+      to: cos/foundation/snapshot.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
+    dependents:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5d_rewind_and_branch
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D9_registry_then_cos_through_the_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D5_every_system_into_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D7_snapshots_per_compartment
+    downstream:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5d_rewind_and_branch
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5e_parallel
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5f_benchmark
+    blockedBy:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
+    unlocks:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5d_rewind_and_branch
+    conflicts:
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP6_resources
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP7_settings
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP8_agents_in_the_compartment
+        files:
+          - cos/manager
+    dangling: []
+    lines:
+      - layer 7 · blocked by CP5a_snapshots_per_compartment
+      - 'depends on (1): CP5a_snapshots_per_compartment · all upstream 14'
+      - >-
+        needed by (1): CP5d_rewind_and_branch · all downstream 3 · finishing it unlocks
+        CP5d_rewind_and_branch
+      - 'same files as CP5_states_rewind_versions with no order between them: cos/manager'
+      - 'same files as CP6_resources with no order between them: cos/manager'
+      - 'same files as CP7_settings with no order between them: cos/manager'
+      - 'same files as CP8_agents_in_the_compartment with no order between them: cos/manager'
+    edges:
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
+        kind: declared

@@ -101,7 +101,17 @@ decisions:
     by: "his, 2026-11-01: \"also can you add the nexus-sync options to the control panel\""
     by_the_axioms: "§5.15 (Idearium owns its sync; COS asks its route), BC_D6 (each value with its layer), §17.12 (a change of them recorded)"
   CP_D9_the_whole_sandbox_per_system:
-    status: "DECIDED 2026-11-01 (his ask); the two tiers decided by his axioms, the default tier his to confirm"
+    status: "DECIDED 2026-11-01 (his ask; the default tier and the first build his, below)"
+    his_choices: >-
+      2026-11-01, asked which tier is the default for his systems (process with the machine opt-in, recommended by the coder; a machine for
+      every system; a machine for the ones he names): "Process, VM opt-in". Asked what to build first (the menu, pause and snapshots,
+      recommended; the network switch and throttle; cores and disk; recording and rewind): "Menu + pause + snapshots". Order: CP5b (pause,
+      backend) → CP5a (snapshots) → CP2 (the menu for every system).
+    correction: >-
+      James, 2026-11-01, the coder having asked both: "axioms 3.1 are law." Both were the axioms' to settle, not problems for him: the order is
+      §3.1 (bottom-up, foundation first) and §3.4 (raw → library → API → CLI → UI), so pause and snapshots before the menu; the default tier is
+      §0.5 (complexity earns its existence) with §0.1's evidence (0.2% free memory), so the process tier, the machine tier opt-in. His answers
+      match what they decide. Asking was the coder's error, recorded (§17.3); the next decision of this kind is taken by the axioms and cited.
     james: >-
       "like im saying setting threads/cores, memory/ram, hard drive space, sandboxed, system state hooked into controls, the entire sandbox is
       rewindable/pausable/recordable/branchable/parraelel and benchmarked, using deltas inbetween events, state recording, orchastration, all of
@@ -341,11 +351,11 @@ phases:
     does: "a compartment's network on, off (loopback only) or throttled (bytes/s): process tier in its wall (net, http, https, dgram refused or wrapped), machine tier by QMP set_link and the netdev throttle; switched live from its menu; each change by a person or RAID's rule, recorded"
     proof: "a fixture refused outbound when off; its throughput under the throttle; switched back live"
   CP5b_pause_resume:
-    status: OPEN
+    status: "DONE 0.60.362 — test-cos-pause PA-01..04 on Linux (SIGSTOP/SIGCONT, real process trees). The Windows path (NtSuspendProcess through PowerShell) is written and UNPROVEN until it runs on his machine (§1.1); the screen is CP2"
     spec: cos/spec/compartment.spec
-    blocks: [MOD-CP-PAUSE]
-    depends_on: [CP1a_every_system_walled_by_cos, CP_D9_the_whole_sandbox_per_system]
-    files: [cos/manager/supervisor.js]
+    blocks: [MOD-CP-SUSPEND, MOD-CP-PAUSE]
+    depends_on: [CP1a_every_system_walled_by_cos, CP6b_raid_approves_what_cos_does_by_rule, CP_D9_the_whole_sandbox_per_system]
+    files: [cos/manager/suspend.js, cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, tests/modules/test-cos-pause.test.js]
     does: "pause and resume a compartment: Linux SIGSTOP/SIGCONT, Windows suspend/resume of the process tree, the machine tier QMP stop/cont; its state 'paused' on the ledger and the screen; the watchdog does not count a paused system as dead"
     proof: "a fixture paused stops beating, is not restarted, resumes where it was"
   CP5c_recording_the_deltas:

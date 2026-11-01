@@ -436,6 +436,7 @@ const SUITES = [
   'test-emergence-channel.test.js',
   'test-tension-channel.test.js',
   'test-cos-channel.test.js',
+  'test-cos-pause.test.js',
   'test-update-menu.test.js',
   'test-friction-home.test.js',
   'test-cos-ui-starts.test.js',

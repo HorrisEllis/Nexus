@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP6e_network_switch_and_throttle
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP6e_network_switch_and_throttle
+context: pipeline phase CP6e_network_switch_and_throttle of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP6e_network_switch_and_throttle (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793576104493
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104493
+lastSeenAt: 1793576104493
+fingerprint: null
+payload:
+  id: CP6e_network_switch_and_throttle
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/compartment/boundary.js
+    - cos/manager/walls.js
+    - cos/compartment/qemu-runtime.js
+  depends_on:
+    - CP1a_every_system_walled_by_cos
+    - CP_D9_the_whole_sandbox_per_system
+  blocks:
+    - MOD-CP-NETWORK
+  spec: cos/spec/compartment.spec
+  graph: 17011dcc49054eea

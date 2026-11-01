@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793564674532
+exported_at: 1793576104428
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793564674532
-lastSeenAt: 1793564674532
+firstSeenAt: 1793576104428
+lastSeenAt: 1793576104428
 fingerprint: null
 payload:
   for: CP0_the_full_spec
@@ -80,6 +80,7 @@ payload:
       - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
       - docs/2026-11-01-the-compartment-phasemap.spec::CP2_the_window
       - docs/2026-11-01-the-compartment-phasemap.spec::CP3_one_terminal_one_cli
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP3a_the_agent_cli
       - docs/2026-11-01-the-compartment-phasemap.spec::CP4_files_and_code
       - docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
       - docs/2026-11-01-the-compartment-phasemap.spec::CP6_resources
@@ -89,14 +90,22 @@ payload:
     blockedBy: []
     unlocks:
       - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5e_parallel
+        files:
+          - cos/spec/compartment.spec
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5f_benchmark
+        files:
+          - cos/spec/compartment.spec
     dangling: []
     lines:
       - layer 1 · ready
       - 'depends on (1): CP_D0_a_compartment_is_all_of_it'
       - >-
-        needed by (1): CP1_the_machine_and_its_door · all downstream 47 · finishing it unlocks
+        needed by (1): CP1_the_machine_and_its_door · all downstream 48 · finishing it unlocks
         CP1_the_machine_and_its_door
+      - 'same files as CP5e_parallel with no order between them: cos/spec/compartment.spec'
+      - 'same files as CP5f_benchmark with no order between them: cos/spec/compartment.spec'
     edges:
       - from: docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
         kind: declared
