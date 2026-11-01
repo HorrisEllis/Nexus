@@ -92,3 +92,43 @@ phases:
     proof: "the bench's report, both columns"
 
 build_order: "EB1 (Emerge's repo, then a new lock) → EB2 → EB3; EB4 from EB1 on; EB5 last."
+
+# ── ADDENDUM 2026-11-01 — his correction: "look at idearium. all of that is in there" ───────────────────────────────────────────────
+# James, 2026-11-01, after the coder listed what it would take for Emerge to beat a frontier model (complete specs, small pieces, strict
+# checks, many cheap tries, reuse, memory, measurement): "look at idearium. all of that is in there"
+# He is right; the coder answered from memory instead of from the tree (his 2026-10-17 rule, "always make effective use of what you already
+# have"). Read in the tree on 2026-11-01:
+#   specs → phases → .phase + graph (DG2);
+#   chunks (spec engine, WARP chunk dispatch);
+#   lib/pipeline-routing.js: local-first, chain, a learned order (economy router), breakers, failure classes, and verdicts that teach it;
+#   test-first build plans (idearium/repo/build-plan.js);
+#   the component store; the flight recorder (lib/flight-data.js: calls, tokens, attempts, what was wasted);
+#   COS compartments, rewind and Versionium.
+# Emerge is already an Idearium repo (nexus/emerge, 0.60.340, in compartment nexus-self-emerge).
+# So EB4 is re-read: no new rebuild machinery. Emerge's phases are built through Idearium, local-first, and read in its flight recorder.
+# Two parts Idearium does not have, found by reading it:
+# - it changes the MODEL on a failed attempt (the routing chain), never the METHOD; his rule lives in lib/emergence.js and lib/end-state.js,
+#   which no Idearium build uses;
+# - its attempts are sequential fallback; nothing writes several candidates at once and keeps the one its tests pass.
+phases_addendum_2026_11_01:
+  EB4a_idearium_innovates_the_method:
+    status: OPEN
+    depends_on: [EB_D0_his_bar]
+    files: [lib/pipeline-routing.js, lib/emergence.js, lib/end-state.js, idearium/repo/phases.js]
+    interface: [route, html]
+    does: "when one failure class repeats on a phase (pivotAfter, default 3), the next attempt is asked for a different method, said as such (lib/emergence.js's pivot prompt), not just sent to the next model; the pivot is a row in the flight recorder and a run in the Emergence channel"
+    proof: "a fixture phase whose first method always fails the test: three same-class failures, then a pivot attempt with the changed ask, and its row in the flight data"
+  EB4b_many_cheap_tries:
+    status: OPEN
+    depends_on: [EB4a_idearium_innovates_the_method]
+    files: [lib/pipeline-routing.js, idearium/repo/phases.js]
+    interface: [route, html]
+    does: "a phase may ask for N candidates at once from local models (each in its own COS branch); its tests choose; the flight recorder counts all N"
+    proof: "N=5 on a fixture phase with one passing candidate: that one lands, four are counted as spent"
+  EB4_the_rebuild_loop_reread:
+    status: OPEN
+    depends_on: [EB1_the_registry_whole, EB4a_idearium_innovates_the_method]
+    files: [idearium/repo, emerge]
+    interface: [html]
+    does: "EB4 as Idearium's own work: nexus/emerge's phases built local-first through Idearium, the pivots and candidates from EB4a/EB4b, each run in the flight recorder; replaces EB4's 'rebuild loop' wording (kept above, §0.3)"
+    proof: "as EB4's, read from the flight recorder"
