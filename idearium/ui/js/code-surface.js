@@ -49,6 +49,14 @@ const CS = { uuid: null, overview: null, overviewError: null, open: null, text: 
   agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' }, activity: false, loadingChanges: false, plan: null, live: [],
   view: (() => { try { return _csViewOf(localStorage.getItem('idearium.cs.view')); } catch (_) { return 'files'; } })(), showChanges: false };
 
+// CC1 — CS.view reads as one of the three; setting it maps the old ids as csView does, so code that sets it directly (as before 0.60.341)
+// lands where it meant: 'changes' is Files with the agent's changes, 'files' is the file, 'plans'/'cos' Build, 'runs' Flight.
+(function () {
+  let v = _csViewOf(CS.view);
+  Object.defineProperty(CS, 'view', { enumerable: true, configurable: true, get: () => v,
+    set: (x) => { if (x === 'changes') CS.showChanges = true; else if (x === 'files') CS.showChanges = false; v = _csViewOf(x); } });
+})();
+
 function _csq(s) { return escapeHtml(String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'")); }
 
 function _csReset(repo) {
@@ -447,6 +455,7 @@ function csAgentToggle() {
 function csPaint() {
   const el = document.getElementById('repo-subtab-code'); const repo = CURRENT_API_REPO;
   if (!el || !repo || CS.uuid !== repo.uuid) return;
+
   const keep = document.getElementById('cs-code'); const scroll = keep ? keep.scrollTop : 0;
   const ed = document.getElementById('cs-editor'); const edState = ed ? { a: ed.selectionStart, b: ed.selectionEnd, top: ed.scrollTop, focus: document.activeElement === ed } : null;   // §CE6
   const talk = document.getElementById('cs-talk');

@@ -564,6 +564,10 @@
   <div class="ch" id="ch-emerge">
     <iframe id="emerge-iframe" src="" style="width:100%;height:100%;border:none;background:#0d0d0f" title="Emerge IDE"></iframe>
   </div>
+  <!-- 2026-11-01 TV3 — the emergence channel, its own page (TV_D2): channels/emergence/ -->
+  <div class="ch" id="ch-emergence" style="padding:0;overflow:hidden;">
+    <iframe id="emergence-iframe" src="" style="width:100%;height:100%;border:none;background:#05060a" title="Emergence"></iframe>
+  </div>
 
 <!-- Top bar — channel name, visible when menu open -->
 <div id="top-bar">
@@ -777,6 +781,8 @@ const CH_META=[
   {id:'ch-mistral-agent',    name:'MISTRAL',     accent:'Local · Ollama · Enterprise · NCP', hidden:true},
   {id:'ch-gemini-agent',     name:'GEMINI',      accent:'Vision · multimodal · NCP', hidden:true},
   {id:'ch-perplexity-agent', name:'PERPLEXITY',  accent:'Web-grounded · citations · NCP', hidden:true},
+  // 2026-11-01 TV3 — James: "the tv ui needs the emergence channel". Appended, never inserted: CH_INSPECT is read by position.
+  {id:'ch-emergence',  name:'EMERGENCE',  accent:'Crystallised · Forming · Runs', railLabel:'✦ Emergence'},
 ];
 // §EDITABLE 2026-09-20 — window.CH_META was never set (menu.js's own
 // _buildNavButtons() already expected it: `window.CH_META || []` always
@@ -796,7 +802,12 @@ const CHANNEL_STORE_KEY = 'nexus.tv.channels';
 function loadChannelList() {
   try {
     const raw = localStorage.getItem(CHANNEL_STORE_KEY);
-    if (raw) { const parsed = JSON.parse(raw); if (Array.isArray(parsed) && parsed.length) return parsed; }
+    // 2026-11-01 TV3 — a list saved before a channel was built never showed it (EMERGENCE would never appear for him once he had edited
+    // the rail). A built-in channel missing from the saved list is added at its end; one he removed by hand is hidden, never deleted, so
+    // it stays in the list and is not re-added.
+    if (raw) { const parsed = JSON.parse(raw); if (Array.isArray(parsed) && parsed.length) {
+      const have = new Set(parsed.map(c => c && c.id));
+      return parsed.concat(DEFAULT_CH_META.filter(c => !have.has(c.id)).map(c => ({...c}))); } }
   } catch (e) { console.warn('[tv-shell] channel list load failed, using defaults:', e.message); }
   return DEFAULT_CH_META.map(c => ({...c}));
 }
@@ -885,6 +896,7 @@ function tune(n){
   if(chId==='ch-causal'){cgLoad();}
   if(chId==='ch-conversations'){convLoad();}
   if(chId==='ch-emerge'){const f=document.getElementById('emerge-iframe');if(f&&!f.src)f.src='../emerge/emerge-ide.html';}
+  if(chId==='ch-emergence'){const f=document.getElementById('emergence-iframe');if(f&&!f.getAttribute('src'))f.src='channels/emergence/emergence.html';else if(f&&f.contentWindow&&f.contentWindow.EMERGENCE)f.contentWindow.EMERGENCE.load();}
 }
 
 // ── Inspect overlay — contextual diagnostics for whatever channel is active ──

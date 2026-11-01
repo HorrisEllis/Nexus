@@ -64,3 +64,8 @@ phases:
 # ── ADDENDUM 2026-11-01 (0.60.341) — CC1 built; James said "do it phase 1" ──────────────────────────────────────────────────────────────
 # Built as mapped, with one part deferred: the dock's duplicate rails (plan, outputs, changes, tasks, control) stay until CC2. Their panels
 # (outputs above all) have no other home yet, and test-code-dock DK-13…18 drives them. "phase 1" was read as CC1, the phase just shown.
+
+# ── ADDENDUM 2026-11-01 (0.60.344) — CC1's old ids, set directly ─────────────────────────────────────────────────────────────────────
+# The full suite found it: test-agent-live set CS.view = 'changes' (and later 'files') directly, as code before 0.60.341 does, and got a blank
+# view. CC1 had mapped the old ids only inside csView(). Now CS.view is a property that maps on every set, so 'changes' is Files with the
+# agent's changes, 'files' the file, 'plans' and 'cos' Build, 'runs' Flight, however it is set. test-agent-live 5/5.

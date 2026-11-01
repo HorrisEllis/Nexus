@@ -2470,6 +2470,22 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     return json(res, r.ok ? 200 : (r.error==='emerge offline'?503:500), r);
   }
 
+  // ── Emergence — /api/emergence/{patterns,liminal,sessions} (2026-11-01 TV3) ───────────────────────────────────────────────
+  // James, 2026-11-01: "the tv ui needs the emergence channel". The TV asks only :9000 (TV_D1); what emerges is Intelligence's (its
+  // crystallised patterns, its liminal spaces), asked through its routes; his emergence runs are lib/emergence.js's (the kernel). A system
+  // that does not answer is said by name, with a 503, never as an empty list.
+  if (top === 'api' && sub === 'emergence' && M === 'GET') {
+    const what = seg[2] || '';
+    if (what === 'patterns') { const r = await GET('intelligence', '/api/intelligence/patterns', 4000); return json(res, r && r.ok !== false ? 200 : 503, r && r.ok !== false ? r : { ok: false, error: `intelligence did not answer: ${(r && r.error) || 'no reply'}` }); }
+    if (what === 'liminal') {
+      const [st, ls] = await Promise.all([GET('intelligence', '/api/liminal-space/status', 4000), GET('intelligence', `/api/liminal-space/list${QS.get('focalPoint') ? `?focalPoint=${encodeURIComponent(QS.get('focalPoint'))}` : ''}`, 4000)]);
+      if (!st || st.ok === false) return json(res, 503, { ok: false, error: `intelligence did not answer: ${(st && st.error) || 'no reply'}` });
+      return json(res, 200, { ok: true, status: st, items: (ls && ls.items) || [] });
+    }
+    if (what === 'sessions') { const r = require('../lib/emergence.js').sessions({ limit: Number(QS.get('limit')) || 20 }); return json(res, r.ok ? 200 : 503, r); }
+    return json(res, 404, { ok: false, error: 'emergence: patterns | liminal | sessions' });
+  }
+
   // ── Autopilot proxy ───────────────────────────────────────────────────────
   // Process supervisor — separate from every system above. Those report
   // "did my HTTP endpoint respond"; this reports real kernel state (restart

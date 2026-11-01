@@ -1510,7 +1510,11 @@ function handleRequest(method, pathname, searchParams, body, json) {
 
   // GET /api/intelligence/patterns
   if (method === 'GET' && pathname === '/api/intelligence/patterns') {
-    json(200, { ok: true, patterns: _patternIndex, total: _patternIndex.length });
+    // 2026-11-01 TV3 — each pattern carries its own sentence (said, as the log says it) and self: one side of it is Intelligence's own
+    // event, so it shows Intelligence watching itself (his boot log of 2026-11-01: "command invoked always fires alongside" everything)
+    const _self = (t) => /^(cortex\.)?intelligence[.:]/.test(String(t || ''));
+    const patterns = _patternIndex.map(p => ({ ...p, said: _humanPattern(p), self: [p.typeA, p.typeB, p.precursorType].some(_self) }));
+    json(200, { ok: true, patterns, total: patterns.length, self: patterns.filter(p => p.self).length });
     return true;
   }
 

@@ -65,4 +65,33 @@ phases:
     does: "each of ~20 channels and the overlays (menu, rewind, inspect, the spec wizard) moved into lib/ui/tv-shell/channels/<name>/ as .html, .css, .js; index.html keeps the shell; channels.json drives the rail; the 187 inline styles into each channel's css; the old index.html archived"
     proof: "in Clear Glass, every channel opens and shows what it showed before (screenshots before and after); a channel added by a folder and a line in channels.json, one removed by deleting its line, nothing else breaks"
 
-build_order: "TV0 → TV1 → TV2. The orchestrator change in TV1 is the orchestrator's (its own file), made through its route table."
+  TV3_the_emergence_channel:
+    status: "DONE 0.60.344"
+    depends_on: [TV_D1_one_endpoint, TV_D2_each_channel_its_own_page]
+    files: [lib/emergence.js, orchestrator/orchestrator.js, idearium/cli/route-commands.js, lib/ui/tv-shell/channels/emergence/emergence.html, lib/ui/tv-shell/channels/emergence/emergence.css, lib/ui/tv-shell/channels/emergence/emergence.js, lib/ui/tv-shell/index.html]
+    interface: [route, cli, html]
+    does: >-
+      James, 2026-11-01: "the tv ui needs the emergence channel". A channel for what emerges in Nexus, from what already exists:
+        - Intelligence's crystallised patterns (GET /api/intelligence/patterns: co-occurrence, failure precursor, bottleneck, cross-system
+          causal, each with its count and confidence; noise-tainted ones marked, and what Intelligence sees of itself hidden by a switch);
+        - the liminal spaces where a pattern forms before it crystallises (GET /api/liminal-space/status, /list);
+        - his emergence runs (lib/emergence.js, "if it can't innovate the problem, innovate the method"): axioms, end state, attempts,
+          method pivots, outcome. Kept in the emergence_sessions table, with no reader until now (sessions()).
+      Backend first: sessions() in lib/emergence.js. The route: the orchestrator forwards GET /api/emergence/{patterns,liminal,sessions}
+      (TV_D1: one endpoint, :9000). The command rows: emergence.patterns, emergence.liminal, emergence.sessions. Then the channel, its own
+      page (TV_D2), loaded into the rail like the Emerge IDE's.
+    reading: "TO CONFIRM — the coder's reading of 'emergence': what Intelligence crystallises plus his emergence runs; not Emerge (the language), which has its own channel (EMERGE IDE)."
+    proof: "the route against a fixture Intelligence answers all three, and says which is down; the channel driven in Clear Glass shows each, with the self-echo switch counting what it hides"
+
+build_order: "TV0 → TV1 → TV2. TV3 stands alone (its own page, its own route). The orchestrator change in TV1 is the orchestrator's (its own file), made through its route table."
+
+# ── ADDENDUM 2026-11-01 (0.60.344) — TV3 built ────────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-11-01: "the tv ui needs the emergence channel". Built in his order: backend (lib/emergence.js sessions(); Intelligence's own
+# pattern route now carries each pattern's sentence and self), route (the orchestrator's GET /api/emergence/{patterns,liminal,sessions}),
+# command rows (emergence patterns | liminal | sessions), then the channel (lib/ui/tv-shell/channels/emergence/, its own page, TV_D2).
+# Found on the way, fixed in the same release:
+# - a rail he had saved (the channel editor) never showed a channel built after it. loadChannelList now adds a built-in channel missing from
+#   the saved list at its end. One he hid stays hidden: the editor never deletes a built-in.
+# - CH_INSPECT (the inspect overlay) is read by position and has 14 entries for 22 channels: channels past the 14th have no inspect entry.
+#   Pre-existing, not fixed here, said (TV2 moves each channel to its own page and ends the positional list).
+# The orchestrator's forward is checked in its source (EC-04), not run: the orchestrator cannot be started on a test port.
