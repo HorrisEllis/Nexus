@@ -63,4 +63,13 @@ phases:
     does: "status and regime routes, two command rows, the view"
     proof: "`intelligence causal` shows shared events after a fixture run"
 
-order: "CI1 → (CI2, CI3) → CI5; CI4 after ML3 (the batched learning loop) is built."
+  CI6_friction_and_tension_home:
+    status: "DONE 0.60.346"
+    depends_on: [CI_D0_interconnected]
+    files: [intelligence/routes.js, intelligence/registry-components.js, loom/server.js, loom/registry-components.js, loom/test/friction-proxy.test.js, tests/modules/test-friction-home.test.js]
+    spec: intelligence/spec/causal-interconnect.spec
+    blocks: [MOD-CI-FRICTION]
+    does: "James, 2026-11-01: \"move that to the intelligence system\". Friction and tension owned by Intelligence (Diagnostic measures, Intelligence means); Loom's routes ask Intelligence"
+    proof: "MOD-CI-FRICTION's acceptance"
+
+order: "CI6 depends on the decision only and goes first, by his word. CI1 → (CI2, CI3) → CI5; CI4 after ML3 (the batched learning loop) is built."

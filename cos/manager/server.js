@@ -50,6 +50,20 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
         res.write(`event: cos.hello\ndata: ${JSON.stringify({ systems: sup.list().map(v => ({ name: v.name, state: v.state, pid: v.pid })), at: Date.now() })}\n\n`);
         streams.add(res); req.on('close', () => streams.delete(res)); return;
       }
+      // 2026-11-01 TV3 — James: "i also meant cos ui" (the emergence channel). COS asks Intelligence through its routes (its origin from its
+      // declaration's healthUrl, never its files) and the kernel for his emergence runs (lib/emergence.js). A silent Intelligence is a 503 naming it.
+      const em = /^\/api\/cos\/emergence\/(patterns|liminal|sessions)$/.exec(p);
+      if (em && m === 'GET') {
+        if (em[1] === 'sessions') { const r = require('../../lib/emergence.js').sessions({ limit: Number(u.searchParams.get('limit')) || 20 }); return send(res, r.ok ? 200 : 503, r); }
+        const d = sup.declarations().find(x => x.name === 'intelligence'); let origin = 'http://127.0.0.1:3753'; try { if (d && d.healthUrl) origin = new URL(d.healthUrl).origin; } catch (_) {}
+        const ask = (path) => new Promise((resolve) => { const q = http.get(origin + path, { timeout: 4000 }, (r) => { let t = ''; r.on('data', c => t += c); r.on('end', () => { try { resolve(JSON.parse(t)); } catch (_) { resolve({ ok: false, error: `not JSON (${r.statusCode})` }); } }); });
+          q.on('timeout', () => q.destroy(new Error('no answer in 4 s'))); q.on('error', (e) => resolve({ ok: false, error: e.message })); });
+        if (em[1] === 'patterns') { const r = await ask('/api/intelligence/patterns'); return send(res, r && r.ok !== false ? 200 : 503, r && r.ok !== false ? r : { ok: false, error: `intelligence did not answer: ${(r && r.error) || 'no reply'}` }); }
+        const fp = u.searchParams.get('focalPoint');
+        const [st, ls] = await Promise.all([ask('/api/liminal-space/status'), ask(`/api/liminal-space/list${fp ? `?focalPoint=${encodeURIComponent(fp)}` : ''}`)]);
+        if (!st || st.ok === false) return send(res, 503, { ok: false, error: `intelligence did not answer: ${(st && st.error) || 'no reply'}` });
+        return send(res, 200, { ok: true, status: st, items: (ls && ls.items) || [] });
+      }
       if (m === 'GET' && p === '/api/cos/usage') return send(res, 200, { ok: true, usage: usage.read(sup.list(), sup.policy()) });
       const lg = /^\/api\/cos\/systems\/([^/]+)\/logs$/.exec(p);
       if (lg && m === 'GET') return send(res, 200, { ok: true, system: decodeURIComponent(lg[1]), lines: sup.logs(decodeURIComponent(lg[1]), { limit: Number(u.searchParams.get('limit')) || 200 }) });

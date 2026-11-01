@@ -1981,3 +1981,17 @@ spec:
 # event, gate, process, delta, state, sigma, output) mapped to Emerge and Nexus, his words → code saved (the garden walk-back), and the
 # component registry as the spine of every project the compiler builds. James: "okay that needs to be saves or specced. thats much easier
 # for me to understand." DRAFT; the coder's mappings marked to confirm.
+
+# ADDENDUM 2026-11-01 — registered: docs/outperform.spec + docs/2026-11-01-outperform-phasemap.spec (OP_D0, OP_D1; OP1–OP11). The arena: can
+# Nexus (Idearium's pipeline, local models first, his "innovate the method", many cheap tries, frontier models through Guardian only to plan,
+# repair or judge) build better than one frontier model alone? Measured on a sealed suite of his own repos' phases with hidden tests (Metrics:
+# quality, first-try rate, regressions, boundary breaks, frontier and local calls and tokens, cost units, time, waste, variance, explained),
+# then learning from what held (OP9), improving its own code through RAID and Versionium (OP10), and the curve over time on a frozen suite
+# (OP11). James, 2026-11-01: "could it outperform you? use guardian also. can you spec this? make a dependancy graph." · "could beat you in what
+# metrics" · "not only that but the system learns better code to optimize itself, which gives better code." Compiles at specDepth 1.0
+# (test-substrate-spec). Phase files: idearium/phases/2026-11-01-outperform/, lib/phases/2026-11-01-outperform/.
+
+# ADDENDUM 2026-11-01 — registered: docs/friction-map.spec + docs/2026-11-01-friction-map-phasemap.spec (FT_D0; FT1–FT5). The friction and tension
+# map between functions and primitives: every function placed against his eight primitives from its code; joints measured (friction from fault
+# records, shapes, crossings; tension from open gaps, RFR2 traces, Versionium churn, Loom fan-in); "what fits" answered by the one traversal.
+# Intelligence's (CI6). James, 2026-11-01: "the friction and tension mapping, between functions and primitives." Compiles at specDepth 1.0.

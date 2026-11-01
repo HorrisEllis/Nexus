@@ -1,0 +1,8 @@
+/* cos/ui/emergence/page.css — the shared EMERGENCE pieces (emergence.css) worn in COS's theme: its tokens, its panels, its page head. */
+.cos-page { --bg: transparent; --panel: var(--nx-card2); --line: var(--line-soft, var(--nx-edge)); --fg: var(--nx-text); --dim: var(--nx-dim);
+  --faint: var(--nx-muted); --acc: var(--nx-violet); --bad: var(--nx-err); --cause: var(--nx-ok); --pre: var(--nx-err); --bot: var(--nx-warn); }
+.cos-page { background: transparent; height: auto; }
+.cos-page .actions { display: flex; align-items: center; gap: var(--s4, 16px); flex-wrap: wrap; }
+.cos-page .em-grid { background: none; gap: var(--s4, 16px); height: auto; min-height: 60vh; }
+.cos-page .em-col { padding: var(--s4, 16px); max-height: 72vh; }
+.cos-page .em-card { background: var(--nx-plate); }

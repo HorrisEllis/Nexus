@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-outperform-phasemap.spec::OP5_the_arms
+type: phase
+id: docs_2026-11-01-outperform-phasemap.spec::OP5_the_arms
+context: pipeline phase OP5_the_arms of docs/2026-11-01-outperform-phasemap.spec
+intent: null
+summary: OP5_the_arms (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793551440159
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440159
+lastSeenAt: 1793551440159
+fingerprint: null
+payload:
+  id: OP5_the_arms
+  map: docs/2026-11-01-outperform-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/arena/run.js
+    - tests/modules/test-outperform-run.test.js
+  depends_on:
+    - OP2_guardian_as_the_frontier
+    - OP3_many_cheap_tries
+    - OP4_the_suite
+  blocks:
+    - MOD-OP-RUN
+  spec: docs/outperform.spec
+  graph: e81a1a8a5f289a3e

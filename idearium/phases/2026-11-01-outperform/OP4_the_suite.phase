@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-outperform-phasemap.spec::OP4_the_suite
+type: phase
+id: docs_2026-11-01-outperform-phasemap.spec::OP4_the_suite
+context: pipeline phase OP4_the_suite of docs/2026-11-01-outperform-phasemap.spec
+intent: null
+summary: OP4_the_suite (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793551440158
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440158
+lastSeenAt: 1793551440158
+fingerprint: null
+payload:
+  id: OP4_the_suite
+  map: docs/2026-11-01-outperform-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/arena/suite.js
+    - tests/modules/test-outperform-suite.test.js
+  depends_on:
+    - OP_D0_measured_not_asserted
+    - EB1_the_registry_whole
+  blocks:
+    - MOD-OP-SUITE
+  spec: docs/outperform.spec
+  graph: 2a71bf2665329ae3

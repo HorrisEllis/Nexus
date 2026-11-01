@@ -1,0 +1,71 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OP6_the_verdict:3644da86fe2187e7
+type: graph
+id: phase:OP6_the_verdict:3644da86fe2187e7
+context: dependency graph of phase OP6_the_verdict
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793551440160
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440160
+lastSeenAt: 1793551440160
+fingerprint: null
+payload:
+  for: OP6_the_verdict
+  kind: phase
+  repo: null
+  hash: 3644da86fe2187e7
+  nodes:
+    - path: idearium/arena/score.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: tests/modules/test-outperform-score.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-01-outperform-phasemap.spec::OP5_the_arms
+    dependents:
+      - docs/2026-11-01-outperform-phasemap.spec::OP7_the_screen
+      - docs/2026-11-01-outperform-phasemap.spec::OP9_it_learns
+    upstream:
+      - docs/2026-11-01-emerge-bottom-up-phasemap.spec::EB1_the_registry_whole
+      - docs/2026-11-01-emerge-bottom-up-phasemap.spec::EB_D0_his_bar
+      - docs/2026-11-01-outperform-phasemap.spec::OP1_innovate_the_method
+      - docs/2026-11-01-outperform-phasemap.spec::OP2_guardian_as_the_frontier
+      - docs/2026-11-01-outperform-phasemap.spec::OP3_many_cheap_tries
+      - docs/2026-11-01-outperform-phasemap.spec::OP4_the_suite
+      - docs/2026-11-01-outperform-phasemap.spec::OP5_the_arms
+      - docs/2026-11-01-outperform-phasemap.spec::OP_D0_measured_not_asserted
+      - docs/2026-11-01-outperform-phasemap.spec::OP_D1_guardian_is_the_frontier
+    downstream:
+      - docs/2026-11-01-outperform-phasemap.spec::OP10_it_improves_itself
+      - docs/2026-11-01-outperform-phasemap.spec::OP11_the_curve
+      - docs/2026-11-01-outperform-phasemap.spec::OP7_the_screen
+      - docs/2026-11-01-outperform-phasemap.spec::OP8_the_first_real_run
+      - docs/2026-11-01-outperform-phasemap.spec::OP9_it_learns
+    blockedBy:
+      - docs/2026-11-01-outperform-phasemap.spec::OP5_the_arms
+    unlocks:
+      - docs/2026-11-01-outperform-phasemap.spec::OP7_the_screen
+      - docs/2026-11-01-outperform-phasemap.spec::OP9_it_learns
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by OP5_the_arms
+      - 'depends on (1): OP5_the_arms · all upstream 9'
+      - >-
+        needed by (2): OP7_the_screen, OP9_it_learns · all downstream 5 · finishing it unlocks
+        OP7_the_screen, OP9_it_learns
+    edges:
+      - from: docs/2026-11-01-outperform-phasemap.spec::OP5_the_arms
+        kind: declared

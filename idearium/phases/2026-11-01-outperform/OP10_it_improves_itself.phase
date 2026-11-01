@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-outperform-phasemap.spec::OP10_it_improves_itself
+type: phase
+id: docs_2026-11-01-outperform-phasemap.spec::OP10_it_improves_itself
+context: pipeline phase OP10_it_improves_itself of docs/2026-11-01-outperform-phasemap.spec
+intent: null
+summary: OP10_it_improves_itself (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793551440164
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440164
+lastSeenAt: 1793551440164
+fingerprint: null
+payload:
+  id: OP10_it_improves_itself
+  map: docs/2026-11-01-outperform-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/arena/self.js
+    - tests/modules/test-outperform-self.test.js
+  depends_on:
+    - OP9_it_learns
+  blocks:
+    - MOD-OP-SELF
+  spec: docs/outperform.spec
+  graph: a13450cde97df667

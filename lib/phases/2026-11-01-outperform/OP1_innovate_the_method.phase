@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-outperform-phasemap.spec::OP1_innovate_the_method
+type: phase
+id: docs_2026-11-01-outperform-phasemap.spec::OP1_innovate_the_method
+context: pipeline phase OP1_innovate_the_method of docs/2026-11-01-outperform-phasemap.spec
+intent: null
+summary: OP1_innovate_the_method (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793551440154
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440154
+lastSeenAt: 1793551440154
+fingerprint: null
+payload:
+  id: OP1_innovate_the_method
+  map: docs/2026-11-01-outperform-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - lib/emergence.js
+    - idearium/api/index.js
+    - tests/modules/test-outperform-pivot.test.js
+  depends_on:
+    - OP_D0_measured_not_asserted
+  blocks:
+    - MOD-OP-PIVOT
+  spec: docs/outperform.spec
+  graph: ad86fff2fdfb71f4

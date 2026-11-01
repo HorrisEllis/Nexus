@@ -828,6 +828,13 @@ export const SPEC = [
     req: () => ({ method: 'GET', path: '/api/cos/usage' }) },
   { key: 'cos.policy', repo: false, usage: 'cos policy', about: 'the supervisor\'s rules (boot set, restart backoff, circuit, memory floors, idle) with their defaults',
     req: () => ({ method: 'GET', path: '/api/cos/policy' }) },
+  // 2026-11-01 TV3 — James: "the tv ui needs the emergence channel". The same three reads the channel makes, for agents and the CLI.
+  { key: 'emergence.patterns', repo: false, usage: 'emergence patterns', about: 'what Intelligence has crystallised: co-occurrence, failure precursors, bottlenecks, cross-system causes — each with its count and confidence',
+    req: () => ({ system: 'orchestrator', method: 'GET', path: '/api/emergence/patterns' }) },
+  { key: 'emergence.liminal', repo: false, usage: 'emergence liminal [--focal L1/L2]', about: 'the liminal spaces, where a pattern forms before it crystallises: each one\'s active, resolved and crystallised items and its velocity',
+    req: (a) => ({ system: 'orchestrator', method: 'GET', path: `/api/emergence/liminal${a.flags.focal ? `?focalPoint=${encodeURIComponent(a.flags.focal)}` : ''}` }) },
+  { key: 'emergence.sessions', repo: false, usage: 'emergence sessions [--limit n]', about: 'his emergence runs (axioms, end state; "if it can\'t innovate the problem, innovate the method"): attempts, method pivots, outcome',
+    req: (a) => ({ system: 'orchestrator', method: 'GET', path: `/api/emergence/sessions${a.flags.limit ? `?limit=${Number(a.flags.limit)}` : ''}` }) },
   // 0.60.339 EAS3 — Emerge (github.com/HorrisEllis/emerge, in Nexus at emerge/), through its own door
   { key: 'emerge.status', repo: false, usage: 'emerge status', about: 'Emerge\'s own status, from its door (:4900): its nodes, commands, routes and modules',
     req: () => ({ method: 'GET', path: '/api/emerge-system/status' }) },

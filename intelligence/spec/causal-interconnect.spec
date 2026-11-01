@@ -152,6 +152,14 @@ spec:
       behavioral_contracts: ["the routes keep their paths and reply shapes"]
       error_paths: ["the kernel not live → the reply says so"]
 
+    - id: IF-DIAGNOSTIC-MEASURE
+      name: diagnostic-measure
+      path: diagnostic/nexus-diagnostic.js
+      description: "Diagnostic's per-system monitors, through its door (:7825): GET /friction { friction: { <system>: { friction, sigma, errorRate, slope } } }, GET /tension (friction × (1 + openGaps × 0.2) × (1 + max(0, slope) × 2))."
+      exports: ["GET /friction → { ok, friction, ts }", "GET /tension → { ok, tension, ts }"]
+      behavioral_contracts: ["Diagnostic probes and measures; it is asked through its route, never its files"]
+      error_paths: ["Diagnostic down → no answer; said by the caller"]
+
   modules:
 
     - id: MOD-CI-FEED
@@ -230,6 +238,24 @@ spec:
       behavioral_contracts: ["agents get what a person gets"]
       error_paths: ["Intelligence down → the row says so"]
       acceptance: ["`intelligence causal` shows CFR and RFR2 counts with shared > 0 after a fixture run"]
+
+    - id: MOD-CI-FRICTION
+      name: friction-and-tension-owned
+      uuid: nexus-intelligence-friction-v1-0000-2026-1101-001
+      path: intelligence/routes.js
+      phase: CI6_friction_and_tension_home
+      description: >-
+        James, 2026-11-01: "move that to the intelligence system" (Loom's friction and tension, proxied from Diagnostic, outside Intelligence).
+        Intelligence owns what friction and tension mean (§10.3, one truth): GET /api/intelligence/friction and /api/intelligence/tension answer
+        per system from Diagnostic's measurements (asked through its door) beside CFR's own field friction, each value naming its source.
+        Loom's /api/friction and /api/tension keep their paths and now ask Intelligence (§0.3: kept, not deleted).
+      deps: [{ name: cfr }, { name: diagnostic-measure }]
+      schema_refs: [InterconnectStatus]
+      exports: ["GET /api/intelligence/friction → { ok, friction: { <system>: {...} }, field: { friction, coherence }, sources }", "GET /api/intelligence/tension → { ok, tension, sources }"]
+      gate_pipeline: ["GATE-CI6-001: ask Diagnostic's route (4 s)", "GATE-CI6-002: add CFR's field friction", "GATE-CI6-003: each part names its source; a silent source is said, never zero"]
+      behavioral_contracts: ["Diagnostic stays the measurer; Intelligence the meaning", "the per-system shape Loom's callers read is unchanged"]
+      error_paths: ["Diagnostic down → 502 naming it, with CFR's field still given"]
+      acceptance: ["with a stand-in Diagnostic: Intelligence's friction names diagnostic and cfr as sources; Loom's /api/friction answers the same per-system values through Intelligence"]
 
   events:
     causal:

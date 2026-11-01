@@ -66,10 +66,12 @@ const connections = require('../lib/connections');
 // not a raw fetch. Default-deny elsewhere in NEXUS; here the one thing in
 // scope is the diagnostic kernel itself, on localhost, nothing else.
 connections.registerScope('diagnostic-kernel', { allowedDomains: ['127.0.0.1', 'localhost'], allowedMethods: ['GET'] });
+connections.registerScope('intelligence', { allowedDomains: ['127.0.0.1', 'localhost'], allowedMethods: ['GET'] });   // 2026-11-01 CI6: friction and tension are Intelligence's; GET only, loopback only
 // §WIRED — real, distinct config, not inline constants. See
 // loom/config.js's own header. Matches the established pattern.
 const config = require('./config.js');
 const DIAG_URL = config.DIAG_URL;
+const INTEL_URL = config.INTEL_URL;
 
 const SYSTEM_ID = 'loom';
 const PORT      = config.PORT;
@@ -539,15 +541,16 @@ const server = http.createServer(async (req, res) => {
     // this is loom asking the kernel, honestly, not a second implementation.
     // If the kernel isn't up, that's the truth of the answer, not papered
     // over with a fake 200.
-    if (method === 'GET' && p === '/api/friction') {
-      const r = await connections.call({ scope: 'diagnostic-kernel', url: `${DIAG_URL}/friction`, timeoutMs: 4000 });
-      if (!r.ok) return json(res, 502, { ok: false, error: 'diagnostic kernel unreachable', reason: r.reason });
-      return json(res, 200, r.body);
-    }
-    if (method === 'GET' && p === '/api/tension') {
-      const r = await connections.call({ scope: 'diagnostic-kernel', url: `${DIAG_URL}/tension`, timeoutMs: 4000 });
-      if (!r.ok) return json(res, 502, { ok: false, error: 'diagnostic kernel unreachable', reason: r.reason });
-      return json(res, 200, r.body);
+    // 2026-11-01 CI6 — James: "move that to the intelligence system". Friction and tension are Intelligence's (it means them; Diagnostic measures):
+    // Loom asks Intelligence's /api/intelligence/{friction,tension}. With Intelligence down, Loom still answers from Diagnostic's raw measure and
+    // says so (via), so one system down breaks no other (§5.9). The path and the per-system shape its callers read are unchanged (§0.3).
+    if (method === 'GET' && (p === '/api/friction' || p === '/api/tension')) {
+      const what = p === '/api/friction' ? 'friction' : 'tension';
+      const i = await connections.call({ scope: 'intelligence', url: `${INTEL_URL}/api/intelligence/${what}`, timeoutMs: 4000 });
+      if (i.ok && i.body && i.body.ok !== false) return json(res, 200, { ...i.body, via: 'intelligence' });
+      const r = await connections.call({ scope: 'diagnostic-kernel', url: `${DIAG_URL}/${what}`, timeoutMs: 4000 });
+      if (!r.ok) return json(res, 502, { ok: false, error: 'intelligence and the diagnostic kernel are unreachable', reason: r.reason, intelligence: i.reason || (i.body && i.body.error) || null });
+      return json(res, 200, { ...r.body, via: `diagnostic (intelligence did not answer: ${i.reason || (i.body && i.body.error) || 'no answer'})` });
     }
     // §part_2 2026-07-10 — the semantic query layer. context-graph resolves
     // wires to component-level relations with intent; impact answers "if this

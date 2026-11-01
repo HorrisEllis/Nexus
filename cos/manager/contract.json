@@ -98,6 +98,11 @@
       "method": "GET",
       "path": "/api/cos/legacy-callers",
       "out": "{ callers }"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/emergence/:what",
+      "out": "patterns → Intelligence's crystallised patterns (each with said, self); liminal → { status, items }; sessions → his emergence runs (lib/emergence.js). 503 names a silent Intelligence. TV3, 2026-11-01."
     }
   ],
   "door": {
@@ -327,6 +332,21 @@
       "emits": [
         "cos.ui.navigate"
       ]
+    },
+    {
+      "id": "emergence",
+      "title": "Emergence",
+      "path": "emergence/",
+      "route": "#/emergence",
+      "nav": "main",
+      "built": true,
+      "phase": "TV3_the_emergence_channel",
+      "routes": [
+        "GET /api/cos/emergence/:what"
+      ],
+      "listens": [],
+      "emits": [],
+      "about": "what emerges: Intelligence's crystallised patterns, the liminal spaces where they form, and his emergence runs (axioms → end state; innovate the method). One page with the TV's channel: the same script, served read-only from lib/ui/tv-shell/channels/emergence/."
     }
   ],
   "planned": [

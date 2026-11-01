@@ -1,0 +1,93 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OP9_it_learns:58ec9046edaac956
+type: graph
+id: phase:OP9_it_learns:58ec9046edaac956
+context: dependency graph of phase OP9_it_learns
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793551440163
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440163
+lastSeenAt: 1793551440163
+fingerprint: null
+payload:
+  for: OP9_it_learns
+  kind: phase
+  repo: null
+  hash: 58ec9046edaac956
+  nodes:
+    - path: idearium/arena/learn.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: lib/economy/router.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-outperform-learn.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/pipeline-routing.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/adapters/warp-cascade.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/server.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: lib/economy/router.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-11-01-outperform-phasemap.spec::OP6_the_verdict
+    dependents:
+      - docs/2026-11-01-outperform-phasemap.spec::OP10_it_improves_itself
+      - docs/2026-11-01-outperform-phasemap.spec::OP11_the_curve
+    upstream:
+      - docs/2026-11-01-emerge-bottom-up-phasemap.spec::EB1_the_registry_whole
+      - docs/2026-11-01-emerge-bottom-up-phasemap.spec::EB_D0_his_bar
+      - docs/2026-11-01-outperform-phasemap.spec::OP1_innovate_the_method
+      - docs/2026-11-01-outperform-phasemap.spec::OP2_guardian_as_the_frontier
+      - docs/2026-11-01-outperform-phasemap.spec::OP3_many_cheap_tries
+      - docs/2026-11-01-outperform-phasemap.spec::OP4_the_suite
+      - docs/2026-11-01-outperform-phasemap.spec::OP5_the_arms
+      - docs/2026-11-01-outperform-phasemap.spec::OP6_the_verdict
+      - docs/2026-11-01-outperform-phasemap.spec::OP_D0_measured_not_asserted
+      - docs/2026-11-01-outperform-phasemap.spec::OP_D1_guardian_is_the_frontier
+    downstream:
+      - docs/2026-11-01-outperform-phasemap.spec::OP10_it_improves_itself
+      - docs/2026-11-01-outperform-phasemap.spec::OP11_the_curve
+    blockedBy:
+      - docs/2026-11-01-outperform-phasemap.spec::OP6_the_verdict
+    unlocks:
+      - docs/2026-11-01-outperform-phasemap.spec::OP10_it_improves_itself
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by OP6_the_verdict
+      - 'depends on (1): OP6_the_verdict · all upstream 10'
+      - >-
+        needed by (2): OP10_it_improves_itself, OP11_the_curve · finishing it unlocks
+        OP10_it_improves_itself
+    edges:
+      - from: docs/2026-11-01-outperform-phasemap.spec::OP6_the_verdict
+        kind: declared
