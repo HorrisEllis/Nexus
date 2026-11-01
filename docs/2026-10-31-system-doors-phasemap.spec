@@ -42,6 +42,8 @@ decisions:
 phases:
   DO6_every_door_on_its_registry_and_walled_by_cos:
     status: OPEN
+    spec: docs/system-doors.spec
+    blocks: [MOD-DOOR-WALLED]
     depends_on: [DO_D9_registry_then_cos_through_the_door, DO1_idearium_door, DO2_architect_door, DO3_cortex_door, DO5_clear_glass_door]
     files: [cos/manager/supervisor.js, cos/manager/server.js, guardian/server.js, copilot/server.js, loom/server.js, versionium/server.js, intelligence/server.js, ollama/server.js, diagnostic/server.js, "*/compartment.json"]
     does: >-

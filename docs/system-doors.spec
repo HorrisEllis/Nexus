@@ -240,6 +240,23 @@ spec:
       error_paths: ["a route needing a renderer → served through the main process's IPC, said"]
       acceptance: ["Clear Glass's suite green; GET :7702/contract from the registry"]
 
+    - id: MOD-DOOR-WALLED
+      name: every-door-walled-by-cos
+      uuid: nexus-system-doors-walled-v1-0000-2026-1101-001
+      path: cos/manager/supervisor.js
+      phase: DO6_every_door_on_its_registry_and_walled_by_cos
+      description: >-
+        His DO_D9 (2026-11-01): each server.js mounts its own registry and answers the handshake from it; each compartment.json declares its
+        compartment and its wall; COS's supervisor starts each system behind its wall (LM6's mechanism, 0.60.338), audit mode first and enforce
+        when the audit is empty, and reaches each system only through its door.
+      deps: [{ name: handshake-counts-real-routes }, { name: guardian-door }]
+      schema_refs: [DoorManifest]
+      exports: ["runtime.process.compartment and runtime.process.boundary in every compartment.json", "the supervisor's walled spawn and its wall lines on COS's ledger"]
+      gate_pipeline: ["GATE-DO6-001: the door's handshake lists only its registry's routes", "GATE-DO6-002: started walled; audit lines before enforce"]
+      behavioral_contracts: ["no system reached by COS but through its door", "a wall refusal is a ledger line, never silent"]
+      error_paths: ["a system whose audit is not empty stays in audit mode, its open ways listed"]
+      acceptance: ["per system: the handshake from its registry; started walled by COS; its audit empty, then enforce"]
+
   events:
     doors:
       - "system.door.up { system, port, routes, contractHash }"
