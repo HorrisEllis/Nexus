@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-orchestration-console-phasemap.spec::OC11_the_cos_app_runs_alone
+type: phase
+id: docs_2026-11-01-orchestration-console-phasemap.spec::OC11_the_cos_app_runs_alone
+context: pipeline phase OC11_the_cos_app_runs_alone of docs/2026-11-01-orchestration-console-phasemap.spec
+intent: null
+summary: OC11_the_cos_app_runs_alone (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793557554810
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793557554810
+lastSeenAt: 1793557554810
+fingerprint: null
+payload:
+  id: OC11_the_cos_app_runs_alone
+  map: docs/2026-11-01-orchestration-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/app/desktop/main.js
+    - cos/app/runtime.js
+    - cos/app/store.js
+    - cos/app/switch.js
+    - .github/workflows/cos-app.yml
+  depends_on:
+    - OC_D4_the_cos_app_is_the_application
+    - MG33_cos_ui_has_a_way_in
+    - UP9_a_popup_when_there_is_an_update
+  blocks:
+    - MOD-OC-CONSOLE
+  spec: docs/orchestration-console.spec
+  graph: d49c0504d8afae24

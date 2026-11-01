@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793556958981
+exported_at: 1793557554789
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793556958981
-lastSeenAt: 1793556958981
+firstSeenAt: 1793557554789
+lastSeenAt: 1793557554789
 fingerprint: null
 payload:
   for: OC7_the_taxonomy_expanded
@@ -43,20 +43,22 @@ payload:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
     dependents:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC9_templates
     upstream:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
     downstream:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
-    blockedBy:
-      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
-    unlocks: []
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC9_templates
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC9_templates
     conflicts: []
     dangling: []
     lines:
-      - layer 2 · blocked by OC1_task_nodes
+      - layer 2 · ready
       - 'depends on (1): OC1_task_nodes · all upstream 2'
-      - 'needed by (1): OC8_the_console'
+      - 'needed by (2): OC8_the_console, OC9_templates · finishing it unlocks OC9_templates'
     edges:
       - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
         kind: declared

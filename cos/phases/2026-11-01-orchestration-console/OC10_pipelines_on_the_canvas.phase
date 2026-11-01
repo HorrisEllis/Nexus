@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-orchestration-console-phasemap.spec::OC10_pipelines_on_the_canvas
+type: phase
+id: docs_2026-11-01-orchestration-console-phasemap.spec::OC10_pipelines_on_the_canvas
+context: pipeline phase OC10_pipelines_on_the_canvas of docs/2026-11-01-orchestration-console-phasemap.spec
+intent: null
+summary: OC10_pipelines_on_the_canvas (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793557554809
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793557554809
+lastSeenAt: 1793557554809
+fingerprint: null
+payload:
+  id: OC10_pipelines_on_the_canvas
+  map: docs/2026-11-01-orchestration-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/ui/brainos/index.html
+  depends_on:
+    - OC_D2_the_eravos_canvas_replaces_brainos
+    - EO2_cos_tools
+    - OC2_scheduler_on_nodes
+  blocks:
+    - MOD-OC-CONSOLE
+  spec: docs/orchestration-console.spec
+  graph: 25d81bb1639e7f1d

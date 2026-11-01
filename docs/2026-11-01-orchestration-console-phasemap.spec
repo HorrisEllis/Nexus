@@ -17,6 +17,35 @@ decisions:
     chosen: "One orchestration console, a page of COS's UI, reading every system through its route; .task/.pipeline files the record; every act with by and through RAID."
     by_the_axioms: "§5.9/§5.15, §9.1, §0.3, §17.12, §8.6 (engine, pipelines, scheduler, cron, tool index, COS proposals reused)"
 
+  OC_D1_templates_and_schemas:
+    status: DECIDED 2026-11-01 (his)
+    chosen: >-
+      Every node type the console adds (task, schedule, occurrence, deployment, run_history) has its schema file in lib/node-schemas, and every
+      kind of work has templates to start from: .task templates (a daily check, watch a page, build a phase, run a tool, deploy an agent) beside
+      the .pipeline/.workflow templates lib/automation/templates.js already holds, all in Idearium's template picker (the spec workshop) and in
+      COS's create. OC9 builds them.
+    by: "his, 2026-11-01: \"dont forget all templates and data schemas\""
+  OC_D2_the_eravos_canvas_replaces_brainos:
+    status: DECIDED 2026-11-01 (his)
+    chosen: >-
+      Pipelines and workflows are built and watched on the ERAVOS canvas (cos/archetype/eravos-canvas), not BrainOS: each task and step an ERAVOS
+      tool, each dependency a wire, run through COS (the EO map's orchestration domain, ctx.cos). BrainOS's page is archived and links there.
+      OC8's Pipelines section is the canvas.
+    by: "his, 2026-11-01: \"using eravos canvas for the automation pipeline and workflow, to replace the brainos, and build tools for it instead, it already uses cos\""
+  OC_D3_canvas_for_cos_ui:
+    status: "ASKED 2026-11-01 — his question, the coder's recommendation, to decide"
+    question: "\"and then the canvas for the cos ui?\""
+    recommendation: >-
+      The coder's: the canvas for what is a graph (pipelines, workflows, the systems and their wires, the diagnostic map: CP11), pages for what is
+      a list or a record (the ledger, proposals, the calendar, settings); both in one COS window, the canvas as its main view.
+  OC_D4_the_cos_app_is_the_application:
+    status: DECIDED 2026-11-01 (his)
+    chosen: >-
+      The COS app (cos/app, Electron, COS 0.1.2, built by .github/workflows/cos-app.yml as a portable exe and an installer) runs on its own,
+      without Nexus running, and is how he updates: it shows COS's UI (the cockpit) as its window, runs COS's manager itself, installs and
+      switches Nexus releases (its store and switch), and checks for a newer COS (app-update.js). Until Looking Glass replaces Electron.
+    by: "his, 2026-11-01: \"build the exe for cos to run independant of nexus that i can use to update, using the ui as the application until looking glass replaces electron\""
+
 phases:
   OC1_task_nodes:
     status: "DONE 0.60.348"
@@ -91,4 +120,39 @@ phases:
     does: "the console in COS's UI: overview, pipelines, tasks, calendar, agents, tools, history, triggers; BrainOS archived and linking here"
     proof: "MOD-OC-CONSOLE's acceptance, in Clear Glass"
 
+  OC9_templates:
+    status: OPEN
+    depends_on: [OC_D1_templates_and_schemas, OC7_the_taxonomy_expanded]
+    spec: docs/orchestration-console.spec
+    blocks: [MOD-OC-TAXONOMY]
+    files: [lib/automation/templates.js, idearium/spec-engine/templates, cos/archetype]
+    interface: [html, cli]
+    does: ".task templates and the schemas of every new node type, offered in Idearium's template picker and COS's create"
+    proof: "each template makes a valid node (validateTask); each schema parses"
+  OC10_pipelines_on_the_canvas:
+    status: OPEN
+    depends_on: [OC_D2_the_eravos_canvas_replaces_brainos, EO2_cos_tools, OC2_scheduler_on_nodes]
+    spec: docs/orchestration-console.spec
+    blocks: [MOD-OC-CONSOLE]
+    files: [cos/archetype/eravos-canvas/tools/orchestration, cos/ui/orchestration, lib/ui/brainos/index.html]
+    interface: [html]
+    does: "a .pipeline opened on the ERAVOS canvas as tools and wires, edited there, saved as the node, run through COS; BrainOS archived, linking here"
+    proof: "in Clear Glass: a pipeline drawn on the canvas, saved, reopened the same, run, its runs shown on its tools"
+  OC11_the_cos_app_runs_alone:
+    status: OPEN
+    depends_on: [OC_D4_the_cos_app_is_the_application, MG33_cos_ui_has_a_way_in, UP9_a_popup_when_there_is_an_update]
+    spec: docs/orchestration-console.spec
+    blocks: [MOD-OC-CONSOLE]
+    files: [cos/app/desktop/main.js, cos/app/runtime.js, cos/app/store.js, cos/app/switch.js, .github/workflows/cos-app.yml]
+    interface: [html]
+    does: "the COS app's window is COS's UI; it starts COS's manager itself (no Nexus needed); installs, switches and updates Nexus releases; its own update said; released as cos-v0.2.0 (exe + installer)"
+    proof: "the app built by the workflow, started with no Nexus running: the cockpit shows, a release installed and switched to, the update popup on a newer one"
+
 build_order: "OC1 → OC7 → OC2 → (OC3, OC6) and (OC4, OC5) from OC1 → OC8."
+
+# ── ADDENDUM 2026-11-01 — his additions: templates and schemas; the ERAVOS canvas replaces BrainOS; the COS app as the application ─────────
+# James, 2026-11-01: "dont forget all templates and data schemas. systems running in cos, what is the advantage. also want to build the exe for cos
+# to run independant of nexus that i can use to update, using the ui as the application until looking glass replaces electron. also using eravos
+# canvas for the automation pipeline and workflow, to replace the brainos, and build tools for it instead, it already uses cos, and then the
+# canvas for the cos ui?"
+# (the decisions OC_D1–OC_D4 and the phases OC9–OC11 of this addendum are written into the decisions: and phases: blocks above)

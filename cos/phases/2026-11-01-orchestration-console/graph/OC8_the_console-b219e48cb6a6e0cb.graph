@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793556958993
+exported_at: 1793557554806
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793556958993
-lastSeenAt: 1793556958993
+firstSeenAt: 1793557554806
+lastSeenAt: 1793557554806
 fingerprint: null
 payload:
   for: OC8_the_console
@@ -82,7 +82,10 @@ payload:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC6_history_and_replay
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC7_the_taxonomy_expanded
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-01-orchestration-console-phasemap.spec::OC10_pipelines_on_the_canvas
+        files:
+          - lib/ui/brainos/index.html
     dangling: []
     lines:
       - >-
@@ -93,6 +96,9 @@ payload:
         OC6_history_and_replay, OC7_the_taxonomy_expanded, MG33_cos_ui_has_a_way_in · all upstream
         17
       - 'needed by (0): —'
+      - >-
+        same files as OC10_pipelines_on_the_canvas with no order between them:
+        lib/ui/brainos/index.html
     edges:
       - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC3_the_calendar
         kind: declared

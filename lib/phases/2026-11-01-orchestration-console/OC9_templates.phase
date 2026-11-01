@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-orchestration-console-phasemap.spec::OC9_templates
+type: phase
+id: docs_2026-11-01-orchestration-console-phasemap.spec::OC9_templates
+context: pipeline phase OC9_templates of docs/2026-11-01-orchestration-console-phasemap.spec
+intent: null
+summary: OC9_templates (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793557554807
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793557554807
+lastSeenAt: 1793557554807
+fingerprint: null
+payload:
+  id: OC9_templates
+  map: docs/2026-11-01-orchestration-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/automation/templates.js
+  depends_on:
+    - OC_D1_templates_and_schemas
+    - OC7_the_taxonomy_expanded
+  blocks:
+    - MOD-OC-TAXONOMY
+  spec: docs/orchestration-console.spec
+  graph: 18867fd4e9ccaa8d
