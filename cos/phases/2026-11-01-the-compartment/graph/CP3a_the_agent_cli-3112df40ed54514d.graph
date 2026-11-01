@@ -1,0 +1,284 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP3a_the_agent_cli:3112df40ed54514d
+type: graph
+id: phase:CP3a_the_agent_cli:3112df40ed54514d
+context: dependency graph of phase CP3a_the_agent_cli
+intent: null
+summary: 29 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793576104510
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104510
+lastSeenAt: 1793576104510
+fingerprint: null
+payload:
+  for: CP3a_the_agent_cli
+  kind: phase
+  repo: null
+  hash: 3112df40ed54514d
+  nodes:
+    - path: cos/archetype/nexus-system/lib/commands.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: docs/command-index-per-system.spec
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/command.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/nexus-ask.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cos/archetype/nexus-system/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system/lib/core.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system/lib/handoff.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system/lib/system.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system/tests/skeleton.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/listener-commands.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/mcp-server.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/archetype/nexus-system/lib/handoff.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system/lib/system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/agent-tools/naming.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/idearium/code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/git-pr.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/archetype/nexus-system/server.js
+      to: cos/archetype/nexus-system/lib/system.js
+      kind: requires
+    - from: cos/archetype/nexus-system/server.js
+      to: cos/archetype/nexus-system/lib/handoff.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/command.js
+      to: lib/agent-tools/naming.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/command.js
+      to: lib/agent-tools/tools/idearium/code.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/command.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/git-pr.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: cos/archetype/nexus-system/tests/skeleton.test.js
+      to: cos/archetype/nexus-system/server.js
+      kind: requires
+    - from: cos/archetype/nexus-system/cli.js
+      to: cos/archetype/nexus-system/lib/commands.js
+      kind: requires
+    - from: cos/archetype/nexus-system/lib/core.js
+      to: cos/archetype/nexus-system/lib/commands.js
+      kind: requires
+    - from: cos/archetype/nexus-system/lib/handoff.js
+      to: cos/archetype/nexus-system/lib/commands.js
+      kind: requires
+    - from: cos/archetype/nexus-system/lib/system.js
+      to: cos/archetype/nexus-system/lib/commands.js
+      kind: requires
+    - from: copilot/lib/nexus-ask.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: lib/listener-commands.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: orchestrator/lib/mcp-server.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP3_one_terminal_one_cli
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+    dependents: []
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP3_one_terminal_one_cli
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
+    downstream: []
+    blockedBy:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP3_one_terminal_one_cli
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5b_pause_resume
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP7a_the_nexus_sync_options
+        files:
+          - idearium/cli/route-commands.js
+    dangling: []
+    lines:
+      - layer 7 · blocked by CP3_one_terminal_one_cli
+      - 'depends on (2): CP3_one_terminal_one_cli, PD1_procedure_nodes_and_commands · all upstream 18'
+      - 'needed by (0): —'
+      - 'same files as CP10_miniworlds with no order between them: idearium/cli/route-commands.js'
+      - 'same files as CP5b_pause_resume with no order between them: idearium/cli/route-commands.js'
+      - >-
+        same files as CP5a_snapshots_per_compartment with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as CP7a_the_nexus_sync_options with no order between them:
+        idearium/cli/route-commands.js
+    edges:
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP3_one_terminal_one_cli
+        kind: declared
+      - from: docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+        kind: declared

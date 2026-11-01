@@ -100,6 +100,65 @@ decisions:
       reads its files. The panel also shows what each system's part of the last sync cost.
     by: "his, 2026-11-01: \"also can you add the nexus-sync options to the control panel\""
     by_the_axioms: "§5.15 (Idearium owns its sync; COS asks its route), BC_D6 (each value with its layer), §17.12 (a change of them recorded)"
+  CP_D9_the_whole_sandbox_per_system:
+    status: "DECIDED 2026-11-01 (his ask; the default tier and the first build his, below)"
+    his_choices: >-
+      2026-11-01, asked which tier is the default for his systems (process with the machine opt-in, recommended by the coder; a machine for
+      every system; a machine for the ones he names): "Process, VM opt-in". Asked what to build first (the menu, pause and snapshots,
+      recommended; the network switch and throttle; cores and disk; recording and rewind): "Menu + pause + snapshots". Order: CP5b (pause,
+      backend) → CP5a (snapshots) → CP2 (the menu for every system).
+    correction: >-
+      James, 2026-11-01, the coder having asked both: "axioms 3.1 are law." Both were the axioms' to settle, not problems for him: the order is
+      §3.1 (bottom-up, foundation first) and §3.4 (raw → library → API → CLI → UI), so pause and snapshots before the menu; the default tier is
+      §0.5 (complexity earns its existence) with §0.1's evidence (0.2% free memory), so the process tier, the machine tier opt-in. His answers
+      match what they decide. Asking was the coder's error, recorded (§17.3); the next decision of this kind is taken by the axioms and cited.
+    james: >-
+      "like im saying setting threads/cores, memory/ram, hard drive space, sandboxed, system state hooked into controls, the entire sandbox is
+      rewindable/pausable/recordable/branchable/parraelel and benchmarked, using deltas inbetween events, state recording, orchastration, all of
+      cos features that exist in relation to the systems, also network switch and throttling. full snapshot system and menu for every system."
+    context: >-
+      Said after 0.60.361 (RAID gates COS's restarts) and the coder's report that per-compartment resources were caps, priority and accounting.
+      He is naming the whole of it: every system a sandbox with all of COS's controls, and its state a timeline that can be paused, rewound,
+      branched, run in parallel and measured.
+    chosen: >-
+      Every system gets one control surface, its menu, over two tiers of sandbox that share it:
+        process tier (what Nexus's systems run in now, light): the OS process with COS's wall;
+        machine tier (opt-in per compartment, heavy): the QEMU machine COS already runs for desktops (qemu-runtime.js, vm-control.js).
+      Each control says, per tier, enforced / watched / not-enforced, with why (§0.0, CP-003). The timeline is one model for both tiers:
+      a snapshot (state at a point, content-addressed, CP_D7) plus the deltas between events (each event's changes, recorded as they happen),
+      so rewind = nearest snapshot + deltas replayed to the moment; branch = a new compartment from that moment; parallel = branches running
+      at once on their own ports and data; benchmark = each branch's account (CP6a) and timings, compared.
+    by_the_axioms: >-
+      §0.0 and CP-003 (what the OS cannot enforce is said, never claimed); §8.6 (the QEMU runtime, vm-control, SnapshotEngine, the wall,
+      resources.js and the event taxonomy reused, not rebuilt); REVERSIBILITY (rewind and branch never lose the present: a snapshot first);
+      §0.3; §17.12 (snapshots and branches recorded in Versionium); §9.1 (acts by rule through RAID, CP6b); resource evidence: his machine at
+      0.2% free memory on 2026-11-01 — the reason the process tier is the coder's recommended default and the machine tier opt-in. To confirm.
+    capabilities: |
+      control              process tier (now)                                   machine tier (QEMU)                    phase
+      cores / threads      not set (affinity: Windows ProcessorAffinity,        -smp: BUILT                            CP6c
+                           Linux taskset — to build)
+      memory / RAM         heap cap at spawn BUILT; resident watched + act       -m: BUILT                              CP6a done
+                           BUILT (no hard cap without a job object, said)
+      disk space           none (no per-folder quota without admin: watched     qemu-img size: BUILT                   CP6d
+                           + act, said)
+      sandboxed            the require wall BUILT (CP1a); fs/net not walled      full machine isolation: BUILT          CP6e
+      network switch       none (the wall can refuse net/http/dgram inside       QMP set_link: BUILT                    CP6e
+                           the process; outside it needs a firewall rule)
+      throttling           none (socket wrapper in the wall: bytes/s)           netdev/block_set_io_throttle: to build CP6e
+      state → controls     the cockpit reads the supervisor; no per-system menu  vm-control on the desktop page          CP2
+      pause / resume       none (Linux SIGSTOP/SIGCONT; Windows suspend via      QMP stop/cont: BUILT                   CP5b
+                           NtSuspendProcess — to build)
+      snapshot             SnapshotEngine BUILT; per compartment OPEN (CP5a)     savevm / qemu-img: BUILT               CP5a
+      record (deltas)      the event log and ledgers exist; per-compartment      the same, plus checkpoints            CP5c
+                           delta stream not built
+      rewind               none                                                  loadvm: BUILT                          CP5d
+      branch               none                                                  qcow2 overlay on a backing file: to build CP5d
+      parallel             none                                                  overlays side by side: to build        CP5e
+      benchmark            CP6a's account per compartment BUILT; comparison     the same                               CP5f
+                           across branches not built
+      orchestration        tasks and pipelines (OC1, PL) BUILT; target a        the same                               OC4
+                           compartment: OC4 open
+      menu for every system none                                                 —                                      CP2
 stands_on: >-
   Built: COS's supervisor, its door, the handover, its UI and the cockpit (MG15–MG18, MG29); Loom run behind its wall (LM6); a repo's desktop
   (idearium/ui/desktop.html on cos/workspace); checkpoints, activity and Nexus's systems as compartments (compartment-control-and-activity);
@@ -267,6 +326,70 @@ phases:
       storage. The Idearium half of his ask is CP9 (depends on CP1, open).
     proof: "CR-06 approved → restarted with 'raid-approved'; CR-07 refused/unreachable → not restarted, 'raid-refused' with the reason"
 
+  CP6c_cores:
+    status: OPEN
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-CORES]
+    depends_on: [CP6a_caps_priority_accounting, CP_D9_the_whole_sandbox_per_system]
+    files: [cos/manager/resources.js, cos/manager/usage.js]
+    does: "a compartment's cores: process tier sets its CPU affinity (Windows ProcessorAffinity, Linux taskset) and reads it back; machine tier its -smp. A caps key, by layer, like heap and priority"
+    proof: "a fixture pinned to one core and read back from the OS"
+  CP6d_disk:
+    status: OPEN
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-DISK]
+    depends_on: [CP6a_caps_priority_accounting, CP_D9_the_whole_sandbox_per_system]
+    files: [cos/manager/resources.js, cos/manager/usage.js]
+    does: "a compartment's disk: the size of its data folder in its account; a limit watched with an act (warn, or a proposal), said watched not enforced on the process tier; the machine tier's disk size"
+    proof: "a fixture's folder over its limit gives the ledger line and the proposal"
+  CP6e_network_switch_and_throttle:
+    status: OPEN
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-NETWORK]
+    depends_on: [CP1a_every_system_walled_by_cos, CP_D9_the_whole_sandbox_per_system]
+    files: [cos/compartment/boundary.js, cos/manager/walls.js, cos/compartment/qemu-runtime.js]
+    does: "a compartment's network on, off (loopback only) or throttled (bytes/s): process tier in its wall (net, http, https, dgram refused or wrapped), machine tier by QMP set_link and the netdev throttle; switched live from its menu; each change by a person or RAID's rule, recorded"
+    proof: "a fixture refused outbound when off; its throughput under the throttle; switched back live"
+  CP5b_pause_resume:
+    status: "DONE 0.60.362 — test-cos-pause PA-01..04 on Linux (SIGSTOP/SIGCONT, real process trees). The Windows path (NtSuspendProcess through PowerShell) is written and UNPROVEN until it runs on his machine (§1.1); the screen is CP2"
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-SUSPEND, MOD-CP-PAUSE]
+    depends_on: [CP1a_every_system_walled_by_cos, CP6b_raid_approves_what_cos_does_by_rule, CP_D9_the_whole_sandbox_per_system]
+    files: [cos/manager/suspend.js, cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, tests/modules/test-cos-pause.test.js]
+    does: "pause and resume a compartment: Linux SIGSTOP/SIGCONT, Windows suspend/resume of the process tree, the machine tier QMP stop/cont; its state 'paused' on the ledger and the screen; the watchdog does not count a paused system as dead"
+    proof: "a fixture paused stops beating, is not restarted, resumes where it was"
+  CP5c_recording_the_deltas:
+    status: OPEN
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-DELTAS]
+    depends_on: [CP5a_snapshots_per_compartment]
+    files: [cos/manager, cos/foundation/snapshot.js]
+    does: "between snapshots, each event's changes to a compartment's state folder kept as a delta (path, before hash, after bytes), tied to the event that made it (the event taxonomy); recording on/off per compartment"
+    proof: "three events on a fixture give three deltas that, applied to the first snapshot, give the last state exactly"
+  CP5d_rewind_and_branch:
+    status: OPEN
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-REWIND]
+    depends_on: [CP5c_recording_the_deltas]
+    files: [cos/manager, cos/compartment/qemu-runtime.js, cos/workspace/vm-control.js]
+    does: "rewind to any recorded moment (nearest snapshot + deltas; a snapshot of now first, nothing lost); branch: a new compartment from that moment, its own data and ports; the machine tier by qcow2 overlays"
+    proof: "a fixture rewound to its second event matches that state byte for byte; a branch runs beside the original"
+  CP5e_parallel:
+    status: OPEN
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-PARALLEL]
+    depends_on: [CP5d_rewind_and_branch]
+    files: [cos/manager]
+    does: "several branches of one compartment running at once, each with its own ports, data and caps; under memory pressure RAID decides which wait (CP6b's gate)"
+    proof: "two branches of a fixture run at once without sharing a port or a file"
+  CP5f_benchmark:
+    status: OPEN
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-BENCHMARK]
+    depends_on: [CP5e_parallel]
+    files: [cos/manager]
+    does: "branches compared: each one's account (memory, CPU, disk, network) and the timing of the same task, side by side, kept as a record"
+    proof: "two branches given one task give a comparison with both accounts and timings"
   CP5a_snapshots_per_compartment:
     status: OPEN
     spec: cos/spec/compartment.spec

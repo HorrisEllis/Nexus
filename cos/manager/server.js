@@ -8,7 +8,7 @@
  * door are MG16's. Since MG17 (0.60.330) lib/nexus/autopilot.js launches it: --only=a,b is the boot set for --boot, --handover=<version>
  * writes the 'handover' line naming the release, --root=<dir> reads another tree's declarations (a fixture).
  *   GET  /api/cos/health · /api/cos/systems · /api/cos/systems/:name · /api/cos/ledger[?system&limit] · /api/cos/policy
- *   POST /api/cos/boot · /api/cos/systems/:name/(start|stop|restart|touch|reset-circuit) — each act carries { by } (MG-006)
+ *   POST /api/cos/boot · /api/cos/systems/:name/(start|stop|restart|touch|reset-circuit|pause|resume) — each act carries { by } (MG-006); pause/resume CP5b
  *   PATCH /api/cos/policy
  * MG18 (0.60.337, MG_D16): GET /api/cos/contract · /api/cos/events (server-sent: cos.ledger, cos.system.state) · /api/cos/usage ·
  *   /api/cos/systems/:name/logs · /api/cos/proposals; POST /api/cos/proposals (an agent's) · /api/cos/proposals/:id/(take|drop) (a person's)
@@ -82,7 +82,7 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
       const pr = /^\/api\/cos\/proposals\/([^/]+)\/(take|drop)$/.exec(p);
       if (pr && m === 'POST') { try { return send(res, 200, { ok: true, ...(pr[2] === 'take' ? proposals.take(decodeURIComponent(pr[1]), { by: body.by }) : proposals.drop(decodeURIComponent(pr[1]), { by: body.by, why: body.why })) }); }
         catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
-      const act = /^\/api\/cos\/systems\/([^/]+)(?:\/(start|stop|restart|touch|reset-circuit))?$/.exec(p);
+      const act = /^\/api\/cos\/systems\/([^/]+)(?:\/(start|stop|restart|touch|reset-circuit|pause|resume))?$/.exec(p);
       if (act && m === 'GET' && !act[2]) return send(res, 200, { ok: true, system: sup.get(decodeURIComponent(act[1])) });
       // MG-006: a start, stop, restart, boot or policy change is a person's act or a rule's, and says whose; touch is a request for the system
       const needBy = () => { if (!body.by) { send(res, 400, { ok: false, error: 'say who acts: { "by": "person" | "rule:<id>" }' }); return false; } return true; };
@@ -90,6 +90,17 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
         const name = decodeURIComponent(act[1]);
         if (act[2] === 'touch') return send(res, 200, { ok: true, system: sup.touch(name) });
         if (!needBy()) return;
+        // CP5b — pause/resume: a person's act is his; a rule's is RAID's to approve (fails closed, CP6b); an agent proposes (CP-005)
+        if (act[2] === 'pause' || act[2] === 'resume') {
+          const by = String(body.by);
+          if (/^agent:/.test(by)) return send(res, 403, { ok: false, error: `an agent proposes; a ${act[2]} is a person's act or a rule's RAID approved (CP-005)` });
+          if (/^rule:/.test(by)) {
+            let ok = null; try { ok = await require('../../lib/raid-port.js').approveTool('cos', `cos.${act[2]} ${name}`, { action: act[2], intent: { action: act[2], target: name }, causedBy: by }); } catch (e) { ok = { approved: false, reason: `RAID unreachable: ${e.message}` }; }
+            if (!ok || !ok.approved) { sup.note('raid-refused', `RAID did not approve ${act[2]} of ${name} by ${by}: ${(ok && ok.reason) || 'no answer'}`, { by, system: name }); return send(res, 403, { ok: false, error: `RAID did not approve: ${(ok && ok.reason) || 'no answer'}` }); }
+          }
+          const v = await sup[act[2]](name, { by });
+          return send(res, v.said ? 409 : 200, { ok: !v.said, system: v, ...(v.said ? { said: v.said } : {}) });   // said = nothing was done, and why
+        }
         const fn = { start: sup.start, stop: sup.stop, restart: sup.restart, 'reset-circuit': sup.resetCircuit }[act[2]];
         return send(res, 200, { ok: true, system: fn(name, { by: body.by }) });
       }

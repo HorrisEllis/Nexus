@@ -1,0 +1,155 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP6e_network_switch_and_throttle:17011dcc49054eea
+type: graph
+id: phase:CP6e_network_switch_and_throttle:17011dcc49054eea
+context: dependency graph of phase CP6e_network_switch_and_throttle
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793576104493
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104493
+lastSeenAt: 1793576104493
+fingerprint: null
+payload:
+  for: CP6e_network_switch_and_throttle
+  kind: phase
+  repo: null
+  hash: 17011dcc49054eea
+  nodes:
+    - path: cos/compartment/boundary.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/walls.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/cli/commands/vm.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/compartment/process-runner.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/provision.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/vm-control.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/helpers/cos-mini-guest.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-vm-shell.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/compartment/qemu-runtime.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/walls.js
+      kind: requires
+    - from: cos/cli/commands/vm.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/vm-control.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/helpers/cos-mini-guest.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-vm-shell.test.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D9_the_whole_sandbox_per_system
+    dependents: []
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D9_registry_then_cos_through_the_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D5_every_system_into_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D9_the_whole_sandbox_per_system
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5d_rewind_and_branch
+        files:
+          - cos/compartment/qemu-runtime.js
+    dangling: []
+    lines:
+      - layer 6 · ready
+      - >-
+        depends on (2): CP1a_every_system_walled_by_cos, CP_D9_the_whole_sandbox_per_system · all
+        upstream 13
+      - 'needed by (0): —'
+      - >-
+        same files as CP5d_rewind_and_branch with no order between them:
+        cos/compartment/qemu-runtime.js
+    edges:
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+        kind: declared
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP_D9_the_whole_sandbox_per_system
+        kind: declared

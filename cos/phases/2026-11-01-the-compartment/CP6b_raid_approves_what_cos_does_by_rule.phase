@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP6b_raid_approves_what_cos_does_by_rule
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP6b_raid_approves_what_cos_does_by_rule
+context: >-
+  pipeline phase CP6b_raid_approves_what_cos_does_by_rule of
+  docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP6b_raid_approves_what_cos_does_by_rule (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793576104485
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104485
+lastSeenAt: 1793576104485
+fingerprint: null
+payload:
+  id: CP6b_raid_approves_what_cos_does_by_rule
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE 0.60.361 — test-cos-resources CR-06, CR-07"'
+  files:
+    - cos/manager/resources.js
+    - cos/spec/compartment.spec
+    - tests/modules/test-cos-resources.test.js
+  depends_on:
+    - CP6a_caps_priority_accounting
+  blocks:
+    - MOD-CP-RAID-GATE
+  spec: cos/spec/compartment.spec
+  graph: 999040cea9ff16ee

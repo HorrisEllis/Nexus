@@ -824,7 +824,7 @@ export const SPEC = [
     req: (a) => ({ method: 'POST', path: `/api/workshop/${encodeURIComponent(a.args[0] || '')}/skip`, body: { step: 'workshop.sections', by: 'person' } }) },
   { key: 'cos.ps', repo: false, usage: 'cos ps', about: 'every declared system as COS\'s supervisor sees it: state, pid, restarts, circuit',
     req: () => ({ method: 'GET', path: '/api/cos/systems' }) },
-  { key: 'cos.act', repo: false, usage: 'cos <start|stop|restart|touch|reset-circuit> <system>', about: 'a person\'s act on one system, through COS\'s supervisor (ledgered before it happens)',
+  { key: 'cos.act', repo: false, usage: 'cos <start|stop|restart|touch|reset-circuit|pause|resume> <system>', about: 'a person\'s act on one system, through COS\'s supervisor (ledgered before it happens); pause and resume suspend its process tree and read it back from the OS (CP5b)',
     req: (a) => ({ method: 'POST', path: `/api/cos/systems/${encodeURIComponent(a.args[1] || '')}/${encodeURIComponent(a.args[0] || 'start')}`, body: { by: 'person' } }) },
   { key: 'cos.boot', repo: false, usage: 'cos boot [all|core]', about: 'boot the declared systems phase by phase (core = the critical set, CS4a)',
     req: (a) => ({ method: 'POST', path: '/api/cos/boot', timeoutMs: 120000, body: { set: a.args[0] || undefined, by: 'person' } }) },

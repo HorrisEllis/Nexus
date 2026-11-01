@@ -1,0 +1,166 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP11_the_diagnostic_map:bccdc8f84285b773
+type: graph
+id: phase:CP11_the_diagnostic_map:bccdc8f84285b773
+context: dependency graph of phase CP11_the_diagnostic_map
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793576104467
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104467
+lastSeenAt: 1793576104467
+fingerprint: null
+payload:
+  for: CP11_the_diagnostic_map
+  kind: phase
+  repo: null
+  hash: bccdc8f84285b773
+  nodes:
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/walls.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/ui/serve.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/emergence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-update.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/emergence.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/walls.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/ui/serve.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D4_the_diagnostic_map_on_the_eravos_canvas
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+    dependents:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO4_measure_tools
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D0_interconnected
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D1_one_graph_cfr_builds_rfr2_reads
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D4_the_diagnostic_map_on_the_eravos_canvas
+    downstream:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO4_measure_tools
+    blockedBy:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP9_cos_and_idearium_one_link
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5b_pause_resume
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP7a_the_nexus_sync_options
+        files:
+          - cos/manager/server.js
+    dangling: []
+    lines:
+      - layer 6 · blocked by CI1_one_feed, CI3_the_measures_chained, CP1_the_machine_and_its_door
+      - >-
+        depends on (4): CP_D4_the_diagnostic_map_on_the_eravos_canvas, CI1_one_feed,
+        CI3_the_measures_chained, CP1_the_machine_and_its_door · all upstream 17
+      - 'needed by (1): EO4_measure_tools'
+      - >-
+        same files as CP9_cos_and_idearium_one_link with no order between them:
+        cos/manager/server.js
+      - 'same files as CP10_miniworlds with no order between them: cos/manager/server.js'
+      - 'same files as CP5b_pause_resume with no order between them: cos/manager/server.js'
+      - >-
+        same files as CP5a_snapshots_per_compartment with no order between them:
+        cos/manager/server.js
+      - 'same files as CP7a_the_nexus_sync_options with no order between them: cos/manager/server.js'
+    edges:
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP_D4_the_diagnostic_map_on_the_eravos_canvas
+        kind: declared
+      - from: docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+        kind: declared
+      - from: docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+        kind: declared
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+        kind: declared

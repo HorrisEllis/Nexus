@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP5f_benchmark
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP5f_benchmark
+context: pipeline phase CP5f_benchmark of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP5f_benchmark (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793576104504
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104504
+lastSeenAt: 1793576104504
+fingerprint: null
+payload:
+  id: CP5f_benchmark
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager
+    - cos/spec/compartment.spec
+  depends_on:
+    - CP5e_parallel
+  blocks:
+    - MOD-CP-BENCHMARK
+  spec: cos/spec/compartment.spec
+  graph: ac9b1d36c61a43c8

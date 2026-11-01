@@ -142,7 +142,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   function onExit(name, proc, code, signal, threw = null) {
     const s = S.get(name);
     if (proc && s.proc !== proc) return;   // an old child's exit
-    s.proc = null; s.pid = null; s.lastExit = { code, signal, ts: Date.now() };
+    s.proc = null; s.pid = null; s.pause = null; s.lastExit = { code, signal, ts: Date.now() };
     if (s.state === 'stopping') { s.state = 'stopped'; write('stop', name, 'stopped as asked', { code, by: s.by }); return; }
     if (s.state === 'idling') { s.state = 'idle'; write('idle-stop', name, `idle ${Math.round(P.idleMs / 1000)}s; starts again when asked`, { code }); return; }
     if (s.state === 'restarting') { s.backoffMs = P.restart.backoffMs[0]; write('restart', name, 'restarting as asked', { code, by: s.by }); spawnNow(name, s.by); return; }
@@ -167,11 +167,44 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   function start(name, { by = 'person' } = {}) { const s = must(name); if (running(s)) return { ...view(s), said: 'already running: nothing done' }; clearTimers(s); spawnNow(name, by); return view(s); }
   function stop(name, { by = 'person' } = {}) {
     const s = must(name); clearTimers(s); if (!running(s)) { if (s.state !== 'circuit-open') s.state = 'stopped'; return { ...view(s), said: 'not running' }; }
-    s.state = 'stopping'; s.by = by; const p = s.proc; try { p.kill('SIGTERM'); } catch (_) {}
+    _unpauseForExit(s); s.state = 'stopping'; s.by = by; const p = s.proc; try { p.kill('SIGTERM'); } catch (_) {}
     later(s, P.stopGraceMs, () => { if (s.proc === p) try { p.kill('SIGKILL'); } catch (_) {} }); return view(s);
   }
-  function restart(name, { by = 'person' } = {}) { const s = must(name); if (!running(s)) return start(name, { by }); s.state = 'restarting'; s.by = by; try { s.proc.kill('SIGTERM'); } catch (_) {} return view(s); }
+  function restart(name, { by = 'person' } = {}) { const s = must(name); if (!running(s)) return start(name, { by }); _unpauseForExit(s); s.state = 'restarting'; s.by = by; try { s.proc.kill('SIGTERM'); } catch (_) {} return view(s); }
   function touch(name) { const s = must(name); s.lastActivity = Date.now(); if (!running(s) && s.decl.onDemand && !s.circuit.open) spawnNow(name, 'rule:on-demand'); return view(s); }
+  // ── pause / resume (CP5b, 0.60.362; cos/spec/compartment.spec MOD-CP-PAUSE) ─────────────────────────────────────────────────────────
+  // James, 2026-11-01: "the entire sandbox is rewindable/pausable/…". The ledger line first (§9.2), then the OS act (suspend.js), then the OS's
+  // read-back decides the state (§0.1): 'paused' only when the OS reads the tree suspended. A paused system is not idled or restarted by rule.
+  // Who may pause is the manager route's gate (a person, or a rule RAID approved; an agent proposes).
+  function _unpauseForExit(s) {   // a stopped (SIGSTOP) process cannot act on SIGTERM until it is continued; Windows terminates a suspended one
+    if (s.state !== 'paused' || !s.pid) return;
+    if (process.platform !== 'win32') for (const p of (s.pause && s.pause.pids) || [s.pid]) { try { process.kill(p, 'SIGCONT'); } catch (_) {} }
+    write('resume', s.decl.name, 'resumed so it can stop', { by: 'rule:pause' }); s.pause = null;
+  }
+  async function pause(name, { by = 'person' } = {}) {
+    const s = must(name);
+    if (!running(s)) return { ...view(s), said: 'not running: nothing to pause' };
+    if (s.state === 'paused') return { ...view(s), said: 'already paused' };
+    const susp = require('./suspend.js');
+    if (!write('pause', name, `pausing its process tree (${susp.VIA})`, { by })) return { ...view(s), said: 'the ledger could not be written: not paused (§9.2)' };
+    const r = await susp.suspend(s.pid);
+    if (!r.ok) { write('pause-failed', name, `not paused: ${r.error || r.os} (the OS reads ${r.os})`, { by }); return { ...view(s), said: r.error || `the OS reads ${r.os}` }; }
+    s.pause = { pids: r.pids, via: r.via, os: r.os, by, since: Date.now(), was: s.state }; s.state = 'paused';
+    write('paused', name, `paused: ${r.pids.length} process(es), the OS reads ${r.os}`, { by });
+    return view(s);
+  }
+  async function resume(name, { by = 'person' } = {}) {
+    const s = must(name);
+    if (s.state !== 'paused') return { ...view(s), said: 'not paused' };
+    const susp = require('./suspend.js');
+    if (!write('resume', name, `resuming its process tree (${susp.VIA})`, { by })) return { ...view(s), said: 'the ledger could not be written: not resumed (§9.2)' };
+    const r = await susp.resume(s.pid);
+    if (!r.ok) { write('resume-failed', name, `still paused: ${r.error || r.os} (the OS reads ${r.os})`, { by }); return { ...view(s), said: r.error || `the OS reads ${r.os}` }; }
+    s.state = (s.pause && s.pause.was) || 'up'; s.pause = null; s.lastActivity = Date.now();
+    write('resumed', name, `resumed: the OS reads ${r.os}`, { by });
+    return view(s);
+  }
+
   function resetCircuit(name, { by = 'person' } = {}) { const s = must(name); s.crashes = []; s.circuit = { open: false, openedAt: null, why: null }; s.state = 'stopped'; write('circuit-close', name, 'reset by a person', { by }); return view(s); }
 
   async function boot({ set = P.bootSet, by = 'boot' } = {}) {
@@ -193,12 +226,12 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   }
 
   const reaper = setInterval(() => {   // on-demand systems idle past idleMs stop
-    for (const s of S.values()) if (s.decl.onDemand && running(s) && s.lastActivity && Date.now() - s.lastActivity > P.idleMs) { s.state = 'idling'; try { s.proc.kill('SIGTERM'); } catch (_) {} }
+    for (const s of S.values()) if (s.decl.onDemand && running(s) && s.state !== 'paused' && s.lastActivity && Date.now() - s.lastActivity > P.idleMs) { s.state = 'idling'; try { s.proc.kill('SIGTERM'); } catch (_) {} }
   }, P.idleCheckMs); if (reaper.unref) reaper.unref();
 
   function view(s) {
     const d = s.decl;
-    return { name: d.name, system: d.system, state: s.state, pid: s.pid, port: d.healthUrl ? Number((/:(\d+)/.exec(d.healthUrl) || [])[1]) || null : null,
+    return { name: d.name, system: d.system, state: s.state, pause: s.pause ? { ...s.pause, pids: [...s.pause.pids] } : null, pid: s.pid, port: d.healthUrl ? Number((/:(\d+)/.exec(d.healthUrl) || [])[1]) || null : null,
       healthUrl: d.healthUrl || null, critical: !!d.critical, compartment: d.compartment || null, walled: !!(d.boundary && d.boundary.allow), wallMode: d.boundary ? (d.boundary.mode || 'enforce') : null, wallVia: d.boundary && d.boundary.allow ? (/electron/i.test(String(d.cmd)) ? 'NODE_OPTIONS' : '--require') : null, bootPhase: d.onDemand ? null : (d.phase ?? null), onDemand: !!d.onDemand,
       restarts: { count: s.restarts, last: s.lastExit ? s.lastExit.ts : null, backoffMs: s.backoffMs }, circuit: { ...s.circuit }, startedAt: s.startedAt, by: s.by,
       // MG16: what autopilot's /status carried, so the door answers in its shape
@@ -215,7 +248,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
 
   function logs(name, { limit = 200 } = {}) { const s = must(name); return s.out.slice(-Math.max(1, Math.min(LOG_KEEP, limit))); }
 
-  const api = { boot, note, logs, on: (ev, fn) => bus.on(ev, fn), off: (ev, fn) => bus.off(ev, fn), declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
+  const api = { boot, note, logs, pause, resume, on: (ev, fn) => bus.on(ev, fn), off: (ev, fn) => bus.off(ev, fn), declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
     policy: () => JSON.parse(JSON.stringify(P)), setPolicy: (patch, { by = 'person' } = {}) => { Object.assign(P, patch || {}); write('policy', null, `policy changed: ${JSON.stringify(patch)}`, { by }); return JSON.parse(JSON.stringify(P)); },
     shutdown, DEFAULTS, ledgerFile: LEDGER, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); }, commandOf: (n) => commandOf(must(n).decl), root };
   return api;
