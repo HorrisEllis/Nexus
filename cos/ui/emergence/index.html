@@ -1,0 +1,35 @@
+<!doctype html>
+<!-- cos/ui/emergence/index.html — COS's Emergence page (TV3, 2026-11-01). One page with the TV's EMERGENCE channel: the same script and the
+     same pieces (lib/ui/tv-shell/channels/emergence/, served read-only by cos/ui/serve.js under /kernel/emergence/), worn in COS's theme.
+     James, 2026-11-01: "the tv ui needs the emergence channel" · "i also meant cos ui". Every read is COS's own door:
+     /api/cos/emergence/{patterns,liminal,sessions}. -->
+<html lang="en" data-theme="nexus" data-accent="cycle">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Emergence · COS</title>
+  <meta name="emergence-api" content="/api/cos/emergence">
+  <link rel="stylesheet" href="../core/theme.css"><link rel="stylesheet" href="../core/core.css">
+  <link rel="stylesheet" href="/kernel/emergence/emergence.css"><link rel="stylesheet" href="page.css">
+</head>
+<body class="cos-page">
+  <div data-refusals></div>
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">Compartment OS · what emerges</span>
+      <h1 class="title">Emergence</h1>
+      <p class="lede">What Intelligence has crystallised, what is still forming between the layers, and your emergence runs: axioms and an end state, and when the problem will not give, the method changes.</p>
+    </div>
+    <div class="actions">
+      <div class="em-counts" id="em-counts"></div>
+      <label class="em-switch" title="Patterns where one side is Intelligence's own event: Intelligence watching itself, not the system"><input type="checkbox" id="em-hide-self" checked> hide what Intelligence sees of itself <span id="em-self-n"></span></label>
+    </div>
+  </header>
+  <main class="em-grid">
+    <section class="panel em-col" id="em-crystals"><h2>Crystallised <span class="em-hint">patterns that held</span></h2><div class="em-body" data-body>reading…</div></section>
+    <section class="panel em-col" id="em-liminal"><h2>Forming <span class="em-hint">the liminal spaces</span></h2><div class="em-body" data-body>reading…</div></section>
+    <section class="panel em-col" id="em-runs"><h2>Runs <span class="em-hint">axioms → end state</span></h2><div class="em-body" data-body>reading…</div></section>
+  </main>
+  <script src="../core/core.js"></script>
+  <script src="page.js"></script>
+  <script src="/kernel/emergence/emergence.js"></script>
+</body>
+</html>

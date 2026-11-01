@@ -95,3 +95,11 @@ build_order: "TV0 → TV1 → TV2. TV3 stands alone (its own page, its own route
 # - CH_INSPECT (the inspect overlay) is read by position and has 14 entries for 22 channels: channels past the 14th have no inspect entry.
 #   Pre-existing, not fixed here, said (TV2 moves each channel to its own page and ends the positional list).
 # The orchestrator's forward is checked in its source (EC-04), not run: the orchestrator cannot be started on a test port.
+
+# ── ADDENDUM 2026-11-01 (0.60.345) — TV3 in COS's UI too ───────────────────────────────────────────────────────────────────────────────
+# James, 2026-11-01: "i also meant cos ui". COS's UI gains an Emergence page (cos/ui/emergence/, listed in COS's contract). It is ONE page with
+# the TV channel ("no redundancy"):
+# - the same script and pieces, served read-only by cos/ui/serve.js from lib/ui/tv-shell/channels/emergence/ (that folder, .js and .css only);
+# - worn in COS's theme by its page.css;
+# - told its door by <meta name="emergence-api">: COS's GET /api/cos/emergence/:what.
+# COS asks Intelligence through its routes, its origin taken from its declaration, and the kernel for his runs.

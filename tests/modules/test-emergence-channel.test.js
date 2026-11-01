@@ -12,6 +12,8 @@ require('../../lib/test-sandbox.js').ensure();
  *   EC-06  one system down: its column says so in red, by name; the others still show
  *   EC-07  the TV: EMERGENCE is the last channel (CH_INSPECT is read by position), its page loads on tune, and a rail he saved before it
  *          existed gets it added at its end
+ *   EC-08  COS ("i also meant cos ui"): COS's manager answers /api/cos/emergence/* from a stand-in Intelligence (its origin from its
+ *          declaration) and the kernel; the cockpit serves the one shared script; COS's Emergence page, in Clear Glass, shows all three
  */
 const assert = require('assert'), http = require('http'), path = require('path'), fs = require('fs');
 const ROOT = path.join(__dirname, '..', '..'), UI = path.join(ROOT, 'lib/ui/tv-shell');
@@ -114,6 +116,40 @@ const PATTERNS = [
     const got = load({ getItem: (k) => store[k] }, [{ id: 'ch-overview', name: 'NEXUS' }, { id: 'ch-log', name: 'LOG' }, { id: 'ch-emergence', name: 'EMERGENCE' }], 'nexus.tv.channels', console);
     assert.deepStrictEqual(got.map(c => [c.id, !!c.hidden]), [['ch-log', false], ['ch-overview', true], ['ch-emergence', false]], 'his order and his hidden one kept; the new one added at the end');
   });
+  // EC-08 — COS: the real manager server and the real cockpit server, a stand-in Intelligence behind the manager
+  const intel = http.createServer((req, res) => { res.setHeader('Content-Type', 'application/json'); const u = req.url.split('?')[0];
+    if (u === '/api/intelligence/patterns') return res.end(JSON.stringify({ ok: true, patterns: [{ patternType: 'bottleneck', said: '"dangling hook" gaps keep recurring (13× open) — likely a systemic bottleneck', count: 13, confidence: 0.6, self: false }], total: 1, self: 0 }));
+    if (u === '/api/liminal-space/status') return res.end(JSON.stringify({ spaces: { 'L1/L3': { name: 'Pattern-Causality Membrane', invariant: 'cause before pattern', active: 21, resolved: 2, crystals: 5, velocity: 0.3 } } }));
+    if (u === '/api/liminal-space/list') return res.end(JSON.stringify({ ok: true, items: [] }));
+    res.statusCode = 404; res.end('{}'); });
+  await new Promise(r => intel.listen(0, '127.0.0.1', r));
+  const sup = { on() {}, list: () => [], ledgerFile: path.join(require('os').tmpdir(), `ec-cos-${process.pid}`, 'ledger.jsonl'), declarations: () => [{ name: 'intelligence', healthUrl: `http://127.0.0.1:${intel.address().port}/health` }] };
+  const mgr = await require(path.join(ROOT, 'cos/manager/server.js')).listen(sup, 0, { root: ROOT });
+  const cockpit = require(path.join(ROOT, 'cos/ui/serve.js')).createServer({ port: 0, manager: `http://127.0.0.1:${mgr.address().port}` });
+  await new Promise(r => cockpit.listen(0, '127.0.0.1', r));
+  const cp = `http://127.0.0.1:${cockpit.address().port}`;
+  const getJ = (u) => new Promise(r => http.get(u, (x) => { let t = ''; x.on('data', c => t += c); x.on('end', () => r({ status: x.statusCode, body: t })); }));
+  await test('EC-08', 'COS: its door answers from Intelligence and the kernel; the cockpit serves the one script; its page shows all three', async () => {
+    const p = JSON.parse((await getJ(`${cp}/api/cos/emergence/patterns`)).body); assert.ok(p.ok && p.patterns[0].patternType === 'bottleneck', JSON.stringify(p));
+    const l = JSON.parse((await getJ(`${cp}/api/cos/emergence/liminal`)).body); assert.ok(l.ok && l.status.spaces['L1/L3'], JSON.stringify(l));
+    const s = JSON.parse((await getJ(`${cp}/api/cos/emergence/sessions`)).body); assert.ok(s.ok && s.sessions.some(x => x.compartmentId === 'c1'), JSON.stringify(s));
+    const js = await getJ(`${cp}/kernel/emergence/emergence.js`); assert.strictEqual(js.status, 200);
+    assert.strictEqual(js.body, fs.readFileSync(path.join(UI, 'channels/emergence/emergence.js'), 'utf8'), 'the same file, not a copy');
+    assert.strictEqual((await getJ(`${cp}/kernel/emergence/emergence.html`)).status, 404, 'its script and style only');
+    assert.strictEqual((await getJ(`${cp}/kernel/emergence/%2e%2e%2f%2e%2e%2findex.html`)).status, 404, 'nothing above that folder');
+    if (browser || true) {
+      let b2; try { b2 = await glass.chromium.launch(); } catch (_) { return; }
+      try {
+        const pg = await b2.newPage({ viewport: { width: 1280, height: 800 } });
+        await pg.goto(`${cp}/emergence/index.html`);
+        await pg.waitForFunction(() => !/reading…/.test(document.getElementById('em-runs').textContent) && !/reading…/.test(document.getElementById('em-liminal').textContent));
+        const t = await pg.evaluate(() => document.body.textContent);
+        assert.ok(/systemic bottleneck/.test(t) && /Pattern-Causality Membrane/.test(t) && /a parser that passes/.test(t), t.slice(0, 600));
+        if (process.env.EC_SHOTS) await pg.screenshot({ path: path.join(process.env.EC_SHOTS, 'emergence-cos.png') });
+      } finally { await b2.close(); }
+    }
+  });
+  cockpit.close(); mgr.close(); intel.close();
   console.log(`\n  ${passed} passed, ${failed} failed\n`);
   process.exit(failed ? 1 : 0);
 })();
