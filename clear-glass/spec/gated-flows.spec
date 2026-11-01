@@ -782,3 +782,10 @@ spec:
 # field still takes the tab-and-panel path, and a value not offered is said with the field's own list (§1.2). In production the prior field's
 # menu is dismissed by the click on the next control (universal click-away); a left-open menu is the one failure mode, named not silent.
 # Acceptance met in Clear Glass's own engine: tests/modules/test-gig-metadata-dropdown-glass.test.js DD-01..05, with a screenshot.
+#
+# What the AI ENGINE field is FOR (the purpose, recorded 2026-11-01 — Nexus knew how to fill it but not what it meant; a gap closed on James's
+# ask "what is the ai engine for?"). On Fiverr's AI Development category it is a buyer-discovery metadata field: the seller declares which AI
+# models/engines the service is built on or works with (Claude, ChatGPT, Gemini, Llama, Mistral, …) so buyers who want a specific engine filter
+# to the gig. That is why each clear-glass/docs/gigs/*.gig sets AI ENGINE to the models that gig actually uses. (NOT to be confused with NEXUS's
+# own "AI engine" = Guardian, guardian/spec/guardian.spec — the system that touches the AI providers. The buyer-facing semantics here are the
+# coder's reading of Fiverr's live page, held as stated/observed, not a Fiverr-published definition — EP1.)
