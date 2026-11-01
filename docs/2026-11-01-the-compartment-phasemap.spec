@@ -42,6 +42,22 @@ decisions:
       answered by his "use .cos … look for the miniworlds" the same day. Emerge's emerge/emerge.cos is the first.
     by: "his, 2026-11-01: \"i want cos to use miniworlds for entire systems. one layer above the spec/repo. miniworld is the meta layer for compartments. its how i run counterfactuals, or mental simulations. each system in my head is a model. thats why each system is its own folder. i like it nic eand tidy.\""
     by_the_axioms: "§0.3 (a fork never touches what it came from; a discard archives), §10.3 (one miniworld per system, not a second record of it), §5.15 (each system's folder its own)"
+  CP_D3_the_miniworld_is_the_compartment:
+    status: DECIDED 2026-11-01 (his; supersedes the coder's reading in CP_D2, which is kept)
+    chosen: >-
+      A miniworld and a COS compartment are the same thing; COS is the orchestrator. There is no layer above: the compartment, whole (CP_D0),
+      is the miniworld, and a counterfactual is a forked compartment run beside its original (CP10). The coder had read the .cos node as a
+      layer above the spec and repo (CP_D2); that reading is superseded here. The .cos node stays the compartment's node.
+    by: "his, 2026-11-01: \"the miniworld would be the same as the cos compartments. basically cos is the orchatrator.\""
+  CP_D4_the_diagnostic_map_on_the_eravos_canvas:
+    status: DECIDED 2026-11-01 (his)
+    chosen: >-
+      CFR and RFR2 seen as one visual diagnostic map of the whole system on the ERAVOS canvas (cos/archetype/eravos-canvas): each compartment
+      a node, each real wire an edge, the tension (CFR's field, sigma) and the friction (RFR2's bottlenecks, the FrictionScore) drawn on them,
+      and the real events moving along the edges as they happen — nothing drawn that did not happen. It is the view of the causal-interconnect
+      map's CI5 (another session's map, read, not superseded); it supersedes the TV UI's Nerve channel (lib/ui/tv-shell/nerve), whose
+      snapshot route 404s (TV audit 2026-11-01), kept and archived when this is built.
+    by: "his, 2026-11-01: \"I want cfr and rfr2 as a visual diagnostic map of the system, the tension and friction, showing real data moving through the system. using the eravos canvas.\""
 stands_on: >-
   Built: COS's supervisor, its door, the handover, its UI and the cockpit (MG15–MG18, MG29); Loom run behind its wall (LM6); a repo's desktop
   (idearium/ui/desktop.html on cos/workspace); checkpoints, activity and Nexus's systems as compartments (compartment-control-and-activity);
@@ -150,5 +166,17 @@ phases:
       overlay for a machine), change it, run the fork beside the original behind its own wall, compare them (their ledgers, their tests,
       RFR2's measure), then keep (merge) or discard (archived). The fork shows in Idearium as a branch of the system's repo.
     proof: "Emerge's miniworld forked, a change made in the fork, both run side by side, the comparison shown, the fork discarded, the original untouched byte for byte (its lock)"
+
+  CP11_the_diagnostic_map:
+    status: OPEN
+    depends_on: [CP_D4_the_diagnostic_map_on_the_eravos_canvas, CI1_one_feed, CI3_the_measures_chained, CP1_the_machine_and_its_door]
+    files: [cos/ui/map, cos/archetype/eravos-canvas, intelligence/cfr, intelligence/rfr2, cos/manager/server.js]
+    interface: [html, route]
+    does: >-
+      The map, on the ERAVOS canvas, opened from COS: compartments as nodes (their state from COS's supervisor), wires as edges (Loom's
+      registry), CFR's sigma as each node's tension, RFR2's bottlenecks and friction as each edge's weight, the event stream (COS's bus,
+      the ledger fan-in) as pulses travelling the edges; a node or edge opened shows its numbers, its causal chain (CI2) and its compartment
+      window (CP2). Read through each system's door: Intelligence's routes for CFR and RFR2, COS's for the compartments.
+    proof: "in Clear Glass, on the running stack: a restart in COS shows as a pulse on its edges and a sigma rise on its node; a forced slow route shows as friction on its edge; every number on the map equals its owner's route at that time"
 
 build_order: "CP0 → CP1 → (CP9, with EAS3) → CP2 → (CP3, CP5, CP6, CP7) → CP4, CP8. The open canvas (MG_D18) and Add → Build (BC4) sit on CP2."
