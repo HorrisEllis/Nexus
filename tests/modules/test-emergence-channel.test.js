@@ -125,7 +125,7 @@ const PATTERNS = [
     if (u === '/api/liminal-space/list') return res.end(JSON.stringify({ ok: true, items: [] }));
     res.statusCode = 404; res.end('{}'); });
   await new Promise(r => intel.listen(0, '127.0.0.1', r));
-  const sup = { on() {}, list: () => [], ledgerFile: path.join(require('os').tmpdir(), `ec-cos-${process.pid}`, 'ledger.jsonl'), declarations: () => [{ name: 'intelligence', healthUrl: `http://127.0.0.1:${intel.address().port}/health` }] };
+  const sup = { on() {}, setHooks() {}, list: () => [], ledgerFile: path.join(require('os').tmpdir(), `ec-cos-${process.pid}`, 'ledger.jsonl'), declarations: () => [{ name: 'intelligence', healthUrl: `http://127.0.0.1:${intel.address().port}/health` }] };
   const mgr = await require(path.join(ROOT, 'cos/manager/server.js')).listen(sup, 0, { root: ROOT });
   const cockpit = require(path.join(ROOT, 'cos/ui/serve.js')).createServer({ port: 0, manager: `http://127.0.0.1:${mgr.address().port}` });
   await new Promise(r => cockpit.listen(0, '127.0.0.1', r));
