@@ -51,6 +51,7 @@ const FILES = [
   ['cos/ui/core/section.js',    I('cos/ui/core/section.js'),    [I('cos/ui/core/core.js')]],
   ['cos/ui/shell/bus.js',       I('cos/ui/shell/bus.js'),       []],
   ['cos/ui/shell/page.js',      I('cos/ui/shell/page.js'),      [I('cos/ui/core/core.js'), I('cos/ui/shell/bus.js'), I('cos/ui/serve.js')]],   // the event stream; frames by postMessage
+  ['cos/ui/updates/page.js',     I('cos/ui/updates/page.js'),     [I('cos/ui/core/core.js'), I('cos/ui/shell/page.js'), I('cos/manager/updates.js')]],   // SC7 0.60.379: Updates and the gear's settings (through COS's routes)
   ['cos/ui/shell/console.js',   I('cos/ui/shell/console.js'),   [I('cos/ui/core/core.js'), I('cos/ui/shell/page.js'), I('lib/ui/update-popup/update-popup.js')]],   // SC5 0.60.379: the bell, the command line, Add system
   ['cos/ui/cockpit/sections/config/section.js', I('cos/ui/cockpit/sections/config/section.js'), [I('cos/ui/core/section.js'), I('cos/manager/system-config.js')]],   // SC5: a system's configuration (through its routes)
   ...['overview', 'ledger', 'proposals', 'automation', 'planned', 'cockpit'].map(p => [`cos/ui/${p}/page.js`, I(`cos/ui/${p}/page.js`), [I('cos/ui/core/core.js'), I('cos/ui/shell/page.js'), ...(p === 'cockpit' ? [I('cos/ui/core/section.js')] : [])]]),

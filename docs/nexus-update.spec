@@ -168,3 +168,9 @@ spec:
 # - autoTick: under auto, when every local commit is already on GitHub by content, it keeps them on a branch and moves on by itself. Any commit
 #   GitHub lacks stays his call, offered on COS's card.
 # - The route is POST /api/update/keep-local (Idearium); the command row is `update keep-local --yes` (the person's).
+
+# ── ADDENDUM 2026-11-02 (0.60.380, SC7) — keepLocal, a policy setting ──
+# James, 2026-11-02: "A gear, with update settings and Build that update section in cos. With a gear". getPolicy/setPolicy carry keepLocal: auto
+# (CE3's behaviour: under auto, local commits GitHub already has by content are kept on local/<date> and the update goes on) or ask (the tick
+# stops at "blocked" and waits for his Keep mine and update). setPolicy refuses everyHours outside 1–168 and keepLocal outside auto|ask.
+# Set from COS's gear (PATCH /api/cos/update/settings), Idearium's POST /api/update/policy, or `update policy --keep-local ask`.

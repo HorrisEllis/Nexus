@@ -14,7 +14,7 @@
   const $ = (id) => document.getElementById(id);
   const stage = $('stage');
   const S = { contract: null, systems: [], frames: new Map(), listens: new Map(), current: null, es: null, poll: null, events: 0, proposals: 0, last: new Map() };
-  const ICON = { overview: 'grid', ledger: 'list', proposals: 'inbox', automation: 'gear', planned: 'compass', cockpit: 'layers' };
+  const ICON = { overview: 'grid', ledger: 'list', proposals: 'inbox', automation: 'pulse', updates: 'download', planned: 'compass',   /* SC7: the gear is Updates' (his "With a gear"); Automation takes pulse */ cockpit: 'layers' };
   const THEMES = ['nexus', 'midnight', 'graphite'];
 
   // ── fetch for the shell's own reads (declared in the contract as the "shell" page) ──
@@ -203,7 +203,7 @@
       $('manager').querySelector('.dot').dataset.s = 'down'; $('manager-text').textContent = $('manager').title = 'manager not answering'; busState('down', 'no manager');
       setTimeout(start, 3000); return;
     }
-    stage.replaceChildren();
+    stage.replaceChildren(); S.frames.clear();   // SC7: a page opened while the contract was loading was cleared from the stage but kept here, so it never showed again
     BUS.lanes(S.systems.map(s => s.name)); renderNav(); route(); connect(); refreshTop(); refreshProposals();
     setInterval(refreshTop, 5000);
   }

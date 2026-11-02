@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793586316435
+exported_at: 1793586808974
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793586316435
-lastSeenAt: 1793586316435
+firstSeenAt: 1793586808974
+lastSeenAt: 1793586808974
 fingerprint: null
 payload:
   for: SC4_add_a_system
@@ -136,6 +136,7 @@ payload:
       - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
     downstream:
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
     blockedBy: []
     unlocks:
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
@@ -144,7 +145,9 @@ payload:
     lines:
       - layer 1
       - 'depends on (1): SC_D4_adding_a_system_is_a_proposal'
-      - 'needed by (1): SC5_the_console_ui · finishing it unlocks SC5_the_console_ui'
+      - >-
+        needed by (1): SC5_the_console_ui · all downstream 2 · finishing it unlocks
+        SC5_the_console_ui
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
         kind: declared

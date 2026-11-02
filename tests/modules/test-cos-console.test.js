@@ -17,6 +17,9 @@ require('../../lib/test-sandbox.js').ensure();
  *   CC-06  add a system: his add writes <folder>/compartment.json and declares it live (startable); the same again refused; an agent's add is held
  *   CC-07  one Intelligence: the real tree declares one intelligence process; its server starts the consumer; the update restarts one kernel
  *   CC-08  wired: the contract declares every route and the event; the cockpit has Configuration; the command rows exist
+ *   CC-10  update settings (SC7): read; set policy, every N hours, keep-local, each read back and on the ledger; bad values and an agent refused;
+ *          the history; a rollback with nothing to roll back refused, said
+ *   CC-11  in Clear Glass: the gear in the top bar opens Updates with its settings; a setting saved there is the kernel's
  *   CC-09  in Clear Glass: the bell counts and lists; the command line answers ps; a system's Configuration shows its settings and saves one;
  *          Add system on Overview adds a system
  */
@@ -154,6 +157,21 @@ const SERVER = (envVar, def) => `const http=require('http');const PORT=parseInt(
     for (const k of ['cos.config', 'cos.notices', 'cos.cli']) assert.ok(keys.includes(`"${k}"`), k);
   });
 
+  await test('CC-10', 'update settings: read, set and read back, on the ledger; refusals; the history; rollback refused with nothing to undo', async () => {
+    let r = await getJ(M, '/api/cos/update/settings'); assert.strictEqual(r.status, 200);
+    assert.deepStrictEqual([r.j.settings.policy, r.j.settings.everyHours, r.j.settings.keepLocal], ['auto', 6, 'auto'], 'the kernel\'s defaults');
+    r = await send(M, 'PATCH', '/api/cos/update/settings', { patch: { policy: 'notify', everyHours: 12, keepLocal: 'ask' }, by: 'person' });
+    assert.strictEqual(r.status, 200, JSON.stringify(r.j)); assert.deepStrictEqual([r.j.settings.policy, r.j.settings.everyHours, r.j.settings.keepLocal], ['notify', 12, 'ask']);
+    assert.deepStrictEqual(require(path.join(ROOT, 'lib/nexus-update.js')).getPolicy({ root: tmp }).keepLocal, 'ask', 'the kernel\'s own file, not a copy');
+    assert.ok(sup.ledger({ limit: 50 }).some(e => e.kind === 'update-settings' && /keepLocal auto → ask/.test(e.why)));
+    r = await send(M, 'PATCH', '/api/cos/update/settings', { patch: { everyHours: 0 }, by: 'person' }); assert.strictEqual(r.status, 400); assert.match(r.j.error, /1–168/);
+    r = await send(M, 'PATCH', '/api/cos/update/settings', { patch: { branch: 'dev' }, by: 'person' }); assert.strictEqual(r.status, 400);
+    r = await send(M, 'PATCH', '/api/cos/update/settings', { patch: { policy: 'off' }, by: 'agent:x' }); assert.strictEqual(r.status, 403);
+    r = await getJ(M, '/api/cos/update/history'); assert.deepStrictEqual(r.j.history, []);
+    r = await send(M, 'POST', '/api/cos/update/rollback', { by: 'person' }); assert.strictEqual(r.status, 409); assert.ok(r.j.error, 'said why');
+    await send(M, 'PATCH', '/api/cos/update/settings', { patch: { policy: 'auto', everyHours: 6, keepLocal: 'auto' }, by: 'person' });
+  });
+
   const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));
   let browser; try { browser = await glass.chromium.launch(); } catch (e) { console.log(`  - CC-09 SKIPPED: the engine could not start (${e.message.split('\n')[0]})`); }
   if (browser) {
@@ -211,6 +229,27 @@ const SERVER = (envVar, def) => `const http=require('http');const PORT=parseInt(
       assert.ok(fs.existsSync(path.join(tmp, 'epsilon', 'compartment.json')));
       assert.deepStrictEqual(errors, [], 'no page error');
       ui.close();
+    });
+    await test('CC-11', 'in Clear Glass: the gear opens Updates with its settings; a setting saved there is the kernel\'s', async () => {
+      const ui = require(path.join(ROOT, 'cos/ui/serve.js')).createServer({ port: 0, manager: `http://127.0.0.1:${M}` });
+      await new Promise(r => ui.listen(0, '127.0.0.1', r)); const U = ui.address().port;
+      const page = await browser.newPage({ viewport: { width: 1360, height: 900 } }); const errors = []; page.on('pageerror', (e) => errors.push(e.message));
+      await page.goto(`http://127.0.0.1:${U}/shell/#/overview`); await page.waitForSelector('#gear');
+      await page.evaluate(() => document.getElementById('gear').click());
+      // clicked straight away, while the shell may still be loading its contract (the case that once left the stage empty)
+      const F = `document.querySelector('iframe[data-page="updates"]')`;
+      try { await wait(async () => page.evaluate(`(() => { const f = ${F}; const d = f && f.contentDocument; return !!(d && d.getElementById('settings') && !d.getElementById('settings').hidden && d.querySelector('#policy button')); })()`), 15000); }
+      catch (e) { throw new Error('updates page: ' + await page.evaluate(`(() => { const f = ${F}; const d = f && f.contentDocument; return JSON.stringify({ hash: location.hash, frame: !!f, title: document.getElementById('crumb-title').textContent, settings: d && d.getElementById('settings') && d.getElementById('settings').hidden, body: d && d.body && d.body.innerText.slice(0, 300), stage: [...document.querySelectorAll('iframe')].map(f => f.dataset.page + ':' + f.getAttribute('src')).join(' ') }); })()`)); }
+      assert.strictEqual(await page.evaluate(`${F}.contentDocument.querySelector('#policy button[aria-checked="true"]').dataset.v`), 'auto');
+      await page.evaluate(`${F}.contentDocument.querySelector('#policy button[data-v="notify"]').click()`);
+      if (process.env.CC_SHOTS) await page.screenshot({ path: path.join(process.env.CC_SHOTS, 'cos-updates.png') });
+      await page.evaluate(`${F}.contentDocument.getElementById('save').click()`);
+      await page.waitForFunction(() => !document.getElementById('confirm').hidden); await page.evaluate(() => document.getElementById('confirm-yes').click());
+      await wait(() => require(path.join(ROOT, 'lib/nexus-update.js')).getPolicy({ root: tmp }).policy === 'notify');
+      assert.strictEqual(await page.evaluate(`${F}.contentDocument.querySelector('#policy button[aria-checked="true"]').dataset.v`), 'notify', 'read back on the page');
+      assert.ok(await page.evaluate(`!!${F}.contentDocument.querySelector('#history .empty')`), 'the history says it is empty');
+      assert.ok(await page.evaluate(() => !!document.querySelector('#nav-main a[data-page="updates"]')), 'Updates is in the rail');
+      assert.deepStrictEqual(errors, [], 'no page error'); ui.close();
     });
     await browser.close();
   }

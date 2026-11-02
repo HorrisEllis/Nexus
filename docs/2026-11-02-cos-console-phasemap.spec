@@ -162,3 +162,23 @@ phases:
 # console and the bell's panel still on screen when hidden (display:flex outranked [hidden]) and `ps` printing [object Object] for restarts.
 # Two tests counted the real tree's processes as 14; with intelligence-consumer retired it is 13 (SV-08, CW-01 updated, the reason in each).
 # Readings TO CONFIRM: "miniworld" as each system's compartment; "It'll be using the .spec" (SC_D0).
+
+# ── ADDENDUM 2026-11-02 — "A gear, with update settings and Build that update section in cos. With a gear" (SC7) ──
+phases_addendum_2026_11_02_sc7:
+  SC7_the_updates_section:
+    layer: ui
+    status: "DONE 0.60.380 — test-cos-console CC-10, CC-11 (Clear Glass); found: a page opened while the shell loaded its contract never showed (the stage cleared, its frame kept) — fixed in cos/ui/shell/page.js"
+    depends_on: [SC1_the_bell, SC5_the_console_ui]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-MG-UI-UPDATES]
+    files: [lib/nexus-update.js, cos/manager/updates.js, cos/manager/update-run.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/updates/index.html (new), cos/ui/updates/page.css (new), cos/ui/updates/page.js (new), cos/ui/shell/index.html, cos/ui/shell/console.js, cos/ui/shell/page.js, cos/ui/core/core.js, idearium/api/index.js, idearium/cli/route-commands.js, tests/modules/test-cos-console.test.js]
+    origin: '"A gear, with update settings and Build that update section in cos. With a gear" (James, 2026-11-02)'
+    does: >-
+      A gear in COS's top bar opens Updates, a section of its own (its own .html, in the rail): this Nexus against GitHub (current, latest,
+      behind, last check, Check now), his release lines and each system the update changes (restarts by itself / waits for you), Update now
+      and Keep mine and update (confirmed), the history of every update, keep-local and rollback, with Roll back on the last one. The gear's
+      panel holds the update settings the kernel already keeps (lib/nexus-update.js policy: auto | notify | off, every N hours) and one new
+      one, keep mine automatically (auto, the CE3 behaviour; or ask). GET|PATCH /api/cos/update/settings, GET /api/cos/update/history,
+      POST /api/cos/update/rollback (in its own process, then each changed system restarted, as apply). The COS app's own exe update policy
+      lives in the app (its tray), not here: said on the page.
+    proof: "settings round-trip and refusal; history lists the update; the page in Clear Glass: the gear opens it, a setting saved and read back"

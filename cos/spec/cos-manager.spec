@@ -1406,6 +1406,20 @@ spec:
       error_paths: ["an unknown verb → the table"]
       acceptance: ["test-cos-console CC-05, CC-09"]
 
+    - id: MOD-MG-UI-UPDATES
+      name: ui-updates
+      uuid: nexus-cos-manager-ui-updates-v1-0000-2026-1102-001
+      path: cos/ui/updates/page.js
+      phase: SC7_the_updates_section
+      description: "Updates, COS's section for Nexus from GitHub, with its settings behind a gear (the shell's top bar opens it at #/updates/settings): the state against GitHub, the systems it changes, his release lines, Update now / Keep mine and update, the history and Roll back."
+      deps: [{ name: updates }, { name: ui-shell }]
+      schema_refs: [SupervisedSystem]
+      exports: ["page updates (#/updates, #/updates/settings)", "routes GET|PATCH /api/cos/update/settings, GET /api/cos/update/history, POST /api/cos/update/rollback (cos/manager/updates.js settings, setSettings, history, rollback)"]
+      gate_pipeline: ["GATE-SC7-001: every act confirmed in the shell, by = person", "GATE-SC7-002: settings are the kernel's (lib/nexus-update.js policy), never a copy"]
+      behavioral_contracts: ["policy auto | notify | off; everyHours 1–168; keepLocal auto | ask (ask: the automatic tick never keeps local commits by itself)", "the COS exe's own update policy stays in the app, said on the page"]
+      error_paths: ["a bad value → 400 naming the range; an agent → 403", "nothing to roll back → 409 with the kernel's reason"]
+      acceptance: ["test-cos-console CC-10, CC-11"]
+
   events:
     cos:
       - "cos.system.state { name, state, pid, by }"
@@ -1508,3 +1522,8 @@ spec:
 # gains the bell, the console and the Add system form (console.js); the cockpit gains a Configuration section; Overview and Proposals an Add system
 # button. MOD-MG-UI-SERVE: a write's origin is checked against the port it listens on (port 0 refused every write before). The shell's keys reach
 # it from inside a page's frame. "miniworld" is read by the coder as each system's compartment (its declaration and its process) — to confirm.
+
+# ── ADDENDUM 2026-11-02 (0.60.380, SC7) — Updates, with a gear ──
+# James, 2026-11-02: "A gear, with update settings and Build that update section in cos. With a gear". MOD-MG-UI-UPDATES is new; MOD-MG-UI-SHELL
+# gains the gear (#/updates/settings) and clears its frames with its stage on (re)start (a page opened while the contract loaded never showed).
+# cos/manager/updates.js gains settings, setSettings, history and rollback (update-run.js rollback). core.js's gear icon is a cog.

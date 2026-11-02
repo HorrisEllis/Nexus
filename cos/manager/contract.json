@@ -187,6 +187,28 @@
       "path": "/api/cos/cli",
       "in": "{ line, by }",
       "out": "{ ok, lines[] } — COS's own command line over its own functions (SC3)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/update/settings",
+      "out": "{ settings { policy auto|notify|off, everyHours, keepLocal auto|ask, setAt }, last (the last automatic check), options } (SC7)"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/cos/update/settings",
+      "in": "{ patch: { policy?, everyHours?, keepLocal? }, by }",
+      "out": "the settings after; 400 naming what it wants; 403 for an agent (SC7)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/update/history",
+      "out": "{ history[] } — every update, keep-local and rollback, newest first (SC7)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/update/rollback",
+      "in": "{ by }",
+      "out": "the last update rolled back (in its own process), then each changed system restarted; refused when the running commit did not come from an update (SC7)"
     }
   ],
   "door": {
@@ -425,6 +447,34 @@
       "emits": [
         "cos.ui.notice"
       ]
+    },
+    {
+      "id": "updates",
+      "title": "Updates",
+      "path": "updates/",
+      "route": "#/updates",
+      "nav": "main",
+      "built": true,
+      "phase": "SC7_the_updates_section",
+      "routes": [
+        "GET /api/cos/update",
+        "GET /api/cos/update/notice",
+        "POST /api/cos/update/apply",
+        "GET /api/cos/update/settings",
+        "PATCH /api/cos/update/settings",
+        "GET /api/cos/update/history",
+        "POST /api/cos/update/rollback",
+        "POST /api/cos/systems/:name/:op"
+      ],
+      "listens": [
+        "cos.update",
+        "cos.notice"
+      ],
+      "emits": [
+        "cos.ui.notice",
+        "cos.ui.navigate"
+      ],
+      "about": "Nexus against GitHub, per system; Update now, Keep mine and update; the history and roll back; the gear holds the update settings (SC7, 2026-11-02)"
     },
     {
       "id": "planned",

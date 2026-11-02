@@ -15,7 +15,7 @@
   };
 
   // ── the bell ──
-  $('bell').insertAdjacentHTML('afterbegin', icon('bell')); $('cli-open').innerHTML = icon('terminal');
+  $('bell').insertAdjacentHTML('afterbegin', icon('bell')); $('cli-open').innerHTML = icon('terminal'); $('gear').innerHTML = icon('gear');
   const TABS = [['all', 'All'], ['update', 'Updates'], ['system', 'Systems'], ['notice', 'Notices']];
   function badge() {
     const n = B.counts.unread || 0, b = $('bell-n'); b.hidden = !n; b.textContent = n > 99 ? '99+' : String(n);

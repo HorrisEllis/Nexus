@@ -1,0 +1,283 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC7_the_updates_section:573666197c5aeafd
+type: graph
+id: phase:SC7_the_updates_section:573666197c5aeafd
+context: dependency graph of phase SC7_the_updates_section
+intent: null
+summary: 39 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793586808983
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793586808983
+lastSeenAt: 1793586808983
+fingerprint: null
+payload:
+  for: SC7_the_updates_section
+  kind: phase
+  repo: null
+  hash: 573666197c5aeafd
+  nodes:
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/update-run.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/core/core.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/console.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/index.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/updates/index.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/updates/page.css
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/updates/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/nexus-update.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-console.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/update.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.retired-0.60.330.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/core-duties.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/cli.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus-update.js
+      to: lib/release-version.js
+      kind: requires
+    - from: lib/nexus-update.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: lib/nexus-update.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/cli.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/update.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/nexus/autopilot.retired-0.60.330.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/nexus/core-duties.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+    dependents: []
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+      - docs/2026-11-02-cos-console-phasemap.spec::SC4_add_a_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4
+      - 'depends on (2): SC1_the_bell, SC5_the_console_ui · all upstream 10'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+        kind: declared
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+        kind: declared

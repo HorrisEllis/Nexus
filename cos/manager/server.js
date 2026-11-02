@@ -83,6 +83,11 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
       if (m === 'GET' && p === '/api/cos/update/notice') { try { return send(res, 200, { ok: true, ...require('../../lib/nexus-update.js').notice({ root }), updatesPage: 'http://127.0.0.1:4800/update.html' }); } catch (e) { return send(res, 500, { ok: false, error: e.message }); } }
       // CE2 0.60.376 — what GitHub has, per system (?fetch=1 asks GitHub; else what was last fetched), and the update tool
       if (m === 'GET' && p === '/api/cos/update') return send(res, 200, await updates.check({ fetch: u.searchParams.get('fetch') === '1' }));
+      // SC7 0.60.379 — the Updates section's gear: the kernel's update settings; the history; roll back
+      if (m === 'GET' && p === '/api/cos/update/settings') return send(res, 200, updates.settings());
+      if (m === 'PATCH' && p === '/api/cos/update/settings') { const r = updates.setSettings(body.patch || {}, { by: body.by }); return send(res, r.ok ? 200 : r.code || 400, r); }
+      if (m === 'GET' && p === '/api/cos/update/history') return send(res, 200, updates.history({ limit: u.searchParams.get('limit') }));
+      if (m === 'POST' && p === '/api/cos/update/rollback') { if (!body.by) return send(res, 400, { ok: false, error: 'say who acts: { "by": "person" }' }); if (/^agent:/.test(String(body.by))) return send(res, 403, { ok: false, error: 'an agent proposes; a rollback is a person\'s' }); const r = await updates.rollback({ by: body.by }); return send(res, r.ok ? 200 : 409, r); }
       if (m === 'GET' && p === '/api/cos/usage') return send(res, 200, { ok: true, usage: await usage.readAsync(sup.list(), sup.policy()) });
       // CP6a (his 2026-11-01: "then i want resource management for each cos compartment") — caps by layer, read back; the account
       if (m === 'GET' && p === '/api/cos/resources') { if (u.searchParams.get('fresh') === '1') await resources.sample(); return send(res, 200, { ok: true, resources: resources.all() }); }

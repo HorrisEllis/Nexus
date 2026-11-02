@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793586316433
+exported_at: 1793586808973
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793586316433
-lastSeenAt: 1793586316433
+firstSeenAt: 1793586808973
+lastSeenAt: 1793586808973
 fingerprint: null
 payload:
   for: SC3_system_command_line
@@ -227,6 +227,7 @@ payload:
       - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
     downstream:
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
     blockedBy: []
     unlocks:
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
@@ -237,7 +238,9 @@ payload:
       - >-
         depends on (3): SC_D5_cos_has_its_own_command_line, SC1_the_bell,
         SC2_configuration_per_system · all upstream 6
-      - 'needed by (1): SC5_the_console_ui · finishing it unlocks SC5_the_console_ui'
+      - >-
+        needed by (1): SC5_the_console_ui · all downstream 2 · finishing it unlocks
+        SC5_the_console_ui
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
         kind: declared
