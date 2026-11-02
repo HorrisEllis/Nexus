@@ -784,3 +784,20 @@ spec:
 #     option clicked, and the chip read back with a choice's timing (8 s, 600 ms settle).
 #   - Not offered: said with the dropdown's own list.
 # - "Other" is never ticked for him. Proof: tests/modules/test-gig-metadata-glass.test.js MD-07.
+# ── ADDENDUM 2026-11-01 (0.60.339 FP6) — MOD-GT6 fills metadata DROPDOWNS too ─────────────────────────────────────────────────────────────
+# James, 2026-11-01: "do it, I need it fiverr ready, take screenshots if you have to. use idearium as a map if you need, or in the docs the
+# atlas. I need this working for a fact." His live AI Development page: Gig metadata is a table where AI ENGINE is a multi-select DROPDOWN
+# ("Choose…"), not the radio/checkbox panels metaPanelScript reads. gig-fields.js gains metaDropdownScript() → { found, fields: [{ name, idx,
+# native, shown }] } (marks each trigger data-cg-meta-dd, the section data-cg-meta-root) and metaChosenScript(idx, value) → boolean (a selected
+# option / checked input, or a chip with the value outside the open menu). bridge.js _gigMetadata routes a field that matches a dropdown through
+# the driver's choose with confirmScript = metaChosenScript (one value at a time, re-found before each), read back on the page; a radio/checkbox
+# field still takes the tab-and-panel path, and a value not offered is said with the field's own list (§1.2). In production the prior field's
+# menu is dismissed by the click on the next control (universal click-away); a left-open menu is the one failure mode, named not silent.
+# Acceptance met in Clear Glass's own engine: tests/modules/test-gig-metadata-dropdown-glass.test.js DD-01..05, with a screenshot.
+#
+# What the AI ENGINE field is FOR (the purpose, recorded 2026-11-01 — Nexus knew how to fill it but not what it meant; a gap closed on James's
+# ask "what is the ai engine for?"). On Fiverr's AI Development category it is a buyer-discovery metadata field: the seller declares which AI
+# models/engines the service is built on or works with (Claude, ChatGPT, Gemini, Llama, Mistral, …) so buyers who want a specific engine filter
+# to the gig. That is why each clear-glass/docs/gigs/*.gig sets AI ENGINE to the models that gig actually uses. (NOT to be confused with NEXUS's
+# own "AI engine" = Guardian, guardian/spec/guardian.spec — the system that touches the AI providers. The buyer-facing semantics here are the
+# coder's reading of Fiverr's live page, held as stated/observed, not a Fiverr-published definition — EP1.)

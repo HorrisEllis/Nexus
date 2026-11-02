@@ -6,6 +6,17 @@ platform: fiverr
 title: I will build a custom MCP server so Claude can use your tools and data
 category: Programming & Tech
 subcategory: AI Development
+serviceType: AI Integrations          # SELECT A SERVICE TYPE on the page; the fill matches by label (§1.2 says what it can't)
+metadata:
+  "AI ENGINE":
+    - Claude
+    - ChatGPT
+  "DELIVERY TYPE":
+    - Application code
+  "PROGRAMMING LANGUAGE":
+    - TypeScript
+    - JavaScript
+    - Python
 tags:
   - mcp server
   - claude code

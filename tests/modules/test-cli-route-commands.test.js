@@ -129,6 +129,18 @@ process.on('exit', () => { try { fs.rmSync(tmp, { recursive: true, force: true }
     assert.ok(r.code === 0 || /running\?|unreachable|ECONNREFUSED|HTTP/.test(r.err), r.err);
   });
 
+  // CF1 (0.60.339) — James, 2026-11-01: "Yes, phase it". A one-word row takes free text; its sub-rows still win.
+  await test('CL-09', '`note <text>` reaches the one-word row (not note.<word>); `note done <id>` still ticks it', async () => {
+    const r = await cli(['note', 'hello', 'world', '--tags', 'a'], env);
+    assert.ok(r.code === 0 && /note: hello world/.test(r.out), r.out + r.err);
+    const id = (r.out.match(/note-[0-9a-f]+/) || [])[0];
+    assert.ok(id, r.out);
+    const d = await cli(['note', 'done', id], env);
+    assert.ok(d.code === 0 && /done: hello world/.test(d.out), d.out + d.err);
+    const bad = await cli(['repo', 'no-such-sub'], env);
+    assert.ok(bad.code !== 0 && /unknown command: repo.no-such-sub/.test(bad.err), bad.err);
+  });
+
   srv.close();
   console.log(`\n  ${passed} passed · ${failed} failed\n`);
   process.exit(failed ? 1 : 0);

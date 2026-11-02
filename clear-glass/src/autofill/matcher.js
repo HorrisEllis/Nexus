@@ -26,6 +26,7 @@
 
 const { FIELD_TYPES, EXTRA_FIELDS } = require('./store.js');
 const { fillTemplate, profileVars } = require('./proposal.js');
+const { bestOption, boolOf } = require('../dom/select-match.js');   // §CR1 — the same resolvers the DOM mesh uses (DD1), reused here
 
 // §REAL, NAMED PATTERNS — one array entry per real FIELD_TYPES value,
 // each pattern checked in order until one hits. Patterns are checked
@@ -172,6 +173,55 @@ function fieldKeysOf(field = {}) {
   return parts.map(x => String(x || '').trim().toLowerCase()).filter(k => k && !seen.has(k) && seen.add(k));
 }
 
+// §CR1 2026-11-01 — James: "Radios and checkboxes. Can we add that to autofill?" The text pass above deliberately skips choice inputs (a
+// text-value set does not apply). This second pass fills them, reusing what already exists: the DOM mesh already SETS a checkbox/radio from a
+// yes/no (archaeology.js handleMutate, DD1), select-match's boolOf/bestOption resolve the value, and the learn-loop (JA1/JA3) teaches a group
+// the patterns miss. The purpose of a choice group comes from its identity (name/id/aria/learned), NOT a radio's own label — a radio's label is
+// its option ("Yes"), its name is the group ("work_authorization"). For a checkbox the label IS the question, so it counts there.
+function _choicePurpose(field, opts) {
+  const learnedKey = opts.learned ? fieldKeysOf(field).find(k => Object.prototype.hasOwnProperty.call(opts.learned, k)) : null;
+  if (learnedKey) return { fieldType: opts.learned[learnedKey], confidence: 'high', source: 'learned' };
+  const ac = _matchAutocomplete(field.attrs?.autocomplete); if (ac) return { fieldType: ac, confidence: 'high', source: 'autocomplete' };
+  const byName = _matchByPattern(field.name); if (byName) return { fieldType: byName, confidence: 'medium', source: 'name' };
+  const byId = _matchByPattern(field.attrs?.id || field.id_attr); if (byId) return { fieldType: byId, confidence: 'medium', source: 'id' };
+  const byAria = _matchByLabel(field.attrs?.['aria-label']); if (byAria) return { fieldType: byAria, confidence: 'medium', source: 'aria' };
+  return null;
+}
+
+// matchChoiceFields(domFields, profile, opts) → [{ cgId, fieldType, value, confidence, source, kind, option? }]. A standalone CHECKBOX is a
+// boolean (its own label as the question); a RADIO group (grouped by name) is a one-of choice — the group's purpose from its identity, the
+// winning option from each radio's label via bestOption (Yes/No via boolOf). The emitted value is 'yes'/'no' so the existing handleMutate sets
+// the checked state (a radio set checked unchecks its siblings natively). A group whose purpose is unknown, or whose value cannot be resolved
+// to an option, is left for the element picker — never a silent wrong pick (§1.2).
+function matchChoiceFields(domFields, profile, opts = {}) {
+  const out = [], groups = new Map();
+  for (const field of domFields) {
+    if (!field || !field.id || (field.tag || '').toLowerCase() !== 'input') continue;
+    const type = (field.type || '').toLowerCase();
+    if (type === 'checkbox') {
+      const p = _choicePurpose(field, opts) || (_matchByLabel(field.label) ? { fieldType: _matchByLabel(field.label), confidence: 'medium', source: 'label' } : null);
+      if (!p) continue;
+      const val = _valueFor(p.fieldType, profile); if (val === undefined || val === null || val === '') continue;
+      const b = boolOf(val); if (b === null) continue;   // a checkbox takes a clear yes/no only — else leave it (§1.2)
+      out.push({ cgId: field.id, fieldType: p.fieldType, value: b ? 'yes' : 'no', confidence: p.confidence, source: p.source, kind: 'checkbox' });
+    } else if (type === 'radio') {
+      const key = field.name || `__cg_noname_${field.id}`;
+      if (!groups.has(key)) groups.set(key, []); groups.get(key).push(field);
+    }
+  }
+  for (const group of groups.values()) {
+    let p = null; for (const f of group) { p = _choicePurpose(f, opts); if (p) break; }
+    if (!p) continue;
+    const val = _valueFor(p.fieldType, profile); if (val === undefined || val === null || val === '') continue;
+    const options = group.map(f => ({ value: f.label || f.attrs?.value || '', text: f.label || f.attrs?.value || '', _cg: f.id }));
+    let win = bestOption(options, String(val));
+    if (!win) { const b = boolOf(val); if (b !== null) win = options.find(o => boolOf(o.text) === b) || null; }
+    if (!win || !win._cg) continue;   // the value does not name any option here — left for the picker (§1.2)
+    out.push({ cgId: win._cg, fieldType: p.fieldType, value: 'yes', confidence: p.confidence, source: p.source, kind: 'radio', option: win.text });
+  }
+  return out;
+}
+
 function matchFields(domFields, profile, opts = {}) {
   if (!Array.isArray(domFields)) throw new Error('matchFields: domFields must be a real array (the dom_query result)');
   if (!profile || typeof profile.fields !== 'object') throw new Error('matchFields: profile must be a real AutofillProfile with a fields map');
@@ -224,7 +274,8 @@ function matchFields(domFields, profile, opts = {}) {
 
     matches.push({ cgId: field.id, fieldType, value, confidence, source, ...(needsEdit ? { needsEdit: true } : {}) });
   }
-  return matches;
+  // §CR1 — the choice inputs (checkbox/radio) the text pass skipped, filled from the same profile by the same evidence grades
+  return matches.concat(matchChoiceFields(domFields, profile, opts));
 }
 
 // §AF1 2026-10-26 — one input, one match. The inline chip (renderer/autofill-inline.js) and a single-field fill need the type
@@ -239,7 +290,7 @@ function matchOne(domField, profile, opts = {}) {
   return m[0] || null;
 }
 
-module.exports = { matchFields, matchOne, fieldKeysOf, valueFor: _valueFor, learnKey, learnedFromSettings, LEARNED_PREFIX, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, detectFields, fillFields };
+module.exports = { matchFields, matchChoiceFields, matchOne, fieldKeysOf, valueFor: _valueFor, learnKey, learnedFromSettings, LEARNED_PREFIX, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, detectFields, fillFields };
 
 // §BUILT 2026-09-19 — James: "library ui." Extracted here after finding
 // the exact same detect/fill orchestration (query -> match -> filter ->
