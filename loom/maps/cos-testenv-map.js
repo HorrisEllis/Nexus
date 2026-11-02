@@ -34,10 +34,12 @@ const FILES = [
   ['cos/manager/walls.js',      I('cos/manager/walls.js'),      []],   // CP1a: reads the supervisor it is given (declarations, ledger); no require
   ['scripts/cos-walls.js',      I('scripts/cos-walls.js'),      [I('loom/templates/cos-compartment.js'), I('lib/system-boundary.js')]],   // CP1a: writes each system's wall into its own compartment.json from the census
   ['cos/manager/autopilot-door.js', I('cos/manager/autopilot-door.js'), [I('lib/test-sandbox.js'), I('lib/bus-subscriptions.js'), I('cortex/memory/jaa-db.js'), I('intelligence/cfr/field.js'), I('lib/ledger-sse.js'), I('lib/error-log.js')]],   // 0.60.329 MG16; cortex/intelligence: the legacy /tables /files reads
-  ['cos/manager/server.js',     I('cos/manager/server.js'),     [I('cos/manager/supervisor.js'), I('lib/raid-port.js'), I('cos/manager/autopilot-door.js'), I('cos/manager/proposals.js'), I('cos/manager/usage.js'), I('cos/manager/contract.json'), I('cos/manager/walls.js'), I('cos/manager/resources.js')]],   // requires; the contract read per request (MG18); walls (CP1a)
+  ['cos/manager/server.js',     I('cos/manager/server.js'),     [I('cos/manager/supervisor.js'), I('lib/raid-port.js'), I('cos/manager/autopilot-door.js'), I('cos/manager/proposals.js'), I('cos/manager/usage.js'), I('cos/manager/contract.json'), I('cos/manager/walls.js'), I('cos/manager/resources.js'), I('cos/manager/updates.js')]],   // requires; the contract read per request (MG18); walls (CP1a)
   // 0.60.337 MG18/MG29 (MG_D16) — COS's UI: the cockpit server forwards to the manager over HTTP by the contract's allowlist; each page loads
   // core by <script>, talks to the shell only by postMessage (the bus), and to the manager only through the cockpit server's same-origin routes
-  ['cos/manager/proposals.js',  I('cos/manager/proposals.js'),  []],   // given the supervisor; notes on its ledger
+  ['cos/manager/proposals.js',  I('cos/manager/proposals.js'),  []],
+  ['cos/manager/updates.js',    I('cos/manager/updates.js'),    [I('lib/nexus-update.js'), I('cos/manager/update-run.js')]],   // CE2 0.60.376: per system; the git work spawned (update-run.js, by path) — not a require
+  ['cos/manager/update-run.js', I('cos/manager/update-run.js'), [I('lib/nexus-update.js')]],   // CE2: check, applyBacked, keepLocalBacked in their own process   // given the supervisor; notes on its ledger
   ['cos/manager/usage.js',      I('cos/manager/usage.js'),      []],
   ['cos/manager/contract.json', I('cos/manager/contract.json'), []],
   ['cos/ui/serve.js',           I('cos/ui/serve.js'),           [I('cos/manager/contract.json'), I('cos/manager/server.js')]],   // reads the contract; HTTP to the manager

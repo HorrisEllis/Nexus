@@ -1,0 +1,79 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE6_the_exe_carries_it:56519278b3154e00
+type: graph
+id: phase:CE6_the_exe_carries_it:56519278b3154e00
+context: dependency graph of phase CE6_the_exe_carries_it
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793583403070
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793583403070
+lastSeenAt: 1793583403070
+fingerprint: null
+payload:
+  for: CE6_the_exe_carries_it
+  kind: phase
+  repo: null
+  hash: 56519278b3154e00
+  nodes:
+    - path: cos/app/version.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/controller.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-app-build.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-self-update.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: cos/app/controller.js
+      to: cos/app/version.js
+      kind: requires
+    - from: tests/modules/test-cos-app-build.test.js
+      to: cos/app/version.js
+      kind: requires
+    - from: tests/modules/test-cos-app-self-update.test.js
+      to: cos/app/version.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE1_close_and_minimize_are_his
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
+    dependents:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE7_borderless
+    upstream:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE1_close_and_minimize_are_his
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2_updates_as_cos_routes
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE3_keep_mine_and_update
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D0_per_system_reading
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D1_diverged_is_kept_never_lost
+    downstream:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE7_borderless
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE7_borderless
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (2): CE1_close_and_minimize_are_his, CE4_toasts_in_the_cockpit · all upstream 6'
+      - 'needed by (1): CE7_borderless · finishing it unlocks CE7_borderless'
+    edges:
+      - from: docs/2026-11-02-cos-enterprise-phasemap.spec::CE1_close_and_minimize_are_his
+        kind: declared
+      - from: docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
+        kind: declared

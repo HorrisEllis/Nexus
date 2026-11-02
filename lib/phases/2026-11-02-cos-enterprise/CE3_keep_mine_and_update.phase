@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-enterprise-phasemap.spec::CE3_keep_mine_and_update
+type: phase
+id: docs_2026-11-02-cos-enterprise-phasemap.spec::CE3_keep_mine_and_update
+context: pipeline phase CE3_keep_mine_and_update of docs/2026-11-02-cos-enterprise-phasemap.spec
+intent: null
+summary: CE3_keep_mine_and_update (backend) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793581138961
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793581138961
+lastSeenAt: 1793581138961
+fingerprint: null
+payload:
+  id: CE3_keep_mine_and_update
+  map: docs/2026-11-02-cos-enterprise-phasemap.spec
+  repo: null
+  layer: backend
+  status: DONE 0.60.376 — test-nexus-update UP-14, test-cos-updates CU-04
+  files:
+    - lib/nexus-update.js
+    - tests/modules/test-nexus-update.test.js
+  depends_on:
+    - CE_D1_diverged_is_kept_never_lost
+  blocks: []
+  spec: null
+  graph: d8ab802b6093772e

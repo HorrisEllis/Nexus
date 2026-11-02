@@ -150,3 +150,21 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node, invariants valid"
     - "tests/modules/test-nexus-update.test.js — UP-13a..c: refused without a backup; the backup on the row; the route's snapshot and record"
+
+
+# ── ADDENDUM 2026-11-02 (0.60.376) — keep mine and update (CE3) ──
+# James, 2026-11-02: "i want toasts in cos ui for gibhub updates with a update tool. so i can update nexus automatically. per system" · "Yes. I need the cos ui to be a full enterprise grade, windows service, option to close or minimize to tray, manage systems,"
+# His three boots of 0.60.338 each found 0.60.343 on GitHub and stopped at "diverged: 1 local commit(s) not on GitHub — merging is yours". The
+# automatic update could never move past one local commit. Added (docs/2026-11-02-cos-enterprise-phasemap.spec CE_D1, by his axioms §0.3,
+# REVERSIBILITY, §1.2):
+# - check() returns local: { count, onGitHub, commits } (git cherry: how many local commits GitHub already has by content), and can names
+#   keep-local.
+# - keepLocal / keepLocalBacked:
+#   - a backup first (UP13);
+#   - each local commit kept on a branch local/<date>;
+#   - colliding data set aside (_setAside, now shared with apply);
+#   - git reset --keep to origin, which refuses rather than overwrite an uncommitted edit;
+#   - recorded in history (kind keep-local), and so in Versionium.
+# - autoTick: under auto, when every local commit is already on GitHub by content, it keeps them on a branch and moves on by itself. Any commit
+#   GitHub lacks stays his call, offered on COS's card.
+# - The route is POST /api/update/keep-local (Idearium); the command row is `update keep-local --yes` (the person's).
