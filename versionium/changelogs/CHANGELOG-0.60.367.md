@@ -1,23 +1,23 @@
-> Renumbered from 0.60.334 on merge (2026-11-02): built on `claude/sleepy-gates-9lc085` as 0.60.334, in parallel with main, which used 0.60.334 first (CHANGELOG-0.60.334.md is main's). Numbered above main's 0.60.365 so both stand (§0.3).
+> Renumbered from 0.60.333 on merge (2026-11-02): built on `claude/sleepy-gates-9lc085` as 0.60.333, in parallel with main, which used 0.60.333 first (CHANGELOG-0.60.333.md is main's). Numbered above main's 0.60.365 so both stand (§0.3).
 
-# 0.60.367 — the .portfolio command rows (agents get it through nexus.command)
+# 0.60.367 — the .portfolio node import button (upload a portfolio into the settings page)
 
-James, 2026-10-31: **"finish the backend."**
+James, 2026-10-30: **"No md. Nodes you can upload and import to the settings page."**
 
-The portfolio had backend + route + UI (0.60.333) but no command row — so copilot and agents couldn't reach it through `nexus.command`. Your order of delivery is backend → route → command → UI, and "agents get every capability a person gets, through the one command tool." Now they do.
+The `.portfolio` node + its format already existed (PF1, 0.60.299). This adds the door and the UI so you can actually upload one — no markdown.
 
-## Added (`idearium/cli/route-commands.js`)
-- `portfolio` — list the portfolios (name, project count, headline)
-- `portfolio export [--out <file.portfolio>]` — the portfolios as one `.portfolio` file
-- `portfolio import <file.portfolio>` — import one (upsert by id, newer wins)
+## What was built
+- **Bridge** (`clear-glass/src/ipc/bridge.js`): a lazy `_portfolioStore()` (JAA `cg_portfolio`) + IPC `portfolio:list/get/import/export/create/delete`, and `/cli/portfolio[/export,/import]` so agents get it too (your order of delivery: backend → route → command → UI).
+- **Preload**: `cg.portfolio.*`.
+- **Settings UI** (`settings/sections/autofill.js`): a **Portfolio** pane — **Import a file…** (reads a `.portfolio`, upserts by id, newer wins), **Export**, and the list with Delete. It mirrors the proven `.autofill` transfer pane.
 
-Each row calls the `/cli/portfolio` door in Clear Glass (0.60.333), so a person, copilot and every agent use the same path.
+So the 5 `.gig` nodes load under Fiverr gigs → Load a gig file…, and the `.portfolio` node loads here.
 
 ## Reuse
-The `autofill.export`/`autofill.import` rows are the pattern; the `/cli/portfolio` routes are the door. Nothing new beside them.
+`portfolio.importNode`/`exportNode` (PF1), the transfer-pane pattern (AT1), the JAA store. Nothing new invented beside them.
 
 ## Proof
-The 3 rows register in `SPEC` with a `req()` (import check); `route-commands.js` passes `node --check`.
+`test-portfolio-node` 8/8 (store import/export round-trip, upsert newer-wins, a bad file refused). The three edited files pass `node --check`. The UI is verified live on your machine (Electron).
 
 ## Remaining in this phase
-Only the per-site portfolio picker (one UI bit) is left in `PF_routes_commands_ui`.
+The per-site portfolio picker, and a `route-commands` row so `nexus.command` lists it.

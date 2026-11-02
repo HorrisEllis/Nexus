@@ -1,23 +1,17 @@
-> Renumbered from 0.60.333 on merge (2026-11-02): built on `claude/sleepy-gates-9lc085` as 0.60.333, in parallel with main, which used 0.60.333 first (CHANGELOG-0.60.333.md is main's). Numbered above main's 0.60.365 so both stand (§0.3).
+# 0.60.366 — CA1: Clear Glass to the tray after no input
 
-# 0.60.366 — the .portfolio node import button (upload a portfolio into the settings page)
+James, 2026-11-02: "clearglass needs a setting for automatically minimizing to tray after a period of time."
 
-James, 2026-10-30: **"No md. Nodes you can upload and import to the settings page."**
+## The setting
+Settings → General → **Go to the tray after no input**: off (the default), 5, 15, 30 or 60 minutes.
+- **Idle means the OS's own idle time:** no keyboard or mouse anywhere.
+- **Work is never hidden.** Clear Glass stays up while a window plays sound or a macro or workflow runs.
+- **Once per idle stretch.** A window he brings back is not hidden again until he is idle again.
 
-The `.portfolio` node + its format already existed (PF1, 0.60.299). This adds the door and the UI so you can actually upload one — no markdown.
-
-## What was built
-- **Bridge** (`clear-glass/src/ipc/bridge.js`): a lazy `_portfolioStore()` (JAA `cg_portfolio`) + IPC `portfolio:list/get/import/export/create/delete`, and `/cli/portfolio[/export,/import]` so agents get it too (your order of delivery: backend → route → command → UI).
-- **Preload**: `cg.portfolio.*`.
-- **Settings UI** (`settings/sections/autofill.js`): a **Portfolio** pane — **Import a file…** (reads a `.portfolio`, upserts by id, newer wins), **Export**, and the list with Delete. It mirrors the proven `.autofill` transfer pane.
-
-So the 5 `.gig` nodes load under Fiverr gigs → Load a gig file…, and the `.portfolio` node loads here.
-
-## Reuse
-`portfolio.importNode`/`exportNode` (PF1), the transfer-pane pattern (AT1), the JAA store. Nothing new invented beside them.
+## Found on the way
+Clear Glass's tray icon was an empty image. That is invisible on Windows, so a window hidden to the tray could not be brought back. The tray now has a real icon (`clear-glass/assets/tray.png`).
 
 ## Proof
-`test-portfolio-node` 8/8 (store import/export round-trip, upsert newer-wins, a bad file refused). The three edited files pass `node --check`. The UI is verified live on your machine (Electron).
+tests/modules/test-cg-idle-tray.test.js: 3/3.
 
-## Remaining in this phase
-The per-site portfolio picker, and a `route-commands` row so `nexus.command` lists it.
+The tray icon and the idle time on Windows are unverified until it runs on his machine.

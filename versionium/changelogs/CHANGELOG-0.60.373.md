@@ -1,31 +1,32 @@
-> Renumbered from 0.60.340 on merge (2026-11-02): built on `claude/sleepy-gates-9lc085` as 0.60.340, in parallel with main, which used 0.60.340 first (CHANGELOG-0.60.340.md is main's). Numbered above main's 0.60.365 so both stand (§0.3).
+> Renumbered from 0.60.339 on merge (2026-11-02): built on `claude/sleepy-gates-9lc085` as 0.60.339, in parallel with main, which used 0.60.339 first (CHANGELOG-0.60.339.md is main's). Numbered above main's 0.60.365 so both stand (§0.3).
 
-# 0.60.373 — CR1: the general autofill fills radios and checkboxes
+# 0.60.373 — FP6: the AI ENGINE multi-select dropdown fills, for a fact
 
-James, 2026-11-01: **"Radios and checkboxes. Can we add that to autofill?"**
+James, 2026-11-01: **"do it, I need it fiverr ready, take screenshots if you have to. use idearium as a map if you need, or in the docs the atlas. I need this working for a fact."**
 
 ## The gap
-`clear-glass/src/autofill/matcher.js` filled text inputs and `<select>` dropdowns, but its matching pass **deliberately skipped** `checkbox` and `radio` — a text-value set doesn't apply to them. So on a job application, a Yes/No "authorized to work?" radio and a relocate/consent checkbox were never filled.
+`_gigMetadata` (GT6, 0.60.320) filled the Gig-metadata **radios and checkboxes**, but not the multi-select **dropdown** his real AI Development page uses for **AI ENGINE** ("Choose…"). So the one metadata field that matters most on his live gig stayed blank.
 
 ## What was built
-`matchChoiceFields(domFields, profile, opts)` — concatenated into `matchFields`, so `detectFields`/`fillFields` carry it with **no change to the fill loop**.
+A metadata field whose control is a dropdown is now filled through the driver's proven `choose`, one value at a time — gated on the field's **chosen state (its chips)**, not the trigger text (which keeps saying "Choose…") nor the open menu (which is full of the wanted words).
 
-- A standalone **checkbox** is a boolean: its own label is the question; `boolOf` (select-match, DD1) turns the profile value into yes/no.
-- A **radio group** (grouped by `name`) is one-of: the group's purpose comes from its **identity** (name/id/aria/**learned** — *not* a radio's own label, which is its option "Yes"); the winning option comes from `bestOption` over the radios' labels.
-- The emitted value is `'yes'`/`'no'`, which drives the DOM mesh's **existing** checkbox/radio set (`archaeology.js handleMutate`, DD1) — a radio set checked unchecks its siblings natively.
-- A group whose purpose is unknown, or whose value names no option, is **left for the element picker** (JA1/JA3) — never a silent wrong pick (§1.2).
+- `clear-glass/src/autofill/gig-fields.js` — **`metaDropdownScript()`** finds, within the "Gig metadata" section, the field rows whose control is a dropdown (a `<select>`, a combobox/`aria-haspopup`, or a "Choose…"/"Select…" trigger), names each by its row label, and marks each trigger `data-cg-meta-dd` + the section `data-cg-meta-root`. **`metaChosenScript(idx, value)`** is the honest read-back: a selected option / checked input, or a chip bearing the value **outside** the open menu.
+- `clear-glass/src/driver/index.js` — `choose` gains one optional param, **`confirmScript`**: a page-side predicate used in place of the trigger text to decide a pick took. A value already chosen is **left alone** (clicking it again would toggle it off) and returns `{ already: true }`.
+- `clear-glass/src/ipc/bridge.js` — `_gigMetadata` routes a dropdown field through `choose` with `confirmScript = metaChosenScript`, reads it back, and names any value Fiverr does not offer with the field's own list (§1.2). A radio/checkbox field still takes the tab-and-panel path.
 
 ## Reuse (§8.6 reuse before build)
-Nothing new was invented for the write: `boolOf`/`bestOption` already existed (DD1), the DOM mesh already set checkbox/radio state, and the per-site learn-loop already teaches a group the patterns miss. CR1 is matching only.
+`option-match` (FP2) for the labels, `choose` for the open/pick/human-pace — extended in place, not forked. `confirmScript` is general: it fits any chip/tag multi-select, not metadata only.
 
-## Proof (Clear Glass's own engine, never Playwright)
-`tests/modules/test-autofill-radio-checkbox-glass.test.js` **4/4**:
-- **CR-01** a radio group (Yes/No), a checkbox, and a non-boolean radio ("3-5 years") each resolve to the right option.
-- **CR-02** §1.2 — an undecidable checkbox value, a radio value naming no option, and an unknown group are all left.
-- **CR-03** a learned pick (JA1) names an opaque group, and then it fills.
-- **CR-04** end-to-end in a real browser: query → `matchFields` → `mesh.mutate` — the right radio selected, the checkbox ticked, the opaque group untouched. This proves archaeology's real label extraction (radio label = option, name = group), not an assumption.
+## Proof (Clear Glass's own engine, never Playwright — AXIOMS §4.1)
+`tests/modules/test-gig-metadata-dropdown-glass.test.js` **5/5** on a live multi-select page:
+- **DD-01** `metaDropdownScript` finds AI ENGINE + PROGRAMMING LANGUAGE, not the DELIVERY TYPE radios.
+- **DD-02** AI ENGINE ← Claude, ChatGPT, Gemini — three chips, matched case-insensitively, each gated on the chosen state; a **screenshot** (`_artifacts/fp6-ai-engine-dropdown.png`).
+- **DD-03** a value not offered ("Grok-9 Ultra") said with the list; the offered ones still chosen.
+- **DD-04** idempotent: a value already chosen is not toggled back off.
+- **DD-05** a dropdown field and a radio field filled in one call.
 
-No regression: the DD1, learned, fill-active, select-match, dropdown-fill and clear-glass-autofill suites stay green (44 tests).
+## Map & specs
+Phase `FP6_metadata_dropdowns_multi_select` in `docs/2026-10-28-first-principles-phasemap.spec`; addenda in `clear-glass/spec/flow-cores.spec` (choose's `confirmScript`) and `clear-glass/spec/gated-flows.spec` (MOD-GT6 fills dropdowns).
 
-## Map & spec
-Phase `CR1` in `docs/2026-10-19-gig-autofill-and-learn-phasemap.spec`; addendum in `clear-glass/spec/clear-glass.spec`.
+## The one failure mode, named not silent
+In production the prior field's menu is dismissed by the click on the next control (universal click-away). A dropdown left open is the one thing that could pollute the next field — it is reported, never passed over.

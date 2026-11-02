@@ -1,40 +1,31 @@
-> Renumbered from 0.60.339 on merge (2026-11-02): built on `claude/cf1-one-word-cli-rows` as 0.60.339, in parallel with main, which used 0.60.339 first. Numbered 0.60.374 so both stand (§0.3).
+> Renumbered from 0.60.340 on merge (2026-11-02): built on `claude/sleepy-gates-9lc085` as 0.60.340, in parallel with main, which used 0.60.340 first (CHANGELOG-0.60.340.md is main's). Numbered above main's 0.60.365 so both stand (§0.3).
 
-# 0.60.374 — a one-word command takes free text (CF1)
+# 0.60.374 — CR1: the general autofill fills radios and checkboxes
 
-James, 2026-11-01:
-> "can you execute anything? like give me a sign"
+James, 2026-11-01: **"Radios and checkboxes. Can we add that to autofill?"**
 
-and, asked whether to fix what that turned up as a phase:
-> "Yes, phase it"
+## The gap
+`clear-glass/src/autofill/matcher.js` filled text inputs and `<select>` dropdowns, but its matching pass **deliberately skipped** `checkbox` and `radio` — a text-value set doesn't apply to them. So on a job application, a Yes/No "authorized to work?" radio and a relocate/consent checkbox were never filled.
 
-## Found
+## What was built
+`matchChoiceFields(domFields, profile, opts)` — concatenated into `matchFields`, so `detectFields`/`fillFields` carry it with **no change to the fill loop**.
 
-To give the sign, the coder ran `idearium note "Sign from Claude Code…"` on his running machine. It died with
-`unknown command: note.Sign…`. `idearium/cli/index.js` keyed every line with two words as `cmd.sub` and never fell back to `cmd`.
-So every row keyed by one word whose first argument is text (`note <text>`, `field …`, `access …`) could not be reached from a
-terminal. The route (`POST /api/notes`) was fine, and agents were not hit, because `nexus.command` resolves the row itself. The sign was
-posted to the route directly (`note-1ccdc1231d`).
+- A standalone **checkbox** is a boolean: its own label is the question; `boolOf` (select-match, DD1) turns the profile value into yes/no.
+- A **radio group** (grouped by `name`) is one-of: the group's purpose comes from its **identity** (name/id/aria/**learned** — *not* a radio's own label, which is its option "Yes"); the winning option comes from `bestOption` over the radios' labels.
+- The emitted value is `'yes'`/`'no'`, which drives the DOM mesh's **existing** checkbox/radio set (`archaeology.js handleMutate`, DD1) — a radio set checked unchecks its siblings natively.
+- A group whose purpose is unknown, or whose value names no option, is **left for the element picker** (JA1/JA3) — never a silent wrong pick (§1.2).
 
-## Built
+## Reuse (§8.6 reuse before build)
+Nothing new was invented for the write: `boolOf`/`bestOption` already existed (DD1), the DOM mesh already set checkbox/radio state, and the per-site learn-loop already teaches a group the patterns miss. CR1 is matching only.
 
-- `cmd.sub` is used when that row exists. Otherwise, when `cmd` alone is a row, the line goes to it with `sub` as its first argument.
-- Nothing that resolved before resolves differently. A note whose text starts with a sub-row's word (`done …`) still reaches that row.
-- Mapped first: `docs/2026-10-05-cli-data-code-phasemap.spec` CF1.
+## Proof (Clear Glass's own engine, never Playwright)
+`tests/modules/test-autofill-radio-checkbox-glass.test.js` **4/4**:
+- **CR-01** a radio group (Yes/No), a checkbox, and a non-boolean radio ("3-5 years") each resolve to the right option.
+- **CR-02** §1.2 — an undecidable checkbox value, a radio value naming no option, and an unknown group are all left.
+- **CR-03** a learned pick (JA1) names an opaque group, and then it fills.
+- **CR-04** end-to-end in a real browser: query → `matchFields` → `mesh.mutate` — the right radio selected, the checkbox ticked, the opaque group untouched. This proves archaeology's real label extraction (radio label = option, name = group), not an assumption.
 
-## Proof
+No regression: the DD1, learned, fill-active, select-match, dropdown-fill and clear-glass-autofill suites stay green (44 tests).
 
-`tests/modules/test-cli-route-commands.test.js` **CL-09** green:
-- `note hello world --tags a` reaches the row and posts "hello world";
-- `note done <id>` still ticks it;
-- `repo no-such-sub` still refuses.
-
-The suite is 4 passed, 5 failed on his Windows machine. CL-03 to CL-07 failed the same way before the change: the Claude Code
-stand-in will not spawn (`spawn EFTYPE`). That is a separate defect, not this phase's.
-
-Live on :4800: `idearium note "CF1 live check from the terminal"` posted `note-8cacc97386`, and `note done` ticked it.
-
-## Versionium
-
-Recorded live on his machine through `lib/versionium-record.js` `record()`: commit `vtm-9b38cd10`. All six paths are recorded before and
-after in full, except `lib/version.js`, which is about 1 MB, over the 256 KB cap, so it is recorded by hash.
+## Map & spec
+Phase `CR1` in `docs/2026-10-19-gig-autofill-and-learn-phasemap.spec`; addendum in `clear-glass/spec/clear-glass.spec`.

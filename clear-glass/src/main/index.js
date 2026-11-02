@@ -39,7 +39,7 @@ require('../../../lib/data-home.js').atBoot('clear-glass');
  * It does not depend on nexus-wired or ErosmancerOS to boot.
  */
 
-const { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage, session, shell, nativeTheme } = require('electron');
+const { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage, session, shell, nativeTheme, powerMonitor } = require('electron');
 const CompartmentWindow = require('./compartment-window.js');
 const WindowFrame = require('./window-frame.js');   // 0.60.54 CS1
 const path   = require('path');
@@ -1939,6 +1939,18 @@ async function bootstrap() {
 
   // 17. Tray
   buildTray(mesh);
+  // 0.60.366 CA1 (clear-glass/spec/tray.spec MOD-CGT-IDLE-TRAY) — James: "clearglass needs a setting for automatically minimizing to tray after a
+  // period of time". Off unless he set one; the OS's own idle time; never while a window plays sound or an automation runs.
+  try {
+    require('./idle-tray').start({ log: (m) => console.log(m), hide: () => hideAppToTray(), read: () => {
+      const ws = [...windows.values()].filter(w => w && !(w.isDestroyed && w.isDestroyed()));
+      const wc = (w) => w.webContents || (w.base && w.base.webContents) || null;
+      return { minutes: Number((nexusOptions && nexusOptions.get().trayAfterIdleMin) || 0), idleSec: powerMonitor.getSystemIdleTime(),
+        audible: ws.some(w => { try { const c = wc(w); return !!(c && c.isCurrentlyAudible()); } catch (_) { return false; } }),
+        activeRuns: (() => { try { return (mesh && mesh._automation && mesh._automation.activeRuns().length) || 0; } catch (_) { return 0; } })(),
+        anyVisible: ws.some(w => { try { return w.isVisible ? w.isVisible() : true; } catch (_) { return false; } }) };
+    } });
+  } catch (e) { console.warn(`[ClearGlass] idle-to-tray not started: ${e.message}`); }
 
   // 18. Default window (skipped in headless/tray-only mode)
   if (!HEADLESS) {
@@ -2106,7 +2118,9 @@ function _startNexusProbe() {
 
 // ── Tray ───────────────────────────────────────────────────────────────────
 function buildTray(mesh) {
-  const icon = nativeImage.createEmpty();
+  // 0.60.366 CA1 — a real icon: an empty one is invisible on Windows, and a window hidden to the tray could not come back (§1.2)
+  let icon = nativeImage.createFromPath(path.join(__dirname, '..', '..', 'assets', 'tray.png'));
+  if (icon.isEmpty()) { console.warn('[ClearGlass] the tray icon (clear-glass/assets/tray.png) did not load — the tray uses an empty image'); icon = nativeImage.createEmpty(); }
   tray = new Tray(icon);
   tray.setToolTip(`Clear Glass v${CG_VERSION} — NEXUS Browser →E→E→`);
   _rebuildTrayMenu(mesh);

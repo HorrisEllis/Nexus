@@ -1,21 +1,23 @@
-> Renumbered from 0.60.335 on merge (2026-11-02): built on `claude/sleepy-gates-9lc085` as 0.60.335, in parallel with main, which used 0.60.335 first (CHANGELOG-0.60.335.md is main's). Numbered above main's 0.60.365 so both stand (§0.3).
+> Renumbered from 0.60.334 on merge (2026-11-02): built on `claude/sleepy-gates-9lc085` as 0.60.334, in parallel with main, which used 0.60.334 first (CHANGELOG-0.60.334.md is main's). Numbered above main's 0.60.365 so both stand (§0.3).
 
-# 0.60.368 — MT1: the macro recording toast with the classic breathing red dot
+# 0.60.368 — the .portfolio command rows (agents get it through nexus.command)
 
-James, 2026-10-31: **"a toast with playback controls … the classic red dot breathing when recording."** · **"step by step macro recorder, with a hotkey"**
+James, 2026-10-31: **"finish the backend."**
 
-## What was built
-`clear-glass/renderer/macro-toast.js` + `.css` — one persistent toast (`window.CGMacroToast`), two states:
-- **Recording** — a breathing red dot (CSS pulse), "Recording macro", a live step count, and **Stop**.
-- **Playing** — the macro name, step **N / M**, a progress bar, and **Pause / Step / Stop**.
+The portfolio had backend + route + UI (0.60.333) but no command row — so copilot and agents couldn't reach it through `nexus.command`. Your order of delivery is backend → route → command → UI, and "agents get every capability a person gets, through the one command tool." Now they do.
 
-It's drawn in Clear Glass's own window (like the autofill chip), and wired into the **record hotkey** (`browser.js` `cg.macroRecord`: shows on start with a working Stop, hides on stop), replacing the plain "● Recording a macro" line.
+## Added (`idearium/cli/route-commands.js`)
+- `portfolio` — list the portfolios (name, project count, headline)
+- `portfolio export [--out <file.portfolio>]` — the portfolios as one `.portfolio` file
+- `portfolio import <file.portfolio>` — import one (upsert by id, newer wins)
+
+Each row calls the `/cli/portfolio` door in Clear Glass (0.60.333), so a person, copilot and every agent use the same path.
 
 ## Reuse
-The existing record start/stop hooks — this adds the visible toast on top.
+The `autofill.export`/`autofill.import` rows are the pattern; the `/cli/portfolio` routes are the door. Nothing new beside them.
 
-## Proof (a real browser, via glass.js)
-`tests/modules/test-macro-toast-glass.test.js` 3/3 — recording shows the breathing dot + Stop; playing shows the name, "step 3/5", a 60% bar, and the controls; hide clears it.
+## Proof
+The 3 rows register in `SPEC` with a `req()` (import check); `route-commands.js` passes `node --check`.
 
-## Next (MT2)
-The player's **live** progress and Pause/Step come from the macro runner emitting a per-step event and holding on pause (`lib/agent-tools/tools/clear-glass/macro.js`) — mapped, not yet built.
+## Remaining in this phase
+Only the per-site portfolio picker (one UI bit) is left in `PF_routes_commands_ui`.
