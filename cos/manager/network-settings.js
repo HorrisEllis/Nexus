@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/manager/network-settings.js — COS's network settings, and the gate in front of every engine that reaches outside (CA3, 0.60.367).
+ * cos/manager/network-settings.js — COS's network settings, and the gate in front of every engine that reaches outside (CA3, 0.60.379).
  * Spec: cos/spec/network.spec MOD-NET-SETTINGS · Map: docs/2026-11-02-cos-the-application-phasemap.spec CA3_network_settings, CA_D2.
  *
  * James, 2026-11-02: "both but extensive settings for all of this." · "Gate behind settings to open. Make a full detailed settings for network."

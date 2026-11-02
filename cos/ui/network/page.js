@@ -1,4 +1,4 @@
-/* cos/ui/network/page.js — the Network page (CA3, 0.60.367; cos/spec/network.spec MOD-NET-PAGE).
+/* cos/ui/network/page.js — the Network page (CA3, 0.60.379; cos/spec/network.spec MOD-NET-PAGE).
    James, 2026-11-02: "Gate behind settings to open. Make a full detailed settings for network." Every setting from one list (FIELDS); Save sends
    only what changed, asks first when it opens something, and shows each engine's gate after. A token is typed to replace it, never shown. */
 (function () {

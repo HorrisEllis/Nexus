@@ -62,7 +62,7 @@ phases:
     does: "a Clear Glass setting: minimize to the tray after N minutes with no input (off by default; 5, 15, 30, 60), restored from the tray; a page playing media or a macro running keeps it up"
     proof: "with a short period, the window goes to the tray after no input and comes back from the tray; a running macro keeps it up"
   CA3_network_settings:
-    status: "DONE 0.60.367 — test-cos-network 5/5 (the page through the real cockpit in Clear Glass). The engines themselves (tunnel, rendezvous, mapping, DDNS, SSH) start behind the gate; wiring each to its settings is CA2"
+    status: "DONE 0.60.379 — test-cos-network 5/5 (the page through the real cockpit in Clear Glass). The engines themselves (tunnel, rendezvous, mapping, DDNS, SSH) start behind the gate; wiring each to its settings is CA2"
     depends_on: [CA_D2_remote_reach]
     spec: cos/spec/network.spec
     blocks: [MOD-NET-SETTINGS, MOD-NET-ROUTES, MOD-NET-PAGE, MOD-NET-GATE]

@@ -2,7 +2,7 @@
 // run-all: timeout 120000
 require('../../lib/test-sandbox.js').ensure();
 /**
- * tests/modules/test-cos-network.test.js — CA3, 0.60.367. Map: docs/2026-11-02-cos-the-application-phasemap.spec CA3 · Spec: cos/spec/network.spec.
+ * tests/modules/test-cos-network.test.js — CA3, 0.60.379. Map: docs/2026-11-02-cos-the-application-phasemap.spec CA3 · Spec: cos/spec/network.spec.
  * James, 2026-11-02: "both but extensive settings for all of this." · "Gate behind settings to open. Make a full detailed settings for network."
  *   NW-01 defaults: everything off, every reach gate closed, tokens shown as not set
  *   NW-02 patch: an agent refused; a bad value refused naming the field, nothing written; the fixed safety values cannot be turned off;
