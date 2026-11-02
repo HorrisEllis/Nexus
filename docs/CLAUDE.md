@@ -402,3 +402,11 @@ system.js, which needs the config."
   config: config → server.js → the registry → components → UI. A file traces to its origin when its system's server.js reaches it. The
   line above read "system.js" as lib/system.js; it is superseded and kept (§0.3). Six systems have no server.js yet (idearium,
   clear-glass, cortex, architect, orchestrator, cos).
+
+## ADDENDUM 2026-11-02 — a phase's DAG names its configuration and UI files too (his question, the coder's reading to confirm)
+James, 2026-11-02: "should dag have dag? Like: Additional dependencies: Settings/configuration files HTML/ui files"
+- Yes. A phase's graph (lib/phase-graph.js) follows require() edges, so a settings file read at runtime or an HTML page that loads a script is
+  invisible to it, and a change there breaks what the graph says is safe. Each phase lists them in its `files:` with a role, and the graph
+  marks them: `config` (settings, .json, .cos, contract.json) and `ui` (html, css, the scripts a page loads). The checker for it is to build
+  (lib/phase-graph.js reading script/link tags and the files a module reads by path); until then they are named by hand in `files:`.
+
