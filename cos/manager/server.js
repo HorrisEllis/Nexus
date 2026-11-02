@@ -26,7 +26,19 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
   const proposals = createProposals(sup);   // MG18: agents' held acts
   const resources = require('./resources.js').createResources(sup, { proposals });   // CP6a: caps by layer, read back; the account; pressure → a proposal
   // CE2 0.60.376 — Nexus's update as COS's: per system, the tool behind the toast (cos/manager/updates.js); every step on the event stream
-  const updates = require('./updates.js').createUpdates(sup, { root, emit: (e, d) => broadcast(e, d) });
+  const updates = require('./updates.js').createUpdates(sup, { root, emit: (e, d) => { broadcast(e, d); if (e === 'cos.update') notices.fromUpdate(d); } });
+  // SC1–SC4 0.60.379 (docs/2026-11-02-cos-console-phasemap.spec) — James, 2026-11-02: "notification bell for update, system status,  notications" ·
+  // "Need configuration for each system" · "add system" · "Need the system cli". The bell keeps what the ledger and the update tool say; the
+  // configuration is applied by the supervisor through one hook (adjust); adding a system is a proposal; the CLI is COS's own table.
+  const notices = require('./notices.js').createNotices({ file: path.join(path.dirname(sup.ledgerFile), 'notices.json'), emit: (e, d) => broadcast(e, d) });
+  const config = require('./system-config.js').createSystemConfig(sup, { resources });
+  sup.setHooks({ adjust: config.adjust });
+  const addSystem = require('./add-system.js').createAddSystem(sup, proposals, { root });
+  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage });
+  sup.on('ledger', (entry) => { try { notices.fromLedger(entry); } catch (_) {} });
+  const checkNotice = () => { try { notices.fromNotice(require('../../lib/nexus-update.js').notice({ root })); } catch (_) {} };
+  const noticeTick = setInterval(checkNotice, 10 * 60 * 1000); if (noticeTick.unref) noticeTick.unref(); setTimeout(checkNotice, 2000).unref();
+  const cpuTick = setInterval(() => { config.watchCpu().catch(() => {}); }, 30000); if (cpuTick.unref) cpuTick.unref();
   // MG18 (MG_D16): the one event stream the UI floats on. Every ledger line as it is written; a system's state when it changes (read each
   // second from the supervisor's own view, so a state reached without a ledger line, 'up' after health, is heard too).
   const streams = new Set(); let last = new Map();
@@ -79,6 +91,22 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
       if (cp && m === 'PATCH') { try { return send(res, 200, { ok: true, caps: resources.setCaps(decodeURIComponent(cp[1]), body.patch || {}, { by: body.by }) }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
       // CP1a (his 2026-11-01: "continue moving the rest of the systems into cos.") — every compartment's wall and what it has said
       if (m === 'GET' && p === '/api/cos/walls') { const w = require('./walls.js').report(sup); return send(res, 200, { ok: true, walls: w, counts: { enforce: w.filter(x => x.mode === 'enforce').length, audit: w.filter(x => x.mode === 'audit').length, bare: w.filter(x => x.mode === 'none').length, enforceReady: w.filter(x => x.enforceReady).length } }); }
+      // SC1 — the bell
+      if (m === 'GET' && p === '/api/cos/notices') return send(res, 200, { ok: true, notices: notices.list({ unread: u.searchParams.get('unread') === '1', kind: u.searchParams.get('kind'), limit: u.searchParams.get('limit') }), counts: notices.counts() });
+      if (m === 'POST' && p === '/api/cos/notices/read') return send(res, 200, { ok: true, ...notices.read({ ids: body.ids, all: body.all === true }) });
+      // SC2 — a system's configuration: every setting, its layer, when and how it applies; set his overrides; clear them back to the declared
+      const cf = /^\/api\/cos\/systems\/([^/]+)\/config(\/clear)?$/.exec(p);
+      if (cf) { const name = decodeURIComponent(cf[1]);
+        try {
+          if (m === 'GET' && !cf[2]) return send(res, 200, config.get(name));
+          if (m === 'PATCH' && !cf[2]) return send(res, 200, config.set(name, body.patch || {}, { by: body.by }));
+          if (m === 'POST' && cf[2]) return send(res, 200, config.clear(name, body.keys || [], { by: body.by }));
+        } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
+      // SC4 — add a system: a proposal; his own is taken at once
+      if (m === 'POST' && p === '/api/cos/systems') { try { return send(res, 200, { ok: true, ...addSystem.propose(body) }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
+      // SC3 — COS's own command line
+      if (m === 'POST' && p === '/api/cos/cli') { const r = await cli.run(body.line, { by: body.by || 'person' }); return send(res, 200, r); }
+      if (m === 'GET' && p === '/api/cos/cli') return send(res, 200, { ok: true, table: cli.TABLE.map(([verb, usage, about]) => ({ verb, usage, about })) });
       const lg = /^\/api\/cos\/systems\/([^/]+)\/logs$/.exec(p);
       if (lg && m === 'GET') return send(res, 200, { ok: true, system: decodeURIComponent(lg[1]), lines: sup.logs(decodeURIComponent(lg[1]), { limit: Number(u.searchParams.get('limit')) || 200 }) });
       if (m === 'GET' && p === '/api/cos/proposals') return send(res, 200, { ok: true, proposals: proposals.list({ open: u.searchParams.get('open') === '1' }) });

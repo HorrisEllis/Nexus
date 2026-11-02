@@ -1348,6 +1348,64 @@ spec:
       behavioral_contracts: ["turning it off removes the task and the login item", "a failed elevation falls back to the login item, said"]
       error_paths: ["schtasks refused (no admin) → the login item, 'not elevated' said", "not Windows → the login item (macOS) or a note (Linux)"]
       acceptance: ["the task command built for enable and disable; a refused schtasks falls back to the login item; --hidden shows no window"]
+    # ── 0.60.379 SC1–SC5 (docs/2026-11-02-cos-console-phasemap.spec) — James, 2026-11-02: "notification bell for update, system status,  notications" ·
+    # "Need configuration for each system ... set ram, cpu and network limits. Percent or gbs. Ports and network settings." · "add system" · "Need the system cli."
+    - id: MOD-MG-NOTICES
+      name: notices
+      uuid: nexus-cos-manager-notices-v1-0000-2026-1102-001
+      path: cos/manager/notices.js
+      phase: SC1_the_bell
+      description: "COS's bell: kept notices (update, system, notice; info, warn, error), read and unread, newest 300 in COS's data; a keyed notice told once."
+      deps: [{ name: supervisor }, { name: updates }]
+      schema_refs: [SupervisedSystem]
+      exports: ["createNotices({ file, keep, emit }) → { add, list({ unread, kind, limit }), read({ ids | all }), counts(), fromLedger(entry), fromUpdate(ev), fromNotice(n) }", "routes GET /api/cos/notices, POST /api/cos/notices/read; event cos.notice; row `cos notices`"]
+      gate_pipeline: ["GATE-SC1-001: a keyed notice is told once", "GATE-SC1-002: his own proposal is not news to him"]
+      behavioral_contracts: ["crash, circuit-open, refused, over-limit, no-restart, health, raid-refused, restart-failed → system; proposal-held (an agent's), declared → notice; the update check's notice and the update tool's steps → update"]
+      error_paths: ["the store unwritable → kept in memory, said nowhere silent: the bell still counts"]
+      acceptance: ["a crash is one unread error; read all clears; one update version told once (test-cos-console CC-04)"]
+
+    - id: MOD-MG-SYSTEM-CONFIG
+      name: system-config
+      uuid: nexus-cos-manager-system-config-v1-0000-2026-1102-001
+      path: cos/manager/system-config.js
+      phase: SC2_configuration_per_system
+      description: "Every system's configuration by layer (declared → his, in COS's data), with each setting's source and how it applies; units free (percent, GB, MB, cores, Mbps); applied through the supervisor's adjust hook and resources.js's caps."
+      deps: [{ name: supervisor }, { name: resources }]
+      schema_refs: [SupervisedSystem]
+      exports: ["createSystemConfig(sup, { resources, file, totalMB, cores }) → { get(name), set(name, patch, { by }), clear(name, keys, { by }), adjust(decl), watchCpu(), portEnvOf(decl) }", "parse.size | cpu | bandwidth", "routes GET|PATCH /api/cos/systems/:name/config, POST …/config/clear; row `cos config`"]
+      gate_pipeline: ["GATE-SC2-001: a person or a rule sets; an agent is refused (403)", "GATE-SC2-002: the ledger line before it applies; Versionium records it", "GATE-SC2-003: nothing shown as applied that the OS does not do"]
+      behavioral_contracts: ["memory and priority are the caps (CP6a), not a copy", "a port goes through the env var the system reads (declared, else discovered in its config.js/server.js, else not applied, said)", "network limit and outbound: recorded, not-enforced", "clear returns the declared value"]
+      error_paths: ["a unit not understood → 400 naming the form it wants", "an unknown setting → 400 with the list", "COS_BOUNDARY or NODE_OPTIONS → refused (COS's own)"]
+      acceptance: ["test-cos-console CC-01..CC-03: units; layers; a real process on his port with his env var; autostart off skipped; restart never left down"]
+
+    - id: MOD-MG-ADD-SYSTEM
+      name: add-system
+      uuid: nexus-cos-manager-add-system-v1-0000-2026-1102-001
+      path: cos/manager/add-system.js
+      phase: SC4_add_a_system
+      description: "Adding a system: a proposal (add-system); taking it writes <folder>/compartment.json (the system's own declaration, by his act) and declares it live."
+      deps: [{ name: supervisor }, { name: proposals }]
+      schema_refs: [SupervisedSystem]
+      exports: ["createAddSystem(sup, proposals, { root }) → { propose({ name, dir, cmd, args, port, health, by, why }), check }", "route POST /api/cos/systems; `add` in COS's command line"]
+      gate_pipeline: ["GATE-SC4-001: his add taken at once; an agent's held", "GATE-SC4-002: never overwrites a declaration"]
+      behavioral_contracts: ["nothing starts until he starts it", "found again at COS's next start (readDeclarations)"]
+      error_paths: ["name taken or folder already declaring → 409", "folder or entry missing → 404", "a port another system has → 409"]
+      acceptance: ["test-cos-console CC-06 and CC-09 (from Overview in Clear Glass)"]
+
+    - id: MOD-MG-CLI
+      name: cli
+      uuid: nexus-cos-manager-cli-v1-0000-2026-1102-001
+      path: cos/manager/cli.js
+      phase: SC3_system_command_line
+      description: "COS's own command line, run in its manager over its own functions, so it works with every other system down (SC_D5)."
+      deps: [{ name: supervisor }, { name: system-config }, { name: notices }, { name: proposals }, { name: add-system }]
+      schema_refs: [SupervisedSystem]
+      exports: ["createCli({ sup, resources, config, notices, proposals, addSystem, usage }) → { run(line, { by }) → { ok, lines[] }, TABLE }", "routes GET|POST /api/cos/cli; row `cos cli`; the shell's console (Ctrl+`)"]
+      gate_pipeline: ["GATE-SC3-001: an agent's act refused (it proposes); reading is anyone's"]
+      behavioral_contracts: ["the verbs are the cos.* rows' verbs"]
+      error_paths: ["an unknown verb → the table"]
+      acceptance: ["test-cos-console CC-05, CC-09"]
+
   events:
     cos:
       - "cos.system.state { name, state, pid, by }"
@@ -1440,3 +1498,13 @@ spec:
 # the title bar with Windows' own buttons drawn over the top right (titleBarOverlay, 40px); 'windows' changes nothing (the way back). The
 # preload marks the page html[data-cos-frame="none"]; cos/ui/shell/page.css then makes the top bar the drag region and ends it before those
 # buttons. settings.frame: none | windows. Map: docs/2026-11-02-cos-enterprise-phasemap.spec CE7.
+
+# ── ADDENDUM 2026-11-02 (0.60.379, SC1–SC5) — the bell, configuration per system, add a system, COS's command line ──
+# James, 2026-11-02: "Also have a notification bell for update, system status,  notications" · "Need configuration for each system. Hooks into the
+# config for each miniworld, set ram, cpu and network limits. Percent or gbs. Ports and network settings. All the settings like idearium has for the
+# repos." · "an add system in the proposal section, or just in the general homepage" · "Need the system cli."
+# MOD-MG-NOTICES, MOD-MG-SYSTEM-CONFIG, MOD-MG-ADD-SYSTEM, MOD-MG-CLI are new. MOD-MG-SUPERVISOR gains hooks.adjust(decl) (read at spawn, boot,
+# crash and in its view), declare(decl) and effective(name). MOD-MG-RESOURCES: null for heapMB, onOver or priority drops his layer. MOD-MG-UI-SHELL
+# gains the bell, the console and the Add system form (console.js); the cockpit gains a Configuration section; Overview and Proposals an Add system
+# button. MOD-MG-UI-SERVE: a write's origin is checked against the port it listens on (port 0 refused every write before). The shell's keys reach
+# it from inside a page's frame. "miniworld" is read by the coder as each system's compartment (its declaration and its process) — to confirm.

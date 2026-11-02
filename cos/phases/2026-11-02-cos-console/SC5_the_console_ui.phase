@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+type: phase
+id: docs_2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+context: pipeline phase SC5_the_console_ui of docs/2026-11-02-cos-console-phasemap.spec
+intent: null
+summary: SC5_the_console_ui (ui) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1793586316437
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793586316437
+lastSeenAt: 1793586316437
+fingerprint: null
+payload:
+  id: SC5_the_console_ui
+  map: docs/2026-11-02-cos-console-phasemap.spec
+  repo: null
+  layer: ui
+  status: >-
+    "DONE 0.60.379 — test-cos-console CC-09 (Clear Glass); the borderless window unverified on
+    Windows"
+  files:
+    - cos/ui/shell/index.html
+    - cos/ui/shell/page.js
+    - cos/ui/shell/page.css
+    - cos/ui/shell/console.js
+    - cos/ui/overview/page.js
+    - cos/ui/proposals/page.js
+    - tests/modules/test-cos-console.test.js
+  depends_on:
+    - SC1_the_bell
+    - SC2_configuration_per_system
+    - SC3_system_command_line
+    - SC4_add_a_system
+  blocks:
+    - MOD-MG-UI-SHELL
+  spec: cos/spec/cos-manager.spec
+  graph: 2c77571e2047b324

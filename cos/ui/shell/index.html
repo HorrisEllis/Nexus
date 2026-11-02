@@ -41,11 +41,38 @@
     </div>
     <div class="top-actions">
       <button class="btn quiet sm" id="theme" title="palette"></button>
+      <!-- SC5 0.60.379 — James, 2026-11-02: "notification bell for update, system status,  notications" · "Need the system cli." -->
+      <button class="btn quiet sm icon-btn" id="cli-open" title="COS's command line (Ctrl+`)" aria-label="Command line"></button>
+      <button class="btn quiet sm icon-btn bell" id="bell" title="Notifications" aria-label="Notifications" aria-expanded="false"><span class="badge" id="bell-n" hidden></span></button>
       <button class="btn sm goto-btn" id="goto-open"><span class="ic"></span><span>Go to</span><kbd>⌘K</kbd></button>
     </div>
   </header>
 
   <main class="stage" id="stage"></main>
+
+  <div class="bell-panel panel" id="bell-panel" hidden role="dialog" aria-label="Notifications">
+    <div class="bell-head"><b>Notifications</b><div class="bell-tabs" id="bell-tabs"></div><button class="btn quiet sm" id="bell-read">Mark all read</button></div>
+    <ol class="bell-list" id="bell-list"></ol>
+  </div>
+
+  <div class="console panel" id="console" hidden role="dialog" aria-label="COS command line">
+    <div class="console-head"><b>COS</b><span class="mono faint">command line · help for the table</span><button class="btn quiet sm" id="console-close" aria-label="Close">×</button></div>
+    <pre class="console-out" id="console-out"></pre>
+    <form class="console-in" id="console-form"><span class="mono">cos&gt;</span><input id="console-line" autocomplete="off" spellcheck="false" placeholder="ps · config intelligence · config loom memory.limit=25% · notices · add <name> <folder> port=<n>"></form>
+  </div>
+
+  <div class="scrim" id="add-sys" hidden>
+    <form class="dialog panel add-form" id="add-form" role="dialog" aria-modal="true" aria-labelledby="add-title">
+      <h2 id="add-title">Add a system</h2>
+      <p class="faint">A folder of Nexus with something to run. COS writes its declaration (&lt;folder&gt;/compartment.json) as your act and lists it; nothing starts until you start it.</p>
+      <label>Name<input class="input" name="name" required pattern="[a-z][a-z0-9-]{1,30}" placeholder="my-service"></label>
+      <label>Folder<input class="input" name="dir" required placeholder="my-service"></label>
+      <div class="two"><label>Command<input class="input" name="cmd" value="node"></label><label>Runs<input class="input" name="args" value="server.js"></label></div>
+      <div class="two"><label>Port<input class="input" name="port" type="number" min="1" max="65535" placeholder="optional"></label><label>Health path<input class="input" name="health" value="/health"></label></div>
+      <p class="add-err" id="add-err" hidden></p>
+      <div class="dialog-foot"><button type="button" class="btn quiet" id="add-no">Cancel</button><button class="btn primary" id="add-yes">Add</button></div>
+    </form>
+  </div>
   <div class="notices" id="notices" aria-live="polite"></div>
 
   <div class="scrim" id="confirm" hidden>
@@ -67,6 +94,7 @@
   <script src="../core/core.js"></script>
   <script src="bus.js"></script>
   <script src="page.js"></script>
+  <script src="console.js"></script>
   <!-- 2026-11-01 UP9 — the update popup (one script with the TV's), asking COS's own door -->
   <script src="/kernel/update-popup/update-popup.js" data-api="/api/cos/update/notice" data-tool="cos"></script>
 </body>

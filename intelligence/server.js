@@ -232,6 +232,11 @@ function start() {
     // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
     try { require('../lib/node-registry.js').startForSystem('intelligence', { bus: nexusBus }); } catch (e) { console.warn(`[intelligence] node registry: ${e.message}`); }
     console.log(`[intelligence] :${PORT} — v1.0.0 — cognition + system-health layer online`);
+    // SC6 (docs/2026-11-02-cos-console-phasemap.spec) — James, 2026-11-02: "There shouldn't be two intelligence. Intelligence consumer and
+    // intelligence should not be two separate things." Its queue's input half (consumer.js) runs here, in Intelligence's own process, instead of
+    // as a second declared process (intelligence-consumer, retired). INTELLIGENCE_CONSUMER=off leaves it off, said.
+    if (process.env.INTELLIGENCE_CONSUMER === 'off') console.log('[intelligence] queue consumer off (INTELLIGENCE_CONSUMER=off)');
+    else { try { require('./consumer.js').start(); console.log('[intelligence] queue consumer running in this process (intelligence/input/)'); } catch (e) { console.warn(`[intelligence] queue consumer did not start: ${e.message}`); } }
     // §BUILT — real heartbeat/pulse, matching every other sovereign system's
     // established pattern exactly (see versionium/server.js, loom/server.js,
     // ollama/server.js, copilot/server.js for the same call). Before this,
@@ -252,6 +257,7 @@ function start() {
 }
 
 function stop() {
+  try { require('./consumer.js').stop(); } catch (_) {}   // SC6
   try { fieldProvider.stop(); } catch (_) {}
   try { liminal.stop(); } catch (_) {}
   if (_raidTimer) { clearTimeout(_raidTimer); _raidTimer = null; }

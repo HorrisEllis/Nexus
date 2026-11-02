@@ -142,6 +142,51 @@
       "path": "/api/cos/update/apply",
       "in": "{ by, mode: update | keep-local }",
       "out": "the update applied (a backup first, asked of Idearium), then each changed system restarted by itself; Clear Glass waits for him (waitForHim); keep-local keeps local commits on local/<date> first (CE2, CE3, 2026-11-02)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/notices",
+      "out": "{ notices[] (newest first: id, at, kind update|system|notice, level info|warn|error, title, body, system, read, action), counts { unread, update, system, notice, error } } ?unread=1&kind=&limit= (SC1, 2026-11-02)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/notices/read",
+      "in": "{ ids: [id] } | { all: true }",
+      "out": "{ read: n, counts } (SC1)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/systems/:name/config",
+      "out": "{ groups, settings { key: { group, label, value, from declared|his|default|discovered, unit?, how { state enforced|watched|not-enforced|pending|unknown|not-applied, when, why } } }, env, host { totalMB, cores }, running } (SC2)"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/cos/systems/:name/config",
+      "in": "{ patch: { 'memory.limit': '25%', 'cpu.limit': '2 cores', 'network.port': 3760, 'env.FOO': 'bar', … }, by }",
+      "out": "the configuration after; refused 400 with the unit or setting it wants, 403 for an agent (SC2)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/systems/:name/config/clear",
+      "in": "{ keys: [key], by }",
+      "out": "the configuration after: those keys back to the declared value (SC2)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/systems",
+      "in": "{ name, dir, cmd?, args?, port?, health?, by, why? }",
+      "out": "{ proposal, taken?, system? } — a proposal (add-system); his own is taken at once: <dir>/compartment.json written, declared live (SC4)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/cli",
+      "out": "{ table: [{ verb, usage, about }] } (SC3)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/cli",
+      "in": "{ line, by }",
+      "out": "{ ok, lines[] } — COS's own command line over its own functions (SC3)"
     }
   ],
   "door": {
@@ -204,7 +249,8 @@
     "cos.ui.navigate": "{ to } — a page asks the shell to open a route",
     "cos.ui.notice": "{ level, text } — a page asks the shell to say something",
     "cos.ui.tab": "{ tab } — the shell tells a cockpit which tab the address names",
-    "cos.update": "{ phase: started | refused | none | restarted | restart-failed | updated, mode, ... } — the update's steps, as they happen (CE2, 2026-11-02)"
+    "cos.update": "{ phase: started | refused | none | restarted | restart-failed | updated, mode, ... } — the update's steps, as they happen (CE2, 2026-11-02)",
+    "cos.notice": "{ notice, counts } | { read, counts } — the bell: a notice kept, or notices read (SC1, 2026-11-02)"
   },
   "pages": [
     {
@@ -225,13 +271,22 @@
         "GET /api/cos/update/notice",
         "GET /api/cos/update",
         "POST /api/cos/update/apply",
-        "POST /api/cos/systems/:name/:op"
+        "POST /api/cos/systems/:name/:op",
+        "GET /api/cos/notices",
+        "POST /api/cos/notices/read",
+        "GET /api/cos/cli",
+        "POST /api/cos/cli",
+        "POST /api/cos/systems",
+        "GET /api/cos/systems/:name/config",
+        "PATCH /api/cos/systems/:name/config",
+        "POST /api/cos/systems/:name/config/clear"
       ],
       "listens": [],
       "emits": [
         "cos.system.state",
         "cos.ledger",
-        "cos.update"
+        "cos.update",
+        "cos.notice"
       ],
       "about": "the frame: holds the one event stream and relays each event only to the pages that declare it"
     },
@@ -325,7 +380,10 @@
         "POST /run-tests/:name",
         "GET /api/cos/walls",
         "GET /api/cos/systems/:name/caps",
-        "PATCH /api/cos/systems/:name/caps"
+        "PATCH /api/cos/systems/:name/caps",
+        "GET /api/cos/systems/:name/config",
+        "PATCH /api/cos/systems/:name/config",
+        "POST /api/cos/systems/:name/config/clear"
       ],
       "listens": [
         "cos.system.state",
@@ -345,7 +403,8 @@
         "files",
         "tests",
         "snapshot",
-        "resources"
+        "resources",
+        "config"
       ]
     },
     {

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+type: phase
+id: docs_2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+context: pipeline phase SC1_the_bell of docs/2026-11-02-cos-console-phasemap.spec
+intent: null
+summary: SC1_the_bell (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793586316428
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793586316428
+lastSeenAt: 1793586316428
+fingerprint: null
+payload:
+  id: SC1_the_bell
+  map: docs/2026-11-02-cos-console-phasemap.spec
+  repo: null
+  layer: backend
+  status: '"DONE 0.60.379 — test-cos-console CC-04, CC-09"'
+  files:
+    - cos/manager/notices.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - tests/modules/test-cos-console.test.js
+    - tests/modules/run-all.js
+  depends_on: []
+  blocks:
+    - MOD-MG-NOTICES
+  spec: cos/spec/cos-manager.spec
+  graph: 57a47b97dd8f72a0

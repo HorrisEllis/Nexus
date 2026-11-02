@@ -63,12 +63,12 @@ function createServer({ port = 7797, manager = 'http://127.0.0.1:7799', contract
     });
   }
 
-  return http.createServer((req, res) => {
+  const srv = http.createServer((req, res) => {
     const u = new URL(req.url, 'http://x'); const p = u.pathname; const m = req.method;
     if (m !== 'GET' && m !== 'HEAD') {   // GATE-MGSV-002: a write only from this page, on this machine
       const origin = req.headers.origin;
       if (!loopback(req.headers.host)) return send(res, 403, { ok: false, error: `host ${req.headers.host} is not loopback` });
-      if (!origin || !loopback(new URL(origin).host) || new URL(origin).port !== String(port)) return send(res, 403, { ok: false, error: `a write from ${origin || 'no origin'} is refused: only the cockpit's own pages may act` });
+      if (!origin || !loopback(new URL(origin).host) || new URL(origin).port !== String((srv.address() && srv.address().port) || port)) /* SC5 0.60.379: the port it listens on (port 0 picks one) */ return send(res, 403, { ok: false, error: `a write from ${origin || 'no origin'} is refused: only the cockpit's own pages may act` });
     }
     let allow; try { allow = loadAllow(); } catch (e) { return send(res, 500, { ok: false, error: `the manager's contract is unreadable: ${e.message}` }); }
     if (p.startsWith('/api/cos/')) {
@@ -98,6 +98,7 @@ function createServer({ port = 7797, manager = 'http://127.0.0.1:7799', contract
     }
     return serveStatic(req, res, p);
   });
+  return srv;
 }
 
 if (require.main === module) {

@@ -1,0 +1,247 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC3_system_command_line:ca407152ec8f60e8
+type: graph
+id: phase:SC3_system_command_line:ca407152ec8f60e8
+context: dependency graph of phase SC3_system_command_line
+intent: null
+summary: 29 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793586316433
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793586316433
+lastSeenAt: 1793586316433
+fingerprint: null
+payload:
+  for: SC3_system_command_line
+  kind: phase
+  repo: null
+  hash: ca407152ec8f60e8
+  nodes:
+    - path: cos/manager/cli.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cos-console.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/walls.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/emergence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-update.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/emergence.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/walls.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+    dependents:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
+    downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - >-
+        depends on (3): SC_D5_cos_has_its_own_command_line, SC1_the_bell,
+        SC2_configuration_per_system · all upstream 6
+      - 'needed by (1): SC5_the_console_ui · finishing it unlocks SC5_the_console_ui'
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
+        kind: declared
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+        kind: declared
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+        kind: declared

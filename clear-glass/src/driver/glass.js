@@ -392,10 +392,18 @@ class Page extends EventEmitter {
       if (i < 0 || i >= o.length) throw new Error('selectOption: no such option');
       el.selectedIndex = i; el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); return [o[i].value];`, sel, `const v = ${JSON.stringify(value)};`);
   }
-  async _press(key) {
+  async _press(combo) {
+    // 0.60.379 (SC5) — a combination, as Playwright writes it: "Control+`", "Shift+Tab", "Meta+K". The modifiers ride on the key event (CDP's
+    // bitmask: Alt 1, Control 2, Meta 4, Shift 8), and a key with Control, Alt or Meta types no text. Found when COS's console shortcut could
+    // not be driven: press('Control+`') sent one key literally named "Control+`".
+    const parts = String(combo).split('+'); const key = parts.length > 1 && parts[parts.length - 1] === '' ? '+' : parts.pop();
+    const MOD = { Alt: 1, Control: 2, Ctrl: 2, Meta: 4, Command: 4, Shift: 8 };
+    const modifiers = parts.filter(Boolean).reduce((m, p) => m | (MOD[p] || 0), 0);
     const code = KEYS[key] || (key.length === 1 ? key.toUpperCase().charCodeAt(0) : 0);
-    const base = { key, code: key.length === 1 ? 'Key' + key.toUpperCase() : key, windowsVirtualKeyCode: code, nativeVirtualKeyCode: code };
-    await this._send('Input.dispatchKeyEvent', { type: key.length === 1 ? 'keyDown' : 'rawKeyDown', ...base, ...(key.length === 1 ? { text: key } : {}) });
+    const base = { key, code: key.length === 1 ? (/[a-z]/i.test(key) ? 'Key' + key.toUpperCase() : key === '`' ? 'Backquote' : key) : key, windowsVirtualKeyCode: code, nativeVirtualKeyCode: code, modifiers };
+    const text = key === 'Enter' ? '\r' : key.length === 1 ? key : null;   // Enter carries "\r", as a real keyboard's does: Chromium submits a form on it
+    const types = !!text && !(modifiers & 7);
+    await this._send('Input.dispatchKeyEvent', { type: types ? 'keyDown' : 'rawKeyDown', ...base, ...(types ? { text, unmodifiedText: text } : {}) });
     await this._send('Input.dispatchKeyEvent', { type: 'keyUp', ...base });
   }
 

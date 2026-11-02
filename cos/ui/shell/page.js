@@ -105,6 +105,7 @@
       BUS.pulse(entry.system, `${entry.kind}${/^person|^agent/.test(entry.by || '') ? ' by-person' : ''}`); relay('cos.ledger', { entry });
       if (/^proposal-/.test(entry.kind)) refreshProposals(); });
     es.addEventListener('cos.system.state', (m) => onState(JSON.parse(m.data)));
+    es.addEventListener('cos.notice', (m) => { try { dispatchEvent(new CustomEvent('cos-notice', { detail: JSON.parse(m.data) })); } catch (_) {} });   // SC5: the bell (console.js)
     es.onerror = () => { busState('starting', 'reconnecting — reading every 5 s'); startPoll(); };
   }
   function startPoll() {
@@ -118,6 +119,7 @@
   addEventListener('message', (m) => {
     if (m.origin !== location.origin || !m.data) return; const d = m.data;
     if (d.type === 'cos.ready') { S.listens.set(m.source, new Set(d.listens || [])); return; }
+    if (d.type === 'cos.key' && (d.key === 'k' || d.key === '`')) { dispatchEvent(new KeyboardEvent('keydown', { key: d.key, ctrlKey: true })); return; }   // SC5: a page's frame passes the shell's keys up
     if (d.type === 'cos.confirm') { confirmAsk(d).then(yes => m.source.postMessage({ type: 'cos.confirmed', id: d.id, yes }, location.origin)); return; }
     if (d.type === 'cos.emit') {
       const page = S.contract.pages.find(p => p.id === d.page);
