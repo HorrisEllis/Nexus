@@ -48,7 +48,7 @@ decisions:
 
 phases:
   CA1_clear_glass_to_the_tray:
-    status: OPEN
+    status: "DONE 0.60.366 — test-cg-idle-tray 3/3; the tray icon and the idle time on Windows unverified until his run"
     depends_on: []
     spec: clear-glass/spec/tray.spec
     blocks: [MOD-CGT-IDLE-TRAY]
