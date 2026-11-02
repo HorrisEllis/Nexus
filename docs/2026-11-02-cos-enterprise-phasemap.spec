@@ -104,3 +104,17 @@ phases:
     files: [cos/app/service.js (new), cos/app/desktop/main.js]
     does: "install, uninstall, status of the COS manager as a Windows service (the wrapper his call chooses); the app attaches to the running service instead of starting its own manager"
     proof: "unverified until his run on Windows: services.msc lists it; logging off leaves the systems running"
+
+  CE6_the_exe_carries_it:
+    layer: integration
+    status: DONE 0.60.377 (COS 0.4.0) — the cos-app workflow's own check (no change to the exe's files since its tag without a bump); on Windows unverified until his run
+    depends_on: [CE1_close_and_minimize_are_his, CE4_toasts_in_the_cockpit]
+    files: [cos/app/version.js]
+    origin: '"Look cos 0.3.0" (James, 2026-11-02, after 0.60.376 was pushed). Read by the coder as: check COS 0.3.0, the exe he runs, against the new work — to confirm.'
+    found: >-
+      COS 0.3.0 (cos-v0.3.0, built from main at e4409e7f, setup downloaded twice, portable once) is his exe. 0.60.376 changed cos/app/desktop/main.js
+      and cos/app/settings.js but left cos/app/version.js at 0.3.0. On merge, .github/workflows/cos-app.yml would fail ("already released, but the files
+      its exe is built from changed"), and CE1 and CE4's Windows notification would never reach him. The Nexus-side work (the card, the routes, keep
+      mine) reaches him through his folder's update; only the window's behaviour needs the new exe.
+    does: "COS 0.4.0: the bump, so merging to main publishes cos-v0.4.0 (portable and setup, SHA256SUMS), which 0.3.0's own update check (app-update.js) announces"
+    proof: "git diff cos-v0.3.0 HEAD -- cos/app names main.js and settings.js; the version is now untagged, so the workflow builds"

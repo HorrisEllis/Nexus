@@ -9,4 +9,6 @@
 // 0.3.0 (Nexus 0.60.365, MG36/MG37): James, 2026-11-02: "no i mean cos ui as the app. like a full orchastration application. since it's like vmware.
 // not the old one. but maybe add the old one as an manual update feature." · "cos starts up with windows, minimizes to tray unless disabled. admin
 // access and a service if applicable." The window is COS's cockpit; the old page is Versions & manual update; COS starts at logon, elevated, to the tray.
-module.exports = { version: '0.3.0' };
+// 0.4.0 (Nexus 0.60.377, CE6): James, 2026-11-02: "Look cos 0.3.0". 0.60.376 changed main.js and settings.js (close and minimize are his, the
+// Windows notification while COS is in the tray) and left this at 0.3.0, so the workflow would have refused it and his 0.3.0 exe would never get them.
+module.exports = { version: '0.4.0' };

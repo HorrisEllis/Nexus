@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793581138957
+exported_at: 1793583002431
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793581138957
-lastSeenAt: 1793581138957
+firstSeenAt: 1793583002431
+lastSeenAt: 1793583002431
 fingerprint: null
 payload:
   for: CE1_close_and_minimize_are_his
@@ -107,15 +107,18 @@ payload:
   dag:
     layer: 0
     deps: []
-    dependents: []
+    dependents:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE6_the_exe_carries_it
     upstream: []
-    downstream: []
+    downstream:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE6_the_exe_carries_it
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE6_the_exe_carries_it
     conflicts: []
     dangling: []
     lines:
       - layer 0
       - 'depends on (0): —'
-      - 'needed by (0): —'
+      - 'needed by (1): CE6_the_exe_carries_it · finishing it unlocks CE6_the_exe_carries_it'
     edges: []

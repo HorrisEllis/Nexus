@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793581138963
+exported_at: 1793583002438
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793581138963
-lastSeenAt: 1793581138963
+firstSeenAt: 1793583002438
+lastSeenAt: 1793583002438
 fingerprint: null
 payload:
   for: CE4_toasts_in_the_cockpit
@@ -92,21 +92,24 @@ payload:
     deps:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2_updates_as_cos_routes
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE3_keep_mine_and_update
-    dependents: []
+    dependents:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE6_the_exe_carries_it
     upstream:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2_updates_as_cos_routes
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE3_keep_mine_and_update
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D0_per_system_reading
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D1_diverged_is_kept_never_lost
-    downstream: []
+    downstream:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE6_the_exe_carries_it
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE6_the_exe_carries_it
     conflicts: []
     dangling: []
     lines:
       - layer 2
       - 'depends on (2): CE2_updates_as_cos_routes, CE3_keep_mine_and_update · all upstream 4'
-      - 'needed by (0): —'
+      - 'needed by (1): CE6_the_exe_carries_it · finishing it unlocks CE6_the_exe_carries_it'
     edges:
       - from: docs/2026-11-02-cos-enterprise-phasemap.spec::CE2_updates_as_cos_routes
         kind: declared
