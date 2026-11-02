@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-the-application-phasemap.spec::CA1_clear_glass_to_the_tray
+type: phase
+id: docs_2026-11-02-cos-the-application-phasemap.spec::CA1_clear_glass_to_the_tray
+context: pipeline phase CA1_clear_glass_to_the_tray of docs/2026-11-02-cos-the-application-phasemap.spec
+intent: null
+summary: CA1_clear_glass_to_the_tray (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793578979879
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793578979879
+lastSeenAt: 1793578979879
+fingerprint: null
+payload:
+  id: CA1_clear_glass_to_the_tray
+  map: docs/2026-11-02-cos-the-application-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/main/idle-tray.js
+    - clear-glass/src/main/index.js
+    - clear-glass/src/options/store.js
+    - clear-glass/renderer/settings/sections/general.js
+    - tests/modules/test-cg-idle-tray.test.js
+  depends_on: []
+  blocks:
+    - MOD-CGT-IDLE-TRAY
+  spec: clear-glass/spec/tray.spec
+  graph: bf93d6da1d79cb33

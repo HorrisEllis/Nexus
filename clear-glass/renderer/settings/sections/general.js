@@ -49,6 +49,8 @@
       return [
         pane({ title: 'Window', flush: true, body: [
           row('Closing hides to the tray', 'Clear Glass keeps running so agents and Guardian stay connected.', toggle(o.hideToTrayOnClose !== false, (on) => setOpt({ hideToTrayOnClose: on }))),
+          // 0.60.366 CA1 — James: "clearglass needs a setting for automatically minimizing to tray after a period of time"
+          row('Go to the tray after no input', 'Off, or after this long with no keyboard or mouse. Never while a window plays sound or a macro or workflow runs.', select([['0', 'off'], ['5', '5 minutes'], ['15', '15 minutes'], ['30', '30 minutes'], ['60', '1 hour']], String(o.trayAfterIdleMin || 0), (v) => setOpt({ trayAfterIdleMin: Number(v) }, Number(v) ? `To the tray after ${v} min with no input` : 'Idle to tray: off'))),
           row('Open the co-pilot pane with each window', null, toggle(o.autoOpenCopilotPane !== false, (on) => setOpt({ autoOpenCopilotPane: on }))),
           // 0.60.280 KB7 — James: "the clearglass floating menu button, can you make that an option to pin it?"
           row('Pin the floating CLI button', 'The ›_ button stays on every window, and ✕ collapses it instead of hiding it.', toggle(!!(o.floatCli && o.floatCli.pinned), async (on) => { const r = await cg.floatCli.pin(on); if (!r || r.ok === false) toast((r && r.error) || 'could not pin', 'err'); })),

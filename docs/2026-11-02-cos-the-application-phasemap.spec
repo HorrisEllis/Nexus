@@ -50,12 +50,16 @@ phases:
   CA1_clear_glass_to_the_tray:
     status: OPEN
     depends_on: []
-    files: [clear-glass/src/main/index.js, clear-glass/renderer/settings]
+    spec: clear-glass/spec/tray.spec
+    blocks: [MOD-CGT-IDLE-TRAY]
+    files: [clear-glass/src/main/idle-tray.js, clear-glass/src/main/index.js, clear-glass/src/options/store.js, clear-glass/renderer/settings/sections/general.js, clear-glass/assets/tray.png, tests/modules/test-cg-idle-tray.test.js]
     does: "a Clear Glass setting: minimize to the tray after N minutes with no input (off by default; 5, 15, 30, 60), restored from the tray; a page playing media or a macro running keeps it up"
     proof: "with a short period, the window goes to the tray after no input and comes back from the tray; a running macro keeps it up"
   CA2_remote_reach:
     status: "OPEN — waits on his choice in CA_D2"
     depends_on: [CA_D2_remote_reach]
+    spec: "to be written once he chooses (CA_D2)"
+    blocks: []
     files: [cos/services/anonymous, cos/manager, cos/ui]
     does: "the chosen reach, supervised by COS's manager as a compartment, on the cockpit's menu: on/off, who can connect, every connection on the ledger"
     proof: "from another network, his device reaches Nexus only after the handshake; with reach off nothing answers from outside"
