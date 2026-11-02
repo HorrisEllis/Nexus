@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-enterprise-phasemap.spec::CE2_updates_as_cos_routes
+type: phase
+id: docs_2026-11-02-cos-enterprise-phasemap.spec::CE2_updates_as_cos_routes
+context: pipeline phase CE2_updates_as_cos_routes of docs/2026-11-02-cos-enterprise-phasemap.spec
+intent: null
+summary: CE2_updates_as_cos_routes (backend) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1793581138959
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793581138959
+lastSeenAt: 1793581138959
+fingerprint: null
+payload:
+  id: CE2_updates_as_cos_routes
+  map: docs/2026-11-02-cos-enterprise-phasemap.spec
+  repo: null
+  layer: backend
+  status: DONE 0.60.376 — test-cos-updates CU-01..06
+  files:
+    - cos/manager/updates.js
+    - cos/manager/update-run.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - lib/nexus-update.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-cos-updates.test.js
+  depends_on:
+    - CE_D0_per_system_reading
+  blocks: []
+  spec: null
+  graph: 802761c1790cb398

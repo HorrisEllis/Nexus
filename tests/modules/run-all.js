@@ -18,9 +18,13 @@ const fs   = require('fs');
 const MODULES_DIR = __dirname;
 
 const SUITES = [
+  'test-autofill-page-chip-glass.test.js', // 0.60.336 AC1 — the page-level "Autofill this page" pill shows automatically / fills / hides, driven in Clear Glass
+  'test-macro-toast-glass.test.js',    // 0.60.335 MT1 — the macro recording/playing toast (breathing red dot + player), driven in Clear Glass
   'test-select-match.test.js',            // 0.60.298 DD1 — bestOption/boolOf: a dropdown/checkbox fills from a profile value that isn't the option's raw value ("United States"→US)
   'test-portfolio-node.test.js',          // 0.60.299 PF1 — the .portfolio node: PortfolioStore + export/import a clearglass.portfolio/1 file (merge by id, newer-wins)
   'test-gig-metadata-glass.test.js',      // 0.60.320 GT6 — Gig metadata tab by tab: radio/checkboxes by label within the tab's limit, read back; not offered, over the limit, required-and-empty, said
+  'test-gig-metadata-dropdown-glass.test.js', // 0.60.339 FP6 — Gig metadata multi-select DROPDOWNS (AI ENGINE "Choose…"): each value chosen via the driver's choose, gated on the field's chips; not offered said, idempotent, dropdown+radio in one call
+  'test-autofill-radio-checkbox-glass.test.js', // 0.60.340 CR1 — the general autofill fills RADIOS + CHECKBOXES (matchChoiceFields): a radio group's option by label, a checkbox from yes/no; unknown group left for the picker; end-to-end in Clear Glass
   'test-service-type-glass.test.js',      // 0.60.319 GT5 — Service type after the subcategory: dropdown or radios, chosen and read back; none offered or none in the gig, said
   'test-choose-refind-glass.test.js',     // 0.60.318 GT1+GT4 — real choose on a live page: a re-rendered dropdown found again (his "Element not found: [data-cg-choose=\"1\"]"), gates timed per part
   'test-dropdown-fill-glass.test.js',     // 0.60.316 DD1-verify — real browser (glass.js): a <select>/checkbox/radio/text/contenteditable actually fills; caught the checkbox double-toggle
@@ -450,6 +454,7 @@ const SUITES = [
   'test-cos-walls.test.js',                // 0.60.355 CP1a — every system walled by COS (audit where ways are open, enforce for Ollama); Electron through NODE_OPTIONS
   'test-procedures.test.js',               // 0.60.354 PD1 — .procedure nodes: run in order, stopped at his yes, copilot the same; list/show/run from a terminal
   'test-update-popup.test.js',             // 0.60.349 UP9 — the update popup on the TV and in COS's UI; a failed check saved and shown               // 0.60.348 OC1 — the .task node: written, validated (every problem), listed, archived            // 0.60.347 MG33 — COS's manager starts its cockpit (:7797); the TV's COS channel frames it            // 0.60.346 CI6 — friction and tension are Intelligence's; Diagnostic measures; Loom asks Intelligence        // 0.60.344 TV3 — the EMERGENCE channel: patterns, liminal spaces, his runs; route, rows, page          // 0.60.343 MB2 — Settings › Macros as blocks with the gate between them, in Clear Glass             // 0.60.343 MB1 — the gate between two macro blocks: delay (fixed, range, human), backoff, onClosed          // 0.60.280 KB4–KB7 — gated dropdowns in the node, keys in macros and automation, the node upgraded, the CLI pinned
+  'test-cos-updates.test.js',              // 0.60.376 CE2+CE4 — updates as COS's, per system; keep mine and update; the tool on the card in Clear Glass
   'test-gig-features.test.js',             // 0.60.281 AP1 — a gig's package rows: features in the .gig, checkAt/rowLabels, the fill's rows
   'test-opportunity-contacts.test.js',     // 0.60.281 AP2–AP4 — contacts behind job applications: captured from the page, routes, command, tool, Settings › Applications
   'test-snowflake-steps.test.js',          // 0.60.281 SN1 — Snowflake as a step in macros and workflows (route, unroute, start, wait, check, stop)

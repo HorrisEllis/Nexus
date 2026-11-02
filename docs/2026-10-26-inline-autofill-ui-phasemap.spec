@@ -136,3 +136,18 @@ order: >-
 # Placement (sovereignty §5.9/§5.15): select-match.js is the DOM mesh's (Clear Glass), beside archaeology.js; no cross-system edge.
 # Proof: tests/modules/test-select-match.test.js 7/7; the reconstructed in-page script parses. Live (his machine): a real form's
 # country/state/years dropdowns.
+
+# ── ADDENDUM 2026-10-31 (0.60.336) — AC1: the autofill chip shows automatically (a page-level "Autofill this page")
+# James, 2026-10-31: "yes, fiverr. autofill and have the chip show automatically, and any money making features clearglass has,"
+# Reading (the coder's; §0.1): the per-field ⚡ chips already refresh automatically on dom-ready / in-page nav / stale (autofill-inline.js),
+# and there is a right-click "Autofill this page" + the cg.autofill hotkey (browser.js) — but nothing APPEARS on its own to say the page can
+# be filled. "have the chip show automatically" = a single page-level affordance (like 1Password/Firefox's key) that comes up by itself
+# when the page has fillable fields, fills them all on click, and hides when there is nothing to fill.
+# depends_on: [AF3_the_inline_chip]  (reuses its suggest()/draw() and the fill-all path cg.autofill.fill(null, agentId))
+# Built (reuse, rule 2): a #af-page pill in Clear Glass's OWN window layer (NOT in the page — sovereignty §5.9/§5.15, same as the chips, so
+# a site cannot read the profile), fixed bottom-right of the webview. draw() counts the fields that render a ⚡ chip (a field already
+# holding its value has none) and shows "⚡ Autofill N field(s)"; 0 → hidden. Click → cg.autofill.fill(null, agentId) (the same path the
+# context menu uses), then refresh(); a no-profile / error answer is said (§1.2), never a silent nothing.
+# files: [clear-glass/renderer/autofill-inline.js, clear-glass/renderer/autofill-inline.css]
+# Proof: tests/modules/test-autofill-page-chip-glass.test.js — driven in Clear Glass (glass.js, never Playwright CG-001b): with N
+# fillable fields the pill shows "N"; filling clears them and hides the pill; all-already-filled shows no pill.

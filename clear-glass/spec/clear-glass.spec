@@ -736,3 +736,11 @@ spec:
 # Superseded and kept (§0.3): the passwords plugin's 2026-08-24 userscript (autofilled the one saved login without asking; agent windows only)
 # — its code stays in plugins/passwords/index.js, no longer contributed. PasswordVault records gain accountId. account-switch capture() takes
 # onCaptured. A page script (src/preload/passwords.js) runs on every session; Snowflake compartments are refused in main.
+
+# ── ADDENDUM 2026-11-01 (0.60.340 CR1) — autofill fills radios and checkboxes ──────────────────────────────────────────────────────────────
+# James, 2026-11-01: "Radios and checkboxes. Can we add that to autofill?" autofill/matcher.js gains matchChoiceFields(domFields, profile, opts),
+# concatenated into matchFields (so detectFields/fillFields carry it unchanged). A standalone checkbox is a boolean (its own label the question,
+# boolOf the value); a radio group (by name) is one-of — purpose from the group's identity (name/id/aria/learned, NOT a radio's option label),
+# option from bestOption over the radios' labels. The emitted value 'yes'/'no' drives the DOM mesh's existing checkbox/radio set (archaeology DD1);
+# an unknown group or an unresolvable value is left for the element picker (JA1/JA3), never a silent wrong pick (§1.2). Proof:
+# tests/modules/test-autofill-radio-checkbox-glass.test.js CR-01..04 (CR-04 end-to-end in Clear Glass). Map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec CR1.

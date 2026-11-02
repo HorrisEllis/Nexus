@@ -25,6 +25,8 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
   const send = (res, code, body) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(body)); };
   const proposals = createProposals(sup);   // MG18: agents' held acts
   const resources = require('./resources.js').createResources(sup, { proposals });   // CP6a: caps by layer, read back; the account; pressure → a proposal
+  // CE2 0.60.376 — Nexus's update as COS's: per system, the tool behind the toast (cos/manager/updates.js); every step on the event stream
+  const updates = require('./updates.js').createUpdates(sup, { root, emit: (e, d) => broadcast(e, d) });
   // MG18 (MG_D16): the one event stream the UI floats on. Every ledger line as it is written; a system's state when it changes (read each
   // second from the supervisor's own view, so a state reached without a ledger line, 'up' after health, is heard too).
   const streams = new Set(); let last = new Map();
@@ -67,6 +69,8 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
       }
       // 2026-11-01 UP9 — the same update notice for COS's UI (the kernel's lib/nexus-update.js notice)
       if (m === 'GET' && p === '/api/cos/update/notice') { try { return send(res, 200, { ok: true, ...require('../../lib/nexus-update.js').notice({ root }), updatesPage: 'http://127.0.0.1:4800/update.html' }); } catch (e) { return send(res, 500, { ok: false, error: e.message }); } }
+      // CE2 0.60.376 — what GitHub has, per system (?fetch=1 asks GitHub; else what was last fetched), and the update tool
+      if (m === 'GET' && p === '/api/cos/update') return send(res, 200, await updates.check({ fetch: u.searchParams.get('fetch') === '1' }));
       if (m === 'GET' && p === '/api/cos/usage') return send(res, 200, { ok: true, usage: await usage.readAsync(sup.list(), sup.policy()) });
       // CP6a (his 2026-11-01: "then i want resource management for each cos compartment") — caps by layer, read back; the account
       if (m === 'GET' && p === '/api/cos/resources') { if (u.searchParams.get('fresh') === '1') await resources.sample(); return send(res, 200, { ok: true, resources: resources.all() }); }
@@ -104,6 +108,7 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
         const fn = { start: sup.start, stop: sup.stop, restart: sup.restart, 'reset-circuit': sup.resetCircuit }[act[2]];
         return send(res, 200, { ok: true, system: fn(name, { by: body.by }) });
       }
+      if (m === 'POST' && p === '/api/cos/update/apply') { if (!needBy()) return; const r = await updates.apply({ mode: body.mode || 'update', by: body.by }); return send(res, r.ok ? 200 : (r.busy ? 409 : 409), r); }   // CE2: mode update | keep-local; then each changed system restarted
       if (m === 'POST' && p === '/api/cos/boot') { if (!needBy()) return; return send(res, 200, { ok: true, ...(await sup.boot({ set: body.set, by: body.by })) }); }
       if (m === 'PATCH' && p === '/api/cos/policy') { if (!needBy()) return; return send(res, 200, { ok: true, policy: sup.setPolicy(body.patch || {}, { by: body.by }) }); }
       if (!p.startsWith('/api/cos') && door(req, res)) return;

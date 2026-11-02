@@ -6,6 +6,17 @@ platform: fiverr
 title: I will fix and finish your AI built app from Lovable, Bolt, Base44 or Cursor
 category: Programming & Tech
 subcategory: AI Development
+serviceType: AI Websites & Software          # SELECT A SERVICE TYPE on the page; the fill matches by label (§1.2 says what it can't)
+metadata:
+  "AI ENGINE":
+    - Claude
+    - ChatGPT
+  "DELIVERY TYPE":
+    - Application code
+  "PROGRAMMING LANGUAGE":
+    - JavaScript
+    - TypeScript
+    - Python
 tags:
   - vibe coding
   - lovable

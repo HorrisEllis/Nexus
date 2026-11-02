@@ -131,6 +131,17 @@
       "method": "GET",
       "path": "/api/cos/update/notice",
       "out": "{ show, kind: available|blocked|error|updated|none, title, text, current, latest, at, updatesPage } — what the last automatic update check means (UP9, 2026-11-01)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/update",
+      "out": "the update on GitHub, per system: { current, latest, behind, ahead, releases (his words), systems (folders), perSystem { restart, waitForHim, kernelChanged, cosChanged }, local (commits GitHub lacks, how many it has by content), can, plan, busy }. ?fetch=1 asks GitHub (CE2, 2026-11-02)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/update/apply",
+      "in": "{ by, mode: update | keep-local }",
+      "out": "the update applied (a backup first, asked of Idearium), then each changed system restarted by itself; Clear Glass waits for him (waitForHim); keep-local keeps local commits on local/<date> first (CE2, CE3, 2026-11-02)"
     }
   ],
   "door": {
@@ -192,7 +203,8 @@
     "cos.system.state": "{ name, state, pid } — a system's state changed",
     "cos.ui.navigate": "{ to } — a page asks the shell to open a route",
     "cos.ui.notice": "{ level, text } — a page asks the shell to say something",
-    "cos.ui.tab": "{ tab } — the shell tells a cockpit which tab the address names"
+    "cos.ui.tab": "{ tab } — the shell tells a cockpit which tab the address names",
+    "cos.update": "{ phase: started | refused | none | restarted | restart-failed | updated, mode, ... } — the update's steps, as they happen (CE2, 2026-11-02)"
   },
   "pages": [
     {
@@ -210,12 +222,16 @@
         "GET /api/cos/systems",
         "GET /api/cos/usage",
         "GET /api/cos/proposals",
-        "GET /api/cos/update/notice"
+        "GET /api/cos/update/notice",
+        "GET /api/cos/update",
+        "POST /api/cos/update/apply",
+        "POST /api/cos/systems/:name/:op"
       ],
       "listens": [],
       "emits": [
         "cos.system.state",
-        "cos.ledger"
+        "cos.ledger",
+        "cos.update"
       ],
       "about": "the frame: holds the one event stream and relays each event only to the pages that declare it"
     },

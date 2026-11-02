@@ -1,5 +1,10 @@
 # James Brooks: the work, and the proof that it is his
 
+> **In his own words (2026-11-01): an "emergent end-state first systems thinker."** Fix the finished state as law, then
+> let the system emerge the path to it from proven primitives. It is checkable, not aspirational — see
+> [`PROOF-OF-COMPETENCY.md`](PROOF-OF-COMPETENCY.md) (end-state first: `END_STATE_QUESTIONS` + bidirectional chaining;
+> emergent: Emerge/CIE-EG + the neutral core NC0; systems: sovereignty §5.9 + the DAG the build refuses to skip + Loom).
+
 **Author of:** NEXUS (a self-building multi-system platform), its 15 systems, the Emerge programming language, and
 THE INNOVATION TOOLKIT, the method all of it was built from.
 

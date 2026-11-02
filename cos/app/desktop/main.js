@@ -28,13 +28,17 @@ function notify(title, body) { try { if (Notification.isSupported()) new Notific
 function createWindow() {
   const w = ctl ? ctl.settings().settings.window : Settings.DEFAULTS.window;
   win = new BrowserWindow({ width: w.width, height: w.height, ...(w.x !== null && w.y !== null ? { x: w.x, y: w.y } : {}), minWidth: 640, minHeight: 420, backgroundColor: '#0d0e14', title: 'COS', autoHideMenuBar: true, icon: path.join(__dirname, 'icon.png'),
-    skipTaskbar: false, show: !hiddenStart(), webPreferences: { preload: path.join(__dirname, 'starting-preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true } });
+    ...W.frameOptions(ctl ? ctl.settings().settings.frame : 'none'),   // CE7 — borderless: Windows' own buttons over the top right, the page drags by its top bar
+    skipTaskbar: false, show: !hiddenStart(), webPreferences: { preload: path.join(__dirname, 'starting-preload.js'), additionalArguments: [`--cos-frame=${(ctl && ctl.settings().settings.frame) || 'none'}`], contextIsolation: true, nodeIntegration: false, sandbox: true } });
   if (w.maximized && !hiddenStart()) win.maximize();
   target = null; retarget();
   win.webContents.setWindowOpenHandler(({ url }) => { if (/^https:\/\//.test(url)) shell.openExternal(url); else if (W.allowedUrl(url)) win.loadURL(url); return { action: 'deny' }; });
   win.webContents.on('will-navigate', (e, url) => { if (!W.allowedUrl(url)) e.preventDefault(); });   // the cockpit's own pages only (MG36)
   // VMware-style: minimize goes to the taskbar (the Electron default, left alone on purpose); CLOSE hides to the tray and the project keeps running.
-  win.on('close', (e) => { if (!quitting) { saveBounds(); e.preventDefault(); win.hide(); } });
+  // CE1 (2026-11-02) — his choice: closing hides to the tray (the default: every system keeps running) or quits COS (which stops what COS
+  // started, as the tray's Quit does); minimizing goes to the taskbar (the default) or to the tray
+  win.on('close', (e) => { if (quitting) return; saveBounds(); e.preventDefault(); if (ctl && ctl.settings().settings.onClose === 'quit') quit(); else win.hide(); });
+  win.on('minimize', (e) => { if (ctl && ctl.settings().settings.onMinimize === 'tray') { e.preventDefault(); win.hide(); } });
   let t = null; const later = () => { clearTimeout(t); t = setTimeout(saveBounds, 800); }; win.on('resize', later); win.on('move', later);
 }
 function saveBounds() {
@@ -84,8 +88,35 @@ function buildTray() {
       { type: 'separator' }, { label: 'Start COS with Windows', type: 'checkbox', checked: !!S.startWithWindows, click: flip('startWithWindows') },
       { label: 'Start in the tray', type: 'checkbox', checked: !!S.startHidden, click: flip('startHidden') },
       { label: 'Admin rights at startup (one approval)', type: 'checkbox', checked: !!S.startElevated, enabled: !!S.startWithWindows, click: flip('startElevated') },
+      { type: 'separator' },   // CE1 — what the window's buttons do
+      { label: 'Closing the window', submenu: [
+        { label: 'Hides COS to the tray (systems keep running)', type: 'radio', checked: S.onClose !== 'quit', click: () => ctl.setSetting('onClose', 'tray') },
+        { label: 'Quits COS (stops what COS started)', type: 'radio', checked: S.onClose === 'quit', click: () => ctl.setSetting('onClose', 'quit') }] },
+      { label: 'The window (from its next opening)', submenu: [   // CE7 — "Also make it borderless."; Windows' frame is the way back
+        { label: 'Borderless', type: 'radio', checked: S.frame !== 'windows', click: () => ctl.setSetting('frame', 'none') },
+        { label: "With Windows' frame", type: 'radio', checked: S.frame === 'windows', click: () => ctl.setSetting('frame', 'windows') }] },
+      { label: 'Minimizing the window', submenu: [
+        { label: 'Goes to the taskbar', type: 'radio', checked: S.onMinimize !== 'tray', click: () => ctl.setSetting('onMinimize', 'taskbar') },
+        { label: 'Goes to the tray', type: 'radio', checked: S.onMinimize === 'tray', click: () => ctl.setSetting('onMinimize', 'tray') }] },
       { type: 'separator' }, { label: 'Open the inbox folder', click: () => shell.openPath(s.inbox.path) }, { label: 'Quit (stops what COS started)', click: () => quit() }); return Menu.buildFromTemplate(items); };
   tray.on('click', show); tray.on('right-click', async () => tray.popUpContextMenu(await menu()));
+}
+// CE4 (2026-11-02) — James: "i want toasts in cos ui for gibhub updates with a update tool". While COS's window is hidden, the update the
+// cockpit's card would show comes as a Windows notification, once per version and kind; clicking it opens COS on the card (the tool is there).
+function watchUpdates() {
+  const seen = new Set();
+  const tick = () => {
+    if (win && !win.isDestroyed() && win.isVisible() && !win.isMinimized()) return;   // the cockpit's card shows it
+    require('http').get({ hostname: '127.0.0.1', port: Number(process.env.COS_MANAGER_PORT) || 7799, path: '/api/cos/update/notice', timeout: 4000 }, (r) => {
+      let b = ''; r.on('data', c => { b += c; }); r.on('end', () => {
+        let n; try { n = JSON.parse(b); } catch (_) { return; }
+        if (!n || !n.show || !['available', 'blocked', 'updated'].includes(n.kind)) return;
+        const k = `${n.kind}:${n.latest || n.at}`; if (seen.has(k)) return; seen.add(k);
+        try { if (!Notification.isSupported()) return; const x = new Notification({ title: n.title || 'Nexus update', body: n.kind === 'blocked' ? `${n.text} — open COS: Keep mine and update` : (n.text || '') }); x.on('click', show); x.show(); } catch (_) {}
+      });
+    }).on('error', () => {}).on('timeout', function () { this.destroy(); });
+  };
+  setTimeout(tick, 60000); setInterval(tick, 10 * 60000);
 }
 async function quit() { quitting = true; try { if (sh) sh.cancel(); } catch (_) {} try { await ctl.stopAll(); } catch (_) {} app.quit(); }
 
@@ -130,7 +161,9 @@ app.on('second-instance', show);
 app.whenReady().then(() => {
   ctl = new Controller({ root: process.env.COS_APP_ROOT || Store.defaultRoot(), onEvent: send }); fs.mkdirSync(ctl.root, { recursive: true });
   sh = new Shell({ root: ctl.root, project: 'nexus', stdio: 'pipe', out: (t) => send({ type: 'sh.data', text: t }) }); ipc(); createWindow(); buildTray(); watchInbox();
-  startOnLaunch(); setInterval(() => { retarget().catch(() => {}); }, 2000); applyLogon().catch(() => {});
+  startOnLaunch();
+  setInterval(() => { retarget().catch(() => {}); }, 2000); applyLogon().catch(() => {});
+  watchUpdates();   // CE4: the update as a Windows notification while COS is in the tray
 });
 // MG35 (MOD-COSA-START-ON-LAUNCH) — the exe is how Nexus starts: the project he chose starts when COS opens; a failure is said, never silent
 async function startOnLaunch() {

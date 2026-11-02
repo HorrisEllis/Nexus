@@ -8,3 +8,7 @@ contextBridge.exposeInMainWorld('cosStart', {
   start: (project) => ipcRenderer.invoke('cos:start', String(project || 'nexus')),
   onStarting: (fn) => ipcRenderer.on('cos:starting', (_e, t) => fn(t)),
 });
+// CE7 — "Also make it borderless.": the window has no frame unless he chose Windows' one, so the page is told, and its top bar becomes where the
+// window is dragged (cos/ui/shell/page.css). In a browser the same page has no mark and is unchanged. The overlay's height rides on the mark.
+const framed = process.argv.some(a => a === '--cos-frame=windows');
+window.addEventListener('DOMContentLoaded', () => { if (!framed) { document.documentElement.dataset.cosFrame = 'none'; document.documentElement.style.setProperty('--cos-caption-h', '40px'); } });

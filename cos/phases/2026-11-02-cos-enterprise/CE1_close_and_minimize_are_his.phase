@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-enterprise-phasemap.spec::CE1_close_and_minimize_are_his
+type: phase
+id: docs_2026-11-02-cos-enterprise-phasemap.spec::CE1_close_and_minimize_are_his
+context: pipeline phase CE1_close_and_minimize_are_his of docs/2026-11-02-cos-enterprise-phasemap.spec
+intent: null
+summary: CE1_close_and_minimize_are_his (backend) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793581138957
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793581138957
+lastSeenAt: 1793581138957
+fingerprint: null
+payload:
+  id: CE1_close_and_minimize_are_his
+  map: docs/2026-11-02-cos-enterprise-phasemap.spec
+  repo: null
+  layer: backend
+  status: DONE 0.60.376 — test-cos-app-window CW-07; on Windows unverified until his run
+  files:
+    - cos/app/settings.js
+    - cos/app/desktop/main.js
+    - tests/modules/test-cos-app-window.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a8b22eacaee1a6de

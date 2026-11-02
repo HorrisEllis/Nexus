@@ -4,6 +4,13 @@ platform: fiverr
 title: I will build a custom Electron desktop app for Windows or Mac
 category: Programming & Tech
 subcategory: Desktop Applications
+serviceType: Desktop Applications          # SELECT A SERVICE TYPE on the page; the fill matches by label (§1.2 says what it can't)
+metadata:
+  "PROGRAMMING LANGUAGE":
+    - JavaScript
+    - TypeScript
+  "DELIVERY TYPE":
+    - Application code
 tags:
   - electron
   - desktop app

@@ -37,4 +37,13 @@ function allowedUrl(url, port = COCKPIT_PORT) {
   try { const u = new URL(url); if (u.protocol === 'file:') return true; return u.protocol === 'http:' && u.hostname === '127.0.0.1' && Number(u.port) === port; } catch (_) { return false; }
 }
 
-module.exports = { windowTarget, cockpitUp, allowedUrl, cockpitUrl, COCKPIT_PORT, MODULE_ID: 'cos.app.window', VERSION: '1.0.0' };
+// CE7 (docs/2026-11-02-cos-enterprise-phasemap.spec) — James, 2026-11-02: "Also make it borderless." No Windows frame or title bar; Windows still
+// draws its own minimize, maximize and close over the top right (titleBarOverlay), so snap layouts and double-click to maximize keep working.
+// The page drags by its top bar (cos/ui/shell/page.css, html[data-cos-frame="none"]). frame: 'windows' is the way back (settings.frame).
+const OVERLAY_HEIGHT = 40;
+function frameOptions(frame = 'none') {
+  if (frame === 'windows') return {};
+  return { titleBarStyle: 'hidden', titleBarOverlay: { color: '#00000000', symbolColor: '#e6e8ef', height: OVERLAY_HEIGHT } };
+}
+
+module.exports = { windowTarget, cockpitUp, allowedUrl, cockpitUrl, frameOptions, OVERLAY_HEIGHT, COCKPIT_PORT, MODULE_ID: 'cos.app.window', VERSION: '1.0.0' };

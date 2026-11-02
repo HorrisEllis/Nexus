@@ -150,7 +150,7 @@
     try {
       const [hl, us] = await Promise.all([get('/api/cos/health'), get('/api/cos/usage')]);
       $('manager').querySelector('.dot').dataset.s = 'up';
-      $('manager-text').textContent = `manager · pid ${hl.pid} · ${hl.systems} systems`;
+      $('manager-text').textContent = $('manager').title = `manager · pid ${hl.pid} · ${hl.systems} systems`;   // CE7: the title holds the full text when the pill is shortened
       const host = us.usage.host, cpu = Math.min(1, host.load1 / host.cpus), used = 1 - host.freeMemPct / 100;
       const mc = $('m-cpu'), mm = $('m-mem');
       mc.querySelector('i').style.width = `${Math.round(cpu * 100)}%`; mc.querySelector('.v').textContent = `${Math.round(cpu * 100)}%`; mc.classList.toggle('hot', cpu > 0.85);
@@ -158,7 +158,7 @@
       const fl = mm.querySelector('.floor'); if (host.haltPct != null) { fl.style.display = 'block'; fl.style.left = `${(1 - host.haltPct) * 100}%`; }
       mm.classList.toggle('hot', host.haltPct != null && host.freeMemPct / 100 < host.haltPct * 1.5);
       mm.title = `host memory in use: ${host.totalMB - host.freeMB} of ${host.totalMB} MB · the supervisor halts spawns below ${Math.round((host.haltPct || 0) * 100)}% free`;
-    } catch (e) { $('manager').querySelector('.dot').dataset.s = 'down'; $('manager-text').textContent = 'manager not answering'; }
+    } catch (e) { $('manager').querySelector('.dot').dataset.s = 'down'; $('manager-text').textContent = $('manager').title = 'manager not answering'; }
   }
   async function refreshProposals() { try { S.proposals = (await get('/api/cos/proposals?open=1')).proposals.length; badge(); } catch (_) {} }
 
@@ -198,7 +198,7 @@
       S.systems = (await get('/api/cos/systems')).systems;
     } catch (e) {
       stage.replaceChildren(); const box = h('div'); stage.append(box); COS.down(box, e.message);
-      $('manager').querySelector('.dot').dataset.s = 'down'; $('manager-text').textContent = 'manager not answering'; busState('down', 'no manager');
+      $('manager').querySelector('.dot').dataset.s = 'down'; $('manager-text').textContent = $('manager').title = 'manager not answering'; busState('down', 'no manager');
       setTimeout(start, 3000); return;
     }
     stage.replaceChildren();

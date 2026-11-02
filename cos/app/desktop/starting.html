@@ -16,6 +16,8 @@
   button { padding:9px 16px; border-radius:8px; border:1px solid var(--line); background:rgba(255,255,255,.03); color:var(--fg); font:600 12px ui-monospace,Consolas,monospace; cursor:pointer; }
   button.primary { border-color:var(--acc); color:var(--acc); background:rgba(56,189,248,.08); }
   button[hidden] { display:none; }
+  /* CE7 — borderless: the whole page drags the window; its buttons stay clickable; Windows' own buttons sit over the top right */
+  html[data-cos-frame="none"] body { -webkit-app-region: drag; } html[data-cos-frame="none"] button { -webkit-app-region: no-drag; }
 </style></head>
 <body><main>
   <div class="logo">COS</div>

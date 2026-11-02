@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-enterprise-phasemap.spec::CE6_the_exe_carries_it
+type: phase
+id: docs_2026-11-02-cos-enterprise-phasemap.spec::CE6_the_exe_carries_it
+context: pipeline phase CE6_the_exe_carries_it of docs/2026-11-02-cos-enterprise-phasemap.spec
+intent: null
+summary: CE6_the_exe_carries_it (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793583002441
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793583002441
+lastSeenAt: 1793583002441
+fingerprint: null
+payload:
+  id: CE6_the_exe_carries_it
+  map: docs/2026-11-02-cos-enterprise-phasemap.spec
+  repo: null
+  layer: integration
+  status: >-
+    DONE 0.60.377 (COS 0.4.0) — the cos-app workflow's own check (no change to the exe's files since
+    its tag without a bump); on Windows unverified until his run
+  files:
+    - cos/app/version.js
+  depends_on:
+    - CE1_close_and_minimize_are_his
+    - CE4_toasts_in_the_cockpit
+  blocks: []
+  spec: null
+  graph: 56519278b3154e00

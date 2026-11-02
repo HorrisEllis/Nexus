@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-enterprise-phasemap.spec::CE5_cos_as_a_windows_service
+type: phase
+id: docs_2026-11-02-cos-enterprise-phasemap.spec::CE5_cos_as_a_windows_service
+context: pipeline phase CE5_cos_as_a_windows_service of docs/2026-11-02-cos-enterprise-phasemap.spec
+intent: null
+summary: CE5_cos_as_a_windows_service (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793581138964
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793581138964
+lastSeenAt: 1793581138964
+fingerprint: null
+payload:
+  id: CE5_cos_as_a_windows_service
+  map: docs/2026-11-02-cos-enterprise-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cos/app/service.js
+    - cos/app/desktop/main.js
+  depends_on:
+    - CE_D2_the_windows_service
+  blocks: []
+  spec: null
+  graph: eea440b1fe32d6c9

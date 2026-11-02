@@ -4,6 +4,17 @@ platform: fiverr
 title: I will set up a private local AI on your PC with Ollama, no cloud
 category: Programming & Tech
 subcategory: AI Development
+serviceType: AI Technology Consulting          # SELECT A SERVICE TYPE on the page; the fill matches by label (§1.2 says what it can't)
+metadata:
+  "AI ENGINE":
+    - Llama
+    - Mistral
+    - DeepSeek
+  "DELIVERY TYPE":
+    - AI model
+  "PROGRAMMING LANGUAGE":
+    - Python
+    - JavaScript
 tags:
   - ollama
   - local llm

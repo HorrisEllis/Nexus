@@ -248,3 +248,19 @@ with rows "Number of APIs integrated", "Number of Triggers / Actions", "Number o
   not name (`rowLabels`) so he can add them. A value the menu lacks fails with the reason; nothing is guessed.
 - ai-agent-workflow-automation.gig carries the five rows with the coder's draft values (to confirm); the other gigs carry `features: {}`.
 - Proof: tests/modules/test-gig-features.test.js GF-01..03 (GF-02 caught a first-row miss in rowLabels before release).
+
+## ADDENDUM 2026-11-01 (0.60.340 CR1) — the general autofill fills radios and checkboxes
+James, 2026-11-01: "Radios and checkboxes. Can we add that to autofill?"
+- **The gap:** matcher.js's text pass deliberately skips choice inputs (`['checkbox','radio',...]`) — a text-value set does not apply to them.
+  So on job applications a Yes/No radio ("authorized to work?") and a consent/relocate checkbox were never filled.
+- **Built (reuse before build, §8.6):** `matcher.js` `matchChoiceFields(domFields, profile, opts)`, concatenated into `matchFields` so
+  `detectFields`/`fillFields` carry it with no change to the fill loop.
+  - A standalone **checkbox** is a boolean: its own label is the question; `boolOf` (select-match, DD1) turns the profile value into yes/no.
+  - A **radio group** (grouped by `name`) is one-of: the group's purpose from its identity (name/id/aria/**learned** — NOT a radio's own label,
+    which is its option), the winning option from each radio's label via `bestOption`. The emitted value is 'yes' so the existing DOM mesh
+    `handleMutate` (archaeology DD1) sets the checked state — a radio set checked unchecks its siblings natively.
+  - A group whose purpose is unknown, or whose value names no option, is **left for the element picker** (JA1/JA3) — never a silent wrong pick (§1.2).
+  - spec: clear-glass/spec/clear-glass.spec (autofill/matcher). blocks: the matcher module. depends_on: JA1 (the learned map), DD1 (boolOf/bestOption).
+- **Proof:** tests/modules/test-autofill-radio-checkbox-glass.test.js CR-01..04 — CR-04 end-to-end in Clear Glass's own engine (query →
+  matchFields → mesh.mutate), proving archaeology's real label extraction (a radio's label is its option, its name is the group), opaque group
+  left untouched. No regression: the DD1, learned, fill-active and clear-glass-autofill suites stay green.

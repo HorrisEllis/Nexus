@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-enterprise-phasemap.spec::CE7_borderless
+type: phase
+id: docs_2026-11-02-cos-enterprise-phasemap.spec::CE7_borderless
+context: pipeline phase CE7_borderless of docs/2026-11-02-cos-enterprise-phasemap.spec
+intent: null
+summary: CE7_borderless (ui) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1793583403071
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793583403071
+lastSeenAt: 1793583403071
+fingerprint: null
+payload:
+  id: CE7_borderless
+  map: docs/2026-11-02-cos-enterprise-phasemap.spec
+  repo: null
+  layer: ui
+  status: >-
+    DONE 0.60.378 (COS 0.4.0, the same unreleased exe as CE6) — test-cos-app-window CW-08 and CW-08b
+    (Clear Glass), test-cos-ui-theme; on Windows unverified until his run
+  files:
+    - cos/app/window.js
+    - cos/app/settings.js
+    - cos/app/desktop/main.js
+    - cos/app/desktop/starting-preload.js
+    - cos/app/desktop/starting.html
+    - cos/ui/shell/page.css
+    - cos/ui/shell/page.js
+    - tests/modules/test-cos-app-window.test.js
+  depends_on:
+    - CE1_close_and_minimize_are_his
+    - CE6_the_exe_carries_it
+  blocks: []
+  spec: null
+  graph: ffad1fa03a192f60

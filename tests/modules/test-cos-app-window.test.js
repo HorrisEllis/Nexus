@@ -13,6 +13,11 @@ require('../../lib/test-sandbox.js').ensure();
  *   CW-04 settings: startWithWindows, startElevated, startHidden on by default, booleans only
  *   CW-05 main.js: the main window is the cockpit/starting page with the starting bridge only; the old page opens as Versions & manual update;
  *         the tray has the startup switches; --hidden starts in the tray; logon applied at launch
+ *   CW-07 (CE1, 0.60.376) close and minimize are his: onClose tray|quit (tray by default), onMinimize taskbar|tray (taskbar by default); main.js
+ *         follows both; the tray menu offers both
+ *   CW-08 (CE7, 0.60.378) borderless: frameOptions hides the frame with Windows' own buttons over it (frame: windows is the way back); the
+ *         setting; main.js and the preload follow; in Clear Glass the marked cockpit drags by its top bar, its buttons stay clickable, room is
+ *         left for Windows' buttons, and the unmarked page (a browser) is unchanged
  *   CW-06 the starting page in Clear Glass: says why it waits; Start shown when not started; Versions & manual update calls the bridge
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http');
@@ -58,6 +63,31 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
     assert.strictEqual(Settings.set(root, 'startWithWindows', 'maybe').ok, false);
     fs.rmSync(root, { recursive: true, force: true });
   });
+  await test('CW-07', 'close and minimize are his: tray|quit, taskbar|tray; main.js follows; the tray offers both', () => {
+    const d = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-close-'));
+    assert.deepStrictEqual([Settings.load(d).settings.onClose, Settings.load(d).settings.onMinimize], ['tray', 'taskbar'], 'the defaults: hide to tray, minimize to taskbar');
+    assert.strictEqual(Settings.set(d, 'onClose', 'quit').settings.onClose, 'quit'); assert.strictEqual(Settings.set(d, 'onMinimize', 'tray').settings.onMinimize, 'tray');
+    assert.match(Settings.set(d, 'onClose', 'minimize').error, /onClose is tray or quit/); assert.deepStrictEqual(Settings.normalize({ onMinimize: 'x' }).dropped, ['onMinimize "x"']);
+    const src = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/main.js'), 'utf8');
+    assert.ok(/settings\.onClose === 'quit'\) quit\(\); else win\.hide\(\)/.test(src), 'close follows onClose');
+    assert.ok(/win\.on\('minimize', \(e\) => \{ if \(ctl && ctl\.settings\(\)\.settings\.onMinimize === 'tray'\) \{ e\.preventDefault\(\); win\.hide\(\);/.test(src), 'minimize follows onMinimize');
+    assert.ok(/label: 'Closing the window'/.test(src) && /label: 'Minimizing the window'/.test(src), 'the tray offers both');
+    fs.rmSync(d, { recursive: true, force: true });
+  });
+
+  await test('CW-08', "borderless: no frame, Windows' own buttons over it; frame: windows the way back; main.js and the preload follow", () => {
+    assert.deepStrictEqual(W.frameOptions(), { titleBarStyle: 'hidden', titleBarOverlay: { color: '#00000000', symbolColor: '#e6e8ef', height: W.OVERLAY_HEIGHT } });
+    assert.deepStrictEqual(W.frameOptions('windows'), {}, "Windows' frame: nothing changed");
+    const d = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-frame-'));
+    assert.strictEqual(Settings.load(d).settings.frame, 'none', 'borderless by default');
+    assert.strictEqual(Settings.set(d, 'frame', 'windows').settings.frame, 'windows'); assert.match(Settings.set(d, 'frame', 'thin').error, /frame is none or windows/);
+    fs.rmSync(d, { recursive: true, force: true });
+    const src = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/main.js'), 'utf8'), pre = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/starting-preload.js'), 'utf8');
+    assert.ok(/\.\.\.W\.frameOptions\(ctl \? ctl\.settings\(\)\.settings\.frame : 'none'\)/.test(src) && /--cos-frame=\$\{/.test(src), 'the window is made from the setting, and the preload is told');
+    assert.ok(/label: 'Borderless'/.test(src) && /With Windows' frame/.test(src), 'the tray offers both');
+    assert.ok(/dataset\.cosFrame = 'none'/.test(pre), 'the preload marks the page');
+  });
+
   await test('CW-05', 'main.js: cockpit window with the starting bridge only; Versions & manual update; the tray switches; --hidden; logon at launch', () => {
     const m = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/main.js'), 'utf8');
     assert.ok(/preload: path\.join\(__dirname, 'starting-preload\.js'\)/.test(m) && /show: !hiddenStart\(\)/.test(m));
@@ -83,6 +113,22 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
       await page.evaluate(() => { document.getElementById('versions').click(); document.getElementById('start').click(); });
       await page.waitForFunction(() => window.__calls.length === 2);
       assert.deepStrictEqual(await page.evaluate(() => window.__calls), ['versions', 'start']);
+    });
+    await test('CW-08b', 'borderless in Clear Glass: the marked cockpit drags by its top bar, its buttons stay clickable, room for Windows\' buttons; a browser unchanged', async () => {
+      const url = 'file://' + path.join(ROOT, 'cos/ui/shell/index.html');
+      const read = (p) => p.evaluate(() => { const top = document.querySelector('.top'), b = document.getElementById('theme'), cs = (e) => getComputedStyle(e);
+        const g = document.getElementById('goto-open').getBoundingClientRect(), t = top.getBoundingClientRect(), h1 = document.getElementById('crumb-title').getBoundingClientRect();
+        return { top: cs(top).webkitAppRegion || cs(top).appRegion, btn: cs(b).webkitAppRegion || cs(b).appRegion, room: innerWidth - t.right, inside: g.right <= t.right && g.left >= t.left, title: h1.width }; });
+      const app = await browser.newPage({ viewport: { width: 1200, height: 760 } });
+      await app.addInitScript(() => { document.addEventListener('DOMContentLoaded', () => { document.documentElement.dataset.cosFrame = 'none'; }); });
+      await app.goto(url); await app.waitForSelector('.top');
+      const a = await read(app);
+      assert.strictEqual(a.top, 'drag', 'the top bar drags the window'); assert.strictEqual(a.btn, 'no-drag', 'its buttons stay clickable'); assert.ok(a.room >= 138, `room for Windows' buttons (${a.room}px)`);
+      assert.ok(a.inside, 'Go to stays inside the top bar'); assert.ok(a.title >= 80, `the title is not squeezed away (${a.title}px)`);
+      if (process.env.CW_SHOTS) await app.screenshot({ path: path.join(process.env.CW_SHOTS, 'cos-borderless.png') });
+      const web = await browser.newPage({ viewport: { width: 1200, height: 760 } }); await web.goto(url); await web.waitForSelector('.top');
+      const b = await read(web);
+      assert.notStrictEqual(b.top, 'drag', 'in a browser nothing drags'); assert.ok(b.room < 40, 'and the top bar reaches the edge as before');
     });
     await browser.close();
   }

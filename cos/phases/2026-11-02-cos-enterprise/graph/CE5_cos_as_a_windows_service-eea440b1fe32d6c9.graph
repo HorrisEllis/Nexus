@@ -1,0 +1,94 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE5_cos_as_a_windows_service:eea440b1fe32d6c9
+type: graph
+id: phase:CE5_cos_as_a_windows_service:eea440b1fe32d6c9
+context: dependency graph of phase CE5_cos_as_a_windows_service
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793581138964
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793581138964
+lastSeenAt: 1793581138964
+fingerprint: null
+payload:
+  for: CE5_cos_as_a_windows_service
+  kind: phase
+  repo: null
+  hash: eea440b1fe32d6c9
+  nodes:
+    - path: cos/app/desktop/main.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/service.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/app/controller.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/logon.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/settings.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/store.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/window.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/app/desktop/main.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/store.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/settings.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/shell.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/window.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/logon.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D2_the_windows_service
+    dependents: []
+    upstream:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D2_the_windows_service
+    downstream: []
+    blockedBy:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D2_the_windows_service
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by CE_D2_the_windows_service
+      - 'depends on (1): CE_D2_the_windows_service'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D2_the_windows_service
+        kind: declared
