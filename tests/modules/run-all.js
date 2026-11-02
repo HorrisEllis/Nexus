@@ -438,6 +438,7 @@ const SUITES = [
   'test-cos-channel.test.js',
   'test-cos-pause.test.js',
   'test-cos-app-link.test.js',
+  'test-cos-app-window.test.js',
   'test-update-menu.test.js',
   'test-friction-home.test.js',
   'test-cos-ui-starts.test.js',

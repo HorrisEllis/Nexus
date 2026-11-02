@@ -834,3 +834,20 @@ phases_addendum_2026_11_01_mg33:
       so the exe links it (Link a Nexus folder…) and starts it with the system node (never Electron-as-node, which would break Clear Glass),
       on launch when he sets it. COS 0.2.0: the workflow publishes cos-v0.2.0 (portable exe and installer) when this reaches main.
     proof: "test-cos-app-link: a fixture folder linked, started with the system node and no ELECTRON_RUN_AS_NODE, up on /status, stopped; start on launch on and off"
+
+  MG36_the_cockpit_is_the_window:
+    status: "DONE 0.60.365 (COS 0.3.0) — test-cos-app-window 6/6; on Windows unverified until his run: the UAC approval, the logon task, the tray at logon"
+    depends_on: [MG35_the_exe_starts_nexus, CA_D0_the_cockpit_is_the_window]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-COSA-COCKPIT-WINDOW]
+    files: [cos/app/window.js, cos/app/desktop/main.js, cos/app/desktop/starting.html, cos/app/desktop/preload.js, cos/app/version.js, tests/modules/test-cos-app-window.test.js]
+    does: "James, 2026-11-02: \"no i mean cos ui as the app. like a full orchastration application. since it's like vmware. not the old one. but maybe add the old one as an manual update feature.\" The exe's window loads COS's cockpit (:7797) once it answers, a starting page until then; the old page opens as Versions & manual update (tray, and a cockpit link)"
+    proof: "the window's target is the starting page, then the cockpit when it answers; Versions & manual update opens the old page"
+  MG37_starts_with_windows:
+    status: "DONE 0.60.365 (COS 0.3.0) — test-cos-app-window 6/6; on Windows unverified until his run: the UAC approval, the logon task, the tray at logon"
+    depends_on: [MG35_the_exe_starts_nexus, CA_D1_with_windows_elevated_no_service]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-COSA-AT-LOGON]
+    files: [cos/app/desktop/main.js, cos/app/settings.js, cos/app/logon.js, tests/modules/test-cos-app-window.test.js]
+    does: "James, 2026-11-02: \"cos starts up with windows, minimizes to tray unless disabled. admin access and a service if applicable.\" Settings startWithWindows (on), elevated (a logon task with highest privileges; else the Run-key login item, said) and startHidden (on): started at logon it goes to the tray. No service (CA_D1)"
+    proof: "the logon task's command (schtasks /Create … /SC ONLOGON /RL HIGHEST) and the login-item fallback built and removed; started with --hidden, no window shows"

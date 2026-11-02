@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
+context: pipeline phase MG36_the_cockpit_is_the_window of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG36_the_cockpit_is_the_window (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793578686146
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793578686146
+lastSeenAt: 1793578686146
+fingerprint: null
+payload:
+  id: MG36_the_cockpit_is_the_window
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/app/desktop/main.js
+    - cos/app/desktop/starting.html
+    - cos/app/desktop/preload.js
+    - cos/app/version.js
+    - tests/modules/test-cos-app-window.test.js
+  depends_on:
+    - MG35_the_exe_starts_nexus
+    - CA_D0_the_cockpit_is_the_window
+  blocks:
+    - MOD-COSA-COCKPIT-WINDOW
+  spec: cos/spec/cos-manager.spec
+  graph: cf267c01215961f1

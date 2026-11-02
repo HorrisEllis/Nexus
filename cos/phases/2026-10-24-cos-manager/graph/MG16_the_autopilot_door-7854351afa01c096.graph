@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793577139992
+exported_at: 1793578686080
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577139992
-lastSeenAt: 1793577139992
+firstSeenAt: 1793578686080
+lastSeenAt: 1793578686080
 fingerprint: null
 payload:
   for: MG16_the_autopilot_door
@@ -190,6 +190,8 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
       - docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
       - docs/2026-10-24-cos-manager-phasemap.spec::MG35_the_exe_starts_nexus
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
       - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
       - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
@@ -207,7 +209,7 @@ payload:
       - layer 4
       - 'depends on (1): MG15_the_supervisor_in_cos · all upstream 5'
       - >-
-        needed by (1): MG17_autopilot_hands_over · all downstream 32 · finishing it unlocks
+        needed by (1): MG17_autopilot_hands_over · all downstream 34 · finishing it unlocks
         MG17_autopilot_hands_over
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos

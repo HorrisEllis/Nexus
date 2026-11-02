@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793577140028
+exported_at: 1793578686136
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577140028
-lastSeenAt: 1793577140028
+firstSeenAt: 1793578686136
+lastSeenAt: 1793578686136
 fingerprint: null
 payload:
   for: MG33_cos_ui_has_a_way_in
@@ -124,6 +124,8 @@ payload:
     downstream:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
       - docs/2026-10-24-cos-manager-phasemap.spec::MG35_the_exe_starts_nexus
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC11_the_cos_app_runs_alone
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
       - docs/2026-11-01-tv-ui-cleanup-phasemap.spec::TV4_the_overview_idearium_and_cos
@@ -138,7 +140,7 @@ payload:
       - 'depends on (1): MG17_autopilot_hands_over · all upstream 8'
       - >-
         needed by (3): MG34_the_cos_channel_always_has_a_way_in, OC8_the_console,
-        OC11_the_cos_app_runs_alone · all downstream 5 · finishing it unlocks
+        OC11_the_cos_app_runs_alone · all downstream 7 · finishing it unlocks
         MG34_the_cos_channel_always_has_a_way_in, OC11_the_cos_app_runs_alone
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over

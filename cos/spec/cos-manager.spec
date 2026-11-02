@@ -1309,6 +1309,45 @@ spec:
       behavioral_contracts: ["no start on launch unless set", "a start that fails is said in the window and a notification"]
       error_paths: ["the linked folder gone → said, the setting kept"]
       acceptance: ["with startOnLaunch set, the controller starts the linked project at launch; unset, nothing starts"]
+
+    - id: MOD-COSA-COCKPIT-WINDOW
+      name: cockpit-window
+      uuid: nexus-cos-app-cockpit-window-v1-0000-2026-1102-001
+      path: cos/app/window.js
+      phase: MG36_the_cockpit_is_the_window
+      description: >-
+        James, 2026-11-02: "no i mean cos ui as the app. like a full orchastration application. since it's like vmware. not the old one. but
+        maybe add the old one as an manual update feature." The window's target: windowTarget({ cockpitUp, linked, started }) → the cockpit
+        (http://127.0.0.1:7797/) when it answers; else the starting page (cos/app/desktop/starting.html) saying what it waits for (no folder
+        linked → it says so and offers Versions & manual update). A watcher re-checks every 2 s and swaps the window to the cockpit when it
+        answers, back to the starting page when it stops. The old page (cos/app/desktop/ui) opens as its own window: Versions & manual update,
+        from the tray and from the starting page. The cockpit is loaded from loopback only; navigation off it is refused.
+      deps: [{ name: start-on-launch }]
+      schema_refs: [SupervisedSystem]
+      exports: ["windowTarget({ cockpitUp, linked, started }) → { kind: 'cockpit'|'starting', url|file, why }", "openVersions()", "tray: Open COS, Versions & manual update"]
+      gate_pipeline: ["GATE-MG36-001: the cockpit loaded only from 127.0.0.1:7797", "GATE-MG36-002: the starting page says why it waits", "GATE-MG36-003: the old page kept, as a panel"]
+      behavioral_contracts: ["the window is the cockpit whenever the cockpit answers", "nothing of the old page lost"]
+      error_paths: ["the cockpit never answers → the starting page says so, with the start's error and the log button"]
+      acceptance: ["windowTarget gives starting, then cockpit when it answers; no folder linked → starting, saying so"]
+
+    - id: MOD-COSA-AT-LOGON
+      name: at-logon
+      uuid: nexus-cos-app-at-logon-v1-0000-2026-1102-001
+      path: cos/app/logon.js
+      phase: MG37_starts_with_windows
+      description: >-
+        James, 2026-11-02: "cos starts up with windows, minimizes to tray unless disabled. admin access and a service if applicable." COS starts
+        at logon (setting startWithWindows, on): elevated by a scheduled task (schtasks /Create /TN "COS" /SC ONLOGON /RL HIGHEST /TR "<exe>
+        --hidden" /F; one admin approval, no prompt after), or, when he declines elevation, the per-user login item (app.setLoginItemSettings),
+        said as not elevated. startHidden (on): started with --hidden, COS goes straight to the tray. No Windows service (CA_D1: session 0 has no
+        desktop; nothing windowless needs one yet), said in the setting's help.
+      deps: [{ name: cockpit-window }]
+      schema_refs: [SupervisedSystem]
+      exports: ["taskCommand({ exe, enable }) → { cmd, args }", "apply({ exe, enable, elevated, run, setLoginItem }) → { ok, via, elevated, error? }", "settings startWithWindows, startElevated, startHidden"]
+      gate_pipeline: ["GATE-MG37-001: his setting, on by default, off removes it", "GATE-MG37-002: elevation by his one approval, or said not elevated", "GATE-MG37-003: --hidden goes to the tray"]
+      behavioral_contracts: ["turning it off removes the task and the login item", "a failed elevation falls back to the login item, said"]
+      error_paths: ["schtasks refused (no admin) → the login item, 'not elevated' said", "not Windows → the login item (macOS) or a note (Linux)"]
+      acceptance: ["the task command built for enable and disable; a refused schtasks falls back to the login item; --hidden shows no window"]
   events:
     cos:
       - "cos.system.state { name, state, pid, by }"
