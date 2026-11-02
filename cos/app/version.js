@@ -6,4 +6,7 @@
 // 0.2.0 (Nexus 0.60.364, MG35): James, 2026-11-01: "need the exe for cos. its how were going to start nexus from now on". COS links his own Nexus folder
 // (the git folder he updates in place), starts it with the system node (never Electron-as-node, which would break Clear Glass), and starts it when COS
 // opens if he ticks it.
-module.exports = { version: '0.2.0' };
+// 0.3.0 (Nexus 0.60.365, MG36/MG37): James, 2026-11-02: "no i mean cos ui as the app. like a full orchastration application. since it's like vmware.
+// not the old one. but maybe add the old one as an manual update feature." · "cos starts up with windows, minimizes to tray unless disabled. admin
+// access and a service if applicable." The window is COS's cockpit; the old page is Versions & manual update; COS starts at logon, elevated, to the tray.
+module.exports = { version: '0.3.0' };

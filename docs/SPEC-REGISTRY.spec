@@ -2010,3 +2010,8 @@ spec:
 # ── ADDENDUM 2026-11-01 (0.60.363 UP13) — docs/nexus-update.spec ───────────────────────────────────────────────────────────────────
 # James, 2026-11-01: "make sure it hooks into idearium versionium, to backup the system". The update tool's module spec, begun: UpdateBackup;
 # MOD-UP-BACKUP-ROUTE, MOD-UP-APPLY-BACKED, MOD-UP-POLICY-TOGGLE. Compile-only in SS-01 until UP0–UP12 (which predate the spec rule) name it.
+
+# ── ADDENDUM 2026-11-02 (0.60.365) — docs/2026-11-02-cos-the-application-phasemap.spec ─────────────────────────────────────────────
+# James, 2026-11-02: "no i mean cos ui as the app ... cos starts up with windows ... also what about remote connections via ssh or ddns with a upnp,
+# or can we invent our own upnp." CA_D0 (the cockpit is the window), CA_D1 (elevated logon task, no service), CA_D2 (remote reach, his choice),
+# CA1 (Clear Glass to the tray), CA2 (remote reach). MG36/MG37 in the COS manager map, specced in cos/spec/cos-manager.spec.

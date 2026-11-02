@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793577139978
+exported_at: 1793578686067
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577139978
-lastSeenAt: 1793577139978
+firstSeenAt: 1793578686067
+lastSeenAt: 1793578686067
 fingerprint: null
 payload:
   for: MG12_the_exe_is_the_compartment_manager
@@ -258,11 +258,12 @@ payload:
     unlocks:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
     conflicts:
-      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG35_the_exe_starts_nexus
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
         files:
           - cos/app/desktop/main.js
-          - cos/app/desktop/ui
-          - cos/app/controller.js
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
+        files:
+          - cos/app/desktop/main.js
     dangling: []
     lines:
       - >-
@@ -278,8 +279,9 @@ payload:
         needed by (2): MG13_cli_in_the_exe, MG14_live_thumbnails · finishing it unlocks
         MG13_cli_in_the_exe
       - >-
-        same files as MG35_the_exe_starts_nexus with no order between them: cos/app/desktop/main.js,
-        cos/app/desktop/ui, cos/app/controller.js
+        same files as MG36_the_cockpit_is_the_window with no order between them:
+        cos/app/desktop/main.js
+      - 'same files as MG37_starts_with_windows with no order between them: cos/app/desktop/main.js'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 36 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793577139995
+exported_at: 1793578686082
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577139995
-lastSeenAt: 1793577139995
+firstSeenAt: 1793578686082
+lastSeenAt: 1793578686082
 fingerprint: null
 payload:
   for: MG17_autopilot_hands_over
@@ -286,6 +286,8 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
       - docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
       - docs/2026-10-24-cos-manager-phasemap.spec::MG35_the_exe_starts_nexus
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
       - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
       - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
@@ -308,7 +310,7 @@ payload:
         7
       - >-
         needed by (4): CS4a_cos_boots_alone, MG17b_registry_reads_the_declarations,
-        MG32_autopilot_door_through_doors, MG33_cos_ui_has_a_way_in · all downstream 31 · finishing
+        MG32_autopilot_door_through_doors, MG33_cos_ui_has_a_way_in · all downstream 33 · finishing
         it unlocks MG17b_registry_reads_the_declarations, MG32_autopilot_door_through_doors,
         MG33_cos_ui_has_a_way_in
     edges:

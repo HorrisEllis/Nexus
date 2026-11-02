@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- cos/app/desktop/starting.html — what COS's window shows until the cockpit answers (MG36). James, 2026-11-02: "no i mean cos ui as the app.
+     like a full orchastration application. since it's like vmware." The window becomes the cockpit by itself the moment COS's manager answers. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<title>COS</title>
+<style>
+  :root { --bg:#0d0e14; --line:rgba(255,255,255,.08); --fg:rgba(255,255,255,.88); --dim:rgba(255,255,255,.5); --acc:#38bdf8; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--fg); font:13px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif; }
+  main { height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:0 24px; text-align:center; }
+  .logo { font:700 34px/1 ui-monospace,Consolas,monospace; letter-spacing:.2em; color:var(--acc); }
+  .spin { width:28px; height:28px; border:2px solid var(--line); border-top-color:var(--acc); border-radius:50%; animation:s 1s linear infinite; }
+  @keyframes s { to { transform:rotate(360deg) } }
+  #why { max-width:620px; color:var(--dim); }
+  .row { display:flex; gap:10px; }
+  button { padding:9px 16px; border-radius:8px; border:1px solid var(--line); background:rgba(255,255,255,.03); color:var(--fg); font:600 12px ui-monospace,Consolas,monospace; cursor:pointer; }
+  button.primary { border-color:var(--acc); color:var(--acc); background:rgba(56,189,248,.08); }
+  button[hidden] { display:none; }
+</style></head>
+<body><main>
+  <div class="logo">COS</div>
+  <div class="spin" id="spin"></div>
+  <div id="why">starting…</div>
+  <div class="row"><button class="primary" id="start" hidden>Start Nexus</button><button id="versions">Versions &amp; manual update</button></div>
+</main>
+<script>
+  const show = (t) => { if (!t) return; document.getElementById('why').textContent = t.why;
+    const waiting = /^starting Nexus/.test(t.why); document.getElementById('spin').hidden = !waiting;
+    document.getElementById('start').hidden = !/not started|did not start/.test(t.why); };
+  window.cosStart.onStarting(show); window.cosStart.why().then(show);
+  document.getElementById('versions').onclick = () => window.cosStart.openVersions();
+  document.getElementById('start').onclick = async () => { document.getElementById('why').textContent = 'starting…'; const r = await window.cosStart.start(); if (r && r.ok === false) document.getElementById('why').textContent = r.error; };
+</script>
+</body></html>
