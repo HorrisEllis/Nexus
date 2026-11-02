@@ -62,11 +62,13 @@ phases:
     does: "a Clear Glass setting: minimize to the tray after N minutes with no input (off by default; 5, 15, 30, 60), restored from the tray; a page playing media or a macro running keeps it up"
     proof: "with a short period, the window goes to the tray after no input and comes back from the tray; a running macro keeps it up"
   CA3_network_settings:
-    status: OPEN
+    status: "DONE 0.60.379 — test-cos-network 5/5 (the page through the real cockpit in Clear Glass). The engines themselves (tunnel, rendezvous, mapping, DDNS, SSH) start behind the gate; wiring each to its settings is CA2"
     depends_on: [CA_D2_remote_reach]
-    spec: "to be written: cos/spec/network.spec (NetworkSettings schema first)"
-    blocks: []
-    files: [cos/manager/network-settings.js, cos/manager/server.js, cos/ui/network, cos/services/anonymous]
+    spec: cos/spec/network.spec
+    blocks: [MOD-NET-SETTINGS, MOD-NET-ROUTES, MOD-NET-PAGE, MOD-NET-GATE]
+    files: [cos/manager/network-settings.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/network/index.html, cos/ui/network/page.js, cos/ui/network/page.css, cos/services/anonymous/nexus.js, idearium/cli/route-commands.js, tests/modules/test-cos-network.test.js]
+    requires: [node 20+, COS's manager running for the page and rows]
+    prerequisites: [CA_D2_remote_reach decided (his: both, gated)]
     does: >-
       James, 2026-11-02: "Gate behind settings to open. Make a full detailed settings for network." One NetworkSettings store owned by COS
       (every engine off by default): outbound — tunnel (provider, token, which systems), rendezvous (devices, keys); inbound — UPnP/PCP/NAT-PMP

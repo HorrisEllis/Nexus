@@ -444,6 +444,7 @@ const SUITES = [
   'test-cos-app-link.test.js',
   'test-cos-app-window.test.js',
   'test-cg-idle-tray.test.js',
+  'test-cos-network.test.js',
   'test-update-menu.test.js',
   'test-friction-home.test.js',
   'test-cos-ui-starts.test.js',

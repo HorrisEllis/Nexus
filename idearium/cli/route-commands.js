@@ -858,6 +858,12 @@ export const SPEC = [
     print: (d, a, h) => { const c = d.counts || {}; h.header(`walls — ${c.enforce || 0} enforce · ${c.audit || 0} audit · ${c.bare || 0} bare · ${c.enforceReady || 0} ready for enforce`);
       for (const w of d.walls || []) console.log(`  ${w.name.padEnd(22)} ${w.mode.padEnd(8)} ${String(w.via).padEnd(13)} ${w.said}${w.crossings.length ? `\n      ${w.crossings.slice(0, 5).map(x => `${x.file} (from ${x.from})`).join('\n      ')}` : ''}`); } },
   // 2026-11-01 CP6a — James: "then i want resource management for each cos compartment". Caps by layer, read back from the OS; the account
+  // 0.60.367 CA3 — James: "Gate behind settings to open. Make a full detailed settings for network." Reading is anyone's; changing it is his.
+  { key: 'cos.network', repo: false, usage: 'cos network', about: 'COS\'s network settings (outbound tunnel and rendezvous, inbound port mapping, DDNS, SSH, TLS, compartment switches) and whether each reach engine\'s gate is open; tokens shown only as set or not',
+    req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/network' }) },
+  { key: 'cos.network.set', repo: false, usage: 'cos network set <path> <value>', personOnly: () => 'opening the network is the person\'s: the Network page in COS, or ask them', about: 'change one network setting, e.g. cos network set inbound.ddns.enabled true',
+    req: (a) => { const p = String(a.args[0] || ''), raw = a.args.slice(1).join(' '); let v = raw; try { v = JSON.parse(raw); } catch (_) {} const patch = {}; const ks = p.split('.'); let x = patch; ks.slice(0, -1).forEach(k => { x = x[k] = {}; }); x[ks[ks.length - 1]] = v;
+      return { system: 'cos', method: 'PATCH', path: '/api/cos/network', body: { patch, by: 'person' } }; } },
   { key: 'cos.resources', repo: false, usage: 'cos resources', about: 'each compartment\'s caps (heap, resident limit, priority) as applied by the OS, its resident memory and CPU now, peak and average',
     req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/resources?fresh=1', timeoutMs: 20000 }),
     print: (d, a, h) => { const r = d.resources || {}; h.header(`resources — host ${r.host ? `${r.host.freeMemPct}% free of ${r.host.totalMB} MB` : '?'} · reader ${r.reader || 'none'}${r.incident ? ' · under the halt floor: a proposal is held' : ''}`);

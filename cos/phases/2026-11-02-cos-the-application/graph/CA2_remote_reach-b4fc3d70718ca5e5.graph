@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1793578979881
+exported_at: 1793592215347
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793578979881
-lastSeenAt: 1793578979881
+firstSeenAt: 1793592215347
+lastSeenAt: 1793592215347
 fingerprint: null
 payload:
   for: CA2_remote_reach
@@ -30,13 +30,12 @@ payload:
     upstream:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA_D2_remote_reach
     downstream: []
-    blockedBy:
-      - docs/2026-11-02-cos-the-application-phasemap.spec::CA_D2_remote_reach
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 1 · blocked by CA_D2_remote_reach
+      - layer 1 · ready
       - 'depends on (1): CA_D2_remote_reach'
       - 'needed by (0): —'
     edges:

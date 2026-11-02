@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-the-application-phasemap.spec::CA3_network_settings
+type: phase
+id: docs_2026-11-02-cos-the-application-phasemap.spec::CA3_network_settings
+context: pipeline phase CA3_network_settings of docs/2026-11-02-cos-the-application-phasemap.spec
+intent: null
+summary: CA3_network_settings (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1793592215345
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793592215345
+lastSeenAt: 1793592215345
+fingerprint: null
+payload:
+  id: CA3_network_settings
+  map: docs/2026-11-02-cos-the-application-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/network-settings.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - cos/ui/network/index.html
+    - cos/ui/network/page.js
+    - cos/ui/network/page.css
+    - cos/services/anonymous/nexus.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-cos-network.test.js
+  depends_on:
+    - CA_D2_remote_reach
+  blocks:
+    - MOD-NET-SETTINGS
+    - MOD-NET-ROUTES
+    - MOD-NET-PAGE
+    - MOD-NET-GATE
+  spec: cos/spec/network.spec
+  graph: b37e8a4a1764b309

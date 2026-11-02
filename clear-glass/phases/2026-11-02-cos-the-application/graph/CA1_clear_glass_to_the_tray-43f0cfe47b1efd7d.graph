@@ -1,0 +1,192 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CA1_clear_glass_to_the_tray:43f0cfe47b1efd7d
+type: graph
+id: phase:CA1_clear_glass_to_the_tray:43f0cfe47b1efd7d
+context: dependency graph of phase CA1_clear_glass_to_the_tray
+intent: null
+summary: 24 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793592215334
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793592215334
+lastSeenAt: 1793592215334
+fingerprint: null
+payload:
+  for: CA1_clear_glass_to_the_tray
+  kind: phase
+  repo: null
+  hash: 43f0cfe47b1efd7d
+  nodes:
+    - path: clear-glass/renderer/settings/sections/general.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/idle-tray.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-cg-idle-tray.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/clear-glass-accounts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/nexus-options-autoboot.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/contexts/google-signin.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/manager.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/vault.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/fingerprint/engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/compartment-window.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/window-frame.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/sse/server.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/tls/proxy.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/main/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/window-frame.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/sse/server.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/tls/proxy.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/fingerprint/engine.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/manager.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-accounts.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/nexus-options-autoboot.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []
