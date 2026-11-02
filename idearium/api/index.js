@@ -3493,7 +3493,7 @@ const ROUTE_CAP = {
   'system.sovereign': CAPS.READ_IDEAS,   // 0.60.133 IM1
   'system.tables': CAPS.READ_IDEAS,   // 0.60.250 SV1 — which system writes and reads which table of the shared store
   'procedure.list': CAPS.READ_IDEAS, 'procedure.show': CAPS.READ_IDEAS, 'procedure.run': CAPS.ADMIN,   // 0.60.354 PD1 — a procedure can change Nexus's code (behind his yes)
-  'update.check': CAPS.READ_IDEAS, 'update.history': CAPS.READ_IDEAS, 'update.apply': CAPS.ADMIN, 'update.rollback': CAPS.ADMIN, 'update.restart': CAPS.ADMIN, 'update.policy.get': CAPS.READ_IDEAS, 'update.policy.set': CAPS.ADMIN, 'update.auto': CAPS.READ_IDEAS, 'update.backup': CAPS.ADMIN,   /* 0.60.363 UP13 — a backup of Nexus before an update */   // 0.60.252 UP3 — changing Nexus's own code is an admin act
+  'update.check': CAPS.READ_IDEAS, 'update.history': CAPS.READ_IDEAS, 'update.apply': CAPS.ADMIN, 'update.keep-local': CAPS.ADMIN, 'update.rollback': CAPS.ADMIN, 'update.restart': CAPS.ADMIN, 'update.policy.get': CAPS.READ_IDEAS, 'update.policy.set': CAPS.ADMIN, 'update.auto': CAPS.READ_IDEAS, 'update.backup': CAPS.ADMIN,   /* 0.60.363 UP13 — a backup of Nexus before an update */   // 0.60.252 UP3 — changing Nexus's own code is an admin act
   'system.shape': CAPS.READ_IDEAS,   // 0.60.138 IM5
   'system.nodes': CAPS.READ_IDEAS,   // 0.60.130 P33a
   'system.nodes.list': CAPS.READ_IDEAS,   // 0.60.157 GM4
@@ -3814,6 +3814,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','update'], 'update.check'],                   // 0.60.252 UP3 — what is newer on GitHub, his words per release (?fetch=0 reads what was last fetched)
     ['GET',    ['api','update','history'], 'update.history'],
     ['POST',   ['api','update','apply'], 'update.apply'],           // {confirm:true} — fast-forward, data collisions archived, npm install if the lockfile changed
+    ['POST',   ['api','update','keep-local'], 'update.keep-local'], // 0.60.376 CE3 — {confirm:true} — the local commits kept on local/<date>, then GitHub's commit (backed up first)
     ['POST',   ['api','update','rollback'], 'update.rollback'],     // {confirm:true} — back to the commit the last update came from
     ['POST',   ['api','update','restart'], 'update.restart'],
     ['GET',    ['api','update','policy'], 'update.policy.get'],       // 0.60.254 UP8 — auto | notify | off, and how often
@@ -6276,6 +6277,11 @@ async function handle(req, res, route, query, body) {
     case 'update.backup': {
       const r = _updateBackup({ by: (body && body.by) || 'person', why: (body && body.why) || 'asked' });
       res.writeHead(r.ok ? 200 : 500, { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r));
+    }
+    case 'update.keep-local': {   // 0.60.376 CE3 (docs/2026-11-02-cos-enterprise-phasemap.spec) — James: "so i can update nexus automatically"
+      const U = _require('../../lib/nexus-update.js');
+      const r = await U.keepLocalBacked({ confirm: !!(body && body.confirm === true), by: (body && body.by === 'agent') ? 'agent' : 'person', backupFn: (o) => _updateBackup(o) });
+      res.writeHead(r.ok ? 200 : (r.needsConfirm ? 428 : 409), { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r));
     }
     case 'update.apply': case 'update.rollback': {
       const U = _require('../../lib/nexus-update.js');

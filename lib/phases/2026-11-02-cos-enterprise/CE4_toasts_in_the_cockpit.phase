@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
+type: phase
+id: docs_2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
+context: pipeline phase CE4_toasts_in_the_cockpit of docs/2026-11-02-cos-enterprise-phasemap.spec
+intent: null
+summary: CE4_toasts_in_the_cockpit (ui) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793581138963
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793581138963
+lastSeenAt: 1793581138963
+fingerprint: null
+payload:
+  id: CE4_toasts_in_the_cockpit
+  map: docs/2026-11-02-cos-enterprise-phasemap.spec
+  repo: null
+  layer: ui
+  status: >-
+    DONE 0.60.376 — test-cos-updates CU-07 (the card in Clear Glass); the Windows notification
+    unverified until his run
+  files:
+    - lib/ui/update-popup/update-popup.js
+    - cos/ui/shell/index.html
+    - cos/app/desktop/main.js
+    - tests/modules/test-cos-updates.test.js
+  depends_on:
+    - CE2_updates_as_cos_routes
+    - CE3_keep_mine_and_update
+  blocks: []
+  spec: null
+  graph: ddfa1a93dcf1251d

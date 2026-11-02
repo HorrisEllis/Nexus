@@ -1415,3 +1415,22 @@ spec:
 # well as /ap/* (the manager is the one endpoint since MG17), and checks routes against the contract rather than a fixed list; the shell's
 # "command line" is a Go-to list (⌘K) over pages and systems: running command rows from the shell waits on the round table's CLI (MG_D17).
 # Proof: tests/modules/test-cos-ui.test.js CU-01..06 (CU-06 in Clear Glass), test-cos-ui-theme.test.js TH-01..03.
+
+
+# ── ADDENDUM 2026-11-02 (0.60.376) — the update as COS's, per system; close and minimize are his (CE1, CE2, CE4) ──
+# James, 2026-11-02: "i want toasts in cos ui for gibhub updates with a update tool. so i can update nexus automatically. per system" · "Yes. I need the cos ui to be a full enterprise grade, windows service, option to close or minimize to tray, manage systems,"
+# Map: docs/2026-11-02-cos-enterprise-phasemap.spec.
+# - cos/manager/updates.js; the git work runs in cos/manager/update-run.js's own process, so it never blocks the supervisor.
+#   - GET /api/cos/update: the check, plus perSystem: what restarts by itself, what waits for him (Clear Glass), whether COS or the kernel
+#     changed.
+#   - POST /api/cos/update/apply { by, mode: update | keep-local }: then each changed system is restarted by the supervisor. One update at a
+#     time. Every step goes out as cos.update on the event stream.
+# - The update popup (lib/ui/update-popup, UP9) with data-tool="cos" in the shell is the update tool:
+#   - it names the systems;
+#   - Update now, or Keep mine and update when diverged, confirmed once on the card;
+#   - then what restarted, with a Restart button for what waits.
+#   The COS app shows the same as a Windows notification while its window is hidden.
+# - The COS app: onClose tray | quit (tray by default) and onMinimize taskbar | tray (taskbar by default), in the tray menu.
+# - Reading of "per system", to confirm (CE_D0): one update, announced and restarted per system. A git tree cannot take half a commit.
+# - The Windows service waits on his choice (CE_D2): the part with no window as the service, the windows in his session. This is CA_D1's own
+#   "applicable" case.

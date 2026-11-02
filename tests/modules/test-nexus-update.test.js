@@ -17,6 +17,8 @@ require('../../lib/test-sandbox.js').ensure();
  *   UP-10  attach in place: an unzipped release folder becomes its release's working tree (no file touched), then updates like a clone
  *   UP-13  (0.60.363) no backup, no update: refused and nothing moved; Idearium not answering → refused, said; the backup's snapshot on
  *          the history row (his 'make sure it hooks into idearium versionium, to backup the system')
+ *   UP-14  (CE3) keep mine and update: a diverged folder's local commits kept on local/<date>, the folder moved to GitHub's commit (git
+ *          reset --keep), nothing lost; refused without confirm and without a backup; check says how many GitHub already has by content
  *   UP-11  automatic: auto applies when idle and restarts what changed (never Clear Glass); not idle waits; notify only says; off nothing
  *   UP-08  the Updates page, driven in Clear Glass (glass.js) over the real lib/nexus-update.js: his words, Update, Roll back, history
  */
@@ -277,6 +279,27 @@ const BK = { ok: true, snapshot: 'test-backup-0001', created: true, files: 3 }; 
     const none = await U.applyBacked({ root: d, confirm: true, fetch: false, backupFn: async () => { throw new Error('must not back up when up to date'); } });
     assert.strictEqual(none.action, 'none');
   });
+  await test('UP-14', 'keep mine and update: local commits kept on a branch, the folder at GitHub\'s commit, nothing lost', async () => {
+    const d = path.join(tmp, 'keep1'); G(tmp, 'clone', '-q', '--branch', 'main', origin, d); G(d, 'reset', '-q', '--hard', 'HEAD~1');
+    W(d, 'mine.js', 'his own\n'); G(d, 'add', 'mine.js'); G(d, 'commit', '-q', '-m', 'his local work');
+    const mine = G(d, 'rev-parse', 'HEAD');
+    const c = U.check({ root: d, fetch: false });
+    assert.strictEqual(c.ahead, 1); assert.match(c.can, /keep-local/); assert.deepStrictEqual([c.local.count, c.local.onGitHub, c.local.commits[0].subject], [1, 0, 'his local work']);
+    assert.strictEqual(U.keepLocal({ root: d, fetch: false }).needsConfirm, true);
+    const nb = U.keepLocal({ root: d, confirm: true, fetch: false }); assert.strictEqual(nb.ok, false); assert.match(nb.error, /no backup/); assert.strictEqual(G(d, 'rev-parse', 'HEAD'), mine, 'nothing moved');
+    const r = await U.keepLocalBacked({ root: d, confirm: true, by: 'person', fetch: false, backupFn: async () => BK });
+    assert.ok(r.ok, r.error); assert.strictEqual(r.action, 'kept-local'); assert.match(r.keptOn, /^local\/\d{4}-\d{2}-\d{2}-/);
+    assert.strictEqual(G(d, 'rev-parse', 'HEAD'), G(d, 'rev-parse', 'origin/main'), 'at GitHub\'s commit');
+    assert.strictEqual(G(d, 'rev-parse', r.keptOn), mine, 'the local commit is on its branch');
+    assert.strictEqual(G(d, 'show', `${r.keptOn}:mine.js`), 'his own', 'nothing lost');
+    assert.strictEqual(U.history({ root: d })[0].kind, 'keep-local');
+    assert.strictEqual(U.check({ root: d, fetch: false }).upToDate, true, 'updates flow again');
+    // a local commit GitHub already has by content (the same change, made twice) is counted so
+    const e = path.join(tmp, 'keep2'); G(tmp, 'clone', '-q', '--branch', 'main', origin, e); G(e, 'reset', '-q', '--hard', 'HEAD~1');
+    G(e, 'cherry-pick', 'origin/main');
+    const ce = U.check({ root: e, fetch: false }); assert.deepStrictEqual([ce.ahead, ce.local.onGitHub], [1, 1]);
+  });
+
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);

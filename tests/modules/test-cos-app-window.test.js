@@ -13,6 +13,8 @@ require('../../lib/test-sandbox.js').ensure();
  *   CW-04 settings: startWithWindows, startElevated, startHidden on by default, booleans only
  *   CW-05 main.js: the main window is the cockpit/starting page with the starting bridge only; the old page opens as Versions & manual update;
  *         the tray has the startup switches; --hidden starts in the tray; logon applied at launch
+ *   CW-07 (CE1, 0.60.376) close and minimize are his: onClose tray|quit (tray by default), onMinimize taskbar|tray (taskbar by default); main.js
+ *         follows both; the tray menu offers both
  *   CW-06 the starting page in Clear Glass: says why it waits; Start shown when not started; Versions & manual update calls the bridge
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http');
@@ -58,6 +60,18 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
     assert.strictEqual(Settings.set(root, 'startWithWindows', 'maybe').ok, false);
     fs.rmSync(root, { recursive: true, force: true });
   });
+  await test('CW-07', 'close and minimize are his: tray|quit, taskbar|tray; main.js follows; the tray offers both', () => {
+    const d = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-close-'));
+    assert.deepStrictEqual([Settings.load(d).settings.onClose, Settings.load(d).settings.onMinimize], ['tray', 'taskbar'], 'the defaults: hide to tray, minimize to taskbar');
+    assert.strictEqual(Settings.set(d, 'onClose', 'quit').settings.onClose, 'quit'); assert.strictEqual(Settings.set(d, 'onMinimize', 'tray').settings.onMinimize, 'tray');
+    assert.match(Settings.set(d, 'onClose', 'minimize').error, /onClose is tray or quit/); assert.deepStrictEqual(Settings.normalize({ onMinimize: 'x' }).dropped, ['onMinimize "x"']);
+    const src = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/main.js'), 'utf8');
+    assert.ok(/settings\.onClose === 'quit'\) quit\(\); else win\.hide\(\)/.test(src), 'close follows onClose');
+    assert.ok(/win\.on\('minimize', \(e\) => \{ if \(ctl && ctl\.settings\(\)\.settings\.onMinimize === 'tray'\) \{ e\.preventDefault\(\); win\.hide\(\);/.test(src), 'minimize follows onMinimize');
+    assert.ok(/label: 'Closing the window'/.test(src) && /label: 'Minimizing the window'/.test(src), 'the tray offers both');
+    fs.rmSync(d, { recursive: true, force: true });
+  });
+
   await test('CW-05', 'main.js: cockpit window with the starting bridge only; Versions & manual update; the tray switches; --hidden; logon at launch', () => {
     const m = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/main.js'), 'utf8');
     assert.ok(/preload: path\.join\(__dirname, 'starting-preload\.js'\)/.test(m) && /show: !hiddenStart\(\)/.test(m));

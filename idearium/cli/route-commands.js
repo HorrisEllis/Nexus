@@ -256,8 +256,15 @@ export const SPEC = [
       for (const r of (d.releases || []).slice(0, 12)) console.log(`  ${h.c.gray(r.version.padEnd(9))} ${r.quote ? `"${String(r.quote).slice(0, 150)}"` : h.c.dim('(no quote in its line)')}`);
       if (d.systems && d.systems.length) console.log(h.c.dim(`  changes: ${d.systems.join(', ')}${d.lockChanged ? ' · package-lock.json (npm install runs)' : ''}`));
       const p = d.plan || {}; if ((p.archive || []).length) console.log(h.c.dim(`  sets aside first (copied to _archive/update/): ${p.archive.length} data file(s)`)); if ((p.blocks || []).length) console.log(h.c.amber(`  refuses: your edits to ${p.blocks.map(b => b.file).slice(0, 6).join(', ')}`));
-      if (d.can && !d.upToDate) console.log(h.c.amber(`  ${d.can}`)); else if (!d.upToDate) console.log(h.c.dim('  idearium update apply --yes'));
+      if (d.local) { console.log(h.c.dim(`  local commits GitHub lacks: ${d.local.count} (${d.local.onGitHub} already on GitHub by content)`)); for (const c of d.local.commits.slice(0, 5)) console.log(h.c.dim(`    ${c.onGitHub ? '=' : '+'} ${c.commit} ${c.subject}`)); }
+      if (d.can && !d.upToDate) console.log(h.c.amber(`  ${d.can}${d.local ? ' → idearium update keep-local --yes' : ''}`)); else if (!d.upToDate) console.log(h.c.dim('  idearium update apply --yes'));
     } },
+  // 0.60.376 CE3 — James, 2026-11-02: "so i can update nexus automatically". A diverged folder: its local commits kept on a branch, then GitHub's commit
+  { key: 'update.keep-local', repo: false, usage: 'update keep-local --yes', about: 'when local commits block an update (diverged): keep them on a branch local/<date>, set his colliding data aside, and move this folder to GitHub\'s commit (git reset --keep; a backup first)',
+    personOnly: () => 'moving Nexus to GitHub\'s commit is the person\'s — an agent asks them first',
+    need: (a) => (a.flags.yes ? null : '--yes (it moves Nexus to GitHub\'s commit; `idearium update` shows the local commits and how many GitHub already has)'),
+    req: () => ({ method: 'POST', path: '/api/update/keep-local', timeoutMs: 20 * 60000, body: { confirm: true } }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); if (d.action === 'none') return console.log(h.c.mint(`  ${d.why}`)); console.log(h.c.mint(`  ${d.from.version} → ${d.to.version} · your local commits are on ${d.keptOn}`)); if ((d.archived || []).length) console.log(h.c.dim(`  ${d.archived.length} data file(s) set aside in ${d.archivedTo}`)); console.log(h.c.dim(`  restart: ${(d.systems || []).join(', ') || 'nothing changed a system'}`)); } },
   { key: 'update.apply', repo: false, usage: 'update apply --yes', about: 'bring in the newer Nexus from GitHub: fast-forward only, his changed data files copied aside first, npm install if the lockfile changed; says what to restart',
     personOnly: () => 'updating Nexus\'s code is the person\'s — an agent uses nexus.update.tool apply with confirm:true after asking them',
     need: (a) => (a.flags.yes ? null : '--yes (it changes Nexus\'s code; `idearium update` shows what it brings)'),

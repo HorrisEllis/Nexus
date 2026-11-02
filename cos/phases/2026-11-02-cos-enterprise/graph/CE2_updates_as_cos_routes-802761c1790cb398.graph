@@ -1,0 +1,246 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE2_updates_as_cos_routes:802761c1790cb398
+type: graph
+id: phase:CE2_updates_as_cos_routes:802761c1790cb398
+context: dependency graph of phase CE2_updates_as_cos_routes
+intent: null
+summary: 32 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793581138959
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793581138959
+lastSeenAt: 1793581138959
+fingerprint: null
+payload:
+  for: CE2_updates_as_cos_routes
+  kind: phase
+  repo: null
+  hash: 802761c1790cb398
+  nodes:
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/update-run.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/nexus-update.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-updates.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/update.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.retired-0.60.330.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/core-duties.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/walls.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/ui/serve.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/emergence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/emergence.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/walls.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/ui/serve.js
+      kind: requires
+    - from: lib/nexus-update.js
+      to: lib/release-version.js
+      kind: requires
+    - from: lib/nexus-update.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: lib/nexus-update.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/update.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/nexus/autopilot.retired-0.60.330.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/nexus/core-duties.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D0_per_system_reading
+    dependents:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
+    upstream:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D0_per_system_reading
+    downstream:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): CE_D0_per_system_reading'
+      - 'needed by (1): CE4_toasts_in_the_cockpit · finishing it unlocks CE4_toasts_in_the_cockpit'
+    edges:
+      - from: docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D0_per_system_reading
+        kind: declared

@@ -1599,3 +1599,12 @@ rule 3, says one system going down must break no other. Inside Idearium, Emerge 
   not an OS. Nexus's own switch is not built yet: EAS3 (one locked Emerge at `emerge/`) and EAS4 (lib/emerge's callers through the door).
 - **His part / the coder's part:** the question, the two options, the goal, and the laws and skeleton that decided and built it are his.
   Applying the axioms, the merge of the 13 shared files, the language door, the boundary fix and the tests are the coder's.
+
+### 2026-11-02 — 0.60.376: "so i can update nexus automatically. per system"
+- **His words:** "i want toasts in cos ui for gibhub updates with a update tool. so i can update nexus automatically. per system"
+- **Context:** He pasted three boots. The coder traced why the automatic update had never landed: one local commit made every check
+  "diverged". The answer was not a forced reset (which would drop the commit) and not "merge it yourself" (which never happens automatically).
+  It was a branch that keeps the commit, and git cherry to know when the commit was already on GitHub, so the update can move on by itself.
+- **Skill:** failure-mode thinking from a real log. The stop he saw at every boot became a tested path (UP-14: the local commit reachable on
+  its branch after the update).
+- **Checkable:** `tests/modules/test-nexus-update.test.js` UP-14; `tests/modules/test-cos-updates.test.js` CU-04, CU-07.
