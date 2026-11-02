@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793583002441
+exported_at: 1793583403070
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793583002441
-lastSeenAt: 1793583002441
+firstSeenAt: 1793583403070
+lastSeenAt: 1793583403070
 fingerprint: null
 payload:
   for: CE6_the_exe_carries_it
@@ -52,7 +52,8 @@ payload:
     deps:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE1_close_and_minimize_are_his
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
-    dependents: []
+    dependents:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE7_borderless
     upstream:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE1_close_and_minimize_are_his
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2_updates_as_cos_routes
@@ -60,15 +61,17 @@ payload:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D0_per_system_reading
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D1_diverged_is_kept_never_lost
-    downstream: []
+    downstream:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE7_borderless
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE7_borderless
     conflicts: []
     dangling: []
     lines:
       - layer 3
       - 'depends on (2): CE1_close_and_minimize_are_his, CE4_toasts_in_the_cockpit · all upstream 6'
-      - 'needed by (0): —'
+      - 'needed by (1): CE7_borderless · finishing it unlocks CE7_borderless'
     edges:
       - from: docs/2026-11-02-cos-enterprise-phasemap.spec::CE1_close_and_minimize_are_his
         kind: declared

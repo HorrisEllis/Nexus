@@ -94,3 +94,20 @@ body.shell {
 
 @media (max-width: 1100px) { .meters { display: none; } }
 @media (max-width: 820px) { body.shell { --rail: 76px; } .brand span, .nav a span:not(.dot), .nav-label, .nav a .port, .bus-state .label, .bus-state #bus-count { display: none; } .nav a { justify-content: center; } .manager { display: none; } }
+
+/* ── CE7 (0.60.378) — borderless in the COS app. James, 2026-11-02: "Also make it borderless." The app's preload marks the page
+   (html[data-cos-frame="none"]); a browser never does, so the cockpit there is unchanged. The top bar and the gap above it drag the window
+   (double-click maximizes, as Windows' own title bar does); everything that is clicked stays clickable; the top bar ends before
+   the minimize, maximize and close Windows draws over the window's top right (the titleBarOverlay, 40px high, about 138px wide). ── */
+html[data-cos-frame="none"] body.shell::before { content: ''; position: fixed; left: 0; right: 0; top: 0; height: var(--gap); z-index: 2; -webkit-app-region: drag; app-region: drag; }
+html[data-cos-frame="none"] .top { -webkit-app-region: drag; app-region: drag;
+  margin-right: max(120px, calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw) - var(--gap))); }   /* the bar ends where Windows' buttons begin */
+html[data-cos-frame="none"] .crumb { min-width: 96px; }
+/* the room the bar gave up comes from the meters and the manager's pill, never the title or the buttons: the meters keep their numbers and
+   draw their bars only when there is room (a wide window); the pill shortens with an ellipsis (its full text is its title) */
+html[data-cos-frame="none"] .meter { grid-template-columns: auto auto; } html[data-cos-frame="none"] .meter .bar { display: none; }
+html[data-cos-frame="none"] .manager { min-width: 0; flex: 0 1 auto; overflow: hidden; } html[data-cos-frame="none"] #manager-text { overflow: hidden; text-overflow: ellipsis; }
+html[data-cos-frame="none"] .top-actions { flex: none; }
+@media (min-width: 1500px) { html[data-cos-frame="none"] .meter { grid-template-columns: auto 72px auto; } html[data-cos-frame="none"] .meter .bar { display: block; } }
+html[data-cos-frame="none"] .top button, html[data-cos-frame="none"] .top a, html[data-cos-frame="none"] .top input,
+html[data-cos-frame="none"] .top .meter, html[data-cos-frame="none"] .top .manager { -webkit-app-region: no-drag; app-region: no-drag; }

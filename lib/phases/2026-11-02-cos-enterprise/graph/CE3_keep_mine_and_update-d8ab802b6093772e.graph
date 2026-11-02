@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793583002436
+exported_at: 1793583403065
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793583002436
-lastSeenAt: 1793583002436
+firstSeenAt: 1793583403065
+lastSeenAt: 1793583403065
 fingerprint: null
 payload:
   for: CE3_keep_mine_and_update
@@ -153,6 +153,7 @@ payload:
     downstream:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE6_the_exe_carries_it
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE7_borderless
     blockedBy: []
     unlocks:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
@@ -162,7 +163,7 @@ payload:
       - layer 1
       - 'depends on (1): CE_D1_diverged_is_kept_never_lost'
       - >-
-        needed by (1): CE4_toasts_in_the_cockpit · all downstream 2 · finishing it unlocks
+        needed by (1): CE4_toasts_in_the_cockpit · all downstream 3 · finishing it unlocks
         CE4_toasts_in_the_cockpit
     edges:
       - from: docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D1_diverged_is_kept_never_lost

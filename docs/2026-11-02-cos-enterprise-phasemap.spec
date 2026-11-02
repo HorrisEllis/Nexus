@@ -118,3 +118,34 @@ phases:
       mine) reaches him through his folder's update; only the window's behaviour needs the new exe.
     does: "COS 0.4.0: the bump, so merging to main publishes cos-v0.4.0 (portable and setup, SHA256SUMS), which 0.3.0's own update check (app-update.js) announces"
     proof: "git diff cos-v0.3.0 HEAD -- cos/app names main.js and settings.js; the version is now untagged, so the workflow builds"
+
+  # ── ADDENDUM 2026-11-02 — "Also where are the agent features. Also make it borderless." (CE7 built; the agents mapped as CE_D3, to him) ──
+  CE7_borderless:
+    layer: ui
+    status: DONE 0.60.378 (COS 0.4.0, the same unreleased exe as CE6) — test-cos-app-window CW-08 and CW-08b (Clear Glass), test-cos-ui-theme; on Windows unverified until his run
+    depends_on: [CE1_close_and_minimize_are_his, CE6_the_exe_carries_it]
+    files: [cos/app/window.js, cos/app/settings.js, cos/app/desktop/main.js, cos/app/desktop/starting-preload.js, cos/app/desktop/starting.html, cos/ui/shell/page.css, cos/ui/shell/page.js, tests/modules/test-cos-app-window.test.js]
+    origin: '"Also make it borderless." (James, 2026-11-02)'
+    does: >-
+      COS's window has no Windows frame or title bar. Windows still draws its own minimize, maximize and close over the top right
+      (titleBarStyle hidden with titleBarOverlay), so snap layouts, double-click to maximize and Aero snap keep working, and close still
+      follows his onClose. The cockpit's top bar is where the window is dragged (app-region), its buttons stay clickable, and ends before
+      the three buttons; the room comes from the meters (numbers kept, bars drawn on wide windows) and the manager's pill (shortened, full text
+      in its title), found by the first Clear Glass shot, where Go to spilled out of the bar. The preload marks the page (data-cos-frame) so the same cockpit in a browser is unchanged. settings.frame:
+      none (the default) | windows, in the tray menu, on the next start of the window: the way back if borderless misbehaves on his machine.
+    by: "his axioms, applied by the coder: §8.6 (Electron's own overlay, not hand-drawn buttons that lose snap), REVERSIBILITY (the setting), §1.2 (the menu says when it applies)"
+
+decisions_addendum_2026_11_02:
+  CE_D3_where_the_agents_are:
+    status: "TO HIM: the direction (what COS shows of the agents first)"
+    james: '"Also where are the agent features." (2026-11-02) · 2026-10-31 (MG_D17, recorded, never phased): "a full meta control panel, reploymet, cli interface for the round table, be able to address specific agents, oarchastration pipeline workflow and cli interface. like this needs to be fully, built, deploy agents to systems, have them do tasks, jobs, map them to each system like a drone."'
+    found: >-
+      COS's UI has no agent feature: only the proposals agents raise (Proposals, Overview's count). The agents live elsewhere: Idearium's
+      repo agent (repo.agent.prompt, feed, stream, history, memory, tools, settings, gate: ~30 command rows) and its page agents (AC5);
+      Copilot's agent suite and switch (/api/agent/suite, current, switch; /api/agents/capability); the round table (lib/roundtable.js, the
+      roundtable agent tool) and the council (lib/agent-council.js) with no route of their own; orchestrator automation (AE3–AE4). His
+      2026-10-31 vision for COS (MG_D17) was recorded and never turned into phases; AC1–AC3 (the agents' control panel in Idearium) are OPEN.
+    coder_recommends: >-
+      An Agents page in COS (its own .html, MG_D18) that reads through each system's routes, never their files (§5.9): first who the agents
+      are and what each is doing now (Copilot's suite, Idearium's repo agents, the proposals), and address one agent with a prompt; then the
+      round table with its CLI (it needs a route first, in its owning system); then deploying an agent to a system (MG_D17's drones).

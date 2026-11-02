@@ -11,7 +11,8 @@ const fs = require('fs'), path = require('path');
 const POLICIES = ['off', 'ask', 'auto'];
 // CE1 — what closing and minimizing the window do: his choice (close: hide to the tray or quit COS; minimize: the taskbar or the tray)
 const CLOSE = Object.freeze(['tray', 'quit']), MINIMIZE = Object.freeze(['taskbar', 'tray']);
-const DEFAULTS = Object.freeze({ update: { policy: 'ask' }, startOnLaunch: null, startWithWindows: true, startElevated: true, startHidden: true, onClose: 'tray', onMinimize: 'taskbar', logonApplied: null, window: { width: 1000, height: 720, x: null, y: null, maximized: false } });   // MG35 startOnLaunch: the project COS starts when it opens (his choice), or null
+const FRAME = Object.freeze(['none', 'windows']);   // CE7 — "Also make it borderless.": none (the default) or Windows' own frame, the way back
+const DEFAULTS = Object.freeze({ update: { policy: 'ask' }, startOnLaunch: null, startWithWindows: true, startElevated: true, startHidden: true, onClose: 'tray', onMinimize: 'taskbar', frame: 'none', logonApplied: null, window: { width: 1000, height: 720, x: null, y: null, maximized: false } });   // MG35 startOnLaunch: the project COS starts when it opens (his choice), or null
 const file = (root) => path.join(root, 'settings.json');
 const clone = (o) => JSON.parse(JSON.stringify(o));
 const num = (v, d, lo, hi) => (Number.isFinite(v) && v >= lo && v <= hi ? Math.round(v) : d);
@@ -24,7 +25,7 @@ function normalize(raw) {
   for (const k of ['startWithWindows', 'startElevated', 'startHidden']) if (raw[k] !== undefined) { if (typeof raw[k] === 'boolean') s[k] = raw[k]; else dropped.push(`${k} "${raw[k]}"`); }   // MG37
   if (raw.logonApplied && typeof raw.logonApplied === 'object') s.logonApplied = raw.logonApplied;
   // CE1 (docs/2026-11-02-cos-enterprise-phasemap.spec) — James, 2026-11-02: "option to close or minimize to tray"
-  for (const [k, ok] of [['onClose', CLOSE], ['onMinimize', MINIMIZE]]) if (raw[k] !== undefined) { if (ok.includes(raw[k])) s[k] = raw[k]; else dropped.push(`${k} "${raw[k]}"`); }
+  for (const [k, ok] of [['onClose', CLOSE], ['onMinimize', MINIMIZE], ['frame', FRAME]]) if (raw[k] !== undefined) { if (ok.includes(raw[k])) s[k] = raw[k]; else dropped.push(`${k} "${raw[k]}"`); }
   const w = raw.window || {};
   s.window.width = num(w.width, DEFAULTS.window.width, 480, 10000); s.window.height = num(w.height, DEFAULTS.window.height, 320, 10000);
   s.window.x = Number.isFinite(w.x) ? Math.round(w.x) : null; s.window.y = Number.isFinite(w.y) ? Math.round(w.y) : null; s.window.maximized = w.maximized === true;
@@ -50,15 +51,15 @@ function set(root, key, value) {
     if (v === null) return { ok: false, error: `${key} is true or false, not "${value}"` };
     const cur = load(root).settings; cur[key] = v; save(root, cur); return { ok: true, settings: cur };
   }
-  if (key === 'onClose' || key === 'onMinimize') {   // CE1
-    const allowed = key === 'onClose' ? CLOSE : MINIMIZE;
+  if (key === 'onClose' || key === 'onMinimize' || key === 'frame') {   // CE1, CE7
+    const allowed = key === 'onClose' ? CLOSE : key === 'frame' ? FRAME : MINIMIZE;
     if (!allowed.includes(value)) return { ok: false, error: `${key} is ${allowed.join(' or ')}, not "${value}"` };
     const cur = load(root).settings; cur[key] = value; save(root, cur); return { ok: true, settings: cur };
   }
   if (key === 'logonApplied') { const cur = load(root).settings; cur.logonApplied = value && typeof value === 'object' ? value : null; save(root, cur); return { ok: true, settings: cur }; }
-  if (key !== 'update.policy') return { ok: false, error: `unknown setting "${key}" (update.policy, startOnLaunch, startWithWindows, startElevated, startHidden, onClose, onMinimize)` };
+  if (key !== 'update.policy') return { ok: false, error: `unknown setting "${key}" (update.policy, startOnLaunch, startWithWindows, startElevated, startHidden, onClose, onMinimize, frame)` };
   if (!POLICIES.includes(value)) return { ok: false, error: `update.policy must be one of ${POLICIES.join(', ')}, not "${value}"` };
   const cur = load(root).settings; cur.update.policy = value; save(root, cur); return { ok: true, settings: cur };
 }
 function saveWindow(root, bounds) { const cur = load(root).settings; cur.window = normalize({ window: { ...cur.window, ...bounds } }).settings.window; save(root, cur); return cur.window; }
-module.exports = { POLICIES, CLOSE, MINIMIZE, DEFAULTS, normalize, load, save, set, saveWindow };
+module.exports = { POLICIES, CLOSE, MINIMIZE, FRAME, DEFAULTS, normalize, load, save, set, saveWindow };

@@ -1434,3 +1434,9 @@ spec:
 # - Reading of "per system", to confirm (CE_D0): one update, announced and restarted per system. A git tree cannot take half a commit.
 # - The Windows service waits on his choice (CE_D2): the part with no window as the service, the windows in his session. This is CA_D1's own
 #   "applicable" case.
+
+# ── ADDENDUM 2026-11-02 (0.60.378, CE7) — MOD-COSA-COCKPIT-WINDOW is borderless ──
+# James, 2026-11-02: "Also make it borderless." cos/app/window.js frameOptions(frame) → BrowserWindow options: frame 'none' (the default) hides
+# the title bar with Windows' own buttons drawn over the top right (titleBarOverlay, 40px); 'windows' changes nothing (the way back). The
+# preload marks the page html[data-cos-frame="none"]; cos/ui/shell/page.css then makes the top bar the drag region and ends it before those
+# buttons. settings.frame: none | windows. Map: docs/2026-11-02-cos-enterprise-phasemap.spec CE7.

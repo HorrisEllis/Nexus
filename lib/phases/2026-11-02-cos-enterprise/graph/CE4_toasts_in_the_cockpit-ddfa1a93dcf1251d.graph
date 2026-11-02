@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793583002438
+exported_at: 1793583403067
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793583002438
-lastSeenAt: 1793583002438
+firstSeenAt: 1793583403067
+lastSeenAt: 1793583403067
 fingerprint: null
 payload:
   for: CE4_toasts_in_the_cockpit
@@ -101,6 +101,7 @@ payload:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D1_diverged_is_kept_never_lost
     downstream:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE6_the_exe_carries_it
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE7_borderless
     blockedBy: []
     unlocks:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE6_the_exe_carries_it
@@ -109,7 +110,9 @@ payload:
     lines:
       - layer 2
       - 'depends on (2): CE2_updates_as_cos_routes, CE3_keep_mine_and_update · all upstream 4'
-      - 'needed by (1): CE6_the_exe_carries_it · finishing it unlocks CE6_the_exe_carries_it'
+      - >-
+        needed by (1): CE6_the_exe_carries_it · all downstream 2 · finishing it unlocks
+        CE6_the_exe_carries_it
     edges:
       - from: docs/2026-11-02-cos-enterprise-phasemap.spec::CE2_updates_as_cos_routes
         kind: declared

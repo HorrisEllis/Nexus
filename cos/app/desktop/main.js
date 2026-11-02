@@ -28,7 +28,8 @@ function notify(title, body) { try { if (Notification.isSupported()) new Notific
 function createWindow() {
   const w = ctl ? ctl.settings().settings.window : Settings.DEFAULTS.window;
   win = new BrowserWindow({ width: w.width, height: w.height, ...(w.x !== null && w.y !== null ? { x: w.x, y: w.y } : {}), minWidth: 640, minHeight: 420, backgroundColor: '#0d0e14', title: 'COS', autoHideMenuBar: true, icon: path.join(__dirname, 'icon.png'),
-    skipTaskbar: false, show: !hiddenStart(), webPreferences: { preload: path.join(__dirname, 'starting-preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true } });
+    ...W.frameOptions(ctl ? ctl.settings().settings.frame : 'none'),   // CE7 — borderless: Windows' own buttons over the top right, the page drags by its top bar
+    skipTaskbar: false, show: !hiddenStart(), webPreferences: { preload: path.join(__dirname, 'starting-preload.js'), additionalArguments: [`--cos-frame=${(ctl && ctl.settings().settings.frame) || 'none'}`], contextIsolation: true, nodeIntegration: false, sandbox: true } });
   if (w.maximized && !hiddenStart()) win.maximize();
   target = null; retarget();
   win.webContents.setWindowOpenHandler(({ url }) => { if (/^https:\/\//.test(url)) shell.openExternal(url); else if (W.allowedUrl(url)) win.loadURL(url); return { action: 'deny' }; });
@@ -91,6 +92,9 @@ function buildTray() {
       { label: 'Closing the window', submenu: [
         { label: 'Hides COS to the tray (systems keep running)', type: 'radio', checked: S.onClose !== 'quit', click: () => ctl.setSetting('onClose', 'tray') },
         { label: 'Quits COS (stops what COS started)', type: 'radio', checked: S.onClose === 'quit', click: () => ctl.setSetting('onClose', 'quit') }] },
+      { label: 'The window (from its next opening)', submenu: [   // CE7 — "Also make it borderless."; Windows' frame is the way back
+        { label: 'Borderless', type: 'radio', checked: S.frame !== 'windows', click: () => ctl.setSetting('frame', 'none') },
+        { label: "With Windows' frame", type: 'radio', checked: S.frame === 'windows', click: () => ctl.setSetting('frame', 'windows') }] },
       { label: 'Minimizing the window', submenu: [
         { label: 'Goes to the taskbar', type: 'radio', checked: S.onMinimize !== 'tray', click: () => ctl.setSetting('onMinimize', 'taskbar') },
         { label: 'Goes to the tray', type: 'radio', checked: S.onMinimize === 'tray', click: () => ctl.setSetting('onMinimize', 'tray') }] },
