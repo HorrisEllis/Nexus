@@ -45,6 +45,9 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
       if (m === 'GET' && p === '/api/cos/systems') return send(res, 200, { ok: true, systems: sup.list() });
       if (m === 'GET' && p === '/api/cos/ledger') return send(res, 200, { ok: true, entries: sup.ledger({ limit: Number(u.searchParams.get('limit')) || 100, system: u.searchParams.get('system') }) });
       if (m === 'GET' && p === '/api/cos/legacy-callers') return send(res, 200, { ok: true, callers: door.legacyCallers() });   // MG16: who still calls /tables and /files
+      // CA3 (cos/spec/network.spec MOD-NET-ROUTES) — James: "Gate behind settings to open. Make a full detailed settings for network."
+      if (p === '/api/cos/network' && m === 'GET') { const N = require('./network-settings.js'); return send(res, 200, { ok: true, settings: N.view(), gates: Object.fromEntries(Object.keys(N.REACH).map(e => [e, N.gate(e)])) }); }
+      if (p === '/api/cos/network' && m === 'PATCH') { const N = require('./network-settings.js'); const r = N.patch(body.patch, { by: body.by }); if (r.ok) sup.note('network', `network settings changed: ${r.changed.map(c => c.path).join(', ')}`, { by: body.by }); return send(res, r.ok ? 200 : r.code, r.ok ? { ...r, gates: Object.fromEntries(Object.keys(N.REACH).map(e => [e, N.gate(e)])) } : r); }
       if (m === 'GET' && p === '/api/cos/policy') return send(res, 200, { ok: true, policy: sup.policy(), defaults: sup.DEFAULTS });   // MG18: the defaults too, so a page can say each value's layer
       // MG18 — the contract, the stream, usage, logs, proposals
       if (m === 'GET' && p === '/api/cos/contract') { try { return send(res, 200, { ok: true, contract: JSON.parse(require('fs').readFileSync(CONTRACT, 'utf8')) }); } catch (e) { return send(res, 500, { ok: false, error: `the contract is unreadable: ${e.message}` }); } }

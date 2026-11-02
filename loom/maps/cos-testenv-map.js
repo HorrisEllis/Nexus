@@ -27,6 +27,7 @@ const FILES = [
   ['cos/app/window.js', I('cos/app/window.js'), []],   // MG36 0.60.365: what the window shows — the cockpit when it answers, else the starting page
   ['cos/app/logon.js',  I('cos/app/logon.js'),  []],   // MG37 0.60.365: COS at logon — an elevated logon task, else the login item; no service (CA_D1)
   ['cos/app/desktop/main.js', I('cos/app/desktop/main.js'), [I('cos/app/controller.js'), I('cos/app/store.js'), I('cos/app/settings.js'), I('cos/app/shell.js'), I('cos/app/window.js'), I('cos/app/logon.js')]],   // MG35: startOnLaunch, pickFolder, link
+  ['cos/manager/network-settings.js', I('cos/manager/network-settings.js'), [I('lib/versionium-record.js')]],   // CA3 0.60.367: network settings, all off; gate(engine); secrets never read back
   ['cos/manager/suspend.js',    I('cos/manager/suspend.js'),    []],   // CP5b 0.60.362: a process tree suspended/resumed and read back from the OS (SIGSTOP/SIGCONT; Windows NtSuspendProcess via PowerShell, unproven there)
   ['cos/manager/resources.js',  I('cos/manager/resources.js'),  [I('cos/manager/usage.js'), I('lib/versionium-record.js'), I('lib/raid-port.js')]],   // CP6a 0.60.356: caps, read back; the account; pressure → a proposal · CP6b 0.60.361: a restart by rule asks RAID (approveTool, fails closed)
   ['lib/agent-tools/tools/clear-glass/macro-control.js', I('lib/agent-tools/tools/clear-glass/macro-control.js'), []],   // MB4 0.60.359: made by clear-glass/src/ipc/bridge.js runMacroAsPerson, passed to macro.js run as control

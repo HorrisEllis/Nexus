@@ -1,7 +1,7 @@
 {
   "schema": "nexus.cos.manager-contract/1",
   "version": "1.0.0",
-  "about": "COS's manager: every route, event and page it serves. The UI and agents read this, not the code (§5.10). Spec: cos/spec/cos-manager.spec MOD-MG-CONTRACT. Map: docs/2026-10-24-cos-manager-phasemap.spec MG18, MG_D16.",
+  "about": "COS's manager: every route, event and page it serves. The UI and agents read this, not the code (\u00a75.10). Spec: cos/spec/cos-manager.spec MOD-MG-CONTRACT. Map: docs/2026-10-24-cos-manager-phasemap.spec MG18, MG_D16.",
   "origin": "James, 2026-10-31: \"okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered, cheap, or lazy\"",
   "routes": [
     {
@@ -68,12 +68,12 @@
     {
       "method": "GET",
       "path": "/api/cos/walls",
-      "out": "{ walls: CompartmentWall[] (cos/spec/compartment.spec), counts: { enforce, audit, bare, enforceReady } } — CP1a, 2026-11-01"
+      "out": "{ walls: CompartmentWall[] (cos/spec/compartment.spec), counts: { enforce, audit, bare, enforceReady } } \u2014 CP1a, 2026-11-01"
     },
     {
       "method": "GET",
       "path": "/api/cos/resources",
-      "out": "{ resources: { host, reader, incident, systems: [{ caps, now, account }] } } — CP6a; ?fresh=1 samples first"
+      "out": "{ resources: { host, reader, incident, systems: [{ caps, now, account }] } } \u2014 CP6a; ?fresh=1 samples first"
     },
     {
       "method": "GET",
@@ -125,12 +125,12 @@
     {
       "method": "GET",
       "path": "/api/cos/emergence/:what",
-      "out": "patterns → Intelligence's crystallised patterns (each with said, self); liminal → { status, items }; sessions → his emergence runs (lib/emergence.js). 503 names a silent Intelligence. TV3, 2026-11-01."
+      "out": "patterns \u2192 Intelligence's crystallised patterns (each with said, self); liminal \u2192 { status, items }; sessions \u2192 his emergence runs (lib/emergence.js). 503 names a silent Intelligence. TV3, 2026-11-01."
     },
     {
       "method": "GET",
       "path": "/api/cos/update/notice",
-      "out": "{ show, kind: available|blocked|error|updated|none, title, text, current, latest, at, updatesPage } — what the last automatic update check means (UP9, 2026-11-01)"
+      "out": "{ show, kind: available|blocked|error|updated|none, title, text, current, latest, at, updatesPage } \u2014 what the last automatic update check means (UP9, 2026-11-01)"
     },
     {
       "method": "GET",
@@ -142,6 +142,18 @@
       "path": "/api/cos/update/apply",
       "in": "{ by, mode: update | keep-local }",
       "out": "the update applied (a backup first, asked of Idearium), then each changed system restarted by itself; Clear Glass waits for him (waitForHim); keep-local keeps local commits on local/<date> first (CE2, CE3, 2026-11-02)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/network",
+      "out": "{ settings (secrets as { set }), gates: { tunnel|relay|upnp|ddns|ssh: { ok, why } } } \u2014 CA3"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/cos/network",
+      "in": "{ patch, by }",
+      "personAct": true,
+      "out": "{ settings, changed, gates } | 400 naming the field | 403 for an agent \u2014 CA3"
     }
   ],
   "door": {
@@ -199,12 +211,12 @@
     ]
   },
   "events": {
-    "cos.ledger": "{ entry: SupervisorLedgerEntry } — every line the supervisor writes, as it is written",
-    "cos.system.state": "{ name, state, pid } — a system's state changed",
-    "cos.ui.navigate": "{ to } — a page asks the shell to open a route",
-    "cos.ui.notice": "{ level, text } — a page asks the shell to say something",
-    "cos.ui.tab": "{ tab } — the shell tells a cockpit which tab the address names",
-    "cos.update": "{ phase: started | refused | none | restarted | restart-failed | updated, mode, ... } — the update's steps, as they happen (CE2, 2026-11-02)"
+    "cos.ledger": "{ entry: SupervisorLedgerEntry } \u2014 every line the supervisor writes, as it is written",
+    "cos.system.state": "{ name, state, pid } \u2014 a system's state changed",
+    "cos.ui.navigate": "{ to } \u2014 a page asks the shell to open a route",
+    "cos.ui.notice": "{ level, text } \u2014 a page asks the shell to say something",
+    "cos.ui.tab": "{ tab } \u2014 the shell tells a cockpit which tab the address names",
+    "cos.update": "{ phase: started | refused | none | restarted | restart-failed | updated, mode, ... } \u2014 the update's steps, as they happen (CE2, 2026-11-02)"
   },
   "pages": [
     {
@@ -396,7 +408,23 @@
       ],
       "listens": [],
       "emits": [],
-      "about": "what emerges: Intelligence's crystallised patterns, the liminal spaces where they form, and his emergence runs (axioms → end state; innovate the method). One page with the TV's channel: the same script, served read-only from lib/ui/tv-shell/channels/emergence/."
+      "about": "what emerges: Intelligence's crystallised patterns, the liminal spaces where they form, and his emergence runs (axioms \u2192 end state; innovate the method). One page with the TV's channel: the same script, served read-only from lib/ui/tv-shell/channels/emergence/."
+    },
+    {
+      "id": "network",
+      "title": "Network",
+      "path": "network/",
+      "route": "#/network",
+      "nav": "main",
+      "built": true,
+      "phase": "CA3_network_settings",
+      "routes": [
+        "GET /api/cos/network",
+        "PATCH /api/cos/network"
+      ],
+      "listens": [],
+      "emits": [],
+      "about": "every way Nexus reaches or is reached from outside \u2014 outbound tunnel and rendezvous, inbound UPnP/PCP/NAT-PMP mapping, DDNS, SSH (keys only), TLS, each compartment's switch and throttle \u2014 all off until he opens them; each engine's gate shown"
     }
   ],
   "planned": [

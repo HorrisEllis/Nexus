@@ -1,0 +1,15 @@
+/* the Network page (CA3) — COS's theme; one row per setting */
+.nw-hint { font-weight: 400; opacity: .55; font-size: 12px; margin-left: 8px; }
+.nw-gates { display: flex; flex-wrap: wrap; gap: 8px; }
+.nw-gate { padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); font: 12px ui-monospace, monospace; }
+.nw-gate.open { border-color: #34d399; color: #34d399; } .nw-gate.closed { opacity: .7; }
+.nw-sec { margin-top: 14px; }
+.nw-row { display: grid; grid-template-columns: minmax(180px, 280px) 1fr; gap: 6px 16px; align-items: center; padding: 8px 0; border-top: 1px solid rgba(255,255,255,.06); }
+.nw-row:first-of-type { border-top: 0; }
+.nw-row label { font-weight: 600; } .nw-row .nw-help { grid-column: 2; font-size: 12px; opacity: .6; }
+.nw-row input[type=text], .nw-row input[type=number], .nw-row input[type=password], .nw-row select, .nw-row textarea { width: 100%; max-width: 520px; box-sizing: border-box; }
+.nw-row textarea { min-height: 54px; font: 12px ui-monospace, monospace; }
+.nw-row.fixed { opacity: .6; }
+.nw-msg:empty { display: none; } .nw-msg { margin: 8px 0; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.12); }
+.nw-msg.bad { border-color: #f87171; color: #f87171; } .nw-msg.ok { border-color: #34d399; color: #34d399; }
+@media (max-width: 640px) { .nw-row { grid-template-columns: 1fr; } .nw-row .nw-help { grid-column: 1; } }
