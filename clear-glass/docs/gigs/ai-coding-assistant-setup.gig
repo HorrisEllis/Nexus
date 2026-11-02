@@ -4,6 +4,17 @@ platform: fiverr
 title: I will set up Claude Code or AI coding tools to build your project
 category: Programming & Tech
 subcategory: AI Development
+serviceType: AI Technology Consulting          # SELECT A SERVICE TYPE on the page; the fill matches by label (§1.2 says what it can't)
+metadata:
+  "AI ENGINE":
+    - Claude
+    - ChatGPT
+  "DELIVERY TYPE":
+    - Application code
+  "PROGRAMMING LANGUAGE":
+    - Python
+    - JavaScript
+    - TypeScript
 tags:
   - claude code
   - ai coding

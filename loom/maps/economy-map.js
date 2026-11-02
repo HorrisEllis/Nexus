@@ -71,6 +71,7 @@ const CONSUMERS = [
   [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.161 autofill.gig -> /cli/autofill/gig/autofill (_gigAutofill)'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig.js'), '_gigAutofill/_gigFill/_gigDraft: write and fill a Fiverr gig'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/store.js'), '0.60.161 GA1a getLastGig/setLastGig: the panel and the co-pilot fill the same gig'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/portfolio.js'), '0.60.333 PF _portfolioStore + portfolio:import/export/list + /cli/portfolio: the .portfolio node door'],
   // §DD1 0.60.298 — the dropdown/checkbox option matcher, used by both fill paths (reuse)
   [I('clear-glass/src/dom/archaeology.js'), I('clear-glass/src/dom/select-match.js'), '0.60.298 DD1 bestOption/boolOf SOURCE interpolated into DOM_OBSERVER_SCRIPT mutate: a <select> selects the matching option, a checkbox/radio sets checked'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/dom/select-match.js'), '0.60.298 DD1 _autofillFillOne: bestOption resolves the profile value to the real option before driver.select'],

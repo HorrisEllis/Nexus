@@ -4,6 +4,16 @@ platform: fiverr
 title: I will find the root cause of your JavaScript or Node.js bug and fix it
 category: Programming & Tech
 subcategory: Debugging
+serviceType: Bug Fixes          # SELECT A SERVICE TYPE on the page; the fill matches by label (§1.2 says what it can't)
+metadata:
+  "PROGRAMMING LANGUAGE":
+    - JavaScript
+    - TypeScript
+    - Python
+  "EXPERTISE":
+    - Debugging
+    - Testing procedures
+    - Performance
 tags:
   - bug fix
   - node.js

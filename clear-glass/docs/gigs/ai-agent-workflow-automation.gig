@@ -4,6 +4,17 @@ platform: fiverr
 title: I will build an AI agent workflow that automates your repetitive work
 category: Programming & Tech
 subcategory: AI Development
+serviceType: AI Agents          # SELECT A SERVICE TYPE on the page; the fill matches by label (§1.2 says what it can't)
+metadata:
+  "AI ENGINE":
+    - Claude
+    - ChatGPT
+    - Gemini
+  "DELIVERY TYPE":
+    - Application code
+  "PROGRAMMING LANGUAGE":
+    - Python
+    - JavaScript
 tags:
   - ai agent
   - automation

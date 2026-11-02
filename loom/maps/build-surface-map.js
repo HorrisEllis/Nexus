@@ -31,6 +31,8 @@ const FILES = [
     I('clear-glass/src/ipc/bridge.js'),                        // IPC autofill:suggest / autofill:fillOne
     I('clear-glass/src/preload/webview-bridge.js'),            // the page's autofill:rects / autofill:stale (ipc-message)
   ]],
+  // §MT1 0.60.335 — the macro recording/playing toast (window.CGMacroToast); browser.js drives it from the record hotkey
+  ['clear-glass/renderer/macro-toast.js', I('clear-glass/renderer/macro-toast.js'), [I('clear-glass/renderer/browser.js')]],
   ['clear-glass/src/autofill/suggest.js', I('clear-glass/src/autofill/suggest.js'), []],
   ['clear-glass/src/page/keyboard-mode.js', I('clear-glass/src/page/keyboard-mode.js'), [   // 0.60.273 FG1 — the Tab switch per site
     I('clear-glass/src/page/state-diff.js'),                   // require — snapshotScript, diffState, _part injected into the page

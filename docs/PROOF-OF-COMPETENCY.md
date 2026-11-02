@@ -1,5 +1,27 @@
 # Proof of competency: James Brooks
 
+> **James, 2026-11-01 — who he is as a thinker, in his own words:** "i am a architectural thinker. as you can probably
+> tell from nexus and emerge" · "emergent end-state first thinker" · "emergent end-state first systems thinking".
+>
+> This is his positioning, landed over three refinements into the truest form. It is not a claim — it is what the code
+> already does, and a stranger can check each half:
+> - **End-state first.** The pipeline starts from the finished thing. The questions a buyer answers
+>   (`clear-glass/src/autofill/gig.js` `END_STATE_QUESTIONS`) are literally "what the finished result must do or be — the
+>   end state, in the buyer's words." A spec is written first as the contract, "so it can be rebuilt if lost"
+>   (docs/CLAUDE.md, 2026-10-20). His bidirectional chaining reasons backward from the end state, not only forward — it
+>   refuses a change forward-only planning would have turned into a contract (proof entry IF-05).
+> - **Emergent.** He defines primitives and lets the result compose from them, rather than hand-building the path:
+>   Emerge (his own language/compiler, CIE-EG) so systems grow in any language from a schema (decision NC0, the neutral
+>   core); the gates as a programmable surface ("each gate can be a step … use the gates as the surface"); crystallization
+>   memory. Bottom-up emergence, disciplined by the end-state contract at the top.
+> - **Systems.** He designs the *system* those happen inside, and makes its laws enforce themselves: sovereignty
+>   (§5.9/§5.15) so one system going down breaks no other, with a boundary ratchet (`lib/system-boundary.js`) that catches
+>   a cross-system edge; a dependency graph the build *refuses* to proceed without (DG1/DG2/DG3, 409 NO_GRAPH); Loom, a
+>   self-model of the system's own connections so it can reason over itself.
+>
+> **The whole, in one line: fix the finished state as law, then let the system emerge the path to it from proven
+> primitives.** The spec/architecture gig he sells is this skill turned into a product — the proof is NEXUS itself.
+
 James (2026-10-13): "focus on what establishes credibility, and skills, portfolio, and proof of compentancy. money is
 needed, badly." · "log anything that helps establish credibility, value and proof of compentancy with quotes and
 explicit context."

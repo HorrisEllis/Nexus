@@ -91,6 +91,26 @@ phases:
     does: pricingBlocks(gig, { rows }) from F5's controls; no Save or Publish block
     proof: a sample gig's blocks, each gate valid by FP3's validateGate, none publishing
 
+  FP6_metadata_dropdowns_multi_select:
+    layer: capability
+    status: BUILT
+    depends_on: [FP2_which_option_is_meant]
+    origin: 'James, 2026-11-01: "do it, I need it fiverr ready, take screenshots if you have to. use idearium as a map if you need, or in the docs the atlas. I need this working for a fact."'
+    files: [clear-glass/src/driver/index.js, clear-glass/src/autofill/gig-fields.js, clear-glass/src/ipc/bridge.js, tests/modules/test-gig-metadata-dropdown-glass.test.js]
+    spec: clear-glass/spec/flow-cores.spec
+    blocks: [MOD-FC-OPTION]
+    does: >
+      _gigMetadata fills a metadata field whose control is a DROPDOWN (his AI ENGINE multi-select "Choose…"), not only the radio/checkbox
+      panels GT6 reads. Reuse (§8.6): the driver's choose does the open/match/pick/human-pace; gig-fields.metaDropdownScript finds and marks
+      the metadata dropdowns, metaChosenScript is the read-back. choose gains ONE optional param, confirmScript — a multi-select shows a pick
+      as a chip while the trigger keeps saying "Choose…" and the open menu is full of the wanted words, so the honest gate is the field's
+      chosen state, not the trigger text; an already-chosen value is left alone so a re-fill never toggles it off.
+    decisions:
+      - by_the_axioms: "choose extended in place, not forked (§8.6 reuse before build); confirmScript is general (any chip/tag multi-select), not metadata-only"
+      - by_the_axioms: "gated on the chosen chips, read back on the page (§0.1 evidence over memory, §1.2 a miss is said with the page's own list)"
+      - his: "verified in Clear Glass's own engine on a live page, never Playwright (AXIOMS §4.1)"
+    proof: tests/modules/test-gig-metadata-dropdown-glass.test.js 5/5 in Clear Glass; screenshot _artifacts/fp6-ai-engine-dropdown.png (three chips, the picks dimmed in the menu)
+
 ## ADDENDUM 2026-10-28 (0.60.221) — what was built, and the cores that were not
 James, 2026-10-28: "stop. just get fiverr working." Said while the five cores were being written: the work narrowed to what makes Fiverr work.
 - FP1 BUILT: src/tabs/open-decision.js, used by the popup handler (TC3 with it). FP2 BUILT: src/page/option-match.js, used by ClearDriver choose.
