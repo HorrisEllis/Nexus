@@ -79,6 +79,7 @@ const FILES = [
   ['orchestrator/cos-ui-door.js', I('orchestrator/cos-ui-door.js'), []],   // 0.60.352 MG34 — the COS channel's door: probes :7797/:7799, starts only what is down (spawns by path, never requires COS)
   ['lib/ui/tv-shell/channels/cos/cos.js', I('lib/ui/tv-shell/channels/cos/cos.js'), []],   // 0.60.352 MG34 — the COS channel page (a browser script; reads the orchestrator by route)
   ['lib/ui/tv-shell/channels/tension/tension.js', I('lib/ui/tv-shell/channels/tension/tension.js'), []],   // 0.60.351 CI8 — the TENSION channel (a browser script; reads the orchestrator by route)
+  ['clear-glass/src/main/idle-tray.js', I('clear-glass/src/main/idle-tray.js'), []],   // 0.60.366 CA1 — Clear Glass to the tray after his period with no input (required by src/main/index.js)
   ['intelligence/friction.js', I('intelligence/friction.js'), []],   // 0.60.350 CI7 — the tension formula, Intelligence's (pure; its inputs come by route in routes.js)   // 0.60.284 PL1 — WORKFLOWS_DIR; byType, validateStep
   ['clear-glass/renderer/settings/sections/pipelines.js', I('clear-glass/renderer/settings/sections/pipelines.js'), [I('lib/automation/routes.js')]],   // 0.60.284 PL4 — wire /automation/pipelines*
   ['clear-glass/src/page/state-diff.js', I('clear-glass/src/page/state-diff.js'), []],      // 0.60.221 FP4 — pure; first used 0.60.273

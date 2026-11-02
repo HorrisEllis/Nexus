@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CA2_remote_reach:b4fc3d70718ca5e5
+type: graph
+id: phase:CA2_remote_reach:b4fc3d70718ca5e5
+context: dependency graph of phase CA2_remote_reach
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1793578979881
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793578979881
+lastSeenAt: 1793578979881
+fingerprint: null
+payload:
+  for: CA2_remote_reach
+  kind: phase
+  repo: null
+  hash: b4fc3d70718ca5e5
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA_D2_remote_reach
+    dependents: []
+    upstream:
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA_D2_remote_reach
+    downstream: []
+    blockedBy:
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA_D2_remote_reach
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by CA_D2_remote_reach
+      - 'depends on (1): CA_D2_remote_reach'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-02-cos-the-application-phasemap.spec::CA_D2_remote_reach
+        kind: declared

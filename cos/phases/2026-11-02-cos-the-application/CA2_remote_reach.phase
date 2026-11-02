@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-the-application-phasemap.spec::CA2_remote_reach
+type: phase
+id: docs_2026-11-02-cos-the-application-phasemap.spec::CA2_remote_reach
+context: pipeline phase CA2_remote_reach of docs/2026-11-02-cos-the-application-phasemap.spec
+intent: null
+summary: CA2_remote_reach (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793578979881
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793578979881
+lastSeenAt: 1793578979881
+fingerprint: null
+payload:
+  id: CA2_remote_reach
+  map: docs/2026-11-02-cos-the-application-phasemap.spec
+  repo: null
+  layer: null
+  status: '"OPEN — waits on his choice in CA_D2"'
+  files:
+    - cos/services/anonymous
+    - cos/manager
+    - cos/ui
+  depends_on:
+    - CA_D2_remote_reach
+  blocks: []
+  spec: '"to be written once he chooses (CA_D2)"'
+  graph: b4fc3d70718ca5e5
