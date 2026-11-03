@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-disk-phasemap.spec::DK4_boot_from_a_disk
+type: phase
+id: docs_2026-11-02-cos-disk-phasemap.spec::DK4_boot_from_a_disk
+context: pipeline phase DK4_boot_from_a_disk of docs/2026-11-02-cos-disk-phasemap.spec
+intent: null
+summary: DK4_boot_from_a_disk (integration) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793705167317
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793705167317
+lastSeenAt: 1793705167317
+fingerprint: null
+payload:
+  id: DK4_boot_from_a_disk
+  map: docs/2026-11-02-cos-disk-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cos/disk/disk.js
+    - cos/manager/supervisor.js
+    - cos/manager/add-system.js
+  depends_on:
+    - DK2_disks_in_cos
+    - CS6_rebuild_from_the_spec
+  blocks: []
+  spec: null
+  graph: e7a453e84eddd982

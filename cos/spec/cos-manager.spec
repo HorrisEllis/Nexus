@@ -1420,6 +1420,20 @@ spec:
       error_paths: ["a bad value → 400 naming the range; an agent → 403", "nothing to roll back → 409 with the kernel's reason"]
       acceptance: ["test-cos-console CC-10, CC-11"]
 
+    - id: MOD-COS-DISK
+      name: disk
+      uuid: nexus-cos-disk-v1-0000-2026-1103-001
+      path: cos/disk/disk.js
+      phase: DK1_pack_inspect_verify_unpack
+      description: "A compartment's disk: its spec and declaration as metadata (disk.json, first), its code, its data only when asked, in one gzip(tar) file in COS's data; the kernel named as its base, not copied."
+      deps: [{ name: tar }, { name: supervisor }]
+      schema_refs: [SupervisedSystem]
+      exports: ["createDisks({ root, dir }) → { pack(system, { withState, by }), inspect(file), verify(file), unpack(file, out, { layers }), list({ system }), coverage(system), describe(system), dir }", "routes GET /api/cos/disks, GET /api/cos/disks/:file[/verify], GET|POST /api/cos/systems/:name/disk; CLI `disk`, `disks`; row cos.disk; the cockpit's Disk tab"]
+      gate_pipeline: ["GATE-DK-001: a person or a rule makes a disk; an agent is refused", "GATE-DK-002: verify re-hashes every entry", "GATE-DK-003: unpack never writes outside its folder", "GATE-DK-004: data only when asked"]
+      behavioral_contracts: ["the same content makes the same disk (its name carries the content hash)", "a disk made is on COS's ledger and recorded in Versionium"]
+      error_paths: ["no such system or folder → 404", "not a disk (no disk.json, another schema) → 422", "an entry leaving its folder → 422, nothing written outside"]
+      acceptance: ["test-cos-disk DK-01..DK-05"]
+
   events:
     cos:
       - "cos.system.state { name, state, pid, by }"
@@ -1527,3 +1541,8 @@ spec:
 # James, 2026-11-02: "A gear, with update settings and Build that update section in cos. With a gear". MOD-MG-UI-UPDATES is new; MOD-MG-UI-SHELL
 # gains the gear (#/updates/settings) and clears its frames with its stage on (re)start (a page opened while the contract loaded never showed).
 # cos/manager/updates.js gains settings, setSettings, history and rollback (update-run.js rollback). core.js's gear icon is a cog.
+
+# ── ADDENDUM 2026-11-03 (0.60.381, DK1–DK3) — a compartment's disk ──
+# James, 2026-11-02: "Use the spec as metadata then have the actual file be a compressed or virtual disk or envirement." MOD-COS-DISK is new
+# (cos/disk/disk.js); cos/testenv/tar.js gains readTar beside its writer; the manager serves the disks and writes a ledger line for each made;
+# the cockpit gains a Disk tab; the shell's Proposals badge no longer reads 0. Map: docs/2026-11-02-cos-disk-phasemap.spec.

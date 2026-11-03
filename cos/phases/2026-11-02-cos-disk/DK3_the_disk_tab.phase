@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-disk-phasemap.spec::DK3_the_disk_tab
+type: phase
+id: docs_2026-11-02-cos-disk-phasemap.spec::DK3_the_disk_tab
+context: pipeline phase DK3_the_disk_tab of docs/2026-11-02-cos-disk-phasemap.spec
+intent: null
+summary: DK3_the_disk_tab (ui) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793705189876
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793705189876
+lastSeenAt: 1793705189876
+fingerprint: null
+payload:
+  id: DK3_the_disk_tab
+  map: docs/2026-11-02-cos-disk-phasemap.spec
+  repo: null
+  layer: ui
+  status: '"DONE 0.60.381 — test-cos-disk DK-05 (Clear Glass)"'
+  files:
+    - cos/ui/cockpit/page.js
+    - cos/manager/contract.json
+    - tests/modules/test-cos-disk.test.js
+  depends_on:
+    - DK2_disks_in_cos
+  blocks:
+    - MOD-MG-UI-SHELL
+  spec: cos/spec/cos-manager.spec
+  graph: b423dcfe0ae59765

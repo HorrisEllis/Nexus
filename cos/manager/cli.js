@@ -9,7 +9,7 @@
  * from outside). The verbs are the cos.* rows' verbs, so a person and an agent say the same thing. An agent's line is refused for an act
  * (it proposes: POST /api/cos/proposals); reading is anyone's.
  *
- *   createCli({ sup, resources, config, notices, proposals, addSystem, usage }) → { run(line, { by }) → Promise<{ ok, lines[] }>, TABLE }
+ *   createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks }) → { run(line, { by }) → Promise<{ ok, lines[] }>, TABLE }
  */
 
 const TABLE = [
@@ -25,6 +25,8 @@ const TABLE = [
   ['proposals', 'proposals [all]', 'held acts waiting for you'],
   ['take', 'take <proposal-id>', 'take a held act'], ['drop', 'drop <proposal-id> [why]', 'drop it'],
   ['add', 'add <name> <folder> [cmd=node] [args=server.js] [port=<n>] [health=/health]', 'add a system: a proposal, taken by you'],
+  ['disk', 'disk <system> [make] [state] | disk verify <file>', 'a system\'s disks (its spec as metadata, its files in one compressed file); make one, with its data if you say state; verify one'],
+  ['disks', 'disks', 'every disk COS holds'],
 ];
 
 function split(line) {
@@ -39,12 +41,12 @@ function split(line) {
 }
 const pad = (s, n) => String(s ?? '—').padEnd(n);
 
-function createCli({ sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null } = {}) {
+function createCli({ sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null } = {}) {
   async function run(line, { by = 'person' } = {}) {
     const [verb, ...a] = split(line); const L = [];
     if (!verb) return { ok: true, lines: [] };
-    const acts = ['start', 'stop', 'restart', 'boot', 'take', 'drop', 'add'];
-    if (/^agent:/.test(String(by)) && (acts.includes(verb) || (verb === 'config' && a.length > 1) || (verb === 'notices' && a[0] === 'read')))
+    const acts = ['start', 'stop', 'restart', 'boot', 'take', 'drop', 'add'];   // and `disk <system> make` (below)
+    if (/^agent:/.test(String(by)) && (acts.includes(verb) || (verb === 'disk' && a[1] === 'make') || (verb === 'config' && a.length > 1) || (verb === 'notices' && a[0] === 'read')))
       return { ok: false, lines: [`an agent proposes; ${verb} is a person's act (POST /api/cos/proposals)`] };
     const need = (n, usage) => { if (a.length < n) throw Object.assign(new Error(`usage: ${usage}`), { code: 400 }); };
     const row = TABLE.find(r => r[0] === verb);
@@ -77,6 +79,15 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
             for (const [k, s] of rows) L.push(`  ${pad(k, 20)}${pad(s.value === null ? '—' : s.unit === 'size' && typeof s.value === 'number' ? `${s.value} MB` : s.unit === 'cpu' && s.value != null ? `${s.value}%` : typeof s.value === 'object' ? JSON.stringify(s.value) : s.value, 18)}${pad(s.from, 11)}${s.how.state || ''}${s.how.when ? ` · ${s.how.when}` : ''}`);
           }
           break;
+        }
+        case 'disks': { if (!disks) throw new Error('no disks in this manager'); const ds = disks.list(); if (!ds.length) L.push(`no disks yet (${disks.dir})`); for (const d of ds) L.push(`${pad(d.file, 52)}${pad(Math.round(d.bytes / 1024) + ' KB', 10)}${pad(d.files + ' files', 12)}${d.created.slice(0, 16).replace('T', ' ')} · ${d.by}`); break; }
+        case 'disk': {
+          if (!disks) throw new Error('no disks in this manager'); need(1, row[1]);
+          if (a[0] === 'verify') { need(2, row[1]); const v = disks.verify(a[1]); L.push(v.ok ? `${a[1]}: every one of ${v.files} files matches its hash` : `${a[1]}: ${v.changed.length} changed, ${v.missing.length} missing, ${v.extra.length} extra — ${[...v.changed, ...v.missing, ...v.extra].slice(0, 8).join(', ')}`); break; }
+          if (a[1] === 'make') { const r = await disks.pack(a[0], { withState: a[2] === 'state', by }); sup.note('disk', `${r.file}: ${r.files} files${r.withState ? ', with its data' : ''}`, { by, system: a[0] }); L.push(`${r.file}: ${r.files} files, ${Math.round(r.bytes / 1024)} KB${r.withState ? ', with its data' : ''} · metadata ${r.metadata.declaredBy || 'none'}, ${r.metadata.spec} spec file(s) · its spec names ${r.metadata.coverage.pct}% of its code`); break; }
+          const ds = disks.list({ system: a[0] }), c = disks.coverage(a[0]);
+          L.push(`${a[0]}: its spec names ${c.namedBySpec} of ${c.codeFiles} code files (${c.pct}%) — how much of its disk the metadata alone could rebuild`);
+          if (!ds.length) L.push(`no disk yet: disk ${a[0]} make`); for (const d of ds) L.push(`  ${pad(d.file, 52)}${pad(Math.round(d.bytes / 1024) + ' KB', 10)}${d.files} files${d.withState ? ', with data' : ''}`); break;
         }
         case 'caps': { if (!resources) throw new Error('no resources in this manager'); need(1, row[1]); const c = resources.caps(a[0]); for (const k of ['heapMB', 'rssLimitMB', 'onOver', 'priority']) L.push(`${pad(k, 12)}${pad(c[k], 10)}${pad(c.layers[k], 10)}`); for (const [k, x] of Object.entries(c.applied)) L.push(`${pad(k, 12)}${pad(x.state, 14)}${x.why || ''}`); break; }
         case 'usage': { if (!usage) throw new Error('no usage reader'); const u = await usage.readAsync(sup.list(), sup.policy()); L.push(`host: ${u.host ? `${u.host.freePct != null ? u.host.freePct + '% memory free' : ''}` : ''}`); for (const [n, x] of Object.entries(u.systems || {})) L.push(`${pad(n, 22)}${pad(x.rssMB != null ? x.rssMB + ' MB' : '—', 12)}${x.cpuPct != null ? x.cpuPct + '% cpu' : ''}`); break; }

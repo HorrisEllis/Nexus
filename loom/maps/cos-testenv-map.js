@@ -34,7 +34,7 @@ const FILES = [
   ['cos/manager/walls.js',      I('cos/manager/walls.js'),      []],   // CP1a: reads the supervisor it is given (declarations, ledger); no require
   ['scripts/cos-walls.js',      I('scripts/cos-walls.js'),      [I('loom/templates/cos-compartment.js'), I('lib/system-boundary.js')]],   // CP1a: writes each system's wall into its own compartment.json from the census
   ['cos/manager/autopilot-door.js', I('cos/manager/autopilot-door.js'), [I('lib/test-sandbox.js'), I('lib/bus-subscriptions.js'), I('cortex/memory/jaa-db.js'), I('intelligence/cfr/field.js'), I('lib/ledger-sse.js'), I('lib/error-log.js')]],   // 0.60.329 MG16; cortex/intelligence: the legacy /tables /files reads
-  ['cos/manager/server.js',     I('cos/manager/server.js'),     [I('cos/manager/supervisor.js'), I('lib/raid-port.js'), I('cos/manager/autopilot-door.js'), I('cos/manager/proposals.js'), I('cos/manager/notices.js'), I('cos/manager/system-config.js'), I('cos/manager/add-system.js'), I('cos/manager/cli.js'), I('cos/manager/usage.js'), I('cos/manager/contract.json'), I('cos/manager/walls.js'), I('cos/manager/resources.js'), I('cos/manager/updates.js')]],   // requires; the contract read per request (MG18); walls (CP1a)
+  ['cos/manager/server.js',     I('cos/manager/server.js'),     [I('cos/manager/supervisor.js'), I('lib/raid-port.js'), I('cos/manager/autopilot-door.js'), I('cos/manager/proposals.js'), I('cos/manager/notices.js'), I('cos/manager/system-config.js'), I('cos/manager/add-system.js'), I('cos/manager/cli.js'), I('cos/disk/disk.js'), I('cos/manager/usage.js'), I('cos/manager/contract.json'), I('cos/manager/walls.js'), I('cos/manager/resources.js'), I('cos/manager/updates.js')]],   // requires; the contract read per request (MG18); walls (CP1a)
   // 0.60.337 MG18/MG29 (MG_D16) — COS's UI: the cockpit server forwards to the manager over HTTP by the contract's allowlist; each page loads
   // core by <script>, talks to the shell only by postMessage (the bus), and to the manager only through the cockpit server's same-origin routes
   ['cos/manager/proposals.js',  I('cos/manager/proposals.js'),  []],
@@ -43,6 +43,7 @@ const FILES = [
   ['cos/manager/notices.js',      I('cos/manager/notices.js'),      []],   // SC1 0.60.379: the bell; fed by server.js from the ledger and the update tool
   ['cos/manager/system-config.js', I('cos/manager/system-config.js'), [I('lib/versionium-record.js')]],   // SC2: given the supervisor and resources.js; its adjust() is the supervisor's hook
   ['cos/manager/add-system.js',   I('cos/manager/add-system.js'),   [I('lib/versionium-record.js')]],   // SC4: registers add-system on proposals.js; sup.declare
+  ['cos/disk/disk.js',           I('cos/disk/disk.js'),           [I('cos/testenv/tar.js'), I('lib/versionium-record.js')]],   // DK1 0.60.381: a compartment's disk (spec as metadata, files compressed)
   ['cos/manager/cli.js',          I('cos/manager/cli.js'),          []],   // SC3: COS's own table over what server.js gives it (sup, resources, config, notices, proposals, addSystem, usage)
   ['cos/manager/usage.js',      I('cos/manager/usage.js'),      []],
   ['cos/manager/contract.json', I('cos/manager/contract.json'), []],
@@ -53,6 +54,7 @@ const FILES = [
   ['cos/ui/shell/page.js',      I('cos/ui/shell/page.js'),      [I('cos/ui/core/core.js'), I('cos/ui/shell/bus.js'), I('cos/ui/serve.js')]],   // the event stream; frames by postMessage
   ['cos/ui/updates/page.js',     I('cos/ui/updates/page.js'),     [I('cos/ui/core/core.js'), I('cos/ui/shell/page.js'), I('cos/manager/updates.js')]],   // SC7 0.60.379: Updates and the gear's settings (through COS's routes)
   ['cos/ui/shell/console.js',   I('cos/ui/shell/console.js'),   [I('cos/ui/core/core.js'), I('cos/ui/shell/page.js'), I('lib/ui/update-popup/update-popup.js')]],   // SC5 0.60.379: the bell, the command line, Add system
+  ['cos/ui/cockpit/sections/disk/section.js', I('cos/ui/cockpit/sections/disk/section.js'), [I('cos/ui/core/section.js'), I('cos/disk/disk.js')]],   // DK3 0.60.381: a system's disk (through its routes)
   ['cos/ui/cockpit/sections/config/section.js', I('cos/ui/cockpit/sections/config/section.js'), [I('cos/ui/core/section.js'), I('cos/manager/system-config.js')]],   // SC5: a system's configuration (through its routes)
   ...['overview', 'ledger', 'proposals', 'automation', 'planned', 'cockpit'].map(p => [`cos/ui/${p}/page.js`, I(`cos/ui/${p}/page.js`), [I('cos/ui/core/core.js'), I('cos/ui/shell/page.js'), ...(p === 'cockpit' ? [I('cos/ui/core/section.js')] : [])]]),
   ...['overview', 'logs', 'events', 'api', 'data', 'files', 'tests', 'snapshot', 'resources'].map(s => [`cos/ui/cockpit/sections/${s}/section.js`, I(`cos/ui/cockpit/sections/${s}/section.js`), [I('cos/ui/core/section.js'), I('cos/ui/cockpit/page.js')]]),

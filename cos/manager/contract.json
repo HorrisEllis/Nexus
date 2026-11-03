@@ -209,6 +209,32 @@
       "path": "/api/cos/update/rollback",
       "in": "{ by }",
       "out": "the last update rolled back (in its own process), then each changed system restarted; refused when the running commit did not come from an update (SC7)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/disks",
+      "out": "{ dir, disks[] { file, system, created, by, bytes, sha256, files, withState, nexus, contentHash } } (DK2)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/disks/:file",
+      "out": "{ disk } — its metadata (disk.json without the file list): system, declaration, spec, coverage, base, layers (DK2)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/disks/:file/verify",
+      "out": "{ verify { ok, files, changed[], missing[], extra[] } } — every entry re-hashed against its metadata (DK2)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/systems/:name/disk",
+      "out": "{ metadata { declaredBy, state }, coverage { codeFiles, namedBySpec, pct }, disks[] } (DK2)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/systems/:name/disk",
+      "in": "{ withState?, by }",
+      "out": "the disk made: { file, bytes, files, layers, metadata }; 403 for an agent (DK2)"
     }
   ],
   "door": {
@@ -405,7 +431,10 @@
         "PATCH /api/cos/systems/:name/caps",
         "GET /api/cos/systems/:name/config",
         "PATCH /api/cos/systems/:name/config",
-        "POST /api/cos/systems/:name/config/clear"
+        "POST /api/cos/systems/:name/config/clear",
+        "GET /api/cos/systems/:name/disk",
+        "POST /api/cos/systems/:name/disk",
+        "GET /api/cos/disks/:file/verify"
       ],
       "listens": [
         "cos.system.state",
@@ -426,7 +455,8 @@
         "tests",
         "snapshot",
         "resources",
-        "config"
+        "config",
+        "disk"
       ]
     },
     {

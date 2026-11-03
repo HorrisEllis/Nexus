@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-disk-phasemap.spec::DK1_pack_inspect_verify_unpack
+type: phase
+id: docs_2026-11-02-cos-disk-phasemap.spec::DK1_pack_inspect_verify_unpack
+context: pipeline phase DK1_pack_inspect_verify_unpack of docs/2026-11-02-cos-disk-phasemap.spec
+intent: null
+summary: DK1_pack_inspect_verify_unpack (backend) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793705189872
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793705189872
+lastSeenAt: 1793705189872
+fingerprint: null
+payload:
+  id: DK1_pack_inspect_verify_unpack
+  map: docs/2026-11-02-cos-disk-phasemap.spec
+  repo: null
+  layer: backend
+  status: '"DONE 0.60.381 — test-cos-disk DK-01, DK-02, DK-04"'
+  files:
+    - cos/disk/disk.js
+    - cos/testenv/tar.js
+    - tests/modules/test-cos-disk.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - DK_D0_spec_is_metadata_the_disk_holds_the_content
+    - DK_D1_the_disk_file
+    - DK_D2_where_disks_live
+  blocks:
+    - MOD-COS-DISK
+  spec: cos/spec/cos-manager.spec
+  graph: 5fea7cf189e6a2c4

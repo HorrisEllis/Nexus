@@ -142,6 +142,6 @@ html[data-cos-frame="none"] .bell-panel { right: calc(var(--gap) + 120px); }
 .add-form label { display: grid; gap: 5px; font: 500 10.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--nx-muted); }
 .add-form input { text-transform: none; letter-spacing: 0; } .add-form .two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); }
 .add-err { color: var(--nx-err); font: 400 12.5px/1.5 var(--mono); }
-.bell-panel[hidden], .console[hidden], .add-err[hidden], .bell .badge[hidden] { display: none; }   /* found in the Clear Glass shots: display:flex outranked [hidden] */
+.bell-panel[hidden], .console[hidden], .add-err[hidden], .bell .badge[hidden], .nav a .badge[hidden] { display: none; }   /* found in the Clear Glass shots: display:flex outranked [hidden] */
 /* SC5 — the bell and the command line take room in the top bar: the title keeps its own, the manager's pill gives it (full text in its title) */
 .crumb { min-width: 96px; } .manager { min-width: 0; flex: 0 1 auto; overflow: hidden; } #manager-text { overflow: hidden; text-overflow: ellipsis; } .top-actions { flex: none; }

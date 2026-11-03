@@ -34,7 +34,10 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
   const config = require('./system-config.js').createSystemConfig(sup, { resources });
   sup.setHooks({ adjust: config.adjust });
   const addSystem = require('./add-system.js').createAddSystem(sup, proposals, { root });
-  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage });
+  // DK2 0.60.381 (docs/2026-11-02-cos-disk-phasemap.spec) — James, 2026-11-02: "Use the spec as metadata then have the actual file be a compressed or
+  // virtual disk or envirement." Each system's disk: its spec as metadata, its files in one compressed file, in COS's own data
+  const disks = require('../disk/disk.js').createDisks({ root });
+  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks });
   sup.on('ledger', (entry) => { try { notices.fromLedger(entry); } catch (_) {} });
   const checkNotice = () => { try { notices.fromNotice(require('../../lib/nexus-update.js').notice({ root })); } catch (_) {} };
   const noticeTick = setInterval(checkNotice, 10 * 60 * 1000); if (noticeTick.unref) noticeTick.unref(); setTimeout(checkNotice, 2000).unref();
@@ -106,6 +109,16 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
           if (m === 'GET' && !cf[2]) return send(res, 200, config.get(name));
           if (m === 'PATCH' && !cf[2]) return send(res, 200, config.set(name, body.patch || {}, { by: body.by }));
           if (m === 'POST' && cf[2]) return send(res, 200, config.clear(name, body.keys || [], { by: body.by }));
+        } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
+      // DK2 — the disks
+      if (m === 'GET' && p === '/api/cos/disks') return send(res, 200, { ok: true, dir: disks.dir, disks: disks.list() });
+      const dkf = /^\/api\/cos\/disks\/([^/]+?)(\/verify)?$/.exec(p);
+      if (dkf && m === 'GET') { try { const f = decodeURIComponent(dkf[1]); if (dkf[2]) return send(res, 200, { ok: true, verify: disks.verify(f) }); const i = disks.inspect(f); delete i.files; return send(res, 200, { ok: true, disk: i }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
+      const dks = /^\/api\/cos\/systems\/([^/]+)\/disk$/.exec(p);
+      if (dks) { const name = decodeURIComponent(dks[1]);
+        try {
+          if (m === 'GET') { const D = disks.describe(name); return send(res, 200, { ok: true, system: name, metadata: { declaredBy: D.declaredBy, state: D.state }, coverage: disks.coverage(name), disks: disks.list({ system: name }) }); }
+          if (m === 'POST') { const r = await disks.pack(name, { withState: body.withState === true, by: body.by }); sup.note('disk', `${r.file}: ${r.files} files, ${Math.round(r.bytes / 1024)} KB${r.withState ? ', with its data' : ''}`, { by: body.by, system: name }); return send(res, 200, r); }   // §9.2: the act on the ledger
         } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
       // SC4 — add a system: a proposal; his own is taken at once
       if (m === 'POST' && p === '/api/cos/systems') { try { return send(res, 200, { ok: true, ...addSystem.propose(body) }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
