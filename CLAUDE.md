@@ -8,6 +8,9 @@ Atlas in Idearium (`docs/atlases/<system>-atlas.md`) and each system's own spec 
 guess if you do not know. Ambiguity must be reconciled by me. Use the Atlas in Idearium. The specs in each spec folder. Of each system."
 **Each system is sovereign: its own data, modules and commands, all inside its own folder. It reaches another system only through its API routes
 and the CLI server, so the other can be swapped. `lib/` is not a directory for what a system uses.** (docs/CLAUDE.md, addendum 2026-11-03.)
+**Each system's component registry IS its spine: its interaction contract and event bus, with handshake verification, the only way in (API routes
+and the CLI; the UI floats on top). server.js is its process: what COS manages, hosting the spine.** James, 2026-11-03: "No component registry is the
+spine. Why is this getting confused?" (and his, 2026-10-17, in genesis.spec: "basically the spine of each system").
 **The component registry is per system. The system registry connects the component registries; COS and the Orchestrator use it to orchestrate.**
 **Every system's component registry is its own: per system, sovereign, never central, and Loom is NOT it (AXIOMS §5.16).** James, 2026-11-03:
 "And enforce that. I’m sick of you confusing that. It’s fucking sovereign. Do not  make this mistake again."

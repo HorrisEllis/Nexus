@@ -92,9 +92,21 @@ decisions_in_planning:
   PL_D5_each_system_reflects_genesis:
     status: "DECIDED 2026-11-03 (his)"
     james: '"I’m overwhelmed. Yes. Each system needs to reflect genesis.spec."'
-    reading: "\"Yes\" read as yes to server.js being the spine (the question just asked) — the coder's reading; genesis.spec 1.5.0 already says the origin is server.js (config → server.js → the registry → components → UI), so the reading agrees with it."
+    reading: "WITHDRAWN 2026-11-03. The coder read \"Yes\" as yes to server.js being the spine — a guess, against his rule of the same day (\"do not guess if you do not know. Ambiguity must be reconciled by me\"). His correction is PL_D6."
     chosen: >-
       idearium/spec-engine/templates/genesis.spec (1.5.0; its proposed 1.6.0 mapped 2026-10-31) is the shape every system takes: server.js its
       one process and origin, its own component registry as its drawbridge (the only way in, by API routes and the CLI), its own nodes and
       data, its boundary. The open questions above are answered by genesis where it already answers them; only what genesis leaves open
       comes back to him, one at a time.
+  PL_D6_the_component_registry_is_the_spine:
+    status: "DECIDED 2026-11-03 (his; corrects the coder's guess in PL_D5 and answers PL_D3's open question)"
+    james: '"No component registry is the spine. Why is this getting confused?"'
+    context: >-
+      Already his on 2026-10-17, in genesis.spec's own header: "i want to eventually have the component registry for each system be the
+      interaction contract and event bus, with handshake verification. basically the spine of each system ... the drawbridge for each
+      compartment for each system, the only way to interact between systems. using the api routes, and cli interface. ui floats ontop".
+      The coder confused it by guessing at a one-word answer instead of asking.
+    chosen: >-
+      Each system's spine is its own component registry: its interaction contract and event bus, with handshake verification, the only way
+      in, by API routes and the CLI, the UI floating on top. server.js is the system's process: the one thing COS manages, which hosts the
+      spine and routes its CLI and API through it.
