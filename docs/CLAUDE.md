@@ -411,3 +411,43 @@ system.js, which needs the config."
   config: config → server.js → the registry → components → UI. A file traces to its origin when its system's server.js reaches it. The
   line above read "system.js" as lib/system.js; it is superseded and kept (§0.3). Six systems have no server.js yet (idearium,
   clear-glass, cortex, architect, orchestrator, cos).
+
+## ADDENDUM 2026-11-03 — do not guess; each system is sovereign; component registries and the system registry (his words, binding)
+James, 2026-11-03: "Put in the Claude MD. Also put do not guess if you do not know. Ambiguity must be reconciled by me. Use the Atlas in Idearium. The specs in each spec folder. Of each system. Nothing a system needs lies outside of its own boundaries, beyond another system. Like Idearium needs Guardian, right? But I could slot another system in its place to use. It's not hardwired, it just uses the API routes and the CLI server, which is the whole point. That's why the axiom exists that says hardwired, hard-coded must earn its place."
+
+James, the same message: "Each system is sovereign. It is responsible for its own data, its own modules. Its own commands, lib is not a directory for anything that a system uses that it does not have within its own directory. Each system needs to work independent of the system. Loom is not the component registry. The lib folder is not the component registry. The component registry is the system's component registry, you know, per system, right? Then the system registry is for connecting the component registries. Cos and The orchastrator uses that to orchestrate."
+
+Said after the coder put Loom (and, before that, a central store in lib/) where the per-system component registry belongs, twice in one day.
+
+**Do not guess.**
+- If you do not know, do not guess. Read, or ask.
+- Ambiguity is reconciled by him, never by the coder. When his words or the code can be read two ways, ask him with the readings side by
+  side. Do not pick one and build on it. (This tightens "a reading of his words is acted on, said as a reading" above. For what he says,
+  this rule wins.)
+- Where to read before asking:
+  - **The Atlas in Idearium:** `docs/atlases/<system>-atlas.md`, one per system, shown in Idearium by `idearium/ui/js/nexus-atlas.js`.
+  - **The specs in each system's own spec folder:** `<system>/spec/*.spec` (architect, clear-glass, copilot, cortex, cos, diagnostic,
+    guardian, idearium, intelligence, ollama, orchestrator, versionium, …).
+
+**Each system is sovereign** (AXIOMS §5.9, §5.15, §5.16):
+- It is responsible for its own data, its own modules and its own commands.
+- Nothing a system needs lies outside its own folder, except another *system*. That system is reached only through its API routes and the
+  CLI server, never its files, so it can be swapped. Idearium needs Guardian, but another system could be slotted in Guardian's place. It
+  is not hardwired.
+- Hardwired or hard-coded must earn its place. The coder cites AXIOMS §0.5 ("Complexity Must Earn Its Existence": every dependency must
+  continuously justify itself) as the axiom he means. **To confirm with him:** it is the nearest text found; no axiom uses the word
+  "hardwired".
+- **`lib/` is not a directory for things a system uses.** Whatever a system uses that is not another system lives inside that system's
+  own folder. Each system works on its own, independent of the rest.
+
+**Component registry and system registry. Two things, never confused:**
+- **The component registry is per system.** Each system has its own: its components, routes, commands, events. It is written, stored and
+  served by that system (AXIOMS §5.16).
+- **It is not Loom.** Loom is being removed.
+- **It is not `lib/`.** `lib/component-registry.js`, one central store, is the violation to undo, held by the ratchet
+  `lib/registry-sovereign-check.js`.
+- **The system registry connects the component registries.** It knows each system and reaches each system's own registry.
+- **COS and the Orchestrator use the system registry to orchestrate.**
+- **To reconcile with him, not decided by the coder:** today's `lib/system-registry.js` is a read-only merge of autopilot's kernels,
+  diagnostic's systems and lib/version.js (2026-09-06). It is not yet the registry he describes. Where the system registry lives and
+  whose it is are his to settle.

@@ -38,7 +38,7 @@ phases:
 planning_with_him:
   status: "PLANNING — not mapped until he answers"
   questions:
-    - "Is COS the directory systems find each other through (coder's recommendation), or do systems find each other directly?"
+    - "ANSWERED 2026-11-03 (his): \"Then the system registry is for connecting the component registries. Cos and The orchastrator uses that to orchestrate.\" Open, his to reconcile: where the system registry lives and whose it is (today's lib/system-registry.js is a read-only merge, not that)."
     - "Is each system's registry part of its .cos (its face), or a separate file the .cos points to?"
     - "One .cos with everything sealed inside, a small readable .cos pointing to its disk, or both forms (coder's recommendation: both)?"
     - "A running system's files: a normal folder, or the mounted virtual disk?"
