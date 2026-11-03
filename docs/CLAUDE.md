@@ -434,9 +434,9 @@ Said after the coder put Loom (and, before that, a central store in lib/) where 
 - Nothing a system needs lies outside its own folder, except another *system*. That system is reached only through its API routes and the
   CLI server, never its files, so it can be swapped. Idearium needs Guardian, but another system could be slotted in Guardian's place. It
   is not hardwired.
-- Hardwired or hard-coded must earn its place. The coder cites AXIOMS §0.5 ("Complexity Must Earn Its Existence": every dependency must
-  continuously justify itself) as the axiom he means. **To confirm with him:** it is the nearest text found; no axiom uses the word
-  "hardwired".
+- Hardwired or hard-coded must earn its place. His own rule, 2026-10-05, in Idearium's system template
+  (`idearium/spec-engine/templates/architecture-spec.template.yaml`): "hardcoded has to earn its place". (Corrected 2026-11-03: the coder had
+  first cited AXIOMS §0.5 as the nearest text; the template is where he said it.)
 - **`lib/` is not a directory for things a system uses.** Whatever a system uses that is not another system lives inside that system's
   own folder. Each system works on its own, independent of the rest.
 

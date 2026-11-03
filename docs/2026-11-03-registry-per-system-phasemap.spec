@@ -130,3 +130,17 @@ decisions_in_planning:
       call, checking the contract, the events, routing). A component knows nothing of other systems, of the bus or of COS — so it can be
       written in any language (his NC0, 2026-10-19) and moved or swapped.
     next: "write it down before anything is built: an addendum to idearium/spec-engine/templates/genesis.spec (the entry's shape and the door), then a map"
+  PL_D10_the_template_is_the_reference:
+    status: "DECIDED 2026-11-03 (his)"
+    james: '"Yes. This reduces the complexity for each complement. Look at iseariums template for a new systme"'
+    context: >-
+      Read the same day: idearium/spec-engine/templates/architecture-spec.template.yaml (his, 2026-10-05 → 10-17), with the node schemas in
+      templates/system/schemas/, already holds the one-door design: "the registry is the interaction contract, the event bus, the queue, the
+      dependency graph, the wiring harness and the spine: systems reach each other only through it" · "every component connects only to the
+      registry — never to another component" · server.js serves the route nodes, cli.js runs the command nodes · "a system is
+      self-contained … runs in its own COS compartment" · "hardcoded has to earn its place". None of the 14 systems was made from it.
+    chosen: "the template is the reference each system is rebuilt toward, one at a time, the door as its registry"
+    still_his:
+      - "the template lists registry-components.js, interaction-contract.json and event-taxonomy.js as three files while its rule makes the registry the contract and the bus: one source (the others generated or dropped)?"
+      - "the template says \"what every system uses is the kernel's\" (and the kernel serves existing systems until each moves); today he said lib/ is not a directory for anything a system uses that is not in its own folder — superseded, or the same meaning?"
+      - "where the .cos sits in the tree (the template lists compartment.json)"
