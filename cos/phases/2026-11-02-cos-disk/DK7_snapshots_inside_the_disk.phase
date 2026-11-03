@@ -7,11 +7,11 @@ intent: null
 summary: DK7_snapshots_inside_the_disk (backend) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793705608397
+exported_at: 1793708290561
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793705608397
-lastSeenAt: 1793705608397
+firstSeenAt: 1793708290561
+lastSeenAt: 1793708290561
 fingerprint: null
 payload:
   id: DK7_snapshots_inside_the_disk
@@ -26,5 +26,5 @@ payload:
     - DK6_the_virtual_disk
   blocks:
     - MOD-COS-VDISK
-  spec: cos/spec/cos-manager.spec
+  spec: cos/spec/cos-disk.spec
   graph: de0acd2c4ed378fa

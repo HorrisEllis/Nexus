@@ -7,11 +7,11 @@ intent: null
 summary: 10 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793705608385
+exported_at: 1793708278758
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793705608385
-lastSeenAt: 1793705608385
+firstSeenAt: 1793708278758
+lastSeenAt: 1793708278758
 fingerprint: null
 payload:
   for: DK1_pack_inspect_verify_unpack
@@ -94,6 +94,7 @@ payload:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
     downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
       - docs/2026-11-02-cos-disk-phasemap.spec::DK2_disks_in_cos
       - docs/2026-11-02-cos-disk-phasemap.spec::DK3_the_disk_tab
       - docs/2026-11-02-cos-disk-phasemap.spec::DK4_boot_from_a_disk
@@ -113,7 +114,7 @@ payload:
         depends on (3): DK_D0_spec_is_metadata_the_disk_holds_the_content, DK_D1_the_disk_file,
         DK_D2_where_disks_live
       - >-
-        needed by (2): DK2_disks_in_cos, DK6_the_virtual_disk · all downstream 7 · finishing it
+        needed by (2): DK2_disks_in_cos, DK6_the_virtual_disk · all downstream 8 · finishing it
         unlocks DK2_disks_in_cos, DK6_the_virtual_disk
     edges:
       - from: docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content

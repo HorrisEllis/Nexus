@@ -7,11 +7,11 @@ intent: null
 summary: DK1_pack_inspect_verify_unpack (backend) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793705608385
+exported_at: 1793708290541
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793705608385
-lastSeenAt: 1793705608385
+firstSeenAt: 1793708290541
+lastSeenAt: 1793708290541
 fingerprint: null
 payload:
   id: DK1_pack_inspect_verify_unpack
@@ -30,5 +30,5 @@ payload:
     - DK_D2_where_disks_live
   blocks:
     - MOD-COS-DISK
-  spec: cos/spec/cos-manager.spec
+  spec: cos/spec/cos-disk.spec
   graph: 36129950b3b66646

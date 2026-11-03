@@ -7,11 +7,11 @@ intent: null
 summary: DK2_disks_in_cos (backend) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1793705608387
+exported_at: 1793708290543
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793705608387
-lastSeenAt: 1793705608387
+firstSeenAt: 1793708290543
+lastSeenAt: 1793708290543
 fingerprint: null
 payload:
   id: DK2_disks_in_cos
@@ -30,5 +30,5 @@ payload:
     - DK1_pack_inspect_verify_unpack
   blocks:
     - MOD-COS-DISK
-  spec: cos/spec/cos-manager.spec
+  spec: cos/spec/cos-disk.spec
   graph: 782cd02d321bb5f6

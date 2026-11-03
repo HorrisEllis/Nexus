@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793705608395
+exported_at: 1793708278770
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793705608395
-lastSeenAt: 1793705608395
+firstSeenAt: 1793708278770
+lastSeenAt: 1793708278770
 fingerprint: null
 payload:
   for: DK6_the_virtual_disk
@@ -152,6 +152,7 @@ payload:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
     downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
       - docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
       - docs/2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
     blockedBy: []
@@ -164,7 +165,7 @@ payload:
       - layer 2
       - 'depends on (1): DK1_pack_inspect_verify_unpack · all upstream 4'
       - >-
-        needed by (1): DK7_snapshots_inside_the_disk · all downstream 2 · finishing it unlocks
+        needed by (1): DK7_snapshots_inside_the_disk · all downstream 3 · finishing it unlocks
         DK7_snapshots_inside_the_disk
       - 'DANGLING depends_on: DK_D3_the_disk_is_a_qcow2_virtual_disk'
     edges:

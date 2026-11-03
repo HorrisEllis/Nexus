@@ -7,11 +7,11 @@ intent: null
 summary: SC4_add_a_system (backend) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793586316435
+exported_at: 1793708289497
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793586316435
-lastSeenAt: 1793586316435
+firstSeenAt: 1793708289497
+lastSeenAt: 1793708289497
 fingerprint: null
 payload:
   id: SC4_add_a_system
@@ -29,5 +29,5 @@ payload:
     - SC_D4_adding_a_system_is_a_proposal
   blocks:
     - MOD-MG-ADD-SYSTEM
-  spec: cos/spec/cos-manager.spec
-  graph: 546edc55dc30d679
+  spec: cos/spec/cos-console.spec
+  graph: f51adf4a49f7478d

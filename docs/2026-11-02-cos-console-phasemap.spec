@@ -87,7 +87,7 @@ phases:
     layer: backend
     status: "DONE 0.60.379 — test-cos-console CC-04, CC-09"
     depends_on: []
-    spec: cos/spec/cos-manager.spec
+    spec: cos/spec/cos-console.spec
     blocks: [MOD-MG-NOTICES]
     files: [cos/manager/notices.js (new), cos/manager/server.js, cos/manager/contract.json, tests/modules/test-cos-console.test.js (new), tests/modules/run-all.js]
     does: >-
@@ -100,7 +100,7 @@ phases:
     layer: backend
     status: "DONE 0.60.379 — test-cos-console CC-01..CC-03, CC-09"
     depends_on: [SC_D1_units_and_what_the_os_enforces, SC_D2_where_the_configuration_lives, SC_D3_ports_are_announced_not_guessed]
-    spec: cos/spec/cos-manager.spec
+    spec: cos/spec/cos-console.spec
     blocks: [MOD-MG-SYSTEM-CONFIG]
     files: [cos/manager/system-config.js (new), cos/manager/supervisor.js, cos/manager/resources.js, cos/manager/server.js, cos/manager/contract.json, tests/modules/test-cos-console.test.js]
     does: >-
@@ -115,7 +115,7 @@ phases:
     layer: backend
     status: "DONE 0.60.379 — test-cos-console CC-05, CC-09"
     depends_on: [SC_D5_cos_has_its_own_command_line, SC1_the_bell, SC2_configuration_per_system]
-    spec: cos/spec/cos-manager.spec
+    spec: cos/spec/cos-console.spec
     blocks: [MOD-MG-CLI]
     files: [cos/manager/cli.js (new), cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, tests/modules/test-cos-console.test.js]
     does: "POST /api/cos/cli { line, by } → { ok, lines[] }: COS's table over its own functions; help lists it. Rows cos.config and cos.notices for agents."
@@ -125,7 +125,7 @@ phases:
     layer: backend
     status: "DONE 0.60.379 — test-cos-console CC-06, CC-09"
     depends_on: [SC_D4_adding_a_system_is_a_proposal]
-    spec: cos/spec/cos-manager.spec
+    spec: cos/spec/cos-console.spec
     blocks: [MOD-MG-ADD-SYSTEM]
     files: [cos/manager/add-system.js (new), cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, tests/modules/test-cos-console.test.js]
     does: "POST /api/cos/systems { name, dir, cmd, args, port, health, by } → a proposal (kind add-system); taking it writes <dir>/compartment.json and declares it live (supervisor.declare)"
@@ -169,7 +169,7 @@ phases_addendum_2026_11_02_sc7:
     layer: ui
     status: "DONE 0.60.380 — test-cos-console CC-10, CC-11 (Clear Glass); found: a page opened while the shell loaded its contract never showed (the stage cleared, its frame kept) — fixed in cos/ui/shell/page.js"
     depends_on: [SC1_the_bell, SC5_the_console_ui]
-    spec: cos/spec/cos-manager.spec
+    spec: cos/spec/cos-console.spec
     blocks: [MOD-MG-UI-UPDATES]
     files: [lib/nexus-update.js, cos/manager/updates.js, cos/manager/update-run.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/updates/index.html (new), cos/ui/updates/page.css (new), cos/ui/updates/page.js (new), cos/ui/shell/index.html, cos/ui/shell/console.js, cos/ui/shell/page.js, cos/ui/core/core.js, idearium/api/index.js, idearium/cli/route-commands.js, tests/modules/test-cos-console.test.js]
     origin: '"A gear, with update settings and Build that update section in cos. With a gear" (James, 2026-11-02)'
@@ -182,3 +182,21 @@ phases_addendum_2026_11_02_sc7:
       POST /api/cos/update/rollback (in its own process, then each changed system restarted, as apply). The COS app's own exe update policy
       lives in the app (its tray), not here: said on the page.
     proof: "settings round-trip and refusal; history lists the update; the page in Clear Glass: the gear opens it, a setting saved and read back"
+
+# ── ADDENDUM 2026-11-03 — SC8: the coder's modules at full depth (a fix, phased first) ──────────────────────────────────────────────────
+# Found 2026-11-03 while updating genesis and the architecture spec (0.60.385): test-substrate-spec SS-01/SS-02 have failed since 0.60.379.
+# The coder added seven modules (MOD-MG-NOTICES, -SYSTEM-CONFIG, -ADD-SYSTEM, -CLI, -UI-UPDATES, MOD-COS-DISK, -VDISK) to cos/spec/cos-manager.spec,
+# which is tied to the cos-manager map, while their phases are in this map and the disk map; three depended on names the spec never declares
+# (updates, proposals, tar). The check that would have caught it was not run after those releases — drift, the coder's.
+phases_addendum_2026_11_03_sc8:
+  SC8_the_specs_at_full_depth:
+    layer: spec
+    status: "DONE 0.60.386 — test-substrate-spec 3/3 with cos-console.spec and cos-disk.spec listed"
+    depends_on: [SC7_the_updates_section, DK7_snapshots_inside_the_disk]
+    files: [cos/spec/cos-console.spec (new), cos/spec/cos-disk.spec (new), cos/spec/cos-manager.spec, tests/modules/test-substrate-spec.test.js]
+    does: >-
+      The seven modules move whole (§0.3) into two specs of their own, each declaring what they stand on as interfaces (supervisor, updates,
+      resources, proposals, ui-shell; tar, qemu-runtime) so every dependency resolves at full depth. Their phase tie is not checked (map: null,
+      as compartment.spec and nexus-update.spec): this map holds another system's phase (SC6, Intelligence's), and tying them waits for the
+      phase cleanup he called for.
+    proof: "test-substrate-spec SS-01..03 green with both specs listed"

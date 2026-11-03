@@ -7,11 +7,11 @@ intent: null
 summary: SC5_the_console_ui (ui) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1793586316437
+exported_at: 1793708289507
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793586316437
-lastSeenAt: 1793586316437
+firstSeenAt: 1793708289507
+lastSeenAt: 1793708289507
 fingerprint: null
 payload:
   id: SC5_the_console_ui

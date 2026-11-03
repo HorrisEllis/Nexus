@@ -7,11 +7,11 @@ intent: null
 summary: SC2_configuration_per_system (backend) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1793586316430
+exported_at: 1793708289492
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793586316430
-lastSeenAt: 1793586316430
+firstSeenAt: 1793708289492
+lastSeenAt: 1793708289492
 fingerprint: null
 payload:
   id: SC2_configuration_per_system
@@ -32,5 +32,5 @@ payload:
     - SC_D3_ports_are_announced_not_guessed
   blocks:
     - MOD-MG-SYSTEM-CONFIG
-  spec: cos/spec/cos-manager.spec
-  graph: 98125c7d861221db
+  spec: cos/spec/cos-console.spec
+  graph: b610a3d149b4b284

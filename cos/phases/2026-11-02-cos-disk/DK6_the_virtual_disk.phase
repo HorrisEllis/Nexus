@@ -7,11 +7,11 @@ intent: null
 summary: DK6_the_virtual_disk (backend) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793705608395
+exported_at: 1793708290560
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793705608395
-lastSeenAt: 1793705608395
+firstSeenAt: 1793708290560
+lastSeenAt: 1793708290560
 fingerprint: null
 payload:
   id: DK6_the_virtual_disk
@@ -29,5 +29,5 @@ payload:
     - DK1_pack_inspect_verify_unpack
   blocks:
     - MOD-COS-VDISK
-  spec: cos/spec/cos-manager.spec
+  spec: cos/spec/cos-disk.spec
   graph: d5b120fefe421ce8

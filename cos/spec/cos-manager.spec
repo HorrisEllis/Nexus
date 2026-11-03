@@ -1348,105 +1348,12 @@ spec:
       behavioral_contracts: ["turning it off removes the task and the login item", "a failed elevation falls back to the login item, said"]
       error_paths: ["schtasks refused (no admin) → the login item, 'not elevated' said", "not Windows → the login item (macOS) or a note (Linux)"]
       acceptance: ["the task command built for enable and disable; a refused schtasks falls back to the login item; --hidden shows no window"]
-    # ── 0.60.379 SC1–SC5 (docs/2026-11-02-cos-console-phasemap.spec) — James, 2026-11-02: "notification bell for update, system status,  notications" ·
-    # "Need configuration for each system ... set ram, cpu and network limits. Percent or gbs. Ports and network settings." · "add system" · "Need the system cli."
-    - id: MOD-MG-NOTICES
-      name: notices
-      uuid: nexus-cos-manager-notices-v1-0000-2026-1102-001
-      path: cos/manager/notices.js
-      phase: SC1_the_bell
-      description: "COS's bell: kept notices (update, system, notice; info, warn, error), read and unread, newest 300 in COS's data; a keyed notice told once."
-      deps: [{ name: supervisor }, { name: updates }]
-      schema_refs: [SupervisedSystem]
-      exports: ["createNotices({ file, keep, emit }) → { add, list({ unread, kind, limit }), read({ ids | all }), counts(), fromLedger(entry), fromUpdate(ev), fromNotice(n) }", "routes GET /api/cos/notices, POST /api/cos/notices/read; event cos.notice; row `cos notices`"]
-      gate_pipeline: ["GATE-SC1-001: a keyed notice is told once", "GATE-SC1-002: his own proposal is not news to him"]
-      behavioral_contracts: ["crash, circuit-open, refused, over-limit, no-restart, health, raid-refused, restart-failed → system; proposal-held (an agent's), declared → notice; the update check's notice and the update tool's steps → update"]
-      error_paths: ["the store unwritable → kept in memory, said nowhere silent: the bell still counts"]
-      acceptance: ["a crash is one unread error; read all clears; one update version told once (test-cos-console CC-04)"]
 
-    - id: MOD-MG-SYSTEM-CONFIG
-      name: system-config
-      uuid: nexus-cos-manager-system-config-v1-0000-2026-1102-001
-      path: cos/manager/system-config.js
-      phase: SC2_configuration_per_system
-      description: "Every system's configuration by layer (declared → his, in COS's data), with each setting's source and how it applies; units free (percent, GB, MB, cores, Mbps); applied through the supervisor's adjust hook and resources.js's caps."
-      deps: [{ name: supervisor }, { name: resources }]
-      schema_refs: [SupervisedSystem]
-      exports: ["createSystemConfig(sup, { resources, file, totalMB, cores }) → { get(name), set(name, patch, { by }), clear(name, keys, { by }), adjust(decl), watchCpu(), portEnvOf(decl) }", "parse.size | cpu | bandwidth", "routes GET|PATCH /api/cos/systems/:name/config, POST …/config/clear; row `cos config`"]
-      gate_pipeline: ["GATE-SC2-001: a person or a rule sets; an agent is refused (403)", "GATE-SC2-002: the ledger line before it applies; Versionium records it", "GATE-SC2-003: nothing shown as applied that the OS does not do"]
-      behavioral_contracts: ["memory and priority are the caps (CP6a), not a copy", "a port goes through the env var the system reads (declared, else discovered in its config.js/server.js, else not applied, said)", "network limit and outbound: recorded, not-enforced", "clear returns the declared value"]
-      error_paths: ["a unit not understood → 400 naming the form it wants", "an unknown setting → 400 with the list", "COS_BOUNDARY or NODE_OPTIONS → refused (COS's own)"]
-      acceptance: ["test-cos-console CC-01..CC-03: units; layers; a real process on his port with his env var; autostart off skipped; restart never left down"]
 
-    - id: MOD-MG-ADD-SYSTEM
-      name: add-system
-      uuid: nexus-cos-manager-add-system-v1-0000-2026-1102-001
-      path: cos/manager/add-system.js
-      phase: SC4_add_a_system
-      description: "Adding a system: a proposal (add-system); taking it writes <folder>/compartment.json (the system's own declaration, by his act) and declares it live."
-      deps: [{ name: supervisor }, { name: proposals }]
-      schema_refs: [SupervisedSystem]
-      exports: ["createAddSystem(sup, proposals, { root }) → { propose({ name, dir, cmd, args, port, health, by, why }), check }", "route POST /api/cos/systems; `add` in COS's command line"]
-      gate_pipeline: ["GATE-SC4-001: his add taken at once; an agent's held", "GATE-SC4-002: never overwrites a declaration"]
-      behavioral_contracts: ["nothing starts until he starts it", "found again at COS's next start (readDeclarations)"]
-      error_paths: ["name taken or folder already declaring → 409", "folder or entry missing → 404", "a port another system has → 409"]
-      acceptance: ["test-cos-console CC-06 and CC-09 (from Overview in Clear Glass)"]
 
-    - id: MOD-MG-CLI
-      name: cli
-      uuid: nexus-cos-manager-cli-v1-0000-2026-1102-001
-      path: cos/manager/cli.js
-      phase: SC3_system_command_line
-      description: "COS's own command line, run in its manager over its own functions, so it works with every other system down (SC_D5)."
-      deps: [{ name: supervisor }, { name: system-config }, { name: notices }, { name: proposals }, { name: add-system }]
-      schema_refs: [SupervisedSystem]
-      exports: ["createCli({ sup, resources, config, notices, proposals, addSystem, usage }) → { run(line, { by }) → { ok, lines[] }, TABLE }", "routes GET|POST /api/cos/cli; row `cos cli`; the shell's console (Ctrl+`)"]
-      gate_pipeline: ["GATE-SC3-001: an agent's act refused (it proposes); reading is anyone's"]
-      behavioral_contracts: ["the verbs are the cos.* rows' verbs"]
-      error_paths: ["an unknown verb → the table"]
-      acceptance: ["test-cos-console CC-05, CC-09"]
 
-    - id: MOD-MG-UI-UPDATES
-      name: ui-updates
-      uuid: nexus-cos-manager-ui-updates-v1-0000-2026-1102-001
-      path: cos/ui/updates/page.js
-      phase: SC7_the_updates_section
-      description: "Updates, COS's section for Nexus from GitHub, with its settings behind a gear (the shell's top bar opens it at #/updates/settings): the state against GitHub, the systems it changes, his release lines, Update now / Keep mine and update, the history and Roll back."
-      deps: [{ name: updates }, { name: ui-shell }]
-      schema_refs: [SupervisedSystem]
-      exports: ["page updates (#/updates, #/updates/settings)", "routes GET|PATCH /api/cos/update/settings, GET /api/cos/update/history, POST /api/cos/update/rollback (cos/manager/updates.js settings, setSettings, history, rollback)"]
-      gate_pipeline: ["GATE-SC7-001: every act confirmed in the shell, by = person", "GATE-SC7-002: settings are the kernel's (lib/nexus-update.js policy), never a copy"]
-      behavioral_contracts: ["policy auto | notify | off; everyHours 1–168; keepLocal auto | ask (ask: the automatic tick never keeps local commits by itself)", "the COS exe's own update policy stays in the app, said on the page"]
-      error_paths: ["a bad value → 400 naming the range; an agent → 403", "nothing to roll back → 409 with the kernel's reason"]
-      acceptance: ["test-cos-console CC-10, CC-11"]
 
-    - id: MOD-COS-DISK
-      name: disk
-      uuid: nexus-cos-disk-v1-0000-2026-1103-001
-      path: cos/disk/disk.js
-      phase: DK1_pack_inspect_verify_unpack
-      description: "A compartment's disk: its spec and declaration as metadata (disk.json, first), its code, its data only when asked, in one gzip(tar) file in COS's data; the kernel named as its base, not copied."
-      deps: [{ name: tar }, { name: supervisor }]
-      schema_refs: [SupervisedSystem]
-      exports: ["createDisks({ root, dir }) → { pack(system, { withState, by }), inspect(file), verify(file), unpack(file, out, { layers }), list({ system }), coverage(system), describe(system), dir }", "routes GET /api/cos/disks, GET /api/cos/disks/:file[/verify], GET|POST /api/cos/systems/:name/disk; CLI `disk`, `disks`; row cos.disk; the cockpit's Disk tab"]
-      gate_pipeline: ["GATE-DK-001: a person or a rule makes a disk; an agent is refused", "GATE-DK-002: verify re-hashes every entry", "GATE-DK-003: unpack never writes outside its folder", "GATE-DK-004: data only when asked"]
-      behavioral_contracts: ["the same content makes the same disk (its name carries the content hash)", "a disk made is on COS's ledger and recorded in Versionium"]
-      error_paths: ["no such system or folder → 404", "not a disk (no disk.json, another schema) → 422", "an entry leaving its folder → 422, nothing written outside"]
-      acceptance: ["test-cos-disk DK-01..DK-05"]
 
-    - id: MOD-COS-VDISK
-      name: vdisk
-      uuid: nexus-cos-vdisk-v1-0000-2026-1103-001
-      path: cos/disk/vdisk.js
-      phase: DK6_the_virtual_disk
-      description: "A compartment's virtual disk: <system>.qcow2 with one ext4 filesystem (/.cos metadata, /code, /state), its snapshots inside; written with mke2fs -d, read with debugfs from a raw copy, no root."
-      deps: [{ name: disk }, { name: qemu-runtime }]
-      schema_refs: [SupervisedSystem]
-      exports: ["createVDisks({ root, dir, disks, env }) → { tools(), make, refresh, info, verify, extract, snapshot, snapshots, revert, dropSnapshot, list, pathOf }", "routes GET /api/cos/systems/:name/vdisk[/verify], POST /api/cos/systems/:name/vdisk/:op; CLI `vdisk`; the Disk tab's Virtual disk"]
-      gate_pipeline: ["GATE-VD-001: a person or a rule acts; an agent is refused", "GATE-VD-002: a missing tool is said (501), nothing faked", "GATE-VD-003: refresh keeps every snapshot"]
-      behavioral_contracts: ["all its data by default (the disk is the whole machine)", "every act on the ledger first and recorded in Versionium"]
-      error_paths: ["no tools → 501 naming them", "a second make → 409 (refresh instead)", "grown past its disk → 409"]
-      acceptance: ["test-cos-vdisk VD-01..VD-06"]
 
   events:
     cos:
@@ -1564,3 +1471,8 @@ spec:
 # ── ADDENDUM 2026-11-03 (0.60.382, DK6–DK8) — the virtual disk ──
 # James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data, snapshots, system
 # state." MOD-COS-VDISK is new; MOD-COS-DISK gains collect() (shared by both kinds); the Disk tab leads with the virtual disk.
+
+# ── ADDENDUM 2026-11-03 (SC8) — seven modules moved, whole, to their own specs ──
+# MOD-MG-NOTICES, MOD-MG-SYSTEM-CONFIG, MOD-MG-ADD-SYSTEM, MOD-MG-CLI, MOD-MG-UI-UPDATES → cos/spec/cos-console.spec; MOD-COS-DISK, MOD-COS-VDISK →
+# cos/spec/cos-disk.spec. They were added here in 0.60.379–0.60.382 while their phases live in other maps, and three depended on names this
+# spec never declares; test-substrate-spec failed from 0.60.379 and the coder did not run it. Moved, not deleted (§0.3).

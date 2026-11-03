@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793705608397
+exported_at: 1793708278772
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793705608397
-lastSeenAt: 1793705608397
+firstSeenAt: 1793708278772
+lastSeenAt: 1793708278772
 fingerprint: null
 payload:
   for: DK7_snapshots_inside_the_disk
@@ -70,6 +70,7 @@ payload:
     deps:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK6_the_virtual_disk
     dependents:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
       - docs/2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
     upstream:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK1_pack_inspect_verify_unpack
@@ -78,9 +79,11 @@ payload:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
     downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
       - docs/2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
     blockedBy: []
     unlocks:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
       - docs/2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
     conflicts: []
     dangling: []
@@ -88,8 +91,8 @@ payload:
       - layer 3
       - 'depends on (1): DK6_the_virtual_disk · all upstream 5'
       - >-
-        needed by (1): DK8_the_disk_in_cos_and_its_vm · finishing it unlocks
-        DK8_the_disk_in_cos_and_its_vm
+        needed by (2): SC8_the_specs_at_full_depth, DK8_the_disk_in_cos_and_its_vm · finishing it
+        unlocks SC8_the_specs_at_full_depth, DK8_the_disk_in_cos_and_its_vm
     edges:
       - from: docs/2026-11-02-cos-disk-phasemap.spec::DK6_the_virtual_disk
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: SC3_system_command_line (backend) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793586316433
+exported_at: 1793708289495
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793586316433
-lastSeenAt: 1793586316433
+firstSeenAt: 1793708289495
+lastSeenAt: 1793708289495
 fingerprint: null
 payload:
   id: SC3_system_command_line
@@ -31,5 +31,5 @@ payload:
     - SC2_configuration_per_system
   blocks:
     - MOD-MG-CLI
-  spec: cos/spec/cos-manager.spec
-  graph: ca407152ec8f60e8
+  spec: cos/spec/cos-console.spec
+  graph: 65b23bdb7638bc8f

@@ -50,7 +50,7 @@ phases:
     layer: backend
     status: "DONE 0.60.381 — test-cos-disk DK-01, DK-02, DK-04"
     depends_on: [DK_D0_spec_is_metadata_the_disk_holds_the_content, DK_D1_the_disk_file, DK_D2_where_disks_live]
-    spec: cos/spec/cos-manager.spec
+    spec: cos/spec/cos-disk.spec
     blocks: [MOD-COS-DISK]
     files: [cos/disk/disk.js (new), cos/testenv/tar.js, tests/modules/test-cos-disk.test.js (new), tests/modules/run-all.js]
     does: >-
@@ -63,7 +63,7 @@ phases:
     layer: backend
     status: "DONE 0.60.381 — test-cos-disk DK-03"
     depends_on: [DK1_pack_inspect_verify_unpack]
-    spec: cos/spec/cos-manager.spec
+    spec: cos/spec/cos-disk.spec
     blocks: [MOD-COS-DISK]
     files: [cos/manager/server.js, cos/manager/contract.json, cos/manager/cli.js, idearium/cli/route-commands.js, loom/maps/cos-testenv-map.js, tests/modules/test-cos-disk.test.js]
     does: "GET /api/cos/disks, GET /api/cos/systems/:name/disk (its disks and its spec coverage), POST /api/cos/systems/:name/disk { withState, by }, GET /api/cos/disks/:file/verify; COS's CLI `disk`; the row cos.disk"
@@ -131,7 +131,7 @@ phases_addendum_2026_11_03:
     layer: backend
     status: "DONE 0.60.382 — test-cos-vdisk VD-01, VD-03, VD-06"
     depends_on: [DK_D3_the_disk_is_a_qcow2_virtual_disk, DK1_pack_inspect_verify_unpack]
-    spec: cos/spec/cos-manager.spec
+    spec: cos/spec/cos-disk.spec
     blocks: [MOD-COS-VDISK]
     files: [cos/disk/vdisk.js (new), cos/testenv/host.js, cos/compartment/qemu-runtime.js, tests/modules/test-cos-vdisk.test.js (new), tests/modules/run-all.js]
     does: >-
@@ -143,7 +143,7 @@ phases_addendum_2026_11_03:
     layer: backend
     status: "DONE 0.60.382 — test-cos-vdisk VD-02"
     depends_on: [DK6_the_virtual_disk]
-    spec: cos/spec/cos-manager.spec
+    spec: cos/spec/cos-disk.spec
     blocks: [MOD-COS-VDISK]
     files: [cos/disk/vdisk.js, tests/modules/test-cos-vdisk.test.js]
     does: "snapshot(disk, tag, { by }) / snapshots(disk) / revert(disk, tag, { by }) / dropSnapshot: qcow2 internal snapshots in the same file; refreshing a disk from the system (its current files and data) after a snapshot, so a snapshot keeps the earlier state"

@@ -7,11 +7,11 @@ intent: null
 summary: SC1_the_bell (backend) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793586316428
+exported_at: 1793708289489
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793586316428
-lastSeenAt: 1793586316428
+firstSeenAt: 1793708289489
+lastSeenAt: 1793708289489
 fingerprint: null
 payload:
   id: SC1_the_bell
@@ -28,5 +28,5 @@ payload:
   depends_on: []
   blocks:
     - MOD-MG-NOTICES
-  spec: cos/spec/cos-manager.spec
-  graph: 57a47b97dd8f72a0
+  spec: cos/spec/cos-console.spec
+  graph: f3ffb8eb1cd6a805
