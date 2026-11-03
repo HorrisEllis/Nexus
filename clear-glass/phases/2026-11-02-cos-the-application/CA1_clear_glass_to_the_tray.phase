@@ -7,18 +7,20 @@ intent: null
 summary: CA1_clear_glass_to_the_tray (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793578979879
+exported_at: 1793592215335
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793578979879
-lastSeenAt: 1793578979879
+firstSeenAt: 1793592215335
+lastSeenAt: 1793592215335
 fingerprint: null
 payload:
   id: CA1_clear_glass_to_the_tray
   map: docs/2026-11-02-cos-the-application-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "DONE 0.60.366 — test-cg-idle-tray 3/3; the tray icon and the idle time on Windows unverified
+    until his run"
   files:
     - clear-glass/src/main/idle-tray.js
     - clear-glass/src/main/index.js
@@ -29,4 +31,4 @@ payload:
   blocks:
     - MOD-CGT-IDLE-TRAY
   spec: clear-glass/spec/tray.spec
-  graph: bf93d6da1d79cb33
+  graph: 43f0cfe47b1efd7d

@@ -465,4 +465,16 @@ James, 2026-11-03: "Okay we also need to clean the phases at some point. Add to 
 - **Pending, his call on when:** cleaning the phases. Found on 2026-11-03: the open phases for COS as the orchestrator alone are spread over
   four maps (cos-spine, cos-manager, system-doors, the compartment), many superseded in part. The cleaning is planned with him first, not
   done by the coder on its own.
+## ADDENDUM 2026-11-02 — a phase's DAG names its configuration and UI files too (his question, the coder's reading to confirm)
+James, 2026-11-02: "should dag have dag? Like: Additional dependencies: Settings/configuration files HTML/ui files"
+- Yes. A phase's graph (lib/phase-graph.js) follows require() edges, so a settings file read at runtime or an HTML page that loads a script is
+  invisible to it, and a change there breaks what the graph says is safe. Each phase lists them in its `files:` with a role, and the graph
+  marks them: `config` (settings, .json, .cos, contract.json) and `ui` (html, css, the scripts a page loads). The checker for it is to build
+  (lib/phase-graph.js reading script/link tags and the files a module reads by path); until then they are named by hand in `files:`.
+- **And requirements and prerequisites, per DAG and per gate (his, the same day).** James, 2026-11-02: "Requirements and pre-requisites per
+  dag and gate". Each phase's graph, and each gate, names what must already hold before it runs: `requires:` (tools, versions, services up,
+  OS, admin, a setting switched on, e.g. CA3's network engines need their switch) and `prerequisites:` (phases or decisions done first,
+  beyond depends_on: data present, a backup taken, a port free). A gate whose requirement is not met refuses and names it (§1.2). The coder's
+  reading of how they are written (two lists beside `files:` and `depends_on:`) is to confirm; the checker in lib/phase-graph.js and the gate
+  pipeline is to build with the config/ui roles above.
 

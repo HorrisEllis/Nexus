@@ -251,6 +251,18 @@
       "path": "/api/cos/systems/:name/vdisk/:op",
       "in": "{ by, tag?, withState? } — op: make | refresh | snapshot | revert | drop-snapshot",
       "out": "the disk after; 403 for an agent; 501 when this host lacks qemu-img or e2fsprogs, saying which (DK8)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/network",
+      "out": "{ settings (secrets as { set }), gates: { tunnel|relay|upnp|ddns|ssh: { ok, why } } } — CA3"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/cos/network",
+      "in": "{ patch, by }",
+      "personAct": true,
+      "out": "{ settings, changed, gates } | 400 naming the field | 403 for an agent — CA3"
     }
   ],
   "door": {
@@ -555,6 +567,22 @@
       "listens": [],
       "emits": [],
       "about": "what emerges: Intelligence's crystallised patterns, the liminal spaces where they form, and his emergence runs (axioms → end state; innovate the method). One page with the TV's channel: the same script, served read-only from lib/ui/tv-shell/channels/emergence/."
+    },
+    {
+      "id": "network",
+      "title": "Network",
+      "path": "network/",
+      "route": "#/network",
+      "nav": "main",
+      "built": true,
+      "phase": "CA3_network_settings",
+      "routes": [
+        "GET /api/cos/network",
+        "PATCH /api/cos/network"
+      ],
+      "listens": [],
+      "emits": [],
+      "about": "every way Nexus reaches or is reached from outside — outbound tunnel and rendezvous, inbound UPnP/PCP/NAT-PMP mapping, DDNS, SSH (keys only), TLS, each compartment's switch and throttle — all off until he opens them; each engine's gate shown"
     }
   ],
   "planned": [

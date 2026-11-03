@@ -31,7 +31,13 @@ decisions:
       he declines admin (no elevation, said).
     by_the_axioms: "§0.0 (a service cannot show a window: said, not attempted), §4.3 (least privilege: elevated once, by him), §0.5 (no service until something needs one), USER_AUTONOMY (each one a setting he can turn off)"
   CA_D2_remote_reach:
-    status: "PROPOSED 2026-11-02 — his to choose: it opens his machine to the internet (a cost to know before it is paid)"
+    status: "DECIDED 2026-11-02 (his): both, gated behind settings"
+    his_choice: >-
+      James, 2026-11-02, asked outbound-only (recommended) or inbound (UPnP/PCP + DDNS + SSH): "both but extensive settings for all of this. Get
+      this done as soon as possible to push." · "Gate behind settings to open. Make a full detailed settings for network." Both are built; every
+      engine is OFF until he opens it in Network settings; nothing reaches outside without his switch (§4.3 still: keys only for SSH, TLS and
+      the app password for anything inbound).
+    was: "PROPOSED 2026-11-02 — his to choose: it opens his machine to the internet (a cost to know before it is paid)"
     found: >-
       COS already has it, unwired: cos/services/anonymous (its own kernel, nexus.js) with engines upnp (UPnP IGD port mapping), tunnel (direct
       → UPnP → PCP/NAT-PMP → Cloudflare Tunnel → ngrok, first that works), ddns (Cloudflare, DuckDNS), autodns, ssh (the OS's own OpenSSH,
@@ -55,6 +61,21 @@ phases:
     files: [clear-glass/src/main/idle-tray.js, clear-glass/src/main/index.js, clear-glass/src/options/store.js, clear-glass/renderer/settings/sections/general.js, clear-glass/assets/tray.png, tests/modules/test-cg-idle-tray.test.js]
     does: "a Clear Glass setting: minimize to the tray after N minutes with no input (off by default; 5, 15, 30, 60), restored from the tray; a page playing media or a macro running keeps it up"
     proof: "with a short period, the window goes to the tray after no input and comes back from the tray; a running macro keeps it up"
+  CA3_network_settings:
+    status: "DONE 0.60.379 — test-cos-network 5/5 (the page through the real cockpit in Clear Glass). The engines themselves (tunnel, rendezvous, mapping, DDNS, SSH) start behind the gate; wiring each to its settings is CA2"
+    depends_on: [CA_D2_remote_reach]
+    spec: cos/spec/network.spec
+    blocks: [MOD-NET-SETTINGS, MOD-NET-ROUTES, MOD-NET-PAGE, MOD-NET-GATE]
+    files: [cos/manager/network-settings.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/network/index.html, cos/ui/network/page.js, cos/ui/network/page.css, cos/services/anonymous/nexus.js, idearium/cli/route-commands.js, tests/modules/test-cos-network.test.js]
+    requires: [node 20+, COS's manager running for the page and rows]
+    prerequisites: [CA_D2_remote_reach decided (his: both, gated)]
+    does: >-
+      James, 2026-11-02: "Gate behind settings to open. Make a full detailed settings for network." One NetworkSettings store owned by COS
+      (every engine off by default): outbound — tunnel (provider, token, which systems), rendezvous (devices, keys); inbound — UPnP/PCP/NAT-PMP
+      (ports, lease, which systems), DDNS (provider, domain, token, interval), SSH (port, keys only, allowed keys), TLS; and the per-compartment
+      switch and throttle (CP6e). GET/PATCH /api/cos/network, rows `cos network`, the cockpit's Network page; each engine refuses to start
+      unless its switch is on, said; every change in Versionium (secrets redacted).
+    proof: "with every switch off nothing listens or connects outside; turning one on starts only that engine; the page shows and edits all of it"
   CA2_remote_reach:
     status: "OPEN — waits on his choice in CA_D2"
     depends_on: [CA_D2_remote_reach]
