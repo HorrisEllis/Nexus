@@ -183,3 +183,15 @@ decisions_in_planning:
       0.60.333 (the six-source view points at the orchestrator), AE5 OPEN (the automation UI: Clear Glass Settings › Automation and BrainOS
       pointed at the orchestrator; Clear Glass's old routes retired).
     reading: "\"the orchestrator\" in that map was the old orchestrator/ process; with COS the orchestrator (PL_D8), AE1–AE4's host and door move to COS, the engine leaves lib/ for COS's folder, and AE5 becomes COS's Automation page"
+  PL_D14_hard_limits_per_system:
+    status: "DECIDED 2026-11-03 (his: what he wants); how network is restricted is TO HIM"
+    james: '"Okay but I want to be able to set the max number of gb of ram. Cores/threads. Run on startup. Like throttle it. Restrict network access."'
+    context: >-
+      Asked after the coder described the finished picture (COS like VMware, each system a sandboxed server.js behind its door). Today, in each
+      system's Configuration (SC2, 0.60.379): the heap is enforced at start, the total memory limit and a CPU limit are only watched (warn or
+      restart), priority is enforced, start at boot is enforced, network limit and outbound are recorded and not enforced.
+    chosen: "per system, set by him: max RAM in GB, which cores/threads, run on startup, a CPU throttle, network restricted — as hard limits, not watches"
+    coders_plan: >-
+      Windows Job Objects (a hard memory limit, a CPU rate cap) and CPU affinity (cores/threads), through PowerShell calling Windows directly (no
+      new binary; COS already runs elevated at logon, 0.60.365). Built and tested here only as far as Linux allows; verified on his machine.
+    still_his: "network: (a) a named copy of node per system so a firewall rule can tell them apart (a real block, ~90 MB each), (b) everything through a proxy COS controls (fits the doors, bypassable), (c) Node's own network permission (the coder does not know which Node version has it — to check, not guess); the coder recommends (b) between systems plus (a) for systems cut off from the internet"
