@@ -16,14 +16,21 @@ They are law here. AXIOMS-v3.1 governs; this is the operational distillation.
    compose it. Most drift this project has seen came from building beside
    something that already existed.
 
-3. **ALWAYS UPDATE THE COMPONENT REGISTRY — WITH WIRES.** Loom's registry is the
+3. **THE COMPONENT REGISTRY IS PER SYSTEM, AND SOVEREIGN (AXIOMS §5.16, 2026-11-03).** Every system owns its own component
+   registry: what it offers (routes, commands, events, permissions, hooks), written, stored and served by that system alone,
+   inside its compartment (.cos). There is no central registry: no system stores, fills or serves another's entries. A new
+   capability is added to the registry of the system that owns it, nowhere else. **Loom is NOT the component registry** and is
+   being removed: do not add Loom maps, wires or declarations. lib/component-registry.js (one store in Cortex, served by
+   Orchestrator) is the violation to undo, not the pattern to follow.
+   James, 2026-11-03: "No component registry is per system.  That needs to be implemented" · "And enforce that. I’m sick of you confusing that. It’s fucking sovereign. Do not  make this mistake again." · earlier the same day: "Not loom. Never said loom. Loom is going to be removed"
+   *Superseded wording, kept (§0.3):* ~~ALWAYS UPDATE THE COMPONENT REGISTRY — WITH WIRES. Loom's registry is the
    system's self-model of its own connections; it is how NEXUS stays aware of
    itself so it can fix itself. Every new component MUST be mapped into loom
    **with its real `require()`/consumer edges as wires**, not as a bare
    declaration. A component with no wires is an isolated dot the system cannot
    reason over. Mirror `loom/maps/warp-map.js`; add to
    `loom/maps/observability-map.js` (or a sibling map). Bare `driver.declare`
-   with no hooks/wires is a defect, not an update.
+   with no hooks/wires is a defect, not an update.~~
 
 4. **ADDENDA TO RELEVANT SPECS (§12.5).** A living spec documents drift. When you
    change behavior, add a dated `## ADDENDUM` to the spec(s) that own it, and
@@ -104,8 +111,10 @@ Read the compact projections before the raw tree. A wrong guess about what exist
    list` shows them all). In Claude Code the same table is the `mcp__nexus__*` tools (`.mcp.json`): `nexus_grep`,
    `nexus_read_range`, `nexus_loom_query`, `nexus_loom_impact`, `nexus_read_spec`, `nexus_gaps`,
    `nexus_changelog_tail`.
-2. **Loom** (`loom/`, registry, `loom/maps/*`) is the system's self-model: components, hooks, and wires as real
-   require/consumer edges. Ask it "who uses this" (`loom_impact`) before changing anything shared.
+2. **Each system's own component registry** (AXIOMS §5.16): what that system offers, read from that system. *Superseded 2026-11-03, kept
+   (§0.3):* ~~**Loom** (`loom/`, registry, `loom/maps/*`) is the system's self-model: components, hooks, and wires as real
+   require/consumer edges. Ask it "who uses this" (`loom_impact`) before changing anything shared.~~ Loom is not the registry and is being
+   removed (James, 2026-11-03: "Not loom. Never said loom. Loom is going to be removed"). For "who uses this", grep the code.
 3. **The atlases** (`docs/atlases/*-atlas.md`, one per system) give what each system is, its files, routes, and events.
    `lib/context-atlas.js` searches across specs, notes and nodes.
 4. **Specs and phasemaps.**
@@ -254,7 +263,7 @@ and uncertain.
 
 ---
 *If you are an AI reading this at the start of a session: these five rules are not
-suggestions. Map first, reuse first, wire the registry, addend the specs, lose
+suggestions. Map first, reuse first, each system's registry is its own (never Loom, never central), addend the specs, lose
 nothing. Then build.*
 
 ## ADDENDUM 2026-10-19 (0.60.172 DG3) — every phase has its place in the whole DAG
@@ -378,7 +387,7 @@ James, 2026-10-29: "Make sure you put as much evidence of competence as possible
 James, 2026-10-29: "Each component needs to be wired to the module component, and ui"
 - A component (a code file) passes only with all three:
   - a spec module that owns it (the module's `path:` names it);
-  - a Loom component with its real wires;
+  - an entry in its own system's component registry (AXIOMS §5.16; was "a Loom component with its real wires", superseded 2026-11-03);
   - a way in for a person (a screen) or an agent (a command row), when it serves anything a person or an agent does.
 - Measured by `node scripts/systems-report.js`. On 2026-10-29: Loom 80–100% registered; spec modules 0–36% (the gap); Idearium's routes
   79% with a screen, 33% with a command, 14% with neither. The per-system document is `docs/NEXUS-SYSTEMS-FOR-CODING.md`.

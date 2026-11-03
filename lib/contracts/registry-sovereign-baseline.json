@@ -1,0 +1,42 @@
+{
+  "about": "AXIOMS §5.16: what existed on 2026-11-03 against every system owning its own component registry. It only shrinks (lib/registry-sovereign-check.js).",
+  "at": "2026-11-03",
+  "centralCallers": [
+    "copilot/module-builder.js",
+    "cortex/boot.js",
+    "guardian/lib/grammar-fallback.js",
+    "intelligence/gap/predicate.js",
+    "lib/blueprint.js",
+    "lib/cli-map.js",
+    "lib/component-ledger.js",
+    "lib/self-register.js",
+    "lib/system-registry.js",
+    "loom/server.js",
+    "orchestrator/lib/mutation-contract.js",
+    "orchestrator/orchestrator.js"
+  ],
+  "loomMaps": {
+    "loom/maps/accounts-authority-map.js": 70,
+    "loom/maps/agent-memory-map.js": 107,
+    "loom/maps/build-context-map.js": 85,
+    "loom/maps/build-surface-map.js": 622,
+    "loom/maps/chat-ledger-map.js": 69,
+    "loom/maps/compartment-activity-map.js": 30,
+    "loom/maps/component-intake-map.js": 77,
+    "loom/maps/copilot-capability-map.js": 383,
+    "loom/maps/cos-testenv-map.js": 122,
+    "loom/maps/declare-map.js": 30,
+    "loom/maps/economy-map.js": 181,
+    "loom/maps/idearium-codebase-map.js": 128,
+    "loom/maps/ledger-wire-person-model-map.js": 148,
+    "loom/maps/observability-map.js": 228,
+    "loom/maps/one-idearium-map.js": 184,
+    "loom/maps/raid-events-and-tools-map.js": 191,
+    "loom/maps/releases-map.js": 60,
+    "loom/maps/run-state-map.js": 448,
+    "loom/maps/session-2026-08-14-map.js": 471,
+    "loom/maps/ui-map.js": 108,
+    "loom/maps/verified-primitives-map.js": 107,
+    "loom/maps/warp-map.js": 102
+  }
+}
