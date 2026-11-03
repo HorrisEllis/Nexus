@@ -115,3 +115,18 @@ decisions_in_planning:
     status: "DECIDED (his; restated 2026-11-03 after the coder listed COS as 'not a compartment yet' and the old orchestrator/ as a system of its own)"
     james: '"Are you fucking serious.  Cos is the orchastrator now. That’s the point. The reason for the sandbox is to seperate the systems." · "Is this even possible to integrate an event bus and interaction contract and component registry into one door into the system? Like each component for each module connects" · "You’re the coder. I’m learning as I go."'
     chosen: "COS is the orchestrator (since MG17's handover). The old orchestrator/ process, and the central registry it serves, are what COS replaces. The sandbox exists to separate the systems."
+  PL_D9_one_door_dumb_components:
+    status: "DECIDED 2026-11-03 (his; the door's design proposed by the coder, confirmed by him)"
+    james: '"Yes so each component can be dumb, and agnostic at some point."'
+    context: >-
+      The coder's proposal, the same day: the component registry, the interaction contract and the event bus are one door, because each
+      component's entry carries all three (module, route, CLI command, contract in/out/errors/permission, events emitted and listened to).
+      The door on each system's server.js reads out the registry (also the handshake), checks every call against the component's contract
+      before any module sees it, and carries only the events the registry declares. COS's system registry knows every door; calls and the CLI
+      go through COS to a door. The sandbox makes the door the only way in. The door's code lives inside each system (from genesis's
+      template), only the entry schema shared; Guardian (genesis's reference) or Intelligence (closest today) first, then one at a time.
+    chosen: >-
+      One door per system. Each component is dumb and agnostic: it takes its input and returns its output; the door does the rest (who may
+      call, checking the contract, the events, routing). A component knows nothing of other systems, of the bus or of COS — so it can be
+      written in any language (his NC0, 2026-10-19) and moved or swapped.
+    next: "write it down before anything is built: an addendum to idearium/spec-engine/templates/genesis.spec (the entry's shape and the door), then a map"
