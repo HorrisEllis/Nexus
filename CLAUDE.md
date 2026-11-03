@@ -14,6 +14,10 @@ It’s what cos manages. The spine and component registry for each system routes
 **The component registry is per system. The system registry connects the component registries; COS and the Orchestrator use it to orchestrate.**
 **Every system's component registry is its own: per system, sovereign, never central, and Loom is NOT it (AXIOMS §5.16).** James, 2026-11-03:
 "And enforce that. I’m sick of you confusing that. It’s fucking sovereign. Do not  make this mistake again."
+**Every phase needs a DAG.** James, 2026-11-03: "Okay we also need to clean the phases at some point. Add to the Claude.md. That every phase needs a
+dag." Every phase of every map has its `depends_on:` (`[]` when none, every name resolving, no cycles), its `files:`, and its graph written before
+any code (his 2026-10-18 and 2026-10-19 rules, in docs/CLAUDE.md: `node lib/emerge/compiler/phase-specs.js <map>`, `lib/phase-dag.js`). A phase
+without them is not built. **Pending, his:** the phases need cleaning (the open ones are spread over many maps; when, his call).
 **Every change and every version goes to Versionium, in full (§17.12).** James, 2026-10-29: "full changes, and versions have to be pushed
 to versionium? enforce it everywhere that you'd find it." The how is in docs/CLAUDE.md.
 

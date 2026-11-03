@@ -456,3 +456,13 @@ Said after the coder put Loom (and, before that, a central store in lib/) where 
 - **To reconcile with him, not decided by the coder:** today's `lib/system-registry.js` is a read-only merge of autopilot's kernels,
   diagnostic's systems and lib/version.js (2026-09-06). It is not yet the registry he describes. Where the system registry lives and
   whose it is are his to settle.
+
+## ADDENDUM 2026-11-03 — every phase needs a DAG; the phases need cleaning
+James, 2026-11-03: "Okay we also need to clean the phases at some point. Add to the Claude.md. That every phase needs a dag."
+- Restating, at the top of the root CLAUDE.md, his rules of 2026-10-18 ("each phase, has to have a dependany graph before executing") and
+  2026-10-19 ("every phasemap phase needs extensive dag, that needs to start being standard"), above. Every phase of every map has its
+  `depends_on:`, its `files:`, and its graph, before code. A phase without them is not built.
+- **Pending, his call on when:** cleaning the phases. Found on 2026-11-03: the open phases for COS as the orchestrator alone are spread over
+  four maps (cos-spine, cos-manager, system-doors, the compartment), many superseded in part. The cleaning is planned with him first, not
+  done by the coder on its own.
+
