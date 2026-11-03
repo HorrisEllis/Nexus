@@ -235,6 +235,22 @@
       "path": "/api/cos/systems/:name/disk",
       "in": "{ withState?, by }",
       "out": "the disk made: { file, bytes, files, layers, metadata }; 403 for an agent (DK2)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/systems/:name/vdisk",
+      "out": "{ tools { ok, missing, why }, disk { file, format, virtualSize, actualSize, snapshots[], metadata } | null } (DK8)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/systems/:name/vdisk/verify",
+      "out": "{ verify { ok, files, changed[], missing[] } } — every file re-hashed from inside the qcow2 (?snapshot=<tag>) (DK8)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/systems/:name/vdisk/:op",
+      "in": "{ by, tag?, withState? } — op: make | refresh | snapshot | revert | drop-snapshot",
+      "out": "the disk after; 403 for an agent; 501 when this host lacks qemu-img or e2fsprogs, saying which (DK8)"
     }
   ],
   "door": {
@@ -434,7 +450,10 @@
         "POST /api/cos/systems/:name/config/clear",
         "GET /api/cos/systems/:name/disk",
         "POST /api/cos/systems/:name/disk",
-        "GET /api/cos/disks/:file/verify"
+        "GET /api/cos/disks/:file/verify",
+        "GET /api/cos/systems/:name/vdisk",
+        "GET /api/cos/systems/:name/vdisk/verify",
+        "POST /api/cos/systems/:name/vdisk/:op"
       ],
       "listens": [
         "cos.system.state",

@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793705189876
+exported_at: 1793705608389
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793705189876
-lastSeenAt: 1793705189876
+firstSeenAt: 1793705608389
+lastSeenAt: 1793705608389
 fingerprint: null
 payload:
   for: DK3_the_disk_tab
@@ -45,22 +45,27 @@ payload:
     layer: 3
     deps:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK2_disks_in_cos
-    dependents: []
+    dependents:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
     upstream:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK1_pack_inspect_verify_unpack
       - docs/2026-11-02-cos-disk-phasemap.spec::DK2_disks_in_cos
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
-    downstream: []
+    downstream:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
     conflicts: []
     dangling: []
     lines:
       - layer 3
       - 'depends on (1): DK2_disks_in_cos · all upstream 5'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): DK8_the_disk_in_cos_and_its_vm · finishing it unlocks
+        DK8_the_disk_in_cos_and_its_vm
     edges:
       - from: docs/2026-11-02-cos-disk-phasemap.spec::DK2_disks_in_cos
         kind: declared

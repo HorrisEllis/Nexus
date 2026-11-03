@@ -5,3 +5,7 @@
 .disks{list-style:none;margin:0;padding:var(--s2) var(--s5) var(--s4);display:grid;gap:var(--s2)}
 .disks li{display:grid;grid-template-columns:1fr auto auto;gap:var(--s3);align-items:center;padding:var(--s3) 0;border-bottom:1px solid var(--line-soft);font:400 12.5px/1.45 var(--mono);color:var(--nx-text)}
 .disks li small{display:block;color:var(--nx-muted);font-size:11.5px}.disks .ok{color:var(--nx-ok,#4ade80)}.disks .bad{color:var(--nx-err)}.disks .empty{display:block;color:var(--nx-muted);border:0}
+.vd{padding:var(--s4) var(--s5);display:grid;gap:var(--s3)}.vd .row{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center}.vd .input{height:32px;width:180px}
+.vd .facts{display:grid;grid-template-columns:150px 1fr;gap:6px var(--s4);font:400 12.5px/1.5 var(--mono);color:var(--nx-text)}.vd .facts b{font:500 10.5px/1.6 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--nx-muted)}
+.snaps{list-style:none;margin:0;padding:0;display:grid;gap:4px}.snaps li{display:grid;grid-template-columns:1fr auto auto;gap:var(--s2);align-items:center;font:400 12.5px/1.4 var(--mono);padding:6px 0;border-bottom:1px solid var(--line-soft)}
+.vd .why{color:var(--nx-warn);font:400 12.5px/1.55 var(--font)}.vd .v.ok{color:var(--nx-ok,#4ade80)}.vd .v.bad{color:var(--nx-err)}

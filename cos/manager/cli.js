@@ -27,6 +27,7 @@ const TABLE = [
   ['add', 'add <name> <folder> [cmd=node] [args=server.js] [port=<n>] [health=/health]', 'add a system: a proposal, taken by you'],
   ['disk', 'disk <system> [make] [state] | disk verify <file>', 'a system\'s disks (its spec as metadata, its files in one compressed file); make one, with its data if you say state; verify one'],
   ['disks', 'disks', 'every disk COS holds'],
+  ['vdisk', 'vdisk <system> [make|refresh|verify] | vdisk <system> snapshot|revert|drop <tag>', 'its virtual disk (qcow2): metadata, files and all its data in one file, its snapshots inside'],
 ];
 
 function split(line) {
@@ -41,12 +42,12 @@ function split(line) {
 }
 const pad = (s, n) => String(s ?? '—').padEnd(n);
 
-function createCli({ sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null } = {}) {
+function createCli({ sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null, vdisks = null } = {}) {
   async function run(line, { by = 'person' } = {}) {
     const [verb, ...a] = split(line); const L = [];
     if (!verb) return { ok: true, lines: [] };
     const acts = ['start', 'stop', 'restart', 'boot', 'take', 'drop', 'add'];   // and `disk <system> make` (below)
-    if (/^agent:/.test(String(by)) && (acts.includes(verb) || (verb === 'disk' && a[1] === 'make') || (verb === 'config' && a.length > 1) || (verb === 'notices' && a[0] === 'read')))
+    if (/^agent:/.test(String(by)) && (acts.includes(verb) || (verb === 'disk' && a[1] === 'make') || (verb === 'vdisk' && /^(make|refresh|snapshot|revert|drop)$/.test(a[1] || '')) || (verb === 'config' && a.length > 1) || (verb === 'notices' && a[0] === 'read')))
       return { ok: false, lines: [`an agent proposes; ${verb} is a person's act (POST /api/cos/proposals)`] };
     const need = (n, usage) => { if (a.length < n) throw Object.assign(new Error(`usage: ${usage}`), { code: 400 }); };
     const row = TABLE.find(r => r[0] === verb);
@@ -79,6 +80,15 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
             for (const [k, s] of rows) L.push(`  ${pad(k, 20)}${pad(s.value === null ? '—' : s.unit === 'size' && typeof s.value === 'number' ? `${s.value} MB` : s.unit === 'cpu' && s.value != null ? `${s.value}%` : typeof s.value === 'object' ? JSON.stringify(s.value) : s.value, 18)}${pad(s.from, 11)}${s.how.state || ''}${s.how.when ? ` · ${s.how.when}` : ''}`);
           }
           break;
+        }
+        case 'vdisk': {
+          if (!vdisks) throw new Error('no virtual disks in this manager'); need(1, row[1]); const t = vdisks.tools(); if (!t.ok) throw new Error(t.why);
+          const [name, op, tag] = a; const mb = (b) => `${(b / 1048576).toFixed(1)} MB`;
+          if (op === 'make' || op === 'refresh') { sup.note('vdisk', `${op} its virtual disk`, { by, system: name }); const r = await vdisks[op](name, { by }); L.push(`${name}.qcow2: ${r.files} files, ${mb(r.actualSize)} on disk of ${mb(r.virtualSize)}; ${r.snapshots.length} snapshot(s) inside`); break; }
+          if (op === 'verify') { const v = vdisks.verify(name, { snapshot: tag || null }); L.push(v.ok ? `every one of ${v.files} files matches, read from inside${tag ? ` snapshot ${tag}` : ''}` : `${v.changed.length} changed, ${v.missing.length} missing: ${[...v.changed, ...v.missing].slice(0, 8).join(', ')}`); break; }
+          if (op === 'snapshot' || op === 'revert' || op === 'drop') { need(3, row[1]); sup.note('vdisk', `${op} ${tag}`, { by, system: name }); const r = op === 'snapshot' ? vdisks.snapshot(name, tag, { by }) : op === 'revert' ? vdisks.revert(name, tag, { by }) : vdisks.dropSnapshot(name, tag, { by }); L.push(`${name}: ${op} ${tag} done${r.snapshots ? ` · snapshots: ${r.snapshots.map(s => s.tag).join(', ') || 'none'}` : ''}`); break; }
+          const i = vdisks.info(name); L.push(`${i.file}: ${i.format}, ${mb(i.actualSize)} on disk of ${mb(i.virtualSize)} · ${i.metadata.fileCount} files · made ${i.metadata.created.slice(0, 16).replace('T', ' ')} by ${i.metadata.by}`);
+          for (const s of i.snapshots) L.push(`  snapshot ${pad(s.tag, 20)}${s.at ? s.at.slice(0, 16).replace('T', ' ') : ''}${s.vmState ? ' · with its memory' : ''}`); break;
         }
         case 'disks': { if (!disks) throw new Error('no disks in this manager'); const ds = disks.list(); if (!ds.length) L.push(`no disks yet (${disks.dir})`); for (const d of ds) L.push(`${pad(d.file, 52)}${pad(Math.round(d.bytes / 1024) + ' KB', 10)}${pad(d.files + ' files', 12)}${d.created.slice(0, 16).replace('T', ' ')} · ${d.by}`); break; }
         case 'disk': {

@@ -1,0 +1,225 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DK8_the_disk_in_cos_and_its_vm:3b84c6a0db91742f
+type: graph
+id: phase:DK8_the_disk_in_cos_and_its_vm:3b84c6a0db91742f
+context: dependency graph of phase DK8_the_disk_in_cos_and_its_vm
+intent: null
+summary: 25 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793705608398
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793705608398
+lastSeenAt: 1793705608398
+fingerprint: null
+payload:
+  for: DK8_the_disk_in_cos_and_its_vm
+  kind: phase
+  repo: null
+  hash: 3b84c6a0db91742f
+  nodes:
+    - path: cos/compartment/qemu-runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/cli.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/cli/commands/vm.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/compartment/process-runner.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/provision.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/vm-control.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/helpers/cos-mini-guest.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-vm-shell.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/nexus-update.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: cos/cli/commands/vm.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/vm-control.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/helpers/cos-mini-guest.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-vm-shell.test.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK2_disks_in_cos
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK3_the_disk_tab
+    dependents: []
+    upstream:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK1_pack_inspect_verify_unpack
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK2_disks_in_cos
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK3_the_disk_tab
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK6_the_virtual_disk
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-02-cos-disk-phasemap.spec::DK5_machine_disks
+        files:
+          - cos/compartment/qemu-runtime.js
+    dangling: []
+    lines:
+      - layer 4 · ready
+      - >-
+        depends on (3): DK7_snapshots_inside_the_disk, DK2_disks_in_cos, DK3_the_disk_tab · all
+        upstream 8
+      - 'needed by (0): —'
+      - 'same files as DK5_machine_disks with no order between them: cos/compartment/qemu-runtime.js'
+    edges:
+      - from: docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
+        kind: declared
+      - from: docs/2026-11-02-cos-disk-phasemap.spec::DK2_disks_in_cos
+        kind: declared
+      - from: docs/2026-11-02-cos-disk-phasemap.spec::DK3_the_disk_tab
+        kind: declared

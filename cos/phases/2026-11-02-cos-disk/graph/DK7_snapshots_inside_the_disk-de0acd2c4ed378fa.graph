@@ -1,0 +1,95 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DK7_snapshots_inside_the_disk:de0acd2c4ed378fa
+type: graph
+id: phase:DK7_snapshots_inside_the_disk:de0acd2c4ed378fa
+context: dependency graph of phase DK7_snapshots_inside_the_disk
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793705608397
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793705608397
+lastSeenAt: 1793705608397
+fingerprint: null
+payload:
+  for: DK7_snapshots_inside_the_disk
+  kind: phase
+  repo: null
+  hash: de0acd2c4ed378fa
+  nodes:
+    - path: cos/disk/vdisk.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-vdisk.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/disk/vdisk.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/disk/vdisk.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/disk/vdisk.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: tests/modules/test-cos-vdisk.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK6_the_virtual_disk
+    dependents:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
+    upstream:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK1_pack_inspect_verify_unpack
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK6_the_virtual_disk
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
+    downstream:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): DK6_the_virtual_disk · all upstream 5'
+      - >-
+        needed by (1): DK8_the_disk_in_cos_and_its_vm · finishing it unlocks
+        DK8_the_disk_in_cos_and_its_vm
+    edges:
+      - from: docs/2026-11-02-cos-disk-phasemap.spec::DK6_the_virtual_disk
+        kind: declared

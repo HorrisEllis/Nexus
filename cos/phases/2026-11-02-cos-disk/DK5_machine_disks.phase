@@ -7,11 +7,11 @@ intent: null
 summary: DK5_machine_disks (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793705167318
+exported_at: 1793705608394
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793705167318
-lastSeenAt: 1793705167318
+firstSeenAt: 1793705608394
+lastSeenAt: 1793705608394
 fingerprint: null
 payload:
   id: DK5_machine_disks
@@ -26,4 +26,4 @@ payload:
     - DK4_boot_from_a_disk
   blocks: []
   spec: null
-  graph: 1b970966f14877f3
+  graph: 7cfdd584f3c01419

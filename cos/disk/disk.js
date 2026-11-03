@@ -67,7 +67,8 @@ function createDisks({ root = path.resolve(__dirname, '..', '..'), dir = null, n
     go(''); return { files, skipped };
   }
 
-  async function pack(system, { withState = false, by = null } = {}) {
+  // what goes on a disk, archive or virtual (DK6 reuses it): the entries with their hashes, and the metadata (disk.json) about them
+  function collect(system, { withState = false, by = null, kind = 'archive' } = {}) {
     if (!by) throw err('say who makes it: { "by": "person" | "rule:<id>" }');
     if (/^agent:/.test(String(by))) throw err('an agent proposes; a disk is made by a person or a rule', 403);
     const D = describe(system);
@@ -87,12 +88,17 @@ function createDisks({ root = path.resolve(__dirname, '..', '..'), dir = null, n
     const sum = (l) => { const x = entries.filter(e => e.layer === l); return { files: x.length, bytes: x.reduce((a, e) => a + e.bytes, 0) }; };
     const contentHash = sha(entries.map(e => `${e.layer} ${e.path} ${e.sha256}`).join('\n')).slice(0, 12);
     const manifest = {
-      schema: SCHEMA, system, kind: 'archive', created: now().toISOString(), by, contentHash,
+      schema: SCHEMA, system, kind, created: now().toISOString(), by, contentHash,
       metadata: { declaredBy: D.declaredBy, declaration: D.declaration, spec, coverage: coverage(system, entries) },
       base: { kernel: 'lib', nexus: version, commit, note: 'named, not copied: the disk runs on a Nexus kernel of this version (a linked clone on a shared base image)' },
       layers: { code: sum('code'), state: withState ? { ...sum('state'), folders: D.state } : null },
       files: entries.map(({ abs, ...e }) => e), skipped,
     };
+    return { D, entries, manifest, version, spec, contentHash, skipped };
+  }
+
+  async function pack(system, { withState = false, by = null } = {}) {
+    const { D, entries, manifest, version, spec, contentHash, skipped } = collect(system, { withState, by });
     fs.mkdirSync(DIR, { recursive: true });
     const name = `${system}-${version || 'unversioned'}-${contentHash}${withState ? '-with-state' : ''}.disk`;
     const tmp = path.join(DIR, `.${name}.tar-${process.pid}`), out = path.join(DIR, name);
@@ -153,7 +159,7 @@ function createDisks({ root = path.resolve(__dirname, '..', '..'), dir = null, n
     return { codeFiles: code.length, namedBySpec: hit, pct: code.length ? Math.round(hit / code.length * 100) : 0 };
   }
 
-  return { pack, inspect, verify, unpack, list, coverage, describe, dir: DIR };
+  return { pack, collect, inspect, verify, unpack, list, coverage, describe, dir: DIR };
 }
 
 module.exports = { createDisks, SCHEMA, MODULE_ID: 'cos.disk', VERSION: '1.0.0' };

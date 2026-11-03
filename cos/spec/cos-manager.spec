@@ -1434,6 +1434,20 @@ spec:
       error_paths: ["no such system or folder → 404", "not a disk (no disk.json, another schema) → 422", "an entry leaving its folder → 422, nothing written outside"]
       acceptance: ["test-cos-disk DK-01..DK-05"]
 
+    - id: MOD-COS-VDISK
+      name: vdisk
+      uuid: nexus-cos-vdisk-v1-0000-2026-1103-001
+      path: cos/disk/vdisk.js
+      phase: DK6_the_virtual_disk
+      description: "A compartment's virtual disk: <system>.qcow2 with one ext4 filesystem (/.cos metadata, /code, /state), its snapshots inside; written with mke2fs -d, read with debugfs from a raw copy, no root."
+      deps: [{ name: disk }, { name: qemu-runtime }]
+      schema_refs: [SupervisedSystem]
+      exports: ["createVDisks({ root, dir, disks, env }) → { tools(), make, refresh, info, verify, extract, snapshot, snapshots, revert, dropSnapshot, list, pathOf }", "routes GET /api/cos/systems/:name/vdisk[/verify], POST /api/cos/systems/:name/vdisk/:op; CLI `vdisk`; the Disk tab's Virtual disk"]
+      gate_pipeline: ["GATE-VD-001: a person or a rule acts; an agent is refused", "GATE-VD-002: a missing tool is said (501), nothing faked", "GATE-VD-003: refresh keeps every snapshot"]
+      behavioral_contracts: ["all its data by default (the disk is the whole machine)", "every act on the ledger first and recorded in Versionium"]
+      error_paths: ["no tools → 501 naming them", "a second make → 409 (refresh instead)", "grown past its disk → 409"]
+      acceptance: ["test-cos-vdisk VD-01..VD-06"]
+
   events:
     cos:
       - "cos.system.state { name, state, pid, by }"
@@ -1546,3 +1560,7 @@ spec:
 # James, 2026-11-02: "Use the spec as metadata then have the actual file be a compressed or virtual disk or envirement." MOD-COS-DISK is new
 # (cos/disk/disk.js); cos/testenv/tar.js gains readTar beside its writer; the manager serves the disks and writes a ledger line for each made;
 # the cockpit gains a Disk tab; the shell's Proposals badge no longer reads 0. Map: docs/2026-11-02-cos-disk-phasemap.spec.
+
+# ── ADDENDUM 2026-11-03 (0.60.382, DK6–DK8) — the virtual disk ──
+# James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data, snapshots, system
+# state." MOD-COS-VDISK is new; MOD-COS-DISK gains collect() (shared by both kinds); the Disk tab leads with the virtual disk.

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
+type: phase
+id: docs_2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
+context: pipeline phase DK8_the_disk_in_cos_and_its_vm of docs/2026-11-02-cos-disk-phasemap.spec
+intent: null
+summary: DK8_the_disk_in_cos_and_its_vm (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793705608398
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793705608398
+lastSeenAt: 1793705608398
+fingerprint: null
+payload:
+  id: DK8_the_disk_in_cos_and_its_vm
+  map: docs/2026-11-02-cos-disk-phasemap.spec
+  repo: null
+  layer: integration
+  status: >-
+    "PART 0.60.382 — the routes, CLI and Disk tab (VD-04, VD-05 in Clear Glass); a snapshot keeping
+    a running VM's memory (QMP savevm) and booting with the disk attached remain OPEN"
+  files:
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - cos/manager/cli.js
+    - cos/compartment/qemu-runtime.js
+  depends_on:
+    - DK7_snapshots_inside_the_disk
+    - DK2_disks_in_cos
+    - DK3_the_disk_tab
+  blocks: []
+  spec: null
+  graph: 3b84c6a0db91742f

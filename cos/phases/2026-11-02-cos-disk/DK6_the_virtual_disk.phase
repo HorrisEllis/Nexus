@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-disk-phasemap.spec::DK6_the_virtual_disk
+type: phase
+id: docs_2026-11-02-cos-disk-phasemap.spec::DK6_the_virtual_disk
+context: pipeline phase DK6_the_virtual_disk of docs/2026-11-02-cos-disk-phasemap.spec
+intent: null
+summary: DK6_the_virtual_disk (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793705608395
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793705608395
+lastSeenAt: 1793705608395
+fingerprint: null
+payload:
+  id: DK6_the_virtual_disk
+  map: docs/2026-11-02-cos-disk-phasemap.spec
+  repo: null
+  layer: backend
+  status: '"DONE 0.60.382 — test-cos-vdisk VD-01, VD-03, VD-06"'
+  files:
+    - cos/disk/vdisk.js
+    - cos/testenv/host.js
+    - cos/compartment/qemu-runtime.js
+    - tests/modules/test-cos-vdisk.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - DK1_pack_inspect_verify_unpack
+  blocks:
+    - MOD-COS-VDISK
+  spec: cos/spec/cos-manager.spec
+  graph: d5b120fefe421ce8

@@ -37,7 +37,10 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
   // DK2 0.60.381 (docs/2026-11-02-cos-disk-phasemap.spec) — James, 2026-11-02: "Use the spec as metadata then have the actual file be a compressed or
   // virtual disk or envirement." Each system's disk: its spec as metadata, its files in one compressed file, in COS's own data
   const disks = require('../disk/disk.js').createDisks({ root });
-  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks });
+  // DK6–DK8 0.60.382 — James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data,
+  // snapshots, system state." Each system's qcow2: its metadata, files and data in one ext4, its snapshots inside the same file
+  const vdisks = require('../disk/vdisk.js').createVDisks({ root, disks });
+  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks });
   sup.on('ledger', (entry) => { try { notices.fromLedger(entry); } catch (_) {} });
   const checkNotice = () => { try { notices.fromNotice(require('../../lib/nexus-update.js').notice({ root })); } catch (_) {} };
   const noticeTick = setInterval(checkNotice, 10 * 60 * 1000); if (noticeTick.unref) noticeTick.unref(); setTimeout(checkNotice, 2000).unref();
@@ -114,6 +117,22 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
       if (m === 'GET' && p === '/api/cos/disks') return send(res, 200, { ok: true, dir: disks.dir, disks: disks.list() });
       const dkf = /^\/api\/cos\/disks\/([^/]+?)(\/verify)?$/.exec(p);
       if (dkf && m === 'GET') { try { const f = decodeURIComponent(dkf[1]); if (dkf[2]) return send(res, 200, { ok: true, verify: disks.verify(f) }); const i = disks.inspect(f); delete i.files; return send(res, 200, { ok: true, disk: i }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
+      // DK8 — the virtual disk: read; make, refresh, snapshot, revert, drop a snapshot — each a person's act, on the ledger first (§9.2)
+      const vd = /^\/api\/cos\/systems\/([^/]+)\/vdisk(?:\/(make|refresh|snapshot|revert|drop-snapshot|verify))?$/.exec(p);
+      if (vd) { const name = decodeURIComponent(vd[1]), op = vd[2];
+        try {
+          if (m === 'GET' && !op) { const t = vdisks.tools(); let disk = null; if (t.ok && require('fs').existsSync(vdisks.pathOf(name))) disk = vdisks.info(name); return send(res, 200, { ok: true, system: name, tools: t, disk }); }
+          if (m === 'GET' && op === 'verify') return send(res, 200, { ok: true, verify: vdisks.verify(name, { snapshot: u.searchParams.get('snapshot') || null }) });
+          if (m === 'POST' && op) {
+            if (!body.by) return send(res, 400, { ok: false, error: 'say who acts: { "by": "person" }' });
+            if (/^agent:/.test(String(body.by))) return send(res, 403, { ok: false, error: 'an agent proposes; a disk is a person\'s or a rule\'s' });
+            const what = op === 'make' || op === 'refresh' ? `${op} its virtual disk` : `${op} ${body.tag || ''}`.trim();
+            if (!sup.note('vdisk', what, { by: body.by, system: name })) return send(res, 500, { ok: false, error: 'the ledger cannot be written: nothing done' });
+            const r = op === 'make' ? await vdisks.make(name, { by: body.by, withState: body.withState !== false }) : op === 'refresh' ? await vdisks.refresh(name, { by: body.by, withState: body.withState !== false })
+              : op === 'snapshot' ? vdisks.snapshot(name, body.tag, { by: body.by }) : op === 'revert' ? vdisks.revert(name, body.tag, { by: body.by }) : vdisks.dropSnapshot(name, body.tag, { by: body.by });
+            return send(res, 200, r);
+          }
+        } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
       const dks = /^\/api\/cos\/systems\/([^/]+)\/disk$/.exec(p);
       if (dks) { const name = decodeURIComponent(dks[1]);
         try {
