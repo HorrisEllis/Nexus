@@ -89,3 +89,12 @@ decisions_in_planning:
       (§5.15). Found against it, from the coder's own work: the qcow2 virtual disk's snapshots (a second store, a full copy each refresh),
       the .disk archive used as a version (full copies), and lib/versionium-record.js sending whole files before and after.
     still_his: "whether .nex names a system snapshot recorded in Versionium, or drops out"
+  PL_D5_each_system_reflects_genesis:
+    status: "DECIDED 2026-11-03 (his)"
+    james: '"I’m overwhelmed. Yes. Each system needs to reflect genesis.spec."'
+    reading: "\"Yes\" read as yes to server.js being the spine (the question just asked) — the coder's reading; genesis.spec 1.5.0 already says the origin is server.js (config → server.js → the registry → components → UI), so the reading agrees with it."
+    chosen: >-
+      idearium/spec-engine/templates/genesis.spec (1.5.0; its proposed 1.6.0 mapped 2026-10-31) is the shape every system takes: server.js its
+      one process and origin, its own component registry as its drawbridge (the only way in, by API routes and the CLI), its own nodes and
+      data, its boundary. The open questions above are answered by genesis where it already answers them; only what genesis leaves open
+      comes back to him, one at a time.
