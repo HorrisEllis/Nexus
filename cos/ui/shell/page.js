@@ -14,7 +14,7 @@
   const $ = (id) => document.getElementById(id);
   const stage = $('stage');
   const S = { contract: null, systems: [], frames: new Map(), listens: new Map(), current: null, es: null, poll: null, events: 0, proposals: 0, last: new Map() };
-  const ICON = { overview: 'grid', ledger: 'list', proposals: 'inbox', automation: 'gear', planned: 'compass', cockpit: 'layers' };
+  const ICON = { overview: 'grid', ledger: 'list', proposals: 'inbox', automation: 'pulse', updates: 'download', planned: 'compass',   /* SC7: the gear is Updates' (his "With a gear"); Automation takes pulse */ cockpit: 'layers' };
   const THEMES = ['nexus', 'midnight', 'graphite'];
 
   // ── fetch for the shell's own reads (declared in the contract as the "shell" page) ──
@@ -105,6 +105,7 @@
       BUS.pulse(entry.system, `${entry.kind}${/^person|^agent/.test(entry.by || '') ? ' by-person' : ''}`); relay('cos.ledger', { entry });
       if (/^proposal-/.test(entry.kind)) refreshProposals(); });
     es.addEventListener('cos.system.state', (m) => onState(JSON.parse(m.data)));
+    es.addEventListener('cos.notice', (m) => { try { dispatchEvent(new CustomEvent('cos-notice', { detail: JSON.parse(m.data) })); } catch (_) {} });   // SC5: the bell (console.js)
     es.onerror = () => { busState('starting', 'reconnecting — reading every 5 s'); startPoll(); };
   }
   function startPoll() {
@@ -118,6 +119,7 @@
   addEventListener('message', (m) => {
     if (m.origin !== location.origin || !m.data) return; const d = m.data;
     if (d.type === 'cos.ready') { S.listens.set(m.source, new Set(d.listens || [])); return; }
+    if (d.type === 'cos.key' && (d.key === 'k' || d.key === '`')) { dispatchEvent(new KeyboardEvent('keydown', { key: d.key, ctrlKey: true })); return; }   // SC5: a page's frame passes the shell's keys up
     if (d.type === 'cos.confirm') { confirmAsk(d).then(yes => m.source.postMessage({ type: 'cos.confirmed', id: d.id, yes }, location.origin)); return; }
     if (d.type === 'cos.emit') {
       const page = S.contract.pages.find(p => p.id === d.page);
@@ -201,7 +203,7 @@
       $('manager').querySelector('.dot').dataset.s = 'down'; $('manager-text').textContent = $('manager').title = 'manager not answering'; busState('down', 'no manager');
       setTimeout(start, 3000); return;
     }
-    stage.replaceChildren();
+    stage.replaceChildren(); S.frames.clear();   // SC7: a page opened while the contract was loading was cleared from the stage but kept here, so it never showed again
     BUS.lanes(S.systems.map(s => s.name)); renderNav(); route(); connect(); refreshTop(); refreshProposals();
     setInterval(refreshTop, 5000);
   }

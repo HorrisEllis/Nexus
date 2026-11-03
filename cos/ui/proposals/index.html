@@ -13,7 +13,8 @@
       <h1 class="title">Proposals</h1>
       <p class="lede">An agent never starts, stops or restarts a system on its own. It proposes, says why, and waits. You take it, and it runs as your act, or you drop it.</p>
     </div>
-    <div class="chips" id="tabs"></div>
+    <div class="actions"><div class="chips" id="tabs"></div><!-- SC5 0.60.380: "an add system in the proposal section" -->
+      <button class="btn" id="add-system" onclick="try{window.parent.COS_ADD()}catch(_){COS.notice('err','Add system opens in COS\'s shell')}">+ Add system</button></div>
   </header>
   <section id="list" class="list"></section>
   <script src="../core/core.js"></script>

@@ -25,7 +25,8 @@ const backupFn = BACKUP_URL ? (body) => new Promise((resolve) => {
     if (op === 'check') r = U.check({ root, fetch: opts.fetch !== false });
     else if (op === 'apply') r = await U.applyBacked({ root, confirm: opts.confirm === true, by: opts.by || 'person', backupFn });
     else if (op === 'keep-local') r = await U.keepLocalBacked({ root, confirm: opts.confirm === true, by: opts.by || 'person', backupFn });
-    else r = { ok: false, error: `unknown op "${op}" (check, apply, keep-local)` };
+    else if (op === 'rollback') r = U.rollback({ root, confirm: opts.confirm === true, by: opts.by || 'person' });   // SC7
+    else r = { ok: false, error: `unknown op "${op}" (check, apply, keep-local, rollback)` };
   } catch (e) { r = { ok: false, error: e.message }; }
   process.stdout.write(JSON.stringify(r) + '\n');
 })();

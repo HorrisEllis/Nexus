@@ -61,9 +61,13 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   const decls = declarations || readDeclarations(root);
   const LEDGER = ledgerFile || path.join(process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager'), 'ledger.jsonl');
   const S = new Map();   // name → { decl, state, proc, pid, crashes[], restarts, backoffMs, timers, lastActivity, startedAt, by, circuit, lastExit }
-  for (const d of decls) S.set(d.name, { decl: d, state: 'declared', proc: null, pid: null, crashes: [], restarts: 0, backoffMs: P.restart.backoffMs[0],
+  const add = (d) => S.set(d.name, { decl: d, state: 'declared', proc: null, pid: null, crashes: [], restarts: 0, backoffMs: P.restart.backoffMs[0],
     timers: new Set(), lastActivity: null, startedAt: null, by: null, circuit: { open: false, openedAt: null, why: null }, lastExit: null, health: null,
     out: [] });   // MG18: its recent output, newest last (LOG_KEEP lines), for the cockpit's Logs
+  for (const d of decls) add(d);
+  // SC2 (docs/2026-11-02-cos-console-phasemap.spec) — his configuration over the declaration: hooks.adjust(decl) → the declaration as it runs
+  // (port, env, health URL, wall mode, autostart, phase, restart). Read at each spawn, boot and crash; a hook that throws leaves the declaration.
+  const eff = (d) => { if (typeof hooks.adjust !== 'function') return d; try { return hooks.adjust(d) || d; } catch (e) { log(`[${d.name}] the configuration hook threw: ${e.message} — its declaration is used`); return d; } };
   const LOG_KEEP = 400;
   const bus = new EventEmitter(); bus.setMaxListeners(100);   // MG18: every ledger line is announced, so the UI hears it instead of polling
 
@@ -110,7 +114,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   }
 
   function spawnNow(name, by) {
-    const s = S.get(name), d = s.decl;
+    const s = S.get(name), d = eff(s.decl);
     if (s.circuit.open) { write('refused', name, `circuit open since ${new Date(s.circuit.openedAt).toISOString()}: ${s.circuit.why} — reset it to start`, { by }); return false; }
     const floor = d.critical ? P.criticalHaltPct : (d.haltPctOverride != null ? d.haltPctOverride : P.memoryHaltPct);
     const free = freeMemPct();
@@ -156,6 +160,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       write('circuit-open', name, `${s.circuit.why}. Not restarting; the others keep running.`); return;
     }
     if (P.restart.on !== 'crash') return;
+    if (eff(s.decl).restart === 'never') { write('no-restart', name, 'its configuration says never restart on a crash (his): left down', { by: 'rule:config' }); return; }
     const delay = Math.max(s.decl.minRestartDelay || 0, s.backoffMs);
     s.backoffMs = Math.min(s.backoffMs * P.restart.factor, P.restart.backoffMs[1]); s.restarts++;
     later(s, delay, () => { if (s.state === 'down') spawnNow(name, 'rule:restart'); });
@@ -208,16 +213,17 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   function resetCircuit(name, { by = 'person' } = {}) { const s = must(name); s.crashes = []; s.circuit = { open: false, openedAt: null, why: null }; s.state = 'stopped'; write('circuit-close', name, 'reset by a person', { by }); return view(s); }
 
   async function boot({ set = P.bootSet, by = 'boot' } = {}) {
-    const want = (s) => (Array.isArray(set) ? set.includes(s.decl.name) : set === 'core' ? !!s.decl.critical : !s.decl.onDemand);
-    const chosen = [...S.values()].filter(want), skipped = [...S.values()].filter(s => !want(s)).map(s => ({ name: s.decl.name, why: s.decl.onDemand ? 'on demand' : `not in bootSet ${JSON.stringify(set)}` }));
+    const E = new Map([...S.values()].map(s => [s, eff(s.decl)]));   // SC2: his autostart, on demand and phase over the declaration
+    const want = (s) => (Array.isArray(set) ? set.includes(s.decl.name) : E.get(s).autostart === false ? false : set === 'core' ? !!s.decl.critical : !E.get(s).onDemand);
+    const chosen = [...S.values()].filter(want), skipped = [...S.values()].filter(s => !want(s)).map(s => ({ name: s.decl.name, why: E.get(s).autostart === false && !Array.isArray(set) ? 'autostart off (his configuration)' : E.get(s).onDemand ? 'on demand' : `not in bootSet ${JSON.stringify(set)}` }));
     write('boot', null, `boot set ${JSON.stringify(set)}: ${chosen.length} to start`, { by });
-    const phases = [...new Set(chosen.map(s => s.decl.phase ?? 99))].sort((a, b) => a - b), started = [];
+    const phases = [...new Set(chosen.map(s => E.get(s).phase ?? 99))].sort((a, b) => a - b), started = [];
     for (const ph of phases) {
-      const group = chosen.filter(s => (s.decl.phase ?? 99) === ph);
+      const group = chosen.filter(s => (E.get(s).phase ?? 99) === ph);
       for (const s of group) { if (!running(s)) spawnNow(s.decl.name, by); started.push(s.decl.name); }
-      await Promise.all(group.filter(s => s.decl.healthUrl).map(async (s) => {   // the phase waits for its health, never forever (§1.2)
+      await Promise.all(group.filter(s => E.get(s).healthUrl).map(async (s) => {   // the phase waits for its health, never forever (§1.2)
         const until = Date.now() + P.phaseGateMs;
-        while (Date.now() < until) { if (await checkHealth(s.decl.healthUrl)) { if (s.proc) s.state = 'up'; return; } await new Promise(r => setTimeout(r, 250)); }
+        while (Date.now() < until) { if (await checkHealth(E.get(s).healthUrl)) { if (s.proc) s.state = 'up'; return; } await new Promise(r => setTimeout(r, 250)); }
         write('health', s.decl.name, `phase ${ph}: no health within ${P.phaseGateMs / 1000}s — boot goes on, said`);
       }));
     }
@@ -230,7 +236,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   }, P.idleCheckMs); if (reaper.unref) reaper.unref();
 
   function view(s) {
-    const d = s.decl;
+    const d = eff(s.decl);
     return { name: d.name, system: d.system, state: s.state, pause: s.pause ? { ...s.pause, pids: [...s.pause.pids] } : null, pid: s.pid, port: d.healthUrl ? Number((/:(\d+)/.exec(d.healthUrl) || [])[1]) || null : null,
       healthUrl: d.healthUrl || null, critical: !!d.critical, compartment: d.compartment || null, walled: !!(d.boundary && d.boundary.allow), wallMode: d.boundary ? (d.boundary.mode || 'enforce') : null, wallVia: d.boundary && d.boundary.allow ? (/electron/i.test(String(d.cmd)) ? 'NODE_OPTIONS' : '--require') : null, bootPhase: d.onDemand ? null : (d.phase ?? null), onDemand: !!d.onDemand,
       restarts: { count: s.restarts, last: s.lastExit ? s.lastExit.ts : null, backoffMs: s.backoffMs }, circuit: { ...s.circuit }, startedAt: s.startedAt, by: s.by,
@@ -250,7 +256,11 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
 
   const api = { boot, note, logs, pause, resume, on: (ev, fn) => bus.on(ev, fn), off: (ev, fn) => bus.off(ev, fn), declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
     policy: () => JSON.parse(JSON.stringify(P)), setPolicy: (patch, { by = 'person' } = {}) => { Object.assign(P, patch || {}); write('policy', null, `policy changed: ${JSON.stringify(patch)}`, { by }); return JSON.parse(JSON.stringify(P)); },
-    shutdown, DEFAULTS, ledgerFile: LEDGER, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); }, commandOf: (n) => commandOf(must(n).decl), root };
+    shutdown, DEFAULTS, ledgerFile: LEDGER, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); },
+    // SC4 — a system added while COS runs (its declaration just written by add-system.js): declared live, never started by this
+    declare: (d) => { if (!d || !d.name) throw Object.assign(new Error('a declaration needs a name'), { code: 400 }); if (S.has(d.name)) throw Object.assign(new Error(`"${d.name}" is already declared`), { code: 409 });
+      decls.push(d); add(d); write('declared', d.name, `added while COS runs: ${d.cmd || 'node'} ${(d.args || []).join(' ')}`, { by: d.addedBy || 'person' }); return view(S.get(d.name)); },
+    effective: (n) => eff(must(n).decl), commandOf: (n) => commandOf(must(n).decl), root };
   return api;
 }
 

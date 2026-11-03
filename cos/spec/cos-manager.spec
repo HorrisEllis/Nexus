@@ -1348,6 +1348,13 @@ spec:
       behavioral_contracts: ["turning it off removes the task and the login item", "a failed elevation falls back to the login item, said"]
       error_paths: ["schtasks refused (no admin) → the login item, 'not elevated' said", "not Windows → the login item (macOS) or a note (Linux)"]
       acceptance: ["the task command built for enable and disable; a refused schtasks falls back to the login item; --hidden shows no window"]
+
+
+
+
+
+
+
   events:
     cos:
       - "cos.system.state { name, state, pid, by }"
@@ -1440,3 +1447,32 @@ spec:
 # the title bar with Windows' own buttons drawn over the top right (titleBarOverlay, 40px); 'windows' changes nothing (the way back). The
 # preload marks the page html[data-cos-frame="none"]; cos/ui/shell/page.css then makes the top bar the drag region and ends it before those
 # buttons. settings.frame: none | windows. Map: docs/2026-11-02-cos-enterprise-phasemap.spec CE7.
+
+# ── ADDENDUM 2026-11-02 (0.60.380, SC1–SC5) — the bell, configuration per system, add a system, COS's command line ──
+# James, 2026-11-02: "Also have a notification bell for update, system status,  notications" · "Need configuration for each system. Hooks into the
+# config for each miniworld, set ram, cpu and network limits. Percent or gbs. Ports and network settings. All the settings like idearium has for the
+# repos." · "an add system in the proposal section, or just in the general homepage" · "Need the system cli."
+# MOD-MG-NOTICES, MOD-MG-SYSTEM-CONFIG, MOD-MG-ADD-SYSTEM, MOD-MG-CLI are new. MOD-MG-SUPERVISOR gains hooks.adjust(decl) (read at spawn, boot,
+# crash and in its view), declare(decl) and effective(name). MOD-MG-RESOURCES: null for heapMB, onOver or priority drops his layer. MOD-MG-UI-SHELL
+# gains the bell, the console and the Add system form (console.js); the cockpit gains a Configuration section; Overview and Proposals an Add system
+# button. MOD-MG-UI-SERVE: a write's origin is checked against the port it listens on (port 0 refused every write before). The shell's keys reach
+# it from inside a page's frame. "miniworld" is read by the coder as each system's compartment (its declaration and its process) — to confirm.
+
+# ── ADDENDUM 2026-11-02 (0.60.381, SC7) — Updates, with a gear ──
+# James, 2026-11-02: "A gear, with update settings and Build that update section in cos. With a gear". MOD-MG-UI-UPDATES is new; MOD-MG-UI-SHELL
+# gains the gear (#/updates/settings) and clears its frames with its stage on (re)start (a page opened while the contract loaded never showed).
+# cos/manager/updates.js gains settings, setSettings, history and rollback (update-run.js rollback). core.js's gear icon is a cog.
+
+# ── ADDENDUM 2026-11-03 (0.60.382, DK1–DK3) — a compartment's disk ──
+# James, 2026-11-02: "Use the spec as metadata then have the actual file be a compressed or virtual disk or envirement." MOD-COS-DISK is new
+# (cos/disk/disk.js); cos/testenv/tar.js gains readTar beside its writer; the manager serves the disks and writes a ledger line for each made;
+# the cockpit gains a Disk tab; the shell's Proposals badge no longer reads 0. Map: docs/2026-11-02-cos-disk-phasemap.spec.
+
+# ── ADDENDUM 2026-11-03 (0.60.383, DK6–DK8) — the virtual disk ──
+# James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data, snapshots, system
+# state." MOD-COS-VDISK is new; MOD-COS-DISK gains collect() (shared by both kinds); the Disk tab leads with the virtual disk.
+
+# ── ADDENDUM 2026-11-03 (SC8) — seven modules moved, whole, to their own specs ──
+# MOD-MG-NOTICES, MOD-MG-SYSTEM-CONFIG, MOD-MG-ADD-SYSTEM, MOD-MG-CLI, MOD-MG-UI-UPDATES → cos/spec/cos-console.spec; MOD-COS-DISK, MOD-COS-VDISK →
+# cos/spec/cos-disk.spec. They were added here in 0.60.380–0.60.383 while their phases live in other maps, and three depended on names this
+# spec never declares; test-substrate-spec failed from 0.60.380 and the coder did not run it. Moved, not deleted (§0.3).

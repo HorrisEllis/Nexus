@@ -34,6 +34,7 @@ const KEYS = { heapMB: [64, 16384], rssLimitMB: [64, 65536] };
 function validate(patch) {
   const out = {};
   for (const [k, v] of Object.entries(patch || {})) {
+    if (v === null && k !== 'rssLimitMB' && ['heapMB', 'onOver', 'priority'].includes(k)) { out[k] = null; continue; }   // SC2: null drops his layer (the declared value again)
     if (k === 'heapMB' || k === 'rssLimitMB') {
       if (v === null && k === 'rssLimitMB') { out[k] = null; continue; }
       const n = Number(v), [lo, hi] = KEYS[k];
@@ -101,7 +102,7 @@ function createResources(sup, { root = sup.root, store = null, sampleMs = 30000,
     if (!sup.note('caps', `${Object.entries(ok).map(([k, v]) => `${k} ${before[k]} → ${v}`).join(', ')}`, { by, system: name })) throw new Error('the ledger cannot be written: nothing changed');
     fs.mkdirSync(path.dirname(FILE), { recursive: true }); fs.writeFileSync(FILE, JSON.stringify(his, null, 2));
     const v = sup.get(name);
-    if ('priority' in ok && v.pid) applyPriority(name, v.pid, ok.priority);
+    if ('priority' in ok && v.pid) applyPriority(name, v.pid, ok.priority == null ? caps(name).priority : ok.priority);
     if ('rssLimitMB' in ok || 'onOver' in ok) { const r = runs.get(name); if (r) r.over = false; }
     try { require('../../lib/versionium-record.js').record({ kind: 'cos.caps', system: name, by, message: `COS: ${name}'s caps — ${Object.keys(ok).join(', ')}`, change: { before: Object.fromEntries(Object.keys(ok).map(k => [k, before[k]])), after: ok } }).catch(() => {}); } catch (_) {}
     return caps(name);

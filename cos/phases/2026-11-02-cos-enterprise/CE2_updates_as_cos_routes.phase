@@ -7,11 +7,11 @@ intent: null
 summary: CE2_updates_as_cos_routes (backend) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1793581138959
+exported_at: 1793708311183
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793581138959
-lastSeenAt: 1793581138959
+firstSeenAt: 1793708311183
+lastSeenAt: 1793708311183
 fingerprint: null
 payload:
   id: CE2_updates_as_cos_routes
@@ -32,4 +32,4 @@ payload:
     - CE_D0_per_system_reading
   blocks: []
   spec: null
-  graph: 802761c1790cb398
+  graph: 4f582656318eef10

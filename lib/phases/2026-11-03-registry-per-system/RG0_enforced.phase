@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-03-registry-per-system-phasemap.spec::RG0_enforced
+type: phase
+id: docs_2026-11-03-registry-per-system-phasemap.spec::RG0_enforced
+context: pipeline phase RG0_enforced of docs/2026-11-03-registry-per-system-phasemap.spec
+intent: null
+summary: RG0_enforced (backend) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1793705950442
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793705950442
+lastSeenAt: 1793705950442
+fingerprint: null
+payload:
+  id: RG0_enforced
+  map: docs/2026-11-03-registry-per-system-phasemap.spec
+  repo: null
+  layer: backend
+  status: '"DONE 0.60.384 — test-registry-sovereign RS-01, RS-02"'
+  files:
+    - lib/registry-sovereign-check.js
+    - lib/contracts/registry-sovereign-baseline.json
+    - tests/modules/test-registry-sovereign.test.js
+    - tests/modules/run-all.js
+    - docs/AXIOMS-v3.1.md
+    - docs/CLAUDE.md
+    - CLAUDE.md
+  depends_on:
+    - RG_D0_the_registry_is_per_system
+  blocks: []
+  spec: null
+  graph: 95add091a375dc32

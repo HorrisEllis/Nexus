@@ -99,10 +99,11 @@
     return el;
   }
   const P = {
+    bell: 'M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0', plus: 'M12 5v14M5 12h14', download: 'M12 4v11M7 10.5l5 5 5-5M5 20h14',   // SC5 0.60.380
     play: 'M7 4.5v15l12-7.5z', stop: 'M6 6h12v12H6z', restart: 'M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5', reset: 'M12 3v4m0 10v4M3 12h4m10 0h4M6 6l2.5 2.5m7 7L18 18M6 18l2.5-2.5m7-7L18 6',
     open: 'M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5', check: 'M5 12.5l4.5 4.5L19 7.5', x: 'M6 6l12 12M18 6L6 18',
     bolt: 'M13 3L5 13.5h6L10 21l9-11h-6z', search: 'M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14zM20 20l-4-4', grid: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
-    list: 'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01', inbox: 'M4 13l2.5-8h11L20 13v6H4zM4 13h5l1 2h4l1-2h5', gear: 'M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM12 2.5v3m0 13v3M2.5 12h3m13 0h3M5.3 5.3l2.1 2.1m9.2 9.2 2.1 2.1M5.3 18.7l2.1-2.1m9.2-9.2 2.1-2.1',
+    list: 'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01', inbox: 'M4 13l2.5-8h11L20 13v6H4zM4 13h5l1 2h4l1-2h5', gear: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z'   /* SC7: a real cog (his "With a gear"; the old path read as a sun) */,
     compass: 'M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18zM15.5 8.5l-2 5-5 2 2-5z', chevron: 'M9 6l6 6-6 6', terminal: 'M4 5h16v14H4zM7.5 9.5l3 2.5-3 2.5M12.5 15h4',
     pulse: 'M3 12h4l2.5-6 4 12 2.5-6H21', file: 'M6 3h8l4 4v14H6zM14 3v4h4', db: 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3',
     api: 'M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16', flask: 'M9 3h6M10 3v6L4.5 19a1.3 1.3 0 0 0 1.1 2h12.8a1.3 1.3 0 0 0 1.1-2L14 9V3', camera: 'M4 8h3l2-3h6l2 3h3v11H4zM12 10.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6z',
@@ -130,5 +131,8 @@
     idling: 'idling', idle: 'idle', stopped: 'stopped', declared: 'not started', down: 'down', 'circuit-open': 'circuit open', external: 'external' };
   const stateLabel = (s) => STATES[s] || s;
 
+  // SC5 0.60.380 — the shell's keys (Ctrl+K Go to, Ctrl+` the command line) reach it from inside a page's frame too: found driving the
+  // console in Clear Glass, where a key pressed with focus in a page never reached the shell (Ctrl+K had the same gap since MG18)
+  if (inFrame) addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K' || e.key === '`')) { e.preventDefault(); window.parent.postMessage({ type: 'cos.key', key: e.key.toLowerCase() }, location.origin); } });
   window.COS = { page, call, on, emit, confirm, notice, navigate, h, icon, esc, ago, dur, clock, say, down, param, stateLabel, Refused, Down, get contract() { return state.contract; }, get self() { return state.page; } };
 })();

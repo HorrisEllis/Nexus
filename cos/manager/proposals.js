@@ -24,10 +24,22 @@ function createProposals(sup, { file } = {}) {
   };
   const save = (p) => { fs.mkdirSync(path.dirname(FILE), { recursive: true }); fs.appendFileSync(FILE, JSON.stringify(p) + '\n'); return p; };
   const view = (p) => ({ ...p, ageMs: Date.now() - p.at });
+  // SC4 (docs/2026-11-02-cos-console-phasemap.spec) — other kinds of held act, each with its own check and run (add-system: its target is not
+  // declared yet). A person may hold one of these too (his own add, taken in the same click, SC_D4).
+  const kinds = new Map();
+  const register = (verb, { check, run, people = false }) => { kinds.set(verb, { check, run, people }); };
 
-  function hold({ by, verb, target, why } = {}) {
+  function hold({ by, verb, target, why, payload } = {}) {
+    const k = kinds.get(verb);
+    if (k) {
+      if (!by || (!/^(agent|rule):/.test(String(by)) && !k.people)) throw Object.assign(new Error('say who proposes: { "by": "agent:<name>" | "person" }'), { code: 400 });
+      const checked = k.check({ target, payload, by });   // throws with a code when it cannot be
+      const p = { id: `p-${Date.now().toString(36)}${(seq++).toString(36)}`, at: Date.now(), by, verb, target, why: String(why || checked.why || '').slice(0, 500), payload: checked.payload || payload || null, seen: null, status: 'held' };
+      if (!sup.note('proposal-held', `${by} proposes ${verb} ${target}: ${p.why}`, { by, system: target })) throw new Error('the ledger cannot be written: nothing held');
+      return view(save(p));
+    }
     if (!by || !/^(agent|rule):/.test(String(by))) throw Object.assign(new Error('a proposal is an agent\'s: { "by": "agent:<name>" }'), { code: 400 });
-    if (!VERBS[verb]) throw Object.assign(new Error(`no such act "${verb}": ${Object.keys(VERBS).join(', ')}`), { code: 400 });
+    if (!VERBS[verb]) throw Object.assign(new Error(`no such act "${verb}": ${[...Object.keys(VERBS), ...kinds.keys()].join(', ')}`), { code: 400 });
     const sys = sup.get(target);   // throws for an undeclared system
     if (!why || String(why).trim().length < 3) throw Object.assign(new Error('say why: an agent\'s reason is part of its proposal'), { code: 400 });
     const p = { id: `p-${Date.now().toString(36)}${(seq++).toString(36)}`, at: Date.now(), by, verb, target, why: String(why).slice(0, 500),
@@ -43,7 +55,7 @@ function createProposals(sup, { file } = {}) {
   function take(id, { by } = {}) {
     if (!by || /^agent:/.test(String(by))) throw Object.assign(new Error('a proposal is taken by a person: { "by": "person" }'), { code: 400 });
     const p = must(id); let result = null, error = null;
-    try { result = sup[VERBS[p.verb]](p.target, { by }); } catch (e) { error = e.message; }
+    try { result = kinds.has(p.verb) ? kinds.get(p.verb).run(p, { by }) : sup[VERBS[p.verb]](p.target, { by }); } catch (e) { error = e.message; }
     sup.note('proposal-taken', `${by} took ${p.by}'s ${p.verb} ${p.target}${error ? ` — it failed: ${error}` : ''}`, { by, system: p.target });
     return { proposal: view(save({ ...p, status: error ? 'failed' : 'taken', closedAt: Date.now(), closedBy: by, ...(error ? { error } : {}) })), result };
   }
@@ -53,7 +65,7 @@ function createProposals(sup, { file } = {}) {
     sup.note('proposal-dropped', `${by} dropped ${p.by}'s ${p.verb} ${p.target}${why ? `: ${why}` : ''}`, { by, system: p.target });
     return { proposal: view(save({ ...p, status: 'dropped', closedAt: Date.now(), closedBy: by, ...(why ? { dropWhy: String(why).slice(0, 300) } : {}) })) };
   }
-  return { hold, list, take, drop, file: FILE, VERBS: Object.keys(VERBS) };
+  return { hold, list, take, drop, register, file: FILE, VERBS: Object.keys(VERBS), kinds: () => [...kinds.keys()] };
 }
 
 module.exports = { createProposals };

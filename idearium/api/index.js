@@ -6241,7 +6241,7 @@ async function handle(req, res, route, query, body) {
     // github?" · "first one but the second one needs to be the end state" (git now, COS later). lib/nexus-update.js; restarting stays his.
     case 'update.check': { const U = _require('../../lib/nexus-update.js'); const r = U.check({ fetch: !(query && query.fetch === '0') }); res.writeHead(200, { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r)); }
     case 'update.policy.get': { const U = _require('../../lib/nexus-update.js'); return ok(res, U.getPolicy({})); }
-    case 'update.policy.set': { const U = _require('../../lib/nexus-update.js'); const r = U.setPolicy({ policy: body && body.policy, everyHours: body && body.everyHours }); if (!r.ok) return err(res, 400, r.error); return ok(res, r); }
+    case 'update.policy.set': { const U = _require('../../lib/nexus-update.js'); const r = U.setPolicy({ policy: body && body.policy, everyHours: body && body.everyHours, keepLocal: body && body.keepLocal });   /* SC7: keepLocal auto | ask */ if (!r.ok) return err(res, 400, r.error); return ok(res, r); }
     case 'update.auto': { const U = _require('../../lib/nexus-update.js'); return ok(res, { policy: U.getPolicy({}), last: U.autoState({}) }); }
     case 'update.restart': {   // the person's button (UP_D2): each supervised process of that system, restarted by autopilot
       const sys = String((body && body.system) || '').trim();

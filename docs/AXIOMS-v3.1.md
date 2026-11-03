@@ -234,6 +234,10 @@ Any implementation may be replaced provided it satisfies the same contract. Repl
 *↳ James, 2026-10-25: "rememeber each system is sovereign." · 2026-10-29: "Remember sovereignty." Rules 1 and 3 are from the record
 (the 2026-09-23 handoff's "each system owns writing/storing its own data", and the 2026-09-19 handoff's rule from him that if cortex
 going down breaks something, it gets moved); their wording here is the coder's. §5.15 is §5.9 made checkable; it adds no new value, only the tests that show whether §5.9 holds.*
+
+**§5.16 Every System's Component Registry Is Its Own** *(2026-11-03, his word)*
+The component registry is per system, and sovereign. Each system owns its registry: the entries that say what it offers (its routes, commands, events, permissions, hooks), written, stored and served by that system alone, as part of its compartment (.cos). There is no central registry. No other system stores, fills or serves another system's entries, and none is the registry for all. Others find a system and what it offers through that system's own registry. The only thing shared is the schema an entry is checked against. Loom is not the component registry, and is being removed. The system registry connects the component registries, and COS and the Orchestrator use it to orchestrate (his, 2026-11-03: "Then the system registry is for connecting the component registries. Cos and The orchastrator uses that to orchestrate."). A system reaches another only through its API routes and the CLI server, so the other can be swapped; lib/ is not a directory for what a system uses (his, the same day).
+*↳ James, 2026-11-03: "No component registry is per system.  That needs to be implemented" · "And enforce that. I’m sick of you confusing that. It’s fucking sovereign. Do not  make this mistake again." · earlier the same day: "Not loom. Never said loom. Loom is going to be removed". Said after the coder twice called Loom the component registry (following the old wording of docs/CLAUDE.md rule 3) and found the registry built central: lib/component-registry.js, one store in Cortex's memory, filled by Cortex at boot, served by Orchestrator. That build is a §5.16 violation to undo, not a design to keep.*
 ---
 
 ### § Group 6 — Documentation
@@ -595,6 +599,7 @@ Wherever a change or a version is made, it is recorded in Versionium, the owner 
 §5.13  Syntax is not architecture.
 §5.14  Every layer is replaceable.
 §5.15  Sovereignty is kept, not just declared: one owner per kind of data, placement is ownership, one system's outage breaks no other.
+§5.16  Every system's component registry is its own: per system, sovereign, inside its compartment; no central registry; Loom is not it.
 §6.1   Documentation is generated from proof, not written as aspiration.
 §6.2   Always read before building.
 §6.3   Every spec is living and tracked in the registry.

@@ -111,3 +111,37 @@ html[data-cos-frame="none"] .top-actions { flex: none; }
 @media (min-width: 1500px) { html[data-cos-frame="none"] .meter { grid-template-columns: auto 72px auto; } html[data-cos-frame="none"] .meter .bar { display: block; } }
 html[data-cos-frame="none"] .top button, html[data-cos-frame="none"] .top a, html[data-cos-frame="none"] .top input,
 html[data-cos-frame="none"] .top .meter, html[data-cos-frame="none"] .top .manager { -webkit-app-region: no-drag; app-region: no-drag; }
+
+/* ── SC5 (0.60.380) — the bell, COS's command line, Add system. James, 2026-11-02: "notification bell for update, system status,  notications" ── */
+.icon-btn { width: 34px; padding: 0; justify-content: center; position: relative; } .icon-btn svg { width: 17px; height: 17px; }
+.bell .badge { position: absolute; top: -4px; right: -5px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--ac); color: var(--nx-void);
+  font: 700 10px/17px var(--mono); text-align: center; box-shadow: 0 0 10px color-mix(in srgb, var(--ac) 60%, transparent); }
+.bell.err .badge { background: var(--nx-err); box-shadow: 0 0 10px color-mix(in srgb, var(--nx-err) 60%, transparent); }
+.bell.ring svg { animation: cos-ring .8s var(--ease); } @keyframes cos-ring { 20% { transform: rotate(14deg); } 40% { transform: rotate(-12deg); } 60% { transform: rotate(8deg); } 80% { transform: rotate(-4deg); } }
+.bell-panel { position: fixed; z-index: 30; top: calc(var(--top) + var(--gap) + 8px); right: var(--gap); width: min(420px, calc(100vw - 2 * var(--gap))); max-height: min(70vh, 640px);
+  display: flex; flex-direction: column; background: var(--glass-hi); animation: cos-pop .18s var(--ease) both; overflow: hidden; }
+html[data-cos-frame="none"] .bell-panel { right: calc(var(--gap) + 120px); }
+.bell-head { display: flex; align-items: center; gap: var(--s3); padding: var(--s4) var(--s4) var(--s3); border-bottom: 1px solid var(--line-soft); flex-wrap: wrap; }
+.bell-head b { font: 600 14px/1 var(--font); color: var(--nx-bright); margin-right: auto; }
+.bell-tabs { display: flex; gap: 2px; order: 3; width: 100%; } .bell-tabs .on { color: var(--ac); background: color-mix(in srgb, var(--ac) 12%, transparent); }
+.bell-list { list-style: none; margin: 0; padding: var(--s2); overflow: auto; }
+.bell-list .n { display: grid; grid-template-columns: 12px 1fr; gap: var(--s3); padding: var(--s3); border-radius: 10px; cursor: pointer; }
+.bell-list .n:hover, .bell-list .n:focus-visible { background: color-mix(in srgb, var(--nx-edge) 50%, transparent); outline: none; }
+.bell-list .n .dot { margin-top: 5px; } .bell-list .n b { font: 600 13px/1.35 var(--font); color: var(--nx-bright); }
+.bell-list .n p { margin: 3px 0; font: 400 12px/1.45 var(--font); color: var(--nx-dim); overflow-wrap: anywhere; } .bell-list .n.read { opacity: .55; } .bell-list .n.read b { font-weight: 500; }
+.bell-list .empty { padding: var(--s6); text-align: center; }
+.console { position: fixed; z-index: 29; left: calc(var(--rail) + 2 * var(--gap)); right: var(--gap); bottom: var(--gap); height: min(46vh, 420px); display: flex; flex-direction: column;
+  background: color-mix(in srgb, var(--nx-void) 88%, transparent); animation: cos-pop .18s var(--ease) both; }
+.console-head { display: flex; align-items: center; gap: var(--s3); padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line-soft); } .console-head b { font: 600 13px/1 var(--mono); color: var(--ac); }
+.console-head button { margin-left: auto; }
+.console-out { flex: 1; margin: 0; padding: var(--s3) var(--s4); overflow: auto; font: 400 12px/1.55 var(--mono); color: var(--nx-text); white-space: pre-wrap; }
+.console-out .cmd { color: var(--ac-soft); } .console-out .err { color: var(--nx-err); } .console-out .faint { color: var(--nx-muted); }
+.console-in { display: flex; align-items: center; gap: var(--s2); padding: var(--s3) var(--s4); border-top: 1px solid var(--line-soft); font: 500 12px/1 var(--mono); color: var(--ac); }
+.console-in input { flex: 1; background: transparent; border: 0; outline: none; color: var(--nx-bright); font: 400 13px/1.4 var(--mono); }
+.add-form { width: min(520px, 92vw); display: grid; gap: var(--s3); } .add-form h2 { margin: 0; } .add-form p { margin: 0; font-size: 12.5px; }
+.add-form label { display: grid; gap: 5px; font: 500 10.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--nx-muted); }
+.add-form input { text-transform: none; letter-spacing: 0; } .add-form .two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); }
+.add-err { color: var(--nx-err); font: 400 12.5px/1.5 var(--mono); }
+.bell-panel[hidden], .console[hidden], .add-err[hidden], .bell .badge[hidden], .nav a .badge[hidden] { display: none; }   /* found in the Clear Glass shots: display:flex outranked [hidden] */
+/* SC5 — the bell and the command line take room in the top bar: the title keeps its own, the manager's pill gives it (full text in its title) */
+.crumb { min-width: 96px; } .manager { min-width: 0; flex: 0 1 auto; overflow: hidden; } #manager-text { overflow: hidden; text-overflow: ellipsis; } .top-actions { flex: none; }

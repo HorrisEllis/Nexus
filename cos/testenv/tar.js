@@ -154,4 +154,34 @@ function packDir(root, outFile, { skip = DEFAULT_SKIP, maxBytes = 4 * 1024 ** 3 
   return stats;
 }
 
-module.exports = { packDir, DEFAULT_SKIP, TarWriter, _split, _paxRecord };
+/**
+ * readTar(buf) → [{ path, type, mode, size, mtime, linkname, data }] — the reader beside the writer (DK1, 0.60.382,
+ * docs/2026-11-02-cos-disk-phasemap.spec). Reads what TarWriter writes and what GNU tar, bsdtar and busybox write: ustar names with their
+ * prefix, a PAX 'x' header's path, linkpath and size for the next entry, a global 'g' header skipped. data is a view into buf (no copy).
+ */
+function readTar(buf) {
+  const out = []; let off = 0, pax = null;
+  const str = (b, a, n) => { const s = b.subarray(a, a + n); const z = s.indexOf(0); return s.subarray(0, z < 0 ? n : z).toString('utf8'); };
+  const oct = (b, a, n) => { const t = str(b, a, n).trim(); return t ? parseInt(t, 8) : 0; };
+  while (off + BLOCK <= buf.length) {
+    const h = buf.subarray(off, off + BLOCK);
+    if (h.every(x => x === 0)) break;                       // the end: two zero blocks (one is enough to stop)
+    const sum = oct(h, 148, 8); let calc = 0; for (let i = 0; i < BLOCK; i++) calc += (i >= 148 && i < 156) ? 32 : h[i];
+    if (sum !== calc) throw new Error(`tar: a bad header at byte ${off} (checksum ${sum} ≠ ${calc})`);
+    const type = String.fromCharCode(h[156] || 48); let size = oct(h, 124, 12);
+    const name = str(h, 0, 100), prefix = str(h, 345, 155);
+    const dataAt = off + BLOCK;
+    if (type === 'x' || type === 'g') {
+      if (type === 'x') { pax = {}; const t = buf.subarray(dataAt, dataAt + size).toString('utf8'); let i = 0;
+        while (i < t.length) { const sp = t.indexOf(' ', i); const len = parseInt(t.slice(i, sp), 10); if (!(len > 0)) break; const rec = t.slice(sp + 1, i + len - 1); const eq = rec.indexOf('='); pax[rec.slice(0, eq)] = rec.slice(eq + 1); i += len; } }
+      off = dataAt + size + _pad(size); continue;
+    }
+    if (pax && pax.size) size = Number(pax.size);
+    const p = (pax && pax.path) || (prefix ? `${prefix}/${name}` : name);
+    out.push({ path: p, type, mode: oct(h, 100, 8), size, mtime: oct(h, 136, 12), linkname: (pax && pax.linkpath) || str(h, 157, 100), data: buf.subarray(dataAt, dataAt + size) });
+    pax = null; off = dataAt + size + _pad(size);
+  }
+  return out;
+}
+
+module.exports = { packDir, readTar, DEFAULT_SKIP, TarWriter, _split, _paxRecord };

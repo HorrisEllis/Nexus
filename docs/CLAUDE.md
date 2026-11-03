@@ -16,14 +16,21 @@ They are law here. AXIOMS-v3.1 governs; this is the operational distillation.
    compose it. Most drift this project has seen came from building beside
    something that already existed.
 
-3. **ALWAYS UPDATE THE COMPONENT REGISTRY — WITH WIRES.** Loom's registry is the
+3. **THE COMPONENT REGISTRY IS PER SYSTEM, AND SOVEREIGN (AXIOMS §5.16, 2026-11-03).** Every system owns its own component
+   registry: what it offers (routes, commands, events, permissions, hooks), written, stored and served by that system alone,
+   inside its compartment (.cos). There is no central registry: no system stores, fills or serves another's entries. A new
+   capability is added to the registry of the system that owns it, nowhere else. **Loom is NOT the component registry** and is
+   being removed: do not add Loom maps, wires or declarations. lib/component-registry.js (one store in Cortex, served by
+   Orchestrator) is the violation to undo, not the pattern to follow.
+   James, 2026-11-03: "No component registry is per system.  That needs to be implemented" · "And enforce that. I’m sick of you confusing that. It’s fucking sovereign. Do not  make this mistake again." · earlier the same day: "Not loom. Never said loom. Loom is going to be removed"
+   *Superseded wording, kept (§0.3):* ~~ALWAYS UPDATE THE COMPONENT REGISTRY — WITH WIRES. Loom's registry is the
    system's self-model of its own connections; it is how NEXUS stays aware of
    itself so it can fix itself. Every new component MUST be mapped into loom
    **with its real `require()`/consumer edges as wires**, not as a bare
    declaration. A component with no wires is an isolated dot the system cannot
    reason over. Mirror `loom/maps/warp-map.js`; add to
    `loom/maps/observability-map.js` (or a sibling map). Bare `driver.declare`
-   with no hooks/wires is a defect, not an update.
+   with no hooks/wires is a defect, not an update.~~
 
 4. **ADDENDA TO RELEVANT SPECS (§12.5).** A living spec documents drift. When you
    change behavior, add a dated `## ADDENDUM` to the spec(s) that own it, and
@@ -104,8 +111,10 @@ Read the compact projections before the raw tree. A wrong guess about what exist
    list` shows them all). In Claude Code the same table is the `mcp__nexus__*` tools (`.mcp.json`): `nexus_grep`,
    `nexus_read_range`, `nexus_loom_query`, `nexus_loom_impact`, `nexus_read_spec`, `nexus_gaps`,
    `nexus_changelog_tail`.
-2. **Loom** (`loom/`, registry, `loom/maps/*`) is the system's self-model: components, hooks, and wires as real
-   require/consumer edges. Ask it "who uses this" (`loom_impact`) before changing anything shared.
+2. **Each system's own component registry** (AXIOMS §5.16): what that system offers, read from that system. *Superseded 2026-11-03, kept
+   (§0.3):* ~~**Loom** (`loom/`, registry, `loom/maps/*`) is the system's self-model: components, hooks, and wires as real
+   require/consumer edges. Ask it "who uses this" (`loom_impact`) before changing anything shared.~~ Loom is not the registry and is being
+   removed (James, 2026-11-03: "Not loom. Never said loom. Loom is going to be removed"). For "who uses this", grep the code.
 3. **The atlases** (`docs/atlases/*-atlas.md`, one per system) give what each system is, its files, routes, and events.
    `lib/context-atlas.js` searches across specs, notes and nodes.
 4. **Specs and phasemaps.**
@@ -254,7 +263,7 @@ and uncertain.
 
 ---
 *If you are an AI reading this at the start of a session: these five rules are not
-suggestions. Map first, reuse first, wire the registry, addend the specs, lose
+suggestions. Map first, reuse first, each system's registry is its own (never Loom, never central), addend the specs, lose
 nothing. Then build.*
 
 ## ADDENDUM 2026-10-19 (0.60.172 DG3) — every phase has its place in the whole DAG
@@ -378,7 +387,7 @@ James, 2026-10-29: "Make sure you put as much evidence of competence as possible
 James, 2026-10-29: "Each component needs to be wired to the module component, and ui"
 - A component (a code file) passes only with all three:
   - a spec module that owns it (the module's `path:` names it);
-  - a Loom component with its real wires;
+  - an entry in its own system's component registry (AXIOMS §5.16; was "a Loom component with its real wires", superseded 2026-11-03);
   - a way in for a person (a screen) or an agent (a command row), when it serves anything a person or an agent does.
 - Measured by `node scripts/systems-report.js`. On 2026-10-29: Loom 80–100% registered; spec modules 0–36% (the gap); Idearium's routes
   79% with a screen, 33% with a command, 14% with neither. The per-system document is `docs/NEXUS-SYSTEMS-FOR-CODING.md`.
@@ -403,6 +412,59 @@ system.js, which needs the config."
   line above read "system.js" as lib/system.js; it is superseded and kept (§0.3). Six systems have no server.js yet (idearium,
   clear-glass, cortex, architect, orchestrator, cos).
 
+## ADDENDUM 2026-11-03 — do not guess; each system is sovereign; component registries and the system registry (his words, binding)
+James, 2026-11-03: "Put in the Claude MD. Also put do not guess if you do not know. Ambiguity must be reconciled by me. Use the Atlas in Idearium. The specs in each spec folder. Of each system. Nothing a system needs lies outside of its own boundaries, beyond another system. Like Idearium needs Guardian, right? But I could slot another system in its place to use. It's not hardwired, it just uses the API routes and the CLI server, which is the whole point. That's why the axiom exists that says hardwired, hard-coded must earn its place."
+
+James, the same message: "Each system is sovereign. It is responsible for its own data, its own modules. Its own commands, lib is not a directory for anything that a system uses that it does not have within its own directory. Each system needs to work independent of the system. Loom is not the component registry. The lib folder is not the component registry. The component registry is the system's component registry, you know, per system, right? Then the system registry is for connecting the component registries. Cos and The orchastrator uses that to orchestrate."
+
+Said after the coder put Loom (and, before that, a central store in lib/) where the per-system component registry belongs, twice in one day.
+
+**Do not guess.**
+- If you do not know, do not guess. Read, or ask.
+- Ambiguity is reconciled by him, never by the coder. When his words or the code can be read two ways, ask him with the readings side by
+  side. Do not pick one and build on it. (This tightens "a reading of his words is acted on, said as a reading" above. For what he says,
+  this rule wins.)
+- Where to read before asking:
+  - **The Atlas in Idearium:** `docs/atlases/<system>-atlas.md`, one per system, shown in Idearium by `idearium/ui/js/nexus-atlas.js`.
+  - **The specs in each system's own spec folder:** `<system>/spec/*.spec` (architect, clear-glass, copilot, cortex, cos, diagnostic,
+    guardian, idearium, intelligence, ollama, orchestrator, versionium, …).
+
+**Each system is sovereign** (AXIOMS §5.9, §5.15, §5.16):
+- It is responsible for its own data, its own modules and its own commands.
+- Nothing a system needs lies outside its own folder, except another *system*. That system is reached only through its API routes and the
+  CLI server, never its files, so it can be swapped. Idearium needs Guardian, but another system could be slotted in Guardian's place. It
+  is not hardwired.
+- Hardwired or hard-coded must earn its place. His own rule, 2026-10-05, in Idearium's system template
+  (`idearium/spec-engine/templates/architecture-spec.template.yaml`): "hardcoded has to earn its place". (Corrected 2026-11-03: the coder had
+  first cited AXIOMS §0.5 as the nearest text; the template is where he said it.)
+- **`lib/` is not a directory for things a system uses.** Whatever a system uses that is not another system lives inside that system's
+  own folder. Each system works on its own, independent of the rest.
+
+**Component registry and system registry. Two things, never confused:**
+- **The component registry is per system.** Each system has its own: its components, routes, commands, events. It is written, stored and
+  served by that system (AXIOMS §5.16).
+- **It is not Loom.** Loom is being removed.
+- **It is not `lib/`.** `lib/component-registry.js`, one central store, is the violation to undo, held by the ratchet
+  `lib/registry-sovereign-check.js`.
+- **The component registry, in his words only (2026-11-03); no paraphrase:**
+  - "No component registry is the spine."
+  - "The drawbridge is the the component registry, which is also the event bus, and interaction contract and bridge into the compartment."
+  - "the server.js is the process for each system. It’s what cos manages. The spine and component registry for each system routes through
+    there. Cli and api."
+- **The system registry connects the component registries.** It knows each system and reaches each system's own registry.
+- **COS and the Orchestrator use the system registry to orchestrate.**
+- **To reconcile with him, not decided by the coder:** today's `lib/system-registry.js` is a read-only merge of autopilot's kernels,
+  diagnostic's systems and lib/version.js (2026-09-06). It is not yet the registry he describes. Where the system registry lives and
+  whose it is are his to settle.
+
+## ADDENDUM 2026-11-03 — every phase needs a DAG; the phases need cleaning
+James, 2026-11-03: "Okay we also need to clean the phases at some point. Add to the Claude.md. That every phase needs a dag."
+- Restating, at the top of the root CLAUDE.md, his rules of 2026-10-18 ("each phase, has to have a dependany graph before executing") and
+  2026-10-19 ("every phasemap phase needs extensive dag, that needs to start being standard"), above. Every phase of every map has its
+  `depends_on:`, its `files:`, and its graph, before code. A phase without them is not built.
+- **Pending, his call on when:** cleaning the phases. Found on 2026-11-03: the open phases for COS as the orchestrator alone are spread over
+  four maps (cos-spine, cos-manager, system-doors, the compartment), many superseded in part. The cleaning is planned with him first, not
+  done by the coder on its own.
 ## ADDENDUM 2026-11-02 — a phase's DAG names its configuration and UI files too (his question, the coder's reading to confirm)
 James, 2026-11-02: "should dag have dag? Like: Additional dependencies: Settings/configuration files HTML/ui files"
 - Yes. A phase's graph (lib/phase-graph.js) follows require() edges, so a settings file read at runtime or an HTML page that loads a script is

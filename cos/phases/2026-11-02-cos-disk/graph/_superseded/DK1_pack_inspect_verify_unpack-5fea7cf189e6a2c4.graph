@@ -1,0 +1,110 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DK1_pack_inspect_verify_unpack:5fea7cf189e6a2c4
+type: graph
+id: phase:DK1_pack_inspect_verify_unpack:5fea7cf189e6a2c4
+context: dependency graph of phase DK1_pack_inspect_verify_unpack
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793705189872
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793705189872
+lastSeenAt: 1793705189872
+fingerprint: null
+payload:
+  for: DK1_pack_inspect_verify_unpack
+  kind: phase
+  repo: null
+  hash: 5fea7cf189e6a2c4
+  nodes:
+    - path: cos/disk/disk.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/tar.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-disk.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/disk/disk.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: tests/modules/test-cos-disk.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/tar.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/testenv/tar.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
+    dependents:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK2_disks_in_cos
+    upstream:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
+    downstream:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK2_disks_in_cos
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK3_the_disk_tab
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK4_boot_from_a_disk
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK5_machine_disks
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK2_disks_in_cos
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - >-
+        depends on (3): DK_D0_spec_is_metadata_the_disk_holds_the_content, DK_D1_the_disk_file,
+        DK_D2_where_disks_live
+      - 'needed by (1): DK2_disks_in_cos · all downstream 4 · finishing it unlocks DK2_disks_in_cos'
+    edges:
+      - from: docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content
+        kind: declared
+      - from: docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
+        kind: declared
+      - from: docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
+        kind: declared

@@ -60,7 +60,34 @@ function createUpdates(sup, { root = path.resolve(__dirname, '..', '..'), emit =
       return out;
     } finally { running = null; }
   }
-  return { check, apply, busy: () => running, perSystem };
+  // SC7 0.60.380 — James, 2026-11-02: "A gear, with update settings and Build that update section in cos." The kernel's update settings (read and
+  // written in-process: two small files), the history, and roll back (in its own process, then each changed system restarted, as apply)
+  function settings() { const p = U().getPolicy({ root }); let a = null; try { a = U().autoState({ root }); } catch (_) {} return { ok: true, settings: p, last: a, options: { policy: ['auto', 'notify', 'off'], everyHours: [1, 168], keepLocal: ['auto', 'ask'] } }; }
+  function setSettings(patch = {}, { by } = {}) {
+    if (!by) return { ok: false, code: 400, error: 'say who acts: { "by": "person" }' };
+    if (/^agent:/.test(String(by))) return { ok: false, code: 403, error: 'an agent proposes; the update settings are a person\'s' };
+    const allowed = ['policy', 'everyHours', 'keepLocal'], bad = Object.keys(patch).filter(k => !allowed.includes(k));
+    if (bad.length) return { ok: false, code: 400, error: `no update setting ${bad.join(', ')} (${allowed.join(', ')})` };
+    const before = U().getPolicy({ root }); const r = U().setPolicy({ root, ...patch });
+    if (!r.ok) return { ...r, code: 400 };
+    if (sup.note) sup.note('update-settings', Object.keys(patch).map(k => `${k} ${before[k]} → ${r[k]}`).join(', '), { by });
+    try { require('../../lib/versionium-record.js').record({ kind: 'cos.update-settings', by, message: `COS: update settings — ${Object.keys(patch).join(', ')}`, change: { before, after: r } }).catch(() => {}); } catch (_) {}
+    return settings();
+  }
+  const history = ({ limit = 50 } = {}) => ({ ok: true, history: U().history({ root }).slice(0, Math.max(1, Math.min(Number(limit) || 50, 500))) });
+  async function rollback({ by = 'person' } = {}) {
+    if (running) return { ok: false, busy: running, error: `an update is running (${running.mode})` };
+    running = { mode: 'rollback', by, at: Date.now() }; emit('cos.update', { phase: 'started', mode: 'rollback', by });
+    try {
+      const r = await run('rollback', { confirm: true, by });
+      if (!r || !r.ok) { emit('cos.update', { phase: 'refused', mode: 'rollback', error: r && r.error }); return r || { ok: false, error: 'no answer' }; }
+      const ps = perSystem(r.systems || [], !!(r.npm && r.npm.ran)); const restarted = [];
+      for (const name of ps.restart) { try { sup.restart(name, { by: `rollback:${by}` }); restarted.push({ name, ok: true }); emit('cos.update', { phase: 'restarted', name }); } catch (e) { restarted.push({ name, ok: false, error: e.message }); emit('cos.update', { phase: 'restart-failed', name, error: e.message }); } }
+      emit('cos.update', { phase: 'updated', mode: 'rollback', from: r.from && r.from.version, to: r.to && r.to.version, restarted: restarted.map(x => x.name), waitForHim: ps.waitForHim });
+      return { ...r, perSystem: ps, restarted };
+    } finally { running = null; }
+  }
+  return { check, apply, rollback, settings, setSettings, history, busy: () => running, perSystem };
 }
 
 module.exports = { createUpdates };

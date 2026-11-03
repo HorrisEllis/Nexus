@@ -27,7 +27,6 @@ const FILES = [
   ['cos/app/window.js', I('cos/app/window.js'), []],   // MG36 0.60.365: what the window shows — the cockpit when it answers, else the starting page
   ['cos/app/logon.js',  I('cos/app/logon.js'),  []],   // MG37 0.60.365: COS at logon — an elevated logon task, else the login item; no service (CA_D1)
   ['cos/app/desktop/main.js', I('cos/app/desktop/main.js'), [I('cos/app/controller.js'), I('cos/app/store.js'), I('cos/app/settings.js'), I('cos/app/shell.js'), I('cos/app/window.js'), I('cos/app/logon.js')]],   // MG35: startOnLaunch, pickFolder, link
-  ['cos/manager/network-settings.js', I('cos/manager/network-settings.js'), [I('lib/versionium-record.js')]],   // CA3 0.60.367: network settings, all off; gate(engine); secrets never read back
   ['cos/manager/suspend.js',    I('cos/manager/suspend.js'),    []],   // CP5b 0.60.362: a process tree suspended/resumed and read back from the OS (SIGSTOP/SIGCONT; Windows NtSuspendProcess via PowerShell, unproven there)
   ['cos/manager/resources.js',  I('cos/manager/resources.js'),  [I('cos/manager/usage.js'), I('lib/versionium-record.js'), I('lib/raid-port.js')]],   // CP6a 0.60.356: caps, read back; the account; pressure → a proposal · CP6b 0.60.361: a restart by rule asks RAID (approveTool, fails closed)
   ['lib/agent-tools/tools/clear-glass/macro-control.js', I('lib/agent-tools/tools/clear-glass/macro-control.js'), []],   // MB4 0.60.359: made by clear-glass/src/ipc/bridge.js runMacroAsPerson, passed to macro.js run as control
@@ -35,12 +34,18 @@ const FILES = [
   ['cos/manager/walls.js',      I('cos/manager/walls.js'),      []],   // CP1a: reads the supervisor it is given (declarations, ledger); no require
   ['scripts/cos-walls.js',      I('scripts/cos-walls.js'),      [I('loom/templates/cos-compartment.js'), I('lib/system-boundary.js')]],   // CP1a: writes each system's wall into its own compartment.json from the census
   ['cos/manager/autopilot-door.js', I('cos/manager/autopilot-door.js'), [I('lib/test-sandbox.js'), I('lib/bus-subscriptions.js'), I('cortex/memory/jaa-db.js'), I('intelligence/cfr/field.js'), I('lib/ledger-sse.js'), I('lib/error-log.js')]],   // 0.60.329 MG16; cortex/intelligence: the legacy /tables /files reads
-  ['cos/manager/server.js',     I('cos/manager/server.js'),     [I('cos/manager/supervisor.js'), I('lib/raid-port.js'), I('cos/manager/autopilot-door.js'), I('cos/manager/proposals.js'), I('cos/manager/usage.js'), I('cos/manager/contract.json'), I('cos/manager/walls.js'), I('cos/manager/resources.js'), I('cos/manager/updates.js')]],   // requires; the contract read per request (MG18); walls (CP1a)
+  ['cos/manager/server.js',     I('cos/manager/server.js'),     [I('cos/manager/supervisor.js'), I('lib/raid-port.js'), I('cos/manager/autopilot-door.js'), I('cos/manager/proposals.js'), I('cos/manager/notices.js'), I('cos/manager/system-config.js'), I('cos/manager/add-system.js'), I('cos/manager/cli.js'), I('cos/disk/disk.js'), I('cos/disk/vdisk.js'), I('cos/manager/usage.js'), I('cos/manager/contract.json'), I('cos/manager/walls.js'), I('cos/manager/resources.js'), I('cos/manager/updates.js')]],   // requires; the contract read per request (MG18); walls (CP1a)
   // 0.60.337 MG18/MG29 (MG_D16) — COS's UI: the cockpit server forwards to the manager over HTTP by the contract's allowlist; each page loads
   // core by <script>, talks to the shell only by postMessage (the bus), and to the manager only through the cockpit server's same-origin routes
   ['cos/manager/proposals.js',  I('cos/manager/proposals.js'),  []],
   ['cos/manager/updates.js',    I('cos/manager/updates.js'),    [I('lib/nexus-update.js'), I('cos/manager/update-run.js')]],   // CE2 0.60.376: per system; the git work spawned (update-run.js, by path) — not a require
   ['cos/manager/update-run.js', I('cos/manager/update-run.js'), [I('lib/nexus-update.js')]],   // CE2: check, applyBacked, keepLocalBacked in their own process   // given the supervisor; notes on its ledger
+  ['cos/manager/notices.js',      I('cos/manager/notices.js'),      []],   // SC1 0.60.380: the bell; fed by server.js from the ledger and the update tool
+  ['cos/manager/system-config.js', I('cos/manager/system-config.js'), [I('lib/versionium-record.js')]],   // SC2: given the supervisor and resources.js; its adjust() is the supervisor's hook
+  ['cos/manager/add-system.js',   I('cos/manager/add-system.js'),   [I('lib/versionium-record.js')]],   // SC4: registers add-system on proposals.js; sup.declare
+  ['cos/disk/disk.js',           I('cos/disk/disk.js'),           [I('cos/testenv/tar.js'), I('lib/versionium-record.js')]],   // DK1 0.60.382: a compartment's disk (spec as metadata, files compressed)
+  ['cos/disk/vdisk.js',          I('cos/disk/vdisk.js'),          [I('cos/disk/disk.js'), I('cos/testenv/host.js'), I('lib/versionium-record.js')]],   // DK6 0.60.383: the qcow2 virtual disk
+  ['cos/manager/cli.js',          I('cos/manager/cli.js'),          []],   // SC3: COS's own table over what server.js gives it (sup, resources, config, notices, proposals, addSystem, usage)
   ['cos/manager/usage.js',      I('cos/manager/usage.js'),      []],
   ['cos/manager/contract.json', I('cos/manager/contract.json'), []],
   ['cos/ui/serve.js',           I('cos/ui/serve.js'),           [I('cos/manager/contract.json'), I('cos/manager/server.js')]],   // reads the contract; HTTP to the manager
@@ -48,6 +53,10 @@ const FILES = [
   ['cos/ui/core/section.js',    I('cos/ui/core/section.js'),    [I('cos/ui/core/core.js')]],
   ['cos/ui/shell/bus.js',       I('cos/ui/shell/bus.js'),       []],
   ['cos/ui/shell/page.js',      I('cos/ui/shell/page.js'),      [I('cos/ui/core/core.js'), I('cos/ui/shell/bus.js'), I('cos/ui/serve.js')]],   // the event stream; frames by postMessage
+  ['cos/ui/updates/page.js',     I('cos/ui/updates/page.js'),     [I('cos/ui/core/core.js'), I('cos/ui/shell/page.js'), I('cos/manager/updates.js')]],   // SC7 0.60.380: Updates and the gear's settings (through COS's routes)
+  ['cos/ui/shell/console.js',   I('cos/ui/shell/console.js'),   [I('cos/ui/core/core.js'), I('cos/ui/shell/page.js'), I('lib/ui/update-popup/update-popup.js')]],   // SC5 0.60.380: the bell, the command line, Add system
+  ['cos/ui/cockpit/sections/disk/section.js', I('cos/ui/cockpit/sections/disk/section.js'), [I('cos/ui/core/section.js'), I('cos/disk/disk.js')]],   // DK3 0.60.382: a system's disk (through its routes)
+  ['cos/ui/cockpit/sections/config/section.js', I('cos/ui/cockpit/sections/config/section.js'), [I('cos/ui/core/section.js'), I('cos/manager/system-config.js')]],   // SC5: a system's configuration (through its routes)
   ...['overview', 'ledger', 'proposals', 'automation', 'planned', 'cockpit'].map(p => [`cos/ui/${p}/page.js`, I(`cos/ui/${p}/page.js`), [I('cos/ui/core/core.js'), I('cos/ui/shell/page.js'), ...(p === 'cockpit' ? [I('cos/ui/core/section.js')] : [])]]),
   ...['overview', 'logs', 'events', 'api', 'data', 'files', 'tests', 'snapshot', 'resources'].map(s => [`cos/ui/cockpit/sections/${s}/section.js`, I(`cos/ui/cockpit/sections/${s}/section.js`), [I('cos/ui/core/section.js'), I('cos/ui/cockpit/page.js')]]),
   // 0.60.330 MG17 — autopilot hands over: the launcher spawns COS's manager by path (and the archive with --legacy-supervisor) and reaches it over

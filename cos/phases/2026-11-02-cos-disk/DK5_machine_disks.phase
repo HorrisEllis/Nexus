@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-disk-phasemap.spec::DK5_machine_disks
+type: phase
+id: docs_2026-11-02-cos-disk-phasemap.spec::DK5_machine_disks
+context: pipeline phase DK5_machine_disks of docs/2026-11-02-cos-disk-phasemap.spec
+intent: null
+summary: DK5_machine_disks (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793705608394
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793705608394
+lastSeenAt: 1793705608394
+fingerprint: null
+payload:
+  id: DK5_machine_disks
+  map: docs/2026-11-02-cos-disk-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cos/compartment/qemu-runtime.js
+    - cos/disk/disk.js
+  depends_on:
+    - DK4_boot_from_a_disk
+  blocks: []
+  spec: null
+  graph: 7cfdd584f3c01419

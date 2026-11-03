@@ -27,7 +27,7 @@ const freePort = () => new Promise(r => { const s = net.createServer(); s.listen
   try {
     await test('CW-01', 'every declared process declares a compartment and a wall, each equal to the census', () => {
       const decl = readDeclarations(ROOT);
-      assert.ok(decl.length >= 14, `${decl.length} declared`);
+      assert.ok(decl.length >= 13, `${decl.length} declared`);   // 14 until 0.60.380 retired intelligence-consumer (SC6: one Intelligence)
       const bare = decl.filter(d => !(d.boundary && Array.isArray(d.boundary.allow))).map(d => d.name);
       assert.deepStrictEqual(bare, [], `bare: ${bare.join(', ')}`);
       for (const d of decl) assert.strictEqual(d.compartment, `nexus-self-${d.system === 'ollama' ? 'ollama' : d.system}`, `${d.name}'s compartment`);

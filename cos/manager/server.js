@@ -26,7 +26,25 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
   const proposals = createProposals(sup);   // MG18: agents' held acts
   const resources = require('./resources.js').createResources(sup, { proposals });   // CP6a: caps by layer, read back; the account; pressure → a proposal
   // CE2 0.60.376 — Nexus's update as COS's: per system, the tool behind the toast (cos/manager/updates.js); every step on the event stream
-  const updates = require('./updates.js').createUpdates(sup, { root, emit: (e, d) => broadcast(e, d) });
+  const updates = require('./updates.js').createUpdates(sup, { root, emit: (e, d) => { broadcast(e, d); if (e === 'cos.update') notices.fromUpdate(d); } });
+  // SC1–SC4 0.60.380 (docs/2026-11-02-cos-console-phasemap.spec) — James, 2026-11-02: "notification bell for update, system status,  notications" ·
+  // "Need configuration for each system" · "add system" · "Need the system cli". The bell keeps what the ledger and the update tool say; the
+  // configuration is applied by the supervisor through one hook (adjust); adding a system is a proposal; the CLI is COS's own table.
+  const notices = require('./notices.js').createNotices({ file: path.join(path.dirname(sup.ledgerFile), 'notices.json'), emit: (e, d) => broadcast(e, d) });
+  const config = require('./system-config.js').createSystemConfig(sup, { resources });
+  sup.setHooks({ adjust: config.adjust });
+  const addSystem = require('./add-system.js').createAddSystem(sup, proposals, { root });
+  // DK2 0.60.382 (docs/2026-11-02-cos-disk-phasemap.spec) — James, 2026-11-02: "Use the spec as metadata then have the actual file be a compressed or
+  // virtual disk or envirement." Each system's disk: its spec as metadata, its files in one compressed file, in COS's own data
+  const disks = require('../disk/disk.js').createDisks({ root });
+  // DK6–DK8 0.60.383 — James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data,
+  // snapshots, system state." Each system's qcow2: its metadata, files and data in one ext4, its snapshots inside the same file
+  const vdisks = require('../disk/vdisk.js').createVDisks({ root, disks });
+  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks });
+  sup.on('ledger', (entry) => { try { notices.fromLedger(entry); } catch (_) {} });
+  const checkNotice = () => { try { notices.fromNotice(require('../../lib/nexus-update.js').notice({ root })); } catch (_) {} };
+  const noticeTick = setInterval(checkNotice, 10 * 60 * 1000); if (noticeTick.unref) noticeTick.unref(); setTimeout(checkNotice, 2000).unref();
+  const cpuTick = setInterval(() => { config.watchCpu().catch(() => {}); }, 30000); if (cpuTick.unref) cpuTick.unref();
   // MG18 (MG_D16): the one event stream the UI floats on. Every ledger line as it is written; a system's state when it changes (read each
   // second from the supervisor's own view, so a state reached without a ledger line, 'up' after health, is heard too).
   const streams = new Set(); let last = new Map();
@@ -74,6 +92,11 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
       if (m === 'GET' && p === '/api/cos/update/notice') { try { return send(res, 200, { ok: true, ...require('../../lib/nexus-update.js').notice({ root }), updatesPage: 'http://127.0.0.1:4800/update.html' }); } catch (e) { return send(res, 500, { ok: false, error: e.message }); } }
       // CE2 0.60.376 — what GitHub has, per system (?fetch=1 asks GitHub; else what was last fetched), and the update tool
       if (m === 'GET' && p === '/api/cos/update') return send(res, 200, await updates.check({ fetch: u.searchParams.get('fetch') === '1' }));
+      // SC7 0.60.380 — the Updates section's gear: the kernel's update settings; the history; roll back
+      if (m === 'GET' && p === '/api/cos/update/settings') return send(res, 200, updates.settings());
+      if (m === 'PATCH' && p === '/api/cos/update/settings') { const r = updates.setSettings(body.patch || {}, { by: body.by }); return send(res, r.ok ? 200 : r.code || 400, r); }
+      if (m === 'GET' && p === '/api/cos/update/history') return send(res, 200, updates.history({ limit: u.searchParams.get('limit') }));
+      if (m === 'POST' && p === '/api/cos/update/rollback') { if (!body.by) return send(res, 400, { ok: false, error: 'say who acts: { "by": "person" }' }); if (/^agent:/.test(String(body.by))) return send(res, 403, { ok: false, error: 'an agent proposes; a rollback is a person\'s' }); const r = await updates.rollback({ by: body.by }); return send(res, r.ok ? 200 : 409, r); }
       if (m === 'GET' && p === '/api/cos/usage') return send(res, 200, { ok: true, usage: await usage.readAsync(sup.list(), sup.policy()) });
       // CP6a (his 2026-11-01: "then i want resource management for each cos compartment") — caps by layer, read back; the account
       if (m === 'GET' && p === '/api/cos/resources') { if (u.searchParams.get('fresh') === '1') await resources.sample(); return send(res, 200, { ok: true, resources: resources.all() }); }
@@ -82,6 +105,48 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
       if (cp && m === 'PATCH') { try { return send(res, 200, { ok: true, caps: resources.setCaps(decodeURIComponent(cp[1]), body.patch || {}, { by: body.by }) }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
       // CP1a (his 2026-11-01: "continue moving the rest of the systems into cos.") — every compartment's wall and what it has said
       if (m === 'GET' && p === '/api/cos/walls') { const w = require('./walls.js').report(sup); return send(res, 200, { ok: true, walls: w, counts: { enforce: w.filter(x => x.mode === 'enforce').length, audit: w.filter(x => x.mode === 'audit').length, bare: w.filter(x => x.mode === 'none').length, enforceReady: w.filter(x => x.enforceReady).length } }); }
+      // SC1 — the bell
+      if (m === 'GET' && p === '/api/cos/notices') return send(res, 200, { ok: true, notices: notices.list({ unread: u.searchParams.get('unread') === '1', kind: u.searchParams.get('kind'), limit: u.searchParams.get('limit') }), counts: notices.counts() });
+      if (m === 'POST' && p === '/api/cos/notices/read') return send(res, 200, { ok: true, ...notices.read({ ids: body.ids, all: body.all === true }) });
+      // SC2 — a system's configuration: every setting, its layer, when and how it applies; set his overrides; clear them back to the declared
+      const cf = /^\/api\/cos\/systems\/([^/]+)\/config(\/clear)?$/.exec(p);
+      if (cf) { const name = decodeURIComponent(cf[1]);
+        try {
+          if (m === 'GET' && !cf[2]) return send(res, 200, config.get(name));
+          if (m === 'PATCH' && !cf[2]) return send(res, 200, config.set(name, body.patch || {}, { by: body.by }));
+          if (m === 'POST' && cf[2]) return send(res, 200, config.clear(name, body.keys || [], { by: body.by }));
+        } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
+      // DK2 — the disks
+      if (m === 'GET' && p === '/api/cos/disks') return send(res, 200, { ok: true, dir: disks.dir, disks: disks.list() });
+      const dkf = /^\/api\/cos\/disks\/([^/]+?)(\/verify)?$/.exec(p);
+      if (dkf && m === 'GET') { try { const f = decodeURIComponent(dkf[1]); if (dkf[2]) return send(res, 200, { ok: true, verify: disks.verify(f) }); const i = disks.inspect(f); delete i.files; return send(res, 200, { ok: true, disk: i }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
+      // DK8 — the virtual disk: read; make, refresh, snapshot, revert, drop a snapshot — each a person's act, on the ledger first (§9.2)
+      const vd = /^\/api\/cos\/systems\/([^/]+)\/vdisk(?:\/(make|refresh|snapshot|revert|drop-snapshot|verify))?$/.exec(p);
+      if (vd) { const name = decodeURIComponent(vd[1]), op = vd[2];
+        try {
+          if (m === 'GET' && !op) { const t = vdisks.tools(); let disk = null; if (t.ok && require('fs').existsSync(vdisks.pathOf(name))) disk = vdisks.info(name); return send(res, 200, { ok: true, system: name, tools: t, disk }); }
+          if (m === 'GET' && op === 'verify') return send(res, 200, { ok: true, verify: vdisks.verify(name, { snapshot: u.searchParams.get('snapshot') || null }) });
+          if (m === 'POST' && op) {
+            if (!body.by) return send(res, 400, { ok: false, error: 'say who acts: { "by": "person" }' });
+            if (/^agent:/.test(String(body.by))) return send(res, 403, { ok: false, error: 'an agent proposes; a disk is a person\'s or a rule\'s' });
+            const what = op === 'make' || op === 'refresh' ? `${op} its virtual disk` : `${op} ${body.tag || ''}`.trim();
+            if (!sup.note('vdisk', what, { by: body.by, system: name })) return send(res, 500, { ok: false, error: 'the ledger cannot be written: nothing done' });
+            const r = op === 'make' ? await vdisks.make(name, { by: body.by, withState: body.withState !== false }) : op === 'refresh' ? await vdisks.refresh(name, { by: body.by, withState: body.withState !== false })
+              : op === 'snapshot' ? vdisks.snapshot(name, body.tag, { by: body.by }) : op === 'revert' ? vdisks.revert(name, body.tag, { by: body.by }) : vdisks.dropSnapshot(name, body.tag, { by: body.by });
+            return send(res, 200, r);
+          }
+        } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
+      const dks = /^\/api\/cos\/systems\/([^/]+)\/disk$/.exec(p);
+      if (dks) { const name = decodeURIComponent(dks[1]);
+        try {
+          if (m === 'GET') { const D = disks.describe(name); return send(res, 200, { ok: true, system: name, metadata: { declaredBy: D.declaredBy, state: D.state }, coverage: disks.coverage(name), disks: disks.list({ system: name }) }); }
+          if (m === 'POST') { const r = await disks.pack(name, { withState: body.withState === true, by: body.by }); sup.note('disk', `${r.file}: ${r.files} files, ${Math.round(r.bytes / 1024)} KB${r.withState ? ', with its data' : ''}`, { by: body.by, system: name }); return send(res, 200, r); }   // §9.2: the act on the ledger
+        } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
+      // SC4 — add a system: a proposal; his own is taken at once
+      if (m === 'POST' && p === '/api/cos/systems') { try { return send(res, 200, { ok: true, ...addSystem.propose(body) }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
+      // SC3 — COS's own command line
+      if (m === 'POST' && p === '/api/cos/cli') { const r = await cli.run(body.line, { by: body.by || 'person' }); return send(res, 200, r); }
+      if (m === 'GET' && p === '/api/cos/cli') return send(res, 200, { ok: true, table: cli.TABLE.map(([verb, usage, about]) => ({ verb, usage, about })) });
       const lg = /^\/api\/cos\/systems\/([^/]+)\/logs$/.exec(p);
       if (lg && m === 'GET') return send(res, 200, { ok: true, system: decodeURIComponent(lg[1]), lines: sup.logs(decodeURIComponent(lg[1]), { limit: Number(u.searchParams.get('limit')) || 200 }) });
       if (m === 'GET' && p === '/api/cos/proposals') return send(res, 200, { ok: true, proposals: proposals.list({ open: u.searchParams.get('open') === '1' }) });
