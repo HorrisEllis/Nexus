@@ -173,3 +173,13 @@ decisions_in_planning:
       Glass, Idearium, BrainOS). COS's Automation page holds only the supervisor's policy; macros and rules wait on MG7, never built.
     plan_by_the_axioms: "what runs automation moves from the old orchestrator to COS (the orchestrator, PL_D8, PL_D11); the engine out of lib/ into COS's folder; COS's Automation page shows and runs workflows, macros and rules; Clear Glass keeps its browser automation, reached at its door"
     reading_to_confirm: "\"Cos ui stays the cos ui\" read as: the TV shell does not become COS's UI — then does the TV shell stay as its own thing, or go?"
+  PL_D13_automation_follows_the_orchestrator:
+    status: "his words recorded 2026-11-03; the retargeting is the coder's reading of PL_D8 and PL_D11, to confirm"
+    james: '"It’s in the orchastrator. Look a the phases. Cos"'
+    found: >-
+      docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec (his home choice that day: "the orchastrator"): AE1 done 0.60.256 (the
+      engine moved out of Clear Glass, into lib/automation/, run as an instance in the orchestrator), AE2 built 0.60.333 (browser steps to
+      Clear Glass's driver), AE3 done 0.60.317 (the orchestrator serves /automation/* on :9000; agent steps RAID → Guardian), AE4 built
+      0.60.333 (the six-source view points at the orchestrator), AE5 OPEN (the automation UI: Clear Glass Settings › Automation and BrainOS
+      pointed at the orchestrator; Clear Glass's old routes retired).
+    reading: "\"the orchestrator\" in that map was the old orchestrator/ process; with COS the orchestrator (PL_D8), AE1–AE4's host and door move to COS, the engine leaves lib/ for COS's folder, and AE5 becomes COS's Automation page"
