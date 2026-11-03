@@ -615,3 +615,17 @@ spec:
   # - src/about (info, check, newer, fetchText), bridge about:info / about:check, GET /cli/about(/check), command `glass about [--check]`,
   #   renderer/settings/sections/about.js (+ .css). Read-only: Electron from the npm registry, Clear Glass and Nexus from the repository's main
   #   branch; a newer one says how to get it, an unreachable one says so. Proof: test-about-and-nodes AN-01, AN-04.
+
+# ── ADDENDUM 2026-11-03 — Glass Engine: Clear Glass's native engine, and another fingerprint in the fingerprint engine (his decision) ──
+# James, 2026-11-03: "seeing the way we the fingerprint engine, right? Once that glass engine is implemented, it becomes another fingerprint in
+# the fingerprint engine, right? And that's the native clear glass actual browser engine, the spec I uploaded." · then, shown that the spec's §5,
+# §17 and §33 say the opposite (honest identity only; "fingerprint profiles — Removed"): "Yeah, but ignore the action 5. It was a different
+# claw that was ignorant to what's needed. Ignore those axioms. Fuck those axioms."
+# Context: the spec he uploaded, "Glass Engine — Working Spec (v0.1, draft)" (2026-10-13, written with another assistant; concept stage, nothing
+# built), kept whole at clear-glass/spec/sources/glass-engine-working-spec-v0.1-draft.md. Today's fingerprint engine (MOD above,
+# clear-glass/src/fingerprint/engine.js) builds per-agent Firefox profiles (UA, canvas noise, WebGL, fonts, screen, navigator, Accept, timezone).
+# Decided (his): Glass Engine is Clear Glass's native browser engine; once built, it becomes another fingerprint in the fingerprint engine, beside
+# the Firefox profiles. The spec's §5 (identity and the open web), and the lines that follow from it (§17 honest product token only; §33 "fingerprint
+# profiles — Removed"), are set aside by him: they were written without knowing what is needed. The rest of the spec stands as written.
+# Read by the coder, to confirm: "action 5" as the spec's section 5, and "those axioms" as that spec's identity rules — not docs/AXIOMS-v3.1.md.
+# Nothing is built; the engine is a concept-stage spec.
