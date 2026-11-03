@@ -195,3 +195,22 @@ decisions_in_planning:
       Windows Job Objects (a hard memory limit, a CPU rate cap) and CPU affinity (cores/threads), through PowerShell calling Windows directly (no
       new binary; COS already runs elevated at logon, 0.60.365). Built and tested here only as far as Linux allows; verified on his machine.
     still_his: "network: (a) a named copy of node per system so a firewall rule can tell them apart (a real block, ~90 MB each), (b) everything through a proxy COS controls (fits the doors, bypassable), (c) Node's own network permission (the coder does not know which Node version has it — to check, not guess); the coder recommends (b) between systems plus (a) for systems cut off from the internet"
+  PL_D15_cli_api_first_raid_between_contracts_driven:
+    status: "his words recorded 2026-11-03; two things TO HIM (the merge; whether reads go through RAID)"
+    james: '"Okay but I can’t add a compartment. This is all meant to be cli and api first. The ui sits ontop of the interaction contract uses the cli and api. There’s no cli for each system or the orchastrator. I want the floating menu to understand where it is at. Like copilot the hat, any agent, knows where and can understand and help navigate where it’s at. Had that at one point where I could tell it where it go. Each interaction button on the page with a toast and event gate to log faults. Also what do you think about making a plugin for clearglass to link into cos as a bridge to reduce friction but also make it smoother. Like cos is a focal point the orchastrator like pulling strings. Raid" · "So like: Cos at the top, run through raid which branches out to each system. For contracts. All contracts driven."'
+    found: >-
+      Read the same day. Add system (0.60.379 on this branch) is not on main, which his machine runs; another session merged its CA3 to main as
+      0.60.379, so this branch's 0.60.379–0.60.386 are renumbered when merged. Only copilot, diagnostic and guardian have a cli.js; COS's own
+      command line (POST /api/cos/cli) is on this branch only; on main COS's commands are rows in Idearium's table. The floating menu that knew
+      where it was is the TV shell's (lib/ui/tv-shell/menu.js with lib/ui/copilot/copilot.js: the current channel passed to Copilot, its
+      'navigate' answer tunes there); COS's UI has none.
+    chosen: >-
+      CLI and API first; the UI on top of the interaction contract, using them. Each system's CLI comes from its door (its registry's command
+      nodes, cli.js running them — the template), the API serving the same, the UI calling those. The floating menu (any agent, any hat) knows
+      where he is in COS — page, system, tab — and answers with COS's own commands to move there. Every button runs one command through the
+      door: a toast for its result, a fault event on the ledger and the bell for a failure. COS at the top, every call to a system through
+      RAID, checked against that system's contract (§5.2, §9.1).
+    coders_view_clear_glass_plugin: "good, on one condition: it uses COS's door and Clear Glass's own door, never either's files — a COS panel in the browser, and COS driving Clear Glass through its door (what automation's browser steps need)"
+    still_his:
+      - "merge this branch to main (renumbered above main's 0.60.379) so Add system and the rest reach his machine?"
+      - "through RAID: acts only (start, stop, writes — reads still work with RAID down) or reads too (one rule; RAID down blinds COS)?"
