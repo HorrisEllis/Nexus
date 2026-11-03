@@ -144,3 +144,21 @@ decisions_in_planning:
       - "the template lists registry-components.js, interaction-contract.json and event-taxonomy.js as three files while its rule makes the registry the contract and the bus: one source (the others generated or dropped)?"
       - "the template says \"what every system uses is the kernel's\" (and the kernel serves existing systems until each moves); today he said lib/ is not a directory for anything a system uses that is not in its own folder — superseded, or the same meaning?"
       - "where the .cos sits in the tree (the template lists compartment.json)"
+  PL_D11_cos_orchestrates_completely:
+    status: "DECIDED 2026-11-03 (his); the plan below is the coder's, not mapped"
+    james: '"Look through all the phases. Cos is meant to be the orchastrator complelely. Replace autopilot."'
+    found: >-
+      Read the same day. COS's: supervising (MG15–MG17, 0.60.326–0.60.331), its window (MG18, MG29, MG33–MG37), walls, caps, pause, updates,
+      configuration, bell, CLI, add system. Not yet: `npm run start:all` still runs lib/nexus/autopilot.js (now a launcher: starts COS, then
+      six core duties from lib/ — wire, vitals, update, loom refresh, snapshot, follow); the old orchestrator/orchestrator.js (3,688 lines,
+      :9000, what `npm start` runs) still holds the central component registry, system registration and heartbeats, the shared event
+      stream, the agents' MCP door, the TV shell and /ui pages, and forwards for ideas, gaps, memory, snapshots, specs, intelligence,
+      versionium, changelog, spec drift; it reaches 26 times into other systems' files. Open phases that already plan the rest are spread over
+      four maps: CS3, CS4, CS4a, CS7 (cos-spine), MG12, MG19–MG22, MG28, MG32 (cos-manager), DO1–DO6 (system-doors), CP0–CP10 (compartment).
+    plan_by_the_axioms: >-
+      (1) COS starts itself — start and start:all start COS; autopilot archived (§0.3); each core duty to its owner (§5.15): update → COS,
+      vitals → Diagnostic, wire and snapshot → their owners, follow → COS's bell and ledger, loom refresh dropped with Loom. (2) COS's system
+      registry replaces the central registry: it reads each system's own door (§5.16). (3) The orchestrator's other jobs back to their
+      owners, each through its door; its UI pages to COS's UI or the system's own. (4) The old orchestrator archived when nothing calls it.
+      (5) The open phases gathered into one map.
+    still_his: "the TV shell (/home, its channels): COS's UI, or a system of its own?"
