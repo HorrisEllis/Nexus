@@ -111,3 +111,7 @@ decisions_in_planning:
     status: "DECIDED 2026-11-03 (his; recorded in his words only)"
     james: '"Remeber how I just said don’t guess?" · "The drawbridge is the the component registry, which is also the event bus, and interaction contract and bridge into the compartment."'
     chosen: "his words, as written above, are the definition; with PL_D3 (\"the server.js is the process for each system ... The spine and component registry for each system routes through there. Cli and api.\") and PL_D6 (\"No component registry is the spine.\")"
+  PL_D8_cos_is_the_orchestrator:
+    status: "DECIDED (his; restated 2026-11-03 after the coder listed COS as 'not a compartment yet' and the old orchestrator/ as a system of its own)"
+    james: '"Are you fucking serious.  Cos is the orchastrator now. That’s the point. The reason for the sandbox is to seperate the systems." · "Is this even possible to integrate an event bus and interaction contract and component registry into one door into the system? Like each component for each module connects" · "You’re the coder. I’m learning as I go."'
+    chosen: "COS is the orchestrator (since MG17's handover). The old orchestrator/ process, and the central registry it serves, are what COS replaces. The sandbox exists to separate the systems."
