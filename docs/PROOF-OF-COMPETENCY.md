@@ -1608,3 +1608,48 @@ rule 3, says one system going down must break no other. Inside Idearium, Emerge 
 - **Skill:** failure-mode thinking from a real log. The stop he saw at every boot became a tested path (UP-14: the local commit reachable on
   its branch after the update).
 - **Checkable:** `tests/modules/test-nexus-update.test.js` UP-14; `tests/modules/test-cos-updates.test.js` CU-04, CU-07.
+
+### 2026-11-03 — one door per system: cross-domain synthesis, one primitive doing the work of three mechanisms
+- **His words, in order, the same day:**
+  - "No component registry is the spine." · "The drawbridge is the the component registry, which is also the event bus, and interaction
+    contract and bridge into the compartment." · "the server.js is the process for each system. It’s what cos manages. The spine and
+    component registry for each system routes through there. Cli and api."
+  - "Is this even possible to integrate an event bus and interaction contract and component registry into one door into the system? Like
+    each component for each module connects" · "Yes so each component can be dumb, and agnostic at some point." · "Yes. This reduces the
+    complexity for each complement."
+  - "This is all meant to be cli and api first. The ui sits ontop of the interaction contract uses the cli and api." · "Cos at the top, run
+    through raid which branches out to each system. For contracts. All contracts driven."
+  - On what the skill is: "Yeah but that’s it. Cross domain synthesis. Cutting down code by reusing primitives across diciplines"
+- **Context:** In planning COS as the orchestrator, he asked whether three mechanisms every distributed system keeps separately (a service
+  registry, an event bus, an interface contract) could be one. The coder answered yes, with an OS's system-call table as the precedent: each
+  component's one entry carries its route, its command, its contract and its events. His template had already said it on 2026-10-05 and
+  2026-10-17 ("each component only needs to connect to the registry. that cuts down immensly on context" · "the registry is the interaction
+  contract, the event bus, the queue, the dependency graph, the wiring harness and the spine"), in
+  `idearium/spec-engine/templates/architecture-spec.template.yaml`. The alternative on the table was the status quo: keep the three apart.
+- **Checkable — the duplication the one door removes, measured on 2026-11-03:**
+  - **Three declarations of the same components, per system:** 11 `registry-components.js` (1,213 lines), 13 `interaction-contract.json`
+    (2,960 lines), 8 `event-taxonomy.js` (599 lines) — 4,772 lines describing one set of components three ways.
+  - **Ten central files running the three mechanisms apart, in lib/ and the old orchestrator:** `lib/component-registry.js` 660,
+    `lib/hook-sync-from-component-registry.js` 140, `lib/drawbridge-registry.js` 144, `lib/system-registry.js` 397 (registry);
+    `lib/nexus/nexus-bus.js` 203, `lib/bus-subscriptions.js` 258 (bus); `orchestrator/lib/contract-handshake.js` 261, `contract-poller.js` 64,
+    `mutation-contract.js` 191, `ui-registry.js` 257 (contract) — 2,575 lines.
+  - **What the drift costs, from the same census:** of 11 systems with a registry, 4 serve it themselves and 7 also send it to a central
+    copy; in none is the registry the bus; 152 places reach past a registry into another system's files.
+  - **The primitive already proven in one system:** Guardian keeps its components as nodes in its own node database, 149 tracked node files
+    (`guardian/data/nodes/`): 63 command, 36 capability, 32 component — one command node serving the CLI, the API and Copilot.
+- **Checkable — the same move, one level down, where the alternative was built and measured:** his "I just don’t want the versions to be
+  bigger than only the changes" · "Look at versionium. It’s meant to record changes." The coder had built a second snapshot store (a qcow2
+  disk). Measured on the real Loom: a snapshot and a refresh with nothing changed grew it 1.3 → 11.4 → 21.5 MB. Versionium's existing diff
+  layer (`versionium/lib/files.js`: a first copy, then proven diffs, a full copy only every 20 or when a diff reaches 90% of the file) already
+  stores only changes. Reusing his primitive instead of a new one is the difference.
+- **Checkable — the rules hold the line:** `tests/modules/test-registry-sovereign.test.js` 2/2 (AXIOMS §5.16, written that day: no new
+  caller of the central registry, no Loom growth); `tests/modules/test-substrate-spec.test.js` 3/3 (it caught the coder's own seven modules
+  drifting out of his spec shape, fixed in 0.60.386).
+- **Skill shown:** cross-domain synthesis — recognising that a registry, a bus and a contract describe the same thing (what a component
+  offers, how it is called, what it says) and collapsing them into one structure; then applying the same reuse to versioning. Systems design
+  stated as governing rules (sovereignty, one door, dumb components), not as a diagram.
+- **Honesty:** the one door is decided and specced (genesis.spec and the architecture spec, 0.60.385), not built. The numbers above are the
+  duplication it is designed to remove, not code already removed; the saving is proven only when a system runs on its door. His "seven
+  months" cannot be checked in this repository (its git history starts 2026-10-02).
+- **His part / the coder's part:** the question, the merge of the three, dumb components, CLI and API first, COS through RAID, and the
+  template that already said it are his. The precedent, the per-entry shape, the measurements and the qcow2 mistake are the coder's.
