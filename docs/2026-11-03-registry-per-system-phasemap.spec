@@ -44,3 +44,30 @@ planning_with_him:
     - "A running system's files: a normal folder, or the mounted virtual disk?"
     - "compartment.json folded into the .cos?"
     - "What .nex becomes: the history inside a .cos, or replaced by .cos?"
+
+# ── ADDENDUM 2026-11-03 — his decisions in planning (recorded, not mapped) ─────────────────────────────────────────────────────────────
+decisions_in_planning:
+  PL_D1_versions_hold_only_changes:
+    status: "DECIDED 2026-11-03 (his)"
+    james: '"I just don''t want the versions to be bigger than only the changes."'
+    context: >-
+      Asked whether .nex is system snapshots or versions. Measured the same day: Versionium's file layer already stores diffs (versionium/
+      lib/files.js, each proven by re-applying it); lib/versionium-record.js stores each changed file whole, before and after (up to 256 KB);
+      the .disk archive is a full copy each time; the coder's qcow2 refresh grew Loom's disk 1.3 → 11.4 → 21.5 MB with nothing changed (it
+      rebuilds the whole filesystem), a bug against this.
+    chosen: "every snapshot and version holds only what changed since the one before"
+    still_his: "whether .nex is the name for those snapshots (the coder's recommendation: .nex = system snapshots, changes only; versions stay Versionium's diffs) — not answered yet"
+  PL_D2_sandboxed_not_virtual_machines:
+    status: "DECIDED 2026-11-03 (his)"
+    james: '"I have a gaming pc with 16gb of ram and a 3700x. Get 1650" · "That''s why I just want sandboxed envirements. Like only what''s needed to run a sandboxed envirement." · "Okay for now. I just want them to be isolated from each other. This should make the system easier to manage but give me more control over resource usage and limits."'
+    context: >-
+      His machine: Ryzen 7 3700X, 16 GB RAM, a GTX 1650 (the coder's reading of "Get 1650", said). A QEMU VM per system costs 0.5–1 GB each;
+      his boot logs of 2026-11-01 already reached 0.2% free memory. Shown the same day: Node 22's permission model, run on this host, confines
+      a process to its own folder (a file outside refused, starting another program refused); it does not cover the network.
+    chosen: >-
+      Each system isolated from the others as an ordinary process in a sandbox — only what is needed: its own folder (Node's permission
+      model), its own code (COS's wall), no other programs unless allowed, memory and CPU limits COS already sets (Configuration) — not a VM.
+      The goal, his: easier to manage, more control over resource usage and limits.
+    still_his: "network isolation (a firewall rule per program, a local proxy COS controls, or later); what becomes of the qcow2 virtual disk (kept for the rare system that needs a VM, or set aside)"
+  pinned:
+    - "drift check pinned 2026-11-03 (his: \"It's fine for now. Pin it.\"): SC7's .phase differs from its map (phase-specs --check); the DAG check was not run"
