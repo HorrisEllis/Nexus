@@ -71,3 +71,21 @@ decisions_in_planning:
     still_his: "network isolation (a firewall rule per program, a local proxy COS controls, or later); what becomes of the qcow2 virtual disk (kept for the rare system that needs a VM, or set aside)"
   pinned:
     - "drift check pinned 2026-11-03 (his: \"It's fine for now. Pin it.\"): SC7's .phase differs from its map (phase-specs --check); the DAG check was not run"
+  PL_D3_server_js_is_each_systems_process:
+    status: "DECIDED 2026-11-03 (his)"
+    james: '"Yes like the server.js is the process for each system. It’s what cos manages. The spine and component registry for each system routes through there. Cli and api."'
+    context: "Read the same day: 7 systems have a server.js (copilot, diagnostic, guardian, intelligence, loom, ollama, versionium); idearium, clear-glass, cortex, cos, orchestrator, architect and emerge have none."
+    chosen: "each system's server.js is its one process, the thing COS manages; that system's spine and its own component registry route through it, for its CLI and its API"
+    still_his: "whether \"the spine\" is server.js itself or a module server.js loads"
+  PL_D4_versionium_records_the_changes:
+    status: "DECIDED 2026-11-03 (his)"
+    james: '"Look at versionium. It’s meant to record changes."'
+    context: >-
+      Read the same day: versionium/spec/versionium.file-versioning.spec keeps "a first full copy then diffs"; versionium/lib/files.js stores
+      a file again only if it changed, each diff proven by re-applying it, a full copy every 20 diffs (FILE_KEYFRAME_INTERVAL) or when a diff
+      would be ≥ 90% of the file (FILE_DELTA_MAX_RATIO). Others reach it only through its routes.
+    chosen: >-
+      Snapshots and versions of a system are Versionium's, recorded as changes, through its routes. COS keeps no snapshot store of its own
+      (§5.15). Found against it, from the coder's own work: the qcow2 virtual disk's snapshots (a second store, a full copy each refresh),
+      the .disk archive used as a version (full copies), and lib/versionium-record.js sending whole files before and after.
+    still_his: "whether .nex names a system snapshot recorded in Versionium, or drops out"
