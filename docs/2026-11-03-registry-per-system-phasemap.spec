@@ -162,3 +162,14 @@ decisions_in_planning:
       owners, each through its door; its UI pages to COS's UI or the system's own. (4) The old orchestrator archived when nothing calls it.
       (5) The open phases gathered into one map.
     still_his: "the TV shell (/home, its channels): COS's UI, or a system of its own?"
+  PL_D12_cos_ui_and_automation:
+    status: "his words recorded 2026-11-03; the TV shell reading TO CONFIRM"
+    james: '"Cos ui stays the cos ui. It’s already for ochastrating. Also the automation where is it?"'
+    found: >-
+      Read the same day: the automation engine is lib/automation/engine.js (in lib/, against his rule that day); the old orchestrator runs
+      it (orchestrator/automation/index.js, his 2026-10-30 "need to finish the automation in orchestrator": agent steps through RAID to
+      Guardian, browser and macro steps to Clear Glass); Clear Glass holds the workflow and macro engine (clear-glass/src/mesh/automation-
+      engine.js, :7704); lib/automation-registry.js (in lib/, served by Idearium) is one view over six sources (Copilot, Ollama, lib, Clear
+      Glass, Idearium, BrainOS). COS's Automation page holds only the supervisor's policy; macros and rules wait on MG7, never built.
+    plan_by_the_axioms: "what runs automation moves from the old orchestrator to COS (the orchestrator, PL_D8, PL_D11); the engine out of lib/ into COS's folder; COS's Automation page shows and runs workflows, macros and rules; Clear Glass keeps its browser automation, reached at its door"
+    reading_to_confirm: "\"Cos ui stays the cos ui\" read as: the TV shell does not become COS's UI — then does the TV shell stay as its own thing, or go?"
