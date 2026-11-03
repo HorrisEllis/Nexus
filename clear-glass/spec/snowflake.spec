@@ -366,3 +366,20 @@ spec:
       - { id: GATE-SF-HTTPS-ONLY, name: no-cleartext, severity: high, check: "http frame upgraded, subresource cancelled when on", on_failure: "build failure" }
       - { id: GATE-SF-FIELDS, name: ui-reads-backend, severity: high, check: "test pins detect/status field names", on_failure: "build failure" }
       - { id: GATE-SF-OPT-IN, name: builtin-is-asked, severity: fatal, check: "builtin only from its own route", on_failure: "build failure" }
+
+# ── ADDENDUM 2026-11-03 — his idea: I2P beside Snowflake, routes that fall back to each other, scored, remembered, watched (recorded, not built) ──
+# James, 2026-11-03: "at some point, I want to integrate IFPS for a dual proxy with the Snowflake. Integrate health scoring and per-site proxies.
+# With maybe a vector, vector ledger maybe, like, to log when I've used a similar IP. And maybe a way to, you know, like a watcher for if a website
+# blocks IFPS or that IP is blocked, you know, just so it doesn't get stuck on it." · "And then the I2P or IP2, you know, it's like Snowflake, but
+# it's for torrents." · "Oh, they could be a fallback for each other. So if a website rejects the connection, maybe hook it into erosmancerOS’
+# threat detection"
+# Read by the coder, to confirm: "IFPS" as I2P (the Invisible Internet Project). Context, read 2026-11-03: this spec's Tor + Snowflake transport
+# (SF1–SF8), per-site routes (clear-glass/src/network/routes.js: direct, block, transport, socks5://), the kill switch and HTTPS-only, a
+# qBittorrent piece (clear-glass/src/net/qbittorrent.js) and magnets; ErosmancerOS's hostile detection (GET /api/hostile/status, the event
+# eros.hostile.detected already wired to context.fp.switch and cortex.gaps.open) and its routing levels (direct | parallel | redundant).
+# The idea, his: (1) I2P as a second transport beside Snowflake/Tor, each a fallback for the other; (2) health scoring per route and proxy;
+# (3) per-site proxies (exists: routes); (4) a vector ledger of the IPs used, per site, searchable by similarity; (5) a block watcher — a site
+# rejecting the connection (403, a block page, a captcha) moves to the next route, so nothing gets stuck; (6) the watcher hooked into
+# ErosmancerOS's threat detection, so a block is a hostile signal and the route (and, if needed, the fingerprint) switches.
+# Said to him (the coder's): I2P is built for sites inside I2P; reaching ordinary websites through it depends on a few volunteer outproxies, slow
+# and unreliable — so for websites the working fallback is Tor/Snowflake ↔ another route, and for torrents I2P ↔ Tor.
