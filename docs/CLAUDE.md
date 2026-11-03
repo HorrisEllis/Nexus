@@ -446,9 +446,11 @@ Said after the coder put Loom (and, before that, a central store in lib/) where 
 - **It is not Loom.** Loom is being removed.
 - **It is not `lib/`.** `lib/component-registry.js`, one central store, is the violation to undo, held by the ratchet
   `lib/registry-sovereign-check.js`.
-- **Each system's component registry is its spine** (his, 2026-11-03: "No component registry is the spine. Why is this getting confused?";
-  and 2026-10-17 in genesis.spec: "basically the spine of each system"): its interaction contract and event bus, with handshake
-  verification, the only way in. **server.js is the process** that hosts it, the thing COS manages. Not the other way round.
+- **The component registry, in his words only (2026-11-03); no paraphrase:**
+  - "No component registry is the spine."
+  - "The drawbridge is the the component registry, which is also the event bus, and interaction contract and bridge into the compartment."
+  - "the server.js is the process for each system. It’s what cos manages. The spine and component registry for each system routes through
+    there. Cli and api."
 - **The system registry connects the component registries.** It knows each system and reaches each system's own registry.
 - **COS and the Orchestrator use the system registry to orchestrate.**
 - **To reconcile with him, not decided by the coder:** today's `lib/system-registry.js` is a read-only merge of autopilot's kernels,

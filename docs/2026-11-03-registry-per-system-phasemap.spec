@@ -106,7 +106,8 @@ decisions_in_planning:
       interaction contract and event bus, with handshake verification. basically the spine of each system ... the drawbridge for each
       compartment for each system, the only way to interact between systems. using the api routes, and cli interface. ui floats ontop".
       The coder confused it by guessing at a one-word answer instead of asking.
-    chosen: >-
-      Each system's spine is its own component registry: its interaction contract and event bus, with handshake verification, the only way
-      in, by API routes and the CLI, the UI floating on top. server.js is the system's process: the one thing COS manages, which hosts the
-      spine and routes its CLI and API through it.
+    chosen: "his words only (the coder's paraphrase, with \"hosts\", withdrawn the same day): see PL_D7"
+  PL_D7_the_drawbridge:
+    status: "DECIDED 2026-11-03 (his; recorded in his words only)"
+    james: '"Remeber how I just said don’t guess?" · "The drawbridge is the the component registry, which is also the event bus, and interaction contract and bridge into the compartment."'
+    chosen: "his words, as written above, are the definition; with PL_D3 (\"the server.js is the process for each system ... The spine and component registry for each system routes through there. Cli and api.\") and PL_D6 (\"No component registry is the spine.\")"
