@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/manager/cli.js — COS's own command line, over the manager's own functions (SC3, 0.60.379).
+ * cos/manager/cli.js — COS's own command line, over the manager's own functions (SC3, 0.60.380).
  * Spec: cos/spec/cos-manager.spec MOD-MG-CLI · Map: docs/2026-11-02-cos-console-phasemap.spec SC3_system_command_line, SC_D5.
  *
  * James, 2026-11-02: "Need the system cli."

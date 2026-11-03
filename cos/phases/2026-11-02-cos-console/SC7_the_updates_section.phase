@@ -19,7 +19,7 @@ payload:
   repo: null
   layer: ui
   status: >-
-    "DONE 0.60.380 — test-cos-console CC-10, CC-11 (Clear Glass); found: a page opened while the
+    "DONE 0.60.381 — test-cos-console CC-10, CC-11 (Clear Glass); found: a page opened while the
     shell loaded its contract never showed (the stage cleared, its frame kept) — fixed in
     cos/ui/shell/page.js"
   files:

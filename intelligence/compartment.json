@@ -65,7 +65,7 @@
         },
         "retired": {
           "at": "2026-11-02",
-          "by": "SC6, 0.60.379",
+          "by": "SC6, 0.60.380",
           "why": "James, 2026-11-02: \"There shouldn't be two intelligence. Intelligence consumer and intelligence should not be two separate things.\" The consumer runs inside intelligence/server.js (consumer.start()); kept here, not declared (§0.3)."
         }
       }

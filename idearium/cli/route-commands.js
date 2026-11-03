@@ -867,7 +867,7 @@ export const SPEC = [
       const patch = Object.fromEntries(kv.map(x => { const [k, v] = x.split('='); return [k, v === 'none' ? null : /MB$/.test(k) ? Number(v) : v]; }));
       return { system: 'cos', method: 'PATCH', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/caps`, body: { patch, by: 'person' } }; },
     print: (d) => { const c = d.caps; console.log(`${c.name}: ${['heapMB', 'rssLimitMB', 'onOver', 'priority'].map(k => `${k} ${c[k]} (${c.layers[k]})`).join(' · ')}`); for (const [k, v] of Object.entries(c.applied)) console.log(`  ${k.padEnd(9)} ${v.state}${v.readBack != null ? ` → ${v.readBack}` : ''}${v.why ? ` — ${v.why}` : ''}`); } },
-  // SC3 0.60.379 — James, 2026-11-02: "Need the system cli." · "Need configuration for each system". COS's own table runs in its manager
+  // SC3 0.60.380 — James, 2026-11-02: "Need the system cli." · "Need configuration for each system". COS's own table runs in its manager
   // (POST /api/cos/cli); these rows give agents and the terminal the same, through COS's routes.
   { key: 'cos.config', repo: false, personOnly: (a) => (a.args.slice(1).some(x => x.includes('=')) ? 'a system\'s configuration is set by a person; an agent reads it' : null), usage: 'cos config <system> [key=value …]  (memory.limit=25% · memory.heap=2GB · cpu.limit=2cores · network.port=3760 · env.FOO=bar · start.autostart=false …)', about: 'a system\'s configuration in COS: every setting with where it came from and when and how it applies; set yours (percent or sizes)',
     req: (a) => { const kv = a.args.slice(1).filter(x => x.includes('=')); if (!kv.length) return { system: 'cos', method: 'GET', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/config` };

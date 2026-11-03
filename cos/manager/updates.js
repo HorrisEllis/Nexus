@@ -60,7 +60,7 @@ function createUpdates(sup, { root = path.resolve(__dirname, '..', '..'), emit =
       return out;
     } finally { running = null; }
   }
-  // SC7 0.60.379 — James, 2026-11-02: "A gear, with update settings and Build that update section in cos." The kernel's update settings (read and
+  // SC7 0.60.380 — James, 2026-11-02: "A gear, with update settings and Build that update section in cos." The kernel's update settings (read and
   // written in-process: two small files), the history, and roll back (in its own process, then each changed system restarted, as apply)
   function settings() { const p = U().getPolicy({ root }); let a = null; try { a = U().autoState({ root }); } catch (_) {} return { ok: true, settings: p, last: a, options: { policy: ['auto', 'notify', 'off'], everyHours: [1, 168], keepLocal: ['auto', 'ask'] } }; }
   function setSettings(patch = {}, { by } = {}) {

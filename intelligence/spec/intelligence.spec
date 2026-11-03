@@ -129,7 +129,7 @@ spec:
       source: cortex/intelligence/
       migration_phase: 1
     - id: MOD-INTELLIGENCE-CONSUMER
-      description: "intelligence/consumer.js — the queue's input half (intelligence/input/ through lib/contract-queue.js). Since 0.60.379 (SC6) it runs inside intelligence/server.js (start on listen, stop on stop); intelligence-consumer is no longer a second declared process."
+      description: "intelligence/consumer.js — the queue's input half (intelligence/input/ through lib/contract-queue.js). Since 0.60.380 (SC6) it runs inside intelligence/server.js (start on listen, stop on stop); intelligence-consumer is no longer a second declared process."
       source: intelligence/consumer.js
       migration_phase: 4
     - id: baseline
@@ -345,7 +345,7 @@ spec:
 # NOTE (said, not hidden, §1.2): tests/modules/test-intelligence-bridge.js is red on main for an unrelated reason —
 #   it requires cortex/core/raid/intelligence-bridge, a module that does not exist in this checkout. Not touched here.
 
-# ── ADDENDUM 2026-11-02 (0.60.379, SC6) — one Intelligence ──
+# ── ADDENDUM 2026-11-02 (0.60.380, SC6) — one Intelligence ──
 # James, 2026-11-02: "There shouldn't be two intelligence. Intelligence consumer and intelligence should not be two separate things. It'll be using
 # the .spec." The consumer (MOD-INTELLIGENCE-CONSUMER) is started by intelligence/server.js in its own process; intelligence/compartment.json
 # keeps the old declaration under runtime.retiredProcesses (§0.3); COS supervises, caps and restarts one system; lib/nexus-update.js restarts one

@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/disk/disk.js — a compartment's disk: its metadata (the spec and its declaration) and its content in one compressed file (DK1, 0.60.381).
+ * cos/disk/disk.js — a compartment's disk: its metadata (the spec and its declaration) and its content in one compressed file (DK1, 0.60.382).
  * Spec: cos/spec/cos-manager.spec MOD-COS-DISK · Map: docs/2026-11-02-cos-disk-phasemap.spec DK1, DK_D0–DK_D2.
  *
  * James, 2026-11-02: "Cos is the wmware. The compartments are the virtual machines/disks. Like can we use the .spec as the virtual machine

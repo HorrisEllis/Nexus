@@ -1,4 +1,4 @@
-/* cos/ui/cockpit/sections/disk/section.css — DK3, 0.60.381. */
+/* cos/ui/cockpit/sections/disk/section.css — DK3, 0.60.382. */
 .meta{display:grid;grid-template-columns:170px 1fr;gap:10px var(--s4);padding:var(--s5);font:400 13px/1.55 var(--mono);color:var(--nx-text)}.meta b{font:500 10.5px/1.6 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--nx-muted)}
 .bar{height:6px;border-radius:6px;background:color-mix(in srgb,var(--nx-edge) 80%,transparent);margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ac),var(--ac-soft))}
 .acts{display:flex;align-items:center;gap:var(--s3)}.chk{display:flex;align-items:center;gap:6px;font:400 12.5px/1 var(--font);color:var(--nx-dim)}

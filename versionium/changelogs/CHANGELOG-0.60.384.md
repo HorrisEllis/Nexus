@@ -1,35 +1,46 @@
-# CHANGELOG 0.60.384 — into CLAUDE.md: do not guess; each system is sovereign; component registries and the system registry
+# CHANGELOG 0.60.384 — RG0: every system's component registry is its own (AXIOMS §5.16), written as law and enforced
 
-James, 2026-11-03: "Put in the Claude MD. Also put do not guess if you do not know. Ambiguity must be reconciled by me. Use the Atlas in
-Idearium. The specs in each spec folder. Of each system. Nothing a system needs lies outside of its own boundaries, beyond another system. Like
-Idearium needs Guardian, right? But I could slot another system in its place to use. It's not hardwired, it just uses the API routes and the
-CLI server, which is the whole point. That's why the axiom exists that says hardwired, hard-coded must earn its place."
+James, 2026-11-03: "Not loom. Never said loom. Loom is going to be removed"
 
-James, the same message: "Each system is sovereign. It is responsible for its own data, its own modules. Its own commands, lib is not a
-directory for anything that a system uses that it does not have within its own directory. Each system needs to work independent of the system.
-Loom is not the component registry. The lib folder is not the component registry. The component registry is the system's component registry,
-you know, per system, right? Then the system registry is for connecting the component registries. Cos and The orchastrator uses that to
-orchestrate."
+James, 2026-11-03: "No component registry is per system.  That needs to be implemented"
 
-## Written
-- **docs/CLAUDE.md**, a dated addendum, with his words:
-  - **Do not guess.** If you don't know, read or ask; ambiguity is his to reconcile, asked with the readings side by side.
-  - **Read first:** the Atlas in Idearium (`docs/atlases/<system>-atlas.md`, shown by `idearium/ui/js/nexus-atlas.js`) and each system's own
-    spec folder.
-  - **Each system is sovereign:** its own data, modules and commands, all inside its own folder. Another system is reached only through its
-    API routes and the CLI server, so it can be swapped (his example: Idearium uses Guardian, and another system could take Guardian's place).
-    `lib/` is not a directory for what a system uses.
-  - **The component registry is per system** (not Loom, not `lib/`). **The system registry connects the component registries**, and COS and
-    the Orchestrator use it to orchestrate.
-- **The root CLAUDE.md** says all of it in its opening lines.
-- **AXIOMS §5.16** gains the system registry sentence and the routes-and-CLI rule, in his words.
-- **docs/2026-11-03-registry-per-system-phasemap.spec:** the first planning question (how systems find each other) is answered by him.
+James, 2026-11-03: "And enforce that. I’m sick of you confusing that. It’s fucking sovereign. Do not  make this mistake again."
 
-## To confirm with him (not decided by the coder)
-- "the axiom … that says hardwired, hard-coded must earn its place": the nearest text found is AXIOMS §0.5, "Complexity Must Earn Its
-  Existence". No axiom uses the word "hardwired".
-- Where the system registry lives and whose it is. Today's `lib/system-registry.js` is a read-only merge of autopilot's kernels, diagnostic's
-  systems and lib/version.js (2026-09-06), not the registry he describes.
+## The mistake, and where it came from
+While planning the `.cos` compartment, the coder twice put Loom where the component registry belongs. That followed docs/CLAUDE.md rule 3,
+which called Loom's registry "the component registry". Read in the code, the registry is also built the way he says it must not be:
+- one central store, `lib/component-registry.js`, kept in Cortex's memory;
+- filled by Cortex at boot and served by Orchestrator;
+- so with either of them down, no system can find another.
+
+## Written as law
+- **docs/AXIOMS-v3.1.md §5.16, "Every System's Component Registry Is Its Own":**
+  - per system and sovereign, inside its compartment;
+  - no central registry, and no system stores, fills or serves another's entries;
+  - only the schema is shared;
+  - Loom is not it, and is being removed.
+
+  Also in Part IV's quick reference.
+- **docs/CLAUDE.md:**
+  - rule 3 restated the same way, the old wording struck and kept (§0.3);
+  - "where to get context" no longer sends the coder to Loom;
+  - the 2026-10-29 "every component wired" rule now asks for an entry in its own system's registry.
+- **The root CLAUDE.md** says it in its first lines, with his words.
+
+## Enforced in code
+- **`lib/registry-sovereign-check.js`**, a ratchet like the boundary census:
+  - what exists today is the baseline to undo (`lib/contracts/registry-sovereign-baseline.json`): 12 files using the central registry,
+    22 Loom maps;
+  - fails on a new caller of the central registry, a new Loom map, or a Loom map that grows, each named;
+  - fails if the law is missing from any of its three files;
+  - shrinking is counted and written back.
+- **The coder stops adding Loom wires.** It had added them to every new file since 0.60.376, by the old rule.
 
 ## Proof
-- test-registry-sovereign 2/2: the law check still finds §5.16 in all three files.
+- test-registry-sovereign 2/2:
+  - RS-01: the real tree holds the line;
+  - RS-02: on a fixture, each way of breaking it is named, shrinking is counted, and a missing baseline is said instead of passing.
+
+## Not done: planning with him
+The per-system registry itself, and the `.cos` compartment it lives in, are in planning, not mapped. The open questions are listed in
+docs/2026-11-03-registry-per-system-phasemap.spec.

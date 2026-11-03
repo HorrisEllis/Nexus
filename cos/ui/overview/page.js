@@ -60,7 +60,7 @@
       h('button', { class: 'btn', onclick: () => boot('core'), html: `${icon('bolt')}<span>Boot core</span>` }),
       h('button', { class: 'btn primary', onclick: () => boot('all'), html: `${icon('play')}<span>Boot all</span>` }),
       h('button', { class: 'btn danger', onclick: stopAll, html: `${icon('stop')}<span>Stop all</span>` }),
-      // SC5 0.60.379 — James, 2026-11-02: "Also needs to be an add system in the proposal section, or just in the general homepage." The shell owns the form
+      // SC5 0.60.380 — James, 2026-11-02: "Also needs to be an add system in the proposal section, or just in the general homepage." The shell owns the form
       h('button', { class: 'btn', id: 'add-system', onclick: () => { try { window.parent.COS_ADD(); } catch (_) { COS.notice('err', 'Add system opens in COS\'s shell'); } }, html: `${icon('plus')}<span>Add system</span>` }));
   }
   function renderStats() {

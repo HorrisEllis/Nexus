@@ -1,4 +1,4 @@
-// cos/ui/cockpit/sections/disk/section.js — a system's disk (DK3, 0.60.381). James, 2026-11-02: "Cos is the wmware. The compartments are the
+// cos/ui/cockpit/sections/disk/section.js — a system's disk (DK3, 0.60.382). James, 2026-11-02: "Cos is the wmware. The compartments are the
 // virtual machines/disks." · "Use the spec as metadata then have the actual file be a compressed or virtual disk or envirement."
 // Its metadata (the declaration and its spec, and how much of its code the spec names: how much of the disk the metadata alone could
 // rebuild), its disks, Make a disk (with its data only when ticked), Verify (every file re-hashed against the disk's metadata).
@@ -15,7 +15,7 @@ $('#make').onclick=async()=>{const st=$('#state').checked;
   if(!await COS.confirm({title:`Make a disk of ${ctx.name}?`,body:`Its files in one compressed file, its spec and declaration as the metadata inside${st?', <b>and its data</b>':' (its data stays out)'}. Kept in COS's data, recorded in Versionium.`,act:'Make the disk'}))return;
   $('#make').disabled=true;$('#make').textContent='Making…';
   try{const r=await COS.call('POST',base,{withState:st,by:'person'});COS.notice('ok',`${r.file}: ${r.files} files, ${kb(r.bytes)}`);await load();}catch(e){if(!e.refused)COS.notice('err',e.message);}finally{$('#make').disabled=false;$('#make').textContent='Make a disk';}};
-// DK8 0.60.382 — the virtual disk (qcow2): its files and all its data in one file, its snapshots inside; each act confirmed, by = person
+// DK8 0.60.383 — the virtual disk (qcow2): its files and all its data in one file, its snapshots inside; each act confirmed, by = person
 const vb=`/api/cos/systems/${encodeURIComponent(ctx.name)}/vdisk`;const mb=(b)=>`${(b/1048576).toFixed(1)} MB`;
 async function vact(op,body,title,text){if(!await COS.confirm({title,body:text+'<br><br>Through COS\'s manager, on its ledger, recorded in Versionium.',act:title.replace(/\?$/,'')}))return;
   try{await COS.call('POST',`${vb}/${op}`,{...body,by:'person'});COS.notice('ok',title.replace(/\?$/,'')+': done');}catch(e){if(!e.refused)COS.notice('err',e.message);}vload();}

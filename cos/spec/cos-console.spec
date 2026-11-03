@@ -1,7 +1,7 @@
 spec:
 
   # cos-console.spec — moved out of cos/spec/cos-manager.spec on 2026-11-03 (SC8, docs/2026-11-02-cos-console-phasemap.spec): the coder's modules of
-  # 0.60.379–0.60.382, at full depth, each dependency an interface below. Format: emerge's module spec, compiled by kg-builder at specDepth 1.0.
+  # 0.60.380–0.60.383, at full depth, each dependency an interface below. Format: emerge's module spec, compiled by kg-builder at specDepth 1.0.
 
   meta:
     name:        cos-console

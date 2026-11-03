@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/manager/notices.js — COS's bell: kept notices, read and unread (SC1, 0.60.379).
+ * cos/manager/notices.js — COS's bell: kept notices, read and unread (SC1, 0.60.380).
  * Spec: cos/spec/cos-manager.spec MOD-MG-NOTICES · Map: docs/2026-11-02-cos-console-phasemap.spec SC1_the_bell.
  *
  * James, 2026-11-02: "Also have a notification bell for update, system status,  notications"

@@ -2,7 +2,7 @@
 // run-all: timeout 180000
 require('../../lib/test-sandbox.js').ensure();
 /**
- * tests/modules/test-cos-disk.test.js — DK1–DK3, 0.60.381 (docs/2026-11-02-cos-disk-phasemap.spec).
+ * tests/modules/test-cos-disk.test.js — DK1–DK3, 0.60.382 (docs/2026-11-02-cos-disk-phasemap.spec).
  * James, 2026-11-02: "Cos is the wmware. The compartments are the virtual machines/disks." · "Use the spec as metadata then have the actual file be
  * a compressed or virtual disk or envirement."
  *   DK-01  a disk: the metadata first (declaration, spec files by hash, coverage, base), its code layer; its data only when asked; unpacked

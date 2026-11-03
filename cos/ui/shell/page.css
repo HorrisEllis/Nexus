@@ -112,7 +112,7 @@ html[data-cos-frame="none"] .top-actions { flex: none; }
 html[data-cos-frame="none"] .top button, html[data-cos-frame="none"] .top a, html[data-cos-frame="none"] .top input,
 html[data-cos-frame="none"] .top .meter, html[data-cos-frame="none"] .top .manager { -webkit-app-region: no-drag; app-region: no-drag; }
 
-/* ── SC5 (0.60.379) — the bell, COS's command line, Add system. James, 2026-11-02: "notification bell for update, system status,  notications" ── */
+/* ── SC5 (0.60.380) — the bell, COS's command line, Add system. James, 2026-11-02: "notification bell for update, system status,  notications" ── */
 .icon-btn { width: 34px; padding: 0; justify-content: center; position: relative; } .icon-btn svg { width: 17px; height: 17px; }
 .bell .badge { position: absolute; top: -4px; right: -5px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--ac); color: var(--nx-void);
   font: 700 10px/17px var(--mono); text-align: center; box-shadow: 0 0 10px color-mix(in srgb, var(--ac) 60%, transparent); }

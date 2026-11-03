@@ -1644,11 +1644,11 @@ rule 3, says one system going down must break no other. Inside Idearium, Emerge 
   stores only changes. Reusing his primitive instead of a new one is the difference.
 - **Checkable — the rules hold the line:** `tests/modules/test-registry-sovereign.test.js` 2/2 (AXIOMS §5.16, written that day: no new
   caller of the central registry, no Loom growth); `tests/modules/test-substrate-spec.test.js` 3/3 (it caught the coder's own seven modules
-  drifting out of his spec shape, fixed in 0.60.386).
+  drifting out of his spec shape, fixed in 0.60.387).
 - **Skill shown:** cross-domain synthesis — recognising that a registry, a bus and a contract describe the same thing (what a component
   offers, how it is called, what it says) and collapsing them into one structure; then applying the same reuse to versioning. Systems design
   stated as governing rules (sovereignty, one door, dumb components), not as a diagram.
-- **Honesty:** the one door is decided and specced (genesis.spec and the architecture spec, 0.60.385), not built. The numbers above are the
+- **Honesty:** the one door is decided and specced (genesis.spec and the architecture spec, 0.60.386), not built. The numbers above are the
   duplication it is designed to remove, not code already removed; the saving is proven only when a system runs on its door. His "seven
   months" cannot be checked in this repository (its git history starts 2026-10-02).
 - **His part / the coder's part:** the question, the merge of the three, dumb components, CLI and API first, COS through RAID, and the

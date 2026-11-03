@@ -66,7 +66,7 @@ const SPECS = [
   { spec: 'cos/spec/compartment.spec', map: null },
   { spec: 'docs/nexus-update.spec', map: null },
   { spec: 'clear-glass/spec/tray.spec', map: null },   // 2026-11-02 CA1 — his 'clearglass needs a setting for automatically minimizing to tray after a period of time'   // 2026-11-01 UP13 — his 'make sure it hooks into idearium versionium, to backup the system'; compile only (UP0–UP12 predate the spec)   // 2026-11-01 CP0 begun — his 'continue moving the rest of the systems into cos ... resource management ... snapsjot'; compile only until every CP phase names it
-  { spec: 'cos/spec/cos-console.spec', map: null },   // 2026-11-03 SC8 — the coder's 0.60.379–0.60.381 modules, moved out of cos-manager.spec
+  { spec: 'cos/spec/cos-console.spec', map: null },   // 2026-11-03 SC8 — the coder's 0.60.380–0.60.382 modules, moved out of cos-manager.spec
   { spec: 'cos/spec/cos-disk.spec', map: null },      // 2026-11-03 SC8 — DK1, DK6 modules, moved out of cos-manager.spec
   { spec: 'docs/orchestration-console.spec', map: 'docs/2026-11-01-orchestration-console-phasemap.spec' },   // 2026-11-01 OC — his "rebuild brianos/orchastration ui with enterprise grade code"   // 2026-11-01 FT — his "the friction and tension mapping, between functions and primitives"   // 2026-11-01 OP — his "could it outperform you? use guardian also. can you spec this?"   // 2026-10-31 EAS — his "a system with a server.js": Emerge sovereign, through its door, nesting
 ];

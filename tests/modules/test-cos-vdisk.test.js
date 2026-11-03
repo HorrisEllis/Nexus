@@ -2,7 +2,7 @@
 // run-all: timeout 240000
 require('../../lib/test-sandbox.js').ensure();
 /**
- * tests/modules/test-cos-vdisk.test.js — DK6–DK8, 0.60.382 (docs/2026-11-02-cos-disk-phasemap.spec).
+ * tests/modules/test-cos-vdisk.test.js — DK6–DK8, 0.60.383 (docs/2026-11-02-cos-disk-phasemap.spec).
  * James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data, snapshots, system state."
  * Real qemu-img and e2fsprogs; skipped, saying which tool is missing, on a host without them.
  *   VD-01  a virtual disk: qemu-img reads a qcow2 with an ext4 inside named for the system; its metadata, files and data read from inside without

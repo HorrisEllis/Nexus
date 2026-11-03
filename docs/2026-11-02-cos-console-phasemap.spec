@@ -85,7 +85,7 @@ phases:
 
   SC1_the_bell:
     layer: backend
-    status: "DONE 0.60.379 — test-cos-console CC-04, CC-09"
+    status: "DONE 0.60.380 — test-cos-console CC-04, CC-09"
     depends_on: []
     spec: cos/spec/cos-console.spec
     blocks: [MOD-MG-NOTICES]
@@ -98,7 +98,7 @@ phases:
 
   SC2_configuration_per_system:
     layer: backend
-    status: "DONE 0.60.379 — test-cos-console CC-01..CC-03, CC-09"
+    status: "DONE 0.60.380 — test-cos-console CC-01..CC-03, CC-09"
     depends_on: [SC_D1_units_and_what_the_os_enforces, SC_D2_where_the_configuration_lives, SC_D3_ports_are_announced_not_guessed]
     spec: cos/spec/cos-console.spec
     blocks: [MOD-MG-SYSTEM-CONFIG]
@@ -113,7 +113,7 @@ phases:
 
   SC3_system_command_line:
     layer: backend
-    status: "DONE 0.60.379 — test-cos-console CC-05, CC-09"
+    status: "DONE 0.60.380 — test-cos-console CC-05, CC-09"
     depends_on: [SC_D5_cos_has_its_own_command_line, SC1_the_bell, SC2_configuration_per_system]
     spec: cos/spec/cos-console.spec
     blocks: [MOD-MG-CLI]
@@ -123,7 +123,7 @@ phases:
 
   SC4_add_a_system:
     layer: backend
-    status: "DONE 0.60.379 — test-cos-console CC-06, CC-09"
+    status: "DONE 0.60.380 — test-cos-console CC-06, CC-09"
     depends_on: [SC_D4_adding_a_system_is_a_proposal]
     spec: cos/spec/cos-console.spec
     blocks: [MOD-MG-ADD-SYSTEM]
@@ -133,7 +133,7 @@ phases:
 
   SC5_the_console_ui:
     layer: ui
-    status: "DONE 0.60.379 — test-cos-console CC-09 (Clear Glass); the borderless window unverified on Windows"
+    status: "DONE 0.60.380 — test-cos-console CC-09 (Clear Glass); the borderless window unverified on Windows"
     depends_on: [SC1_the_bell, SC2_configuration_per_system, SC3_system_command_line, SC4_add_a_system]
     spec: cos/spec/cos-manager.spec
     blocks: [MOD-MG-UI-SHELL]
@@ -146,7 +146,7 @@ phases:
 
   SC6_one_intelligence:
     layer: backend
-    status: "DONE 0.60.379 — test-cos-console CC-07; test-cos-supervisor SV-08 (13 declared + emerge − intelligence-consumer)"
+    status: "DONE 0.60.380 — test-cos-console CC-07; test-cos-supervisor SV-08 (13 declared + emerge − intelligence-consumer)"
     depends_on: [SC_D0_one_intelligence]
     spec: intelligence/spec/intelligence.spec
     blocks: [MOD-INTELLIGENCE-CONSUMER]
@@ -154,7 +154,7 @@ phases:
     does: "server.js starts and stops the consumer in-process; the second declaration retired (runtime.retiredProcesses); the update's restart plan names one kernel"
     proof: "the supervisor's declarations hold one intelligence process; server.js starts the consumer; nexus-update's plan for intelligence/ is [intelligence]"
 
-# ── ADDENDUM 2026-11-02 (0.60.379) — built; what building found ──
+# ── ADDENDUM 2026-11-02 (0.60.380) — built; what building found ──
 # All six phases built. Found while building, each fixed in its phase and said: cos/ui/serve.js compared a write's origin with the port it was
 # asked for, so a cockpit started on port 0 refused every write (now the port it listens on); the shell's Ctrl+K and the new Ctrl+` never reached
 # the shell while a page's frame had focus (pages now pass them up); Clear Glass's driver could not press a key combination ("Control+`" was one
@@ -167,7 +167,7 @@ phases:
 phases_addendum_2026_11_02_sc7:
   SC7_the_updates_section:
     layer: ui
-    status: "DONE 0.60.380 — test-cos-console CC-10, CC-11 (Clear Glass); found: a page opened while the shell loaded its contract never showed (the stage cleared, its frame kept) — fixed in cos/ui/shell/page.js"
+    status: "DONE 0.60.381 — test-cos-console CC-10, CC-11 (Clear Glass); found: a page opened while the shell loaded its contract never showed (the stage cleared, its frame kept) — fixed in cos/ui/shell/page.js"
     depends_on: [SC1_the_bell, SC5_the_console_ui]
     spec: cos/spec/cos-console.spec
     blocks: [MOD-MG-UI-UPDATES]
@@ -184,14 +184,14 @@ phases_addendum_2026_11_02_sc7:
     proof: "settings round-trip and refusal; history lists the update; the page in Clear Glass: the gear opens it, a setting saved and read back"
 
 # ── ADDENDUM 2026-11-03 — SC8: the coder's modules at full depth (a fix, phased first) ──────────────────────────────────────────────────
-# Found 2026-11-03 while updating genesis and the architecture spec (0.60.385): test-substrate-spec SS-01/SS-02 have failed since 0.60.379.
+# Found 2026-11-03 while updating genesis and the architecture spec (0.60.386): test-substrate-spec SS-01/SS-02 have failed since 0.60.380.
 # The coder added seven modules (MOD-MG-NOTICES, -SYSTEM-CONFIG, -ADD-SYSTEM, -CLI, -UI-UPDATES, MOD-COS-DISK, -VDISK) to cos/spec/cos-manager.spec,
 # which is tied to the cos-manager map, while their phases are in this map and the disk map; three depended on names the spec never declares
 # (updates, proposals, tar). The check that would have caught it was not run after those releases — drift, the coder's.
 phases_addendum_2026_11_03_sc8:
   SC8_the_specs_at_full_depth:
     layer: spec
-    status: "DONE 0.60.386 — test-substrate-spec 3/3 with cos-console.spec and cos-disk.spec listed"
+    status: "DONE 0.60.387 — test-substrate-spec 3/3 with cos-console.spec and cos-disk.spec listed"
     depends_on: [SC7_the_updates_section, DK7_snapshots_inside_the_disk]
     files: [cos/spec/cos-console.spec (new), cos/spec/cos-disk.spec (new), cos/spec/cos-manager.spec, tests/modules/test-substrate-spec.test.js]
     does: >-

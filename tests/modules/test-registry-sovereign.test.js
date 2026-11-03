@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/modules/test-registry-sovereign.test.js — AXIOMS §5.16 enforced (RG0, 0.60.383; docs/2026-11-03-registry-per-system-phasemap.spec).
+ * tests/modules/test-registry-sovereign.test.js — AXIOMS §5.16 enforced (RG0, 0.60.384; docs/2026-11-03-registry-per-system-phasemap.spec).
  * James, 2026-11-03: "And enforce that. I’m sick of you confusing that. It’s fucking sovereign. Do not  make this mistake again."
  *   RS-01  the real tree holds the line: no new caller of the central registry, no new or grown Loom map, the law written in all three places
  *   RS-02  on a fixture: a new caller is named; a new Loom map and a grown one are named; a removed caller is counted as shrunk; a law file

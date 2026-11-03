@@ -1,5 +1,5 @@
 /**
- * cos/ui/updates/page.js — Nexus's updates in COS, the settings behind the gear (MOD-MG-UI-UPDATES). SC7, 0.60.379.
+ * cos/ui/updates/page.js — Nexus's updates in COS, the settings behind the gear (MOD-MG-UI-UPDATES). SC7, 0.60.380.
  * James, 2026-11-02: "A gear, with update settings and Build that update section in cos. With a gear"
  * Reads COS's routes only: GET /api/cos/update (?fetch=1 asks GitHub), the settings, the history; acts through POST …/apply and …/rollback with
  * by = person, each confirmed in the shell first. The gear (here, and in the shell's top bar: #/updates/settings) opens the settings.

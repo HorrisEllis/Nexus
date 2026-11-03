@@ -27,17 +27,17 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
   const resources = require('./resources.js').createResources(sup, { proposals });   // CP6a: caps by layer, read back; the account; pressure → a proposal
   // CE2 0.60.376 — Nexus's update as COS's: per system, the tool behind the toast (cos/manager/updates.js); every step on the event stream
   const updates = require('./updates.js').createUpdates(sup, { root, emit: (e, d) => { broadcast(e, d); if (e === 'cos.update') notices.fromUpdate(d); } });
-  // SC1–SC4 0.60.379 (docs/2026-11-02-cos-console-phasemap.spec) — James, 2026-11-02: "notification bell for update, system status,  notications" ·
+  // SC1–SC4 0.60.380 (docs/2026-11-02-cos-console-phasemap.spec) — James, 2026-11-02: "notification bell for update, system status,  notications" ·
   // "Need configuration for each system" · "add system" · "Need the system cli". The bell keeps what the ledger and the update tool say; the
   // configuration is applied by the supervisor through one hook (adjust); adding a system is a proposal; the CLI is COS's own table.
   const notices = require('./notices.js').createNotices({ file: path.join(path.dirname(sup.ledgerFile), 'notices.json'), emit: (e, d) => broadcast(e, d) });
   const config = require('./system-config.js').createSystemConfig(sup, { resources });
   sup.setHooks({ adjust: config.adjust });
   const addSystem = require('./add-system.js').createAddSystem(sup, proposals, { root });
-  // DK2 0.60.381 (docs/2026-11-02-cos-disk-phasemap.spec) — James, 2026-11-02: "Use the spec as metadata then have the actual file be a compressed or
+  // DK2 0.60.382 (docs/2026-11-02-cos-disk-phasemap.spec) — James, 2026-11-02: "Use the spec as metadata then have the actual file be a compressed or
   // virtual disk or envirement." Each system's disk: its spec as metadata, its files in one compressed file, in COS's own data
   const disks = require('../disk/disk.js').createDisks({ root });
-  // DK6–DK8 0.60.382 — James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data,
+  // DK6–DK8 0.60.383 — James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data,
   // snapshots, system state." Each system's qcow2: its metadata, files and data in one ext4, its snapshots inside the same file
   const vdisks = require('../disk/vdisk.js').createVDisks({ root, disks });
   const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks });
@@ -89,7 +89,7 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
       if (m === 'GET' && p === '/api/cos/update/notice') { try { return send(res, 200, { ok: true, ...require('../../lib/nexus-update.js').notice({ root }), updatesPage: 'http://127.0.0.1:4800/update.html' }); } catch (e) { return send(res, 500, { ok: false, error: e.message }); } }
       // CE2 0.60.376 — what GitHub has, per system (?fetch=1 asks GitHub; else what was last fetched), and the update tool
       if (m === 'GET' && p === '/api/cos/update') return send(res, 200, await updates.check({ fetch: u.searchParams.get('fetch') === '1' }));
-      // SC7 0.60.379 — the Updates section's gear: the kernel's update settings; the history; roll back
+      // SC7 0.60.380 — the Updates section's gear: the kernel's update settings; the history; roll back
       if (m === 'GET' && p === '/api/cos/update/settings') return send(res, 200, updates.settings());
       if (m === 'PATCH' && p === '/api/cos/update/settings') { const r = updates.setSettings(body.patch || {}, { by: body.by }); return send(res, r.ok ? 200 : r.code || 400, r); }
       if (m === 'GET' && p === '/api/cos/update/history') return send(res, 200, updates.history({ limit: u.searchParams.get('limit') }));

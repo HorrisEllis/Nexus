@@ -393,7 +393,7 @@ class Page extends EventEmitter {
       el.selectedIndex = i; el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); return [o[i].value];`, sel, `const v = ${JSON.stringify(value)};`);
   }
   async _press(combo) {
-    // 0.60.379 (SC5) — a combination, as Playwright writes it: "Control+`", "Shift+Tab", "Meta+K". The modifiers ride on the key event (CDP's
+    // 0.60.380 (SC5) — a combination, as Playwright writes it: "Control+`", "Shift+Tab", "Meta+K". The modifiers ride on the key event (CDP's
     // bitmask: Alt 1, Control 2, Meta 4, Shift 8), and a key with Control, Alt or Meta types no text. Found when COS's console shortcut could
     // not be driven: press('Control+`') sent one key literally named "Control+`".
     const parts = String(combo).split('+'); const key = parts.length > 1 && parts[parts.length - 1] === '' ? '+' : parts.pop();

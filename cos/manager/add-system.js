@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/manager/add-system.js — adding a system to COS: a proposal, and its declaration written when it is taken (SC4, 0.60.379).
+ * cos/manager/add-system.js — adding a system to COS: a proposal, and its declaration written when it is taken (SC4, 0.60.380).
  * Spec: cos/spec/cos-manager.spec MOD-MG-ADD-SYSTEM · Map: docs/2026-11-02-cos-console-phasemap.spec SC4_add_a_system, SC_D4.
  *
  * James, 2026-11-02: "Also needs to be an add system in the proposal section, or just in the general homepage."

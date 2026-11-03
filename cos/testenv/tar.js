@@ -155,7 +155,7 @@ function packDir(root, outFile, { skip = DEFAULT_SKIP, maxBytes = 4 * 1024 ** 3 
 }
 
 /**
- * readTar(buf) → [{ path, type, mode, size, mtime, linkname, data }] — the reader beside the writer (DK1, 0.60.381,
+ * readTar(buf) → [{ path, type, mode, size, mtime, linkname, data }] — the reader beside the writer (DK1, 0.60.382,
  * docs/2026-11-02-cos-disk-phasemap.spec). Reads what TarWriter writes and what GNU tar, bsdtar and busybox write: ustar names with their
  * prefix, a PAX 'x' header's path, linkpath and size for the next entry, a global 'g' header skipped. data is a view into buf (no copy).
  */

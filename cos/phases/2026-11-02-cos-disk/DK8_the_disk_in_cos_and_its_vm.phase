@@ -19,7 +19,7 @@ payload:
   repo: null
   layer: integration
   status: >-
-    "PART 0.60.382 — the routes, CLI and Disk tab (VD-04, VD-05 in Clear Glass); a snapshot keeping
+    "PART 0.60.383 — the routes, CLI and Disk tab (VD-04, VD-05 in Clear Glass); a snapshot keeping
     a running VM's memory (QMP savevm) and booting with the disk attached remain OPEN"
   files:
     - cos/manager/server.js

@@ -1,4 +1,4 @@
-// cos/ui/cockpit/sections/config/section.js — a system's configuration: every setting, where it came from, when and how it applies (SC5, 0.60.379).
+// cos/ui/cockpit/sections/config/section.js — a system's configuration: every setting, where it came from, when and how it applies (SC5, 0.60.380).
 // James, 2026-11-02: "Need configuration for each system ... set ram, cpu and network limits. Percent or gbs. Ports and network settings. All the
 // settings like idearium has for the repos. All relevant configuration settings". Units are free ("25%", "2GB", "2 cores", "100Mbps"); the manager
 // parses and says what it applied. Nothing is shown as applied that the OS does not do: a not-enforced setting says so in red.

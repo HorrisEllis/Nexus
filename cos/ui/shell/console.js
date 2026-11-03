@@ -1,4 +1,4 @@
-/* cos/ui/shell/console.js — the bell, COS's command line and Add system, in the shell (SC5, 0.60.379). MOD-MG-UI-SHELL.
+/* cos/ui/shell/console.js — the bell, COS's command line and Add system, in the shell (SC5, 0.60.380). MOD-MG-UI-SHELL.
    Map: docs/2026-11-02-cos-console-phasemap.spec SC5_the_console_ui.
    James, 2026-11-02: "Also have a notification bell for update, system status,  notications" · "Need the system cli." · "Also needs to be an
    add system in the proposal section, or just in the general homepage."

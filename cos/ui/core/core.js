@@ -99,7 +99,7 @@
     return el;
   }
   const P = {
-    bell: 'M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0', plus: 'M12 5v14M5 12h14', download: 'M12 4v11M7 10.5l5 5 5-5M5 20h14',   // SC5 0.60.379
+    bell: 'M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0', plus: 'M12 5v14M5 12h14', download: 'M12 4v11M7 10.5l5 5 5-5M5 20h14',   // SC5 0.60.380
     play: 'M7 4.5v15l12-7.5z', stop: 'M6 6h12v12H6z', restart: 'M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5', reset: 'M12 3v4m0 10v4M3 12h4m10 0h4M6 6l2.5 2.5m7 7L18 18M6 18l2.5-2.5m7-7L18 6',
     open: 'M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5', check: 'M5 12.5l4.5 4.5L19 7.5', x: 'M6 6l12 12M18 6L6 18',
     bolt: 'M13 3L5 13.5h6L10 21l9-11h-6z', search: 'M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14zM20 20l-4-4', grid: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
@@ -131,7 +131,7 @@
     idling: 'idling', idle: 'idle', stopped: 'stopped', declared: 'not started', down: 'down', 'circuit-open': 'circuit open', external: 'external' };
   const stateLabel = (s) => STATES[s] || s;
 
-  // SC5 0.60.379 — the shell's keys (Ctrl+K Go to, Ctrl+` the command line) reach it from inside a page's frame too: found driving the
+  // SC5 0.60.380 — the shell's keys (Ctrl+K Go to, Ctrl+` the command line) reach it from inside a page's frame too: found driving the
   // console in Clear Glass, where a key pressed with focus in a page never reached the shell (Ctrl+K had the same gap since MG18)
   if (inFrame) addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K' || e.key === '`')) { e.preventDefault(); window.parent.postMessage({ type: 'cos.key', key: e.key.toLowerCase() }, location.origin); } });
   window.COS = { page, call, on, emit, confirm, notice, navigate, h, icon, esc, ago, dur, clock, say, down, param, stateLabel, Refused, Down, get contract() { return state.contract; }, get self() { return state.page; } };

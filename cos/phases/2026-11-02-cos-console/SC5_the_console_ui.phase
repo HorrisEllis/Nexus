@@ -19,7 +19,7 @@ payload:
   repo: null
   layer: ui
   status: >-
-    "DONE 0.60.379 — test-cos-console CC-09 (Clear Glass); the borderless window unverified on
+    "DONE 0.60.380 — test-cos-console CC-09 (Clear Glass); the borderless window unverified on
     Windows"
   files:
     - cos/ui/shell/index.html

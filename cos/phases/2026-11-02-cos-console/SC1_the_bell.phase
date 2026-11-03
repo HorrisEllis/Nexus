@@ -18,7 +18,7 @@ payload:
   map: docs/2026-11-02-cos-console-phasemap.spec
   repo: null
   layer: backend
-  status: '"DONE 0.60.379 — test-cos-console CC-04, CC-09"'
+  status: '"DONE 0.60.380 — test-cos-console CC-04, CC-09"'
   files:
     - cos/manager/notices.js
     - cos/manager/server.js

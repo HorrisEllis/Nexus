@@ -1,4 +1,4 @@
-/* cos/ui/cockpit/sections/config/section.css — SC5, 0.60.379: categories on the left, one pane at a time (Idearium's repo settings). */
+/* cos/ui/cockpit/sections/config/section.css — SC5, 0.60.380: categories on the left, one pane at a time (Idearium's repo settings). */
 .cfg{display:grid;grid-template-columns:190px 1fr;gap:var(--s4);align-items:start}
 .cfg-nav{display:grid;gap:2px;padding:var(--s3)}.cfg-nav button{justify-content:flex-start}.cfg-nav .on{color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent)}
 .cfg-form{display:grid;gap:var(--s2);padding:var(--s4) var(--s5) var(--s5)}

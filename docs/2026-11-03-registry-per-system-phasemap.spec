@@ -26,7 +26,7 @@ decisions:
 phases:
   RG0_enforced:
     layer: backend
-    status: "DONE 0.60.383 — test-registry-sovereign RS-01, RS-02"
+    status: "DONE 0.60.384 — test-registry-sovereign RS-01, RS-02"
     depends_on: [RG_D0_the_registry_is_per_system]
     files: [lib/registry-sovereign-check.js (new), lib/contracts/registry-sovereign-baseline.json (new), tests/modules/test-registry-sovereign.test.js (new), tests/modules/run-all.js, docs/AXIOMS-v3.1.md, docs/CLAUDE.md, CLAUDE.md]
     does: >-
@@ -188,7 +188,7 @@ decisions_in_planning:
     james: '"Okay but I want to be able to set the max number of gb of ram. Cores/threads. Run on startup. Like throttle it. Restrict network access."'
     context: >-
       Asked after the coder described the finished picture (COS like VMware, each system a sandboxed server.js behind its door). Today, in each
-      system's Configuration (SC2, 0.60.379): the heap is enforced at start, the total memory limit and a CPU limit are only watched (warn or
+      system's Configuration (SC2, 0.60.380): the heap is enforced at start, the total memory limit and a CPU limit are only watched (warn or
       restart), priority is enforced, start at boot is enforced, network limit and outbound are recorded and not enforced.
     chosen: "per system, set by him: max RAM in GB, which cores/threads, run on startup, a CPU throttle, network restricted — as hard limits, not watches"
     coders_plan: >-
@@ -199,8 +199,8 @@ decisions_in_planning:
     status: "his words recorded 2026-11-03; two things TO HIM (the merge; whether reads go through RAID)"
     james: '"Okay but I can’t add a compartment. This is all meant to be cli and api first. The ui sits ontop of the interaction contract uses the cli and api. There’s no cli for each system or the orchastrator. I want the floating menu to understand where it is at. Like copilot the hat, any agent, knows where and can understand and help navigate where it’s at. Had that at one point where I could tell it where it go. Each interaction button on the page with a toast and event gate to log faults. Also what do you think about making a plugin for clearglass to link into cos as a bridge to reduce friction but also make it smoother. Like cos is a focal point the orchastrator like pulling strings. Raid" · "So like: Cos at the top, run through raid which branches out to each system. For contracts. All contracts driven."'
     found: >-
-      Read the same day. Add system (0.60.379 on this branch) is not on main, which his machine runs; another session merged its CA3 to main as
-      0.60.379, so this branch's 0.60.379–0.60.386 are renumbered when merged. Only copilot, diagnostic and guardian have a cli.js; COS's own
+      Read the same day. Add system (0.60.380 on this branch) is not on main, which his machine runs; another session merged its CA3 to main as
+      0.60.380, so this branch's 0.60.380–0.60.387 are renumbered when merged. Only copilot, diagnostic and guardian have a cli.js; COS's own
       command line (POST /api/cos/cli) is on this branch only; on main COS's commands are rows in Idearium's table. The floating menu that knew
       where it was is the TV shell's (lib/ui/tv-shell/menu.js with lib/ui/copilot/copilot.js: the current channel passed to Copilot, its
       'navigate' answer tunes there); COS's UI has none.
@@ -212,5 +212,5 @@ decisions_in_planning:
       RAID, checked against that system's contract (§5.2, §9.1).
     coders_view_clear_glass_plugin: "good, on one condition: it uses COS's door and Clear Glass's own door, never either's files — a COS panel in the browser, and COS driving Clear Glass through its door (what automation's browser steps need)"
     still_his:
-      - "merge this branch to main (renumbered above main's 0.60.379) so Add system and the rest reach his machine?"
+      - "merge this branch to main (renumbered above main's 0.60.380) so Add system and the rest reach his machine?"
       - "through RAID: acts only (start, stop, writes — reads still work with RAID down) or reads too (one rule; RAID down blinds COS)?"

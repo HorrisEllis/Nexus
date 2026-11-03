@@ -18,7 +18,7 @@ payload:
   map: docs/2026-11-02-cos-disk-phasemap.spec
   repo: null
   layer: backend
-  status: '"DONE 0.60.381 — test-cos-disk DK-01, DK-02, DK-04"'
+  status: '"DONE 0.60.382 — test-cos-disk DK-01, DK-02, DK-04"'
   files:
     - cos/disk/disk.js
     - cos/testenv/tar.js

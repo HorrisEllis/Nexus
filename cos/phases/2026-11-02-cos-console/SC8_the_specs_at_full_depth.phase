@@ -18,7 +18,7 @@ payload:
   map: docs/2026-11-02-cos-console-phasemap.spec
   repo: null
   layer: spec
-  status: '"DONE 0.60.386 — test-substrate-spec 3/3 with cos-console.spec and cos-disk.spec listed"'
+  status: '"DONE 0.60.387 — test-substrate-spec 3/3 with cos-console.spec and cos-disk.spec listed"'
   files:
     - cos/spec/cos-console.spec
     - cos/spec/cos-disk.spec

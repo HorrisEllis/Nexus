@@ -18,7 +18,7 @@ payload:
   map: docs/2026-11-03-registry-per-system-phasemap.spec
   repo: null
   layer: backend
-  status: '"DONE 0.60.383 — test-registry-sovereign RS-01, RS-02"'
+  status: '"DONE 0.60.384 — test-registry-sovereign RS-01, RS-02"'
   files:
     - lib/registry-sovereign-check.js
     - lib/contracts/registry-sovereign-baseline.json

@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/disk/vdisk.js — a compartment's virtual disk: one qcow2 file holding its metadata, its files, all its data and its snapshots (DK6, DK7, 0.60.382).
+ * cos/disk/vdisk.js — a compartment's virtual disk: one qcow2 file holding its metadata, its files, all its data and its snapshots (DK6, DK7, 0.60.383).
  * Spec: cos/spec/cos-manager.spec MOD-COS-VDISK · Map: docs/2026-11-02-cos-disk-phasemap.spec DK_D3, DK6, DK7.
  *
  * James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data, snapshots, system state."

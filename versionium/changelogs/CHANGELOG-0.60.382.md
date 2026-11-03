@@ -1,54 +1,57 @@
-# CHANGELOG 0.60.382 — DK6–DK8: each system's virtual disk (qcow2), with its data and its snapshots inside
+# CHANGELOG 0.60.382 — DK1–DK3: a compartment's disk (the spec as metadata, the files compressed)
 
-James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data, snapshots, system state."
+James, 2026-11-02: "Cos is the wmware. The compartments are the virtual machines/disks. Like can we use the .spec as the virtual machine disk?"
 
-Said after 0.60.381 made the disk a compressed archive (.disk). He wants the disk QEMU runs.
+James, 2026-11-02: "That's what it was supposed to be. Use the spec as metadata then have the actual file be a compressed or virtual disk or envirement."
 
-## What a virtual disk is
-- **The file:** `<system>.qcow2`, QEMU's own disk format, the one `cos/compartment/qemu-runtime.js` boots. Clusters are compressed, and
-  only what is written takes room.
-- **Inside:** one ext4 filesystem, named for the system:
-  - `/.cos/disk.json` and `/.cos/spec/…`: the metadata (its spec and declaration, every file by hash, the kernel it runs on);
-  - `/code/<system>/…`: its files;
-  - `/state/<system>/…`: all its data. On by default, because the disk is the whole machine.
-- **Snapshots** are qcow2 snapshots inside the same file:
-  - **refresh** writes the system's current files and data into the disk and keeps every snapshot;
-  - a snapshot can be read, verified, reverted to, or dropped.
-  - Proved before building: a snapshot survives new content written into the disk, and still reads back its old file.
-- **No root needed:** the filesystem is written with `mke2fs -d` (a folder into ext4) and read with `debugfs` from a raw copy `qemu-img`
-  makes.
-- **A missing tool is said, not faked:** a host without `qemu-img`, `mke2fs` or `debugfs` gets a 501 naming them. The compressed `.disk`
-  still works there.
+The coder answered that a spec alone cannot be the disk yet: each system's spec names 4–38% of its code (`scripts/systems-report.js`). The
+coder proposed a layered disk; his answer set the shape. The same design was recorded on 2026-10-23 and left open as his (c)
+(docs/2026-10-23-cos-spine-phasemap.spec, "a miniworld is the .cos archive"). This release closes it.
 
-## In COS
-- `cos/disk/vdisk.js`: tools, make, refresh, info, verify, extract, snapshot, snapshots, revert, dropSnapshot.
-- **Routes:** GET /api/cos/systems/:name/vdisk (and /verify), POST …/vdisk/make|refresh|snapshot|revert|drop-snapshot.
-- **Rules:** each act is a person's or a rule's, never an agent's. It is written on COS's ledger first and recorded in Versionium.
-- **COS's command line:** `vdisk <system> [make|refresh|verify]`, `vdisk <system> snapshot|revert|drop <tag>`.
-- **The Disk tab** now leads with **Virtual disk**:
-  - format, size on disk against virtual size, what it holds (code and data);
-  - Refresh from the system, Verify, Take snapshot;
-  - each snapshot with Revert and Drop.
-- The compressed `.disk` of 0.60.381 stays, as **Exports**. `disk.js` was split into `collect()` + `pack()` so both kinds share one
-  metadata.
+## What a disk is
+- **The file:** `<system>-<version>-<hash>.disk`, one compressed file (gzip of a tar archive). Standard `tar` opens it.
+- **First entry, `disk.json`, the metadata:**
+  - the system's declaration (compartment.json or its .cos node);
+  - its spec files, by hash;
+  - how much of its code its spec names (the share the metadata alone could rebuild);
+  - the base it runs on: the Nexus kernel at a version and commit, named, not copied, like a linked clone on a shared base image;
+  - every file, by layer, path, hash, size and mode.
+- **`code/`:** the system's folder without its data, or `.git`, `node_modules` or caches.
+- **`state/`:** its data folders, only when asked.
+- **Where disks live:** COS's own data (`cos/data/disks/`), never a system's folder, never committed.
+- **Records:** each disk made is a line on COS's ledger and is recorded in Versionium.
+- **Same content, same disk:** the name carries the content hash, so making the same disk twice keeps one.
 
-## Found while building
-- `mke2fs` reads a bare size as blocks, not bytes. The first refresh made a filesystem larger than its disk; `qemu-img` refused it. Fixed:
-  the size is given in KB.
+## What COS does with it
+- **The module, `cos/disk/disk.js`:**
+  - make (pack);
+  - read the metadata without unpacking (inspect);
+  - verify: every file re-hashed, each changed, missing or extra one named;
+  - unpack: byte-identical, never writing outside its folder;
+  - list.
+- `cos/testenv/tar.js` gains a reader beside its writer.
+- **Routes:** GET /api/cos/disks, GET /api/cos/disks/:file and …/verify, GET and POST /api/cos/systems/:name/disk.
+- **COS's command line:** `disk <system> [make] [state]`, `disk verify <file>`, `disks`. The row `cos disk`.
+- **A Disk tab on every system:**
+  - its metadata, and how much of its code its spec covers (a bar);
+  - its disks, with Make a disk (its data only when ticked) and Verify.
+
+## Found while building, fixed
+- A disk made wrote no line on COS's ledger. The route and the CLI now write one.
+- The shell's Proposals badge showed "0" when nothing waited (since MG18): `display: grid` outranked `[hidden]`.
 
 ## Proof
-- test-cos-vdisk 6/6, with real qemu-img 8.2.2 and e2fsprogs 1.47:
-  - VD-01: a qcow2 with ext4 inside named for the system; metadata, files and data read from inside; verified; a host without the tools
-    said.
-  - VD-02: snapshot, change the system, refresh (snapshot kept), the snapshot still holds the old file, revert brings it back, drop.
-  - VD-03: a file removed inside the disk is named by verify.
-  - VD-04: through the manager and the CLI; an agent refused; on the ledger.
-  - VD-05, in Clear Glass: a snapshot taken from the Disk tab and verified.
-  - VD-06: the real Loom with all its data (393 files, 85 of them data): one qcow2, 1.3 MB on disk, verified from inside.
-- Also green: test-cos-disk 5/5, test-cos-console 11/11, test-cos-supervisor 8/8, test-cos-ui 6/6.
+- test-cos-disk 5/5:
+  - DK-01: metadata first; data only when asked; unpacked byte-identical; GNU tar lists it.
+  - DK-02: a changed file named by verify; an entry escaping its folder refused; not-a-disk said.
+  - DK-03: through COS's manager and its CLI; an agent refused; on the ledger.
+  - DK-04: the real Loom, 308 files in a 296 KB disk, verified.
+  - DK-05, in Clear Glass: the Disk tab makes and verifies a disk; no empty badge.
+- Also green: test-cos-console 11/11, test-cos-ui 6/6, test-cos-supervisor 8/8.
+- Failing as before this change: test-cos-testenv-any-repo's missing wire for `cos/testenv/index.js` → `run-target.js` (not touched here).
 
-## Not yet
-- **A snapshot that keeps a running VM's memory and CPU** (QMP savevm): the "system state" of a running machine.
-- **Booting a compartment with its disk attached** (DK4, DK8).
-- **Filling the disk on Windows** (his call, DK_D3): QEMU for Windows has `qemu-img` but not e2fsprogs. The options are WSL's, the QEMU
-  environment filling the disk itself (the coder's recommendation), or a pinned e2fsprogs build.
+## Next, mapped
+- DK4: open a disk as a compartment (where an unpacked compartment lives beside the real tree; how its base is matched). It needs its own
+  map first.
+- DK5: machine disks (qcow2) through qemu-runtime.
+- The name `.disk` is the coder's, to confirm.

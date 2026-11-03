@@ -18,7 +18,7 @@ payload:
   map: docs/2026-11-02-cos-disk-phasemap.spec
   repo: null
   layer: backend
-  status: '"DONE 0.60.382 — test-cos-vdisk VD-02"'
+  status: '"DONE 0.60.383 — test-cos-vdisk VD-02"'
   files:
     - cos/disk/vdisk.js
     - tests/modules/test-cos-vdisk.test.js

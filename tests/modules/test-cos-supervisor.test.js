@@ -97,7 +97,7 @@ const mk = (declarations, extra = {}) => { const s = createSupervisor({ root: di
   await test('SV-08', "the real tree's declarations; a Node child's heap cap and --expose-gc", () => {
     // 13 autopilot booted at the handover; systems added since are declared by their own compartment.json (0.60.339 EAS3: emerge)
     const SINCE_THE_HANDOVER = ['emerge'];
-    // and retired since (0.60.379 SC6, James 2026-11-02: "There shouldn't be two intelligence."): intelligence-consumer runs inside intelligence
+    // and retired since (0.60.380 SC6, James 2026-11-02: "There shouldn't be two intelligence."): intelligence-consumer runs inside intelligence
     const RETIRED = ['intelligence-consumer'];
     assert.strictEqual(readDeclarations(ROOT).length, 13 + SINCE_THE_HANDOVER.length - RETIRED.length);
     assert.ok(!readDeclarations(ROOT).some(d => RETIRED.includes(d.name)));

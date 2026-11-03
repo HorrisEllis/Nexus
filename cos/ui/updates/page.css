@@ -1,4 +1,4 @@
-/* cos/ui/updates/page.css — SC7, 0.60.379. */
+/* cos/ui/updates/page.css — SC7, 0.60.380. */
 .gear-btn { width: 40px; padding: 0; justify-content: center; } .gear-btn svg { width: 18px; height: 18px; transition: transform .4s var(--ease); }
 .gear-btn[aria-expanded="true"] { color: var(--ac); border-color: var(--ac-border); } .gear-btn[aria-expanded="true"] svg { transform: rotate(60deg); }
 .settings { margin-bottom: var(--s4); max-width: 980px; } .settings[hidden] { display: none; }

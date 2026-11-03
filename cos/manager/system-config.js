@@ -1,6 +1,6 @@
 'use strict';
 /**
- * cos/manager/system-config.js — every system's configuration in COS, by layer, applied by its supervisor (SC2, 0.60.379).
+ * cos/manager/system-config.js — every system's configuration in COS, by layer, applied by its supervisor (SC2, 0.60.380).
  * Spec: cos/spec/cos-manager.spec MOD-MG-SYSTEM-CONFIG · Map: docs/2026-11-02-cos-console-phasemap.spec SC2, SC_D1–SC_D3.
  *
  * James, 2026-11-02: "Need configuration for each system. Hooks into the config for each miniworld, set ram, cpu and network limits. Percent or

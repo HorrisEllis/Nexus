@@ -2,7 +2,7 @@
 // run-all: timeout 180000
 require('../../lib/test-sandbox.js').ensure();
 /**
- * tests/modules/test-cos-console.test.js — SC1–SC6, 0.60.379 (docs/2026-11-02-cos-console-phasemap.spec).
+ * tests/modules/test-cos-console.test.js — SC1–SC6, 0.60.380 (docs/2026-11-02-cos-console-phasemap.spec).
  * James, 2026-11-02: "Also have a notification bell for update, system status,  notications" · "There shouldn't be two intelligence." · "an add
  * system in the proposal section, or just in the general homepage" · "Need the system cli." · "Need configuration for each system ... set ram,
  * cpu and network limits. Percent or gbs. Ports and network settings."
@@ -106,7 +106,7 @@ const SERVER = (envVar, def) => `const http=require('http');const PORT=parseInt(
     assert.ok(r.j.counts.unread >= 2 && r.j.counts.error >= 1);
     r = await send(M, 'POST', '/api/cos/notices/read', { all: true }); assert.strictEqual(r.j.counts.unread, 0);
     const N = createNotices({ file: path.join(tmp, 'n2.json') });
-    const avail = { show: true, kind: 'available', title: 'Nexus 0.60.400 is available', text: 'You have 0.60.379.', latest: '0.60.400' };
+    const avail = { show: true, kind: 'available', title: 'Nexus 0.60.400 is available', text: 'You have 0.60.380.', latest: '0.60.400' };
     assert.ok(N.fromNotice(avail)); assert.strictEqual(N.fromNotice(avail), null, 'the same version, told once');
     const done = N.fromUpdate({ phase: 'updated', to: '0.60.400', restarted: ['guardian'], waitForHim: ['clear-glass'] });
     assert.deepStrictEqual([done.kind, done.level], ['update', 'warn']); assert.match(done.body, /restarted: guardian; waits for you: clear-glass/);

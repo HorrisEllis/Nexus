@@ -18,7 +18,7 @@ payload:
   map: docs/2026-11-02-cos-disk-phasemap.spec
   repo: null
   layer: ui
-  status: '"DONE 0.60.381 — test-cos-disk DK-05 (Clear Glass)"'
+  status: '"DONE 0.60.382 — test-cos-disk DK-05 (Clear Glass)"'
   files:
     - cos/ui/cockpit/page.js
     - cos/manager/contract.json
