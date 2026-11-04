@@ -109,5 +109,58 @@ spec:
       depends_on: [UP7_autopilot_keeps_it_current]
       files: [idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/update.html, tests/modules/test-nexus-update.test.js]
       does: "GET|POST /api/update/policy and GET /api/update/auto; the row `update policy [auto|notify|off]`; the Updates page shows the policy, the last automatic check and what it did."
+    UP9_a_popup_when_there_is_an_update:
+      status: DONE (0.60.349)
+      depends_on: [UP8_policy_on_the_page]
+      files: [lib/nexus-update.js, orchestrator/orchestrator.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/serve.js, cos/ui/shell/index.html, lib/ui/update-popup/update-popup.js, lib/ui/tv-shell/index.html, tests/modules/test-update-popup.test.js]
+      does: >-
+        James, 2026-11-01: "can you have it have a popup when it has an update availanel" — said with his screen of COS's UI unreachable: his
+        folder was 0.60.346, the COS UI came in 0.60.347, and the automatic check had thrown ("write ECONNABORTED") without leaving a record.
+        notice() reads the last check for a person (available, waiting, blocked, refused, error, updated); a check that throws is now saved as
+        an error; GET /api/update/notice (the orchestrator, for the TV) and GET /api/cos/update/notice (COS, in its contract); one popup script
+        (lib/ui/update-popup) on the TV and in COS's UI: Open updates (Idearium's Updates page applies), Later (6 h, per version and kind).
+    UP10_update_from_the_floating_menu:
+      status: DONE (0.60.352)
+      depends_on: [UP9_a_popup_when_there_is_an_update]
+      files: [orchestrator/orchestrator.js, lib/ui/tv-shell/menu.js, tests/modules/test-update-menu.test.js]
+      does: >-
+        James, 2026-11-01: "can i update nexus from the floating menu button.?" — he could not: the floating menu (lib/ui/tv-shell/menu.js) had
+        Diagnose, Rewind and Inspect, and the update applied only on Idearium's Updates page. An ⇪ UPDATE button in the menu: it checks (what is
+        current, what is waiting, how many commits, what blocks), and Update now (after his yes) applies. The TV asks only :9000 (TV_D1): the
+        orchestrator forwards GET /api/update/check and POST /api/update/apply to Idearium's /api/update and /api/update/apply, so the tree is
+        still changed in one place (lib/nexus-update.js through Idearium). Restarting stays his (the reply names what to restart).
+        No module spec exists for this map yet (its phases predate the rule); said, a gap.
+    UP11_an_attached_folder_tracks_origin:
+      status: DONE (0.60.353)
+      depends_on: [UP6_attach_in_place]
+      files: [lib/nexus-update.js, tests/modules/test-nexus-update.test.js]
+      does: >-
+        A fix, phased (his rule). James, 2026-11-01, pasting his `git pull` in D:\Backups\Downloads\nexus-0.60.346: "There is no tracking
+        information for the current branch." attachInPlace (UP6) made his unzipped folder a git tree on main but never set main's upstream; the
+        update tool names origin/main itself so it worked, his own git pull did not. attachInPlace now runs git branch --set-upstream-to=origin/main.
+
+    UP12_open_a_pull_request_for_any_agent:
+      status: DONE (0.60.357)
+      depends_on: [UP6_attach_in_place]
+      files: [lib/git-pr.js, idearium/cli/route-commands.js, tests/modules/test-git-pr.test.js, tests/modules/run-all.js]
+      does: >-
+        James, 2026-11-01, after the coder could not open a PR (no gh on his machine, the built-in browser not signed in to GitHub): "Open the
+        PR" · "okay but for all agents, as a agent tool". One row, `pr open [dir] [--base main] [--title …] [--body …]`, in the one command
+        table, so every agent and the person have it through nexus.command. It pushes the branch (git, with his own credential helper: Nexus
+        never reads or holds a token), then opens the PR with gh when gh is installed and signed in; otherwise it answers with GitHub's
+        compare URL, title and body prefilled, for him to open and click. Refused on the base branch itself and on a dirty tree (said, never
+        stashed). The coder's reading, decided by the axioms (§5.15: GitHub auth stays git's and gh's; §1.2: the fallback is said).
+    UP13_a_backup_before_every_update:
+      status: "DONE (0.60.363) — test-nexus-update 12/12 (UP-13 new; UP-08 drives the toggle and the backup line in Clear Glass)"
+      depends_on: [UP12_open_a_pull_request_for_any_agent, UP11_an_attached_folder_tracks_origin]
+      spec: docs/nexus-update.spec
+      blocks: [MOD-UP-BACKUP-ROUTE, MOD-UP-APPLY-BACKED, MOD-UP-POLICY-TOGGLE]
+      files: [lib/nexus-update.js, idearium/api/index.js, idearium/ui/update.html, idearium/cli/route-commands.js, lib/agent-tools/tools/nexus/update.js, lib/nexus/core-duties.js, tests/modules/test-nexus-update.test.js]
+      does: >-
+        James, 2026-11-01, on the Updates page: "can you fix the drop down? make it look better? make sure it hooks into idearium versionium, to
+        backup the system". Before any update: Idearium snapshots the whole tree into its Nexus repo store and records it in Versionium (POST
+        /api/nexus-self/backup); the update names the snapshot; no backup, no update (REVERSIBILITY). The store is Idearium's, so the
+        automatic update and the agent tool ask its route (§5.15). The native white dropdown becomes three buttons in the page's theme. A fetch
+        dropped mid-way (his page: "read ECONNRESET") is tried once more.
 
   verification_here: "Proven against real git repos built in a temp folder (an origin with a newer release, a clone behind it): check, a refused code collision, an archived data collision, apply, rollback. Not run on his machine; GitHub itself is reached by git, not by this test."

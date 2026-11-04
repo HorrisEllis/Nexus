@@ -1,0 +1,175 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP5d_rewind_and_branch:9bd5fc59b5ec2500
+type: graph
+id: phase:CP5d_rewind_and_branch:9bd5fc59b5ec2500
+context: dependency graph of phase CP5d_rewind_and_branch
+intent: null
+summary: 13 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793576104500
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104500
+lastSeenAt: 1793576104500
+fingerprint: null
+payload:
+  for: CP5d_rewind_and_branch
+  kind: phase
+  repo: null
+  hash: 9bd5fc59b5ec2500
+  nodes:
+    - path: cos/compartment/qemu-runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/workspace/vm-control.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/cli/commands/vm.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/compartment/process-runner.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/provision.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/cos-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/helpers/cos-mini-guest.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-vm-shell.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/compartment/qemu-runtime.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/workspace/vm-control.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: cos/cli/commands/vm.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/helpers/cos-mini-guest.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-vm-shell.test.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/workspace/vm-control.js
+      kind: requires
+  crossings:
+    - from: lib/cos-bridge.js
+      to: cos/workspace/vm-control.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5c_recording_the_deltas
+    dependents:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5e_parallel
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D9_registry_then_cos_through_the_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5c_recording_the_deltas
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D5_every_system_into_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D7_snapshots_per_compartment
+    downstream:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5e_parallel
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5f_benchmark
+    blockedBy:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5c_recording_the_deltas
+    unlocks:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5e_parallel
+    conflicts:
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP6_resources
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP7_settings
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP8_agents_in_the_compartment
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP6e_network_switch_and_throttle
+        files:
+          - cos/compartment/qemu-runtime.js
+    dangling: []
+    lines:
+      - layer 8 · blocked by CP5c_recording_the_deltas
+      - 'depends on (1): CP5c_recording_the_deltas · all upstream 15'
+      - 'needed by (1): CP5e_parallel · all downstream 2 · finishing it unlocks CP5e_parallel'
+      - 'same files as CP5_states_rewind_versions with no order between them: cos/manager'
+      - 'same files as CP6_resources with no order between them: cos/manager'
+      - 'same files as CP7_settings with no order between them: cos/manager'
+      - 'same files as CP8_agents_in_the_compartment with no order between them: cos/manager'
+      - >-
+        same files as CP6e_network_switch_and_throttle with no order between them:
+        cos/compartment/qemu-runtime.js
+    edges:
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP5c_recording_the_deltas
+        kind: declared

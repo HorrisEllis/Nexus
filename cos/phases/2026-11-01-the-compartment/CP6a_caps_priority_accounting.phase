@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP6a_caps_priority_accounting
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP6a_caps_priority_accounting
+context: pipeline phase CP6a_caps_priority_accounting of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP6a_caps_priority_accounting (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1793576104482
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104482
+lastSeenAt: 1793576104482
+fingerprint: null
+payload:
+  id: CP6a_caps_priority_accounting
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE 0.60.356 — test-cos-resources CR-01..05
+  files:
+    - cos/manager/resources.js
+    - cos/manager/usage.js
+    - cos/manager/supervisor.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - cos/ui/cockpit/page.js
+    - cos/manager/proposals.js
+    - loom/maps/cos-testenv-map.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-cos-resources.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - CP1a_every_system_walled_by_cos
+    - CP_D6_resources_per_compartment
+  blocks:
+    - MOD-CP-USAGE
+    - MOD-CP-RESOURCES
+  spec: cos/spec/compartment.spec
+  graph: f964c423c903b7fc

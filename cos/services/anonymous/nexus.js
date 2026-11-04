@@ -286,6 +286,9 @@ function handleIPC(name, raw) {
 // ─── spawn / watch ────────────────────────────────────────────────────────────
 
 function spawnEngine(def) {
+  // CA3 (cos/spec/network.spec MOD-NET-GATE) — an engine that reaches outside starts only when he opened it in Network settings (NET-001)
+  try { const g = require('../../manager/network-settings.js').gate(def.name); if (!g.ok) { log('KERNEL', `${def.name} not started — ${g.why}`, 'WARN'); return; } }
+  catch (e) { log('KERNEL', `${def.name} not started — the network gate could not be read: ${e.message}`, 'WARN'); return; }
   const script = path.join(ENG_DIR, `${def.name}.js`);
   if (!fs.existsSync(script)) {
     log('KERNEL', `engine not found: engines/${def.name}.js — skipping`, 'WARN');

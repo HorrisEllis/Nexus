@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-system-doors-phasemap.spec::DO4_boot_js_retired
+type: phase
+id: docs_2026-10-31-system-doors-phasemap.spec::DO4_boot_js_retired
+context: pipeline phase DO4_boot_js_retired of docs/2026-10-31-system-doors-phasemap.spec
+intent: null
+summary: DO4_boot_js_retired (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793419906990
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419906990
+lastSeenAt: 1793419906990
+fingerprint: null
+payload:
+  id: DO4_boot_js_retired
+  map: docs/2026-10-31-system-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - _archive/cortex/boot.js
+    - cortex/boot.js
+  depends_on:
+    - DO3_cortex_door
+  blocks:
+    - MOD-DOOR-CORTEX-RETIRE
+  spec: docs/system-doors.spec
+  graph: a00e51a7b0694f39

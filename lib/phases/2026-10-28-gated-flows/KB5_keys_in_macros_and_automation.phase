@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::KB5_keys_in_macros_and_automation
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::KB5_keys_in_macros_and_automation
+context: pipeline phase KB5_keys_in_macros_and_automation of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: KB5_keys_in_macros_and_automation (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281609
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281609
+lastSeenAt: 1793386281609
+fingerprint: null
+payload:
+  id: KB5_keys_in_macros_and_automation
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.280
+  files:
+    - clear-glass/src/driver/index.js
+    - lib/agent-tools/tools/browser/browser-action.js
+    - lib/automation/steps.js
+    - lib/automation/engine.js
+  depends_on:
+    - KB4_gates_on_macro_steps
+    - KB2_site_keys
+  blocks:
+    - MOD-KB5
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 5d59d7e8e79bfa25

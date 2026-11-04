@@ -91,7 +91,8 @@ phases:
 
   CS1_a_version_is_a_system_state:
     layer: foundation
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP5_states_rewind_versions in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [CS_D2_a_version_is_the_whole_state]
     files: [cos/spine/version.js, idearium/repo/snapshot.js, cos/workspace/vm-control.js, cos/compartment/qemu-runtime.js, versionium/lib/files.js]
     spec: cos/spec/cos-spine.spec
@@ -107,7 +108,7 @@ phases:
   CS2_test_every_version:
     layer: integration
     status: OPEN
-    depends_on: [CS1_a_version_is_a_system_state, SN1_open_a_snapshot_as_a_compartment]
+    depends_on: [CS1_a_version_is_a_system_state, SN1_open_a_snapshot_as_a_compartment, CP5_states_rewind_versions]
     files: [cos/spine/test-version.js, cos/testenv/index.js, cos/workspace/index.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-TEST]
@@ -119,7 +120,7 @@ phases:
   CS3_the_registry_is_the_bridge:
     layer: integration
     status: OPEN
-    depends_on: [CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake, DB16_a_registry_for_each_system]
+    depends_on: [CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake, DB16_a_registry_for_each_system, CP1_the_machine_and_its_door]
     files: [cos/spine/bridge.js, orchestrator/lib/contract-handshake.js, idearium/repo/snapshot.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-BRIDGE]
@@ -144,7 +145,7 @@ phases:
   CS4a_cos_boots_alone:
     layer: foundation
     status: OPEN
-    depends_on: [CS_D7_sovereign_first, COSA3_run_and_supervise]
+    depends_on: [CS_D7_sovereign_first, COSA3_run_and_supervise, MG17_autopilot_hands_over]
     files: [cos/spine/boot.js, cos/app/runtime.js, lib/nexus/autopilot.js, cos/compartment/process-runner.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-BOOT]
@@ -169,7 +170,7 @@ phases:
   CS6_rebuild_from_the_spec:
     layer: integration
     status: OPEN
-    depends_on: [CS1_a_version_is_a_system_state, CS4_every_system_a_compartment, CS_D3_the_spec_rebuilds_the_system]
+    depends_on: [CS1_a_version_is_a_system_state, CS4_every_system_a_compartment, CS_D3_the_spec_rebuilds_the_system, CP5_states_rewind_versions]
     files: [cos/spine/rebuild.js, cos/spine/version.js, cos/workspace/index.js, lib/emerge/compiler/kg-builder.js, lib/emerge/compiler/phase-specs.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-REBUILD]
@@ -194,8 +195,9 @@ phases:
 
   CS9_every_project_a_compartment:
     layer: integration
-    status: OPEN
-    depends_on: [CS4_every_system_a_compartment, CS1_a_version_is_a_system_state, CS_D6_every_project_a_compartment]
+    status: "SUPERSEDED 2026-11-01 by CP9_cos_and_idearium_one_link in docs/2026-11-01-the-compartment-phasemap.spec (his: compartments in COS become nested repos in Idearium; one link both ways); the text below is kept"
+    status_before: OPEN
+    depends_on: [CS4_every_system_a_compartment, CS1_a_version_is_a_system_state, CS_D6_every_project_a_compartment, CP5_states_rewind_versions]
     files: [cos/spine/projects.js, idearium/repo/index.js, lib/cos-bridge.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-PROJECTS]
@@ -253,7 +255,7 @@ phases:
 # The coder's reading, by his NC0 evidence rule: the spec is what is declared and the component registry is what is discovered. The bridge
 # (CS3) passes a call only where both agree. Rebuild (CS6) and drift compare the same two.
 # Found in the specs, not built in code:
-#   - docs/specs/IDEARIUM.spec.md, Miniworld Manager: "Each miniworld is a .nex file opened as a COS compartment sandbox" — nexus miniworld
+#   - docs/specs/IDEARIUM.spec, Miniworld Manager: "Each miniworld is a .nex file opened as a COS compartment sandbox" — nexus miniworld
 #     list | boot | fork | snapshot | discard. No code names a miniworld.
 #   - docs/cos.spec §GAP 2026-08-14: the ".cos portable archive" — a tar.gz of manifest.json, spec/compartment.spec, code/ and
 #     history/*.nex.gz, "a blueprint's SOURCE artifact". Mapped, not built.
@@ -409,3 +411,6 @@ are not boundary work, so they are deferred too; the coder will flag one if it s
 # - CS8_the_cos_screen is gathered into MG12, the exe as the compartment manager: one window, not two. CS8's Systems, Versions and Links
 #   become MG12's tree and its Versions tab.
 # - CS1 (a version is the Versionium commit plus the QEMU snapshot) is what MG12's Rewind and Versions tabs drive.
+
+# ── ADDENDUM 2026-10-31 — CS4a is the supervisor's bootSet 'core' (MG_D13, docs/2026-10-24-cos-manager-phasemap.spec) ─────────────
+# CS4a now follows MG17: once COS's supervisor runs the system, "COS boots alone" is its policy bootSet = 'core', not a change to autopilot.

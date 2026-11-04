@@ -16,7 +16,7 @@ payload:
   status: REAL
   source: >-
     ollama/config.js — the one real place model tags live (DEFAULT_MODEL/FALLBACK_MODEL).
-    Guardian's own use: guardian.node-taxonomy.md marks this READS — guardian never authors a
+    Guardian's own use: guardian.node-taxonomy.spec marks this READS — guardian never authors a
     standalone .model record itself, it only ever sees a model tag as a field inside a hat
     (guardian/lib/jobs.js calls hatForge.get(name), and a hat's own model field is an Ollama tag).
     Materialized as a local copy for the same reason schema.hat already has one despite guardian

@@ -1,0 +1,103 @@
+<!doctype html>
+<!-- cos/ui/shell/index.html — COS's frame (MOD-MG-UI-SHELL). MG18, 0.60.337. James, 2026-10-31: "okay. lets build cos ui. floating, above the event bus." -->
+<html lang="en" data-theme="nexus" data-accent="cycle">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>COS</title>
+  <link rel="icon" href="../core/mark.svg">
+  <link rel="stylesheet" href="../core/theme.css">
+  <link rel="stylesheet" href="../core/core.css">
+  <link rel="stylesheet" href="page.css">
+</head>
+<body class="shell">
+  <canvas id="bus" aria-hidden="true"></canvas>
+  <div class="veil" aria-hidden="true"></div>
+
+  <aside class="rail panel" aria-label="COS">
+    <a class="brand" href="#/overview">
+      <img src="../core/mark.svg" alt="">
+      <span><b>COS</b><small>Compartment OS</small></span>
+    </a>
+    <nav class="nav" id="nav-main" aria-label="Pages"></nav>
+    <div class="nav-group">
+      <div class="nav-label"><span>Systems</span><span class="mono faint" id="sys-count"></span></div>
+      <nav class="nav systems" id="nav-systems" aria-label="Systems"></nav>
+    </div>
+    <div class="rail-foot">
+      <nav class="nav" id="nav-foot"></nav>
+      <div class="bus-state" id="bus-state" title="the manager's event stream">
+        <span class="dot" data-s="declared"></span><span class="label">connecting</span><span class="mono faint" id="bus-count"></span>
+      </div>
+    </div>
+  </aside>
+
+  <header class="top panel">
+    <div class="crumb"><span class="eyebrow" id="crumb-eyebrow">COS</span><h1 id="crumb-title">Overview</h1></div>
+    <div class="manager" id="manager"><span class="dot" data-s="declared"></span><span id="manager-text">reaching the manager…</span></div>
+    <div class="meters" id="meters">
+      <div class="meter" id="m-cpu" title="host load (1 min) per core"><span class="k">CPU</span><span class="bar"><i></i></span><span class="v mono">—</span></div>
+      <div class="meter" id="m-mem" title="host memory in use; the tick is the supervisor's halt floor"><span class="k">MEM</span><span class="bar"><i></i><b class="floor"></b></span><span class="v mono">—</span></div>
+    </div>
+    <div class="top-actions">
+      <button class="btn quiet sm" id="theme" title="palette"></button>
+      <!-- SC5 0.60.380 — James, 2026-11-02: "notification bell for update, system status,  notications" · "Need the system cli." -->
+      <!-- SC7 — James, 2026-11-02: "A gear, with update settings and Build that update section in cos. With a gear" -->
+      <a class="btn quiet sm icon-btn" id="gear" href="#/updates/settings" title="Updates and their settings" aria-label="Updates and their settings"></a>
+      <button class="btn quiet sm icon-btn" id="cli-open" title="COS's command line (Ctrl+`)" aria-label="Command line"></button>
+      <button class="btn quiet sm icon-btn bell" id="bell" title="Notifications" aria-label="Notifications" aria-expanded="false"><span class="badge" id="bell-n" hidden></span></button>
+      <button class="btn sm goto-btn" id="goto-open"><span class="ic"></span><span>Go to</span><kbd>⌘K</kbd></button>
+    </div>
+  </header>
+
+  <main class="stage" id="stage"></main>
+
+  <div class="bell-panel panel" id="bell-panel" hidden role="dialog" aria-label="Notifications">
+    <div class="bell-head"><b>Notifications</b><div class="bell-tabs" id="bell-tabs"></div><button class="btn quiet sm" id="bell-read">Mark all read</button></div>
+    <ol class="bell-list" id="bell-list"></ol>
+  </div>
+
+  <div class="console panel" id="console" hidden role="dialog" aria-label="COS command line">
+    <div class="console-head"><b>COS</b><span class="mono faint">command line · help for the table</span><button class="btn quiet sm" id="console-close" aria-label="Close">×</button></div>
+    <pre class="console-out" id="console-out"></pre>
+    <form class="console-in" id="console-form"><span class="mono">cos&gt;</span><input id="console-line" autocomplete="off" spellcheck="false" placeholder="ps · config intelligence · config loom memory.limit=25% · notices · add <name> <folder> port=<n>"></form>
+  </div>
+
+  <div class="scrim" id="add-sys" hidden>
+    <form class="dialog panel add-form" id="add-form" role="dialog" aria-modal="true" aria-labelledby="add-title">
+      <h2 id="add-title">Add a system</h2>
+      <p class="faint">A folder of Nexus with something to run. COS writes its declaration (&lt;folder&gt;/compartment.json) as your act and lists it; nothing starts until you start it.</p>
+      <label>Name<input class="input" name="name" required pattern="[a-z][a-z0-9-]{1,30}" placeholder="my-service"></label>
+      <label>Folder<input class="input" name="dir" required placeholder="my-service"></label>
+      <div class="two"><label>Command<input class="input" name="cmd" value="node"></label><label>Runs<input class="input" name="args" value="server.js"></label></div>
+      <div class="two"><label>Port<input class="input" name="port" type="number" min="1" max="65535" placeholder="optional"></label><label>Health path<input class="input" name="health" value="/health"></label></div>
+      <p class="add-err" id="add-err" hidden></p>
+      <div class="dialog-foot"><button type="button" class="btn quiet" id="add-no">Cancel</button><button class="btn primary" id="add-yes">Add</button></div>
+    </form>
+  </div>
+  <div class="notices" id="notices" aria-live="polite"></div>
+
+  <div class="scrim" id="confirm" hidden>
+    <div class="dialog panel" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+      <div class="dialog-ic" id="confirm-ic"></div>
+      <h2 id="confirm-title"></h2>
+      <p id="confirm-body"></p>
+      <div class="dialog-foot"><button class="btn quiet" id="confirm-no">Cancel</button><button class="btn primary" id="confirm-yes">Confirm</button></div>
+    </div>
+  </div>
+
+  <div class="scrim" id="goto" hidden>
+    <div class="palette panel" role="dialog" aria-label="Go to">
+      <div class="palette-in"><span class="ic"></span><input id="goto-q" placeholder="Go to a page or a system…" autocomplete="off" spellcheck="false"></div>
+      <div class="palette-list" id="goto-list"></div>
+    </div>
+  </div>
+
+  <script src="../core/core.js"></script>
+  <script src="bus.js"></script>
+  <script src="page.js"></script>
+  <script src="console.js"></script>
+  <!-- 2026-11-01 UP9 — the update popup (one script with the TV's), asking COS's own door -->
+  <script src="/kernel/update-popup/update-popup.js" data-api="/api/cos/update/notice" data-tool="cos"></script>
+</body>
+</html>

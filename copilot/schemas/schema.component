@@ -17,7 +17,7 @@ payload:
   source: >-
     loom/schema/component.js — COMPONENT_SCHEMA (real, checked directly: requiredKeys
     ['id','namespace','name','version'], uuid enforced separately by the loom.uuid-present Axiom in
-    driver.js, not duplicated here). copilot's own use: copilot.node-taxonomy.md marks this VIA LOOM
+    driver.js, not duplicated here). copilot's own use: copilot.node-taxonomy.spec marks this VIA LOOM
     — copilot doesn't author .component records itself, capability-map.js derives them from
     copilot's own real capability registry ('copilot' is confirmed present in capability-map.js's
     own SYSTEMS map). This local copy exists so copilot can validate/interpret component-shaped data

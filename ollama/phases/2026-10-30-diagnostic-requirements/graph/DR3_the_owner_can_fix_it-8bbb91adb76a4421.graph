@@ -1,0 +1,101 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DR3_the_owner_can_fix_it:8bbb91adb76a4421
+type: graph
+id: phase:DR3_the_owner_can_fix_it:8bbb91adb76a4421
+context: dependency graph of phase DR3_the_owner_can_fix_it
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793383782983
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793383782983
+lastSeenAt: 1793383782983
+fingerprint: null
+payload:
+  for: DR3_the_owner_can_fix_it
+  kind: phase
+  repo: null
+  hash: 8bbb91adb76a4421
+  nodes:
+    - path: ollama/interaction-contract.json
+      role: changes
+      exists: true
+      system: ollama
+    - path: ollama/routes/models.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: tests/modules/test-ollama-pull.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: ollama/lib/command-index.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/server.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/http-utils.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/model-inventory.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/state.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: ollama/routes/models.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/routes/models.js
+      to: ollama/lib/state.js
+      kind: requires
+    - from: ollama/routes/models.js
+      to: ollama/lib/http-utils.js
+      kind: requires
+    - from: ollama/routes/models.js
+      to: ollama/lib/model-inventory.js
+      kind: requires
+    - from: ollama/lib/command-index.js
+      to: ollama/routes/models.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/models.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D1_detect_then_owner_fixes
+    dependents:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR4_fixed_under_policy
+    upstream:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D1_detect_then_owner_fixes
+    downstream:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR4_fixed_under_policy
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR5_seen_and_fixed_from_the_screens
+    blockedBy:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D1_detect_then_owner_fixes
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by DR_D1_detect_then_owner_fixes
+      - 'depends on (1): DR_D1_detect_then_owner_fixes'
+      - 'needed by (1): DR4_fixed_under_policy · all downstream 2'
+    edges:
+      - from: docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D1_detect_then_owner_fixes
+        kind: declared

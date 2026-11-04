@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP3_one_terminal_one_cli
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP3_one_terminal_one_cli
+context: pipeline phase CP3_one_terminal_one_cli of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP3_one_terminal_one_cli (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793576104443
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104443
+lastSeenAt: 1793576104443
+fingerprint: null
+payload:
+  id: CP3_one_terminal_one_cli
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+  depends_on:
+    - CP1_the_machine_and_its_door
+  blocks: []
+  spec: null
+  graph: 3cee4d1262232a5b

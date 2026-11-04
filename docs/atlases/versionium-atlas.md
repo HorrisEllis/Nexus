@@ -336,7 +336,7 @@ Not confirmed.
 
 3 other file(s).
 
-- other: `versionium/spec/versionium.file-versioning.spec`, `versionium/spec/versionium.node-taxonomy.md`, `versionium/spec/versionium.spec`
+- other: `versionium/spec/versionium.file-versioning.spec`, `versionium/spec/versionium.node-taxonomy.spec`, `versionium/spec/versionium.spec`
 
 <!-- generated:registry:end -->
 

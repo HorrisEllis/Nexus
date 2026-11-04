@@ -73,7 +73,7 @@ decisions:
 
 phases:
   CG1_the_confidence_gate_backend:
-    status: OPEN
+    status: DONE (found built: lib/agent-confidence-gate.js, in main since 0.60.247; test-agent-confidence-gate 13/13 on 2026-10-31)
     layer: library
     depends_on: [CG_D1_gate_home, CG_D2_threshold, CG_D3_order]
     files: [lib/agent-confidence-gate.js, tests/modules/test-agent-confidence-gate.test.js, tests/modules/run-all.js]

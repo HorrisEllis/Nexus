@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        architecture-spec
-    version:     0.12.0   # 0.12.0 2026-10-17: addendum — the registry as the drawbridge; NODE_SYSTEM begun (P33a)
+    version:     0.15.0   # 0.15.0 2026-11-03: addendum — boundaries: one door per system (the component registry: spine, event bus, contract; CLI, API and UI through it), per system and sovereign, COS the orchestrator (his); 0.14.0 2026-10-31: addendum — every piece traced to its origin; phased only (his); the gaps measured; 0.13.0 2026-10-30: addendum — behaviour schemas, .benchmark, data pipelines, the dependency gate (his); 0.12.0 2026-10-17: addendum — the registry as the drawbridge; NODE_SYSTEM begun (P33a)
     extends:     genesis-devkit-v1-0000-2026-0710-jamesbrooks-001  # idearium/spec-engine/templates/genesis.spec v1.3.0 — the default template of a system spec since 0.39.286; since 1.3.0 the architecture of the system template, section by section (Domain 0a)
     foundation:  TBD — no runtime exists yet, unassigned until first real implementation
     port:        TBD — no runtime process exists yet
@@ -349,6 +349,18 @@ spec:
         opened: 2026-10-01
 
   version_history:
+    - version: 0.14.0
+      date: 2026-10-31
+      summary: >-
+        Additive (ADDENDUM 2026-10-31 at the end): RULE E, every piece traced to its origin (skeleton slot → spec module with an id and a
+        type → phase), and RULE F, phased only (his); with what is missing from rules A-F and from genesis, measured on main 0.60.320.
+        Nothing removed or renamed.
+    - version: 0.13.0
+      date: 2026-10-30
+      summary: >-
+        Additive, his four rules for every system (ADDENDUM 2026-10-30 at the end): behaviour schemas, .benchmark nodes for sigma
+        deviation from baseline traced by Intelligence and acted on by COS's load balancer, a data pipeline door per system, and the
+        dependency gate (.dep nodes; every step a gate). Each names the substrate it composes. Nothing removed or renamed.
     - version: 0.11.0
       date: 2026-10-10
       summary: >-
@@ -608,3 +620,223 @@ spec:
 # was not one of the 15 systems; only idearium uses it, so the refactor tool (lib/architecture-apply.js, RF2) moved it to
 # idearium/architecture-spec/ (git kept each file's history). Every `path:` field above now names the new place; the narrative and the
 # history notes beside them are left as written (§0.3). Proof: tests/modules/test-genesis-and-architecture-spec.test.js GA-01.
+
+# ## ADDENDUM 2026-10-30 (0.13.0) — four rules every system follows (his), and what each one stands on
+# James, 2026-10-30: "the plan it to rebuild nexus at somepoint. in my emerge coding language. from the bottom up in my own language.
+# almost everything in nexus is my own. I love architecture. / i want to be able to have data pipelines to each system. API for routing
+# data to and from them. / oh and add to the architecture spec that each system needs schemas to use for expected system behavior. also i
+# want .benchmark nodes for the sigma deviations from baseline to record into. to monitor peformance, and use the intelligence system to
+# track the events causing performance dips, and drops. that way we can optimize performance. and use a load balancer. / I was thinking.
+# The event gates, with conditions or event listeners, dynamic and a step or gap for each dependancy. like make it universal for any
+# requests dependancies. like every single step is a gate. the success of the previous, triggers the next, with retry logic including
+# increasing the timing little by little, but most important failure mode logging and dianostics using the intelligence system and
+# escalating if its not critical. like maybe a dependancy also includes which systems with gate ids and .dep nodes that are sent to each
+# gate, all tracked with an id and contract id. each piece tracked, logged, and physcial on the backend for persistence. once cos is built
+# fully, we can have system states saved, and survive restart."
+# The rules are his. The census of what each stands on, and the readings marked TO CONFIRM, are the coder's. Spec in emerge's module format
+# and phases come next (his 2026-10-20 order); nothing here is built yet.
+#
+# RULE A — behaviour schemas. Every system declares what it is expected to do, as schemas it owns: <system>/schemas/behaviour/*.schema.
+#   Each names an input (a route, command or event), the events it must emit, the outputs' schema, the time envelope it should answer in,
+#   and its invariants. They are the "expected" the baseline is measured against and the oracle its tests run against (§12.4, §5.13
+#   schemas are truth). Stands on: the system schemas the template already gives every system (idearium/spec-engine/templates/system/
+#   schemas/), interaction-contract.json (15 of 15 systems), event-taxonomy.js (8 of 15; the other 7 get one with their behaviour schemas).
+#
+# RULE B — .benchmark nodes, sigma from baseline, causes traced, load balanced. Every system's measured behaviour (latency, throughput,
+#   memory, CPU, error rate, per route and per gate) is compared with its baseline and its behaviour schema's envelope. A deviation past
+#   threshold is written as a .benchmark node: the metric, the baseline, the reading, sigma, the window, the system and compartment, the
+#   version (CS1), and the events in that window. Intelligence traces the events that came before each dip or drop (the cause) and links
+#   them to the node, so a slowdown reads as a story (§16.2) and repeats become a known pattern (§7.4). COS's load balancer (CS7, MG4)
+#   reads the nodes: it spawns a replica, moves load or caps a noisy neighbour, and each act names the .benchmark it answered (§17.11).
+#   Stands on: intelligence/baseline.js (per-kernel baseline, sigma, friction, failure ledger), schema.sigma_record (the sigma reading,
+#   with baselineSnap), intelligence/rfr2 (sigma, delta), intelligence/causal (anomaly, compound: causal impulse), lib/warp/dispatch/
+#   benchmark.js (measurements, not estimates), cos/watchdog (per-compartment memory, CPU, stall). New: the .benchmark node type
+#   (lib/node-schemas/schema.benchmark), owned and written by Intelligence (§5.15: one writer), read by COS through Intelligence's route.
+#
+# RULE C — a data pipeline door per system. Every system takes data in and gives data out through declared pipes: each pipe has a name,
+#   a direction, a schema for its records, and a contract id, listed in the system's interaction contract. Routing data between systems
+#   goes through one router API that checks both ends' contracts (the handshake, §5.11) before it delivers, and records every hop.
+#   READING TO CONFIRM: the router is COS's (the registry is the bridge, CS3; MG_D4 makes COS the manager), at /api/cos/pipes/route,
+#   and Nexus's :9000 orchestrator forwards to it. NAME CLASH, said: schema.pipeline is already Clear Glass's site pipeline (PL1-PN4);
+#   the system-to-system one needs its own name (the coder's suggestion: "pipe", schema.pipe). Stands on: interaction-contract.json,
+#   DB12 (the UI handshake), CS3 (the registry is the bridge), CompartmentLink (cos-spine.spec), lib/pipeline-routing.js (read first).
+#
+# RULE D — the dependency gate: every step is a gate, universal for any request's dependencies. A request becomes a chain of gates;
+#   each dependency is a step or a gap. A gate opens when its condition holds or its listened-for event arrives, and the success of one
+#   triggers the next. Each dependency is a .dep node sent to the gate that needs it: { id, contractId, chainId, fromSystem, fromGate,
+#   toSystem, toGate, needs (the condition), state, attempts, nextAt, failure }. Each step is tracked by its id and contract id, logged,
+#   and written to disk before it runs (§9.2), so a chain resumes where it was after a restart.
+#   Retry: the delay grows a little each attempt (base × factor^n, factor small, jittered, capped), and a gate past its attempts stops.
+#   Failure: every failure is classified and written as a failure mode, diagnosed by Intelligence (cause, what changed, the fix map), and
+#   escalated on the escalation ladder (escalation.spec levels 0-4).
+#   READING TO CONFIRM — "escalating if its not critical": a non-critical failure climbs the ladder by itself (known fix, safe fix,
+#   snapshot + proposal, deep scan); a critical one stops its chain and comes straight to him (level 4). The other reading is the reverse.
+#   Stands on, nearly all of it: his gate walker (lib/gate-walker.js, 0.60.258: "each gate can be a step ... use the gates as the surface"),
+#   schema.step_chain and schema.step_gate, schema.gate (a durable record per transition, by reference), the executable .contract
+#   (cortex/core/raid/contract-gates.js: gates with depends_on, pass_when, on_failure, classifyFailure), lib/phase-dag.js (dangling and
+#   cycles), cortex/self-heal (escalation, fault-taxonomy, failure-intake), and autopilot's backoff and circuit (moving into COS, MG15).
+#   New: the .dep node type (schema.dep), the retry ladder in the walker, and the walker resuming from its records at boot.
+#   Survive restart: the gate records survive now; whole system states (files and machine) survive once COS's versions do (CS1, MG3).
+
+# ## ADDENDUM 2026-10-30 (b) — the end-state (his)
+# James, 2026-10-30: "cos becomes nexus. / i want to eventually make this into a os. / emerge will be replacing nexus."
+# The architecture this spec states is what carries over: the same registry, contract, handshake, bus and node architecture at every level
+# ("nexus is recursive, builds itself, using itself. the same architecture on every level", 2026-10-12) is what an emerge rebuild compiles
+# from and what an OS made of compartments runs. Readings and order: docs/2026-10-24-cos-manager-phasemap.spec MG_D8.
+
+# ## ADDENDUM 2026-10-30 (c) — RULE C measured: no system has a data pipe door yet; the door's shape
+# James, 2026-10-30: "just have hooks for the backend storage. like apis or urls for api routes. each system in nexus needs those data flow
+# pipeline apis. do they?"
+# Census 2026-10-30 (the interaction contracts): 12 of the 15 systems in lib/nexus-self/systems.js have a contract (~520 routes; ollama's sits
+# at ollama/, components and core have none). Data moves through each system's own one-off routes (imports, exports, streams); no route
+# shape is shared and no system serves /pipes. So yes: every system needs the door, and none has it.
+# The door, the coder's proposal (TO CONFIRM), three routes the same in every system, so one client, one test and one agent tool serve all:
+#   GET  /api/<system>/pipes                 the pipes it declares: { name, dir: in|out|both, schema, contractId, owner }
+#   GET  /api/<system>/pipes/:name?since=c   records out, oldest first, from cursor c (the system's own ledger seq); { records, next }
+#   POST /api/<system>/pipes/:name           records in; each checked against the pipe's schema; a refusal is a typed gap with its reason
+# Routing between systems: COS's router (RULE C, to confirm) checks both ends' contracts and delivers by these three routes only.
+# Storage behind a system is its own business; another system (the tutor included) reaches it only as a URL to a pipe (§5.15).
+
+# ## ADDENDUM 2026-10-30 (d) — the pipe door: both (his); RAID routes; too many primitives, and ESS
+# James, 2026-10-30, sending ESS-spec-v0.1.0, Signal_to_Noise1 and Associative_Lattice (kept: _archive/imports/2026-10-30-uploads/):
+# "non-linear / input, which can be any input, any data packet, then the system / way to many primitives i feel like / the data needs to flow
+# into the /input and then moved to the output one by one." Then, on the coder's three pipe routes: "both, one per system using the server.js
+# as a ingest, from the input folder, with the intent as a flag after the command. / and then orchastrator/cos using raid as the routing, for
+# systems, load balancing, and agents"
+#
+# RULE C decided (his): every system has one door, both halves, served by its own server.js:
+#   - an input folder: any data packet dropped there is ingested by the system's server.js, one by one, in order; the three routes
+#     (GET pipes, GET pipes/:name?since, POST pipes/:name) are the same door over HTTP; /input takes any packet, /output gives results one by one;
+#   - each packet carries its intent, given as a flag after the command (READING TO CONFIRM: `<command> <packet> --intent "<what it is for>"`,
+#     and the intent travels with the packet and is recorded with it);
+#   - COS (the orchestrator, MG_D5) routes between systems with RAID: which system, which agent, and the load (CS11, MG23).
+#   Stands on: his SNR Passthrough (INPUT → plugin chain → OUTPUT, POST /snr/input, every stage optional and reorderable) is already this
+#   shape for one stage; it becomes the template of a system's door.
+#
+# "way to many primitives" — the coder's census, his call: CIE-EG names a registry, roads, a gate, gaps and 13 ledger entry kinds; the Emerge
+# language adds compartment, component, kind, template, hook, wire, signal, constraint, boundary, record, gap, promote, whatif, spawn; SISO and
+# WARP add Event, Gate, Axiom, Stream, StreamLog; Nexus keeps 73 node types (lib/node-schemas). His ESS (End-State Signal v0.1.0) has five:
+#   WRITE (a function hashed at write time) · BIND (a role to a hash) · CALLTO (a signal to a hash or a role) · RESOLVE · UNRESOLVE.
+# They are the same kernel as CIE-EG under other names: WRITE = register, BIND = road, CALLTO = emit through the gate, RESOLVE = deliver,
+# UNRESOLVE = a gap. The coder's recommendation, TO CONFIRM: ESS's five are the kernel; everything else is a function registered as a hash,
+# i.e. a library, not a primitive. That is the reduction he asked for, from his own spec.
+# The coder's review of ESS v0.1.0 (his to take or leave):
+#   1. Short hashes: 7 hex characters is 28 bits. The store is append-only and keeps every version, so the odds of two functions sharing a
+#      short hash reach one in two at about 19,000 functions. The full SHA-256 should be the identity; the short form display only, lengthened
+#      when ambiguous, as git does. ("69fn332" is not hex; cosmetic.)
+#   2. A hash pins code, not behaviour: a function that calls `callto:gate` behaves differently after gate is rebound, with the same hash.
+#      Only hash calltos pin behaviour; the spec should say so.
+#   3. BIND is power: any callto can rebind any role, including the roles that load plugins, so every plugin is effectively root. §1.4
+#      protects the registry only. A capability per role (who may rebind it) keeps the non-linear property without that risk.
+#   4. Adaptive I/O: a plugin widening its own contract because its output goes unresolved can turn noise into signal by redefining it.
+#      A CONTRACT_UPDATE should be a proposal that passes a test (or him) before it binds.
+#   5. Replay uses `ts` (the clock); two binds in one millisecond, or a clock change, reorder history. A sequence number, as in Emerge's
+#      ledger, makes replay exact.
+#   Structural noise (§8: noise = what the kernel cannot route) is the strongest idea in it: objective, content-free, and it pairs with the
+#   content SNR in Signal_to_Noise1 (snr.js) as two different measures, kept apart.
+
+# ── ADDENDUM 2026-10-31 — RULE E: every piece traced to its origin; RULE F: phased only (his); what is missing, measured ──────────────
+# James, 2026-10-31: "Spec it all out. go through the .phases. and spec out everything that is a module, capability, or new component? that
+# way we can have every component traced to its origin, and each piece tracked also. like it all builds from the origin as a foundation/core
+# like the system.js, which needs the config. map all of whats missing from all of this, to the architecture spec and genesis spec." ·
+# "how about anything new, spec, any changes, fixes, or additions is phased only." · "like what if we use spec ids and types, then have a
+# queue/library for specs."
+#
+# RULE E (his; the reading of his system.js as the skeleton's lib/system.js is the coder's, TO CONFIRM): every code file traces to its origin.
+#   origin = the system skeleton (genesis 1.5.0, cos/archetype/nexus-system): config → lib/system.js (schemas, store, ledger and bus, node
+#   index, listener, heartbeat) → server.js and cli.js → components → UI. Each file fills a slot of it or is a component under it; each is
+#   owned by a spec module with an id and a type (<type>:<system>:<slug>); each module is built by a phase. Specs are one library
+#   (docs/SPEC-REGISTRY.spec, given ids and types) and the work one queue, foundation first. Spec: idearium/spec/spec-library.spec;
+#   map: docs/2026-10-31-spec-everything-phasemap.spec.
+# RULE F (his): nothing is built outside a phase. Anything new, every spec, change, fix and addition is a phase of a map, with its spec and
+#   blocks; a code change outside every phase is reported (MOD-SL-PHASED).
+#
+# What is missing, measured on main 0.60.320 (a one-off trace; MOD-SL-TRACE makes it repeatable):
+#   RULE A behaviour schemas ......... 0 systems have <system>/schemas/behaviour.
+#   RULE B .benchmark nodes .......... 0 .benchmark files.
+#   RULE C the door .................. 3 systems have an input/ folder; 0 have the pipe routes (addendum (c)'s census stands).
+#   RULE D the dependency gate ....... 0 .dep files.
+#   RULE E origin trace .............. 1,876 code files: 233 (12%) owned by a spec module, 1,028 (55%) in a phase, 203 (11%) both, 818 (44%)
+#                                      neither. No system boots from the skeleton's core (lib/system.js): 0 of 13.
+#   RULE F phased only ............... not checked anywhere yet (SE5).
+#   Skeleton slots missing:
+#     idearium      server.js, cli.js, event-taxonomy.js
+#     clear-glass   server.js, cli.js, config.js, event-taxonomy.js
+#     cortex        server.js, cli.js (boot.js is its server)
+#     architect     server.js, cli.js, compartment.json, event-taxonomy.js
+#     orchestrator  server.js, cli.js, config.js, compartment.json, registry-components.js, schemas/index.js
+#     cos           server.js, cli.js, config.js, compartment.json, registry-components.js, schemas/index.js
+#     ollama, loom  cli.js, event-taxonomy.js
+#     versionium, intelligence   cli.js
+#   The reference system breaks its own axiom: Guardian keeps 12 JAA tables with no node files (genesis ALL_DATA_ARE_NODES), indexes 10 of
+#   the 12 node types it writes, and writes twice outside its folder (guardian/spec/guardian-nodes.spec).
+#   Diagnostic records findings (16 kinds), beats, pulse, causality, heal attempts and a wire report with no schema (NC0 schema rule;
+#   diagnostic/spec/diagnostic-schemas.spec).
+#   The handshake reports 0 routes for systems that publish components[] (docs/system-doors.spec MOD-DOOR-HANDSHAKE).
+# Mapped 2026-10-31: docs/2026-10-31-spec-everything-phasemap.spec (SE1-SE6), docs/2026-10-31-system-doors-phasemap.spec (DO0-DO5),
+#   docs/2026-10-31-guardian-nodes-phasemap.spec (GND1-GND4), docs/2026-10-31-diagnostic-schemas-phasemap.spec (DSC1-DSC4).
+
+# ── ADDENDUM 2026-10-31 (b) — RULE E corrected by him: the origin is server.js ───────────────────────────────────────────────────────
+# James, 2026-10-31: "system.js i meant server.js". RULE E above read his "like the system.js, which needs the config" as the skeleton's
+# lib/system.js; that reading is superseded (kept, §0.3). RULE E, as he meant it: every code file traces to its system's server.js, which
+# needs the config — config → server.js → the registry → components → UI. A file traces when its system's server.js reaches it (the
+# require graph from the door, or a registry component the door mounts). Six systems have no server.js and so no origin yet: idearium,
+# clear-glass, cortex, architect, orchestrator, cos (docs/2026-10-31-system-doors-phasemap.spec gives them one). "0 of 13 boot from
+# lib/system.js" stays true but is no longer a gap against his rule; the boot core is the coder's suggestion, to confirm (DO_D2).
+
+# ── ADDENDUM 2026-11-01 — RULE THE_AGENT_CLI: one command line for agents, a mode per agent, built live from every system's command nodes ──
+# James, 2026-11-01: "just give the copilot the ability to update. wait, what if we create a cli, literally for the agents to use, a mode made
+# for each of them, dynamic, and spectific in relation to them. give them as much power as possible. connects to each system using the
+# commands, then each command index for each systems database that the server.js uses with the command nodes. that way it updates when any of
+# the systems do. add what of that is missing to genesis and architecture spec."
+# What exists (read, not assumed): each system's command nodes (<system>/data/nodes/command/*.command, indexed in its node database); the
+# genesis server.js builds its routes from them (cos/archetype/nexus-system/server.js); GET /commands on guardian and ollama
+# (docs/command-index-per-system.spec); the one command table (idearium/cli/route-commands.js) behind nexus.command; procedures (PD1) give
+# copilot the update (`procedure run update-nexus`, his yes at the confirm step).
+# The rule, as his design (the cut into three parts is the coder's):
+#   1. THE INDEX IS THE SYSTEM'S. Every system's server.js serves GET /commands from its own command nodes (the same index its routes are built
+#      from), with each command's route, args, capability, owner component and personOnly. Genesis gains this route, so every system built from it
+#      has it; a system without it is a gap the system-check names. A new command node changes the index; nothing else is edited (§5.15, §10.2).
+#   2. THE AGENT CLI READS THEM LIVE. One CLI for agents asks each system's door for its /commands (through the registry's ports, never their
+#      files) and merges them with the one command table: every command any system has, the moment it has it.
+#   3. A MODE PER AGENT. Each agent's mode is that live set filtered and ordered by the agent's own scope (its hat's tools, its system, its
+#      trust), "as much power as possible": everything a person can run, except a row marked personOnly, which is held for him (MG-006).
+# Map: docs/2026-11-01-the-compartment-phasemap.spec CP3a (part of CP3, one terminal one CLI). Not built yet.
+
+# ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# ADDENDUM 2026-11-03 — boundaries: one door per system, COS the orchestrator (his decisions, in his words; recorded, not yet built)
+# James, 2026-11-03: "Okay. I’m overwhelmed. This is a shit show. That’s why boundaries need to exist. Cli and API routes through the component
+# registry like the ui. All of this needs to update the genesis spec and architecture spec"
+# Every decision below is his, said on 2026-11-03, with its record in docs/2026-11-03-registry-per-system-phasemap.spec (PL_D1–PL_D13) and AXIOMS §5.16.
+# 1. THE DOOR. "No component registry is the spine." · "The drawbridge is the the component registry, which is also the event bus, and
+#    interaction contract and bridge into the compartment." · "Cli and API routes through the component registry like the ui." Each system has
+#    one door: its own component registry. Its CLI, its API routes and its UI all go through it.
+# 2. PER SYSTEM, SOVEREIGN. "No component registry is per system. That needs to be implemented" · "And enforce that. … It’s fucking sovereign."
+#    · "Each system is sovereign. It is responsible for its own data, its own modules. Its own commands, lib is not a directory for anything that
+#    a system uses that it does not have within its own directory. Each system needs to work independent of the system." · "Nothing a system
+#    needs lies outside of its own boundaries, beyond another system. Like Idearium needs Guardian, right? But I could slot another system in
+#    its place to use. It's not hardwired, it just uses the API routes and the CLI server". No central registry (AXIOMS §5.16; the ratchet
+#    lib/registry-sovereign-check.js holds today's 12 central callers and 22 Loom maps from growing). "Not loom. Never said loom. Loom is going
+#    to be removed" · "The lib folder is not the component registry."
+# 3. THE PROCESS. "the server.js is the process for each system. It’s what cos manages. The spine and component registry for each system routes
+#    through there. Cli and api."
+# 4. THE SYSTEM REGISTRY AND COS. "Then the system registry is for connecting the component registries. Cos and The orchastrator uses that to
+#    orchestrate." · "Cos is the orchastrator now. That’s the point. The reason for the sandbox is to seperate the systems." · "Cos is meant to
+#    be the orchastrator complelely. Replace autopilot." · "Cos ui stays the cos ui. It’s already for ochastrating." · automation: "It’s in the
+#    orchastrator." (its AE phases follow the orchestrator to COS — the coder's reading, to confirm).
+# 5. DUMB COMPONENTS. "Yes so each component can be dumb, and agnostic at some point." · "Yes. This reduces the complexity for each
+#    complement." A component takes its input and returns its output; the door checks the caller and the contract, carries the events, routes.
+# 6. SANDBOXED, NOT VIRTUAL MACHINES. "I just want them to be isolated from each other. This should make the system easier to manage but give me
+#    more control over resource usage and limits." Each system an ordinary process in its own sandbox (its folder, its code, no other programs
+#    unless allowed, its limits), on his 16 GB machine.
+# 7. ONLY CHANGES. "I just don’t want the versions to be bigger than only the changes." · "Look at versionium. It’s meant to record changes."
+#    Snapshots and versions are Versionium's, recorded as changes, through its routes.
+# 8. EVERY PHASE A DAG. "Okay we also need to clean the phases at some point. Add to the Claude.md. That every phase needs a dag."
+# 9. THE TEMPLATE. "Look at iseariums template for a new systme" — idearium/spec-engine/templates/architecture-spec.template.yaml (his,
+#    2026-10-05 → 10-17) is the shape each system is rebuilt toward; it already says "the registry is the interaction contract, the event bus,
+#    the queue, the dependency graph, the wiring harness and the spine" and "hardcoded has to earn its place".
+# Measured on 2026-11-03, against 1–3: 6 of 14 systems have a server.js COS runs; 11 have their own registry, 4 serve it themselves, 7 also send
+# it to the old orchestrator's central registry; in none is the registry the event bus; 152 places reach past a registry into another system's files.
+# Still his, not decided (do not build on a guess): whether .nex names a snapshot in Versionium or drops out; the TV shell (its own thing, or
+# gone); one source for registry, contract and events (the template lists three files); the template's "what every system uses is the kernel's"
+# against "lib is not a directory …"; where the .cos sits in the tree; network isolation; the qcow2 virtual disk's future.

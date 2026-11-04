@@ -1,0 +1,200 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DR2_diagnostic_checks_them:766bb3f0af8035c6
+type: graph
+id: phase:DR2_diagnostic_checks_them:766bb3f0af8035c6
+context: dependency graph of phase DR2_diagnostic_checks_them
+intent: null
+summary: 18 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793383782981
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793383782981
+lastSeenAt: 1793383782981
+fingerprint: null
+payload:
+  for: DR2_diagnostic_checks_them
+  kind: phase
+  repo: null
+  hash: 766bb3f0af8035c6
+  nodes:
+    - path: diagnostic/lib/requirements.js
+      role: changes
+      exists: false
+      system: diagnostic
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-diagnostic-requirements.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: diagnostic/cli.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/server.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/config.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: diagnostic/lib/wire-integrity.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/contract-verifier.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-engines.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ico.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/data-home.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ico.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/lib/wire-integrity.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/diagnostic-engines.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/config.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: diagnostic/cli.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+    - from: diagnostic/server.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+  crossings:
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      fromSystem: diagnostic
+      toSystem: loom
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR1_systems_declare_what_they_need
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D1_detect_then_owner_fixes
+    dependents:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR4_fixed_under_policy
+    upstream:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR1_systems_declare_what_they_need
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D0_diagnostic_takes_care_of_it
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D1_detect_then_owner_fixes
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D2_declared_by_each_system
+    downstream:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR4_fixed_under_policy
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR5_seen_and_fixed_from_the_screens
+    blockedBy:
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR1_systems_declare_what_they_need
+      - docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D1_detect_then_owner_fixes
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by DR1_systems_declare_what_they_need, DR_D1_detect_then_owner_fixes
+      - >-
+        depends on (2): DR1_systems_declare_what_they_need, DR_D1_detect_then_owner_fixes · all
+        upstream 4
+      - 'needed by (1): DR4_fixed_under_policy · all downstream 2'
+    edges:
+      - from: docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR1_systems_declare_what_they_need
+        kind: declared
+      - from: docs/2026-10-30-diagnostic-requirements-phasemap.spec::DR_D1_detect_then_owner_fixes
+        kind: declared

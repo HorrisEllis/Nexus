@@ -3,7 +3,7 @@
  * cortex/push-recall.js — The Unified API, actually built
  * UUID: nexus-cortex-push-recall-v1-0000-2026-0706-jamesbrooks-001
  * Version: 1.0.0
- * spec: docs/specs/CORTEX.spec.md (implements the "Unified API" section —
+ * spec: docs/specs/CORTEX.spec (implements the "Unified API" section —
  *       confirmed 100% spec text, 0% code, three turns ago in this session)
  *
  * §HONESTY NOTE: this is a real implementation, not a mock. push() and

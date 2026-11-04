@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  renderer/browser.html — the Clear Glass browser window. BS2 (0.60.179), clear-glass/spec/browser-shell.spec MOD-BSH-SHELL.
+  James, 2026-10-21: "rebuild the front end renderer.html completely enterprise grade, same theme as the setting, make it dynamic like
+  firefox. liek a whole toolbar menu. addons or plugins built with little icons like firefox."
+  0.60.180 (BS8–BS11): James, "omg this looks bad. enterprise grade, production quality. outliar level ui" — drawn icons (shell/icons.js),
+  the Guardian agents hub, a start page, the co-pilot pane redrawn.
+  Rebuilt like Firefox in Settings' own palette (cos-theme.css, as Settings loads it) with the layout in shell/shell.css, loaded last. Every element id of the 0.60.178 window is kept, because
+  browser.js wires each one by id; the 0.60.178 file, with its full history of comments, is archived at
+  _archive/clear-glass/renderer/browser-0.60.178.html. New here: the menu bar (#menubar, BS3), home and site identity, pinned plugin
+  icons and the 🧩 panel (BS4), the ⬇ panel (BS5), the ›_ floating CLI button (BS6).
+  CSP: script-src 'self' only (no inline script); style-src keeps 'unsafe-inline' for the panels browser.js still styles inline.
+-->
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               script-src 'self';
+               style-src 'self' 'unsafe-inline';
+               connect-src 'self' http://127.0.0.1:* ws://127.0.0.1:* http://localhost:* ws://localhost:*;
+               img-src 'self' data: https: http:;
+               frame-src 'none'">
+<title>Clear Glass</title>
+<link rel="stylesheet" href="browser.css">
+<link rel="stylesheet" href="cos-theme.css"><!-- 0.60.5 — the Compartment-OS palette, the one Settings loads too -->
+<link rel="stylesheet" href="selector-assign/selector-assign.css">
+<link rel="stylesheet" href="site-keys/bind-bar.css">
+<link rel="stylesheet" href="site-gates/gate-bar.css">
+<link rel="stylesheet" href="macro-elements/log-bar.css">
+<link rel="stylesheet" href="a11y-panel.css">   <!-- 2026-10-30 AC2 the accessibility look, traced and kept off -->
+<link rel="stylesheet" href="site-profile-groups.css">   <!-- 0.60.217 SP3 one site's settings by feature (scoped: .sp-groups, #site-settings-panel) -->
+<link rel="stylesheet" href="autofill-inline.css">   <!-- 0.60.267 AF3 the chip under each input (scoped: #af-chips) -->
+<link rel="stylesheet" href="shell/shell.css">
+<link rel="stylesheet" href="shell/toolbar.css">   <!-- 0.60.210 the ☰ menu's Tools rows and Customize toolbar -->
+<link rel="stylesheet" href="shell/copilot.css"><!-- BS11 the co-pilot pane on the same system -->
+</head>
+<body class="cg-shell">
+
+<!-- ═══ Menu bar (BS3): File Edit View History Bookmarks Tools Help — Alt shows it, View → Menu Bar keeps it ═══ -->
+<nav id="menubar" class="sh-menubar" role="menubar" aria-label="Menu bar" hidden></nav>
+
+<!-- ═══ Tab strip ═══ -->
+<div id="tab-bar" class="sh-tabstrip">
+  <div id="tab-list" class="sh-tabs" role="tablist"></div>
+  <button id="btn-new-tab" class="sh-icon sh-newtab" title="New tab (Ctrl+T)" aria-label="New tab" data-icon="plus">+</button>
+  <div class="sh-drag"></div>
+  <div class="chrome-group cos-ctl sh-winctl">
+    <button class="nav-btn" id="btn-minimize" title="Minimize to Taskbar" aria-label="Minimize" data-icon="minimize" data-icon-size="16">–</button>
+    <button class="nav-btn" id="btn-maximize" title="Maximize" aria-label="Maximize" data-icon="maximize" data-icon-size="14">⛶</button>
+    <button class="nav-btn sh-close" id="btn-close-tray" title="Close to Tray" aria-label="Close" data-icon="close" data-icon-size="16">✕</button>
+  </div>
+</div>
+
+<!-- ═══ Navigation toolbar ═══ -->
+<div id="chrome" class="sh-navbar" role="toolbar" aria-label="Navigation">
+  <div class="chrome-group sh-navgroup">
+    <button class="nav-btn sh-icon" id="btn-back"    title="Back (Alt+←)" aria-label="Back" data-icon="back">←</button>
+    <button class="nav-btn sh-icon" id="btn-forward" title="Forward (Alt+→)" aria-label="Forward" data-icon="forward">→</button>
+    <button class="nav-btn sh-icon" id="btn-reload"  title="Reload (F5)" aria-label="Reload" data-icon="reload">↻</button>
+    <button class="nav-btn sh-icon" id="btn-home"    title="Home" aria-label="Home" data-icon="home">⌂</button>
+  </div>
+
+  <div id="url-bar-wrap" class="sh-urlbar">
+    <button id="sh-identity" class="sh-identity" title="Site information" aria-label="Site information"><span class="sh-lock"></span></button>
+    <div id="url-bar-grip" title="Drag to move the search bar · double-click to put it back" aria-label="Move search bar">⋮⋮</div>
+    <input id="url-bar" type="text" placeholder="Search or enter address" spellcheck="false" autocomplete="off" aria-label="Address">
+    <button id="btn-zoom" class="url-bar-zoom-btn" title="Zoom" style="display:none;">
+      <span id="btn-zoom-pct">100%</span><span class="url-bar-zoom-caret">▾</span>
+    </button>
+    <div id="zoom-popover" class="sh-pop sh-pop-zoom" style="display:none;">
+      <div class="menu-zoom-row">
+        <button data-zoom="out" class="menu-zoom-btn" aria-label="Zoom out">−</button>
+        <span id="zoom-popover-pct">100%</span>
+        <button data-zoom="in" class="menu-zoom-btn" aria-label="Zoom in">+</button>
+        <button data-zoom="reset" class="menu-zoom-btn sh-zoom-reset" title="Reset (Ctrl+0)">Reset</button>
+      </div>
+    </div>
+    <button id="btn-pw" class="url-bar-bookmark-btn sh-pw" title="Saved logins for this site" aria-label="Saved logins" data-icon="key" data-icon-size="16" hidden><span class="sh-badge" hidden></span></button>   <!-- PW4 (0.60.186) -->
+    <button id="btn-bookmark" class="status-bookmark-btn url-bar-bookmark-btn" title="Bookmark this page (Ctrl+D)" aria-label="Bookmark this page" data-icon="star" data-icon-size="17">★</button>
+  </div>
+  <div id="url-bar-resize-handle" title="Drag to resize · double-click to reset"></div>
+
+  <div id="menu-agent-identity-slot" style="display:none;">
+    <button id="agent-badge" title="Agent context — click to switch">default ▾</button>
+    <button id="identity-badge" title="Browser identity — click to switch fingerprint">🎭 <span id="identity-mode-label">chrome</span> ▾</button>
+  </div>
+
+  <div class="chrome-divider" id="tools-divider-l" style="display:none;"></div>
+  <div class="chrome-group" id="toolbar-pinned-tools" style="display:none;"></div>
+  <div class="chrome-divider" id="tools-divider-r" style="display:none;"></div>
+
+  <!-- BS4 — plugins pinned to the toolbar, as their icons; the 🧩 button opens every plugin with a switch and a pin -->
+  <!-- BS9 — Guardian's agents in one place: each NCP agent with its state and Start/Show/Stop, and the Guardian tools -->
+  <button class="nav-btn sh-icon" id="btn-agents" title="Guardian agents" aria-label="Guardian agents" aria-haspopup="true" data-icon="agents">AI<span class="sh-badge" hidden></span></button>
+  <div class="chrome-group sh-ext-pinned" id="sh-ext-pinned" aria-label="Pinned plugins"></div>
+  <button class="nav-btn sh-icon" id="btn-extensions" title="Plugins and add-ons" aria-label="Plugins and add-ons" aria-haspopup="true" data-icon="plugins">🧩</button>
+  <!-- BS5 — downloads, with the Snowflake quarantine -->
+  <button class="nav-btn sh-icon" id="btn-downloads" title="Downloads (Ctrl+Shift+Y)" aria-label="Downloads" aria-haspopup="true" data-icon="download">⬇<span class="sh-ring" hidden></span></button>
+  <button id="copilot-toggle" class="active sh-icon" title="Co-pilot" aria-label="Co-pilot" data-icon="sparkle">✦</button>
+  <!-- BS6 — the floating CLI: its own window, invisible to screen capture, never part of the page -->
+  <button class="nav-btn sh-icon" id="btn-float-cli" title="Floating CLI (Ctrl+Shift+Space) — hidden from screen recording" aria-label="Floating CLI" data-icon="terminal">›_</button>
+  <button class="nav-btn sh-icon sh-hamburger" id="bookmark-mgr-btn" title="Open application menu" aria-label="Application menu" aria-haspopup="true" data-icon="menu">☰</button>
+  <div class="chrome-spacer"></div>
+</div>
+
+<!-- ═══ Bookmarks toolbar ═══ -->
+<div id="bookmarks-bar" class="sh-bookmarks">
+  <div id="bookmarks-list"></div>
+</div>
+
+<!-- ═══ Popovers (one style: .sh-pop; browser.js places each under the button that opened it) ═══ -->
+<div id="bookmark-mgr-panel" class="sh-pop sh-appmenu" style="display:none;" role="menu"></div>
+<div id="bgtabs-panel" class="sh-pop" style="display:none;"></div>
+<div id="site-settings-panel" class="sh-pop" style="display:none;"></div>
+<div id="history-panel" class="sh-pop" style="display:none;"></div>
+<div id="agent-mesh-panel" class="sh-pop sh-pop-narrow" style="display:none;"></div>
+<div id="sh-pw-panel" class="sh-pop sh-pw-panel" style="display:none;" role="dialog" aria-label="Saved logins"></div>
+<div id="sh-extensions-panel" class="sh-pop sh-ext-panel" style="display:none;" role="dialog" aria-label="Plugins and add-ons"></div>
+<div id="sh-downloads-panel" class="sh-pop sh-dl-panel" style="display:none;" role="dialog" aria-label="Downloads"></div>
+<div id="sh-agents-panel" class="sh-pop sh-agents-panel" style="display:none;" role="dialog" aria-label="Guardian agents"></div>
+
+<!-- ═══ Status strip ═══ -->
+<div id="status-strip" class="sh-status">
+  <span title="Connection to the NEXUS orchestrator"><span class="status-dot" id="dot-nexus"></span>NEXUS</span>
+  <span title="Event stream (SSE) from NEXUS"><span class="status-dot" id="dot-sse"></span>SSE</span>
+  <span title="JA4 — TLS client fingerprint tunnel status"><span class="status-dot" id="dot-tls"></span>JA4</span>
+  <span id="status-agent">Agent: default</span>
+  <span id="status-url" class="sh-status-url"></span>
+  <span id="status-health">Health: —</span>
+  <span id="status-cookies">Cookies: —</span>
+</div>
+
+<!-- ═══ Page and co-pilot ═══ -->
+<div id="layout">
+  <div id="webview-wrap">
+    <div id="load-bar"></div>
+    <!-- BS10 — the start page, drawn by the shell over a blank tab (never inside a site's page) -->
+    <section id="sh-newtab" class="sh-newtab-page" hidden aria-label="New tab"></section>
+    <webview id="wv" src="about:blank" allowpopups webpreferences="contextIsolation=yes"></webview>
+  </div>
+
+  <div id="copilot-pane">
+    <div id="copilot-header">
+      <h2>Co-pilot</h2>
+      <span id="copilot-model">Cortex</span>
+      <button id="copilot-clear" title="Clear history" aria-label="Clear history" data-icon="close" data-icon-size="15">✕</button>
+    </div>
+    <div id="copilot-route" aria-label="Co-pilot route"></div>
+    <div id="copilot-messages">
+      <div class="msg assistant">Ask me about this page, or tell me what to do on it.</div>
+    </div>
+    <div id="copilot-input-wrap">
+      <div id="copilot-context-bar" hidden><!-- BS12 (0.60.182): Co-pilot decides what to attach; the chips stay only as /ctx overrides -->
+        <span class="ctx-tag active" id="ctx-dom"  title="Include DOM context">DOM</span>
+        <span class="ctx-tag"        id="ctx-picks" title="Include picked elements">Picks</span>
+        <span class="ctx-tag"        id="ctx-cookies" title="Include cookie info">Cookies</span>
+      </div>
+      <textarea id="copilot-textarea" placeholder="Ask Co-pilot…  (/help for commands)" rows="3"></textarea>
+      <button id="copilot-mic-btn" title="Voice input (local, offline speech-to-text)" aria-label="Voice input" data-icon="mic">🎤</button>
+      <button id="copilot-send">Send ↵</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Side panels and tools (markup as 0.60.178; restyled by shell.css) ═══ -->
+<div id="dom-panel">
+  <div id="dom-panel-header">
+    <h3>⛏ DOM Archaeology</h3>
+    <input id="dom-search" type="text" placeholder="selector or text...">
+    <button id="dom-refresh" class="nav-btn" title="Refresh tree">↺</button>
+    <button id="dom-stream-btn" class="nav-btn" title="Stream live DOM mutations to SSE">▶</button>
+    <button id="dom-panel-close">✕</button>
+  </div>
+  <div id="dom-tree"><span class="sh-dim">Loading DOM...</span></div>
+</div>
+
+<div id="find-bar" class="sh-findbar" style="display:none;">
+  <input id="find-input" type="text" placeholder="Find in page..." />
+  <span id="find-count">0/0</span>
+  <button id="find-prev" title="Previous">↑</button>
+  <button id="find-next" title="Next">↓</button>
+  <button id="find-close" title="Close">✕</button>
+</div>
+
+<div id="rewind-panel">
+  <div id="rewind-header">
+    <span>⏮ Session Rewind</span>
+    <button class="sh-flat" id="rewind-snap-btn" title="Snapshot now">📍</button>
+    <button class="sh-flat" id="rewind-bookmark-btn" title="Save as a named, findable-later state bookmark">🔖</button>
+    <button class="sh-flat" id="rewind-close">✕</button>
+  </div>
+  <div id="rewind-list"><span class="sh-dim sh-pad">No snapshots yet.</span></div>
+</div>
+
+<div id="provider-panel">
+  <div id="provider-header">⟳ NCP Providers</div>
+  <div id="provider-list"></div>
+</div>
+
+<div id="queue-panel">
+  <div id="queue-header"><span>⊞ Mesh Queue</span><span id="queue-depth-label"></span></div>
+  <div id="queue-list"></div>
+</div>
+
+<div id="agent-dropdown"></div>
+<div id="identity-dropdown"></div>
+
+<div id="userscript-panel">
+  <div id="userscript-header">
+    <span>⚙ Userscripts</span>
+    <button class="sh-flat" id="us-new-btn" title="New script">＋</button>
+    <button class="sh-flat" id="us-close">✕</button>
+  </div>
+  <div id="us-list"></div>
+</div>
+
+<div id="us-editor-modal">
+  <div id="us-editor-panel">
+    <div id="us-editor-header">
+      <span id="us-editor-title">Edit Userscript</span>
+      <span id="us-editor-readonly-badge" style="display:none;">READ-ONLY (Guardian script)</span>
+      <button id="us-editor-close" title="Close">✕</button>
+    </div>
+    <div id="us-editor-fields">
+      <input id="us-editor-name" type="text" placeholder="Script name">
+      <input id="us-editor-matches" type="text" placeholder="Match pattern(s), comma-separated — e.g. *://*.example.com/*">
+    </div>
+    <textarea id="us-editor-source" spellcheck="false" placeholder="// userscript source"></textarea>
+    <div id="us-editor-footer">
+      <button id="us-editor-delete" style="display:none;">Delete</button>
+      <span class="sh-grow"></span>
+      <button id="us-editor-cancel">Cancel</button>
+      <button id="us-editor-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- BS15 (0.60.183) — James: "moright click menu needs to be redone in the same themeand in relation to the mouse". Firefox's order: the
+     navigation row, then what was clicked (link, image, selection, field), then the page and Clear Glass. renderer/shell/ctxmenu.js shows the
+     groups that apply and places the menu at the pointer. Every 0.60.182 data-action is kept (§0.3). -->
+<div id="ctx-menu" role="menu" aria-label="Page menu">
+  <div class="ctx-nav ctx-group" data-when="bare">
+    <button class="ctx-navbtn" data-action="nav-back" data-icon="back" data-icon-size="17" title="Back (Alt+←)" aria-label="Back"></button>
+    <button class="ctx-navbtn" data-action="nav-forward" data-icon="forward" data-icon-size="17" title="Forward (Alt+→)" aria-label="Forward"></button>
+    <button class="ctx-navbtn" data-action="nav-reload" data-icon="reload" data-icon-size="17" title="Reload (Ctrl+R)" aria-label="Reload"></button>
+    <button class="ctx-navbtn" data-action="bookmark" data-icon="star" data-icon-size="17" title="Bookmark this page (Ctrl+D)" aria-label="Bookmark this page"></button>
+  </div>
+  <div class="ctx-group" data-when="chrome">
+    <div class="ctx-item" role="menuitem" data-action="unpin" style="display:none;"><span class="ci-ico" data-icon="pin" data-icon-size="16"></span><span class="ci-label">Unpin from toolbar</span></div>
+    <div class="ctx-item sep" data-action="unpin-sep" style="display:none;"></div>
+    <div class="ctx-item" role="menuitem" data-action="customize-toolbar" style="display:none;"><span class="ci-ico" data-icon="settings" data-icon-size="16"></span><span class="ci-label">Customize toolbar…</span></div>
+    <div class="ctx-item sep" data-action="customize-toolbar-sep" style="display:none;"></div>
+  </div>
+  <div class="ctx-group" data-when="link">
+    <div class="ctx-item" role="menuitem" data-action="link-tab"><span class="ci-ico" data-icon="plus" data-icon-size="16"></span><span class="ci-label">Open link in new tab</span></div>
+    <div class="ctx-item" role="menuitem" data-action="link-agent"><span class="ci-ico" data-icon="window" data-icon-size="16"></span><span class="ci-label">Open link in new agent window</span></div>
+    <div class="ctx-item" role="menuitem" data-action="link-copy"><span class="ci-ico" data-icon="link" data-icon-size="16"></span><span class="ci-label">Copy link</span></div>
+    <div class="ctx-item" role="menuitem" data-action="link-copilot"><span class="ci-ico" data-icon="sparkle" data-icon-size="16"></span><span class="ci-label">Ask Co-pilot about this link</span></div>
+  </div>
+  <div class="ctx-group" data-when="plugins"><div id="ctx-plugin-items"></div></div>
+  <div class="ctx-group" data-when="image">
+    <div class="ctx-item" role="menuitem" data-action="image-tab"><span class="ci-ico" data-icon="image" data-icon-size="16"></span><span class="ci-label">Open image in new tab</span></div>
+    <div class="ctx-item" role="menuitem" data-action="image-copy"><span class="ci-ico" data-icon="link" data-icon-size="16"></span><span class="ci-label">Copy image link</span></div>
+    <div class="ctx-item" role="menuitem" data-action="image-save"><span class="ci-ico" data-icon="download" data-icon-size="16"></span><span class="ci-label">Save image…</span></div>
+  </div>
+  <div class="ctx-group" data-when="selection">
+    <div class="ctx-item" role="menuitem" data-action="sel-copy"><span class="ci-ico" data-icon="copy" data-icon-size="16"></span><span class="ci-label">Copy</span><kbd>Ctrl+C</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="sel-search"><span class="ci-ico" data-icon="search" data-icon-size="16"></span><span class="ci-label">Search the web</span></div>
+    <div class="ctx-item" role="menuitem" data-action="sel-copilot"><span class="ci-ico" data-icon="sparkle" data-icon-size="16"></span><span class="ci-label">Ask Co-pilot about this</span></div>
+  </div>
+  <div class="ctx-group" data-when="editable">
+    <div class="ctx-item" role="menuitem" data-action="edit-undo"><span class="ci-ico" data-icon="undo" data-icon-size="16"></span><span class="ci-label">Undo</span><kbd>Ctrl+Z</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="edit-cut"><span class="ci-ico" data-icon="cut" data-icon-size="16"></span><span class="ci-label">Cut</span><kbd>Ctrl+X</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="edit-copy"><span class="ci-ico" data-icon="copy" data-icon-size="16"></span><span class="ci-label">Copy</span><kbd>Ctrl+C</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="edit-paste"><span class="ci-ico" data-icon="paste" data-icon-size="16"></span><span class="ci-label">Paste</span><kbd>Ctrl+V</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="edit-selectall"><span class="ci-ico" data-icon="select" data-icon-size="16"></span><span class="ci-label">Select all</span><kbd>Ctrl+A</kbd></div>
+  </div>
+  <div class="ctx-group" data-when="bare">
+    <div class="ctx-item" role="menuitem" data-action="select-all"><span class="ci-ico" data-icon="select" data-icon-size="16"></span><span class="ci-label">Select all</span><kbd>Ctrl+A</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="find"><span class="ci-ico" data-icon="search" data-icon-size="16"></span><span class="ci-label">Find in page…</span><kbd>Ctrl+F</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="print"><span class="ci-ico" data-icon="print" data-icon-size="16"></span><span class="ci-label">Print…</span><kbd>Ctrl+P</kbd></div>
+    <div class="ctx-item" role="menuitem" data-action="view-source"><span class="ci-ico" data-icon="code" data-icon-size="16"></span><span class="ci-label">View page source</span><kbd>Ctrl+U</kbd></div>
+  </div>
+  <div class="ctx-group" data-when="page">
+    <div class="ctx-label">Clear Glass</div>
+    <div class="ctx-item" role="menuitem" data-action="autofill-page"><span class="ci-ico" data-icon="paste" data-icon-size="16"></span><span class="ci-label">Autofill this page</span></div>
+    <div class="ctx-item" role="menuitem" data-action="copilot-page"><span class="ci-ico" data-icon="sparkle" data-icon-size="16"></span><span class="ci-label">Ask Co-pilot about this page</span></div>
+    <div class="ctx-item" role="menuitem" data-action="answer-question"><span class="ci-ico" data-icon="eye" data-icon-size="16"></span><span class="ci-label">Answer this question</span></div>
+    <div class="ctx-item" role="menuitem" data-action="pick"><span class="ci-ico" data-icon="target" data-icon-size="16"></span><span class="ci-label">Pick element</span></div>
+    <div class="ctx-item" role="menuitem" data-action="snapshot"><span class="ci-ico" data-icon="camera" data-icon-size="16"></span><span class="ci-label">Rewind snapshot</span></div>
+    <div class="ctx-item" role="menuitem" data-action="tokens"><span class="ci-ico" data-icon="token" data-icon-size="16"></span><span class="ci-label">Scan page tokens</span></div>
+  </div>
+  <div class="ctx-group" data-when="page">
+    <div class="ctx-item" role="menuitem" data-action="bg-tab"><span class="ci-ico" data-icon="layers" data-icon-size="16"></span><span class="ci-label">Move to background tab</span></div>
+    <div class="ctx-item" role="menuitem" data-action="new-agent"><span class="ci-ico" data-icon="window" data-icon-size="16"></span><span class="ci-label">Open this page in a new agent window</span></div>
+  </div>
+</div>
+
+<div id="page-map-panel" role="dialog" aria-label="Page map">
+  <div class="pm-headbar"><span>▦ PAGE MAP</span><button id="pm-close" title="Close">✕</button></div>
+  <div id="pm-head" class="pm-headinfo"></div>
+  <div class="pm-row"><input id="pm-intent" placeholder="intent — e.g. type my email · click apply · (or a query for chunks)"><button id="pm-find" class="pm-main">Find</button></div>
+  <div class="pm-row"><button id="pm-map">Map</button><button id="pm-chunks">Chunks</button><button id="pm-scrape" title="the page as markdown, copied">Scrape</button></div>
+  <div id="pm-status" class="pm-status"></div>
+  <div id="pm-out"></div>
+</div>
+
+<div id="gig-panel" role="dialog" aria-label="Fiverr gigs">
+  <div class="gig-head"><span>✦ FIVERR</span><button id="gig-close" title="Close">✕</button></div>
+  <div class="gig-tabs"><button class="gig-tab on" data-step="write">1 · Write a gig</button><button class="gig-tab" data-step="build">2 · Order → build</button></div>
+  <div id="gig-step-write">
+    <div id="gig-no-profile" hidden class="gig-note">One time: add your profile (skills, summary, portfolio) — the gig is written only from it. <button id="gig-open-settings">Open Settings → Autofill</button></div>
+    <label class="gig-field"><span>Profile</span><select id="gig-profile"></select></label>
+    <label class="gig-field"><span>What does this gig offer? (one line)</span><textarea id="gig-offer" rows="2" placeholder="e.g. simple booking websites for small businesses"></textarea></label>
+    <label class="gig-field"><span>Anything else (optional)</span><input id="gig-extra" placeholder="e.g. fast delivery, beginner-friendly prices"></label>
+    <button id="gig-write" class="gig-main">Write the gig</button>
+    <div class="gig-row"><button id="gig-import" title="Load a .gig file (an old .gig.json loads too)">Load a gig file…</button><button id="gig-template" title="An empty .gig to fill in">Download template</button><input type="file" id="gig-file" accept=".gig,.yaml,.yml,.json,application/json" hidden></div>
+    <div id="gig-write-status" class="gig-status"></div>
+    <div id="gig-actions" hidden><button id="gig-fill" class="gig-main">Fill this Fiverr page</button><button id="gig-menu-open" title="Every part of the gig as a row: tick what to fill, change a value or a choice, then Fill selected (0.60.286)">Fill menu…</button><button id="gig-export" title="Save this gig as a .gig file">Save gig file</button><button id="gig-copy-all">Copy all</button><button id="gig-record" title="Record your own choices on this editor page (Service type, metadata, rows); every fill of this page replays them">Record my choices on this page</button></div>
+    <div id="gig-menu" class="gig-menu" hidden></div>   <!-- 0.60.286 GM3 the fill menu: js renderer/gig-menu.js -->
+    <div id="gig-missing" aria-live="polite"></div>
+    <div id="gig-parts"></div>
+  </div>
+  <div id="gig-step-build" hidden>
+    <div class="gig-note">An order came in. The buyer answered your five questions — they are the end state of the job. Send them to Idearium and it becomes a spec and a repo to build.</div>
+    <label class="gig-field"><span>Paste the buyer's whole reply (optional)</span><textarea id="gig-reply" rows="3" placeholder="1. … 2. … 3. …"></textarea></label>
+    <button id="gig-split">Split into the answers</button>
+    <div id="gig-questions"></div>
+    <div class="gig-row"><input id="gig-buyer" placeholder="Buyer (name)"><input id="gig-order" placeholder="Order # (optional)"></div>
+    <button id="gig-send" class="gig-main">Send to Idearium → build</button>
+    <div id="gig-build-status" class="gig-status"></div>
+    <button id="gig-open-idearium" hidden>Open it in Idearium</button>
+  </div>
+</div>
+
+<div id="picks-panel">
+  <div id="picks-header"><span>Picked Elements</span></div>
+  <div id="picks-list"><span class="sh-dim sh-pad">No picks yet. Use ◎ to pick.</span></div>
+</div>
+
+<div id="options-panel">
+  <div id="options-panel-header">
+    <h3>Nexus Options</h3>
+    <button id="options-panel-close">✕</button>
+  </div>
+  <div class="opt-section">
+    <h4>Window Behavior</h4>
+    <div class="opt-row">
+      <label for="opt-hide-tray">Close (✕) hides to tray</label>
+      <div class="opt-toggle" id="opt-hide-tray" data-key="hideToTrayOnClose"></div>
+    </div>
+    <div class="opt-row">
+      <label for="opt-copilot-auto">Co-pilot pane open on launch</label>
+      <div class="opt-toggle" id="opt-copilot-auto" data-key="autoOpenCopilotPane"></div>
+    </div>
+  </div>
+  <div class="opt-section">
+    <h4>Defaults</h4>
+    <div class="opt-row sh-col">
+      <label>Default start URL (new windows)</label>
+      <input class="opt-text-input" id="opt-default-url" type="text" spellcheck="false" autocomplete="off">
+    </div>
+  </div>
+  <div class="opt-section">
+    <h4>NCP Providers</h4>
+    <p class="sh-note">Auto-host Guardian NCP tabs inside Clear Glass. No Tampermonkey required.</p>
+    <div id="opt-providers-list"></div>
+    <p class="sh-note">Set GUARDIAN_DIR env var to point to your Guardian folder.</p>
+  </div>
+  <div class="opt-section">
+    <h4>Bookmarks</h4>
+    <p class="sh-note">★ in the address bar bookmarks the page. Co-pilot can manage bookmarks by name.</p>
+    <div id="opt-bookmarks-count" class="sh-mono"></div>
+    <button class="opt-link-btn" id="opt-clear-bookmarks">Clear all bookmarks for this agent…</button>
+  </div>
+  <div class="opt-section">
+    <h4>Rewind</h4>
+    <p class="sh-note">⏮ shows session history. Pages are auto-snapshotted on load.</p>
+    <div id="opt-rewind-count" class="sh-mono"></div>
+    <button class="opt-link-btn" id="opt-clear-rewind">Clear rewind history for this agent…</button>
+  </div>
+  <div class="opt-section">
+    <h4>Import from Firefox</h4>
+    <p class="sh-note">Cookies, bookmarks and the profile's user agent, read from a copy (BS1). Leave the path empty for your default profile, or use Settings → Import.</p>
+    <div class="sh-row">
+      <input class="opt-text-input" id="opt-ff-profile-path" type="text" placeholder="Firefox profile folder (empty = default profile)">
+      <button class="opt-link-btn" id="opt-ff-import-btn">Import</button>
+    </div>
+  </div>
+  <div class="opt-section">
+    <h4>System</h4>
+    <button class="opt-link-btn" id="opt-link-api-settings">API Settings…</button>
+    <button class="opt-link-btn" id="opt-link-nexus-audit">Run NEXUS UI Audit</button>
+  </div>
+</div>
+
+<!-- tools that live in the ☰ menu until pinned (applyToolbarPins in browser.js moves the same nodes onto the bar) -->
+<div id="toolbar-overflow-slot" style="display:none;">
+  <!-- 0.60.211 zoom controls on the toolbar (core zoom; pinned from Customize toolbar) -->
+  <div id="zoom-controls" class="tb-zoom" role="group" aria-label="Zoom"><button class="nav-btn" data-tz="out" data-icon="minus" title="Zoom out (Ctrl+−)" aria-label="Zoom out">−</button><button class="tb-zoom-pct" data-tz="reset" id="tz-pct" title="Reset to 100% (Ctrl+0)">100%</button><button class="nav-btn" data-tz="in" data-icon="plus" title="Zoom in (Ctrl++)" aria-label="Zoom in">+</button></div>
+  <button class="nav-btn" id="btn-rewind" data-icon="undo" data-tool-id="rewind" data-tool-label="Rewind Session" data-tool-icon="⏮" title="Rewind session">⏮</button>
+  <button class="nav-btn" id="btn-providers" data-icon="link" data-tool-id="providers" data-tool-label="NCP Providers" data-tool-icon="⟳" title="NCP Providers">⟳</button>
+  <button class="nav-btn" id="btn-userscripts" data-tool-id="userscripts" data-tool-label="Userscripts" data-tool-icon="✎" title="Userscripts">✎</button>
+  <button class="nav-btn" id="btn-dom" data-icon="code" data-tool-id="dom" data-tool-label="DOM Archaeology" data-tool-icon="⛏" title="DOM Archaeology">⛏</button>
+  <span class="chrome-group" id="tool-picker-group" data-tool-id="picker" data-tool-label="Element Picker" data-tool-icon="◎">
+    <button id="picker-btn" data-icon="target" title="Element Picker">◎</button>
+    <select id="picker-route" title="Route picks to" class="sh-mini">
+      <option value="sse">→ SSE</option>
+      <option value="api">→ API</option>
+    </select>
+    <input id="picker-api-url" type="text" placeholder="https://..." class="sh-mini" style="display:none;">
+  </span>
+  <button class="nav-btn" id="mesh-picker-btn" data-icon="radar" data-tool-id="mesh-picker" data-tool-label="Agent Mesh" data-tool-icon="◈" title="Agent Mesh">◈</button>
+  <button class="nav-btn" id="btn-mesh" data-icon="mesh" data-tool-id="mesh" data-tool-label="Agent Mesh" data-tool-icon="⬡" title="Agent Mesh">⬡</button>
+  <button class="nav-btn" id="btn-page-map" data-tool-id="page-map" data-tool-label="Page map" data-tool-icon="▦" title="Page map — the page as blocks and a map that learns">▦</button>
+  <button class="nav-btn" id="btn-gig" data-icon="briefcase" data-tool-id="gig" data-tool-label="Fiverr gigs" data-tool-icon="✦" title="Fiverr — write a gig, fill the page, turn an order into a build">✦</button>
+  <button class="nav-btn" id="btn-diag" data-tool-id="diag" data-tool-label="Diagnostics" data-tool-icon="⚕" title="Diagnostics">⚕</button>
+  <button class="nav-btn" id="btn-settings" data-icon="settings" data-tool-id="settings" data-tool-label="Settings" data-tool-icon="⚙" title="Settings">⚙</button>
+</div>
+
+<!-- 0.60.210 — James: "customize toolbar and those toolbar links, and customize toolbar need to be rebuilt for  the new ui, they are cheap and
+     crappy, and look bad." Rebuilt on the shell's system (shell/toolbar.css): a live preview, two labelled lists with drawn icons and what each
+     tool does, a pin / unpin button on every row (dragging still works), the run-once actions as buttons. Every id the code reads is kept. -->
+<div id="toolbar-editor-overlay" role="dialog" aria-modal="true" aria-labelledby="te-title">
+  <div id="toolbar-editor-panel" class="te">
+    <header class="te-head" id="toolbar-editor-header">
+      <span class="te-head-ico" data-icon="pin" data-icon-size="18"></span>
+      <div class="te-head-txt"><h3 id="te-title">Customize toolbar</h3><p>Choose what sits on the toolbar. Everything else stays one click away in the ☰ menu.</p></div>
+      <button id="toolbar-editor-close" class="te-x" title="Close" aria-label="Close" data-icon="close" data-icon-size="16"></button>
+    </header>
+    <div class="te-preview" aria-label="How the toolbar will look">
+      <span class="te-preview-url"><span data-icon="lock" data-icon-size="13"></span>Search or enter address</span>
+      <div id="te-preview-icons" class="te-preview-icons"></div>
+      <span class="te-preview-fixed" data-icon="menu" data-icon-size="16"></span>
+    </div>
+    <div class="te-cols" id="toolbar-editor-zones">
+      <section class="te-col" id="te-zone-toolbar"><div class="te-col-head"><span>On the toolbar</span><span class="te-count" id="te-count-toolbar">0</span></div><div class="te-list" id="te-drop-toolbar" data-zone="toolbar" data-empty="Nothing pinned. Pin a tool to keep it one click away."></div></section>
+      <section class="te-col" id="te-zone-menu"><div class="te-col-head"><span>In the ☰ menu</span><span class="te-count" id="te-count-menu">0</span></div><div class="te-list" id="te-drop-menu" data-zone="menu" data-empty="Every tool is on the toolbar."></div></section>
+    </div>
+    <section class="te-actions" id="toolbar-editor-actions"><div class="te-col-head"><span>Run once</span><span class="te-col-sub">actions with no button of their own</span></div><div id="te-actions-list" class="te-action-btns"></div></section>
+    <footer class="te-foot" id="toolbar-editor-footer">
+      <button id="toolbar-editor-restore" class="te-btn ghost"><span data-icon="undo" data-icon-size="14"></span>Restore defaults</button>
+      <span class="te-foot-hint" id="toolbar-editor-hint">Drag a row between the lists, or use its button.</span>
+      <button id="toolbar-editor-done" class="te-btn primary">Done</button>
+    </footer>
+  </div>
+</div>
+
+<script src="selector-assign/selector-assign.js"></script>
+<script src="site-keys/bind-bar.js"></script>
+<script src="site-gates/gate-bar.js"></script>
+<script src="macro-elements/log-bar.js"></script>
+<script src="copilot-cli.js"></script>
+<script src="a11y-panel.js"></script>   <!-- 2026-10-30 AC2 -->
+<script src="site-profile-groups.js"></script>   <!-- 0.60.217 SP3 -->
+<script src="browser.js"></script>
+<script src="gig-panel.js"></script>
+<script src="gig-menu.js"></script>   <!-- 0.60.286 GM3 the fill menu -->
+<script src="autofill-inline.js"></script>   <!-- 0.60.267 AF3 -->
+<script src="page-map-panel.js"></script>
+<script src="shell/icons.js"></script>
+<script src="shell/menus.js"></script>
+<script src="shell/extensions.js"></script>
+<script src="shell/downloads.js"></script>
+<script src="shell/agents.js"></script>
+<script src="shell/newtab.js"></script>
+<script src="shell/ctxmenu.js"></script>
+<script src="shell/passwords.js"></script>
+<script src="shell/shell.js"></script>
+</body>
+</html>

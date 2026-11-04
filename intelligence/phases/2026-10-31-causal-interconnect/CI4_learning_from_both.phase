@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-causal-interconnect-phasemap.spec::CI4_learning_from_both
+type: phase
+id: docs_2026-10-31-causal-interconnect-phasemap.spec::CI4_learning_from_both
+context: pipeline phase CI4_learning_from_both of docs/2026-10-31-causal-interconnect-phasemap.spec
+intent: null
+summary: CI4_learning_from_both (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793422837079
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793422837079
+lastSeenAt: 1793422837079
+fingerprint: null
+payload:
+  id: CI4_learning_from_both
+  map: docs/2026-10-31-causal-interconnect-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/mastermind.js
+    - tests/modules/test-causal-learning.test.js
+  depends_on:
+    - CI3_the_measures_chained
+    - CI2_one_graph_for_queries_and_chains
+    - ML_D1_per_edge_metric_batched_learning
+    - ML3_learning_loop
+  blocks:
+    - MOD-CI-LEARN
+  spec: intelligence/spec/causal-interconnect.spec
+  graph: cc2c6820c1be9c47

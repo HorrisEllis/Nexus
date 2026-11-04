@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-system-doors-phasemap.spec::DO1_idearium_door
+type: phase
+id: docs_2026-10-31-system-doors-phasemap.spec::DO1_idearium_door
+context: pipeline phase DO1_idearium_door of docs/2026-10-31-system-doors-phasemap.spec
+intent: null
+summary: DO1_idearium_door (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793419906981
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419906981
+lastSeenAt: 1793419906981
+fingerprint: null
+payload:
+  id: DO1_idearium_door
+  map: docs/2026-10-31-system-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/server.js
+    - idearium/api/index.js
+    - idearium/compartment.json
+    - lib/nexus/autopilot.js
+  depends_on:
+    - DO_D0_server_floats_on_the_registry
+    - DO0_the_handshake_counts_real_routes
+  blocks:
+    - MOD-DOOR-IDEARIUM
+  spec: docs/system-doors.spec
+  graph: 14fd771755b294ba

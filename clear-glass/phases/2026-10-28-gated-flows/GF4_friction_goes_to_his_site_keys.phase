@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+context: pipeline phase GF4_friction_goes_to_his_site_keys of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GF4_friction_goes_to_his_site_keys (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281619
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281619
+lastSeenAt: 1793386281619
+fingerprint: null
+payload:
+  id: GF4_friction_goes_to_his_site_keys
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.290
+  files:
+    - clear-glass/src/shortcuts/site-keys.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/renderer/site-keys/bind-bar.js
+  depends_on:
+    - GF3_text_and_lists_filled_and_read_back
+    - KB2_site_keys
+    - KB3_site_keys_ui
+  blocks:
+    - MOD-GF4
+  spec: clear-glass/spec/gated-flows.spec
+  graph: b5c6c77517752cd1

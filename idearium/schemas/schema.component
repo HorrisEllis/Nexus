@@ -17,7 +17,7 @@ payload:
   source: >-
     loom/schema/component.js — COMPONENT_SCHEMA (real, checked directly: requiredKeys
     ['id','namespace','name','version'], uuid enforced separately by the loom.uuid-present Axiom in
-    driver.js, not duplicated here). idearium's own use: idearium.node-taxonomy.md marks this VIA
+    driver.js, not duplicated here). idearium's own use: idearium.node-taxonomy.spec marks this VIA
     LOOM — idearium doesn't author .component records itself, capability-map.js derives them from
     idearium's own real capability registry ('idearium' is confirmed present in capability-map.js's
     own SYSTEMS map). This local copy exists so idearium can validate/interpret component-shaped

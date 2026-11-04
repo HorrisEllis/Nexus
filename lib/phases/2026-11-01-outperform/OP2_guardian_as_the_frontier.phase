@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-outperform-phasemap.spec::OP2_guardian_as_the_frontier
+type: phase
+id: docs_2026-11-01-outperform-phasemap.spec::OP2_guardian_as_the_frontier
+context: pipeline phase OP2_guardian_as_the_frontier of docs/2026-11-01-outperform-phasemap.spec
+intent: null
+summary: OP2_guardian_as_the_frontier (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793551440156
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440156
+lastSeenAt: 1793551440156
+fingerprint: null
+payload:
+  id: OP2_guardian_as_the_frontier
+  map: docs/2026-11-01-outperform-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - idearium/api/index.js
+    - tests/modules/test-outperform-frontier.test.js
+  depends_on:
+    - OP_D1_guardian_is_the_frontier
+    - OP1_innovate_the_method
+  blocks:
+    - MOD-OP-FRONTIER
+  spec: docs/outperform.spec
+  graph: d58b0cafc994a13f

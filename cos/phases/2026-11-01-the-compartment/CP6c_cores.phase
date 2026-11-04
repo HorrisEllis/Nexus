@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP6c_cores
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP6c_cores
+context: pipeline phase CP6c_cores of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP6c_cores (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793576104488
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104488
+lastSeenAt: 1793576104488
+fingerprint: null
+payload:
+  id: CP6c_cores
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/resources.js
+    - cos/manager/usage.js
+  depends_on:
+    - CP6a_caps_priority_accounting
+    - CP_D9_the_whole_sandbox_per_system
+  blocks:
+    - MOD-CP-CORES
+  spec: cos/spec/compartment.spec
+  graph: 087af5adf8a64f60

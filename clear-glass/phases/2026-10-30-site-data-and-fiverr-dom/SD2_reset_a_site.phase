@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD2_reset_a_site
+type: phase
+id: docs_2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD2_reset_a_site
+context: pipeline phase SD2_reset_a_site of docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec
+intent: null
+summary: SD2_reset_a_site (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793402130899
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793402130899
+lastSeenAt: 1793402130899
+fingerprint: null
+payload:
+  id: SD2_reset_a_site
+  map: docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/site-data/reset.js
+    - clear-glass/src/ipc/bridge.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - SD_D1_reset_is_undoable
+  blocks:
+    - MOD-SD-RESET
+  spec: clear-glass/spec/site-data.spec
+  graph: dad127e53f547abc

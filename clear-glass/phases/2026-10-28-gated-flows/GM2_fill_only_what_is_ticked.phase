@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+context: pipeline phase GM2_fill_only_what_is_ticked of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GM2_fill_only_what_is_ticked (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281613
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281613
+lastSeenAt: 1793386281613
+fingerprint: null
+payload:
+  id: GM2_fill_only_what_is_ticked
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.286
+  files:
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/driver/index.js
+    - clear-glass/src/autofill/gig-pages.js
+    - clear-glass/src/preload/index.js
+  depends_on:
+    - GM1_the_fill_menu_model
+  blocks:
+    - MOD-GM2
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 5ce27f2d56b8573d

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+context: pipeline phase GM1_the_fill_menu_model of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GM1_the_fill_menu_model (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281612
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281612
+lastSeenAt: 1793386281612
+fingerprint: null
+payload:
+  id: GM1_the_fill_menu_model
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.286
+  files:
+    - clear-glass/src/autofill/gig-menu.js
+  depends_on:
+    - KB4_gates_on_macro_steps
+  blocks:
+    - MOD-GM1
+  spec: clear-glass/spec/gated-flows.spec
+  graph: bcb884ca2f3645e0

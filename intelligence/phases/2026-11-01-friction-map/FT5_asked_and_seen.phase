@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-friction-map-phasemap.spec::FT5_asked_and_seen
+type: phase
+id: docs_2026-11-01-friction-map-phasemap.spec::FT5_asked_and_seen
+context: pipeline phase FT5_asked_and_seen of docs/2026-11-01-friction-map-phasemap.spec
+intent: null
+summary: FT5_asked_and_seen (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793552212451
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793552212451
+lastSeenAt: 1793552212451
+fingerprint: null
+payload:
+  id: FT5_asked_and_seen
+  map: docs/2026-11-01-friction-map-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/routes.js
+    - intelligence/registry-components.js
+    - idearium/cli/route-commands.js
+    - lib/ui/tv-shell/channels/emergence/emergence.js
+    - tests/modules/test-friction-map-door.test.js
+  depends_on:
+    - FT4_what_fits
+    - TV3_the_emergence_channel
+  blocks:
+    - MOD-FT-DOOR
+  spec: docs/friction-map.spec
+  graph: cf923630427baef0

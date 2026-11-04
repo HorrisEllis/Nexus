@@ -16,7 +16,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
-const ap = require(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'));
+const ap = require(path.join(ROOT, 'lib', 'nexus', 'autopilot.retired-0.60.330.js'));
 
 let passed = 0, failed = 0;
 async function test(id, desc, fn) {
@@ -79,7 +79,7 @@ async function until(fn, ms = 4000) { const t0 = Date.now(); while (Date.now() -
   await test('SC-04', 'an unknown system or op is refused; POST /control/:name/:op is the route', () => {
     assert.strictEqual(ap.controlKernel('no-such', 'restart').code, 404);
     assert.strictEqual(ap.controlKernel(K.name, 'explode').code, 400);
-    const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
+    const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.retired-0.60.330.js'), 'utf8');
     assert.ok(/\\\/control\\\/\(\[a-zA-Z0-9-\]\+\)\\\/\(restart\|stop\|start\)\$/.test(src));
     assert.ok(/s\.status === 'held' \|\| s\.status === 'restarting'/.test(src), 'the exit handler treats them as intentional');
   });

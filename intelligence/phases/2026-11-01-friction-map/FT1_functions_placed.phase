@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-friction-map-phasemap.spec::FT1_functions_placed
+type: phase
+id: docs_2026-11-01-friction-map-phasemap.spec::FT1_functions_placed
+context: pipeline phase FT1_functions_placed of docs/2026-11-01-friction-map-phasemap.spec
+intent: null
+summary: FT1_functions_placed (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793552212444
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793552212444
+lastSeenAt: 1793552212444
+fingerprint: null
+payload:
+  id: FT1_functions_placed
+  map: docs/2026-11-01-friction-map-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/friction-map/roles.js
+    - tests/modules/test-friction-map-roles.test.js
+  depends_on:
+    - FT_D0_the_map_is_intelligences
+  blocks:
+    - MOD-FT-ROLES
+  spec: docs/friction-map.spec
+  graph: 8458a3c65568f0c7

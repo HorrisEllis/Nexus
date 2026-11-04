@@ -15,5 +15,7 @@
 module.exports = {
   PORT: parseInt(process.env.LOOM_PORT || '3752', 10),
   DIAG_URL: process.env.DIAGNOSTIC_URL || 'http://127.0.0.1:7825',
+  // 2026-11-01 CI6 — friction and tension are Intelligence's to mean; Loom asks it first (Diagnostic stays the fallback, said)
+  INTEL_URL: process.env.INTELLIGENCE_URL || 'http://127.0.0.1:3753',
   OR_URL: process.env.ORCH_URL || 'http://127.0.0.1:9000',
 };

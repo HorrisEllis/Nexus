@@ -18,6 +18,16 @@ const fs   = require('fs');
 const MODULES_DIR = __dirname;
 
 const SUITES = [
+  'test-autofill-page-chip-glass.test.js', // 0.60.336 AC1 — the page-level "Autofill this page" pill shows automatically / fills / hides, driven in Clear Glass
+  'test-macro-toast-glass.test.js',    // 0.60.335 MT1 — the macro recording/playing toast (breathing red dot + player), driven in Clear Glass
+  'test-select-match.test.js',            // 0.60.298 DD1 — bestOption/boolOf: a dropdown/checkbox fills from a profile value that isn't the option's raw value ("United States"→US)
+  'test-portfolio-node.test.js',          // 0.60.299 PF1 — the .portfolio node: PortfolioStore + export/import a clearglass.portfolio/1 file (merge by id, newer-wins)
+  'test-gig-metadata-glass.test.js',      // 0.60.320 GT6 — Gig metadata tab by tab: radio/checkboxes by label within the tab's limit, read back; not offered, over the limit, required-and-empty, said
+  'test-gig-metadata-dropdown-glass.test.js', // 0.60.339 FP6 — Gig metadata multi-select DROPDOWNS (AI ENGINE "Choose…"): each value chosen via the driver's choose, gated on the field's chips; not offered said, idempotent, dropdown+radio in one call
+  'test-autofill-radio-checkbox-glass.test.js', // 0.60.340 CR1 — the general autofill fills RADIOS + CHECKBOXES (matchChoiceFields): a radio group's option by label, a checkbox from yes/no; unknown group left for the picker; end-to-end in Clear Glass
+  'test-service-type-glass.test.js',      // 0.60.319 GT5 — Service type after the subcategory: dropdown or radios, chosen and read back; none offered or none in the gig, said
+  'test-choose-refind-glass.test.js',     // 0.60.318 GT1+GT4 — real choose on a live page: a re-rendered dropdown found again (his "Element not found: [data-cg-choose=\"1\"]"), gates timed per part
+  'test-dropdown-fill-glass.test.js',     // 0.60.316 DD1-verify — real browser (glass.js): a <select>/checkbox/radio/text/contenteditable actually fills; caught the checkbox double-toggle
   'test-autofill-active.test.js',         // 0.60.257 AF1 — activeProfile (default/sole/first, never null) + setDefault + matchOne; the "no profile 'null'" fix
   'test-autofill-fill-active.test.js',    // 0.60.258 AF2 — fillFields/detectFields default to the active profile (copilot/agents stop passing null); zero profiles → clean error
   'test-build-paths.test.js',             // 0.60.67 WB0 — every build path and whether WARP is on it, measured; CK-255
@@ -270,6 +280,18 @@ const SUITES = [
   'test-provider-host-respawn.js',
   'test-userscript-mixed-content-fix.js',
   'test-contract-handshake-paths.js',
+  'test-emerge-in-nexus.test.js',   // 0.60.339 EAS3 — Emerge from its own repo, locked, run by COS behind its wall, used through its door
+  'test-cos-walled.test.js',   // 0.60.338 LM6 — COS's supervisor runs Loom in its compartment, behind its wall
+  'test-cos-ui.test.js',   // 0.60.337 MG18/MG29 — COS's UI above the event bus: the cockpit server's gates, the contract, the stream, proposals, logs, usage, an act in Clear Glass
+  'test-cos-ui-theme.test.js',   // 0.60.337 MG_D11 — COS's look equals Idearium's, token by token
+  'test-autopilot-handover.test.js',   // 0.60.330 MG17 — autopilot hands over: the launcher, one supervisor, core's duties kept, the body archived
+  'test-skip-and-page-agents.test.js',   // 0.60.335 AC7/AC5 — skip fills marked defaults; his agent per page goes first
+  'test-automation-driver-port.test.js',   // 0.60.333 AE2 — the orchestrator's engine drives Clear Glass's browser through the port
+  'test-cos-autopilot-door.test.js',   // 0.60.329 MG16 — autopilot's routes on COS's door, in its shapes; legacy /tables /files counted
+  'test-cos-supervisor.test.js',   // 0.60.328 MG15 — COS's supervisor: autopilot's rules on real child processes, read from the declarations
+  'test-compartment-declarations.test.js',   // 0.60.326 MG15a — every autopilot process declared by its own system's compartment.json, field for field
+  'test-release-tool.test.js',   // 0.60.325 FX2 — one release command; data/ never staged; a red test stops it before the commit
+  'test-contract-handshake-routes.test.js',   // 0.60.324 DO0 — the handshake counts components[] routes (Clear Glass 117, Copilot 81, Ollama 9, Versionium 18 were 0); unknown is null, never 0
   'autonomous-loop.test.js',
   // FIX (James, 2026-06-19): these six suites existed, passed standalone,
   // and were never registered here — `node tests/modules/run-all.js` was
@@ -412,13 +434,37 @@ const SUITES = [
   'test-autofill-chips.test.js',         // 0.60.267 AF3 — the page reader always there; a chip under each input
   'test-about-and-nodes.test.js',
   'test-run-log-fixes.test.js',
-  'test-gated-dropdowns.test.js',          // 0.60.280 KB4–KB7 — gated dropdowns in the node, keys in macros and automation, the node upgraded, the CLI pinned
+  'test-gated-dropdowns.test.js',
+  'test-macro-blocks.test.js',
+  'test-macro-blocks-ui.test.js',
+  'test-emergence-channel.test.js',
+  'test-tension-channel.test.js',
+  'test-cos-channel.test.js',
+  'test-cos-pause.test.js',
+  'test-cos-app-link.test.js',
+  'test-cos-app-window.test.js',
+  'test-cg-idle-tray.test.js',
+  'test-cos-network.test.js',
+  'test-update-menu.test.js',
+  'test-friction-home.test.js',
+  'test-cos-ui-starts.test.js',
+  'test-task-nodes.test.js',
+  'test-macro-toast.test.js',              // 0.60.359 MB4 — the macro toast: step i of n, pause, skip, back one step, stop (playback); pause and back (recording)
+  'test-git-pr.test.js',                   // 0.60.357 UP12 — open a PR for any agent: push, gh or the prefilled compare link; refused on main or a dirty tree
+  'test-cos-resources.test.js',            // 0.60.356 CP6a — caps per compartment read back from the OS (priority, heap), resident limit watched, pressure → a proposal; usage without wmic
+  'test-cos-walls.test.js',                // 0.60.355 CP1a — every system walled by COS (audit where ways are open, enforce for Ollama); Electron through NODE_OPTIONS
+  'test-procedures.test.js',               // 0.60.354 PD1 — .procedure nodes: run in order, stopped at his yes, copilot the same; list/show/run from a terminal
+  'test-update-popup.test.js',             // 0.60.349 UP9 — the update popup on the TV and in COS's UI; a failed check saved and shown               // 0.60.348 OC1 — the .task node: written, validated (every problem), listed, archived            // 0.60.347 MG33 — COS's manager starts its cockpit (:7797); the TV's COS channel frames it            // 0.60.346 CI6 — friction and tension are Intelligence's; Diagnostic measures; Loom asks Intelligence        // 0.60.344 TV3 — the EMERGENCE channel: patterns, liminal spaces, his runs; route, rows, page          // 0.60.343 MB2 — Settings › Macros as blocks with the gate between them, in Clear Glass             // 0.60.343 MB1 — the gate between two macro blocks: delay (fixed, range, human), backoff, onClosed          // 0.60.280 KB4–KB7 — gated dropdowns in the node, keys in macros and automation, the node upgraded, the CLI pinned
+  'test-registry-sovereign.test.js',      // 0.60.384 RG0 — AXIOMS §5.16: every system's component registry is its own; no new central caller, no Loom growth
+  'test-cos-vdisk.test.js',               // 0.60.383 DK6–DK8 — each system's qcow2 virtual disk: metadata, files, all its data, snapshots inside; skipped (said) without qemu-img/e2fsprogs
+  'test-cos-disk.test.js',                // 0.60.382 DK1–DK3 — a compartment's disk: the spec as metadata, the files compressed; made, verified, unpacked; the Disk tab in Clear Glass
+  'test-cos-console.test.js',             // 0.60.380 SC1–SC6 — the bell, configuration per system (percent or GB, ports, env), add a system, COS's command line, one Intelligence; driven in Clear Glass
+  'test-cos-updates.test.js',              // 0.60.376 CE2+CE4 — updates as COS's, per system; keep mine and update; the tool on the card in Clear Glass
   'test-gig-features.test.js',             // 0.60.281 AP1 — a gig's package rows: features in the .gig, checkAt/rowLabels, the fill's rows
   'test-opportunity-contacts.test.js',     // 0.60.281 AP2–AP4 — contacts behind job applications: captured from the page, routes, command, tool, Settings › Applications
   'test-snowflake-steps.test.js',          // 0.60.281 SN1 — Snowflake as a step in macros and workflows (route, unroute, start, wait, check, stop)
-  'test-macro-run-toast.test.js', // 0.60.299 MR1 — a macro run's step counter, pause/play, skip/previous/stop; the recording indicator
-  'test-gig-stop-and-toast.test.js', // 0.60.298 GF6 — a gate reads the element against the gig; a failed step stops with a toast; Service type; bundled pipelines listed
-  'test-session-hub-signin.test.js', // 0.60.298 — the ChatGPT window's sign-in is not overwritten by the normal tab's sign-in flow cookies
+  'test-gig-stop-and-toast.test.js', // 0.60.388 GF6 — a gate reads the element against the gig; a failed step stops with a toast; bundled pipelines listed
+  'test-session-hub-signin.test.js', // 0.60.388 — the ChatGPT window's sign-in is not overwritten by the normal tab's sign-in flow cookies
   'test-a11y-trace.test.js', // 2026-10-30 AC2 — the accessibility look traced to what turns it on, kept off by the site setting, the popup panel
   'test-fiverr-overview-and-a11y.test.js', // 0.60.283 — a new gig's Overview (category, subcategory, tags, gated) and a site's remembered accessibility look reset
   'test-pipelines.test.js',                // 0.60.284 PL1–PL4 — pipelines: tasks in a dependency graph (macros, workflows, agents, commands), gated, a checklist
@@ -583,6 +629,7 @@ const SUITES = [
   'test-framework-trial-deploy.test.js', // 0.60.247 AU2 — the framework trial deploys itself (collect answers; judging stays blind/human)
   'test-flow-sources.test.js',           // 0.60.248 BX2 — the BrainOS FlowGraph backend (phases+DAG, runs, mesh; each source best-effort, named on failure)
   'test-automation-registry.test.js',    // 0.60.249 AU1 — the automation union: one neutral door over the six sources; absent named, not thrown; run records under the source
+  'test-orchestrator-automation.test.js',// AE3 — the orchestrator's automation dispatches agent steps through RAID → Guardian (fail-soft); bus + browser ports
   'test-ui-registry.js',
   // Added 2026-07-06 — built alongside cortex/core/raid/snr-filter.js and
   // the real roleConfidence/topologicalProximity fitness terms this pass.
@@ -635,6 +682,7 @@ const SUITES = [
   'test-agent-live.test.js',   // 0.39.356 LS1–LS4 — the agent writing, live: bridge partial → copilot → agent/stream → the Code tab and the Plan (Clear Glass)
   'test-repo-expand.test.js',   // 0.39.360 SB42–SB45 — a repo expands from its spec: phased, chunked, coded; uncoded files grey; an empty slot is never complete
   'test-system-skeleton.test.js',   // 0.39.359 SB28/SB30/SB31 — genesis 1.4.0 is the nexus-system archetype; reusable components; every new repo is the skeleton, the idea slotted in
+  'test-boundary-code-only.test.js',   // EAS1a — genesis's sovereignty check reads code, not template text (found laying Emerge out as a system)
   'test-template-picker.test.js',   // 0.39.357 RS5 — the workshop's start is the template picker: + CUSTOM / MANUAL, every quick-spec template, saved ones versioned (Clear Glass)
   'test-shadow-space.test.js',   // 0.39.322 SH1 — a change acts in a shadow space; only what passes its test and its shadow reaches the real tree
   'test-emerge-core.test.js',   // 0.39.321 EM1 — Emerge core: rejected by id, a gap names its input, a lens cannot write, one seed one history

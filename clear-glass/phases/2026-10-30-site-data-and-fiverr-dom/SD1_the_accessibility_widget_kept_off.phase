@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD1_the_accessibility_widget_kept_off
+type: phase
+id: docs_2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD1_the_accessibility_widget_kept_off
+context: >-
+  pipeline phase SD1_the_accessibility_widget_kept_off of
+  docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec
+intent: null
+summary: SD1_the_accessibility_widget_kept_off (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793402130896
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793402130896
+lastSeenAt: 1793402130896
+fingerprint: null
+payload:
+  id: SD1_the_accessibility_widget_kept_off
+  map: docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/page/keyboard-mode.js
+    - clear-glass/src/site-settings/keys.js
+    - clear-glass/renderer/a11y-panel.js
+  depends_on:
+    - SD_D2_block_the_widget_per_site
+  blocks:
+    - MOD-SD-A11Y3
+  spec: clear-glass/spec/site-data.spec
+  graph: 01c8da4f1550988b

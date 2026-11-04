@@ -22,7 +22,10 @@
   if (!cg || !cg.autofill || !wv) return;
   const agentId = new URLSearchParams(location.search).get('agentId') || 'default';
   const layer = document.createElement('div'); layer.id = 'af-chips'; layer.setAttribute('aria-live', 'polite'); document.body.appendChild(layer);
-  let sugg = new Map(), unmapped = new Map(), mapTo = { profile: [], gig: [] }, rects = [], timer = 0, gen = 0, open = null, done = new Map();
+  // AC1 (0.60.336) — James: "have the chip show automatically". A single page-level pill, in Clear Glass's own window (never in the page,
+  // so a site cannot read the profile — sovereignty §5.9/§5.15), that appears on its own when the page has fillable fields and fills them all.
+  const pageChip = document.createElement('div'); pageChip.id = 'af-page'; pageChip.setAttribute('aria-live', 'polite'); document.body.appendChild(pageChip);
+  let sugg = new Map(), unmapped = new Map(), mapTo = { profile: [], gig: [] }, rects = [], timer = 0, gen = 0, open = null, done = new Map(), pageBusy = '';
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
   async function refresh() {
@@ -43,6 +46,7 @@
     const box = wv.getBoundingClientRect(), z = zoom();
     const visible = box.width > 0 && box.height > 0 && getComputedStyle(wv).visibility !== 'hidden';
     const html = [];
+    let fillable = 0;                                                // AC1 — fields that actually offer a ⚡ chip (none if the field already holds it)
     for (const f of visible ? rects : []) {
       const s = sugg.get(f.cgId), u = !s && unmapped.get(f.cgId);
       if (u) { html.push(anchorChip(f, u, box, z)); continue; }
@@ -51,6 +55,7 @@
       const x = box.left + f.x * z, y = box.top + f.y * z + 2;
       if (y < box.top || y > box.bottom - 18 || x > box.right - 40) continue;
       const o = s.options[0], st = done.get(f.cgId);
+      fillable++;
       html.push(`<div class="af-chip${f.focus ? ' focus' : ''}${st ? ' ' + st : ''}" style="left:${Math.round(Math.max(box.left, x))}px;top:${Math.round(y)}px;max-width:${Math.round(Math.max(140, Math.min(420, f.w * z)))}px" data-cg="${esc(f.cgId)}">`
         + `<button class="af-fill" data-v="0" title="${esc(o.label)} — click to fill">⚡ ${esc(o.preview)}</button>`
         + (s.options.length > 1 ? `<button class="af-more" title="${s.options.length} options">▾</button>` : '')
@@ -58,7 +63,29 @@
         + `</div>`);
     }
     layer.innerHTML = html.join('');
+    drawPage(visible ? fillable : 0);
   }
+  // AC1 — the page-level pill: shown on its own when the page has fillable fields, hidden when there is nothing to fill
+  function drawPage(n) {
+    if (pageBusy) { pageChip.className = 'show ' + pageBusy; pageChip.innerHTML = `<button class="afp-fill" disabled>${pageBusy === 'ok' ? '✓ Filled' : pageBusy === 'bad' ? '✕ See chat' : '… Filling…'}</button>`; return; }
+    if (!n) { pageChip.className = ''; pageChip.innerHTML = ''; window.__cgAutofillPage = { shown: false, count: 0 }; return; }
+    pageChip.className = 'show';
+    pageChip.innerHTML = `<button class="afp-fill" title="Fill every field Clear Glass can on this page, from your active profile">⚡ Autofill this page<span class="afp-n">${n}</span></button>`;
+    window.__cgAutofillPage = { shown: true, count: n };
+  }
+  async function fillPage() {
+    if (pageBusy) return;
+    pageBusy = 'busy'; drawPage(1);
+    let r; try { r = await cg.autofill.fill(null, agentId); } catch (err) { r = { error: err.message }; }
+    const ok = r && !r.error && !r.noProfile;
+    pageBusy = ok ? 'ok' : 'bad'; drawPage(1);
+    if (r && r.noProfile && typeof window.toast === 'function') window.toast('Autofill: no profile yet — add one in Library › Autofill.', 'info');
+    else if (r && r.error && typeof window.toast === 'function') window.toast(`Autofill: ${r.error}`, 'error');
+    else if (ok && typeof window.toast === 'function') { const n = (Array.isArray(r.filled) ? r.filled.length : r.filled) || 0; window.toast(`Autofill: ${n} field(s) filled.`, 'info'); }
+    setTimeout(() => { pageBusy = ''; refresh(); }, 1400);
+  }
+  pageChip.addEventListener('mousedown', (e) => e.preventDefault());
+  pageChip.addEventListener('click', (e) => { if (e.target.closest('.afp-fill')) fillPage(); });
   // ⚓ — a field the chips do not understand: say once what it is
   function anchorChip(f, u, box, z) {
     const x = box.left + f.x * z, y = box.top + f.y * z + 2;

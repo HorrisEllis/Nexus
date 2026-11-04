@@ -1,0 +1,259 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GND1_the_audit_on_his_machine:b701b11270d5d14a
+type: graph
+id: phase:GND1_the_audit_on_his_machine:b701b11270d5d14a
+context: dependency graph of phase GND1_the_audit_on_his_machine
+intent: null
+summary: 29 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793419908438
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419908438
+lastSeenAt: 1793419908438
+fingerprint: null
+payload:
+  for: GND1_the_audit_on_his_machine
+  kind: phase
+  repo: null
+  hash: b701b11270d5d14a
+  nodes:
+    - path: guardian/cli.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/node-audit.js
+      role: changes
+      exists: false
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/test-guardian-node-audit.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/spec-parser.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND_D0_files_are_the_truth
+    dependents:
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND2_every_type_indexed
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND4_writes_stay_home
+    upstream:
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND_D0_files_are_the_truth
+    downstream:
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND2_every_type_indexed
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND3_tables_become_node_files
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND4_writes_stay_home
+    blockedBy:
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND_D0_files_are_the_truth
+    unlocks:
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND2_every_type_indexed
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND4_writes_stay_home
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by GND_D0_files_are_the_truth
+      - 'depends on (1): GND_D0_files_are_the_truth'
+      - >-
+        needed by (2): GND2_every_type_indexed, GND4_writes_stay_home · all downstream 3 · finishing
+        it unlocks GND2_every_type_indexed, GND4_writes_stay_home
+    edges:
+      - from: docs/2026-10-31-guardian-nodes-phasemap.spec::GND_D0_files_are_the_truth
+        kind: declared

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-foundation-up-phasemap.spec::F0_the_kernel_spec
+type: phase
+id: docs_2026-10-30-foundation-up-phasemap.spec::F0_the_kernel_spec
+context: pipeline phase F0_the_kernel_spec of docs/2026-10-30-foundation-up-phasemap.spec
+intent: null
+summary: F0_the_kernel_spec (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793382595474
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595474
+lastSeenAt: 1793382595474
+fingerprint: null
+payload:
+  id: F0_the_kernel_spec
+  map: docs/2026-10-30-foundation-up-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/spec/kernel.spec
+    - CIE-EG_Specification_v0_3_1.md
+  depends_on:
+    - F_D0_foundation_up
+    - F_D1_ess_is_the_kernel
+    - DB21_one_registry_schema_every_level
+  blocks: []
+  spec: null
+  graph: b5ffbb2dfe1dbac2

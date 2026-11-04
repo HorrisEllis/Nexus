@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP5d_rewind_and_branch
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP5d_rewind_and_branch
+context: pipeline phase CP5d_rewind_and_branch of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP5d_rewind_and_branch (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793576104500
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104500
+lastSeenAt: 1793576104500
+fingerprint: null
+payload:
+  id: CP5d_rewind_and_branch
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/compartment/qemu-runtime.js
+    - cos/workspace/vm-control.js
+  depends_on:
+    - CP5c_recording_the_deltas
+  blocks:
+    - MOD-CP-REWIND
+  spec: cos/spec/compartment.spec
+  graph: 9bd5fc59b5ec2500

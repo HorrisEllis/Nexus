@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG35_the_exe_starts_nexus
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG35_the_exe_starts_nexus
+context: pipeline phase MG35_the_exe_starts_nexus of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG35_the_exe_starts_nexus (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1793578686142
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793578686142
+lastSeenAt: 1793578686142
+fingerprint: null
+payload:
+  id: MG35_the_exe_starts_nexus
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "DONE 0.60.364 (COS 0.2.0) — test-cos-app-link 4/4, test-cos-app-ui 22/22 (UI-06b). Windows: the
+    folder picker, the tray notification and where node is found are unverified until it runs on his
+    machine; the exe is built by the cos-app workflow on a Windows runner"
+  files:
+    - cos/app/store.js
+    - cos/app/runtime.js
+    - cos/app/controller.js
+    - cos/app/settings.js
+    - cos/app/cli.js
+    - cos/app/desktop/main.js
+    - cos/app/desktop/preload.js
+    - cos/app/version.js
+    - tests/modules/test-cos-app-link.test.js
+  depends_on:
+    - MG34_the_cos_channel_always_has_a_way_in
+    - COSA14_versionium_record
+    - OC_D4_the_cos_app_is_the_application
+  blocks:
+    - MOD-COSA-LINK
+    - MOD-COSA-LINKED-RUN
+    - MOD-COSA-START-ON-LAUNCH
+  spec: cos/spec/cos-manager.spec
+  graph: 2e1153c3a5bdee53

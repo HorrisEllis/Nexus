@@ -7,18 +7,21 @@ intent: null
 summary: MG3_the_state_manager (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792880100856
+exported_at: 1793577139954
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100856
-lastSeenAt: 1792880100856
+firstSeenAt: 1793577139954
+lastSeenAt: 1793577139954
 fingerprint: null
 payload:
   id: MG3_the_state_manager
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "SUPERSEDED 2026-11-01 by CP5_states_rewind_versions in
+    docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each
+    compartment should be all of it."); the text below is kept"
   files:
     - cos/manager/state.js
     - cos/manager/routes.js
@@ -29,6 +32,7 @@ payload:
     - SN0_one_branch
     - SN2_run_in_parallel
     - VM1_control_like_vmware
-  blocks: []
-  spec: null
-  graph: dc78414883320b4a
+  blocks:
+    - MOD-MG-STATE
+  spec: cos/spec/cos-manager.spec
+  graph: e95685576f546937

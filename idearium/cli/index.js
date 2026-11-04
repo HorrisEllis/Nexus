@@ -1281,7 +1281,10 @@ async function main() {
   }
 
   // Build key: cmd alone or cmd.sub
-  const key = sub ? `${cmd}.${sub}` : cmd;
+  // CF1 (0.60.339) — James, 2026-11-01: "Yes, phase it". `note <text>` died "unknown command: note.<word>": a line with two
+  // words was always keyed cmd.sub. Resolved once the route rows are in COMMANDS (below): cmd.sub when that row exists, else
+  // cmd alone with sub as its first argument (docs/2026-10-05-cli-data-code-phasemap.spec CF1).
+  let key = sub ? `${cmd}.${sub}` : cmd;
   // §0.39.374 — James: "Everything needs to be available as commands." The table of idearium/cli/route-commands.js, one
   // runner for every row (resolve the repo, call the running Idearium or another Nexus system, print; --json raw)
   // §0.60.230 SL10 — the route table overwrote the hand-written `repo.plan`, whose `--dry --file <spec>` form plans a spec file with no repo
@@ -1290,15 +1293,17 @@ async function main() {
   const _planDryFile = COMMANDS['repo.plan'];
   Object.assign(COMMANDS, makeRouteCommands({ api: _localApi, findRepo: _findRepo, shortRepo, die, header, port: IDEARIUM_PORT, c: { sky, mint, amber, coral, violet, bold, dim, gray } }));
   if (_planDryFile) { const _planRoute = COMMANDS['repo.plan']; COMMANDS['repo.plan'] = (os, args) => (args && args.flags && args.flags.dry && typeof args.flags.file === 'string' ? _planDryFile(os, args) : _planRoute(os, args)); }
+  let subArg = !!sub;
+  if (sub && !COMMANDS[key] && COMMANDS[cmd]) { key = cmd; subArg = false; }
   const handler = COMMANDS[key];
 
   if (!handler) die(`unknown command: ${key}\nRun: idearium help`);
 
   const os       = cmd === 'manifest' ? null : getIdeaOS(); // manifest is pure — no store needed
-  const argParsed = parseArgs(sub ? rest : parsed.positional.slice(1));
+  const argParsed = parseArgs(subArg ? rest : parsed.positional.slice(1));
   // For sub-commands, positional[0] is the first arg after the sub command
   const finalArgs = {
-    positional: sub ? rest.filter(a=>!a.startsWith('--')) : argParsed.positional,
+    positional: subArg ? rest.filter(a=>!a.startsWith('--')) : argParsed.positional,
     flags:      parsed.flags,
   };
 

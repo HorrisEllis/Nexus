@@ -1,0 +1,103 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC5_the_console_ui:2c77571e2047b324
+type: graph
+id: phase:SC5_the_console_ui:2c77571e2047b324
+context: dependency graph of phase SC5_the_console_ui
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793708276734
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793708276734
+lastSeenAt: 1793708276734
+fingerprint: null
+payload:
+  for: SC5_the_console_ui
+  kind: phase
+  repo: null
+  hash: 2c77571e2047b324
+  nodes:
+    - path: cos/ui/overview/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/proposals/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/console.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/index.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/page.css
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-console.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-cos-console.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+      - docs/2026-11-02-cos-console-phasemap.spec::SC4_add_a_system
+    dependents:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+      - docs/2026-11-02-cos-console-phasemap.spec::SC4_add_a_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
+    downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+      - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - >-
+        depends on (4): SC1_the_bell, SC2_configuration_per_system, SC3_system_command_line,
+        SC4_add_a_system · all upstream 9
+      - >-
+        needed by (1): SC7_the_updates_section · all downstream 2 · finishing it unlocks
+        SC7_the_updates_section
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+        kind: declared
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+        kind: declared
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+        kind: declared
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC4_add_a_system
+        kind: declared

@@ -1,0 +1,223 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DSC4_beats_heals_and_measures_checked:f45ce414ac48b939
+type: graph
+id: phase:DSC4_beats_heals_and_measures_checked:f45ce414ac48b939
+context: dependency graph of phase DSC4_beats_heals_and_measures_checked
+intent: null
+summary: 19 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793419909862
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419909862
+lastSeenAt: 1793419909862
+fingerprint: null
+payload:
+  for: DSC4_beats_heals_and_measures_checked
+  kind: phase
+  repo: null
+  hash: f45ce414ac48b939
+  nodes:
+    - path: diagnostic/lib/causality.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: diagnostic/lib/heal-loop.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: diagnostic/cli.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/server.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: diagnostic/config.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: diagnostic/lib/wire-integrity.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/contract-verifier.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-engines.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ico.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-config.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: diagnostic/lib/heal-loop.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: diagnostic/lib/heal-loop.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/data-home.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ico.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/lib/wire-integrity.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/diagnostic-engines.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/config.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: diagnostic/lib/heal-loop.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: diagnostic/lib/causality.js
+      kind: requires
+    - from: diagnostic/cli.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+    - from: diagnostic/server.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+  crossings:
+    - from: diagnostic/lib/heal-loop.js
+      to: cortex/core/raid/index.js
+      fromSystem: diagnostic
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      fromSystem: diagnostic
+      toSystem: loom
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: diagnostic/lib/heal-loop.js
+      fromSystem: orchestrator
+      toSystem: diagnostic
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC1_the_schema_files
+    dependents: []
+    upstream:
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC1_the_schema_files
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC_D0_a_schema_for_everything
+    downstream: []
+    blockedBy:
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC1_the_schema_files
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC2_findings_in_one_shape
+        files:
+          - diagnostic/nexus-diagnostic.js
+      - with: docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC3_the_fix_from_the_declaration
+        files:
+          - diagnostic/nexus-diagnostic.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by DSC1_the_schema_files
+      - 'depends on (1): DSC1_the_schema_files · all upstream 2'
+      - 'needed by (0): —'
+      - >-
+        same files as DSC2_findings_in_one_shape with no order between them:
+        diagnostic/nexus-diagnostic.js
+      - >-
+        same files as DSC3_the_fix_from_the_declaration with no order between them:
+        diagnostic/nexus-diagnostic.js
+    edges:
+      - from: docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC1_the_schema_files
+        kind: declared

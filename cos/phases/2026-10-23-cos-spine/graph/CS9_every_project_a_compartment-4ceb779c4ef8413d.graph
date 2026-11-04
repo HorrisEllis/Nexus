@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 8 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792880100801
+exported_at: 1793421631203
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100801
-lastSeenAt: 1792880100801
+firstSeenAt: 1793421631203
+lastSeenAt: 1793421631203
 fingerprint: null
 payload:
   for: CS9_every_project_a_compartment
@@ -258,6 +258,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D6_every_project_a_compartment
     dependents:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
     upstream:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
       - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
@@ -288,6 +289,12 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D6_every_project_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
@@ -299,6 +306,11 @@ payload:
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
     downstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
@@ -314,8 +326,10 @@ payload:
         CS_D6_every_project_a_compartment
       - >-
         depends on (3): CS4_every_system_a_compartment, CS1_a_version_is_a_system_state,
-        CS_D6_every_project_a_compartment · all upstream 38
-      - 'needed by (1): CS10_hats_bound_to_the_compartment · all downstream 3'
+        CS_D6_every_project_a_compartment · all upstream 44
+      - >-
+        needed by (2): CS10_hats_bound_to_the_compartment, MG20_add_deploy_connect · all downstream
+        8
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
         kind: declared

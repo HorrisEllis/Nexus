@@ -1,0 +1,87 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP8_agents_in_the_compartment:6c114e2072db6bcf
+type: graph
+id: phase:CP8_agents_in_the_compartment:6c114e2072db6bcf
+context: dependency graph of phase CP8_agents_in_the_compartment
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1793576104457
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104457
+lastSeenAt: 1793576104457
+fingerprint: null
+payload:
+  for: CP8_agents_in_the_compartment
+  kind: phase
+  repo: null
+  hash: 6c114e2072db6bcf
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP3_one_terminal_one_cli
+    dependents: []
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP3_one_terminal_one_cli
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
+    downstream: []
+    blockedBy:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP3_one_terminal_one_cli
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP6_resources
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP7_settings
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5c_recording_the_deltas
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5d_rewind_and_branch
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5e_parallel
+        files:
+          - cos/manager
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5f_benchmark
+        files:
+          - cos/manager
+    dangling: []
+    lines:
+      - layer 7 · blocked by CP1_the_machine_and_its_door, CP3_one_terminal_one_cli
+      - 'depends on (2): CP1_the_machine_and_its_door, CP3_one_terminal_one_cli · all upstream 13'
+      - 'needed by (0): —'
+      - 'same files as CP5_states_rewind_versions with no order between them: cos/manager'
+      - 'same files as CP6_resources with no order between them: cos/manager'
+      - 'same files as CP7_settings with no order between them: cos/manager'
+      - 'same files as CP5c_recording_the_deltas with no order between them: cos/manager'
+      - 'same files as CP5d_rewind_and_branch with no order between them: cos/manager'
+      - … and 2 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+        kind: declared
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP3_one_terminal_one_cli
+        kind: declared

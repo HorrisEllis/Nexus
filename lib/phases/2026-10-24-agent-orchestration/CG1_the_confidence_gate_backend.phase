@@ -9,18 +9,20 @@ intent: null
 summary: CG1_the_confidence_gate_backend (library) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792874371310
+exported_at: 1793442586687
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874371310
-lastSeenAt: 1792874371310
+firstSeenAt: 1793442586687
+lastSeenAt: 1793442586687
 fingerprint: null
 payload:
   id: CG1_the_confidence_gate_backend
   map: docs/2026-10-24-agent-orchestration-phasemap.spec
   repo: null
   layer: library
-  status: OPEN
+  status: >-
+    DONE (found built: lib/agent-confidence-gate.js, in main since 0.60.247;
+    test-agent-confidence-gate 13/13 on 2026-10-31)
   files:
     - lib/agent-confidence-gate.js
     - tests/modules/test-agent-confidence-gate.test.js
@@ -31,4 +33,4 @@ payload:
     - CG_D3_order
   blocks: []
   spec: docs/brainos-in-idearium.spec
-  graph: 489d66ee3a0491dc
+  graph: c5f39c6ab81085bb

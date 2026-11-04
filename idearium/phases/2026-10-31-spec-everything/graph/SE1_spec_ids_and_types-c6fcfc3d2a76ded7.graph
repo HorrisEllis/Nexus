@@ -1,0 +1,59 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SE1_spec_ids_and_types:c6fcfc3d2a76ded7
+type: graph
+id: phase:SE1_spec_ids_and_types:c6fcfc3d2a76ded7
+context: dependency graph of phase SE1_spec_ids_and_types
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793419905502
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419905502
+lastSeenAt: 1793419905502
+fingerprint: null
+payload:
+  for: SE1_spec_ids_and_types
+  kind: phase
+  repo: null
+  hash: c6fcfc3d2a76ded7
+  nodes:
+    - path: idearium/spec-engine/spec-id.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: tests/modules/test-spec-id.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D1_spec_ids_types_library_queue
+    dependents:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE2_the_origin_trace
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE5_phased_only
+    upstream:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D1_spec_ids_types_library_queue
+    downstream:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE2_the_origin_trace
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE3_the_library_and_the_queue
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE4_drafts_from_code
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE5_phased_only
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE6_the_library_on_screen
+    blockedBy:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D1_spec_ids_types_library_queue
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by SE_D1_spec_ids_types_library_queue
+      - 'depends on (1): SE_D1_spec_ids_types_library_queue'
+      - 'needed by (2): SE2_the_origin_trace, SE5_phased_only · all downstream 5'
+    edges:
+      - from: docs/2026-10-31-spec-everything-phasemap.spec::SE_D1_spec_ids_types_library_queue
+        kind: declared

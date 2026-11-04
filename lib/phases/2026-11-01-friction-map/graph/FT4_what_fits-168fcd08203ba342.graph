@@ -1,0 +1,81 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FT4_what_fits:168fcd08203ba342
+type: graph
+id: phase:FT4_what_fits:168fcd08203ba342
+context: dependency graph of phase FT4_what_fits
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793552212449
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793552212449
+lastSeenAt: 1793552212449
+fingerprint: null
+payload:
+  for: FT4_what_fits
+  kind: phase
+  repo: null
+  hash: 168fcd08203ba342
+  nodes:
+    - path: intelligence/friction-map/fit.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: lib/core/traverse.js
+      role: changes
+      exists: false
+      system: lib
+    - path: tests/modules/test-friction-map-fit.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-11-01-friction-map-phasemap.spec::FT2_joints_measured
+      - docs/2026-11-01-friction-map-phasemap.spec::FT3_tension_measured
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+    dependents:
+      - docs/2026-11-01-friction-map-phasemap.spec::FT5_asked_and_seen
+    upstream:
+      - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI6_friction_and_tension_home
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D0_interconnected
+      - docs/2026-11-01-friction-map-phasemap.spec::FT1_functions_placed
+      - docs/2026-11-01-friction-map-phasemap.spec::FT2_joints_measured
+      - docs/2026-11-01-friction-map-phasemap.spec::FT3_tension_measured
+      - docs/2026-11-01-friction-map-phasemap.spec::FT_D0_the_map_is_intelligences
+    downstream:
+      - docs/2026-11-01-friction-map-phasemap.spec::FT5_asked_and_seen
+    blockedBy:
+      - docs/2026-11-01-friction-map-phasemap.spec::FT2_joints_measured
+      - docs/2026-11-01-friction-map-phasemap.spec::FT3_tension_measured
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+    unlocks:
+      - docs/2026-11-01-friction-map-phasemap.spec::FT5_asked_and_seen
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by FT2_joints_measured, FT3_tension_measured, TV1_traversal_primitive
+      - >-
+        depends on (3): FT2_joints_measured, FT3_tension_measured, TV1_traversal_primitive · all
+        upstream 13
+      - 'needed by (1): FT5_asked_and_seen · finishing it unlocks FT5_asked_and_seen'
+    edges:
+      - from: docs/2026-11-01-friction-map-phasemap.spec::FT2_joints_measured
+        kind: declared
+      - from: docs/2026-11-01-friction-map-phasemap.spec::FT3_tension_measured
+        kind: declared
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+        kind: declared

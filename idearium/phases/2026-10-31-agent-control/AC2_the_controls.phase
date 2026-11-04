@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-agent-control-phasemap.spec::AC2_the_controls
+type: phase
+id: docs_2026-10-31-agent-control-phasemap.spec::AC2_the_controls
+context: pipeline phase AC2_the_controls of docs/2026-10-31-agent-control-phasemap.spec
+intent: null
+summary: AC2_the_controls (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793444632892
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793444632892
+lastSeenAt: 1793444632892
+fingerprint: null
+payload:
+  id: AC2_the_controls
+  map: docs/2026-10-31-agent-control-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/agent-controls.js
+    - lib/repo-agent.js
+    - idearium/api/index.js
+    - tests/modules/test-agent-control.test.js
+  depends_on:
+    - AC1_intents_and_what_they_touched
+  blocks:
+    - MOD-AC-CONTROLS
+  spec: idearium/spec/agent-control.spec
+  graph: cf72f5b987ae90da

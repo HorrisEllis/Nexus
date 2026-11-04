@@ -7,23 +7,27 @@ intent: null
 summary: MG6_settings_by_template_and_type (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792880100859
+exported_at: 1793577139961
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100859
-lastSeenAt: 1792880100859
+firstSeenAt: 1793577139961
+lastSeenAt: 1793577139961
 fingerprint: null
 payload:
   id: MG6_settings_by_template_and_type
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "SUPERSEDED 2026-11-01 by CP7_settings in docs/2026-11-01-the-compartment-phasemap.spec (his
+    "just dont have redundancy. like each compartment should be all of it."); the text below is
+    kept"
   files:
     - cos/manager/settings.js
   depends_on:
     - MG0b_the_full_spec
     - AS1_one_resolver_global_then_repo
-  blocks: []
-  spec: null
-  graph: f0cc6fb8f4a34069
+  blocks:
+    - MOD-MG-SETTINGS
+  spec: cos/spec/cos-manager.spec
+  graph: ef22496bb01f417a

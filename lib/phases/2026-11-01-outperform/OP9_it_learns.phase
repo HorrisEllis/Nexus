@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-outperform-phasemap.spec::OP9_it_learns
+type: phase
+id: docs_2026-11-01-outperform-phasemap.spec::OP9_it_learns
+context: pipeline phase OP9_it_learns of docs/2026-11-01-outperform-phasemap.spec
+intent: null
+summary: OP9_it_learns (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793551440163
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440163
+lastSeenAt: 1793551440163
+fingerprint: null
+payload:
+  id: OP9_it_learns
+  map: docs/2026-11-01-outperform-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/arena/learn.js
+    - lib/economy/router.js
+    - tests/modules/test-outperform-learn.test.js
+  depends_on:
+    - OP6_the_verdict
+  blocks:
+    - MOD-OP-LEARN
+  spec: docs/outperform.spec
+  graph: 58ec9046edaac956

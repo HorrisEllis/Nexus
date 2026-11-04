@@ -1,0 +1,72 @@
+envelope: 1
+uuid: nexus-export-graph-phase:KB7_pin_the_floating_cli:d675ad2d86a480a6
+type: graph
+id: phase:KB7_pin_the_floating_cli:d675ad2d86a480a6
+context: dependency graph of phase KB7_pin_the_floating_cli
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793386281611
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281611
+lastSeenAt: 1793386281611
+fingerprint: null
+payload:
+  for: KB7_pin_the_floating_cli
+  kind: phase
+  repo: null
+  hash: d675ad2d86a480a6
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/float-cli.html
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/float-cli.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/settings/sections/general.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/float-cli.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/float-cli.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+    dependents: []
+    upstream:
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
+      - docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): BS6_float_cli · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-21-browser-shell-phasemap.spec::BS6_float_cli
+        kind: declared

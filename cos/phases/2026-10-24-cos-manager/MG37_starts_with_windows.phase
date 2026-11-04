@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
+context: pipeline phase MG37_starts_with_windows of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG37_starts_with_windows (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793578686149
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793578686149
+lastSeenAt: 1793578686149
+fingerprint: null
+payload:
+  id: MG37_starts_with_windows
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/app/desktop/main.js
+    - cos/app/settings.js
+    - cos/app/logon.js
+    - tests/modules/test-cos-app-window.test.js
+  depends_on:
+    - MG35_the_exe_starts_nexus
+    - CA_D1_with_windows_elevated_no_service
+  blocks:
+    - MOD-COSA-AT-LOGON
+  spec: cos/spec/cos-manager.spec
+  graph: e42a8e74749818f2

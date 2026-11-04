@@ -707,6 +707,19 @@ function _phaseRuns(repoUuid) {
 // Write one phasemap's new text: an ordinary repo through its repo layer; a nexus
 // repo through the apply gate (the live tree, recorded and reversible), then a sync
 // of the owning system so the nexus repos move to the new base.
+
+// 0.60.363 UP13 — a backup of the whole Nexus tree before an update: lib/nexus-self/store.js snapshot() in Idearium's own process (the store is
+// Idearium's), then a Versionium record (§17.12). Answers UpdateBackup (docs/nexus-update.spec).
+function _updateBackup({ by = 'person', why = '' } = {}) {
+  let version = null; try { version = _require('../../lib/release-version.js').current().version; } catch (_) {}
+  try {
+    const snap = _require('../../lib/nexus-self/store.js').snapshot({});
+    const files = Object.values(snap.systems || {}).reduce((n, x) => n + (x.fileCount || 0), 0);
+    try { _require('../../lib/versionium-record.js').record({ kind: 'nexus.backup', message: `Nexus backed up (${version || '?'}): ${why}`, change: { snapshot: snap.hash, created: !!snap.created, files, store: 'idearium nexus-self' }, causedBy: 'nexus-update:backup', by, version }).catch(() => null); } catch (_) {}
+    return { ok: true, snapshot: snap.hash, created: !!snap.created, files, version, by, why };
+  } catch (e) { return { ok: false, error: e.message, version, by, why }; }
+}
+
 async function _phaseWrite(repo, scope, mapPath, text, base, reason) {
   if (scope.source !== 'nexus') {
     const w = getRepoLayer().writeTextFile(repo.uuid, mapPath, text);
@@ -2822,8 +2835,12 @@ async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium',
   const jobType = kind || `page:${String(channel).replace(/^idearium-/, '')}`;
   const policy = _routingPolicy();
   let route = null, routeNote = null;
-  const rr = await _postJson(`${RA.COPILOT_URL}/api/route`, { kind: jobType, preferAgent: RA.defaultProvider(), policy }, 5000);
+  // 0.60.335 AC5 — James: "so i can change the agemnts for the spacial void and spec workshop": his choice for the page goes first
+  let his = null; try { his = (await import('../lib/page-agents.js')).routeFirst(jobType); } catch (_) {}
+  const rr = await _postJson(`${RA.COPILOT_URL}/api/route`, { kind: jobType, preferAgent: (his && his.provider) || RA.defaultProvider(), policy }, 5000);
   if (rr.status === 200 && rr.json && rr.json.ok && Array.isArray(rr.json.route) && rr.json.route.length) route = rr.json.route;
+  if (his) { const r0 = RA.routeFor(his.provider); route = [{ provider: his.provider, backend: r0.backend, agent: r0.agent || null, model: his.model, why: 'his choice for this page (Idearium settings)' },
+    ...(route || []).filter(h => !(h.provider === his.provider && (h.model || null) === his.model))]; }
   else {
     const prov = RA.defaultProvider(), r = RA.routeFor(prov);
     route = [{ provider: prov, backend: r.backend, agent: r.agent || null, model: null, why: 'the default provider' }];
@@ -3475,7 +3492,8 @@ const ROUTE_CAP = {
   'system.homes': CAPS.READ_IDEAS,   // 0.60.129 DB17
   'system.sovereign': CAPS.READ_IDEAS,   // 0.60.133 IM1
   'system.tables': CAPS.READ_IDEAS,   // 0.60.250 SV1 — which system writes and reads which table of the shared store
-  'update.check': CAPS.READ_IDEAS, 'update.history': CAPS.READ_IDEAS, 'update.apply': CAPS.ADMIN, 'update.rollback': CAPS.ADMIN, 'update.restart': CAPS.ADMIN, 'update.policy.get': CAPS.READ_IDEAS, 'update.policy.set': CAPS.ADMIN, 'update.auto': CAPS.READ_IDEAS,   // 0.60.252 UP3 — changing Nexus's own code is an admin act
+  'procedure.list': CAPS.READ_IDEAS, 'procedure.show': CAPS.READ_IDEAS, 'procedure.run': CAPS.ADMIN,   // 0.60.354 PD1 — a procedure can change Nexus's code (behind his yes)
+  'update.check': CAPS.READ_IDEAS, 'update.history': CAPS.READ_IDEAS, 'update.apply': CAPS.ADMIN, 'update.keep-local': CAPS.ADMIN, 'update.rollback': CAPS.ADMIN, 'update.restart': CAPS.ADMIN, 'update.policy.get': CAPS.READ_IDEAS, 'update.policy.set': CAPS.ADMIN, 'update.auto': CAPS.READ_IDEAS, 'update.backup': CAPS.ADMIN,   /* 0.60.363 UP13 — a backup of Nexus before an update */   // 0.60.252 UP3 — changing Nexus's own code is an admin act
   'system.shape': CAPS.READ_IDEAS,   // 0.60.138 IM5
   'system.nodes': CAPS.READ_IDEAS,   // 0.60.130 P33a
   'system.nodes.list': CAPS.READ_IDEAS,   // 0.60.157 GM4
@@ -3549,6 +3567,21 @@ function matchRoute(method, url) {
     ['GET',    ['api','settings','console'],          'settings.console'],
     // §0.39.281 EC8 — the provider economy lives in guardian (lib/economy/*, guardian/lib/economy-guard.js); the settings
     // console reaches it through here, same-origin — a proxy, not a second copy (§10.1)
+    ['GET',    ['api','cos','systems'],               'cos.systems'],      // 0.60.328 MG15b — COS's supervisor, through its door :7799
+    ['GET',    ['api','cos','ledger'],                'cos.ledger'],
+    ['POST',   ['api','cos','boot'],                  'cos.boot'],
+    ['POST',   ['api','cos','systems',':name',':op'], 'cos.act'],
+    // 0.60.337 MG18 — what COS's UI reads, for every agent too (§3.4: route → command → UI)
+    ['GET',    ['api','cos','proposals'],             'cos.proposals'],
+    ['POST',   ['api','cos','proposals',':id',':op'], 'cos.proposal.act'],
+    ['GET',    ['api','cos','systems',':name','logs'],'cos.logs'],
+    ['GET',    ['api','cos','usage'],                 'cos.usage'],
+    ['GET',    ['api','cos','policy'],                'cos.policy'],
+    // 0.60.339 EAS3 — Emerge, through its own door (emerge/server.js :4900), asked by route, never required (§5.15)
+    ['GET',    ['api','emerge-system','status'],      'emerge.status'],
+    ['GET',    ['api','emerge-system','modules'],     'emerge.modules'],
+    ['POST',   ['api','emerge-system','modules'],     'emerge.module.new'],
+    ['POST',   ['api','emerge-system','lang',':op'],  'emerge.lang'],
     ['GET',    ['api','economy'],                     'economy.get'],
     ['POST',   ['api','economy'],                     'economy.set'],
     ['GET',    ['api','economy',':what'],             'economy.view'],
@@ -3775,9 +3808,13 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','homes'], 'system.homes'],
     ['GET',    ['api','system','sovereign'], 'system.sovereign'],
     ['GET',    ['api','system','tables'], 'system.tables'],
+    ['GET',    ['api','procedures'], 'procedure.list'],              // 0.60.354 PD1 — the .procedure library (idearium/procedures)
+    ['GET',    ['api','procedures',':id'], 'procedure.show'],
+    ['POST',   ['api','procedures',':id','run'], 'procedure.run'],   // { yes } — his yes passes its confirm steps; the CLI row refuses --yes to an agent
     ['GET',    ['api','update'], 'update.check'],                   // 0.60.252 UP3 — what is newer on GitHub, his words per release (?fetch=0 reads what was last fetched)
     ['GET',    ['api','update','history'], 'update.history'],
     ['POST',   ['api','update','apply'], 'update.apply'],           // {confirm:true} — fast-forward, data collisions archived, npm install if the lockfile changed
+    ['POST',   ['api','update','keep-local'], 'update.keep-local'], // 0.60.376 CE3 — {confirm:true} — the local commits kept on local/<date>, then GitHub's commit (backed up first)
     ['POST',   ['api','update','rollback'], 'update.rollback'],     // {confirm:true} — back to the commit the last update came from
     ['POST',   ['api','update','restart'], 'update.restart'],
     ['GET',    ['api','update','policy'], 'update.policy.get'],       // 0.60.254 UP8 — auto | notify | off, and how often
@@ -4010,6 +4047,7 @@ function matchRoute(method, url) {
     // lib/nexus-self/*). Static paths first so they never match :system.
     ['GET',    ['api','nexus-self'],                                  'nexus-self.status'],
     ['POST',   ['api','nexus-self','sync'],                           'nexus-self.sync'],
+    ['POST',   ['api','nexus-self','backup'],                         'update.backup'],   // 0.60.363 UP13 — the whole tree snapshotted into Idearium's store, recorded in Versionium
     ['GET',    ['api','nexus-self','understanding'],                  'nexus-self.understanding'],
     ['GET',    ['api','nexus-self','applies'],                        'nexus-self.applies'],
     ['GET',    ['api','nexus-self','atlas'],                          'nexus-self.atlas'],     // 0.39.263 — the nexus repo's Home
@@ -4090,6 +4128,9 @@ function matchRoute(method, url) {
     ['POST',   ['api','workshop',':id','feed'],                  'workshop.feed'],
     ['POST',   ['api','workshop',':id','proposal',':pid'],       'workshop.decide'],
     ['POST',   ['api','workshop',':id','save'],                  'workshop.save'],
+    ['GET',    ['api','settings','page-agents'],                 'settings.page-agents'],   // 0.60.335 AC5 — his agent per page
+    ['POST',   ['api','settings','page-agents'],                 'settings.page-agents.set'],
+    ['POST',   ['api','workshop',':id','skip'],                  'workshop.skip'],      // 0.60.335 AC7 — his skip: fill a step's defaults, marked
     // §0.39.298 AR2 — ARCHITECT (idearium/lib/architect.js): the spec laid out as components, matched against loom's
     // registry and the component store, saved beside the spec as spec/<name>.architecture.yaml
     ['GET',    ['api','architect'],                              'architect.list'],
@@ -6200,7 +6241,7 @@ async function handle(req, res, route, query, body) {
     // github?" · "first one but the second one needs to be the end state" (git now, COS later). lib/nexus-update.js; restarting stays his.
     case 'update.check': { const U = _require('../../lib/nexus-update.js'); const r = U.check({ fetch: !(query && query.fetch === '0') }); res.writeHead(200, { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r)); }
     case 'update.policy.get': { const U = _require('../../lib/nexus-update.js'); return ok(res, U.getPolicy({})); }
-    case 'update.policy.set': { const U = _require('../../lib/nexus-update.js'); const r = U.setPolicy({ policy: body && body.policy, everyHours: body && body.everyHours }); if (!r.ok) return err(res, 400, r.error); return ok(res, r); }
+    case 'update.policy.set': { const U = _require('../../lib/nexus-update.js'); const r = U.setPolicy({ policy: body && body.policy, everyHours: body && body.everyHours, keepLocal: body && body.keepLocal });   /* SC7: keepLocal auto | ask */ if (!r.ok) return err(res, 400, r.error); return ok(res, r); }
     case 'update.auto': { const U = _require('../../lib/nexus-update.js'); return ok(res, { policy: U.getPolicy({}), last: U.autoState({}) }); }
     case 'update.restart': {   // the person's button (UP_D2): each supervised process of that system, restarted by autopilot
       const sys = String((body && body.system) || '').trim();
@@ -6212,10 +6253,42 @@ async function handle(req, res, route, query, body) {
       for (const k of names) { let r; try { r = await _nexusClient.post('autopilot', `/control/${encodeURIComponent(k)}/restart`, {}, { timeout: 8000 }); } catch (e) { r = { ok: false, error: e.message }; } out.push({ process: k, ok: !!(r && r.ok), status: r && r.status, error: r && r.ok ? null : (r && r.error) || 'no answer' }); }
       return ok(res, { system: sys, restarted: out });
     }
+    // 0.60.354 PD1 — James, 2026-11-01: "a command like a batch but a .framework or .macro that me and copilot can use" · ".procedure".
+    // Idearium serves the library it holds (idearium/procedures, §5.15); lib/automation/procedure.js runs it with exec = the one command door.
+    case 'procedure.list': case 'procedure.show': case 'procedure.run': {
+      const RP = _require('../../lib/repo-procedures.js');   // his 0.60.118 .procedure, extended (PD1): one type, one module
+      const dir = process.env.NEXUS_PROCEDURES_DIR || path.join(path.dirname(_fileURLToPath(import.meta.url)), '..', 'procedures');   // the env: a test's own folder
+      if (action === 'procedure.list') { const l = RP.library({ dir }); return ok(res, { procedures: l.map(x => ({ id: x.id, name: x.name, about: x.about, steps: x.steps.map(st => st.confirm != null ? 'confirm' : st.check ? 'check' : (st.args && st.args.command) || st.tool) })), bad: l.bad }); }
+      const proc = RP.fromLibrary(String(params.id || ''), { dir });
+      if (!proc) return err(res, 404, `no procedure ${params.id} — procedure list shows them`);
+      if (action === 'procedure.show') return ok(res, { procedure: proc });
+      const yes = !!(body && body.yes === true);
+      const T = _require('../../lib/agent-tools/tools/nexus/command.js');
+      // a step's tool is nexus.command (the one door); after his yes it runs as the person, else with an agent's limits
+      const runTool = (tool, args) => tool !== 'nexus.command' ? { ok: false, error: `a library procedure's steps are nexus.command (got ${tool})` }
+        : yes ? T.runAsPerson(args || {}, 'person') : T.command.execute(args || {}, { agent: 'procedure' });
+      const r = await RP.runSteps(proc, { runTool, yes, by: yes ? 'person' : 'procedure' });
+      try { _require('../../lib/versionium-record.js').record({ kind: 'procedure.run', system: 'idearium', by: r.run && r.run.by, message: `procedure ${proc.id}: ${r.ok ? 'done' : r.waiting ? 'waiting for his yes' : `stopped at step ${r.run && r.run.stoppedAt}`}`, change: { run: r.run } }).catch(() => {}); } catch (_) {}
+      return ok(res, { ...r, ok: true, finished: r.ok });   // the request worked; how the run ended is in run (waiting is not a refusal)
+    }
     case 'update.history': { const U = _require('../../lib/nexus-update.js'); return ok(res, { history: U.history({}) }); }
+    // 0.60.363 UP13 (docs/nexus-update.spec MOD-UP-BACKUP-ROUTE) — James: "make sure it hooks into idearium versionium, to backup the system".
+    // The store is Idearium's (it lives in Idearium's data, §5.15): the snapshot is taken here, in Idearium's process, and recorded in Versionium.
+    case 'update.backup': {
+      const r = _updateBackup({ by: (body && body.by) || 'person', why: (body && body.why) || 'asked' });
+      res.writeHead(r.ok ? 200 : 500, { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r));
+    }
+    case 'update.keep-local': {   // 0.60.376 CE3 (docs/2026-11-02-cos-enterprise-phasemap.spec) — James: "so i can update nexus automatically"
+      const U = _require('../../lib/nexus-update.js');
+      const r = await U.keepLocalBacked({ confirm: !!(body && body.confirm === true), by: (body && body.by === 'agent') ? 'agent' : 'person', backupFn: (o) => _updateBackup(o) });
+      res.writeHead(r.ok ? 200 : (r.needsConfirm ? 428 : 409), { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r));
+    }
     case 'update.apply': case 'update.rollback': {
       const U = _require('../../lib/nexus-update.js');
-      const r = (action === 'update.apply' ? U.apply : U.rollback)({ confirm: !!(body && body.confirm === true), by: (body && body.by === 'agent') ? 'agent' : 'person' });
+      const who = (body && body.by === 'agent') ? 'agent' : 'person';
+      const r = action === 'update.apply'
+        ? await U.applyBacked({ confirm: !!(body && body.confirm === true), by: who, backupFn: (o) => _updateBackup(o) })   // UP13: backed up here first
+        : U.rollback({ confirm: !!(body && body.confirm === true), by: who });
       res.writeHead(r.ok ? 200 : (r.needsConfirm ? 428 : 409), { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r));
     }
     case 'system.tables': {   // 0.60.250 SV1 — James: "i want to get each system soveriegn and inside a cos compartment". Evidence only.
@@ -7223,6 +7296,26 @@ async function handle(req, res, route, query, body) {
       }
       syncTable(WS.TABLE, [w]);
       return ok(res, { workshop: w, parts: await _workshopParts(WS, w) });
+    }
+    // 0.60.335 AC5 — James: "so i can change the agemnts for the spacial void and spec workshop"
+    case 'settings.page-agents': case 'settings.page-agents.set': {
+      const PA = await import('../lib/page-agents.js');
+      if (action === 'settings.page-agents') return ok(res, { pages: PA.PAGES, agents: PA.get() });
+      let providers = null; try { providers = (_require('../../lib/agent-providers.js').all() || []).map(p => p.id || p.name || p); } catch (_) {}
+      const r = PA.set((body && body.agents) || {}, { by: (body && body.by) || 'person', providers });
+      if (r.error) return err(res, 400, r.error);
+      return ok(res, { pages: PA.PAGES, agents: r });
+    }
+    // 0.60.335 AC7 — James: "I also want skip buttons which will autofill generic/default values in each step of the pipeline."
+    case 'workshop.skip': {
+      const WS = await _workshop(), SD = await import('../lib/step-defaults.js');
+      const w = _workshopGet(WS, params.id); if (!w) return err(res, 404, `workshop not found: ${params.id}`);
+      const d = SD.defaultsFor(String((body && body.step) || 'workshop.sections'), { session: w });
+      if (d.none) return ok(res, { workshop: w, skipped: d });
+      for (const e of d.values.sections || []) { const r = WS.editSection(w, { id: e.id, body: e.body }); if (r.error) return err(res, 400, r.error); }
+      if (d.values.sections) { w.history.push({ at: Date.now(), what: `skip: ${d.values.sections.length} section(s) filled with defaults`, by: (body && body.by) || 'person' }); syncTable(WS.TABLE, [w]); }
+      getIdeaOS().emit('idearium.step.skipped', { step: d.step, filled: (d.values.sections || []).length || 1 });
+      return ok(res, { workshop: w, parts: await _workshopParts(WS, w), skipped: d });
     }
     case 'workshop.feed': {
       const WS = await _workshop();
@@ -9755,6 +9848,36 @@ async function handle(req, res, route, query, body) {
         getIdeaOS().emit('idearium.repo.lifted', { repoUuid: params.uuid, wrapper: r.wrapper, moved: r.moved.length, archived: r.archived.length, failed: r.failed.length });
       }
       return ok(res, { repoUuid: params.uuid, ...r, moves: (r.moves || []).length, ...(r.moved ? { moved: r.moved.length } : {}) });
+    }
+    // 0.60.328 MG15b — COS's supervisor (cos/manager/server.js on :7799, 'cos' in the ports table): asked, never required (§5.15)
+    case 'cos.systems': case 'cos.ledger': case 'cos.boot': case 'cos.act':
+    case 'cos.proposals': case 'cos.proposal.act': case 'cos.logs': case 'cos.usage': case 'cos.policy': {
+      const by = (body && body.by) || 'person';
+      try {
+        const d = action === 'cos.systems' ? await _nexusClient.get('cos', '/api/cos/systems', { timeout: 10000 })
+          : action === 'cos.proposals' ? await _nexusClient.get('cos', `/api/cos/proposals${query.open ? '?open=1' : ''}`, { timeout: 10000 })
+          : action === 'cos.proposal.act' ? await _nexusClient.post('cos', `/api/cos/proposals/${encodeURIComponent(params.id)}/${encodeURIComponent(params.op)}`, { by, why: body && body.why }, { timeout: 15000 })
+          : action === 'cos.logs' ? await _nexusClient.get('cos', `/api/cos/systems/${encodeURIComponent(params.name)}/logs?limit=${Number(query.limit) || 100}`, { timeout: 10000 })
+          : action === 'cos.usage' ? await _nexusClient.get('cos', '/api/cos/usage', { timeout: 10000 })
+          : action === 'cos.policy' ? await _nexusClient.get('cos', '/api/cos/policy', { timeout: 10000 })
+          : action === 'cos.ledger' ? await _nexusClient.get('cos', `/api/cos/ledger?limit=${Number(query.limit) || 50}${query.system ? `&system=${encodeURIComponent(query.system)}` : ''}`, { timeout: 10000 })
+          : action === 'cos.boot' ? await _nexusClient.post('cos', '/api/cos/boot', { set: (body && body.set) || undefined, by }, { timeout: 120000 })
+          : await _nexusClient.post('cos', `/api/cos/systems/${encodeURIComponent(params.name)}/${encodeURIComponent(params.op)}`, { by }, { timeout: 15000 });
+        const { ok: _o, ...rest } = d || {};
+        return ok(res, rest);
+      } catch (e) { return err(res, 502, `COS's manager (:7799) did not answer: ${e.message} — start it with npm run start:all (since 0.60.330 the launcher starts COS's manager)`); }
+    }
+    // 0.60.339 EAS3 — James: "the github repo not the one in lib already. i want that done now. then i want to start being able to use it."
+    case 'emerge.status': case 'emerge.modules': case 'emerge.module.new': case 'emerge.lang': {
+      const OPS = ['check', 'run', 'build', 'test', 'say', 'synth'];
+      if (action === 'emerge.lang' && !OPS.includes(params.op)) return err(res, 404, `no Emerge language op "${params.op}": ${OPS.join(', ')}`);
+      try {
+        const d = action === 'emerge.status' ? await _nexusClient.get('emerge', '/status', { timeout: 10000 })
+          : action === 'emerge.modules' ? await _nexusClient.get('emerge', '/modules', { timeout: 10000 })
+          : action === 'emerge.module.new' ? await _nexusClient.post('emerge', '/modules', body || {}, { timeout: 30000 })
+          : await _nexusClient.post('emerge', `/lang/${params.op}`, body || {}, { timeout: 60000 });
+        return ok(res, d || {});
+      } catch (e) { return err(res, 502, `Emerge's door (:4900) did not answer: ${e.message} — COS starts it (npm run start:all), or: node emerge/server.js`); }
     }
     // §0.39.281 EC8 — the economy, from guardian (the one owner)
     case 'economy.get': case 'economy.set': case 'economy.view': {

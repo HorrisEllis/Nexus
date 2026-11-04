@@ -10,6 +10,7 @@
  *   node cos/app/cli.js switch <project> <version>   stop, snapshot data, start it, health-check; roll back on failure (COSA4)
  *   node cos/app/cli.js rollback <project> [--restore-data]   back to the previous version (data untouched unless asked)
  *   node cos/app/cli.js start <project> [version] | stop <project> | running <project> | logs <project> [--lines n]
+ *   node cos/app/cli.js link <folder> [project] | unlink [project]   his own Nexus folder, run in place (MG35)
  * --root <dir> or COS_APP_ROOT picks the store; --json prints JSON. Exit 1 on a refusal, with the reason.
  */
 const S = require('./store.js');
@@ -32,8 +33,11 @@ function main(argv = process.argv.slice(2), out = (s) => console.log(s)) {
     if (pos[1] && pos[2] === undefined) fail({ ok: false, error: 'settings <key> needs a value (settings update.policy ask)' });
     else if (pos[1]) { const r = St.set(root, pos[1], pos[2]); if (!r.ok) fail(r); else say(r, `✓ ${pos[1]} = ${pos[2]}`); }
     else { const l = St.load(root); say({ ok: true, ...l }, `update.policy = ${l.settings.update.policy}  (off | ask | auto)\nwindow ${l.settings.window.width}x${l.settings.window.height}${l.warning ? '\n! ' + l.warning : ''}`); }
+  } else if (cmd === 'link') {   // MG35 — his own Nexus folder: `link <folder> [project]`
+    const r = S.link(root, pos[2] || 'nexus', pos[1]); if (!r.ok) fail(r); else say(r, `✓ linked ${r.dir} as ${r.project} (${r.version || '?'}) — start it with: start ${r.project}`);
+  } else if (cmd === 'unlink') { const r = S.unlink(root, pos[1] || 'nexus'); say(r, `✓ ${r.unlinked ? `unlinked ${r.unlinked}` : r.note} (the folder itself is untouched)`);
   } else if (cmd === 'status') { const s = S.status(root); say({ ok: true, ...s }, `root ${s.root}\n${s.projects.length} project(s) · inbox ${s.inbox.pending} waiting (${s.inbox.path})`); }
-  else fail({ ok: false, error: `unknown command "${cmd}" (import, inbox, list, status, remove, settings)` });
+  else fail({ ok: false, error: `unknown command "${cmd}" (import, inbox, list, status, remove, settings, link, unlink)` });
   return code;
 }
 const RUNTIME = new Set(['switch', 'rollback', 'start', 'stop', 'running', 'logs']);
@@ -53,7 +57,7 @@ async function run(argv = process.argv.slice(2), out = (s) => console.log(s)) {
   const RT = require('./runtime.js'), SW = require('./switch.js'); const o = { ...(flags['status-port'] ? { statusPort: +flags['status-port'] } : {}), ...(flags.timeout ? { healthTimeoutMs: +flags.timeout * 1000 } : {}) };
   if (cmd === 'switch') { if (!pos[2]) fail({ ok: false, error: 'switch needs <project> <version>' }); else { const r = await SW.switchTo(root, project, pos[2], o); if (!r.ok) fail(r); else say(r, r.already ? `✓ ${r.note}` : `✓ ${project} ${r.from ? r.from + ' → ' : ''}${r.to} healthy after ${(r.healthyAfterMs / 1000).toFixed(1)} s\n  data snapshot: ${r.snapshot} (${r.snapshotFiles} item(s))`); } }
   else if (cmd === 'rollback') { const r = await SW.rollback(root, project, { ...o, restoreData: !!flags['restore-data'] }); if (!r.ok) fail(r); else say(r, `✓ back on ${r.to}${r.restoredData ? ' (data restored from the snapshot)' : ' (data left as it is)'}`); }
-  else if (cmd === 'start') { const st = S.list(root, project)[0]; const v = pos[2] || (st && st.current); if (!v) fail({ ok: false, error: `no version given and ${project} has no current version: use switch <project> <version>` }); else { const r = await RT.start(root, project, v, o); if (!r.ok) fail(r); else say(r, `✓ ${project} ${v} running (pid ${r.pid}), healthy after ${(r.healthyAfterMs / 1000).toFixed(1)} s`); } }
+  else if (cmd === 'start') { const st = S.list(root, project)[0]; const v = pos[2] || (st && st.linked ? 'linked' : st && st.current); if (v === 'linked') o.dir = st.linked.dir; if (!v) fail({ ok: false, error: `no version given and ${project} has no current version: use switch <project> <version>` }); else { const r = await RT.start(root, project, v, o); if (!r.ok) fail(r); else say(r, `✓ ${project} ${v} running (pid ${r.pid}), healthy after ${(r.healthyAfterMs / 1000).toFixed(1)} s`); } }
   else if (cmd === 'stop') { const r = await RT.stop(root, project); if (!r.ok) fail(r); else say(r, r.stopped ? `✓ stopped ${project} ${r.version || ''}` : `✓ ${r.note}`); }
   else if (cmd === 'running') { const r = await RT.status(root, project); say({ ok: true, ...r }, r.running ? `${project} ${r.version} running (pid ${r.pid}) · ${r.healthy ? 'healthy' : 'NOT answering'} · since ${r.startedAt}` : `${project} is not running${r.note ? ' (' + r.note + ')' : ''}`); }
   else if (cmd === 'logs') { const r = RT.logs(root, project, { lines: +flags.lines || 50 }); say({ ok: true, ...r }, r.file ? `${r.file}\n${r.text}` : 'no logs yet'); }

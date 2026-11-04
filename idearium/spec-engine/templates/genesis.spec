@@ -5,6 +5,22 @@
 // Status: proposed. Foundation domains freeze at v1.0.0 per COS-5 pattern.
 
 version 1.5.0
+// PROPOSED 1.6.0 (2026-10-31, NEXUS 0.60.322 — mapped, not applied; the version line moves when SE2 and DO2a are built). James: "map all of
+// whats missing from all of this, to the architecture spec and genesis spec." · "like it all builds from the origin as a foundation/core like
+// the system.js, which needs the config." · "anything new, spec, any changes, fixes, or additions is phased only." What genesis lacks, and what
+// the real systems lack against genesis (measured on main 0.60.320; architecture-spec 0.14.0 addendum holds the numbers):
+//   - axiom TRACED_TO_THE_ORIGIN (proposed): every file is reached from its system's server.js or fills a slot beside it, is owned by a spec module with an
+//     id and a type, and is built by a phase (RULE E). Today 44% of code files have neither a module nor a phase.
+//   - axiom PHASED_ONLY (proposed, his): nothing is built outside a phase (RULE F).
+//   - the origin is server.js (his, corrected the same day: "system.js i meant server.js"): config → server.js → the registry →
+//     components → UI. Six systems have no server.js (idearium, clear-glass, cortex, architect, orchestrator, cos); the door phases give
+//     them one (docs/2026-10-31-system-doors-phasemap.spec DO1–DO5). [Superseded line, kept: "the boot core: genesis's lib/system.js is
+//     the origin, but 0 of 13 systems boot from it" — the coder's reading of "system.js"; a boot core under server.js is now only a
+//     suggestion, DO_D2, to confirm.]
+//   - the registry as the harness: REGISTRY_IS_THE_DRAWBRIDGE names the door; CIE-EG's roads, gate and typed gaps (DB21, his) are not in the
+//     catalog yet, and the skeleton's lib/bus.js is not what the systems use (they share lib nexus-bus). The harness spec is its own map.
+//   - ALL_DATA_ARE_NODES: the reference system, Guardian, keeps 12 tables with no node files (docs/2026-10-31-guardian-nodes-phasemap.spec).
+//   - schemas/: every system has the folder's index; what a system records about itself (Diagnostic's findings) has no schema (DSC1).
 // 1.5.0 + NEXUS 0.60.132 (2026-10-17): the registry as the drawbridge, the system sovereign. James: "i want to eventually have
 // the component registry for each system be the interaction contract and event bus, with handshake verification. basically
 // the spine of each system ... the drawbridge for each compartment for each system, the only way to interact between
@@ -1031,7 +1047,7 @@ catalog GENESIS_FILE_TREE {
     source  = skeleton
     depends = []
   }
-  file "spec/<system>.node-taxonomy.md" {
+  file "spec/<system>.node-taxonomy.spec" {
     uuid    = gs0045-skele-4000-8000-000000000045
     intent  = the_node_types
     summary = "Each node type, what it is and its required fields."
@@ -1067,3 +1083,41 @@ catalog GENESIS_FILE_TREE {
 // heartbeat. A new system is this tree laid out (COS archetype nexus-system) with the idea slotted in as components:
 // lib/<component>.js, its entry in registry-components.js, and its component, capability, command and event nodes.
 // ══════════════════════════════════════════════════════════════════════════════
+
+// ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+// ADDENDUM 2026-11-03 — boundaries: one door per system, COS the orchestrator (his decisions, in his words; recorded, not yet built)
+// James, 2026-11-03: "Okay. I’m overwhelmed. This is a shit show. That’s why boundaries need to exist. Cli and API routes through the component
+// registry like the ui. All of this needs to update the genesis spec and architecture spec"
+// Every decision below is his, said on 2026-11-03, with its record in docs/2026-11-03-registry-per-system-phasemap.spec (PL_D1–PL_D13) and AXIOMS §5.16.
+// 1. THE DOOR. "No component registry is the spine." · "The drawbridge is the the component registry, which is also the event bus, and
+//    interaction contract and bridge into the compartment." · "Cli and API routes through the component registry like the ui." Each system has
+//    one door: its own component registry. Its CLI, its API routes and its UI all go through it.
+// 2. PER SYSTEM, SOVEREIGN. "No component registry is per system. That needs to be implemented" · "And enforce that. … It’s fucking sovereign."
+//    · "Each system is sovereign. It is responsible for its own data, its own modules. Its own commands, lib is not a directory for anything that
+//    a system uses that it does not have within its own directory. Each system needs to work independent of the system." · "Nothing a system
+//    needs lies outside of its own boundaries, beyond another system. Like Idearium needs Guardian, right? But I could slot another system in
+//    its place to use. It's not hardwired, it just uses the API routes and the CLI server". No central registry (AXIOMS §5.16; the ratchet
+//    lib/registry-sovereign-check.js holds today's 12 central callers and 22 Loom maps from growing). "Not loom. Never said loom. Loom is going
+//    to be removed" · "The lib folder is not the component registry."
+// 3. THE PROCESS. "the server.js is the process for each system. It’s what cos manages. The spine and component registry for each system routes
+//    through there. Cli and api."
+// 4. THE SYSTEM REGISTRY AND COS. "Then the system registry is for connecting the component registries. Cos and The orchastrator uses that to
+//    orchestrate." · "Cos is the orchastrator now. That’s the point. The reason for the sandbox is to seperate the systems." · "Cos is meant to
+//    be the orchastrator complelely. Replace autopilot." · "Cos ui stays the cos ui. It’s already for ochastrating." · automation: "It’s in the
+//    orchastrator." (its AE phases follow the orchestrator to COS — the coder's reading, to confirm).
+// 5. DUMB COMPONENTS. "Yes so each component can be dumb, and agnostic at some point." · "Yes. This reduces the complexity for each
+//    complement." A component takes its input and returns its output; the door checks the caller and the contract, carries the events, routes.
+// 6. SANDBOXED, NOT VIRTUAL MACHINES. "I just want them to be isolated from each other. This should make the system easier to manage but give me
+//    more control over resource usage and limits." Each system an ordinary process in its own sandbox (its folder, its code, no other programs
+//    unless allowed, its limits), on his 16 GB machine.
+// 7. ONLY CHANGES. "I just don’t want the versions to be bigger than only the changes." · "Look at versionium. It’s meant to record changes."
+//    Snapshots and versions are Versionium's, recorded as changes, through its routes.
+// 8. EVERY PHASE A DAG. "Okay we also need to clean the phases at some point. Add to the Claude.md. That every phase needs a dag."
+// 9. THE TEMPLATE. "Look at iseariums template for a new systme" — idearium/spec-engine/templates/architecture-spec.template.yaml (his,
+//    2026-10-05 → 10-17) is the shape each system is rebuilt toward; it already says "the registry is the interaction contract, the event bus,
+//    the queue, the dependency graph, the wiring harness and the spine" and "hardcoded has to earn its place".
+// Measured on 2026-11-03, against 1–3: 6 of 14 systems have a server.js COS runs; 11 have their own registry, 4 serve it themselves, 7 also send
+// it to the old orchestrator's central registry; in none is the registry the event bus; 152 places reach past a registry into another system's files.
+// Still his, not decided (do not build on a guess): whether .nex names a snapshot in Versionium or drops out; the TV shell (its own thing, or
+// gone); one source for registry, contract and events (the template lists three files); the template's "what every system uses is the kernel's"
+// against "lib is not a directory …"; where the .cos sits in the tree; network isolation; the qcow2 virtual disk's future.

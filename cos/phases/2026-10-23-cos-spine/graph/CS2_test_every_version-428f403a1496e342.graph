@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877163802
+exported_at: 1793421631193
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877163802
-lastSeenAt: 1792877163802
+firstSeenAt: 1793421631193
+lastSeenAt: 1793421631193
 fingerprint: null
 payload:
   for: CS2_test_every_version
@@ -190,6 +190,9 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
     downstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
       - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
@@ -204,7 +207,7 @@ payload:
       - >-
         depends on (2): CS1_a_version_is_a_system_state, SN1_open_a_snapshot_as_a_compartment · all
         upstream 4
-      - 'needed by (1): CS8_the_cos_screen'
+      - 'needed by (1): CS8_the_cos_screen · all downstream 4'
       - 'same files as CS6_rebuild_from_the_spec with no order between them: cos/workspace/index.js'
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state

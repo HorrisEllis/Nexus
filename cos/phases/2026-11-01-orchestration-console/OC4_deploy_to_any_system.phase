@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+type: phase
+id: docs_2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+context: pipeline phase OC4_deploy_to_any_system of docs/2026-11-01-orchestration-console-phasemap.spec
+intent: null
+summary: OC4_deploy_to_any_system (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793557554801
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793557554801
+lastSeenAt: 1793557554801
+fingerprint: null
+payload:
+  id: OC4_deploy_to_any_system
+  map: docs/2026-11-01-orchestration-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/deploy.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - tests/modules/test-cos-deploy.test.js
+  depends_on:
+    - OC1_task_nodes
+  blocks:
+    - MOD-OC-DEPLOY
+  spec: docs/orchestration-console.spec
+  graph: d46629745587c832

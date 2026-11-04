@@ -4,6 +4,22 @@ platform: fiverr
 title: I will write a clear technical spec and build plan for your app idea
 category: Programming & Tech
 subcategory: Software Development
+serviceType: Full Stack Web Applications          # SELECT A SERVICE TYPE on the page; the fill matches by label (§1.2 says what it can't)
+metadata:
+  "PROGRAMMING LANGUAGE":
+    - JavaScript
+    - TypeScript
+    - Python
+  "EXPERTISE":
+    - Algorithms & Data structures
+    - Databases
+    - Testing procedures
+    - Source control
+    - Performance
+  "FRONTEND FRAMEWORK":
+    - React
+  "BACKEND FRAMEWORK":
+    - Node.js
 tags:
   - technical spec
   - architecture

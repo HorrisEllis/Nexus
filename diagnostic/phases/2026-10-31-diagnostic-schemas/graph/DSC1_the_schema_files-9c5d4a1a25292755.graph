@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DSC1_the_schema_files:9c5d4a1a25292755
+type: graph
+id: phase:DSC1_the_schema_files:9c5d4a1a25292755
+context: dependency graph of phase DSC1_the_schema_files
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793419909856
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419909856
+lastSeenAt: 1793419909856
+fingerprint: null
+payload:
+  for: DSC1_the_schema_files
+  kind: phase
+  repo: null
+  hash: 9c5d4a1a25292755
+  nodes:
+    - path: diagnostic/schemas/index.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: diagnostic/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC_D0_a_schema_for_everything
+    dependents:
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC2_findings_in_one_shape
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC4_beats_heals_and_measures_checked
+    upstream:
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC_D0_a_schema_for_everything
+    downstream:
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC2_findings_in_one_shape
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC3_the_fix_from_the_declaration
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC4_beats_heals_and_measures_checked
+    blockedBy:
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC_D0_a_schema_for_everything
+    unlocks:
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC2_findings_in_one_shape
+      - docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC4_beats_heals_and_measures_checked
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by DSC_D0_a_schema_for_everything
+      - 'depends on (1): DSC_D0_a_schema_for_everything'
+      - >-
+        needed by (2): DSC2_findings_in_one_shape, DSC4_beats_heals_and_measures_checked · all
+        downstream 3 · finishing it unlocks DSC2_findings_in_one_shape,
+        DSC4_beats_heals_and_measures_checked
+    edges:
+      - from: docs/2026-10-31-diagnostic-schemas-phasemap.spec::DSC_D0_a_schema_for_everything
+        kind: declared

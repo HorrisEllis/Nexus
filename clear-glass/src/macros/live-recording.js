@@ -14,8 +14,8 @@ const { recordingToSteps } = require('./recording');
 const nodes = require('../../../lib/automation-nodes.js');
 
 class LiveRecorder {
-  constructor({ getWebContents, evalJs, dir, now = Date.now, setTimer = setInterval, clearTimer = clearInterval, pollMs = 400 } = {}) {
-    this.getWebContents = getWebContents; this.evalJs = evalJs; this.dir = dir; this.now = now;
+  constructor({ getWebContents, evalJs, dir, now = Date.now, setTimer = setInterval, clearTimer = clearInterval, pollMs = 400, onProgress = null } = {}) {
+    this.getWebContents = getWebContents; this.evalJs = evalJs; this.dir = dir; this.now = now; this.onProgress = onProgress;   // MB4: the toast
     this.setTimer = setTimer; this.clearTimer = clearTimer; this.pollMs = pollMs;
     this.sessions = new Map();
   }
@@ -65,15 +65,27 @@ class LiveRecorder {
     try {
       let got = [];
       try { got = (await this.evalJs(s.wc, DRAIN)) || []; } catch (e) { s.errors++; s.lastError = e.message; }
-      if (got.length) s.events.push(...got.filter(e => e && e.type));
+      if (got.length && !s.paused) s.events.push(...got.filter(e => e && e.type));   // MB4: paused, what happens on the page is drained and not kept
       s.events.sort((a, b) => (a.ts || 0) - (b.ts || 0));
-      const w = this._write(s);
+      const before = s.stepCount; const w = this._write(s);
+      if (s.stepCount !== before) this._say(s);
       return { ...w, events: s.events.length, errors: s.errors };
     } finally { s.busy = false; }
   }
+  // 0.60.359 MB4 — James: "the macro toast for playback and recording, shows what step your on, out of how many. with a pause and skip, goes back
+  // one step." Recording: pause stops keeping what happens on the page; back drops the last recorded step (its events archived on the session).
+  _say(s, done = false) { if (this.onProgress) { try { this.onProgress({ kind: 'recording', agentId: s.agentId, name: s.name, i: s.stepCount, n: s.stepCount, paused: !!s.paused, done }); } catch (_) {} } }
+  pause(agentId) { const s = this.sessions.get(agentId); if (!s) return { ok: false, error: 'not recording' }; s.paused = true; this._say(s); return this.status(agentId); }
+  resume(agentId) { const s = this.sessions.get(agentId); if (!s) return { ok: false, error: 'not recording' }; s.paused = false; this._say(s); return this.status(agentId); }
+  back(agentId) {
+    const s = this.sessions.get(agentId); if (!s) return { ok: false, error: 'not recording' };
+    const base = recordingToSteps([], { startUrl: s.startUrl }).steps.length, want = Math.max(base, s.stepCount - 1); s.dropped = s.dropped || [];
+    while (s.events.length && recordingToSteps(s.events, { startUrl: s.startUrl }).steps.length > want) s.dropped.push(s.events.pop());
+    this._write(s); this._say(s); return this.status(agentId);
+  }
   status(agentId) {
     const s = this.sessions.get(agentId); if (!s) return { ok: true, recording: false };
-    return { ok: true, recording: true, file: s.file, name: s.name, events: s.events.length, steps: s.stepCount, errors: s.errors, lastError: s.lastError };
+    return { ok: true, recording: true, paused: !!s.paused, file: s.file, name: s.name, events: s.events.length, steps: s.stepCount, errors: s.errors, lastError: s.lastError };
   }
   /** stop -> { ok, file, steps, params, events } ; keep=false deletes nothing: the node stays (§0.3) */
   async stop(agentId) {
@@ -81,7 +93,7 @@ class LiveRecorder {
     const w = await this.flush(agentId);
     this.clearTimer(s.timer);
     if (s.wc.removeListener) for (const [e, f] of s.listeners) s.wc.removeListener(e, f);
-    this.sessions.delete(agentId);
+    this.sessions.delete(agentId); this._say(s, true);
     return { ok: true, file: s.file, name: s.name, events: s.events.length, steps: (w && w.steps) || [], params: (w && w.params) || [], errors: s.errors };
   }
 }

@@ -684,7 +684,7 @@ async function boot() {
 
       // ── Spec file operations (read the spec doc itself) ──────────────────
       if (path_ === '/api/spec' && method === 'GET') {
-        const specPath = path.join(__dirname, 'docs', 'ARCHITECT-SPEC-v1.1.0.md');
+        const specPath = path.join(__dirname, 'docs', 'ARCHITECT-SPEC-v1.1.0.spec');
         try {
           const content = fs.readFileSync(specPath, 'utf8');
           res.writeHead(200, { 'Content-Type':'text/markdown; charset=utf-8', 'Access-Control-Allow-Origin':'*' });

@@ -1,0 +1,20 @@
+# His words, A to Z — K
+
+Part of [his words, stripped and indexed](../2026-10-31-his-words-stripped.md). [0-9](words-0-9.md) · [A](words-A.md) · [B](words-B.md) · [C](words-C.md) · [D](words-D.md) · [E](words-E.md) · [F](words-F.md) · [G](words-G.md) · [H](words-H.md) · [I](words-I.md) · [J](words-J.md) · [K](words-K.md) · [L](words-L.md) · [M](words-M.md) · [N](words-N.md) · [O](words-O.md) · [P](words-P.md) · [Q](words-Q.md) · [R](words-R.md) · [S](words-S.md) · [T](words-T.md) · [U](words-U.md) · [V](words-V.md) · [W](words-W.md) · [X](words-X.md) · [Y](words-Y.md) · [Z](words-Z.md)
+
+- keeper (3) — [Q0891](quotes-2026-10-05.md#q0891), [Q1025](quotes-2026-10-07.md#q1025), [Q1031](quotes-2026-10-07.md#q1031)
+- keeping (2) — [Q1338](quotes-2026-10-16.md#q1338), [Q1510](quotes-2026-10-19.md#q1510)
+- **keeps** (11) — [Q0360](quotes-2026-09-06.md#q0360), [Q0486](quotes-2026-09-15.md#q0486), [Q0986](quotes-2026-10-05.md#q0986), [Q1196](quotes-2026-10-13.md#q1196), [Q1255](quotes-2026-10-15.md#q1255), [Q1510](quotes-2026-10-19.md#q1510), [Q1806](quotes-2026-10-28.md#q1806), [Q1815](quotes-2026-10-28.md#q1815), [Q1866](quotes-2026-10-30.md#q1866), [Q2008](quotes-undated-1.md#q2008), [Q2192](quotes-undated-2.md#q2192)
+- kept (1) — [Q1914](quotes-2026-10-30.md#q1914)
+- kernel (3) — [Q0044](quotes-2026-08-09.md#q0044), [Q0607](quotes-2026-09-21.md#q0607), [Q0620](quotes-2026-09-21.md#q0620)
+- **key** (10) · *key, keys* — [Q0205](quotes-2026-08-28.md#q0205), [Q0217](quotes-2026-08-29.md#q0217), [Q0334](quotes-2026-09-05.md#q0334), [Q0578](quotes-2026-09-20.md#q0578), [Q0820](quotes-2026-10-02.md#q0820), [Q1315](quotes-2026-10-15.md#q1315), [Q1796](quotes-2026-10-28.md#q1796), [Q1850](quotes-2026-10-29.md#q1850), [Q1856](quotes-2026-10-29.md#q1856), [Q1902](quotes-2026-10-30.md#q1902)
+- keybindings (3) — [Q1796](quotes-2026-10-28.md#q1796), [Q1855](quotes-2026-10-29.md#q1855), [Q1904](quotes-2026-10-30.md#q1904)
+- keyboard (4) — [Q0619](quotes-2026-09-21.md#q0619), [Q1856](quotes-2026-10-29.md#q1856), [Q1862](quotes-2026-10-30.md#q1862), [Q2004](quotes-undated-1.md#q2004)
+- keystroke (1) — [Q1896](quotes-2026-10-30.md#q1896)
+- keyword (3) · *keyword, keywords* — [Q0126](quotes-2026-08-18.md#q0126), [Q0178](quotes-2026-08-23.md#q0178), [Q2069](quotes-undated-1.md#q2069)
+- kids (2) — [Q1882](quotes-2026-10-30.md#q1882), [Q1908](quotes-2026-10-30.md#q1908)
+- kill (4) — [Q0508](quotes-2026-09-16.md#q0508), [Q1574](quotes-2026-10-21.md#q1574), [Q1601](quotes-2026-10-21.md#q1601), [Q1602](quotes-2026-10-21.md#q1602)
+- kinds (1) — [Q0481](quotes-2026-09-15.md#q0481)
+- knowledge (1) — [Q1916](quotes-2026-10-30.md#q1916)
+- known (3) — [Q0741](quotes-2026-09-29.md#q0741), [Q0793](quotes-2026-10-01.md#q0793), [Q0807](quotes-2026-10-01.md#q0807)
+- knows (2) — [Q1291](quotes-2026-10-15.md#q1291), [Q1324](quotes-2026-10-15.md#q1324)

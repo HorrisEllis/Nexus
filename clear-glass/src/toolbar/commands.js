@@ -50,7 +50,7 @@
  */
 
 const TOOLBAR_COMMANDS = [
-  { id: 'btn-gig',         icon: '✦', label: 'Fiverr gigs', glyph: 'briefcase', desc: 'Write a gig, fill the page, turn an order into a build',            group: 'Tools',   pinnable: true, defaultPinned: true },   // §0.59.3 James: "fiverr … this is my only chance"
+  { id: 'btn-gig',         icon: '✦', label: 'Fiverr gigs', glyph: 'briefcase', desc: 'Write a gig, fill the page, turn an order into a build',            group: 'Tools',   pinnable: true, defaultPinned: false, retired: true },   // 0.60.358 — James: "can you remove the fiverr from the menu": retired from the toolbar (hidden even where a saved pin names it), kept in the palette (§0.3)   // §0.59.3 James: "fiverr … this is my only chance"
   { id: 'btn-dom',         icon: '⛏', label: 'DOM Archaeology', glyph: 'code', desc: 'Dig through this page\'s structure and its changes',        group: 'Tools',   pinnable: true, defaultPinned: false },
   // §BUGFIX 2026-08-24 — picker-route (the "→ SSE / → API" select) and
   // picker-api-url (the endpoint input, shown only when "→ API" is chosen)

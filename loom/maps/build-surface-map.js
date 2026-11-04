@@ -31,6 +31,8 @@ const FILES = [
     I('clear-glass/src/ipc/bridge.js'),                        // IPC autofill:suggest / autofill:fillOne
     I('clear-glass/src/preload/webview-bridge.js'),            // the page's autofill:rects / autofill:stale (ipc-message)
   ]],
+  // §MT1 0.60.335 — the macro recording/playing toast (window.CGMacroToast); browser.js drives it from the record hotkey
+  ['clear-glass/renderer/macro-toast.js', I('clear-glass/renderer/macro-toast.js'), [I('clear-glass/renderer/browser.js')]],
   ['clear-glass/src/autofill/suggest.js', I('clear-glass/src/autofill/suggest.js'), []],
   ['clear-glass/src/page/keyboard-mode.js', I('clear-glass/src/page/keyboard-mode.js'), [   // 0.60.273 FG1 — the Tab switch per site
     I('clear-glass/src/page/state-diff.js'),                   // require — snapshotScript, diffState, _part injected into the page
@@ -73,9 +75,14 @@ const FILES = [
   ['clear-glass/src/page/element-gate.js', I('clear-glass/src/page/element-gate.js'), [I('clear-glass/src/page/option-match.js')]],
   ['clear-glass/renderer/site-gates/gate-bar.js', I('clear-glass/renderer/site-gates/gate-bar.js'), []],
   ['clear-glass/renderer/a11y-panel.js', I('clear-glass/renderer/a11y-panel.js'), []],
-  ['clear-glass/renderer/macro-run-toast.js', I('clear-glass/renderer/macro-run-toast.js'), []],   // 2026-11-04 MR1 a browser script: ClearGlass.macros.onRunState / runControl / onRecState over IPC   // 2026-10-30 AC2 a browser script: cg.siteProfile.a11yTrace / a11yKeepOff / a11yOpenControl over IPC   // a browser script: cg.shortcuts.gateAdd over IPC
   ['lib/repo-history-nodes.js', I('lib/repo-history-nodes.js'), [I('lib/node-export.js'), I('lib/test-sandbox.js')]],   // 0.60.285 HN1 — Idearium's history as nodes, one per unit
-  ['lib/automation/pipeline.js', I('lib/automation/pipeline.js'), [I('lib/automation/engine.js'), I('lib/automation/steps.js')]],   // 0.60.284 PL1 — WORKFLOWS_DIR; byType, validateStep
+  ['lib/automation/pipeline.js', I('lib/automation/pipeline.js'), [I('lib/automation/engine.js'), I('lib/automation/steps.js')]],
+  ['lib/automation/task-node.js', I('lib/automation/task-node.js'), [I('lib/automation/cron.js'), I('lib/versionium-record.js')]],
+  ['orchestrator/cos-ui-door.js', I('orchestrator/cos-ui-door.js'), []],   // 0.60.352 MG34 — the COS channel's door: probes :7797/:7799, starts only what is down (spawns by path, never requires COS)
+  ['lib/ui/tv-shell/channels/cos/cos.js', I('lib/ui/tv-shell/channels/cos/cos.js'), []],   // 0.60.352 MG34 — the COS channel page (a browser script; reads the orchestrator by route)
+  ['lib/ui/tv-shell/channels/tension/tension.js', I('lib/ui/tv-shell/channels/tension/tension.js'), []],   // 0.60.351 CI8 — the TENSION channel (a browser script; reads the orchestrator by route)
+  ['clear-glass/src/main/idle-tray.js', I('clear-glass/src/main/idle-tray.js'), []],   // 0.60.366 CA1 — Clear Glass to the tray after his period with no input (required by src/main/index.js)
+  ['intelligence/friction.js', I('intelligence/friction.js'), []],   // 0.60.350 CI7 — the tension formula, Intelligence's (pure; its inputs come by route in routes.js)   // 0.60.284 PL1 — WORKFLOWS_DIR; byType, validateStep
   ['clear-glass/renderer/settings/sections/pipelines.js', I('clear-glass/renderer/settings/sections/pipelines.js'), [I('lib/automation/routes.js')]],   // 0.60.284 PL4 — wire /automation/pipelines*
   ['clear-glass/src/page/state-diff.js', I('clear-glass/src/page/state-diff.js'), []],      // 0.60.221 FP4 — pure; first used 0.60.273
   ['clear-glass/src/about/index.js', I('clear-glass/src/about/index.js'), []],   // 0.60.269 — versions and the update check (fetch, no requires)
@@ -234,13 +241,27 @@ const FILES = [
   ['lib/automation-nodes.js', I('lib/automation-nodes.js'), [I('lib/node-export.js')]],   // core node-file utility + the one source of NODES_DIR
   [I('lib/automation/routes.js'), I('lib/automation-nodes.js'), '§AE1 — the door lists/imports .macro/.workflow node files through the core utility'],
   [I('clear-glass/src/mesh/agent-mesh.js'), I('lib/automation/engine.js'), '§AE1 — Clear Glass runs its OWN engine instance from core for browser automation (local, standalone); its namespace is brainos'],
-  ['orchestrator/automation/index.js', I('orchestrator/automation/index.js'), [I('lib/automation/engine.js'), I('lib/automation/routes.js')]],   // the orchestrator's OWN instance for platform orchestration; its own namespace
+  ['orchestrator/automation/index.js', I('orchestrator/automation/index.js'), [I('lib/automation/engine.js'), I('lib/automation/routes.js'), I('lib/raid-port.js')]],   // the orchestrator's OWN instance; §AE3 agent steps RAID-decide then dispatch to Guardian by port
   [I('orchestrator/orchestrator.js'), I('orchestrator/automation/index.js'), '§AE1/AE3 — the :9000 server mounts the orchestrator engine door (/automation/*)'],
   [I('idearium/api/index.js'), I('lib/context-stream.js'), '0.60.156 makeAttempt: the stream note per gate; POST /api/context/find, /api/repos/:uuid/context/find'],
   [I('idearium/api/index.js'), I('lib/context-sources.js'), '0.60.156 GET /api/context/sources'],
   // §0.60.157 GM4 — the node lattice: every data node of every system, edges typed; read by route, never the files
   ['lib/node-edges.js', I('lib/node-edges.js'), [I('lib/node-export.js')]],   // importFromFile — each node read from its file
   ['intelligence/lattice/node-lattice.js', I('intelligence/lattice/node-lattice.js'), [I('lib/nexus-client.js')]],   // Idearium's GET /api/system/nodes(/:system?edges=1)
+  [I('orchestrator/orchestrator.js'), I('orchestrator/cos-ui-door.js'), '0.60.352 MG34 GET /api/cos-ui/status, POST /api/cos-ui/start'],
+  [I('lib/nexus-update.js'), I('lib/nexus-client.js'), '0.60.363 UP13 applyBacked asks Idearium POST /api/nexus-self/backup before every update (the store is Idearium\'s)'],
+  [I('idearium/api/index.js'), I('lib/nexus-self/store.js'), '0.60.363 UP13 _updateBackup: the whole tree snapshotted in Idearium\'s process'],
+  [I('idearium/api/index.js'), I('lib/versionium-record.js'), '0.60.363 UP13 the backup recorded in Versionium (kind nexus.backup)'],
+  [I('lib/ui/tv-shell/index.html'), I('orchestrator/orchestrator.js'), '0.60.360 TV4 the overview COS tile: GET /api/cos-ui/status (TV_D1)'],
+  [I('lib/ui/tv-shell/channels/cos/cos.js'), I('orchestrator/orchestrator.js'), '0.60.352 MG34 GET /api/cos-ui/status, POST /api/cos-ui/start (TV_D1)'],
+  [I('lib/ui/tv-shell/menu.js'), I('orchestrator/orchestrator.js'), '0.60.352 UP10 ⇪ UPDATE: GET /api/update/check, POST /api/update/apply (TV_D1)'],
+  [I('orchestrator/orchestrator.js'), I('idearium/api/index.js'), '0.60.352 UP10 /api/update/{check,apply} → Idearium GET /api/update, POST /api/update/apply, by route (the one place the tree changes)'],
+  [I('lib/ui/tv-shell/channels/tension/tension.js'), I('orchestrator/orchestrator.js'), '0.60.351 CI8 GET /api/tension-field/tension (TV_D1: the TV asks only :9000)'],
+  [I('orchestrator/orchestrator.js'), I('intelligence/routes.js'), '0.60.351 CI8 /api/tension-field/{tension,friction} → Intelligence GET /api/intelligence/{tension,friction}, by route'],
+  [I('intelligence/routes.js'), I('intelligence/friction.js'), '0.60.350 CI7 GET /api/intelligence/tension → tensionOf(Diagnostic /friction, Cortex /api/gaps/tension)'],
+  [I('intelligence/routes.js'), I('lib/nexus-client.js'), '0.60.346 CI6 / 0.60.350 CI7 Diagnostic GET /friction and Cortex GET /api/gaps/tension, by route'],
+  [I('loom/server.js'), I('intelligence/routes.js'), '0.60.346 CI6 Loom /api/friction and /api/tension ask GET /api/intelligence/{friction,tension} (Diagnostic the said fallback)'],
+  [I('cortex/boot.js'), I('cortex/self-heal/fault-taxonomy.js'), '0.60.350 CI7 GET /api/gaps/tension → tensionBySystem(open gaps)'],
   [I('intelligence/routes.js'), I('intelligence/lattice/node-lattice.js'), '0.60.157 POST /api/intelligence/lattice/neighbours · GET /api/intelligence/lattice/nodes'],
   [I('idearium/api/index.js'), I('lib/node-edges.js'), '0.60.157 GET /api/system/nodes/:system?edges=1'],
   // §0.60.157 QA1 — four more catalogue checks run (the gating census, layer 1)
@@ -452,7 +473,7 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/prevention.js'), '0.60.123 MP _guardedSync heavyAllowedHere; GET /system/lean prevention; POST /system/prevention/clear'],
   [I('clear-glass/src/main/index.js'), I('lib/prevention.js'), '0.60.123 MP Eros and the NCP prewarm held under prevention'],
   [I('cortex/core/raid/officiator.js'), I('lib/prevention.js'), '0.60.123 MP the tick asks heavyAllowedHere'],
-  [I('lib/nexus/autopilot.js'), I('lib/prevention.js'), '0.60.123 MP the loom refresh waits for heavyAllowed'],
+  [I('lib/nexus/autopilot.js'), I('lib/prevention.js'), '0.60.123 MP the loom refresh waits for heavyAllowed'],   // until 0.60.330; since MG17 core-duties' (cos-testenv-map)
   // SD20 0.60.203 — a starved machine does not spin (docs/2026-10-10-idearium-solid-phasemap.spec)
   [I('cortex/core/raid/worker.js'), I('lib/prevention.js'), 'SD20 0.60.203 the drain waits on heavyAllowedHere(raid-worker)'],
   [I('cortex/core/raid/officiator.js'), I('cortex/core/raid/contract-intake.js'), 'SD20 0.60.203 listQueue: sameGoal (no second contract for one goal) and failStreak (its own failing contracts hold synthesis)'],
@@ -510,12 +531,17 @@ const CONSUMERS = [
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/driver/index.js'), '0.60.281 AP1 _gigFeatures: choose / readChoice / checkAt / rowLabels per package row'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/page/keyboard-mode.js'), '2026-10-30 AC2 _a11yTrace / _a11yKeepOff: traceScript, keepOffScript — the look traced to what turns it on, kept off by the site setting accessibility.keepOff'],
   [I('clear-glass/src/main/index.js'), I('clear-glass/src/page/keyboard-mode.js'), '2026-10-30 AC2 _siteOnLoad: keepOffScript(readers.keepOff(url)) at every load of the site'],
-  [I('clear-glass/src/ipc/bridge.js'), I('lib/agent-tools/tools/clear-glass/macro.js'), '2026-11-04 MR1 runMacroAsPerson → macro run({ control }): the run toast\'s pause / play / skip / previous / stop'],
   [I('clear-glass/renderer/browser.js'), I('clear-glass/renderer/a11y-panel.js'), '2026-10-30 AC2 _a11yPanel: the Site settings popup\'s accessibility panel (window.CGA11yPanel)'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/page/keyboard-mode.js'), '0.60.283 _a11y: sweepScript — what holds a site\'s accessibility look on; reset backs up, removes, sets Off, reloads'],
   [I('clear-glass/renderer/browser.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.283 the Site settings popup\'s Reset (cg.siteProfile.a11yReset → IPC site:a11yReset)'],
   [I('lib/automation/routes.js'), I('lib/automation/pipeline.js'), '0.60.284 PL2 /automation/pipelines* and /automation/pipeline-runs* (A.pipelines, lazy)'],
   [I('lib/automation/pipeline.js'), I('lib/automation/engine.js'), '0.60.284 PL1 each task → engine.runStep(step, { vars, scope: { tasks } })'],
+  [I('lib/automation/task-node.js'), I('lib/automation/cron.js'), '0.60.348 OC1 validateTask: schedule.cron → cron.parse (its why on a bad field)'],
+  [I('lib/automation/task-node.js'), I('lib/versionium-record.js'), '0.60.348 OC1 saveTask / archiveTask → record({ kind: orchestration.task.* }) (§17.12)'],
+  [I('lib/repo-procedures.js'), I('lib/automation/pipeline.js'), '0.60.354 PD1 a check step → gateOpen(contains|equals|matches|notEmpty, an earlier step’s output) (lazy)'],
+  [I('idearium/api/index.js'), I('lib/repo-procedures.js'), '0.60.354 PD1 /api/procedures, /:id, /:id/run → library, fromLibrary, runSteps (idearium/procedures)'],
+  [I('idearium/api/index.js'), I('lib/agent-tools/tools/nexus/command.js'), '0.60.354 PD1 a library procedure’s nexus.command step → command.execute (no yes) | runAsPerson (after his yes)'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '0.60.354 PD1 procedure list | show | run rows → /api/procedures*'],
   [I('idearium/cli/route-commands.js'), I('lib/automation/routes.js'), '0.60.284 PL3 pipeline.* rows → Clear Glass :7704 /automation/pipelines*'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig-pages.js'), '0.60.283 _gigTags: tagInputScript / tagShownScript (each tag gated)'],
   [I('lib/repo-agent.js'), I('lib/repo-history-nodes.js'), '0.60.285 HN2 _log → record(row, { text, message, toolCalls, model }): every exchange as nodes (lazy require)'],

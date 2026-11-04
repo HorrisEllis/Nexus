@@ -1,0 +1,56 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SE4_drafts_from_code:1a843403e3232980
+type: graph
+id: phase:SE4_drafts_from_code:1a843403e3232980
+context: dependency graph of phase SE4_drafts_from_code
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793420908244
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793420908244
+lastSeenAt: 1793420908244
+fingerprint: null
+payload:
+  for: SE4_drafts_from_code
+  kind: phase
+  repo: null
+  hash: 1a843403e3232980
+  nodes:
+    - path: idearium/spec-engine/draft-from-code.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: tests/modules/test-draft-from-code.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE3_the_library_and_the_queue
+    dependents: []
+    upstream:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE1_spec_ids_and_types
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE2_the_origin_trace
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE3_the_library_and_the_queue
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D1_spec_ids_types_library_queue
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D3_the_origin_is_server_js
+    downstream: []
+    blockedBy:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE3_the_library_and_the_queue
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by SE3_the_library_and_the_queue
+      - 'depends on (1): SE3_the_library_and_the_queue · all upstream 5'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-31-spec-everything-phasemap.spec::SE3_the_library_and_the_queue
+        kind: declared

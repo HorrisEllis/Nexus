@@ -134,6 +134,23 @@ function hashContract(contractBody) {
 }
 
 // ── Verify a system's contract ────────────────────────────────────────────────
+// 0.60.324 DO0 — James, 2026-10-31: "yes do that also" (the 0-routes defect, docs/system-doors.spec MOD-DOOR-HANDSHAKE). Systems that serve
+// interaction-contract.json publish routes[]; Clear Glass, Copilot, Ollama and Versionium serve their registry, components[] each carrying
+// its route — counted as 0 before (contract.routes || contract.channels only). One count for every shape, and the shape it read is said;
+// a contract in no shape it knows is 'unknown' with a null count, never 0 (§1.2).
+function countRoutes(contract) {
+  const c = contract || {};
+  const n = (x) => (Array.isArray(x) ? x.length : (x && typeof x === 'object' ? Object.keys(x).length : 0));
+  if (Array.isArray(c.routes) || (c.routes && typeof c.routes === 'object')) return { count: n(c.routes), shape: 'routes' };
+  if (Array.isArray(c.channels) || (c.channels && typeof c.channels === 'object')) return { count: n(c.channels), shape: 'channels' };
+  const comps = Array.isArray(c.components) ? c.components : Array.isArray(c) ? c : null;
+  if (comps) {
+    const routed = comps.filter(x => x && x.route && (x.route.path || typeof x.route === 'string'));
+    return { count: routed.length, shape: 'components', malformed: comps.length - routed.length };
+  }
+  return { count: null, shape: 'unknown' };
+}
+
 async function verifySystem(systemId, host, port, opts = {}) {
   const { expectedHash = null, jaaInsert = null, onResult = null } = opts;
   const t0 = Date.now();
@@ -179,9 +196,9 @@ async function verifySystem(systemId, host, port, opts = {}) {
   }
 
   // Route count — handle various contract shapes
-  const routes   = contract.routes || contract.channels || [];
+  const rc       = countRoutes(contract);
   const hasCli   = Array.isArray(contract.cli);
-  const hasContent = routes.length > 0 || contract.siso?.emits?.length > 0 || contract.namespace;
+  const hasContent = rc.count > 0 || contract.siso?.emits?.length > 0 || contract.namespace;
 
   const entry = {
     systemId,
@@ -190,7 +207,9 @@ async function verifySystem(systemId, host, port, opts = {}) {
     trust,
     hash,
     idMatch,
-    routeCount: routes.length,
+    routeCount: rc.count,
+    routeShape: rc.shape,
+    ...(rc.malformed ? { malformedComponents: rc.malformed } : {}),
     cliCount:   hasCli ? contract.cli.length : 0,
     driftReason,
     checkedAt:  Date.now(),
@@ -239,4 +258,4 @@ function _log(jaaInsert, type, payload) {
   }
 }
 
-module.exports = { verifySystem, verifyAll, getEntry, getAllEntries, getTrustMap, TRUST, MODULE_ID, CONTRACT_PATHS };
+module.exports = { verifySystem, verifyAll, getEntry, getAllEntries, getTrustMap, countRoutes, TRUST, MODULE_ID, CONTRACT_PATHS };

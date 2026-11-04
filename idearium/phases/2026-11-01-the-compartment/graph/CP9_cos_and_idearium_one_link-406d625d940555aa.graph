@@ -1,0 +1,335 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP9_cos_and_idearium_one_link:406d625d940555aa
+type: graph
+id: phase:CP9_cos_and_idearium_one_link:406d625d940555aa
+context: dependency graph of phase CP9_cos_and_idearium_one_link
+intent: null
+summary: 29 node(s), 9 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793576104460
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104460
+lastSeenAt: 1793576104460
+fingerprint: null
+payload:
+  for: CP9_cos_and_idearium_one_link
+  kind: phase
+  repo: null
+  hash: 406d625d940555aa
+  nodes:
+    - path: cos/host/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/ci/keys.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/test/test.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/cli.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-tools/tools/execution/safe-apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/cos-archetype.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/cos-blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/cos-compartment.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/cos-playground.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/event-bus.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/archetype.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/blueprint.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/compartment.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/playgrounds.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/plugin.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/process.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/state-store.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/system-map.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/Event.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/host/index.js
+      to: cos/host/state-store.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/event-bus.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/system-map.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/siso/Event.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/compartment.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/process.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/archetype.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/blueprint.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/playgrounds.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/plugin.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cos/ci/keys.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cos/cli/index.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cos/test/test.js
+      to: cos/host/index.js
+      kind: requires
+    - from: guardian/cli.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/safe-apply.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/cos-archetype.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/cos-blueprint.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/cos-compartment.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/cos-playground.js
+      to: cos/host/index.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/host/index.js
+      fromSystem: clear-glass
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: cos/host/index.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: guardian/cli.js
+      to: cos/host/index.js
+      fromSystem: guardian
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/execution/safe-apply.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/sandbox/cos-archetype.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/sandbox/cos-blueprint.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/sandbox/cos-compartment.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/sandbox/cos-playground.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D1_cos_and_idearium_one_link
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+    dependents:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D1_cos_and_idearium_one_link
+    downstream:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
+    blockedBy:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5b_pause_resume
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP7a_the_nexus_sync_options
+        files:
+          - cos/manager/server.js
+          - idearium/api/index.js
+    dangling: []
+    lines:
+      - layer 6 · blocked by CP1_the_machine_and_its_door
+      - >-
+        depends on (3): CP1_the_machine_and_its_door, CP_D1_cos_and_idearium_one_link,
+        EAS3_emerge_at_the_top_of_nexus · all upstream 19
+      - 'needed by (1): CP10_miniworlds'
+      - 'same files as CP11_the_diagnostic_map with no order between them: cos/manager/server.js'
+      - 'same files as CP5b_pause_resume with no order between them: cos/manager/server.js'
+      - >-
+        same files as CP5a_snapshots_per_compartment with no order between them:
+        cos/manager/server.js
+      - >-
+        same files as CP7a_the_nexus_sync_options with no order between them: cos/manager/server.js,
+        idearium/api/index.js
+    edges:
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+        kind: declared
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP_D1_cos_and_idearium_one_link
+        kind: declared
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+        kind: declared

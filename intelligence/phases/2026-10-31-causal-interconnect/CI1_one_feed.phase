@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+type: phase
+id: docs_2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+context: pipeline phase CI1_one_feed of docs/2026-10-31-causal-interconnect-phasemap.spec
+intent: null
+summary: CI1_one_feed (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1793422837073
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793422837073
+lastSeenAt: 1793422837073
+fingerprint: null
+payload:
+  id: CI1_one_feed
+  map: docs/2026-10-31-causal-interconnect-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/causal-bridge.js
+    - intelligence/cfr/ledger.js
+    - intelligence/routes.js
+    - intelligence/server.js
+    - tests/modules/test-causal-bridge.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - CI_D0_interconnected
+    - CI_D1_one_graph_cfr_builds_rfr2_reads
+  blocks:
+    - MOD-CI-FEED
+  spec: intelligence/spec/causal-interconnect.spec
+  graph: d4daccc59aeb56bf

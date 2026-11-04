@@ -1,0 +1,78 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RG0_enforced:95add091a375dc32
+type: graph
+id: phase:RG0_enforced:95add091a375dc32
+context: dependency graph of phase RG0_enforced
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793705950442
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793705950442
+lastSeenAt: 1793705950442
+fingerprint: null
+payload:
+  for: RG0_enforced
+  kind: phase
+  repo: null
+  hash: 95add091a375dc32
+  nodes:
+    - path: CLAUDE.md
+      role: changes
+      exists: true
+      system: null
+    - path: docs/AXIOMS-v3.1.md
+      role: changes
+      exists: true
+      system: null
+    - path: docs/CLAUDE.md
+      role: changes
+      exists: true
+      system: null
+    - path: lib/contracts/registry-sovereign-baseline.json
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/registry-sovereign-check.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-sovereign.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/run-all.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-03-registry-per-system-phasemap.spec::RG_D0_the_registry_is_per_system
+    dependents: []
+    upstream:
+      - docs/2026-11-03-registry-per-system-phasemap.spec::RG_D0_the_registry_is_per_system
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): RG_D0_the_registry_is_per_system'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-03-registry-per-system-phasemap.spec::RG_D0_the_registry_is_per_system
+        kind: declared

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-foundation-up-phasemap.spec::F3_the_door
+type: phase
+id: docs_2026-10-30-foundation-up-phasemap.spec::F3_the_door
+context: pipeline phase F3_the_door of docs/2026-10-30-foundation-up-phasemap.spec
+intent: null
+summary: F3_the_door (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793382595484
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595484
+lastSeenAt: 1793382595484
+fingerprint: null
+payload:
+  id: F3_the_door
+  map: docs/2026-10-30-foundation-up-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+  depends_on:
+    - F0_the_kernel_spec
+    - MG15_the_supervisor_in_cos
+  blocks: []
+  spec: null
+  graph: b2415e92525104ae

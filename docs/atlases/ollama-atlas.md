@@ -281,7 +281,7 @@ Not determined — this spec's `gaps`/`history` sections not read this session.
 
 2 other file(s).
 
-- other: `ollama/spec/ollama.node-taxonomy.md`, `ollama/spec/ollama.spec`
+- other: `ollama/spec/ollama.node-taxonomy.spec`, `ollama/spec/ollama.spec`
 
 <!-- generated:registry:end -->
 

@@ -8,6 +8,7 @@ let passed = 0, failed = 0;
 async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} ${desc}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${desc}\n    ${e.message}`); failed++; } }
 
 process.env.LOOM_PORT = '13799';
+process.env.INTELLIGENCE_URL = 'http://127.0.0.1:1';   // 2026-11-01 CI6: Loom asks Intelligence first; T-001/T-002 are about the Diagnostic fallback
 
 (async () => {
   await test('T-001', '/api/friction proxies a real stand-in kernel and returns its actual body', async () => {
@@ -23,6 +24,7 @@ process.env.LOOM_PORT = '13799';
     process.env.DIAGNOSTIC_URL = 'http://127.0.0.1:17825';
     process.env.LOOM_PORT = '13797';
     delete require.cache[require.resolve(path.join(__dirname, '../..', 'loom/server.js'))];
+    delete require.cache[require.resolve(path.join(__dirname, '../..', 'loom/config.js'))];   // 2026-11-01: config reads the env at load; a cached one kept T-001's port (T-002 failed on main too)
     const loomModule = require(path.join(__dirname, '../..', 'loom/server.js'));
     await new Promise(r => setTimeout(r, 400));
     try {
@@ -40,6 +42,7 @@ process.env.LOOM_PORT = '13799';
     process.env.DIAGNOSTIC_URL = 'http://127.0.0.1:1';   // nothing listens on port 1
     process.env.LOOM_PORT = '13798';
     delete require.cache[require.resolve(path.join(__dirname, '../..', 'loom/server.js'))];
+    delete require.cache[require.resolve(path.join(__dirname, '../..', 'loom/config.js'))];   // 2026-11-01: config reads the env at load; a cached one kept T-001's port (T-002 failed on main too)
     const loomModule = require(path.join(__dirname, '../..', 'loom/server.js'));
     await new Promise(r => setTimeout(r, 400));
     try {
@@ -50,6 +53,24 @@ process.env.LOOM_PORT = '13799';
     } finally {
       await new Promise(r => loomModule.server.close(r));
     }
+  });
+
+  // 2026-11-01 CI6 — James: "move that to the intelligence system". With Intelligence up, Loom answers with Intelligence's friction (via: intelligence)
+  await test('T-003', '/api/friction asks Intelligence first; its answer, sourced, comes back via intelligence', async () => {
+    const intel = http.createServer((req, res) => {
+      if (req.url === '/api/intelligence/friction') { res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ ok: true, friction: { testsystem: { friction: 0.7 } }, field: { friction: 0.2 }, sources: [{ source: 'diagnostic' }, { source: 'cfr' }], by: 'intelligence' })); }
+      res.writeHead(404); res.end();
+    });
+    await new Promise(r => intel.listen(17853, '127.0.0.1', r));
+    process.env.INTELLIGENCE_URL = 'http://127.0.0.1:17853'; process.env.DIAGNOSTIC_URL = 'http://127.0.0.1:1'; process.env.LOOM_PORT = '13796';
+    delete require.cache[require.resolve(path.join(__dirname, '../..', 'loom/server.js'))];
+    delete require.cache[require.resolve(path.join(__dirname, '../..', 'loom/config.js'))];
+    const loomModule = require(path.join(__dirname, '../..', 'loom/server.js'));
+    await new Promise(r => setTimeout(r, 400));
+    try {
+      const body = await (await fetch('http://127.0.0.1:13796/api/friction')).json();
+      assert.strictEqual(body.via, 'intelligence'); assert.strictEqual(body.friction.testsystem.friction, 0.7); assert.deepStrictEqual(body.sources.map(x => x.source), ['diagnostic', 'cfr']);
+    } finally { intel.close(); await new Promise(r => loomModule.server.close(r)); }
   });
 
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);

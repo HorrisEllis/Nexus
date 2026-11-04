@@ -1,0 +1,85 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC8_the_specs_at_full_depth:fd0a440c58263fa7
+type: graph
+id: phase:SC8_the_specs_at_full_depth:fd0a440c58263fa7
+context: dependency graph of phase SC8_the_specs_at_full_depth
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793708276746
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793708276746
+lastSeenAt: 1793708276746
+fingerprint: null
+payload:
+  for: SC8_the_specs_at_full_depth
+  kind: phase
+  repo: null
+  hash: fd0a440c58263fa7
+  nodes:
+    - path: cos/spec/cos-console.spec
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/spec/cos-disk.spec
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/spec/cos-manager.spec
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/test-substrate-spec.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-substrate-spec.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
+    dependents: []
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+      - docs/2026-11-02-cos-console-phasemap.spec::SC4_add_a_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK1_pack_inspect_verify_unpack
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK6_the_virtual_disk
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5
+      - 'depends on (2): SC7_the_updates_section, DK7_snapshots_inside_the_disk · all upstream 17'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+        kind: declared
+      - from: docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
+        kind: declared

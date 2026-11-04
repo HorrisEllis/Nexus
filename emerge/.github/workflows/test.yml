@@ -1,0 +1,57 @@
+name: test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: ${{ matrix.os }} · node ${{ matrix.node }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [18, 22]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: emerge/package-lock.json
+
+      - name: emerge — install
+        working-directory: emerge
+        run: npm ci
+      - name: emerge — language tests
+        working-directory: emerge
+        run: npm run test:lang
+      - name: emerge — verify
+        working-directory: emerge
+        run: node verify.js
+      - name: emerge — compiler tests (npm test, the whole suite)
+        working-directory: emerge
+        run: npm test
+      - name: emerge — the system (genesis skeleton, the language through its door, a system of systems)
+        working-directory: emerge
+        run: npm run test:system
+      - name: learn — every lesson, interpreted, compiled, and eg say (docs/learn/verify.js)
+        run: node docs/learn/verify.js
+
+      - name: tests left the checkout clean
+        if: always()
+        shell: bash
+        run: |
+          git status --porcelain
+          test -z "$(git status --porcelain)"
+

@@ -1,0 +1,59 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FT3_tension_measured:dc2feeb86ae9e717
+type: graph
+id: phase:FT3_tension_measured:dc2feeb86ae9e717
+context: dependency graph of phase FT3_tension_measured
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793552212447
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793552212447
+lastSeenAt: 1793552212447
+fingerprint: null
+payload:
+  for: FT3_tension_measured
+  kind: phase
+  repo: null
+  hash: dc2feeb86ae9e717
+  nodes:
+    - path: intelligence/friction-map/tension.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: tests/modules/test-friction-map-tension.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-01-friction-map-phasemap.spec::FT2_joints_measured
+    dependents:
+      - docs/2026-11-01-friction-map-phasemap.spec::FT4_what_fits
+    upstream:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI6_friction_and_tension_home
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D0_interconnected
+      - docs/2026-11-01-friction-map-phasemap.spec::FT1_functions_placed
+      - docs/2026-11-01-friction-map-phasemap.spec::FT2_joints_measured
+      - docs/2026-11-01-friction-map-phasemap.spec::FT_D0_the_map_is_intelligences
+    downstream:
+      - docs/2026-11-01-friction-map-phasemap.spec::FT4_what_fits
+      - docs/2026-11-01-friction-map-phasemap.spec::FT5_asked_and_seen
+    blockedBy:
+      - docs/2026-11-01-friction-map-phasemap.spec::FT2_joints_measured
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by FT2_joints_measured
+      - 'depends on (1): FT2_joints_measured · all upstream 5'
+      - 'needed by (1): FT4_what_fits · all downstream 2'
+    edges:
+      - from: docs/2026-11-01-friction-map-phasemap.spec::FT2_joints_measured
+        kind: declared

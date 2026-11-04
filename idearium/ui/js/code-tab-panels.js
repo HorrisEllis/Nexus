@@ -125,10 +125,20 @@ async function cxAssist(action) {
 const CX_PANELS = [['activity', 'activity'], ['work', 'work'], ['changes', 'changes'], ['flight', 'flight'], ['upload', 'upload'], ['runs', 'runs'], ['responses', 'responses'], ['tasks', 'tasks'], ['log', 'log'], ['control', 'control'], ['versions', 'versions'], ['machine', 'machine'], ['charter', 'charter'], ['agents', 'agents'], ['jobs', 'jobs']];
 const CX_PLAN = new Set(['charter', 'agents', 'jobs']);
 const CX_RT = new Set(['tasks', 'log', 'control', 'versions', 'machine']);
+// §CC1 2026-11-01 — James: "also the code tab, can we consolidate it more. idearium is the system. it can build those projects. thats the
+// point the outputs. also the flight recorder". The fifteen panels are no longer one bar under 'runs': each lives in one of two views.
+// Build: what goes in and how it is built (input → plan → run). Flight: what happened, the flight recorder first. None removed (§0.3).
+const CX_GROUPS = {
+  build: ['upload', 'work', 'charter', 'agents', 'jobs', 'control'],
+  flight: ['flight', 'activity', 'runs', 'responses', 'changes', 'tasks', 'log', 'versions', 'machine'],
+};
+const CX_DEFAULT = { build: 'work', flight: 'flight' };
+function cxGroupOf(k) { return CX_GROUPS.build.includes(k) ? 'build' : 'flight'; }
 function cxPanel(k) {
-  CX.panel = CX_PANELS.some(p => p[0] === k) ? k : 'activity';
-  // §0.60.107 PS3 — since TB5 (0.60.103) the panels are the 'runs' view: opened from the Plan panel or a shortcut, that view comes up
-  if (typeof CS !== 'undefined' && CS.view !== 'runs') { CS.view = 'runs'; try { localStorage.setItem('idearium.cs.view', 'runs'); } catch (_) {} }
+  CX.panel = CX_PANELS.some(p => p[0] === k) ? k : 'flight';
+  // since TB5 the panels open their view: a panel opened from the Plan panel or a shortcut brings up Build or Flight (CC1)
+  const g = cxGroupOf(CX.panel);
+  if (typeof CS !== 'undefined' && CS.view !== g) { CS.view = g; try { localStorage.setItem('idearium.cs.view', g); } catch (_) {} }
   try { localStorage.setItem('idearium.cs.panel', CX.panel); } catch (_) {}
   if (CX.panel !== 'activity') CS.activity = true;
   csPaint();
@@ -327,8 +337,9 @@ function _cxPanelBody() {
     <div class="rt-views" id="cs-rt-views" style="display:none"></div><div class="rt-filters" id="cs-rt-filters"></div><div class="rt-list" id="cs-rt-list"></div>`;
 }
 /** the panel bar and its body; activity's body is code-surface.js's own strip */
-function cxPanelsHtml(activityHtml) {
-  const bar = CX_PANELS.map(([k, l]) => `<button class="cx-tab${CX.panel === k ? ' on' : ''}" onclick="cxPanel('${k}')">${l}</button>`).join('');
+function cxPanelsHtml(activityHtml, group = cxGroupOf(CX.panel)) {
+  const label = Object.fromEntries(CX_PANELS);   // CC1 — the bar in the group's own order: Build input → plan → run, Flight the recorder first
+  const bar = CX_GROUPS[group].map(k => [k, label[k]]).map(([k, l]) => `<button class="cx-tab${CX.panel === k ? ' on' : ''}" onclick="cxPanel('${k}')">${l}</button>`).join('');
   return `<div class="cx-panels"><div class="cx-bar">${bar}</div>${CX.panel === 'activity' ? activityHtml : `<div class="cx-panel-body" id="cx-panel-body">${_cxPanelBody()}</div>`}</div>`;
 }
 /** after csPaint drew the tab: the Plan panel's views redraw into their mount here (from what they hold — no re-read) */

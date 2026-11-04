@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+context: >-
+  pipeline phase GF3_text_and_lists_filled_and_read_back of
+  docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GF3_text_and_lists_filled_and_read_back (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281617
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281617
+lastSeenAt: 1793386281617
+fingerprint: null
+payload:
+  id: GF3_text_and_lists_filled_and_read_back
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.290
+  files:
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/driver/index.js
+  depends_on:
+    - GF2_every_editor_page_known
+    - GM2_fill_only_what_is_ticked
+  blocks:
+    - MOD-GF3
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 774e26a8703d38e8

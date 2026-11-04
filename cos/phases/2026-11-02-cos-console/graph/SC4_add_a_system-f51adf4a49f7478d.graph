@@ -1,0 +1,154 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC4_add_a_system:f51adf4a49f7478d
+type: graph
+id: phase:SC4_add_a_system:f51adf4a49f7478d
+context: dependency graph of phase SC4_add_a_system
+intent: null
+summary: 17 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793708276732
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793708276732
+lastSeenAt: 1793708276732
+fingerprint: null
+payload:
+  for: SC4_add_a_system
+  kind: phase
+  repo: null
+  hash: f51adf4a49f7478d
+  nodes:
+    - path: cos/manager/add-system.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-console.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/cli.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/suspend.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/add-system.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: cos/manager/supervisor.js
+      to: cos/manager/suspend.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/cli.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
+    dependents:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
+    downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+      - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): SC_D4_adding_a_system_is_a_proposal'
+      - >-
+        needed by (1): SC5_the_console_ui · all downstream 3 · finishing it unlocks
+        SC5_the_console_ui
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
+        kind: declared

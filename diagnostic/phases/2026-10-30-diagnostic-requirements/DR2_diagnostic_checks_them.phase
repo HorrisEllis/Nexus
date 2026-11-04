@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-diagnostic-requirements-phasemap.spec::DR2_diagnostic_checks_them
+type: phase
+id: docs_2026-10-30-diagnostic-requirements-phasemap.spec::DR2_diagnostic_checks_them
+context: pipeline phase DR2_diagnostic_checks_them of docs/2026-10-30-diagnostic-requirements-phasemap.spec
+intent: null
+summary: DR2_diagnostic_checks_them (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793383782981
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793383782981
+lastSeenAt: 1793383782981
+fingerprint: null
+payload:
+  id: DR2_diagnostic_checks_them
+  map: docs/2026-10-30-diagnostic-requirements-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/lib/requirements.js
+    - diagnostic/nexus-diagnostic.js
+    - tests/modules/test-diagnostic-requirements.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - DR1_systems_declare_what_they_need
+    - DR_D1_detect_then_owner_fixes
+  blocks:
+    - MOD-DR-CHECK
+  spec: diagnostic/spec/requirements.spec
+  graph: 766bb3f0af8035c6

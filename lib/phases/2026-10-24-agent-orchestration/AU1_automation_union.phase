@@ -7,11 +7,11 @@ intent: null
 summary: AU1_automation_union (library) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792940185295
+exported_at: 1793442586695
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792940185295
-lastSeenAt: 1792940185295
+firstSeenAt: 1793442586695
+lastSeenAt: 1793442586695
 fingerprint: null
 payload:
   id: AU1_automation_union
@@ -27,4 +27,4 @@ payload:
     - AU_D1_automation_union
   blocks: []
   spec: docs/brainos-in-idearium.spec
-  graph: 1e87cd3782a8b00d
+  graph: 3b2a183fcc350931

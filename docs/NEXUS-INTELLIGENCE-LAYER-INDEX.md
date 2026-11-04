@@ -34,7 +34,7 @@
 - `schedules`, `feedback_scores`, `conditioning_log`, `project_registry` — JAA tables already declared in NEXUS.md
 - `unintegrated/rfr2-nexus/delta/index.js` — computeEventDelta(), detectFractals() already implemented
 - `unintegrated/rfr2-nexus/observer/index.js` — observer bus already real
-- `NEXUS-SELF.spec.md` — BEP engine, crystal patterns, RAID fitness already specced
+- `NEXUS-SELF.spec` — BEP engine, crystal patterns, RAID fitness already specced
 
 ### Genuinely new engineering
 - `GET /api/intelligence/query` — the unified query route (built; served by intelligence/routes.js since 2026-09-19, previously /api/cortex/query on cortex/boot.js)

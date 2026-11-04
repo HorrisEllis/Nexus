@@ -7,24 +7,28 @@ intent: null
 summary: MG4_resources_per_compartment (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792880100857
+exported_at: 1793577139956
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100857
-lastSeenAt: 1792880100857
+firstSeenAt: 1793577139956
+lastSeenAt: 1793577139956
 fingerprint: null
 payload:
   id: MG4_resources_per_compartment
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "SUPERSEDED 2026-11-01 by CP6_resources in docs/2026-11-01-the-compartment-phasemap.spec (his
+    "just dont have redundancy. like each compartment should be all of it."); the text below is
+    kept"
   files:
     - cos/manager/resources.js
   depends_on:
     - MG3_the_state_manager
     - CS5_caps_per_compartment
     - CS7_spawn_despawn_and_balance
-  blocks: []
-  spec: null
-  graph: 45437b4444ec3e8d
+  blocks:
+    - MOD-MG-RESOURCES
+  spec: cos/spec/cos-manager.spec
+  graph: 3e8a7b5d36b3976b

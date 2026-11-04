@@ -7,18 +7,20 @@ intent: null
 summary: FG6_blocks_ui (ui) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793180611541
+exported_at: 1793386281600
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793180611541
-lastSeenAt: 1793180611541
+firstSeenAt: 1793386281600
+lastSeenAt: 1793386281600
 fingerprint: null
 payload:
   id: FG6_blocks_ui
   map: docs/2026-10-28-gated-flows-phasemap.spec
   repo: null
   layer: ui
-  status: MAPPED
+  status: >-
+    DEFERRED 2026-10-28 — no fact needs it yet (first principles,
+    docs/2026-10-28-first-principles-phasemap.spec); kept
   files:
     - clear-glass/renderer/settings/sections/macros.js
     - clear-glass/renderer/settings/sections/macros.css

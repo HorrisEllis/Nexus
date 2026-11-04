@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
+type: phase
+id: docs_2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
+context: pipeline phase DK7_snapshots_inside_the_disk of docs/2026-11-02-cos-disk-phasemap.spec
+intent: null
+summary: DK7_snapshots_inside_the_disk (backend) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793708290561
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793708290561
+lastSeenAt: 1793708290561
+fingerprint: null
+payload:
+  id: DK7_snapshots_inside_the_disk
+  map: docs/2026-11-02-cos-disk-phasemap.spec
+  repo: null
+  layer: backend
+  status: '"DONE 0.60.383 — test-cos-vdisk VD-02"'
+  files:
+    - cos/disk/vdisk.js
+    - tests/modules/test-cos-vdisk.test.js
+  depends_on:
+    - DK6_the_virtual_disk
+  blocks:
+    - MOD-COS-VDISK
+  spec: cos/spec/cos-disk.spec
+  graph: de0acd2c4ed378fa

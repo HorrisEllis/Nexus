@@ -184,7 +184,7 @@ const SYS = {
   guardian:   { port:7820,  host:'127.0.0.1', label:'Guardian',    color:'#9b7fe8' },
   idearium:   { port:4800,  host:'127.0.0.1', label:'Idearium',    color:'#4a9eff' },
   architect:  { port:3747,  host:'127.0.0.1', label:'Architect',   color:'#ef9f27' },
-  emerge:     { port:4242,  host:'127.0.0.1', label:'Emerge IDE',  color:'#3ecf8e' },
+  emerge:     { port:4900,  host:'127.0.0.1', label:'Emerge',      color:'#3ecf8e' },   // 0.60.339 EAS3: Emerge's own door (emerge/server.js), was the old IDE's :4242
   diagnostic: { port:7825,  host:'127.0.0.1', label:'Diagnostic',  color:'#ff6b35', healthPath:'/status' },
   ollama:     { port:3749, host:'127.0.0.1', label:'Ollama Bridge', color:'#00ff88', healthPath:'/health' },
   copilot:    { port:3750, host:'127.0.0.1', label:'Co-pilot',      color:'#cc44ff', healthPath:'/health' },
@@ -1458,11 +1458,13 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
           jaaInsert: null, // cortex not guaranteed up during early boot
           onResult: (e) => {
             registryUpdate(systemId, { contractTrust: e.trust, contractHash: e.hash, contractVerifiedAt: e.checkedAt });
-            const routeStr = e.routeCount !== undefined ? e.routeCount + ' routes' : e.error || 'unreachable';
+            // 0.60.324 DO0 — the shape the count was read from is said; a contract in no known shape says so, never "0 routes"
+            const routeStr = e.routeCount === null ? 'routes unknown (contract shape not recognised)'
+              : e.routeCount !== undefined ? e.routeCount + ' routes' + (e.routeShape && e.routeShape !== 'routes' ? ' (as ' + e.routeShape + ')' : '') : e.error || 'unreachable';
             const hashStr  = e.hash ? e.hash.slice(0,8) : '—';
             console.log('[orch] contract.' + e.trust.toLowerCase() + ' — ' + systemId + ' (' + routeStr + ', hash:' + hashStr + ')');
             // Broadcast trust state over SSE so UIs can show it
-            broadcast('system.contract.verified', { systemId, trust: e.trust, hash: e.hash, routeCount: e.routeCount });
+            broadcast('system.contract.verified', { systemId, trust: e.trust, hash: e.hash, routeCount: e.routeCount, routeShape: e.routeShape });
           },
         });
       } catch(e) {
@@ -2444,7 +2446,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     return json(res,404,{ok:false,error:`idearium route not found: ${M} /api/idearium/${action}`});
   }
 
-  // ── Emerge proxy — /api/emerge/* → emerge-ide.js :4242 ─────────────────────
+  // ── Emerge proxy — /api/emerge/* → Emerge's door :4900 (0.60.339 EAS3; was emerge-ide.js :4242) ───────────
   // emerge-ide.js no longer auto-opens its own browser window.
   // All emerge API calls route through orchestrator.
   if (top === 'api' && sub === 'emerge') {
@@ -2453,7 +2455,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
 
     // SSE stream from emerge
     if (M === 'GET' && action === 'events') {
-      const r = http.request({ hostname:'127.0.0.1', port:4242, path:'/events', method:'GET',
+      const r = http.request({ hostname:'127.0.0.1', port:4900, path:'/events', method:'GET',
         headers:{'Accept':'text/event-stream'} }, upstream => {
         res.writeHead(upstream.statusCode, upstream.headers);
         upstream.pipe(res);
@@ -2466,6 +2468,62 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     // All other emerge routes
     const r = await GET('emerge', p).catch(() => ({ok:false,error:'emerge offline'}));
     return json(res, r.ok ? 200 : (r.error==='emerge offline'?503:500), r);
+  }
+
+  // ── Update from the floating menu — GET /api/update/check, POST /api/update/apply (2026-11-01 UP10) ──────────────────────────────────
+  // James, 2026-11-01: "can i update nexus from the floating menu button.?". The TV asks only :9000 (TV_D1); the tree is still changed in one
+  // place, Idearium's /api/update (lib/nexus-update.js). Applying needs his yes (confirm:true), said back if missing. Restarting stays his.
+  if (top === 'api' && sub === 'update' && (seg[2] === 'check' || seg[2] === 'apply')) {
+    if (seg[2] === 'check' && M === 'GET') { const r = await GET('idearium', `/api/update${QS.get('fetch') === '0' ? '?fetch=0' : ''}`, 90000); return json(res, r && r.error && r.ok === false && !('behind' in r) ? 502 : 200, r || { ok: false, error: 'idearium did not answer' }); }
+    if (seg[2] === 'apply' && M === 'POST') {
+      const b = await readBody(req).catch(() => ({}));
+      if (!b || b.confirm !== true) return json(res, 428, { ok: false, needsConfirm: true, error: 'updating changes Nexus\'s code: send confirm:true once he has said yes' });
+      const r = await POST('idearium', '/api/update/apply', { confirm: true, by: 'person' }, 16 * 60000);   // npm install may run (its own limit is 15 min)
+      return json(res, r && r.ok ? 200 : 409, r || { ok: false, error: 'idearium did not answer' });
+    }
+    return json(res, 405, { ok: false, error: 'update: GET check | POST apply' });
+  }
+  // ── The COS channel's door — GET /api/cos-ui/status, POST /api/cos-ui/start (2026-11-01 MG34) ─────────────────────────────────────────
+  // James, 2026-11-01: "not tension, thats noise. cos ui needs a channel." The channel framed :7797 blind; a cockpit that was not running was a
+  // browser error. Now: both probed and said; Start COS starts only what is down — the manager (it starts its cockpit, boots nothing; the
+  // launcher's way in, MG17: only the server's path is known) or the cockpit alone — and never a second supervisor beside an old autopilot.
+  if (top === 'api' && sub === 'cos-ui') {
+    const D = require('./cos-ui-door.js');
+    if (seg[2] === 'status' && M === 'GET') return json(res, 200, await D.status());
+    if (seg[2] === 'start' && M === 'POST') { const r = await D.start(); return json(res, r.code || (r.ok ? 200 : 500), r); }
+    return json(res, 404, { ok: false, error: 'cos-ui: GET status | POST start' });
+  }
+  // ── Update notice — GET /api/update/notice (2026-11-01 UP9) ───────────────────────────────────────────────────────────────────
+  // James, 2026-11-01: "can you have it have a popup when it has an update availanel". What the last automatic check means (lib/nexus-update.js
+  // notice, the kernel's); the TV shows it as a popup. The apply stays on Idearium's Updates page (one place that changes the tree).
+  if (top === 'api' && sub === 'update' && seg[2] === 'notice' && M === 'GET') {
+    try { return json(res, 200, { ok: true, ...require('../lib/nexus-update.js').notice({}), updatesPage: 'http://127.0.0.1:4800/update.html' }); }
+    catch (e) { return json(res, 500, { ok: false, error: e.message }); }
+  }
+
+  // ── Tension — /api/tension-field/{tension,friction} (2026-11-01 CI8) ─────────────────────────────────────────────────────────────────
+  // James, 2026-11-01: "72% so make sure it is tv ui and i can access it,". The TENSION channel asks only :9000 (TV_D1); the meaning is
+  // Intelligence's (CI7, intelligence/friction.js), asked through its route. A silent Intelligence is a 503 that names it.
+  if (top === 'api' && sub === 'tension-field' && M === 'GET') {
+    const what = seg[2] || 'tension';
+    if (what !== 'tension' && what !== 'friction') return json(res, 404, { ok: false, error: 'tension-field: tension | friction' });
+    const r = await GET('intelligence', `/api/intelligence/${what}`, 6000);
+    return json(res, r && r.ok !== false ? 200 : 503, r && r.ok !== false ? r : { ok: false, error: `intelligence did not answer: ${(r && r.error) || 'no reply'}`, sources: r && r.sources });
+  }
+  // ── Emergence — /api/emergence/{patterns,liminal,sessions} (2026-11-01 TV3) ───────────────────────────────────────────────
+  // James, 2026-11-01: "the tv ui needs the emergence channel". The TV asks only :9000 (TV_D1); what emerges is Intelligence's (its
+  // crystallised patterns, its liminal spaces), asked through its routes; his emergence runs are lib/emergence.js's (the kernel). A system
+  // that does not answer is said by name, with a 503, never as an empty list.
+  if (top === 'api' && sub === 'emergence' && M === 'GET') {
+    const what = seg[2] || '';
+    if (what === 'patterns') { const r = await GET('intelligence', '/api/intelligence/patterns', 4000); return json(res, r && r.ok !== false ? 200 : 503, r && r.ok !== false ? r : { ok: false, error: `intelligence did not answer: ${(r && r.error) || 'no reply'}` }); }
+    if (what === 'liminal') {
+      const [st, ls] = await Promise.all([GET('intelligence', '/api/liminal-space/status', 4000), GET('intelligence', `/api/liminal-space/list${QS.get('focalPoint') ? `?focalPoint=${encodeURIComponent(QS.get('focalPoint'))}` : ''}`, 4000)]);
+      if (!st || st.ok === false) return json(res, 503, { ok: false, error: `intelligence did not answer: ${(st && st.error) || 'no reply'}` });
+      return json(res, 200, { ok: true, status: st, items: (ls && ls.items) || [] });
+    }
+    if (what === 'sessions') { const r = require('../lib/emergence.js').sessions({ limit: Number(QS.get('limit')) || 20 }); return json(res, r.ok ? 200 : 503, r); }
+    return json(res, 404, { ok: false, error: 'emergence: patterns | liminal | sessions' });
   }
 
   // ── Autopilot proxy ───────────────────────────────────────────────────────
@@ -3034,6 +3092,9 @@ if (nexusBus) {
 
 const BIND_HOST = process.env.NEXUS_BIND_HOST || '127.0.0.1'; // §REMOTE-15
 server.listen(PORT, BIND_HOST, async () => {
+  // §AE3 0.60.317 — the automation engine (orchestrator/automation) streams its run events through this server's SSE.
+  // The bus is the orchestrator's; the host receives it (no cross-system reach). Off the boot path, never fatal.
+  try { require('./automation/index.js').setBus((type, data) => broadcast(type, data)); } catch (e) { console.warn(`[orc] automation bus: ${e.message}`); }
   // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
   // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
   try { require('../lib/node-registry.js').startForSystem('orchestrator', { bus: nexusBus }); } catch (e) { console.warn(`[orc] node registry: ${e.message}`); }

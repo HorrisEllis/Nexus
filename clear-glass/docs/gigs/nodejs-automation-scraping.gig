@@ -3,6 +3,15 @@ format: clearglass.gig/1
 platform: fiverr
 title: I will build a custom Node.js automation or web scraping tool
 category: Programming & Tech
+serviceType: Automations & Agents          # SELECT A SERVICE TYPE on the page; the fill matches by label (§1.2 says what it can't)
+metadata:
+  "PROGRAMMING LANGUAGE":
+    - JavaScript
+    - TypeScript
+    - Python
+  "EXPERTISE":
+    - Databases
+    - Testing procedures
 subcategory: ''
 tags:
   - node.js

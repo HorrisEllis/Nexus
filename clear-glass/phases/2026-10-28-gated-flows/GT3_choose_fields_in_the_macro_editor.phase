@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
+context: pipeline phase GT3_choose_fields_in_the_macro_editor of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GT3_choose_fields_in_the_macro_editor (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281635
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281635
+lastSeenAt: 1793386281635
+fingerprint: null
+payload:
+  id: GT3_choose_fields_in_the_macro_editor
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/settings/sections/macros.js
+    - clear-glass/src/driver/index.js
+    - tests/modules/test-pipeline-nodes.test.js
+  depends_on:
+    - GT1_gate_timing_for_dropdowns
+  blocks:
+    - MOD-GT3
+  spec: clear-glass/spec/gated-flows.spec
+  graph: afd63e9391733aa1

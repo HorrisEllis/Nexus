@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GM3_the_menu_in_the_gig_panel
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GM3_the_menu_in_the_gig_panel
+context: pipeline phase GM3_the_menu_in_the_gig_panel of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GM3_the_menu_in_the_gig_panel (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281614
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281614
+lastSeenAt: 1793386281614
+fingerprint: null
+payload:
+  id: GM3_the_menu_in_the_gig_panel
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.286
+  files:
+    - clear-glass/renderer/gig-menu.js
+    - clear-glass/renderer/browser.html
+    - clear-glass/renderer/gig-panel.js
+  depends_on:
+    - GM2_fill_only_what_is_ticked
+  blocks:
+    - MOD-GM3
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 913c1da3799e3bb7

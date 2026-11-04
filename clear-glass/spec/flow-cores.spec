@@ -265,3 +265,11 @@ spec:
   # James, 2026-10-28: "stop. just get fiverr working."
   # Built and used: MOD-FC-OPEN (the popup handler), MOD-FC-OPTION (ClearDriver choose). On disk, not wired: MOD-FC-GATE, MOD-FC-DIFF,
   # MOD-FC-PRICING. test-flow-cores.test.js was not written; FC1 and FC2 are proven in tests/modules/test-fiverr-works.test.js.
+
+  # ── ADDENDUM 2026-11-01 (0.60.339 FP6) — choose gains confirmScript ─────────────────────────────────────────────────
+  # James, 2026-11-01: "do it, I need it fiverr ready, take screenshots if you have to … I need this working for a fact."
+  # MOD-FC-OPTION's consumer, ClearDriver choose (clear-glass/src/driver/index.js), takes one optional param: confirmScript — a page-side
+  # predicate (a JS string returning a boolean) used in place of reading the trigger's own text to decide a pick took. For a multi-select
+  # (Fiverr's AI ENGINE) the trigger keeps saying "Choose…" and the open menu is full of the wanted words, so neither is an honest gate; the
+  # predicate reads the field's chosen state (its chips). When it already reads true before opening, the dropdown is left alone — opening and
+  # clicking again would toggle the value off — and { already: true } is returned. matchOption and shows() are unchanged.

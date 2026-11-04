@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-schema-portfolio
+type: schema
+id: portfolio
+context: lib/node-schemas — shared node-type schema registry. Added 0.60.299 (PF1, docs/2026-10-30-portfolio-node-per-site-ui-macros-phasemap.spec).
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1793750400000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    clear-glass/src/autofill/portfolio.js — his portfolio kept as one clearglass.portfolio/1 file (PortfolioStore.create/update,
+    exportNode/importNode), like .gig and .autofill. James, 2026-10-30: "make a .portfolio node, all nodes are physical files in
+    the backend. import and export. and add per site support." A portfolio is his seller/job-hunt CONTENT (Clear Glass autofill's),
+    not an automation node.
+  fields:
+    id:
+      type: string
+      required: true
+      description: the portfolio's id where it was kept (a fresh one is given on import)
+    name:
+      type: string
+      required: true
+      description: what the Portfolio screen shows; at most 80 characters
+    headline:
+      type: string
+      required: false
+      description: a one-line professional headline (the seller profile's tagline)
+    bio:
+      type: string
+      required: false
+      description: the seller/profile bio or overview
+    skills:
+      type: string
+      required: false
+      description: comma-separated skills
+    site:
+      type: string
+      required: false
+      description: its site — an origin (https://www.fiverr.com) or a URL pattern; none = any (per-site, PF2)
+    items:
+      type: array
+      required: false
+      description: >-
+        the portfolio projects, each { title (required), role, description, skills, link, date }. A project with no title is
+        refused on import, never stored half (§1.2).
+    createdAt:
+      type: number
+      required: false
+      description: when it was first made (ms); set fresh if absent
+    updatedAt:
+      type: number
+      required: false
+      description: when it last changed (ms); an import replaces an existing id only when the file's copy is newer

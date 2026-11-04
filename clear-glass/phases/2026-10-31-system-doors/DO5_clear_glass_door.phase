@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
+type: phase
+id: docs_2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
+context: pipeline phase DO5_clear_glass_door of docs/2026-10-31-system-doors-phasemap.spec
+intent: null
+summary: DO5_clear_glass_door (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1793419906992
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419906992
+lastSeenAt: 1793419906992
+fingerprint: null
+payload:
+  id: DO5_clear_glass_door
+  map: docs/2026-10-31-system-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/server.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/main/index.js
+    - clear-glass/cli.js
+    - clear-glass/config.js
+    - clear-glass/event-taxonomy.js
+  depends_on:
+    - DO_D1_clear_glass_door
+    - DO0_the_handshake_counts_real_routes
+  blocks:
+    - MOD-DOOR-CG
+  spec: docs/system-doors.spec
+  graph: 3c9f1d1c40e106cd

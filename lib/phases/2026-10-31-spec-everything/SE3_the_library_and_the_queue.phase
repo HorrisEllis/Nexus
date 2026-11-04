@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-spec-everything-phasemap.spec::SE3_the_library_and_the_queue
+type: phase
+id: docs_2026-10-31-spec-everything-phasemap.spec::SE3_the_library_and_the_queue
+context: pipeline phase SE3_the_library_and_the_queue of docs/2026-10-31-spec-everything-phasemap.spec
+intent: null
+summary: SE3_the_library_and_the_queue (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793419905508
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419905508
+lastSeenAt: 1793419905508
+fingerprint: null
+payload:
+  id: SE3_the_library_and_the_queue
+  map: docs/2026-10-31-spec-everything-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/library.js
+    - docs/SPEC-REGISTRY.spec
+    - tests/modules/test-spec-library.test.js
+  depends_on:
+    - SE2_the_origin_trace
+  blocks:
+    - MOD-SL-LIBRARY
+  spec: idearium/spec/spec-library.spec
+  graph: 4d0e45e1fe513395

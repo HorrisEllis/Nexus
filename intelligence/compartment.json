@@ -8,8 +8,7 @@
     "kind": "virtual",
     "id": "repo.nexus.intelligence",
     "scope": [
-      "intelligence/",
-      "data/intelligence/"
+      "intelligence/"
     ],
     "versionLine": null,
     "versionNote": "no per-system version registered yet"
@@ -25,36 +24,80 @@
     "phase": 3,
     "critical": false,
     "optional": false,
-    "healthUrl": "http://127.0.0.1:3753/health"
+    "healthUrl": "http://127.0.0.1:3753/health",
+    "process": {
+      "name": "intelligence",
+      "cmd": "node",
+      "args": [
+        "intelligence/server.js"
+      ],
+      "phase": 3,
+      "healthUrl": "http://127.0.0.1:3753/health",
+      "compartment": "nexus-self-intelligence",
+      "boundary": {
+        "mode": "audit",
+        "allow": [
+          "{{root}}/intelligence/",
+          "{{root}}/lib/",
+          "{{root}}/node_modules/"
+        ],
+        "about": "intelligence's wall, declared by intelligence (CP1a, 2026-11-01): COS's supervisor starts it behind this; equal to the census's boundaryFor('intelligence'); audit: 7 way(s) out still open, so the wall says what it would refuse (DO_D9); enforce when the audit is empty"
+      }
+    },
+    "retiredProcesses": [
+      {
+        "name": "intelligence-consumer",
+        "cmd": "node",
+        "args": [
+          "intelligence/consumer.js"
+        ],
+        "phase": 4,
+        "optional": true,
+        "compartment": "nexus-self-intelligence",
+        "boundary": {
+          "mode": "audit",
+          "allow": [
+            "{{root}}/intelligence/",
+            "{{root}}/lib/",
+            "{{root}}/node_modules/"
+          ],
+          "about": "intelligence's wall, declared by intelligence (CP1a, 2026-11-01): COS's supervisor starts it behind this; equal to the census's boundaryFor('intelligence'); audit: 7 way(s) out still open, so the wall says what it would refuse (DO_D9); enforce when the audit is empty"
+        },
+        "retired": {
+          "at": "2026-11-02",
+          "by": "SC6, 0.60.380",
+          "why": "James, 2026-11-02: \"There shouldn't be two intelligence. Intelligence consumer and intelligence should not be two separate things.\" The consumer runs inside intelligence/server.js (consumer.start()); kept here, not declared (§0.3)."
+        }
+      }
+    ]
   },
   "data": {
-    "dataDir": "data/intelligence",
+    "dataDir": "intelligence/data",
     "ledgerDir": "intelligence/data/ledger",
     "nodeIndexDir": "intelligence/data/node-index"
   },
   "spec": "intelligence/spec/",
   "dependsOn": {
-    "cortex": 10,
-    "guardian": 1
+    "cortex": 10
   },
-  "sharedLibRequires": 24,
+  "sharedLibRequires": 41,
   "stats": {
-    "jsFiles": 76,
-    "jsLines": 18606
+    "jsFiles": 81,
+    "jsLines": 19936
   },
   "boundaryFindings": {
-    "count": 11,
+    "count": 10,
     "sample": [
       "intelligence/alk/index.js -> cortex/versionium/\n  ",
       "intelligence/cfr/ledger.js -> cortex/memory/jaa-db",
       "intelligence/gap/predicate.js -> cortex/memory/jaa-db",
       "intelligence/gap/predicate.js -> cortex/self-heal/fault-taxonomy",
       "intelligence/index.js -> cortex/memory/jaa-db",
-      "intelligence/lib/domain-nodes.js -> guardian/jaa-store.js",
       "intelligence/liminal-space/index.js -> cortex/memory/jaa-db",
       "intelligence/server.js -> cortex/memory/jaa-db.js",
       "intelligence/server.js -> cortex/memory/jaa-db.js",
-      "intelligence/server.js -> cortex/memory/jaa-db.js"
+      "intelligence/server.js -> cortex/memory/jaa-db.js",
+      "intelligence/spatial/system-lattice.js -> cortex/memory/jaa-db"
     ]
   }
 }

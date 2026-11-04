@@ -7,11 +7,11 @@ intent: null
 summary: FG1_keyboard_mode_switch (foundation) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1793180611532
+exported_at: 1793386281590
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793180611532
-lastSeenAt: 1793180611532
+firstSeenAt: 1793386281590
+lastSeenAt: 1793386281590
 fingerprint: null
 payload:
   id: FG1_keyboard_mode_switch
@@ -29,7 +29,8 @@ payload:
     - clear-glass/renderer/settings/sections/sites.js
   depends_on:
     - FG_D4_tab_mode_reverted_not_blocked
+    - FP4_what_a_key_changed
   blocks:
     - MOD-FG-TAB
   spec: clear-glass/spec/gated-flows.spec
-  graph: 9a9dc6581e12d0ea
+  graph: 0dad41529b853fe9

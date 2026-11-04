@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-system-doors-phasemap.spec::DO2_architect_door
+type: phase
+id: docs_2026-10-31-system-doors-phasemap.spec::DO2_architect_door
+context: pipeline phase DO2_architect_door of docs/2026-10-31-system-doors-phasemap.spec
+intent: null
+summary: DO2_architect_door (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793421628250
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793421628250
+lastSeenAt: 1793421628250
+fingerprint: null
+payload:
+  id: DO2_architect_door
+  map: docs/2026-10-31-system-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - architect/server.js
+    - architect/compartment.json
+    - architect/cli.js
+    - architect/event-taxonomy.js
+    - architect/service.js
+  depends_on:
+    - DO_D0_server_floats_on_the_registry
+    - SE_D3_the_origin_is_server_js
+    - DO_D3_architect_into_idearium_and_loom
+  blocks:
+    - MOD-DOOR-ARCHITECT
+  spec: docs/system-doors.spec
+  graph: 77bb612e50e01c55

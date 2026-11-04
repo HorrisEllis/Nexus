@@ -1,0 +1,115 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CI4_learning_from_both:cc2c6820c1be9c47
+type: graph
+id: phase:CI4_learning_from_both:cc2c6820c1be9c47
+context: dependency graph of phase CI4_learning_from_both
+intent: null
+summary: 7 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793422837079
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793422837079
+lastSeenAt: 1793422837079
+fingerprint: null
+payload:
+  for: CI4_learning_from_both
+  kind: phase
+  repo: null
+  hash: cc2c6820c1be9c47
+  nodes:
+    - path: intelligence/mastermind.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: tests/modules/test-causal-learning.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: copilot/optimizer.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: tests/modules/mastermind-fractals.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/lib/domain-nodes.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/rfr2-bridge.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/mastermind.js
+      to: intelligence/lib/domain-nodes.js
+      kind: requires
+    - from: intelligence/mastermind.js
+      to: lib/rfr2-bridge.js
+      kind: requires
+    - from: copilot/optimizer.js
+      to: intelligence/mastermind.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/mastermind.js
+      kind: requires
+    - from: tests/modules/mastermind-fractals.test.js
+      to: intelligence/mastermind.js
+      kind: requires
+  crossings:
+    - from: copilot/optimizer.js
+      to: intelligence/mastermind.js
+      fromSystem: copilot
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI2_one_graph_for_queries_and_chains
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML_D1_per_edge_metric_batched_learning
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML3_learning_loop
+    dependents: []
+    upstream:
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML1_metric_point
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML3_learning_loop
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML_D1_per_edge_metric_batched_learning
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI2_one_graph_for_queries_and_chains
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D0_interconnected
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D1_one_graph_cfr_builds_rfr2_reads
+    downstream: []
+    blockedBy:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI2_one_graph_for_queries_and_chains
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML3_learning_loop
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 3 · blocked by CI3_the_measures_chained, CI2_one_graph_for_queries_and_chains,
+        ML3_learning_loop
+      - >-
+        depends on (4): CI3_the_measures_chained, CI2_one_graph_for_queries_and_chains,
+        ML_D1_per_edge_metric_batched_learning, ML3_learning_loop · all upstream 8
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+        kind: declared
+      - from: docs/2026-10-31-causal-interconnect-phasemap.spec::CI2_one_graph_for_queries_and_chains
+        kind: declared
+      - from: docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML_D1_per_edge_metric_batched_learning
+        kind: declared
+      - from: docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML3_learning_loop
+        kind: declared

@@ -363,7 +363,7 @@ spec:
       version:          '1.0.0'
       last_drift_check: '2026-09-19'
       status: >
-        ✓ CHECKED, extended (not rewritten) — added built_2026_09_19_pulse_and_nodes: intelligence/server.js wired into the real orchestrator pulse/heartbeat system (was the one sovereign system relying on active polling), and intelligence/lib/domain-nodes.js closes intelligence.node-taxonomy.md's own "node: NOT USED" finding — real, schema-validated .gap/.bep_pattern/.pattern_sequence/.resonance_crystal node exports at every real construction site. See intelligence/spec/intelligence.spec's own new section for the full record, including two pre-existing schema mismatches and one unrelated blocking YAML bug (lib/node-schemas/schema.repository) found and fixed along the way.
+        ✓ CHECKED, extended (not rewritten) — added built_2026_09_19_pulse_and_nodes: intelligence/server.js wired into the real orchestrator pulse/heartbeat system (was the one sovereign system relying on active polling), and intelligence/lib/domain-nodes.js closes intelligence.node-taxonomy.spec's own "node: NOT USED" finding — real, schema-validated .gap/.bep_pattern/.pattern_sequence/.resonance_crystal node exports at every real construction site. See intelligence/spec/intelligence.spec's own new section for the full record, including two pre-existing schema mismatches and one unrelated blocking YAML bug (lib/node-schemas/schema.repository) found and fixed along the way.
     - spec:             'jaa-db.spec'
       version:          '6.0.0'
       last_drift_check: '2026-07-24'
@@ -1583,7 +1583,7 @@ spec:
     seven related docs (`NEXUS.md`, `NEXUS-SPEC.md`, `NEXUS-SYSTEM.md`,
     `NEXUS-ENCYCLOPEDIA.md`, `NEXUS-PLAIN-ENGLISH.md`,
     `NEXUS-PHASE-MAP-CROSSREF.md`, `phase-map.spec` — the last already named
-    "a dead, pre-v3.0-axiom ancestor" by `docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.md`
+    "a dead, pre-v3.0-axiom ancestor" by `docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.spec`
     itself) moved to `_archive/superseded-docs-2026-09-10/`. All predate the
     per-system `*-phasemap.spec` convention this registry now indexes; none
     of it was the *current* living picture even before this move, per their
@@ -1762,7 +1762,7 @@ spec:
     | `docs/2026-10-19-gate-quality-checks-phasemap.spec` | 1.0.0 (SUPERSEDED-and-kept §0.3 by docs/2026-10-19-solid-build-foundation-phasemap.spec) — quality checks per gate on SISO, using the test file. Its gate ran the test on the host; the superseding map runs it in COS and after dynamic chunking. Kept as the earlier reading | superseded | James: "need quality checks per gate, using the test file and anything else we can. … gate should use siso or warp logic" |
     | `docs/2026-10-19-solid-build-foundation-phasemap.spec` | 1.0.0 (mapped, nothing built) — the solid build foundation, local-first & free, no paid APIs, bottom-up: MF1 model-fit routing (pick the largest ollama model that fits free RAM, before dispatch — kills the OOM churn); DC1 dynamic chunking at plan→contract time sized to the fitting model (wired-but-dormant today); CR1 the built project's component registry as the spine so components stay dumb (rule 3 per project); CT1 COS process-sandbox test runner (VM only where KVM exists); GQ1–GQ4 quality checks per gate on SISO run IN COS, brick gate proves behaviour not shape, phase gate stops dropping the test-first; AB1 the autobuild loop + real resume (confirmed today a failed phase HALTS, no setting); AB2 hat-aware ladder (routing is hat-blind today); SET1/SET2 autobuild settings config+command+UI. Ground-truth verified file:line. Ollama-first, guardian only if strictly necessary, Nexus learns (Beta ladder) | mapped | James: "the core foundation needs to be solid… gate should use siso or warp logic" · "we need as much qulaity checks… then we need cos to work for test env." · "its supposed to chunk dynamically" · "do not add apis. i dont have money for that" · "i dont think it resumes." · "ollama first, but nexus should be learning… the component registry… is the spine that makes components dumb" |
     | `docs/2026-10-18-debugging-product-phasemap.spec` | 1.0.0 (mapped, nothing built) — the product for debugging: one question ("what went wrong, why, and how do I go back") joined across intelligence crystals and fix_map, the rewinds, versionium, COS, RFR2, deviation (detector), friction (diagnostic, phase-faults), gap-field and the diagnostic system, on one key. DBG0a synchronized by a derived key, not one uuid (D10, by his axioms); DBG0b dependency edges as gap evidence (D11, by his axioms); DBG0c which product (his, open); DBG1 the key, DBG2 the case, DBG3 deviation and friction per run, DBG4 dependency gaps (first), DBG5 rewind from a case (TL4), DBG6 cases crystallize, DBG7 route/command/UI, DBG8 in the flight recorder | mapped | James: "can we spec the product for debugging. the intelligence system crystalization  memory, rewind engine, versionium, cos, rfr2, cos, runtime deviation and friction detection, gap detection, diagnostic system? look at the specs." |
-    | `docs/looking-glass/SPEC.md` + `PHASEMAP.md` | 0.3 (his, draft, kept verbatim) — Looking Glass: a UI renderer and app host, not Chromium; UI as typed data, layers as a runtime operation, event bus with per-layer contracts, motion as data, signal providers, shared prefs; 13 phases (0-12), one exe | concept (his, uploaded 2026-10-17; origin 2026-10-13) | James's spec, uploaded 2026-10-17: "Also Look at this." |
+    | `docs/looking-glass/SPEC.spec` + `PHASEMAP.md` | 0.3 (his, draft, kept verbatim) — Looking Glass: a UI renderer and app host, not Chromium; UI as typed data, layers as a runtime operation, event bus with per-layer contracts, motion as data, signal providers, shared prefs; 13 phases (0-12), one exe | concept (his, uploaded 2026-10-17; origin 2026-10-13) | James's spec, uploaded 2026-10-17: "Also Look at this." |
     | `docs/2026-10-16-nexus-git-sync-phasemap.spec` | 1.0.0 (mapped, nothing built) — Nexus synced with GitHub through Versionium/Idearium: GS1 git command rows (routes exist, commands do not); GS2 Nexus as an Idearium repo; GS3 pull is a snapshot-first switch; GS4 push policy (branch, never main); GS5 release alignment; GS6 update notice |
     | `docs/2026-10-16-cos-console-phasemap.spec` | 1.0.0 (mapped, nothing built) — the COS console: a Nexus-specific terminal replacing PowerShell, a front-end on the one command table; CON1 client with local fallback, CON2 grammar, CON3 per-system controls, CON4 safety gate, CON5 pane, CON6 shell escape, CON7 enterprise checklist, CON8 server control surface. |
     | `docs/2026-10-16-code-tab-rebuild-phasemap.spec` | 1.0.0 (mapped, nothing built) — the Code tab rebuilt as five tabs (Files, Changes, Plans, COS, Runs) because four regions at once overwhelmed him; the Runs tab persists every gate, output, response, job and contract and can offer a stored response again (TB0-TB8). Absorbs CE6/CE9/CE11/CE12 and GW9's panel; the data and events stay owned by the run-state and gate-held-work maps. |
@@ -1814,6 +1814,9 @@ spec:
     | `cos/spec/cos-spine.spec` + `docs/2026-10-23-cos-spine-phasemap.spec` | 1.0.0 — FULL build spec: COS is the spine — every Nexus system a compartment (its compartment.json), a version is the whole system state (the Versionium commit of its files + the QEMU snapshot of its machine, with its registry and spec, under one id), each version tested in its own compartment, the component registry the bridge between compartments (verified through the orchestrator's handshake), caps by the OS, a system rebuilt from its spec with its drift listed, replicas spawned, despawned and balanced, the COS screen. 8 modules at specDepth 1.0; CS1–CS8 over SN0–SN4, CE3, IN3, COSA3; DAG clean, no new crossing | specced, nothing built | James: "Versioning could be actual system states ... we can use the spec, the .spec, as a template to rebuild a system. Since that's what it's for." |
     | `docs/2026-10-24-sovereign-systems-phasemap.spec` | 1.0.0 — each system sovereign and in its COS compartment (SV0–SV8, his "i want to get each system soveriegn and inside a cos compartment"; SV0 DONE 0.60.244) and the placement moves phased with COS (CS12–CS21, last unless sovereignty needs one). Moved from the cos-spine map, which is tied to cos-spine.spec's modules (SS-02). |
     | `cos/spec/cos-services.spec` + `docs/2026-10-24-cos-services-phasemap.spec` | 1.0.0 — ported from brave-cori (BCR1, §0.3, verbatim): his anonymousservers engines (web servers, DNS, firewall, SMTP, TLS, proxy …) as COS's deployable networking backend, his "this is all the networking backend for anything needed netwroking wise". Its own phases are SV0–SV4, a name clash with the sovereign-systems map, said there; the DAG keeps them apart. |
+    | `cos/spec/cos-manager.spec` + `docs/2026-10-24-cos-manager-phasemap.spec` | 1.0.0 — FULL build spec (MG0b, 2026-10-30): COS manages the system, his "This will be the new orchastrator/autopilot." One supervisor in COS (autopilot's boot, backoff, circuit, memory floors, on-demand, ledger, read from each system's compartment.json), autopilot's :7799 door kept, autopilot hands over; the backend MG1–MG10; the UI as isolated pages (core, shell, Overview, Ledger, Proposals, compartment tabs, catalog, automation, categories), cos.exe as its window, CLI, thumbnails. MG_D4 to confirm. |
+    | `docs/2026-10-30-foundation-up-phasemap.spec` | 1.0.0 — the whole map of 2026-10-30, foundation up, his "deterministic foundation, then builds each addendum or expansion from that, one block at a time": blocks F0 (the kernel spec, ESS's five) → F1 (one vocabulary) → F2 (locked snapshots; lib/emerge archived) → F3 (the door per system) → F4 (RAID routes the doors) → F5 (memory and learning) → F6 (the compound build) → F7 (the assistant as he types) → F8 (the tutor), with the existing phases ordered between them; four decisions, three to confirm. |
+    | `diagnostic/spec/requirements.spec` + `docs/2026-10-30-diagnostic-requirements-phasemap.spec` | 1.0.0 — his "diagnostic system should be taking care of things like this.": each system declares what it needs (requires[] in its compartment.json), Diagnostic checks it and raises the gap with the fix, the owner fixes it (the Ollama bridge pulls models) through RAID under an off/ask/auto policy (ask for downloads), rechecked before the gap closes. DR1–DR5. |
     | `docs/2026-10-25-automation-engine-sovereignty-graph.md` + `docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec` | 1.0.0 — MAPPED (map-before-build): the platform's automation engine is owned by Clear Glass (a front-end), breaking sovereignty — the graph (from loom + the files) shows it is already a dependency-injected neutral core, so the fix is a move-and-re-point-ports, not a rewrite. AE_D1 DECIDED by James ("the orchastrator"): the engine CORE → the orchestrator; RAID keeps the agent-step decision; Clear Glass keeps browser steps as a driver port. AE1 (move via the refactor tool) → AE2 (browser-driver port) / AE3 (engine door + RAID decide) → AE4 (re-point AU1's registry) → AE5 (UI + cleanup). DAG clean (L1→L4), one crossing surfaced to design out (lib macro.js → clear-glass nodes.js). Each phase specced again as .phase + .graph | AE1 DONE 0.60.256 (engine → core, each system its own instance, sovereign); AE4/AE5 + live remain | James: "rememeber each system is sovereign. i feel like that should have been raid. or the orchastrator. the automation engine. supposed to be soveriegn." · "map the depency graph first," · "the orchastrator" · "clearglass still needs the automation for browser automation" · "sovereignty. like each system needs to be able to run on its own." |
     | `docs/2026-10-25-agent-drones-phasemap.spec` | 1.0.0 — MAPPED: agents as drones — a bounded agent-with-a-task (goal/budget/boundary/exit + target + task) routed to a target, gated, reversible. A COMPOSITION of existing primitives (nexus_autonomous_run, raid-port, agent-confidence-gate, lib/automation, Guardian, a COS compartment as the reversible airspace when real). One technical CORE, two human doors: the UI takes plain tasks (DR4 fills the contract; the gate asks last), copilot is the second entry via the one command table. DR1 (contract+router, core) → DR2 (orchestrator door) → DR3 (commands) → DR4 (plain→contract) → DR5 (human UI, Clear Glass) → DR6 (copilot). DAG clean; works against existing targets now, COS compartment added when real | mapped, nothing built | James: "with cos we can use that to route agents also. like agents need to be able to be like drones with tasks." · "but the ui is human. all easy to understand tasks." · "copilot is another entry point to navigate the system." |
     | `docs/2026-10-26-gate-chain-memory-phasemap.spec` | 1.0.0 — MAPPED: every gate a timestamped node linked to the one before it (his "like Ethereum" — the structure, append-only + hash-linked + replayable, not crypto); the chain IS the persistent memory/context. One chain per scope, every door writes it: the pipeline's gates, copilot's steps, the CLI's commands, a drone's steps. REUSE: node-export (timestamped+fingerprinted envelope) + ledger-writer (append) + gate-context; the one new thing is the `prev` LINK. GC1 chain core (lib/gate-chain.js, DI: append/head/read/replay/verify) → GC2 gates persist → GC3 copilot+CLI emit → GC4 route+command (read/replay/verify) → GC5 human timeline UI (Clear Glass). Core, so every system reads one memory with no crossing | SUPERSEDED by docs/2026-10-26-memory-kernel-additive-phasemap.spec (§0.3, kept): its "chain" already exists (Versionium parentId + contract gate hashes); the real work is folding Cobalt's additive parts | James: "The same gates for Ethereum, the event-driven gates, I want for a copilot, like the CLI … Each gate to be a node … timestamp … The gates keep the context. It's the persistent memory." |
@@ -1873,3 +1876,148 @@ spec:
 # ADDENDUM 2026-10-29 (0.60.289) — registered: docs/2026-10-29-fiverr-income-phasemap.spec (FI0–FI14, the Fiverr chain from money back)
 # James: "Also, make a dependency graph for the fiverr gigs." Built from the end state backward, DAG-checked. The per-system document
 # docs/NEXUS-SYSTEMS-FOR-CODING.md and scripts/systems-report.js answer "a full document of each system and what it needs to get nexus coding".
+
+# ADDENDUM 2026-10-30 (0.60.299) — registered: docs/2026-10-30-portfolio-node-per-site-ui-macros-phasemap.spec (PF1–PF3, UM1)
+# James: "make a .portfolio node, all nodes are physical files in the backend. import and export. and add per site support. same with
+# the macros, and pipeline. i also want macros for the ui not just per sire." PF1 DONE 0.60.299 (the .portfolio node + per-site keys);
+# PF3 (fill My Portfolio + seller profile), UM1 (UI macros), routes+command+UI remain.
+
+# ADDENDUM 2026-10-30 — registered: docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec (CM1, JL1–JL2) — MAPPED, not built
+# James: "consolidate macros, automation into the pipeline section. also ... each job from guardian saved in the queue, the formeer
+# .response ... the job ledger, each job has to have it's corrasponding .response node to be fullfilled from clearglass' end." Reuse:
+# pipelines.js/macros.js + the engine (linked 0.60.293) for CM; response-sink.js (.response node) + the queue + the ledger for JL.
+# CAUTION: the parallel claude/laughing-fermi session is live in this exact area — coordinate before CM/JL code (collision risk).
+
+# ADDENDUM 2026-10-30 — registered: docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec (ML1–ML5) — MAPPED, not built
+# James: "systems compartment ... metric points of data for stats ... model usage. agent usage. also running the intelligence system
+# on jobs every edge? or batch them every 10 or so? to map the relation between code primitives ... for emerge also." Answer (ML_D1,
+# his axioms): per-edge CHEAP metric collection + BATCHED Intelligence learning (every ~10 edges or a sigma event). Reuse: proc-stats,
+# economy ledger (model/agent usage), baseline.js (sigma), relational-field + causal (the learning graph), code-intel (primitives).
+# CAUTION: COS/Intelligence/compartments are where the parallel sessions are live — coordinate before code.
+
+# ADDENDUM 2026-10-31 (0.60.322) — registered four full specs, each with its map (all compile at specDepth 1.0, no BLACK; SS-01/02 green):
+#   idearium/spec/spec-library.spec + docs/2026-10-31-spec-everything-phasemap.spec (SE1–SE6) — his spec ids and types, this registry as the
+#     library, one queue, the origin trace, drafts from code, phased only. James: "like what if we use spec ids and types, then have a
+#     queue/library for specs." · "how about anything new, spec, any changes, fixes, or additions is phased only."
+#   docs/system-doors.spec + docs/2026-10-31-system-doors-phasemap.spec (DO0–DO5, DO2a) — server.js per system on its registry, booting from
+#     the skeleton's lib/system.js; Cortex's boot.js retired; the 0-routes handshake. James: "make a server.js for cortex, and reroute the
+#     boot.js to component registry and retire the boot.js".
+#   guardian/spec/guardian-nodes.spec + docs/2026-10-31-guardian-nodes-phasemap.spec (GND1–GND4) — every Guardian record a node file, its
+#     table the index. James: "make sure all the nodes, are actual files, in the data folder, the database per server.js".
+#   diagnostic/spec/diagnostic-schemas.spec + docs/2026-10-31-diagnostic-schemas-phasemap.spec (DSC1–DSC4) — a schema for everything
+#     Diagnostic records. James: "then all the schemas for the diagnostic system".
+# Addended the same release: docs/architecture-spec/architecture-spec.spec 0.14.0 (RULE E, RULE F, the gaps measured) and
+#   idearium/spec-engine/templates/genesis.spec (PROPOSED 1.6.0 note; version line unchanged until SE2 and DO2a are built).
+
+# ADDENDUM 2026-10-31 (0.60.327) — registered: intelligence/spec/causal-interconnect.spec + docs/2026-10-31-causal-interconnect-phasemap.spec
+# (CI1–CI5). James: "also the intelligence system, rfr2 and cfr need to be interconnected." One causal graph: CFR builds it from the ledger,
+# RFR2 reads and measures it, relational-field's chains walk it, the sigmas chained but kept apart, the batched learning loop learns from
+# both. Compiles at specDepth 1.0; MAPPED, not built. CI_D1 (the reading of "interconnected") is his to confirm.
+
+# ADDENDUM 2026-10-31 (SE0) — 31 specs kept as .md became .spec, text unchanged (git mv). James: "before i forget. convert all md specs to .spec
+# files". Map: docs/2026-10-31-spec-everything-phasemap.spec SE0, SE_D4. Their YAML block form (his "machine readable yaml.
+# multidimentional, block files.") is the next step, SE0b. Renamed:
+#   architect/docs/ARCHITECT-SPEC-v1.1.0.md → architect/docs/ARCHITECT-SPEC-v1.1.0.spec
+#   architect/spec/architect.node-taxonomy.md → architect/spec/architect.node-taxonomy.spec
+#   clear-glass/docs/clear-glass-seam.spec.md → clear-glass/docs/clear-glass-seam.spec
+#   clear-glass/spec/clear-glass.node-taxonomy.md → clear-glass/spec/clear-glass.node-taxonomy.spec
+#   copilot/spec/copilot.node-taxonomy.md → copilot/spec/copilot.node-taxonomy.spec
+#   cortex/spec/cortex.node-taxonomy.md → cortex/spec/cortex.node-taxonomy.spec
+#   cos/archetype/nexus-system/spec/{{slug}}.node-taxonomy.md → cos/archetype/nexus-system/spec/{{slug}}.node-taxonomy.spec
+#   cos/spec/cos-design-v1.7.0.md → cos/spec/cos-design-v1.7.0.spec
+#   diagnostic/spec/diagnostic.node-taxonomy.md → diagnostic/spec/diagnostic.node-taxonomy.spec
+#   diagnostic/spec/healer.node-taxonomy.md → diagnostic/spec/healer.node-taxonomy.spec
+#   diagnostic/spec/healer.spec.md → diagnostic/spec/healer.spec
+#   docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.md → docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.spec
+#   docs/looking-glass/SPEC.md → docs/looking-glass/SPEC.spec
+#   docs/specs/CAUSAL-NEXUS.spec.md → docs/specs/CAUSAL-NEXUS.spec
+#   docs/specs/COBALT-CORE.spec.md → docs/specs/COBALT-CORE.spec
+#   docs/specs/CONTROL-PANEL.spec.md → docs/specs/CONTROL-PANEL.spec
+#   docs/specs/CORTEX.spec.md → docs/specs/CORTEX.spec
+#   docs/specs/GUARDIAN.spec.md → docs/specs/GUARDIAN.spec
+#   docs/specs/IDEARIUM.spec.md → docs/specs/IDEARIUM.spec
+#   docs/specs/MODULES.spec.md → docs/specs/MODULES.spec
+#   docs/specs/NEXUS-SELF.spec.md → docs/specs/NEXUS-SELF.spec
+#   docs/specs/ORCHESTRATOR-COS.spec.md → docs/specs/ORCHESTRATOR-COS.spec
+#   docs/specs/SYSTEM-MAP.spec.md → docs/specs/SYSTEM-MAP.spec
+#   docs/specs/VERSIONIUM.spec.md → docs/specs/VERSIONIUM.spec
+#   guardian/spec/guardian.node-taxonomy.md → guardian/spec/guardian.node-taxonomy.spec
+#   idearium/spec/idearium.node-taxonomy.md → idearium/spec/idearium.node-taxonomy.spec
+#   intelligence/spec/intelligence.node-taxonomy.md → intelligence/spec/intelligence.node-taxonomy.spec
+#   lib/emerge/spec/emerge.node-taxonomy.md → lib/emerge/spec/emerge.node-taxonomy.spec
+#   loom/spec/loom.node-taxonomy.md → loom/spec/loom.node-taxonomy.spec
+#   ollama/spec/ollama.node-taxonomy.md → ollama/spec/ollama.node-taxonomy.spec
+#   versionium/spec/versionium.node-taxonomy.md → versionium/spec/versionium.node-taxonomy.spec
+
+# ADDENDUM 2026-10-31 (0.60.334) — registered: idearium/spec/agent-control.spec + docs/2026-10-31-agent-control-phasemap.spec (AC1–AC7).
+# James: "can we have a full control panel for the agents intents, and everything they touch in idearium? in the repos specific setting." ·
+# "each phase is a pretermined folder/location of the target directory" · "change the agemnts for the spacial void and spec workshop" ·
+# "spacial void needs to be better, maybe use my framework" · "skip buttons which will autofill generic/default values". AC_D1 (his
+# framework = the Innovation Toolkit) to confirm. The Code tab and Ideas+Notes are docs/2026-10-19-idearium-control-phasemap.spec (open).
+# ADDENDUM 2026-10-31 — registered: docs/emerge-system.spec + docs/2026-10-31-emerge-as-a-system-phasemap.spec (EAS1–EAS5). Emerge as a
+# sovereign system in genesis's shape (server.js, its language through its door, one Emerge at Nexus's top level, lib/emerge's callers
+# switched, a system of systems three deep). James: "emerge needs either to be a module for idearium, or a system with a server.js, etc." ·
+# "okay. do it as long as it gets up closer to building large projects, like i want to be buyilding an operating systems".
+
+# ADDENDUM 2026-11-01 — registered: docs/2026-11-01-build-from-cos-phasemap.spec (BC0–BC5): COS's Add → Build → the spec workshop, and the
+# workshop as Nexus's one document editor (templates, schemas, nodes, specs, code; sorted by type, date or recent). James: "i want the spec
+# workshop to also include templates, schemas, nodes, ide, for all of nexus. like make a generalized document editor." MAPPED, not built; its
+# full spec is BC0. Also placed: docs/open-loops/OPEN-LOOPS.spec (his Open Loops spec, a sovereign project, text unchanged).
+
+# ADDENDUM 2026-11-01 — registered: docs/2026-11-01-tv-ui-cleanup-phasemap.spec (TV0–TV2): the TV UI audited against its backend in Clear
+# Glass (91 requests, 28 failed with every system up: bridge :9999, emerge :4242, guardian nerve/hooks not forwarded, contracts asked of
+# servers with none), then its noise out and each channel its own page. James: "then i need tv ui cleaned out ... there is some noise."
+
+# ADDENDUM 2026-11-01 — registered: docs/2026-11-01-systems-as-modules-phasemap.spec (SM0–SM3): every system a folder and a module,
+# recursively, core at the root and modules/<name>/ in the same shape; COS runs them. James: "each system should be its own folder but also a
+# module. the each system has its own modules. recursive." MAPPED; his "merging to cos" read as COS running every system, to confirm.
+
+# ADDENDUM 2026-11-01 — registered: docs/2026-11-01-the-compartment-phasemap.spec (CP0–CP8): the compartment, whole, in one place.
+# James: "just dont have redundancy. like each compartment should be all of it. not split up every where." It supersedes 35 open phases
+# of six maps (CE1–CE7, CE1a, CON1–CON9, CS1_a_version_is_a_system_state, SN0–SN4, MG3, MG4, MG6, MG9, MG13, MG14, MG23–MG27, MG31), each
+# kept with its status naming its successor; ten phases that waited on them now also wait on their successor.
+
+# ADDENDUM 2026-11-01 — registered: docs/emerge-primitives.spec (EP_D0, EP_D1; EP1, EP2): Emerge in his words. His eight primitives (input,
+# event, gate, process, delta, state, sigma, output) mapped to Emerge and Nexus, his words → code saved (the garden walk-back), and the
+# component registry as the spine of every project the compiler builds. James: "okay that needs to be saves or specced. thats much easier
+# for me to understand." DRAFT; the coder's mappings marked to confirm.
+
+# ADDENDUM 2026-11-01 — registered: docs/outperform.spec + docs/2026-11-01-outperform-phasemap.spec (OP_D0, OP_D1; OP1–OP11). The arena: can
+# Nexus (Idearium's pipeline, local models first, his "innovate the method", many cheap tries, frontier models through Guardian only to plan,
+# repair or judge) build better than one frontier model alone? Measured on a sealed suite of his own repos' phases with hidden tests (Metrics:
+# quality, first-try rate, regressions, boundary breaks, frontier and local calls and tokens, cost units, time, waste, variance, explained),
+# then learning from what held (OP9), improving its own code through RAID and Versionium (OP10), and the curve over time on a frozen suite
+# (OP11). James, 2026-11-01: "could it outperform you? use guardian also. can you spec this? make a dependancy graph." · "could beat you in what
+# metrics" · "not only that but the system learns better code to optimize itself, which gives better code." Compiles at specDepth 1.0
+# (test-substrate-spec). Phase files: idearium/phases/2026-11-01-outperform/, lib/phases/2026-11-01-outperform/.
+
+# ADDENDUM 2026-11-01 — registered: docs/friction-map.spec + docs/2026-11-01-friction-map-phasemap.spec (FT_D0; FT1–FT5). The friction and tension
+# map between functions and primitives: every function placed against his eight primitives from its code; joints measured (friction from fault
+# records, shapes, crossings; tension from open gaps, RFR2 traces, Versionium churn, Loom fan-in); "what fits" answered by the one traversal.
+# Intelligence's (CI6). James, 2026-11-01: "the friction and tension mapping, between functions and primitives." Compiles at specDepth 1.0.
+
+# ADDENDUM 2026-11-01 — registered: docs/orchestration-console.spec + docs/2026-11-01-orchestration-console-phasemap.spec (OC_D0; OC1–OC8).
+# BrainOS rebuilt as COS's orchestration console: .task and .pipeline nodes as the record, the scheduler on them with catch-up, a calendar,
+# deploy to any system through COS proposals, every agent tool from the index as a step, run history with replay and rewind, the taxonomy
+# expanded (schedule, occurrence, deployment, run_history; orchestration.* events). Patterns from Temporal, Airflow, Kestra, Dagster, n8n,
+# CrewAI and Maxim, each mapped to a Nexus part. James, 2026-11-01: "rebuild brianos/orchastration ui with enterprise grade code".
+
+# ── ADDENDUM 2026-11-01 — procedures (PD) ─────────────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-11-01: "can you make that a macro or framework and then into a command like a batch but a .framework or .macro that me and copilot
+# can use. i feel we need more proceedures. maybe also have the update and diff plug into versionium. including the changelog and versoins."
+# docs/2026-11-01-procedures-phasemap.spec — PD_D0 (a procedure is a node file run by the existing engine; the name his), PD1–PD5. Mapped, not built.
+
+# ── ADDENDUM 2026-11-01 (0.60.363 UP13) — docs/nexus-update.spec ───────────────────────────────────────────────────────────────────
+# James, 2026-11-01: "make sure it hooks into idearium versionium, to backup the system". The update tool's module spec, begun: UpdateBackup;
+# MOD-UP-BACKUP-ROUTE, MOD-UP-APPLY-BACKED, MOD-UP-POLICY-TOGGLE. Compile-only in SS-01 until UP0–UP12 (which predate the spec rule) name it.
+
+# ── ADDENDUM 2026-11-02 (0.60.365) — docs/2026-11-02-cos-the-application-phasemap.spec ─────────────────────────────────────────────
+# James, 2026-11-02: "no i mean cos ui as the app ... cos starts up with windows ... also what about remote connections via ssh or ddns with a upnp,
+# or can we invent our own upnp." CA_D0 (the cockpit is the window), CA_D1 (elevated logon task, no service), CA_D2 (remote reach, his choice),
+# CA1 (Clear Glass to the tray), CA2 (remote reach). MG36/MG37 in the COS manager map, specced in cos/spec/cos-manager.spec.
+    | `docs/2026-11-02-cos-enterprise-phasemap.spec` | 1.0.0 — COS enterprise-grade: updates as COS's routes, per system, with the update tool on the cockpit's card (and a Windows notification when hidden); keep mine and update for a diverged folder (local commits on a branch, nothing lost); close and minimize his choice; the Windows service his call (CE_D2). CE1–CE4 built 0.60.376; CE5 waits | built, CE5 open | James: "i want toasts in cos ui for gibhub updates with a update tool. so i can update nexus automatically. per system" · "full enterprise grade, windows service, option to close or minimize to tray, manage systems" |
+    | `docs/2026-11-02-cos-console-phasemap.spec` | 1.0.0 — COS's console: a bell for updates, system status and notices (kept until read); every system's configuration (memory, CPU and network as a percent or in GB, ports, listen address, env, start, wall), each saying when and how it applies; add a system (a proposal, his taken at once); COS's own command line; one Intelligence (its consumer inside it). SC1–SC6 built 0.60.380; SC7 (Updates in COS with a gear: settings, history, roll back) 0.60.381 | built | James: "notification bell for update, system status,  notications" · "There shouldn't be two intelligence." · "Need the system cli. Need configuration for each system ... Percent or gbs. Ports and network settings." |
+    | `docs/2026-11-02-cos-disk-phasemap.spec` | 1.0.0 — a compartment's disk: the spec as metadata, the content one compressed file (later a machine disk or a live environment); made, verified, unpacked; a Disk tab per system. DK1–DK3 built 0.60.382; DK6–DK7 (the qcow2 virtual disk, snapshots inside) 0.60.383, DK8 in part; DK4, DK5 open | built, DK4–DK5 open | James: "Cos is the wmware. The compartments are the virtual machines/disks." · "Use the spec as metadata then have the actual file be a compressed or virtual disk or envirement." |
+    | `docs/2026-11-03-registry-per-system-phasemap.spec` | 1.0.0 — every system's component registry is its own (AXIOMS §5.16); RG0, its enforcement, built 0.60.384; the rest in planning with him | RG0 built, planning | James: "No component registry is per system.  That needs to be implemented" · "It’s fucking sovereign. Do not  make this mistake again." |
+
+# 2026-11-02 (0.60.379 CA3) — cos/spec/network.spec: NetworkSettings; MOD-NET-SETTINGS, -ROUTES, -PAGE, -GATE. His 'Gate behind settings to open.'

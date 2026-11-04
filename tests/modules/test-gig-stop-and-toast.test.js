@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/modules/test-gig-stop-and-toast.test.js — a gate reads the element against the gig; a failed step stops with a toast (GF6, 0.60.298)
+ * tests/modules/test-gig-stop-and-toast.test.js — a gate reads the element against the gig; a failed step stops with a toast (GF6, 0.60.388)
  * James, 2026-10-30, with Fiverr's category menu open and nothing chosen, and Settings › Pipelines empty: "how about having a condition to the
  * next gate, like what the element says, if it aligns with the gig. it needs to stop, and display toast with an error on any step."
  *
@@ -10,10 +10,6 @@
  *          the part and why, and Co-pilot's line says where it stopped and what was done
  *   GS-03  in Clear Glass: categoryChosenScript is closed on the suggestion links alone and open on the dropdowns; a choose's gate is the dropdown
  *          it opened (element-gate derive with the driver's selector)
- *   GS-05  in Clear Glass (2026-11-04, "it gets to the service drop down"): the gig's Service type is chosen in its row and gated on that dropdown;
- *          an option the menu does not have stops the fill there with a toast
- *   GS-06  in Clear Glass (2026-11-04, "service type still gets skipped. needs more timing"): the row appears after the subcategory and is waited for;
- *          a gig with no serviceType stops there, the dropdown's options named
  *   GS-04  Settings › Pipelines lists the bundled Fiverr gig (imported once, its gate the dropdown element); a failed pipeline task's event
  *          carries its label and error, and main turns it into a toast
  */
@@ -34,17 +30,14 @@ const OVERVIEW = `<!doctype html><html><head><meta charset="utf-8"><style>body{f
 .menu{position:absolute;background:#fff;border:1px solid #888;width:260px} .menu div{padding:6px} .chip{display:inline-block;border:1px solid #ccc;padding:2px 6px;margin:2px} a{color:#1dbf73;display:block}</style></head><body>
 <h3>Gig title</h3><textarea id="t" placeholder="I will do something I'm really good at"></textarea>
 <h3>Category</h3><div class="dd" id="cat">SELECT A CATEGORY</div> <div class="dd" id="sub">SELECT A SUBCATEGORY</div>
-<div class="row" id="svcrow" style="display:none;gap:20px;align-items:center"><span>Service type</span><div class="dd" id="svc">SELECT A SERVICE TYPE</div></div>
 <h4>Suggested categories</h4><a href="#s1" onclick="return false">Programming &amp; Tech &gt; Software Development</a><a href="#s2" onclick="return false">Programming &amp; Tech &gt; AI Development</a>
 <section id="tagsec"><h3>Search tags</h3><p>Positive keywords</p><div id="chips"></div><input id="tag" type="text" placeholder="Enter search terms"></section>
 <script>var SUBS = { 'Graphics & Design': ['Logo Design'], 'Programming & Tech': ['Website Development', 'AI Development', 'Chatbot Development'] }, menu = null;
 function close(){ if (menu) { menu.remove(); menu = null; } }
 function open(dd, opts){ close(); menu = document.createElement('div'); menu.className = 'menu'; var r = dd.getBoundingClientRect(); menu.style.left = r.left + 'px'; menu.style.top = (r.bottom + scrollY) + 'px';
-  opts.forEach(function(t){ var o = document.createElement('div'); o.textContent = t; o.onclick = function(){ dd.textContent = t; close(); if (dd.id === 'cat') document.getElementById('sub').textContent = 'SELECT A SUBCATEGORY'; if (dd.id === 'sub') setTimeout(function(){ document.getElementById('svcrow').style.display = 'flex'; }, 900); }; menu.appendChild(o); }); document.body.appendChild(menu); }
+  opts.forEach(function(t){ var o = document.createElement('div'); o.textContent = t; o.onclick = function(){ dd.textContent = t; close(); if (dd.id === 'cat') document.getElementById('sub').textContent = 'SELECT A SUBCATEGORY'; }; menu.appendChild(o); }); document.body.appendChild(menu); }
 document.getElementById('cat').onclick = function(){ open(this, Object.keys(SUBS)); };
 document.getElementById('sub').onclick = function(){ var c = document.getElementById('cat').textContent; open(this, SUBS[c] || []); };
-document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
-document.getElementById('svc').onclick = function(){ open(this, ['Web Application', 'Desktop Application', 'Automation']); };
 document.getElementById('tag').addEventListener('keydown', function(e){ if (e.key !== 'Enter' || !this.value.trim()) return; var c = document.createElement('span'); c.className = 'chip'; c.textContent = this.value.trim(); document.getElementById('chips').appendChild(c); this.value = ''; });
 </script></body></html>`;
 
@@ -82,11 +75,11 @@ document.getElementById('tag').addEventListener('keydown', function(e){ if (e.ke
     const page = await browser.newPage({ viewport: { width: 1000, height: 900 } });
     await page.goto(base + '/users/x/manage_gigs/new');
     const d = driverOn(page); const toasts = [], chooses = [];
-    const gig = { title: 'I will build an AI agent workflow', category: 'Programming & Tech', subcategory: 'AI Development', serviceType: 'Automation', tags: ['ai agent'], packages: {} };
+    const gig = { title: 'I will build an AI agent workflow', category: 'Programming & Tech', subcategory: 'AI Development', tags: ['ai agent'], packages: {} };
     const r = await Bridge.prototype._gigFill.call(selfOn(d, toasts, chooses), { gig });
     const cat = r.dropdowns.find(x => x.key === 'category');
     assert.ok(cat && cat.ok && cat.via === 'built-in' && /the suggestion "Programming & Tech > AI Development" did not take/.test(cat.why), JSON.stringify(r.dropdowns) + JSON.stringify(r.notFound));
-    assert.deepStrictEqual(chooses, [['SELECT A CATEGORY', 'Programming & Tech'], ['SELECT A SUBCATEGORY', 'AI Development'], [undefined, 'Automation']], 'the Service type waited for and chosen after the row appeared');
+    assert.deepStrictEqual(chooses, [['SELECT A CATEGORY', 'Programming & Tech'], ['SELECT A SUBCATEGORY', 'AI Development']]);
     assert.deepStrictEqual(await page.evaluate(() => [document.getElementById('cat').textContent, document.getElementById('sub').textContent]), ['Programming & Tech', 'AI Development']);
     const g = r.gates.filter(x => x.key === 'category');
     assert.ok(g.length === 1 && g[0].open && /the dropdowns show Programming & Tech > AI Development/.test(g[0].saw), JSON.stringify(r.gates));
@@ -142,39 +135,6 @@ document.getElementById('tag').addEventListener('keydown', function(e){ if (e.ke
     await page.close();
   });
 
-  if (browser) await test('GS-05', 'in Clear Glass: the Service type is chosen in its row and gated; a missing option stops there with a toast', async () => {
-    const page = await browser.newPage({ viewport: { width: 1000, height: 900 } });
-    await page.goto(base + '/users/x/manage_gigs/new');
-    const d = driverOn(page); const toasts = [];
-    const gig = { title: 'I will spec and architect your project', category: 'Programming & Tech', subcategory: 'AI Development', serviceType: 'Desktop Application', tags: ['spec'], packages: {} };
-    const r = await Bridge.prototype._gigFill.call(selfOn(d, toasts), { gig });
-    const sv = r.dropdowns.find(x => x.key === 'serviceType');
-    assert.ok(sv && sv.ok && sv.option === 'Desktop Application', JSON.stringify(r.dropdowns) + JSON.stringify(r.notFound));
-    assert.strictEqual(await page.evaluate(() => document.getElementById('svc').textContent), 'Desktop Application');
-    assert.ok(r.gates.some(g => g.key === 'serviceType' && g.open), JSON.stringify(r.gates));
-    assert.deepStrictEqual([r.stopped, toasts, r.tags && r.tags.done], [undefined, [], ['spec']]);
-    await page.goto(base + '/users/x/manage_gigs/new');
-    const bad = await Bridge.prototype._gigFill.call(selfOn(driverOn(page), toasts), { gig: { ...gig, serviceType: 'Mobile App' } });
-    assert.ok(bad.stopped && bad.stopped.key === 'serviceType' && /Mobile App/.test(bad.stopped.why), JSON.stringify(bad.stopped));
-    assert.strictEqual(bad.tags, undefined, 'the tags after it did not run');
-    assert.match(toasts[0], /^Gig fill stopped at serviceType: /);
-    await page.close();
-  });
-
-  if (browser) await test('GS-06', 'in Clear Glass: the page asks for a Service type the gig does not name: the fill stops there, naming its options', async () => {
-    const page = await browser.newPage({ viewport: { width: 1000, height: 900 } });
-    await page.goto(base + '/users/x/manage_gigs/new');
-    const d = driverOn(page); const toasts = [];
-    const gig = { title: 'I will spec and architect your project', category: 'Programming & Tech', subcategory: 'AI Development', tags: ['spec'], packages: {} };
-    const r = await Bridge.prototype._gigFill.call(selfOn(d, toasts), { gig });
-    assert.ok(r.stopped && r.stopped.key === 'serviceType', JSON.stringify(r.stopped) + JSON.stringify(r.notFound));
-    assert.match(r.stopped.why, /the page asks for a Service type and the gig has none — its options: Web Application \| Desktop Application \| Automation\. Put one in the gig as serviceType/);
-    assert.strictEqual(await page.evaluate(() => [document.getElementById('svc').textContent, !!document.querySelector('.menu')].join('|')), 'SELECT A SERVICE TYPE|false', 'nothing chosen, the menu closed');
-    assert.strictEqual(r.tags, undefined);
-    assert.match(toasts[0], /^Gig fill stopped at serviceType: the page asks for a Service type/);
-    await page.close();
-  });
-
   await test('GS-04', 'Pipelines lists the bundled Fiverr gig once; a failed task\'s event carries its label and error; main toasts it', async () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gs04-'));
     process.env.NEXUS_DATA_ROOT = tmp;
@@ -200,7 +160,6 @@ document.getElementById('tag').addEventListener('keydown', function(e){ if (e.ke
     const main = fs.readFileSync(CG('src/main/index.js'), 'utf8');
     assert.match(main, /automation\.pipeline\.task' && d\.status === 'failed'\) ipcBridge && ipcBridge\._gigToast\(`Pipeline/);
     assert.match(main, /vars: \{ \.\.\.gigVars\(p, ipcBridge\), page:/);
-    assert.match(fs.readFileSync(CG('src/ipc/bridge.js'), 'utf8'), /if \(r && r\.error && !d\.quiet\) \(typeof this\._gigToast[^\n]*\(`Macro/);
   });
 
   if (browser) try { await browser.close(); } catch (_) {}

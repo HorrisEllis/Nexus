@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
+context: pipeline phase CP11_the_diagnostic_map of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP11_the_diagnostic_map (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793576104468
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576104468
+lastSeenAt: 1793576104468
+fingerprint: null
+payload:
+  id: CP11_the_diagnostic_map
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/server.js
+  depends_on:
+    - CP_D4_the_diagnostic_map_on_the_eravos_canvas
+    - CI1_one_feed
+    - CI3_the_measures_chained
+    - CP1_the_machine_and_its_door
+  blocks: []
+  spec: null
+  graph: bccdc8f84285b773

@@ -1053,7 +1053,7 @@ Not confirmed.
 
 2 other file(s).
 
-- other: `cortex/spec/cortex.node-taxonomy.md`, `cortex/spec/cortex.spec`
+- other: `cortex/spec/cortex.node-taxonomy.spec`, `cortex/spec/cortex.spec`
 
 #### `cortex/tools/`
 

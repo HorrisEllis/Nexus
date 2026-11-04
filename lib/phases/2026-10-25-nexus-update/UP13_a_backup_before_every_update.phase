@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP13_a_backup_before_every_update
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP13_a_backup_before_every_update
+context: pipeline phase UP13_a_backup_before_every_update of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP13_a_backup_before_every_update (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1793576813268
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793576813268
+lastSeenAt: 1793576813268
+fingerprint: null
+payload:
+  id: UP13_a_backup_before_every_update
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-update.js
+    - idearium/api/index.js
+    - idearium/ui/update.html
+    - idearium/cli/route-commands.js
+    - lib/agent-tools/tools/nexus/update.js
+    - lib/nexus/core-duties.js
+    - tests/modules/test-nexus-update.test.js
+  depends_on:
+    - UP12_open_a_pull_request_for_any_agent
+    - UP11_an_attached_folder_tracks_origin
+  blocks: []
+  spec: null
+  graph: edaf46c06afe85a9

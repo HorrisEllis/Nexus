@@ -201,7 +201,7 @@ spec:
         real 'compartment with reusable components as foundation'
         mechanism James described — cos/blueprint/registry.js's
         getBuiltInBlueprint confirms real, pre-built blueprints already
-        exist (matching cos-design-v1.7.0.md's own claim of 11 real
+        exist (matching cos-design-v1.7.0.spec's own claim of 11 real
         blueprints). What's missing: a real bridge from loom's own
         component/wire maps and idearium's own specs INTO a real COS
         blueprint definition — today these are three separate, unconnected

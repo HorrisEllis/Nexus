@@ -235,6 +235,19 @@ export const SPEC = [
   // 0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match."
   // §0.60.252 UP3 — James, 2026-10-25: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?"
   // · "first one but the second one needs to be the end state" (git now, COS later). lib/nexus-update.js; restarting stays his.
+  // 0.60.354 PD1 — James, 2026-11-01: "a command like a batch but a .framework or .macro that me and copilot can use" · ".procedure"
+  { key: 'procedure.list', repo: false, usage: 'procedure list', about: 'the Nexus procedures: steps you or copilot run like a .bat, your yes where they change Nexus (idearium/procedures; a repo\'s own: repo procedures)',
+    req: () => ({ method: 'GET', path: '/api/procedures' }),
+    print: (d, a, h) => { for (const p of d.procedures || []) console.log(`  ${h.c.sky(p.id.padEnd(18))} ${p.name}  ${h.c.dim(p.steps.join(' → '))}`); for (const b of d.bad || []) console.log(h.c.amber(`  ${b.file}: ${b.why}`)); if (!(d.procedures || []).length) console.log(h.c.gray('  no procedures')); } },
+  { key: 'procedure.show', repo: false, usage: 'procedure show <id>', about: 'a procedure’s steps, in order',
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ method: 'GET', path: `/api/procedures/${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => { const p = d.procedure || {}; console.log(`${h.c.bold(p.name || p.id)}${p.about ? `\n  ${h.c.dim(p.about)}` : ''}`); (p.steps || []).forEach((st, i) => console.log(`  ${String(i + 1).padStart(2)}. ${st.confirm != null ? `confirm  ${st.confirm}` : st.check ? `check    step ${st.check.of} ${Object.entries(st.check).filter(([k]) => k !== 'of').map(([k, v]) => `${k} ${v}`).join(' ')}` : `command  ${(st.args && st.args.command) || st.tool}`}`)); } },
+  { key: 'procedure.run', repo: false, usage: 'procedure run <id> [--yes]', about: 'run a procedure; it stops at each step that needs your yes unless you pass --yes',
+    personOnly: (a) => (a.flags.yes ? 'passing a procedure’s yes is the person’s — run it without --yes; it stops at the step that needs them' : null),
+    need: (a) => (a.args[0] ? null : '<id>'),
+    req: (a) => ({ method: 'POST', path: `/api/procedures/${encodeURIComponent(a.args[0])}/run`, body: { yes: !!a.flags.yes }, timeoutMs: 30 * 60000 }),
+    print: (d, a, h) => { const r = d.run || {}; (r.results || []).forEach((st, i) => console.log(`  ${st.ok ? h.c.mint('✓') : st.waiting ? h.c.amber('…') : h.c.coral('✗')} ${String(i + 1).padStart(2)}. ${h.c.dim(st.confirm || (st.check ? `check step ${st.check.of}` : st.tool))}${st.error ? `  ${h.c.coral(st.error)}` : ''}`)); console.log(d.finished ? h.c.mint('  done') : r.waiting ? h.c.amber(`  waiting for your yes — procedure run ${a.args[0]} --yes`) : h.c.coral(`  stopped at step ${r.stoppedAt} of ${r.of}`)); } },
   { key: 'update', repo: false, usage: 'update [--no-fetch]', about: 'is there a newer Nexus on GitHub: this version and origin\'s, each release in between with James\'s words, the systems it changes, what an update would set aside or refuse',
     req: (a) => ({ method: 'GET', path: `/api/update${a.flags['no-fetch'] ? '?fetch=0' : ''}`, timeoutMs: 150000 }),
     print: (d, a, h) => {
@@ -243,22 +256,33 @@ export const SPEC = [
       for (const r of (d.releases || []).slice(0, 12)) console.log(`  ${h.c.gray(r.version.padEnd(9))} ${r.quote ? `"${String(r.quote).slice(0, 150)}"` : h.c.dim('(no quote in its line)')}`);
       if (d.systems && d.systems.length) console.log(h.c.dim(`  changes: ${d.systems.join(', ')}${d.lockChanged ? ' · package-lock.json (npm install runs)' : ''}`));
       const p = d.plan || {}; if ((p.archive || []).length) console.log(h.c.dim(`  sets aside first (copied to _archive/update/): ${p.archive.length} data file(s)`)); if ((p.blocks || []).length) console.log(h.c.amber(`  refuses: your edits to ${p.blocks.map(b => b.file).slice(0, 6).join(', ')}`));
-      if (d.can && !d.upToDate) console.log(h.c.amber(`  ${d.can}`)); else if (!d.upToDate) console.log(h.c.dim('  idearium update apply --yes'));
+      if (d.local) { console.log(h.c.dim(`  local commits GitHub lacks: ${d.local.count} (${d.local.onGitHub} already on GitHub by content)`)); for (const c of d.local.commits.slice(0, 5)) console.log(h.c.dim(`    ${c.onGitHub ? '=' : '+'} ${c.commit} ${c.subject}`)); }
+      if (d.can && !d.upToDate) console.log(h.c.amber(`  ${d.can}${d.local ? ' → idearium update keep-local --yes' : ''}`)); else if (!d.upToDate) console.log(h.c.dim('  idearium update apply --yes'));
     } },
+  // 0.60.376 CE3 — James, 2026-11-02: "so i can update nexus automatically". A diverged folder: its local commits kept on a branch, then GitHub's commit
+  { key: 'update.keep-local', repo: false, usage: 'update keep-local --yes', about: 'when local commits block an update (diverged): keep them on a branch local/<date>, set his colliding data aside, and move this folder to GitHub\'s commit (git reset --keep; a backup first)',
+    personOnly: () => 'moving Nexus to GitHub\'s commit is the person\'s — an agent asks them first',
+    need: (a) => (a.flags.yes ? null : '--yes (it moves Nexus to GitHub\'s commit; `idearium update` shows the local commits and how many GitHub already has)'),
+    req: () => ({ method: 'POST', path: '/api/update/keep-local', timeoutMs: 20 * 60000, body: { confirm: true } }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); if (d.action === 'none') return console.log(h.c.mint(`  ${d.why}`)); console.log(h.c.mint(`  ${d.from.version} → ${d.to.version} · your local commits are on ${d.keptOn}`)); if ((d.archived || []).length) console.log(h.c.dim(`  ${d.archived.length} data file(s) set aside in ${d.archivedTo}`)); console.log(h.c.dim(`  restart: ${(d.systems || []).join(', ') || 'nothing changed a system'}`)); } },
   { key: 'update.apply', repo: false, usage: 'update apply --yes', about: 'bring in the newer Nexus from GitHub: fast-forward only, his changed data files copied aside first, npm install if the lockfile changed; says what to restart',
     personOnly: () => 'updating Nexus\'s code is the person\'s — an agent uses nexus.update.tool apply with confirm:true after asking them',
     need: (a) => (a.flags.yes ? null : '--yes (it changes Nexus\'s code; `idearium update` shows what it brings)'),
     req: () => ({ method: 'POST', path: '/api/update/apply', timeoutMs: 20 * 60000, body: { confirm: true } }),
-    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); if (d.action === 'none') return console.log(h.c.mint(`  ${d.why}`)); console.log(h.c.mint(`  ${d.from.version} → ${d.to.version}`) + h.c.dim(`  ${(d.archived || []).length} data file(s) set aside${d.npm && d.npm.ran ? ` · npm install ${d.npm.ok ? 'ok' : `FAILED: ${d.npm.error}`}` : ''}`)); console.log(h.c.amber(`  restart: ${(d.restart.systems || []).join(', ') || '—'} — ${d.restart.note}`)); } },
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); if (d.action === 'none') return console.log(h.c.mint(`  ${d.why}`)); console.log(h.c.mint(`  ${d.from.version} → ${d.to.version}`) + h.c.dim(`${d.backup ? `  backup ${String(d.backup.snapshot).slice(0, 12)} ·` : ''}  ${(d.archived || []).length} data file(s) set aside${d.npm && d.npm.ran ? ` · npm install ${d.npm.ok ? 'ok' : `FAILED: ${d.npm.error}`}` : ''}`)); console.log(h.c.amber(`  restart: ${(d.restart.systems || []).join(', ') || '—'} — ${d.restart.note}`)); } },
+  // 0.60.363 UP13 — James: "make sure it hooks into idearium versionium, to backup the system". The same backup every update takes first.
+  { key: 'update.backup', repo: false, usage: 'update backup [--why "<reason>"]', about: 'back Nexus up now: the whole tree snapshotted into Idearium\'s Nexus repo store (content-addressed) and recorded in Versionium; every update takes one first',
+    req: (a) => ({ method: 'POST', path: '/api/nexus-self/backup', timeoutMs: 10 * 60000, body: { by: 'person', why: a.flags.why || 'asked' } }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  not backed up: ${d.error}`)); console.log(h.c.mint(`  backed up ${d.version || ''}: snapshot ${String(d.snapshot).slice(0, 12)}`) + h.c.dim(`  ${d.files} files${d.created ? '' : ' · the tree had not moved: the last snapshot is the backup'} · recorded in Versionium`)); } },
   { key: 'update.rollback', repo: false, usage: 'update rollback --yes', about: 'undo the last update: back to the commit it came from (refuses if your edits are in the way)',
     personOnly: () => 'rolling Nexus back is the person\'s — an agent uses nexus.update.tool rollback with confirm:true after asking them',
     need: (a) => (a.flags.yes ? null : '--yes'),
     req: () => ({ method: 'POST', path: '/api/update/rollback', timeoutMs: 20 * 60000, body: { confirm: true } }),
     print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); console.log(h.c.mint(`  ${d.from.version} → ${d.to.version}`)); if (d.note) console.log(h.c.dim(`  ${d.note}`)); console.log(h.c.amber(`  restart: ${(d.restart.systems || []).join(', ') || '—'}`)); } },
   // §0.60.254 UP8 — James, 2026-10-26: "should be automatic". auto (the default) applies when Nexus is idle; notify only says; off does nothing
-  { key: 'update.policy', repo: false, usage: 'update policy [auto|notify|off] [--every <hours>]', about: 'how Nexus updates itself from GitHub: auto (when idle, then restarts what changed — never Clear Glass under you), notify, or off; and what the last automatic check did',
-    req: (a) => (a.args[0] || a.flags.every ? { method: 'POST', path: '/api/update/policy', body: { ...(a.args[0] ? { policy: a.args[0] } : {}), ...(a.flags.every ? { everyHours: Number(a.flags.every) } : {}) } } : { method: 'GET', path: '/api/update/auto' }),
-    print: (d, a, h) => { const p = d.policy && typeof d.policy === 'object' ? d.policy : d; console.log(`  ${h.c.bold(p.policy)} ${h.c.dim(`every ${p.everyHours} h`)}`); if (d.last) console.log(h.c.dim(`  last check ${String(d.last.at).slice(0, 16)}: ${d.last.action}${d.last.to ? ` → ${d.last.to}` : d.last.latest ? ` (${d.last.latest} on GitHub)` : ''}${d.last.error || d.last.why ? ` — ${d.last.error || [].concat(d.last.why).join('; ')}` : ''}`)); } },
+  { key: 'update.policy', repo: false, usage: 'update policy [auto|notify|off] [--every <hours>] [--keep-local auto|ask]', about: 'how Nexus updates itself from GitHub: auto (when idle, then restarts what changed — never Clear Glass under you), notify, or off; and what the last automatic check did',
+    req: (a) => (a.args[0] || a.flags.every || a.flags['keep-local'] ? { method: 'POST', path: '/api/update/policy', body: { ...(a.args[0] ? { policy: a.args[0] } : {}), ...(a.flags.every ? { everyHours: Number(a.flags.every) } : {}), ...(a.flags['keep-local'] ? { keepLocal: a.flags['keep-local'] } : {}) } } : { method: 'GET', path: '/api/update/auto' }),   /* SC7: --keep-local, the same setting as COS's gear */
+    print: (d, a, h) => { const p = d.policy && typeof d.policy === 'object' ? d.policy : d; console.log(`  ${h.c.bold(p.policy)} ${h.c.dim(`every ${p.everyHours} h · your own commits: ${p.keepLocal || 'auto'}`)}`); if (d.last) console.log(h.c.dim(`  last check ${String(d.last.at).slice(0, 16)}: ${d.last.action}${d.last.to ? ` → ${d.last.to}` : d.last.latest ? ` (${d.last.latest} on GitHub)` : ''}${d.last.error || d.last.why ? ` — ${d.last.error || [].concat(d.last.why).join('; ')}` : ''}`)); } },
   { key: 'update.history', repo: false, usage: 'update history', about: 'every update and rollback this install made: when, from and to which version, who, what was set aside',
     req: () => ({ method: 'GET', path: '/api/update/history' }),
     print: (d, a, h) => { const l = d.history || []; if (!l.length) return console.log(h.c.dim('  no updates yet')); for (const r of l) console.log(`  ${h.c.gray(r.at.slice(0, 16))} ${r.kind.padEnd(8)} ${r.from.version} → ${r.to.version}  ${h.c.dim(`by ${r.by}${(r.archived || []).length ? ` · ${r.archived.length} set aside` : ''}`)}`); } },
@@ -803,6 +827,94 @@ export const SPEC = [
     req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/finish`, timeoutMs: 120000 }),
     print: (d, a, h) => { console.log(`${h.c.bold(d.name || '')} — ${d.open ? h.c.amber(`${d.open} open`) : h.c.green('nothing open')} · ${(d.stats || {}).components || 0} components · ${(d.stats || {}).wires || 0} wires`);
       for (const i of d.items || []) console.log(`  ${i.done ? h.c.green('✓') : h.c.amber('·')} ${i.id.padEnd(14)} ${i.say}${!i.done && i.cmd ? h.c.dim(`   → ${i.cmd}`) : ''}`); } },
+  // 0.60.328 MG15b — COS's supervisor (James: "lets do the orchastration. that needs to be done completely.")
+  // 0.60.335 AC5 / AC7 — James: "change the agemnts for the spacial void and spec workshop" · "skip buttons which will autofill"
+  { key: 'settings.page-agents', repo: false, usage: 'page-agents [void|workshop] [provider[:model]|learned]', about: 'his agent for the Spatial Void and the Spec Workshop (learned = Copilot\'s router picks)',
+    req: (a) => (a.args[1] ? { method: 'POST', path: '/api/settings/page-agents', body: { agents: { [a.args[0]]: a.args[1] }, by: 'person' } } : { method: 'GET', path: '/api/settings/page-agents' }) },
+  { key: 'workshop.skip', repo: false, usage: 'workshop skip <workshop-id>', about: 'fill every empty section of a spec workshop with a generic default, marked (default); his text is never touched',
+    req: (a) => ({ method: 'POST', path: `/api/workshop/${encodeURIComponent(a.args[0] || '')}/skip`, body: { step: 'workshop.sections', by: 'person' } }) },
+  { key: 'cos.ps', repo: false, usage: 'cos ps', about: 'every declared system as COS\'s supervisor sees it: state, pid, restarts, circuit',
+    req: () => ({ method: 'GET', path: '/api/cos/systems' }) },
+  { key: 'cos.act', repo: false, usage: 'cos <start|stop|restart|touch|reset-circuit|pause|resume> <system>', about: 'a person\'s act on one system, through COS\'s supervisor (ledgered before it happens); pause and resume suspend its process tree and read it back from the OS (CP5b)',
+    req: (a) => ({ method: 'POST', path: `/api/cos/systems/${encodeURIComponent(a.args[1] || '')}/${encodeURIComponent(a.args[0] || 'start')}`, body: { by: 'person' } }) },
+  { key: 'cos.boot', repo: false, usage: 'cos boot [all|core]', about: 'boot the declared systems phase by phase (core = the critical set, CS4a)',
+    req: (a) => ({ method: 'POST', path: '/api/cos/boot', timeoutMs: 120000, body: { set: a.args[0] || undefined, by: 'person' } }) },
+  { key: 'cos.ledger', repo: false, usage: 'cos ledger [system] [--limit n]', about: 'the supervisor\'s ledger: every spawn, crash, restart, refusal and stop, with why',
+    req: (a) => ({ method: 'GET', path: `/api/cos/ledger?limit=${Number(a.flags.limit) || 50}${a.args[0] ? `&system=${encodeURIComponent(a.args[0])}` : ''}` }) },
+  // 0.60.337 MG18 — what COS's UI shows, as rows (agents get every read a person gets; taking a proposal is a person's act)
+  { key: 'cos.proposals', repo: false, usage: 'cos proposals [--open]', about: 'agents\' held acts on COS: who, what, on which system, why, and whether a person took or dropped it',
+    req: (a) => ({ method: 'GET', path: `/api/cos/proposals${a.flags.open ? '?open=1' : ''}` }) },
+  { key: 'cos.proposal.act', repo: false, personOnly: () => 'taking or dropping a proposal is the person\'s: Take or Drop on COS\'s Proposals page, or ask them', usage: 'cos <take|drop> <proposal-id>', about: 'take an agent\'s proposal (it runs as your act) or drop it; both ledgered',
+    req: (a) => ({ method: 'POST', path: `/api/cos/proposals/${encodeURIComponent(a.args[1] || '')}/${a.args[0] === 'drop' ? 'drop' : 'take'}`, body: { by: 'person' } }) },
+  { key: 'cos.logs', repo: false, usage: 'cos logs <system> [--limit n]', about: 'a system\'s own recent output, as COS\'s supervisor kept it (stdout and stderr, with times)',
+    req: (a) => ({ method: 'GET', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/logs?limit=${Number(a.flags.limit) || 100}` }) },
+  { key: 'cos.usage', repo: false, usage: 'cos usage', about: 'each supervised system\'s memory and CPU read back from the OS, and the host\'s load and free memory against the halt floor',
+    req: () => ({ method: 'GET', path: '/api/cos/usage' }) },
+  { key: 'cos.policy', repo: false, usage: 'cos policy', about: 'the supervisor\'s rules (boot set, restart backoff, circuit, memory floors, idle) with their defaults',
+    req: () => ({ method: 'GET', path: '/api/cos/policy' }) },
+  // 2026-11-01 CP1a — James: "continue moving the rest of the systems into cos." Every compartment's wall, asked of COS's manager (:7799)
+  { key: 'cos.walls', repo: false, usage: 'cos walls', about: 'every compartment\'s wall: enforce, audit or bare, how it is put up, and the crossings an audit wall has said since the process started (enforce-ready when none)',
+    req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/walls' }),
+    print: (d, a, h) => { const c = d.counts || {}; h.header(`walls — ${c.enforce || 0} enforce · ${c.audit || 0} audit · ${c.bare || 0} bare · ${c.enforceReady || 0} ready for enforce`);
+      for (const w of d.walls || []) console.log(`  ${w.name.padEnd(22)} ${w.mode.padEnd(8)} ${String(w.via).padEnd(13)} ${w.said}${w.crossings.length ? `\n      ${w.crossings.slice(0, 5).map(x => `${x.file} (from ${x.from})`).join('\n      ')}` : ''}`); } },
+  // 2026-11-01 CP6a — James: "then i want resource management for each cos compartment". Caps by layer, read back from the OS; the account
+  // 0.60.367 CA3 — James: "Gate behind settings to open. Make a full detailed settings for network." Reading is anyone's; changing it is his.
+  { key: 'cos.network', repo: false, usage: 'cos network', about: 'COS\'s network settings (outbound tunnel and rendezvous, inbound port mapping, DDNS, SSH, TLS, compartment switches) and whether each reach engine\'s gate is open; tokens shown only as set or not',
+    req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/network' }) },
+  { key: 'cos.network.set', repo: false, usage: 'cos network set <path> <value>', personOnly: () => 'opening the network is the person\'s: the Network page in COS, or ask them', about: 'change one network setting, e.g. cos network set inbound.ddns.enabled true',
+    req: (a) => { const p = String(a.args[0] || ''), raw = a.args.slice(1).join(' '); let v = raw; try { v = JSON.parse(raw); } catch (_) {} const patch = {}; const ks = p.split('.'); let x = patch; ks.slice(0, -1).forEach(k => { x = x[k] = {}; }); x[ks[ks.length - 1]] = v;
+      return { system: 'cos', method: 'PATCH', path: '/api/cos/network', body: { patch, by: 'person' } }; } },
+  { key: 'cos.resources', repo: false, usage: 'cos resources', about: 'each compartment\'s caps (heap, resident limit, priority) as applied by the OS, its resident memory and CPU now, peak and average',
+    req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/resources?fresh=1', timeoutMs: 20000 }),
+    print: (d, a, h) => { const r = d.resources || {}; h.header(`resources — host ${r.host ? `${r.host.freeMemPct}% free of ${r.host.totalMB} MB` : '?'} · reader ${r.reader || 'none'}${r.incident ? ' · under the halt floor: a proposal is held' : ''}`);
+      for (const s of r.systems || []) console.log(`  ${s.name.padEnd(22)} ${String(s.now && s.now.rssMB != null ? s.now.rssMB + ' MB' : '—').padStart(8)} ${String(s.now && s.now.cpuPct != null ? s.now.cpuPct + '%' : '—').padStart(7)}  heap ${s.caps.heapMB} (${s.caps.applied.heap.state}) · ${s.caps.priority} (${s.caps.applied.priority.state})${s.caps.rssLimitMB ? ` · limit ${s.caps.rssLimitMB} MB ${s.caps.onOver}` : ''}`); } },
+  { key: 'cos.caps', repo: false, usage: 'cos caps <system> [heapMB=<n>] [rssLimitMB=<n>|none] [onOver=warn|restart] [priority=low|below-normal|normal|above-normal|high]', about: 'a compartment\'s caps: read, or set by you (each value with its layer; applied and read back)',
+    req: (a) => { const kv = a.args.slice(1).filter(x => x.includes('=')); if (!kv.length) return { system: 'cos', method: 'GET', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/caps` };
+      const patch = Object.fromEntries(kv.map(x => { const [k, v] = x.split('='); return [k, v === 'none' ? null : /MB$/.test(k) ? Number(v) : v]; }));
+      return { system: 'cos', method: 'PATCH', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/caps`, body: { patch, by: 'person' } }; },
+    print: (d) => { const c = d.caps; console.log(`${c.name}: ${['heapMB', 'rssLimitMB', 'onOver', 'priority'].map(k => `${k} ${c[k]} (${c.layers[k]})`).join(' · ')}`); for (const [k, v] of Object.entries(c.applied)) console.log(`  ${k.padEnd(9)} ${v.state}${v.readBack != null ? ` → ${v.readBack}` : ''}${v.why ? ` — ${v.why}` : ''}`); } },
+  // SC3 0.60.380 — James, 2026-11-02: "Need the system cli." · "Need configuration for each system". COS's own table runs in its manager
+  // (POST /api/cos/cli); these rows give agents and the terminal the same, through COS's routes.
+  { key: 'cos.config', repo: false, personOnly: (a) => (a.args.slice(1).some(x => x.includes('=')) ? 'a system\'s configuration is set by a person; an agent reads it' : null), usage: 'cos config <system> [key=value …]  (memory.limit=25% · memory.heap=2GB · cpu.limit=2cores · network.port=3760 · env.FOO=bar · start.autostart=false …)', about: 'a system\'s configuration in COS: every setting with where it came from and when and how it applies; set yours (percent or sizes)',
+    req: (a) => { const kv = a.args.slice(1).filter(x => x.includes('=')); if (!kv.length) return { system: 'cos', method: 'GET', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/config` };
+      const patch = Object.fromEntries(kv.map(x => { const i = x.indexOf('='); const v = x.slice(i + 1); return [x.slice(0, i), v === 'none' ? null : v]; }));
+      return { system: 'cos', method: 'PATCH', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/config`, body: { patch, by: 'person' } }; },
+    print: (d, a, h) => { h.header(`${d.name} — host ${Math.round(d.host.totalMB / 1024)} GB, ${d.host.cores} cores`); for (const [k, s] of Object.entries(d.settings)) console.log(`  ${k.padEnd(18)} ${String(s.value == null ? '—' : typeof s.value === 'object' ? JSON.stringify(s.value) : s.value).padEnd(16)} ${s.from.padEnd(10)} ${s.how.state || ''}${s.how.when ? ` · ${s.how.when}` : ''}`); for (const [k, x] of Object.entries(d.env || {})) console.log(`  env.${k.padEnd(14)} ${String(x.value).padEnd(16)} ${x.from}`); } },
+  { key: 'cos.disk', repo: false, personOnly: (a) => (a.args[1] === 'make' ? 'a disk is made by a person; an agent reads them' : null), usage: 'cos disk <system> [make [--state]]', about: 'a system\'s disks in COS: its spec as metadata, its files in one compressed file; make one (with its data: --state)',
+    req: (a) => (a.args[1] === 'make' ? { system: 'cos', method: 'POST', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/disk`, body: { withState: !!a.flags.state, by: 'person' }, timeoutMs: 300000 } : { system: 'cos', method: 'GET', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/disk` }),
+    print: (d) => { if (d.file) { console.log(`${d.file}: ${d.files} files, ${Math.round(d.bytes / 1024)} KB · its spec names ${d.metadata.coverage.pct}% of its code`); return; } console.log(`${d.system}: metadata ${d.metadata.declaredBy || 'none'} · its spec names ${d.coverage.pct}% of its code`); for (const x of d.disks) console.log(`  ${x.file}  ${Math.round(x.bytes / 1024)} KB  ${x.files} files`); } },
+  { key: 'cos.notices', repo: false, usage: 'cos notices [all]', about: 'COS\'s bell: updates, system status and notices kept until read',
+    req: (a) => ({ system: 'cos', method: 'GET', path: `/api/cos/notices${a.args[0] === 'all' ? '' : '?unread=1'}` }),
+    print: (d, a, h) => { h.header(`${d.counts.unread} unread (${d.counts.update} updates, ${d.counts.system} systems, ${d.counts.notice} notices)`); for (const n of d.notices) console.log(`  ${n.read ? ' ' : '•'} ${n.level.padEnd(5)} ${n.kind.padEnd(7)} ${n.title}${n.body ? ` — ${n.body.slice(0, 100)}` : ''}`); } },
+  { key: 'cos.cli', repo: false, personOnly: () => 'COS\'s command line acts as you; an agent proposes (POST /api/cos/proposals) or reads (cos config, cos notices)', usage: 'cos cli <line>  (e.g. cos cli add my-service my-service port=3790)', about: 'run a line of COS\'s own command line in its manager (help lists its table)',
+    req: (a) => ({ system: 'cos', method: 'POST', path: '/api/cos/cli', body: { line: a.args.join(' '), by: 'person' } }),
+    print: (d) => { for (const l of d.lines || []) console.log(l); } },
+  // 2026-11-01 UP12 — James: "Open the PR" · "okay but for all agents, as a agent tool". Run here (local): push, then gh or the compare URL
+  { key: 'pr.open', repo: false, usage: 'pr open [dir] [--base main] [--title "…"] [--body "…"]', about: 'push the current branch and open its pull request (gh when installed and signed in; else GitHub\'s compare link, prefilled, to click)',
+    local: async (a) => require('../../lib/git-pr.js').open({ dir: a.args[0] || process.cwd(), base: a.flags.base || 'main', title: a.flags.title || null, body: a.flags.body || '' }),
+    print: (d) => console.log(d.ok ? `${d.branch} → ${d.base} (${d.repo}) · ${d.pushed ? 'pushed · ' : ''}${d.said}\n  ${d.url}` : `refused: ${d.error}`) },
+  // 2026-11-01 CI8 — James: "72% so make sure it is tv ui and i can access it,". The TENSION channel's read, for agents and the CLI.
+  { key: 'tension', repo: false, usage: 'tension [friction]', about: 'every system\'s tension and regime, computed by Intelligence (intelligence/friction.js) from Diagnostic\'s friction and Cortex\'s open gaps; each source said',
+    req: (a) => ({ system: 'orchestrator', method: 'GET', path: `/api/tension-field/${a.args[0] === 'friction' ? 'friction' : 'tension'}` }) },
+  // 2026-11-01 TV3 — James: "the tv ui needs the emergence channel". The same three reads the channel makes, for agents and the CLI.
+  { key: 'emergence.patterns', repo: false, usage: 'emergence patterns', about: 'what Intelligence has crystallised: co-occurrence, failure precursors, bottlenecks, cross-system causes — each with its count and confidence',
+    req: () => ({ system: 'orchestrator', method: 'GET', path: '/api/emergence/patterns' }) },
+  { key: 'emergence.liminal', repo: false, usage: 'emergence liminal [--focal L1/L2]', about: 'the liminal spaces, where a pattern forms before it crystallises: each one\'s active, resolved and crystallised items and its velocity',
+    req: (a) => ({ system: 'orchestrator', method: 'GET', path: `/api/emergence/liminal${a.flags.focal ? `?focalPoint=${encodeURIComponent(a.flags.focal)}` : ''}` }) },
+  { key: 'emergence.sessions', repo: false, usage: 'emergence sessions [--limit n]', about: 'his emergence runs (axioms, end state; "if it can\'t innovate the problem, innovate the method"): attempts, method pivots, outcome',
+    req: (a) => ({ system: 'orchestrator', method: 'GET', path: `/api/emergence/sessions${a.flags.limit ? `?limit=${Number(a.flags.limit)}` : ''}` }) },
+  // 0.60.339 EAS3 — Emerge (github.com/HorrisEllis/emerge, in Nexus at emerge/), through its own door
+  { key: 'emerge.status', repo: false, usage: 'emerge status', about: 'Emerge\'s own status, from its door (:4900): its nodes, commands, routes and modules',
+    req: () => ({ method: 'GET', path: '/api/emerge-system/status' }) },
+  { key: 'emerge.modules', repo: false, usage: 'emerge modules', about: 'the modules Emerge holds (a system of systems, nested)',
+    req: () => ({ method: 'GET', path: '/api/emerge-system/modules' }) },
+  { key: 'emerge.module.new', repo: false, usage: 'emerge module <name> [--parent p]', about: 'lay out a new Emerge module (its folder and its nodes)',
+    req: (a) => ({ method: 'POST', path: '/api/emerge-system/modules', body: { name: a.args[1] || a.args[0], parent: a.flags.parent || undefined } }) },
+  { key: 'emerge.lang', repo: false, usage: 'emerge <check|run|build|test|synth> <file.eg> [args…] · emerge say "<your words>"',
+    about: 'the Emerge language through its door: check (errors, nothing runs), run, build (to CommonJS), test (each test block in its own fork), synth (blocks to code, no model), say (your words, each understood word with your quote)',
+    req: (a) => { const op = a.args[0]; if (op === 'say') return { method: 'POST', path: '/api/emerge-system/lang/say', body: { sentence: a.args.slice(1).join(' ') } };
+      let source = ''; try { source = require('fs').readFileSync(require('path').resolve(a.args[1] || ''), 'utf8'); } catch (e) { source = a.flags.source || ''; }
+      return { method: 'POST', path: `/api/emerge-system/lang/${encodeURIComponent(op || 'check')}`, timeoutMs: 60000, body: { source, args: a.args.slice(2) } }; } },
   { key: 'repo.spine', repo: true, usage: 'repo spine <repo> [--write] [--unknown] [--limit n]', about: 'the project\'s component registry as its spine: every component and every wire with its evidence (discovered by which adapter, declared, or unknown), and the drift against nexus.spine.json; --write writes it',
     req: (a) => (a.flags.write ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/spine`, body: {}, timeoutMs: 120000 } : { method: 'GET', path: `/api/repos/${a.repo.uuid}/spine${a.flags.limit ? `?limit=${parseInt(a.flags.limit, 10)}` : ''}`, timeoutMs: 120000 }),
     print: (d, a, h) => {
@@ -1263,6 +1375,17 @@ export const SPEC = [
     need: (a) => (!a.args[0] ? '<file.autofill> or undo' : null),
     req: (a) => { if (a.args[0] === 'undo') return { system: 'clear-glass', method: 'POST', path: '/cli/autofill/import/undo', body: {} }; const fs = require('fs'); if (!fs.existsSync(a.args[0])) return { error: `no such file: ${a.args[0]}` }; return { system: 'clear-glass', method: 'POST', path: '/cli/autofill/import', body: { text: fs.readFileSync(a.args[0], 'utf8'), by: 'command' } }; },
     print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); if (d.restored) return console.log(h.c.mint(`  undone: ${d.restored.profiles} profile(s), ${d.restored.learned} learned field(s)${d.restored.gig ? ', the gig' : ''} put back`)); const c = d.counts; console.log(h.c.mint(`  ${c.profilesAdded} added · ${c.profilesReplaced} replaced (newer) · ${c.profilesKept} kept · ${c.learned} learned · ${c.gig ? 'the gig' : 'no gig'}`)); for (const r of d.refused || []) console.log(h.c.amber(`  not taken: ${r.what} ${r.item} — ${r.why}`)); for (const w of d.warnings || []) console.log(h.c.dim(`  ${w}`)); } },
+  // §PF 0.60.334 — James, 2026-10-30: "No md. Nodes you can upload and import to the settings page." The .portfolio node as rows, so nexus.command (every agent) can list / import / export it (finishing the backend chain: backend → route → command → UI).
+  { key: 'portfolio', repo: false, usage: 'portfolio', about: 'the portfolios (.portfolio nodes) in Clear Glass: name, project count and headline',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/portfolio' }),
+    print: (d, a, h) => { const l = (d && d.portfolios) || []; if (!l.length) return console.log(h.c.dim('  no portfolio — import a .portfolio file in Settings › Autofill › Portfolio')); for (const p of l) console.log(`  ${h.c.gray(String(p.id).slice(0, 12))} ${p.name || ''}  ${h.c.dim(`${(p.items || []).length} project(s)${p.headline ? ' · ' + p.headline : ''}`)}`); } },
+  { key: 'portfolio.export', repo: false, usage: 'portfolio export [--out <file.portfolio>]', about: 'the portfolios as one .portfolio file (YAML); --out writes it, else it is printed',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/portfolio/export' }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); if (a.flags.out) { require('fs').writeFileSync(String(a.flags.out), d.text); console.log(h.c.mint(`  wrote ${a.flags.out}: ${d.count} portfolio(s)`)); } else console.log(d.text); } },
+  { key: 'portfolio.import', repo: false, usage: 'portfolio import <file.portfolio>', about: 'import a .portfolio file into Clear Glass (upsert by id, newer copy wins)',
+    need: (a) => (!a.args[0] ? '<file.portfolio>' : null),
+    req: (a) => { const fs = require('fs'); if (!fs.existsSync(a.args[0])) return { error: `no such file: ${a.args[0]}` }; return { system: 'clear-glass', method: 'POST', path: '/cli/portfolio/import', body: { text: fs.readFileSync(a.args[0], 'utf8') } }; },
+    print: (d, a, h) => { if (!(d.imported && d.imported.length)) return console.log(h.c.amber(`  ${d.error || (d.errors && d.errors[0] && d.errors[0].error) || 'nothing imported'}`)); console.log(h.c.mint(`  ${d.imported.length} portfolio(s): ${d.imported.map(x => x.name + (x.updated ? ' (updated)' : x.kept ? ' (kept)' : '')).join(', ')}`)); for (const e of d.errors || []) console.log(h.c.amber(`  refused: ${e.name} — ${e.error}`)); } },
   // §AD4 0.60.251 — James, 2026-10-25: "need clearglass' fiverr, job application automation, autofill and macros working fully,
   // including with the agents and copilot." The fill, the gig and macros as rows, so nexus.command (every agent) has them.
   { key: 'autofill.profiles', repo: false, usage: 'autofill profiles', about: 'the autofill profiles in Clear Glass: id and label (the identity a fill types in)',

@@ -1,0 +1,108 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EAS1_the_skeleton_in_emerge:b9a76e025ece0988
+type: graph
+id: phase:EAS1_the_skeleton_in_emerge:b9a76e025ece0988
+context: dependency graph of phase EAS1_the_skeleton_in_emerge
+intent: null
+summary: 6 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793448283182
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793448283182
+lastSeenAt: 1793448283182
+fingerprint: null
+payload:
+  for: EAS1_the_skeleton_in_emerge
+  kind: phase
+  repo: null
+  hash: b9a76e025ece0988
+  nodes:
+    - path: docs/emerge-system.spec
+      role: changes
+      exists: true
+      system: null
+    - path: lib/emerge/emerge-ide.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/emerge/config.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/emerge/registry-components.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/emerge/siso/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/ollama-runtime.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: lib/emerge/emerge-ide.js
+      to: lib/emerge/siso/index.js
+      kind: requires
+    - from: lib/emerge/emerge-ide.js
+      to: ollama/ollama-runtime.js
+      kind: requires
+    - from: lib/emerge/emerge-ide.js
+      to: lib/emerge/config.js
+      kind: requires
+    - from: lib/emerge/emerge-ide.js
+      to: lib/emerge/registry-components.js
+      kind: requires
+  crossings:
+    - from: lib/emerge/emerge-ide.js
+      to: ollama/ollama-runtime.js
+      fromSystem: lib
+      toSystem: ollama
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+    dependents:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+    downstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS5_a_system_of_systems
+    blockedBy:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 1 · blocked by EAS_D0_a_system_not_an_idearium_module, EAS_D2_two_contracts_two_names,
+        EAS1a_the_boundary_reads_code_not_text
+      - >-
+        depends on (3): EAS_D0_a_system_not_an_idearium_module, EAS_D2_two_contracts_two_names,
+        EAS1a_the_boundary_reads_code_not_text
+      - >-
+        needed by (2): EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus · all
+        downstream 4
+    edges:
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+        kind: declared
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+        kind: declared
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+        kind: declared

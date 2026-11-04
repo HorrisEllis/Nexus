@@ -193,7 +193,7 @@ Second, NEXUS already has that sigma layer: `lib/cfr/sigma.js` (three-axis score
 
 **Correction 2 — Versionium is the snapshot system.**
 
-v0.1 mentioned snapshots without naming the system. `docs/specs/VERSIONIUM.spec.md` is explicit: "Causal version control. Not file trees — causality graphs. GitHub tracks what changed. Versionium tracks why." Commit = `vtm-{sha12}` content-addressed snapshot. Branch = divergent replay path. Temporal replay over CFR Rewind's ring buffer. Sigma-gated auto-commit at threshold 0.15. Versionium is what owns snapshots in this codebase — not `lib/nerve/index.js`, not cfr/field, not any new thing to build.
+v0.1 mentioned snapshots without naming the system. `docs/specs/VERSIONIUM.spec` is explicit: "Causal version control. Not file trees — causality graphs. GitHub tracks what changed. Versionium tracks why." Commit = `vtm-{sha12}` content-addressed snapshot. Branch = divergent replay path. Temporal replay over CFR Rewind's ring buffer. Sigma-gated auto-commit at threshold 0.15. Versionium is what owns snapshots in this codebase — not `lib/nerve/index.js`, not cfr/field, not any new thing to build.
 
 **Correction 3 — Clear Glass is the browser. Systems stay sovereign.**
 

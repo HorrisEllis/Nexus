@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-agent-control-phasemap.spec::AC5_his_agents_for_the_void_and_the_workshop
+type: phase
+id: docs_2026-10-31-agent-control-phasemap.spec::AC5_his_agents_for_the_void_and_the_workshop
+context: >-
+  pipeline phase AC5_his_agents_for_the_void_and_the_workshop of
+  docs/2026-10-31-agent-control-phasemap.spec
+intent: null
+summary: AC5_his_agents_for_the_void_and_the_workshop (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793444857040
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793444857040
+lastSeenAt: 1793444857040
+fingerprint: null
+payload:
+  id: AC5_his_agents_for_the_void_and_the_workshop
+  map: docs/2026-10-31-agent-control-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.335
+  files:
+    - idearium/lib/page-agents.js
+    - idearium/api/index.js
+    - idearium/ui/settings.html
+    - idearium/cli/route-commands.js
+    - tests/modules/test-skip-and-page-agents.test.js
+  depends_on:
+    - AC_D0_control_and_fewer_round_trips
+  blocks:
+    - MOD-AC-PAGE-AGENTS
+  spec: idearium/spec/agent-control.spec
+  graph: ddce77ee565458f8

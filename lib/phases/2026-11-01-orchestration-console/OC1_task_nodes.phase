@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+type: phase
+id: docs_2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+context: pipeline phase OC1_task_nodes of docs/2026-11-01-orchestration-console-phasemap.spec
+intent: null
+summary: OC1_task_nodes (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793557554786
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793557554786
+lastSeenAt: 1793557554786
+fingerprint: null
+payload:
+  id: OC1_task_nodes
+  map: docs/2026-11-01-orchestration-console-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE 0.60.348"'
+  files:
+    - lib/automation/task-node.js
+    - tests/modules/test-task-nodes.test.js
+  depends_on:
+    - OC_D0_one_console_in_cos
+  blocks:
+    - MOD-OC-TASK-NODE
+  spec: docs/orchestration-console.spec
+  graph: 5a337dfee0522a66

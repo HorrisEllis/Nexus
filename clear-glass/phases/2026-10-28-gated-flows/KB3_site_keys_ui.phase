@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+context: pipeline phase KB3_site_keys_ui of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: KB3_site_keys_ui (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281606
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281606
+lastSeenAt: 1793386281606
+fingerprint: null
+payload:
+  id: KB3_site_keys_ui
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.275
+  files:
+    - clear-glass/renderer/site-keys/bind-bar.js
+    - clear-glass/renderer/settings/sections/shortcuts.js
+  depends_on:
+    - KB2_site_keys
+  blocks:
+    - MOD-KB3
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 4cb9972c3bf9fcab

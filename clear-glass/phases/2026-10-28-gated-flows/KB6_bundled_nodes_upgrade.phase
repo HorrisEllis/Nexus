@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::KB6_bundled_nodes_upgrade
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::KB6_bundled_nodes_upgrade
+context: pipeline phase KB6_bundled_nodes_upgrade of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: KB6_bundled_nodes_upgrade (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281610
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281610
+lastSeenAt: 1793386281610
+fingerprint: null
+payload:
+  id: KB6_bundled_nodes_upgrade
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.280
+  files:
+    - lib/automation-nodes.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - KB4_gates_on_macro_steps
+  blocks:
+    - MOD-KB6
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 7b7a18393ae12710

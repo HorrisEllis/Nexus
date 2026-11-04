@@ -153,3 +153,110 @@ emerge-codegen-v2 compiles requires.
 - **Found while grounding** (lib/system-check.js 2026-09-07): James then called emerge "its just a compiler thats it, the rest is trash".
   On 2026-10-24 he read it again, said "Look at emerge. Deeply Custom", and kept the language. The earlier words are kept with the code
   (§0.3); the later decision supersedes them.
+
+# ── ADDENDUM 2026-10-30 — Emerge is the Emerge repo; the compound build (his); the IDE Emerge already built, in Idearium's work area ──
+# James, 2026-10-30, after github.com/HorrisEllis/Emerge was read into the session: "and that is emerge." Then, asked whether Nexus uses
+# Emerge at a pinned version and archives lib/emerge/: "yes, spec compiler. and chunking can be automatic. each line can be fed back in to the
+# previous gate, and the next line can be built by another agent. making it compount, barely any context, what about integrating the
+# worksurface/workarea? from idearium, the diffs? like a fully built ide that emerge has built already."
+# Read 2026-10-30: the Emerge repo is the newer, whole language (lang/: lexer, parser, checker, interpreter, ledger, native compiler;
+# build-spec.js; llm/; observe/). Nexus's lib/emerge/ is an older copy: 21 files differ, 22 exist only in Emerge. Emerge's rule (BUILDING.md):
+# "Emerge depends on nothing above it ... A project's integrations live in that project's own repo."
+#
+# EW_D2 (his): Nexus uses Emerge, the spec compiler included, at a pinned version; lib/emerge/ and the compiler EW3 moved into Idearium are
+#   superseded by it and archived when the switch is built (§0.3). READING TO CONFIRM: "yes, spec compiler" answers that question, and the
+#   spec compiler Nexus builds with is Emerge's.
+# EW_D3 (his): the compound build. Chunking is automatic; each unit, once written, is fed back to the gate before it, and the next unit is
+#   written by another agent; each agent holds barely any context, and what is accepted compounds.
+#   Stands on: Emerge's chunk format (chunk/index.js: one node, ~400-800 tokens), its T2 gate (compiler/t2-gate.js: a model fills one node,
+#   the checker must pass it, a failure kept as .t2-rejected), his gate walker (lib/gate-walker.js: one step per gate, the packet by
+#   reference, each gate its own agent), CIE-EG's gate (typed gaps with pressure) and RULE D (growing retry, escalation).
+#   The coder's shaping, TO CONFIRM: the unit is one statement Emerge's checker accepts in place (a declaration, a handler, an emit, a
+#   constraint), not a raw text line, because half a line cannot be checked; a body too tangled to split stays one unit with line-level
+#   repair. An accepted statement is hashed and reused when the same slot comes up again (no model call), which is what makes it compound.
+#   Measured before adopted (§17.11): Emerge's bench/ runs whole-node T2 against the statement-gated build on pass rate, tokens and time.
+# EW4 re-read (his "a fully built ide that emerge has built already"): Emerge's IDE (lang/ide.js: diagnostics from the real checker,
+#   autocomplete from the language, run and test with the interpreter, generators; emerge-ide.js: model-assisted on the SISO bus) is the
+#   IDE. Idearium's work area hosts it by route, running in Emerge's own process (its COS compartment), not copied into Idearium; beside it,
+#   Idearium's work surface (idearium/repo/work-surface.js: one card per file, + and - lines) shows the compound build live: each statement
+#   as its gate accepts it, which agent wrote it, the checker's verdict, the rejected attempts. Supersedes EW4's "the IDE into Idearium"
+#   (a move of the old copy); EW4 is kept as written (§0.3).
+# Not built; specs next, in Emerge's repo for what is Emerge's (the compound build), in Idearium's for the work area.
+
+# ── ADDENDUM 2026-10-30 (b) — crystal memory in Emerge: scan, pattern, graph, confidence, adversary, test, crystallize (his) ──────────
+# James, 2026-10-30: "what about adding as much code as possible. like using the intelligence system to scan each ai response, each output.
+# integrating a pattern memory into emerge. a graph for edges, nodes, functions, traversal, gaps, like the relationship between the words.
+# then the confidence scoring, and the adversarial agent to verify it, then it crystalizes. thats how the crystal memory is meant to work.
+# verify, test, crystalized."
+# EW_D4 (his): every model output Emerge receives is scanned, learned from as patterns in a graph, scored, verified by an adversarial agent,
+# tested, and only then crystallized; a crystal is reused. The order is his: verify, test, crystallize.
+# What each stage stands on (read 2026-10-30, the coder's census):
+#   scan each output   Emerge: every model answer is already a T2 result, accepted or kept as .t2-rejected (compiler/t2-gate.js); Emerge's
+#                      observe/ reads its ledger (deltas, sigma, CFR field, liminal, gap hunt). Nexus: Intelligence observes agent replies.
+#   pattern memory     Nexus: lib/pattern-leverage.js, intelligence/mastermind.js (recurring shapes), schema.bep_pattern, schema.pattern_sequence.
+#   the graph          Emerge: compiler/kg-builder.js (nodes, edges, depth, BLACK gaps), observe/gaps.js. Nexus: intelligence/relational-field.js
+#                      (RFR2: causes of friction), the lattice. "the relationship between the words": the CIE-EG text model keeps a symbol's
+#                      identity and its interpretation apart (§2.5), so a word is a node and its uses are edges.
+#   confidence         Nexus: lib/agent-confidence-gate.js (below 75%, get context first), cortex/core/raid/snr-filter.js; schema.crystal's
+#                      success_probability.
+#   adversarial agent  Nexus: intelligence/adversarial.js (two readings compared; a contradiction is a gap), lib/meta/adversary-suite.js
+#                      (six attack classes: syntax, logic, edge case, state, cross-domain, stress).
+#   test               Emerge: the checker and the interpreter's tests; the behaviour schemas (architecture-spec RULE A) at the hook (CIE-EG shape).
+#   crystallize        Nexus: schema.crystal (pattern_signature, entry and exit conditions, success_probability, failure_boundaries,
+#                      support_paths, usage_count), lib/warp's crystallizer (an exact digest served at zero cost). Emerge's axiom
+#                      PROOF_REQUIRED_FOR_PROMOTION (lib/emerge/emerge.spec). CIE-EG has no crystal yet: it is new to Emerge.
+# The coder's readings, TO CONFIRM:
+#   - The crystal is what makes the compound build (EW_D3) compound: WARP reuses only an exact digest; a crystal is reused wherever its
+#     pattern_signature and entry conditions match, with its success_probability, so a statement once proven is not asked for again.
+#   - "adding as much code as possible": bring in as much of what Nexus already has as possible. CIE-EG §0 sets the terms: anything added to
+#     Emerge's Node runtime is temporary and worth adding only if it can be written again in .eg; and Emerge depends on nothing above it. So
+#     the Nexus pieces come in as modules of an Emerge spec (their design, their tests, their schemas), built by Emerge in .eg, not copied
+#     as JavaScript. The crystal and pattern node shapes come in as Emerge registry records (CIE-EG §5).
+# Specs next, in Emerge's repo (asked of him 2026-10-30, not yet answered). Not built.
+
+# ── ADDENDUM 2026-10-30 (c) — Emergence (emergence-6.zip) into Emerge, decoupled (his) ────────────────────────────────────────────────
+# James, 2026-10-30, sending emergence-6.zip (the upload the 2026-10-05 divergence report read): "yes but emerge stays decoupled, adding the
+# pattern engine with a ime and rfr2 and cfr, and emerge.zip / anything else in emerge i can redesign? like i kept aes-265GCM since its not
+# smart to build your own. tell me whats mine. tell me what integrating emerge, with emerge.zip looks like"
+# The upload: Emergence 0.1.0 (3 commits), a system built on WARP that reads text (tone, trend, gaslighting, mixed signals, avoidance, goal
+# convergence): components rfr2-observer, cfr-creator, event-ledger, associative-lattice, pattern-engine (exact recall + Markov prediction),
+# feedback-loop-buffer, idea-store, causal-graph; vendor rfr2 (causality, cfr-kernel: physics, render, rewind; field: ALKModule, relational;
+# lattice; ledger; liminal x11), jaa, resonance-v5.1; emerge-language.spec v2.0.0 (seven roots, Lens added); warp beside it.
+# Emerge already holds part of it in its own form: observe/field.js (the CFR field, a pure fold over the ledger), observe/liminal.js,
+# sigma, delta, gaps (CIE-EG §13), core/lens.js.
+# EW_D5 (his): Emerge stays decoupled; the pattern engine, RFR2 and CFR (and "a ime", TO CONFIRM what he meant: ALK? AIME?) are added to it.
+# The coder's reading of "decoupled", TO CONFIRM: Emerge's core (language, compiler, CIE-EG registry, contract, gate, ledger, observe) imports
+# none of them; each is a component in Emerge's repo with its own component.spec, registered (CIE-EG §5), reached only by roads through
+# the gate, an observer that never gates (Emergence's own law: "rfr2 observes — a lens"); and each is ported to .eg by spec (CIE-EG §0).
+# One owner per reading: observe/ stays the deterministic reading of the ledger; the components build on its output, never beside it.
+# Emergence the text reader is a system built from Emerge, its own repo and compartment.
+
+# ── ADDENDUM 2026-10-30 (d) — memory storage and a learning observer; Emerge by hand; the tutorial (his) ──────────────────────────────
+# James, 2026-10-30, asked what "a ime" meant: "memory storage, and a observer for learning? / this is for my to code by hand when I need to.
+# so i can inspect it and build it." · "i also, for other people. want a fully, enterprise grade, systems thinking, level tutorial and user
+# documantation, for any comprehention level, from kids learning to code, to senior systems engineers or experts at their field. as simple
+# as possible, but the highest amount of leverage. Find that slope, and make it steep.,"
+# EW_D5 amended (his): the pattern engine comes with memory storage and an observer that learns; Emerge stays code he can read, inspect and
+# write by hand. READING TO CONFIRM: memory storage is the crystal store (EW_D4); the learning observer is Emerge's observe/ plus RFR2,
+# reading the ledger and proposing patterns and gaps through the gate, never writing state itself.
+# Built in Emerge's repo, branch claude/emerge-learn (github.com/HorrisEllis/Emerge): docs/README.md and docs/learn/0-6 + words.md, one
+# sentence taught at seven depths; every lesson program verified interpreted and compiled against its recorded output
+# (node docs/learn/verify.js, 5/5).
+
+# ── ADDENDUM 2026-10-30 (e) — the tutor: dynamic decomposition (his), it learns, and Emerge grows as the learner does ───────────────────
+# James, 2026-10-30: "I'm saying like extremely easy lessons, what about dynamic decomposing/analysis. like dynamic language, then it could
+# adapt for overwhelm and age / tell me what you think. like its a soverign system." Then: "just have hooks for the backend storage. like apis
+# or urls for api routes. ... yes, i love my idea, dynamic deomposition. i want it to learn also, what about the ability to edit and expand
+# emerge, like it can build as you expand you knowledge"
+# EW_D6 (his): the tutor is a sovereign system built on Emerge (outside it). Lessons are one-idea atoms in a concept graph from the one
+# sentence; a step that overwhelms decomposes into smaller steps (his dynamic decomposition); wording adapts to age and to measured overwhelm
+# (time, errors, retries, a "too much" button); deterministic choice first, a local model may only rephrase and must pass the program check.
+# Storage is hooks only: URLs to pipe routes (architecture-spec addendum (c)), no store of its own.
+# It learns (his) — the coder's shaping, TO CONFIRM, three layers kept apart:
+#   1. the tutor learns: where learners stall becomes gaps; a decomposition that worked is verified, tested and crystallized (EW_D4) and
+#      offered to the next learner;
+#   2. the learner's Emerge grows: what they build (components, kinds, templates, prelude functions) becomes their own library, used by later
+#      lessons;
+#   3. Emerge itself grows only through its own door: lang/core is Emerge source, and eg bootstrap (quarantine, prove, integrate, rollback)
+#      already makes a change safe; a learner's addition can be proposed upstream with proof, and taking it is his act.
+# Children's data stays on the device unless a parent agrees otherwise (§4.3). Not built; spec next, after his confirmation.

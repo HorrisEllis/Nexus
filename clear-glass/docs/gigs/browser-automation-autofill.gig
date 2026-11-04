@@ -4,6 +4,15 @@ platform: fiverr
 title: I will automate your browser tasks, form filling and data entry
 category: Programming & Tech
 subcategory: Web Automation
+serviceType: Automations & Agents          # SELECT A SERVICE TYPE on the page; the fill matches by label (§1.2 says what it can't)
+metadata:
+  "PROGRAMMING LANGUAGE":
+    - JavaScript
+    - TypeScript
+    - Python
+  "EXPERTISE":
+    - Testing procedures
+    - Debugging
 tags:
   - browser automation
   - form filling

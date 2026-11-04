@@ -1,0 +1,89 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GND2_every_type_indexed:80802db4bf983182
+type: graph
+id: phase:GND2_every_type_indexed:80802db4bf983182
+context: dependency graph of phase GND2_every_type_indexed
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793419908440
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793419908440
+lastSeenAt: 1793419908440
+fingerprint: null
+payload:
+  for: GND2_every_type_indexed
+  kind: phase
+  repo: null
+  hash: 80802db4bf983182
+  nodes:
+    - path: guardian/lib/node-registry.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: test-node-index.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-schemas.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/safe-watch.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/node-registry.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/node-index.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/safe-watch.js
+      kind: requires
+    - from: test-node-index.js
+      to: guardian/lib/node-registry.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND1_the_audit_on_his_machine
+    dependents:
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND3_tables_become_node_files
+    upstream:
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND1_the_audit_on_his_machine
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND_D0_files_are_the_truth
+    downstream:
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND3_tables_become_node_files
+    blockedBy:
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND1_the_audit_on_his_machine
+    unlocks:
+      - docs/2026-10-31-guardian-nodes-phasemap.spec::GND3_tables_become_node_files
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by GND1_the_audit_on_his_machine
+      - 'depends on (1): GND1_the_audit_on_his_machine · all upstream 2'
+      - >-
+        needed by (1): GND3_tables_become_node_files · finishing it unlocks
+        GND3_tables_become_node_files
+    edges:
+      - from: docs/2026-10-31-guardian-nodes-phasemap.spec::GND1_the_audit_on_his_machine
+        kind: declared

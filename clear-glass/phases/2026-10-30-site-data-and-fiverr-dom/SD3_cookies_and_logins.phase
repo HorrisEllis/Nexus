@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD3_cookies_and_logins
+type: phase
+id: docs_2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD3_cookies_and_logins
+context: pipeline phase SD3_cookies_and_logins of docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec
+intent: null
+summary: SD3_cookies_and_logins (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793402130901
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793402130901
+lastSeenAt: 1793402130901
+fingerprint: null
+payload:
+  id: SD3_cookies_and_logins
+  map: docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/site-data
+    - clear-glass/spec/site-data.spec
+  depends_on:
+    - SD2_reset_a_site
+  blocks:
+    - MOD-SD-COOKIES
+  spec: clear-glass/spec/site-data.spec
+  graph: bcfcf7f7e188b659

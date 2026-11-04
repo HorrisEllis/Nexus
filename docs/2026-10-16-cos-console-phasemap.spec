@@ -23,38 +23,46 @@ grounded:
     The risk is not the terminal widget (xterm.js in the Electron window is solved). The risk is building a second command language. The leverage is that every command already exists as a row, so the console is mostly completion, safe execution, and presentation of what the rows return. Build the thin part well.
 phase:
   CON1_one_door_client:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP3_one_terminal_one_cli in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     does: "cos/app/console/client.js: calls Idearium's command table over loopback with a token, falls back to the local COS verbs when Idearium is down (start/stop/switch/rollback/logs still work with nothing running). Every call gets a UUID and an activity record (the REPL already does this)."
     proof: "with Idearium off, `switch`, `rollback`, `logs` and `status` work; with it on, any of the 80 rows run and return the same result as nexus.command."
   CON2_grammar_and_completion:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP3_one_terminal_one_cli in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [CON1_one_door_client]
     does: "Verbs and arguments from the live table (route-commands.js SPEC) plus the grammar engine; completion for system names (systems.js), project, version, repo uuid; `help <verb>` from the row's own description. No hand-kept list."
     proof: "a row added to route-commands.js completes with no console change."
   CON3_system_controls:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP3_one_terminal_one_cli in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [CON1_one_door_client, COSA11_nested_tree]
     does: "`system <name> status|start|stop|restart|logs|health|pause|checkpoint|rewind` for each of the 16 systems, per kind (process, VM, logical) with the same honesty rule as COSA10: a control a node cannot honour is absent and says why."
     proof: "every system in systems.js answers `status`; a logical node refuses `pause` with the reason."
   CON4_safety_gate:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP3_one_terminal_one_cli in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [CON1_one_door_client]
     does: "Person-initiated only. Commands marked personOnly in the table (as chat-crawl start/stop are) run from the console and never from an agent through it. Destructive verbs (remove, rewind, restore data, stop all) show what they will change and need a typed confirmation. Everything is journalled before it runs (REVERSIBILITY)."
     proof: "an agent token cannot run a personOnly row via the console; rewind shows the snapshot it took first."
   CON5_pane:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP3_one_terminal_one_cli in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [CON2_grammar_and_completion]
     does: "xterm.js pane in the COS window: scrollback, search, copy, history that survives restart, tab per system, live log tail per system, structured results rendered as tables not text. Failures in red with the cause and the next command to try."
     proof: "UI tested in Clear Glass, never Playwright (docs/CLAUDE.md)."
   CON6_shell_escape:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP3_one_terminal_one_cli in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     does: "One tab that is a real shell (PowerShell/cmd) for what is not Nexus. Optional, off by default? to confirm. Runs as the user, no elevation."
   CON7_enterprise_bar:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP3_one_terminal_one_cli in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     does: "Defined, then tested, not asserted: audit trail of every command (who, when, argv, result, duration) append-only; secrets never echoed or journalled; timeouts and cancel (Ctrl+C reaches the process tree); no command blocks the UI; works offline; accessible (keyboard only, screen reader labels, high contrast); error messages that name cause and fix; documented exit codes; scripting mode (`cos run script.cos`, `--json`) so CI can use what people use."
     proof: "each item has a test id; the list in this phase is the checklist, nothing outside it is called enterprise-grade."
   CON8_nexus_server_hook:
-    status: OPEN
+    status: "SUPERSEDED 2026-11-01 by CP0_the_full_spec in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+    status_before: OPEN
     depends_on: [CON1_one_door_client]
     does: "Each system's server exposes the same minimum control surface (health, status, pause/resume where it can) so the console does not special-case; systems missing it are listed by `system gaps`, not papered over."
 failure_modes:
@@ -101,7 +109,8 @@ addendum_b:
     The console must not edit config.js (code, and the zips COS installs would overwrite it). Config is already env-with-defaults, and the autopilot is what starts every kernel, so the clean seam is an override file per system that the autopilot turns into env when it spawns the kernel. Change a value, restart that system, it takes effect; remove the override and the default returns. Reversible by construction (REVERSIBILITY), and it survives a COS version switch if it lives in the persistent data folder.
   phase:
     CON9_configure:
-      status: OPEN
+      status: "SUPERSEDED 2026-11-01 by CP3_one_terminal_one_cli in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: OPEN
       depends_on: [CON1_one_door_client, CON4_safety_gate]
       does: "1) Discover: read each config.js to list its keys, defaults, the env var behind each and the type (a static read, not a guess; a key it cannot read is listed as unknown, not hidden). 2) `config <system> show|get|set|unset|diff|history`: writes data/config-overrides/<system>.json through a command, never by hand. 3) The autopilot reads that file when it spawns a kernel and passes it as env, and reports which values are overridden. 4) set validates type, refuses an immutable component, warns that a port change needs the systems that call it changed too (ORCH_PORT etc.), journals old and new value, and offers restart. 5) The same rows appear in the floating menu and --cli, since they share the command layer."
       proof: "set OLLAMA_BRIDGE_PORT, restart ollama, it listens on the new port, `config ollama diff` shows it, `unset` restores 3749; an immutable component refuses; a bad type is refused with the reason."

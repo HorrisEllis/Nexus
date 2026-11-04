@@ -189,7 +189,7 @@ async function open(id) {
   setState(null); PEND.clear(); W = d.workshop; PARTS = d.parts || []; BLOCK_KEY = '';
   history.replaceState(null, '', `?id=${enc(W.uuid)}`);
   $('start').classList.add('hidden'); $('writer').classList.remove('hidden');
-  ['newBtn', 'saveBtn', 'sendBtn'].forEach(x => $(x).classList.remove('hidden'));
+  ['newBtn', 'skipBtn', 'saveBtn', 'sendBtn'].forEach(x => $(x).classList.remove('hidden'));
   if (!SEL || !sec(SEL)) SEL = (W.sections[0] || {}).id || null;
   // §RS11 — opened at a block (from a phase in idearium: ?block=<section id>)
   const want = Q.get('block'); if (want && sec(want)) SEL = want;
@@ -481,6 +481,15 @@ async function save(quiet = false) {
   finally { $('saveBtn').disabled = false; }
 }
 $('saveBtn').onclick = () => save();
+// 0.60.335 AC7 — James: "I also want skip buttons which will autofill generic/default values in each step of the pipeline."
+const skipBtn = $('skipBtn');
+if (skipBtn) skipBtn.onclick = async () => {
+  if (!W) return; flush();
+  try { const d = await api(`/api/workshop/${enc(W.uuid)}/skip`, { step: 'workshop.sections', by: 'person' });
+    if (d.skipped && d.skipped.none) return toast(d.skipped.none.toUpperCase());
+    take(d); paint(); toast(`${d.skipped.values.sections.length} SECTION(S) FILLED WITH DEFAULTS — MARKED (DEFAULT)`);
+  } catch (e) { toast(`NOT SKIPPED: ${e.message}`, true); }
+};
 function openRepo(subtab, extra = {}) {
   const repo = (PIPE && PIPE.repo) || (W && W.repoUuid); if (!repo) return;
   if (window.opener && !window.opener.closed) { window.opener.postMessage({ type: 'nexus:repo.open', repoUuid: repo, label: W ? W.title : '', subtab, spec: (PIPE && PIPE.path) || (W && W.specPath) || null, ...(extra.phase ? { phase: extra.phase } : {}) }, '*'); toast(subtab === 'phases' ? 'OPENED IN IDEARIUM — ITS PHASES' : 'OPENED IN IDEARIUM — THE SPEC TAB'); }
@@ -549,7 +558,7 @@ async function planStage(replan) {
   PIPE.runId = r.runId; PIPE.t0 = Date.now();
   step(1, 'run', `THE REPO'S AGENT IS SPLITTING IT INTO PHASES · ${r.mapPath}`);
   pmsg(`A SNAPSHOT WAS TAKEN (${String(r.snapshot || '').slice(0, 12)}). THE REPO'S AGENT IS WRITING ${r.mapPath} — CHUNKED, BOTTOM-UP. IF IT WRITES NONE, THE PLAN IS DERIVED FROM YOUR SECTIONS.`);
-  acts([{ label: 'PLAN FROM THE SPEC NOW', tip: 'DO NOT WAIT FOR THE AGENT: ONE PHASE PER SECTION', go: derive }, OPEN_ACT()]);
+  acts([{ label: 'SKIP — PLAN FROM THE SPEC NOW', tip: 'SKIP (AC7): DO NOT WAIT FOR THE AGENT — THE DEFAULT PLAN, ONE PHASE PER SECTION', go: derive }, OPEN_ACT()]);
   watchPlan();
 }
 function watchPlan() {

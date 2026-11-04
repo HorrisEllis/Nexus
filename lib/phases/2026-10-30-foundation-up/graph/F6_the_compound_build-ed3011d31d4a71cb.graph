@@ -1,0 +1,71 @@
+envelope: 1
+uuid: nexus-export-graph-phase:F6_the_compound_build:ed3011d31d4a71cb
+type: graph
+id: phase:F6_the_compound_build:ed3011d31d4a71cb
+context: dependency graph of phase F6_the_compound_build
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793382595490
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595490
+lastSeenAt: 1793382595490
+fingerprint: null
+payload:
+  for: F6_the_compound_build
+  kind: phase
+  repo: null
+  hash: ed3011d31d4a71cb
+  nodes:
+    - path: emerge/compiler/t2-gate.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 11
+    deps:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F5_memory_and_learning
+      - docs/2026-10-26-gate-walker-programmable-surface-phasemap.spec::GWK1_the_walker_and_chain_schema
+    dependents:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F7_the_assistant
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-26-gate-walker-programmable-surface-phasemap.spec::GWK1_the_walker_and_chain_schema
+      - docs/2026-10-30-foundation-up-phasemap.spec::F0_the_kernel_spec
+      - docs/2026-10-30-foundation-up-phasemap.spec::F1_one_vocabulary
+      - docs/2026-10-30-foundation-up-phasemap.spec::F5_memory_and_learning
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D0_foundation_up
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D1_ess_is_the_kernel
+    downstream:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F7_the_assistant
+      - docs/2026-10-30-foundation-up-phasemap.spec::F8_the_tutor
+    blockedBy:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F5_memory_and_learning
+      - docs/2026-10-26-gate-walker-programmable-surface-phasemap.spec::GWK1_the_walker_and_chain_schema
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 11 · blocked by F5_memory_and_learning, GWK1_the_walker_and_chain_schema
+      - 'depends on (2): F5_memory_and_learning, GWK1_the_walker_and_chain_schema · all upstream 17'
+      - 'needed by (1): F7_the_assistant · all downstream 2'
+    edges:
+      - from: docs/2026-10-30-foundation-up-phasemap.spec::F5_memory_and_learning
+        kind: declared
+      - from: docs/2026-10-26-gate-walker-programmable-surface-phasemap.spec::GWK1_the_walker_and_chain_schema
+        kind: declared

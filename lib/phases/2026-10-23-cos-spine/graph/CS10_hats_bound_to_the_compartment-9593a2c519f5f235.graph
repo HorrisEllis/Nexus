@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792880100802
+exported_at: 1793421631205
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100802
-lastSeenAt: 1792880100802
+firstSeenAt: 1793421631205
+lastSeenAt: 1793421631205
 fingerprint: null
 payload:
   for: CS10_hats_bound_to_the_compartment
@@ -253,6 +253,12 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D4_caps_by_the_os
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D6_every_project_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
@@ -263,6 +269,9 @@ payload:
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
     downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
       - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
@@ -278,8 +287,8 @@ payload:
         CS3_the_registry_is_the_bridge
       - >-
         depends on (3): CS9_every_project_a_compartment, CS5_caps_per_compartment,
-        CS3_the_registry_is_the_bridge · all upstream 41
-      - 'needed by (1): MG7_automation_macros_and_hats · all downstream 2'
+        CS3_the_registry_is_the_bridge · all upstream 47
+      - 'needed by (1): MG7_automation_macros_and_hats · all downstream 5'
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
         kind: declared

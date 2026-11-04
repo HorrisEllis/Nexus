@@ -8,7 +8,7 @@ spec:
       (this file's MCO3 needs MCO-B) and one literal duplicate (the
       two specs' git+credentials MCOs were the same gate). The two
       source files should be marked SUPERSEDED, not deleted, per the
-      existing docs/specs/IDEARIUM.spec.md precedent — kept as history,
+      existing docs/specs/IDEARIUM.spec precedent — kept as history,
       no longer the source of truth for this work."
     uuid:        nexus-idearium-repository-overhaul-v0-0000-2026-0915-002
     author:      james-brooks

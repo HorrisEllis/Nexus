@@ -20,7 +20,7 @@ try {
   check('LM-02 on is saved where the supervisor reads it at boot', LM.read().on === true && fs.existsSync(path.join(tmp, 'autopilot-boot.json')));
   LM.write(false);
   check('LM-03 off again', LM.read().on === false);
-  const ap = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
+  const ap = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.retired-0.60.330.js'), 'utf8');
   check('LM-04 npm run start:all honours it: held services are never spawned at boot, and stay startable', /lean-mode\.js'\)\)\.read/.test(ap) && /_phasePlan\(KERNELS\.filter\(k => !held\.has\(k\.name\)\)\)/.test(ap) && /status = 'held'/.test(ap));
   const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
   const ui = fs.readFileSync(path.join(ROOT, 'idearium/ui/settings.html'), 'utf8');

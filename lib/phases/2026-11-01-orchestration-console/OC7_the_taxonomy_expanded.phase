@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-orchestration-console-phasemap.spec::OC7_the_taxonomy_expanded
+type: phase
+id: docs_2026-11-01-orchestration-console-phasemap.spec::OC7_the_taxonomy_expanded
+context: pipeline phase OC7_the_taxonomy_expanded of docs/2026-11-01-orchestration-console-phasemap.spec
+intent: null
+summary: OC7_the_taxonomy_expanded (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793556958981
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793556958981
+lastSeenAt: 1793556958981
+fingerprint: null
+payload:
+  id: OC7_the_taxonomy_expanded
+  map: docs/2026-11-01-orchestration-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/event-taxonomy.js
+    - tests/modules/test-orchestration-taxonomy.test.js
+  depends_on:
+    - OC1_task_nodes
+  blocks:
+    - MOD-OC-TAXONOMY
+  spec: docs/orchestration-console.spec
+  graph: fa8a82b4ffac78a9

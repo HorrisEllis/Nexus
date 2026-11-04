@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-diagnostic-requirements-phasemap.spec::DR3_the_owner_can_fix_it
+type: phase
+id: docs_2026-10-30-diagnostic-requirements-phasemap.spec::DR3_the_owner_can_fix_it
+context: pipeline phase DR3_the_owner_can_fix_it of docs/2026-10-30-diagnostic-requirements-phasemap.spec
+intent: null
+summary: DR3_the_owner_can_fix_it (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793383782983
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793383782983
+lastSeenAt: 1793383782983
+fingerprint: null
+payload:
+  id: DR3_the_owner_can_fix_it
+  map: docs/2026-10-30-diagnostic-requirements-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ollama/routes/models.js
+    - ollama/interaction-contract.json
+    - tests/modules/test-ollama-pull.test.js
+  depends_on:
+    - DR_D1_detect_then_owner_fixes
+  blocks:
+    - MOD-DR-OLLAMA-PULL
+  spec: diagnostic/spec/requirements.spec
+  graph: 8bbb91adb76a4421

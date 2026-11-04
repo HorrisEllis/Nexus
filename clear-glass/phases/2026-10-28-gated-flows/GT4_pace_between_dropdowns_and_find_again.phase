@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
+context: >-
+  pipeline phase GT4_pace_between_dropdowns_and_find_again of
+  docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GT4_pace_between_dropdowns_and_find_again (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793402929602
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793402929602
+lastSeenAt: 1793402929602
+fingerprint: null
+payload:
+  id: GT4_pace_between_dropdowns_and_find_again
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.318
+  files:
+    - clear-glass/src/driver/index.js
+    - clear-glass/src/site-settings/keys.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/page/element-gate.js
+    - tests/modules/test-choose-refind-glass.test.js
+  depends_on:
+    - GT1_gate_timing_for_dropdowns
+  blocks:
+    - MOD-GT4
+  spec: clear-glass/spec/gated-flows.spec
+  graph: cdd1748d81c66e56

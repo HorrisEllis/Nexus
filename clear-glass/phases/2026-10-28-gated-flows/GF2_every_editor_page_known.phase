@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+context: pipeline phase GF2_every_editor_page_known of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GF2_every_editor_page_known (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281616
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281616
+lastSeenAt: 1793386281616
+fingerprint: null
+payload:
+  id: GF2_every_editor_page_known
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.290
+  files:
+    - clear-glass/src/autofill/gig-pages.js
+  depends_on:
+    - GF1_every_field_found_by_its_section
+  blocks:
+    - MOD-GF2
+  spec: clear-glass/spec/gated-flows.spec
+  graph: fe26a8f96552b2be

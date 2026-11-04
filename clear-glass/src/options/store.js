@@ -73,6 +73,7 @@ const DEFAULTS = {
 
   // Window behavior
   hideToTrayOnClose:    true,   // close (✕) button / OS close → hide to tray instead of destroying
+  trayAfterIdleMin:     0,      // 0.60.366 CA1 — James: "clearglass needs a setting for automatically minimizing to tray after a period of time": 0 off, 5/15/30/60 min with no input
   defaultStartUrl:       DEFAULT_START_URL,
 
   // §NEW 2026-08-24 — real gap named in CLEAR-GLASS-FULL-CHROME-MAP-

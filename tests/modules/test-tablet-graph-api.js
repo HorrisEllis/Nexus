@@ -40,7 +40,7 @@ const ROOT = path.join(__dirname, '../..');
 // It now reads a copy of it (lib/test-sandbox.js seedFromReal), so nothing
 // it or autopilot's handlers write can land in the real data/cortex/memory.
 require('../../lib/test-sandbox.js').seedFromReal('JAA_DATA_DIR');
-const { _handleGraphRead } = require('../../lib/nexus/autopilot.js');
+const { _handleGraphRead } = require('../../lib/nexus/autopilot.retired-0.60.330.js');
 
 let server, PORT;
 const GET = (p) => new Promise((resolve) => {

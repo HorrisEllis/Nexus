@@ -7,11 +7,11 @@ intent: null
 summary: CG4_the_gate_in_the_ui (ui) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792874371317
+exported_at: 1793442586694
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874371317
-lastSeenAt: 1792874371317
+firstSeenAt: 1793442586694
+lastSeenAt: 1793442586694
 fingerprint: null
 payload:
   id: CG4_the_gate_in_the_ui
@@ -25,4 +25,4 @@ payload:
     - CG3_route_and_command
   blocks: []
   spec: docs/brainos-in-idearium.spec
-  graph: 24188efb763168b1
+  graph: 7b70ae0e4c492234

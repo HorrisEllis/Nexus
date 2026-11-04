@@ -5,7 +5,7 @@
 // makes it queryable via jaaDB) — not a new mechanism, the same one
 // every other system's own data/nodes/ + data/node-index/ already uses.
 //
-// §MAPPED, PER intelligence/spec/intelligence.node-taxonomy.md — before
+// §MAPPED, PER intelligence/spec/intelligence.node-taxonomy.spec — before
 // this file, that spec's own table said plainly: "node: NOT USED — real,
 // confirmed gap." intelligence's own gap/pattern/crystal data existed
 // only in jaaDB tables (gaps, bep_patterns, liminal-space's in-memory

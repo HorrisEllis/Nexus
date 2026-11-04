@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::UG4_his_gates_per_site
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::UG4_his_gates_per_site
+context: pipeline phase UG4_his_gates_per_site of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: UG4_his_gates_per_site (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281625
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281625
+lastSeenAt: 1793386281625
+fingerprint: null
+payload:
+  id: UG4_his_gates_per_site
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.292
+  files:
+    - clear-glass/src/options/store.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/preload/index.js
+    - lib/agent-tools/tools/browser/browser-action.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - UG2_every_driver_write_gated
+  blocks:
+    - MOD-UG4
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 8debd86850579fea

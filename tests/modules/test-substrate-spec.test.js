@@ -48,9 +48,28 @@ const SPECS = [
   { spec: 'clear-glass/spec/gated-flows.spec', map: 'docs/2026-10-28-gated-flows-phasemap.spec' },   // 2026-10-28 FG — gated flows, dropdowns, Tab mode
   { spec: 'clear-glass/spec/site-profile.spec', map: 'docs/2026-10-23-site-profile-processes-phasemap.spec' },   // 2026-10-23 SP — per-site settings, Processes   // 2026-10-22 ND — his "each database for each system"   // 0.60.179   // 2026-10-20 — compile only: its new modules' phases (AQ1/AQ2) are not in a map yet
   { spec: 'cos/spec/cos-services.spec', map: 'docs/2026-10-24-cos-services-phasemap.spec' },
+  { spec: 'cos/spec/cos-manager.spec', map: 'docs/2026-10-24-cos-manager-phasemap.spec' },   // 2026-10-30 MG0b — his "This will be the new orchastrator/autopilot."
+  { spec: 'diagnostic/spec/requirements.spec', map: 'docs/2026-10-30-diagnostic-requirements-phasemap.spec' },   // 2026-10-30 DR — his "diagnostic system should be taking care of things like this."
+  { spec: 'clear-glass/spec/site-data.spec', map: 'docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec' },   // 2026-10-30 SD — his reset site, cookies and logins, history page, the DOM map
   { spec: 'docs/automation-pipelines.spec', map: 'docs/2026-10-29-pipelines-phasemap.spec' },
   { spec: 'docs/idearium-history-nodes.spec', map: 'docs/2026-10-29-history-nodes-phasemap.spec' },   // 2026-10-29 HN — his "all the history in idearium saved as nodes per unit"   // 2026-10-29 PL — his "making a pipeline and workflow feature and include the macros and automation"   // 2026-10-24 BCR1 (from brave-cori) — his "this is all the networking backend for anything needed netwroking wise"
   { spec: 'docs/project-spine.spec', map: 'docs/2026-10-29-finish-any-project-phasemap.spec' },   // 2026-10-29 FA — his "create all the capability to finish this or any other project in the repo"
+  { spec: 'idearium/spec/spec-library.spec', map: 'docs/2026-10-31-spec-everything-phasemap.spec' },   // 2026-10-31 SE — his spec ids and types, the library and queue, phased only, traced to the origin
+  { spec: 'docs/system-doors.spec', map: 'docs/2026-10-31-system-doors-phasemap.spec' },   // 2026-10-31 DO — his server.js per system on the registry; Cortex's boot.js retired
+  { spec: 'guardian/spec/guardian-nodes.spec', map: 'docs/2026-10-31-guardian-nodes-phasemap.spec' },   // 2026-10-31 GND — his "make sure all the nodes, are actual files"
+  { spec: 'diagnostic/spec/diagnostic-schemas.spec', map: 'docs/2026-10-31-diagnostic-schemas-phasemap.spec' },   // 2026-10-31 DSC — his "all the schemas for the diagnostic system"
+  { spec: 'intelligence/spec/causal-interconnect.spec', map: 'docs/2026-10-31-causal-interconnect-phasemap.spec' },   // 2026-10-31 CI — his "the intelligence system, rfr2 and cfr need to be interconnected"
+  { spec: 'idearium/spec/agent-control.spec', map: 'docs/2026-10-31-agent-control-phasemap.spec' },   // 2026-10-31 AC — his agents' control panel, phase folders, page agents, skip buttons
+  { spec: 'docs/emerge-system.spec', map: 'docs/2026-10-31-emerge-as-a-system-phasemap.spec' },
+  { spec: 'docs/outperform.spec', map: 'docs/2026-11-01-outperform-phasemap.spec' },
+  { spec: 'docs/friction-map.spec', map: 'docs/2026-11-01-friction-map-phasemap.spec' },
+  { spec: 'cos/spec/compartment.spec', map: null },
+  { spec: 'docs/nexus-update.spec', map: null },
+  { spec: 'clear-glass/spec/tray.spec', map: null },   // 2026-11-02 CA1 — his 'clearglass needs a setting for automatically minimizing to tray after a period of time'   // 2026-11-01 UP13 — his 'make sure it hooks into idearium versionium, to backup the system'; compile only (UP0–UP12 predate the spec)   // 2026-11-01 CP0 begun — his 'continue moving the rest of the systems into cos ... resource management ... snapsjot'; compile only until every CP phase names it
+  { spec: 'cos/spec/cos-console.spec', map: null },   // 2026-11-03 SC8 — the coder's 0.60.380–0.60.382 modules, moved out of cos-manager.spec
+  { spec: 'cos/spec/cos-disk.spec', map: null },      // 2026-11-03 SC8 — DK1, DK6 modules, moved out of cos-manager.spec
+  { spec: 'cos/spec/network.spec', map: null },   // 2026-11-02 CA3 — his 'Gate behind settings to open. Make a full detailed settings for network.'   // 2026-11-02 CA1 — his 'clearglass needs a setting for automatically minimizing to tray after a period of time'   // 2026-11-01 UP13 — his 'make sure it hooks into idearium versionium, to backup the system'; compile only (UP0–UP12 predate the spec)   // 2026-11-01 CP0 begun — his 'continue moving the rest of the systems into cos ... resource management ... snapsjot'; compile only until every CP phase names it
+  { spec: 'docs/orchestration-console.spec', map: 'docs/2026-11-01-orchestration-console-phasemap.spec' },   // 2026-11-01 OC — his "rebuild brianos/orchastration ui with enterprise grade code"   // 2026-11-01 FT — his "the friction and tension mapping, between functions and primitives"   // 2026-11-01 OP — his "could it outperform you? use guardian also. can you spec this?"   // 2026-10-31 EAS — his "a system with a server.js": Emerge sovereign, through its door, nesting
 ];
 
 console.log('\ntest-substrate-spec — full specs compile at full depth and stay tied to their phases');

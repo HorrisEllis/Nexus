@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-diagnostic-requirements-phasemap.spec::DR5_seen_and_fixed_from_the_screens
+type: phase
+id: docs_2026-10-30-diagnostic-requirements-phasemap.spec::DR5_seen_and_fixed_from_the_screens
+context: >-
+  pipeline phase DR5_seen_and_fixed_from_the_screens of
+  docs/2026-10-30-diagnostic-requirements-phasemap.spec
+intent: null
+summary: DR5_seen_and_fixed_from_the_screens (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793383782987
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793383782987
+lastSeenAt: 1793383782987
+fingerprint: null
+payload:
+  id: DR5_seen_and_fixed_from_the_screens
+  map: docs/2026-10-30-diagnostic-requirements-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+    - lib/automation/templates.js
+  depends_on:
+    - DR4_fixed_under_policy
+  blocks:
+    - MOD-DR-SURFACE
+  spec: diagnostic/spec/requirements.spec
+  graph: d661be24641abef2

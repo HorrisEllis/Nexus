@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:F5_memory_and_learning:099fc4242eb20f8a
+type: graph
+id: phase:F5_memory_and_learning:099fc4242eb20f8a
+context: dependency graph of phase F5_memory_and_learning
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1793382595488
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595488
+lastSeenAt: 1793382595488
+fingerprint: null
+payload:
+  for: F5_memory_and_learning
+  kind: phase
+  repo: null
+  hash: 099fc4242eb20f8a
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 10
+    deps:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F1_one_vocabulary
+    dependents:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F6_the_compound_build
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-30-foundation-up-phasemap.spec::F0_the_kernel_spec
+      - docs/2026-10-30-foundation-up-phasemap.spec::F1_one_vocabulary
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D0_foundation_up
+      - docs/2026-10-30-foundation-up-phasemap.spec::F_D1_ess_is_the_kernel
+    downstream:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F6_the_compound_build
+      - docs/2026-10-30-foundation-up-phasemap.spec::F7_the_assistant
+      - docs/2026-10-30-foundation-up-phasemap.spec::F8_the_tutor
+    blockedBy:
+      - docs/2026-10-30-foundation-up-phasemap.spec::F1_one_vocabulary
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 10 · blocked by F1_one_vocabulary
+      - 'depends on (1): F1_one_vocabulary · all upstream 15'
+      - 'needed by (1): F6_the_compound_build · all downstream 3'
+    edges:
+      - from: docs/2026-10-30-foundation-up-phasemap.spec::F1_one_vocabulary
+        kind: declared

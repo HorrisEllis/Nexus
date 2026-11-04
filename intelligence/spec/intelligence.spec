@@ -128,6 +128,10 @@ spec:
       description: "cortex/intelligence/mastermind.js"
       source: cortex/intelligence/
       migration_phase: 1
+    - id: MOD-INTELLIGENCE-CONSUMER
+      description: "intelligence/consumer.js — the queue's input half (intelligence/input/ through lib/contract-queue.js). Since 0.60.380 (SC6) it runs inside intelligence/server.js (start on listen, stop on stop); intelligence-consumer is no longer a second declared process."
+      source: intelligence/consumer.js
+      migration_phase: 4
     - id: baseline
       description: "lib/baseline.js — behavioral baseline tracking."
       source: lib/baseline.js
@@ -281,7 +285,7 @@ spec:
       missed-beat axes, weighted, clamped 0-100, exposed on /api/heartbeat
       and /api/status. Refuses to fabricate a score with zero real beats.
     domain_nodes: >
-      intelligence.node-taxonomy.md's own "node: NOT USED" row is closed:
+      intelligence.node-taxonomy.spec's own "node: NOT USED" row is closed:
       intelligence/lib/domain-nodes.js exports real .gap/.bep_pattern/
       .pattern_sequence/.resonance_crystal files and indexes them into
       real jaaDB tables, wired at every real construction site. Schema-
@@ -340,3 +344,10 @@ spec:
 #   chance-rate pair and a whole-stream burst do not, degenerate inputs return 0 (held), and lift is monotone in observed.
 # NOTE (said, not hidden, §1.2): tests/modules/test-intelligence-bridge.js is red on main for an unrelated reason —
 #   it requires cortex/core/raid/intelligence-bridge, a module that does not exist in this checkout. Not touched here.
+
+# ── ADDENDUM 2026-11-02 (0.60.380, SC6) — one Intelligence ──
+# James, 2026-11-02: "There shouldn't be two intelligence. Intelligence consumer and intelligence should not be two separate things. It'll be using
+# the .spec." The consumer (MOD-INTELLIGENCE-CONSUMER) is started by intelligence/server.js in its own process; intelligence/compartment.json
+# keeps the old declaration under runtime.retiredProcesses (§0.3); COS supervises, caps and restarts one system; lib/nexus-update.js restarts one
+# kernel for intelligence/. INTELLIGENCE_CONSUMER=off leaves the consumer off, said. "It'll be using the .spec" read by the coder as: the one system
+# is described by this one spec — to confirm (if it meant the queue's contracts become .spec files, that is a further phase).

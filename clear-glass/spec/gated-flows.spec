@@ -584,6 +584,9 @@ spec:
       gate_pipeline: ["GATE-GF6-001: act → read the element → aligns with the gig: next · else: stop → toast (part, why)"]
       behavioral_contracts: ["a gate never passes on words the page shows elsewhere", "nothing runs after a failed part", "every failed step is said in a toast and in the result"]
       error_paths: ["the toast cannot be shown (no window) → the result still carries stopped, said in the log"]
+      # ADDENDUM 2026-11-04 (c, on merge) — the Service type parts of (b) and the first addendum were built on a branch beside main's GT5 (gig-pages
+      # serviceTypeScript: waited for, chosen, read back, its options said). Main's GT5 stands; the branch's driver row-choose and list are not merged.
+      # What GF6 adds on top of GT5: a page that asks for a Service type while the gig names none also stops the fill with a toast.
       # ADDENDUM 2026-11-04 (b) — James, with Service type still SELECT A SERVICE TYPE: "service type still gets skipped. needs more timing." The Service type
       # row appears only after the subcategory is chosen: the fill waits for it; a gig with no serviceType while the page asks for one stops there with a
       # toast naming the dropdown's options (driver choose list), never a silent skip.
@@ -595,7 +598,9 @@ spec:
     - id: MOD-MR1
       name: macro-run-toast-with-controls
       uuid: nexus-gated-flows-macro-run-toast-v1-0000-2026-1104-001
-      path: clear-glass/renderer/macro-run-toast.js
+      path: _archive/2026-11-04-mr1-duplicate-of-mb4/macro-run-toast.js
+      # SUPERSEDED 2026-11-04 by main's MB4 (0.60.359, the macro toast: step i of n, pause, skip, back) and MT1 (0.60.335, the recording toast);
+      # built on a branch that had not seen them, archived, not merged (CLAUDE.md rule 4: one contract)
       phase: MR1_a_macro_run_says_its_step_and_can_be_paused
       description: "James, 2026-11-04: 'also gating needs to hault. macros need a toast when executing. with a steps counter, pause and play. skip and previous. also when macros are recording a recording indicator in the taost when recording macros.' Every macro run as him shows a toast in his window: the macro, step n of m and what it does, its state; pause and play, skip (the next step), previous (run the last step again), stop. A gate that stays closed halts the run there and the toast says what it saw. While a macro is being recorded, the toast shows a red recording dot, the macro's name, the steps recorded so far, and Stop. The macro tool's run takes a control (lib/agent-tools/tools/clear-glass/macro.js run({ control })): before each step it may wait (paused), move (skip, previous) or end (stop). The bridge keeps one control per run and broadcasts each state to every window."
       deps: [{ name: gates-read-the-element-against-the-gig-and-a-failed-step-stops }]
@@ -631,6 +636,113 @@ spec:
       behavioral_contracts: ["nothing is chosen until he clicks the chip", "a value already shown has no chip"]
       error_paths: ["the option is not in the dropdown → the chip turns red with why"]
       acceptance: ["test-pipeline-nodes AF-06 in Clear Glass: a new gig's SELECT A CATEGORY gets a chip with the gig's category; clicking it chooses it"]
+
+    # 2026-10-30 GT — James: "wheich needs more timing for the gates for the drop down menus. also the autofill clip should include the drop
+    # downs. also the macro editor needs to have the fields to change all of this. like element text, target text or menu number, in relation
+    # to the drop down menu items."
+    - id: MOD-GT1
+      name: gate-timing-per-part
+      uuid: nexus-gated-flows-gate-timing-v1-0000-2026-1030-001
+      path: clear-glass/src/page/element-gate.js
+      phase: GT1_gate_timing_for_dropdowns
+      description: >-
+        settle() takes its timing per part instead of fixed constants (2500 ms timeout, 400 ms settle, one retry in bridge.js gated()). A
+        choice gate waits as long as choose waits for options (optionsWaitMs, 8 s) by default; a gate that depends on another (the
+        subcategory on the category) opens only after that gate held, and waits for its dropdown's options to arrive; a closed gate retries
+        with a growing delay (base × factor^n, capped: architecture-spec RULE D). Every value is a field on the step (GT3) and on his node
+        macro, with these defaults.
+      deps: [{ name: chip-for-dropdowns }]
+      exports: ["settle(check, { timeoutMs, settleMs, every }) (unchanged signature)", "gateTiming(step) → { timeoutMs, settleMs, every, retries, backoff: { baseMs, factor, capMs }, after }"]
+      gate_pipeline: ["GATE-GT1-001: the gate it depends on held", "GATE-GT1-002: options present", "GATE-GT1-003: read, settle, read again", "GATE-GT1-004: retry with growing delay"]
+      behavioral_contracts: ["defaults keep today's text gates as they are; only choice gates wait longer", "each try and its delay is in the run's record"]
+      error_paths: ["still closed after the last retry → the part says what the gate saw on each try, never 'done'"]
+      acceptance: ["on a fixture page whose subcategory list loads 4 s after the category is chosen: the subcategory is chosen and held; with today's constants it fails (the test proves both)"]
+
+    - id: MOD-GT2
+      name: fill-report-true
+      uuid: nexus-gated-flows-fill-report-v1-0000-2026-1030-001
+      path: clear-glass/src/ipc/bridge.js
+      phase: GT2_the_fill_includes_and_reports_dropdowns
+      description: >-
+        Found 2026-10-30: the gig fill returns leftToCopy computed inside fillGig (src/autofill/gig.js) before the page's own parts run, so a
+        part filled later (the title typed by GF2, the category and subcategory chosen) is still listed as left, and the dropdowns land in
+        r.dropdowns, which Copilot's sentence (src/copilot/verbs.js describeJob) never prints. His report: "Filled ... title. Left to copy by
+        hand: title, category, ...". leftToCopy is recomputed once every part has run, from filled, dropdowns and gates together; Copilot's
+        sentence names the dropdowns chosen and any that failed with what their gate saw.
+      deps: [{ name: gate-timing-per-part }]
+      exports: ["fill result: { filled, dropdowns, gates, failed, leftToCopy } with leftToCopy = parts not done by any path", "describeJob: dropdowns said"]
+      gate_pipeline: ["GATE-GT2-001: every part accounted once", "GATE-GT2-002: the sentence matches the result"]
+      behavioral_contracts: ["a part is in exactly one of filled, dropdowns, failed, left"]
+      error_paths: ["a part that ran but whose gate stayed closed → failed with what it saw, not left"]
+      acceptance: ["a fill that types the title and chooses both dropdowns reports none of the three as left, and Copilot says the dropdowns it chose"]
+
+    - id: MOD-GT3
+      name: choose-in-the-macro-editor
+      uuid: nexus-gated-flows-choose-editor-v1-0000-2026-1030-001
+      path: clear-glass/renderer/settings/sections/macros.js
+      phase: GT3_choose_fields_in_the_macro_editor
+      description: >-
+        The macro editor gets a real form for choose (today it falls back to Selector and Text, and choose reads neither Text nor anything but
+        Extra data): Dropdown shows (the element's text, e.g. SELECT A CATEGORY), Element (a selector, optional), Option (the target text, e.g.
+        {{category}}) or Menu number (the option's position in the list, counted from 1), Pick (auto, pointer, keys), and Timing (open, look,
+        settle, gate wait, retries), each with its default shown. The summary line reads `Choose {{category}} in "SELECT A CATEGORY"`. A + Choose
+        button joins the Add row. The driver's choose gains index (the menu number), matched by position after the options are read.
+      deps: [{ name: gate-timing-per-part }]
+      exports: ["ACTIONS.choose fields: shows, selector, option | index, pick, openWait, pickWait, settleWait, gateTimeoutMs, retries", "driver choose({ index })"]
+      gate_pipeline: ["GATE-GT3-001: option or index, not both", "GATE-GT3-002: index within the options read"]
+      behavioral_contracts: ["existing macros (shows/option/pick in Extra data) open in the new fields unchanged", "Text is no longer offered for choose"]
+      error_paths: ["index past the end → refused with the options read", "neither option nor index → the step says it needs one"]
+      acceptance: ["in Clear Glass: his 'Fiverr gig - choose category' opens with SELECT A CATEGORY, {{category}}, auto in their fields; a step by Menu number 3 picks the third option"]
+
+    # 2026-10-30 GT4–GT6 — James, with the gig editor showing PROGRAMMING & TECH chosen, SELECT A SUBCATEGORY left, Copilot saying "Driver error
+    # [choose]: Element not found: [data-cg-choose="1"]", then SELECT A SERVICE TYPE and the Gig metadata tabs: "almost. more timing in between
+    # drop down menus. then we need the services, then the bullets for each tab for each catagory."
+    - id: MOD-GT4
+      name: dropdown-relocated-after-rerender
+      uuid: nexus-gated-flows-relocate-v1-0000-2026-1030-001
+      path: clear-glass/src/driver/index.js
+      phase: GT4_pace_between_dropdowns_and_find_again
+      description: >-
+        Root cause of his error: choose marks the dropdown it found (data-cg-choose=<n>) and uses that mark after its open wait; choosing the
+        category re-renders the section, the mark is gone, and the next choose fails "Element not found". Between two dropdowns the fill now
+        waits for the page to settle (the DOM quiet for settleMs, the next dropdown present), and choose finds its dropdown again by what it
+        shows (shows, column/row, or selector) whenever its mark is missing, before each open, pick and read back.
+      deps: [{ name: gate-timing-per-part }]
+      exports: ["choose: re-find by shows when the mark is gone", "betweenDropdownsMs (site key, default 1200) and a DOM-quiet wait"]
+      gate_pipeline: ["GATE-GT4-001: previous dropdown held", "GATE-GT4-002: DOM quiet", "GATE-GT4-003: re-find if the mark is gone"]
+      behavioral_contracts: ["the mark is a hint, never the only way to the element"]
+      error_paths: ["not found by mark or by what it shows → the error names both and the dropdowns the page has"]
+      acceptance: ["a fixture page that re-renders its dropdown section after the first choice: the second choose finds its dropdown and picks"]
+
+    - id: MOD-GT5
+      name: service-type
+      uuid: nexus-gated-flows-service-type-v1-0000-2026-1030-001
+      path: clear-glass/src/autofill/gig-pages.js
+      phase: GT5_service_type
+      description: "SELECT A SERVICE TYPE (shown after the subcategory) is a gig part: the gig file carries serviceType; the fill chooses it after the subcategory holds, gated; the chip (AF6) offers it."
+      deps: [{ name: dropdown-relocated-after-rerender }]
+      exports: ["gig part serviceType", "valueOf(gig, 'serviceType')"]
+      gate_pipeline: ["GATE-GT5-001: subcategory held", "GATE-GT5-002: option read back"]
+      behavioral_contracts: ["no service type in the gig → left, said, never guessed"]
+      error_paths: ["the option not in the list → refused with the options read"]
+      acceptance: ["his gig editor: after AI Development, the service type in the gig is chosen and read back"]
+
+    - id: MOD-GT6
+      name: gig-metadata-tabs
+      uuid: nexus-gated-flows-metadata-tabs-v1-0000-2026-1030-001
+      path: clear-glass/src/autofill/gig-fields.js
+      phase: GT6_gig_metadata_bullets_per_tab
+      description: >-
+        Gig metadata is a set of tabs per category (for Programming & Tech: PROGRAMMING LANGUAGE, one choice, radio; FRONTEND FRAMEWORK and
+        BACKEND FRAMEWORK, up to five, checkboxes; EXPERTISE). The gig file carries metadata as { <tab>: [values] } per category; the fill
+        opens each tab, ticks or picks each value by its label (DD1's checkbox fill, main 0.60.316), respects the tab's limit (0 / 5), and reads
+        each back. A value the tab does not offer is said with the tab's own list.
+      deps: [{ name: service-type }]
+      exports: ["gig part metadata: { [tab]: string[] }", "fill: tab by tab, value by value, gated"]
+      gate_pipeline: ["GATE-GT6-001: tab open", "GATE-GT6-002: within the tab's limit", "GATE-GT6-003: each value read back"]
+      behavioral_contracts: ["a required tab (marked *) left empty is said before the fill ends"]
+      error_paths: ["more values than the limit → the first N, the rest said"]
+      acceptance: ["his gig editor: JavaScript in PROGRAMMING LANGUAGE, three frontend frameworks ticked and read back, the counter 3 / 5"]
 
     # 2026-10-30 A11Y2 — James, with a screenshot of fiverr.com still in yellow-on-black links and the reset saying "Nothing on this page is named
     # as accessibility": "look at the accessability. needs to actually hook into the back end settings. looks lazy also."
@@ -676,3 +788,53 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node"
     - "per module: its acceptance lines, the UI ones in Clear Glass"
+
+# ── ADDENDUM 2026-10-30 (0.60.318) — MOD-GT1 and MOD-GT4 built ─────────────────────────────────────────────────────────────────────────
+# MOD-GT1: element-gate.js exports gateTiming(step, site) and backoffMs(timing, n); TIMING.text = today's, TIMING.choice = 8000/600/200, 2
+# retries, backoff 600 × 2^n capped 4000. bridge.js gated(key, doIt, check, retries, kind) reads it; each try is on the gate record (each).
+# MOD-GT4: driver/index.js choose: findScript(shows, reuse) re-run by ensureMark before each open and read-back; lost() names the mark, the
+# text and the page's dropdowns. element-gate.js quietScript(quietMs, capMs). Site key gates.betweenDropdownsMs (int, 0..15000, 1200).
+# The options scan excludes [id^="__cg_"] (Clear Glass's spotlight). Acceptance met: tests/modules/test-choose-refind-glass.test.js GR-01..07.
+
+# ── ADDENDUM 2026-10-30 (0.60.319) — MOD-GT5 built ────────────────────────────────────────────────────────────────────────────────────
+# gig-pages.js: PARTS.overview = [title, category, serviceType, tags]; valueOf(gig, 'serviceType'); serviceTypeScript(want) → { found, kind:
+# 'dropdown'|'radio', shown, options, checked, marked } (marks data-cg-service / data-cg-service-opt). gig.js parseGig keeps serviceType
+# (or service_type); gigParts and the template carry it; gig-menu offers it and apply() edits it. bridge.js _gigFill: the serviceType part
+# (choice gate), and "left for you" when the gig has none. Acceptance met: tests/modules/test-service-type-glass.test.js ST-01..05.
+
+# ── ADDENDUM 2026-10-30 (0.60.320) — MOD-GT6 built ────────────────────────────────────────────────────────────────────────────────────
+# gig-fields.js: metaTabsScript() → { found, tabs: [{ name, required, open }] } (marks data-cg-meta-tab); metaPanelScript() → { found, kind,
+# options: [{ label, checked }], limit, count, counter } (marks data-cg-meta-opt). gig.js parseGig keeps metadata { TAB: [values] } (a lone
+# value, a "*" in the name read as the name); gigParts, the template, gig-menu (one row "TAB: a, b; TAB: c") and apply() carry it. bridge.js
+# _gigMetadata(agentId, gig) → { filled, failed, over, left, gates, tabs }, from _gigFill on the Overview as r.metadata.
+# Acceptance met: tests/modules/test-gig-metadata-glass.test.js MD-01..06.
+
+# ── ADDENDUM 2026-11-01 (0.60.342) — MOD-GT6: a tab whose choices are a dropdown (GT6b) ──────────────────────────────────────────────
+# James, 2026-11-01: "still not doing the metadata. everything but the meta data." Fiverr's AI ENGINE tab is a "CHOOSE ..." dropdown with an
+# "Other" radio. Added to MOD-GT6's contract:
+# - metaPanelScript also returns { dropdown: { native, shown }, text }, with the dropdown marked data-cg-meta-dd. It is found as a <select>, a
+#   combobox or aria-haspopup, else by the words it shows (CHOOSE / SELECT …). text is what the panel shows, never an open list's own options.
+# - metaTabsScript never takes a dropdown's "CHOOSE ..." for a tab.
+# - A value the boxes do not offer, on a tab with a dropdown, is picked there:
+#   - a <select> through the driver's choose;
+#   - Fiverr's own widget: opened with the pointer, the options taken as what appeared (gig-fields leavesScript / ddOptionsScript), the
+#     option clicked, and the chip read back with a choice's timing (8 s, 600 ms settle).
+#   - Not offered: said with the dropdown's own list.
+# - "Other" is never ticked for him. Proof: tests/modules/test-gig-metadata-glass.test.js MD-07.
+# ── ADDENDUM 2026-11-01 (0.60.339 FP6) — MOD-GT6 fills metadata DROPDOWNS too ─────────────────────────────────────────────────────────────
+# James, 2026-11-01: "do it, I need it fiverr ready, take screenshots if you have to. use idearium as a map if you need, or in the docs the
+# atlas. I need this working for a fact." His live AI Development page: Gig metadata is a table where AI ENGINE is a multi-select DROPDOWN
+# ("Choose…"), not the radio/checkbox panels metaPanelScript reads. gig-fields.js gains metaDropdownScript() → { found, fields: [{ name, idx,
+# native, shown }] } (marks each trigger data-cg-meta-dd, the section data-cg-meta-root) and metaChosenScript(idx, value) → boolean (a selected
+# option / checked input, or a chip with the value outside the open menu). bridge.js _gigMetadata routes a field that matches a dropdown through
+# the driver's choose with confirmScript = metaChosenScript (one value at a time, re-found before each), read back on the page; a radio/checkbox
+# field still takes the tab-and-panel path, and a value not offered is said with the field's own list (§1.2). In production the prior field's
+# menu is dismissed by the click on the next control (universal click-away); a left-open menu is the one failure mode, named not silent.
+# Acceptance met in Clear Glass's own engine: tests/modules/test-gig-metadata-dropdown-glass.test.js DD-01..05, with a screenshot.
+#
+# What the AI ENGINE field is FOR (the purpose, recorded 2026-11-01 — Nexus knew how to fill it but not what it meant; a gap closed on James's
+# ask "what is the ai engine for?"). On Fiverr's AI Development category it is a buyer-discovery metadata field: the seller declares which AI
+# models/engines the service is built on or works with (Claude, ChatGPT, Gemini, Llama, Mistral, …) so buyers who want a specific engine filter
+# to the gig. That is why each clear-glass/docs/gigs/*.gig sets AI ENGINE to the models that gig actually uses. (NOT to be confused with NEXUS's
+# own "AI engine" = Guardian, guardian/spec/guardian.spec — the system that touches the AI providers. The buyer-facing semantics here are the
+# coder's reading of Fiverr's live page, held as stated/observed, not a Fiverr-published definition — EP1.)

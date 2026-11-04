@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-outperform-phasemap.spec::OP8_the_first_real_run
+type: phase
+id: docs_2026-11-01-outperform-phasemap.spec::OP8_the_first_real_run
+context: pipeline phase OP8_the_first_real_run of docs/2026-11-01-outperform-phasemap.spec
+intent: null
+summary: OP8_the_first_real_run (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793551440162
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793551440162
+lastSeenAt: 1793551440162
+fingerprint: null
+payload:
+  id: OP8_the_first_real_run
+  map: docs/2026-11-01-outperform-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/PROOF-OF-COMPETENCY.md
+  depends_on:
+    - OP7_the_screen
+  blocks:
+    - MOD-OP-SCORE
+  spec: docs/outperform.spec
+  graph: 9e2e72171f176d7c

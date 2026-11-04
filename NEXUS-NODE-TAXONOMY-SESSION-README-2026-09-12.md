@@ -56,7 +56,7 @@ says so in its own header comment, not just here.
 - `test-new-plugins.js`, `test-node-index.js` — real, passing,
   end-to-end tests, run against a real (temp-directory-redirected)
   `jaaDB` and a real `node-export.js` round-trip.
-- **One `<system>/spec/<system>.node-taxonomy.md` per system** — the
+- **One `<system>/spec/<system>.node-taxonomy.spec` per system** — the
   stripped taxonomy (only node types that system actually, really uses).
 - **One `<system>/schemas/index.js` per system**, now purely local
   (`loadAll()` over that folder only — no shared-registry reference),

@@ -165,10 +165,6 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     list:   ()     => ipcRenderer.invoke('macros:list'),
     get:    (name) => ipcRenderer.invoke('macros:get', { name }),
     recordStart: (agentId, name) => ipcRenderer.invoke('macros:recordStart', { agentId, name }),
-    // 2026-11-04 MR1 — a run's state (step n of m, paused, done) and his controls; the recording indicator's start and stop
-    runControl: (runId, cmd) => ipcRenderer.invoke('macros:runControl', { runId, cmd }),
-    onRunState: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('macros:runState', f); return () => ipcRenderer.removeListener('macros:runState', f); },
-    onRecState: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('macros:recState', f); return () => ipcRenderer.removeListener('macros:recState', f); },
     recordStatus: (agentId) => ipcRenderer.invoke('macros:recordStatus', { agentId }),
     recordStop:  (agentId) => ipcRenderer.invoke('macros:recordStop', { agentId }),
     run:    (name, agentOrOpts, params, skipSnapshot) => {
@@ -176,6 +172,9 @@ contextBridge.exposeInMainWorld('ClearGlass', {
       return ipcRenderer.invoke('macros:run', { name, agentId: o.agentId, params: o.params, skipSnapshot: o.skipSnapshot });
     },
     create: (payload) => ipcRenderer.invoke('macros:create', payload),
+    // 0.60.359 MB4 — the macro toast: step i of n, pause, skip, back one step (playback and recording)
+    control: (op, agentId) => ipcRenderer.invoke('macros:control', { op, agentId }),
+    onProgress: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('macros:progress', f); return () => ipcRenderer.removeListener('macros:progress', f); },
     delete: (name)    => ipcRenderer.invoke('macros:delete', { name }),
     schema: ()        => ipcRenderer.invoke('macros:schema'),
   },
@@ -415,6 +414,16 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     gigFile: (gig)                           => ipcRenderer.invoke('autofill:gig:file', { gig }),        // the gig as a .gig (YAML) file: { text, filename }
     gigTemplate: ()                          => ipcRenderer.invoke('autofill:gig:file', { template: true }),   // an empty .gig to fill in   // a .gig.json file's text -> the gig, checked against Fiverr's limits
     gigToIdearium: (payload)                 => ipcRenderer.invoke('autofill:gig:to-idearium', payload),   // §0.59.3 a buyer's answers → a spec in Idearium
+  },
+
+  // §PF 0.60.333 — the .portfolio node (James: "nodes you can upload and import to the settings page"); clearglass.portfolio/1 files (src/autofill/portfolio.js)
+  portfolio: {
+    list:   ()        => ipcRenderer.invoke('portfolio:list'),
+    get:    (id)      => ipcRenderer.invoke('portfolio:get', { id }),
+    import: (text)    => ipcRenderer.invoke('portfolio:import', { text }),   // upsert by id, newer-wins
+    export: ()        => ipcRenderer.invoke('portfolio:export'),            // { ok, text, filename, count }
+    create: (payload) => ipcRenderer.invoke('portfolio:create', payload),
+    remove: (id)      => ipcRenderer.invoke('portfolio:delete', { id }),
   },
 
   // §BUILT 2026-09-21 — James: "clearglass needs to help me with job

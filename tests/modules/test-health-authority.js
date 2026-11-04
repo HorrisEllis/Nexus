@@ -40,7 +40,7 @@ async function test(id, desc, fn) {
 const ROOT = path.join(__dirname, '../..');
 const DIAG = fs.readFileSync(path.join(ROOT, 'diagnostic/nexus-diagnostic.js'), 'utf8');
 const ORCH = fs.readFileSync(path.join(ROOT, 'orchestrator', 'orchestrator.js'), 'utf8');
-const AP   = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
+const AP   = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.retired-0.60.330.js'), 'utf8');
 
 (async () => {
   // §PR2 0.39.328 — James: "remove the polling then. need the systems to anounce themselves." The probe-then-registry

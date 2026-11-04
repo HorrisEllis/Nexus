@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+context: pipeline phase KB1_choose_waits_and_keys of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: KB1_choose_waits_and_keys (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793386281601
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281601
+lastSeenAt: 1793386281601
+fingerprint: null
+payload:
+  id: KB1_choose_waits_and_keys
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.275
+  files:
+    - clear-glass/src/driver/index.js
+    - tests/modules/test-dropdown-keys.test.js
+  depends_on:
+    - FG2_dropdown_choose
+    - FG_D2_choice_is_read_back
+  blocks:
+    - MOD-KB1
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 5c4366d7ed36cfb4

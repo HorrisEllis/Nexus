@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-diagnostic-requirements-phasemap.spec::DR4_fixed_under_policy
+type: phase
+id: docs_2026-10-30-diagnostic-requirements-phasemap.spec::DR4_fixed_under_policy
+context: pipeline phase DR4_fixed_under_policy of docs/2026-10-30-diagnostic-requirements-phasemap.spec
+intent: null
+summary: DR4_fixed_under_policy (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793383782985
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793383782985
+lastSeenAt: 1793383782985
+fingerprint: null
+payload:
+  id: DR4_fixed_under_policy
+  map: docs/2026-10-30-diagnostic-requirements-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/lib/remedy.js
+    - diagnostic/nexus-diagnostic.js
+    - tests/modules/test-diagnostic-remedy.test.js
+  depends_on:
+    - DR2_diagnostic_checks_them
+    - DR3_the_owner_can_fix_it
+    - DR_D3_downloads_ask_first
+  blocks:
+    - MOD-DR-REMEDY
+  spec: diagnostic/spec/requirements.spec
+  graph: f110b2d660f6ef57

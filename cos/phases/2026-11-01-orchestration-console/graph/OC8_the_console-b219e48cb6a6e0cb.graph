@@ -1,0 +1,114 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OC8_the_console:b219e48cb6a6e0cb
+type: graph
+id: phase:OC8_the_console:b219e48cb6a6e0cb
+context: dependency graph of phase OC8_the_console
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793557554806
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793557554806
+lastSeenAt: 1793557554806
+fingerprint: null
+payload:
+  for: OC8_the_console
+  kind: phase
+  repo: null
+  hash: b219e48cb6a6e0cb
+  nodes:
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/orchestration/index.html
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/ui/orchestration/page.css
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/ui/orchestration/page.js
+      role: changes
+      exists: false
+      system: cos
+    - path: lib/ui/brainos/index.html
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-orchestration-console.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC3_the_calendar
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC5_every_agent_tool
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC6_history_and_replay
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC7_the_taxonomy_expanded
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
+    dependents: []
+    upstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC2_scheduler_on_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC3_the_calendar
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC5_every_agent_tool
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC6_history_and_replay
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC7_the_taxonomy_expanded
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+    downstream: []
+    blockedBy:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC3_the_calendar
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC5_every_agent_tool
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC6_history_and_replay
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC7_the_taxonomy_expanded
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-01-orchestration-console-phasemap.spec::OC10_pipelines_on_the_canvas
+        files:
+          - lib/ui/brainos/index.html
+    dangling: []
+    lines:
+      - >-
+        layer 7 · blocked by OC3_the_calendar, OC4_deploy_to_any_system, OC5_every_agent_tool,
+        OC6_history_and_replay, OC7_the_taxonomy_expanded
+      - >-
+        depends on (6): OC3_the_calendar, OC4_deploy_to_any_system, OC5_every_agent_tool,
+        OC6_history_and_replay, OC7_the_taxonomy_expanded, MG33_cos_ui_has_a_way_in · all upstream
+        17
+      - 'needed by (0): —'
+      - >-
+        same files as OC10_pipelines_on_the_canvas with no order between them:
+        lib/ui/brainos/index.html
+    edges:
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC3_the_calendar
+        kind: declared
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+        kind: declared
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC5_every_agent_tool
+        kind: declared
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC6_history_and_replay
+        kind: declared
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC7_the_taxonomy_expanded
+        kind: declared
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
+        kind: declared

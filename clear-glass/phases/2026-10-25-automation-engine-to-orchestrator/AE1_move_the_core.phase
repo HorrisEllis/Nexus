@@ -9,11 +9,11 @@ intent: null
 summary: AE1_move_the_core (library) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792962436811
+exported_at: 1793442585130
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792962436811
-lastSeenAt: 1792962436811
+firstSeenAt: 1793442585130
+lastSeenAt: 1793442585130
 fingerprint: null
 payload:
   id: AE1_move_the_core
@@ -38,4 +38,4 @@ payload:
     - AE_D2_state_stays
   blocks: []
   spec: docs/2026-10-25-automation-engine-sovereignty-graph.md
-  graph: 2a96f2d1d0bc3b9f
+  graph: 58fe5f72aacfb599

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
+type: phase
+id: docs_2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
+context: pipeline phase F4_raid_routes_the_doors of docs/2026-10-30-foundation-up-phasemap.spec
+intent: null
+summary: F4_raid_routes_the_doors (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793382595486
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793382595486
+lastSeenAt: 1793382595486
+fingerprint: null
+payload:
+  id: F4_raid_routes_the_doors
+  map: docs/2026-10-30-foundation-up-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/router.js
+  depends_on:
+    - F3_the_door
+    - CS11_raid_in_the_exe
+    - MG23_allocation_and_balance
+  blocks: []
+  spec: null
+  graph: 06ea6e31f8bc89c8

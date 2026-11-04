@@ -41,7 +41,8 @@ spec:
     SN0_one_branch:
       layer: library
       systems: [cos, core]
-      status: "OPEN"
+      status: "SUPERSEDED 2026-11-01 by CP5_states_rewind_versions in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: "OPEN"
       james: '"that can branch"'
       depends_on: []
       files: [cos/playground/branch.js, cos/workspace/index.js, lib/nexus-self/branch.js, lib/safe-apply.js]
@@ -50,7 +51,8 @@ spec:
     SN1_open_a_snapshot_as_a_compartment:
       layer: library
       systems: [versionium, cos, idearium]
-      status: "OPEN"
+      status: "SUPERSEDED 2026-11-01 by CP5_states_rewind_versions in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: "OPEN"
       james: '"what if a snapshot is a cos compartment?"'
       depends_on: [SN0_one_branch]
       files: [versionium/lib/files.js, cos/workspace/index.js, idearium/repo/snapshot.js]
@@ -59,7 +61,8 @@ spec:
     SN2_run_in_parallel:
       layer: library
       systems: [core, cos]
-      status: "OPEN"
+      status: "SUPERSEDED 2026-11-01 by CP5_states_rewind_versions in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: "OPEN"
       james: '"or run in parralel to for benchmarks"'
       depends_on: [SN1_open_a_snapshot_as_a_compartment]
       files: [lib/parallel-dispatch.js, cos/playground/sandbox.js, cos/playground/compare.js]
@@ -68,7 +71,8 @@ spec:
     SN3_measured_by_rfr2:
       layer: library
       systems: [intelligence]
-      status: "OPEN"
+      status: "SUPERSEDED 2026-11-01 by CP5_states_rewind_versions in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: "OPEN"
       james: '"using deltas and sigmas? using rfr2?"'
       depends_on: [SN2_run_in_parallel]
       files: [intelligence/rfr2/delta/index.js, intelligence/rfr2/sigma/index.js, intelligence/rfr2/time/index.js]
@@ -77,7 +81,8 @@ spec:
     SN4_benchmarks_teach:
       layer: library
       systems: [core]
-      status: "OPEN"
+      status: "SUPERSEDED 2026-11-01 by CP5_states_rewind_versions in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
+      status_before: "OPEN"
       james: '"for benchmarks"'
       depends_on: [SN3_measured_by_rfr2]
       files: [lib/pipeline-routing.js, lib/economy/ledger.js]

@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-failure_mode-b831eefb-a114-4e0d-be4e-12e132d97f59
+type: failure_mode
+id: b831eefb-a114-4e0d-be4e-12e132d97f59
+context: real failure_modes row, enriched with real causal chain + sigma delta by failure-mode-forensics.js
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1793426882130
+source: cortex.self-heal.failure-mode-forensics
+occurrences: 1
+firstSeenAt: 1793426882130
+lastSeenAt: 1793426882130
+fingerprint: null
+payload:
+  uuid: b831eefb-a114-4e0d-be4e-12e132d97f59
+  faultClass: timeout
+  gapUuid: null
+  friction: null
+  enteredAt: 1793426882124
+  source: test
+  signature: timeout::map#P9
+  where: map#P9
+  system: idearium
+  summary: the caller stopped waiting after 295 s
+  anchor: null
+  evidence:
+    mode: timeout
+  occurrences: 1
+  firstSeenAt: 1793426882124
+  lastSeenAt: 1793426882124
+  status: open
+  via: intake
+  cfrAtEntry:
+    coherence: 0.6
+    friction: 0.2
+    resonance: 0.3
+    entropy: 0.2
+    regime: stable
+    updatedAt: 1793426881888
+    at: 1793426882124
+  viewAtEntry:
+    label: view — what was on screen (Nerve); never evidence of a cause
+    regime: null
+    windows: []
+  env:
+    nexus: 0.60.330
+    node: v22.23.4
+    platform: linux
+  id: b7914af0-2ff2-49cb-88fd-06a9182d5261
+  root: null
+  conditions: []
+  siblingDanglingHooks: []
+  sigmaBefore: null
+  sigmaAtEntry: null
+  sigmaDelta: null
+  compound:
+    status: unavailable
+    reason: 'no anchor: gap carries no (ledgerSystem, entryUuid) pair'
+    class: null
+    factors: null
+    sigmaProgression: null
+    deltaProgression: null
+    peakSigma: null
+    rootUuid: null
+    anchor: null
+  enrichedAt: 1793426882129

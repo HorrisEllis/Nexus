@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792948743422
+exported_at: 1792962436815
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792948743422
-lastSeenAt: 1792948743422
+firstSeenAt: 1792962436815
+lastSeenAt: 1792962436815
 fingerprint: null
 payload:
   for: AE2_browser_driver_port
@@ -148,13 +148,12 @@ payload:
     downstream:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
-    blockedBy:
-      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 2 · blocked by AE1_move_the_core
+      - layer 2 · ready
       - 'depends on (1): AE1_move_the_core · all upstream 3'
       - 'needed by (1): AE4_repoint_the_registry · all downstream 2'
     edges:

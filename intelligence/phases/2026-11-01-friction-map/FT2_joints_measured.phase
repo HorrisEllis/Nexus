@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-friction-map-phasemap.spec::FT2_joints_measured
+type: phase
+id: docs_2026-11-01-friction-map-phasemap.spec::FT2_joints_measured
+context: pipeline phase FT2_joints_measured of docs/2026-11-01-friction-map-phasemap.spec
+intent: null
+summary: FT2_joints_measured (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793552212446
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793552212446
+lastSeenAt: 1793552212446
+fingerprint: null
+payload:
+  id: FT2_joints_measured
+  map: docs/2026-11-01-friction-map-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/friction-map/joints.js
+    - tests/modules/test-friction-map-joints.test.js
+  depends_on:
+    - FT1_functions_placed
+    - CI6_friction_and_tension_home
+  blocks:
+    - MOD-FT-JOINTS
+  spec: docs/friction-map.spec
+  graph: e31b33eb127fd2a5

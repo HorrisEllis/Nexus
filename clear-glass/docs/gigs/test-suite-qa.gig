@@ -4,6 +4,16 @@ platform: fiverr
 title: I will write automated tests for your Node.js or JavaScript project
 category: Programming & Tech
 subcategory: QA & Review
+serviceType: Software Testing          # SELECT A SERVICE TYPE on the page; the fill matches by label (§1.2 says what it can't)
+metadata:
+  "PROGRAMMING LANGUAGE":
+    - JavaScript
+    - TypeScript
+    - Python
+  "EXPERTISE":
+    - Testing procedures
+    - Debugging
+    - Source control
 tags:
   - unit testing
   - node.js

@@ -1,0 +1,216 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OC11_the_cos_app_runs_alone:d49c0504d8afae24
+type: graph
+id: phase:OC11_the_cos_app_runs_alone:d49c0504d8afae24
+context: dependency graph of phase OC11_the_cos_app_runs_alone
+intent: null
+summary: 22 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793557554810
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793557554810
+lastSeenAt: 1793557554810
+fingerprint: null
+payload:
+  for: OC11_the_cos_app_runs_alone
+  kind: phase
+  repo: null
+  hash: d49c0504d8afae24
+  nodes:
+    - path: .github/workflows/cos-app.yml
+      role: changes
+      exists: true
+      system: null
+    - path: cos/app/desktop/main.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/store.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/switch.js
+      role: changes
+      exists: true
+      system: cos
+    - path: clear-glass/src/releases/service.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cos/app/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/controller.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-app-runtime.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-shell.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-store.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-switch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-ui.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/app/controller.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/settings.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/versionium.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/release-version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/zip.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/app/desktop/main.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/settings.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/shell.js
+      kind: requires
+    - from: cos/app/store.js
+      to: lib/zip.js
+      kind: requires
+    - from: cos/app/store.js
+      to: lib/release-version.js
+      kind: requires
+    - from: cos/app/store.js
+      to: cos/app/versionium.js
+      kind: requires
+    - from: cos/app/cli.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/shell.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-runtime.test.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-switch.test.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-ui.test.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: clear-glass/src/releases/service.js
+      to: cos/app/store.js
+      kind: requires
+    - from: tests/modules/test-cos-app-shell.test.js
+      to: cos/app/store.js
+      kind: requires
+    - from: tests/modules/test-cos-app-store.test.js
+      to: cos/app/store.js
+      kind: requires
+    - from: tests/modules/test-cos-app-update.test.js
+      to: cos/app/store.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: cos/app/store.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/releases/service.js
+      to: cos/app/store.js
+      fromSystem: clear-glass
+      toSystem: cos
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D4_the_cos_app_is_the_application
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP9_a_popup_when_there_is_an_update
+    dependents: []
+    upstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2a_adopt_the_old_folder
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP6_attach_in_place
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP7_autopilot_keeps_it_current
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP8_policy_on_the_page
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP9_a_popup_when_there_is_an_update
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D1_how_an_update_lands
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D2_who_applies
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D3_runtime_data
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D4_automatic
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D4_the_cos_app_is_the_application
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 8 · ready
+      - >-
+        depends on (3): OC_D4_the_cos_app_is_the_application, MG33_cos_ui_has_a_way_in,
+        UP9_a_popup_when_there_is_an_update · all upstream 21
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC_D4_the_cos_app_is_the_application
+        kind: declared
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
+        kind: declared
+      - from: docs/2026-10-25-nexus-update-phasemap.spec::UP9_a_popup_when_there_is_an_update
+        kind: declared

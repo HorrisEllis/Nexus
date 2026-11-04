@@ -51,7 +51,9 @@ test('T-007', 'only the systems in systems.js: every phase\'s systems are Ideari
   const NS = require('../../lib/nexus-self/systems.js');
   const all = pm.loadAll();
   // ER1 (0.60.83, docs/2026-10-16-eravos-removal-phasemap.spec) — James: "can you remove eravos?" → "Delete it outright.": 16 − eravos
-  assert.strictEqual(NS.names().length, 15, 'the 15 of SY1 + cos (SY2, James: "Its own system (16th)") − eravos (ER1, deleted 0.60.83)');
+  // 0.60.339 EAS3 — James, 2026-11-01: "the github repo not the one in lib already. i want that done now." Emerge, from its own repo, is a system
+  assert.strictEqual(NS.names().length, 16, 'the 15 of SY1 + cos (SY2, James: "Its own system (16th)") − eravos (ER1, deleted 0.60.83) + emerge (EAS3, 0.60.339)');
+  assert.ok(NS.names().includes('emerge'), 'emerge is one of them');
   assert.ok(!NS.names().includes('eravos'), 'eravos is gone (ER1)');
   assert.ok(NS.names().includes('cos'));
   const outside = all.phases.filter(p => p.systems.some(x => !NS.names().includes(x))).map(p => `${p.map}:${p.id} ${p.systems}`);

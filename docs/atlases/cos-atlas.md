@@ -14,7 +14,7 @@ The sections below are what core's atlas said about `cos/` before the move, kept
 
 ## The Compartment OS
 
-Isolated sandboxes with their own process, network and runtime boundary, persistent state on disk and real snapshots. Its spec is `cos/spec/cos.spec`, beside the design document `cos/spec/cos-design-v1.7.0.md`, which describes COS in Rust terms while the code is Node; the spec records that boundary rather than hiding it.
+Isolated sandboxes with their own process, network and runtime boundary, persistent state on disk and real snapshots. Its spec is `cos/spec/cos.spec`, beside the design document `cos/spec/cos-design-v1.7.0.spec`, which describes COS in Rust terms while the code is Node; the spec records that boundary rather than hiding it.
 
 ### Compartments and archetypes
 
@@ -551,7 +551,7 @@ Isolated sandboxes with their own process, network and runtime boundary, persist
 
 2 other file(s).
 
-- other: `cos/archetype/nexus-system/spec/{{slug}}.node-taxonomy.md`, `cos/archetype/nexus-system/spec/{{slug}}.spec`
+- other: `cos/archetype/nexus-system/spec/{{slug}}.node-taxonomy.spec`, `cos/archetype/nexus-system/spec/{{slug}}.spec`
 
 #### `cos/archetype/nexus-system/tests/`
 
@@ -1498,7 +1498,7 @@ Isolated sandboxes with their own process, network and runtime boundary, persist
 
 10 other file(s).
 
-- other: `cos/spec/check-catalogue.spec`, `cos/spec/cos-design-v1.7.0.md`, `cos/spec/cos-spine.spec`, `cos/spec/cos.spec`, `cos/spec/deny-list.spec`, `cos/spec/lab.spec`, `cos/spec/language-toolchains.spec`, `cos/spec/qa-catalog.spec`, `cos/spec/the-machine.spec`, `cos/spec/torture-chamber.spec`
+- other: `cos/spec/check-catalogue.spec`, `cos/spec/cos-design-v1.7.0.spec`, `cos/spec/cos-spine.spec`, `cos/spec/cos.spec`, `cos/spec/deny-list.spec`, `cos/spec/lab.spec`, `cos/spec/language-toolchains.spec`, `cos/spec/qa-catalog.spec`, `cos/spec/the-machine.spec`, `cos/spec/torture-chamber.spec`
 
 #### `cos/tablet/`
 

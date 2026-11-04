@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793180611541
+exported_at: 1793386281600
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793180611541
-lastSeenAt: 1793180611541
+firstSeenAt: 1793386281600
+lastSeenAt: 1793386281600
 fingerprint: null
 payload:
   for: FG6_blocks_ui
@@ -31,21 +31,32 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 56b114c7f05d7b11
-    layer: 2
+    layer: 4
     deps:
       - docs/2026-10-28-gated-flows-phasemap.spec::FG3_gate_per_step
     dependents: []
     upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
       - docs/2026-10-28-gated-flows-phasemap.spec::FG3_gate_per_step
       - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
     downstream: []
     blockedBy:
       - docs/2026-10-28-gated-flows-phasemap.spec::FG3_gate_per_step
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-10-28-gated-flows-phasemap.spec::GT3_choose_fields_in_the_macro_editor
+        files:
+          - clear-glass/renderer/settings/sections/macros.js
     dangling: []
     lines:
-      - DAG 56b114c7f05d7b11 · layer 2 · blocked by FG3_gate_per_step
-      - 'depends on (1): FG3_gate_per_step · all upstream 2'
+      - layer 4 · blocked by FG3_gate_per_step
+      - 'depends on (1): FG3_gate_per_step · all upstream 5'
       - 'needed by (0): —'
+      - >-
+        same files as GT3_choose_fields_in_the_macro_editor with no order between them:
+        clear-glass/renderer/settings/sections/macros.js
+    edges:
+      - from: docs/2026-10-28-gated-flows-phasemap.spec::FG3_gate_per_step
+        kind: declared

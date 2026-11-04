@@ -473,7 +473,7 @@ Full real chain traced and patched this pass, five files, not one:
 
 1 other file(s).
 
-- other: `clear-glass/docs/clear-glass-seam.spec.md`
+- other: `clear-glass/docs/clear-glass-seam.spec`
 
 #### `clear-glass/docs/gigs/`
 
@@ -1563,7 +1563,7 @@ Full real chain traced and patched this pass, five files, not one:
 
 11 other file(s).
 
-- other: `clear-glass/spec/adblock.spec`, `clear-glass/spec/browser-shell.spec`, `clear-glass/spec/clear-glass.node-taxonomy.md`, `clear-glass/spec/clear-glass.spec`, `clear-glass/spec/compartment-downloads.spec`, `clear-glass/spec/design-surface.spec`, `clear-glass/spec/guided-browser.spec`, `clear-glass/spec/passwords.spec`, `clear-glass/spec/semantic-tree.spec`, `clear-glass/spec/site-profile.spec`, `clear-glass/spec/snowflake.spec`
+- other: `clear-glass/spec/adblock.spec`, `clear-glass/spec/browser-shell.spec`, `clear-glass/spec/clear-glass.node-taxonomy.spec`, `clear-glass/spec/clear-glass.spec`, `clear-glass/spec/compartment-downloads.spec`, `clear-glass/spec/design-surface.spec`, `clear-glass/spec/guided-browser.spec`, `clear-glass/spec/passwords.spec`, `clear-glass/spec/semantic-tree.spec`, `clear-glass/spec/site-profile.spec`, `clear-glass/spec/snowflake.spec`
 
 #### `clear-glass/src/`
 

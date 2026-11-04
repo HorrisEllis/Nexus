@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG24_network_manager
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG24_network_manager
+context: pipeline phase MG24_network_manager of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG24_network_manager (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793577140012
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793577140012
+lastSeenAt: 1793577140012
+fingerprint: null
+payload:
+  id: MG24_network_manager
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "SUPERSEDED 2026-11-01 by CP6_resources in docs/2026-11-01-the-compartment-phasemap.spec (his
+    "just dont have redundancy. like each compartment should be all of it."); the text below is
+    kept"
+  files:
+    - cos/manager/network.js
+    - cos/compartment/qemu-runtime.js
+    - cos/manager/contract.json
+    - tests/modules/test-cos-network.test.js
+  depends_on:
+    - MG15_the_supervisor_in_cos
+    - SV2_into_a_compartment
+  blocks:
+    - MOD-MG-NETWORK
+  spec: cos/spec/cos-manager.spec
+  graph: acca12c55d63753b

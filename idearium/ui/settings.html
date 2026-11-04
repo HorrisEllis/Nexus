@@ -439,7 +439,7 @@ async function renderRouting() {
   const row = (k, desc, ctl) => `<div class="row"><div><div class="k">routing.${k}</div><div class="d">${desc}</div></div><div class="ctl">${ctl}</div><div class="ctl"></div></div>`;
   const num = (k, v, min, max) => `<input type="number" data-rt="${k}" value="${esc(v)}" min="${min}" max="${max}">`;
   const br = (d.breakers || []);
-  $('body').innerHTML = `<div class="card" id="acct-card"><h3><span class="grow">Accounts — fallback chain</span></h3><div class="kv">reading…</div></div><div class="card" id="lean-card"><h3><span class="grow">Lean mode</span></h3><div class="kv">reading…</div></div><div class="card"><h3><span class="grow">Mode</span><span class="tag">${esc(p.mode)}</span></h3><div class="ap-chips">${Object.entries(RT_MODES).map(([m, t]) => `<button class="ap-chip ${p.mode === m ? 'on' : ''}" data-rt-mode="${m}" title="${esc(t)}">${esc(m)}</button>`).join('')}</div><div class="kv">${esc(RT_MODES[p.mode])}</div></div>
+  $('body').innerHTML = `<div class="card" id="pa-card"><h3><span class="grow">Page agents</span></h3><div class="kv">reading…</div></div><div class="card" id="acct-card"><h3><span class="grow">Accounts — fallback chain</span></h3><div class="kv">reading…</div></div><div class="card" id="lean-card"><h3><span class="grow">Lean mode</span></h3><div class="kv">reading…</div></div><div class="card"><h3><span class="grow">Mode</span><span class="tag">${esc(p.mode)}</span></h3><div class="ap-chips">${Object.entries(RT_MODES).map(([m, t]) => `<button class="ap-chip ${p.mode === m ? 'on' : ''}" data-rt-mode="${m}" title="${esc(t)}">${esc(m)}</button>`).join('')}</div><div class="kv">${esc(RT_MODES[p.mode])}</div></div>
     <div class="card"><h3><span class="grow">Fallback chain</span></h3>${row('chain', 'tried in this order after the chosen agent (and the block\'s own <code>fallback:</code> in blocks.yaml)', `<input type="text" data-rt="chain" value="${esc(p.chain.join(','))}">`)}</div>
     <div class="card"><h3><span class="grow">Ollama models</span></h3>${row('ollama_models', 'each listed model is its own candidate, learned separately (e.g. qwen2.5-coder:3b,qwen2.5-coder:7b); empty = the hat\'s model', `<input type="text" data-rt="ollama_models" value="${esc((p.ollamaModels || []).join(','))}">`)}${row('learn_min_records', 'outcomes needed for a chunk type before learned mode reorders it', `<input type="number" data-rt="learn_min_records" value="${esc(p.learnMinRecords)}" min="1" max="1000">`)}
       <div id="rt-learned" class="kv">loading what has been learned…</div></div>
@@ -496,6 +496,7 @@ async function renderRouting() {
     $('rt-learned').innerHTML = ks.length ? ks.map(k => `<div><b>${esc(k)}</b> ${L[k].slice(0, 5).map(x => `<span class="tag ${x.success >= 0.5 ? 'ok' : 'warn'}" title="${x.ok} ok · ${x.failed} failed">${esc(x.provider)} ${Math.round(x.success * 100)}%</span>`).join(' ')}</div>`).join('') : 'nothing learned yet — every chunk build records its outcome'; }).catch(() => { $('rt-learned').textContent = ''; });
   $('rt-reset').onclick = async () => { try { await post('/api/routing/breaker/reset', {}); toast('breakers reset', 'ok'); renderRouting(); } catch (e) { toast(e.message, 'bad'); } };
   $('rt-try-go').onclick = rtTry;   // 0.60.31 RT1
+  renderPageAgents();   // 0.60.335 AC5
 }
 
 // 0.60.31 RT1 — the door's route for one request: eligible agents in order, the rejected ones and why, its record
@@ -538,6 +539,21 @@ function _econGraph(series, lim) {
     <text x="2" y="12" fill="var(--faint)" font-size="9">${Math.round(maxY)}</text><text x="2" y="${H - 14}" fill="var(--faint)" font-size="9">0</text>
     ${line(lim && lim.safeLimit, 'var(--ok)', 'safe')}${line(lim && lim.minBad, 'var(--bad)', 'failed at')}
     ${pts.map(p => `<circle cx="${X(p.at).toFixed(1)}" cy="${Y(p.tokensIn).toFixed(1)}" r="2.6" fill="${col[p.outcome] || 'var(--dim)'}"><title>${esc(p.outcome)} · ${p.tokensIn} tokens · ${new Date(p.at).toLocaleString()}</title></circle>`).join('')}</svg>`;
+}
+// 0.60.335 AC5 — James: "the idearium settings, so i can change the agemnts for the spacial void and spec workshop"
+async function renderPageAgents() {
+  const card = $('pa-card'); if (!card) return;
+  let d; try { d = await api('/api/settings/page-agents'); d = d.data || d; } catch (e) { card.querySelector('.kv').textContent = `Could not read the page agents: ${e.message}`; return; }
+  const PROV = ['copilot', 'ollama', 'chatgpt', 'claude', 'deepseek', 'gemini', 'perplexity'];
+  const row = (page) => { const c = d.agents[page] || { mode: 'learned' };
+    return `<div class="row"><div><div class="k">${esc(d.pages[page])}</div><div class="d">learned = Copilot's router picks (as before); a provider is tried first, its fallback said on the reply</div></div>
+      <div class="ctl"><select data-pa="${page}"><option value="learned"${c.provider ? '' : ' selected'}>learned</option>${PROV.map(p => `<option value="${p}"${c.provider === p ? ' selected' : ''}>${p}</option>`).join('')}</select>
+      <input data-pam="${page}" placeholder="model (optional)" value="${esc(c.model || '')}" style="width:12em"></div><div class="ctl"></div></div>`; };
+  card.querySelector('.kv').outerHTML = `<div>${Object.keys(d.pages).map(row).join('')}<div class="row"><div></div><div class="ctl"><button class="btn" id="pa-save">Save page agents</button></div></div></div>`;
+  $('pa-save').onclick = async () => {
+    const agents = {}; for (const sel of card.querySelectorAll('[data-pa]')) { const m = card.querySelector(`[data-pam="${sel.dataset.pa}"]`).value.trim(); agents[sel.dataset.pa] = sel.value === 'learned' ? 'learned' : (m ? `${sel.value}:${m}` : sel.value); }
+    try { await api('/api/settings/page-agents', { method: 'POST', body: JSON.stringify({ agents, by: 'person' }) }); renderPageAgents(); } catch (e) { alert(`Not saved: ${e.message}`); }
+  };
 }
 async function renderEconomy() {
   $('title').textContent = 'Provider economy';

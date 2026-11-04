@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-orchestration-console-phasemap.spec::OC5_every_agent_tool
+type: phase
+id: docs_2026-11-01-orchestration-console-phasemap.spec::OC5_every_agent_tool
+context: pipeline phase OC5_every_agent_tool of docs/2026-11-01-orchestration-console-phasemap.spec
+intent: null
+summary: OC5_every_agent_tool (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793556958990
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793556958990
+lastSeenAt: 1793556958990
+fingerprint: null
+payload:
+  id: OC5_every_agent_tool
+  map: docs/2026-11-01-orchestration-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/automation/tool-step.js
+    - lib/automation/steps.js
+    - tests/modules/test-tool-step.test.js
+  depends_on:
+    - OC1_task_nodes
+  blocks:
+    - MOD-OC-TOOLS
+  spec: docs/orchestration-console.spec
+  graph: 0490333fb7318547

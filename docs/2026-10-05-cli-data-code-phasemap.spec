@@ -32,7 +32,7 @@ spec:
       in the root data/<system>/ or in cortex. docs/2026-09-11-sovereign-node-architecture-phasemap.spec P5
       "data_folder_completion" (OPEN) already says it: "cortex becomes the real bookkeeper it's meant to be rather than
       the primary store … the largest, highest-risk phase … per system, not attempted in one sweep."
-      docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.md maps each system's memory needs.
+      docs/META-SYSTEM-AND-SUBSYSTEM-SPECS.spec maps each system's memory needs.
     code_tab: >-
       Today: the Code tab is search and chunk cards (0.39.273). The work surface (idearium/ui/js/work-surface.js,
       GET /api/repos/:uuid/worksurface — a projection, 0.39.284) sits under the plan panel; the agent's pending code
@@ -433,6 +433,29 @@ spec:
         written (the tail, following the newest line). Painted in place, never a re-render of the tab.
       proof: "Clear Glass: feed frames (an Ollama chunk, a guardian dom pulse with its anchor) show in both places as they arrive"
       not_in_this_phase: "BL8 and the other backlog phases themselves — this is the capability that builds them; each still needs its own files"
+    CF1_a_one_word_command_takes_free_text:
+      layer: cli
+      systems: [idearium]
+      origin: >-
+        James, 2026-11-01: "can you execute anything? like give me a sign" — the coder ran `idearium note "Sign from Claude Code…"`
+        on his running machine and got "unknown command: note.Sign…". Asked "Should I fix the CLI's note parsing as a phase?",
+        James: "Yes, phase it".
+      value: { score: 3, cost: S, for: [daily-use, agents], why: "note, field, access, notes … every one-word row that takes text was unreachable from a terminal" }
+      status: "DONE (0.60.339) — CL-09 in tests/modules/test-cli-route-commands.test.js; proven live on :4800."
+      spec: "none — idearium/cli/index.js has no spec module yet (the 2026-10-29 gap, docs/NEXUS-SYSTEMS-FOR-CODING.md); this phase changes no contract, only which row a typed line reaches"
+      blocks: []
+      depends_on: []
+      files: [idearium/cli/index.js, tests/modules/test-cli-route-commands.test.js]
+      found: >-
+        idearium/cli/index.js main() keyed every line with two words as `cmd.sub`, never falling back to `cmd`. A row keyed by
+        one word whose first argument is text (`note <text>`, `field <…>`, `access <…>`) died "unknown command: note.<word>".
+        The route (POST /api/notes) was fine; only the terminal could not reach it. Agents were not hit: nexus.command resolves
+        the row itself.
+      does: >-
+        `cmd.sub` is used when that row exists; otherwise, when `cmd` alone is a row, the line goes to it with `sub` as its first
+        argument. Nothing that resolved before resolves differently. The one ambiguity is kept as it was: a note whose text starts
+        with a sub-row's word ("done …") still reaches that row; quote around it does not help, use --json or the route.
+      proof: "CL-09: `idearium note hello world --tags a` posts body \"hello world\" to /api/notes; `note done <id>` still ticks"
 
   session_inventory:
     - { said: "Tell me about nexus. Tell me about idearium. How it chunks, reduces tokens.", where: "answered, no build asked — docs/atlases/idearium-atlas.md" }

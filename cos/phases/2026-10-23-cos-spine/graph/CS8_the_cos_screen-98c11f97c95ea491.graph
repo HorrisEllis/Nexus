@@ -1,0 +1,200 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS8_the_cos_screen:98c11f97c95ea491
+type: graph
+id: phase:CS8_the_cos_screen:98c11f97c95ea491
+context: dependency graph of phase CS8_the_cos_screen
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793421631207
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793421631207
+lastSeenAt: 1793421631207
+fingerprint: null
+payload:
+  for: CS8_the_cos_screen
+  kind: phase
+  repo: null
+  hash: 98c11f97c95ea491
+  nodes:
+    - path: cos/app/controller.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/desktop/spine.html
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/app/desktop/spine.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/app/desktop/main.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-app-self-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-ui.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/app/app-update.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/settings.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/store.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/switch.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/version.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/versionium.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/app/controller.js
+      to: cos/app/store.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/settings.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/switch.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/versionium.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/app-update.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/version.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: tests/modules/test-cos-app-self-update.test.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: tests/modules/test-cos-app-ui.test.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: tests/modules/test-cos-app-update.test.js
+      to: cos/app/controller.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 11
+    deps:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+    upstream:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM6_cortex_unclumped
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D4_caps_by_the_os
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D8_raid_home
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV2_core_files_go_home
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
+    downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
+    blockedBy:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 11 · blocked by CS2_test_every_version, CS5_caps_per_compartment,
+        CS7_spawn_despawn_and_balance
+      - >-
+        depends on (3): CS2_test_every_version, CS5_caps_per_compartment,
+        CS7_spawn_despawn_and_balance · all upstream 52
+      - 'needed by (1): MG12_the_exe_is_the_compartment_manager · all downstream 3'
+    edges:
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+        kind: declared

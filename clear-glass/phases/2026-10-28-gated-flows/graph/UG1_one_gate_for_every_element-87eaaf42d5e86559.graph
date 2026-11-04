@@ -1,0 +1,114 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UG1_one_gate_for_every_element:87eaaf42d5e86559
+type: graph
+id: phase:UG1_one_gate_for_every_element:87eaaf42d5e86559
+context: dependency graph of phase UG1_one_gate_for_every_element
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793386281621
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793386281621
+lastSeenAt: 1793386281621
+fingerprint: null
+payload:
+  for: UG1_one_gate_for_every_element
+  kind: phase
+  repo: null
+  hash: 87eaaf42d5e86559
+  nodes:
+    - path: clear-glass/src/page/element-gate.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-element-gates.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-element-gates.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 11
+    deps:
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+    dependents:
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG2_every_driver_write_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG3_every_dom_write_gated
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+    downstream:
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG2_every_driver_write_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG3_every_dom_write_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG4_his_gates_per_site
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG5_gates_made_with_the_picker
+      - docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL7_pipeline_tasks_gated_on_elements
+      - docs/2026-10-29-pipelines-phasemap.spec::PL8_macro_steps_gated_on_elements
+      - docs/2026-10-29-pipelines-phasemap.spec::PL9_macros_workflows_pipelines_linked
+      - docs/2026-10-29-pipelines-phasemap.spec::PN3_the_editor_picks_from_clear_glass_and_files
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG2_every_driver_write_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG3_every_dom_write_gated
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 11
+      - 'depends on (1): GG1_every_part_gated · all upstream 17'
+      - >-
+        needed by (3): UG2_every_driver_write_gated, UG3_every_dom_write_gated, PL6_the_gate_step ·
+        all downstream 10 · finishing it unlocks UG2_every_driver_write_gated,
+        UG3_every_dom_write_gated, PL6_the_gate_step
+    edges:
+      - from: docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+        kind: declared

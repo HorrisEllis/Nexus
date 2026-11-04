@@ -121,7 +121,7 @@ spec:
 #   config.js + diagnostic.config.json   port 7825 and heartbeat from the file, DIAGNOSTIC_PORT / _HEARTBEAT_MS over it
 #   compartment.json         its COS compartment, nexus-self-diagnostic (entry server.js, health /health)
 #   event-taxonomy.js        its 13 events in ET1 shape, each a real broadcast in nexus-diagnostic.js
-#   spec/diagnostic.spec, spec/diagnostic.node-taxonomy.md, spec/healer.*
+#   spec/diagnostic.spec, spec/diagnostic.node-taxonomy.spec, spec/healer.*
 #   lib/                     its components: heal-loop.js (was nexus-heal-loop.js), wire-integrity.js, and pulse-watch.js,
 #                            diagnostic-contract.js (moved from lib/: used only by diagnostic, DB17)
 #   healer/                  the healer (api, cli), served under /healer
@@ -139,3 +139,12 @@ spec:
 # A share only rises: the high-water mark is diagnostic's own data (causality-highwater.json), a fall is named.
 # config.js: DIAGNOSTIC_DATA_DIR over the file, like the port. Measured on the tree at 0.60.145: 72 of 1,467 rows (4.9%) name
 # a cause, and none of the 72 resolves to a row in any ledger read. Proof: diagnostic/tests/causality.test.js 4/4.
+
+# ── ADDENDUM 2026-11-01 (0.60.350 CI7) — Diagnostic measures; Intelligence means ─────────────────────────────────────────────────────
+# James, 2026-11-01: "migrating looms friction and tension system to the intelligence system"
+# - GET /friction gains monitorGaps per system (the raw count tension needs). It stays Diagnostic's measurement.
+# - GET /tension (§TENSION-05) is SUPERSEDED and kept: the formula is Intelligence's now (intelligence/friction.js, GET /api/intelligence/tension),
+#   unchanged in its numbers. It stays only as Loom's fallback when Intelligence is down.
+# - Found on the way: /tension asked Cortex for open gaps without a limit (Cortex's default is 20, so only the newest 20 were counted) and
+#   required cortex/self-heal/fault-taxonomy.js directly (a crossing). Cortex now scores every open gap by its own taxonomy behind
+#   GET /api/gaps/tension, and Intelligence asks that route.

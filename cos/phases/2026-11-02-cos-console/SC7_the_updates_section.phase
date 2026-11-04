@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+type: phase
+id: docs_2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+context: pipeline phase SC7_the_updates_section of docs/2026-11-02-cos-console-phasemap.spec
+intent: null
+summary: SC7_the_updates_section (ui) — 15 file(s)
+system: idearium
+tags: []
+exported_at: 1793708289513
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793708289513
+lastSeenAt: 1793708289513
+fingerprint: null
+payload:
+  id: SC7_the_updates_section
+  map: docs/2026-11-02-cos-console-phasemap.spec
+  repo: null
+  layer: ui
+  status: >-
+    "DONE 0.60.381 — test-cos-console CC-10, CC-11 (Clear Glass); found: a page opened while the
+    shell loaded its contract never showed (the stage cleared, its frame kept) — fixed in
+    cos/ui/shell/page.js"
+  files:
+    - lib/nexus-update.js
+    - cos/manager/updates.js
+    - cos/manager/update-run.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - cos/ui/updates/index.html
+    - cos/ui/updates/page.css
+    - cos/ui/updates/page.js
+    - cos/ui/shell/index.html
+    - cos/ui/shell/console.js
+    - cos/ui/shell/page.js
+    - cos/ui/core/core.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-cos-console.test.js
+  depends_on:
+    - SC1_the_bell
+    - SC5_the_console_ui
+  blocks:
+    - MOD-MG-UI-UPDATES
+  spec: cos/spec/cos-console.spec
+  graph: d1b3dabbec430a4f

@@ -1,0 +1,173 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DK6_the_virtual_disk:d5b120fefe421ce8
+type: graph
+id: phase:DK6_the_virtual_disk:d5b120fefe421ce8
+context: dependency graph of phase DK6_the_virtual_disk
+intent: null
+summary: 19 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793708278770
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793708278770
+lastSeenAt: 1793708278770
+fingerprint: null
+payload:
+  for: DK6_the_virtual_disk
+  kind: phase
+  repo: null
+  hash: d5b120fefe421ce8
+  nodes:
+    - path: cos/compartment/qemu-runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-vdisk.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/cli/commands/vm.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/compartment/process-runner.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/installer.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/provision.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/vm-control.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/helpers/cos-mini-guest.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-vm-shell.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/disk/vdisk.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/disk/vdisk.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: tests/modules/test-cos-vdisk.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/installer.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/cli/commands/vm.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/vm-control.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/helpers/cos-mini-guest.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-vm-shell.test.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK1_pack_inspect_verify_unpack
+    dependents:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
+    upstream:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK1_pack_inspect_verify_unpack
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
+    downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
+    conflicts: []
+    dangling:
+      - DK_D3_the_disk_is_a_qcow2_virtual_disk
+    lines:
+      - layer 2
+      - 'depends on (1): DK1_pack_inspect_verify_unpack · all upstream 4'
+      - >-
+        needed by (1): DK7_snapshots_inside_the_disk · all downstream 3 · finishing it unlocks
+        DK7_snapshots_inside_the_disk
+      - 'DANGLING depends_on: DK_D3_the_disk_is_a_qcow2_virtual_disk'
+    edges:
+      - from: docs/2026-11-02-cos-disk-phasemap.spec::DK1_pack_inspect_verify_unpack
+        kind: declared

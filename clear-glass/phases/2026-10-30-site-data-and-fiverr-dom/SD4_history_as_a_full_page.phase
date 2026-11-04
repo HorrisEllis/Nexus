@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD4_history_as_a_full_page
+type: phase
+id: docs_2026-10-30-site-data-and-fiverr-dom-phasemap.spec::SD4_history_as_a_full_page
+context: >-
+  pipeline phase SD4_history_as_a_full_page of
+  docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec
+intent: null
+summary: SD4_history_as_a_full_page (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793402130902
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793402130902
+lastSeenAt: 1793402130902
+fingerprint: null
+payload:
+  id: SD4_history_as_a_full_page
+  map: docs/2026-10-30-site-data-and-fiverr-dom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/browser.js
+  depends_on:
+    - SD3_cookies_and_logins
+  blocks:
+    - MOD-SD-HISTORY
+  spec: clear-glass/spec/site-data.spec
+  graph: 25d362c8ab254ae3

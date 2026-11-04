@@ -17,6 +17,8 @@
  *                              data-cg-part=<kind>.question / <kind>.answer → { found, why }
  *   valueAtScript({ selector | cgId, key })  what a box shows now, marked data-cg-part=<key> → { found, value }   (GG1, a part's gate)
  *   shownScript(text)          the page shows this text (an FAQ or a question once added) → boolean
+ *   metaTabsScript()           Gig metadata's tabs, marked data-cg-meta-tab=<i> → { found, tabs: [{ name, required, open }] }   (GT6)
+ *   metaPanelScript()          the open tab's choices, marked data-cg-meta-opt=<j> → { found, kind, options, limit, count, counter } (GT6)
  * Fiverr's other editor pages are not on record (gig-pages.js); the words matched here are the editor's own labels, a reading to confirm on
  * his machine. What does not match falls to his site keys (bridge _gigSiteKey), then to "point at it".
  */
@@ -144,4 +146,161 @@ function readsBack(shown, value) {
   return n(shown).includes(v.slice(0, 60));
 }
 
-module.exports = { MODULE_ID, VERSION, HIS_BUTTONS, SECTIONS, fieldScript, readScript, clickButtonScript, listBoxesScript, valueAtScript, shownScript, categoryChosenScript, readsBack };
+// 2026-10-30 GT6 — James: "then the bullets for each tab for each catagory." Fiverr's Gig metadata is a list of tabs (PROGRAMMING LANGUAGE*,
+// FRONTEND FRAMEWORK …) beside a panel of choices for the open tab: radio buttons (one) or checkboxes (up to a limit, a counter "3 / 5").
+// Both are found under the words "Gig metadata", never by a class name; the tab list is the visible text in the section that is not a
+// choice's label. Read only, except the marks for the driver: data-cg-meta-tab=<i> on each tab, data-cg-meta-opt=<j> on each choice.
+const META_PRELUDE = `var re = /gig metadata/i;
+  function vis(el){ if (!el) return false; var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+  function txt(el){ return String(el.innerText || el.textContent || '').replace(/\\s+/g, ' ').trim(); }
+  function name(t){ return String(t || '').replace(/\\*/g, '').replace(/\\s+/g, ' ').trim(); }
+  var head = Array.prototype.find.call(document.querySelectorAll('h1,h2,h3,h4,h5,h6,label,legend,p,span,div,strong,b'), function(e){ return vis(e) && !e.children.length && re.test(txt(e)); });
+  var root = null;
+  for (var p = head && head.parentElement, i = 0; p && i < 6; p = p.parentElement, i++) if (p.querySelector('input[type="checkbox"],input[type="radio"],[role="checkbox"],[role="radio"],select,[role="combobox"],[aria-haspopup="listbox"]')) { root = p; break; }
+  function boxes(){ return Array.prototype.filter.call(root.querySelectorAll('input[type="checkbox"],input[type="radio"],[role="checkbox"],[role="radio"]'), function(b){ return vis(b) || vis(b.closest('label') || b.parentElement); }); }
+  function labelOf(b){ return b.closest('label') || (b.id && document.querySelector('label[for="' + b.id + '"]')) || b.parentElement; }
+  function isOn(b){ return b.tagName === 'INPUT' ? !!b.checked : b.getAttribute('aria-checked') === 'true'; }`;
+
+// metaTabsScript() → { found, tabs: [{ name, required, open }], why } — each tab marked data-cg-meta-tab=<i>
+function metaTabsScript() {
+  return `(function(){ ${META_PRELUDE}
+  if (!head) return { found: false, why: 'no "Gig metadata" section on the page' };
+  if (!root) return { found: false, why: 'a "Gig metadata" heading with no choices under it' };
+  document.querySelectorAll('[data-cg-meta-tab]').forEach(function(e){ e.removeAttribute('data-cg-meta-tab'); });
+  var inChoice = function(el){ return boxes().some(function(b){ var l = labelOf(b); return l && (l === el || l.contains(el) || el.contains(b)); }); };
+  var seen = {}, tabs = [];
+  Array.prototype.forEach.call(root.querySelectorAll('li,button,[role="tab"],a,div,span,p'), function(el){
+    if (!vis(el) || el === head || el.contains(head) || inChoice(el)) return;
+    var t = txt(el); if (!t || t.length > 60 || re.test(t) || /\\d+\\s*\\/\\s*\\d+/.test(t) || /select up to|choose up to/i.test(t) || /^(choose|select)\\b/i.test(t)) return;   // GT6b: a dropdown's "CHOOSE ..." is not a tab
+    if (Array.prototype.some.call(el.children, function(c){ return vis(c) && txt(c) === t; })) return;   // the innermost element with this text
+    if (Array.prototype.some.call(el.querySelectorAll('*'), function(c){ return vis(c) && txt(c) && txt(c) !== t && c.children.length === 0; })) return;   // one label, not a group
+    var n = name(t); if (!n || seen[n.toLowerCase()]) return;
+    // a tab name is a short label: in capitals, sitting in a list/tablist, OR Title Case like Fiverr's real metadata tabs (2026-10-31, his
+    // Edit Gig page: "Programming language", "Expertise", "Frontend framework", "Backend framework", "AI & low/no code builders"). Prose is
+    // not a tab — it ends in sentence punctuation or runs long ("Make your Gig easy to find.", "Select up to five areas you are an expert in").
+    var inList = !!el.closest('[role="tablist"],ul,ol,nav,[role="tab"]');
+    if (!(t === t.toUpperCase() || inList || (n.length <= 40 && !/[.!?:]$/.test(t)))) return;
+    seen[n.toLowerCase()] = 1;
+    var open = el.getAttribute('aria-selected') === 'true' || /(^|[\\s_-])(active|selected|current)([\\s_-]|$)/i.test(String(el.className || '')) || /(^|[\\s_-])(active|selected|current)([\\s_-]|$)/i.test(String((el.parentElement || {}).className || ''));
+    el.setAttribute('data-cg-meta-tab', String(tabs.length)); tabs.push({ name: n, required: /\\*/.test(t), open: open });
+  });
+  return { found: true, tabs: tabs };
+})()`;
+}
+
+// metaPanelScript() → { found, kind: 'radio'|'checkbox', options: [{ label, checked }], limit, count, counter } — each choice's label marked
+// data-cg-meta-opt=<j>. limit: the counter's "/ N", else "up to N" in the section, else 1 for radio buttons, else null (none said).
+function metaPanelScript() {
+  return `(function(){ ${META_PRELUDE}
+  if (!root) return { found: false, why: head ? 'a "Gig metadata" heading with no choices under it' : 'no "Gig metadata" section on the page' };
+  document.querySelectorAll('[data-cg-meta-opt]').forEach(function(e){ e.removeAttribute('data-cg-meta-opt'); });
+  var bs = boxes(), radio = bs.length && bs.every(function(b){ return b.type === 'radio' || b.getAttribute('role') === 'radio'; });
+  var options = bs.map(function(b, j){ var l = labelOf(b); var t = name(txt(l) || b.value || b.getAttribute('aria-label') || ''); (vis(l) ? l : b).setAttribute('data-cg-meta-opt', String(j)); return { label: t, checked: isOn(b) }; });
+  var all = txt(root), c = /(\\d+)\\s*\\/\\s*(\\d+)/.exec(all), u = /(?:select|choose) up to (\\d+)/i.exec(all);
+  var limit = c ? Number(c[2]) : u ? Number(u[1]) : radio ? 1 : null;
+  // 2026-11-01 GT6b — a tab whose choices are a dropdown (Fiverr's AI ENGINE: "CHOOSE ..." beside an "Other" radio). Found by what it is
+  // (a <select>, a combobox) or by what it shows (CHOOSE / SELECT …), never by a class; marked data-cg-meta-dd for the driver's choose.
+  document.querySelectorAll('[data-cg-meta-dd]').forEach(function(e){ e.removeAttribute('data-cg-meta-dd'); });
+  var notTab = function(el){ return !el.closest('[data-cg-meta-tab]') && !el.querySelector('[data-cg-meta-tab]') && !bs.some(function(b){ var l = labelOf(b); return l && (l.contains(el) || el.contains(b)); }); };
+  var dd = Array.prototype.find.call(root.querySelectorAll('select,[role="combobox"],[aria-haspopup="listbox"],[aria-haspopup="true"]'), function(e){ return vis(e) && notTab(e); }) || null;
+  if (!dd) dd = Array.prototype.find.call(root.querySelectorAll('button,div,span,p'), function(e){ var t = txt(e); return vis(e) && notTab(e) && t.length < 40 && /^(choose|select)\\b/i.test(t) && !Array.prototype.some.call(e.children, function(c){ return vis(c) && txt(c) === t; }); }) || null;
+  if (dd) dd.setAttribute('data-cg-meta-dd', '1');
+  // what the panel shows, without an open dropdown's own list (data-cg-meta-ddopt): a pick is read back from the chips, never from the list
+  function shownText(){ return Array.prototype.filter.call(root.querySelectorAll('*'), function(e){ return vis(e) && !Array.prototype.some.call(e.children, vis) && !e.closest('[data-cg-meta-ddopt]'); }).map(txt).join(' '); }
+  var dropdown = dd ? { native: dd.tagName === 'SELECT', shown: dd.tagName === 'SELECT' ? txt(dd.options[dd.selectedIndex] || {}) : txt(dd) } : null;
+  return { found: true, kind: bs.length ? (radio ? 'radio' : 'checkbox') : dd ? 'dropdown' : 'none', options: options, dropdown: dropdown, text: shownText(), limit: limit, count: options.filter(function(o){ return o.checked; }).length, counter: c ? c[0].replace(/\\s+/g, ' ') : null };
+})()`;
+}
+
+// 2026-11-01 GT6b — a multi-choice dropdown in a metadata tab (Fiverr's AI ENGINE: each pick becomes a chip, the box keeps "CHOOSE ...").
+// leavesScript() → the visible texts on the page now, before the dropdown is opened. ddOptionsScript(before) → after it is opened: the
+// texts that appeared (the dropdown's own list), each marked data-cg-meta-ddopt=<k>. Found by what is shown, never by a class.
+const LEAVES = `function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+  function txt(el){ return String(el.innerText || el.textContent || '').replace(/\\s+/g, ' ').trim(); }
+  function leaves(){ return Array.prototype.filter.call(document.querySelectorAll('body *'), function(e){ var t; return vis(e) && !Array.prototype.some.call(e.children, vis) && (t = txt(e)) && t.length < 80; }); }`;
+function leavesScript() { return `(function(){ ${LEAVES} return leaves().map(txt); })()`; }
+function ddOptionsScript(before) {
+  return `(function(before){ ${LEAVES}
+  document.querySelectorAll('[data-cg-meta-ddopt]').forEach(function(e){ e.removeAttribute('data-cg-meta-ddopt'); });
+  var seen = {}; (before || []).forEach(function(t){ seen[t] = 1; });
+  var out = []; leaves().forEach(function(e){ var t = txt(e); if (seen[t]) return; seen[t] = 1; e.setAttribute('data-cg-meta-ddopt', String(out.length)); out.push(t); });
+  return { options: out };
+})(${JSON.stringify(before || [])})`;
+}
+
+
+// Merged 2026-11-02: main's GT6b (a dropdown inside a metadata tab's panel) and sleepy-gates' FP6 (Gig metadata as a table of dropdown
+// rows) are two page layouts; ipc/bridge.js tries FP6's rows first and falls through to GT6b's tab path. Both kept (§0.3).
+// 2026-11-01 FP6 — James: "do it, I need it fiverr ready, take screenshots if you have to … I need this working for a fact." His live AI
+// Development page: Gig metadata is a table where AI ENGINE is a multi-select DROPDOWN ("Choose…"), not the radio/checkbox panels metaPanelScript
+// reads. metaDropdownScript() finds, within the "Gig metadata" section, the field rows whose control is a dropdown (a <select>, a combobox /
+// aria-haspopup, or a "Choose…"/"Select…" trigger), names each by its row label, and marks each trigger data-cg-meta-dd=<i> and the section
+// data-cg-meta-root. Read only, but for those marks. → { found, fields: [{ name, idx, native, shown }], why }
+function metaDropdownScript() {
+  return `(function(){
+  function vis(el){ if (!el) return false; var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
+  function txt(el){ return String((el && (el.innerText || el.textContent)) || '').replace(/\\s+/g, ' ').trim(); }
+  function name(t){ return String(t || '').replace(/\\*/g, '').replace(/\\s+/g, ' ').trim(); }
+  var re = /gig metadata/i;
+  var head = Array.prototype.find.call(document.querySelectorAll('h1,h2,h3,h4,h5,h6,label,legend,p,span,div,strong,b'), function(e){ return vis(e) && !e.children.length && re.test(txt(e)); });
+  if (!head) return { found: false, why: 'no "Gig metadata" section on the page' };
+  function isDD(el){
+    if (el.tagName === 'SELECT') return true;
+    var role = el.getAttribute('role'); if (role === 'combobox' || role === 'listbox') return true;
+    if (el.hasAttribute('aria-haspopup')) return true;
+    if ((!el.children.length || el.querySelector('select'))) { var t = txt(el); if (/^(choose|select)\\b/i.test(t) && t.length <= 40) return true; }
+    return false;
+  }
+  var sel = 'select,[role="combobox"],[role="listbox"],[aria-haspopup],button,div,span';
+  var secEl = null;
+  for (var p = head.parentElement, i = 0; p && i < 8; p = p.parentElement, i++) {
+    if (Array.prototype.some.call(p.querySelectorAll(sel), function(e){ return vis(e) && isDD(e); })) { secEl = p; break; }
+  }
+  if (!secEl) return { found: true, fields: [], why: 'no dropdown control in the Gig metadata section' };
+  document.querySelectorAll('[data-cg-meta-dd]').forEach(function(e){ e.removeAttribute('data-cg-meta-dd'); });
+  document.querySelectorAll('[data-cg-meta-root]').forEach(function(e){ e.removeAttribute('data-cg-meta-root'); });
+  secEl.setAttribute('data-cg-meta-root', '1');
+  var cands = Array.prototype.filter.call(secEl.querySelectorAll(sel), function(e){ return vis(e) && isDD(e); });
+  // the outermost control (a widget wrapper, not its inner <select> or caret), each counted once
+  var picked = [];
+  cands.forEach(function(el){ if (picked.some(function(o){ return o.contains(el) || el.contains(o); })) return; picked.push(el); });
+  function labelFor(el){
+    var shown = txt(el);
+    for (var a = el.parentElement, k = 0; a && k < 6; a = a.parentElement, k++) {
+      var leaf = Array.prototype.find.call(a.querySelectorAll('label,legend,span,div,p,strong,b,th,td'), function(c){
+        if (!vis(c) || c.children.length || el.contains(c) || c.contains(el)) return false;
+        // never the dropdown's own innards: an option on offer, a chosen chip, or anything inside an open menu/listbox is not the field's name
+        if (c.matches('[role="option"]') || c.closest('[role="listbox"],[role="menu"],[class*="menu" i],[class*="dropdown" i],[class*="chip" i],[class*="tag" i]')) return false;
+        var t = txt(c); if (!t || t.length > 40) return false;
+        if (t === shown || /^(choose|select)\\b/i.test(t)) return false;
+        if (/\\d+\\s*\\/\\s*\\d+/.test(t) || /select up to|choose up to/i.test(t) || re.test(t)) return false;
+        return true;
+      });
+      if (leaf) return name(txt(leaf));
+    }
+    return '';
+  }
+  var fields = [];
+  picked.forEach(function(el, idx){ el.setAttribute('data-cg-meta-dd', String(idx)); var nm = labelFor(el); if (nm) fields.push({ name: nm, idx: idx, native: el.tagName === 'SELECT' || !!el.querySelector('select'), shown: txt(el).slice(0, 80) }); });
+  return { found: true, fields: fields };
+})()`;
+}
+
+// metaChosenScript(idx, value) — the honest read-back for a metadata dropdown: is `value` a CHOSEN value of the field marked data-cg-meta-dd=<idx>?
+// A selected option / checked input bearing it, OR a chip/tag with its text within the field's row but NOT inside the open menu (whose option list
+// is full of the wanted words — those are choices on offer, not choices made). → boolean. Used as choose's confirmScript and for the final read.
+function metaChosenScript(idx, value) {
+  return `(function(){
+  function norm(s){ return String(s == null ? '' : s).normalize('NFKD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim(); }
+  var want = norm(${JSON.stringify(String(value))}); if (!want) return false;
+  var trig = document.querySelector('[data-cg-meta-dd="${Number(idx)}"]'); if (!trig) return false;
+  var scope = trig.closest('tr,fieldset,[class*="row" i],li') || (trig.parentElement && trig.parentElement.parentElement) || trig.parentElement || trig;
+  function has(t){ t = norm(t); return t === want || (' ' + t + ' ').indexOf(' ' + want + ' ') >= 0; }
+  function inMenu(el){ return !!el.closest('[role="listbox"],[role="menu"],[class*="menu" i],[class*="dropdown" i],[class*="option" i]'); }
+  var sel = Array.prototype.some.call(scope.querySelectorAll('[role="option"][aria-selected="true"],[aria-checked="true"],option,input:checked'), function(e){ return (e.tagName !== 'OPTION' || e.selected) && has(e.textContent || e.value || e.getAttribute('aria-label') || ''); });
+  if (sel) return true;
+  return Array.prototype.some.call(scope.querySelectorAll('span,div,li,button,a'), function(e){ if (e.children.length > 2) return false; if (e.matches('[role="option"]') || inMenu(e)) return false; return norm(e.textContent) === want; });
+})()`;
+}
+
+module.exports = { MODULE_ID, VERSION, HIS_BUTTONS, SECTIONS, fieldScript, readScript, clickButtonScript, listBoxesScript, valueAtScript, shownScript, categoryChosenScript, readsBack, metaTabsScript, metaPanelScript, leavesScript, ddOptionsScript, metaDropdownScript, metaChosenScript };

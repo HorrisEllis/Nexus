@@ -15,7 +15,7 @@ origin:
     sandbox for Nexus (that is the compartment system, different), and not read as auto-running whatever Clear Glass downloads without his say.
   already_mapped_not_built:
     - "cos/spec/cos.spec section GAP 2026-08-14: the '.cos' portable archive (a tar.gz of a compartment's file contents with the snapshot chain and spec). Mapped, not built. It is a compartment's source artifact, not an app updater."
-    - "cos/spec/cos.spec and cos-design-v1.7.0.md: an 'exe' runtime archetype (Windows native EXE runtime, section 46): runs an exe INSIDE a compartment. Not an exe that IS COS."
+    - "cos/spec/cos.spec and cos-design-v1.7.0.spec: an 'exe' runtime archetype (Windows native EXE runtime, section 46): runs an exe INSIDE a compartment. Not an exe that IS COS."
     - "docs/2026-10-05-cos-machines-phasemap.spec: downloads and verifies OS images; offered, never forced onto running compartments. Its update rule is reused here."
     - "So 'its phased already' is true for the pieces (archive, exe runtime, verified downloads) and not for COS as an application."
   reuse:
@@ -224,6 +224,8 @@ addendum_e:
       depends_on: [COSA9_idearium_sync, COSA13_auto_update]
       does: "Every install, switch, rollback and remove is written to Versionium through Idearium (the one write door, RAID is the only write authority), with checksum, outcome, reason and the data-snapshot reference; queued and replayed when Idearium is down. COS's version list can be shown from the record (Nexus's own history in Idearium's repo view), and `repo diff` between two Nexus releases works from it."
       proof: "a switch while Idearium is down is recorded once, in order, after it returns; the record and COS's store agree (a test compares them); Idearium shows the switch and any rollback with its reason."
+    # COSA15 (2026-11-01, his "need the exe for cos. its how were going to start nexus from now on") is built as MG35_the_exe_starts_nexus in
+    # docs/2026-10-24-cos-manager-phasemap.spec, where cos/spec/cos-manager.spec (which specs cos/app) keeps its phases.
   failure_modes:
     - "Auto-switch during a running job: idle check plus the normal snapshot and rollback."
     - "Record and store disagree (record says v2 running, store says v1): the test compares them and COS's store wins, the difference is reported, never silently fixed."
@@ -320,3 +322,23 @@ an update should land (git clone, through COS, or zip side by side), he said: "f
 #   install, remove, switch and rollback, with its own outbox in COS's store, because the exe ships without lib. It is replayed at start
 #   and every minute. It goes direct to Versionium's contract, not through Idearium as first mapped: the one owner is Versionium (§5.15),
 #   and Idearium need not be running. Proof: test-versionium-everywhere VE-06.
+
+# ── ADDENDUM 2026-10-30 — one exe runs Nexus, replacing PowerShell; his update-system read (his) ─────────────────────────────────────
+# James, 2026-10-30, sending update-system.zip: "it will be what runs nexus. replacing powershell. / just one exe. then we can drag and drop
+# new systems onto it, or use idearium to have one built from the pipeline, or copilot. copoilot it an etry point. / then we can have an
+# updater using github. or this?"
+# What exists for it (read 2026-10-30): the exe (COSA6), a release zip dropped on it is imported (COSA1, the drop overlay in desktop/ui),
+# switch and rollback (COSA4), the update policy off/ask/auto, GitHub as the release source (COSA0c, cos/app/app-update.js checks
+# cos-v<x.y.z>), and COS's one recorder (cos/app/versionium.js). With docs/2026-10-24-cos-manager-phasemap.spec MG_D4 (COS is the one
+# supervisor) the exe is what runs Nexus, and lib/nexus/autopilot.js stops being the entry PowerShell starts.
+# His update-system (10 files, 876 lines: UpdateService, UpdateClient, HandshakeRegistry, EventContract, ContractTransport, WebRTCTransport,
+# a drop zone): server-push revisions over WebRTC data channels, checksum, staleness, rollback as a publish, heartbeat catch-up, a
+# location per handshake that can be revoked, and dedup. Probed by the coder with in-memory transports, two defects:
+#   (1) dedup keys on the payload's hash, so a second identical event on one location is dropped (two {} pings: 1 received; a repeated
+#       request() would time out);
+#   (2) a client that acks rejected-stale or failed makes the server force a full resend at once, with no backoff: 28,773 pushes in
+#       300 ms to a client already on the latest revision.
+# The coder's reading, TO CONFIRM: GitHub stays the source of releases for the exe (built); his update-system is the push channel between
+# machines (Bridge, :9999, which already has the signaling it needs), for pushing a revision to another device or a remote compartment,
+# once (1) keys dedup on requestId and (2) retries with the growing delay of the dependency gate (architecture-spec 0.13.0 RULE D).
+# Its envelope (location + requestId + hash) is the same shape as the handshake §5.11 asks for; it should be the one envelope, not a second.

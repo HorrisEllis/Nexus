@@ -9,18 +9,18 @@ intent: null
 summary: AE4_repoint_the_registry (library) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792962436834
+exported_at: 1793442585148
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792962436834
-lastSeenAt: 1792962436834
+firstSeenAt: 1793442585148
+lastSeenAt: 1793442585148
 fingerprint: null
 payload:
   id: AE4_repoint_the_registry
   map: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
   repo: null
   layer: library
-  status: OPEN
+  status: BUILT 0.60.333
   files:
     - lib/automation-registry.js
     - tests/modules/test-automation-registry.test.js
@@ -29,4 +29,4 @@ payload:
     - AE3_the_engine_door
   blocks: []
   spec: docs/brainos-in-idearium.spec
-  graph: 139a7c4e2a7971c9
+  graph: 12b92196a075064e
