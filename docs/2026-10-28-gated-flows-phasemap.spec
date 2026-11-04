@@ -451,6 +451,18 @@ phases_ei:
     status: BUILT 0.60.294
     depends_on: [GF2_every_editor_page_known, GG1_every_part_gated]
     files: [clear-glass/src/ipc/bridge.js, tests/modules/test-fiverr-overview-and-a11y.test.js]
+  GF6_the_element_says_the_gig_or_it_stops:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GF6]
+    status: BUILT 0.60.388 (built as 0.60.298 on a branch; renumbered on merge, main had taken 0.60.298)
+    depends_on: [GF5_category_and_subcategory_finished, PL7_pipeline_tasks_gated_on_elements]
+    files: [clear-glass/src/ipc/bridge.js, clear-glass/src/autofill/gig-fields.js, clear-glass/src/autofill/gig.js, clear-glass/src/autofill/gig-pages.js, clear-glass/docs/gigs/spec-and-architect-any-size.gig, clear-glass/src/driver/index.js, clear-glass/src/page/element-gate.js, clear-glass/src/copilot/verbs.js, clear-glass/src/main/index.js, lib/automation/pipeline.js, lib/automation/routes.js, clear-glass/automation/nodes/fiverr-gig-choose-category.macro, clear-glass/automation/nodes/fiverr-gig.pipeline, scripts/build-fiverr-pipeline.js, tests/modules/test-gig-stop-and-toast.test.js]
+  MR1_a_macro_run_says_its_step_and_can_be_paused:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-MR1]
+    status: "SUPERSEDED 2026-11-04 by MB4 (0.60.359) and MT1 (0.60.335) on main — built on a branch that had not seen them; archived in _archive/2026-11-04-mr1-duplicate-of-mb4"
+    depends_on: [GF6_the_element_says_the_gig_or_it_stops]
+    files: [_archive/2026-11-04-mr1-duplicate-of-mb4/macro-run-toast.js]
   EI1_every_key_and_click_paced_through_eros:
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-EI1]

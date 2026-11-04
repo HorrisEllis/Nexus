@@ -66,7 +66,8 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
 
   await test('AN-03', 'the gig fill picks delivery with his node macro (imported once, run as him); the built-in pick only when it cannot', async () => {
     const Bridge = require(CG('src/ipc/bridge.js'));
-    const gig = { title: 'I will build it', tags: [], description: 'd', faq: [], requirements: [], packages: { basic: { name: 'Starter', description: 'one', price: 30, deliveryDays: 3 }, standard: { name: 'Plus', description: 'two', price: 60, deliveryDays: 5 } } };
+    // 2026-10-30 GF6: a part the page does not have stops the fill, so this gig carries only what the stand-in page has before delivery (no names, no descriptions)
+    const gig = { title: 'I will build it', tags: [], description: 'd', faq: [], requirements: [], packages: { basic: { price: 30, deliveryDays: 3 }, standard: { price: 60, deliveryDays: 5 } } };
     const run = async (macroFails) => {
       const store = [], runs = [], calls = [];
       const self = { dom: { handleQuery: async () => [], handleMutate: async () => ({}) }, postEvent: () => {}, _humanCheckGate: async () => ({ pass: true }), _gigFeatures: Bridge.prototype._gigFeatures, _gigTags: Bridge.prototype._gigTags,

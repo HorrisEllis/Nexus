@@ -1,0 +1,32 @@
+/* renderer/macro-run-toast.css — a running macro's step and controls; a recording's indicator (MR1, 2026-11-04). Scoped to .mrt. */
+.mrt { position: fixed; left: 18px; bottom: 18px; z-index: 99998; display: flex; flex-direction: column; gap: 8px; width: 320px; max-width: calc(100vw - 36px); font: 12px var(--sans, system-ui); pointer-events: none; }
+.mrt .mrt-card { pointer-events: auto; background: var(--surface, #12161c); border: 1px solid var(--edge, #2a313b); border-radius: var(--r-m, 8px); padding: 10px 12px; color: var(--ink, #d6dde6); box-shadow: 0 8px 24px rgba(0, 0, 0, .35); transition: opacity .3s, transform .3s; }
+.mrt .mrt-card.out { opacity: 0; transform: translateY(6px); }
+.mrt .mrt-card[data-state="paused"], .mrt .mrt-card[data-state="pausing"] { border-color: color-mix(in srgb, var(--amber, #e3b341) 55%, transparent); }
+.mrt .mrt-card[data-state="failed"], .mrt .mrt-card[data-state="stopped"] { border-color: color-mix(in srgb, var(--bad, #ff6b6b) 60%, transparent); }
+.mrt .mrt-card[data-state="done"] { border-color: color-mix(in srgb, var(--ok, #3fb950) 55%, transparent); }
+.mrt .mrt-head { display: flex; align-items: center; gap: 8px; }
+.mrt .mrt-icon { width: 16px; text-align: center; color: var(--cyan, #39c5cf); }
+.mrt .mrt-card[data-state="failed"] .mrt-icon, .mrt .mrt-card[data-state="stopped"] .mrt-icon { color: var(--bad, #ff6b6b); }
+.mrt .mrt-card[data-state="done"] .mrt-icon { color: var(--ok, #3fb950); }
+.mrt .mrt-name { flex: 1; min-width: 0; font-weight: 600; color: var(--ink-hi, #eef2f6); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mrt .mrt-chip { font-size: 10.5px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--edge, #2a313b); color: var(--ink-dim, #8b96a5); white-space: nowrap; }
+.mrt .mrt-close { border: 0; background: none; color: var(--ink-dim, #8b96a5); cursor: pointer; font-size: 14px; padding: 0 2px; }
+.mrt .mrt-step { margin-top: 6px; color: var(--ink-hi, #eef2f6); font-variant-numeric: tabular-nums; }
+.mrt .mrt-what { margin-top: 2px; color: var(--ink-dim, #8b96a5); font: 11px var(--mono, ui-monospace, monospace); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mrt .mrt-what:empty { display: none; }
+.mrt .mrt-bar { margin-top: 8px; height: 3px; border-radius: 2px; background: var(--edge, #2a313b); overflow: hidden; }
+.mrt .mrt-fill { height: 100%; width: 0; background: var(--cyan, #39c5cf); transition: width .25s; }
+.mrt .mrt-card[data-state="done"] .mrt-fill { background: var(--ok, #3fb950); }
+.mrt .mrt-ctl { display: flex; gap: 6px; margin-top: 8px; }
+.mrt .mrt-ctl[hidden] { display: none; }
+.mrt .mrt-btn { flex: 1; border: 1px solid var(--edge, #2a313b); background: var(--void, #0d1117); color: var(--ink-hi, #eef2f6); border-radius: var(--r-s, 6px); padding: 4px 0; cursor: pointer; font-size: 13px; }
+.mrt .mrt-btn:hover { border-color: var(--cyan, #39c5cf); }
+.mrt .mrt-btn:focus-visible { outline: 2px solid var(--cyan, #39c5cf); outline-offset: 1px; }
+.mrt .mrt-err { margin-top: 6px; color: var(--bad, #ff6b6b); line-height: 1.4; overflow-wrap: anywhere; }
+.mrt .mrt-err[hidden] { display: none; }
+.mrt .mrt-rec { border-color: color-mix(in srgb, var(--bad, #ff4466) 60%, transparent); }
+.mrt .mrt-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff4466; box-shadow: 0 0 0 0 rgba(255, 68, 102, .6); animation: mrt-pulse 1.4s infinite; }
+.mrt .mrt-rec .mrt-chip { color: #ff4466; border-color: color-mix(in srgb, #ff4466 45%, transparent); }
+@keyframes mrt-pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 68, 102, .6); } 70% { box-shadow: 0 0 0 8px rgba(255, 68, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 68, 102, 0); } }
+@media (prefers-reduced-motion: reduce) { .mrt .mrt-dot { animation: none; } .mrt .mrt-card, .mrt .mrt-fill { transition: none; } }

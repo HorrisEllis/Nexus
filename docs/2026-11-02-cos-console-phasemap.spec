@@ -200,3 +200,41 @@ phases_addendum_2026_11_03_sc8:
       as compartment.spec and nexus-update.spec): this map holds another system's phase (SC6, Intelligence's), and tying them waits for the
       phase cleanup he called for.
     proof: "test-substrate-spec SS-01..03 green with both specs listed"
+
+# ── ADDENDUM 2026-11-04 — the zip dropzone updater and his zip history, in the Updates section; the console through RAID is PL_D15 ─────────
+# James, 2026-11-04: "okay. cos.exe build. complete build. with the manual zip dropzone updator as a backup/offline update tool. also a drop
+# down for my 800 zips for nexus to be tracked and versioned, and diff tracked. there is a tool for this. also cli in cos ui doesn't work. bridge
+# not connected. i feed it should route through raid"
+# Grounded 2026-11-04 against main 0.60.387 (the coder):
+#   - SC7 updates from GitHub only (lib/nexus-update.js). A release zip can be dropped on the old desktop COS (COSA1/COSA6), not on this UI.
+#   - "there is a tool for this": lib/cli/import-history.js (N27, BUILT 0.39.282) puts a folder of release zips into git, one snapshot commit
+#     per zip on history/snapshots with Zip-Name / Zip-Sha256 / Nexus-Version trailers, resumable; lib/history-import-job.js runs it as a job.
+#     Nothing in COS shows it.
+#   - "route through raid" is mapped already: PL_D15 (docs/2026-11-03-registry-per-system-phasemap.spec), with his open question there —
+#     acts only through RAID, or reads too. Not mapped twice; it waits on his answer.
+#   - "bridge not connected": the words are not in cos/, cos/ui or cos/manager/cli.js; where he sees them is asked (§0.1).
+phases_addendum_2026_11_04:
+  SC9_the_zip_dropzone_updater:
+    layer: ui
+    status: OPEN
+    depends_on: [SC7_the_updates_section, COSA1_version_store_and_import]
+    spec: cos/spec/cos-console.spec
+    files: [cos/manager/updates.js, cos/manager/server.js, cos/ui/updates/page.js, cos/ui/updates/index.html]
+    origin: '"with the manual zip dropzone updator as a backup/offline update tool" (James, 2026-11-04)'
+    does: >-
+      The offline way, in Updates: drop a Nexus release zip (or pick one) → checked like SC7's download (its version, newer or not, its files
+      whole, its checksum) → applied through the same apply and rollback as SC7, recorded in Versionium (§17.12). Nothing is downloaded.
+    proof: "a fixture zip: refused when broken or not newer, said why; applied, rolled back, in the history"
+  SC10_the_zip_history:
+    layer: ui
+    status: OPEN
+    depends_on: [SC7_the_updates_section, N27_history_import_from_700_zips]
+    spec: cos/spec/cos-console.spec
+    files: [cos/manager/history.js, cos/manager/server.js, cos/ui/updates/page.js]
+    origin: '"also a drop down for my 800 zips for nexus to be tracked and versioned, and diff tracked. there is a tool for this" (James, 2026-11-04)'
+    does: >-
+      In Updates, a dropdown of every imported zip (history/snapshots, read through git): version, zip name, date, sha; picking one shows its
+      diff against the one before (files changed, added, removed; a file's lines on a click). "Import a folder of zips" runs import-history as
+      a job with its progress; a rerun adds nothing. Each import recorded in Versionium.
+    proof: "a fixture folder of three zips: imported once, listed in order, a diff between two shown; in Clear Glass"
+build_order_addendum_2026_11_04: "SC9 → SC10; the console through RAID when PL_D15's question is answered"

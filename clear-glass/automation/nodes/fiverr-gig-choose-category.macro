@@ -6,9 +6,12 @@ context: Clear Glass → Settings → Macros
 intent: >-
   Overview of a new gig: open SELECT A CATEGORY and pick {{category}} (e.g. "Programming & Tech"), then
   open SELECT A SUBCATEGORY and pick {{subcategory}} (e.g. "AI Development"). Each pick is gated: the
-  page must show the value after it, else the pick runs again (2 retries). What _gigFill does for the
+  dropdown itself must show the value after it (an element outside the Suggested categories links,
+  2026-10-30 GF6), else the pick runs again (2 retries). What _gigFill does for the
   category part when the page offers no suggested category. Edit `pick` (auto, pointer, keys, number)
   or add `keysFor` to bind keys to each value.
+supersedes:
+  - bf337cf8bb667995
 summary: 3 browser steps for fiverr.com, each pick gated on the value shown; asks for category, subcategory
 system: clear-glass.automation
 tags:
@@ -17,7 +20,7 @@ tags:
   - step:choose
   - gated
 source: clear-glass/src/automation/nodes.js
-fingerprint: bf337cf8bb667995
+fingerprint: 36d014b408d1f3be
 payload:
   uuid: fiverr-gig-choose-category-v1
   name: Fiverr gig - choose category
@@ -32,7 +35,8 @@ payload:
         option: '{{category}}'
         pick: auto
       gate:
-        text: '{{category}}'
+        xpath: '//*[not(ancestor-or-self::a)][not(ancestor-or-self::*[@role=''option'' or @role=''listbox'' or @role=''menu'' or @id=''__cg_spot__''])][translate(normalize-space(text()),''ABCDEFGHIJKLMNOPQRSTUVWXYZ'',''abcdefghijklmnopqrstuvwxyz'')=translate(''{{category}}'',''ABCDEFGHIJKLMNOPQRSTUVWXYZ'',''abcdefghijklmnopqrstuvwxyz'')]'
+        visible: true
         retries: 2
         timeoutMs: 4000
     - action: choose
@@ -41,7 +45,8 @@ payload:
         option: '{{subcategory}}'
         pick: auto
       gate:
-        text: '{{subcategory}}'
+        xpath: '//*[not(ancestor-or-self::a)][not(ancestor-or-self::*[@role=''option'' or @role=''listbox'' or @role=''menu'' or @id=''__cg_spot__''])][translate(normalize-space(text()),''ABCDEFGHIJKLMNOPQRSTUVWXYZ'',''abcdefghijklmnopqrstuvwxyz'')=translate(''{{subcategory}}'',''ABCDEFGHIJKLMNOPQRSTUVWXYZ'',''abcdefghijklmnopqrstuvwxyz'')]'
+        visible: true
         retries: 2
         timeoutMs: 4000
   params:
@@ -50,6 +55,6 @@ payload:
   profile: null
   description: >-
     Overview of a new gig: pick {{category}} in SELECT A CATEGORY, then {{subcategory}} in SELECT A
-    SUBCATEGORY, each gated on the value the page shows.
+    SUBCATEGORY, each gated on the dropdown itself showing the value (GF6).
   runCount: 0
   lastRunAt: null

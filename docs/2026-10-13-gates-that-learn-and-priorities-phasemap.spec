@@ -656,3 +656,12 @@ phasemap:
 # - Proof: tests/modules/test-prevention.test.js 8/8 (PV-00..07). The record lives in data/prevention.json, never
 #   committed. Tests write it to the sandbox (NEXUS_PREVENTION_DIR).
 # - Not yet proven on his PC: the numbers from his 0.60.23 log (15.4% → 0.1% free in four minutes) need a run there.
+
+# ADDENDUM 2026-11-04 (0.60.388; built as 0.60.298 on a branch, renumbered on merge) — the session hub mirrors the sign-in, never a sign-in flow's own cookies
+# James, 2026-11-04: "reloading the sign in. it doesn't do on the main browser, only the popup window. maybe synbolic link or copying cookies?"
+# - His "copying cookies" was built 0.60.13 (clear-glass/src/cookies/session-hub.js): the provider window's session and the normal tabs are kept
+#   equal, live, both ways. It copied every cookie of the provider's site, so while he signed in in the ChatGPT window, the normal tab's csrf /
+#   callback-url / state cookies were written into that window's jar and its sign-in no longer matched (quiet() guarded only the Accounts window).
+# - Now only session credentials (isAuthCookie) are mirrored: sign-in and sign-out still follow both ways; a flow's own cookies stay in the jar
+#   that set them. test-session-hub-signin SH-01 fails on the old code and passes now; SH-02 keeps the sign-in mirrored.
+# - The coder's reading of the cause, to confirm on his machine: the mechanism is reproduced in the test, not observed in his run.

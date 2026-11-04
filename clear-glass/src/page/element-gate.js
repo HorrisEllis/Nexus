@@ -54,6 +54,9 @@ function derive(action, args = {}, res = {}) {
     case 'choose': {
       const shows = _str(a.option); if (!shows.trim()) return null;
       if (a.column || a.row || sel) return { choice: { column: a.column || null, row: a.row || null, selector: sel }, shows, why: 'chosen' };
+      // 2026-10-30 GF6 — James: "a condition to the next gate, like what the element says". The dropdown the choose opened (its selector), not the page:
+      // words the page shows elsewhere (Fiverr's Suggested categories) passed this before. No selector from the driver → the page, as before.
+      if (r.selector) return { selector: r.selector, shows: _str(r.option || shows), why: 'chosen (the dropdown shows it)' };
       return { text: _str(r.option || shows), why: 'chosen (the page shows it)' };
     }
     case 'check': return sel ? { selector: sel, checked: a.checked !== false, why: a.checked === false ? 'cleared' : 'ticked' } : null;
