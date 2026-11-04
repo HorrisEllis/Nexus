@@ -457,6 +457,12 @@ phases_ei:
     status: BUILT 0.60.298
     depends_on: [GF5_category_and_subcategory_finished, PL7_pipeline_tasks_gated_on_elements]
     files: [clear-glass/src/ipc/bridge.js, clear-glass/src/autofill/gig-fields.js, clear-glass/src/autofill/gig.js, clear-glass/src/autofill/gig-pages.js, clear-glass/docs/gigs/spec-and-architect-any-size.gig, clear-glass/src/driver/index.js, clear-glass/src/page/element-gate.js, clear-glass/src/copilot/verbs.js, clear-glass/src/main/index.js, lib/automation/pipeline.js, lib/automation/routes.js, clear-glass/automation/nodes/fiverr-gig-choose-category.macro, clear-glass/automation/nodes/fiverr-gig.pipeline, scripts/build-fiverr-pipeline.js, tests/modules/test-gig-stop-and-toast.test.js]
+  MR1_a_macro_run_says_its_step_and_can_be_paused:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-MR1]
+    status: BUILT 0.60.299
+    depends_on: [GF6_the_element_says_the_gig_or_it_stops]
+    files: [lib/agent-tools/tools/clear-glass/macro.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/renderer/macro-run-toast.js, clear-glass/renderer/macro-run-toast.css, clear-glass/renderer/browser.html, tests/modules/test-macro-run-toast.test.js]
   EI1_every_key_and_click_paced_through_eros:
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-EI1]

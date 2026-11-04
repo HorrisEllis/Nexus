@@ -416,6 +416,7 @@ const SUITES = [
   'test-gig-features.test.js',             // 0.60.281 AP1 — a gig's package rows: features in the .gig, checkAt/rowLabels, the fill's rows
   'test-opportunity-contacts.test.js',     // 0.60.281 AP2–AP4 — contacts behind job applications: captured from the page, routes, command, tool, Settings › Applications
   'test-snowflake-steps.test.js',          // 0.60.281 SN1 — Snowflake as a step in macros and workflows (route, unroute, start, wait, check, stop)
+  'test-macro-run-toast.test.js', // 0.60.299 MR1 — a macro run's step counter, pause/play, skip/previous/stop; the recording indicator
   'test-gig-stop-and-toast.test.js', // 0.60.298 GF6 — a gate reads the element against the gig; a failed step stops with a toast; Service type; bundled pipelines listed
   'test-session-hub-signin.test.js', // 0.60.298 — the ChatGPT window's sign-in is not overwritten by the normal tab's sign-in flow cookies
   'test-a11y-trace.test.js', // 2026-10-30 AC2 — the accessibility look traced to what turns it on, kept off by the site setting, the popup panel

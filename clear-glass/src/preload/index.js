@@ -165,6 +165,10 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     list:   ()     => ipcRenderer.invoke('macros:list'),
     get:    (name) => ipcRenderer.invoke('macros:get', { name }),
     recordStart: (agentId, name) => ipcRenderer.invoke('macros:recordStart', { agentId, name }),
+    // 2026-11-04 MR1 — a run's state (step n of m, paused, done) and his controls; the recording indicator's start and stop
+    runControl: (runId, cmd) => ipcRenderer.invoke('macros:runControl', { runId, cmd }),
+    onRunState: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('macros:runState', f); return () => ipcRenderer.removeListener('macros:runState', f); },
+    onRecState: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('macros:recState', f); return () => ipcRenderer.removeListener('macros:recState', f); },
     recordStatus: (agentId) => ipcRenderer.invoke('macros:recordStatus', { agentId }),
     recordStop:  (agentId) => ipcRenderer.invoke('macros:recordStop', { agentId }),
     run:    (name, agentOrOpts, params, skipSnapshot) => {

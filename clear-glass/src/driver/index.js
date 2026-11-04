@@ -745,10 +745,11 @@ class ClearDriver {
   }
   _pause(span) { const [a, b] = Array.isArray(span) ? span : [span, span]; return this._sleep(a + Math.random() * Math.max(0, b - a)); }
 
-  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'auto', openWait = [600, 1100], pickWait = [300, 650], settleWait = [500, 900], optionsWaitMs = 8000, pick = 'auto', keys = null, keysFor = null } = {}) {
+  async _choose(agentId, { selector, column, row, shows: showsText, option, via = 'auto', openWait = [600, 1100], pickWait = [300, 650], settleWait = [500, 900], optionsWaitMs = 8000, pick = 'auto', keys = null, keysFor = null, list = false } = {}) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
-    if (option === undefined || option === null || option === '') throw new Error('choose requires option');
+    // list (2026-11-04): open the dropdown, read its options, close it — nothing is chosen (the gig fill says them when the gig names none)
+    if (!list && (option === undefined || option === null || option === '')) throw new Error('choose requires option');
     if (!selector && !column && !showsText && !row) throw new Error('choose requires selector, column with row or shows, shows alone, or row alone');   // row alone: 2026-11-04 (Service type)   // 0.60.283: shows alone (the Overview's SELECT A CATEGORY)
     const OM = require('../page/option-match');
     const found = await this._evalJs(wc, `(function(sel, col, row, showsText){
@@ -797,6 +798,7 @@ class ClearDriver {
     })(${JSON.stringify(selector || null)}, ${JSON.stringify(column || null)}, ${JSON.stringify(row || null)}, ${JSON.stringify(showsText || null)})`);
     if (!found || found.error) throw new Error(`choose: ${(found && found.error) || 'page did not answer'}`);
     const trigSel = `[data-cg-choose="${found.n}"]`;
+    if (found.native && list) return { kind: 'list', options: found.options, selector: trigSel };
     if (found.native) {
       const m = OM.matchOption(found.options, option);
       if (!m.ok) throw new Error(`choose: ${m.why} — options: ${m.candidates.join(' | ')}`);
@@ -809,7 +811,7 @@ class ClearDriver {
     // the option and Enter, then the option's number typed and Enter — and last a direct click. Each is read back; the result says which took.
     const scan = () => this._evalJs(wc, `(function(){
         function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
-        function fresh(el){ return !(window.__cgPre && window.__cgPre.has(el)); }
+        function fresh(el){ return !(window.__cgPre && window.__cgPre.has(el)) && !(el.closest && el.closest('#__cg_spot__')); }   // 2026-11-04: never Clear Glass's own spotlight label
         var all = Array.prototype.filter.call(document.querySelectorAll('[role="option"],[role="menuitem"],li,[class*="option" i],[class*="item" i]'), function(el){ return fresh(el) && vis(el); });
         // 0.60.222b — a site whose options are plain divs: what appeared on opening, with short text of its own
         if (!all.length) all = Array.prototype.filter.call(document.querySelectorAll('body *'), function(el){ if (!fresh(el)) return false; var t = (el.innerText || '').trim(); return t && t.length <= 80 && t.indexOf('\\n') < 0 && vis(el); });
@@ -829,7 +831,7 @@ class ClearDriver {
     };
     const open = async () => {
       await this._waitResponsive(wc);
-      const r = await this._humanPointer(agentId, { selector: trigSel, do: 'click', via, label: `open ${column || selector}` });
+      const r = await this._humanPointer(agentId, { selector: trigSel, do: 'click', via, label: `open ${column || row || showsText || selector}` });
       await this._pause(openWait);   // drop down … (his words) — the menu animates in before anything is read
       return r;
     };
@@ -837,6 +839,11 @@ class ClearDriver {
     let opts = await readOptions(optionsWaitMs);
     if (!opts || !opts.length) { await open(); opts = await readOptions(optionsWaitMs); }   // the first click may have landed while the page was busy
     if (!opts || !opts.length) throw new Error(`choose: the dropdown did not open (no new options after clicking ${column || selector}, twice)`);
+    if (list) {
+      await this._key(wc, 'Escape'); await this._pause(settleWait);
+      const stillOpen = await this._evalJs(wc, `!!document.querySelector('[data-cg-opt]') && document.querySelector('[data-cg-opt]').isConnected`).catch(() => null);
+      return { kind: 'list', options: opts, selector: trigSel, ...(stillOpen ? { left: 'the menu did not close on Escape' } : {}) };
+    }
     const m = OM.matchOption(opts, option);
     if (!m.ok) throw new Error(`choose: ${m.why} — options: ${m.candidates.slice(0, 40).join(' | ')}`);
     await this._pause(pickWait);   // … and then click

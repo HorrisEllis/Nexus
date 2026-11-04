@@ -1060,10 +1060,65 @@ class IpcBridge {
       if (!this.driver) return { error: 'driver not wired' };
       try { return { ok: true, action, result: await this.driver.exec({ agentId, ...call, by: 'person' }) }; } catch (err) { return { error: err.message }; }
     };
-    const r = await this.macroTool.execute({ action: 'run', name: d.name, agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep });
+    // 2026-11-04 MR1 — James: "macros need a toast when executing. with a steps counter, pause and play. skip and previous." One control per run:
+    // the toast in his window (renderer/macro-run-toast.js) shows each step and sends pause / play / skip / previous / stop back (_macroRunControl)
+    const run = IpcBridge.prototype._macroRunStart.call(this, d.name);
+    const r = await this.macroTool.execute({ action: 'run', name: d.name, agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep, control: run.control });
+    IpcBridge.prototype._macroRunEnd.call(this, run, r);
     if (r && r.error && !d.quiet) (typeof this._gigToast === 'function' ? this._gigToast.bind(this) : IpcBridge.prototype._gigToast.bind(this))(`Macro "${d.name}" stopped${r.failedAtStep != null ? ` at step ${r.failedAtStep}` : ''}: ${r.error}`);   // GF6
     try { require('../processes').activity().push({ kind: 'macro', what: `macro "${d.name}" ${r && r.error ? `did not run: ${r.error}` : 'ran'}`, url, by: d.by || 'person', level: r && r.error ? 'warn' : 'info', ref: d.name }); } catch (_) {}   // SP5
     return r;
+  }
+
+  // 2026-11-04 MR1 — a macro run's state, said to every window; its controls come back by runId
+  _broadcast(channel, data) {
+    try {
+      const { BrowserWindow } = this._electron || require('electron');
+      for (const w of BrowserWindow.getAllWindows()) { if (!w.isDestroyed() && !w.webContents.isDestroyed()) w.webContents.send(channel, data); }
+    } catch (_) { /* no windows (a test, a closing app): the run goes on */ }
+  }
+  _macroRunStart(name) {
+    if (!this._macroRuns) this._macroRuns = new Map();
+    const runId = `mr-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+    const st = { runId, name, i: 0, total: 0, label: '', state: 'running', paused: false, want: null, wake: null };
+    this._macroRuns.set(runId, st);
+    const say = () => (this._broadcast || IpcBridge.prototype._broadcast).call(this, 'macros:runState',
+      { runId, name, i: st.i, total: st.total, label: st.label, state: st.state, error: st.error || null, skipped: st.skipped || 0 });
+    const label = (step) => { const dd = step.data || {}; return `${step.action}${dd.shows || dd.selector || dd.text || dd.url || dd.option ? ` ${String(dd.option ? `${dd.shows || ''} → ${dd.option}` : dd.shows || dd.selector || dd.text || dd.url).slice(0, 80)}` : ''}`; };
+    const control = {
+      // commands take effect at the next step: skip leaves out the step about to run; previous runs the one before it again; pause holds here
+      before: async (i, total, step) => {
+        st.i = i; st.total = total; st.label = label(step);
+        while (st.paused && !st.want) { st.state = 'paused'; say(); await new Promise(res => { st.wake = res; }); st.wake = null; }
+        const w = st.want; st.want = null;
+        if (w === 'stop') { st.state = 'stopped'; say(); return { stop: true }; }
+        if (w === 'skip') { st.skipped = (st.skipped || 0) + 1; st.state = 'running'; say(); return { goto: i + 1 }; }
+        if (w === 'previous') { st.state = 'running'; say(); return { goto: Math.max(0, i - 1) }; }
+        st.state = 'running'; say(); return {};
+      },
+      after: (i, res) => { if (res && res.ok === false) st.error = res.error; },
+    };
+    st.say = say;
+    return { st, control };
+  }
+  _macroRunEnd(run, r) {
+    const st = run.st;
+    st.state = r && r.ok ? 'done' : r && r.stopped ? 'stopped' : 'failed';
+    if (r && r.ok) { st.i = st.total; st.error = null; } else st.error = (r && r.error) || 'it did not run';
+    st.say();
+    setTimeout(() => { try { this._macroRuns.delete(st.runId); } catch (_) {} }, 60000);
+  }
+  /** pause | play | skip | previous | stop a running macro (his buttons on the toast) */
+  _macroRunControl(runId, cmd) {
+    const st = this._macroRuns && this._macroRuns.get(String(runId));
+    if (!st) return { ok: false, error: 'that macro is not running any more' };
+    if (!['pause', 'play', 'skip', 'previous', 'stop'].includes(cmd)) return { ok: false, error: `pause, play, skip, previous or stop (got ${cmd})` };
+    if (cmd === 'pause') { st.paused = true; st.state = 'pausing'; }
+    else if (cmd === 'play') st.paused = false;
+    else st.want = cmd;
+    if (cmd !== 'pause' && st.wake) st.wake();
+    st.say();
+    return { ok: true, runId: st.runId, state: st.state };
   }
 
   _bindRendererHandlers() {
@@ -1395,19 +1450,13 @@ class IpcBridge {
     // builder opens pre-filled (passwords become a {{password}} parameter).
     // §0.60.57 MR1 — James, 2026-10-15: "needs to start recording a macro node file." The recording IS a .macro file from the first
     // second (src/macros/live-recording.js); recordStop returns the same steps the file holds, so the step editor opens on what was saved.
-    let _live = null;
-    const live = () => _live || (_live = new (require('../macros/live-recording').LiveRecorder)({
-      getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
-      dir: require('../../../lib/automation-nodes.js').NODES_DIR }));
-    ipcMain.handle('macros:recordStart', async (e, { agentId, name } = {}) => {
-      if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
-      try { return await live().start({ agentId, name }); } catch (err) { return { ok: false, error: err.message }; }
-    });
-    ipcMain.handle('macros:recordStatus', async (e, { agentId } = {}) => { try { return live().status(agentId); } catch (err) { return { ok: false, error: err.message }; } });
-    ipcMain.handle('macros:recordStop', async (e, { agentId } = {}) => {
-      if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
-      try { return await live().stop(agentId); } catch (err) { return { ok: false, error: err.message }; }
-    });
+    // 2026-11-04 MR1 — one recorder: the IPC and /cli doors both go through _macroRecord (its own LiveRecorder). Before, IPC made a second
+    // LiveRecorder here (a duplicate, dropped: test-cg-agent-doors AD-02 had failed on it), so a recording from the window was not the one
+    // /cli/macros/record/status saw, and the recording indicator could not hear it.
+    ipcMain.handle('macros:runControl', async (e, { runId, cmd } = {}) => this._macroRunControl(runId, cmd));   // 2026-11-04 MR1
+    ipcMain.handle('macros:recordStart', async (e, { agentId, name } = {}) => this._macroRecord('start', { agentId, name }));
+    ipcMain.handle('macros:recordStatus', async (e, { agentId } = {}) => this._macroRecord('status', { agentId }));
+    ipcMain.handle('macros:recordStop', async (e, { agentId } = {}) => this._macroRecord('stop', { agentId }));
     ipcMain.handle('macros:schema', async () => {
       try {
         const ba = require('../../../lib/agent-tools/tools/browser/browser-action.js');
@@ -2205,8 +2254,10 @@ class IpcBridge {
       if (!this._liveRecorder) this._liveRecorder = new (require('../macros/live-recording').LiveRecorder)({
         getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
         dir: require('../../../lib/automation-nodes.js').NODES_DIR });   // 0.60.266: AE1 (0.60.251) moved NODES_DIR here; this call still named the old file
-      if (op === 'start') return await this._liveRecorder.start({ agentId, name });
-      if (op === 'stop') return await this._liveRecorder.stop(agentId);
+      // 2026-11-04 MR1 — "a recording indicator in the taost when recording macros": every window hears it start and stop
+      const tell = (on, r) => { if (r && r.ok !== false) (this._broadcast || IpcBridge.prototype._broadcast).call(this, 'macros:recState', { recording: on, agentId, name: (r && r.name) || name || null, steps: (r && r.steps) || 0 }); return r; };
+      if (op === 'start') return tell(true, await this._liveRecorder.start({ agentId, name }));
+      if (op === 'stop') return tell(false, await this._liveRecorder.stop(agentId));
       if (op === 'status') return this._liveRecorder.status(agentId);
       return { ok: false, error: `unknown record op "${op}" — start, status or stop` };
     } catch (err) { return { ok: false, error: err.message }; }
@@ -2628,7 +2679,27 @@ class IpcBridge {
     }
     for (const part of r.stopped ? [] : (where.page && GP.PARTS[where.page]) || []) {
       if (!wants(part)) continue;
-      const value = valueOf(part); if (value === null || value === undefined || value === '') continue;
+      const value = valueOf(part);
+      // 2026-11-04 — James, with Service type still SELECT A SERVICE TYPE: "service type still gets skipped. needs more timing." The row appears only
+      // after the subcategory is chosen: wait for it (up to 8 s). A page that asks for one while the gig names none stops here, with the dropdown's
+      // options read and said, never a quiet skip.
+      if (part === 'serviceType' && this.driver) {
+        const GFs = require('../autofill/gig-fields');
+        let shown = false;
+        for (let t0 = Date.now(); Date.now() - t0 < 8000;) {
+          const x = await this.driver.exec({ agentId, action: 'eval', code: GFs.shownScript('Service type'), by: 'person' }).catch(() => null);
+          if (x && x.result) { shown = true; break; }
+          if (!x) break;   // a page that does not answer: unchecked, said below as nothing to do
+          await new Promise(res => setTimeout(res, 300));
+        }
+        if (!shown) continue;   // this subcategory has no Service type
+        if (value === null || value === undefined || value === '') {
+          let opts = []; try { const l = await this.driver.exec({ agentId, action: 'choose', row: 'Service type', list: true, by: 'person' }); opts = (l && l.options) || []; } catch (_) {}
+          const why = `the page asks for a Service type and the gig has none${opts.length ? ` — its options: ${opts.slice(0, 12).join(' | ')}` : ''}. Put one in the gig as serviceType`;
+          r.notFound.push({ key: part, why }); r.stopped = { key: part, why }; break;
+        }
+      }
+      if (value === null || value === undefined || value === '') continue;
       if (filledKeys.has(part)) continue;   // filled and gated above
       const learned = site && mem.target(site, GP.targetKey(where.page, part));
       const isChoice = part === 'category' || part.endsWith('.delivery');

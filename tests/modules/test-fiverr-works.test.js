@@ -165,7 +165,7 @@ document.querySelectorAll('.dv').forEach(function(dv){ dv.addEventListener('clic
     const o = await run({ url: 'https://www.fiverr.com/edit', headings: [], text: 'Suggested categories Gig metadata', links: [{ text: 'Programming & Tech > AI Development', selector: '#cat1' }] });
     assert.strictEqual(o.r.page, 'overview');
     assert.ok(o.calls.some(c => c.action === 'pointer' && c.selector === '#cat1' && c.do === 'click'));
-    assert.ok(!o.calls.some(c => c.action === 'choose'), 'no delivery on the overview page');
+    assert.ok(!o.calls.some(c => c.action === 'choose' && c.column), 'no delivery (a tier\'s column) on the overview page');
     mem.forget('https://www.fiverr.com', 'fiverr:pricing:basic.name');
   });
 
