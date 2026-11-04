@@ -1,0 +1,14 @@
+{
+  "name": "ollama",
+  "description": "NEXUS Ollama Python service — smart model routing, SSE streaming (port 3748)",
+  "command": "python",
+  "cwd": "bridge",
+  "args": ["nexus-ollama-service.py"],
+  "env": {
+    "PORT": "3748"
+  },
+  "maxRestarts": 5,
+  "restartDelay": 3000,
+  "windowsName": "NexusOllama",
+  "verbose": false
+}

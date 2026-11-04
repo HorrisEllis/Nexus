@@ -84,3 +84,38 @@ phases:
     files: [cos/services/anonymous, cos/manager, cos/ui]
     does: "the chosen reach, supervised by COS's manager as a compartment, on the cockpit's menu: on/off, who can connect, every connection on the ledger"
     proof: "from another network, his device reaches Nexus only after the handshake; with reach off nothing answers from outside"
+
+# ── ADDENDUM 2026-11-04 — his decision: a Windows service, with admin rights; supersedes CA_D1's "no service" for the part that has no window ──
+# James, 2026-11-04, uploading NSSM.zip (his NSM v2 and the NSSM install notes, written for the old bridge on :3747): "build that for clearglass
+# then make sure cos.exe is completely borderless. also run on startup with an option to disable. run in service with admin privilages for more
+# control and power.  maybe move the system to the cos folder."
+# Grounded (the coder, 2026-11-04, against main 0.60.388):
+#   - Already in COS 0.4.0 (cos-v0.4.0, CE7, MG37): borderless by default (Windows' own min/max/close over the top right; "With Windows' frame"
+#     the way back), start with Windows (default on, a tray switch), admin rights at startup (one approval, a tray switch).
+#   - His NSM v2 is COS's supervisor already, rule for rule (backoff 1 s→30 s, a circuit after 6 crashes in 5 min, phases gated on health, a
+#     ledger): reused, not rebuilt. What it has that COS has not: running as a real Windows service (before logon, through logoff, LocalSystem),
+#     and restarting a process that is up but unhealthy. Its bridge/:3747 targets are gone. Kept in _archive/2026-11-04-nsm-upload (§0.3).
+#   - A Windows service runs in session 0 with no desktop (§0.0): Clear Glass and the COS window cannot run there. So the service is the part with
+#     no window (Nexus started headless: autopilot → COS's manager → the headless systems), and the windows stay with the logon task in his session.
+decisions_addendum_2026_11_04:
+  CA_D1b_the_supervisor_as_a_service:
+    status: "DECIDED 2026-11-04 (his: \"run in service with admin privilages for more control and power\"); the split the axioms' (§0.0)"
+    chosen: >-
+      Nexus's headless part runs as the Windows service NexusCOS through NSSM (his named tool; a Node process cannot answer the service control
+      manager by itself): LocalSystem, automatic at boot, restarted by NSSM if it dies, logs rotated. In it, COS's manager starts every system
+      except the ones with a window (an Electron process, Clear Glass): those are said as "starts in your session" and the COS window starts them
+      at logon. A tray switch turns the service off (removed, the app starts Nexus again as before). Needs nssm.exe (cos/bin/nssm.exe, NSSM_EXE, or
+      PATH): without it, said with where to put it; nothing installed silently. CA_D1 is kept (§0.3): its logon task is still how the windows start.
+    by_the_axioms: "USER_AUTONOMY (his call), §0.0 (session 0 has no desktop: said, designed around), §4.3 (admin by one approval, his), §5.9 (one system down — the service — breaks no window), §8.6 (NSSM and COS's supervisor reused)"
+phases_addendum_2026_11_04:
+  CA4_the_supervisor_as_a_windows_service:
+    status: OPEN
+    depends_on: [CA_D1b_the_supervisor_as_a_service, MG37_starts_with_windows]
+    files: [cos/app/service.js, cos/app/settings.js, cos/app/desktop/main.js, cos/app/version.js, cos/manager/supervisor.js, tests/modules/test-cos-service.test.js]
+    does: >-
+      cos/app/service.js: find nssm.exe; the commands that install NexusCOS (node + the linked folder's lib/nexus/autopilot.js, COS_SERVICE=1, its
+      folder, logs rotated at 10 MB, restart after 2 s, SERVICE_AUTO_START, LocalSystem) and remove it; run them with one admin approval; read its
+      status. Setting runAsService (a tray switch). COS's supervisor under COS_SERVICE=1 leaves a windowed process unstarted and says why. The COS
+      window, when the service holds Nexus, starts the windowed systems itself in his session.
+    proof: "test-cos-service: the install and remove commands exactly; nssm found or said missing; status read; the supervisor leaves Clear Glass to
+      the session under COS_SERVICE=1 and starts it otherwise. On Windows: unverified until his run (said)."

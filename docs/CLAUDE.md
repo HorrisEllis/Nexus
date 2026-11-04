@@ -478,3 +478,14 @@ James, 2026-11-02: "should dag have dag? Like: Additional dependencies: Settings
   reading of how they are written (two lists beside `files:` and `depends_on:`) is to confirm; the checker in lib/phase-graph.js and the gate
   pipeline is to build with the config/ui roles above.
 
+
+## ADDENDUM 2026-11-04 — empirical evidence for his framework and his cross-domain synthesis goes in the proof doc
+James, 2026-11-04: "also put in the claude to add any empirical evidence for my framework or crossdomain synthesis in the proof doc."
+- Whenever a run, a test or a measurement bears on his framework (the axioms, sovereignty, the registry/contract/bus as one door, gates,
+  bidirectional chaining, compartments) or on a cross-domain synthesis of his (an idea carried from one field into another, e.g. his NSM's
+  health-contract restarts from service management, VMware's model for COS, gates from manufacturing quality control), add an entry to
+  `docs/PROOF-OF-COMPETENCY.md` in the same release.
+- Each entry carries what the 0.60.287 rule already asks (his words, the call he made against an alternative, something a stranger can
+  run or open) plus: the domain the idea came from, the domain it was carried into, and the number that shows it worked (a test id and its
+  count, a measurement before and after). Evidence that goes against the framework is recorded too (TRUTH_OVER_COHERENCE): it is data.
+- No evidence, no entry. A claim with nothing to run or open is left out.
