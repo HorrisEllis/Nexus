@@ -243,3 +243,55 @@ build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → M
 # The decisions MG_D2 and MG_D3 and the phases MG10–MG14 are in this map's decisions: and phases: blocks above (real YAML, so
 # lib/phase-dag.js checks them).
 # build_order addendum: MG10 → MG11 → MG12 → MG13 → MG14, after MG3–MG9. Backend → route → command → UI in each (his order of delivery).
+
+# ── ADDENDUM 2026-11-04 — the complete cos.exe build, his order; what is mapped already is reused, three gaps added ───────────────────────
+# James, 2026-11-04: "okay. cos.exe build. complete build. with the manual zip dropzone updator as a backup/offline update tool. also a drop
+# down for my 800 zips for nexus to be tracked and versioned, and diff tracked. there is a tool for this. also cli in cos ui doesn't work. bridge
+# not connected. i feed it should route through raid"
+# Grounded 2026-11-04 (the coder, against the tree):
+#   - Built already: the release-zip drop-zone and inbox for the projects COS runs (COSA1 store + import, COSA6 the exe's drop target), switch
+#     and rollback (COSA4), the console (CON-lite, cos/app/shell.js: npm scripts, nexus <args>, node <file>, COS's verbs).
+#   - "there is a tool for this": lib/cli/import-history.js (N27, BUILT 0.39.282) imports a folder of release zips into git, one snapshot
+#     commit per zip on history/snapshots, dated to the zip, with Zip-Name / Zip-Sha256 / Nexus-Version trailers; resumable; and
+#     lib/history-import-job.js runs it as a job. COS shows none of it.
+#   - Not built: COS updating ITSELF from a zip (cos/app/app-update.js only checks GitHub and opens the page); CON1 (the console's one door to
+#     the command table); MG0b–MG14 (the manager); CON2–CON7.
+#   - "bridge not connected": no such text is in COS's code (cos/, lib/ui). Its source is to be found from his screen before it is fixed
+#     (§0.1: evidence over memory) — asked.
+# Decided by his axioms (§5.2 routing goes through RAID, §9.1 RAID is the only write authority, §5.15 a system is reached by its route, §17.12
+# every change and version in Versionium): a console line that is a Nexus command is approved by RAID (Cortex POST /api/raid/approve-tool,
+# the route lib/raid-port.js already uses) and run through the one command door (Copilot POST /api/tools/run nexus.command); COS's own verbs
+# stay local, so the console works with nothing else running. The exe ships without lib, so it reaches both by route, never by require.
+phases_addendum_2026_11_04:
+  CB1_the_console_through_raid:
+    spec: cos/spec/cos-spine.spec
+    status: OPEN
+    depends_on: [CON1_one_door_client]
+    files: [cos/app/console/client.js, cos/app/shell.js, cos/app/desktop/main.js, cos/app/desktop/ui/app.js]
+    does: >-
+      CON1, built with RAID in front: a line that is not a COS verb nor npm/node is a Nexus command; RAID approves it (approve-tool, source
+      cos-console) and the one door runs it; refused → said with RAID's reason; RAID or the door down → said, and COS's verbs still run. Each
+      line gets an id and an activity record. The console says which door answered.
+    proof: "with Cortex and Copilot stand-ins: an approved row runs and returns the table's text; a refused one says RAID's reason; with both
+      down, `status`, `switch`, `logs` still work and a Nexus row says what is down"
+  CB2_the_zip_history_dropdown:
+    spec: cos/spec/cos-spine.spec
+    status: OPEN
+    depends_on: [COSA1_version_store_and_import]
+    files: [cos/app/history.js, cos/app/desktop/main.js, cos/app/desktop/preload.js, cos/app/desktop/ui/app.js]
+    does: >-
+      Per project, a dropdown of every imported zip (history/snapshots through lib/cli/import-history.js, run with the project's own node in its
+      version folder): version, zip name, date, sha; pick one → its diff against the one before (files changed, added, removed), and "import
+      a folder of zips" starts the import job with its progress. Each import is recorded in Versionium (§17.12, the COS recorder).
+    proof: "a fixture folder of three zips: imported once (a rerun adds nothing), listed in order, a diff between two shown"
+  CB3_cos_updates_itself_from_a_zip:
+    spec: cos/spec/cos-spine.spec
+    status: OPEN
+    depends_on: [COSA6_the_exe]
+    files: [cos/app/app-update.js, cos/app/desktop/main.js, cos/app/desktop/ui/app.js]
+    does: >-
+      The offline backup: a COS release zip (cos-v<x.y.z>) dropped on the window, or put in the inbox, is checked (its version newer, its
+      files whole) and installed beside the running one; COS restarts into it and the old one is kept for rollback. Nothing is downloaded.
+    proof: "a fixture cos zip: refused when older or broken, said why; installed beside, the previous kept"
+build_order_addendum_2026_11_04: "CB1 (the console works) → CB2 (his 800 zips) → CB3 (offline COS update) → MG0b…MG9 → MG10–MG14 (the
+  manager, thumbnails) → CON2–CON7. Each: backend → route → command → UI, tested in Clear Glass."
