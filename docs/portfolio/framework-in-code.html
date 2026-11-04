@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Framework in Code</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5f0; --surface:#ffffff; --ink:#1c1b19; --muted:#5f5b53; --line:#e2ddd2;
+  --accent:#8a4b1f; --accent-soft:#f3e6da; --ok:#2f6b3a; --ok-soft:#e3efe4; --warn:#8a5a00; --warn-soft:#f6ecd6;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161514; --surface:#1f1e1c; --ink:#ece8e1; --muted:#a39d92; --line:#34312c;
+    --accent:#e0a070; --accent-soft:#3a2a1e; --ok:#8fcf98; --ok-soft:#1f3122; --warn:#e6bf6a; --warn-soft:#3a3020;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161514; --surface:#1f1e1c; --ink:#ece8e1; --muted:#a39d92; --line:#34312c;
+  --accent:#e0a070; --accent-soft:#3a2a1e; --ok:#8fcf98; --ok-soft:#1f3122; --warn:#e6bf6a; --warn-soft:#3a3020;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:48px 16px 80px}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;font-weight:600;line-height:1.2}
+h1{font-size:clamp(2rem,5vw,2.8rem);margin:0 0 12px}
+h2{font-size:1.6rem;margin:56px 0 8px}
+h3{font-size:1.25rem;margin:0 0 4px}
+.kicker{color:var(--accent);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:.78rem}
+.lede{font-size:1.15rem;color:var(--muted);max-width:680px}
+.note{color:var(--muted);font-size:.92rem}
+blockquote{margin:0;padding:10px 14px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 6px 6px 0;font-family:"Source Serif 4",Georgia,serif;font-size:1.05rem}
+blockquote cite{display:block;font-family:Inter,sans-serif;font-style:normal;font-size:.8rem;color:var(--muted);margin-top:4px}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.85em}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:28px 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px}
+.stat b{display:block;font-size:1.6rem;font-family:"Source Serif 4",serif}
+.stat span{color:var(--muted);font-size:.85rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;margin:18px 0}
+.card .sys{color:var(--muted);font-size:.9rem;margin-bottom:12px}
+.card p{margin:12px 0}
+.tests{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.pill{background:var(--ok-soft);color:var(--ok);border-radius:999px;padding:2px 10px;font-size:.8rem;font-family:"JetBrains Mono",monospace}
+.gap{background:var(--warn-soft);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:10px 0}
+.gap b{color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+td,th{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:500}
+.scroll{overflow-x:auto}
+pre{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;overflow-x:auto;font-size:.82rem}
+footer{margin-top:64px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="kicker">Case study · Nexus · November 2026</div>
+<h1>A way of thinking, built into code you can test</h1>
+<p class="lede">James Brooks wrote down how he reasons: start from the end state, measure before you judge, treat constraints as a field, and read what is missing. Then he specified a system that does each of those, and directed it into code with tests that anyone can run.</p>
+
+<div class="stats">
+  <div class="stat"><b>208 / 208</b><span>tests passing across the 19 suites cited here (run 2026-11-04)</span></div>
+  <div class="stat"><b>547</b><span>specs written before code</span></div>
+  <div class="stat"><b>847</b><span>test files</span></div>
+  <div class="stat"><b>586k</b><span>lines of JavaScript, 3,063 files</span></div>
+  <div class="stat"><b>~2,200</b><span>of his decisions quoted verbatim, dated, in the record</span></div>
+</div>
+<p class="note"><b>Who did what.</b> The ideas, the architecture, the rules and every design call are his. The code was written by an AI coder (Claude Code) working to his specs and his written law (<code>docs/AXIOMS-v3.1.md</code>). Directing an AI to production quality, with a spec before every phase and a test behind every claim, is itself one of the skills shown here.</p>
+
+<h2>Five methods, five systems</h2>
+<p class="note">Each one: his words, what the system does, where the code is, and the tests that show it working.</p>
+
+<div class="card">
+  <h3>1 · End-state-first reasoning → RAID</h3>
+  <div class="sys"><code>cortex/core/raid/*</code>: contract intake, officiator, router, constitution gate, decision record</div>
+  <blockquote>"Set the end-state → determine invariants → replicate conditions → test, iterate, loop."<cite>His Innovation Toolkit, Section 2</cite></blockquote>
+  <p>RAID turns a request into a contract, and the contract <i>is</i> the end state. Every step an agent takes is checked against that contract, and the officiator verifies the result against the real end state, not against the agent's own report. An agent cannot quietly redefine "done". Intent flows both ways: forward from the goal, and backward from the result. The test IF-05 shows this backward check refusing a change that forward-only planning would have accepted.</p>
+  <div class="tests"><span class="pill">end-state 20/20</span><span class="pill">officiator 18/18</span><span class="pill">router 10/10</span><span class="pill">verify-fused 6/6</span><span class="pill">constitution gate 5/5</span><span class="pill">decision record 5/5</span><span class="pill">intent-flow 5/5</span></div>
+</div>
+
+<div class="card">
+  <h3>2 · Systems thinking → RFR2</h3>
+  <div class="sys"><code>intelligence/rfr2/delta</code> → <code>rfr2/sigma</code> → causality → <code>snapshot-trigger.js</code></div>
+  <blockquote>"Invariants here = two+ points in deviation (measured in sigmas); the gaps between measured in deltas."<cite>His Innovation Toolkit, Part 3</cite></blockquote>
+  <p>Measurement and judgment are kept apart. Deltas only measure and have no thresholds. Sigma is the layer that judges, sorting behaviour into regimes: stable, degraded, oscillatory or collapsing. When the regime changes, a snapshot is taken and traced back to the conditions that caused it, so any state can be explained and reverted.</p>
+  <div class="tests"><span class="pill">rfr2 31/31</span><span class="pill">intelligence-causal 8/8</span><span class="pill">snapshot-on-sigma 7/7</span></div>
+</div>
+
+<div class="card">
+  <h3>3 · Constraint field runtime → CFR</h3>
+  <div class="sys"><code>intelligence/cfr/field.js</code>, <code>lib/emerge/compiler/gap-field-engine.js</code></div>
+  <blockquote>"Probabilistic probability on top of deterministic probability = a constraint field … the boundary of the constraint field = the signal. Everything else is noise, assumption, or convention dressed as necessity."<cite>His Innovation Toolkit, Section 3</cite></blockquote>
+  <p>Hard rules are the deterministic floor, and models work inside the space those rules leave. Wherever a rule is broken, the engine names a gap automatically. The gaps are derived from the rules, never written by hand. The field measures coherence and friction continuously instead of answering pass/fail.</p>
+  <div class="tests"><span class="pill">gap-field 18/18</span><span class="pill">cfr graph distance 7/7</span><span class="pill">cfr field authority 3/3</span><span class="pill">cfr collapse anchor 3/3</span></div>
+</div>
+
+<div class="card">
+  <h3>4 · Reading between the lines → Gap Hunter and the Liminal Space reader</h3>
+  <div class="sys"><code>intelligence/gap/hunter.js</code>, <code>intelligence/liminal/</code> (12 detectors), <code>intelligence/liminal-space/</code> (5 interstitial spaces)</div>
+  <blockquote>"Gap hunter and liminal space reader is my ability to read in between the lines. A way to account for ambiguity. Shadow space, negative space, reasoning… Looking for what's not there to fill in… the in between the lines."<cite>James, 2026-11-04</cite></blockquote>
+  <p>Most systems analyse what is present. This one also looks at what is absent. The twelve detectors carry his names for it: negative space, shadow, contrastive, oscillatory, reversal, assumption, structural, relational, existential, field, code and music. The liminal-space organ watches the boundaries between layers, for example the threshold where intent meets constitution, and the membrane where a pattern meets its cause. Ambiguity is kept and named; it is never silently resolved.</p>
+  <div class="tests"><span class="pill">liminal-space 16/16</span><span class="pill">gap-tools 11/11</span><span class="pill">gap-finder 9/9</span></div>
+</div>
+
+<div class="card">
+  <h3>5 · Grounded intuition → the crystallizer</h3>
+  <div class="sys"><code>intelligence/index.js</code> <code>_groundedCrystallise</code>, <code>intelligence/adversarial.js</code></div>
+  <blockquote>"One gap = anomaly. Two = coincidence. Three = an invariant (not a fact)." · "Intuition must be regulated and grounded."<cite>His Innovation Toolkit, Part 3</cite></blockquote>
+  <p>A pattern is announced only when it passes three checks: it occurred at least three times, it occurs more often than the base rate would predict, and its type is not known noise. A pattern that fails is held as a hypothesis, which matches his "not a fact". Tests F2 and F3 show the difference this makes. A naive rule ("seen three times = a pattern") would announce a loud coincidence or a burst. His rule refuses both.</p>
+  <div class="tests"><span class="pill">crystallizer 15/15</span><span class="pill">adversarial 11/11</span></div>
+</div>
+
+<h2>Where the code does not yet match the framework</h2>
+<p class="note">On 2026-11-04 each part of his framework was checked against the code. These are the gaps found. They are listed because a portfolio that hides its gaps is not credible.</p>
+<div class="gap"><b>A real mismatch: f(slope).</b> In his framework, slope pays off only up to a point ("the closer to unstable without destabilizing yourself, the more novel the solution"), so leverage should rise with slope and then turn down before instability (the coder's reading of his f(slope)). In <code>friction.js</code>, leverage keeps rising with slope and never falls. Fixing this needs the threshold, which is his to set.</div>
+<div class="gap"><b>Not built.</b> His Priority formula, (Efficiency + Effectiveness) / Urgency, and his Weighting formula, Urgency × Importance × Fidelity × Slope. His Section 0 gate, "Is this even a framework problem?". The idea vectors for convergence and divergence.</div>
+<div class="gap"><b>Partial.</b> In his framework, Signal = alignment + fidelity + expansion. The SNR gate checks fidelity only.</div>
+
+<h2>The record behind it</h2>
+<div class="scroll"><table>
+<tr><th>What</th><th>Count</th><th>Why it matters</th></tr>
+<tr><td>Commits</td><td>1,357 since 2026-09-25</td><td>Steady, reviewable history</td></tr>
+<tr><td>His decisions, quoted verbatim</td><td>2,228 distinct (10,667 occurrences), 2026-07-24 → 2026-11-04</td><td>Each design call can be traced to his own words, with its date and context</td></tr>
+<tr><td>Specs</td><td>547</td><td>Rule: spec first, then phases with a dependency graph, then code</td></tr>
+<tr><td>Written law</td><td><code>docs/AXIOMS-v3.1.md</code></td><td>Every technical decision cites the axioms that decide it</td></tr>
+</table></div>
+
+<h2>Check it yourself</h2>
+<pre>git clone https://github.com/HorrisEllis/Nexus.git && cd Nexus && npm install
+node tests/modules/test-end-state.js           # RAID: the goal posts cannot move
+node tests/modules/test-intent-flow.test.js    # bidirectional chaining (IF-05)
+node tests/modules/test-rfr2-cjs.js            # RFR2: delta → sigma → causality
+node tests/modules/test-gap-field.js           # CFR: rules → derived gaps
+node tests/modules/test-liminal-space.js       # the interstitial spaces
+node tests/modules/intelligence.test.js        # three = an invariant, not a fact</pre>
+
+<h2>Skills this demonstrates</h2>
+<div class="scroll"><table>
+<tr><td><b>Systems design</b></td><td>Separate systems that own their own data and connect only through routes. Measurement kept apart from judgment.</td></tr>
+<tr><td><b>Specification</b></td><td>547 specs, written so that a system could be rebuilt from its spec if the code were lost.</td></tr>
+<tr><td><b>Failure-mode thinking</b></td><td>Gates that refuse rather than guess, hypotheses kept apart from facts, and nothing failing silently.</td></tr>
+<tr><td><b>Carrying ideas across fields</b></td><td>Quality gates from manufacturing quality control, health-checked restarts from service management, and a VMware-style host for systems, each brought into AI orchestration.</td></tr>
+<tr><td><b>Directing AI to production quality</b></td><td>Rules, specs and tests that hold an AI coder to account, so its claims are proven, not taken on trust.</td></tr>
+</table></div>
+
+<footer>Every number on this page comes from a run on 2026-11-04, on Nexus main 0.60.390. The full cross-reference is <code>docs/innovation-toolkit-x-intelligence.md</code>, and the record of evidence is <code>docs/PROOF-OF-COMPETENCY.md</code>.</footer>
+</div>
+</body>
+</html>
