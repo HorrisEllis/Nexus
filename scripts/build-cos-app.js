@@ -12,7 +12,7 @@
  */
 const fs = require('fs'), path = require('path'), { spawnSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '..');
-const FILES = ['cos/app/store.js', 'cos/app/runtime.js', 'cos/app/switch.js', 'cos/app/controller.js', 'cos/app/app-update.js', 'cos/app/settings.js', 'cos/app/shell.js', 'cos/app/cli.js', 'cos/app/version.js', 'cos/app/versionium.js', 'cos/app/desktop/main.js', 'cos/app/desktop/preload.js', 'cos/app/desktop/icon.png', 'cos/app/window.js', 'cos/app/logon.js', 'cos/app/desktop/starting.html', 'cos/app/desktop/starting-preload.js',   /* 0.3.0 MG36/MG37 */
+const FILES = ['cos/app/store.js', 'cos/app/runtime.js', 'cos/app/switch.js', 'cos/app/controller.js', 'cos/app/app-update.js', 'cos/app/settings.js', 'cos/app/shell.js', 'cos/app/cli.js', 'cos/app/version.js', 'cos/app/versionium.js', 'cos/app/desktop/main.js', 'cos/app/desktop/preload.js', 'cos/app/desktop/icon.png', 'cos/app/window.js', 'cos/app/logon.js', 'cos/app/desktop/starting.html', 'cos/app/desktop/starting-preload.js',   /* 0.3.0 MG36/MG37 */ 'cos/app/service.js', 'cos/app/desktop-systems.js',   /* 0.5.0 CA4: the Windows service, the windowed systems in his session */
   'cos/app/desktop/ui/index.html', 'cos/app/desktop/ui/app.js', 'cos/app/desktop/ui/style.css', 'lib/zip.js', 'lib/release-version.js', 'lib/version.js'];
 
 function stage({ out = path.join(ROOT, 'dist', 'cos-app-stage'), root = ROOT } = {}) {

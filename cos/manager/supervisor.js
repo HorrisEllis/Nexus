@@ -31,6 +31,10 @@ const DEFAULTS = Object.freeze({   // autopilot's constants (the test reads both
 });
 
 /** every process the systems declare (runtime.process / runtime.processes, lib/cli/compartments.js MG15a), {{root}} filled */
+// CA4 — the Windows service (cos/app/service.js) runs this supervisor in session 0, which has no desktop
+const serviceMode = () => process.env.COS_SERVICE === '1';
+const isWindowed = (d, c) => /electron/i.test(path.basename(String((c && c.cmd) || (d.process && d.process.cmd) || d.cmd || ''))) || d.window === true;
+
 function readDeclarations(root) {
   const fill = (v) => (typeof v === 'string' ? v.replace(/\{\{root\}\}/g, root) : Array.isArray(v) ? v.map(fill)
     : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, fill(x)])) : v);
@@ -123,6 +127,12 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       s.state = 'waiting-memory'; later(s, P.memBackoffMs, () => { if (s.state === 'waiting-memory') spawnNow(name, by); }); return false;
     }
     const c = commandOf(d);
+    // 2026-11-04 CA4 (CA_D1b) — James: "run in service with admin privilages". Under the Windows service (COS_SERVICE=1, session 0) a process with a
+    // window (an Electron app: Clear Glass) cannot be seen: it is left to his session, where the COS window starts it, and said (§0.0, §1.2)
+    if (serviceMode() && isWindowed(d, c)) {
+      if (s.state !== 'desktop') write('refused', name, 'has a window: under the Windows service it starts in your session (the COS window starts it), not here', { by });
+      s.state = 'desktop'; return false;
+    }
     if (!write('spawn', name, `${c.via ? `in compartment ${d.compartment || d.name}, behind its wall (${(d.boundary.mode || 'enforce')}${c.via === 'NODE_OPTIONS' ? ', through NODE_OPTIONS' : ''}): ` : ''}${c.cmd} ${c.args.join(' ')}`, { by })) return false;
     let proc;
     try { proc = spawnFn(c.cmd, c.args, { cwd: c.cwd, env: { ...process.env, ...(d.env || {}), ...(c.env || {}) }, stdio: ['ignore', 'pipe', 'pipe'], shell: c.shell }); }
@@ -264,4 +274,4 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   return api;
 }
 
-module.exports = { createSupervisor, readDeclarations, DEFAULTS, httpOk };
+module.exports = { createSupervisor, readDeclarations, DEFAULTS, httpOk, isWindowed };

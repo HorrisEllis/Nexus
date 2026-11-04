@@ -95,6 +95,20 @@ class Controller {
   stop(project) { return this._exclusive(project, 'stopping', () => this.rt.stop(this.root, project, this.opts)); }
   remove(project, version) { return this._exclusive(project, `removing ${version}`, async () => this.store.remove(this.root, project, version)); }
   logs(project, lines = 80) { return { ok: true, ...this.rt.logs(this.root, project, { lines }) }; }
+  // 2026-11-04 CA4 (CA_D1b) — James: "run in service with admin privilages for more control and power." The linked folder's headless part as the
+  // Windows service NexusCOS (cos/app/service.js), and the systems with a window started in his session (cos/app/desktop-systems.js)
+  linkedDir(project = 'nexus') { const st = this.store.list(this.root, project)[0]; return st && st.linked && st.linked.present ? st.linked.dir : null; }
+  async applyService(enable, { project = 'nexus', service = require('./service.js'), fsx = require('fs'), pathx = require('path') } = {}) {
+    const dir = this.linkedDir(project);
+    const entry = dir ? this.rt.ENTRIES.map(e => pathx.join(dir, e)).find(f => fsx.existsSync(f)) : null;
+    const r = await service.apply({ enable: !!enable, node: this.rt.nodeBinary(), entry, dir, logDir: dir ? pathx.join(dir, 'data', 'cos-service') : null });
+    this.emit({ type: 'service', enable: !!enable, ok: !!r.ok, state: r.state || null, error: r.error || null });
+    return { ...r, dir };
+  }
+  startWindowed(project = 'nexus', { desktop = require('./desktop-systems.js') } = {}) {
+    const dir = this.linkedDir(project); if (!dir) return Promise.resolve([]);
+    return desktop.startAll(dir);
+  }
   /** stopAll() — on quit: the projects COS started are stopped with it (the window is the owner; a project left running with no window would be invisible) */
   async stopAll() { const out = []; for (const p of this.store.list(this.root)) out.push({ project: p.project, ...(await this.rt.stop(this.root, p.project, this.opts)) }); return out; }
 }
