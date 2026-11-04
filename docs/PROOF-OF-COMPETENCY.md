@@ -1653,3 +1653,24 @@ rule 3, says one system going down must break no other. Inside Idearium, Emerge 
   months" cannot be checked in this repository (its git history starts 2026-10-02).
 - **His part / the coder's part:** the question, the merge of the three, dumb components, CLI and API first, COS through RAID, and the
   template that already said it are his. The precedent, the per-entry shape, the measurements and the qcow2 mistake are the coder's.
+
+### 2026-11-04 — his framework, tested in code: "three = an invariant (not a fact)" refuses what a count-only rule would announce
+
+- **His words:** "One gap = anomaly. Two = coincidence. Three = an invariant (not a fact)." · "Analytical must have strict weighting; intuition
+  must be regulated and grounded." (docs/innovation-toolkit.framework, Part 3) · 2026-11-04: "cross-reference the framework with the rest of the
+  intelligence system."
+- **The call against the alternative:** the earlier crystallizer used his "once twice three times it is a pattern" as a bare count. His Part 3
+  adds "not a fact" and "regulated and grounded". The crystallizer now keeps the count of three as a floor, adds a base-rate lift test, and holds
+  a pair that fails as a hypothesis, never announced (his 2026-10-24 "b, tighten the crystallizer threshold").
+- **Domains:** from his cognitive method (pattern recognition held against chance) into event-stream inference (co-occurrence of system
+  events).
+- **Checkable:** `tests/modules/intelligence.test.js` 15/15 on 2026-11-04. F2: two loud event types co-occurring at chance rate do not beat
+  base rate. F3: a burst, with the whole stream in one window, cannot be called an invariant. Both are cases a count-only rule of three would
+  have crystallised. F1 shows the gate still lets a real pattern through (two rare types over a real time span).
+- **Evidence against, recorded too:** the same cross-reference (`docs/innovation-toolkit-x-intelligence.md`) found the framework's f(slope)
+  ("amplifies leverage up to a threshold, then inverts") is not what `intelligence/friction.js` computes (slope only amplifies), and that his
+  Priority and Weighting formulas, Section 0's gate, and the idea vectors have no code. Those are untested parts of the framework, not proof.
+- **Skill shown:** turning a personal cognitive method into a falsifiable rule a machine applies, with the failure case (coincidence called an
+  invariant) written down before the code.
+- **His part / the coder's part:** the method, the three-gap rule and "regulated and grounded" are his. The lift formula, the hypothesis state,
+  the tests and this cross-reference are the coder's.
