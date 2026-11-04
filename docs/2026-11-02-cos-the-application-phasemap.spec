@@ -109,9 +109,9 @@ decisions_addendum_2026_11_04:
     by_the_axioms: "USER_AUTONOMY (his call), §0.0 (session 0 has no desktop: said, designed around), §4.3 (admin by one approval, his), §5.9 (one system down — the service — breaks no window), §8.6 (NSSM and COS's supervisor reused)"
 phases_addendum_2026_11_04:
   CA4_the_supervisor_as_a_windows_service:
-    status: OPEN
+    status: "BUILT 0.60.389 (COS 0.5.0) — test-cos-service 7/7; the service on Windows unverified until his run (no Windows here)"
     depends_on: [CA_D1b_the_supervisor_as_a_service, MG37_starts_with_windows]
-    files: [cos/app/service.js, cos/app/settings.js, cos/app/desktop/main.js, cos/app/version.js, cos/manager/supervisor.js, tests/modules/test-cos-service.test.js]
+    files: [cos/app/service.js, cos/app/desktop-systems.js, cos/app/controller.js, cos/app/settings.js, cos/app/desktop/main.js, cos/app/version.js, cos/manager/supervisor.js, scripts/build-cos-app.js, tests/modules/test-cos-service.test.js]
     does: >-
       cos/app/service.js: find nssm.exe; the commands that install NexusCOS (node + the linked folder's lib/nexus/autopilot.js, COS_SERVICE=1, its
       folder, logs rotated at 10 MB, restart after 2 s, SERVICE_AUTO_START, LocalSystem) and remove it; run them with one admin approval; read its
