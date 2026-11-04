@@ -53,7 +53,7 @@ async function retarget() {
   if (!win || win.isDestroyed()) return;
   const st = await ctl.state().catch(() => null); const name = (ctl.settings().settings.startOnLaunch) || 'nexus';
   const p = st && st.projects.find(x => x.project === name);
-  const t = W.windowTarget({ cockpitUp: await W.cockpitUp(), linked: p && p.linked, started: p && p.run ? p.run.running : lastStart.started, error: lastStart.error });
+  const t = W.windowTarget({ cockpitUp: await W.cockpitUp(), linked: p && p.linked, started: p && p.run ? p.run.running : lastStart.started, error: lastStart.error, installing: installState.step, installError: installState.error });
   if (!target || target.kind !== t.kind) { if (t.kind === 'cockpit') win.loadURL(t.url); else win.loadFile(path.join(__dirname, 'starting.html')); }
   target = t; if (t.kind === 'starting') win.webContents.send('cos:starting', t);
 }
@@ -156,6 +156,7 @@ function ipc() {
   const h = (name, fn) => ipcMain.handle('cos:' + name, async (_e, ...a) => { try { return await fn(...a); } catch (e) { return { ok: false, error: e.message }; } });
   h('state', () => ctl.state());
   h('openVersions', () => openVersions()); h('starting', () => target || W.windowTarget({}));   // MG36
+  h('install', () => installNexus());   // CA5: Install Nexus (from GitHub), from the starting page
   // 0.1.2 — a newer COS: the check, and the release page opened in the browser (only a github.com release page of this repo)
   h('appUpdate', () => ctl.appUpdate());
   h('openRelease', (url) => { if (typeof url !== 'string' || !/^https:\/\/github\.com\/HorrisEllis\/[Nn]exus\/releases\/tag\/cos-v\d+\.\d+\.\d+$/.test(url)) return { ok: false, error: 'not a COS release page' }; shell.openExternal(url); return { ok: true }; });
@@ -182,7 +183,18 @@ app.whenReady().then(() => {
   watchUpdates();   // CE4: the update as a Windows notification while COS is in the tray
 });
 // MG35 (MOD-COSA-START-ON-LAUNCH) — the exe is how Nexus starts: the project he chose starts when COS opens; a failure is said, never silent
+// CA5 (COS 0.6.0) — James: "have it pull from the git. it should be installing the cos ui." Nothing linked: Nexus is installed from GitHub, then started
+const installState = { step: null, error: null };
+async function installNexus() {
+  installState.error = null; installState.step = 'starting'; retarget();
+  const r = await ctl.installNexus({ onStep: (e) => { if (e.state === 'running') installState.step = e.what; if (e.state === 'failed') installState.error = e.error; retarget(); } });
+  installState.step = null; if (!r.ok) installState.error = r.error; retarget();
+  notify(r.ok ? 'Nexus is installed' : 'Nexus was not installed', r.ok ? `from GitHub (${r.via}${r.version ? `, ${r.version}` : ''}) into ${r.dir}${r.started ? ' — starting' : r.startError ? ` — it did not start: ${r.startError}` : ''}` : String(r.error).slice(0, 220));
+  return r;
+}
 async function startOnLaunch() {
+  // CA5 — nothing linked and nothing installed: COS installs Nexus itself (his "it should be installing"), then it starts like a linked folder
+  if (!ctl.linkedDir() && ctl.settings().settings.autoInstall !== false) { const st = ctl.store.list(ctl.root, 'nexus')[0]; if (!st || !st.current) { await installNexus(); return; } }
   const p = ctl.settings().settings.startOnLaunch; if (!p) return;
   // CA4 — the service holds Nexus: this window only starts the systems with a window, in his session
   if (serviceOn() && ctl.linkedDir()) {

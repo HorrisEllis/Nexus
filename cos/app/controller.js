@@ -95,6 +95,24 @@ class Controller {
   stop(project) { return this._exclusive(project, 'stopping', () => this.rt.stop(this.root, project, this.opts)); }
   remove(project, version) { return this._exclusive(project, `removing ${version}`, async () => this.store.remove(this.root, project, version)); }
   logs(project, lines = 80) { return { ok: true, ...this.rt.logs(this.root, project, { lines }) }; }
+  // 2026-11-04 CA5 — James: "have it pull from the git. it should be installing the cos ui." Nexus installed from GitHub into <root>/nexus (git
+  // clone, else the latest release zip; then npm install), then linked and started like a folder he linked himself (MG35)
+  async installNexus({ project = 'nexus', install = require('./install.js'), onStep = null } = {}) {
+    if (this._installing) return { ok: false, error: 'already installing' };
+    this._installing = true;
+    try {
+      const dir = require('path').join(this.root, project);
+      const step = (e) => { this.emit({ type: 'install.step', project, ...e }); if (onStep) onStep(e); };
+      const r = await install.run({ dir, onStep: step });
+      this.emit({ type: 'install.done', project, ok: !!r.ok, via: r.via || null, error: r.error || null });
+      if (!r.ok) return r;
+      const l = this.link(project, dir); if (!l.ok) return { ok: false, dir, error: `installed, but it could not be linked: ${l.error}` };
+      if (!this.settings().settings.startOnLaunch) this.setSetting('startOnLaunch', project);
+      const st = await this.start(project);
+      return { ...r, linked: true, started: !!(st && st.ok), ...(st && !st.ok ? { startError: st.error } : {}) };
+    } finally { this._installing = false; }
+  }
+  installing() { return !!this._installing; }
   // 2026-11-04 CA4 (CA_D1b) — James: "run in service with admin privilages for more control and power." The linked folder's headless part as the
   // Windows service NexusCOS (cos/app/service.js), and the systems with a window started in his session (cos/app/desktop-systems.js)
   linkedDir(project = 'nexus') { const st = this.store.list(this.root, project)[0]; return st && st.linked && st.linked.present ? st.linked.dir : null; }
