@@ -9,6 +9,8 @@ process.env.NEXUS_DATA_ROOT = fs.mkdtempSync(path.join(os.tmpdir(), 'fiverr-pipe
 const ROOT = path.resolve(__dirname, '..'), ND = path.join(ROOT, 'clear-glass/automation/nodes');
 const N = require(path.join(ROOT, 'lib/automation-nodes.js'));
 const { AutomationEngine } = require(path.join(ROOT, 'lib/automation/engine.js'));
+const UP = "'ABCDEFGHIJKLMNOPQRSTUVWXYZ'", LO = "'abcdefghijklmnopqrstuvwxyz'";
+const GIG_SAYS = (v) => `//*[not(ancestor-or-self::a)][not(ancestor-or-self::*[@role='option' or @role='listbox' or @role='menu'])][translate(normalize-space(text()),${UP},${LO})=translate('${v}',${UP},${LO})]`;
 (async () => {
   const e = new AutomationEngine({});
   // straight from the source files, unchanged: the workflows as written, the macros from the standalone .macro files (the current, gated ones)
@@ -30,7 +32,9 @@ const { AutomationEngine } = require(path.join(ROOT, 'lib/automation/engine.js')
     tasks: [
       // a new gig shows SELECT A CATEGORY / SELECT A SUBCATEGORY (his screenshot, 2026-10-30): his gated macro picks both; the page must then show the subcategory
       { id: 'overview', label: 'Overview: category and subcategory', retries: 1, step: { type: 'macro', config: { name: 'Fiverr gig - choose category', agentId: 'default', params: { category: '{{vars.category}}', subcategory: '{{vars.subcategory}}' } } },
-        gate: { element: { text: '{{vars.subcategory}}', timeoutMs: 8000 } } },
+        // 2026-10-30 GF6 — James: "a condition to the next gate, like what the element says, if it aligns with the gig." The dropdown itself shows the
+        // gig's subcategory: an element outside the Suggested categories links (which always show the same words) and outside an open menu
+        gate: { element: { xpath: GIG_SAYS('{{vars.subcategory}}'), visible: true, timeoutMs: 8000 } } },
       { id: 'on-pricing', label: 'You press Save & Continue (your click)', depends_on: ['overview'],
         step: { type: 'gate', config: { condition: 'page_text', value: 'Scope & Pricing', timeoutMs: 600000 } } },
       { id: 'pricing', label: 'Scope & Pricing: each package', depends_on: ['on-pricing'],

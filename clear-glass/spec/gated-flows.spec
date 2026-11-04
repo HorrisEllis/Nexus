@@ -573,6 +573,19 @@ spec:
       error_paths: ["neither picks → notFound with the macro's why and the pick's"]
       acceptance: ["test-fiverr-overview-and-a11y FO-04 in Clear Glass: the macro chose the category and stopped; the fill picks only the subcategory", "test-about-and-nodes AN-03"]
 
+    - id: MOD-GF6
+      name: gates-read-the-element-against-the-gig-and-a-failed-step-stops
+      uuid: nexus-gated-flows-element-says-the-gig-v1-0000-2026-1030-001
+      path: clear-glass/src/ipc/bridge.js
+      phase: GF6_the_element_says_the_gig_or_it_stops
+      description: "James, 2026-10-30, with the category menu open and nothing chosen, and Pipelines empty: 'how about having a condition to the next gate, like what the element says, if it aligns with the gig. it needs to stop, and display toast with an error on any step.' A gate reads the element, never the page: the category is open only when the dropdowns themselves show the gig's category and subcategory (SELECT A CATEGORY / SELECT A SUBCATEGORY gone) — the Suggested categories links, which always show the same words, no longer pass it. A choose's own gate reads the dropdown it opened (driver choose returns its selector; element-gate derive reads it). A suggestion that does not take falls through to his macro, then the built-in pick. The first part that fails stops the fill (nothing after it runs: no packages, no page macro), and a toast says which part and why; every macro run as him, every workflow and every pipeline task that fails says so in a toast too. The bundled Fiverr macro and pipeline gate on the dropdown element showing the gig's value (an xpath that excludes links), and a pipeline run on a page of its site gets the written gig's values for the vars it declares. Co-pilot's reply is built from the final result (done, stopped at, left). Settings › Pipelines lists the bundled pipelines (imported once)."
+      deps: [{ name: category-picked-from-what-the-page-shows }]
+      exports: ["gig-fields categoryChosenScript(category, subcategory)", "_gigFill → r.stopped { key, why }, r.leftToCopy recomputed", "_gigToast(msg)", "driver choose → { selector }", "element-gate derive(choose) → { selector, shows }", "pipeline task event carries label and error", "main gigVars(pipeline, gig)", "routes: bundled .pipeline seeded into Pipelines"]
+      gate_pipeline: ["GATE-GF6-001: act → read the element → aligns with the gig: next · else: stop → toast (part, why)"]
+      behavioral_contracts: ["a gate never passes on words the page shows elsewhere", "nothing runs after a failed part", "every failed step is said in a toast and in the result"]
+      error_paths: ["the toast cannot be shown (no window) → the result still carries stopped, said in the log"]
+      acceptance: ["test-gig-stop-and-toast GS-01..GS-05 in Clear Glass: a suggestion that does not take falls through and the dropdowns are read; a part that cannot be done stops the fill with a toast; the Co-pilot line names it; the bundled pipeline is listed; a failed pipeline task toasts"]
+
     - id: MOD-EI1
       name: human-input-for-every-key
       uuid: nexus-gated-flows-human-input-v1-0000-2026-1030-001

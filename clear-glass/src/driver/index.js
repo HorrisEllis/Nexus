@@ -798,7 +798,7 @@ class ClearDriver {
       const m = OM.matchOption(found.options, option);
       if (!m.ok) throw new Error(`choose: ${m.why} — options: ${m.candidates.join(' | ')}`);
       const r = await this._select(agentId, { selector: `[data-cg-choose-native="${found.n}"]`, text: m.option });
-      return { kind: 'native', option: m.option, shown: r.text, by: m.by, via: 'native' };
+      return { kind: 'native', option: m.option, shown: r.text, by: m.by, via: 'native', selector: trigSel };   // GF6: the dropdown it chose in, for its gate
     }
     // 0.60.275 — James, 2026-10-28: "the drop downs. it needs to wait for the system. it keeps freezing. and then, opens the drop down, doesn't
     // click. could always try arrows, or a number." Before each step it waits until the page answers quickly (a frozen page is waited for, not
@@ -896,7 +896,7 @@ class ClearDriver {
       if (label && OM.shows(shown, m.option)) { clickedBy = label; break; }
     }
     if (!clickedBy) throw new Error(`choose: "${m.option}" did not take — the dropdown shows "${shown}" (tried: ${tried.join('; ')})`);
-    return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, clickedBy, tried, ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
+    return { kind: 'widget', option: m.option, shown, by: m.by, via: picked && picked.via || via, clickedBy, tried, selector: trigSel, ...((opened && opened.viaWhy) || (picked && picked.viaWhy) ? { viaWhy: (picked && picked.viaWhy) || opened.viaWhy } : {}) };
   }
 
   // 0.60.281 SN1 — James, 2026-10-29: "also snowflake plugin support to macros and automation." route/unroute this tab's site, start, stop,

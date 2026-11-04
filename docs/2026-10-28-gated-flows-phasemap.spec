@@ -451,6 +451,12 @@ phases_ei:
     status: BUILT 0.60.294
     depends_on: [GF2_every_editor_page_known, GG1_every_part_gated]
     files: [clear-glass/src/ipc/bridge.js, tests/modules/test-fiverr-overview-and-a11y.test.js]
+  GF6_the_element_says_the_gig_or_it_stops:
+    spec: clear-glass/spec/gated-flows.spec
+    blocks: [MOD-GF6]
+    status: BUILT 0.60.298
+    depends_on: [GF5_category_and_subcategory_finished, PL7_pipeline_tasks_gated_on_elements]
+    files: [clear-glass/src/ipc/bridge.js, clear-glass/src/autofill/gig-fields.js, clear-glass/src/driver/index.js, clear-glass/src/page/element-gate.js, clear-glass/src/copilot/verbs.js, clear-glass/src/main/index.js, lib/automation/pipeline.js, lib/automation/routes.js, clear-glass/automation/nodes/fiverr-gig-choose-category.macro, clear-glass/automation/nodes/fiverr-gig.pipeline, scripts/build-fiverr-pipeline.js, tests/modules/test-gig-stop-and-toast.test.js]
   EI1_every_key_and_click_paced_through_eros:
     spec: clear-glass/spec/gated-flows.spec
     blocks: [MOD-EI1]

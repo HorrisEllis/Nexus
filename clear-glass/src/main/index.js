@@ -1208,6 +1208,13 @@ async function bootstrap() {
   // §0.60.219 SP5 — James, 2026-10-23: "Also need a processes screen for background tabs and activity." The activity ring (src/processes)
   // reads what every system already says on this bus: the driver's actions, background tabs, downloads, workflow runs, captured errors.
   { const act = require('../processes').activity(); bus.on('*', (ev) => { try { act.fromEvent(ev.type, ev.data); } catch (_) {} }); }
+  // 2026-10-30 GF6 — James: "it needs to stop, and display toast with an error on any step." A pipeline task or a workflow run that fails is said in a
+  // toast in his window, with the pipeline, the task and its error (macros run as him toast from the bridge's runMacroAsPerson)
+  bus.on('*', (ev) => { try {
+    const d = ev.data || {};
+    if (ev.type === 'automation.pipeline.task' && d.status === 'failed') ipcBridge && ipcBridge._gigToast(`Pipeline "${d.pipeline || d.pipelineId}" stopped at ${d.label || d.task}: ${d.error || 'failed'}`);
+    else if (ev.type === 'automation.run.error') ipcBridge && ipcBridge._gigToast(`Workflow ${d.id} stopped${d.step ? ` at ${d.step}` : ''}: ${d.error}`);
+  } catch (_) {} });
   // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." Clear Glass's node registry: its listener over
   // clear-glass/data/nodes, indexed into clear-glass/data/node-index with every change, its node events on this SISO bus.
   try { require('../../../lib/node-registry.js').startForSystem('clear-glass', { bus: { emit: (e, d) => emit(e, d) } }); } catch (e) { console.warn(`[ClearGlass] node registry: ${e.message}`); }
@@ -2896,6 +2903,19 @@ function _siteOnLoad(contents, url) {
 // opens (onLoad) runs here, from this Clear Glass's own engine (the one Settings › Pipelines shows), with the page given as {{vars.page}}
 // (its window: wc:<id>) and {{vars.url}}; once per page and minute, like a site's macros; off when the site's Site settings say pipelines.enabled
 // false. A failure is said in the log with the pipeline and the site.
+// 2026-10-30 GF6 — the gig his gates are checked against: the vars a pipeline declares (category, subcategory, basic_name …) that the written gig
+// has, filled from it (src/autofill/gig-pages.js valueOf). A var the gig has no value for keeps the pipeline's own.
+function gigVars(p, bridge) {
+  let gig = null; try { gig = bridge && bridge.autofillStore && bridge.autofillStore.getLastGig(); } catch (_) {}
+  if (!gig || !p || !p.vars) return {};
+  const GP = require('../autofill/gig-pages'), out = {};
+  for (const k of Object.keys(p.vars)) {
+    const key = k.replace(/^(basic|standard|premium)_/, '$1.');
+    let v = null; try { v = k === 'subcategory' ? gig.subcategory : k === 'category' ? gig.category : GP.valueOf(gig, key); } catch (_) {}
+    if (v != null && v !== '') out[k] = Array.isArray(v) ? v.join(', ') : String(v);
+  }
+  return out;
+}
 function _sitePipelinesOnLoad(contents, url) {
   const A = ipcBridge && ipcBridge.mesh && ipcBridge.mesh._automation; if (!A) return;
   if (require('../site-settings/readers').pipelinesAllowed(url) === false) return;
@@ -2907,7 +2927,7 @@ function _sitePipelinesOnLoad(contents, url) {
     const key = `${contents.id}|${origin}|pipeline:${p.id}`;
     if (_siteLoadRuns.has(key)) continue;
     _siteLoadRuns.set(key, now);
-    Promise.resolve(P.run(p.id, { vars: { page: `wc:${contents.id}`, url }, wait: true }))
+    Promise.resolve(P.run(p.id, { vars: { ...gigVars(p, ipcBridge), page: `wc:${contents.id}`, url }, wait: true }))
       .then(r => { if (r && !r.ok) console.warn(`[pipelines] "${p.name}" on load at ${origin} did not finish: ${r.error || r.status}`); try { require('../processes').activity().push({ kind: 'pipeline', what: `pipeline "${p.name}" ${r && r.ok ? 'ran' : `did not finish: ${(r && r.error) || 'a task failed'}`}`, url, by: 'site pipeline (on load)', level: r && r.ok ? 'info' : 'warn' }); } catch (_) {} })
       .catch(e => console.warn(`[pipelines] "${p.name}" on load at ${origin} failed: ${e.message}`));
   }

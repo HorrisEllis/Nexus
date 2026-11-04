@@ -126,7 +126,11 @@ function describeJob(job, r = {}) {
   if (job.kind === 'fill' && job.gig) {
     if (r.needsGig) return r.error;
     const left = r.leftToCopy || [];
-    return `Filled the gig "${r.title || ''}": ${names(r.filled, 'key').join(', ') || 'nothing matched'}${r.drafted ? ' (written from your Fiverr profile just now)' : ''}.` +
+    // 2026-10-30 GF6 — from the final result: what the page took (typed, chosen, tags), where it stopped and why, what is left
+    const done = [...names(r.filled, 'key'), ...(r.dropdowns || []).filter(d => d.ok).map(d => `${d.key}${d.option ? ` (${d.option})` : ''}`),
+      ...(r.tags && r.tags.done && r.tags.done.length ? [`tags (${r.tags.done.length})`] : []), ...names(r.siteKeys, 'key').map(k => `${k} (your keys)`)];
+    return `Filled the gig "${r.title || ''}": ${[...new Set(done)].join(', ') || 'nothing matched'}${r.drafted ? ' (written from your Fiverr profile just now)' : ''}.` +
+      `${r.stopped ? ` Stopped at ${r.stopped.key}: ${r.stopped.why}.` : ''}` +
       `${left.length ? ` Left to copy by hand: ${left.join(', ')}.` : ''}${(r.failed || []).length ? ` Failed: ${names(r.failed, 'key').join(', ')}.` : ''} Nothing was saved or published.`;
   }
   if (job.kind === 'fill') {
