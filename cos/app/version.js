@@ -13,4 +13,6 @@
 // Windows notification while COS is in the tray) and left this at 0.3.0, so the workflow would have refused it and his 0.3.0 exe would never get them.
 // 0.5.0 (Nexus 0.60.389, CA4): James, 2026-11-04: "run in service with admin privilages for more control and power." · "run on startup with an option to
 // disable." Nexus's headless part as the Windows service NexusCOS through NSSM (LocalSystem, at boot), his tray switch; Clear Glass started in his session.
-module.exports = { version: '0.5.0' };
+// 0.6.0 (Nexus 0.60.390, CA5): James, 2026-11-04: "have it pull from the git. it should be installing the cos ui. this is redundant garbage." Nothing
+// linked: COS installs Nexus from GitHub itself (git clone, else the latest release zip; npm install), links it and starts it, so the cockpit opens.
+module.exports = { version: '0.6.0' };

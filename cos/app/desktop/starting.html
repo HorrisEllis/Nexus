@@ -23,13 +23,15 @@
   <div class="logo">COS</div>
   <div class="spin" id="spin"></div>
   <div id="why">starting…</div>
-  <div class="row"><button class="primary" id="start" hidden>Start Nexus</button><button id="versions">Versions &amp; manual update</button></div>
+  <div class="row"><button class="primary" id="install" hidden>Install Nexus</button><button class="primary" id="start" hidden>Start Nexus</button><button id="versions">Versions &amp; manual update</button></div>
 </main>
 <script>
   const show = (t) => { if (!t) return; document.getElementById('why').textContent = t.why;
-    const waiting = /^starting Nexus/.test(t.why); document.getElementById('spin').hidden = !waiting;
+    const waiting = /^starting Nexus|^installing Nexus/.test(t.why); document.getElementById('spin').hidden = !waiting;
+    document.getElementById('install').hidden = !t.canInstall;   // CA5
     document.getElementById('start').hidden = !/not started|did not start/.test(t.why); };
   window.cosStart.onStarting(show); window.cosStart.why().then(show);
+  document.getElementById('install').onclick = async () => { document.getElementById('install').hidden = true; document.getElementById('why').textContent = 'installing Nexus…'; const r = await window.cosStart.install(); if (r && r.ok === false) document.getElementById('why').textContent = r.error; };
   document.getElementById('versions').onclick = () => window.cosStart.openVersions();
   document.getElementById('start').onclick = async () => { document.getElementById('why').textContent = 'starting…'; const r = await window.cosStart.start(); if (r && r.ok === false) document.getElementById('why').textContent = r.error; };
 </script>

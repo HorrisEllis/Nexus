@@ -126,7 +126,7 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     assert.match(S.set(tmp, 'runAsService', 'maybe').error, /true or false/);
     const B = fs.readFileSync(path.join(ROOT, 'scripts/build-cos-app.js'), 'utf8');
     for (const f of ['cos/app/service.js', 'cos/app/desktop-systems.js']) assert.ok(B.includes(`'${f}'`), f);
-    assert.strictEqual(require(path.join(ROOT, 'cos/app/version.js')).version, '0.5.0');
+    const [maj, min] = require(path.join(ROOT, 'cos/app/version.js')).version.split('.').map(Number); assert.ok(maj > 0 || min >= 5, 'COS 0.5.0 or later carries the service');
     const M = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/main.js'), 'utf8');
     assert.match(M, /Run Nexus as a Windows service \(admin, at boot; needs nssm\.exe\)/);
     assert.match(M, /if \(serviceOn\(\) && ctl\.linkedDir\(\)\)/);

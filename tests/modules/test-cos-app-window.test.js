@@ -32,7 +32,7 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
   const linked = { dir: 'D:\\nexus', version: '0.60.365' };
   await test('CW-01', 'windowTarget: the cockpit when it answers; the starting page says why otherwise', () => {
     assert.deepStrictEqual(W.windowTarget({ cockpitUp: true, linked }), { kind: 'cockpit', url: 'http://127.0.0.1:7797/', why: 'the cockpit answers' });
-    assert.match(W.windowTarget({}).why, /no Nexus folder is linked yet: open Versions & manual update/);
+    assert.match(W.windowTarget({}).why, /Nexus is not installed yet: press Install Nexus \(from GitHub\), or link your own folder in Versions & manual update/);   // CA5 (0.6.0): was "no Nexus folder is linked yet"
     assert.match(W.windowTarget({ linked, started: false }).why, /linked but not started: press Start/);
     assert.match(W.windowTarget({ linked, error: 'port 9000 in use\nmore' }).why, /^Nexus did not start: port 9000 in use$/);
     assert.match(W.windowTarget({ linked, started: true }).why, /^starting Nexus 0\.60\.365 from D:\\nexus — the cockpit opens here/);
@@ -96,7 +96,7 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
     assert.ok(/Versions & manual update/.test(m) && /Start COS with Windows/.test(m) && /Start in the tray/.test(m) && /Admin rights at startup/.test(m));
     assert.ok(/applyLogon\(\)\.catch/.test(m) && /process\.argv\.includes\('--hidden'\)/.test(m));
     const sp = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/starting-preload.js'), 'utf8');
-    assert.deepStrictEqual([...sp.matchAll(/ipcRenderer\.invoke\('cos:(\w+)'/g)].map(x => x[1]), ['starting', 'openVersions', 'start'], 'the cockpit\'s window gets three calls, nothing else');
+    assert.deepStrictEqual([...sp.matchAll(/ipcRenderer\.invoke\('cos:(\w+)'/g)].map(x => x[1]), ['starting', 'openVersions', 'start', 'install'], 'the cockpit\'s window gets four calls, nothing else (CA5 added install)');
     const B = require(path.join(ROOT, 'scripts/build-cos-app.js'));
     for (const f of ['cos/app/window.js', 'cos/app/logon.js', 'cos/app/desktop/starting.html', 'cos/app/desktop/starting-preload.js']) assert.ok(B.FILES.includes(f), `${f} staged into the exe`);
   });

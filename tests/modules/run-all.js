@@ -443,7 +443,8 @@ const SUITES = [
   'test-cos-pause.test.js',
   'test-cos-app-link.test.js',
   'test-cos-app-window.test.js',
-  'test-cos-service.test.js',   // 0.60.389 CA4 (COS 0.5.0) — Nexus as the Windows service NexusCOS; Clear Glass in his session
+  'test-cos-service.test.js',
+  'test-cos-install.test.js',   // 0.60.390 CA5 (COS 0.6.0) — COS installs Nexus from GitHub itself, first run   // 0.60.389 CA4 (COS 0.5.0) — Nexus as the Windows service NexusCOS; Clear Glass in his session
   'test-cg-idle-tray.test.js',
   'test-cos-network.test.js',
   'test-update-menu.test.js',

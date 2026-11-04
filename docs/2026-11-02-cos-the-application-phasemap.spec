@@ -119,3 +119,19 @@ phases_addendum_2026_11_04:
       window, when the service holds Nexus, starts the windowed systems itself in his session.
     proof: "test-cos-service: the install and remove commands exactly; nssm found or said missing; status read; the supervisor leaves Clear Glass to
       the session under COS_SERVICE=1 and starts it otherwise. On Windows: unverified until his run (said)."
+
+# ── ADDENDUM 2026-11-04 (b) — his: COS installs Nexus from GitHub itself ─────────────────────────────────────────────────────────────
+# James, 2026-11-04, with COS 0.5.0 open on "no Nexus folder is linked yet": "okay. what is this ? where is the cos ui ? also, have it pull from the
+# git. it should be installing the cos ui. this is redundant garbage." · "i know i downloaded it. this is what i get."
+phases_addendum_2026_11_04_b:
+  CA5_cos_installs_nexus_from_github:
+    status: "BUILT 0.60.390 (COS 0.6.0) — test-cos-install 6/6; on Windows unverified until his run"
+    depends_on: [MG35_the_exe_starts_nexus, MG36_the_cockpit_is_the_window]
+    files: [cos/app/install.js, cos/app/controller.js, cos/app/window.js, cos/app/settings.js, cos/app/desktop/main.js, cos/app/desktop/starting.html, cos/app/desktop/starting-preload.js, cos/app/version.js, scripts/build-cos-app.js, tests/modules/test-cos-install.test.js]
+    does: >-
+      Nothing linked on first launch: COS installs Nexus into <COS root>/nexus — git clone (partial) when git is on the machine, else the latest
+      release's nexus-<version>.zip — then npm install, links it, sets it to start with COS and starts it, so the window becomes the cockpit.
+      Each step on the starting page; a failure stops with its reason and an Install Nexus button; nothing half-done is linked. autoInstall
+      (default on) is his switch; linking his own folder still works (Versions & manual update).
+    proof: "test-cos-install: the clone and npm commands exactly, a clone pulled, the release-zip path, a failure stopping with its reason, the
+      controller linking and starting, the starting page's states"
