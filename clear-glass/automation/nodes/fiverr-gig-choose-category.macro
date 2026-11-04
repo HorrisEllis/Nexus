@@ -20,7 +20,7 @@ tags:
   - step:choose
   - gated
 source: clear-glass/src/automation/nodes.js
-fingerprint: ddc28025e7ac1c28
+fingerprint: 36d014b408d1f3be
 payload:
   uuid: fiverr-gig-choose-category-v1
   name: Fiverr gig - choose category
@@ -35,7 +35,7 @@ payload:
         option: '{{category}}'
         pick: auto
       gate:
-        xpath: '//*[not(ancestor-or-self::a)][not(ancestor-or-self::*[@role=''option'' or @role=''listbox'' or @role=''menu''])][translate(normalize-space(text()),''ABCDEFGHIJKLMNOPQRSTUVWXYZ'',''abcdefghijklmnopqrstuvwxyz'')=translate(''{{category}}'',''ABCDEFGHIJKLMNOPQRSTUVWXYZ'',''abcdefghijklmnopqrstuvwxyz'')]'
+        xpath: '//*[not(ancestor-or-self::a)][not(ancestor-or-self::*[@role=''option'' or @role=''listbox'' or @role=''menu'' or @id=''__cg_spot__''])][translate(normalize-space(text()),''ABCDEFGHIJKLMNOPQRSTUVWXYZ'',''abcdefghijklmnopqrstuvwxyz'')=translate(''{{category}}'',''ABCDEFGHIJKLMNOPQRSTUVWXYZ'',''abcdefghijklmnopqrstuvwxyz'')]'
         visible: true
         retries: 2
         timeoutMs: 4000
@@ -45,7 +45,7 @@ payload:
         option: '{{subcategory}}'
         pick: auto
       gate:
-        xpath: '//*[not(ancestor-or-self::a)][not(ancestor-or-self::*[@role=''option'' or @role=''listbox'' or @role=''menu''])][translate(normalize-space(text()),''ABCDEFGHIJKLMNOPQRSTUVWXYZ'',''abcdefghijklmnopqrstuvwxyz'')=translate(''{{subcategory}}'',''ABCDEFGHIJKLMNOPQRSTUVWXYZ'',''abcdefghijklmnopqrstuvwxyz'')]'
+        xpath: '//*[not(ancestor-or-self::a)][not(ancestor-or-self::*[@role=''option'' or @role=''listbox'' or @role=''menu'' or @id=''__cg_spot__''])][translate(normalize-space(text()),''ABCDEFGHIJKLMNOPQRSTUVWXYZ'',''abcdefghijklmnopqrstuvwxyz'')=translate(''{{subcategory}}'',''ABCDEFGHIJKLMNOPQRSTUVWXYZ'',''abcdefghijklmnopqrstuvwxyz'')]'
         visible: true
         retries: 2
         timeoutMs: 4000

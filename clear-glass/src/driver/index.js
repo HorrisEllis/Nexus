@@ -749,7 +749,7 @@ class ClearDriver {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
     if (option === undefined || option === null || option === '') throw new Error('choose requires option');
-    if (!selector && !column && !showsText) throw new Error('choose requires selector, column with row or shows, or shows alone');   // 0.60.283: shows alone (the Overview's SELECT A CATEGORY)
+    if (!selector && !column && !showsText && !row) throw new Error('choose requires selector, column with row or shows, shows alone, or row alone');   // row alone: 2026-11-04 (Service type)   // 0.60.283: shows alone (the Overview's SELECT A CATEGORY)
     const OM = require('../page/option-match');
     const found = await this._evalJs(wc, `(function(sel, col, row, showsText){
       function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
@@ -764,12 +764,15 @@ class ClearDriver {
         if (col) { var heads = byText(col); if (!heads.length) return { error: 'no column headed "' + col + '" on the page' }; h = heads[0].getBoundingClientRect(); }
         var band = null;
         if (row) { var rows = byText(row); if (!rows.length) return { error: 'no row labelled "' + row + '" on the page' };
-          var rl = rows[0], box = (rl.closest('tr') || rl.parentElement || rl).getBoundingClientRect(); band = { top: box.top, bottom: box.bottom }; }
+          var rl = rows[0], box = (rl.closest('tr') || rl.parentElement || rl).getBoundingClientRect(); band = { top: box.top, bottom: box.bottom };
+          // 2026-11-04 — a row alone (Fiverr's "Service type"): the dropdown is the one to the right of its label, never the label itself
+          if (!col) band.rightOf = rl.getBoundingClientRect().right; }
         var cands = [];
         document.querySelectorAll('select,[role="combobox"],[aria-haspopup],button,[tabindex],div,span').forEach(function(el){
           if (!vis(el)) return; var r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
           if (h && (cx < h.left || cx > h.right)) return;
           if (band && (cy < band.top || cy > band.bottom)) return;
+          if (band && band.rightOf != null && r.left < band.rightOf) return;
           if (!band && showsText && norm(el.textContent) !== norm(showsText)) return;
           if (!band && !showsText) return;
           cands.push(el); });

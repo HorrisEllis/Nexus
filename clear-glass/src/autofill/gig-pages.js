@@ -37,7 +37,7 @@ const SIGNS = Object.freeze({
 const TAB_OF = { general: 'overview', pricing: 'pricing', description: 'description', requirements: 'requirements', gallery: 'gallery' };
 
 const PARTS = Object.freeze({
-  overview: ['title', 'category', 'tags'],   // 0.60.283: tags too (Search tags, typed one by one); 2026-10-30 GF2: the title
+  overview: ['title', 'category', 'serviceType', 'tags'],   // 2026-11-04: the Service type dropdown, when the gig names one   // 0.60.283: tags too (Search tags, typed one by one); 2026-10-30 GF2: the title
   pricing: ['basic.name', 'standard.name', 'premium.name', 'basic.description', 'standard.description', 'premium.description',
     'basic.delivery', 'standard.delivery', 'premium.delivery',
     // 0.60.286 GM2 — James: "do everything you can ... to get fiverr operational": revisions and price were never filled
@@ -104,6 +104,7 @@ function valueOf(gig, part) {
   if (part === 'category') return gig.category ? (gig.subcategory ? `${gig.category} > ${gig.subcategory}` : gig.category) : null;
   if (part === 'tags') return Array.isArray(gig.tags) && gig.tags.length ? gig.tags.slice(0, 5).join(', ') : null;   // 0.60.283
   // 2026-10-30 GF2 — the title without the "I will" the editor shows itself; the description; the lists as a count (filled item by item)
+  if (part === 'serviceType') return gig.serviceType ? String(gig.serviceType) : null;   // 2026-11-04
   if (part === 'title') return gig.title ? String(gig.title).replace(/^I will\s+/i, '') : null;
   if (part === 'description') return gig.description ? String(gig.description) : null;
   if (part === 'faq') return Array.isArray(gig.faq) && gig.faq.some(f => f && f.question && f.answer) ? `${gig.faq.filter(f => f && f.question && f.answer).length} FAQ` : null;

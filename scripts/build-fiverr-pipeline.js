@@ -10,7 +10,7 @@ const ROOT = path.resolve(__dirname, '..'), ND = path.join(ROOT, 'clear-glass/au
 const N = require(path.join(ROOT, 'lib/automation-nodes.js'));
 const { AutomationEngine } = require(path.join(ROOT, 'lib/automation/engine.js'));
 const UP = "'ABCDEFGHIJKLMNOPQRSTUVWXYZ'", LO = "'abcdefghijklmnopqrstuvwxyz'";
-const GIG_SAYS = (v) => `//*[not(ancestor-or-self::a)][not(ancestor-or-self::*[@role='option' or @role='listbox' or @role='menu'])][translate(normalize-space(text()),${UP},${LO})=translate('${v}',${UP},${LO})]`;
+const GIG_SAYS = (v) => `//*[not(ancestor-or-self::a)][not(ancestor-or-self::*[@role='option' or @role='listbox' or @role='menu' or @id='__cg_spot__'])][translate(normalize-space(text()),${UP},${LO})=translate('${v}',${UP},${LO})]`;
 (async () => {
   const e = new AutomationEngine({});
   // straight from the source files, unchanged: the workflows as written, the macros from the standalone .macro files (the current, gated ones)

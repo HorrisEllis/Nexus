@@ -134,10 +134,11 @@ document.querySelectorAll('.dv').forEach(function(dv){ dv.addEventListener('clic
   await test('FW-09', 'the fill does the detected page only: a learned target first, delivery per tier, the rest listed; Overview clicks the category', async () => {
     const Bridge = require(CG('src/ipc/bridge.js'));
     const gig = { title: 'I will build it', category: 'Programming & Tech', subcategory: 'AI Development', tags: [], description: 'd', faq: [], requirements: [],
-      packages: { basic: { name: 'Starter', description: 'one', price: 30, deliveryDays: 3 }, standard: { name: 'Plus', description: 'two', price: 60, deliveryDays: 5 } } };
+      packages: { basic: { name: 'Starter', price: 30, deliveryDays: 3 }, standard: { price: 60, deliveryDays: 5 } } };   // GF6: only what the stand-in page has (a missing part stops the fill)
     const run = async (read) => {
       const calls = [];
       const self = { dom: { handleQuery: async () => [], handleMutate: async () => ({}) }, postEvent: () => {}, _humanCheckGate: async () => ({ pass: true }), _gigFeatures: Bridge.prototype._gigFeatures,   // 0.60.281 AP1 the package rows
+        _gigText: async (a, part, v) => { last = String(v); return { kind: 'typed' }; },   // GF6: the title part (a failed part stops the fill, so the stand-in types it)
         // 2026-10-30 GG1: every part is gated now, so the stand-in answers the reads a page would (what was last typed, what was chosen)
         driver: { exec: async (c) => { calls.push(c); if (c.action === 'readPage') return read; if (c.action === 'choose') return { option: c.option + ' Days' };
           if (c.action === 'setValue' || c.action === 'insertText' || c.action === 'typeAt') { last = String(c.value != null ? c.value : c.text); return { value: last, selector: '#typed' }; }
@@ -153,7 +154,13 @@ document.querySelectorAll('.dv').forEach(function(dv){ dv.addEventListener('clic
     assert.strictEqual(r.page, 'pricing');
     assert.ok(calls.some(c => c.action === 'setValue' && c.selector === '#learned-basic-name' && c.value === 'Starter'), 'the learned target is used');
     assert.deepStrictEqual(calls.filter(c => c.action === 'choose').map(c => [c.column, c.option]), [['BASIC', '3'], ['STANDARD', '5']]);
-    assert.deepStrictEqual(r.notFound.map(n => n.key).sort(), ['basic.description', 'standard.description', 'standard.name'], 'listed to point at');
+    assert.deepStrictEqual([r.notFound, r.stopped], [[], undefined], JSON.stringify(r.notFound));
+    // 2026-10-30 GF6 — James: "it needs to stop, and display toast with an error on any step." A part the page does not have stops the fill there,
+    // said with why; nothing after it runs (no delivery picked)
+    gig.packages.standard.name = 'Plus';
+    const st = await run({ url: 'https://www.fiverr.com/edit', headings: [{ text: 'Scope & Pricing' }, { text: 'Packages' }], links: [] });
+    assert.deepStrictEqual([st.r.stopped && st.r.stopped.key, st.r.notFound.map(n => n.key), st.calls.filter(c => c.action === 'choose').length], ['standard.name', ['standard.name'], 0], JSON.stringify(st.r.stopped));
+    delete gig.packages.standard.name;
     assert.ok(!calls.some(c => c.action === 'pointer'), 'no category click on the pricing page');
     const o = await run({ url: 'https://www.fiverr.com/edit', headings: [], text: 'Suggested categories Gig metadata', links: [{ text: 'Programming & Tech > AI Development', selector: '#cat1' }] });
     assert.strictEqual(o.r.page, 'overview');

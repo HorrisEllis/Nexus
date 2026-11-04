@@ -1,8 +1,8 @@
 # The Fiverr gig as a pipeline — bundled with Clear Glass (2026-10-30 PN4). James: "should we rebuild the fiverr plugin?"
 envelope: 1
-uuid: nexus-export-pipeline-035e79d4-6546-403c-a67f-f7319bcd0b39
+uuid: nexus-export-pipeline-dc4e9d22-077f-482c-9381-6ee1ca5f9d28
 type: pipeline
-id: 035e79d4-6546-403c-a67f-f7319bcd0b39
+id: dc4e9d22-077f-482c-9381-6ee1ca5f9d28
 context: Clear Glass → Settings → Pipelines
 intent: >-
   A new Fiverr gig, page by page: Overview (category, subcategory, with your choose-category macro),
@@ -18,14 +18,14 @@ tags:
   - step:workflow
   - fiverr
   - bundled
-exported_at: 1793363036821
+exported_at: 1793770469552
 source: lib/automation-nodes.js
 occurrences: 1
-firstSeenAt: 1793363036821
-lastSeenAt: 1793363036821
+firstSeenAt: 1793770469552
+lastSeenAt: 1793770469552
 fingerprint: null
 payload:
-  id: 035e79d4-6546-403c-a67f-f7319bcd0b39
+  id: dc4e9d22-077f-482c-9381-6ee1ca5f9d28
   format: nexus-pipeline
   version: 1
   name: Fiverr gig
@@ -64,8 +64,8 @@ payload:
         element:
           xpath: >-
             //*[not(ancestor-or-self::a)][not(ancestor-or-self::*[@role='option' or @role='listbox'
-            or
-            @role='menu'])][translate(normalize-space(text()),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')=translate('{{vars.subcategory}}','ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')]
+            or @role='menu' or
+            @id='__cg_spot__'])][translate(normalize-space(text()),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')=translate('{{vars.subcategory}}','ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')]
           visible: true
           timeoutMs: 8000
       retries: 1
@@ -119,8 +119,8 @@ payload:
             gate:
               xpath: >-
                 //*[not(ancestor-or-self::a)][not(ancestor-or-self::*[@role='option' or
-                @role='listbox' or
-                @role='menu'])][translate(normalize-space(text()),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')=translate('{{category}}','ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')]
+                @role='listbox' or @role='menu' or
+                @id='__cg_spot__'])][translate(normalize-space(text()),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')=translate('{{category}}','ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')]
               visible: true
               retries: 2
               timeoutMs: 4000
@@ -132,8 +132,8 @@ payload:
             gate:
               xpath: >-
                 //*[not(ancestor-or-self::a)][not(ancestor-or-self::*[@role='option' or
-                @role='listbox' or
-                @role='menu'])][translate(normalize-space(text()),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')=translate('{{subcategory}}','ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')]
+                @role='listbox' or @role='menu' or
+                @id='__cg_spot__'])][translate(normalize-space(text()),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')=translate('{{subcategory}}','ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')]
               visible: true
               retries: 2
               timeoutMs: 4000
@@ -144,7 +144,7 @@ payload:
         description: >-
           Overview of a new gig: pick {{category}} in SELECT A CATEGORY, then {{subcategory}} in
           SELECT A SUBCATEGORY, each gated on the dropdown itself showing the value (GF6).
-        createdAt: 1793363036821
+        createdAt: 1793770469552
         runCount: 0
         lastRunAt: null
       - uuid: fiverr-gig-choose-delivery-v2
@@ -178,7 +178,7 @@ payload:
         runCount: 0
         lastRunAt: null
     workflows:
-      - ref: 48026490-c0d5-41a2-b5f8-5d85a62e0a2a
+      - ref: 2a1a97e1-4e3b-4e22-97cd-f38a6d9df879
         name: Fiverr gig - Scope & Pricing (steps)
         description: >-
           Scope & Pricing page, as editable steps: stops at a human check, types each package name
@@ -198,16 +198,16 @@ payload:
           concurrency: queue
           timeoutMs: 120000
         steps:
-          - id: 648d4e9e-4fb5-4e6d-9575-eec81ecdba50
+          - id: 352f87ad-9c9e-4ea7-819a-1d7f351ce0d3
             type: trigger
             config: {}
-          - id: 36017a13-b5ff-41cd-a731-581bcf7d567c
+          - id: f60211b6-7ee9-47fe-8589-f3bf56680cd8
             type: extract
             config:
               page: auto
               mode: page
             label: Page
-          - id: 5f957d7e-8151-4d9b-ac3f-1f0b73d79cc7
+          - id: 0f2fe3d4-08c4-4c6b-9c56-ec13c9904b53
             type: condition
             config:
               left: '{{steps.Page.output.text}}'
@@ -215,10 +215,10 @@ payload:
               value: >-
                 /press\s*(&|and)\s*hold|px-captcha|verify you are human|checking if the site
                 connection is secure/i
-              onTrue: e479876b-b6f2-4e99-b955-0366a41b1e76
+              onTrue: 780af295-f7d5-4eed-81b8-5f7a5ee25066
               onFalse: next
             label: Human check?
-          - id: 4faef9ac-d2c9-435e-b2e9-17efeec284a0
+          - id: b2b7eac4-b292-4366-b78c-2f283cf92c37
             type: browser
             config:
               action: fill
@@ -227,7 +227,7 @@ payload:
               value: '{{vars.basic_name}}'
             label: BASIC name
             onError: continue
-          - id: 70a5f9c6-a343-4d53-a03a-8557cdd15354
+          - id: d4210c76-fbe5-49b1-bd4e-689bfc83adcc
             type: browser
             config:
               action: fill
@@ -236,7 +236,7 @@ payload:
               value: '{{vars.basic_description}}'
             label: BASIC description
             onError: continue
-          - id: 7e2d8813-3dc2-4d5a-a7e1-395fce7cddb3
+          - id: da5beef8-beba-436a-a7bd-ce955f7a809d
             type: macro
             config:
               name: Fiverr gig - choose delivery
@@ -246,7 +246,7 @@ payload:
                 delivery = {{vars.basic_delivery}}
             label: BASIC delivery
             onError: continue
-          - id: 22fb8959-1636-4e4f-bb6f-ae1454998caa
+          - id: 93f7781b-44ca-422b-b290-06fff7681e05
             type: browser
             config:
               action: fill
@@ -255,7 +255,7 @@ payload:
               value: '{{vars.standard_name}}'
             label: STANDARD name
             onError: continue
-          - id: b2cc6131-6414-45b8-a43d-55398ab67bb0
+          - id: fce9b9b5-c788-42a5-9eb9-ec3d5b1f6c35
             type: browser
             config:
               action: fill
@@ -264,7 +264,7 @@ payload:
               value: '{{vars.standard_description}}'
             label: STANDARD description
             onError: continue
-          - id: 61a8a1e9-c47d-4cfd-a49d-acc1544c888f
+          - id: c50601e4-fe49-49d6-a737-a8b7a8b06889
             type: macro
             config:
               name: Fiverr gig - choose delivery
@@ -274,7 +274,7 @@ payload:
                 delivery = {{vars.standard_delivery}}
             label: STANDARD delivery
             onError: continue
-          - id: cdeff3f5-8da8-4811-b375-bb9d62366c35
+          - id: f4db6f80-ddbb-480c-9e0f-6d9a5da2cdd0
             type: browser
             config:
               action: fill
@@ -283,7 +283,7 @@ payload:
               value: '{{vars.premium_name}}'
             label: PREMIUM name
             onError: continue
-          - id: db56e96c-76e0-422c-9a80-5f3751fc1979
+          - id: 889f24f3-ec20-421a-9f8a-1ffbd2233a23
             type: browser
             config:
               action: fill
@@ -292,7 +292,7 @@ payload:
               value: '{{vars.premium_description}}'
             label: PREMIUM description
             onError: continue
-          - id: 33437e72-ed76-4201-a9b1-7032f540839e
+          - id: b4f6e044-a041-4907-b229-76fe223b1e9f
             type: macro
             config:
               name: Fiverr gig - choose delivery
@@ -302,17 +302,17 @@ payload:
                 delivery = {{vars.premium_delivery}}
             label: PREMIUM delivery
             onError: continue
-          - id: 8d80c8b9-5545-449e-ab49-8b7cced2b6c9
+          - id: 9729e5c8-9303-4da2-b5e4-56c1b6e78783
             type: stop
             config: {}
             label: Done
-          - id: e479876b-b6f2-4e99-b955-0366a41b1e76
+          - id: 780af295-f7d5-4eed-81b8-5f7a5ee25066
             type: notify
             config:
               title: 'Fiverr: a human check is up'
               body: Nothing was typed. The check is yours to pass; run this again after.
             label: Held
-          - id: e41a7f44-d2f5-444a-99b9-29e98152a1b8
+          - id: 2b7f22ef-1585-4e05-ad71-8a7eddaa2e84
             type: stop
             config: {}
             label: Stop

@@ -54,7 +54,7 @@ const A11Y = `<!doctype html><html><head><style>html.a11y-mode a{color:yellow;ba
     const r = GP.gigPage({ url: 'https://www.fiverr.com/users/x/manage_gigs/new?wizard=0&tab=general', title: 'Fiverr', text: 'Gig title Category SELECT A CATEGORY SELECT A SUBCATEGORY Search tags Positive keywords' });
     assert.strictEqual(r.page, 'overview', JSON.stringify(r));
     assert.strictEqual(GP.gigPage({ url: 'https://www.fiverr.com/x', text: 'Gig title Search tags' }).page, 'overview', 'two signs are enough without the address');
-    assert.deepStrictEqual(GP.PARTS.overview, ['title', 'category', 'tags']);   // 2026-10-30 GF2: the title too ("work with all fields")
+    assert.deepStrictEqual(GP.PARTS.overview, ['title', 'category', 'serviceType', 'tags']);   // 2026-10-30 GF2: the title too ("work with all fields")
     assert.strictEqual(GP.valueOf({ tags: ['a', 'b', 'c', 'd', 'e', 'f'] }, 'tags'), 'a, b, c, d, e', 'at most 5');
   });
 
@@ -82,13 +82,13 @@ const A11Y = `<!doctype html><html><head><style>html.a11y-mode a{color:yellow;ba
     const page = await browser.newPage({ viewport: { width: 1000, height: 800 } });
     await page.goto(base + '/users/x/manage_gigs/new?wizard=0&tab=general');
     const d = driverOn(page);
-    await assert.rejects(d.exec({ agentId: 'w', action: 'choose', option: 'x' }), /choose requires selector, column with row or shows, or shows alone/);
+    await assert.rejects(d.exec({ agentId: 'w', action: 'choose', option: 'x' }), /choose requires selector, column with row or shows, shows alone, or row alone/);
     const Bridge = require(CG('src/ipc/bridge.js'));
     const gig = { title: 'I will build an AI agent workflow', category: 'Programming & Tech', subcategory: 'AI Development', tags: ['ai agent', 'automation', 'workflow'], packages: {} };
     // the page is served locally; what it reads is said to be at Fiverr's new-gig address (the detection reads the address too)
     const FIVERR = 'https://www.fiverr.com/users/x/manage_gigs/new?wizard=0&tab=general';
     const self = { dom: { handleQuery: async () => [], handleMutate: async () => ({}) }, postEvent: () => {}, _humanCheckGate: async () => ({ pass: true }),
-      _gigTags: Bridge.prototype._gigTags, _gigFeatures: Bridge.prototype._gigFeatures,
+      _gigTags: Bridge.prototype._gigTags, _gigFeatures: Bridge.prototype._gigFeatures, _gigText: Bridge.prototype._gigText,   // GF6: a failed part stops the fill, so the stand-in has what the title needs
       driver: { exec: (a) => (a.action === 'readPage' ? d.exec(a).then(x => ({ ...x, url: FIVERR }))
         : d.exec({ ...a, ...(a.action === 'choose' ? fast : {}), ...(a.action === 'type' ? { delay: 5 } : {}) })) } };
     const r = await Bridge.prototype._gigFill.call(self, { gig });
@@ -131,7 +131,9 @@ const A11Y = `<!doctype html><html><head><style>html.a11y-mode a{color:yellow;ba
     assert.ok(node, 'bundled');
     const doc = N.parse(fs.readFileSync(CG('automation/nodes/fiverr-gig-choose-category.macro'), 'utf8'));
     const steps = doc.payload.steps.filter(s => s.action === 'choose');
-    assert.deepStrictEqual(steps.map(s => [s.data.shows, s.data.option, s.gate.text, s.gate.retries]), [['SELECT A CATEGORY', '{{category}}', '{{category}}', 2], ['SELECT A SUBCATEGORY', '{{subcategory}}', '{{subcategory}}', 2]]);
+    // 2026-10-30 GF6 — each pick gated on the dropdown element itself showing the value (an xpath outside links, menus and the spotlight)
+    assert.deepStrictEqual(steps.map(s => [s.data.shows, s.data.option, s.gate.visible, s.gate.retries, /translate\('\{\{(\w+)\}\}'/.exec(s.gate.xpath)[1], /not\(ancestor-or-self::a\)/.test(s.gate.xpath)]),
+      [['SELECT A CATEGORY', '{{category}}', true, 2, 'category', true], ['SELECT A SUBCATEGORY', '{{subcategory}}', true, 2, 'subcategory', true]]);
     assert.strictEqual(doc.fingerprint, N.macroFingerprint(doc.payload));
     const GE = require(path.join(ROOT, 'lib/agent-tools/tools/clear-glass/gate-eval.js'));
     for (const s of steps) assert.ok(GE.validateGate(s.gate).ok);

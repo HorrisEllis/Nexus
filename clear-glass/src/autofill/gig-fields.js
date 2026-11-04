@@ -119,14 +119,15 @@ function shownScript(text) {
 
 // 2026-10-30 GF6 — James: "how about having a condition to the next gate, like what the element says, if it aligns with the gig." The category
 // is chosen only when the dropdowns themselves say so: no SELECT A CATEGORY / SELECT A SUBCATEGORY left, and an element outside any link (the
-// Suggested categories are links that always show the same words) whose own text is the category, and the subcategory. Only reads.
+// Suggested categories are links that always show the same words), outside an open menu and Clear Glass's own spotlight label (#__cg_spot__,
+// which names the option being picked), whose own text is the category, and the subcategory. Only reads.
 //   → { open, saw }
 function categoryChosenScript(category, subcategory) {
   return `(function(cat, sub){
   function vis(el){ var r = el.getBoundingClientRect(), cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; }
   function norm(t){ return String(t || '').replace(/\\s+/g, ' ').trim().toLowerCase(); }
   function own(el){ return norm(Array.prototype.map.call(el.childNodes, function(n){ return n.nodeType === 3 ? n.textContent : ''; }).join(' ')); }
-  var els = Array.prototype.filter.call(document.querySelectorAll('body *'), function(el){ return !el.closest('a') && !el.closest('[role="option"],[role="listbox"],[role="menu"]') && vis(el); });
+  var els = Array.prototype.filter.call(document.querySelectorAll('body *'), function(el){ return !el.closest('a') && !el.closest('[role="option"],[role="listbox"],[role="menu"],#__cg_spot__') && vis(el); });
   function says(t){ var w = norm(t); return els.some(function(el){ return own(el) === w; }); }
   var left = ['select a category', 'select a subcategory'].filter(says);
   var miss = [cat, sub].filter(function(v){ return v && !says(v); });

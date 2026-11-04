@@ -584,6 +584,9 @@ spec:
       gate_pipeline: ["GATE-GF6-001: act → read the element → aligns with the gig: next · else: stop → toast (part, why)"]
       behavioral_contracts: ["a gate never passes on words the page shows elsewhere", "nothing runs after a failed part", "every failed step is said in a toast and in the result"]
       error_paths: ["the toast cannot be shown (no window) → the result still carries stopped, said in the log"]
+      # ADDENDUM 2026-11-04 — James: "fiverr ai engine doesn't work. it gets to the service drop down." The Overview's Service type is a part (gig.serviceType,
+      # optional): chosen in its row (driver choose with row alone: the dropdown right of the label), gated on that dropdown. A box check whose read the page
+      # does not answer is unchecked, not closed (NC0), like the choice check.
       acceptance: ["test-gig-stop-and-toast GS-01..GS-05 in Clear Glass: a suggestion that does not take falls through and the dropdowns are read; a part that cannot be done stops the fill with a toast; the Co-pilot line names it; the bundled pipeline is listed; a failed pipeline task toasts"]
 
     - id: MOD-EI1

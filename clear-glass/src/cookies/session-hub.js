@@ -109,6 +109,11 @@ class SessionHub {
     const h = (_e, cookie, cause, removed) => {
       try {
         if (!cookie || !this._mine(provider, cookie)) return;
+        // 2026-11-04 — James: "reloading the sign in. it doesn't do on the main browser, only the popup window. maybe synbolic link or copying
+        // cookies?" Only the sign-in itself is mirrored (a session credential: isAuthCookie), never a sign-in flow's own cookies (csrf, state,
+        // callback-url, nonce). Mirroring every chatgpt.com cookie meant his normal tab's csrf/state kept being written into the provider window's
+        // jar while he signed in there, so its sign-in no longer matched and started again. Sign-in and sign-out still follow both ways.
+        if (!isAuthCookie(cookie)) return;
         if (removed && (cause === 'overwrite' || /^expired/.test(cause))) return;   // a rewrite, or each jar's own expiry
         if (this._isEcho(side, cookie, removed)) return;
         // an account switch is rewriting the provider session: that is a change of WHO it is signed in as, not a sign-in or

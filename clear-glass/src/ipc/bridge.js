@@ -1061,7 +1061,7 @@ class IpcBridge {
       try { return { ok: true, action, result: await this.driver.exec({ agentId, ...call, by: 'person' }) }; } catch (err) { return { error: err.message }; }
     };
     const r = await this.macroTool.execute({ action: 'run', name: d.name, agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep });
-    if (r && r.error && !d.quiet) this._gigToast(`Macro "${d.name}" stopped${r.failedAtStep != null ? ` at step ${r.failedAtStep}` : ''}: ${r.error}`);   // GF6
+    if (r && r.error && !d.quiet) (typeof this._gigToast === 'function' ? this._gigToast.bind(this) : IpcBridge.prototype._gigToast.bind(this))(`Macro "${d.name}" stopped${r.failedAtStep != null ? ` at step ${r.failedAtStep}` : ''}: ${r.error}`);   // GF6
     try { require('../processes').activity().push({ kind: 'macro', what: `macro "${d.name}" ${r && r.error ? `did not run: ${r.error}` : 'ran'}`, url, by: d.by || 'person', level: r && r.error ? 'warn' : 'info', ref: d.name }); } catch (_) {}   // SP5
     return r;
   }
@@ -2665,6 +2665,13 @@ class IpcBridge {
             : this.driver.exec({ agentId, action: t ? 'insertText' : 'setValue', selector: learned.selector, ...(t ? { text: value } : { value }), by: 'person' }), check);
           r.learned.push({ key: part, selector: learned.selector }); continue;
         }
+        // 2026-11-04 — James: "fiverr ai engine doesn't work. it gets to the service drop down." The Service type dropdown, chosen in its row (the
+        // label "Service type" and the dropdown beside it), gated on that dropdown showing the gig's value; a gig with no serviceType skips it
+        if (part === 'serviceType') {
+          check = C.choice({ row: 'Service type' }, value);
+          const c = await gated(part, () => this.driver.exec({ agentId, action: 'choose', row: 'Service type', option: value, by: 'person' }), check);
+          r.dropdowns.push({ key: part, ok: true, option: c && c.option || value, via: 'built-in' }); continue;
+        }
         // 0.60.286 GM2 — revisions chosen in the tier's column on the Revisions row; price typed in the Price row; each gated
         if (part.endsWith('.revisions')) {
           check = C.choice({ column, row: 'Revisions' }, value);
@@ -2759,7 +2766,7 @@ class IpcBridge {
       ...(r.tags && r.tags.done && r.tags.done.length ? ['tags'] : []), ...(r.faqs && !r.faqs.failed.length ? ['faq'] : []), ...(r.requirements && !r.requirements.failed.length ? ['requirement'] : [])]);
     const top = (k) => (k === 'subcategory' ? 'category' : k.startsWith('faq.') ? 'faq' : k.startsWith('requirement.') ? 'requirement' : k);
     if (Array.isArray(r.leftToCopy)) r.leftToCopy = r.leftToCopy.filter(k => !doneKeys.has(k) && !doneKeys.has(top(k)));
-    if (r.stopped) this._gigToast(`Gig fill stopped at ${r.stopped.key}: ${r.stopped.why}`);
+    if (r.stopped) (typeof this._gigToast === 'function' ? this._gigToast.bind(this) : IpcBridge.prototype._gigToast.bind(this))(`Gig fill stopped at ${r.stopped.key}: ${r.stopped.why}`);
     if (!r.error) this.postEvent('autofill.gig.filled', { agentId, page: r.page, filled: r.filled.length, learned: r.learned.length, notFound: r.notFound.length, failed: r.failed.length, features: r.features ? { filled: r.features.filled.length, failed: r.features.failed.length, unlisted: r.features.unlisted.length } : null, ts: Date.now() });
     return r;
   }
@@ -3382,7 +3389,8 @@ function gigChecks(driver, agentId) {
   const ev = async (code) => { const x = await driver.exec({ agentId, action: 'eval', code, by: 'person' }); return x && x.result; };
   const q = (v) => JSON.stringify(String(v == null ? '' : v).slice(0, 60));
   return {
-    text: (where, value) => async () => { const x = await ev(GF.valueAtScript(where)); if (!x || !x.found) return { open: false, saw: 'the box is gone' };
+    text: (where, value) => async () => { const x = await ev(GF.valueAtScript(where)); if (x == null) return { open: false, unread: true, saw: 'the page did not answer the read' };   // NC0: unchecked, not closed (GF6)
+      if (!x.found) return { open: false, saw: 'the box is gone' };
       return { open: GF.readsBack(x.value, value), saw: q(x.value) }; },
     choice: (where, value) => async () => { const g = await driver.exec({ agentId, action: 'readChoice', ...where, is: String(value), by: 'person' });
       if (!g || (g.shown == null && g.matches == null && !(g.texts && g.texts.length))) return { open: false, unread: true, saw: 'the page did not answer the read' };

@@ -182,6 +182,8 @@ function parseGig(text) {
   if (requirements.length > LIMITS.requirements) { warnings.push(`${requirements.length} buyer questions; kept ${LIMITS.requirements}`); requirements.length = LIMITS.requirements; }
 
   const gig = { title, category: String(raw.category || '').trim(), subcategory: String(raw.subcategory || '').trim(), tags, description, packages, faq, requirements };
+  // 2026-11-04 — James: "fiverr ai engine doesn't work. it gets to the service drop down." The Overview's Service type, as Fiverr shows the option (optional)
+  if (raw.serviceType != null && String(raw.serviceType).trim()) gig.serviceType = String(raw.serviceType).trim();
   return { ok: true, gig, warnings };
 }
 
