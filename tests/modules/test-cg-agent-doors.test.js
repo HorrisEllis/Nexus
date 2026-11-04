@@ -84,6 +84,7 @@ function fakeClearGlass() {
     const calls = [];
     const s = { macroTool: { execute: async (a) => { calls.push(a); return { ok: true, name: a.name }; } }, driver: {} };
     s._macroWrite = IpcBridge.prototype._macroWrite.bind(s); s._macroRecord = IpcBridge.prototype._macroRecord.bind(s);
+    s._recorder = IpcBridge.prototype._recorder.bind(s);   // 0.60.359 MB4: _macroRecord reaches the one LiveRecorder through _recorder()
     await s._macroWrite('create', { name: 'apply micro1', steps: [{ action: 'click', data: { selector: '#go' } }], urlPattern: 'https://micro1.ai/*', params: ['email'] });
     await s._macroWrite('delete', { name: 'apply micro1' });
     assert.deepStrictEqual(calls.map(c => c.action), ['create', 'delete']);
@@ -95,7 +96,11 @@ function fakeClearGlass() {
     assert.deepStrictEqual(rec.map(r => r[0]), ['start', 'stop']);
     const noDriver = { macroTool: s.macroTool, driver: null }; noDriver._macroRecord = IpcBridge.prototype._macroRecord.bind(noDriver);
     assert.match((await noDriver._macroRecord('start', { agentId: 't1' })).error, /driver not wired/);
-    assert.match(BRIDGE_SRC, /ipcMain\.handle\('macros:recordStart'[^\n]*this\._macroRecord\('start'/, 'IPC uses the shared method');
+    // 0.60.359 MB4 moved the IPC handlers onto live() = this._recorder(), the one LiveRecorder _macroRecord uses too (AD_D2); this check
+    // still looked for the older call text (2026-11-04: updated to the contract — one recorder for IPC and HTTP — not to a spelling)
+    assert.match(BRIDGE_SRC, /const live = \(\) => this\._recorder\(\);/, 'IPC reaches the recorder through _recorder()');
+    assert.match(BRIDGE_SRC, /ipcMain\.handle\('macros:recordStart'[\s\S]{0,200}live\(\)\.start\(/, 'IPC start uses that recorder');
+    assert.match(BRIDGE_SRC, /async _macroRecord\([\s\S]{0,400}this\._recorder\(\)/, '_macroRecord uses the same recorder');
     for (const [m, p] of [['POST', '/cli/macros'], ['DELETE', '/cli/macros/x'], ['POST', '/cli/macros/record/start'], ['POST', '/cli/macros/record/stop'], ['GET', '/cli/macros/record/status']]) assert.ok(served(m, p), `${m} ${p} served`);
     assert.match(BRIDGE_SRC, /vars: req\.body\?\.vars/, 'POST /cli/autofill/fill passes vars');
   });

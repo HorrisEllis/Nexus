@@ -60,7 +60,17 @@ release is what of that work main did not already have, put on main's code.
   - GS-03: the check is closed on the links alone and open on the dropdowns, and the macro's xpath finds only the dropdown.
   - GS-04: the bundled pipeline is listed once, and a failed task's event carries its label and error.
 - `test-session-hub-signin` 2/2. SH-01 fails on the old code.
-- The regression set over main's and the branch's tests is in the commit.
+- 24 suites over main's and this branch's tests, all green except one, run on the merged tree:
+  - test-fiverr-overview-and-a11y 6/6, test-gig-all-fields 5/5, test-fiverr-works 11/11, test-about-and-nodes 4/4;
+  - test-gig-metadata-glass 7/7, test-gig-metadata-dropdown-glass 5/5;
+  - test-macro-blocks 6/6, test-macro-blocks-ui 3/3, test-macro-toast 5/5;
+  - test-autofill-page-chip-glass 3/3, test-autofill-radio-checkbox-glass 4/4;
+  - test-element-gates, test-pipeline-gates, test-pipeline-nodes, test-gated-dropdowns, test-gig-fill-menu, test-gig-features;
+  - test-site-settings-ui, test-a11y-trace, test-substrate-spec 3/3.
+- **test-cg-agent-doors AD-02 was red on main since 0.60.359.** MB4 moved the record handlers onto `_recorder()`, but the test's stand-in
+  bridge had no `_recorder`, and its source check looked for the old call text. Both are fixed to the contract (one recorder for IPC and
+  HTTP). 7/7.
+- **Fails the same on main, so not this release:** test-autofill-learn-macro JA5-04 ("a click on the label resolves to the box").
 
 ## Readings (to confirm)
 
