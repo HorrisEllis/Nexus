@@ -223,7 +223,14 @@ if (require.main === module) {
       ui.once('error', (e) => { console.log(`[cos] the cockpit did not start on :${uiPort} (${e.code || e.message}) — the manager runs on without it; node cos/ui/serve.js --port <n> starts it by hand`); ui = null; });
       ui.listen(uiPort, '127.0.0.1', () => console.log(`[cos] cockpit on http://127.0.0.1:${ui.address().port}/ (COS's UI)`));
     }
-    if (process.argv.includes('--boot')) { const r = await sup.boot({ by: 'boot', ...(only ? { set: only } : {}) }); console.log(`[cos] booted ${r.started.length}, skipped ${r.skipped.length}`); }
+    if (process.argv.includes('--boot')) {
+      // 2026-11-05 DP1 — James: "cos also needs to install the dependancies." A pulled Nexus with a newer package-lock.json (or no node_modules)
+      // gets npm install before the systems start; said on the ledger; a failed install is said and the boot goes on (each system then says why).
+      if (!process.argv.includes('--no-deps')) { const D = require('./deps.js'); const c = D.check(root);
+        if (c.needed) { sup.note('deps', `installing Nexus's dependencies first: ${c.why} (npm install)`, { by: 'boot' }); console.log(`[cos] ${c.why} — npm install before boot`);
+          const r = await D.install(root); sup.note('deps', r.ok ? `dependencies installed in ${Math.round(r.ms / 1000)} s` : `npm install failed (exit ${r.code}): ${String(r.tail).trim().split('\n').slice(-3).join(' ').slice(0, 300)} — booting anyway`, { by: 'boot' }); } }
+      const r = await sup.boot({ by: 'boot', ...(only ? { set: only } : {}) }); console.log(`[cos] booted ${r.started.length}, skipped ${r.skipped.length}`);
+    }
     const bye = () => { sup.shutdown({ by: 'boot' }); srv.close(); if (ui) ui.close(); setTimeout(() => process.exit(0), 500).unref(); };
     process.on('SIGINT', bye); process.on('SIGTERM', bye);
   }).catch((e) => { console.error(`[cos] ${e.message}`); process.exit(1); });

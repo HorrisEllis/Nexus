@@ -444,6 +444,7 @@ const SUITES = [
   'test-cos-app-link.test.js',
   'test-cos-app-window.test.js',
   'test-cos-service.test.js',
+  'test-cos-boot-and-deps.test.js',   // 0.60.399 SC12/SC13 — Start at boot for each system on Automation; npm install before boot when the lock changed
   'test-cos-console-tab.test.js',   // 0.60.398 SC11 — COS's Console tab: every system's output together, live, and the command line
   'test-cg-element-engine-plugin.test.js',   // 0.60.397 EE0 — the Ad Blocker plugin is the Element Engine: Ad blocking, the picker, ErosmancerOS, Edit ErosmancerOS
   'test-eros-edit.test.js',   // 0.60.396 ES5 — edit ErosmancerOS's TypeScript yourself: export, diff, import (archived, tested, recorded)

@@ -68,4 +68,24 @@
   };
   COS.on('cos.ledger', ({ entry }) => { if (entry.kind === 'policy' && !Object.keys(S.edits).length) load(); });
   load();
+
+  // BT1 (0.60.399) — James: "this pc is getting its ass kicked. i need options for what systems start on boot." Each system's own Start at boot
+  // (its Configuration's start.autostart, SC2), all in one list; a change is his, PATCHed with by = person and read back.
+  async function bootList() {
+    let systems; try { systems = (await COS.call('GET', '/api/cos/systems')).systems; } catch (e) { return COS.say($('boot-rows'), { glyph: 'x', title: 'The systems could not be read', text: esc(e.message) }); }
+    const rows = await Promise.all(systems.map(async (sys) => {
+      let on = true, from = 'default';
+      try { const c = await COS.call('GET', `/api/cos/systems/${encodeURIComponent(sys.name)}/config`); const st = c.settings && c.settings['start.autostart']; if (st) { on = st.value !== false && st.value !== 'false'; from = st.from || from; } } catch (_) {}
+      const sw = h('button', { class: 'switch', role: 'switch', 'aria-checked': String(on), 'data-sys': sys.name, title: on ? 'Starts at boot' : 'Skipped at boot' });
+      sw.onclick = async () => {
+        const want = sw.getAttribute('aria-checked') !== 'true';
+        try { await COS.call('PATCH', `/api/cos/systems/${encodeURIComponent(sys.name)}/config`, { patch: { 'start.autostart': want ? 'true' : 'false' }, by: 'person' });
+          sw.setAttribute('aria-checked', String(want)); sw.title = want ? 'Starts at boot' : 'Skipped at boot'; COS.notice('ok', `${sys.name}: ${want ? 'starts' : 'skipped'} at the next boot`); }
+        catch (e) { if (!e.refused) COS.notice('err', `${sys.name}: ${e.message}`); }
+      };
+      return h('div', { class: 'boot-row' }, h('span', { class: 'name' }, sys.name), h('span', { class: 'meta' }, `${sys.critical ? 'critical · ' : ''}${sys.onDemand ? 'on demand · ' : ''}${sys.state}${from === 'his' ? ' · your setting' : ''}`), sw);
+    }));
+    $('boot-rows').replaceChildren(...rows);
+  }
+  bootList();
 })();

@@ -232,6 +232,57 @@ phases_addendum_2026_11_04:
       with its time and its system (coloured), errors in red; filter by system, errors only, search; follow on/off; and the command line at
       the bottom (POST /api/cos/cli), its answers shown in the stream. Declared in COS's contract (the page, its routes, the event).
     proof: "a system's printed lines reach GET /api/cos/console merged in time order and arrive live as cos.console; in Clear Glass the Console tab shows them with their system, filters to one, and runs a command"
+  SC12_start_at_boot_each_system:
+    layer: ui
+    status: "BUILT 0.60.399 — test-cos-boot-and-deps BD-03, BD-04"
+    origin: "James, 2026-11-05: \"also this pc is getting its ass kicked. i need options for what systems start on boot.\""
+    depends_on: [SC2_configuration_per_system]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/ui/automation/index.html, cos/ui/automation/page.js, cos/ui/automation/page.css, cos/manager/contract.json, tests/modules/test-cos-boot-and-deps.test.js]
+    does: "Each system's Start at boot (start.autostart, SC2, until now one system's Configuration at a time) in one list on Automation: a switch per system, his, read back; the next boot skips what is off, said."
+    proof: "BD-03: switched off through the route, a system is skipped at boot with why; switched on, it starts. BD-04: the list and its routes"
+  SC13_dependencies_before_boot:
+    layer: backend
+    status: "BUILT 0.60.399 — test-cos-boot-and-deps BD-01, BD-02, BD-04"
+    origin: "James, 2026-11-05: \"cos also needs to install the dependancies.\""
+    depends_on: [SC12_start_at_boot_each_system]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/manager/deps.js, cos/manager/server.js, tests/modules/test-cos-boot-and-deps.test.js]
+    does: >-
+      Before --boot starts the systems: no node_modules, or a package-lock.json whose content changed since the last good install (its hash
+      kept in node_modules/.cos-deps.json; by time until the first install) → npm install first (npm.cmd quoted, CA6), said on the ledger; a
+      failure is said and the boot goes on. --no-deps skips it.
+    proof: "BD-01 the cases (a time-only change is not an install); BD-02 the command and no-npm said; BD-04 the boot runs the check first"
+  SC14_each_system_opens_in_its_own_window:
+    layer: ui
+    status: "OPEN — mapped 2026-11-05"
+    origin: >-
+      James, 2026-11-05: "i want each ui folder for each system to be the envirement. you open. it can be in a popout window for either the
+      console for that system or for the ui from the folder."
+    depends_on: [SC11_the_console_tab]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/ui/serve.js, cos/ui/shell/page.js, cos/ui/console/page.js, cos/app/desktop/main.js, cos/manager/contract.json]
+    does: >-
+      Each system's own ui/ folder is its environment: from its row in the rail, Open (its UI, served from <system>/ui/ through COS's cockpit
+      server, only that folder) or Console (the Console tab filtered to it, ?system=), each in its own pop-out window (in the COS app a new
+      window; in a browser window.open). A system with no ui/ folder offers Console only, said.
+    proof: "a fixture system's ui/index.html opens in a pop-out; its console pop-out shows only its lines; a path outside its ui/ folder is refused"
+  SC15_nexus_cli_in_the_console:
+    layer: backend
+    status: "OPEN — mapped 2026-11-05"
+    origin: "James, 2026-11-05: \"also look for nexus-cli\""
+    found: >-
+      (read 2026-11-05) nexus-cli is docs/nexus-cli.spec ("Dynamic CLI runtime. No hardcoded commands. All commands from component registry
+      grammar tree."), lib/cli/nexus-cli.js and lib/nexus-cli-interface.js (the retired autopilot's --cli, routing to co-pilot's capabilities,
+      awareness, self-model and grammar router). His DO_D10 (2026-11-05): each server.js's CLI is how every UI and co-pilot reach that system.
+    depends_on: [SC11_the_console_tab, DO_D10_the_cli_is_the_way_in_for_every_ui_and_copilot]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/manager/cli.js, cos/ui/console/page.js, docs/nexus-cli.spec]
+    does: >-
+      The Console's command line, past COS's own table: a line that starts with a system's name goes to that system's door (POST <origin>/cli,
+      DO3a's shape; Cortex has it), so the commands come from each system's own registry grammar, as nexus-cli specs. A system with no door yet
+      is said, never guessed.
+    proof: "`cortex health` in the Console runs through Cortex's door; a system with no /cli says so"
   SC9_the_zip_dropzone_updater:
     layer: ui
     status: OPEN

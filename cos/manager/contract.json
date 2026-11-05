@@ -525,10 +525,13 @@
       "route": "#/automation",
       "nav": "main",
       "built": true,
-      "phase": "MG9_the_console_ui (the policy form)",
+      "phase": "MG9_the_console_ui (the policy form) · BT1 (Start at boot, each system)",
       "routes": [
         "GET /api/cos/policy",
-        "PATCH /api/cos/policy"
+        "PATCH /api/cos/policy",
+        "GET /api/cos/systems",
+        "GET /api/cos/systems/:name/config",
+        "PATCH /api/cos/systems/:name/config"
       ],
       "listens": [
         "cos.ledger"
