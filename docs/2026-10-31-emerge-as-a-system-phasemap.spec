@@ -270,11 +270,24 @@ phases:
     expects: "in: spec file, out dir, model route, host routes · out: the closed loop's result with its progress as a list (not live, named) · fails: the model route down → said at the first node"
     does: "run, the most expensive primitive (the closed loop with a model), through the door: POST /compiler/run"
   EAS4e_the_callback_routes:
-    status: OPEN
+    status: "BUILT 0.60.412 — Cortex's host routes; Guardian's model is its existing ask route; Idearium's sync found dead (below)"
     depends_on: [EAS4d_L3_run, DO3_cortex_door]
     spec: docs/emerge-system.spec
     blocks: [MOD-EAS-CALLERS]
-    files: [cortex/server.js, cortex/registry-components.js, lib/emerge/cortex-query/index.js, lib/emerge/cortex-query/writeback.js, lib/emerge/idearium/client.js, idearium/api/index.js, guardian/server.js]
+    files: [cortex/server.js, cortex/boot.js, cortex/registry-components.js, cortex/emerge-host/preflight.js, cortex/emerge-host/writeback.js, lib/emerge/cortex-query/index.js, lib/emerge/cortex-query/writeback.js, lib/emerge/idearium/client.js, idearium/api/index.js, guardian/server.js, lib/nexus-client.js, emerge/emerge/compiler/model.js]
+    # ── EXPANDED 2026-11-05 (0.60.412) — built, and what reading the old code found (prerequisite: what it does today, read first) ──
+    # - Cortex: POST /api/emerge-host/ping|preflight|writeback (cortex/boot.js, through its door; three entries in Cortex's own registry).
+    #   The handlers are lib/emerge/cortex-query's two files copied unchanged into cortex/emerge-host/, so a build's answer does not change.
+    #   Read on 2026-11-05, of what they ask Cortex: preflight's /api/gaps and /api/memory?table= answer; /api/projects, /api/files and
+    #   /api/memory/search are served by no system, so existingFiles is always empty and skipGeneration never true. Writeback's /api/event
+    #   and /api/table/insert answer; /api/files/upload and /api/versionium/commit do not. Kept as they are (a fix is its own phase).
+    # - Idearium's sync (lib/emerge/idearium/client.js): its five routes (/api/idea/create, /api/vortex/log, …) are served by no system and
+    #   it posts to :7820, Guardian's port. It has always failed silently. Not rebuilt: dropping it changes no answer anyone gets.
+    # - Guardian's model: no new route. Its POST /api/copilot/prompt already answers Emerge's model contract ({ prompt } → { ok, text }),
+    #   with RAID resolving the provider. Emerge's route model gained `extra` (fields the route's contract takes, e.g. provider, timeoutMs).
+    # - lib/nexus-client.js urlOf(system, path): a route as a URL from the ports table (transport only; the host and model settings each
+    #   caller names itself, since lib is not for what a system uses, his 2026-11-03 rule).
+    # Proof: compiler-door 8/8; test-cortex-door 4/4; census 1122 → 1121.
     requires: ["Cortex's door (DO3a, built)", "Idearium reachable by its API", "Guardian's model route"]
     prerequisites: ["what lib/emerge's cortex-query (preflight 273 lines, writeback 410) and idearium/client do today, read and recorded as each route's expectation before it moves"]
     expects: "each route answers exactly what host.js's method returns today (preflight, writeback, sync, the model), so a build's answer does not change"
@@ -284,7 +297,10 @@ phases:
       copy archived once nothing requires it.
     proof: "a build through Emerge with the Nexus host by route gives the same answer as lib/emerge's compile with Cortex (the compare MOD-EAS-CALLERS asks for)"
   EAS4f_the_callers_switch:
-    status: OPEN
+    status: "OPEN — guardian/server.js switched 0.60.412; idearium/compiler-bridge.js, copilot/module-builder.js, lib/build-pipeline.js to do"
+    # ── EXPANDED 2026-11-05 (0.60.412) — guardian/server.js POST /build runs in Emerge (POST /compiler/run), the host by Cortex's routes, the
+    # model by Guardian's own ask route, provider as asked. Named differences: an unconnected provider fails fast with its reason where the
+    # SEAM queue (/command, 'seam') waited for it; progress (guardian.build.progress) is emitted after the run from its list, not live.
     depends_on: [EAS4e_the_callback_routes]
     spec: docs/emerge-system.spec
     blocks: [MOD-EAS-CALLERS]

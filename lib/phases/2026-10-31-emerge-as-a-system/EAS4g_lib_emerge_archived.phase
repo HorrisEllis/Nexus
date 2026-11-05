@@ -7,11 +7,11 @@ intent: null
 summary: EAS4g_lib_emerge_archived (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793910797515
+exported_at: 1793917506300
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793910797515
-lastSeenAt: 1793910797515
+firstSeenAt: 1793917506300
+lastSeenAt: 1793917506300
 fingerprint: null
 payload:
   id: EAS4g_lib_emerge_archived
@@ -23,6 +23,7 @@ payload:
     - tests/modules/test-substrate-spec.test.js
   depends_on:
     - EAS4f_the_callers_switch
-  blocks: []
-  spec: null
+  blocks:
+    - MOD-EAS-CALLERS
+  spec: docs/emerge-system.spec
   graph: 2f12ffaf0fb6715c

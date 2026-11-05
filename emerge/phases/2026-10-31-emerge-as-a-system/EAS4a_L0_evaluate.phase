@@ -7,11 +7,11 @@ intent: null
 summary: EAS4a_L0_evaluate (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793910797504
+exported_at: 1793917506287
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793910797504
-lastSeenAt: 1793910797504
+firstSeenAt: 1793917506287
+lastSeenAt: 1793917506287
 fingerprint: null
 payload:
   id: EAS4a_L0_evaluate
@@ -26,6 +26,7 @@ payload:
   depends_on:
     - EAS_D5_one_primitive_per_gate
     - EAS_D6_emerge_is_a_system_in_nexus
-  blocks: []
-  spec: null
+  blocks:
+    - MOD-EAS-CALLERS
+  spec: docs/emerge-system.spec
   graph: dd5d749dd87feb65

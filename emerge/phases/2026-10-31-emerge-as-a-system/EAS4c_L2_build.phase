@@ -7,11 +7,11 @@ intent: null
 summary: EAS4c_L2_build (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793910797509
+exported_at: 1793917506292
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793910797509
-lastSeenAt: 1793910797509
+firstSeenAt: 1793917506292
+lastSeenAt: 1793917506292
 fingerprint: null
 payload:
   id: EAS4c_L2_build
@@ -29,6 +29,7 @@ payload:
   depends_on:
     - EAS4b_L1_compile
     - EAS_D9_emerge_calls_back_by_route
-  blocks: []
-  spec: null
+  blocks:
+    - MOD-EAS-CALLERS
+  spec: docs/emerge-system.spec
   graph: e9a4063e9531c16a

@@ -486,6 +486,18 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ── EAS4 2026-11-05 — Cortex as Emerge's build host (his EAS_D9: "Emerge calls back by route") ──────────────
+  // Emerge's door (POST /compiler/build|run) is told these routes; Emerge POSTs here and never requires Cortex's files.
+  if (method === 'POST' && (p === '/api/emerge-host/ping' || p === '/api/emerge-host/preflight' || p === '/api/emerge-host/writeback')) {
+    const body = await readBody(req);
+    try {
+      if (p === '/api/emerge-host/ping') return json(res, 200, { ok: true, reachable: true, status: 'cortex' });
+      if (p === '/api/emerge-host/preflight') return json(res, 200, await require('./emerge-host/preflight.js').preflight(body || {}));
+      const wb = require('./emerge-host/writeback.js');
+      return json(res, 200, await wb.writeback((body && body.compileResult) || null, (body && body.specPath) || null, (body && body.opts) || {}));
+    } catch (e) { return json(res, 500, { ok: false, error: `cortex emerge-host ${p}: ${e.message}` }); }
+  }
+
   // ── §RAID-FIX 2026-09-16 — cross-process self-registration ──────────────
   // James: "raid also needs to stop failing, i dont think its using the
   // agent mesh, router, ncp, or the job dispatcher." Real root cause,

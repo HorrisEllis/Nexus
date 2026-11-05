@@ -7,11 +7,11 @@ intent: null
 summary: EAS4b_L1_compile (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793910797507
+exported_at: 1793917506290
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793910797507
-lastSeenAt: 1793910797507
+firstSeenAt: 1793917506290
+lastSeenAt: 1793917506290
 fingerprint: null
 payload:
   id: EAS4b_L1_compile
@@ -30,6 +30,7 @@ payload:
   depends_on:
     - EAS4a_L0_evaluate
     - EAS_D7_the_spec_compiler_is_emerges
-  blocks: []
-  spec: null
+  blocks:
+    - MOD-EAS-CALLERS
+  spec: docs/emerge-system.spec
   graph: 3b90647c4bc31ed0
