@@ -99,6 +99,23 @@ phases:
     does: "In browser.html: the site's watch rules (add from a picked element), ErosmancerOS's options in plain words, its actions and its threats — the same as the CLI, nothing the CLI cannot do. Tested in Clear Glass (AXIOMS §4.1)."
     proof: "Clear Glass driver: add a rule from a picked element in the panel, see it in `cg watch list`"
 
+  ES5_edit_the_typescript_yourself:
+    status: "BUILT 0.60.396 — test-eros-edit"
+    origin: "James, 2026-11-05: \"can you make a way to import type scripts so i can edit it myself, and import the changes. if i remove cloudflare, fringerprint scripts, and datadome etc\""
+    depends_on: []
+    files: [clear-glass/src/eros/edit.js, tests/modules/test-eros-edit.test.js, tests/modules/run-all.js, package.json]
+    does: >-
+      Three commands, CLI first (`npm run eros:edit -- <export|diff|import> [folder]`):
+        export — every ErosmancerOS source file (.ts under erosmancer-os/src) copied to a folder of his (default <home>/erosmancer-edit),
+                 with a manifest of each file's hash, so he edits a copy, never the live code.
+        diff   — what he changed: each changed, added or missing file, with lines added and removed. Changes nothing.
+        import — dry run unless --yes. Refused, said: a path outside src or not .ts; a file whose syntax does not parse (TypeScript's own
+                 parser); a file that changed in Nexus since his export (unless --force). With --yes: the current files are copied to
+                 _archive/erosmancer-edits/<stamp>/ first (nothing lost), the new ones written, each module's own test run
+                 (tests/<module>.test.ts with tsx) when it can run; a test that fails puts the old files back and says so. A file he deleted
+                 is reported, never deleted. The change is recorded in Versionium in full (§17.12).
+    proof: "export → edit (remove a pattern) → diff names it → import --yes writes it and archives the old; a syntax error is refused; a conflict is refused; a failing test restores"
+
 order: "CLI first, as he asked: ES1 can start now; CM1 after the element engine's EE1; ES2 after his CM_D0; ES4 last."
 
 # ── ADDENDUM 2026-11-05 — his: leave the existing module alone ───────────────────────────────────────────────────────────────────────────

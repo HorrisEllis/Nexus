@@ -1,6 +1,6 @@
 {
   "name": "nexus",
-  "version": "0.60.395",
+  "version": "0.60.396",
   "author": "James Brooks (Erosmancer)",
   "license": "MIT",
   "private": true,
@@ -30,7 +30,8 @@
     "movement": "node lib/cli/nexus-movement.js",
     "cos:vm-setup": "node cos/testenv/provision.js",
     "cos:vm-status": "node cos/testenv/provision.js --status",
-    "changes": "node versionium/lib/release-notes.js"
+    "changes": "node versionium/lib/release-notes.js",
+    "eros:edit": "node clear-glass/src/eros/edit.js"
   },
   "engines": {
     "node": ">=18.0.0"
