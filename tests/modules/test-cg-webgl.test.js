@@ -25,8 +25,9 @@ test('WG-01', 'acceleration on by default; off with CG_GPU=off or a failed GPU, 
   const src = fs.readFileSync(path.join(ROOT, 'clear-glass/src/main/index.js'), 'utf8');
   assert.match(src, /const _gpuOff = process\.env\.CG_GPU === 'off' \|\| \(process\.env\.CG_GPU !== 'on' && require\('fs'\)\.existsSync\(_gpuFlag\)\);/);
   assert.match(src, /if \(_gpuOff\) \{ app\.disableHardwareAcceleration\(\); app\.commandLine\.appendSwitch\('enable-unsafe-swiftshader'\);/);
-  assert.match(src, /d\.type !== 'GPU'[\s\S]{0,120}\+\+_gpuGone === 3\) \{ try \{ require\('fs'\)\.writeFileSync\(_gpuFlag/, 'three GPU deaths in a run write the flag');
+  assert.match(src, /d\.type !== 'GPU'[\s\S]{0,700}\+\+_gpuGone === 3\) \{ try \{ require\('fs'\)\.writeFileSync\(_gpuFlag/, 'three GPU deaths in a run write the flag');
   assert.strictEqual((src.match(/app\.disableHardwareAcceleration\(\)/g) || []).length, 1, 'acceleration is turned off in one place only');
+  assert.match(src, /restarting once in software mode[\s\S]{0,120}app\.relaunch\(\); app\.exit\(0\);/, 'WG3: the third GPU death restarts in software mode now, not at the next start');
 });
 
 test('WG-02', 'real Electron: WebGL null without the switch, a renderer with it', () => {

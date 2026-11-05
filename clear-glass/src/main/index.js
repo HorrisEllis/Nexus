@@ -233,7 +233,9 @@ else {
   let _gpuGone = 0;
   app.on('child-process-gone', (_e, d) => {
     if (!d || d.type !== 'GPU' || process.env.CG_GPU === 'on') return;
-    if (++_gpuGone === 3) { try { require('fs').writeFileSync(_gpuFlag, JSON.stringify({ at: new Date().toISOString(), reason: d.reason, exitCode: d.exitCode }) + '\n'); } catch (_) {} console.warn(`[clear-glass] the GPU process died 3 times (${d.reason}): the next start runs in software mode (${_gpuFlag}; delete it to try the GPU again)`); }
+    // WG3 (0.60.401) — disable-gpu-process-crash-limit (below) keeps a failing GPU process restarting forever, so waiting for the next start
+    // left this run looping. On the third death: the flag is written and Clear Glass restarts itself once, now in software mode.
+    if (++_gpuGone === 3) { try { require('fs').writeFileSync(_gpuFlag, JSON.stringify({ at: new Date().toISOString(), reason: d.reason, exitCode: d.exitCode }) + '\n'); } catch (_) {} console.warn(`[clear-glass] the GPU process died 3 times (${d.reason}): restarting once in software mode (${_gpuFlag}; delete it to try the GPU again)`); try { app.relaunch(); app.exit(0); } catch (_) {} }
   });
 }
 // §BUG FIXED 2026-07-11, REVISED 2026-07-11 — the first version of this
