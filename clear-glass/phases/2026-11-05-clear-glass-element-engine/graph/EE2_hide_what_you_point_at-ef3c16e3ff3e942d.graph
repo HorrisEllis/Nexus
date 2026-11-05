@@ -1,0 +1,101 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EE2_hide_what_you_point_at:ef3c16e3ff3e942d
+type: graph
+id: phase:EE2_hide_what_you_point_at:ef3c16e3ff3e942d
+context: dependency graph of phase EE2_hide_what_you_point_at
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793871876645
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793871876645
+lastSeenAt: 1793871876645
+fingerprint: null
+payload:
+  for: EE2_hide_what_you_point_at
+  kind: phase
+  repo: null
+  hash: ef3c16e3ff3e942d
+  nodes:
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/engine.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/lists.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-cg-element-engine.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/plugins/adblocker/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/import.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/import.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/adblock/lists.js
+      to: clear-glass/src/adblock/import.js
+      kind: requires
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/adblock/engine.js
+      kind: requires
+    - from: clear-glass/src/adblock/import.js
+      to: clear-glass/src/adblock/engine.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+    dependents:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+    upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+    downstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
+    blockedBy:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+    unlocks:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by EE1_one_identity_for_a_chosen_element
+      - 'depends on (1): EE1_one_identity_for_a_chosen_element · all upstream 3'
+      - 'needed by (1): EE3_one_panel · all downstream 2 · finishing it unlocks EE3_one_panel'
+    edges:
+      - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+        kind: declared

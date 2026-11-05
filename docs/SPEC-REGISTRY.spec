@@ -2033,3 +2033,7 @@ spec:
 
 # ── ADDENDUM 2026-11-05 (0.60.394) — docs/2026-11-05-clear-glass-webgl-phasemap.spec ───────────────────────────────────────────────────────
     | `docs/2026-11-05-clear-glass-webgl-phasemap.spec` | 1.0.0 — Clear Glass has WebGL with hardware acceleration off (newer Chromium dropped the software fallback; Fiverr's bot check crashed on the absence). WG1 built 0.60.394 | built | James: "i cant use fiverr at all. clearglass is my main driver" |
+
+# ── ADDENDUM 2026-11-05 — docs/2026-11-05-clear-glass-element-engine-phasemap.spec ────────────────────────────────────────────────────────
+# James, 2026-11-05: "can you integrate erosmanceros, the adblocker, and guardian picker into one? should be a phase for it." Owner: clear-glass.
+    | `docs/2026-11-05-clear-glass-element-engine-phasemap.spec` | 1.0.0 — one element engine: pick (the Guardian picker) → identify (ErosmancerOS's durable identity) → use (hide as an adblock ## rule, gate, fill, name); one panel. EE_D0/EE_D1 his; EE1–EE4 open | mapped | James: "integrate erosmanceros, the adblocker, and guardian picker into one" |
