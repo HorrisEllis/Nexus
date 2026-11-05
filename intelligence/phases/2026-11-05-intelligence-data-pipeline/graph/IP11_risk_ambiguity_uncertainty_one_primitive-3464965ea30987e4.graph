@@ -1,0 +1,273 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IP11_risk_ambiguity_uncertainty_one_primitive:3464965ea30987e4
+type: graph
+id: phase:IP11_risk_ambiguity_uncertainty_one_primitive:3464965ea30987e4
+context: dependency graph of phase IP11_risk_ambiguity_uncertainty_one_primitive
+intent: null
+summary: 28 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793854560011
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793854560011
+lastSeenAt: 1793854560011
+fingerprint: null
+payload:
+  for: IP11_risk_ambiguity_uncertainty_one_primitive
+  kind: phase
+  repo: null
+  hash: 3464965ea30987e4
+  nodes:
+    - path: intelligence/gap/hunter.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/pipeline/assess.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/rfr2/sigma/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: tests/modules/test-intelligence-pipeline.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: guardian/api-dispatch.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/rfr2/clip/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/context/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/coordination/intelligence-query.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/diagnostic-report.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/boot.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/intelligence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-intelligence-core-wired.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-rfr2-cjs.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/cfr/graph.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/config.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/lib/domain-nodes.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/causality/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/meta/confidence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/self-register.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/lib/domain-nodes.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/config.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/self-register.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/gap/hunter.js
+      to: lib/meta/confidence.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/index.js
+      kind: requires
+    - from: lib/diagnostic-report.js
+      to: intelligence/index.js
+      kind: requires
+    - from: lib/ledger-fanin/boot.js
+      to: intelligence/index.js
+      kind: requires
+    - from: tests/modules/intelligence.test.js
+      to: intelligence/index.js
+      kind: requires
+    - from: tests/modules/test-intelligence-core-wired.js
+      to: intelligence/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/sigma/index.js
+      kind: requires
+    - from: intelligence/rfr2/context/index.js
+      to: intelligence/rfr2/sigma/index.js
+      kind: requires
+    - from: intelligence/rfr2/index.js
+      to: intelligence/rfr2/sigma/index.js
+      kind: requires
+    - from: tests/modules/test-rfr2-cjs.js
+      to: intelligence/rfr2/sigma/index.js
+      kind: requires
+    - from: guardian/api-dispatch.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal/index.js
+      kind: requires
+  crossings:
+    - from: intelligence/index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/diagnostic-report.js
+      to: intelligence/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/ledger-fanin/boot.js
+      to: intelligence/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: guardian/api-dispatch.js
+      to: intelligence/liminal/index.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+    dependents:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+    upstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
+    downstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+    blockedBy:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+        files:
+          - tests/modules/test-intelligence-pipeline.test.js
+    dangling: []
+    lines:
+      - layer 7 · blocked by IP8_negative_and_shadow_space, IP9_the_open_loop
+      - 'depends on (2): IP8_negative_and_shadow_space, IP9_the_open_loop · all upstream 10'
+      - 'needed by (1): IP10_growth_tracking'
+      - >-
+        same files as IP6_route_command_screen with no order between them:
+        tests/modules/test-intelligence-pipeline.test.js
+    edges:
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+        kind: declared
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+        kind: declared

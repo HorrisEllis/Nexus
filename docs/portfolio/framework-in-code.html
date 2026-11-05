@@ -61,7 +61,7 @@ footer{margin-top:64px;color:var(--muted);font-size:.85rem;border-top:1px solid 
 <p class="lede">James Brooks wrote down how he reasons: start from the end state, measure before you judge, treat constraints as a field, and read what is missing. Then he specified a system that does each of those, and directed it into code with tests that anyone can run.</p>
 
 <div class="stats">
-  <div class="stat"><b>208 / 208</b><span>tests passing across the 19 suites cited here (run 2026-11-04)</span></div>
+  <div class="stat"><b>235 / 237</b><span>tests passing across the 20 suites cited here (run 2026-11-04/05; the 2 failures are a stale count and a fixture path in the gap-field engine's test)</span></div>
   <div class="stat"><b>547</b><span>specs written before code</span></div>
   <div class="stat"><b>847</b><span>test files</span></div>
   <div class="stat"><b>586k</b><span>lines of JavaScript, 3,063 files</span></div>
@@ -93,7 +93,7 @@ footer{margin-top:64px;color:var(--muted);font-size:.85rem;border-top:1px solid 
   <div class="sys"><code>intelligence/cfr/field.js</code>, <code>lib/emerge/compiler/gap-field-engine.js</code></div>
   <blockquote>"Probabilistic probability on top of deterministic probability = a constraint field … the boundary of the constraint field = the signal. Everything else is noise, assumption, or convention dressed as necessity."<cite>His Innovation Toolkit, Section 3</cite></blockquote>
   <p>Hard rules are the deterministic floor, and models work inside the space those rules leave. Wherever a rule is broken, the engine names a gap automatically. The gaps are derived from the rules, never written by hand. The field measures coherence and friction continuously instead of answering pass/fail.</p>
-  <div class="tests"><span class="pill">gap-field 18/18</span><span class="pill">cfr graph distance 7/7</span><span class="pill">cfr field authority 3/3</span><span class="pill">cfr collapse anchor 3/3</span></div>
+  <div class="tests"><span class="pill">gap-field engine 27/29</span><span class="pill">cfr graph distance 7/7</span><span class="pill">cfr field authority 3/3</span><span class="pill">cfr collapse anchor 3/3</span></div>
 </div>
 
 <div class="card">
@@ -101,7 +101,7 @@ footer{margin-top:64px;color:var(--muted);font-size:.85rem;border-top:1px solid 
   <div class="sys"><code>intelligence/gap/hunter.js</code>, <code>intelligence/liminal/</code> (12 detectors), <code>intelligence/liminal-space/</code> (5 interstitial spaces)</div>
   <blockquote>"Gap hunter and liminal space reader is my ability to read in between the lines. A way to account for ambiguity. Shadow space, negative space, reasoning… Looking for what's not there to fill in… the in between the lines."<cite>James, 2026-11-04</cite></blockquote>
   <p>Most systems analyse what is present. This one also looks at what is absent. The twelve detectors carry his names for it: negative space, shadow, contrastive, oscillatory, reversal, assumption, structural, relational, existential, field, code and music. The liminal-space organ watches the boundaries between layers, for example the threshold where intent meets constitution, and the membrane where a pattern meets its cause. Ambiguity is kept and named; it is never silently resolved.</p>
-  <div class="tests"><span class="pill">liminal-space 16/16</span><span class="pill">gap-tools 11/11</span><span class="pill">gap-finder 9/9</span></div>
+  <div class="tests"><span class="pill">liminal-space 16/16</span><span class="pill">gap reports 18/18</span><span class="pill">gap-tools 11/11</span><span class="pill">gap-finder 9/9</span></div>
 </div>
 
 <div class="card">
@@ -132,7 +132,7 @@ footer{margin-top:64px;color:var(--muted);font-size:.85rem;border-top:1px solid 
 node tests/modules/test-end-state.js           # RAID: the goal posts cannot move
 node tests/modules/test-intent-flow.test.js    # bidirectional chaining (IF-05)
 node tests/modules/test-rfr2-cjs.js            # RFR2: delta → sigma → causality
-node tests/modules/test-gap-field.js           # CFR: rules → derived gaps
+node lib/emerge/test/gap-field.test.js         # CFR: rules → derived gaps
 node tests/modules/test-liminal-space.js       # the interstitial spaces
 node tests/modules/intelligence.test.js        # three = an invariant, not a fact</pre>
 

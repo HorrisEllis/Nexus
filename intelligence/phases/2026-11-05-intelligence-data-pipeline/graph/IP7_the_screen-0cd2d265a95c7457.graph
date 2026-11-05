@@ -1,0 +1,60 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IP7_the_screen:0cd2d265a95c7457
+type: graph
+id: phase:IP7_the_screen:0cd2d265a95c7457
+context: dependency graph of phase IP7_the_screen
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793853812308
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793853812308
+lastSeenAt: 1793853812308
+fingerprint: null
+payload:
+  for: IP7_the_screen
+  kind: phase
+  repo: null
+  hash: 0cd2d265a95c7457
+  nodes:
+    - path: intelligence/ui/pipeline.html
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/ui/pipeline.js
+      role: changes
+      exists: false
+      system: intelligence
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+    dependents: []
+    upstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
+    downstream: []
+    blockedBy:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 7 · blocked by IP6_route_command_screen
+      - 'depends on (1): IP6_route_command_screen · all upstream 9'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+        kind: declared

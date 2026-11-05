@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+type: phase
+id: docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+context: >-
+  pipeline phase IP4_invariants_across_series of
+  docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+intent: null
+summary: IP4_invariants_across_series (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793853812301
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793853812301
+lastSeenAt: 1793853812301
+fingerprint: null
+payload:
+  id: IP4_invariants_across_series
+  map: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/pipeline/invariants.js
+    - intelligence/index.js
+    - tests/modules/test-intelligence-pipeline.test.js
+  depends_on:
+    - IP3_deviation_and_regime
+  blocks: []
+  spec: null
+  graph: 5656e465b1dd68aa

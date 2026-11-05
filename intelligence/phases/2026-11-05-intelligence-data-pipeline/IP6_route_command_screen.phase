@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+type: phase
+id: docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+context: >-
+  pipeline phase IP6_route_command_screen of
+  docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+intent: null
+summary: IP6_route_command_screen (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1793853812306
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793853812306
+lastSeenAt: 1793853812306
+fingerprint: null
+payload:
+  id: IP6_route_command_screen
+  map: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/routes.js
+    - intelligence/pipeline/report.js
+    - idearium/cli/route-commands.js
+    - intelligence/registry-components.js
+    - intelligence/event-taxonomy.js
+    - tests/modules/test-intelligence-pipeline.test.js
+  depends_on:
+    - IP5_invariants_into_rfr2
+  blocks: []
+  spec: null
+  graph: 02acd156908401f5

@@ -21,6 +21,9 @@ const ENTRIES = [
   ["op.start", e("A project operation began; the project is busy until it ends.", ["project", "what"], 'info')],
   ["op.done", e("A project operation ended, ok or not.", ["project", "what", "ok"], 'info')],
   ["auto.switch", e("The controller switched a project to a version on its own (its policy, once the project was idle).", ["project", "version", "ok"], 'notable')],
+  // CA5/CA6 (0.60.390–0.60.391) — the install from GitHub, emitted by cos/app/controller.js installNexus; undeclared until EC-05 caught it (2026-11-05)
+  ["install.step", e("A step of installing Nexus from GitHub (clone, pull, download, npm) started, finished or failed.", ["project", "id", "state", "what", "error"], 'info')],
+  ["install.done", e("Installing Nexus from GitHub ended, ok or not, with how (git clone, git pull, release zip) and why it failed.", ["project", "ok", "via", "error"], 'notable')],
   ["host:compartment:create", e("A compartment was asked to be created (CLI \u2192 CreateCompartmentGate).", ["name", "purpose", "runtimeId", "networkIsolated", "parentId", "store", "sysmap"], 'info')],
   [EC.HOST.COMPARTMENT_CREATED, e("A compartment was created: its id, slug and runtime.", ["compartmentId", "name", "slug", "runtimeId", "compartment"], 'notable')],
   ["host:compartment:start", e("A compartment was asked to start (CLI or a watchdog action).", ["name", "store", "sysmap"], 'info')],

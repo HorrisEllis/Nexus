@@ -1,0 +1,110 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IP5_invariants_into_rfr2:a7abd4e8b9c3f8a8
+type: graph
+id: phase:IP5_invariants_into_rfr2:a7abd4e8b9c3f8a8
+context: dependency graph of phase IP5_invariants_into_rfr2
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793854559995
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793854559995
+lastSeenAt: 1793854559995
+fingerprint: null
+payload:
+  for: IP5_invariants_into_rfr2
+  kind: phase
+  repo: null
+  hash: a7abd4e8b9c3f8a8
+  nodes:
+    - path: intelligence/data/baselines/README.md
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/pipeline/invariants.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/rfr2/sigma/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: tests/modules/test-intelligence-pipeline.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: intelligence/rfr2/clip/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/context/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: tests/modules/test-rfr2-cjs.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/sigma/index.js
+      kind: requires
+    - from: intelligence/rfr2/context/index.js
+      to: intelligence/rfr2/sigma/index.js
+      kind: requires
+    - from: intelligence/rfr2/index.js
+      to: intelligence/rfr2/sigma/index.js
+      kind: requires
+    - from: tests/modules/test-rfr2-cjs.js
+      to: intelligence/rfr2/sigma/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+    dependents:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+    upstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
+    downstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+    blockedBy:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+    unlocks:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+    conflicts:
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+        files:
+          - tests/modules/test-intelligence-pipeline.test.js
+    dangling: []
+    lines:
+      - layer 5 · blocked by IP4_invariants_across_series
+      - 'depends on (1): IP4_invariants_across_series · all upstream 7'
+      - >-
+        needed by (2): IP6_route_command_screen, IP9_the_open_loop · all downstream 5 · finishing it
+        unlocks IP6_route_command_screen
+      - >-
+        same files as IP8_negative_and_shadow_space with no order between them:
+        tests/modules/test-intelligence-pipeline.test.js
+    edges:
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+        kind: declared
