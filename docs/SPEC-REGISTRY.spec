@@ -2037,3 +2037,7 @@ spec:
 # ── ADDENDUM 2026-11-05 — docs/2026-11-05-clear-glass-element-engine-phasemap.spec ────────────────────────────────────────────────────────
 # James, 2026-11-05: "can you integrate erosmanceros, the adblocker, and guardian picker into one? should be a phase for it." Owner: clear-glass.
     | `docs/2026-11-05-clear-glass-element-engine-phasemap.spec` | 1.0.0 — one element engine: pick (the Guardian picker) → identify (ErosmancerOS's durable identity) → use (hide as an adblock ## rule, gate, fill, name); one panel. EE_D0/EE_D1 his; EE1–EE4 open | mapped | James: "integrate erosmanceros, the adblocker, and guardian picker into one" |
+
+# ── ADDENDUM 2026-11-05 — docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec ─────────────────────────────────────
+# James, 2026-11-05: "i want to be able to add dom mutators for node anchor for guardian, listeners, macros, etc." · "expand erosmanceros. add as much human ledgible options as possible ... all cli first, then into the browser.html." Owner: clear-glass.
+    | `docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec` | 1.0.0 — ClearDriver's watch rules (when an element appears/changes/goes → anchor, emit, macro, gate), the existing observers moved onto them; ErosmancerOS's options in plain words, his TypeScript actions, threats said and handed over (no evasion); CLI first, then browser.html. CM_D0 his; CM1–CM4, ES1–ES4 open | mapped | James: "expand it exponentially if possible" |

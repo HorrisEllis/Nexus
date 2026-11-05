@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES4_the_browser_panel
+type: phase
+id: docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES4_the_browser_panel
+context: >-
+  pipeline phase ES4_the_browser_panel of
+  docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+intent: null
+summary: ES4_the_browser_panel (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793872153645
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793872153645
+lastSeenAt: 1793872153645
+fingerprint: null
+payload:
+  id: ES4_the_browser_panel
+  map: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/browser.html
+    - clear-glass/renderer/eros-panel.js
+    - clear-glass/renderer/eros-panel.css
+  depends_on:
+    - CM3_listeners_and_macros
+    - ES3_threats_said_and_handed_over
+  blocks: []
+  spec: null
+  graph: c660dff855c07be5
