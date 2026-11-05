@@ -1674,3 +1674,36 @@ rule 3, says one system going down must break no other. Inside Idearium, Emerge 
   invariant) written down before the code.
 - **His part / the coder's part:** the method, the three-gap rule and "regulated and grounded" are his. The lift formula, the hypothesis state,
   the tests and this cross-reference are the coder's.
+
+### 2026-11-05 — first principles as architecture: deterministic first, probabilistic built off it
+
+- **His words:** 2026-11-05: "like genesis.spec is meant to be the deterministic aspects of the code to reuse per system, then builds from there.
+  like first principles." · "Deterministic building from there. Probabilistic variables off of deterministic. Deterministic = invariants,
+  primitives, principles, values, beliefs if open to change. Its first principles." · His framework, Section 3: "Probabilistic probability on top
+  of deterministic probability = a constraint field (a variation of first-principles → emergence). Deterministic variables/invariants/principles
+  bound the field." · 2026-10-13: "it would be nice to use agents intentionally for what theyre best at. as little as possible."
+- **The call against the alternative:** the usual way to build an AI system is model-first: ask the model, then check what it said. His rule is
+  the other way round. What is fixed comes first and is written once, and the probabilistic parts work only inside the space it leaves. In code
+  that means: one spec (genesis) every system is built from, never a bespoke shape per system; a parser, a test or a check runs before any
+  model is asked; a gap is derived from the rules, never written by hand; a pattern stays a hypothesis until it clears a fixed floor.
+- **Domains:** from first-principles reasoning (his cognitive method: start from what is true, then let the rest emerge) into four places in
+  software: system architecture (genesis), AI routing (deterministic before any model), specification analysis (gaps from invariants) and event
+  inference (the crystallizer).
+- **Checkable (run 2026-11-05):**
+  - genesis is the template: `tests/modules/test-genesis-and-architecture-spec.test.js` 7/7.
+  - deterministic before any model: `tests/modules/test-cg-agent-doors.test.js` 7/7. AD-04 shows Clear Glass's job verbs ("fill this in for
+    me", "record a macro called …") parsed and routed to the engine with no model call, and near-misses ("fill it with my other email", "I
+    filled it in") refused rather than guessed.
+  - gaps derived from the rules, never authored: `lib/emerge/test/gap-field.test.js` 27 passed, 2 failed. "fully specced system produces 0
+    gaps" and the structural, semantic and behavioural gaps from invariant violations pass. The 2 failures are the test's, not the method's: an
+    event count written as 8 when the pipeline now emits 9, and a fixture path (`./runtime.spec`) that only resolves from another folder.
+  - a fixed floor under the probabilistic: `tests/modules/intelligence.test.js` 15/15 (see the 2026-11-04 entry: a count of three and a
+    base-rate lift before anything is called an invariant).
+- **Evidence against, recorded too:** the systems do not yet build from genesis. Six have no server.js (genesis's origin). Guardian, the
+  reference system, has 35 loose files at its root against his example's three. Genesis 1.6.0 is mapped, not applied. And
+  `docs/innovation-toolkit-x-intelligence.md` cited the wrong test for the gap-field engine (corrected the same day). The principle is proven
+  where it is built; where it is not yet built, it is a plan, not proof.
+- **Skill shown:** first-principles thinking stated as an engineering rule a stranger can check: what is fixed is written once and reused, what
+  is uncertain is bounded by it, and the order between them is enforced in code and tests, not left to taste.
+- **His part / the coder's part:** the principle, genesis as the deterministic core, and "probabilistic variables off of deterministic" are his.
+  The tests cited, the counts and the gaps found are the coder's.
