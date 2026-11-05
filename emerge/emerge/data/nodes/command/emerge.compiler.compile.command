@@ -13,8 +13,8 @@
       "emerge.compiler.compiled"
     ],
     "expects": {
-      "in": "{ spec: YAML text (meta, modules, schemas), name?: the spec file's name, tier?: 0|1 (default 1) }",
-      "out": "{ ok: true, files: { relative/path: text }, t0: { emitted }, t1: { emitted }, ms } \u2014 the same files compiler/index.js compile() writes, read back",
+      "in": "{ spec: YAML text (meta, modules, schemas), name?: the spec file's name, tier?: 0|1 (default 1), host?: route settings (EAS_D9) for the host's preflight and writeback, skipWriteback? }",
+      "out": "{ ok: true, files: { relative/path: text }, t0: { emitted }, t1: { emitted }, cortex?, writeback? (with a host), ms } \u2014 the same files compiler/index.js compile() writes, read back",
       "fails": "400 naming the missing field \u00b7 { ok: false, error, step } when the compiler refuses the spec (its own words) \u00b7 never a partial ok"
     }
   }

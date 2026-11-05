@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793910797515
+exported_at: 1793919176656
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793910797515
-lastSeenAt: 1793910797515
+firstSeenAt: 1793919176656
+lastSeenAt: 1793919176656
 fingerprint: null
 payload:
   for: EAS4g_lib_emerge_archived
@@ -53,8 +53,7 @@ payload:
       - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
       - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
     downstream: []
-    blockedBy:
-      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4f_the_callers_switch
+    blockedBy: []
     unlocks: []
     conflicts:
       - with: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
@@ -64,7 +63,7 @@ payload:
           - _archive/lib/emerge
     dangling: []
     lines:
-      - layer 7 · blocked by EAS4f_the_callers_switch
+      - layer 7 · ready
       - 'depends on (1): EAS4f_the_callers_switch · all upstream 13'
       - 'needed by (0): —'
       - >-

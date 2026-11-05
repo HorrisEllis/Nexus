@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4f_the_callers_switch
+type: phase
+id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4f_the_callers_switch
+context: pipeline phase EAS4f_the_callers_switch of docs/2026-10-31-emerge-as-a-system-phasemap.spec
+intent: null
+summary: EAS4f_the_callers_switch (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1793919176655
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793919176655
+lastSeenAt: 1793919176655
+fingerprint: null
+payload:
+  id: EAS4f_the_callers_switch
+  map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.414 — all four callers through Emerge's door; nothing requires lib/emerge at run
+    time"
+  files:
+    - idearium/compiler-bridge.js
+    - copilot/module-builder.js
+    - guardian/server.js
+    - lib/build-pipeline.js
+    - emerge/emerge/lib/compiler.js
+    - emerge/emerge/tests/compiler-door.test.js
+    - tests/modules/test-emerge-direct-compile.js
+  depends_on:
+    - EAS4e_the_callback_routes
+  blocks:
+    - MOD-EAS-CALLERS
+  spec: docs/emerge-system.spec
+  graph: dd5de290eb1b4a32

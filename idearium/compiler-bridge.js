@@ -48,8 +48,11 @@ import os   from 'os';
 
 const require = createRequire(import.meta.url);
 
-// emerge/compiler/index.js is CJS — bridge it in via createRequire.
-const { compile } = require('../lib/emerge/compiler/index.js');
+// EAS4f 2026-11-05 — the spec compiler is Emerge's; it is reached through Emerge's door (POST /compiler/compile), never its files
+// (§5.15). His EAS_D9: "Emerge calls back by route" — Cortex's preflight and writeback are named to Emerge as Cortex's own routes.
+const nx = require('../lib/nexus-client.js');
+const cortexHost = () => ({ name: 'nexus-cortex', ping: nx.urlOf('cortex', '/api/emerge-host/ping'),
+  preflight: nx.urlOf('cortex', '/api/emerge-host/preflight'), writeback: nx.urlOf('cortex', '/api/emerge-host/writeback') });
 
 // ── Section lookup ───────────────────────────────────────────────────────────
 function _section(spec, id) {
@@ -223,12 +226,21 @@ export async function compileIdeariumSpec(spec, outputDir, options = {}) {
   fs.writeFileSync(specFile, yamlSpec, 'utf8');
 
   try {
-    const result = await compile(specFile, outputDir, {
-      tier:          options.tier ?? 1,
-      skipCortex:    options.skipCortex ?? false,
-      skipWriteback: options.skipCortex ?? false,
-      verbose:       options.verbose ?? false,
-    });
+    const skipCortex = options.skipCortex ?? false;
+    let result;
+    try {
+      result = await nx.post('emerge', '/compiler/compile', {
+        spec: yamlSpec, name: path.basename(specFile), tier: options.tier ?? 1, skipWriteback: skipCortex,
+        ...(skipCortex ? {} : { host: cortexHost() }),
+      }, { timeout: 120000 });
+    } catch (e) {
+      return { ok: false, error: `the spec compiler is Emerge's (its door, :4900), and it did not answer: ${e.message}`, step: 'compile-door', extraction };
+    }
+    if (result && result.ok) {
+      for (const [rel, text] of Object.entries(result.files || {})) {
+        const f = path.join(outputDir, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, text);
+      }
+    }
 
     if (!result.ok) {
       return { ok: false, error: result.error, step: result.step || 'compile', extraction };

@@ -125,6 +125,18 @@ async function t(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} ${de
       const b = await call(port, 'POST', '/compiler/run', { spec, model: './a-model.js' });
       assert.strictEqual(b.status, 400); assert.match(JSON.stringify(b.body), /model/);
     });
+    await t('CD-09', 'compile with a host by route: preflight and writeback POSTed; the same files as without one', async () => {
+      seen.length = 0;
+      const withHost = (await call(port, 'POST', '/compiler/compile', { spec, name: 'SPEC_COMPILER.spec', host })).body;
+      const plain = (await call(port, 'POST', '/compiler/compile', { spec, name: 'SPEC_COMPILER.spec' })).body;
+      assert.ok(withHost.ok && plain.ok, JSON.stringify(withHost).slice(0, 200));
+      const paths = seen.map(x => x.path);
+      assert.ok(paths.includes('/preflight') && paths.includes('/writeback'), paths.join(', '));
+      assert.deepStrictEqual(Object.keys(withHost.files).filter(k => !k.startsWith('.emerge/')), Object.keys(plain.files).filter(k => !k.startsWith('.emerge/')), 'the same files');
+      assert.ok(withHost.cortex !== undefined && withHost.writeback !== undefined, 'the host\'s answers come back');
+      const bad = await call(port, 'POST', '/compiler/compile', { spec, host: './h.js' });
+      assert.strictEqual(bad.status, 400);
+    });
     stand.close();
 
     await t('CD-04', 'every component keeps the shape: a capability, a command and events', async () => {

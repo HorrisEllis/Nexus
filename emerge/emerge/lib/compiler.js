@@ -14,10 +14,13 @@ const path = require('path');
 
 function _bad(field) { return Object.assign(new Error(`missing ${field}`), { status: 400 }); }
 
-/** POST /compiler/compile { spec, name?, tier? } -> { ok, files, t0, t1, ms } | { ok:false, error, step } */
+/** POST /compiler/compile { spec, name?, tier?, host?, skipWriteback? } -> { ok, files, t0, t1, cortex?, writeback?, ms } | { ok:false, error, step }
+ *  host: route settings (EAS_D9, as /compiler/build); without one it runs on the local host (no preflight, no writeback) */
 async function compile(args = {}) {
   if (typeof args.spec !== 'string' || !args.spec.trim()) throw _bad('spec (the spec\'s YAML text)');
   const tier = args.tier === 0 ? 0 : 1;
+  // checked before anything runs (and before the compiler's narration is silenced): only settings cross the door
+  const host = args.host === undefined || args.host === null ? undefined : (typeof args.host === 'object' && !Array.isArray(args.host) ? args.host : (() => { throw _bad('host as settings ({ … routes } — a path or a module is not taken through the door)'); })());
   const name = path.basename(String(args.name || 'spec.spec')).replace(/[^\w.-]/g, '_') || 'spec.spec';
   const work = fs.mkdtempSync(path.join(os.tmpdir(), 'emerge-compile-'));
   const t0 = Date.now();
@@ -27,12 +30,13 @@ async function compile(args = {}) {
     fs.writeFileSync(src, args.spec);
     const { compile: run } = require('../compiler/index.js');
     const log = console.log; console.log = () => {};   // the compiler narrates; the door answers in JSON only
-    let r; try { r = await run(src, out, { tier, skipCortex: true }); } finally { console.log = log; }
+    let r; try { r = await run(src, out, { tier, skipCortex: !host, host, skipWriteback: !!args.skipWriteback }); } finally { console.log = log; }
     if (!r || !r.ok) return { ok: false, error: (r && r.error) || 'the compiler did not run', step: (r && r.step) || 'compile', ms: Date.now() - t0 };
     const emitted = (t) => (r[t] && r[t].emitted) || [];
     const files = {};
     for (const rel of [...new Set([...emitted('t0'), ...emitted('t1')])].sort()) files[rel] = fs.readFileSync(path.join(out, rel), 'utf8');
-    return { ok: true, files, t0: { emitted: emitted('t0') }, t1: { emitted: emitted('t1') }, ms: Date.now() - t0 };
+    const safe = (v) => { try { return v == null ? null : JSON.parse(JSON.stringify(v, (k, x) => (typeof x === 'function' ? undefined : x))); } catch (_) { return null; } };
+    return { ok: true, files, t0: { emitted: emitted('t0') }, t1: { emitted: emitted('t1') }, ...(host ? { cortex: safe(r.cortex), writeback: safe(r.writeback) } : {}), ms: Date.now() - t0 };
   } finally {
     try { fs.rmSync(work, { recursive: true, force: true }); } catch (_) { /* a temp folder left behind is not an error of the call */ }
   }
@@ -74,7 +78,8 @@ async function _inWork(args, fn) {
 async function build(args = {}) {
   const host = _settings(args.host, 'host');
   return _inWork(args, async (src, out) => {
-    const r = await require('../compiler/pipeline.js').compile(src, out, { host, skipHost: !!args.skipHost || !host, force: !!args.force });
+    const tierArg = args.tier === 0 || args.tier === 1 ? args.tier : undefined;   // as the pipeline takes it; left out, its own default
+    const r = await require('../compiler/pipeline.js').compile(src, out, { host, skipHost: !!args.skipHost || !host, skipWriteback: !!args.skipWriteback, force: !!args.force, ...(tierArg === undefined ? {} : { tier: tierArg }) });
     if (!r || !r.ok) return { ok: false, error: (r && r.error) || 'the pipeline did not run', step: (r && r.step) || 'build' };
     const tier = (t) => (r[t] ? { emitted: r[t].emitted || [], failures: _jsonSafe(r[t].failures || []) } : null);
     return { ok: true, skipped: !!r.skipped, moduleName: r.moduleName || null, t0: tier('t0'), t1: tier('t1'), cortex: _jsonSafe(r.cortex), writeback: _jsonSafe(r.writeback), sync: _jsonSafe(r.idearium || r.sync) };

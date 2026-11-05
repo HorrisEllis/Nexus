@@ -297,14 +297,25 @@ phases:
       copy archived once nothing requires it.
     proof: "a build through Emerge with the Nexus host by route gives the same answer as lib/emerge's compile with Cortex (the compare MOD-EAS-CALLERS asks for)"
   EAS4f_the_callers_switch:
-    status: "OPEN — guardian/server.js switched 0.60.412; idearium/compiler-bridge.js, copilot/module-builder.js, lib/build-pipeline.js to do"
+    status: "BUILT 0.60.414 — all four callers through Emerge's door; nothing requires lib/emerge at run time"
+    # ── EXPANDED 2026-11-05 (0.60.414) — the last three callers (James, the same day: "Let's fix the emerge issue") ──
+    # Compared first (its prerequisite), Cortex down in both: lib/emerge's pipeline vs Emerge's build on SPEC_COMPILER.spec — the same 50 files,
+    # one line apart (the compiler's version stamp, named in EAS4b); idearium/compiler-bridge before vs after on one Idearium spec — t0 9,
+    # t1 0, 3 entries on disk both ways, Cortex unreachable said both ways (the wording differs).
+    # - idearium/compiler-bridge.js → POST /compiler/compile (its own engine, compiler/index.js), Cortex's host routes unless skipCortex; the
+    #   door's compile takes host and skipWriteback (CD-09).
+    # - copilot/module-builder.js → POST /compiler/build with Cortex's host routes; files written into its build folder (EM-003 rewritten for
+    #   the door, the old wording kept in the test).
+    # - lib/build-pipeline.js → POST /compiler/run with Cortex's host and Guardian's ask route; a dry run through it: 11 T2 nodes, 0 failed,
+    #   every frame emitted (build.started, stage, node, complete). Named: node progress arrives after the run, from Emerge's list.
+    # Proof: compiler-door 9/9; test-emerge-direct-compile 8/9 (EM-005 fails on main too: a September archive file missing); census 1121, none added.
     # ── EXPANDED 2026-11-05 (0.60.412) — guardian/server.js POST /build runs in Emerge (POST /compiler/run), the host by Cortex's routes, the
     # model by Guardian's own ask route, provider as asked. Named differences: an unconnected provider fails fast with its reason where the
     # SEAM queue (/command, 'seam') waited for it; progress (guardian.build.progress) is emitted after the run from its list, not live.
     depends_on: [EAS4e_the_callback_routes]
     spec: docs/emerge-system.spec
     blocks: [MOD-EAS-CALLERS]
-    files: [idearium/compiler-bridge.js, copilot/module-builder.js, guardian/server.js, lib/build-pipeline.js]
+    files: [idearium/compiler-bridge.js, copilot/module-builder.js, guardian/server.js, lib/build-pipeline.js, emerge/emerge/lib/compiler.js, emerge/emerge/tests/compiler-door.test.js, tests/modules/test-emerge-direct-compile.js]
     requires: ["Emerge's door up", "the callback routes (EAS4e)"]
     prerequisites: ["each caller's answer before and after compared on one real spec, the difference named or none"]
     does: "the four remaining callers call Emerge's door: idearium/compiler-bridge (compile, with Cortex around it by route), copilot/module-builder (build), guardian/server and lib/build-pipeline (run)"
