@@ -44,13 +44,16 @@ async function run() {
     assert.ok(!/cq\.create\(/.test(codeOnly) && !/cq\.dispatch\(/.test(codeOnly));
   });
 
-  test('EM-003', 'build() now requires and calls emerge/compiler/pipeline.js\'s compile() directly', () => {
-    assert.ok(/require\(['"]\.\.\/lib\/emerge\/compiler\/pipeline['"]\)/.test(src));
-    assert.ok(/await compile\(specPath, buildDir/.test(src));
+  // EAS4f 2026-11-05 (his EAS_D9, "Emerge calls back by route"): the build is Emerge's, asked through its door, never its files.
+  // Was: "build() now requires and calls emerge/compiler/pipeline.js's compile() directly" (kept, §0.3: the in-process require it checked is gone).
+  test('EM-003', 'build() asks Emerge\'s door (POST /compiler/build) with Cortex\'s host routes; no require of lib/emerge', () => {
+    assert.ok(!/require\(['"]\.\.\/lib\/emerge\//.test(src), 'no in-process require of lib/emerge');
+    assert.ok(/nx\.post\('emerge', '\/compiler\/build'/.test(src), 'the door');
+    assert.ok(/\/api\/emerge-host\/preflight/.test(src) && /\/api\/emerge-host\/writeback/.test(src), 'Cortex named by its routes');
   });
 
   test('EM-004', 'emerge/consumer.js is genuinely gone from its live location', () => {
-    assert.ok(!fs.existsSync(path.join(__dirname, '..', '..', 'lib', 'emerge', 'consumer.js')), 'consumer.js should be removed, not just unused');
+    assert.ok(!fs.existsSync(path.join(__dirname, '..', '..', 'emerge', 'emerge', 'consumer.js')), 'consumer.js should be removed, not just unused');
   });
 
   test('EM-005', 'emerge/consumer.js is archived, not deleted without a trace — §0.3', () => {
@@ -58,7 +61,7 @@ async function run() {
   });
 
   test('EM-006', 'emerge/compiler/ itself is untouched — the real, load-bearing part James said to keep', () => {
-    assert.ok(fs.existsSync(path.join(__dirname, '..', '..', 'lib', 'emerge', 'compiler', 'pipeline.js')));
+    assert.ok(fs.existsSync(path.join(__dirname, '..', '..', 'emerge', 'emerge', 'compiler', 'pipeline.js')));
   });
 
   test('EM-007', 'autopilot.js no longer spawns emerge/consumer.js as a kernel', () => {

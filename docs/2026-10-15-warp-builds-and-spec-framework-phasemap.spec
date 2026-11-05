@@ -93,8 +93,9 @@ phases:
     proof: "a planted good reply is collected, registered and tagged to its phase; a bad one returns its errors, nothing registered"
   SF4_compile_on_collect:
     status: DONE (0.60.67)
-    systems: [idearium, core]
-    files: [lib/spec-collect.js, lib/emerge/compiler/index.js, lib/repo-inject.js, idearium/lib/config-core.cjs, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/app.js, tests/modules/test-spec-pipeline.test.js]
+    systems: [idearium, core, emerge]   # emerge added 2026-11-05 (EAS4g): its compiler file is Emerge's now
+    # EAS4g 2026-11-05: lib/emerge/compiler/index.js archived with lib/emerge; the compiler is Emerge's (emerge/emerge/compiler/index.js), asked through its door
+    files: [lib/spec-collect.js, emerge/emerge/compiler/index.js, lib/repo-inject.js, idearium/lib/config-core.cjs, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/app.js, tests/modules/test-spec-pipeline.test.js]
     depends_on: [SF3_collect_the_spec]
     specs: [docs/spec-compiler.spec, idearium/spec/idearium.spec]
     does: "per-repo setting: a collected spec runs T0/T1 (zero tokens); its files arrive as proposed .inject nodes."

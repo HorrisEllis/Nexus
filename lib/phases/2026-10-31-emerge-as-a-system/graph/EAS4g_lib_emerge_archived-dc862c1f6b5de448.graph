@@ -1,0 +1,267 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EAS4g_lib_emerge_archived:dc862c1f6b5de448
+type: graph
+id: phase:EAS4g_lib_emerge_archived:dc862c1f6b5de448
+context: dependency graph of phase EAS4g_lib_emerge_archived
+intent: null
+summary: 35 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793920520047
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793920520047
+lastSeenAt: 1793920520047
+fingerprint: null
+payload:
+  for: EAS4g_lib_emerge_archived
+  kind: phase
+  repo: null
+  hash: dc862c1f6b5de448
+  nodes:
+    - path: emerge/emerge/lib/compiler.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: idearium/spec-engine/phase-specs.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/cli/diagnose.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/file-integrity.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/hooks/emerge.hooks.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/route-contract-check.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-check.js
+      role: changes
+      exists: true
+      system: lib
+    - path: scripts/precommit-check.js
+      role: changes
+      exists: true
+      system: null
+    - path: scripts/release.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-substrate-spec.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/living-spec.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/contract-queue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/change-pack.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: emerge/emerge/compiler/index.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/compiler/kg-builder.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/compiler/pipeline.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/compiler/t2-gate.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-dag.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pipeline-nodes.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-substrate-spec.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/phase-files.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/phase-graph.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/pipeline-nodes.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/phase-plan.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/node-export.js
+      kind: requires
+    - from: emerge/emerge/lib/compiler.js
+      to: emerge/emerge/compiler/index.js
+      kind: requires
+    - from: emerge/emerge/lib/compiler.js
+      to: emerge/emerge/compiler/pipeline.js
+      kind: requires
+    - from: emerge/emerge/lib/compiler.js
+      to: emerge/emerge/compiler/t2-gate.js
+      kind: requires
+    - from: emerge/emerge/lib/compiler.js
+      to: emerge/emerge/compiler/kg-builder.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/contract-queue.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/apply.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/change-pack.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4f_the_callers_switch
+    dependents: []
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4a_L0_evaluate
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4b_L1_compile
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4c_L2_build
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4d_L3_run
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4f_the_callers_switch
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D5_one_primitive_per_gate
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D6_emerge_is_a_system_in_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D7_the_spec_compiler_is_emerges
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D9_emerge_calls_back_by_route
+      - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
+      - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 7
+      - 'depends on (1): EAS4f_the_callers_switch · all upstream 13'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4f_the_callers_switch
+        kind: declared

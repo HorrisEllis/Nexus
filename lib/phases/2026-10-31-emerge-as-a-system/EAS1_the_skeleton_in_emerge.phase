@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
 context: pipeline phase EAS1_the_skeleton_in_emerge of docs/2026-10-31-emerge-as-a-system-phasemap.spec
 intent: null
-summary: EAS1_the_skeleton_in_emerge (?) — 23 file(s)
+summary: EAS1_the_skeleton_in_emerge (?) — 22 file(s)
 system: idearium
 tags: []
-exported_at: 1793905362589
+exported_at: 1793920520027
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793905362589
-lastSeenAt: 1793905362589
+firstSeenAt: 1793920520027
+lastSeenAt: 1793920520027
 fingerprint: null
 payload:
   id: EAS1_the_skeleton_in_emerge
@@ -42,7 +42,6 @@ payload:
     - emerge/emerge/ide-registry.js
     - emerge/emerge/events-compiler.js
     - emerge/emerge/emerge-ide.js
-    - lib/emerge/emerge-ide.js
   depends_on:
     - EAS_D0_a_system_not_an_idearium_module
     - EAS_D2_two_contracts_two_names
@@ -50,4 +49,4 @@ payload:
   blocks:
     - MOD-EAS-SKELETON
   spec: docs/emerge-system.spec
-  graph: 7a333f9310dea553
+  graph: 2394bb4d108734c7

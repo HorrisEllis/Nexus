@@ -126,7 +126,8 @@ spec:
 
     - id: IF-PHASE-SPECS
       name: phase-specs
-      path: lib/emerge/compiler/phase-specs.js
+      # EAS4g 2026-11-05 (his EAS_D10, "Idearium, via the door"): moved from lib/emerge/compiler/phase-specs.js (archived with lib/emerge)
+      path: idearium/spec-engine/phase-specs.cjs
       description: "Writes each phase's .phase and .graph files and checks them for drift."
       exports: ["derive", "write", "check", "writeAll", "checkAll"]
       behavioral_contracts: ["a superseded graph is moved to _superseded/, never deleted"]
@@ -134,7 +135,8 @@ spec:
 
     - id: IF-KG-BUILDER
       name: kg-builder
-      path: lib/emerge/compiler/kg-builder.js
+      # EAS4g 2026-11-05: Emerge's copy (EAS_D7, EAS_D10); lib/emerge/compiler/kg-builder.js archived with lib/emerge
+      path: emerge/emerge/compiler/kg-builder.js
       description: "Compiles a spec into its graph with each node's specDepth."
       exports: ["build(spec) → { ok, graph }"]
       behavioral_contracts: ["deterministic"]

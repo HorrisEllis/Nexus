@@ -73,7 +73,11 @@ const tmp = (n) => fs.mkdtempSync(path.join(os.tmpdir(), `rc-${n}-`));
   await test('RC-02', 'no long-running kernel file uses a bare fs.watch', async () => {
     const files = ['orchestrator/orchestrator.js', 'guardian/lib/node-registry.js', 'lib/node-registry.js', 'lib/node-index-watcher.js',
       'lib/queue.js', 'orchestrator/auth/index.js', 'idearium/architecture-spec/registry/watcher.js', 'cos/foundation/file-browser.js',
-      'diagnostic/nexus-diagnostic.js', 'lib/emerge/emerge-kernel.js', 'idearium/repo/watcher.js'];
+      'diagnostic/nexus-diagnostic.js', 'idearium/repo/watcher.js'];
+    // EAS4g 2026-11-05: lib/emerge/emerge-kernel.js is archived. Emerge's own kernel (emerge/emerge/emerge-kernel.js) watches with its own
+    // guard since 2026-10-28 (his "don't couple to nexus": not lib/safe-watch.js), so it is checked for that guard below, not for safe-watch.
+    { const k = fs.readFileSync(path.join(ROOT, 'emerge/emerge/emerge-kernel.js'), 'utf8');
+      assert.ok(/fs\.watch\(dir, cb\); w\.on\('error'/.test(k) && /cannot watch/.test(k), "Emerge's kernel guards its own watcher (error handler, a failed watch said)"); }
     for (const f of files) {
       const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
       assert.ok(!/\bfs\.watch\(/.test(src), `${f} still calls fs.watch directly`);

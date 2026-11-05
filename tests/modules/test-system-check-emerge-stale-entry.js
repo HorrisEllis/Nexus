@@ -29,15 +29,16 @@ function run() {
 
   test('SCE-002', 'it now points at the real, current, kept core — emerge/compiler/pipeline.js', () => {
     const src = fs.readFileSync(path.join(ROOT, 'lib/system-check.js'), 'utf8');
-    assert.ok(/emerge:\s*'lib\/emerge\/compiler\/pipeline\.js'/.test(src));
+    // EAS4g 2026-11-05: lib/emerge archived; the kept core is Emerge's own (was lib/emerge/compiler/pipeline.js, kept in the history)
+    assert.ok(/emerge:\s*'emerge\/emerge\/compiler\/pipeline\.js'/.test(src));
   });
 
   test('SCE-003', 'the real, current entry file genuinely exists on disk — the fix points at something real, not another guess', () => {
-    assert.ok(fs.existsSync(path.join(ROOT, 'lib', 'emerge', 'compiler', 'pipeline.js')));
+    assert.ok(fs.existsSync(path.join(ROOT, 'emerge', 'emerge', 'compiler', 'pipeline.js')));
   });
 
   test('SCE-004', 'the archived consumer.js is confirmed gone from its old live location — confirms the retirement this fix accounts for actually happened', () => {
-    assert.ok(!fs.existsSync(path.join(ROOT, 'lib', 'emerge', 'consumer.js')));
+    assert.ok(!fs.existsSync(path.join(ROOT, 'emerge', 'emerge', 'consumer.js')));
     assert.ok(fs.existsSync(path.join(ROOT, '_archive/2026-09-06-emerge-consumer-retired/consumer.js')), 'archived per §0.3, not deleted without a trace');
   });
 

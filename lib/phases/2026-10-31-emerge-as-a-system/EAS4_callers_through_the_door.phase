@@ -7,11 +7,11 @@ intent: null
 summary: EAS4_callers_through_the_door (?) — 21 file(s)
 system: idearium
 tags: []
-exported_at: 1793910797503
+exported_at: 1793920520035
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793910797503
-lastSeenAt: 1793910797503
+firstSeenAt: 1793920520035
+lastSeenAt: 1793920520035
 fingerprint: null
 payload:
   id: EAS4_callers_through_the_door
@@ -19,8 +19,8 @@ payload:
   repo: null
   layer: null
   status: >-
-    "OPEN — expanded 2026-11-05 into EAS4a–EAS4g (one per primitive, then the callback routes, the
-    callers, the archive); done when they are"
+    "BUILT 0.60.415 — EAS4a–EAS4g all built; nothing in Nexus requires lib/emerge, and lib/emerge is
+    archived (_archive/lib/emerge)"
   files:
     - guardian/server.js
     - idearium/compiler-bridge.js

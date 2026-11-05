@@ -19,7 +19,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const ROOT = path.join(__dirname, '../..');
-const P = require(path.join(ROOT, 'lib', 'emerge', 'compiler', 'phase-specs.js'));
+const P = require(path.join(ROOT, 'idearium', 'spec-engine', 'phase-specs.cjs'))   // EAS_D10 2026-11-05: Idearium's (was lib/emerge/compiler/phase-specs.js);
 const NE = require(path.join(ROOT, 'lib/node-export.js'));
 
 let passed = 0, failed = 0;
@@ -110,7 +110,7 @@ test('PN-04', "Nexus's tree: every phase of every map has its .phase; drift (a g
   const c = quiet(() => P.checkAll({}));
   assert.ok(c.length > 1500, `${c.length} phases`);
   const none = c.filter(x => x.drift.includes('no .phase written'));
-  assert.deepStrictEqual(none.slice(0, 5).map(x => x.key), [], `${none.length} phase(s) with no node — run node emerge/compiler/phase-specs.js --all`);
+  assert.deepStrictEqual(none.slice(0, 5).map(x => x.key), [], `${none.length} phase(s) with no node — run node idearium/spec-engine/phase-specs.cjs --all`);
   const drift = c.filter(x => x.drift.length).length;
   if (drift) console.log(`    (${drift} node(s) drifted from the code their graph names — refreshed by phase-specs.js --all at release)`);
 });
@@ -127,7 +127,7 @@ test('PN-04', "Nexus's tree: every phase of every map has its .phase; drift (a g
     const r = await api._route('GET', `/api/repos/${made.repo.uuid}/phases/nodes`);
     const d = r.json.data || r.json;
     assert.strictEqual(r.status, 200, JSON.stringify(r.json).slice(0, 300));
-    assert.deepStrictEqual([d.phases, d.nodes, d.missingCount], [4, 0, 4]); assert.ok(/phase-specs\.js --all/.test(d.remedy));
+    assert.deepStrictEqual([d.phases, d.nodes, d.missingCount], [4, 0, 4]); assert.ok(/phase-specs\.c?js --all/.test(d.remedy));
     const { pathToFileURL } = require('url');
     const RC = await import(pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href);
     assert.strictEqual(RC.SPEC.find(x => x.key === 'repo.nodes').req({ repo: { uuid: 'u' }, args: [], flags: {} }).path, '/api/repos/u/phases/nodes');

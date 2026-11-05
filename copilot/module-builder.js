@@ -693,14 +693,21 @@ Return the fixed spec only, starting with "spec:"`;
       );
     }
 
-    const { compile } = require('../lib/emerge/compiler/pipeline');
+    // EAS4f 2026-11-05 — the build runs in Emerge, through its door (POST /compiler/build), never its files (§5.15). His EAS_D9: "Emerge
+    // calls back by route" — Cortex's preflight and writeback are named to Emerge as Cortex's own routes. The files come back as text and
+    // are written into this build's folder, as before. Emerge down is said, never a silent fallback (§1.2).
+    const nx = require('../lib/nexus-client');
     try {
-      const result = await compile(specPath, buildDir, { verbose: false });
+      const result = await nx.post('emerge', '/compiler/build', {
+        spec, name: path.basename(specPath),
+        host: { name: 'nexus-cortex', ping: nx.urlOf('cortex', '/api/emerge-host/ping'), preflight: nx.urlOf('cortex', '/api/emerge-host/preflight'), writeback: nx.urlOf('cortex', '/api/emerge-host/writeback') },
+      }, { timeout: 180000 });
+      if (result.ok) for (const [rel, text] of Object.entries(result.files || {})) { const f = path.join(buildDir, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, text); }
       buildResult = result.ok
         ? { ok: true, outputDir: buildDir, skipped: !!result.skipped }
         : { ok: false, error: result.error || 'compile pipeline produced no result' };
     } catch (e) {
-      buildResult = { ok: false, error: e.message };
+      buildResult = { ok: false, error: `the build runs in Emerge (its door, :4900), and it did not answer: ${e.message}` };
     }
     // Real event, kept — genuinely useful observability, same real
     // event_log write consumer.js used to do, one call, no separate
