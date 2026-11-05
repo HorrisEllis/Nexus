@@ -7,18 +7,21 @@ intent: null
 summary: DO3_cortex_door (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793419906988
+exported_at: 1793859126590
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793419906988
-lastSeenAt: 1793419906988
+firstSeenAt: 1793859126590
+lastSeenAt: 1793859126590
 fingerprint: null
 payload:
   id: DO3_cortex_door
   map: docs/2026-10-31-system-doors-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "DO3a BUILT 0.60.392 (the door: cortex/server.js is the process, its registry, handshake and
+    CLI; launchers switched); DO3b OPEN (boot.js's handlers into cortex/routes, one registry entry
+    at a time)"
   files:
     - cortex/server.js
     - cortex/registry-components.js
@@ -31,4 +34,4 @@ payload:
   blocks:
     - MOD-DOOR-CORTEX
   spec: docs/system-doors.spec
-  graph: 81bcaa0246117951
+  graph: b169f6c34d6b4729

@@ -84,7 +84,7 @@ phases:
     does: "architect/server.js on its config and the registry, with its missing slots: Architect gets its origin"
     proof: "the origin trace shows Architect with no missing slot"
   DO3_cortex_door:
-    status: OPEN
+    status: "DO3a BUILT 0.60.392 (the door: cortex/server.js is the process, its registry, handshake and CLI; launchers switched); DO3b OPEN (boot.js's handlers into cortex/routes, one registry entry at a time)"
     depends_on: [DO_D0_server_floats_on_the_registry, DO0_the_handshake_counts_real_routes]
     files: [cortex/server.js, cortex/routes, cortex/registry-components.js, cortex/compartment.json, lib/nexus/autopilot.js, cortex/boot.js]
     spec: docs/system-doors.spec
@@ -121,3 +121,17 @@ order: "DO0 first (it is a defect, and every door's handshake needs it); then DO
 # Measured the same day: server.js in guardian, copilot, loom, versionium, intelligence, ollama, diagnostic (diagnostic's names no
 # registry); none yet in cortex, idearium, orchestrator, clear-glass, architect, cos (DO1–DO5 open). Loom runs walled under COS since
 # 0.60.338 (LM6); DO6 does the same for every system, audit before enforce.
+
+# ── ADDENDUM 2026-11-05 (0.60.392) — DO3 cut in two; DO3a built ──────────────────────────────────────────────────────────────────────────
+# James, 2026-11-05: "they all need the door build". Said after "Like I can’t just move a folder and have nexus run still that’s why they need
+# to use the cli and api routes for the server.js. Then connect through the door".
+# The cut (the coder's, by his axioms: §3.3 smallest proven step first, REVERSIBILITY): DO3a gives Cortex its door without moving a single
+# route — cortex/server.js is the process COS starts; it answers GET /registry, GET /handshake and POST /cli from cortex/registry-components.js
+# (the three added to the registry) and hands every other request to boot.js's routes, unchanged. boot.js's listen became start(); run
+# directly it still starts (old launchers keep working until DO4). Launchers switched: cortex/compartment.json, lib/cli/compartments.js ENTRY,
+# lib/system-check.js. DO3b (still OPEN) moves boot.js's handlers into cortex/routes, one registry entry at a time, then DO4 retires boot.js.
+# Proof: tests/modules/test-cortex-door.test.js 4/4 — DR-02 records the route table through boot.js alone and replays it through the door: 14
+# GET routes, the same status and keys. test-cos-supervisor SV-08 now expects cortex/server.js (8/8). The other Cortex suites unchanged
+# (cortex-sse-broadcast 2/2; test-failure-modes 8/1 as before, its one failure not this change's).
+# Not done here, said (§1.2): /contract still serves interaction-contract.json, not the registry (orchestrator's handshake reads that shape;
+# changing it is DO6's); Orchestrator and COS have no door phase yet — to add.
