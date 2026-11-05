@@ -4,29 +4,31 @@ type: phase
 id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS5_a_system_of_systems
 context: pipeline phase EAS5_a_system_of_systems of docs/2026-10-31-emerge-as-a-system-phasemap.spec
 intent: null
-summary: EAS5_a_system_of_systems (?) — 4 file(s)
+summary: EAS5_a_system_of_systems (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1793447691370
+exported_at: 1793899854798
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793447691370
-lastSeenAt: 1793447691370
+firstSeenAt: 1793899854798
+lastSeenAt: 1793899854798
 fingerprint: null
 payload:
   id: EAS5_a_system_of_systems
   map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: BUILT 0.60.336 (Emerge 58a12d8)
   files:
     - Emerge:emerge/tests/nesting.test.js
     - Emerge:emerge/lib/modules.js
     - Emerge:emerge/lib/handoff.js
     - docs/emerge-system.spec
+    - lib/nexus/autopilot.js
+    - lib/system-boundary.js
   depends_on:
     - EAS2_the_language_through_the_door
   blocks:
     - MOD-EAS-NESTING
   spec: docs/emerge-system.spec
-  graph: d1d93cd40edabc4e
+  graph: 5a5d760d7237d7a3

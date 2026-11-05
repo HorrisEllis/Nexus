@@ -82,6 +82,31 @@ phases:
     blocks: [MOD-EAS-CALLERS]
     does: "run-time callers to Emerge's door, build-time ones to the snapshot; lib/emerge archived"
     proof: "nothing requires lib/emerge; the module suite green"
+    # ── EXPANDED 2026-11-05 (his rule: phases expand, not rewritten) — primitives first; one primitive per gate; compounds per layer ──
+    # James, 2026-11-05: "Primitive based coding?" · "Would also set expectations. One primitive per gate. Compounds, each layer."
+    # Found that day, before any switch (MOD-EAS-CALLERS: "a caller whose answer changes is stopped and the difference named"): lib/emerge
+    # and the emerge/ snapshot have drifted both ways — 37 files differ, 31 exist only in lib/emerge (compiler/t2-gate.js 343 lines there,
+    # 291 in the snapshot; kg-builder.js 605 / 615; compiler/phase-specs.js only in lib/emerge). Six run-time callers: copilot/module-builder.js
+    # (pipeline), guardian/server.js and lib/build-pipeline.js (t2-gate), idearium/compiler-bridge.js and lib/spec-collect.js (compiler index),
+    # lib/warp/adapters/emerge-field.js (core); thirteen files name lib/emerge paths as text.
+    # The approach (his, choosing the coder's (b) over reconciling all 37 first): what the callers use is found and each use becomes ONE
+    # primitive behind Emerge's door — one primitive per gate, its expectation stated (in, out, failures) — and each layer above is a
+    # compound of the primitives below it. Callers are rebuilt on those primitives; lib/emerge is archived as it stands, carrying over only
+    # what a primitive needs, into Emerge's own repo first (then a new lock). Nothing is copied again.
+    still_his: "whose are compiler/phase-specs.js and kg-builder.js (they turn his maps into phase files and check the specs): the coder reads Idearium (it owns specs and phases), to confirm"
+    # ── EXPANDED 2026-11-05 — the primitives found (read from the six callers) ──
+    # Four functions, already layered, each a compound of the one below:
+    #   L0 evaluate (core)                constraint + state → { ok } | { gap } | { ok:false, constraint, reason }   ← warp's admit, every link
+    #   L1 compile  (compiler/index.js)   spec text + dir → the compiled graph, ok | error                          ← idearium/compiler-bridge, lib/spec-collect
+    #   L2 build    (compiler/pipeline)   spec file + out dir → { ok, skipped, error }                              ← copilot/module-builder
+    #   L3 run      (compiler/t2-gate)    spec file + out dir + provider → the closed loop, with progress events   ← guardian/server, lib/build-pipeline
+    # Emerge's door (emerge/emerge/server.js) is the template's: /contract, /handoff, /handoff/receipt, /health; work arrives as a handoff
+    # matched to a command node that accepts its kind. The snapshot's command nodes are lang.* (build, check, run, say, synth, test),
+    # handoff, modules, nodes, status — none of the four (command nodes emerge.compile, .check, .codegen … exist only in lib/emerge).
+    # So each primitive becomes a command node in Emerge (its expectation in the node), built in Emerge's own repo, then a new lock.
+    # Found, to raise with him (a cost before it is paid): L0 evaluate runs on every WARP link; a handoff is a file moved through
+    # input/ → processing/ → done/, far too slow per link, and Emerge down would stop WARP (§5.15 rule 3). L1–L3 become asynchronous
+    # (a handoff and its receipt) where their callers wait inline today.
   EAS5_a_system_of_systems:
     status: BUILT 0.60.336 (Emerge 58a12d8)
     depends_on: [EAS2_the_language_through_the_door]
@@ -102,3 +127,12 @@ order: |
 # MOD-EAS-NEXUS-PLACE named lib/nexus/autopilot.js for the boot plan; since MG17 the boot plan is each compartment.json, so Emerge's runtime
 # is a Nexus overlay on its compartment.json, recorded in the lock. Loom's wires for emerge/ come from its source scanner (no hand map yet).
 # lib/emerge stays until EAS4 moves its callers to the door.
+
+# ── ADDENDUM 2026-11-05 — primitive-based, one primitive per gate, compounds per layer (his) ──
+decisions_addendum_2026_11_05:
+  EAS_D5_one_primitive_per_gate:
+    status: DECIDED 2026-11-05 (his)
+    james: '"Primitive based coding?" · "Would also set expectations. One primitive per gate. Compounds, each layer."'
+    context: "Shown, the same day, that EAS4's two copies have drifted both ways (37 differ, 31 only in lib/emerge), and two ways to finish it: (a) reconcile all 37 first, (b) primitives first. Emerge already keeps its base values in emerge/emerge/core/primitives.eg; Nexus names its shared primitives in lib/system-boundary.js PRIMITIVES."
+    chosen: "Each gate is one primitive with its expectation stated — what it takes, what it returns, how it fails — and each layer is a compound of the primitives of the layer below. A caller relies on a primitive's expectation, never on its code. EAS4 is done this way."
+

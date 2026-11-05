@@ -4,21 +4,21 @@ type: phase
 id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
 context: pipeline phase EAS1_the_skeleton_in_emerge of docs/2026-10-31-emerge-as-a-system-phasemap.spec
 intent: null
-summary: EAS1_the_skeleton_in_emerge (?) — 20 file(s)
+summary: EAS1_the_skeleton_in_emerge (?) — 23 file(s)
 system: idearium
 tags: []
-exported_at: 1793448283182
+exported_at: 1793899854788
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793448283182
-lastSeenAt: 1793448283182
+firstSeenAt: 1793899854788
+lastSeenAt: 1793899854788
 fingerprint: null
 payload:
   id: EAS1_the_skeleton_in_emerge
   map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: BUILT 0.60.336 (Emerge 19200ff)
   files:
     - Emerge:emerge/server.js
     - Emerge:emerge/cli.js
@@ -39,6 +39,9 @@ payload:
     - Emerge:emerge/spec/emerge.spec
     - Emerge:emerge/tests/skeleton.test.js
     - docs/emerge-system.spec
+    - emerge/emerge/ide-registry.js
+    - emerge/emerge/events-compiler.js
+    - emerge/emerge/emerge-ide.js
     - lib/emerge/emerge-ide.js
   depends_on:
     - EAS_D0_a_system_not_an_idearium_module
@@ -47,4 +50,4 @@ payload:
   blocks:
     - MOD-EAS-SKELETON
   spec: docs/emerge-system.spec
-  graph: b9a76e025ece0988
+  graph: 285bf4a765c6281c
