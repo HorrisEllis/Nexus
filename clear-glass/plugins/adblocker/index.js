@@ -85,11 +85,33 @@ function _erosStatus({ get = null } = {}) {
   }));
   return Promise.resolve(fetchIt()).then(st => { _eros = st && st.ok ? st : { state: 'not answering', why: 'Clear Glass\'s /eros-supervisor did not answer' }; return _eros; });
 }
-function _parts() {
-  const e = _eros;
+// EE2 (0.60.402) — what he pointed at and hid: one ##rule per element in his own filters ("My filters"), per site; Undo removes the line
+const HIDE_RE = (host) => new RegExp(`^${host.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}##`);
+function _hidden(svc, host) { if (!svc || !host) return []; return String(svc.state().custom || '').split('\n').map(l => l.trim()).filter(l => HIDE_RE(host).test(l)); }
+function _hide(svc, url, selector) {
+  const host = hostOf(url); const sel = String(selector || '').trim();
+  if (!svc) return { note: 'The blocker is not running yet; open a window first.' };
+  if (!host) return { note: 'Only an http(s) page can hide an element.' };
+  if (!sel || sel.length > 400 || /\n|##|#@#/.test(sel) || sel === 'unknown') return { note: `That element has no selector a rule can use (${sel.slice(0, 60) || 'none'}); nothing was hidden.` };
+  const rule = `${host}##${sel}`;
+  const cur = String(svc.state().custom || '');
+  if (cur.split('\n').some(l => l.trim() === rule)) return { note: `Already hidden on ${host}: ${sel}`, rule };
+  const r = svc.setCustom(cur.replace(/\s*$/, '') + (cur.trim() ? '\n' : '') + rule + '\n');
+  return { note: r.skipped && r.skippedBy && Object.keys(r.skippedBy).length ? `Saved, but the rule was skipped (${Object.keys(r.skippedBy).join(', ')}): ${rule}` : `Hidden on ${host}: ${sel} — reload the page to see it gone; Undo in Element Engine › Hidden on this site`, rule };
+}
+function _unhide(svc, rule) {
+  if (!svc || !rule) return { note: 'nothing to undo' };
+  const cur = String(svc.state().custom || '').split('\n');
+  const left = cur.filter(l => l.trim() !== String(rule).trim());
+  if (left.length === cur.length) return { note: `Not in your filters: ${rule}` };
+  svc.setCustom(left.join('\n')); return { note: `Shown again: ${rule} (reload the page)` };
+}
+function _parts(page = {}) {
+  const e = _eros; const svc = lists.service(); const host = hostOf(page.url); const hid = _hidden(svc, host);
   return [
     { type: 'info', label: '— Elements —', value: 'Point at anything on the page' },
-    { key: 'pick', type: 'action', label: 'Pick an element', kind: 'primary', help: 'Starts the Guardian picker. After a pick, the bar under the page offers Gate this element and Bind a key.' },
+    { key: 'pick', type: 'action', label: 'Pick an element', kind: 'primary', help: 'Starts the Guardian picker. After a pick, the bar under the page offers Hide this element, Gate this element and Bind a key.' },
+    ...(host ? [{ key: 'hidden', type: 'list', label: `Hidden on ${host}`, empty: 'Nothing hidden on this site. Pick an element, then Hide.', items: hid.map(r => ({ id: r, label: r.slice(host.length + 2), remove: true })) }] : []),
     { type: 'info', label: '— ErosmancerOS —', value: `${e.state || 'unknown'}${e.port ? ` · port ${e.port}` : ''}${e.lastError ? ` · ${e.lastError}` : e.why ? ` · ${e.why}` : ''}` },
     { type: 'info', label: '— Edit ErosmancerOS —', value: `Your copy: ${editDir()}` },
     { key: 'eros-export', type: 'action', label: 'Export a copy to edit', help: 'Copies ErosmancerOS\'s TypeScript to your folder. Edit it there, never the live code.' },
@@ -122,8 +144,14 @@ const PART_KEYS = ['pick', 'eros-export', 'eros-diff', 'eros-import'];
  *  Synchronous as before (2.1.0's contract) except where the Ad blocking part or an import has to wait; ErosmancerOS's state is refreshed in
  *  the background and shown from its last answer. */
 function settings(data = {}) {
-  const withParts = (r) => (r && r.data && r.data.view && r.data.view.fields && data.op !== 'summary') ? { ...r, data: { ...r.data, view: { ...r.data.view, fields: [...r.data.view.fields, ..._parts()] } } } : r;
+  const withParts = (r) => (r && r.data && r.data.view && r.data.view.fields && data.op !== 'summary') ? { ...r, data: { ...r.data, view: { ...r.data.view, fields: [...r.data.view.fields, ..._parts(data.page || {})] } } } : r;
   const then = (x, f) => (x && typeof x.then === 'function' ? x.then(f) : f(x));
+  // EE2 — Hide what you point at (from the bar after a pick), and Undo from the Hidden list
+  if (data.op === 'set' && (data.key === 'hide' || data.key === 'hidden')) {
+    const svc = lists.service(); const v = data.value || {};
+    const x = data.key === 'hide' ? _hide(svc, v.url || (data.page || {}).url, v.selector) : (v.remove ? _unhide(svc, v.id) : { note: '' });
+    return then(_adblock({ ...data, op: 'get' }), (b) => { const r = withParts(b); return { ...r, data: { ...r.data, ...x } }; });
+  }
   if (data.op !== 'summary') _erosStatus().catch(() => {});
   if (data.op === 'action' && PART_KEYS.includes(data.key)) {
     let extra; try { extra = _partAction(data.key); } catch (e) { extra = { note: `${data.key}: ${e.message}` }; }
@@ -163,4 +191,4 @@ function _adblock(data = {}) {
   return reply(_view(svc, page), note ? { note } : {});
 }
 
-module.exports = { isBlocked, filterRequest, toggleFromToolbar, settings, BLOCKLIST, _partAction, _erosStatus, _parts };
+module.exports = { isBlocked, filterRequest, toggleFromToolbar, settings, BLOCKLIST, _partAction, _erosStatus, _parts, _hide, _unhide, _hidden };

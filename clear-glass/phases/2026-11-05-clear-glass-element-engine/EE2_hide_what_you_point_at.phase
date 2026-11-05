@@ -6,28 +6,30 @@ context: >-
   pipeline phase EE2_hide_what_you_point_at of
   docs/2026-11-05-clear-glass-element-engine-phasemap.spec
 intent: null
-summary: EE2_hide_what_you_point_at (?) — 4 file(s)
+summary: EE2_hide_what_you_point_at (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1793871876645
+exported_at: 1793892016590
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793871876645
-lastSeenAt: 1793871876645
+firstSeenAt: 1793892016590
+lastSeenAt: 1793892016590
 fingerprint: null
 payload:
   id: EE2_hide_what_you_point_at
   map: docs/2026-11-05-clear-glass-element-engine-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: '"BUILT 0.60.402 — test-cg-element-engine-plugin EP-05"'
   files:
-    - clear-glass/src/adblock/engine.js
-    - clear-glass/src/adblock/lists.js
-    - clear-glass/renderer/guardian-picker.js
-    - tests/modules/test-cg-element-engine.test.js
+    - clear-glass/plugins/adblocker/index.js
+    - clear-glass/renderer/site-hide/hide-bar.js
+    - clear-glass/renderer/site-hide/hide-bar.css
+    - clear-glass/renderer/browser.js
+    - clear-glass/renderer/browser.html
+    - tests/modules/test-cg-element-engine-plugin.test.js
   depends_on:
-    - EE1_one_identity_for_a_chosen_element
+    - EE0_the_merged_plugin
   blocks: []
   spec: null
-  graph: ef3c16e3ff3e942d
+  graph: 97733c2a826de3b5

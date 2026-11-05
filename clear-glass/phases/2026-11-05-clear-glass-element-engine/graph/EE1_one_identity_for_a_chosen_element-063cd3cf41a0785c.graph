@@ -7,11 +7,11 @@ intent: null
 summary: 9 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793872929066
+exported_at: 1793892016586
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793872929066
-lastSeenAt: 1793872929066
+firstSeenAt: 1793892016586
+lastSeenAt: 1793892016586
 fingerprint: null
 payload:
   for: EE1_one_identity_for_a_chosen_element
@@ -76,16 +76,12 @@ payload:
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
     dependents:
-      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
     upstream:
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
     downstream:
-      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
-      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
-      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM3_listeners_and_macros
@@ -94,18 +90,27 @@ payload:
     blockedBy:
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
     unlocks:
-      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+        files:
+          - clear-glass/renderer/guardian-picker.js
+      - with: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
+        files:
+          - clear-glass/renderer/guardian-picker.js
     dangling: []
     lines:
       - layer 2 · blocked by EE_D1_erosmancer_in_process_or_its_own
       - >-
         depends on (2): EE0_the_merged_plugin, EE_D1_erosmancer_in_process_or_its_own · all upstream
         3
+      - 'needed by (1): CM1_watch_rules · all downstream 5 · finishing it unlocks CM1_watch_rules'
       - >-
-        needed by (2): EE2_hide_what_you_point_at, CM1_watch_rules · all downstream 8 · finishing it
-        unlocks EE2_hide_what_you_point_at, CM1_watch_rules
+        same files as EE3_one_panel with no order between them:
+        clear-glass/renderer/guardian-picker.js
+      - >-
+        same files as EE4_the_old_ways_archived with no order between them:
+        clear-glass/renderer/guardian-picker.js
     edges:
       - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
         kind: declared
