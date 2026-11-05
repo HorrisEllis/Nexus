@@ -3061,22 +3061,27 @@ function handleExtendedRoutes(req, res, url, method) {
       }
 
       try {
-        const t2 = require('../lib/emerge/compiler/t2-gate');
-        const outDir = outputDir || require('path').join(require('path').dirname(require.main?.filename || __dirname), 'output', name || 'build-' + Date.now());
-
-        // If specText provided, write to temp file
-        let resolvedSpecPath = specPath;
-        if (specText && !specPath) {
-          const tmpPath = require('path').join(require('os').tmpdir(), `nexus-spec-${Date.now()}.spec`);
-          require('fs').writeFileSync(tmpPath, specText, 'utf8');
-          resolvedSpecPath = tmpPath;
-        }
-
-        const onProgress = (node, status, detail) => {
-          bus.emit('guardian.build.progress', { node: node?.name, status, detail, ts: Date.now() });
-        };
-
-        const result = await t2.run(resolvedSpecPath, outDir, { provider, dryRun, verbose, onProgress });
+        // EAS4 L3 2026-11-05 — the build runs in Emerge, through its door (POST /compiler/run); never its files (§5.15). His EAS_D9:
+        // "Emerge calls back by route" — Emerge is told Cortex's build-host routes and this system's own ask route as the model, so T2
+        // still goes through Guardian (RAID, the economy). Named difference: T2 asks /api/copilot/prompt (the job machinery, the same
+        // provider) where it went through the SEAM queue (/command, command 'seam'): an unconnected provider fails fast with its reason
+        // where the queue waited for it; progress arrives as a list after the run.
+        const nx = require('../lib/nexus-client');
+        const pth = require('path'), fsx = require('fs');
+        const outDir = outputDir || pth.join(pth.dirname(require.main?.filename || __dirname), 'output', name || 'build-' + Date.now());
+        let spec = specText;
+        if (!spec) { try { spec = fsx.readFileSync(specPath, 'utf8'); } catch (e) { pRes(res, 400, { ok:false, error:`spec not readable: ${e.message}` }); return; } }
+        let r;
+        try {
+          r = await nx.post('emerge', '/compiler/run', {
+            spec, name: name || (specPath ? pth.basename(specPath) : 'spec.spec'), dryRun: !!dryRun,
+            host:  { name: 'nexus-cortex', ping: nx.urlOf('cortex', '/api/emerge-host/ping'), preflight: nx.urlOf('cortex', '/api/emerge-host/preflight'), writeback: nx.urlOf('cortex', '/api/emerge-host/writeback') },
+            model: { api: 'route', name: 'guardian', url: nx.urlOf('guardian', '/api/copilot/prompt'), extra: { provider, timeoutMs: 600000 } },
+          }, { timeout: 1800000 });
+        } catch (e) { pRes(res, 502, { ok:false, error:`the build runs in Emerge, and its door (:4900) did not answer: ${e.message}` }); return; }
+        for (const g of r.progress || []) bus.emit('guardian.build.progress', { node: g.node, status: g.status, detail: g.detail, ts: g.ts });
+        for (const [rel, text] of Object.entries(r.files || {})) { const f = pth.join(outDir, rel); fsx.mkdirSync(pth.dirname(f), { recursive: true }); fsx.writeFileSync(f, text); }
+        const result = { ok: !!r.ok, stage: r.stage, summary: r.summary || r.error || null, t2Result: r.t2 };
         pRes(res, result.ok ? 200 : 500, {
           ok:      result.ok,
           stage:   result.stage,

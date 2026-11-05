@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
+type: phase
+id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
+context: pipeline phase EAS4e_the_callback_routes of docs/2026-10-31-emerge-as-a-system-phasemap.spec
+intent: null
+summary: EAS4e_the_callback_routes (?) — 12 file(s)
+system: idearium
+tags: []
+exported_at: 1793917506296
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793917506296
+lastSeenAt: 1793917506296
+fingerprint: null
+payload:
+  id: EAS4e_the_callback_routes
+  map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.412 — Cortex's host routes; Guardian's model is its existing ask route; Idearium's
+    sync found dead (below)"
+  files:
+    - cortex/server.js
+    - cortex/boot.js
+    - cortex/registry-components.js
+    - cortex/emerge-host/preflight.js
+    - cortex/emerge-host/writeback.js
+    - lib/emerge/cortex-query/index.js
+    - lib/emerge/cortex-query/writeback.js
+    - lib/emerge/idearium/client.js
+    - idearium/api/index.js
+    - guardian/server.js
+    - lib/nexus-client.js
+    - emerge/emerge/compiler/model.js
+  depends_on:
+    - EAS4d_L3_run
+    - DO3_cortex_door
+  blocks:
+    - MOD-EAS-CALLERS
+  spec: docs/emerge-system.spec
+  graph: f020577facaca202

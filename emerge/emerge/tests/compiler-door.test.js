@@ -93,6 +93,7 @@ async function t(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} ${de
       const paths = seen.map(x => x.path);
       for (const p of ['/preflight', '/writeback', '/sync']) assert.ok(paths.includes(p), `${p} was called (${paths.join(', ')})`);
       assert.ok(Object.keys(r.files).length > 20, 'the package came back');
+      assert.ok(r.t1 && r.t1.emitted.length > 0 && r.t1.emitted.every(f => f in r.files), 'T1\'s emitted list names files that came back');
     });
 
     await t('CD-06', 'a host route that does not answer is said; without a host the local host builds', async () => {
@@ -105,13 +106,14 @@ async function t(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} ${de
 
     await t('CD-07', 'run with a model named by its route: each T2 prompt reaches it; results and progress come back', async () => {
       seen.length = 0;
-      const r = (await call(port, 'POST', '/compiler/run', { spec, host, model: { api: 'route', url: `${S}/generate` } })).body;
+      const r = (await call(port, 'POST', '/compiler/run', { spec, host, model: { api: 'route', url: `${S}/generate`, extra: { provider: 'ollama' } } })).body;
       assert.ok(r.stage, JSON.stringify(r).slice(0, 300));
       assert.ok(Array.isArray(r.progress) && r.progress.some(p => p.status === 'compiled'), 'progress is listed');
       if (r.stage === 'complete') {
         const asked = seen.filter(x => x.path === '/generate');
         assert.strictEqual(asked.length, r.t2.dispatched, 'every T2 node asked the route once');
         assert.ok(asked.every(x => typeof x.body.prompt === 'string' && x.body.prompt.length > 50), 'each with its prompt');
+        assert.ok(asked.every(x => x.body.provider === 'ollama'), 'the route\'s extra fields go with every prompt');
         assert.strictEqual(r.t2.results.length, r.t2.dispatched, 'every node has its result, none dropped');
         assert.ok(r.t2.results.every(x => x.status), 'each result says what happened');
       } else assert.strictEqual(r.stage, 'compile_only', 'no T2 nodes in this spec is said, not hidden');

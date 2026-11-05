@@ -76,7 +76,8 @@ async function build(args = {}) {
   return _inWork(args, async (src, out) => {
     const r = await require('../compiler/pipeline.js').compile(src, out, { host, skipHost: !!args.skipHost || !host, force: !!args.force });
     if (!r || !r.ok) return { ok: false, error: (r && r.error) || 'the pipeline did not run', step: (r && r.step) || 'build' };
-    return { ok: true, skipped: !!r.skipped, moduleName: r.moduleName || null, cortex: _jsonSafe(r.cortex), writeback: _jsonSafe(r.writeback), sync: _jsonSafe(r.idearium || r.sync) };
+    const tier = (t) => (r[t] ? { emitted: r[t].emitted || [], failures: _jsonSafe(r[t].failures || []) } : null);
+    return { ok: true, skipped: !!r.skipped, moduleName: r.moduleName || null, t0: tier('t0'), t1: tier('t1'), cortex: _jsonSafe(r.cortex), writeback: _jsonSafe(r.writeback), sync: _jsonSafe(r.idearium || r.sync) };
   });
 }
 

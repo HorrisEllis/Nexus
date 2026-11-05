@@ -7,11 +7,11 @@ intent: null
 summary: EAS4d_L3_run (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793910797511
+exported_at: 1793917506294
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793910797511
-lastSeenAt: 1793910797511
+firstSeenAt: 1793917506294
+lastSeenAt: 1793917506294
 fingerprint: null
 payload:
   id: EAS4d_L3_run
@@ -29,6 +29,7 @@ payload:
     - lib/build-pipeline.js
   depends_on:
     - EAS4c_L2_build
-  blocks: []
-  spec: null
+  blocks:
+    - MOD-EAS-CALLERS
+  spec: docs/emerge-system.spec
   graph: 9524b42383548801

@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793910797514
+exported_at: 1793917506298
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793910797514
-lastSeenAt: 1793910797514
+firstSeenAt: 1793917506298
+lastSeenAt: 1793917506298
 fingerprint: null
 payload:
   for: EAS4f_the_callers_switch
@@ -197,8 +197,7 @@ payload:
       - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
     downstream:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4g_lib_emerge_archived
-    blockedBy:
-      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
+    blockedBy: []
     unlocks:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4g_lib_emerge_archived
     conflicts:
@@ -209,7 +208,7 @@ payload:
           - copilot/module-builder.js
     dangling: []
     lines:
-      - layer 6 · blocked by EAS4e_the_callback_routes
+      - layer 6 · ready
       - 'depends on (1): EAS4e_the_callback_routes · all upstream 12'
       - 'needed by (1): EAS4g_lib_emerge_archived · finishing it unlocks EAS4g_lib_emerge_archived'
       - >-

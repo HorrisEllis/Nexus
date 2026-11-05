@@ -29,6 +29,10 @@ module.exports = [
   _c('memory.forget',         'POST', '/api/memory/forget',            'Archive memory row (never delete)', {tags:['memory']}),
   _c('memory.working',        'GET',  '/api/memory/working',           'Working memory snapshot'),
   // ── Gaps ───────────────────────────────────────────────────────────────
+  // EAS4 2026-11-05 — Emerge's build host, by route (his EAS_D9): Emerge POSTs here, it never requires these files
+  _c('emerge-host.ping',      'POST', '/api/emerge-host/ping',         'Emerge build host: Cortex answers', {tags:['emerge']}),
+  _c('emerge-host.preflight', 'POST', '/api/emerge-host/preflight',    'Emerge build host: what Cortex has for a module before it is built (gaps, memory)', {tags:['emerge']}),
+  _c('emerge-host.writeback', 'POST', '/api/emerge-host/writeback',    'Emerge build host: a built module recorded in Cortex (event, table rows)', {tags:['emerge']}),
   _c('gaps.list',             'GET',  '/api/gaps',                     'Open gaps by severity'),
   _c('gaps.open',             'POST', '/api/gaps',                     'Open a new gap', {tags:['gaps']}),
   // ── Events / CFR ───────────────────────────────────────────────────────

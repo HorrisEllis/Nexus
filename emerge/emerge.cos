@@ -25,7 +25,7 @@ payload:
       the snapshot changes only by a new lock (scripts/emerge-lock.js --write). Since 2026-11-05 (EAS_D6, his "A": Emerge is a system in Nexus, emerge/ its
       source) commit is the base this came from, and a new lock is taken in Nexus; 2026-11-05 EAS4 L0: core/admit.js added, core/index.js exports it; EAS4 L1:
       lib/compiler.js (POST /compiler/compile), its nodes and tests/compiler-door.test.js; EAS4 L2/L3 (EAS_D9): compiler/model.js api route, compiler/host.js
-      routeHost, POST /compiler/build and /compiler/run
+      routeHost, POST /compiler/build and /compiler/run; route model extra (0.60.412)
     state:
       - emerge/data/
       - emerge/input/
@@ -149,7 +149,7 @@ payload:
       emerge/compiler/index.js: 3ca47ffdfe264c0b103c56a4c7ee15afa985e4f245e6ed9fc6402c5d6e07804c
       emerge/compiler/invariants-engine.js: 050d627fdfd4a9fe7686c95839169490f970bdb827bcb95452dd4791d5a7c2c7
       emerge/compiler/kg-builder.js: dc0782125cf6c97c4788c3ac8283703c34550bf65443c4745113c458f54e4205
-      emerge/compiler/model.js: 114382f0f5f19bc3dd2a00ced794657e6cde8cc4bde467666c156f4e7959bb42
+      emerge/compiler/model.js: 53e14efe4ba2ad3d8eff3010d2a6d73060ba193cd3b83080069f240e5ff3700b
       emerge/compiler/pipeline.js: 3fb028610e15907c993f2e8e02fd03d8e842ff99cff2de89fc2a95ea8b08e49d
       emerge/compiler/reply-engine.js: 3db2d5007dfaed837db517898a415b4f7790e1bc655b81bed76e8657df94e00a
       emerge/compiler/ring-buffer.js: 5c91d20df53e908a318f6bba8abb58cdb1fb6fd5a77c7143e50760bccbaed5f5
@@ -178,7 +178,7 @@ payload:
       emerge/data/nodes/capability/emerge.handoff.move.capability: 51adee0deca04e57ea27d2f0fa66e5c691bcc32152167300ad9e375a8bf7de6e
       emerge/data/nodes/capability/emerge.lang.code.capability: 97e4d7df13c8907cc99c7561d36f6f302131f011b85602c690a3e0680c6c1b32
       emerge/data/nodes/capability/emerge.modules.nest.capability: 2aea482460261dbe1bdaa199e62006438929650f4d39d9a3952bf725ac2d713b
-      emerge/data/nodes/command/emerge.compiler.build.command: 507aae8339b2b8d39bae66c7ee9c4622055e78d5f35ab49643fefc67db6bfdf2
+      emerge/data/nodes/command/emerge.compiler.build.command: 1905aceded9b7b320247b0dd98945ee8143aa5be314ed2ed82d98efe9c83f0af
       emerge/data/nodes/command/emerge.compiler.compile.command: 15cb5a4c0ce80615f3c2e24180b02b337762ebbe702d1f44090fcceafa38c99e
       emerge/data/nodes/command/emerge.compiler.run.command: 82ca45bbf1b80c47feba51ea9bd8d0d6a77c0e4d159abe9806a0fd480e2e7fff
       emerge/data/nodes/command/emerge.handoff.send.command: 8a1ad19d8e63c160b22f6c80b9a15564f48a4e771eac5ab4b23ca9c0ea505a99
@@ -316,7 +316,7 @@ payload:
       emerge/lib/boundary.js: 551f2943c872ad16f0f24c3bda78064896b21145ea348b007841650d23ab6f04
       emerge/lib/bus.js: 024e9c348cad6dd9a8628a6bd2a9f3362209e33ba428bb5b8cb83daf7ab5c5f9
       emerge/lib/commands.js: b5fdfdb6da9108413c0553dc3e3ff5211a40d46c68d487d1f4aa6bdb16fe492a
-      emerge/lib/compiler.js: d83a784d90c360edf4dd8b80b9dc9b709006774a74ef66a67e19ffaa6d371418
+      emerge/lib/compiler.js: 4acb8252ab851aded7ec2b3b14525ff67332bd5309e0ad96d7f728160abe2946
       emerge/lib/core.js: 2ed60b0ae8dcf13cc8db48c59805b4495498357e6c812a30bdd425b13f4d1f86
       emerge/lib/envelope.js: 31818d4ae1dec65f2c3ac3f4b4714812beb26af85d72b42d97d501d9b87b6c55
       emerge/lib/handoff.js: 7a9b2e6e19a2c80a304e2d6f5e64cecf5c77c38a65e33d8e1009f541ab92e430
@@ -386,12 +386,20 @@ payload:
       emerge/test/reply-engine.test.js: 40f8513b6d9eaef90e52c8c01d3b8862c750af388b8082720e9ba47777625bc6
       emerge/test/target.test.js: f369e7dd14d391b84d43266f7a4443383fd4422742feb4079eba2d959486e672
       emerge/test/tier-contract.test.js: f4abe1b07caddef983ab5f36fe8f52d4747349d77a1d91c5a820a237eccd6ee5
-      emerge/tests/compiler-door.test.js: 877b843a390cb19efb48e9dd8795b464789933abae2873728d560c94cac2cd2f
+      emerge/tests/compiler-door.test.js: 8adbc126cd86785b2aeaaffe228951d6c4c0f4e7978aefcc861c6aee661fa131
       emerge/tests/lang-door.test.js: 9ce73533af138f82816200f91e6c1bebb600da9d83dcbaf4fa0b7ca19f09b306
       emerge/tests/nesting.test.js: 189638d20a62e31f93b1c5661b5fb2edc5d15f096582afe16d13cc99d3c5dabe
       emerge/tests/skeleton.test.js: d740e0fc50fe15fd4214d4cab0249003f37c6d5edfa1e4d609599dd65f72af19
       emerge/verify.js: 99273746e5977c75e82d571abf173316cbce2307c7ded5d51b40b948e3c191c8
       emerge/version.js: bb0ab190c523b5950bce5c04cda9b220c848dc20e6936d39519eeb8c493f96b6
+      phases/2026-10-31-emerge-as-a-system/EAS4a_L0_evaluate.phase: e13305baec8fefce02e98ece1ad2113150be0d4d453edd1dd790ab0922999b4d
+      phases/2026-10-31-emerge-as-a-system/EAS4b_L1_compile.phase: 238d51e39621c80f6ccf28b9a8980ebdd8ed9c4aba85ab1a892189c8d0d20545
+      phases/2026-10-31-emerge-as-a-system/EAS4c_L2_build.phase: 931c453f64902c938a07272c46ac2e4126fecea62f8c1b8e2877b0a1543c149d
+      phases/2026-10-31-emerge-as-a-system/EAS4d_L3_run.phase: 3b1b5a8db328adf48cff51326f587c59ed53b64e6490c6c577f8ccea061e0482
+      phases/2026-10-31-emerge-as-a-system/graph/EAS4a_L0_evaluate-dd5d749dd87feb65.graph: 79f2ad6aecccda22da1fa7bbee7475a0a3693780a462de093c4763e5b9ccc1ab
+      phases/2026-10-31-emerge-as-a-system/graph/EAS4b_L1_compile-3b90647c4bc31ed0.graph: b0e645e38bf52aeb257bc4306288b0ab0ee9767f20564f5ee1d18c652fa69acf
+      phases/2026-10-31-emerge-as-a-system/graph/EAS4c_L2_build-e9a4063e9531c16a.graph: a9ece15e66981aa09f61c08ca3af7b0a3f19e217433562d2206d62a6af83694e
+      phases/2026-10-31-emerge-as-a-system/graph/EAS4d_L3_run-9524b42383548801.graph: a0d8dbe772c353a979ff0cf44869fe8b0f254dc1e2e5b80d5f3a5f3b24a0bc71
   runtime:
     process:
       name: emerge

@@ -13,7 +13,7 @@
  *   ollama  POST <url>/api/chat              (default url http://localhost:11434)
  *   openai  POST <url>/v1/chat/completions   (llama.cpp server, LM Studio, vLLM; default url http://localhost:8080)
  * Any other backend (Nexus's Guardian is one, kept in Nexus's repo) is a module a project passes in.
- *   route   POST <url> { prompt, meta } → { ok, text, error?, prompt_tokens?, output_tokens? }   (EAS_D9, 2026-11-05: through
+ *   route   POST <url> { ...extra, prompt, meta } → { ok, text, error?, prompt_tokens?, output_tokens? }   (EAS_D9, 2026-11-05: through
  *           the door a model cannot be handed over in-process, so a caller names one by its route; James: "Emerge calls back by route".
  *           Any system that answers that contract can be the model; Nexus's Guardian is one.)
  *
@@ -58,7 +58,9 @@ function createModel(o = {}) {
     if (!o.url) throw new Error('model api "route" needs a url (POST <url> { prompt, meta } → { ok, text })');
     const routeName = o.name ?? `route:${url}`;
     return { name: routeName, async generate(prompt, meta) {
-      const r = await post(url, { prompt, meta: meta ?? null }, timeoutMs);
+      // extra: fields the route's own contract takes beside the prompt (e.g. Guardian's provider), sent as given
+      const extra = (o.extra && typeof o.extra === 'object' && !Array.isArray(o.extra)) ? o.extra : {};
+      const r = await post(url, { ...extra, prompt, meta: meta ?? null }, timeoutMs);
       if (!r.ok) return { ok: false, error: r.error ?? r.data?.error ?? `the model route answered ${r.status}` };
       const d = r.data || {};
       if (d.ok === false) return { ok: false, error: d.error || 'the model route said no, without a reason' };
