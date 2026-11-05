@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793854560007
+exported_at: 1793855146012
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793854560007
-lastSeenAt: 1793854560007
+firstSeenAt: 1793855146012
+lastSeenAt: 1793855146012
 fingerprint: null
 payload:
   for: IP9_the_open_loop
@@ -55,6 +55,7 @@ payload:
     downstream:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP12_gaps_between_the_pieces
     blockedBy:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
@@ -68,7 +69,9 @@ payload:
     lines:
       - layer 6 · blocked by IP8_negative_and_shadow_space, IP5_invariants_into_rfr2
       - 'depends on (2): IP8_negative_and_shadow_space, IP5_invariants_into_rfr2 · all upstream 9'
-      - 'needed by (2): IP10_growth_tracking, IP11_risk_ambiguity_uncertainty_one_primitive'
+      - >-
+        needed by (2): IP10_growth_tracking, IP11_risk_ambiguity_uncertainty_one_primitive · all
+        downstream 3
       - >-
         same files as IP6_route_command_screen with no order between them:
         intelligence/pipeline/report.js, tests/modules/test-intelligence-pipeline.test.js

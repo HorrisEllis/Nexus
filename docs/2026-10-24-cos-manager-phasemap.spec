@@ -790,7 +790,7 @@ decisions_d14:
 # files (§5.9, §5.15): with Cortex down, COS's graph route breaks.
 phases_addendum_2026_11_01:
   MG32_autopilot_door_through_doors:
-    status: OPEN
+    status: "BUILT 0.60.393 — test-cos-autopilot-door AD-05; the census adds nothing (402 → 400 edges, 0 past the baseline); CT-07 and FM-07 green"
     depends_on: [MG17_autopilot_hands_over]
     spec: cos/spec/cos-manager.spec
     blocks: [MOD-MG-AUTOPILOT-DOOR]
@@ -851,3 +851,12 @@ phases_addendum_2026_11_01_mg33:
     files: [cos/app/desktop/main.js, cos/app/settings.js, cos/app/logon.js, tests/modules/test-cos-app-window.test.js]
     does: "James, 2026-11-02: \"cos starts up with windows, minimizes to tray unless disabled. admin access and a service if applicable.\" Settings startWithWindows (on), elevated (a logon task with highest privileges; else the Run-key login item, said) and startHidden (on): started at logon it goes to the tray. No service (CA_D1)"
     proof: "the logon task's command (schtasks /Create … /SC ONLOGON /RL HIGHEST) and the login-item fallback built and removed; started with --hidden, no window shows"
+
+# ── ADDENDUM 2026-11-05 (0.60.393) — MG32 built ─────────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-11-05: "next" (after the existing phases were checked and MG32 named as unblocked). COS's autopilot door read Cortex's store and
+# Intelligence's field through their files: the two crossings the boundary ratchet had reported on main (cos -> cortex/memory/jaa-db.js, cos ->
+# intelligence/cfr/field.js), which kept CT-07 and FM-07 red. /graph now reads through their routes: Cortex's GET /api/memory?table=&n=
+# (memory.browse in its registry) for event_log, bus_subscriptions, raid_trails, guardian_artifacts and idearium_spec_chunks; Intelligence's
+# GET /api/intelligence/friction for the field's regime. Cortex down: cortex: 'down' and why, trails unreadable (never empty), and the rest
+# answered. A second require of jaa-db.js (_getJaaDB) that nothing called was removed, said. Proof: AD-05; CT-07 8/8 (was 7/8); FM-07,
+# test-failure-modes 9/9 (was 8/9); test-flight-data 9/9; the census 0 past its baseline.

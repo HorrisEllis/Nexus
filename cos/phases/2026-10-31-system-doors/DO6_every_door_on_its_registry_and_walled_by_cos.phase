@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-system-doors-phasemap.spec::DO6_every_door_on_its_registry_and_walled_by_cos
+type: phase
+id: docs_2026-10-31-system-doors-phasemap.spec::DO6_every_door_on_its_registry_and_walled_by_cos
+context: >-
+  pipeline phase DO6_every_door_on_its_registry_and_walled_by_cos of
+  docs/2026-10-31-system-doors-phasemap.spec
+intent: null
+summary: DO6_every_door_on_its_registry_and_walled_by_cos (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1793859126569
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793859126569
+lastSeenAt: 1793859126569
+fingerprint: null
+payload:
+  id: DO6_every_door_on_its_registry_and_walled_by_cos
+  map: docs/2026-10-31-system-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/supervisor.js
+    - cos/manager/server.js
+    - guardian/server.js
+    - copilot/server.js
+    - loom/server.js
+    - versionium/server.js
+    - intelligence/server.js
+    - ollama/server.js
+    - diagnostic/server.js
+  depends_on:
+    - DO_D9_registry_then_cos_through_the_door
+    - DO1_idearium_door
+    - DO2_architect_door
+    - DO3_cortex_door
+    - DO5_clear_glass_door
+  blocks:
+    - MOD-DOOR-WALLED
+  spec: docs/system-doors.spec
+  graph: 2e96e48971f0a5d9

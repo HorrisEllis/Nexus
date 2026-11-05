@@ -1,0 +1,100 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AT4_claude_code_page:695efbc1e3b9521a
+type: graph
+id: phase:AT4_claude_code_page:695efbc1e3b9521a
+context: dependency graph of phase AT4_claude_code_page
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793861492477
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793861492477
+lastSeenAt: 1793861492477
+fingerprint: null
+payload:
+  for: AT4_claude_code_page
+  kind: phase
+  repo: null
+  hash: 695efbc1e3b9521a
+  nodes:
+    - path: guardian/lib/wake-loop.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/nexus-hey-claude.user.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/userscript-claude.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: tests/modules/test-guardian-any-reply-tools.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/test-guardian-wake.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-chat.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/wake-loop.js
+      to: lib/agent-chat.js
+      kind: requires
+    - from: guardian/lib/wake-loop.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/wake-loop.js
+      kind: requires
+    - from: tests/modules/test-guardian-wake.js
+      to: guardian/lib/wake-loop.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT_D1_where_the_result_goes
+    dependents: []
+    upstream:
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT_D0_what_runs_by_itself
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT_D1_where_the_result_goes
+    downstream: []
+    blockedBy:
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT_D1_where_the_result_goes
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT2_the_gate
+        files:
+          - tests/modules/test-guardian-any-reply-tools.test.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by AT1_pickup_from_any_reply, AT_D1_where_the_result_goes
+      - 'depends on (2): AT1_pickup_from_any_reply, AT_D1_where_the_result_goes · all upstream 3'
+      - 'needed by (0): —'
+      - >-
+        same files as AT2_the_gate with no order between them:
+        tests/modules/test-guardian-any-reply-tools.test.js
+    edges:
+      - from: docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
+        kind: declared
+      - from: docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT_D1_where_the_result_goes
+        kind: declared

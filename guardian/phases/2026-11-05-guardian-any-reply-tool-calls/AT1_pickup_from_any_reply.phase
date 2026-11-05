@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
+type: phase
+id: docs_2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
+context: >-
+  pipeline phase AT1_pickup_from_any_reply of
+  docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec
+intent: null
+summary: AT1_pickup_from_any_reply (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793861314897
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793861314897
+lastSeenAt: 1793861314897
+fingerprint: null
+payload:
+  id: AT1_pickup_from_any_reply
+  map: docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/ncp-handler.js
+    - guardian/server.js
+    - guardian/event-taxonomy.js
+    - tests/modules/test-guardian-any-reply-tools.test.js
+  depends_on:
+    - AT_D0_what_runs_by_itself
+  blocks: []
+  spec: null
+  graph: c1fc161edcdef353

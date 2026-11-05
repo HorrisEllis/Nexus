@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793854559983
+exported_at: 1793855145986
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793854559983
-lastSeenAt: 1793854559983
+firstSeenAt: 1793855145986
+lastSeenAt: 1793855145986
 fingerprint: null
 payload:
   for: IP1_input_folder_and_reader
@@ -53,6 +53,7 @@ payload:
     downstream:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP12_gaps_between_the_pieces
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
@@ -71,7 +72,7 @@ payload:
       - layer 1 · blocked by IP_D1_formats_and_rows
       - 'depends on (1): IP_D1_formats_and_rows'
       - >-
-        needed by (1): IP2_baseline_per_series · all downstream 10 · finishing it unlocks
+        needed by (1): IP2_baseline_per_series · all downstream 11 · finishing it unlocks
         IP2_baseline_per_series
     edges:
       - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows

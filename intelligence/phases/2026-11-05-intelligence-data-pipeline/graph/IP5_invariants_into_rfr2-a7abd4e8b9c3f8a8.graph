@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793854559995
+exported_at: 1793855146000
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793854559995
-lastSeenAt: 1793854559995
+firstSeenAt: 1793855146000
+lastSeenAt: 1793855146000
 fingerprint: null
 payload:
   for: IP5_invariants_into_rfr2
@@ -84,6 +84,7 @@ payload:
     downstream:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP12_gaps_between_the_pieces
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
@@ -100,7 +101,7 @@ payload:
       - layer 5 · blocked by IP4_invariants_across_series
       - 'depends on (1): IP4_invariants_across_series · all upstream 7'
       - >-
-        needed by (2): IP6_route_command_screen, IP9_the_open_loop · all downstream 5 · finishing it
+        needed by (2): IP6_route_command_screen, IP9_the_open_loop · all downstream 6 · finishing it
         unlocks IP6_route_command_screen
       - >-
         same files as IP8_negative_and_shadow_space with no order between them:

@@ -7,11 +7,11 @@ intent: null
 summary: MG18_the_supervisor_screen (?) — 12 file(s)
 system: idearium
 tags: []
-exported_at: 1793577139999
+exported_at: 1793860899398
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577139999
-lastSeenAt: 1793577139999
+firstSeenAt: 1793860899398
+lastSeenAt: 1793860899398
 fingerprint: null
 payload:
   id: MG18_the_supervisor_screen
@@ -48,4 +48,4 @@ payload:
     - MOD-MG-UI-SERVE
     - MOD-MG-UI-THEME
   spec: cos/spec/cos-manager.spec
-  graph: 4a66cf1c4b372815
+  graph: ae0aca6ae69635bd

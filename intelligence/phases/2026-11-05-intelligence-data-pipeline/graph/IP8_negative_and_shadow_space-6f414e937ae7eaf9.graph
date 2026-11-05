@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 7 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793854560004
+exported_at: 1793855146009
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793854560004
-lastSeenAt: 1793854560004
+firstSeenAt: 1793855146009
+lastSeenAt: 1793855146009
 fingerprint: null
 payload:
   for: IP8_negative_and_shadow_space
@@ -182,6 +182,7 @@ payload:
     downstream:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP12_gaps_between_the_pieces
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
     blockedBy:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
@@ -199,7 +200,7 @@ payload:
       - 'depends on (1): IP4_invariants_across_series · all upstream 7'
       - >-
         needed by (2): IP9_the_open_loop, IP11_risk_ambiguity_uncertainty_one_primitive · all
-        downstream 3
+        downstream 4
       - >-
         same files as IP5_invariants_into_rfr2 with no order between them:
         tests/modules/test-intelligence-pipeline.test.js

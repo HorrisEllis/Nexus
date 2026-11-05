@@ -16,6 +16,10 @@ module.exports = [
   // ── Health ─────────────────────────────────────────────────────────────
   _c('health',                'GET',  '/health',                       'Cortex health + JAA stats'),
   _c('contract',              'GET',  '/contract',                     'Cortex interaction contract'),
+  // ── The door (DO3a, 2026-11-05, cortex/server.js) — James: "they all need the door build" ─────────────
+  _c('registry',              'GET',  '/registry',                     'Every component Cortex offers, from this registry', {tags:['door']}),
+  _c('handshake',             'GET',  '/handshake',                    'Who answers, its version and port, its component count and registry hash', {tags:['door']}),
+  _c('cli',                   'POST', '/cli',                          'Run a Cortex command: the component whose grammar the line starts with, through its own route', {tags:['door'], params:['line']}),
   _c('events',                'GET',  '/events',                       'SSE — all cortex events', {tags:['stream']}),
   // ── Memory ─────────────────────────────────────────────────────────────
   _c('memory.browse',         'GET',  '/api/memory',                   'Browse any JAA table', {tags:['memory']}),

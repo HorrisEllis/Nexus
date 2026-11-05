@@ -110,7 +110,7 @@ phases:
 
   DL6_cortex_server:
     layer: integration
-    status: OPEN
+    status: "SERVED BY DO3 (docs/2026-10-31-system-doors-phasemap.spec) — found 2026-11-05 to be the same phase: one contract, not two (§12.5). DO3a built 0.60.392 (cortex/server.js the one entry, the route table the same); DL6's cortex-v2.js part is carried into DO3b. Kept, §0.3."
     depends_on: [DL1_clearup_tool]
     files: [cortex/server.js, cortex/boot.js, cortex/cortex-v2.js, orchestrator/orchestrator.js]
     spec: docs/data-layout.spec

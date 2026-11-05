@@ -7,11 +7,11 @@ intent: null
 summary: MG24_network_manager (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793577140012
+exported_at: 1793860899411
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577140012
-lastSeenAt: 1793577140012
+firstSeenAt: 1793860899411
+lastSeenAt: 1793860899411
 fingerprint: null
 payload:
   id: MG24_network_manager
@@ -33,4 +33,4 @@ payload:
   blocks:
     - MOD-MG-NETWORK
   spec: cos/spec/cos-manager.spec
-  graph: acca12c55d63753b
+  graph: f04970a37562837d

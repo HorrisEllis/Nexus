@@ -1,0 +1,181 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DO3_cortex_door:d7a0688dce9f478e
+type: graph
+id: phase:DO3_cortex_door:d7a0688dce9f478e
+context: dependency graph of phase DO3_cortex_door
+intent: null
+summary: 20 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793859698103
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793859698103
+lastSeenAt: 1793859698103
+fingerprint: null
+payload:
+  for: DO3_cortex_door
+  kind: phase
+  repo: null
+  hash: d7a0688dce9f478e
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/compartment.json
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/cortex-v2.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/registry-components.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/server.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/nexus/autopilot.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-cli-interface.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/core-duties.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pulse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus/autopilot.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/nexus/core-duties.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/nexus-cli-interface.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
+      - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
+    dependents:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO6_every_door_on_its_registry_and_walled_by_cos
+      - docs/2026-10-31-system-doors-phasemap.spec::DO4_boot_js_retired
+    upstream:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
+    downstream:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO4_boot_js_retired
+      - docs/2026-10-31-system-doors-phasemap.spec::DO6_every_door_on_its_registry_and_walled_by_cos
+    blockedBy:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
+    unlocks:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO4_boot_js_retired
+    conflicts:
+      - with: docs/2026-10-31-system-doors-phasemap.spec::DO1_idearium_door
+        files:
+          - lib/nexus/autopilot.js
+    dangling: []
+    lines:
+      - layer 1 · blocked by DO_D0_server_floats_on_the_registry
+      - 'depends on (2): DO_D0_server_floats_on_the_registry, DO0_the_handshake_counts_real_routes'
+      - >-
+        needed by (2): DO6_every_door_on_its_registry_and_walled_by_cos, DO4_boot_js_retired ·
+        finishing it unlocks DO4_boot_js_retired
+      - 'same files as DO1_idearium_door with no order between them: lib/nexus/autopilot.js'
+    edges:
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
+        kind: declared
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
+        kind: declared

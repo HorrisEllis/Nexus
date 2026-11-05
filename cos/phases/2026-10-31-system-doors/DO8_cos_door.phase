@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-system-doors-phasemap.spec::DO8_cos_door
+type: phase
+id: docs_2026-10-31-system-doors-phasemap.spec::DO8_cos_door
+context: pipeline phase DO8_cos_door of docs/2026-10-31-system-doors-phasemap.spec
+intent: null
+summary: DO8_cos_door (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793859698111
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793859698111
+lastSeenAt: 1793859698111
+fingerprint: null
+payload:
+  id: DO8_cos_door
+  map: docs/2026-10-31-system-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/server.js
+    - cos/manager/server.js
+    - cos/registry-components.draft.json
+    - cos/compartment.json
+  depends_on:
+    - DO_D9_registry_then_cos_through_the_door
+    - DO0_the_handshake_counts_real_routes
+  blocks: []
+  spec: docs/system-doors.spec
+  graph: 39102e7ba71eebf4

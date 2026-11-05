@@ -2026,3 +2026,7 @@ spec:
 # James, 2026-11-05: "we need a pipeline for the intelligence system. i want to run data through it. thats what the input folders are for per
 # system ... like stock data, blood cells to measure deviation, investment oppertunities". Owner: intelligence.
     | `docs/2026-11-05-intelligence-data-pipeline-phasemap.spec` | 1.0.0 — any data through the intelligence fields: input/ (genesis handoff states) → a baseline per series → deviations and RFR2 sigma regimes → invariants through the crystallizer → invariants into RFR2 as constraints for the next run; route, command, screen. IP_D1–IP_D3 his; IP1–IP7 open | mapped | James: "imagine running data through the fields. thats why theyre agnostic." · "invariants, crystals, primitives, could establish a baseline." |
+
+# ── ADDENDUM 2026-11-05 — docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec ──────────────────────────────────────────────────────
+# James, 2026-11-05: "i would love if guardian would automatically pick up agent tool commands regardless of request." Owner: guardian.
+    | `docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec` | 1.0.0 — Guardian picks up ```tool_call blocks from any reply (not only its own jobs), gated by RAID's constitution (reads run, changes asked, irreversible refused — his AT_D0 to choose); result in a toast, the panel, or back into the chat (AT_D1). AT1–AT3 open | mapped | James: "pick up agent tool commands regardless of request" |

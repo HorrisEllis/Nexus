@@ -171,11 +171,33 @@ phases:
       = 1 − confidence; ambiguity = more than one reading within a close confidence of the best; risk = the gap's reach (what depends on it)
       when it is uncertain or ambiguous. The route follows: uncertain → the open loop (IP9); ambiguous → asked with the readings side by side;
       crystallized → reported as an invariant. The same assessment runs on data and on a conversation.
+      His framework already states the risk side (Part 3): "More invariants = higher reward. More variables = higher risk." · "Bridge the gap to
+      reduce risk". Read as the coder's, to confirm: risk grows with the variables still open (uncertain or ambiguous gaps), reward with the
+      invariants that crystallized; closing a gap moves one from the first count to the second.
     superseded_first_map: >-
       (kept, §0.3) The coder's first version, 2026-11-05 (fc5099560), made the three separate measures with a new risk formula
       (impact × irreversibility × (1 + uncertainty + ambiguity)) and reached into lib/ for gap-field-engine, open-loop-taxonomy,
       intent-classifier and ambiguity-pull. He corrected it the same hour: they are the reusable primitives, confidence scoring and
       crystallization.
+  IP12_gaps_between_the_pieces:
+    status: OPEN
+    origin: >-
+      James, 2026-11-05: "The analysis tool can find gaps also. Inbetween the pieces, chunks, parts or components" — said with his framework
+      pasted whole; its Section 3: "Using analysis to break problems down into pieces, and into more pieces, and into more, factually and
+      recursively." · "Gaps in between bricks are where the tension lies." · "A missing dependancy in a codebase or plan."
+    depends_on: [IP11_risk_ambiguity_uncertainty_one_primitive]
+    files: [intelligence/pipeline/seams.js, intelligence/synthesis/engine.js, intelligence/gap/hunter.js, tests/modules/test-intelligence-pipeline.test.js]
+    does: >-
+      Analysis (decomposition) does two jobs, not one: it breaks a thing into pieces, and then it reads the seams between them. For each pair of
+      neighbouring pieces (chunks of a text, windows of a series, components of a system, steps of a plan): what one expects that the other
+      does not give (a missing dependency, an interface mismatch), a jump between them (a delta across the seam much larger than within
+      either), and a piece that should be there and is not. Each seam finding is a gap like any other, assessed by IP11. Recursive, and only as
+      deep as the problem is complex (his "proportional to the complexity of the problem, at most").
+    reuse_note: >-
+      Code already does this for two kinds of piece, outside intelligence: the spec compiler's gap field (lib/emerge/compiler/gap-field-engine.js:
+      omitted and propagation gaps between spec modules) and the registry's declared-but-not-served check (lib/drawbridge-registry.js). Their
+      method is carried here; their files are not required (his 2026-11-03 rule on lib/).
+
 proof_planned: >-
   test-intelligence-pipeline on planted data, so the right answer is known before the run: one series with a step change (one deviation run,
   regime degraded), one oscillating (oscillatory), two series that deviate together five times (an invariant), two loud series that co-deviate
@@ -183,4 +205,5 @@ proof_planned: >-
   same kind against the saved baseline and invariants (IP5): the break is named. IP8–IP10: a planted series with a missing stretch and a
   topic that stops being mentioned (negative space found), a run whose open questions are the next run's input (the loop stays open), and a
   dated journal sample whose friction and integration are tracked across weeks. IP11: planted gaps whose confidence and readings put one each on every route (open
-  loop, asked, invariant), the same assessment on a planted conversation with a contradiction in it, and no gap routed unassessed.
+  loop, asked, invariant), the same assessment on a planted conversation with a contradiction in it, and no gap routed unassessed. IP12: a text in chunks where one
+  chunk names something no other gives, and a series whose windows are smooth inside and jump at one seam.

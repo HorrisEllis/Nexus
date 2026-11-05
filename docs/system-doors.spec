@@ -275,3 +275,11 @@ spec:
 # ── ADDENDUM 2026-10-31 (0.60.324) — MOD-DOOR-HANDSHAKE built ───────────────────────────────────────────────────────────────────────
 # orchestrator/lib/contract-handshake.js exports countRoutes; HandshakeCount as specced (routes | channels | components, 'unknown' → null).
 # Acceptance met: Clear Glass's registry contract reports 117 routes with shape components (HR-03, HR-04).
+
+# ── ADDENDUM 2026-11-05 (0.60.392) — MOD-DOOR-CORTEX, its first half (DO3a) built ───────────────────────────────────────────────────
+# James, 2026-11-05: "they all need the door build". cortex/server.js exports createDoor({ registry, version, port, call }) → { handle(req,
+# res) → handled?, handshake(), match(line) }, registryHash(components), start({ port }). It serves GET /registry, GET /handshake and POST
+# /cli { line } from cortex/registry-components.js (the longest grammar the line starts with; a line matching none is refused with the
+# commands); everything else goes to boot.js's routes unchanged. boot.js exports start({ port }) and starts itself only when run directly.
+# Acceptance met for this half: the route table replayed through the door is the same (test-cortex-door DR-02, 14 GET routes). The other
+# half (handlers in cortex/routes, as registry components) is still open.

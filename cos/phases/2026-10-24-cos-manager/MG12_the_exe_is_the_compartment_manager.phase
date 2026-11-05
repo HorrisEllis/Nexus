@@ -9,11 +9,11 @@ intent: null
 summary: MG12_the_exe_is_the_compartment_manager (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793577139978
+exported_at: 1793860899376
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577139978
-lastSeenAt: 1793577139978
+firstSeenAt: 1793860899376
+lastSeenAt: 1793860899376
 fingerprint: null
 payload:
   id: MG12_the_exe_is_the_compartment_manager
@@ -41,4 +41,4 @@ payload:
   blocks:
     - MOD-MG-EXE-MANAGER
   spec: cos/spec/cos-manager.spec
-  graph: a45cf0eb47b7fc80
+  graph: f09aeb744898650f
