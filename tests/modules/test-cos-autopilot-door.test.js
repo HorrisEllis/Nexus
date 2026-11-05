@@ -7,6 +7,8 @@ require('../../lib/test-sandbox.js').ensure();
  *   AD-02 /status in autopilot's shape: { ok, kernels: { name: { status, restarts, crashesInWindow, lastExit, downSince, pid, healthUrl, port } }, boot, ledger, ts }
  *   AD-03 /control and /spawn in autopilot's reply shapes; a stop of a stopped system is 'held'; a non-on-demand spawn refused as autopilot did
  *   AD-04 /tables and /files: marked legacy with their replacement; each call counted with its caller
+ *   AD-05 MG32 (2026-11-05): /graph reads Cortex's store and Intelligence's regime through their routes, never their files; with Cortex down
+ *         it says cortex: down with why and still answers
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http');
 const ROOT = path.join(__dirname, '..', '..');
@@ -60,6 +62,23 @@ const freePort = () => new Promise(r => { const s = http.createServer().listen(0
       await call('GET', '/files/svc', { 'x-nexus-caller': 'idearium' });
       const c = (await call('GET', '/api/cos/legacy-callers')).body.callers;
       assert.deepStrictEqual(c.filter(x => x.caller !== 'unknown').map(x => `${x.route} ${x.caller} ${x.count}`).sort(), ['/files idearium 1', '/tables tablet 1']); assert.ok(c.some(x => x.caller === 'unknown'), 'a call that names no caller is counted as unknown');
+    });
+    await test('AD-05', 'MG32: /graph through Cortex\'s and Intelligence\'s routes, never their files; Cortex down is said', async () => {
+      const { createDoorHandlers } = require(path.join(ROOT, 'cos/manager/autopilot-door.js'));
+      const H = createDoorHandlers({ ROOT, sup });
+      const asked = [];
+      const rows = { event_log: [{ source: 'guardian', type: 'job.done' }, { source: 'guardian', type: 'job.done' }, { source: 'cortex', type: 'raid.decide' }], raid_trails: [{ envelopeId: 'e1', trail: [{ system: 'cortex', status: 'ok', ts: 1 }] }] };
+      const get = async (url) => { asked.push(url); const u = new URL(url); if (u.pathname === '/api/memory') { const t = u.searchParams.get('table'); return { ok: true, table: t, rows: rows[t] || [] }; } if (u.pathname === '/api/intelligence/friction') return { ok: true, field: { regime: 'stable' } }; throw new Error('no such route'); };
+      const res = () => { const r = { code: 0, body: null, writeHead(c) { r.code = c; }, end(b) { r.body = JSON.parse(b); } }; return r; };
+      const a = res(); await H._handleGraphRead({ url: '/graph?events=50' }, a, { get });
+      assert.strictEqual(a.code, 200, JSON.stringify(a.body).slice(0, 300));
+      assert.deepStrictEqual([a.body.cortex, a.body.eventsSampled, a.body.trails.length, a.body.trailsObserved], ['up', 3, 1, true]);
+      assert.ok(asked.some(u => /\/api\/memory\?table=event_log&n=50$/.test(u)) && asked.some(u => /table=bus_subscriptions/.test(u)), asked.join(' '));
+      const b = res(); await H._handleGraphRead({ url: '/graph' }, b, { get: async () => { throw new Error('connect ECONNREFUSED'); } });
+      assert.deepStrictEqual([b.code, b.body.cortex, b.body.trailsObserved, b.body.eventsSampled], [200, 'down', false, 0]);
+      assert.match(b.body.cortexWhy, /cortex did not answer \(connect ECONNREFUSED\)/);
+      const src = fs.readFileSync(path.join(ROOT, 'cos/manager/autopilot-door.js'), 'utf8');
+      assert.ok(!/require\(['"][^'"]*cortex\/memory\/jaa-db/.test(src) && !/require\(['"][^'"]*intelligence\/cfr\/field/.test(src), 'no file of Cortex or Intelligence is required');
     });
   } finally { srv.close(); sup.shutdown({ by: 'test' }); }
   await new Promise(r => setTimeout(r, 400));

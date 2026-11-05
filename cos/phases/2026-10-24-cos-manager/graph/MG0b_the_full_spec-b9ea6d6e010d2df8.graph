@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793578686017
+exported_at: 1793860899342
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793578686017
-lastSeenAt: 1793578686017
+firstSeenAt: 1793860899342
+lastSeenAt: 1793860899342
 fingerprint: null
 payload:
   for: MG0b_the_full_spec
@@ -111,6 +111,12 @@ payload:
       - docs/2026-11-01-the-compartment-phasemap.spec::CP4_files_and_code
       - docs/2026-11-01-the-compartment-phasemap.spec::CP7a_the_nexus_sync_options
       - docs/2026-11-01-tv-ui-cleanup-phasemap.spec::TV4_the_overview_idearium_and_cos
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK4_boot_from_a_disk
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK5_machine_disks
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA4_the_supervisor_as_a_windows_service
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA5_cos_installs_nexus_from_github
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA6_install_asks_where_and_npm_in_program_files
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
     unlocks:
@@ -126,7 +132,7 @@ payload:
         needed by (9): MG1_loom_on_its_registry_spine, MG3_the_state_manager,
         MG5_browsers_and_editors, MG6_settings_by_template_and_type, MG10_categories,
         MG15a_every_system_declares_its_process, MG15_the_supervisor_in_cos,
-        MG18_the_supervisor_screen, MG19_the_spec_bundle · all downstream 57 · finishing it unlocks
+        MG18_the_supervisor_screen, MG19_the_spec_bundle · all downstream 63 · finishing it unlocks
         MG3_the_state_manager, MG5_browsers_and_editors, MG15a_every_system_declares_its_process
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order

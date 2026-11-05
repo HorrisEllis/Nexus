@@ -7,18 +7,20 @@ intent: null
 summary: MG37_starts_with_windows (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793578686149
+exported_at: 1793860899442
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793578686149
-lastSeenAt: 1793578686149
+firstSeenAt: 1793860899442
+lastSeenAt: 1793860899442
 fingerprint: null
 payload:
   id: MG37_starts_with_windows
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "DONE 0.60.365 (COS 0.3.0) — test-cos-app-window 6/6; on Windows unverified until his run: the
+    UAC approval, the logon task, the tray at logon"
   files:
     - cos/app/desktop/main.js
     - cos/app/settings.js
@@ -30,4 +32,4 @@ payload:
   blocks:
     - MOD-COSA-AT-LOGON
   spec: cos/spec/cos-manager.spec
-  graph: e42a8e74749818f2
+  graph: 0312d04be7c91bed

@@ -7,11 +7,11 @@ intent: null
 summary: MG13_cli_in_the_exe (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793577139982
+exported_at: 1793860899380
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577139982
-lastSeenAt: 1793577139982
+firstSeenAt: 1793860899380
+lastSeenAt: 1793860899380
 fingerprint: null
 payload:
   id: MG13_cli_in_the_exe
@@ -33,4 +33,4 @@ payload:
   blocks:
     - MOD-MG-EXE-CLI
   spec: cos/spec/cos-manager.spec
-  graph: 78748a7efe75ff5d
+  graph: e657047c720ff38f

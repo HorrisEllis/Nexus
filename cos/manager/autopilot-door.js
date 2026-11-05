@@ -49,10 +49,35 @@ function createDoorHandlers({ ROOT, sup, log = () => {}, warp = null }) {
     return { ok: true, idle: reasons.length === 0, reasons, guardian: guardianUp ? (jobs || { error: true }) : { running: false }, ts: Date.now() };
   }
 
-  function _handleGraphRead(req, res) {
+  // 2026-11-05 MG32 (docs/2026-10-24-cos-manager-phasemap.spec) — James: "they all need the door build" · "I can’t just move a folder and have
+  // nexus run still that’s why they need to use the cli and api routes". The graph read went into Cortex's store and Intelligence's field
+  // through their files (the two crossings the boundary ratchet reported, cos -> cortex/memory/jaa-db.js and cos -> intelligence/cfr/field.js).
+  // Now through their routes: Cortex's GET /api/memory?table=&n= (memory.browse in its registry) and Intelligence's GET /api/intelligence/friction
+  // (the field's regime). With either down the read says which and answers with what it has.
+  const _origin = (name, dflt) => { const k = ALL_KERNELS.find(x => x.name === name); try { return k && k.healthUrl ? new URL(k.healthUrl).origin : dflt; } catch (_) { return dflt; } };
+  async function _cortexTables(tables, { get = _httpJson } = {}) {
+    const base = _origin('cortex', 'http://127.0.0.1:3748');
+    const out = { rows: {}, down: null };
+    for (const [table, n] of tables) {
+      if (out.down) { out.rows[table] = null; continue; }
+      try { const r = await get(`${base}/api/memory?table=${encodeURIComponent(table)}&n=${n}`, 2500); out.rows[table] = r && r.ok && Array.isArray(r.rows) ? r.rows : null; }
+      catch (e) { out.down = `cortex did not answer (${e.message})`; out.rows[table] = null; }
+    }
+    return out;
+  }
+  async function _fieldRegime({ get = _httpJson } = {}) {
+    try { const r = await get(`${_origin('intelligence', 'http://127.0.0.1:3753')}/api/intelligence/friction`, 2500); return { regime: r && r.field ? r.field.regime : null, why: r && r.field ? null : 'intelligence answered without a field' }; }
+    catch (e) { return { regime: null, why: `intelligence did not answer (${e.message})` }; }
+  }
+  async function _handleGraphRead(req, res, { get = _httpJson } = {}) {
     try {
-      const { jaaDB } = require('../../cortex/memory/jaa-db');
       const busSubs   = require('../../lib/bus-subscriptions');
+      const limitRaw0 = new URL(req.url, 'http://x').searchParams.get('events');
+      const evLimit0  = Math.min(Math.max(parseInt(limitRaw0 || '300', 10) || 300, 1), 2000);
+      const C = await _cortexTables([['event_log', evLimit0], [busSubs.TABLE || 'bus_subscriptions', 1000], ['raid_trails', 60], ['guardian_artifacts', 40], ['idearium_spec_chunks', 40]], { get });
+      // the store as Cortex's route gave it: the same reads, over the route (a table it did not answer is unreadable, never empty)
+      const tail = (t, n) => { const r = C.rows[t]; if (!r) throw new Error(C.down || `cortex did not give ${t}`); return r.slice(0, n); };
+      const jaaDB = { tail, all: (t) => tail(t, Infinity), query: (t) => tail(t, Infinity) };
 
       const subs  = busSubs.all(jaaDB);
       const edgeR = busSubs.edges(jaaDB);
@@ -203,8 +228,8 @@ function createDoorHandlers({ ROOT, sup, log = () => {}, warp = null }) {
           // function the rest of NEXUS uses rather than reimplementing the
           // thresholds here, which would be a second truth (§10.3).
           if (cfr && cfr.regime === undefined) {
-            try { cfr.regime = require('../../intelligence/cfr/field').computeRegime(cfr); }
-            catch (_) { cfr.regime = null; }
+            // MG32: the regime is Intelligence's, asked through its route (never its file); down, it is null with the reason
+            const R = await _fieldRegime({ get }); cfr.regime = R.regime; if (R.why) cfr.regimeWhy = R.why;
           }
         }
       } catch (_) { cfr = null; }
@@ -219,6 +244,8 @@ function createDoorHandlers({ ROOT, sup, log = () => {}, warp = null }) {
         movement,
         cfr,
         subscriptionsObserved: !!subs.observed,
+        cortex: C.down ? 'down' : 'up',
+        ...(C.down ? { cortexWhy: C.down } : {}),
         staleAfterMs: busSubs.STALE_MS,
         eventsSampled: events.length,
         // §1.2 — the map states its own limits inline, so a reader of the raw
@@ -458,13 +485,8 @@ function createDoorHandlers({ ROOT, sup, log = () => {}, warp = null }) {
   // gating readiness on an actual health check instead of a fixed timer,
   // and tearing a process down again once nothing needs it.
 
-  let _jaaDB = null;
-  function _getJaaDB() {
-    if (_jaaDB) return _jaaDB;
-    try { ({ jaaDB: _jaaDB } = require('../../cortex/memory/jaa-db.js')); }
-    catch (e) { console.warn(`[autopilot] jaaDB unavailable — on-demand events will log to console only: ${e.message}`); _jaaDB = false; }
-    return _jaaDB;
-  }
+  // MG32 (2026-11-05): _getJaaDB() — a second require of cortex/memory/jaa-db.js — was here and nothing called it; removed as redundant
+  // (§0.5), said here and in the changelog. Events go to Cortex through its route, like every other system's.
 
   // §THE EVENT-TRACKING PIECE — "all the events are supposed to be tracked,
   // using the meta system." Every real spawn/gate/despawn transition below

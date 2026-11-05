@@ -7,11 +7,11 @@ intent: null
 summary: MG31_the_compartment_window (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793577139941
+exported_at: 1793860899339
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577139941
-lastSeenAt: 1793577139941
+firstSeenAt: 1793860899339
+lastSeenAt: 1793860899339
 fingerprint: null
 payload:
   id: MG31_the_compartment_window
@@ -33,4 +33,4 @@ payload:
   blocks:
     - MOD-MG-UI-COCKPIT
   spec: cos/spec/cos-manager.spec
-  graph: 1c6fed32a4d8759b
+  graph: b478cfa2dc0f6b82
