@@ -7,6 +7,7 @@
  *   BK-02  the bridge checks the name against his macros; the preload exposes bindMacro
  *   BK-03  the bar: opening a bound bookmark waits for the page to load, then runs its macro (macros:run); a failure is said; ⚡ marks it
  *   BK-04  the Library: each bookmark has "Macro on open" (his macros), bound through bindMacro, and opening it runs the macro
+ *   BK-05  0.60.404 MT6: the window listens to macro progress and draws the toast for every run (a bookmark's included)
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), fs = require('fs'), path = require('path');
@@ -48,5 +49,11 @@ test('BK-04', 'the Library: Macro on open, bound through bindMacro, run on open'
   assert.match(js, /cg\.bookmarks\.bindMacro\(\{ id: b\.id, macro: sel\.value \|\| null \}\)/);
   assert.match(js, /toast\(`Opened in \$\{b\.agentId \|\| 'default'\}`\);\n      await runBound\(b\);/);
   assert.match(js, /cg\.macros\.run\(b\.macro, \{ agentId: b\.agentId \|\| 'default' \}\)/);
+});
+test('BK-05', 'the window listens to macro progress and draws the toast', () => {
+  const js = read('clear-glass/renderer/browser.js');
+  assert.match(js, /cg\.macros\.onProgress\(\(s\) => \{ if \(s && s\.agentId && s\.agentId !== agentId\) return; window\.CGMacroToast\?\.fromProgress\(s, \(op\) => cg\.macros\.control\(op, agentId\)\); \}\)/);
+  assert.match(read('clear-glass/src/preload/index.js'), /onProgress: \(cb\) => \{[^\n]*ipcRenderer\.on\('macros:progress', f\)/);
+  assert.match(read('clear-glass/src/ipc/bridge.js'), /w\.webContents\.send\('macros:progress', s\)/);
 });
 console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exitCode = failed ? 1 : 0;

@@ -1,0 +1,66 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MT6_the_toast_hears_the_macro:7b7fb719e343f5ee
+type: graph
+id: phase:MT6_the_toast_hears_the_macro:7b7fb719e343f5ee
+context: dependency graph of phase MT6_the_toast_hears_the_macro
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793896362956
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793896362956
+lastSeenAt: 1793896362956
+fingerprint: null
+payload:
+  for: MT6_the_toast_hears_the_macro
+  kind: phase
+  repo: null
+  hash: 7b7fb719e343f5ee
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/macro-toast.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-cg-bookmark-macros.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-macro-toast-glass.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-macro-toast-glass.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-05-bookmark-macros-phasemap.spec::BM1_a_bookmark_runs_its_macro
+    dependents: []
+    upstream:
+      - docs/2026-11-05-bookmark-macros-phasemap.spec::BM1_a_bookmark_runs_its_macro
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): BM1_a_bookmark_runs_its_macro'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-05-bookmark-macros-phasemap.spec::BM1_a_bookmark_runs_its_macro
+        kind: declared
