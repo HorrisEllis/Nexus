@@ -96,6 +96,17 @@ decisions:
       Where the merged kernel lives and whose it is (a system of its own, Emerge, or the kernel; §5.15) · what Seed means (Emerge built
       replayable randomness; ERAVOS's "seed-registry" and "generator id + seed" read the same; an outside analysis read "initial condition") ·
       whether merging retires siso/ and warp/core's duplicates.
+    # ── ADDENDUM 2026-11-05 — an idea, his, recorded (not a decision, no phase): a world simulation as a domain for the benchmark ──
+    # James, 2026-11-05, on an outside analysis of the primitives as the base of a large persistent game world ("This feels huge."), asked
+    # whether to log it: "Yes then finish eas4"
+    # Read against the code the same day (the coder's): simulation level-of-detail is the shape of Level (a node's summary stands for the
+    # detail under it, hashed over its children; the expand/collapse rule is not built); a consequence chain (bridge → route → supply →
+    # settlement → faction) is Transition's causedBy and WARP's Link and Expectation; a frame budget is Budget, and ERAVOS's audio thread
+    # (~2.7 ms per 128-sample block at 48 kHz, "timing and stability first") is already a tighter real-time deadline than a 60 FPS frame.
+    # Rendering, physics, animation and content are not what the primitives give.
+    # The coder's suggestion, his to place: one domain of the merged-kernel benchmark — a few thousand agents and settlements built only
+    # from the kernel, Level choosing detail by distance; measured: time per tick against a fixed budget, agents at full detail vs summarised,
+    # and that a collapsed settlement expanded again matches a run never collapsed.
 
 phases:
   EAS1_the_skeleton_in_emerge:
