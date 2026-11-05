@@ -1,0 +1,80 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AT2_the_gate:f73ff0d177af3dd7
+type: graph
+id: phase:AT2_the_gate:f73ff0d177af3dd7
+context: dependency graph of phase AT2_the_gate
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793861314900
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793861314900
+lastSeenAt: 1793861314900
+fingerprint: null
+payload:
+  for: AT2_the_gate
+  kind: phase
+  repo: null
+  hash: f73ff0d177af3dd7
+  nodes:
+    - path: guardian/lib/any-reply-tools.js
+      role: changes
+      exists: false
+      system: guardian
+    - path: guardian/tool-runtime.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: tests/modules/test-guardian-any-reply-tools.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/tool-runtime.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/tool-runtime.js
+      to: lib/agent-tools/tool-guide.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/tool-runtime.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
+    dependents:
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT3_result_and_screen
+    upstream:
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT_D0_what_runs_by_itself
+    downstream:
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT3_result_and_screen
+    blockedBy:
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by AT1_pickup_from_any_reply
+      - 'depends on (1): AT1_pickup_from_any_reply · all upstream 2'
+      - 'needed by (1): AT3_result_and_screen'
+    edges:
+      - from: docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
+        kind: declared

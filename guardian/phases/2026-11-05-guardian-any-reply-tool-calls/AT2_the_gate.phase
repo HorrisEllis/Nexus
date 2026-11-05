@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT2_the_gate
+type: phase
+id: docs_2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT2_the_gate
+context: pipeline phase AT2_the_gate of docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec
+intent: null
+summary: AT2_the_gate (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793861314900
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793861314900
+lastSeenAt: 1793861314900
+fingerprint: null
+payload:
+  id: AT2_the_gate
+  map: docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/any-reply-tools.js
+    - guardian/tool-runtime.js
+    - tests/modules/test-guardian-any-reply-tools.test.js
+  depends_on:
+    - AT1_pickup_from_any_reply
+  blocks: []
+  spec: null
+  graph: f73ff0d177af3dd7

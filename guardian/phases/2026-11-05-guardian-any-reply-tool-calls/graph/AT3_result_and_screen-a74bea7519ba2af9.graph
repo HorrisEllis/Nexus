@@ -1,0 +1,204 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AT3_result_and_screen:a74bea7519ba2af9
+type: graph
+id: phase:AT3_result_and_screen:a74bea7519ba2af9
+context: dependency graph of phase AT3_result_and_screen
+intent: null
+summary: 21 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793861314904
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793861314904
+lastSeenAt: 1793861314904
+fingerprint: null
+payload:
+  for: AT3_result_and_screen
+  kind: phase
+  repo: null
+  hash: a74bea7519ba2af9
+  nodes:
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/renderer/toasts.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/ui/tool-calls.html
+      role: changes
+      exists: false
+      system: guardian
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/spec-parser.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+  crossings:
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT2_the_gate
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT_D1_where_the_result_goes
+    dependents: []
+    upstream:
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT2_the_gate
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT_D0_what_runs_by_itself
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT_D1_where_the_result_goes
+    downstream: []
+    blockedBy:
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT2_the_gate
+      - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT_D1_where_the_result_goes
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by AT2_the_gate, AT_D1_where_the_result_goes
+      - 'depends on (2): AT2_the_gate, AT_D1_where_the_result_goes · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT2_the_gate
+        kind: declared
+      - from: docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT_D1_where_the_result_goes
+        kind: declared
