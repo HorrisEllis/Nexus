@@ -1,0 +1,150 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV1_the_tables_and_their_writers:b03ec046cab24300
+type: graph
+id: phase:SV1_the_tables_and_their_writers:b03ec046cab24300
+context: dependency graph of phase SV1_the_tables_and_their_writers
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793875440337
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793875440337
+lastSeenAt: 1793875440337
+fingerprint: null
+payload:
+  for: SV1_the_tables_and_their_writers
+  kind: phase
+  repo: null
+  hash: b03ec046cab24300
+  nodes:
+    - path: docs/2026-11-05-sovereignty-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: lib/system-boundary.js
+      role: changes
+      exists: true
+      system: lib
+    - path: scripts/jaa-table-owners.js
+      role: changes
+      exists: false
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/drawbridge-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/registry-draft.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/capability-spec.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/system-boundary.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: lib/system-boundary.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/registry-draft.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: lib/system-boundary.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV_D0_each_system_keeps_its_own_tables
+    dependents:
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV2_versionium_sovereign
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV3_diagnostic_and_ollama
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV4_cortex_sovereign
+    upstream:
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV_D0_each_system_keeps_its_own_tables
+    downstream:
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV2_versionium_sovereign
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV3_diagnostic_and_ollama
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV4_cortex_sovereign
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV5_the_rest_one_at_a_time
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV2_versionium_sovereign
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV3_diagnostic_and_ollama
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): SV_D0_each_system_keeps_its_own_tables'
+      - >-
+        needed by (3): SV2_versionium_sovereign, SV3_diagnostic_and_ollama, SV4_cortex_sovereign ·
+        all downstream 4 · finishing it unlocks SV2_versionium_sovereign, SV3_diagnostic_and_ollama
+    edges:
+      - from: docs/2026-11-05-sovereignty-phasemap.spec::SV_D0_each_system_keeps_its_own_tables
+        kind: declared

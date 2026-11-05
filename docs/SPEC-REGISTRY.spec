@@ -2041,3 +2041,7 @@ spec:
 # ── ADDENDUM 2026-11-05 — docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec ─────────────────────────────────────
 # James, 2026-11-05: "i want to be able to add dom mutators for node anchor for guardian, listeners, macros, etc." · "expand erosmanceros. add as much human ledgible options as possible ... all cli first, then into the browser.html." Owner: clear-glass.
     | `docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec` | 1.0.0 — ClearDriver's watch rules (when an element appears/changes/goes → anchor, emit, macro, gate), the existing observers moved onto them; ErosmancerOS's options in plain words, his TypeScript actions, threats said and handed over (no evasion); CLI first, then browser.html. CM_D0 his; CM1–CM4, ES1–ES4 open | mapped | James: "expand it exponentially if possible" |
+
+# ── ADDENDUM 2026-11-05 — docs/2026-11-05-sovereignty-phasemap.spec ──────────────────────────────────────────────────────────────────────
+# James, 2026-11-05: "okay. doors. then we need to make each one soveriegn".
+    | `docs/2026-11-05-sovereignty-phasemap.spec` | 1.0.0 — every system sovereign, measured by lib/system-boundary.js sovereignty() (400 crossings on 0.60.399); each system keeps its own tables in its own store (SV_D0, by his axioms; Guardian's precedent); SV1 table owners, SV2 Versionium, SV3 Diagnostic and Ollama, SV4 Cortex, SV5 the rest | mapped | James: "doors. then we need to make each one soveriegn" |

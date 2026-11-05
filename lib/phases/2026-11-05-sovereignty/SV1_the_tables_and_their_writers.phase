@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-sovereignty-phasemap.spec::SV1_the_tables_and_their_writers
+type: phase
+id: docs_2026-11-05-sovereignty-phasemap.spec::SV1_the_tables_and_their_writers
+context: pipeline phase SV1_the_tables_and_their_writers of docs/2026-11-05-sovereignty-phasemap.spec
+intent: null
+summary: SV1_the_tables_and_their_writers (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793875440338
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793875440338
+lastSeenAt: 1793875440338
+fingerprint: null
+payload:
+  id: SV1_the_tables_and_their_writers
+  map: docs/2026-11-05-sovereignty-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/system-boundary.js
+    - scripts/jaa-table-owners.js
+    - docs/2026-11-05-sovereignty-phasemap.spec
+  depends_on:
+    - SV_D0_each_system_keeps_its_own_tables
+  blocks: []
+  spec: null
+  graph: b03ec046cab24300

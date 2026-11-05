@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-sovereignty-phasemap.spec::SV5_the_rest_one_at_a_time
+type: phase
+id: docs_2026-11-05-sovereignty-phasemap.spec::SV5_the_rest_one_at_a_time
+context: pipeline phase SV5_the_rest_one_at_a_time of docs/2026-11-05-sovereignty-phasemap.spec
+intent: null
+summary: SV5_the_rest_one_at_a_time (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1793875440349
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793875440349
+lastSeenAt: 1793875440349
+fingerprint: null
+payload:
+  id: SV5_the_rest_one_at_a_time
+  map: docs/2026-11-05-sovereignty-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence
+    - cos
+    - copilot
+    - idearium
+    - orchestrator
+    - guardian
+    - clear-glass
+    - architect
+    - lib
+  depends_on:
+    - SV4_cortex_sovereign
+  blocks: []
+  spec: null
+  graph: 22fc42d5d90e7dd8
