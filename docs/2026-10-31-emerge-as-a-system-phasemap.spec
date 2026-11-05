@@ -41,6 +41,38 @@ decisions:
     chosen: "the door's language handlers run the eg command line in a child process with a timeout, rather than requiring the interpreter in the server"
     by: "his axioms, applied by the coder: §8.6 (the CLI is the tested surface), §5.15 rule 3 (a runaway program kills its child, not the door), §1.2 (a timeout is said)"
 
+  # ── ADDENDUM 2026-11-05 — primitive-based, one primitive per gate, compounds per layer (his) — moved here from after order: on 2026-11-05, where a phase reader took it as EAS5's body ──
+  EAS_D5_one_primitive_per_gate:
+    status: DECIDED 2026-11-05 (his)
+    james: '"Primitive based coding?" · "Would also set expectations. One primitive per gate. Compounds, each layer."'
+    context: "Shown, the same day, that EAS4's two copies have drifted both ways (37 differ, 31 only in lib/emerge), and two ways to finish it: (a) reconcile all 37 first, (b) primitives first. Emerge already keeps its base values in emerge/emerge/core/primitives.eg; Nexus names its shared primitives in lib/system-boundary.js PRIMITIVES."
+    chosen: "Each gate is one primitive with its expectation stated — what it takes, what it returns, how it fails — and each layer is a compound of the primitives of the layer below. A caller relies on a primitive's expectation, never on its code. EAS4 is done this way."
+
+  EAS_D6_emerge_is_a_system_in_nexus:
+    status: "DECIDED 2026-11-05 (his); supersedes EAS3's lock rule in part (kept, §0.3)"
+    james: '"It should be a system in nexus. You can request. Emerge was to help me learn to code. A, or migrate"'
+    context: >-
+      Asked whether the coder could add the Emerge repository (to build EAS4's primitives there, under EAS3's rule that "the Emerge repo is
+      the one source; this snapshot changes only by a new lock"), and which way for evaluate. Read the same day (public, read-only): the Emerge
+      repository's main is f023240, exactly the commit Nexus locked — nothing newer; its other branch claude/emerge-learn (9a7181c, 2026-10-30)
+      adds only docs/learn (the course, levels 0–6), and Nexus's emerge/docs/learn already holds a newer version of it (2s-say-it, the garden
+      examples). Nothing is lost by Nexus becoming the source.
+    chosen: >-
+      Emerge is a system in Nexus: emerge/ is its source, developed in Nexus; the separate repository was a learning project (his). EAS4's
+      primitives are built in emerge/ directly. evaluate (L0) is a shared primitive (his "A"; "or migrate" left open as the alternative), pure
+      and used directly — not through a handoff — beside the bus, nexus-connect, the WARP core, SISO and the hooks (lib/system-boundary.js
+      PRIMITIVES).
+    still_his: "whose are phase-specs.js and kg-builder.js (the coder reads Idearium)"
+  EAS_D7_the_spec_compiler_is_emerges:
+    status: "DECIDED 2026-11-05 (his)"
+    james: '"I don’t know idearium?" · then, shown both records side by side: "A."'
+    context: >-
+      Two records disagreed: PS1 (2026-10-20, phase-specs.js's own header) placed it in Emerge, "the spec compiler's system", on purpose; his
+      later words ("okay warp and emerge. spec compiler, ide, and idearium"; a voice note: "spec compiler's moving to Idearium") pointed to
+      Idearium, which is where the coder's first reading came from. Options: (a) Emerge's — the compiler stays Emerge's heart, Idearium a user
+      through Emerge's door (the coder's lean); (b) Idearium's.
+    chosen: "(a) kg-builder.js (the spec compiler) and phase-specs.js are Emerge's; Idearium (its Phases screen, API, CLI) and the release script reach them through Emerge's door, never its files"
+
 phases:
   EAS1_the_skeleton_in_emerge:
     status: BUILT 0.60.336 (Emerge 19200ff)
@@ -77,7 +109,7 @@ phases:
   EAS4_callers_through_the_door:
     status: OPEN
     depends_on: [EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus]
-    files: [guardian/server.js, idearium/compiler-bridge.js, copilot/module-builder.js, cortex/core/raid/contract-intake.js, lib/hooks/emerge.hooks.js, tests/modules/test-substrate-spec.test.js, lib/emerge, _archive/lib/emerge]
+    files: [guardian/server.js, idearium/compiler-bridge.js, copilot/module-builder.js, cortex/core/raid/contract-intake.js, lib/hooks/emerge.hooks.js, tests/modules/test-substrate-spec.test.js, lib/emerge, _archive/lib/emerge, emerge/emerge/core/admit.js, emerge/emerge/core/index.js, lib/warp/adapters/_archive/emerge-field.js, lib/warp/core/Engine.js, lib/warp/spec/warp.spec, tests/modules/test-warp2.test.js]
     spec: docs/emerge-system.spec
     blocks: [MOD-EAS-CALLERS]
     does: "run-time callers to Emerge's door, build-time ones to the snapshot; lib/emerge archived"
@@ -94,6 +126,17 @@ phases:
     # compound of the primitives below it. Callers are rebuilt on those primitives; lib/emerge is archived as it stands, carrying over only
     # what a primitive needs, into Emerge's own repo first (then a new lock). Nothing is copied again.
     still_his: "whose are compiler/phase-specs.js and kg-builder.js (they turn his maps into phase files and check the specs): the coder reads Idearium (it owns specs and phases), to confirm"
+    # ── EXPANDED 2026-11-05 (0.60.388) — L0 done: evaluate's one caller moved, with no new crossing ──
+    # Tried first, as told to him: name emerge/emerge/core/constraint.js in lib/system-boundary.js PRIMITIVES and have
+    # lib/warp/adapters/emerge-field.js require it. The ratchet refused it: PRIMITIVES only names a blocker, and the require was a NEW
+    # upward edge (lib -> emerge, the kernel depending on a system, §5.9). Reverted, not pushed.
+    # Done instead, by §5.15 (a thing belongs to the system it serves): the adapter turns Emerge's constraints into admit(link), and WARP's
+    # Engine already takes admit handed in, so the adapter is Emerge's. It is emerge/emerge/core/admit.js (an L0 compound on ./constraint,
+    # its expectation in its header); the lib file is in lib/warp/adapters/_archive/ with its reason. Its one caller, test-warp2, uses
+    # Emerge's core now. PRIMITIVES is unchanged.
+    # Proof: test-warp2 7/7, test-emerge-core 6/6, test-emergence-and-warp-suites 198/198 (same before and after); census 1120 crossings
+    # before and after, and check() adds none of this change's (its two added edges, cos/manager/autopilot-door.js, were there before:
+    # test-system-boundary 8/2 before and after). Left for L1-L3: compile, build and run as command nodes behind Emerge's door.
     # ── EXPANDED 2026-11-05 — the primitives found (read from the six callers) ──
     # Four functions, already layered, each a compound of the one below:
     #   L0 evaluate (core)                constraint + state → { ok } | { gap } | { ok:false, constraint, reason }   ← warp's admit, every link
@@ -127,36 +170,3 @@ order: |
 # MOD-EAS-NEXUS-PLACE named lib/nexus/autopilot.js for the boot plan; since MG17 the boot plan is each compartment.json, so Emerge's runtime
 # is a Nexus overlay on its compartment.json, recorded in the lock. Loom's wires for emerge/ come from its source scanner (no hand map yet).
 # lib/emerge stays until EAS4 moves its callers to the door.
-
-# ── ADDENDUM 2026-11-05 — primitive-based, one primitive per gate, compounds per layer (his) ──
-decisions_addendum_2026_11_05:
-  EAS_D5_one_primitive_per_gate:
-    status: DECIDED 2026-11-05 (his)
-    james: '"Primitive based coding?" · "Would also set expectations. One primitive per gate. Compounds, each layer."'
-    context: "Shown, the same day, that EAS4's two copies have drifted both ways (37 differ, 31 only in lib/emerge), and two ways to finish it: (a) reconcile all 37 first, (b) primitives first. Emerge already keeps its base values in emerge/emerge/core/primitives.eg; Nexus names its shared primitives in lib/system-boundary.js PRIMITIVES."
-    chosen: "Each gate is one primitive with its expectation stated — what it takes, what it returns, how it fails — and each layer is a compound of the primitives of the layer below. A caller relies on a primitive's expectation, never on its code. EAS4 is done this way."
-
-  EAS_D6_emerge_is_a_system_in_nexus:
-    status: "DECIDED 2026-11-05 (his); supersedes EAS3's lock rule in part (kept, §0.3)"
-    james: '"It should be a system in nexus. You can request. Emerge was to help me learn to code. A, or migrate"'
-    context: >-
-      Asked whether the coder could add the Emerge repository (to build EAS4's primitives there, under EAS3's rule that "the Emerge repo is
-      the one source; this snapshot changes only by a new lock"), and which way for evaluate. Read the same day (public, read-only): the Emerge
-      repository's main is f023240, exactly the commit Nexus locked — nothing newer; its other branch claude/emerge-learn (9a7181c, 2026-10-30)
-      adds only docs/learn (the course, levels 0–6), and Nexus's emerge/docs/learn already holds a newer version of it (2s-say-it, the garden
-      examples). Nothing is lost by Nexus becoming the source.
-    chosen: >-
-      Emerge is a system in Nexus: emerge/ is its source, developed in Nexus; the separate repository was a learning project (his). EAS4's
-      primitives are built in emerge/ directly. evaluate (L0) is a shared primitive (his "A"; "or migrate" left open as the alternative), pure
-      and used directly — not through a handoff — beside the bus, nexus-connect, the WARP core, SISO and the hooks (lib/system-boundary.js
-      PRIMITIVES).
-    still_his: "whose are phase-specs.js and kg-builder.js (the coder reads Idearium)"
-  EAS_D7_the_spec_compiler_is_emerges:
-    status: "DECIDED 2026-11-05 (his)"
-    james: '"I don’t know idearium?" · then, shown both records side by side: "A."'
-    context: >-
-      Two records disagreed: PS1 (2026-10-20, phase-specs.js's own header) placed it in Emerge, "the spec compiler's system", on purpose; his
-      later words ("okay warp and emerge. spec compiler, ide, and idearium"; a voice note: "spec compiler's moving to Idearium") pointed to
-      Idearium, which is where the coder's first reading came from. Options: (a) Emerge's — the compiler stays Emerge's heart, Idearium a user
-      through Emerge's door (the coder's lean); (b) Idearium's.
-    chosen: "(a) kg-builder.js (the spec compiler) and phase-specs.js are Emerge's; Idearium (its Phases screen, API, CLI) and the release script reach them through Emerge's door, never its files"

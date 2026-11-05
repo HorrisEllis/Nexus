@@ -17,8 +17,9 @@ const path = require('path');
 const ROOT = path.join(__dirname, '../..');
 const W = require(path.join(ROOT, 'lib', 'warp'));
 const { attach } = require(path.join(ROOT, 'lib', 'warp', 'adapters', 'siso-gates.js'));
-const { admitFrom } = require(path.join(ROOT, 'lib', 'warp', 'adapters', 'emerge-field.js'));
-const E = require(path.join(ROOT, 'lib', 'emerge', 'core'));
+// EAS4 L0 (2026-11-05): the adapter is Emerge's now (emerge/emerge/core/admit.js); the old lib copies are archived.
+const { admitFrom } = require(path.join(ROOT, 'emerge', 'emerge', 'core', 'admit.js'));
+const E = require(path.join(ROOT, 'emerge', 'emerge', 'core'));
 
 let passed = 0, failed = 0;
 function test(id, desc, fn) {
