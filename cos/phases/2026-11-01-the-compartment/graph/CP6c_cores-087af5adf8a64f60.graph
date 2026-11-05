@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793576104488
+exported_at: 1793918356086
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793576104488
-lastSeenAt: 1793576104488
+firstSeenAt: 1793918356086
+lastSeenAt: 1793918356086
 fingerprint: null
 payload:
   for: CP6c_cores

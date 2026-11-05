@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1793576104449
+exported_at: 1793917832756
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793576104449
-lastSeenAt: 1793576104449
+firstSeenAt: 1793917832756
+lastSeenAt: 1793917832756
 fingerprint: null
 payload:
   for: CP5_states_rewind_versions
@@ -67,6 +67,8 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC5_open_loops_imported
       - docs/2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK4_boot_from_a_disk
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK5_machine_disks
     blockedBy:
       - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
     unlocks:
@@ -100,7 +102,7 @@ payload:
       - >-
         needed by (7): FMR6_run_it_in_cos, CS2_test_every_version, CS6_rebuild_from_the_spec,
         CS9_every_project_a_compartment, MG7_automation_macros_and_hats,
-        MG12_the_exe_is_the_compartment_manager, CP10_miniworlds · all downstream 19 · finishing it
+        MG12_the_exe_is_the_compartment_manager, CP10_miniworlds · all downstream 21 · finishing it
         unlocks CS2_test_every_version
       - 'same files as CP6_resources with no order between them: cos/manager'
       - 'same files as CP7_settings with no order between them: cos/manager'

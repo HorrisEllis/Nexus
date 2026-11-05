@@ -7,11 +7,11 @@ intent: null
 summary: N24_no_json_yaml_node_types_only (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676288
+exported_at: 1793917836977
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676288
-lastSeenAt: 1792787676288
+firstSeenAt: 1793917836977
+lastSeenAt: 1793917836977
 fingerprint: null
 payload:
   id: N24_no_json_yaml_node_types_only
@@ -27,4 +27,4 @@ payload:
     - N18_hardcode_census
   blocks: []
   spec: null
-  graph: 2e2bc510c6a525a5
+  graph: 8aa2f99fb0c63b56

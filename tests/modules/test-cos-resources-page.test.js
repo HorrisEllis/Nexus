@@ -7,6 +7,7 @@
  *   RP-02  in Clear Glass, against a real supervisor with two running systems: both listed with what they use; priority set to low from the
  *          page is applied to the running process and read back from the OS; a memory limit set from the page is his layer and waits for the
  *          next start; Start at boot switched off is his configuration
+ *   RP-03  CP6f (0.60.413): the Balancing panel says it is on with its rule; Turn off from the page sets the policy (by person), read back
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http'), net = require('net');
@@ -20,7 +21,7 @@ const { listen } = require(path.join(ROOT, 'cos/manager/server.js'));
 let passed = 0, failed = 0;
 async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${d}\n    ${(e.stack || e.message).split('\n').slice(0, 5).join('\n    ')}`); failed++; } }
 const freePort = () => new Promise(r => { const s = net.createServer(); s.listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => r(p)); }); });
-const wait = async (fn, ms = 8000) => { const until = Date.now() + ms; while (Date.now() < until) { const v = await fn(); if (v) return v; await new Promise(r => setTimeout(r, 100)); } throw new Error('timed out waiting'); };
+const wait = async (fn, ms = 8000) => { const until = Date.now() + ms; while (Date.now() < until) { const v = await fn(); if (v) return v; await new Promise(r => setTimeout(r, 100)); } throw new Error(`timed out waiting: ${String(fn).slice(0, 140)}`); };
 const getJ = (port, p) => new Promise((res, rej) => http.get({ host: '127.0.0.1', port, path: p, timeout: 5000 }, r => { let t = ''; r.on('data', c => t += c); r.on('end', () => { try { res(JSON.parse(t)); } catch (e) { rej(e); } }); }).on('error', rej));
 const SYS = (port) => `require('http').createServer((q,r)=>r.end('{"ok":true}')).listen(${port},'127.0.0.1');setInterval(()=>{},1000);\n`;
 
@@ -72,6 +73,15 @@ const SYS = (port) => `require('http').createServer((q,r)=>r.end('{"ok":true}'))
         await wait(async () => page.evaluate(`(() => { const s = ${F}.querySelector('select[data-k="priority"][data-sys="alpha"]'); return s && s.value === 'low'; })()`), 5000);
         if (process.env.CC_SHOTS) await page.screenshot({ path: path.join(process.env.CC_SHOTS, 'cos-resources.png') });
         assert.deepStrictEqual(errors, []);
+        // RP-03 on the same page: the Balancing panel, and its switch
+        const st = await wait(async () => page.evaluate(`(() => { const d = ${F}; const t = d && d.getElementById('bal-state'); return t && t.textContent; })()`), 5000);
+        assert.strictEqual(st, 'on', 'balancing is on by default, said');
+        assert.match(await page.evaluate(`${F}.getElementById('bal-rule').textContent`), /below-normal.*RAID/, 'the rule is said in words');
+        await page.evaluate(`${F}.getElementById('bal-toggle').click()`);
+        await wait(async () => { const r = await getJ(M, '/api/cos/policy'); return r.policy.balance === false; });
+        assert.ok(sup.ledger({}).some(e => e.kind === 'policy' && /balance/.test(e.why || '') && e.by === 'person'), 'the change on the ledger, by person');
+        await wait(async () => page.evaluate(`${F}.getElementById('bal-state').textContent === 'off'`), 5000);
+        passed++; console.log('  ✓ RP-03 the Balancing panel: on with its rule; Turn off sets the policy by person, read back');
         ui.close();
       });
       await browser.close();

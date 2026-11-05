@@ -23,9 +23,12 @@
       <div id="rows"></div>
     </div>
   </section>
-  <section class="panel later rise">
-    <div class="panel-head"><h2>Balancing</h2><span class="tag">CS7 · next</span></div>
-    <div class="panel-body muted">RAID moving load between compartments (CS7; CP6b already makes COS ask RAID before it restarts anything by rule) comes after this page. The limits set here are what it will balance within.</div>
+  <section class="panel rise">
+    <div class="panel-head"><h2>Balancing</h2><span class="tag" id="bal-state"></span><button class="btn" id="bal-toggle"></button></div>
+    <div class="panel-body">
+      <p class="muted" id="bal-rule"></p>
+      <div id="bal-rows"></div>
+    </div>
   </section>
   <script src="../core/core.js"></script>
   <script src="page.js"></script>

@@ -285,6 +285,28 @@ spec:
       error_paths: ["RAID refuses or does not answer → not restarted, 'raid-refused' with the reason"]
       acceptance: ["approved → restarted, 'raid-approved' on the ledger; refused or unreachable → not restarted, the reason on the ledger"]
 
+    - id: MOD-CP-BALANCE
+      name: balance-the-machine
+      uuid: nexus-cos-compartment-balance-v1-0000-2026-1105-001
+      path: cos/manager/resources.js
+      phase: CP6f_raid_balances_load
+      description: >-
+        James, 2026-11-05: "build the load balancer" · asked which balance, with both readings side by side: "Balance the machine". Under
+        pressure (free memory under balanceMemPct, default 15%; or the compartments' CPU together over balanceCpuPct of the cores, default 85%)
+        the heaviest non-critical compartment at normal priority is lowered one step to below-normal; with the pressure gone (hysteresis +5%
+        memory, -15% CPU) it is put back. Each act is asked of RAID first (as MOD-CP-RAID-GATE), applied, read back from the OS and ledgered
+        (balanced, balance-restored, balance-released, balance-failed, raid-refused). One act per sample. Never touched: a critical system, a
+        priority he set above normal; his own change to a balanced compartment wins and the balance lets go. policy.balance false turns it off.
+      deps: [{ name: resources }, { name: raid-gates-the-rules }]
+      schema_refs: [CompartmentCaps, UsageSample]
+      exports: ["balance() → { on, balanceMemPct, balanceCpuPct, active: [{ name, from, to, kind, at, why }], pressure }",
+        "GET /api/cos/resources (its balance)", "PATCH /api/cos/policy { patch: { balance, balanceMemPct, balanceCpuPct }, by }",
+        "row `cos balance [on|off]` (setting is the person's)", "the Resources page's Balancing panel (on/off, its rule, what is lowered and why)"]
+      gate_pipeline: ["GATE-CP6f-001: pressure read from the sample, not guessed", "GATE-CP6f-002: RAID asked; no answer is a refusal", "GATE-CP6f-003: applied and read back", "GATE-CP6f-004: ledgered, and put back when the pressure is gone"]
+      behavioral_contracts: ["one act per sample", "a critical system and his above-normal are never touched", "his priority change wins over the balance", "a lower priority frees no memory: said, and the halt floor's proposal stays the act that frees memory"]
+      error_paths: ["RAID refuses or does not answer → not lowered, 'raid-refused' with the reason", "the OS refuses the priority → 'balance-failed' with its reason", "raising back needs rights the OS did not give → 'balance-failed', said"]
+      acceptance: ["CR-08 CPU pressure lowers the heaviest at normal, RAID asked, read back", "CR-09 put back when the pressure is gone", "CR-10 refused → not lowered; critical and his above-normal untouched; off → nothing", "CR-11 his change wins", "RP-03 the panel's switch sets the policy by person"]
+
     - id: MOD-CP-SUSPEND
       name: suspend
       uuid: nexus-cos-compartment-suspend-v1-0000-2026-1101-001

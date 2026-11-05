@@ -173,6 +173,11 @@ phases:
     proof: "a macro requiring 'sentinel' does not run on a tab with a stale leak test; a trigger fires on transport_down."
 
 # ═══ ADDENDUM 2026-10-15 (c) — kill switch (MAPPED, nothing below is built) ═══
+    expanded_2026_11_05: >-
+      James, 2026-11-05: "Macros for the automation." Recorded here as the phase that names macros and automation together; which automation
+      he means is to confirm, not guessed: (a) Clear Glass's macros as steps of its own automation (this phase: route, preset and network
+      steps, conditions and triggers); (b) COS's automation (the orchestrator's scheduler moving to COS: SC0_scheduler, EX0_executors) gaining
+      macros as steps a schedule can run. A built macro and its toast exist (0.60.403 BM1, 0.60.404 MT6). Settled 2026-11-05, asked with both readings and "both": "Both" — a macro is a step in either automation, COS's schedules and Clear Glass's own.
 addendum_c:
   james: "maybe a kill if disconnected, like kills the sandbox or compartment completely?"
   reading: "The coder's reading (to confirm): if the protected path is lost, tear down everything that depended on it, not only stop the traffic."

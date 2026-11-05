@@ -11,6 +11,10 @@ require('../../lib/test-sandbox.js').ensure();
  *   CR-05 an agent cannot set a cap; a value out of range is refused with the range
  *   CR-06 CP6b (0.60.361): RAID's yes is asked before a restart by rule — approved → restarted, the approval on the ledger
  *   CR-07 CP6b: RAID refuses, or does not answer (fails closed) → not restarted, its reason on the ledger
+ *   CR-08 CP6f (0.60.413, his "Balance the machine"): CPU pressure → the heaviest at normal lowered to below-normal, RAID asked, read back from the OS
+ *   CR-09 CP6f: the pressure gone → put back to normal, RAID asked, read back, on the ledger
+ *   CR-10 CP6f: RAID refuses → not lowered, said; a critical system and his above-normal untouched; policy balance false → nothing
+ *   CR-11 CP6f: he sets the priority of a balanced compartment → his call wins, the balance lets go, said
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
@@ -104,6 +108,63 @@ const until = async (fn, ms = 15000) => { const t = Date.now() + ms; while (Date
       const sup = mk(['e']); sups.push(sup); const res = createResources(sup, { store: path.join(dir, 'caps-e.json'), sampleMs: 0 });
       assert.throws(() => res.setCaps('e', { priority: 'low' }, { by: 'agent:x' }), /agent proposes/);
       assert.throws(() => res.setCaps('e', { heapMB: 10 }, { by: 'person' }), /64–16384/);
+      res.stop(); sup.shutdown({ by: 'test' });
+    });
+    // CP6f — balance the machine. A stub reader gives the load; the priorities are the real OS's, read back.
+    const loadOf = (cpu) => async (list) => ({ at: Date.now(), reader: 'stub', host: { freeMemPct: 80, cpus: 1 },
+      systems: Object.fromEntries(list.map(v => [v.name, v.pid ? { rssMB: 50, cpuPct: (cpu[v.name] || 0), reader: 'stub' } : { notRead: 'not running' }])) });
+    const prioOf = (res, n) => res.caps(n).applied.priority;
+    let b8 = null;   // CR-08's compartments, carried to CR-09
+    await test('CR-08', 'CPU pressure: the heaviest at normal lowered to below-normal, RAID asked, read back from the OS', async () => {
+      const sup = mk(['x', 'y']); sups.push(sup); const asked = [], load = { x: 90, y: 5 };
+      const res = createResources(sup, { store: path.join(dir, 'caps-x.json'), sampleMs: 0, approve: async (cmd, o) => { asked.push([cmd, o.intent]); return { approved: true }; }, read: (l) => loadOf(load)(l) });
+      sup.start('x', { by: 'test' }); sup.start('y', { by: 'test' }); await until(() => sup.get('x').pid && sup.get('y').pid && prioOf(res, 'x').state === 'enforced' && prioOf(res, 'y').state === 'enforced');
+      await res.sample();
+      const px = prioOf(res, 'x');
+      assert.deepStrictEqual([px.readBack, px.balanced && px.balanced.kind], ['below-normal', 'cpu'], JSON.stringify(px));
+      assert.strictEqual(prioOf(res, 'y').readBack, 'normal', 'only the heaviest');
+      assert.deepStrictEqual(asked[0], ['cos.balance x', { action: 'lower-priority', target: 'x', from: 'normal', to: 'below-normal' }]);
+      assert.ok(sup.ledger({ system: 'x' }).some(e => e.kind === 'balanced' && e.by === 'rule:balance'), 'on the ledger');
+      assert.deepStrictEqual(res.balance().active.map(a => a.name), ['x']);
+      b8 = { sup, res, asked, load };
+    });
+    await test('CR-09', 'the pressure gone: put back to normal, RAID asked, read back, on the ledger', async () => {
+      assert.ok(b8, 'CR-08 left its compartments'); const { sup, res, asked, load } = b8;
+      load.x = 10;
+      await res.sample();
+      assert.strictEqual(prioOf(res, 'x').readBack, 'normal'); assert.ok(!prioOf(res, 'x').balanced, 'no longer balanced');
+      assert.ok(sup.ledger({ system: 'x' }).some(e => e.kind === 'balance-restored'), JSON.stringify(sup.ledger({ system: 'x' }).map(e => e.kind)));
+      assert.deepStrictEqual(asked[1], ['cos.balance x', { action: 'restore-priority', target: 'x', from: 'below-normal', to: 'normal' }]);
+      res.stop(); sup.shutdown({ by: 'test' });
+    });
+    await test('CR-10', 'RAID refuses → not lowered, said; critical and his above-normal untouched; balance off → nothing', async () => {
+      const sup = createSupervisor({ root: dir, ledgerFile: path.join(dir, `l-${Math.random()}.jsonl`), log: () => {}, policy: { stopGraceMs: 200 },
+        declarations: [{ name: 'p', system: 'p', cmd: process.execPath, args: [idle] }, { name: 'q', system: 'q', cmd: process.execPath, args: [idle], critical: true }, { name: 'r', system: 'r', cmd: process.execPath, args: [idle] }] });
+      sups.push(sup);
+      const load = { p: 80, q: 95, r: 99 };
+      const res = createResources(sup, { store: path.join(dir, 'caps-p.json'), sampleMs: 0, approve: async () => ({ approved: false, reason: 'RAID unreachable: ECONNREFUSED' }), read: (l) => loadOf(load)(l) });
+      res.setCaps('r', { priority: 'above-normal' }, { by: 'person' });
+      for (const n of ['p', 'q', 'r']) sup.start(n, { by: 'test' });
+      await until(() => ['p', 'q', 'r'].every(n => sup.get(n).pid && prioOf(res, n).state !== 'pending'));
+      await res.sample();
+      assert.strictEqual(prioOf(res, 'p').readBack, 'normal', 'refused → not lowered');
+      assert.ok(sup.ledger({ system: 'p' }).some(e => e.kind === 'raid-refused' && /ECONNREFUSED/.test(e.why)), 'the refusal said');
+      assert.strictEqual(prioOf(res, 'q').readBack, 'normal', 'critical untouched'); assert.ok(!sup.ledger({ system: 'q' }).some(e => /raid|balanc/.test(e.kind)), 'never asked for a critical one');
+      assert.ok(!sup.ledger({ system: 'r' }).some(e => /raid|balanc/.test(e.kind)), 'his above-normal is his');
+      sup.setPolicy({ balance: false }, { by: 'person' });
+      const before = sup.ledger({}).length; await res.sample();
+      assert.ok(!sup.ledger({}).slice(before).some(e => /raid-refused|balanced/.test(e.kind)), 'balance off: nothing asked, nothing done');
+      assert.strictEqual(res.balance().on, false);
+      res.stop(); sup.shutdown({ by: 'test' });
+    });
+    await test('CR-11', 'he sets the priority of a balanced compartment: his call wins, the balance lets go, said', async () => {
+      const sup = mk(['z']); sups.push(sup);
+      const res = createResources(sup, { store: path.join(dir, 'caps-z.json'), sampleMs: 0, approve: async () => ({ approved: true }), read: (l) => loadOf({ z: 99 })(l) });
+      sup.start('z', { by: 'test' }); await until(() => sup.get('z').pid && prioOf(res, 'z').state === 'enforced');
+      await res.sample(); assert.ok(prioOf(res, 'z').balanced, 'balanced first');
+      res.setCaps('z', { priority: 'low' }, { by: 'person' });
+      assert.ok(!prioOf(res, 'z').balanced, 'released'); assert.strictEqual(prioOf(res, 'z').readBack, 'low');
+      assert.ok(sup.ledger({ system: 'z' }).some(e => e.kind === 'balance-released'), 'said on the ledger');
       res.stop(); sup.shutdown({ by: 'test' });
     });
   } finally {
