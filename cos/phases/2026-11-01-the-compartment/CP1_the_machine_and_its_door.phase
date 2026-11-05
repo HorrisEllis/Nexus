@@ -7,11 +7,11 @@ intent: null
 summary: CP1_the_machine_and_its_door (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793576104434
+exported_at: 1793917832745
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793576104434
-lastSeenAt: 1793576104434
+firstSeenAt: 1793917832745
+lastSeenAt: 1793917832745
 fingerprint: null
 payload:
   id: CP1_the_machine_and_its_door
@@ -26,4 +26,4 @@ payload:
     - LM6_cos_runs_loom_in_its_compartment
   blocks: []
   spec: null
-  graph: d83f1e8eea4e1e46
+  graph: 1f21bf2301ed7127

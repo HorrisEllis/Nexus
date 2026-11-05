@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793576104485
+exported_at: 1793917832781
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793576104485
-lastSeenAt: 1793576104485
+firstSeenAt: 1793917832781
+lastSeenAt: 1793917832781
 fingerprint: null
 payload:
   for: CP6b_raid_approves_what_cos_does_by_rule
@@ -74,6 +74,7 @@ payload:
     deps:
       - docs/2026-11-01-the-compartment-phasemap.spec::CP6a_caps_priority_accounting
     dependents:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP6f_raid_balances_load
       - docs/2026-11-01-the-compartment-phasemap.spec::CP5b_pause_resume
     upstream:
       - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
@@ -92,15 +93,19 @@ payload:
       - docs/2026-11-01-the-compartment-phasemap.spec::CP_D6_resources_per_compartment
     downstream:
       - docs/2026-11-01-the-compartment-phasemap.spec::CP5b_pause_resume
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP6f_raid_balances_load
     blockedBy: []
     unlocks:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP6f_raid_balances_load
       - docs/2026-11-01-the-compartment-phasemap.spec::CP5b_pause_resume
     conflicts: []
     dangling: []
     lines:
       - layer 7
       - 'depends on (1): CP6a_caps_priority_accounting · all upstream 14'
-      - 'needed by (1): CP5b_pause_resume · finishing it unlocks CP5b_pause_resume'
+      - >-
+        needed by (2): CP6f_raid_balances_load, CP5b_pause_resume · finishing it unlocks
+        CP6f_raid_balances_load, CP5b_pause_resume
     edges:
       - from: docs/2026-11-01-the-compartment-phasemap.spec::CP6a_caps_priority_accounting
         kind: declared

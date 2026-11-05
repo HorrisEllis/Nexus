@@ -57,6 +57,12 @@ spec:
         existing GitHub repo is the same path without the create. Route repo.github.{link,create}; row `repo github <repo> [create|link
         <url>]`; Settings › repo › GitHub shows the link, the visibility and the last push.
       proof: "with a fake GitHub API and a bare local remote: create → private repo, remote set, first push lands; link → remote set; no token → refused with what to set; the token never appears in a response"
+      expanded_2026_11_05: >-
+        James, 2026-11-05: "can we add github integration, completely like i want full control to create repos, push, pull into a compartment".
+        Expanded (his rule: phases expand): create and link stay as written; added: pull a GitHub repo into a compartment (clone into a new or an
+        existing compartment, its remote set), and push and pull on request from COS as well as Idearium. GH3 keeps sync (off | manual |
+        on-change, fast-forward pull only). Placement to settle when built (§5.15): this phase names lib/repo-github.js, and his 2026-11-03 rule
+        says lib is not for what a system uses, so its home is a system's own folder (Idearium's or Versionium's), the coder's reading, to confirm.
     GH2_the_context_brief_at_the_root:
       status: OPEN
       depends_on: [GH1_a_compartment_gets_its_github_repo]

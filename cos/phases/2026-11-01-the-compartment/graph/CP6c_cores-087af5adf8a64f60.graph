@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793576104488
+exported_at: 1793917832785
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793576104488
-lastSeenAt: 1793576104488
+firstSeenAt: 1793917832785
+lastSeenAt: 1793917832785
 fingerprint: null
 payload:
   for: CP6c_cores
@@ -81,6 +81,10 @@ payload:
         files:
           - cos/manager/resources.js
           - cos/manager/usage.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP6f_raid_balances_load
+        files:
+          - cos/manager/resources.js
+          - cos/manager/usage.js
     dangling: []
     lines:
       - layer 7 · ready
@@ -90,6 +94,9 @@ payload:
       - 'needed by (0): —'
       - >-
         same files as CP6d_disk with no order between them: cos/manager/resources.js,
+        cos/manager/usage.js
+      - >-
+        same files as CP6f_raid_balances_load with no order between them: cos/manager/resources.js,
         cos/manager/usage.js
     edges:
       - from: docs/2026-11-01-the-compartment-phasemap.spec::CP6a_caps_priority_accounting

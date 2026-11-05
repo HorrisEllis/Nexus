@@ -7,18 +7,21 @@ intent: null
 summary: CP5b_pause_resume (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1793576104496
+exported_at: 1793917832793
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793576104496
-lastSeenAt: 1793576104496
+firstSeenAt: 1793917832793
+lastSeenAt: 1793917832793
 fingerprint: null
 payload:
   id: CP5b_pause_resume
   map: docs/2026-11-01-the-compartment-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "DONE 0.60.362 — test-cos-pause PA-01..04 on Linux (SIGSTOP/SIGCONT, real process trees). The
+    Windows path (NtSuspendProcess through PowerShell) is written and UNPROVEN until it runs on his
+    machine (§1.1); the screen is CP2"
   files:
     - cos/manager/suspend.js
     - cos/manager/supervisor.js
@@ -34,4 +37,4 @@ payload:
     - MOD-CP-SUSPEND
     - MOD-CP-PAUSE
   spec: cos/spec/compartment.spec
-  graph: 4d67bb403bc06808
+  graph: 98f89389e72ed566

@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-the-compartment-phasemap.spec::CP6f_raid_balances_load
+type: phase
+id: docs_2026-11-01-the-compartment-phasemap.spec::CP6f_raid_balances_load
+context: pipeline phase CP6f_raid_balances_load of docs/2026-11-01-the-compartment-phasemap.spec
+intent: null
+summary: CP6f_raid_balances_load (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1793917832791
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793917832791
+lastSeenAt: 1793917832791
+fingerprint: null
+payload:
+  id: CP6f_raid_balances_load
+  map: docs/2026-11-01-the-compartment-phasemap.spec
+  repo: null
+  layer: null
+  status: '"OPEN — mapped 2026-11-05; which balance he means is to confirm before any code"'
+  files:
+    - cos/manager/resources.js
+    - cos/manager/usage.js
+    - cos/manager/supervisor.js
+    - lib/raid-port.js
+    - cos/manager/contract.json
+    - cos/ui/resources/page.js
+    - tests/modules/test-cos-resources.test.js
+  depends_on:
+    - CP6a_caps_priority_accounting
+    - CP6b_raid_approves_what_cos_does_by_rule
+  blocks:
+    - MOD-CP-RESOURCES
+  spec: cos/spec/compartment.spec
+  graph: 60d2bddb354dba0f

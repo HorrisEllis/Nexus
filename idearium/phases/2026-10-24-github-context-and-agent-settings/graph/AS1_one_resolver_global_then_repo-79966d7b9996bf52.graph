@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792880100924
+exported_at: 1793917834894
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100924
-lastSeenAt: 1792880100924
+firstSeenAt: 1793917834894
+lastSeenAt: 1793917834894
 fingerprint: null
 payload:
   for: AS1_one_resolver_global_then_repo
@@ -227,6 +227,11 @@ payload:
     upstream:
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0d_layers
     downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG10_categories
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG11_category_manager_ui
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
       - docs/2026-10-24-cos-manager-phasemap.spec::MG6_settings_by_template_and_type
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS2_each_provider_its_own_profile
@@ -252,7 +257,7 @@ payload:
       - 'depends on (1): GC0d_layers'
       - >-
         needed by (3): MG6_settings_by_template_and_type, GH3_sync_per_compartment,
-        AS2_each_provider_its_own_profile · all downstream 5 · finishing it unlocks
+        AS2_each_provider_its_own_profile · all downstream 10 · finishing it unlocks
         AS2_each_provider_its_own_profile
       - >-
         same files as GH1_a_compartment_gets_its_github_repo with no order between them:

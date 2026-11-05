@@ -480,6 +480,13 @@ spec:
         done). Then one merge commit joins history/snapshots under the current main as a second parent — no rewrite of
         existing history. Versionium indexes the snapshot commits as positions. Idempotent: running it twice adds nothing.
       proof: "a fixture of 5 zips (2 with .git, 3 without, one duplicate) → 2 imported ref sets, 2 snapshot commits, 1 duplicate node, rerun adds 0"
+      expanded_2026_11_05: >-
+        James, 2026-11-05: "the pipeline tool for versionium, like i have a 1000 zips of nexus and i want to be able to import them into cos or
+        idearium and have them renamed to fit the version, diff mapped, and indexed and pushed if possible." Expanded (his rule: phases expand):
+        N27 built the base (cli/import-history.js: sha256, root, version, date → version order → one snapshot commit per zip). Added: it is
+        Versionium's pipeline (§17.12; its home moves to versionium/ when built), its target is a COS compartment or an Idearium repo, each zip
+        renamed to the version it holds, the diff between consecutive versions mapped and indexed (repo versions, repo diff), and the history
+        pushed to the compartment's GitHub repo when one is linked (GH1). A zip whose version cannot be read is listed, never guessed.
 
     N28_live_run_findings:
       layer: automation

@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841754184
+exported_at: 1793917836983
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754184
-lastSeenAt: 1792841754184
+firstSeenAt: 1793917836983
+lastSeenAt: 1793917836983
 fingerprint: null
 payload:
   for: N27_history_import_from_700_zips
@@ -31,18 +31,21 @@ payload:
     deps: []
     dependents:
       - docs/2026-09-29-nex-node-store-phasemap.spec::N30_archive_import_dropbox_and_copilot_command
+      - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
     upstream: []
     downstream:
       - docs/2026-09-29-nex-node-store-phasemap.spec::N30_archive_import_dropbox_and_copilot_command
+      - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
     blockedBy: []
     unlocks:
       - docs/2026-09-29-nex-node-store-phasemap.spec::N30_archive_import_dropbox_and_copilot_command
+      - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
     conflicts: []
     dangling: []
     lines:
       - layer 0
       - 'depends on (0): —'
       - >-
-        needed by (1): N30_archive_import_dropbox_and_copilot_command · finishing it unlocks
-        N30_archive_import_dropbox_and_copilot_command
+        needed by (2): N30_archive_import_dropbox_and_copilot_command, SC10_the_zip_history ·
+        finishing it unlocks N30_archive_import_dropbox_and_copilot_command, SC10_the_zip_history
     edges: []

@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793576104510
+exported_at: 1793917832804
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793576104510
-lastSeenAt: 1793576104510
+firstSeenAt: 1793917832804
+lastSeenAt: 1793917832804
 fingerprint: null
 payload:
   for: CP3a_the_agent_cli
@@ -255,9 +255,6 @@ payload:
       - with: docs/2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
         files:
           - idearium/cli/route-commands.js
-      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5b_pause_resume
-        files:
-          - idearium/cli/route-commands.js
       - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
         files:
           - idearium/cli/route-commands.js
@@ -270,7 +267,6 @@ payload:
       - 'depends on (2): CP3_one_terminal_one_cli, PD1_procedure_nodes_and_commands · all upstream 18'
       - 'needed by (0): —'
       - 'same files as CP10_miniworlds with no order between them: idearium/cli/route-commands.js'
-      - 'same files as CP5b_pause_resume with no order between them: idearium/cli/route-commands.js'
       - >-
         same files as CP5a_snapshots_per_compartment with no order between them:
         idearium/cli/route-commands.js

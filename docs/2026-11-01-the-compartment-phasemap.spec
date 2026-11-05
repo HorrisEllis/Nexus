@@ -255,6 +255,12 @@ phases:
       compartment under its repo's id (CS9's half). One link, checked both ways: no compartment without its repo, no repo with a compartmentId
       that COS does not hold. Emerge's compartment (EAS3) is the first to appear in Idearium by itself.
     proof: "a compartment made in COS appears in Idearium as a repo under its parent's repo within one event; destroyed, the repo is archived; an Idearium import gets its compartment; the check over both lists finds nothing missing; Emerge appears nested with its files"
+    expanded_2026_11_05: >-
+      James, 2026-11-05: "i was thinking we could use cos as a project management tool, have each compartment a idearium compartment. make it
+      an option when importing a system. i want this to hold my projects." Expanded (his rule: phases expand), no code yet: CP9's one link is
+      the base (every compartment its Idearium repo, both ways); his addition is COS as where his projects live and are managed, and, when a
+      system is imported, a choice to make its compartment an Idearium compartment too (on by default or asked: his to say). Files to add when
+      built: cos/ui (the import form's option), cos/manager/add-system (the option carried), idearium/repo (the ingest under the compartment).
 
   CP10_miniworlds:
     status: OPEN
@@ -358,6 +364,23 @@ phases:
     files: [cos/compartment/boundary.js, cos/manager/walls.js, cos/compartment/qemu-runtime.js]
     does: "a compartment's network on, off (loopback only) or throttled (bytes/s): process tier in its wall (net, http, https, dgram refused or wrapped), machine tier by QMP set_link and the netdev throttle; switched live from its menu; each change by a person or RAID's rule, recorded"
     proof: "a fixture refused outbound when off; its throughput under the throttle; switched back live"
+  CP6f_raid_balances_load:
+    status: "OPEN — mapped 2026-11-05; which balance he means is to confirm before any code"
+    spec: cos/spec/compartment.spec
+    blocks: [MOD-CP-RESOURCES]
+    depends_on: [CP6a_caps_priority_accounting, CP6b_raid_approves_what_cos_does_by_rule]
+    files: [cos/manager/resources.js, cos/manager/usage.js, cos/manager/supervisor.js, lib/raid-port.js, cos/manager/contract.json, cos/ui/resources/page.js, tests/modules/test-cos-resources.test.js]
+    requires: [node, "COS's manager up (:7799)", "RAID reachable through lib/raid-port.js (fails closed)"]
+    prerequisites: ["usage sampled per compartment (CP6a's ring)", "his reading of 'load balancer' settled (below)"]
+    # James, 2026-11-05: "map: once commited and released. build the load balancer." Written as CP6's own part (his rule: phases expand):
+    # CP6b's record says "Still open of CP6: RAID balancing load across compartments", and CS11 says RAID "is the load balancer".
+    # Two readings live in the maps, to confirm with him before code (do not guess):
+    #   (a) balance the machine: under load, RAID shifts what compartments get (priority, memory limit, which waits), proposed or by rule;
+    #       CP6's proof: "a load balanced across two compartments by RAID".
+    #   (b) balance the work: of two compartments that can do the same job, RAID sends it to the less loaded one; CS11's proof: "of two fit
+    #       agents the less loaded is chosen and said".
+    does: "RAID balances load across compartments, reading CP6a's usage, every act on the ledger and approved by rule (CP6b); the reading is his"
+    proof: "two fixture compartments under a synthetic load: RAID's balance act is the one his reading names, on the ledger, read back"
   CP5b_pause_resume:
     status: "DONE 0.60.362 — test-cos-pause PA-01..04 on Linux (SIGSTOP/SIGCONT, real process trees). The Windows path (NtSuspendProcess through PowerShell) is written and UNPROVEN until it runs on his machine (§1.1); the screen is CP2"
     spec: cos/spec/compartment.spec
