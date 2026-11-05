@@ -93,7 +93,9 @@ phases:
     does: "Each hostile/ detection in plain words (what it saw, where, how sure); `eros threats` lists them; a detection pauses the automation on that page and hands it to him (CM_D1). No evasion is built."
     proof: "a fixture challenge page pauses a running macro and raises the hand-over toast; the threat is listed with what was seen"
   ES4_the_browser_panel:
-    status: OPEN
+    status: "PART BUILT 0.60.410 — options and threats in the Element Engine panel (browser.html's extensions panel), test-cg-element-engine-plugin EP-06; the watch rules part waits on CM1–CM3"
+    expanded_2026_11_05: "James: \"make sure its been added to browser.html\". The panel he opens from browser.html (the Element Engine, EE0) carries the options (a select for pace and sending, a field for each other, the same store as eros set) and the threats in plain words."
+    files_added: [clear-glass/plugins/adblocker/index.js, tests/modules/test-cg-element-engine-plugin.test.js]
     depends_on: [CM3_listeners_and_macros, ES3_threats_said_and_handed_over]
     files: [clear-glass/renderer/browser.html, clear-glass/renderer/eros-panel.js, clear-glass/renderer/eros-panel.css]
     does: "In browser.html: the site's watch rules (add from a picked element), ErosmancerOS's options in plain words, its actions and its threats — the same as the CLI, nothing the CLI cannot do. Tested in Clear Glass (AXIOMS §4.1)."

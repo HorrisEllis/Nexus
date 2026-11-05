@@ -85,6 +85,43 @@ function _erosStatus({ get = null } = {}) {
   }));
   return Promise.resolve(fetchIt()).then(st => { _eros = st && st.ok ? st : { state: 'not answering', why: 'Clear Glass\'s /eros-supervisor did not answer' }; return _eros; });
 }
+// 2026-11-05 ES4 (0.60.410) — James: "make sure its been added to browser.html". ErosmancerOS's options (src/eros/options.js, the same store
+// `eros set` writes) and its threats in plain words (src/eros/threats.js), in this panel — nothing here the CLI cannot do.
+const EOPT = () => require('../../src/eros/options.js').createOptions({ file: require('path').join(process.env.EROS_DATA_DIR || require('path').join(__dirname, '..', '..', '..', 'data', 'erosmancer'), 'options.json'),
+  record: (r) => { try { require('../../../lib/versionium-record.js').record(r); } catch (_) {} } });
+const EROS_PORT = () => parseInt(process.env.EROS_PORT || '7432', 10);
+function _erosHttp(method, p, body) {
+  return new Promise((resolve) => {
+    const data = body ? JSON.stringify(body) : null;
+    const r = require('http').request({ hostname: '127.0.0.1', port: EROS_PORT(), path: p, method, timeout: 1500, headers: data ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } : {} }, (res) => {
+      let b = ''; res.on('data', d => { b += d; }); res.on('end', () => { try { resolve({ ok: res.statusCode < 400, body: JSON.parse(b) }); } catch (_) { resolve({ ok: false }); } }); });
+    r.on('error', () => resolve({ ok: false })); r.on('timeout', () => { r.destroy(); resolve({ ok: false }); }); if (data) r.write(data); r.end();
+  });
+}
+let _threats = null;   // the last answer from ErosmancerOS's /api/hostile/state, said in plain words; refreshed when the page is drawn
+function _threatsRefresh({ get = null } = {}) {
+  return Promise.resolve((get || (() => _erosHttp('GET', '/api/hostile/state')))()).then(r => { _threats = r && r.ok ? require('../../src/eros/threats.js').describe((r.body && r.body.states) || {}) : null; return _threats; });
+}
+function _erosOptionFields() {
+  let L; try { L = EOPT().list(); } catch (e) { return [{ type: 'info', label: 'Options', value: `could not be read: ${e.message}` }]; }
+  const show = (o) => (Array.isArray(o.value) ? o.value.join(', ') : String(o.value));
+  return [
+    { type: 'info', label: '— ErosmancerOS options —', value: 'The same as `eros options` / `eros set`. Pace and sending apply now; the rest the next time it connects.' },
+    ...L.options.map(o => o.kind === 'enum'
+      ? { key: `eros-opt:${o.key}`, type: 'select', label: o.words, value: o.value, options: o.allowed.map(a => ({ value: a, label: a })), help: o.does }
+      : { key: `eros-opt:${o.key}`, type: 'text', label: `${o.words}${o.kind === 'ms' ? ' (ms)' : ''}${o.changed ? ' · yours' : ''}`, value: show(o), placeholder: Array.isArray(o.default) ? o.default.join(', ') : String(o.default), help: o.does }),
+    { type: 'info', label: '— Threats ErosmancerOS sees —', value: _threats == null ? 'ErosmancerOS is not answering' : !_threats.length ? 'Nothing hostile seen' : `${_threats.length} page(s)` },
+    ...((_threats || []).flatMap(t => t.signals.map(sg => ({ type: 'info', label: `${t.level} · ${String(t.tab).slice(0, 8)}`, value: `${sg.what} — ${sg.then}` })))),
+  ];
+}
+function _erosOptionSet(key, value) {
+  const k = String(key).slice('eros-opt:'.length);
+  let r; try { r = EOPT().set(k, value, { by: 'james (Element Engine panel)' }); } catch (e) { return { note: e.message }; }
+  if (r.key === 'pace') _erosHttp('POST', '/api/behavior/profile', { sessionId: 'default', profile: r.value });
+  if (r.key === 'routing') _erosHttp('POST', '/api/routing/level', { level: r.value, reason: 'his setting' });
+  return { note: `${r.words}: ${Array.isArray(r.value) ? r.value.join(', ') : r.value} — ${r.note}` };
+}
+
 // EE2 (0.60.402) — what he pointed at and hid: one ##rule per element in his own filters ("My filters"), per site; Undo removes the line
 const HIDE_RE = (host) => new RegExp(`^${host.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}##`);
 function _hidden(svc, host) { if (!svc || !host) return []; return String(svc.state().custom || '').split('\n').map(l => l.trim()).filter(l => HIDE_RE(host).test(l)); }
@@ -113,6 +150,7 @@ function _parts(page = {}) {
     { key: 'pick', type: 'action', label: 'Pick an element', kind: 'primary', help: 'Starts the Guardian picker. After a pick, the bar under the page offers Hide this element, Gate this element and Bind a key.' },
     ...(host ? [{ key: 'hidden', type: 'list', label: `Hidden on ${host}`, empty: 'Nothing hidden on this site. Pick an element, then Hide.', items: hid.map(r => ({ id: r, label: r.slice(host.length + 2), remove: true })) }] : []),
     { type: 'info', label: '— ErosmancerOS —', value: `${e.state || 'unknown'}${e.port ? ` · port ${e.port}` : ''}${e.lastError ? ` · ${e.lastError}` : e.why ? ` · ${e.why}` : ''}` },
+    ..._erosOptionFields(),
     { type: 'info', label: '— Edit ErosmancerOS —', value: `Your copy: ${editDir()}` },
     { key: 'eros-export', type: 'action', label: 'Export a copy to edit', help: 'Copies ErosmancerOS\'s TypeScript to your folder. Edit it there, never the live code.' },
     { key: 'eros-diff', type: 'action', label: 'Show my changes' },
@@ -152,7 +190,12 @@ function settings(data = {}) {
     const x = data.key === 'hide' ? _hide(svc, v.url || (data.page || {}).url, v.selector) : (v.remove ? _unhide(svc, v.id) : { note: '' });
     return then(_adblock({ ...data, op: 'get' }), (b) => { const r = withParts(b); return { ...r, data: { ...r.data, ...x } }; });
   }
-  if (data.op !== 'summary') _erosStatus().catch(() => {});
+  // ES4 — an ErosmancerOS option set from the panel
+  if (data.op === 'set' && String(data.key || '').startsWith('eros-opt:')) {
+    const x = _erosOptionSet(data.key, data.value);
+    return then(_adblock({ ...data, op: 'get' }), (b) => { const r = withParts(b); return { ...r, data: { ...r.data, ...x } }; });
+  }
+  if (data.op !== 'summary') { _erosStatus().catch(() => {}); _threatsRefresh().catch(() => {}); }
   if (data.op === 'action' && PART_KEYS.includes(data.key)) {
     let extra; try { extra = _partAction(data.key); } catch (e) { extra = { note: `${data.key}: ${e.message}` }; }
     return then(extra, (x) => { const base = _adblock({ ...data, op: 'get' }); return then(base, (b) => { const r = withParts(b); return { ...r, data: { ...r.data, ...(x || {}) } }; }); });
@@ -191,4 +234,4 @@ function _adblock(data = {}) {
   return reply(_view(svc, page), note ? { note } : {});
 }
 
-module.exports = { isBlocked, filterRequest, toggleFromToolbar, settings, BLOCKLIST, _partAction, _erosStatus, _parts, _hide, _unhide, _hidden };
+module.exports = { isBlocked, filterRequest, toggleFromToolbar, settings, BLOCKLIST, _partAction, _erosStatus, _threatsRefresh, _parts, _hide, _unhide, _hidden };

@@ -5,6 +5,8 @@
  *
  *   HW-01  the supervisor starts a node system with windowsHide: true, and an Electron one (Clear Glass) with false, so its own window shows
  *   HW-02  every spawn in the supervisor, the door's test runner and core-duties hides its window
+ *   HW-03  2026-11-05 ("getting spammed with command prompt from cos"): the watchdog's per-process read on Windows was one VISIBLE PowerShell
+ *          per system per tick. Now one hidden call reads every process, cached for 2 s: 13 systems in a tick start one, not 13
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), { EventEmitter } = require('events');
@@ -37,6 +39,19 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
       for (const sp of spawns) assert.match(sp, /windowsHide/, `${f}: ${sp.slice(0, 90)}`);
       assert.ok(spawns.length > 0, `${f} has spawns`);
     }
+  });
+  await test('HW-03', 'the watchdog\'s Windows read: one hidden PowerShell per tick for every system, not one window each', () => {
+    const PS = require(path.join(ROOT, 'cos/watchdog/proc-stats.js'));
+    const src = fs.readFileSync(path.join(ROOT, 'cos/watchdog/proc-stats.js'), 'utf8');
+    assert.match(src, /execFileSync\('powershell'[\s\S]{0,300}windowsHide: true/, 'the PowerShell is hidden');
+    PS._resetWinCache(); let calls = 0;
+    const all = () => { calls++; return new Map([[101, { rssMB: 50, cpuTimeMs: 1000 }], [102, { rssMB: 70, cpuTimeMs: 2000 }]]); };
+    for (let pid = 101; pid <= 113; pid++) PS.readWin32ProcStats(pid, { now: 1000, readAll: all });
+    assert.strictEqual(calls, 1, `13 systems in one tick → ${calls} PowerShell starts`);
+    assert.deepStrictEqual(PS.readWin32ProcStats(102, { now: 1500, readAll: all }), { rssMB: 70, cpuTimeMs: 2000 });
+    PS.readWin32ProcStats(101, { now: 4000, readAll: all }); assert.strictEqual(calls, 2, 'read again after 2 s');
+    assert.strictEqual(PS.readWin32ProcStats(999, { now: 4100, readAll: all }), null, 'a process that is gone reads as null');
+    assert.match(fs.readFileSync(path.join(ROOT, 'cos/services/anonymous/nexus.js'), 'utf8'), /Win32_Process[\s\S]{0,200}windowsHide: true/);
   });
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exitCode = failed ? 1 : 0;
   setTimeout(() => process.exit(process.exitCode), 300);

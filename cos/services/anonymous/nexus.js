@@ -374,7 +374,7 @@ function recordPids() {
 function _cmdlineOf(pid) {
   try {
     if (IS_WIN) {
-      const out = cp.execSync(`powershell -NoProfile -NonInteractive -Command "(Get-CimInstance Win32_Process -Filter \\"ProcessId=${Number(pid)}\\").CommandLine"`, { encoding: 'utf8', timeout: 8000, stdio: ['ignore', 'pipe', 'ignore'] });
+      const out = cp.execSync(`powershell -NoProfile -NonInteractive -Command "(Get-CimInstance Win32_Process -Filter \\"ProcessId=${Number(pid)}\\").CommandLine"`, { encoding: 'utf8', timeout: 8000, stdio: ['ignore', 'pipe', 'ignore'], windowsHide: true });
       return String(out || '').trim();
     }
     return fs.readFileSync(`/proc/${Number(pid)}/cmdline`, 'utf8').replace(/\0/g, ' ');
