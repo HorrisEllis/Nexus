@@ -36,7 +36,12 @@ decisions:
       merge." Read as (c): one plugin now (EE0), the engine's deeper steps (EE1–EE4) inside it after. The coder's reading of "the new plugin"
       as this map's merged plugin, to confirm.
   EE_D1_erosmancer_in_process_or_its_own:
-    status: "OPEN — his"
+    status: "LEANED (a) 2026-11-05 — his, to confirm: \"maybe its own process?\""
+    leaning: >-
+      James, 2026-11-05, asked (a) keep ErosmancerOS its own process and add a register / find-again route to it, or (b) port its finder into
+      Clear Glass: "maybe its own process?" — the coder's recommendation (a). Built on (a); his "maybe" is kept, so a later (b) is a dated
+      addendum, not a reversal of his word.
+    unblocked: "the same day ErosmancerOS's own tests run in the coder's sandbox (esbuild's linux binary installed without saving: HostileDetection 15/15), so a change to it is tested here, not only on his PC"
     question: >-
       ErosmancerOS runs as its own TypeScript process today (started with tsx). (a) keep it its own process and reach it by its API (the
       sovereign way: it can be swapped, as his 2026-11-03 rule says); (b) port its selector engine into Clear Glass as JavaScript, in
@@ -56,6 +61,12 @@ phases:
     proof: "the panel's view has the four parts; the adblock part is the same view as before; export, show changes and import answer through the panel; a pick asks the renderer to start the picker"
   EE1_one_identity_for_a_chosen_element:
     status: OPEN
+    cut_2026_11_05: >-
+      On (a), in two halves: EE1a — ErosmancerOS gains POST /api/nodes/register (a pick's tag, selector, xpath, text and attributes into its
+      NodeRegistry: a UUID and a fingerprint) and Clear Glass keeps that UUID with the pick, its gates and its anchors; EE1b — POST
+      /api/nodes/:uuid/find (its seven-strategy SelectorEngine over CDP, answering a fresh xpath and selector), and a gate or anchor whose
+      xpath no longer matches asks it before failing. EE1b's proof needs a real browser under ErosmancerOS (CDP), run here with the
+      pre-installed Chromium.
     depends_on: [EE0_the_merged_plugin, EE_D1_erosmancer_in_process_or_its_own]
     files: [clear-glass/renderer/guardian-picker.js, clear-glass/src/eros/supervisor.js, clear-glass/src/page/element-gate.js, clear-glass/src/schemas/element.schema.json, tests/modules/test-cg-element-engine.test.js]
     does: >-
