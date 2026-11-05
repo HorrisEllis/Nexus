@@ -283,6 +283,19 @@ phases_addendum_2026_11_04:
       DO3a's shape; Cortex has it), so the commands come from each system's own registry grammar, as nexus-cli specs. A system with no door yet
       is said, never guessed.
     proof: "`cortex health` in the Console runs through Cortex's door; a system with no /cli says so"
+  SC16_no_console_windows:
+    layer: backend
+    status: "BUILT 0.60.400 — test-cos-hidden-windows"
+    origin: "James, 2026-11-05: \"keeps spamming my screen. any way to have those node.exe windows open in the background?\""
+    found: >-
+      (read 2026-11-05) COS's supervisor started every system with spawn(cmd, args, { cwd, env, stdio, shell }) and no windowsHide: on Windows,
+      a child of a process with no console (COS's window) gets its own console window, one per system, each restart a new one. The COS app's
+      own spawns already pass windowsHide (runtime, install, service, shell); the supervisor, its test runner and core-duties did not.
+    depends_on: [SC11_the_console_tab]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/manager/supervisor.js, cos/manager/autopilot-door.js, lib/nexus/core-duties.js, tests/modules/test-cos-hidden-windows.test.js, tests/modules/run-all.js]
+    does: "Every process COS starts hides its console window (windowsHide); a windowed system (Electron: Clear Glass) is the one left as it was, so its own window shows. Their output is read in the Console tab (SC11), not in a window."
+    proof: "the supervisor passes windowsHide: true for a node system and false for an Electron one; every spawn in the supervisor, the door's test runner and core-duties hides its window"
   SC9_the_zip_dropzone_updater:
     layer: ui
     status: OPEN

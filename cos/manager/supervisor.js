@@ -135,7 +135,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     }
     if (!write('spawn', name, `${c.via ? `in compartment ${d.compartment || d.name}, behind its wall (${(d.boundary.mode || 'enforce')}${c.via === 'NODE_OPTIONS' ? ', through NODE_OPTIONS' : ''}): ` : ''}${c.cmd} ${c.args.join(' ')}`, { by })) return false;
     let proc;
-    try { proc = spawnFn(c.cmd, c.args, { cwd: c.cwd, env: { ...process.env, ...(d.env || {}), ...(c.env || {}) }, stdio: ['ignore', 'pipe', 'pipe'], shell: c.shell }); }
+    try { proc = spawnFn(c.cmd, c.args, { cwd: c.cwd, env: { ...process.env, ...(d.env || {}), ...(c.env || {}) }, stdio: ['ignore', 'pipe', 'pipe'], shell: c.shell, windowsHide: !isWindowed(d, c) }); }   /* SC16 (0.60.400): no console window per system; a windowed one (Clear Glass) shows its own */
     catch (err) { onExit(name, proc, null, null, `spawn threw: ${err.message}`); return false; }
     s.proc = proc; s.pid = proc.pid || null; s.state = 'starting'; s.startedAt = Date.now(); s.by = by; s.sawAddrInUse = false;
     if (typeof hooks.spawned === 'function' && s.pid) { try { hooks.spawned(name, s.pid); } catch (e) { log(`[${name}] the spawn hook threw: ${e.message}`); } }

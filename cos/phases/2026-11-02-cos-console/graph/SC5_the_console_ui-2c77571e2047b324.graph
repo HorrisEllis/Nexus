@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793874058235
+exported_at: 1793889272974
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793874058235
-lastSeenAt: 1793874058235
+firstSeenAt: 1793889272974
+lastSeenAt: 1793889272974
 fingerprint: null
 payload:
   for: SC5_the_console_ui
@@ -82,6 +82,7 @@ payload:
       - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
       - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
       - docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
+      - docs/2026-11-02-cos-console-phasemap.spec::SC16_no_console_windows
       - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
       - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
       - docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
@@ -97,7 +98,7 @@ payload:
         depends on (4): SC1_the_bell, SC2_configuration_per_system, SC3_system_command_line,
         SC4_add_a_system · all upstream 9
       - >-
-        needed by (2): SC7_the_updates_section, SC11_the_console_tab · all downstream 7 · finishing
+        needed by (2): SC7_the_updates_section, SC11_the_console_tab · all downstream 8 · finishing
         it unlocks SC7_the_updates_section, SC11_the_console_tab
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
