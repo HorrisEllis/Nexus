@@ -478,3 +478,12 @@ James, 2026-11-02: "should dag have dag? Like: Additional dependencies: Settings
   reading of how they are written (two lists beside `files:` and `depends_on:`) is to confirm; the checker in lib/phase-graph.js and the gate
   pipeline is to build with the config/ui roles above.
 
+## ADDENDUM 2026-11-03 — phases expand; they are not written again (his rule)
+James, 2026-11-03: "We need a fucking ledger too of phases, and we need, like, so they stop getting written, you know what I mean?" · "Like they
+stop getting written and start getting, they expand."
+- Before writing a phase, find the phase that already covers its files or its intent (the census, `lib/phase-census.js`; the ledger and its
+  gate, SL11, when built) and **expand it**: its does:, files:, depends_on: and proof grow, with a dated addendum quoting why. A new phase is
+  written only when none covers the work.
+- Every phase id is unique across all maps. Found 2026-11-03: TB1 and PF1 each written in two maps for two different things.
+- Map: docs/2026-10-23-self-building-loop-phasemap.spec SL_D11, SL11 (expanded there, not a new map).
+

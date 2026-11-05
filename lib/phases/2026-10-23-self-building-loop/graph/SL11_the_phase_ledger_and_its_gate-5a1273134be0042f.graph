@@ -1,0 +1,254 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SL11_the_phase_ledger_and_its_gate:5a1273134be0042f
+type: graph
+id: phase:SL11_the_phase_ledger_and_its_gate:5a1273134be0042f
+context: dependency graph of phase SL11_the_phase_ledger_and_its_gate
+intent: null
+summary: 30 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793899281153
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793899281153
+lastSeenAt: 1793899281153
+fingerprint: null
+payload:
+  for: SL11_the_phase_ledger_and_its_gate
+  kind: phase
+  repo: null
+  hash: 5a1273134be0042f
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/phase-census.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-dag.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-groom.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-ledger.js
+      role: changes
+      exists: false
+      system: lib
+    - path: tests/modules/test-phase-ledger.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/flow-sources.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phase-mapping.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/build-queue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-deps-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-convert.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-architecture-migrate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/changelog-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/git-pr.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phasemap-parse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/phase-census.js
+      to: lib/changelog-files.js
+      kind: requires
+    - from: lib/phase-dag.js
+      to: lib/phasemap-parse.js
+      kind: requires
+    - from: lib/phase-groom.js
+      to: lib/phase-files.js
+      kind: requires
+    - from: lib/phase-groom.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/git-pr.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/phase-census.js
+      kind: requires
+    - from: idearium/lib/flow-sources.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/repo/phase-mapping.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/build-queue.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-deps-gate.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/project-convert.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: tests/modules/test-architecture-migrate.test.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
+    dependents: []
+    upstream:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling:
+      - SL_D11_phases_expand
+    lines:
+      - layer 2 · ready
+      - 'depends on (2): SL3_the_backlog_groomed, SL2_done_by_evidence · all upstream 3'
+      - 'needed by (0): —'
+      - 'DANGLING depends_on: SL_D11_phases_expand'
+    edges:
+      - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
+        kind: declared
+      - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
+        kind: declared
