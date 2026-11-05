@@ -1,0 +1,98 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PL5_orchestrator_runs_pipelines:88947fab83cf069a
+type: graph
+id: phase:PL5_orchestrator_runs_pipelines:88947fab83cf069a
+context: dependency graph of phase PL5_orchestrator_runs_pipelines
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793911833907
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833907
+lastSeenAt: 1793911833907
+fingerprint: null
+payload:
+  for: PL5_orchestrator_runs_pipelines
+  kind: phase
+  repo: null
+  hash: 88947fab83cf069a
+  nodes:
+    - path: orchestrator/automation/index.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-orchestrator-automation.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/automation/engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: orchestrator/automation/index.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: orchestrator/automation/index.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: orchestrator/automation/index.js
+      to: lib/automation/routes.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/automation/index.js
+      kind: requires
+    - from: tests/modules/test-orchestrator-automation.test.js
+      to: orchestrator/automation/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL2_pipeline_door
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+    dependents: []
+    upstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL2_pipeline_door
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · ready
+      - >-
+        depends on (3): PL2_pipeline_door, AE2_browser_driver_port, AE3_the_engine_door · all
+        upstream 9
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-29-pipelines-phasemap.spec::PL2_pipeline_door
+        kind: declared
+      - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+        kind: declared
+      - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+        kind: declared

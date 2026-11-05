@@ -440,6 +440,7 @@
     id: 'macros', group: 'Agents', icon: '⌘', label: 'Macros',
     keywords: 'macro steps record replay rewind job application erosmancer behavior template',
     blurb: 'Repeatable sequences of browser actions. Record one from a tab, start from a template, or build it step by step. {{placeholders}} become questions when it runs.',
+    related: ['automation', 'pipelines'],   // 2026-11-05 PA — one hop to the other two (CM1 merges them)
     async render({ tools, rerender }) {
       const [lr, schema] = await Promise.all([call(() => cg.macros.list(), 'macros'), call(() => cg.macros.schema(), 'macro schema')]);
       const fail = (e) => toast(e.message, 'bad');

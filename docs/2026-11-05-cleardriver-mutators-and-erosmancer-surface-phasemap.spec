@@ -72,9 +72,9 @@ phases:
     does: "Each existing MutationObserver moved onto watch rules one at a time, its tests unchanged; the replaced code archived with a note (§0.3)."
     proof: "each moved piece's own suite unchanged; no observer left without a caller"
   ES1_erosmancer_options_in_plain_words:
-    status: OPEN
+    status: "BUILT 0.60.409 — test-eros-options EO-01, EO-02 (files expanded 2026-11-05: ErosmancerOS's own code left alone, his ask)"
     depends_on: []
-    files: [clear-glass/erosmancer/erosmancer-os/src/api/server.ts, clear-glass/erosmancer/erosmancer-os/src/options.ts, clear-glass/src/eros/supervisor.js, idearium/cli/route-commands.js, tests/modules/test-eros-options.test.js]
+    files: [clear-glass/src/eros/options.js, clear-glass/src/eros/supervisor.js, clear-glass/src/ipc/bridge.js, idearium/cli/route-commands.js, tests/modules/test-eros-options.test.js, tests/modules/run-all.js]
     does: >-
       Every ErosmancerOS option (behaviour profiles, selector strategies and their order, routing, telemetry, replay, observer, hostile
       detectors) listed with a plain-words description, its value, its default and what changing it does. Read and set from the CLI (`eros
@@ -87,13 +87,15 @@ phases:
     does: "(reading a) a .ts file in erosmancer-os/actions/ is an action with a name and a description; `eros actions` lists them, `eros run <name>` runs one; a watch rule or a macro can call it."
     proof: "a fixture action is listed with its description and run; a file that does not compile is listed as broken with the error"
   ES3_threats_said_and_handed_over:
-    status: OPEN
+    status: "BUILT 0.60.409 — test-eros-options EO-03, EO-04 (macros hand over; a workflow's browser steps not yet, said)"
     depends_on: [ES1_erosmancer_options_in_plain_words, CM_D1_a_threat_hands_over_never_evades]
-    files: [clear-glass/src/eros/supervisor.js, clear-glass/src/main/index.js, tests/modules/test-eros-options.test.js]
+    files: [clear-glass/src/eros/threats.js, clear-glass/src/ipc/bridge.js, idearium/cli/route-commands.js, tests/modules/test-eros-options.test.js]
     does: "Each hostile/ detection in plain words (what it saw, where, how sure); `eros threats` lists them; a detection pauses the automation on that page and hands it to him (CM_D1). No evasion is built."
     proof: "a fixture challenge page pauses a running macro and raises the hand-over toast; the threat is listed with what was seen"
   ES4_the_browser_panel:
-    status: OPEN
+    status: "PART BUILT 0.60.410 — options and threats in the Element Engine panel (browser.html's extensions panel), test-cg-element-engine-plugin EP-06; the watch rules part waits on CM1–CM3"
+    expanded_2026_11_05: "James: \"make sure its been added to browser.html\". The panel he opens from browser.html (the Element Engine, EE0) carries the options (a select for pace and sending, a field for each other, the same store as eros set) and the threats in plain words."
+    files_added: [clear-glass/plugins/adblocker/index.js, tests/modules/test-cg-element-engine-plugin.test.js]
     depends_on: [CM3_listeners_and_macros, ES3_threats_said_and_handed_over]
     files: [clear-glass/renderer/browser.html, clear-glass/renderer/eros-panel.js, clear-glass/renderer/eros-panel.css]
     does: "In browser.html: the site's watch rules (add from a picked element), ErosmancerOS's options in plain words, its actions and its threats — the same as the CLI, nothing the CLI cannot do. Tested in Clear Glass (AXIOMS §4.1)."
@@ -124,3 +126,17 @@ order: "CLI first, as he asked: ES1 can start now; CM1 after the element engine'
 # edits, removes or archives it. ES3 now only READS it, through ErosmancerOS's own routes (GET /api/hostile/state, POST /api/hostile/probe)
 # and its threat:* events; its files list no longer names hostile/index.ts. CM_D1 is the coder's line for what the coder builds on top,
 # not a change to his module. Making it safe is his to design; the coder explained how it works the same day (in the conversation).
+
+# ── ADDENDUM 2026-11-05 (0.60.409) — ES1 and ES3 built; ES2 read as answered by PA1 (to confirm); ES4 open ─────────────────────────────────
+# James, 2026-11-05: "also finish erosmancer" · then "1, then 3? can" (Automate first, then this).
+# - ES1: every ErosmancerOS option (26 in its OSConfig) in plain words: 16 settable (2 at once: pace, how actions are sent; 14 at the next
+#   connect, through its own POST /api/connect { config }), 9 fixed in its code (listed with their values, changed only by editing it, ES5),
+#   3 set by Clear Glass. Defaults read from its source. CLI: eros options, eros set <option> <value|default>. Each change recorded (§17.12).
+# - ES3: hostile/'s threat types in plain words (eros threats). A macro that reaches a page showing a check a person answers (Cloudflare,
+#   Turnstile, reCAPTCHA, hCaptcha, a site's own CAPTCHA, a rate limit) pauses before its next step and tells him which check, on which page;
+#   it goes on when he presses resume. Fingerprinting and DevTools-detection scripts are only said. Nothing is changed to get past a check
+#   (CM_D1). The page check only looks (EO-04 asserts it has no click, value write or DOM change).
+# - ErosmancerOS's own code (erosmancer-os/src) is not changed: his words the same day, "can you at least leave them alone" (EO-05 checks it).
+# - ES2 ("adding typescripts"): read by the coder as answered by his later words, "conditions for detection of elements, scripts and type
+#   scripts" — PA1 (his .ts and .js scripts as steps and as conditions, 0.60.408). To confirm; if he meant ErosmancerOS actions, ES2 stays.
+# - Open: ES4 (the panel in browser.html: options, threats, rules); the hand-over for a workflow's browser steps (macros only today).

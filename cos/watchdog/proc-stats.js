@@ -67,19 +67,27 @@ function readLinuxProcStats(pid) {
  * @param {number} pid
  * @returns {{ rssMB: number, cpuTimeMs: number }|null}
  */
-function readWin32ProcStats(pid) {
+// 2026-11-05 — James: "getting spammed with command prompt from cos, any way to hide those?" Found: this ran one visible PowerShell per system
+// on every watchdog tick (13 systems → 13 console windows, each a PowerShell start costing CPU). Now: hidden (windowsHide), and ONE call
+// reads every process, kept for WIN_CACHE_MS, so a tick over 13 systems starts one hidden PowerShell, not 13 windows.
+const WIN_CACHE_MS = 2000;
+let _winCache = { at: 0, byPid: null };
+function _readAllWin32() {
+  const out = execFileSync('powershell', [
+    '-NoProfile', '-NonInteractive', '-Command',
+    "Get-Process | Select-Object Id,WorkingSet64,@{n='CpuSec';e={$_.CPU}} | ConvertTo-Json -Compress",
+  ], { encoding: 'utf8', timeout: 5000, windowsHide: true, maxBuffer: 16 * 1024 * 1024 });
+  const rows = [].concat(JSON.parse(out) || []);
+  const byPid = new Map();
+  for (const r of rows) if (r && r.Id != null) byPid.set(Number(r.Id), { rssMB: (r.WorkingSet64 || 0) / (1024 * 1024), cpuTimeMs: (r.CpuSec || 0) * 1000 });
+  return byPid;
+}
+function readWin32ProcStats(pid, { now = Date.now(), readAll = _readAllWin32 } = {}) {
   try {
-    // WorkingSet is bytes; CPU is TotalProcessorTime in seconds (a double).
-    const out = execFileSync('powershell', [
-      '-NoProfile', '-Command',
-      `Get-Process -Id ${pid} | Select-Object WorkingSet64,@{n='CpuSec';e={$_.CPU}} | ConvertTo-Json`,
-    ], { encoding: 'utf8', timeout: 3000 });
-    const parsed = JSON.parse(out);
-    return {
-      rssMB: (parsed.WorkingSet64 || 0) / (1024 * 1024),
-      cpuTimeMs: (parsed.CpuSec || 0) * 1000,
-    };
+    if (!_winCache.byPid || now - _winCache.at > WIN_CACHE_MS) _winCache = { at: now, byPid: readAll() };
+    return _winCache.byPid.get(Number(pid)) || null;
   } catch {
+    _winCache = { at: now, byPid: new Map() };   // a failed read is not retried every call within the window
     return null;
   }
 }
@@ -94,7 +102,7 @@ function readProcStats(pid) {
   return null; // macOS/BSD/other — not implemented
 }
 
-module.exports = {
+module.exports = { _resetWinCache: () => { _winCache = { at: 0, byPid: null }; },
   readProcStats,
   readLinuxProcStats,
   readWin32ProcStats,

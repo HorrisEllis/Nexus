@@ -1,0 +1,83 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PN3_the_editor_picks_from_clear_glass_and_files:3e9719f9c5900168
+type: graph
+id: phase:PN3_the_editor_picks_from_clear_glass_and_files:3e9719f9c5900168
+context: dependency graph of phase PN3_the_editor_picks_from_clear_glass_and_files
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793911833921
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833921
+lastSeenAt: 1793911833921
+fingerprint: null
+payload:
+  for: PN3_the_editor_picks_from_clear_glass_and_files
+  kind: phase
+  repo: null
+  hash: 3e9719f9c5900168
+  nodes:
+    - path: clear-glass/renderer/settings/sections/pipelines.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 15
+    deps:
+      - docs/2026-10-29-pipelines-phasemap.spec::PN2_pipelines_kept_as_node_files
+      - docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
+    dependents: []
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+      - docs/2026-10-29-pipelines-phasemap.spec::PL10_per_site_pipelines
+      - docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL2_pipeline_door
+      - docs/2026-10-29-pipelines-phasemap.spec::PL4_pipelines_screen
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL7_pipeline_tasks_gated_on_elements
+      - docs/2026-10-29-pipelines-phasemap.spec::PL9_macros_workflows_pipelines_linked
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D4_a_gate_is_a_pipeline_block
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D5_per_site_pipelines
+      - docs/2026-10-29-pipelines-phasemap.spec::PN1_the_pipeline_node
+      - docs/2026-10-29-pipelines-phasemap.spec::PN2_pipelines_kept_as_node_files
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 15
+      - >-
+        depends on (2): PN2_pipelines_kept_as_node_files, PL11_screens_for_gates_and_sites · all
+        upstream 32
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-29-pipelines-phasemap.spec::PN2_pipelines_kept_as_node_files
+        kind: declared
+      - from: docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
+        kind: declared

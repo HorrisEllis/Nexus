@@ -6,28 +6,31 @@ context: >-
   pipeline phase ES3_threats_said_and_handed_over of
   docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
 intent: null
-summary: ES3_threats_said_and_handed_over (?) — 3 file(s)
+summary: ES3_threats_said_and_handed_over (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793872312631
+exported_at: 1793912378782
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793872312631
-lastSeenAt: 1793872312631
+firstSeenAt: 1793912378782
+lastSeenAt: 1793912378782
 fingerprint: null
 payload:
   id: ES3_threats_said_and_handed_over
   map: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "BUILT 0.60.409 — test-eros-options EO-03, EO-04 (macros hand over; a workflow's browser steps
+    not yet, said)"
   files:
-    - clear-glass/src/eros/supervisor.js
-    - clear-glass/src/main/index.js
+    - clear-glass/src/eros/threats.js
+    - clear-glass/src/ipc/bridge.js
+    - idearium/cli/route-commands.js
     - tests/modules/test-eros-options.test.js
   depends_on:
     - ES1_erosmancer_options_in_plain_words
     - CM_D1_a_threat_hands_over_never_evades
   blocks: []
   spec: null
-  graph: 6968e13d33e8d1fa
+  graph: 4586af7db55881fe

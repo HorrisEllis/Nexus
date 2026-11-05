@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
+context: pipeline phase PL11_screens_for_gates_and_sites of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PL11_screens_for_gates_and_sites (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833917
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833917
+lastSeenAt: 1793911833917
+fingerprint: null
+payload:
+  id: PL11_screens_for_gates_and_sites
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.293
+  files:
+    - clear-glass/renderer/settings/sections/pipelines.js
+  depends_on:
+    - PL7_pipeline_tasks_gated_on_elements
+    - PL9_macros_workflows_pipelines_linked
+    - PL10_per_site_pipelines
+    - PL4_pipelines_screen
+  blocks:
+    - MOD-PIPELINE-SITE-UI
+  spec: docs/automation-pipelines.spec
+  graph: 5fbc5c8f1c67c63f

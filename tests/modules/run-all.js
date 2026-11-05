@@ -478,6 +478,8 @@ const SUITES = [
   'test-a11y-trace.test.js', // 2026-10-30 AC2 — the accessibility look traced to what turns it on, kept off by the site setting, the popup panel
   'test-fiverr-overview-and-a11y.test.js', // 0.60.283 — a new gig's Overview (category, subcategory, tags, gated) and a site's remembered accessibility look reset
   'test-pipelines.test.js',                // 0.60.284 PL1–PL4 — pipelines: tasks in a dependency graph (macros, workflows, agents, commands), gated, a checklist
+  'test-automate-steps.test.js',          // 0.60.408 PA1–PA4 — his .js/.ts scripts as steps, autofill, "if" on an element or a script, a gate after every step
+  'test-eros-options.test.js',            // 0.60.409 ES1/ES3 — ErosmancerOS's options and threats in plain words; a bot check hands the page to him
   'test-history-nodes.test.js',            // 0.60.285 HN1–HN3 — Idearium's history as nodes per unit (.exchange .input .response .tool_call .code_block)
   'test-release-backfill-off-process.test.js', // 0.60.285 — the full release backfill in a child process (0.60.278 froze Versionium for 1113 s)
   'test-gig-fill-menu.test.js',   // 0.60.286 GM1–GM3 — the Fiverr fill menu: ticks, dropdowns, only what is ticked; price and revisions

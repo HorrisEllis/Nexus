@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PL3_pipeline_commands
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PL3_pipeline_commands
+context: pipeline phase PL3_pipeline_commands of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PL3_pipeline_commands (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833905
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833905
+lastSeenAt: 1793911833905
+fingerprint: null
+payload:
+  id: PL3_pipeline_commands
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE 0.60.284
+  files:
+    - idearium/cli/route-commands.js
+  depends_on:
+    - PL2_pipeline_door
+  blocks:
+    - MOD-PIPELINE-COMMANDS
+  spec: docs/automation-pipelines.spec
+  graph: 500fe546163f6545

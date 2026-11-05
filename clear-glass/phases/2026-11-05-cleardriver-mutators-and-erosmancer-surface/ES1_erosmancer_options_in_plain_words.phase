@@ -6,28 +6,31 @@ context: >-
   pipeline phase ES1_erosmancer_options_in_plain_words of
   docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
 intent: null
-summary: ES1_erosmancer_options_in_plain_words (?) — 5 file(s)
+summary: ES1_erosmancer_options_in_plain_words (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1793872153639
+exported_at: 1793912378775
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793872153639
-lastSeenAt: 1793872153639
+firstSeenAt: 1793912378775
+lastSeenAt: 1793912378775
 fingerprint: null
 payload:
   id: ES1_erosmancer_options_in_plain_words
   map: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "BUILT 0.60.409 — test-eros-options EO-01, EO-02 (files expanded 2026-11-05: ErosmancerOS's own
+    code left alone, his ask)"
   files:
-    - clear-glass/erosmancer/erosmancer-os/src/api/server.ts
-    - clear-glass/erosmancer/erosmancer-os/src/options.ts
+    - clear-glass/src/eros/options.js
     - clear-glass/src/eros/supervisor.js
+    - clear-glass/src/ipc/bridge.js
     - idearium/cli/route-commands.js
     - tests/modules/test-eros-options.test.js
+    - tests/modules/run-all.js
   depends_on: []
   blocks: []
   spec: null
-  graph: d7d72d18dd522286
+  graph: a4aacdcfbeca3393

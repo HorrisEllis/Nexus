@@ -1,0 +1,140 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PA1_script_and_typescript_steps:acaa5a2b90054d1e
+type: graph
+id: phase:PA1_script_and_typescript_steps:acaa5a2b90054d1e
+context: dependency graph of phase PA1_script_and_typescript_steps
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793911833923
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833923
+lastSeenAt: 1793911833923
+fingerprint: null
+payload:
+  for: PA1_script_and_typescript_steps
+  kind: phase
+  repo: null
+  hash: acaa5a2b90054d1e
+  nodes:
+    - path: lib/automation/engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/scripts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/steps.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-automate-steps.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: lib/automation/pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/automation/index.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/automation-engine.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/automation/cron.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/dom.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/template.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/automation/steps.js
+      to: lib/automation/cron.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/template.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/dom.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: lib/automation/steps.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/steps.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: orchestrator/automation/index.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: tests/modules/automation-engine.test.js
+      to: lib/automation/engine.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+    dependents:
+      - docs/2026-10-29-pipelines-phasemap.spec::PA3_conditions_on_elements_and_scripts
+    upstream:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+    downstream:
+      - docs/2026-10-29-pipelines-phasemap.spec::PA3_conditions_on_elements_and_scripts
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-29-pipelines-phasemap.spec::PA3_conditions_on_elements_and_scripts
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): PL1_pipeline_core · all upstream 3'
+      - >-
+        needed by (1): PA3_conditions_on_elements_and_scripts · finishing it unlocks
+        PA3_conditions_on_elements_and_scripts
+    edges:
+      - from: docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+        kind: declared

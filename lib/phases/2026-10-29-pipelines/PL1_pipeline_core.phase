@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+context: pipeline phase PL1_pipeline_core of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PL1_pipeline_core (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833901
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833901
+lastSeenAt: 1793911833901
+fingerprint: null
+payload:
+  id: PL1_pipeline_core
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE 0.60.284
+  files:
+    - lib/automation/pipeline.js
+  depends_on:
+    - PL_D1_a_task_is_one_engine_step
+    - PL_D2_pipelines_live_in_the_engine_that_runs_them
+  blocks:
+    - MOD-PIPELINE
+  spec: docs/automation-pipelines.spec
+  graph: 9f15916156689288

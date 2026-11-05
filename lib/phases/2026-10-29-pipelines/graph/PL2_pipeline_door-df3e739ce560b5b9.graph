@@ -1,0 +1,123 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PL2_pipeline_door:df3e739ce560b5b9
+type: graph
+id: phase:PL2_pipeline_door:df3e739ce560b5b9
+context: dependency graph of phase PL2_pipeline_door
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793911833903
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833903
+lastSeenAt: 1793911833903
+fingerprint: null
+payload:
+  for: PL2_pipeline_door
+  kind: phase
+  repo: null
+  hash: df3e739ce560b5b9
+  nodes:
+    - path: lib/automation/routes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: orchestrator/automation/index.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: lib/automation-nodes.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/cron.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/from-macro.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/steps.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/templates.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/automation/routes.js
+      to: lib/automation/steps.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/templates.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation-nodes.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/cron.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/from-macro.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/automation/routes.js
+      kind: requires
+    - from: orchestrator/automation/index.js
+      to: lib/automation/routes.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+    dependents:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL3_pipeline_commands
+      - docs/2026-10-29-pipelines-phasemap.spec::PL4_pipelines_screen
+      - docs/2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
+      - docs/2026-10-29-pipelines-phasemap.spec::PL9_macros_workflows_pipelines_linked
+    upstream:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+    downstream:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
+      - docs/2026-10-29-pipelines-phasemap.spec::PL3_pipeline_commands
+      - docs/2026-10-29-pipelines-phasemap.spec::PL4_pipelines_screen
+      - docs/2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
+      - docs/2026-10-29-pipelines-phasemap.spec::PL9_macros_workflows_pipelines_linked
+      - docs/2026-10-29-pipelines-phasemap.spec::PN3_the_editor_picks_from_clear_glass_and_files
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL3_pipeline_commands
+      - docs/2026-10-29-pipelines-phasemap.spec::PL4_pipelines_screen
+      - docs/2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
+      - docs/2026-10-29-pipelines-phasemap.spec::PL9_macros_workflows_pipelines_linked
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): PL1_pipeline_core · all upstream 3'
+      - >-
+        needed by (4): PL3_pipeline_commands, PL4_pipelines_screen, PL5_orchestrator_runs_pipelines,
+        PL9_macros_workflows_pipelines_linked · all downstream 6 · finishing it unlocks
+        PL3_pipeline_commands, PL4_pipelines_screen, PL5_orchestrator_runs_pipelines,
+        PL9_macros_workflows_pipelines_linked
+    edges:
+      - from: docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+        kind: declared

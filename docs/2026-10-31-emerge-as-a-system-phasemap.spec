@@ -162,7 +162,7 @@ phases:
     does: "emerge/ at Nexus's root, a locked snapshot at one commit; registered as a system with its wires"
     proof: "the lock check passes and fails on a one-byte edit; Emerge's door boots from Nexus"
   EAS4_callers_through_the_door:
-    status: OPEN
+    status: "OPEN — expanded 2026-11-05 into EAS4a–EAS4g (one per primitive, then the callback routes, the callers, the archive); done when they are"
     depends_on: [EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus]
     files: [guardian/server.js, idearium/compiler-bridge.js, copilot/module-builder.js, cortex/core/raid/contract-intake.js, lib/hooks/emerge.hooks.js, tests/modules/test-substrate-spec.test.js, lib/emerge, _archive/lib/emerge, emerge/emerge/core/admit.js, emerge/emerge/core/index.js, lib/warp/adapters/_archive/emerge-field.js, lib/warp/core/Engine.js, lib/warp/spec/warp.spec, tests/modules/test-warp2.test.js, emerge/emerge/lib/compiler.js, emerge/emerge/registry-components.js, emerge/emerge/data/nodes/command/emerge.compiler.compile.command, emerge/emerge/tests/compiler-door.test.js, emerge/emerge/compiler/host.js, emerge/emerge/compiler/model.js, emerge/emerge.cos, lib/spec-collect.js, tests/modules/test-spec-pipeline.test.js, idearium/api/index.js, idearium/cli/route-commands.js]
     spec: docs/emerge-system.spec
@@ -225,6 +225,84 @@ phases:
     # Found, to raise with him (a cost before it is paid): L0 evaluate runs on every WARP link; a handoff is a file moved through
     # input/ → processing/ → done/, far too slow per link, and Emerge down would stop WARP (§5.15 rule 3). L1–L3 become asynchronous
     # (a handoff and its receipt) where their callers wait inline today.
+  # ── EXPANDED 2026-11-05 — EAS4, one phase per primitive, each with its DAG, requirements and prerequisites (his) ──
+  # James, 2026-11-05: "the most expensive one is done right? pre-requisits, and dag per primitive?" Found when he asked: EAS4's four
+  # primitives were comments inside one phase, so no primitive had a depends_on, requires or prerequisites the DAG could check. EAS4 is
+  # expanded (his rule: phases expand) into its parts below; EAS4 itself is done when all of them are.
+  EAS4a_L0_evaluate:
+    status: "BUILT 0.60.405 — test-warp2 7/7, test-emerge-core 6/6, emergence and WARP suites 198/198"
+    depends_on: [EAS_D5_one_primitive_per_gate, EAS_D6_emerge_is_a_system_in_nexus]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
+    files: [emerge/emerge/core/admit.js, emerge/emerge/core/constraint.js, lib/warp/adapters/_archive, tests/modules/test-warp2.test.js]
+    requires: [node]
+    prerequisites: ["Emerge's core constraint primitive present (EAS1)"]
+    expects: "in: a constraint and a state · out: { ok } | { gap } | { ok:false, constraint, reason } · fails: never throws; a bad constraint is a refusal"
+    does: "evaluate, the L0 primitive, used directly (a shared primitive, EAS_D6), as WARP's admit"
+  EAS4b_L1_compile:
+    status: "BUILT 0.60.406 — compiler-door CD-01..04, test-spec-pipeline 13/13; one of two callers moved (lib/spec-collect), idearium/compiler-bridge stopped with its difference named"
+    depends_on: [EAS4a_L0_evaluate, EAS_D7_the_spec_compiler_is_emerges]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
+    files: [emerge/emerge/lib/compiler.js, emerge/emerge/server.js, emerge/emerge/registry-components.js, lib/spec-collect.js, emerge/emerge/tests/compiler-door.test.js]
+    requires: [node, "Emerge's door up (:4900)"]
+    prerequisites: ["emerge/ locked (EAS3)"]
+    expects: "in: spec text · out: the compiled graph and the emitted files as text | error · fails: Emerge down → said, nothing proposed"
+    does: "compile through Emerge's door: POST /compiler/compile, command emerge.compiler.compile"
+  EAS4c_L2_build:
+    status: "BUILT (Emerge's side) 0.60.407 — compiler-door CD-05..08; its caller (copilot/module-builder.js) not switched"
+    depends_on: [EAS4b_L1_compile, EAS_D9_emerge_calls_back_by_route]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
+    files: [emerge/emerge/compiler/pipeline.js, emerge/emerge/compiler/host.js, emerge/emerge/server.js, copilot/module-builder.js]
+    requires: [node, "Emerge's door up", "a host by route (EAS4e) for a build that reports to Nexus; the local host otherwise"]
+    prerequisites: ["EAS4b's compile"]
+    expects: "in: spec file text, out dir, host routes · out: { ok, skipped, error } · fails: a host or model given as a path is refused at the door"
+    does: "build through the door: POST /compiler/build"
+  EAS4d_L3_run:
+    status: "BUILT (Emerge's side) 0.60.407 — compiler-door CD-07 (11 T2 nodes through a model route, 11 complete); its callers (guardian/server.js, lib/build-pipeline.js) not switched"
+    depends_on: [EAS4c_L2_build]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
+    files: [emerge/emerge/compiler/t2-gate.js, emerge/emerge/compiler/model.js, emerge/emerge/server.js, guardian/server.js, lib/build-pipeline.js]
+    requires: [node, "Emerge's door up", "a model by route (Guardian's, EAS4e)", "a host by route (Cortex and Idearium, EAS4e)"]
+    prerequisites: ["EAS4c's build"]
+    expects: "in: spec file, out dir, model route, host routes · out: the closed loop's result with its progress as a list (not live, named) · fails: the model route down → said at the first node"
+    does: "run, the most expensive primitive (the closed loop with a model), through the door: POST /compiler/run"
+  EAS4e_the_callback_routes:
+    status: OPEN
+    depends_on: [EAS4d_L3_run, DO3_cortex_door]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
+    files: [cortex/server.js, cortex/registry-components.js, lib/emerge/cortex-query/index.js, lib/emerge/cortex-query/writeback.js, lib/emerge/idearium/client.js, idearium/api/index.js, guardian/server.js]
+    requires: ["Cortex's door (DO3a, built)", "Idearium reachable by its API", "Guardian's model route"]
+    prerequisites: ["what lib/emerge's cortex-query (preflight 273 lines, writeback 410) and idearium/client do today, read and recorded as each route's expectation before it moves"]
+    expects: "each route answers exactly what host.js's method returns today (preflight, writeback, sync, the model), so a build's answer does not change"
+    does: >-
+      The other side of EAS_D9: Cortex serves preflight and writeback on its door, Idearium serves sync, Guardian serves the model, each as a
+      route Emerge's routeHost and model route call. The logic in lib/emerge/cortex-query moves to the system it queries (Cortex), lib's
+      copy archived once nothing requires it.
+    proof: "a build through Emerge with the Nexus host by route gives the same answer as lib/emerge's compile with Cortex (the compare MOD-EAS-CALLERS asks for)"
+  EAS4f_the_callers_switch:
+    status: OPEN
+    depends_on: [EAS4e_the_callback_routes]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
+    files: [idearium/compiler-bridge.js, copilot/module-builder.js, guardian/server.js, lib/build-pipeline.js]
+    requires: ["Emerge's door up", "the callback routes (EAS4e)"]
+    prerequisites: ["each caller's answer before and after compared on one real spec, the difference named or none"]
+    does: "the four remaining callers call Emerge's door: idearium/compiler-bridge (compile, with Cortex around it by route), copilot/module-builder (build), guardian/server and lib/build-pipeline (run)"
+    proof: "each caller's suite unchanged; the before/after compare clean"
+  EAS4g_lib_emerge_archived:
+    status: OPEN
+    depends_on: [EAS4f_the_callers_switch]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
+    files: [lib/emerge, _archive/lib/emerge, tests/modules/test-substrate-spec.test.js]
+    requires: ["nothing requires lib/emerge (grep and the census)"]
+    prerequisites: ["phase-specs.js and kg-builder.js run from emerge/ (EAS_D7)"]
+    does: "lib/emerge moved to _archive/lib/emerge with its reason (§0.3); every reference points at emerge/"
+    proof: "nothing requires lib/emerge; the module suite unchanged"
   EAS5_a_system_of_systems:
     status: BUILT 0.60.336 (Emerge 58a12d8)
     depends_on: [EAS2_the_language_through_the_door]

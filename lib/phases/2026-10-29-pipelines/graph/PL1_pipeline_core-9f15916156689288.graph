@@ -1,0 +1,152 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PL1_pipeline_core:9f15916156689288
+type: graph
+id: phase:PL1_pipeline_core:9f15916156689288
+context: dependency graph of phase PL1_pipeline_core
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793911833900
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833900
+lastSeenAt: 1793911833900
+fingerprint: null
+payload:
+  for: PL1_pipeline_core
+  kind: phase
+  repo: null
+  hash: 9f15916156689288
+  nodes:
+    - path: lib/automation/pipeline.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: lib/automation-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-procedures.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/steps.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/automation/pipeline.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: lib/automation/steps.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation-nodes.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/repo-procedures.js
+      to: lib/automation/pipeline.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+    dependents:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL2_pipeline_door
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL10_per_site_pipelines
+      - docs/2026-10-29-pipelines-phasemap.spec::PN1_the_pipeline_node
+      - docs/2026-10-29-pipelines-phasemap.spec::PA1_script_and_typescript_steps
+      - docs/2026-10-29-pipelines-phasemap.spec::PA2_autofill_step
+    upstream:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+    downstream:
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF6_the_element_says_the_gig_or_it_stops
+      - docs/2026-10-28-gated-flows-phasemap.spec::MR1_a_macro_run_says_its_step_and_can_be_paused
+      - docs/2026-10-29-pipelines-phasemap.spec::PA1_script_and_typescript_steps
+      - docs/2026-10-29-pipelines-phasemap.spec::PA2_autofill_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PA3_conditions_on_elements_and_scripts
+      - docs/2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL10_per_site_pipelines
+      - docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
+      - docs/2026-10-29-pipelines-phasemap.spec::PL2_pipeline_door
+      - docs/2026-10-29-pipelines-phasemap.spec::PL3_pipeline_commands
+      - docs/2026-10-29-pipelines-phasemap.spec::PL4_pipelines_screen
+      - docs/2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL7_pipeline_tasks_gated_on_elements
+      - docs/2026-10-29-pipelines-phasemap.spec::PL8_macro_steps_gated_on_elements
+      - docs/2026-10-29-pipelines-phasemap.spec::PL9_macros_workflows_pipelines_linked
+      - docs/2026-10-29-pipelines-phasemap.spec::PN1_the_pipeline_node
+      - docs/2026-10-29-pipelines-phasemap.spec::PN2_pipelines_kept_as_node_files
+      - docs/2026-10-29-pipelines-phasemap.spec::PN3_the_editor_picks_from_clear_glass_and_files
+      - docs/2026-10-29-pipelines-phasemap.spec::PN4_the_fiverr_pipeline
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL2_pipeline_door
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL10_per_site_pipelines
+      - docs/2026-10-29-pipelines-phasemap.spec::PN1_the_pipeline_node
+      - docs/2026-10-29-pipelines-phasemap.spec::PA1_script_and_typescript_steps
+      - docs/2026-10-29-pipelines-phasemap.spec::PA2_autofill_step
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - >-
+        depends on (2): PL_D1_a_task_is_one_engine_step,
+        PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - >-
+        needed by (6): PL2_pipeline_door, PL6_the_gate_step, PL10_per_site_pipelines,
+        PN1_the_pipeline_node, PA1_script_and_typescript_steps, PA2_autofill_step · all downstream
+        20 · finishing it unlocks PL2_pipeline_door, PL6_the_gate_step, PL10_per_site_pipelines,
+        PN1_the_pipeline_node, PA1_script_and_typescript_steps, PA2_autofill_step
+    edges:
+      - from: docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+        kind: declared
+      - from: docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+        kind: declared

@@ -9,6 +9,8 @@
  *   EP-04  Edit ErosmancerOS in the panel: export, show changes, import — through src/eros/edit.js, to his folder
  *   EP-05  EE2: Hide what you point at — a host##selector rule in his filters, the element hidden by the engine on that site only, listed,
  *          Undo removes it; a selector a rule cannot use is refused; the bar after a pick is wired
+ *   EP-06  ES4: ErosmancerOS's options and threats in the panel — every option shown (selects for pace and sending, text for the rest); a set
+ *          from the panel lands in the same store `eros set` uses; a bad value is refused with why; threats said in plain words
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -17,7 +19,9 @@ const os = require('os');
 const path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
 process.env.EROS_EDIT_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'ee-edit-'));
-process.env.CLEARGL_IPC_PORT = '1';   // no Clear Glass here: ErosmancerOS's state reads "not answering", said
+process.env.CLEARGL_IPC_PORT = '1';
+process.env.EROS_PORT = '1';   // no ErosmancerOS here either
+process.env.EROS_DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'ee-eros-data-'));   // no Clear Glass here: ErosmancerOS's state reads "not answering", said
 const P = require(path.join(ROOT, 'clear-glass/plugins/adblocker/index.js'));
 const M = require(path.join(ROOT, 'clear-glass/plugins/adblocker/manifest.json'));
 
@@ -94,6 +98,24 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     assert.match(js, /window\.CGHideBar\?\.offer\(\{ selector: pick\.selector, url: pick\.url \|\| wv\.getURL\(\) \}\)/);
     assert.match(fs.readFileSync(path.join(ROOT, 'clear-glass/renderer/browser.html'), 'utf8'), /<script src="site-hide\/hide-bar\.js"><\/script>/);
     assert.match(fs.readFileSync(path.join(ROOT, 'clear-glass/renderer/site-hide/hide-bar.js'), 'utf8'), /ctx\.cg\.plugins\.settings\(PLUGIN, 'set', 'hide', \{ selector, url \}, \{ url \}\)/);
+  });
+
+  await test('EP-06', 'ErosmancerOS\'s options and threats in the panel; a set from the panel is the CLI\'s store', async () => {
+    const O = require(path.join(ROOT, 'clear-glass/src/eros/options.js'));
+    const r = await P.settings({ op: 'get', requestId: 'o1', page: {} });
+    const f = r.data.view.fields;
+    const opt = f.filter(x => String(x.key || '').startsWith('eros-opt:'));
+    assert.strictEqual(opt.length, O.CATALOGUE.length, 'every settable option is in the panel');
+    assert.deepStrictEqual(f.find(x => x.key === 'eros-opt:pace').options.map(o => o.value), O.PACES);
+    const set = await P.settings({ op: 'set', key: 'eros-opt:selector.timeoutMs', value: '9000', requestId: 'o2', page: {} });
+    assert.match(set.data.note, /Look for an element for at most: 9000 — kept; used the next time/);
+    const store = O.createOptions({ file: path.join(process.env.EROS_DATA_DIR, 'options.json') });
+    assert.strictEqual(store.get('selector.timeoutMs').value, 9000, 'the same store eros set writes');
+    const bad = await P.settings({ op: 'set', key: 'eros-opt:dispatcher.defaultMaxRetries', value: '99', requestId: 'o3', page: {} });
+    assert.match(bad.data.note, /between 0 and 20/);
+    await P._threatsRefresh({ get: async () => ({ ok: true, body: { states: { t1: { level: 'high', score: 80, activeSignals: [{ type: 'recaptcha', level: 'high' }] } } } }) });
+    const again = await P.settings({ op: 'get', requestId: 'o4', page: {} });
+    assert.ok(again.data.view.fields.some(x => /Google reCAPTCHA — the page is yours/.test(x.value || '')), 'the threat said plainly');
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exitCode = failed ? 1 : 0;

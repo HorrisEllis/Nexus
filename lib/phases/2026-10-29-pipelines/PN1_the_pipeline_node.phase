@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PN1_the_pipeline_node
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PN1_the_pipeline_node
+context: pipeline phase PN1_the_pipeline_node of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PN1_the_pipeline_node (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833918
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833918
+lastSeenAt: 1793911833918
+fingerprint: null
+payload:
+  id: PN1_the_pipeline_node
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.296
+  files:
+    - lib/automation-nodes.js
+    - lib/node-export.js
+  depends_on:
+    - PL1_pipeline_core
+  blocks:
+    - MOD-PIPELINE-NODE
+  spec: docs/automation-pipelines.spec
+  graph: 7893051b27023d65

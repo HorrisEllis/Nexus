@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793872153636
+exported_at: 1793912378772
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793872153636
-lastSeenAt: 1793872153636
+firstSeenAt: 1793912378772
+lastSeenAt: 1793912378772
 fingerprint: null
 payload:
   for: CM4_the_old_observers_on_the_rules
@@ -91,12 +91,13 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 4
+    layer: 5
     deps:
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM3_listeners_and_macros
     dependents: []
     upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
@@ -111,10 +112,10 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 4 · blocked by CM2_guardian_anchors_follow_the_page, CM3_listeners_and_macros
+      - layer 5 · blocked by CM2_guardian_anchors_follow_the_page, CM3_listeners_and_macros
       - >-
         depends on (2): CM2_guardian_anchors_follow_the_page, CM3_listeners_and_macros · all
-        upstream 6
+        upstream 7
       - 'needed by (0): —'
     edges:
       - from: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page

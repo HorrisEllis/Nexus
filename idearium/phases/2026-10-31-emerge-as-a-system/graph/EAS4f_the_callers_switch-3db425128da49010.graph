@@ -1,0 +1,220 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EAS4f_the_callers_switch:3db425128da49010
+type: graph
+id: phase:EAS4f_the_callers_switch:3db425128da49010
+context: dependency graph of phase EAS4f_the_callers_switch
+intent: null
+summary: 22 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793910797514
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793910797514
+lastSeenAt: 1793910797514
+fingerprint: null
+payload:
+  for: EAS4f_the_callers_switch
+  kind: phase
+  repo: null
+  hash: 3db425128da49010
+  nodes:
+    - path: copilot/module-builder.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/compiler-bridge.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/build-pipeline.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/faculty/faculty-tools.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/execution-pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: copilot/axiom-manager.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/descriptor-projector.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/compiler-bridge.js
+      to: lib/emerge/compiler/index.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: copilot/axiom-manager.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: copilot/lib/descriptor-projector.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/emerge/compiler/pipeline.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/event-types.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/compiler-bridge.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: lib/execution-pipeline.js
+      to: lib/build-pipeline.js
+      kind: requires
+  crossings:
+    - from: copilot/module-builder.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/module-builder.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
+    dependents:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4g_lib_emerge_archived
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4a_L0_evaluate
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4b_L1_compile
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4c_L2_build
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4d_L3_run
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D5_one_primitive_per_gate
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D6_emerge_is_a_system_in_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D7_the_spec_compiler_is_emerges
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D9_emerge_calls_back_by_route
+      - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
+      - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
+    downstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4g_lib_emerge_archived
+    blockedBy:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
+    unlocks:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4g_lib_emerge_archived
+    conflicts:
+      - with: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+        files:
+          - guardian/server.js
+          - idearium/compiler-bridge.js
+          - copilot/module-builder.js
+    dangling: []
+    lines:
+      - layer 6 · blocked by EAS4e_the_callback_routes
+      - 'depends on (1): EAS4e_the_callback_routes · all upstream 12'
+      - 'needed by (1): EAS4g_lib_emerge_archived · finishing it unlocks EAS4g_lib_emerge_archived'
+      - >-
+        same files as EAS4_callers_through_the_door with no order between them: guardian/server.js,
+        idearium/compiler-bridge.js, copilot/module-builder.js
+    edges:
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
+        kind: declared

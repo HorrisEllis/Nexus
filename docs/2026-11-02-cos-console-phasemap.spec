@@ -320,3 +320,10 @@ phases_addendum_2026_11_04:
       a job with its progress; a rerun adds nothing. Each import recorded in Versionium.
     proof: "a fixture folder of three zips: imported once, listed in order, a diff between two shown; in Clear Glass"
 build_order_addendum_2026_11_04: "SC9 → SC10; the console through RAID when PL_D15's question is answered"
+
+# ── ADDENDUM 2026-11-05 (0.60.410) — SC16 expanded: the watchdog's PowerShell per system was the window spam ─────────────────────────────
+# James, 2026-11-05 (on 0.60.404, which already had SC16): "also getting spammed with command prompt from cos, any way to hide those?"
+# Found: cos/watchdog/proc-stats.js read each system's memory and CPU on Windows with one PowerShell per system per tick, without windowsHide
+# — 13 systems, 13 console windows a tick, and 13 PowerShell starts of CPU. SC16 hid the systems' own windows, not this. Now one hidden
+# PowerShell reads every process, cached 2 s (test-cos-hidden-windows HW-03). Also hidden: cos/services/anonymous/nexus.js's command-line read.
+# SC16 files expanded: cos/watchdog/proc-stats.js, cos/services/anonymous/nexus.js.

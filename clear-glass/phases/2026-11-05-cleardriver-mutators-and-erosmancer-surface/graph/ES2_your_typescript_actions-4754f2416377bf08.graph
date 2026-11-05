@@ -1,0 +1,118 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ES2_your_typescript_actions:4754f2416377bf08
+type: graph
+id: phase:ES2_your_typescript_actions:4754f2416377bf08
+context: dependency graph of phase ES2_your_typescript_actions
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793912378778
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793912378778
+lastSeenAt: 1793912378778
+fingerprint: null
+payload:
+  for: ES2_your_typescript_actions
+  kind: phase
+  repo: null
+  hash: 4754f2416377bf08
+  nodes:
+    - path: clear-glass/erosmancer/erosmancer-os/src/api/server.ts
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-eros-options.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/erosmancer/erosmancer-os/src/adaptive/index.ts
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/erosmancer/erosmancer-os/src/behavior/index.ts
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/erosmancer/erosmancer-os/src/hostile/index.ts
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/erosmancer/erosmancer-os/src/index.ts
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/erosmancer/erosmancer-os/src/observer/index.ts
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/erosmancer/erosmancer-os/src/replay/index.ts
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/erosmancer/erosmancer-os/src/routing/index.ts
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/erosmancer/erosmancer-os/src/types/index.ts
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/erosmancer/erosmancer-os/src/api/server.ts
+      to: clear-glass/erosmancer/erosmancer-os/src/index.ts
+      kind: requires
+    - from: clear-glass/erosmancer/erosmancer-os/src/api/server.ts
+      to: clear-glass/erosmancer/erosmancer-os/src/behavior/index.ts
+      kind: requires
+    - from: clear-glass/erosmancer/erosmancer-os/src/api/server.ts
+      to: clear-glass/erosmancer/erosmancer-os/src/routing/index.ts
+      kind: requires
+    - from: clear-glass/erosmancer/erosmancer-os/src/api/server.ts
+      to: clear-glass/erosmancer/erosmancer-os/src/observer/index.ts
+      kind: requires
+    - from: clear-glass/erosmancer/erosmancer-os/src/api/server.ts
+      to: clear-glass/erosmancer/erosmancer-os/src/replay/index.ts
+      kind: requires
+    - from: clear-glass/erosmancer/erosmancer-os/src/api/server.ts
+      to: clear-glass/erosmancer/erosmancer-os/src/adaptive/index.ts
+      kind: requires
+    - from: clear-glass/erosmancer/erosmancer-os/src/api/server.ts
+      to: clear-glass/erosmancer/erosmancer-os/src/hostile/index.ts
+      kind: requires
+    - from: clear-glass/erosmancer/erosmancer-os/src/api/server.ts
+      to: clear-glass/erosmancer/erosmancer-os/src/types/index.ts
+      kind: requires
+    - from: tests/modules/test-eros-options.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM_D0_what_typescripts_means
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES1_erosmancer_options_in_plain_words
+    dependents: []
+    upstream:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM_D0_what_typescripts_means
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES1_erosmancer_options_in_plain_words
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (2): CM_D0_what_typescripts_means, ES1_erosmancer_options_in_plain_words'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM_D0_what_typescripts_means
+        kind: declared
+      - from: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES1_erosmancer_options_in_plain_words
+        kind: declared

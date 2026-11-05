@@ -7,18 +7,20 @@ intent: null
 summary: EAS4_callers_through_the_door (?) — 21 file(s)
 system: idearium
 tags: []
-exported_at: 1793905362596
+exported_at: 1793910797503
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793905362596
-lastSeenAt: 1793905362596
+firstSeenAt: 1793910797503
+lastSeenAt: 1793910797503
 fingerprint: null
 payload:
   id: EAS4_callers_through_the_door
   map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "OPEN — expanded 2026-11-05 into EAS4a–EAS4g (one per primitive, then the callback routes, the
+    callers, the archive); done when they are"
   files:
     - guardian/server.js
     - idearium/compiler-bridge.js

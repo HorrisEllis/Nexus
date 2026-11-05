@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
+type: phase
+id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
+context: pipeline phase EAS4e_the_callback_routes of docs/2026-10-31-emerge-as-a-system-phasemap.spec
+intent: null
+summary: EAS4e_the_callback_routes (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1793910797512
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793910797512
+lastSeenAt: 1793910797512
+fingerprint: null
+payload:
+  id: EAS4e_the_callback_routes
+  map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/server.js
+    - cortex/registry-components.js
+    - lib/emerge/cortex-query/index.js
+    - lib/emerge/cortex-query/writeback.js
+    - lib/emerge/idearium/client.js
+    - idearium/api/index.js
+    - guardian/server.js
+  depends_on:
+    - EAS4d_L3_run
+    - DO3_cortex_door
+  blocks: []
+  spec: null
+  graph: 5365f351464d20c3

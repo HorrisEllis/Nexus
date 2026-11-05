@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
+context: pipeline phase PL5_orchestrator_runs_pipelines of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PL5_orchestrator_runs_pipelines (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833908
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833908
+lastSeenAt: 1793911833908
+fingerprint: null
+payload:
+  id: PL5_orchestrator_runs_pipelines
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/automation/index.js
+  depends_on:
+    - PL2_pipeline_door
+    - AE2_browser_driver_port
+    - AE3_the_engine_door
+  blocks:
+    - MOD-PIPELINE-ORCHESTRATOR
+  spec: docs/automation-pipelines.spec
+  graph: 88947fab83cf069a

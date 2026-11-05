@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
+context: pipeline phase PA4_a_gate_after_every_step of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PA4_a_gate_after_every_step (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833926
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833926
+lastSeenAt: 1793911833926
+fingerprint: null
+payload:
+  id: PA4_a_gate_after_every_step
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.408"'
+  files:
+    - lib/automation/engine.js
+    - lib/automation/steps.js
+    - clear-glass/renderer/settings/sections/automation.js
+    - tests/modules/test-automate-steps.test.js
+  depends_on:
+    - MB1_the_gate_between
+    - PL6_the_gate_step
+  blocks:
+    - MOD-AUTOMATE-GATE-AFTER
+  spec: docs/automation-pipelines.spec
+  graph: b829bdb031fc2003

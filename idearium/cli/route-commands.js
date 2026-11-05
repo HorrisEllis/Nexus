@@ -1582,6 +1582,23 @@ export const SPEC = [
     need: (a) => (a.args.length < 2 ? '<accountId> <pace>' : null),
     req: (a) => ({ system: 'clear-glass', method: 'PUT', path: `/cli/accounts/${encodeURIComponent(a.args[0])}`, body: { updates: { erosProfile: a.args[1] === 'default' ? null : a.args[1] } } }),
     print: (d, a, h) => console.log(d.error ? h.c.amber(`  ${d.error}`) : h.c.mint(`  ${d.label || d.id}: ${d.erosProfile || 'default'}`)) },
+  // 2026-11-05 ES1/ES3 — James: "can you expand erosmanceros. add as much human ledgible options as possible, inscluding adding typescripts,
+  //   threats, etc, all cli first, then into the browser.html." Its options and its threats in plain words, through Clear Glass's door.
+  { key: 'eros.options', repo: false, usage: 'eros options', about: 'every ErosmancerOS option in plain words: what it does, its value, its default, and whether a change applies now or at the next connect',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/eros/options' }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); let sec = null;
+      for (const o of d.options || []) { if (o.section !== sec) { sec = o.section; console.log(h.c.mint(`\n  ${sec}`)); }
+        console.log(`  ${h.c.gray(o.key.padEnd(30))} ${o.words}: ${Array.isArray(o.value) ? o.value.join(' > ') : o.value}${o.changed ? h.c.amber(' (yours)') : h.c.dim(' (default)')}${o.when === 'live' ? '' : h.c.dim(' · at connect')}`);
+        console.log(h.c.dim(`  ${''.padEnd(30)} ${o.does}`)); }
+      if ((d.fixed || []).length) { console.log(h.c.mint('\n  Fixed in its code (Edit ErosmancerOS to change)')); for (const f of d.fixed) console.log(`  ${h.c.gray(f.key.padEnd(30))} ${JSON.stringify(f.value)}  ${h.c.dim(f.does)}`); } } },
+  { key: 'eros.set', repo: false, usage: 'eros set <option> <value | default>', about: 'set one ErosmancerOS option (eros options lists them); default puts it back; a bad value is refused with the allowed ones',
+    need: (a) => (a.args.length < 2 ? '<option> <value>' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/eros/options', body: a.args[1] === 'default' ? { key: a.args[0], reset: true } : { key: a.args[0], value: a.args.slice(1).join(' ') } }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.words || d.key}: ${Array.isArray(d.value) ? d.value.join(' > ') : d.value}`) + h.c.dim(`  ${d.applied ? `applied ${d.applied}` : d.note}`) : h.c.amber(`  ${d.error}`)) },
+  { key: 'eros.threats', repo: false, usage: 'eros threats', about: 'what ErosmancerOS sees on its pages that is hostile (Cloudflare, CAPTCHAs, rate limits, fingerprinting), in plain words; a check a person answers pauses a running macro and is handed to him — nothing is done to get past it',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/eros/threats' }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); if (!(d.threats || []).length) return console.log(h.c.dim('  nothing hostile seen'));
+      for (const t of d.threats) { console.log(`  ${h.c.gray(String(t.tab).slice(0, 8))} ${t.level} (${t.score}/100)`); for (const s of t.signals) console.log(`    ${s.what}${h.c.dim(` — ${s.then}`)}`); } } },
   { key: 'glass.open', repo: false, usage: 'glass open <url>', about: 'show James a page in Clear Glass: the window already on that site comes to the front, else the main window goes there, else a new one',
     need: (a) => (a.args[0] ? null : '<url>'),
     req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/open', body: { url: /^[a-z][\w+.-]*:\/\//i.test(a.args[0]) ? a.args[0] : `${/^(?:localhost|127\.|\d+\.\d+\.\d+\.\d+)/.test(a.args[0]) ? 'http' : 'https'}://${a.args[0]}` } }),   // a local system is plain http

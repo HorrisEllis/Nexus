@@ -1,0 +1,76 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ES5_edit_the_typescript_yourself:9d0c15c53b69022b
+type: graph
+id: phase:ES5_edit_the_typescript_yourself:9d0c15c53b69022b
+context: dependency graph of phase ES5_edit_the_typescript_yourself
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793912378788
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793912378788
+lastSeenAt: 1793912378788
+fingerprint: null
+payload:
+  for: ES5_edit_the_typescript_yourself
+  kind: phase
+  repo: null
+  hash: 9d0c15c53b69022b
+  nodes:
+    - path: clear-glass/src/eros/edit.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: package.json
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-edit.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/plugins/adblocker/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/eros/edit.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: tests/modules/test-eros-edit.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/eros/edit.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

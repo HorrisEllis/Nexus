@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PN2_pipelines_kept_as_node_files
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PN2_pipelines_kept_as_node_files
+context: pipeline phase PN2_pipelines_kept_as_node_files of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PN2_pipelines_kept_as_node_files (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833920
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833920
+lastSeenAt: 1793911833920
+fingerprint: null
+payload:
+  id: PN2_pipelines_kept_as_node_files
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.296
+  files:
+    - lib/automation/pipeline.js
+    - lib/automation/routes.js
+  depends_on:
+    - PN1_the_pipeline_node
+  blocks:
+    - MOD-PIPELINE-FILES
+  spec: docs/automation-pipelines.spec
+  graph: 0c961009b982ed6a
