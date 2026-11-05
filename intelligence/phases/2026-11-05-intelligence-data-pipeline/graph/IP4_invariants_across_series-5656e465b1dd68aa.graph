@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793853812300
+exported_at: 1793854267649
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793853812300
-lastSeenAt: 1793853812300
+firstSeenAt: 1793854267649
+lastSeenAt: 1793854267649
 fingerprint: null
 payload:
   for: IP4_invariants_across_series
@@ -169,6 +169,7 @@ payload:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
     dependents:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
     upstream:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
@@ -177,21 +178,25 @@ payload:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
     downstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
     blockedBy:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
     unlocks:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
     conflicts: []
     dangling: []
     lines:
       - layer 4 · blocked by IP3_deviation_and_regime
       - 'depends on (1): IP3_deviation_and_regime · all upstream 6'
       - >-
-        needed by (1): IP5_invariants_into_rfr2 · all downstream 3 · finishing it unlocks
-        IP5_invariants_into_rfr2
+        needed by (2): IP5_invariants_into_rfr2, IP8_negative_and_shadow_space · all downstream 6 ·
+        finishing it unlocks IP5_invariants_into_rfr2, IP8_negative_and_shadow_space
     edges:
       - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
         kind: declared

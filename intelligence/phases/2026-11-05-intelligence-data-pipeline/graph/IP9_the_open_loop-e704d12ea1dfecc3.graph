@@ -1,0 +1,78 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IP9_the_open_loop:e704d12ea1dfecc3
+type: graph
+id: phase:IP9_the_open_loop:e704d12ea1dfecc3
+context: dependency graph of phase IP9_the_open_loop
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793854267662
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793854267662
+lastSeenAt: 1793854267662
+fingerprint: null
+payload:
+  for: IP9_the_open_loop
+  kind: phase
+  repo: null
+  hash: e704d12ea1dfecc3
+  nodes:
+    - path: intelligence/pipeline/open-loop.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/pipeline/report.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: tests/modules/test-intelligence-pipeline.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+    dependents:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+    upstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
+    downstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+    blockedBy:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+    unlocks:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+    conflicts:
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+        files:
+          - intelligence/pipeline/report.js
+          - tests/modules/test-intelligence-pipeline.test.js
+    dangling: []
+    lines:
+      - layer 6 · blocked by IP8_negative_and_shadow_space, IP5_invariants_into_rfr2
+      - 'depends on (2): IP8_negative_and_shadow_space, IP5_invariants_into_rfr2 · all upstream 9'
+      - 'needed by (1): IP10_growth_tracking · finishing it unlocks IP10_growth_tracking'
+      - >-
+        same files as IP6_route_command_screen with no order between them:
+        intelligence/pipeline/report.js, tests/modules/test-intelligence-pipeline.test.js
+    edges:
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+        kind: declared
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+        kind: declared

@@ -23,6 +23,17 @@ readings_to_confirm:
   - "\"invariants, crystals, primitives, could establish a baseline\": the baseline of a dataset is its invariants (each series' mean, sigma,
      slope, and the co-deviations that held), saved, so the next run of the same kind of data is compared to it instead of learning again."
 
+  - "(2026-11-05, his addendum) \"gaps are problems, or deviations\": a gap has two kinds — a deviation (a point or a series away from its
+     baseline, IP3) and a problem (something missing, broken or avoided, the negative and shadow space, IP8). Both are kept as gaps, each
+     marked with its kind."
+  - "(2026-11-05, his addendum) \"like a open loop system. like the way the human mind works\": a run never closes on an answer. What it
+     could not settle (hypotheses, gaps, what was missing) becomes the next run's questions (IP9). His framework, Section 3: \"leave the loop
+     open to think dialectically\"."
+  - "(2026-11-05, TO CONFIRM — two readings) \"growth tracking for the self. its for structure. integration and friction tracking. intution,
+     and deomposition\": (a) his own growth: his notes, quotes, decisions or a journal run through the pipeline, tracking how his structure,
+     integration and friction change over time (his framework: \"Inner work is in scope\"); (b) the system's self: Nexus tracking its own
+     growth the same way; (c) both, the same pipeline pointed at either."
+
 decisions:
   IP_D1_formats_and_rows:
     status: "OPEN — his"
@@ -98,8 +109,41 @@ phases:
     files: [intelligence/ui/pipeline.html, intelligence/ui/pipeline.js]
     does: "Drop a file, see each series against its baseline, the regimes, the invariants and hypotheses. Tested in Clear Glass (AXIOMS §4.1)."
 
+  IP8_negative_and_shadow_space:
+    status: OPEN
+    origin: "James, 2026-11-05: \"oh yeah, lets add that also. maybe thats the end of the pipeline, negative and shadow space\" · \"gaps are problems, or deviations\""
+    depends_on: [IP4_invariants_across_series]
+    files: [intelligence/pipeline/liminal-stage.js, intelligence/liminal/index.js, intelligence/liminal-space/index.js, tests/modules/test-intelligence-pipeline.test.js]
+    does: >-
+      The end of the pipeline reads what is not there. On numbers: the liminal field detector (detectField: edges, plateaus, convergence,
+      oscillation) and the absences themselves — a series that should have deviated with its partner and did not, a gap in time, a value that
+      never appears. On text (notes, journals, reviews): the detectors he named — negative space (topic orbit, avoidance, a vocabulary that is
+      missing), shadow (displacement, intensity mismatch), contrastive (belief against behaviour). Every finding is a gap, marked as a problem
+      or a deviation. Reused as they are: intelligence/liminal (12 detectors, signals not diagnoses) and liminal-space.
+  IP9_the_open_loop:
+    status: OPEN
+    origin: "James, 2026-11-05: \"like a open loop system. like the way the human mind works.\""
+    depends_on: [IP8_negative_and_shadow_space, IP5_invariants_into_rfr2]
+    files: [intelligence/pipeline/open-loop.js, intelligence/pipeline/report.js, tests/modules/test-intelligence-pipeline.test.js]
+    does: >-
+      A run ends with its open questions, not a verdict: the hypotheses that did not crystallise, the gaps (problems and deviations) and what
+      was missing. They are saved with the dataset kind's baseline and become what the next run checks first: did the hypothesis cross the
+      floor, did the gap close, did the missing thing appear. A question closes only when a later run answers it, and the answer says which run.
+  IP10_growth_tracking:
+    status: "OPEN — waits on his reading of \"growth tracking for the self\" (above)"
+    origin: "James, 2026-11-05: \"like growth tracking for the self. its for structure. integration and friction tracking. intution, and deomposition.\""
+    depends_on: [IP9_the_open_loop]
+    files: [intelligence/pipeline/growth.js, intelligence/friction.js, intelligence/intuition.js, intelligence/synthesis/engine.js, tests/modules/test-intelligence-pipeline.test.js]
+    does: >-
+      The same run repeated over time, tracked as growth along his five axes, each from a part that exists: structure (the invariants that
+      hold, and how many), integration (gaps that closed, hypotheses that became invariants), friction (intelligence/friction.js tensionOf over
+      the open gaps), intuition (intelligence/intuition.js, the fast pattern-first reading, scored afterwards by whether the run proved it) and
+      decomposition (synthesis/engine.js breaking a problem into its chained gaps). A growth line per axis, per period.
+
 proof_planned: >-
   test-intelligence-pipeline on planted data, so the right answer is known before the run: one series with a step change (one deviation run,
   regime degraded), one oscillating (oscillatory), two series that deviate together five times (an invariant), two loud series that co-deviate
   only at chance (a hypothesis, never an invariant: F2's case on numbers), and a file with bad rows (counted and said). Then a second run of the
-  same kind against the saved baseline and invariants (IP5): the break is named.
+  same kind against the saved baseline and invariants (IP5): the break is named. IP8–IP10: a planted series with a missing stretch and a
+  topic that stops being mentioned (negative space found), a run whose open questions are the next run's input (the loop stays open), and a
+  dated journal sample whose friction and integration are tracked across weeks.

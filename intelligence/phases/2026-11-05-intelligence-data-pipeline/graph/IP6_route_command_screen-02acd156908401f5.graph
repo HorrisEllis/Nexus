@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793853812306
+exported_at: 1793854267655
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793853812306
-lastSeenAt: 1793853812306
+firstSeenAt: 1793854267655
+lastSeenAt: 1793854267655
 fingerprint: null
 payload:
   for: IP6_route_command_screen
@@ -235,12 +235,31 @@ payload:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
     unlocks:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+        files:
+          - tests/modules/test-intelligence-pipeline.test.js
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+        files:
+          - intelligence/pipeline/report.js
+          - tests/modules/test-intelligence-pipeline.test.js
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+        files:
+          - tests/modules/test-intelligence-pipeline.test.js
     dangling: []
     lines:
       - layer 6 · blocked by IP5_invariants_into_rfr2
       - 'depends on (1): IP5_invariants_into_rfr2 · all upstream 8'
       - 'needed by (1): IP7_the_screen · finishing it unlocks IP7_the_screen'
+      - >-
+        same files as IP8_negative_and_shadow_space with no order between them:
+        tests/modules/test-intelligence-pipeline.test.js
+      - >-
+        same files as IP9_the_open_loop with no order between them: intelligence/pipeline/report.js,
+        tests/modules/test-intelligence-pipeline.test.js
+      - >-
+        same files as IP10_growth_tracking with no order between them:
+        tests/modules/test-intelligence-pipeline.test.js
     edges:
       - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793853812296
+exported_at: 1793854267644
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793853812296
-lastSeenAt: 1793853812296
+firstSeenAt: 1793854267644
+lastSeenAt: 1793854267644
 fingerprint: null
 payload:
   for: IP2_baseline_per_series
@@ -111,11 +111,14 @@ payload:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
     downstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
     blockedBy:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
     unlocks:
@@ -128,7 +131,7 @@ payload:
         depends on (2): IP1_input_folder_and_reader, IP_D2_where_the_baseline_comes_from · all
         upstream 3
       - >-
-        needed by (1): IP3_deviation_and_regime · all downstream 5 · finishing it unlocks
+        needed by (1): IP3_deviation_and_regime · all downstream 8 · finishing it unlocks
         IP3_deviation_and_regime
     edges:
       - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader

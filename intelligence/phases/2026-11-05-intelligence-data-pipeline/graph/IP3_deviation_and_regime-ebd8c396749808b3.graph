@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793853812298
+exported_at: 1793854267647
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793853812298
-lastSeenAt: 1793853812298
+firstSeenAt: 1793854267647
+lastSeenAt: 1793854267647
 fingerprint: null
 payload:
   for: IP3_deviation_and_regime
@@ -76,10 +76,13 @@ payload:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
     downstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
     blockedBy:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
     unlocks:
@@ -90,7 +93,7 @@ payload:
       - layer 3 · blocked by IP2_baseline_per_series
       - 'depends on (2): IP2_baseline_per_series, IP_D3_how_far_is_a_deviation · all upstream 5'
       - >-
-        needed by (1): IP4_invariants_across_series · all downstream 4 · finishing it unlocks
+        needed by (1): IP4_invariants_across_series · all downstream 7 · finishing it unlocks
         IP4_invariants_across_series
     edges:
       - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
