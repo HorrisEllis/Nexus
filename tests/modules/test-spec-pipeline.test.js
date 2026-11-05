@@ -130,8 +130,13 @@ const BAD = 'spec:\n  meta:\n    name: ledger\n  modules:\n    - id: ledger-stor
     assert.strictEqual(RI.get(r.proposed[0].uuid).status, 'proposed');
   });
 
+  // EAS4 L1 (2026-11-05): the compiler template is Emerge's, reached through its door (:4900). The test starts Emerge there when nothing
+  // serves the port, as COS would, and stops it after; with Emerge down the compiler template says so, never a silent fallback.
+  const portFree = (p) => new Promise(r => { const s = require('net').createServer(); s.once('error', () => r(false)); s.listen(p, '127.0.0.1', () => s.close(() => r(true))); });
   await test('SP-08b', '0.60.68: the template can be chosen — compiler (the TypeScript scaffold) by request or by the spec\'s meta.template; unknown is refused', async () => {
-    const r = await quiet(() => SC.compileToProposals({ layer, repo, specPath: 'spec/ledger.spec', content: GOOD, template: 'compiler', into: 'ts' }));
+    const em = (await portFree(4900)) ? await quiet(() => require(path.join(ROOT, 'emerge/emerge/server.js')).start({ port: 4900 })) : null;
+    let r; try { r = await quiet(() => SC.compileToProposals({ layer, repo, specPath: 'spec/ledger.spec', content: GOOD, template: 'compiler', into: 'ts' })); }
+    finally { if (em) await new Promise(res => em.server.close(res)); }
     assert.ok(r.ok, r.error); assert.strictEqual(r.template, 'compiler');
     assert.ok(r.proposed.some(p => p.path === 'ts/src/modules/ledger-store/ledger-store.ts'), JSON.stringify(r.proposed.map(p => p.path)));
     const viaMeta = GOOD.replace('    uuid: ledger-v1\n', '    uuid: ledger-v1\n    template: compiler\n');
@@ -180,6 +185,12 @@ const BAD = 'spec:\n  meta:\n    name: ledger\n  modules:\n    - id: ledger-stor
     const ev = heardC[0]; const p = ev && (ev.proposed || (ev.data && ev.data.proposed));
     assert.ok(p && p.includes('auto/data/nodes/component/ledger.auto-store.component'), JSON.stringify(ev).slice(0, 400));
     SC.setCompileSetting(() => ({ on: false, into: '' }));
+  });
+
+  await test('SP-08d', 'EAS4 L1: with Emerge down, the compiler template says the compiler is Emerge\'s and Emerge did not answer — nothing proposed', async () => {
+    if (!(await portFree(4900))) { console.log('  · SP-08d skipped: something serves :4900, so Emerge cannot be shown down here'); return; }
+    const r = await quiet(() => SC.compileToProposals({ layer, repo, specPath: 'spec/ledger.spec', content: GOOD, template: 'compiler', into: 'ts2' }));
+    assert.strictEqual(r.ok, false); assert.match(r.error, /Emerge's/); assert.match(r.error, /unreachable|ECONNREFUSED/);
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);

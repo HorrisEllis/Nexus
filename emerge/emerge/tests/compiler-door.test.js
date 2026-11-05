@@ -1,0 +1,79 @@
+'use strict';
+// tests/compiler-door.test.js — Emerge's spec compiler through its own door (EAS4 L1). Nexus docs/2026-10-31-emerge-as-a-system-phasemap.spec.
+// Every call goes over HTTP to server.js, as another system would make it; the comparison runs compiler/index.js directly.
+//
+//   CD-01  the contract lists POST /compiler/compile, and its command node states its expectation (in, out, fails)
+//   CD-02  a spec through the door gives byte for byte the files compile() writes for it on disk (SPEC_COMPILER.spec, T0+T1)
+//   CD-03  a missing spec is a 400 that names it; a spec the compiler refuses is ok:false with its error, never a partial ok
+//   CD-04  the door keeps the shape: every component has a capability, a command and events
+const assert = require('assert');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const http = require('http');
+const { start } = require('../server.js');
+
+const ROOT = path.join(__dirname, '..');
+const SPEC = path.join(ROOT, 'SPEC_COMPILER.spec');
+
+function call(port, method, p, body) {
+  return new Promise((resolve, reject) => {
+    const data = body ? JSON.stringify(body) : '';
+    const req = http.request({ host: '127.0.0.1', port, method, path: p, headers: { 'content-type': 'application/json', 'content-length': Buffer.byteLength(data) } }, (res) => {
+      let s = ''; res.on('data', (c) => { s += c; }); res.on('end', () => { try { resolve({ status: res.statusCode, body: JSON.parse(s) }); } catch (e) { reject(e); } });
+    });
+    req.on('error', reject); req.end(data);
+  });
+}
+function files(dir, base = dir, out = {}) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) files(p, base, out); else out[path.relative(base, p).split(path.sep).join('/')] = fs.readFileSync(p, 'utf8');
+  }
+  return out;
+}
+
+let passed = 0, failed = 0;
+async function t(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} ${desc}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${desc}\n    ${e.stack.split('\n').slice(0, 4).join('\n    ')}`); failed++; } }
+
+(async () => {
+  console.log('\ncompiler-door — Emerge\'s spec compiler through its own door');
+  const { server, port, ctx } = await start({ port: 0, root: ROOT });
+  try {
+    await t('CD-01', 'the contract lists POST /compiler/compile; its command states in, out and fails', async () => {
+      const c = (await call(port, 'GET', '/contract')).body;
+      assert.ok(c.resources.some(r => r.method === 'POST' && r.path === '/compiler/compile'), 'the route is in the contract');
+      const cmd = ctx.index.get('command', 'emerge.compiler.compile');
+      const ex = (cmd && (cmd.expects || (cmd.payload && cmd.payload.expects))) || {};
+      for (const k of ['in', 'out', 'fails']) assert.ok(typeof ex[k] === 'string' && ex[k].length > 10, `expects.${k} is stated`);
+    });
+
+    await t('CD-02', 'through the door: byte for byte the files compile() writes on disk', async () => {
+      const r = (await call(port, 'POST', '/compiler/compile', { spec: fs.readFileSync(SPEC, 'utf8'), name: 'SPEC_COMPILER.spec' })).body;
+      assert.ok(r.ok, JSON.stringify(r).slice(0, 300));
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cd-direct-'));
+      try {
+        const log = console.log; console.log = () => {};
+        let d; try { d = await require('../compiler/index.js').compile(SPEC, dir, { tier: 1, skipCortex: true }); } finally { console.log = log; }
+        assert.ok(d.ok);
+        const want = files(dir), emitted = [...new Set([...d.t0.emitted, ...d.t1.emitted])].sort();
+        assert.deepStrictEqual(Object.keys(r.files), emitted, 'the same files');
+        for (const rel of emitted) assert.strictEqual(r.files[rel], want[rel], `${rel} is the same bytes`);
+        assert.ok(emitted.length > 20, `a whole package (${emitted.length} files)`);
+      } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+    });
+
+    await t('CD-03', 'a missing spec is a 400 naming it; a refused spec is ok:false with its error', async () => {
+      const miss = await call(port, 'POST', '/compiler/compile', {});
+      assert.strictEqual(miss.status, 400); assert.match(JSON.stringify(miss.body), /spec/);
+      const bad = (await call(port, 'POST', '/compiler/compile', { spec: 'not: [a, module, spec' })).body;
+      assert.strictEqual(bad.ok, false); assert.ok(bad.error, 'the compiler\'s own words'); assert.ok(!bad.files, 'no partial files');
+    });
+
+    await t('CD-04', 'every component keeps the shape: a capability, a command and events', async () => {
+      assert.deepStrictEqual(ctx.shape(), []);
+    });
+  } finally { server.close(); }
+  console.log(`\n  ${passed} passed, ${failed} failed`);
+  process.exit(failed ? 1 : 0);
+})();

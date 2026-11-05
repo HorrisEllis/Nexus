@@ -133,7 +133,7 @@ phases:
   EAS4_callers_through_the_door:
     status: OPEN
     depends_on: [EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus]
-    files: [guardian/server.js, idearium/compiler-bridge.js, copilot/module-builder.js, cortex/core/raid/contract-intake.js, lib/hooks/emerge.hooks.js, tests/modules/test-substrate-spec.test.js, lib/emerge, _archive/lib/emerge, emerge/emerge/core/admit.js, emerge/emerge/core/index.js, lib/warp/adapters/_archive/emerge-field.js, lib/warp/core/Engine.js, lib/warp/spec/warp.spec, tests/modules/test-warp2.test.js]
+    files: [guardian/server.js, idearium/compiler-bridge.js, copilot/module-builder.js, cortex/core/raid/contract-intake.js, lib/hooks/emerge.hooks.js, tests/modules/test-substrate-spec.test.js, lib/emerge, _archive/lib/emerge, emerge/emerge/core/admit.js, emerge/emerge/core/index.js, lib/warp/adapters/_archive/emerge-field.js, lib/warp/core/Engine.js, lib/warp/spec/warp.spec, tests/modules/test-warp2.test.js, emerge/emerge/lib/compiler.js, emerge/emerge/registry-components.js, emerge/emerge/data/nodes/command/emerge.compiler.compile.command, emerge/emerge/tests/compiler-door.test.js, emerge/emerge.cos, lib/spec-collect.js, tests/modules/test-spec-pipeline.test.js, idearium/api/index.js, idearium/cli/route-commands.js]
     spec: docs/emerge-system.spec
     blocks: [MOD-EAS-CALLERS]
     does: "run-time callers to Emerge's door, build-time ones to the snapshot; lib/emerge archived"
@@ -161,6 +161,21 @@ phases:
     # Proof: test-warp2 7/7, test-emerge-core 6/6, test-emergence-and-warp-suites 198/198 (same before and after); census 1120 crossings
     # before and after, and check() adds none of this change's (its two added edges, cos/manager/autopilot-door.js, were there before:
     # test-system-boundary 8/2 before and after). Left for L1-L3: compile, build and run as command nodes behind Emerge's door.
+    # ── EXPANDED 2026-11-05 (0.60.389) — L1 compile behind Emerge's door; one of its two callers moved; the other stopped, its difference named ──
+    # Before the switch (MOD-EAS-CALLERS): lib/emerge's compile and emerge/'s, on SPEC_COMPILER.spec, substrate.spec and belief-loop.spec
+    # (50, 78, 70 files, skipCortex, T1), differ in one line only: the compiler's version stamp in src/index.ts and src/types/index.ts
+    # (v1.1.0 from lib/emerge, v1.13.0 from emerge/). Named here; it is the stamp of the compiler that ran.
+    # Built: component emerge.compiler (emerge/emerge/lib/compiler.js), capability emerge.compiler.spec, command emerge.compiler.compile with
+    # its expectation in the node (expects: in, out, fails), route POST /compiler/compile, event emerge.compiler.compiled, its registry entry.
+    # The spec comes in as text and the emitted files go back as text (a caller in another system shares no folder with Emerge). It runs on
+    # the local host: no Cortex, Emerge depends on nothing above it (his, 2026-10-28).
+    # Moved: lib/spec-collect.js's compiler template now posts to Emerge's door (lib/nexus-client.js, :4900); Emerge down is said, nothing
+    # proposed (SP-08d). Stopped, not moved: idearium/compiler-bridge.js. Its default (skipCortex false) runs Cortex's preflight and writeback
+    # inside lib/emerge's compile; Emerge's compile has no Cortex. Moving it changes its answer. By §5.15 and his 2026-10-28 rule, the coder's
+    # reading is that Idearium calls Cortex itself around the door; to do as its own step, with its difference shown first.
+    # Proof: emerge tests/compiler-door.test.js 4/4 (CD-02: through the door, byte for byte the files compile() writes); lang-door 8/8,
+    # nesting 5/5, skeleton green; test-spec-pipeline 13/13; census 1120 before and after; emerge/ locked again (352 files). The CLI and agents:
+    # POST /api/emerge-system/compile and the row emerge.compile (EN-04 green); no screen yet, the UI deferred and said.
     # ── EXPANDED 2026-11-05 — the primitives found (read from the six callers) ──
     # Four functions, already layered, each a compound of the one below:
     #   L0 evaluate (core)                constraint + state → { ok } | { gap } | { ok:false, constraint, reason }   ← warp's admit, every link

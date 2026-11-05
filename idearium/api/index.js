@@ -3582,6 +3582,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','emerge-system','modules'],     'emerge.modules'],
     ['POST',   ['api','emerge-system','modules'],     'emerge.module.new'],
     ['POST',   ['api','emerge-system','lang',':op'],  'emerge.lang'],
+    ['POST',   ['api','emerge-system','compile'],     'emerge.compile'],   // 0.60.389 EAS4 L1 — the spec compiler, Emerge's
     ['GET',    ['api','economy'],                     'economy.get'],
     ['POST',   ['api','economy'],                     'economy.set'],
     ['GET',    ['api','economy',':what'],             'economy.view'],
@@ -9868,13 +9869,14 @@ async function handle(req, res, route, query, body) {
       } catch (e) { return err(res, 502, `COS's manager (:7799) did not answer: ${e.message} — start it with npm run start:all (since 0.60.330 the launcher starts COS's manager)`); }
     }
     // 0.60.339 EAS3 — James: "the github repo not the one in lib already. i want that done now. then i want to start being able to use it."
-    case 'emerge.status': case 'emerge.modules': case 'emerge.module.new': case 'emerge.lang': {
+    case 'emerge.status': case 'emerge.modules': case 'emerge.module.new': case 'emerge.lang': case 'emerge.compile': {
       const OPS = ['check', 'run', 'build', 'test', 'say', 'synth'];
       if (action === 'emerge.lang' && !OPS.includes(params.op)) return err(res, 404, `no Emerge language op "${params.op}": ${OPS.join(', ')}`);
       try {
         const d = action === 'emerge.status' ? await _nexusClient.get('emerge', '/status', { timeout: 10000 })
           : action === 'emerge.modules' ? await _nexusClient.get('emerge', '/modules', { timeout: 10000 })
           : action === 'emerge.module.new' ? await _nexusClient.post('emerge', '/modules', body || {}, { timeout: 30000 })
+          : action === 'emerge.compile' ? await _nexusClient.post('emerge', '/compiler/compile', body || {}, { timeout: 120000 })
           : await _nexusClient.post('emerge', `/lang/${params.op}`, body || {}, { timeout: 60000 });
         return ok(res, d || {});
       } catch (e) { return err(res, 502, `Emerge's door (:4900) did not answer: ${e.message} — COS starts it (npm run start:all), or: node emerge/server.js`); }
