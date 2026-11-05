@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-the-application-phasemap.spec::CA4_the_supervisor_as_a_windows_service
+type: phase
+id: docs_2026-11-02-cos-the-application-phasemap.spec::CA4_the_supervisor_as_a_windows_service
+context: >-
+  pipeline phase CA4_the_supervisor_as_a_windows_service of
+  docs/2026-11-02-cos-the-application-phasemap.spec
+intent: null
+summary: CA4_the_supervisor_as_a_windows_service (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1793847429748
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793847429748
+lastSeenAt: 1793847429748
+fingerprint: null
+payload:
+  id: CA4_the_supervisor_as_a_windows_service
+  map: docs/2026-11-02-cos-the-application-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.389 (COS 0.5.0) — test-cos-service 7/7; the service on Windows unverified until his
+    run (no Windows here)"
+  files:
+    - cos/app/service.js
+    - cos/app/desktop-systems.js
+    - cos/app/controller.js
+    - cos/app/settings.js
+    - cos/app/desktop/main.js
+    - cos/app/version.js
+    - cos/manager/supervisor.js
+    - scripts/build-cos-app.js
+    - tests/modules/test-cos-service.test.js
+  depends_on:
+    - MG37_starts_with_windows
+  blocks: []
+  spec: null
+  graph: 1759f12658ef5172

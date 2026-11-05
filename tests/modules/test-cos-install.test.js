@@ -8,7 +8,10 @@
  *   IN-03  a step that fails stops it, with its reason; no npm is said with where to get Node.js; nothing half-done is linked
  *   IN-04  the controller installs, links the folder, sets it to start with COS, and starts it
  *   IN-05  the window: nothing linked says "not installed" with Install Nexus; installing says its step; a failure says why
- *   IN-06  COS 0.6.0; install.js in the exe; autoInstall on by default
+ *   IN-06  COS 0.7.0; install.js in the exe; autoInstall on by default
+ *   IN-07  CA6: npm.cmd under C:\\Program Files runs quoted through cmd.exe (his 'C:\\Program' is not recognized), elsewhere unchanged
+ *   IN-08  CA6: the folder he picks: named nexus or empty → itself, else <picked>/nexus
+ *   IN-09  CA6: installDir kept (absolute only); the controller installs where he chose; every install asks, cancel installs nothing
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -94,13 +97,50 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     assert.match(fs.readFileSync(path.join(ROOT, 'cos/app/desktop/starting-preload.js'), 'utf8'), /install: \(\) => ipcRenderer\.invoke\('cos:install'\)/);
   });
 
-  await test('IN-06', 'COS 0.6.0; install.js in the exe; autoInstall on by default; first launch installs', () => {
-    assert.strictEqual(require(path.join(ROOT, 'cos/app/version.js')).version, '0.6.0');
+  await test('IN-06', 'COS 0.7.0; install.js in the exe; autoInstall on by default; first launch installs', () => {
+    assert.strictEqual(require(path.join(ROOT, 'cos/app/version.js')).version, '0.7.0');
     assert.ok(fs.readFileSync(path.join(ROOT, 'scripts/build-cos-app.js'), 'utf8').includes("'cos/app/install.js'"));
     assert.strictEqual(require(path.join(ROOT, 'cos/app/settings.js')).DEFAULTS.autoInstall, true);
     const M = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/main.js'), 'utf8');
     assert.match(M, /if \(!ctl\.linkedDir\(\) && ctl\.settings\(\)\.settings\.autoInstall !== false\)/);
     assert.match(M, /h\('install', \(\) => installNexus\(\)\)/);
+  });
+
+  await test('IN-07', 'npm.cmd under Program Files runs quoted through cmd.exe; elsewhere unchanged', () => {
+    const sp = I.spawnSpec('C:\\Program Files\\nodejs\\npm.cmd', ['install', '--no-audit', '--no-fund'], 'win32', 'C:\\Windows\\system32\\cmd.exe');
+    assert.deepStrictEqual(sp, { file: 'C:\\Windows\\system32\\cmd.exe', args: ['/d', '/s', '/c', '""C:\\Program Files\\nodejs\\npm.cmd" install --no-audit --no-fund"'], verbatim: true });
+    assert.strictEqual(I.spawnSpec('C:\\x\\npm.cmd', ['install', 'D:\\My Files\\nexus'], 'win32', 'cmd.exe').args[3], '""C:\\x\\npm.cmd" install "D:\\My Files\\nexus""');
+    assert.deepStrictEqual(I.spawnSpec('C:\\Program Files\\Git\\cmd\\git.exe', ['pull'], 'win32'), { file: 'C:\\Program Files\\Git\\cmd\\git.exe', args: ['pull'], verbatim: false });
+    assert.deepStrictEqual(I.spawnSpec('/usr/bin/npm', ['install'], 'linux'), { file: '/usr/bin/npm', args: ['install'], verbatim: false });
+    assert.doesNotMatch(fs.readFileSync(path.join(ROOT, 'cos/app/install.js'), 'utf8'), /spawn\(cmd, args, \{ cwd, shell/, 'no unquoted shell spawn left');
+  });
+
+  await test('IN-08', 'the picked folder: named nexus or empty is used, else <picked>/nexus', () => {
+    const base = fs.mkdtempSync(path.join(os.tmpdir(), 'in08-'));
+    const empty = path.join(base, 'Empty Place'); fs.mkdirSync(empty);
+    const full = path.join(base, 'D Drive'); fs.mkdirSync(full); fs.writeFileSync(path.join(full, 'x.txt'), '1');
+    const named = path.join(base, 'Nexus'); fs.mkdirSync(named); fs.writeFileSync(path.join(named, 'x.txt'), '1');
+    assert.deepStrictEqual([I.targetDir(empty), I.targetDir(full), I.targetDir(named), I.targetDir(null)], [empty, path.join(full, 'nexus'), named, null]);
+  });
+
+  await test('IN-09', 'installDir kept; the controller installs where he chose; every install asks', async () => {
+    const S = require(path.join(ROOT, 'cos/app/settings.js'));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'in09-'));
+    assert.strictEqual(S.DEFAULTS.installDir, null);
+    assert.ok(!S.set(root, 'installDir', 'relative/path').ok);
+    const where = path.join(root, 'elsewhere');
+    assert.strictEqual(S.set(root, 'installDir', where).settings.installDir, where);
+    assert.strictEqual(S.load(root).settings.installDir, where);
+    const { Controller } = require(path.join(ROOT, 'cos/app/controller.js'));
+    const c = new Controller({ root, store: { list: () => [], link: (r0, p, d) => ({ ok: true, dir: d }), defaultRoot: () => root } });
+    c.start = async () => ({ ok: true });
+    let got = null;
+    await c.installNexus({ dir: path.join(where, 'nexus'), install: { run: async (o) => { got = o.dir; return { ok: true, dir: o.dir, via: 'git-clone' }; } } });
+    assert.strictEqual(got, path.join(where, 'nexus'));
+    const M = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/main.js'), 'utf8');
+    assert.match(M, /async function installNexus\(\) \{[\s\S]{0,200}const dir = await askInstallDir\(\);/);
+    assert.match(M, /if \(!dir\) \{[^\n]*no install location chosen/);
+    assert.match(M, /properties: \['openDirectory', 'createDirectory', 'promptToCreate'\]/);
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exitCode = failed ? 1 : 0;

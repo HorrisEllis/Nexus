@@ -135,3 +135,28 @@ phases_addendum_2026_11_04_b:
       (default on) is his switch; linking his own folder still works (Versions & manual update).
     proof: "test-cos-install: the clone and npm commands exactly, a clone pulled, the release-zip path, a failure stopping with its reason, the
       controller linking and starting, the starting page's states"
+  CA6_install_asks_where_and_npm_in_program_files:
+    status: "BUILT 0.60.391 (COS 0.7.0) — test-cos-install IN-07..IN-09; on Windows unverified until his run"
+    origin: >-
+      James, 2026-11-05, with COS 0.6.0 open on "installing Nexus's dependencies (npm install …) failed (exit 1): 'C:\\Program' is not
+      recognized as an internal or external command, operable program or batch file.": "needs to ask for install location also. i was also
+      thinking each compartment can have a different location inside of cos."
+    depends_on: [CA5_cos_installs_nexus_from_github]
+    files: [cos/app/install.js, cos/app/controller.js, cos/app/settings.js, cos/app/desktop/main.js, cos/app/version.js, tests/modules/test-cos-install.test.js]
+    does: >-
+      (1) The root cause of his screen: npm on Windows is npm.cmd under C:\\Program Files\\nodejs; a .cmd needs cmd.exe, and spawn with
+      shell:true joined the path unquoted, so cmd split it at the space. Now a .cmd runs as cmd.exe /d /s /c ""<path>" args" with verbatim
+      arguments (install.js spawnSpec), every part with a space quoted. (2) Every install asks where (a folder dialog, the last place chosen or
+      <COS root> preselected); Nexus goes into <chosen>/nexus unless the chosen folder is already named nexus or is empty. Cancelling installs
+      nothing and says so. The place is kept in the setting installDir.
+    proof: "IN-07 a .cmd under Program Files is quoted for cmd.exe; IN-08 the folder rule (nexus/empty/else <chosen>/nexus); IN-09 installDir
+      kept, cancel installs nothing"
+  CA7_each_compartment_its_own_location:
+    status: "OPEN — his reading to settle first (do not guess)"
+    origin: "James, 2026-11-05: \"i was also thinking each compartment can have a different location inside of cos.\""
+    depends_on: [CA6_install_asks_where_and_npm_in_program_files]
+    files: []
+    readings_to_confirm:
+      - "(a) each compartment (system) can live in a folder of his choosing, anywhere on disk (another drive too); COS keeps where each one is and starts it from there"
+      - "(b) each compartment has its own folder inside COS's root (<COS root>/<system>), and COS lets him move it"
+      - "(c) both: a default folder inside COS, movable per compartment"

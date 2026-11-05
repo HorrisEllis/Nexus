@@ -97,11 +97,12 @@ class Controller {
   logs(project, lines = 80) { return { ok: true, ...this.rt.logs(this.root, project, { lines }) }; }
   // 2026-11-04 CA5 — James: "have it pull from the git. it should be installing the cos ui." Nexus installed from GitHub into <root>/nexus (git
   // clone, else the latest release zip; then npm install), then linked and started like a folder he linked himself (MG35)
-  async installNexus({ project = 'nexus', install = require('./install.js'), onStep = null } = {}) {
+  // CA6 (2026-11-05) — James: "needs to ask for install location also." dir is where he chose (the window asks); without one, <root>/nexus
+  async installNexus({ project = 'nexus', install = require('./install.js'), onStep = null, dir = null } = {}) {
     if (this._installing) return { ok: false, error: 'already installing' };
     this._installing = true;
     try {
-      const dir = require('path').join(this.root, project);
+      dir = dir || require('path').join(this.root, project);
       const step = (e) => { this.emit({ type: 'install.step', project, ...e }); if (onStep) onStep(e); };
       const r = await install.run({ dir, onStep: step });
       this.emit({ type: 'install.done', project, ok: !!r.ok, via: r.via || null, error: r.error || null });
