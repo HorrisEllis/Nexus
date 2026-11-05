@@ -9,11 +9,11 @@ intent: null
 summary: EE1_one_identity_for_a_chosen_element (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793871876642
+exported_at: 1793872929066
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793871876642
-lastSeenAt: 1793871876642
+firstSeenAt: 1793872929066
+lastSeenAt: 1793872929066
 fingerprint: null
 payload:
   id: EE1_one_identity_for_a_chosen_element
@@ -28,8 +28,8 @@ payload:
     - clear-glass/src/schemas/element.schema.json
     - tests/modules/test-cg-element-engine.test.js
   depends_on:
-    - EE_D0_what_one_means
+    - EE0_the_merged_plugin
     - EE_D1_erosmancer_in_process_or_its_own
   blocks: []
   spec: null
-  graph: 757bf6ce02e18691
+  graph: 063cd3cf41a0785c

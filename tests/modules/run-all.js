@@ -444,6 +444,7 @@ const SUITES = [
   'test-cos-app-link.test.js',
   'test-cos-app-window.test.js',
   'test-cos-service.test.js',
+  'test-cg-element-engine-plugin.test.js',   // 0.60.397 EE0 — the Ad Blocker plugin is the Element Engine: Ad blocking, the picker, ErosmancerOS, Edit ErosmancerOS
   'test-eros-edit.test.js',   // 0.60.396 ES5 — edit ErosmancerOS's TypeScript yourself: export, diff, import (archived, tested, recorded)
   'test-cg-webgl.test.js',   // 0.60.394 WG1 — Clear Glass has WebGL with acceleration off (Fiverr's bot check crashed on its absence)
   'test-cortex-door.test.js',   // 0.60.392 DO3a — Cortex's door: cortex/server.js, registry, handshake, CLI; the route table replayed the same

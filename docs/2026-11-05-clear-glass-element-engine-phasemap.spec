@@ -30,7 +30,11 @@ readings_to_confirm:
 
 decisions:
   EE_D0_what_one_means:
-    status: "OPEN — his (the readings above)"
+    status: "DECIDED 2026-11-05 (his) — one plugin, with its parts inside it"
+    chosen: >-
+      James, 2026-11-05, after the TypeScript edit tool (ES5) was built: "okay this needs to live inside the new plugin also. lets do the
+      merge." Read as (c): one plugin now (EE0), the engine's deeper steps (EE1–EE4) inside it after. The coder's reading of "the new plugin"
+      as this map's merged plugin, to confirm.
   EE_D1_erosmancer_in_process_or_its_own:
     status: "OPEN — his"
     question: >-
@@ -39,9 +43,20 @@ decisions:
       process (faster, one less process, but two copies until the TS one is archived). The coder's recommendation: (a).
 
 phases:
+  EE0_the_merged_plugin:
+    status: "BUILT 0.60.397 — test-cg-element-engine-plugin"
+    depends_on: [EE_D0_what_one_means]
+    files: [clear-glass/plugins/adblocker/manifest.json, clear-glass/plugins/adblocker/index.js, clear-glass/renderer/shell/extensions.js, clear-glass/src/eros/edit.js, tests/modules/test-cg-element-engine-plugin.test.js, tests/modules/run-all.js]
+    does: >-
+      The Ad Blocker plugin becomes the Element Engine plugin (3.0.0) — the same id, folder and handlers, so his lists, allowed sites and
+      filters stay where they are (nothing lost). Its panel has four parts: Ad blocking (unchanged), Elements (Pick an element: the Guardian
+      picker, then the bars it already has — Gate this element, Bind a key), ErosmancerOS (its state, through Clear Glass's own
+      /eros-supervisor route), and Edit ErosmancerOS (ES5 in the panel: export, show changes, import with its checks). ErosmancerOS stays its
+      own process (EE_D1 not decided; nothing about it moved).
+    proof: "the panel's view has the four parts; the adblock part is the same view as before; export, show changes and import answer through the panel; a pick asks the renderer to start the picker"
   EE1_one_identity_for_a_chosen_element:
     status: OPEN
-    depends_on: [EE_D0_what_one_means, EE_D1_erosmancer_in_process_or_its_own]
+    depends_on: [EE0_the_merged_plugin, EE_D1_erosmancer_in_process_or_its_own]
     files: [clear-glass/renderer/guardian-picker.js, clear-glass/src/eros/supervisor.js, clear-glass/src/page/element-gate.js, clear-glass/src/schemas/element.schema.json, tests/modules/test-cg-element-engine.test.js]
     does: >-
       An element the picker chooses gets ErosmancerOS's identity (its UUID and its seven ways to find it), stored as one element record

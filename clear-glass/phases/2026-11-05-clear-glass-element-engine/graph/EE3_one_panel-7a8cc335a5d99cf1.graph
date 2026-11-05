@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793871876647
+exported_at: 1793872929073
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793871876647
-lastSeenAt: 1793871876647
+firstSeenAt: 1793872929073
+lastSeenAt: 1793872929073
 fingerprint: null
 payload:
   for: EE3_one_panel
@@ -35,12 +35,13 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 3
+    layer: 4
     deps:
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
     dependents:
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
     upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
@@ -54,8 +55,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 3 · blocked by EE2_hide_what_you_point_at
-      - 'depends on (1): EE2_hide_what_you_point_at · all upstream 4'
+      - layer 4 · blocked by EE2_hide_what_you_point_at
+      - 'depends on (1): EE2_hide_what_you_point_at · all upstream 5'
       - 'needed by (1): EE4_the_old_ways_archived · finishing it unlocks EE4_the_old_ways_archived'
     edges:
       - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at

@@ -157,6 +157,8 @@
       const r = await cg().plugins.settings(id, op, key, value, pageOf()).catch(err => ({ ok: false, error: err.message }));
       if (!r || r.ok === false) { say(r && r.error ? `${name}: ${r.error}` : `${name} did not answer`); return null; }
       if (r.view) draw(r.view); if (r.note) say(r.note);
+      // 0.60.397 EE0 — the Element Engine's "Pick an element": the plugin cannot reach the page, so it asks the shell to press the picker
+      if (r.do === 'pick') { UI().close(); const pb = document.getElementById('picker-btn'); if (pb && !pb.classList.contains('active')) pb.click(); }
       refreshBadges(); return r;
     };
     function field(f) {

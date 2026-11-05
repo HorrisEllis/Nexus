@@ -7,11 +7,11 @@ intent: null
 summary: 9 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793871876645
+exported_at: 1793872929069
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793871876645
-lastSeenAt: 1793871876645
+firstSeenAt: 1793872929069
+lastSeenAt: 1793872929069
 fingerprint: null
 payload:
   for: EE2_hide_what_you_point_at
@@ -74,12 +74,13 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 2
+    layer: 3
     deps:
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
     dependents:
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
     upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
@@ -93,8 +94,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 2 · blocked by EE1_one_identity_for_a_chosen_element
-      - 'depends on (1): EE1_one_identity_for_a_chosen_element · all upstream 3'
+      - layer 3 · blocked by EE1_one_identity_for_a_chosen_element
+      - 'depends on (1): EE1_one_identity_for_a_chosen_element · all upstream 4'
       - 'needed by (1): EE3_one_panel · all downstream 2 · finishing it unlocks EE3_one_panel'
     edges:
       - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
