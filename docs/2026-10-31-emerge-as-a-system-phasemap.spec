@@ -151,3 +151,12 @@ decisions_addendum_2026_11_05:
       and used directly — not through a handoff — beside the bus, nexus-connect, the WARP core, SISO and the hooks (lib/system-boundary.js
       PRIMITIVES).
     still_his: "whose are phase-specs.js and kg-builder.js (the coder reads Idearium)"
+  EAS_D7_the_spec_compiler_is_emerges:
+    status: "DECIDED 2026-11-05 (his)"
+    james: '"I don’t know idearium?" · then, shown both records side by side: "A."'
+    context: >-
+      Two records disagreed: PS1 (2026-10-20, phase-specs.js's own header) placed it in Emerge, "the spec compiler's system", on purpose; his
+      later words ("okay warp and emerge. spec compiler, ide, and idearium"; a voice note: "spec compiler's moving to Idearium") pointed to
+      Idearium, which is where the coder's first reading came from. Options: (a) Emerge's — the compiler stays Emerge's heart, Idearium a user
+      through Emerge's door (the coder's lean); (b) Idearium's.
+    chosen: "(a) kg-builder.js (the spec compiler) and phase-specs.js are Emerge's; Idearium (its Phases screen, API, CLI) and the release script reach them through Emerge's door, never its files"
