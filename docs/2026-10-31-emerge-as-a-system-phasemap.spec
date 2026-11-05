@@ -164,7 +164,7 @@ phases:
   EAS4_callers_through_the_door:
     status: OPEN
     depends_on: [EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus]
-    files: [guardian/server.js, idearium/compiler-bridge.js, copilot/module-builder.js, cortex/core/raid/contract-intake.js, lib/hooks/emerge.hooks.js, tests/modules/test-substrate-spec.test.js, lib/emerge, _archive/lib/emerge, emerge/emerge/core/admit.js, emerge/emerge/core/index.js, lib/warp/adapters/_archive/emerge-field.js, lib/warp/core/Engine.js, lib/warp/spec/warp.spec, tests/modules/test-warp2.test.js, emerge/emerge/lib/compiler.js, emerge/emerge/registry-components.js, emerge/emerge/data/nodes/command/emerge.compiler.compile.command, emerge/emerge/tests/compiler-door.test.js, emerge/emerge.cos, lib/spec-collect.js, tests/modules/test-spec-pipeline.test.js, idearium/api/index.js, idearium/cli/route-commands.js]
+    files: [guardian/server.js, idearium/compiler-bridge.js, copilot/module-builder.js, cortex/core/raid/contract-intake.js, lib/hooks/emerge.hooks.js, tests/modules/test-substrate-spec.test.js, lib/emerge, _archive/lib/emerge, emerge/emerge/core/admit.js, emerge/emerge/core/index.js, lib/warp/adapters/_archive/emerge-field.js, lib/warp/core/Engine.js, lib/warp/spec/warp.spec, tests/modules/test-warp2.test.js, emerge/emerge/lib/compiler.js, emerge/emerge/registry-components.js, emerge/emerge/data/nodes/command/emerge.compiler.compile.command, emerge/emerge/tests/compiler-door.test.js, emerge/emerge/compiler/host.js, emerge/emerge/compiler/model.js, emerge/emerge.cos, lib/spec-collect.js, tests/modules/test-spec-pipeline.test.js, idearium/api/index.js, idearium/cli/route-commands.js]
     spec: docs/emerge-system.spec
     blocks: [MOD-EAS-CALLERS]
     does: "run-time callers to Emerge's door, build-time ones to the snapshot; lib/emerge archived"
@@ -207,6 +207,11 @@ phases:
     # Proof: emerge tests/compiler-door.test.js 4/4 (CD-02: through the door, byte for byte the files compile() writes); lang-door 8/8,
     # nesting 5/5, skeleton green; test-spec-pipeline 13/13; census 1120 before and after; emerge/ locked again (352 files). The CLI and agents:
     # POST /api/emerge-system/compile and the row emerge.compile (EN-04 green); no screen yet, the UI deferred and said.
+    # ── EXPANDED 2026-11-05 (0.60.390) — L2 build and L3 run behind the door, Emerge's side (his EAS_D9: "Emerge calls back by route") ──
+    # Corrected: "port t2-gate's 52 lib-only lines" (above) was wrong; they are the Guardian/Cortex coupling his 2026-10-28 rule removed.
+    # Built: compiler/model.js api route; compiler/host.js routeHost; POST /compiler/build and /compiler/run (commands with expects:); a
+    # host or model as a path is refused at the door. Run's progress comes back as a list, not live (named). Proof: compiler-door 8/8.
+    # Next: Cortex (preflight, writeback), Idearium (sync), Guardian (the model) each serve their route; then the four callers switch.
     # ── EXPANDED 2026-11-05 — the primitives found (read from the six callers) ──
     # Four functions, already layered, each a compound of the one below:
     #   L0 evaluate (core)                constraint + state → { ok } | { gap } | { ok:false, constraint, reason }   ← warp's admit, every link

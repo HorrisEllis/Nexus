@@ -9,7 +9,9 @@
     "component": "emerge.compiler",
     "summary": "a module spec (meta/modules/schemas YAML) compiled to its T0/T1 TypeScript package, no model, nothing written outside a fresh work folder",
     "commands": [
-      "emerge.compiler.compile"
+      "emerge.compiler.compile",
+      "emerge.compiler.build",
+      "emerge.compiler.run"
     ]
   }
 }

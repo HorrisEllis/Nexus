@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
 context: pipeline phase EAS4_callers_through_the_door of docs/2026-10-31-emerge-as-a-system-phasemap.spec
 intent: null
-summary: EAS4_callers_through_the_door (?) — 19 file(s)
+summary: EAS4_callers_through_the_door (?) — 21 file(s)
 system: idearium
 tags: []
-exported_at: 1793903590540
+exported_at: 1793905362596
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793903590540
-lastSeenAt: 1793903590540
+firstSeenAt: 1793905362596
+lastSeenAt: 1793905362596
 fingerprint: null
 payload:
   id: EAS4_callers_through_the_door
@@ -35,6 +35,8 @@ payload:
     - emerge/emerge/lib/compiler.js
     - emerge/emerge/registry-components.js
     - emerge/emerge/tests/compiler-door.test.js
+    - emerge/emerge/compiler/host.js
+    - emerge/emerge/compiler/model.js
     - lib/spec-collect.js
     - tests/modules/test-spec-pipeline.test.js
     - idearium/api/index.js
@@ -45,4 +47,4 @@ payload:
   blocks:
     - MOD-EAS-CALLERS
   spec: docs/emerge-system.spec
-  graph: 5480c2c48609d667
+  graph: eb8c94cf996ed2ee

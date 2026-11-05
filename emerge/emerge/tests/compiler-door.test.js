@@ -6,6 +6,10 @@
 //   CD-02  a spec through the door gives byte for byte the files compile() writes for it on disk (SPEC_COMPILER.spec, T0+T1)
 //   CD-03  a missing spec is a 400 that names it; a spec the compiler refuses is ok:false with its error, never a partial ok
 //   CD-04  the door keeps the shape: every component has a capability, a command and events
+//   CD-05  build with a host named by its routes (EAS_D9): Emerge POSTs preflight, writeback and sync to them; files come back
+//   CD-06  a host route that does not answer is said, never taken as a pass; build without a host uses the local host
+//   CD-07  run with a model named by its route: every T2 node's prompt reaches the route, each result kept with its reason; progress listed
+//   CD-08  a host or model given as a path (a module) is refused at the door: only settings cross it
 const assert = require('assert');
 const fs = require('fs');
 const os = require('os');
@@ -69,6 +73,57 @@ async function t(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} ${de
       const bad = (await call(port, 'POST', '/compiler/compile', { spec: 'not: [a, module, spec' })).body;
       assert.strictEqual(bad.ok, false); assert.ok(bad.error, 'the compiler\'s own words'); assert.ok(!bad.files, 'no partial files');
     });
+
+    // a stand-in for another system: answers Emerge's host and model contracts, and records what it was asked
+    const seen = [];
+    const stand = http.createServer((req, res) => { let b = ''; req.on('data', c => b += c); req.on('end', () => {
+      const body = b ? JSON.parse(b) : {}; seen.push({ path: req.url, body });
+      const reply = req.url === '/preflight' ? { ok: true, existingFiles: [], openGaps: [], skipGeneration: false, summary: 'stand-in preflight' }
+        : req.url === '/generate' ? { ok: true, text: '// stand-in T2 body', prompt_tokens: 1, output_tokens: 1 } : { ok: true, from: 'stand-in', path: req.url };
+      res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify(reply)); }); });
+    await new Promise(r => stand.listen(0, '127.0.0.1', r));
+    const S = `http://127.0.0.1:${stand.address().port}`;
+    const host = { name: 'stand-in', preflight: `${S}/preflight`, writeback: `${S}/writeback`, sync: `${S}/sync` };
+    const spec = fs.readFileSync(SPEC, 'utf8');
+
+    await t('CD-05', 'build with a host named by its routes: preflight, writeback and sync are POSTed; files come back', async () => {
+      seen.length = 0;
+      const r = (await call(port, 'POST', '/compiler/build', { spec, name: 'SPEC_COMPILER.spec', host })).body;
+      assert.ok(r.ok, JSON.stringify(r).slice(0, 300));
+      const paths = seen.map(x => x.path);
+      for (const p of ['/preflight', '/writeback', '/sync']) assert.ok(paths.includes(p), `${p} was called (${paths.join(', ')})`);
+      assert.ok(Object.keys(r.files).length > 20, 'the package came back');
+    });
+
+    await t('CD-06', 'a host route that does not answer is said; without a host the local host builds', async () => {
+      const dead = { name: 'dead', preflight: 'http://127.0.0.1:1/preflight' };
+      const r = (await call(port, 'POST', '/compiler/build', { spec, host: dead })).body;
+      assert.match(JSON.stringify(r), /unreachable|refused|ECONNREFUSED/, 'the dead route is named in the result');
+      const local = (await call(port, 'POST', '/compiler/build', { spec })).body;
+      assert.ok(local.ok && Object.keys(local.files).length > 20, JSON.stringify(local).slice(0, 200));
+    });
+
+    await t('CD-07', 'run with a model named by its route: each T2 prompt reaches it; results and progress come back', async () => {
+      seen.length = 0;
+      const r = (await call(port, 'POST', '/compiler/run', { spec, host, model: { api: 'route', url: `${S}/generate` } })).body;
+      assert.ok(r.stage, JSON.stringify(r).slice(0, 300));
+      assert.ok(Array.isArray(r.progress) && r.progress.some(p => p.status === 'compiled'), 'progress is listed');
+      if (r.stage === 'complete') {
+        const asked = seen.filter(x => x.path === '/generate');
+        assert.strictEqual(asked.length, r.t2.dispatched, 'every T2 node asked the route once');
+        assert.ok(asked.every(x => typeof x.body.prompt === 'string' && x.body.prompt.length > 50), 'each with its prompt');
+        assert.strictEqual(r.t2.results.length, r.t2.dispatched, 'every node has its result, none dropped');
+        assert.ok(r.t2.results.every(x => x.status), 'each result says what happened');
+      } else assert.strictEqual(r.stage, 'compile_only', 'no T2 nodes in this spec is said, not hidden');
+    });
+
+    await t('CD-08', 'a host or a model given as a path is refused at the door', async () => {
+      const a = await call(port, 'POST', '/compiler/build', { spec, host: '/etc/some-host.js' });
+      assert.strictEqual(a.status, 400); assert.match(JSON.stringify(a.body), /host/);
+      const b = await call(port, 'POST', '/compiler/run', { spec, model: './a-model.js' });
+      assert.strictEqual(b.status, 400); assert.match(JSON.stringify(b.body), /model/);
+    });
+    stand.close();
 
     await t('CD-04', 'every component keeps the shape: a capability, a command and events', async () => {
       assert.deepStrictEqual(ctx.shape(), []);
