@@ -108,6 +108,26 @@ decisions:
     # from the kernel, Level choosing detail by distance; measured: time per tick against a fixed budget, agents at full detail vs summarised,
     # and that a collapsed settlement expanded again matches a run never collapsed.
 
+  EAS_D9_emerge_calls_back_by_route:
+    status: "DECIDED 2026-11-05 (his)"
+    james: 'asked how Nexus\'s pieces take part when it asks Emerge through its door: "Emerge calls back by route"'
+    context: >-
+      Found the same day, reading EAS4's last three callers (copilot/module-builder.js L2 build; guardian/server.js and lib/build-pipeline.js
+      L3 run; idearium/compiler-bridge.js): lib/emerge's pipeline runs Cortex's preflight and writeback and Idearium's sync in-process, and
+      its t2-gate sends T2 to Guardian (:7820 /command, the SEAM queue). emerge/ removed that coupling on purpose (his, 2026-10-28: "don't
+      couple to nexus"): it calls a host (compiler/host.js) and a model (compiler/model.js), and says Nexus keeps its own "in its repo"; none
+      exists. Through the door nothing can be handed over in-process. So the coder's earlier plan to "port t2-gate's 52 lib-only lines" was
+      wrong: those lines are the coupling his rule removed. The conflict put to him: Emerge depends on nothing above it (2026-10-28) vs model
+      work routes through RAID and Guardian (§5.2, §9.1). Choices: Emerge calls back by route · callers wrap the door (T2 on Emerge's own
+      Ollama, bypassing Guardian) · one Nexus build host placed in a system he names · plan it first.
+    chosen: >-
+      A request through Emerge's door may name a host and a model as routes. Emerge calls them over HTTP: still no Nexus file in Emerge, and
+      any system can be swapped in for any of them. Guardian stays the model for Nexus's builds, so routing and the economy hold.
+    changes: >-
+      emerge/: model.js gains api "route" (POST a URL: { prompt, meta } → { ok, text, … }); host.js accepts route settings (ping, preflight,
+      writeback, sync each a URL; summarize stays local). Nexus: the system that owns each part serves it (Cortex: preflight, writeback;
+      Idearium: sync; Guardian: the model). Then L2 build and L3 run go behind the door and the four callers switch.
+
 phases:
   EAS1_the_skeleton_in_emerge:
     status: BUILT 0.60.336 (Emerge 19200ff)
