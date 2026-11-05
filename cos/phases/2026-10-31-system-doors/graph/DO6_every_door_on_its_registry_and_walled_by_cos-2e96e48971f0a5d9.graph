@@ -1,0 +1,233 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DO6_every_door_on_its_registry_and_walled_by_cos:2e96e48971f0a5d9
+type: graph
+id: phase:DO6_every_door_on_its_registry_and_walled_by_cos:2e96e48971f0a5d9
+context: dependency graph of phase DO6_every_door_on_its_registry_and_walled_by_cos
+intent: null
+summary: 26 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793859126569
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793859126569
+lastSeenAt: 1793859126569
+fingerprint: null
+payload:
+  for: DO6_every_door_on_its_registry_and_walled_by_cos
+  kind: phase
+  repo: null
+  hash: 2e96e48971f0a5d9
+  nodes:
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: changes
+      exists: true
+      system: cos
+    - path: diagnostic/server.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: intelligence/server.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: loom/server.js
+      role: changes
+      exists: true
+      system: loom
+    - path: ollama/server.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: versionium/server.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/clear-glass-stream-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/copilot-adversarial-wire.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/copilot-handshake-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/cli.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/suspend.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/manager/supervisor.js
+      to: cos/manager/suspend.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/cli.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-wire.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-handshake-dispatch.test.js
+      to: copilot/server.js
+      kind: requires
+  crossings:
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D9_registry_then_cos_through_the_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO1_idearium_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO2_architect_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
+    dependents: []
+    upstream:
+      - docs/2026-10-31-spec-everything-phasemap.spec::SE_D3_the_origin_is_server_js
+      - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
+      - docs/2026-10-31-system-doors-phasemap.spec::DO1_idearium_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO2_architect_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D1_clear_glass_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D3_architect_into_idearium_and_loom
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D9_registry_then_cos_through_the_door
+    downstream: []
+    blockedBy:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO1_idearium_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO2_architect_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 2 · blocked by DO1_idearium_door, DO2_architect_door, DO3_cortex_door,
+        DO5_clear_glass_door
+      - >-
+        depends on (5): DO_D9_registry_then_cos_through_the_door, DO1_idearium_door,
+        DO2_architect_door, DO3_cortex_door, DO5_clear_glass_door · all upstream 10
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO_D9_registry_then_cos_through_the_door
+        kind: declared
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO1_idearium_door
+        kind: declared
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO2_architect_door
+        kind: declared
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+        kind: declared
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
+        kind: declared

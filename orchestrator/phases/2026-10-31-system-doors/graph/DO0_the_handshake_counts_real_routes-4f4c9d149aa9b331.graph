@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421248102
+exported_at: 1793859126574
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421248102
-lastSeenAt: 1793421248102
+firstSeenAt: 1793859126574
+lastSeenAt: 1793859126574
 fingerprint: null
 payload:
   for: DO0_the_handshake_counts_real_routes
@@ -161,12 +161,16 @@ payload:
       - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
       - docs/2026-10-31-system-doors-phasemap.spec::DO4_boot_js_retired
       - docs/2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO6_every_door_on_its_registry_and_walled_by_cos
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
     conflicts: []
     dangling: []
     lines:
       - layer 0
       - 'depends on (0): —'
-      - 'needed by (3): DO1_idearium_door, DO3_cortex_door, DO5_clear_glass_door · all downstream 4'
+      - >-
+        needed by (3): DO1_idearium_door, DO3_cortex_door, DO5_clear_glass_door · all downstream 5 ·
+        finishing it unlocks DO5_clear_glass_door
     edges: []
