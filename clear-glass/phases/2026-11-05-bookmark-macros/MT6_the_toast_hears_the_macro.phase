@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-bookmark-macros-phasemap.spec::MT6_the_toast_hears_the_macro
+type: phase
+id: docs_2026-11-05-bookmark-macros-phasemap.spec::MT6_the_toast_hears_the_macro
+context: pipeline phase MT6_the_toast_hears_the_macro of docs/2026-11-05-bookmark-macros-phasemap.spec
+intent: null
+summary: MT6_the_toast_hears_the_macro (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793896362956
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793896362956
+lastSeenAt: 1793896362956
+fingerprint: null
+payload:
+  id: MT6_the_toast_hears_the_macro
+  map: docs/2026-11-05-bookmark-macros-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.404 — test-macro-toast-glass MT-06/07, test-cg-bookmark-macros BK-05"'
+  files:
+    - clear-glass/renderer/macro-toast.js
+    - clear-glass/renderer/browser.js
+    - tests/modules/test-macro-toast-glass.test.js
+    - tests/modules/test-cg-bookmark-macros.test.js
+  depends_on:
+    - BM1_a_bookmark_runs_its_macro
+  blocks: []
+  spec: null
+  graph: 7b7fb719e343f5ee

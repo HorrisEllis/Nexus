@@ -20,3 +20,13 @@ phases:
       most 30 s), then the macro runs as his act through macros:run, with its own toast; from the Library, after the page opens in its window.
       The bar marks a bound bookmark ⚡. A macro that is gone or fails is said, never silent; the page stays open either way.
     proof: "a bound bookmark keeps its macro and unbinds; an unknown macro is refused; the bar runs it after the page loads; the Library offers the choice and runs it on open"
+  MT6_the_toast_hears_the_macro:
+    status: "BUILT 0.60.404 — test-macro-toast-glass MT-06/07, test-cg-bookmark-macros BK-05"
+    origin: "James, 2026-11-05: \"so it should work end to end. did you add the toast for the macros??\""
+    depends_on: [BM1_a_bookmark_runs_its_macro]
+    files: [clear-glass/renderer/macro-toast.js, clear-glass/renderer/browser.js, tests/modules/test-macro-toast-glass.test.js, tests/modules/test-cg-bookmark-macros.test.js]
+    does: >-
+      Found when he asked: the toast (MT1) and the bridge's per-step progress (MB4) existed, but nothing in the window listened, so no toast
+      showed while a macro played. The window now hears macros:progress and the toast draws it: step N of M and its label; Pause, Resume, Step
+      (skip) and Stop to the running macro; done, or where it stopped and why.
+    proof: "MT-06/07 in Clear Glass; BK-05 the subscription"

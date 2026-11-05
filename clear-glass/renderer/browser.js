@@ -702,6 +702,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   window.CGSiteKeyBar?.mount({ cg });   // 0.60.275 KB3 — "Bind a key" after a pick
   window.CGGateBar?.mount({ cg });      // 0.60.292 UG5 — "Gate this element" after a pick
   window.CGHideBar?.mount({ cg });      // 0.60.402 EE2 — "Hide this element" after a pick
+  // 0.60.404 MT6 — the macro toast hears every step of a macro this window runs (his runs, a bookmark's, a gate's): before this nothing listened
+  try { cg.macros.onProgress((s) => { if (s && s.agentId && s.agentId !== agentId) return; window.CGMacroToast?.fromProgress(s, (op) => cg.macros.control(op, agentId)); }); } catch (_) {}
 
   pickerBtn.addEventListener('click', async () => {
     pickerActive = !pickerActive;

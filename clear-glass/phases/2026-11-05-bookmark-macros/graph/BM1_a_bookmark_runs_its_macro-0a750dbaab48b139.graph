@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793896059430
+exported_at: 1793896362953
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793896059430
-lastSeenAt: 1793896059430
+firstSeenAt: 1793896362953
+lastSeenAt: 1793896362953
 fingerprint: null
 payload:
   for: BM1_a_bookmark_runs_its_macro
@@ -172,15 +172,20 @@ payload:
   dag:
     layer: 0
     deps: []
-    dependents: []
+    dependents:
+      - docs/2026-11-05-bookmark-macros-phasemap.spec::MT6_the_toast_hears_the_macro
     upstream: []
-    downstream: []
+    downstream:
+      - docs/2026-11-05-bookmark-macros-phasemap.spec::MT6_the_toast_hears_the_macro
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-11-05-bookmark-macros-phasemap.spec::MT6_the_toast_hears_the_macro
     conflicts: []
     dangling: []
     lines:
       - layer 0
       - 'depends on (0): —'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): MT6_the_toast_hears_the_macro · finishing it unlocks
+        MT6_the_toast_hears_the_macro
     edges: []

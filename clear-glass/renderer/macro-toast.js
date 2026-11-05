@@ -52,7 +52,30 @@
       var bar = root.querySelector('.mt-bar > i'); if (bar && total) bar.style.width = Math.round(100 * index / total) + '%';
       return API;
     },
-    hide: function () { root.className = ''; root.innerHTML = ''; cbs = {}; return API; },
+    hide: function () { root.className = ''; root.innerHTML = ''; cbs = {}; clearTimeout(API._doneT); return API; },
+    // 0.60.404 MT6 — James, 2026-11-05: "did you add the toast for the macros??" The toast was built (MT1) and the bridge sent each step
+    // (macros:progress, MB4) but nothing in the window listened, so a playing macro showed no toast. fromProgress(state, control) is that
+    // listener: a playback state { name, i, n, label, paused, done, ok, error } draws the player (step i+1 of n, the step's label), its buttons
+    // go back to the running macro through control(op) — pause, resume, skip (the Step button) and stop — and the end says done or where it
+    // stopped, then clears itself.
+    fromProgress: function (s, control) {
+      if (!s || s.kind !== 'playback') return API;
+      var op = function (o) { return function () { try { control && control(o); } catch (_) {} }; };
+      if (s.done) {
+        mount(); root.className = 'show playing'; cbs = {};
+        root.innerHTML = '<span class="mt-label">' + (s.ok ? '✓ ' : '✗ ') + esc(s.name || 'Macro') + '</span>'
+          + '<span class="mt-sub" id="mt-prog">' + (s.ok ? 'done · ' + (s.n || 0) + ' steps' : 'stopped at step ' + ((s.i || 0) + 1) + (s.error ? ' — ' + esc(s.error) : '')) + '</span>';
+        clearTimeout(API._doneT); API._doneT = setTimeout(function () { API.hide(); }, s.ok ? 3500 : 9000);
+        return API;
+      }
+      clearTimeout(API._doneT);
+      var state = { name: s.name, index: (s.i || 0) + 1, total: s.n || 0, paused: !!s.paused };
+      if (!root || root.className.indexOf('playing') < 0 || API._paused !== state.paused || API._name !== state.name) {
+        API.playing(state, { onPause: op('pause'), onResume: op('resume'), onStep: op('skip'), onStop: op('stop') });
+        API._paused = state.paused; API._name = state.name;
+      }
+      return API.step(state.index, state.total, s.label || '');
+    },
   };
   window.CGMacroToast = API;
 })();
