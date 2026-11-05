@@ -553,7 +553,9 @@
         "GET /api/cos/systems/:name/caps",
         "PATCH /api/cos/systems/:name/caps",
         "GET /api/cos/systems/:name/config",
-        "PATCH /api/cos/systems/:name/config"
+        "PATCH /api/cos/systems/:name/config",
+        "GET /api/cos/policy",
+        "PATCH /api/cos/policy"
       ],
       "listens": [
         "cos.ledger"

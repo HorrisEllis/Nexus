@@ -4,21 +4,23 @@ type: phase
 id: docs_2026-11-01-the-compartment-phasemap.spec::CP6f_raid_balances_load
 context: pipeline phase CP6f_raid_balances_load of docs/2026-11-01-the-compartment-phasemap.spec
 intent: null
-summary: CP6f_raid_balances_load (?) — 7 file(s)
+summary: CP6f_raid_balances_load (?) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1793918058515
+exported_at: 1793918356092
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793918058515
-lastSeenAt: 1793918058515
+firstSeenAt: 1793918356092
+lastSeenAt: 1793918356092
 fingerprint: null
 payload:
   id: CP6f_raid_balances_load
   map: docs/2026-11-01-the-compartment-phasemap.spec
   repo: null
   layer: null
-  status: '"OPEN — mapped 2026-11-05; his reading settled the same day: balance the machine (below)"'
+  status: >-
+    "BUILT 0.60.413 — test-cos-resources CR-08..CR-11, test-cos-resources-page RP-03; his reading:
+    balance the machine"
   files:
     - cos/manager/resources.js
     - cos/manager/usage.js
@@ -26,11 +28,15 @@ payload:
     - lib/raid-port.js
     - cos/manager/contract.json
     - cos/ui/resources/page.js
+    - cos/ui/resources/index.html
+    - cos/spec/compartment.spec
+    - idearium/cli/route-commands.js
     - tests/modules/test-cos-resources.test.js
+    - tests/modules/test-cos-resources-page.test.js
   depends_on:
     - CP6a_caps_priority_accounting
     - CP6b_raid_approves_what_cos_does_by_rule
   blocks:
-    - MOD-CP-RESOURCES
+    - MOD-CP-BALANCE
   spec: cos/spec/compartment.spec
-  graph: 60d2bddb354dba0f
+  graph: 58c9c228b0377a0d

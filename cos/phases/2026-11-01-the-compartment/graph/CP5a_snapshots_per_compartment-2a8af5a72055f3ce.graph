@@ -7,11 +7,11 @@ intent: null
 summary: 32 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793917832801
+exported_at: 1793918356103
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793917832801
-lastSeenAt: 1793917832801
+firstSeenAt: 1793918356103
+lastSeenAt: 1793918356103
 fingerprint: null
 payload:
   for: CP5a_snapshots_per_compartment
@@ -281,10 +281,6 @@ payload:
       - with: docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
         files:
           - cos/manager/server.js
-      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP6f_raid_balances_load
-        files:
-          - cos/manager/supervisor.js
-          - cos/manager/contract.json
       - with: docs/2026-11-01-the-compartment-phasemap.spec::CP7a_the_nexus_sync_options
         files:
           - cos/manager/server.js
@@ -314,7 +310,7 @@ payload:
         same files as CP10_miniworlds with no order between them: cos/manager/server.js,
         cos/manager/contract.json, idearium/cli/route-commands.js
       - 'same files as CP11_the_diagnostic_map with no order between them: cos/manager/server.js'
-      - … and 3 more phases sharing its files without an order
+      - … and 2 more phases sharing its files without an order
     edges:
       - from: docs/2026-11-01-the-compartment-phasemap.spec::CP1a_every_system_walled_by_cos
         kind: declared

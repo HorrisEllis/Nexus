@@ -365,11 +365,11 @@ phases:
     does: "a compartment's network on, off (loopback only) or throttled (bytes/s): process tier in its wall (net, http, https, dgram refused or wrapped), machine tier by QMP set_link and the netdev throttle; switched live from its menu; each change by a person or RAID's rule, recorded"
     proof: "a fixture refused outbound when off; its throughput under the throttle; switched back live"
   CP6f_raid_balances_load:
-    status: "OPEN — mapped 2026-11-05; his reading settled the same day: balance the machine (below)"
+    status: "BUILT 0.60.413 — test-cos-resources CR-08..CR-11, test-cos-resources-page RP-03; his reading: balance the machine"
     spec: cos/spec/compartment.spec
-    blocks: [MOD-CP-RESOURCES]
+    blocks: [MOD-CP-BALANCE]
     depends_on: [CP6a_caps_priority_accounting, CP6b_raid_approves_what_cos_does_by_rule]
-    files: [cos/manager/resources.js, cos/manager/usage.js, cos/manager/supervisor.js, lib/raid-port.js, cos/manager/contract.json, cos/ui/resources/page.js, tests/modules/test-cos-resources.test.js]
+    files: [cos/manager/resources.js, cos/manager/usage.js, cos/manager/supervisor.js, lib/raid-port.js, cos/manager/contract.json, cos/ui/resources/page.js, cos/ui/resources/index.html, cos/spec/compartment.spec, idearium/cli/route-commands.js, tests/modules/test-cos-resources.test.js, tests/modules/test-cos-resources-page.test.js]
     requires: [node, "COS's manager up (:7799)", "RAID reachable through lib/raid-port.js (fails closed)"]
     prerequisites: ["usage sampled per compartment (CP6a's ring)", "his reading settled: balance the machine (2026-11-05)"]
     # James, 2026-11-05: "map: once commited and released. build the load balancer." Written as CP6's own part (his rule: phases expand):

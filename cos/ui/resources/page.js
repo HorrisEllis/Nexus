@@ -54,8 +54,26 @@
     $('at').textContent = r.at ? `read ${COS.clock(r.at)}${r.reader ? ` · ${r.reader}` : ''}` : 'not read yet';
     $('host').hidden = !(r.host && r.host.freeMemPct != null);
     $('host').textContent = r.host && r.host.freeMemPct != null ? `${r.host.freeMemPct}% memory free of ${Math.round((r.host.totalMB || 0) / 1024)} GB` : '';
+    balancing(r.balance);
+  }
+  // CP6f (0.60.413) — balance the machine, his reading: "Balance the machine". What it does, said; what it has lowered, with why.
+  function balancing(b) {
+    if (!b) { $('bal-state').textContent = 'not read'; return; }
+    $('bal-state').textContent = b.on ? 'on' : 'off';
+    $('bal-toggle').textContent = b.on ? 'Turn off' : 'Turn on';
+    $('bal-toggle').onclick = async () => {
+      try { await COS.call('PATCH', '/api/cos/policy', { patch: { balance: !b.on }, by: 'person' }); COS.notice('ok', `Balancing ${b.on ? 'off' : 'on'}`); }
+      catch (e) { if (!e.refused) COS.notice('err', e.message); }
+      load();
+    };
+    $('bal-rule').textContent = `When free memory is under ${Math.round(b.balanceMemPct * 100)}% or the systems use over ${Math.round(b.balanceCpuPct * 100)}% of the cores, ` +
+      'the busiest system at normal priority goes to below-normal, one at a time, each approved by RAID. It goes back when the pressure is gone. ' +
+      'Critical systems and any priority you set above normal are never touched. A lower priority frees no memory.';
+    $('bal-rows').replaceChildren(...(b.active.length ? b.active.map(a => h('div', { class: 'row' },
+      h('strong', {}, a.name), h('span', { class: 'mono' }, ` ${a.from} → ${a.to}`), h('small', { class: 'muted' }, ` ${a.kind} · ${a.why}`)))
+      : [h('div', { class: 'muted' }, b.on ? 'Nothing is lowered now.' : 'Balancing is off.')]));
   }
   $('refresh').onclick = () => load(true);
-  COS.on('cos.ledger', ({ entry }) => { if (/caps|config|spawn|exit|start|stop/.test(entry.kind || '')) load(); });
+  COS.on('cos.ledger', ({ entry }) => { if (/caps|config|spawn|exit|start|stop|balanc|policy/.test(entry.kind || '')) load(); });
   load(true);   // read once on opening, so "using now" is filled at once (one hidden read for every system)
 })();
