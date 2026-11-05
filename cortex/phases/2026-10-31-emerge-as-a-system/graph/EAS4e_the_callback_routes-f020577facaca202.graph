@@ -1,0 +1,279 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EAS4e_the_callback_routes:f020577facaca202
+type: graph
+id: phase:EAS4e_the_callback_routes:f020577facaca202
+context: dependency graph of phase EAS4e_the_callback_routes
+intent: null
+summary: 36 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793917506296
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793917506296
+lastSeenAt: 1793917506296
+fingerprint: null
+payload:
+  for: EAS4e_the_callback_routes
+  kind: phase
+  repo: null
+  hash: f020577facaca202
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/emerge-host/preflight.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/emerge-host/writeback.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/registry-components.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/server.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: emerge/emerge/compiler/model.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/emerge/cortex-query/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/emerge/cortex-query/writeback.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/emerge/idearium/client.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/emerge/compiler/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/verify.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pulse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+    - from: lib/emerge/compiler/index.js
+      to: lib/emerge/cortex-query/index.js
+      kind: requires
+    - from: lib/emerge/compiler/pipeline.js
+      to: lib/emerge/cortex-query/index.js
+      kind: requires
+    - from: lib/emerge/verify.js
+      to: lib/emerge/cortex-query/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4d_L3_run
+      - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+    dependents:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4f_the_callers_switch
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4a_L0_evaluate
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4b_L1_compile
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4c_L2_build
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4d_L3_run
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D5_one_primitive_per_gate
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D6_emerge_is_a_system_in_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D7_the_spec_compiler_is_emerges
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D9_emerge_calls_back_by_route
+      - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
+      - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
+    downstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4f_the_callers_switch
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4g_lib_emerge_archived
+    blockedBy:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+    unlocks:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4f_the_callers_switch
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by DO3_cortex_door
+      - 'depends on (2): EAS4d_L3_run, DO3_cortex_door · all upstream 11'
+      - >-
+        needed by (1): EAS4f_the_callers_switch · all downstream 2 · finishing it unlocks
+        EAS4f_the_callers_switch
+    edges:
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4d_L3_run
+        kind: declared
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
+        kind: declared

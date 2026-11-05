@@ -7,18 +7,20 @@ intent: null
 summary: EAS4f_the_callers_switch (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793910797514
+exported_at: 1793917506298
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793910797514
-lastSeenAt: 1793910797514
+firstSeenAt: 1793917506298
+lastSeenAt: 1793917506298
 fingerprint: null
 payload:
   id: EAS4f_the_callers_switch
   map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "OPEN — guardian/server.js switched 0.60.412; idearium/compiler-bridge.js,
+    copilot/module-builder.js, lib/build-pipeline.js to do"
   files:
     - idearium/compiler-bridge.js
     - copilot/module-builder.js
@@ -26,6 +28,7 @@ payload:
     - lib/build-pipeline.js
   depends_on:
     - EAS4e_the_callback_routes
-  blocks: []
-  spec: null
+  blocks:
+    - MOD-EAS-CALLERS
+  spec: docs/emerge-system.spec
   graph: 3db425128da49010
