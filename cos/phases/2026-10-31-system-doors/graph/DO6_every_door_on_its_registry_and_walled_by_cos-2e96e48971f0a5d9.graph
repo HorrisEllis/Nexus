@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793859126569
+exported_at: 1793859698083
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793859126569
-lastSeenAt: 1793859126569
+firstSeenAt: 1793859698083
+lastSeenAt: 1793859698083
 fingerprint: null
 payload:
   for: DO6_every_door_on_its_registry_and_walled_by_cos
@@ -210,7 +210,10 @@ payload:
       - docs/2026-10-31-system-doors-phasemap.spec::DO3_cortex_door
       - docs/2026-10-31-system-doors-phasemap.spec::DO5_clear_glass_door
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-10-31-system-doors-phasemap.spec::DO8_cos_door
+        files:
+          - cos/manager/server.js
     dangling: []
     lines:
       - >-
@@ -220,6 +223,7 @@ payload:
         depends on (5): DO_D9_registry_then_cos_through_the_door, DO1_idearium_door,
         DO2_architect_door, DO3_cortex_door, DO5_clear_glass_door · all upstream 10
       - 'needed by (0): —'
+      - 'same files as DO8_cos_door with no order between them: cos/manager/server.js'
     edges:
       - from: docs/2026-10-31-system-doors-phasemap.spec::DO_D9_registry_then_cos_through_the_door
         kind: declared

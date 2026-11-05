@@ -27,3 +27,12 @@ system. It’s what cos manages. The spine and component registry for each syste
 - DO4: `boot.js` retired.
 - Doors for Idearium (DO1), Architect (DO2), Clear Glass (DO5), and Orchestrator and COS (no phase yet).
 - `/contract` still serves `interaction-contract.json`. Serving it from the registry is DO6's.
+
+## The existing phases checked (same release)
+James, 2026-11-05: "check the existing phases. also keep updating the ledger."
+- I read every open phase in every map that names a door, a drawbridge or a system's `server.js`: 94 entries across 50 maps.
+- **Duplicate:** `DL6_cortex_server` (the 2026-10-21 data-layout map) is the same phase as DO3. It now says "served by DO3". Its
+  `cortex-v2.js` part moved into DO3b. It is kept, not deleted.
+- **Unblocked:** `MG32_autopilot_door_through_doors`. It moves COS's autopilot door off Cortex's and Intelligence's files onto their routes.
+  Those two reads are the two new crossings on main, and the reason CT-07 is red.
+- **Missing:** Orchestrator and COS had no door phase anywhere. Added: DO7 (Orchestrator's door) and DO8 (COS's door).

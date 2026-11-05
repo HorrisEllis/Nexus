@@ -86,7 +86,7 @@ phases:
   DO3_cortex_door:
     status: "DO3a BUILT 0.60.392 (the door: cortex/server.js is the process, its registry, handshake and CLI; launchers switched); DO3b OPEN (boot.js's handlers into cortex/routes, one registry entry at a time)"
     depends_on: [DO_D0_server_floats_on_the_registry, DO0_the_handshake_counts_real_routes]
-    files: [cortex/server.js, cortex/routes, cortex/registry-components.js, cortex/compartment.json, lib/nexus/autopilot.js, cortex/boot.js]
+    files: [cortex/server.js, cortex/routes, cortex/registry-components.js, cortex/compartment.json, lib/nexus/autopilot.js, cortex/boot.js, cortex/cortex-v2.js]
     spec: docs/system-doors.spec
     blocks: [MOD-DOOR-CORTEX]
     does: "boot.js's routes become registry components with handlers in cortex/routes; server.js mounts them; launchers switched"
@@ -107,6 +107,23 @@ phases:
     blocks: [MOD-DOOR-CG]
     does: "TO CONFIRM: the :7702 REST surface out of bridge.js into clear-glass/server.js"
     proof: "every /cli/* route answers the same; contract from the registry"
+
+  DO7_orchestrator_door:
+    status: OPEN
+    origin: "James, 2026-11-05: \"they all need the door build\" — found the same day: Orchestrator had no door phase in any map"
+    depends_on: [DO_D9_registry_then_cos_through_the_door, DO0_the_handshake_counts_real_routes]
+    files: [orchestrator/server.js, orchestrator/orchestrator.js, orchestrator/registry-components.draft.json, orchestrator/compartment.json, lib/cli/compartments.js]
+    spec: docs/system-doors.spec
+    does: "orchestrator/server.js in front of orchestrator.js the way DO3a put cortex/server.js in front of boot.js: registry, handshake, CLI from its own registry (its draft accepted first), every other route unchanged; COS starts the door"
+    proof: "its route table recorded through orchestrator.js alone and replayed through the door: the same"
+  DO8_cos_door:
+    status: OPEN
+    origin: "James, 2026-11-05: \"they all need the door build\" — found the same day: COS had no door phase; cos/manager/server.js serves COS's routes but names no registry"
+    depends_on: [DO_D9_registry_then_cos_through_the_door, DO0_the_handshake_counts_real_routes]
+    files: [cos/server.js, cos/manager/server.js, cos/registry-components.draft.json, cos/compartment.json]
+    spec: docs/system-doors.spec
+    does: "COS's own door: its registry (the draft accepted), handshake and CLI served from it; the manager's routes unchanged behind it"
+    proof: "the manager's route table the same through the door; COS's CLI (SC1–SC8) runs through POST /cli"
 
 order: "DO0 first (it is a defect, and every door's handshake needs it); then DO2 (the smallest system gets its origin first), DO1, DO3 → DO4; DO5 and DO2a after his yes."
 
@@ -135,3 +152,15 @@ order: "DO0 first (it is a defect, and every door's handshake needs it); then DO
 # (cortex-sse-broadcast 2/2; test-failure-modes 8/1 as before, its one failure not this change's).
 # Not done here, said (§1.2): /contract still serves interaction-contract.json, not the registry (orchestrator's handshake reads that shape;
 # changing it is DO6's); Orchestrator and COS have no door phase yet — to add.
+
+# ── ADDENDUM 2026-11-05 — the existing phases checked before the next door (his "check the existing phases") ─────────────────────────────
+# James, 2026-11-05: "check the existing phases. also keep updating the ledger." Every open phase in every map that names a door, a
+# drawbridge or a system's server.js was read (94 entries across 50 maps). What they say about the doors:
+#   - DUPLICATE: DL6_cortex_server (2026-10-21 data-layout) is DO3 — the same file and the same proof. It now says "served by DO3"; its
+#     cortex-v2.js part moved into DO3b's files. Kept, not deleted (§0.3).
+#   - UNBLOCKED: MG32_autopilot_door_through_doors (cos-manager map) moves COS's autopilot door off Cortex's and Intelligence's files onto
+#     their routes. Those two reads are the two new crossings the boundary ratchet reports on main (cos -> cortex/memory/jaa-db.js, cos ->
+#     intelligence/cfr/field.js) and the reason CT-07 is red. Cortex's door now exists; MG32 goes next.
+#   - RELATED, not duplicates: SE7_the_door_in_the_dag (a phase with no way in is refused), EAS4_callers_through_the_door (Emerge's door),
+#     CP0/CP4 (the compartment), RG/PL in the registry-per-system map (each registry its own). Each names its own work; none builds a door.
+#   - MISSING: Orchestrator and COS had no door phase anywhere. Added here: DO7, DO8.
