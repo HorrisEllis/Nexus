@@ -541,6 +541,38 @@
       ]
     },
     {
+      "id": "resources",
+      "title": "Resources",
+      "path": "resources/",
+      "route": "#/resources",
+      "nav": "main",
+      "built": true,
+      "phase": "CP6a_caps_priority_accounting (expanded 2026-11-05: every system on one page; balancing by RAID is CS7, after)",
+      "routes": [
+        "GET /api/cos/resources",
+        "GET /api/cos/systems/:name/caps",
+        "PATCH /api/cos/systems/:name/caps",
+        "GET /api/cos/systems/:name/config",
+        "PATCH /api/cos/systems/:name/config"
+      ],
+      "listens": [
+        "cos.ledger"
+      ],
+      "emits": [
+        "cos.ui.notice"
+      ],
+      "plannedBefore": {
+        "id": "resources",
+        "title": "Resources",
+        "phase": "MG27_state_and_resource_screens",
+        "waitsOn": [
+          "MG23_allocation_and_balance",
+          "MG24_network_manager"
+        ],
+        "does": "Caps, allocation and balance per compartment, virtual networks and storage locations."
+      }
+    },
+    {
       "id": "updates",
       "title": "Updates",
       "path": "updates/",
@@ -666,16 +698,6 @@
         "MG26_branch_benchmark_merge"
       ],
       "does": "Every system state on one timeline: snapshot, branch, benchmark, merge after friction testing."
-    },
-    {
-      "id": "resources",
-      "title": "Resources",
-      "phase": "MG27_state_and_resource_screens",
-      "waitsOn": [
-        "MG23_allocation_and_balance",
-        "MG24_network_manager"
-      ],
-      "does": "Caps, allocation and balance per compartment, virtual networks and storage locations."
     },
     {
       "id": "builder",

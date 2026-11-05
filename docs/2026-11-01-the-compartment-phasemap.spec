@@ -312,6 +312,14 @@ phases:
       stop the lowest-priority, largest compartment. Routes GET /api/cos/resources and GET|PATCH /api/cos/systems/:name/caps; rows
       `cos resources` and `cos caps`; the cockpit's Resources tab.
     proof: "a fixture compartment's priority set and read back from the OS; its heap cap on its command line; a resident limit crossed gives the ledger line and a restart; the halt floor gives one proposal; usage reads a real pid on this Windows"
+    expanded_2026_11_05: >-
+      James, 2026-11-05: "need that resource manager". The coder proposed the first step (a Resources page: priority, memory limit, start at
+      boot, applied right away; RAID balancing after); his answer: "yes". Found first: CP6a had built the backend (caps by layer, read back)
+      and only a key/value form per system in its cockpit, and the Resources page stood in the contract's planned list. Expanded (his rule:
+      phases expand): one page for every system — what it uses now, its priority (low, below-normal, normal; applied at once, read back from
+      the OS), its memory limit (heapMB, at its next start), a restart above a resident limit (rssLimitMB, onOver restart, RAID-approved by
+      CP6b), and Start at boot (BT1's start.autostart). On the main rail; the contract's page moved from planned to built.
+    files_added: [cos/ui/resources/index.html, cos/ui/resources/page.js, cos/ui/resources/page.css, cos/ui/shell/page.js, cos/manager/contract.json, tests/modules/test-cos-resources-page.test.js, tests/modules/run-all.js]
   CP6b_raid_approves_what_cos_does_by_rule:
     status: "DONE 0.60.361 — test-cos-resources CR-06, CR-07"
     spec: cos/spec/compartment.spec
