@@ -1,6 +1,5 @@
 envelope: 1
-uuid: >-
-  nexus-export-phase-docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+uuid: nexus-export-phase-docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
 type: phase
 id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
 context: >-
@@ -10,18 +9,18 @@ intent: null
 summary: EAS1a_the_boundary_reads_code_not_text (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793448283184
+exported_at: 1793899854790
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793448283184
-lastSeenAt: 1793448283184
+firstSeenAt: 1793899854790
+lastSeenAt: 1793899854790
 fingerprint: null
 payload:
   id: EAS1a_the_boundary_reads_code_not_text
   map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: BUILT 0.60.336
   files:
     - cos/archetype/nexus-system/lib/boundary.js
   depends_on: []
