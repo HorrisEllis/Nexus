@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-console-phasemap.spec::SC16_no_console_windows
+type: phase
+id: docs_2026-11-02-cos-console-phasemap.spec::SC16_no_console_windows
+context: pipeline phase SC16_no_console_windows of docs/2026-11-02-cos-console-phasemap.spec
+intent: null
+summary: SC16_no_console_windows (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793889273003
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793889273003
+lastSeenAt: 1793889273003
+fingerprint: null
+payload:
+  id: SC16_no_console_windows
+  map: docs/2026-11-02-cos-console-phasemap.spec
+  repo: null
+  layer: backend
+  status: '"BUILT 0.60.400 — test-cos-hidden-windows"'
+  files:
+    - cos/manager/supervisor.js
+    - cos/manager/autopilot-door.js
+    - lib/nexus/core-duties.js
+    - tests/modules/test-cos-hidden-windows.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - SC11_the_console_tab
+  blocks: []
+  spec: cos/spec/cos-manager.spec
+  graph: 56c3a98b91cdc03a

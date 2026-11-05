@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793874058256
+exported_at: 1793889272990
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793874058256
-lastSeenAt: 1793874058256
+firstSeenAt: 1793889272990
+lastSeenAt: 1793889272990
 fingerprint: null
 payload:
   for: SC11_the_console_tab
@@ -150,6 +150,7 @@ payload:
     dependents:
       - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
       - docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
+      - docs/2026-11-02-cos-console-phasemap.spec::SC16_no_console_windows
     upstream:
       - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
       - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
@@ -164,18 +165,21 @@ payload:
     downstream:
       - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
       - docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
+      - docs/2026-11-02-cos-console-phasemap.spec::SC16_no_console_windows
     blockedBy: []
     unlocks:
       - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
       - docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
+      - docs/2026-11-02-cos-console-phasemap.spec::SC16_no_console_windows
     conflicts: []
     dangling: []
     lines:
       - layer 4
       - 'depends on (2): SC3_system_command_line, SC5_the_console_ui · all upstream 10'
       - >-
-        needed by (2): SC14_each_system_opens_in_its_own_window, SC15_nexus_cli_in_the_console ·
-        finishing it unlocks SC14_each_system_opens_in_its_own_window, SC15_nexus_cli_in_the_console
+        needed by (3): SC14_each_system_opens_in_its_own_window, SC15_nexus_cli_in_the_console,
+        SC16_no_console_windows · finishing it unlocks SC14_each_system_opens_in_its_own_window,
+        SC15_nexus_cli_in_the_console, SC16_no_console_windows
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
         kind: declared

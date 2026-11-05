@@ -396,7 +396,7 @@ function createDoorHandlers({ ROOT, sup, log = () => {}, warp = null }) {
     // §SANDBOX 2026-09-25 — run-all gives each suite its own root; this marks
     // the runner itself as a test process too.
     const sb = require('../../lib/test-sandbox.js').childEnv({ ...process.env, NEXUS_TEST_RUN_DEPTH: '1' });
-    const proc = spawn(process.execPath, [path.join(ROOT, 'tests', 'modules', 'run-all.js'), `--filter=${name}`], {
+    const proc = spawn(process.execPath, [path.join(ROOT, 'tests', 'modules', 'run-all.js'), `--filter=${name}`], { windowsHide: true,   // SC16
       cwd: ROOT,
       env: sb.env,
     });
