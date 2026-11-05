@@ -34,3 +34,13 @@ phases:
       or when the GPU process died 3 times in one run: then <userData>/gpu-off.flag keeps later starts in software mode (WG1's software WebGL),
       said in the log, until the flag is deleted or CG_GPU=on. The 0.60.3 default (off) is superseded and kept in the comment (§0.3).
     proof: "WG-01: on by default; off with CG_GPU=off or the flag; three GPU deaths write the flag"
+  WG3_a_failing_gpu_restarts_in_software_now:
+    status: "BUILT 0.60.401 — test-cg-webgl WG-01"
+    origin: "James, 2026-11-05: \"clearglass is looping\" · \"finish clearglass.\""
+    depends_on: [WG2_gpu_on_by_default]
+    files: [clear-glass/src/main/index.js, tests/modules/test-cg-webgl.test.js]
+    does: >-
+      The coder's miss in WG2, found the same day: Clear Glass passes disable-gpu-process-crash-limit, so with the GPU on by default a failing
+      GPU process restarts forever, and WG2's flag only took effect at the next start. On the third GPU death the flag is written and Clear
+      Glass restarts itself once, in software mode. Whether this was his loop is his machine's to show.
+    proof: "WG-01: the third death writes the flag and relaunches"
