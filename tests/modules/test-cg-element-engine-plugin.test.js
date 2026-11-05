@@ -7,6 +7,8 @@
  *   EP-02  the panel: the Ad blocking view first and unchanged, then Elements, ErosmancerOS and Edit ErosmancerOS
  *   EP-03  Pick asks the shell to start the picker; the shell presses #picker-btn
  *   EP-04  Edit ErosmancerOS in the panel: export, show changes, import — through src/eros/edit.js, to his folder
+ *   EP-05  EE2: Hide what you point at — a host##selector rule in his filters, the element hidden by the engine on that site only, listed,
+ *          Undo removes it; a selector a rule cannot use is refused; the bar after a pick is wired
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -68,6 +70,30 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     const im = await P.settings({ op: 'action', key: 'eros-import', requestId: 'r6', page: {} });
     assert.match(im.data.note, /^Not imported: hostile\/index\.ts — its syntax does not parse/, im.data.note);
     assert.ok(!/\[ ;/.test(fs.readFileSync(path.join(ROOT, 'clear-glass/erosmancer/erosmancer-os/src/hostile/index.ts'), 'utf8')), 'the live file is untouched');
+  });
+
+  await test('EP-05', 'Hide what you point at: one rule, hidden on that site only, listed, undone', async () => {
+    const L = require(path.join(ROOT, 'clear-glass/src/adblock/lists.js'));
+    const svc = L.service({ dir: fs.mkdtempSync(path.join(os.tmpdir(), 'ee2-')), fetch: null }); svc.start();
+    const page = { url: 'https://www.fiverr.com/categories', tabId: 1 };
+    const r = await P.settings({ op: 'set', key: 'hide', value: { selector: 'div.promo-banner', url: page.url }, page, requestId: 'h1' });
+    assert.strictEqual(r.data.rule, 'www.fiverr.com##div.promo-banner', JSON.stringify(r.data).slice(0, 300));
+    assert.ok(svc.state().custom.split('\n').includes('www.fiverr.com##div.promo-banner'), 'in his filters');
+    const css = (u) => JSON.stringify(svc.cosmetics ? svc.cosmetics(u) : '');
+    assert.match(css('https://www.fiverr.com/x'), /div\.promo-banner/, 'hidden on that site');
+    assert.doesNotMatch(css('https://example.com/'), /div\.promo-banner/, 'and not on another');
+    const list = r.data.view.fields.find(f => f.key === 'hidden');
+    assert.deepStrictEqual(list.items.map(i => i.id), ['www.fiverr.com##div.promo-banner']);
+    const again = await P.settings({ op: 'set', key: 'hide', value: { selector: 'div.promo-banner', url: page.url }, page, requestId: 'h2' });
+    assert.match(again.data.note, /Already hidden/);
+    const bad = await P.settings({ op: 'set', key: 'hide', value: { selector: 'a##b', url: page.url }, page, requestId: 'h3' });
+    assert.ok(!bad.data.rule && /no selector a rule can use/.test(bad.data.note));
+    const u = await P.settings({ op: 'set', key: 'hidden', value: { id: 'www.fiverr.com##div.promo-banner', remove: true }, page, requestId: 'h4' });
+    assert.match(u.data.note, /Shown again/); assert.ok(!svc.state().custom.includes('promo-banner'));
+    const js = fs.readFileSync(path.join(ROOT, 'clear-glass/renderer/browser.js'), 'utf8');
+    assert.match(js, /window\.CGHideBar\?\.offer\(\{ selector: pick\.selector, url: pick\.url \|\| wv\.getURL\(\) \}\)/);
+    assert.match(fs.readFileSync(path.join(ROOT, 'clear-glass/renderer/browser.html'), 'utf8'), /<script src="site-hide\/hide-bar\.js"><\/script>/);
+    assert.match(fs.readFileSync(path.join(ROOT, 'clear-glass/renderer/site-hide/hide-bar.js'), 'utf8'), /ctx\.cg\.plugins\.settings\(PLUGIN, 'set', 'hide', \{ selector, url \}, \{ url \}\)/);
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exitCode = failed ? 1 : 0;

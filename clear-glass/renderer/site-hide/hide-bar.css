@@ -1,0 +1,13 @@
+/* 0.60.402 EE2 — the "Hide this element" bar after an element pick; every rule under #cg-hide-bar. It sits above the "Gate this element" bar. */
+#cg-hide-bar { position: fixed; left: 50%; bottom: 232px; transform: translateX(-50%); z-index: 2147483000; width: min(760px, calc(100vw - 32px));
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  background: var(--panel, #15171c); color: var(--text, #e8e8ea); border: 1px solid var(--line, #2b2f38); border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.45); padding: 10px 12px; font: 13px/1.4 system-ui, sans-serif; }
+#cg-hide-bar .hb-title { font-weight: 600; flex: 1 0 100%; }
+#cg-hide-bar .hb-sel { flex: 1 1 200px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 12px/1.4 ui-monospace, monospace; opacity: .8; }
+#cg-hide-bar button { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line, #2b2f38); background: #dc2626; color: #fff; cursor: pointer; font: inherit; }
+#cg-hide-bar .hb-undo { background: transparent; color: inherit; }
+#cg-hide-bar .hb-x { background: transparent; color: inherit; padding: 6px 10px; }
+#cg-hide-bar button[hidden] { display: none; }
+#cg-hide-bar .hb-say { flex: 1 0 100%; min-height: 1em; font-size: 12px; }
+#cg-hide-bar .hb-say.ok { color: #4ade80; } #cg-hide-bar .hb-say.bad { color: #f87171; }

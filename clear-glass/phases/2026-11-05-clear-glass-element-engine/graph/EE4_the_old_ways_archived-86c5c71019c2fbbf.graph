@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793872929077
+exported_at: 1793892016597
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793872929077
-lastSeenAt: 1793872929077
+firstSeenAt: 1793892016597
+lastSeenAt: 1793892016597
 fingerprint: null
 payload:
   for: EE4_the_old_ways_archived
@@ -27,27 +27,31 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 5
+    layer: 4
     deps:
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
     dependents: []
     upstream:
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
-      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
-      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
     downstream: []
     blockedBy:
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+        files:
+          - clear-glass/renderer/guardian-picker.js
     dangling: []
     lines:
-      - layer 5 · blocked by EE3_one_panel
-      - 'depends on (1): EE3_one_panel · all upstream 6'
+      - layer 4 · blocked by EE3_one_panel
+      - 'depends on (1): EE3_one_panel · all upstream 4'
       - 'needed by (0): —'
+      - >-
+        same files as EE1_one_identity_for_a_chosen_element with no order between them:
+        clear-glass/renderer/guardian-picker.js
     edges:
       - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
         kind: declared

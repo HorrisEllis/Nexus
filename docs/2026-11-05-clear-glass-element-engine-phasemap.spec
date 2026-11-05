@@ -64,9 +64,13 @@ phases:
       identity, so a page that re-renders still finds the element.
     proof: "a picked element is found again after the page replaces its node; a gate made before still passes"
   EE2_hide_what_you_point_at:
-    status: OPEN
-    depends_on: [EE1_one_identity_for_a_chosen_element]
-    files: [clear-glass/src/adblock/engine.js, clear-glass/src/adblock/lists.js, clear-glass/renderer/guardian-picker.js, tests/modules/test-cg-element-engine.test.js]
+    status: "BUILT 0.60.402 — test-cg-element-engine-plugin EP-05"
+    recut: >-
+      (2026-11-05, the coder's, said) EE2 no longer waits on EE1: the picker already gives each pick a CSS selector, which is what an element
+      hiding rule needs, and EE1 waits on his EE_D1 (ErosmancerOS's own process or ported) and on running ErosmancerOS, which cannot run in the
+      coder's sandbox (esbuild's binary missing). When EE1 lands, Hide uses the identity's most stable plain-CSS finder.
+    depends_on: [EE0_the_merged_plugin]
+    files: [clear-glass/plugins/adblocker/index.js, clear-glass/renderer/site-hide/hide-bar.js, clear-glass/renderer/site-hide/hide-bar.css, clear-glass/renderer/browser.js, clear-glass/renderer/browser.html, tests/modules/test-cg-element-engine-plugin.test.js]
     does: >-
       The picker gains Hide: the element becomes a ## cosmetic rule for that site in the adblocker's own user list (the parser it already
       has), shown in the adblock panel with Undo. The rule is the most stable finder that is a plain CSS selector; one that is not is said,
