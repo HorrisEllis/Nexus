@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4g_lib_emerge_archived
+type: phase
+id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4g_lib_emerge_archived
+context: pipeline phase EAS4g_lib_emerge_archived of docs/2026-10-31-emerge-as-a-system-phasemap.spec
+intent: null
+summary: EAS4g_lib_emerge_archived (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793910797515
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793910797515
+lastSeenAt: 1793910797515
+fingerprint: null
+payload:
+  id: EAS4g_lib_emerge_archived
+  map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tests/modules/test-substrate-spec.test.js
+  depends_on:
+    - EAS4f_the_callers_switch
+  blocks: []
+  spec: null
+  graph: 2f12ffaf0fb6715c
