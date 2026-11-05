@@ -14,7 +14,7 @@
   const $ = (id) => document.getElementById(id);
   const stage = $('stage');
   const S = { contract: null, systems: [], frames: new Map(), listens: new Map(), current: null, es: null, poll: null, events: 0, proposals: 0, last: new Map() };
-  const ICON = { overview: 'grid', ledger: 'list', console: 'terminal',   /* SC11 */ proposals: 'inbox', automation: 'pulse', updates: 'download', planned: 'compass',   /* SC7: the gear is Updates' (his "With a gear"); Automation takes pulse */ cockpit: 'layers' };
+  const ICON = { overview: 'grid', ledger: 'list', console: 'terminal',   /* SC11 */ proposals: 'inbox', automation: 'pulse', resources: 'cpu',   /* CP6a, expanded 2026-11-05 */ updates: 'download', planned: 'compass',   /* SC7: the gear is Updates' (his "With a gear"); Automation takes pulse */ cockpit: 'layers' };
   const THEMES = ['nexus', 'midnight', 'graphite'];
 
   // ── fetch for the shell's own reads (declared in the contract as the "shell" page) ──

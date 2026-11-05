@@ -1,0 +1,19 @@
+/* cos/ui/resources/page.css — every system's resources in one list (CP6a expanded, 0.60.411). */
+.res-row { display: grid; grid-template-columns: 170px 1fr 150px 150px 150px 70px; gap: var(--s3); align-items: center; padding: 10px var(--s3); border-radius: 10px; }
+.res-row:hover { background: var(--ac-ghost); }
+.res-head { font: 500 10.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--nx-muted); }
+.res-head:hover { background: none; }
+.res-row .name { font-weight: 600; color: var(--nx-bright); }
+.res-row .name small { display: block; font: 400 11px/1.4 var(--mono); color: var(--nx-muted); }
+.res-row .now { font: 400 12px/1.4 var(--mono); color: var(--nx-dim); }
+.res-row .bar { height: 4px; border-radius: 4px; background: var(--glass-hi); margin-top: 4px; overflow: hidden; }
+.res-row .bar i { display: block; height: 100%; background: var(--ac); }
+.res-row .bar.over i { background: var(--nx-err, #f55); }
+.res-row .cell small { display: block; font: 400 10.5px/1.4 var(--mono); color: var(--nx-muted); margin-top: 3px; }
+.res-row .cell small.failed { color: var(--nx-err, #f55); } .res-row .cell small.pending { color: var(--nx-warn); }
+.res-row .input { width: 100%; }
+.switch { width: 40px; height: 22px; border-radius: 999px; border: 1px solid var(--line-soft); background: var(--glass-hi); position: relative; cursor: pointer; }
+.switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--nx-muted); transition: left .15s, background .15s; }
+.switch[aria-checked="true"] { background: var(--ac-dim); border-color: var(--ac); } .switch[aria-checked="true"]::after { left: 20px; background: var(--ac); }
+.later { max-width: 980px; }
+@media (max-width: 900px) { .res-row { grid-template-columns: 1fr 1fr; } .res-head { display: none; } }
