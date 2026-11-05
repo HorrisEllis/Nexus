@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+context: pipeline phase PL6_the_gate_step of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PL6_the_gate_step (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833909
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833909
+lastSeenAt: 1793911833909
+fingerprint: null
+payload:
+  id: PL6_the_gate_step
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.293
+  files:
+    - lib/automation/engine.js
+    - lib/automation/steps.js
+    - clear-glass/src/driver/index.js
+  depends_on:
+    - PL_D4_a_gate_is_a_pipeline_block
+    - PL1_pipeline_core
+    - UG1_one_gate_for_every_element
+  blocks:
+    - MOD-GATE-STEP
+  spec: docs/automation-pipelines.spec
+  graph: 9b9ccd9dd382f09e

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PA1_script_and_typescript_steps
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PA1_script_and_typescript_steps
+context: pipeline phase PA1_script_and_typescript_steps of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PA1_script_and_typescript_steps (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833923
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833923
+lastSeenAt: 1793911833923
+fingerprint: null
+payload:
+  id: PA1_script_and_typescript_steps
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.408"'
+  files:
+    - lib/automation/steps.js
+    - lib/automation/engine.js
+    - lib/automation/scripts.js
+    - tests/modules/test-automate-steps.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - PL1_pipeline_core
+  blocks:
+    - MOD-AUTOMATE-SCRIPT
+  spec: docs/automation-pipelines.spec
+  graph: acaa5a2b90054d1e

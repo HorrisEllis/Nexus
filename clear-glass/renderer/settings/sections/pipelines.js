@@ -232,6 +232,7 @@
     id: 'pipelines', group: 'Agents', icon: '⇶', label: 'Pipelines',
     keywords: 'pipeline pipelines dependency graph checklist tasks macros workflows agents automation chain',
     blurb: 'Tasks in a dependency graph, each one a macro, a workflow, a question to any agent, or a Nexus command — gated, retried, and run as a checklist.',
+    related: ['automation', 'macros'],   // 2026-11-05 PA — one hop to the other two (CM1 merges them)
     async render({ rerender } = {}) {
       for (const t of polls.values()) clearInterval(t); polls.clear();
       let list;

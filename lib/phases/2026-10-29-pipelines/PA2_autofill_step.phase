@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PA2_autofill_step
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PA2_autofill_step
+context: pipeline phase PA2_autofill_step of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PA2_autofill_step (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833924
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833924
+lastSeenAt: 1793911833924
+fingerprint: null
+payload:
+  id: PA2_autofill_step
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.408"'
+  files:
+    - lib/automation/steps.js
+    - lib/automation/engine.js
+    - tests/modules/test-automate-steps.test.js
+  depends_on:
+    - PL1_pipeline_core
+  blocks:
+    - MOD-AUTOMATE-AUTOFILL
+  spec: docs/automation-pipelines.spec
+  graph: 0396ac50af76dae2

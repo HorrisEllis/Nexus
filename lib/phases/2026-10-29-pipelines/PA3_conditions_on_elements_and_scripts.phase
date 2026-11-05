@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PA3_conditions_on_elements_and_scripts
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PA3_conditions_on_elements_and_scripts
+context: pipeline phase PA3_conditions_on_elements_and_scripts of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PA3_conditions_on_elements_and_scripts (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833925
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833925
+lastSeenAt: 1793911833925
+fingerprint: null
+payload:
+  id: PA3_conditions_on_elements_and_scripts
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.408"'
+  files:
+    - lib/automation/steps.js
+    - lib/automation/engine.js
+    - tests/modules/test-automate-steps.test.js
+  depends_on:
+    - PA1_script_and_typescript_steps
+    - PL6_the_gate_step
+  blocks:
+    - MOD-AUTOMATE-CONDITIONS
+  spec: docs/automation-pipelines.spec
+  graph: 7577bcf17ce62c26

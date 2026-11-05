@@ -78,7 +78,13 @@
       case 'agent': return `${c.await ? 'Ask' : 'Send to'} ${ctx.agentName(c.agentKey)}${c.accountId ? ` as “${ctx.accountName(c.accountId)}”` : ''}: “${clip(c.prompt, 90)}”${c.await ? ' — and wait for the reply' : ''}`;
       case 'macro': return `Run the macro “${c.name || '?'}” in ${c.agentId || 'the main window'}${c.params && Object.keys(c.params).length ? ` with ${Object.keys(typeof c.params === 'object' ? c.params : kvObj(c.params)).join(', ')}` : ''}`;
       case 'delay': return `Wait ${durText(c.ms || 1000)}${c.jitterMs ? ` (+ up to ${durText(c.jitterMs)})` : ''}`;
-      case 'condition': return `If ${c.left ? clip(c.left, 50) : ctx.varName(c.var)} ${OPL(c.op)}${['empty', 'not_empty', 'exists', 'missing', 'changed'].includes(c.op) ? '' : ` ${clip(c.value, 40)}`} → ${branchText(ctx.steps, c.onTrue)}, otherwise ${branchText(ctx.steps, c.onFalse)}`;
+      // 2026-11-05 PA1–PA3 — his scripts, autofill, and "if" on an element or a script
+      case 'script': return `Run your script ${c.script || '?'}${c.input && Object.keys(typeof c.input === 'object' ? c.input : kvObj(c.input)).length ? ' with values' : ''}`;
+      case 'autofill': return `Autofill the form${!c.page || c.page === 'auto' ? '' : ` in ${c.page === 'default' ? 'the main window' : c.page}`}${c.profileId ? ` from ${c.profileId}` : ''}`;
+      case 'condition':
+        if (c.test === 'element') return `If ${['page_text', 'url'].includes(c.element) ? '' : `${clip(c.selector, 50)} `}${optLabel('condition', 'element', c.element || 'present')}${['text', 'value', 'page_text', 'url'].includes(c.element) ? ` ${clip(c.value, 40)}` : ''} → ${branchText(ctx.steps, c.onTrue)}, otherwise ${branchText(ctx.steps, c.onFalse)}`;
+        if (c.test === 'script') return `If your script ${c.script || '?'} says yes → ${branchText(ctx.steps, c.onTrue)}, otherwise ${branchText(ctx.steps, c.onFalse)}`;
+        return `If ${c.left ? clip(c.left, 50) : ctx.varName(c.var)} ${OPL(c.op)}${['empty', 'not_empty', 'exists', 'missing', 'changed'].includes(c.op) ? '' : ` ${clip(c.value, 40)}`} → ${branchText(ctx.steps, c.onTrue)}, otherwise ${branchText(ctx.steps, c.onFalse)}`;
       case 'command': return `${(c.method || 'GET').toUpperCase()} ${(SYSTEMS.find(x => x.value === c.system) || { label: c.system }).label} ${c.endpoint || '/health'}`;
       case 'notify': return `Notify: “${clip(String(c.title || '{{workflow}}').replace(/\{\{\s*workflow\s*\}\}/g, ctx.wfName || 'the workflow'), 60)}”${c.body ? ` — ${clip(c.body, 60)}` : ''}`;
       case 'browser': {
@@ -113,6 +119,7 @@
     if (s.saveAs) out.push(chip(`→ ${s.saveAs}`));
     if (s.retry && parseInt(s.retry.count, 10) > 0) out.push(chip(`retry ×${s.retry.count}`));
     if (s.timeoutMs) out.push(chip(`≤ ${durText(s.timeoutMs)}`));
+    if (s.after) out.push(chip(`⛩ after: ${s.after.gateId ? `gate ${s.after.gateId}` : s.after.condition ? `${s.after.condition}${s.after.selector ? ` ${clip(s.after.selector, 24)}` : ''}` : 'a delay'}${s.after.onClosed && s.after.onClosed !== 'stop' ? `, ${s.after.onClosed} when closed` : ''}`));   // PA4
     if (s.onError && s.onError !== 'fail') out.push(chip(`on error: ${s.onError === 'continue' ? 'carry on' : s.onError === 'stop' ? 'stop' : branchText(steps, s.onError)}`, 'warn'));
     return out;
   }
@@ -264,6 +271,8 @@
           const mine = ctx.accounts.filter(a => (a.agentKeys || []).includes(cur.agentKey || (ctx.registry[0] && ctx.registry[0].id)));
           el = select([{ value: '', label: 'Its default account' }, ...mine.map(a => ({ value: a.id, label: a.label }))], val || ''); break;
         }
+        case 'script': { const sc = ctx.scripts || []; const opts = sc.length ? sc.map(x => ({ value: x.name, label: `${x.name}${x.description ? ` — ${x.description.slice(0, 60)}` : ''}` })) : [{ value: '', label: `No scripts yet — put a .js or .ts file in ${ctx.scriptsDir || 'your scripts folder'}` }];
+          if (val && !opts.some(o => o.value === val)) opts.push({ value: val, label: `${val} (not in the folder)` }); el = select(opts, val || (sc[0] && sc[0].name) || ''); break; }
         case 'macro': el = select(ctx.macros.length ? ctx.macros.map(m => ({ value: m.name, label: m.name })) : [{ value: '', label: 'No macros yet — record one on the Macros page' }], val || (ctx.macros[0] && ctx.macros[0].name) || ''); break;
         case 'page': {
           const opts = [{ value: 'auto', label: 'This workflow’s automation page (hidden)' }, { value: 'default', label: 'The main window' }, ...ctx.windows.filter(w => w.value !== 'default')];
@@ -328,15 +337,39 @@
       const tm = durationInput(meta.timeoutMs);
       const oe = select([{ value: 'fail', label: 'Fail the run' }, { value: 'continue', label: 'Carry on with the next step' }, { value: 'stop', label: 'Stop the workflow (no error)' },
         ...others.map(o => ({ value: o.id, label: `Go to step ${stepNo(workflowSteps, o.id)} — ${o.label || catOf(o.type).label}` }))], meta.onError);
-      const syncMeta = () => { meta.saveAs = sa.value.trim(); meta.retryCount = parseInt(rc.value, 10) || 0; meta.retryDelay = rd.getValue(); meta.backoff = bo.checked; meta.timeoutMs = tm.getValue(); meta.onError = oe.value; };
-      [sa, rc, bo, oe].forEach(x => x.addEventListener('change', syncMeta));
+      // 2026-11-05 PA4 — James: "the pipeline editor that uses the steps, with gates in between". The gate after this step: a delay, then a
+      // gate (one of his by id, or a condition on an element), and what happens when it stays closed — the same gate as a macro's (MB1)
+      const A = (step && step.after) || {};
+      const gDelay = select([{ value: '', label: 'no pause' }, { value: 'fixed', label: 'pause' }, { value: 'range', label: 'pause between two times' }, { value: 'human', label: 'pause like a person' }], (A.delay && A.delay.kind) || '');
+      const gMs = h('input', { type: 'text', inputmode: 'numeric', placeholder: 'ms (range: 800-2000)', value: A.delay ? (A.delay.kind === 'range' ? `${A.delay.min}-${A.delay.max}` : String(A.delay.ms || '')) : '' });
+      const gCond = select([{ value: '', label: 'no gate' }, { value: 'gate', label: 'one of my gates (id)' }, { value: 'value', label: 'the element holds…' }, { value: 'equals', label: 'the element holds exactly…' }, { value: 'text', label: 'the element contains text…' },
+        { value: 'visible', label: 'the element is visible' }, { value: 'gone', label: 'the element is gone' }, { value: 'checked', label: 'the box is ticked' }, { value: 'shows', label: 'the dropdown shows…' }, { value: 'page_text', label: 'the page shows text…' }, { value: 'url', label: 'the address matches…' }], A.gateId ? 'gate' : (A.condition || ''));
+      const gSel = h('input', { type: 'text', class: 'mono', placeholder: 'selector, XPath — or the gate id', value: A.gateId || A.selector || '' });
+      const gVal = h('input', { type: 'text', placeholder: 'value', value: A.value || '' });
+      const gTo = durationInput(A.timeoutMs || 10000);
+      const gClosed = select([{ value: 'stop', label: 'stop the workflow (fail the step)' }, { value: 'retry', label: 'run the step again (its retries)' }, { value: 'skip', label: 'go on anyway (said in the log)' }], A.onClosed || 'stop');
+      const readAfter = () => {
+        const out = {}; const k = gDelay.value, t = gMs.value.trim();
+        if (k) { if (k === 'range') { const [a, b] = t.split(/\s*[-–]\s*/).map(x => parseInt(x, 10) || 0); out.delay = { kind: 'range', min: a, max: Math.max(a, b || a) }; } else out.delay = { kind: k, ms: parseInt(t, 10) || (k === 'human' ? 800 : 1000) }; }
+        const c = gCond.value;
+        if (c === 'gate') { if (gSel.value.trim()) out.gateId = gSel.value.trim(); }
+        else if (c) { out.condition = c; if (gSel.value.trim()) out.selector = gSel.value.trim(); if (gVal.value !== '') out.value = gVal.value; }
+        if (out.gateId || out.condition) { out.timeoutMs = gTo.getValue() || 10000; out.onClosed = gClosed.value; }
+        return Object.keys(out).length ? out : null;
+      };
+      meta.after = (step && step.after) || null;
+      const syncMeta = () => { meta.saveAs = sa.value.trim(); meta.retryCount = parseInt(rc.value, 10) || 0; meta.retryDelay = rd.getValue(); meta.backoff = bo.checked; meta.timeoutMs = tm.getValue(); meta.onError = oe.value; meta.after = readAfter(); };
+      [sa, rc, bo, oe, gDelay, gMs, gCond, gSel, gVal, gClosed].forEach(x => x.addEventListener('change', syncMeta)); gTo.addEventListener('change', syncMeta);
+      const gate = h('details', { class: 'adv gate-after', open: !!meta.after },
+        h('summary', { text: '⛩ Gate after this step' }),
+        h('div', { class: 'grid' }, field('Then', gDelay), field('For', gMs, 'ms; a range is 800-2000'), field('Then wait until', gCond), field('Element or gate', gSel), field('Value', gVal), field('Wait at most', gTo), field('If it stays closed', gClosed)));
       rd.addEventListener('change', syncMeta); tm.addEventListener('change', syncMeta);
       const adv = h('details', { class: 'adv', open: !!(meta.saveAs || meta.retryCount || meta.timeoutMs || meta.onError !== 'fail') },
         h('summary', { text: 'Output, retries and errors' }),
         h('div', { class: 'grid' }, field('Also keep the output as variable', sa, 'Then use {{vars.<name>}}; “memory.<name>” keeps it between runs'), field('If it fails, retry', rc, 'times'),
           field('Between retries', rd), h('label', { class: 'field chk' }, bo, h('span', { text: 'Double the wait each retry' })), field('Time limit', tm, '0 = none'), field('If it still fails', oe)));
       adv.syncMeta = syncMeta;
-      form.append(field('Step name', label), adv);
+      form.append(field('Step name', label), adv, gate);
       form._adv = adv;
     };
 
@@ -369,10 +402,12 @@
         else if (f.required && f.default === undefined) throw new Error(`“${f.label || f.key}” is needed.`);
         else if (f.default !== undefined && f.type !== 'bool') cfg[f.key] = f.default;
       }
-      if (type === 'condition' && !cfg.left && !cfg.var) throw new Error('Say what to check — a value, or a live value.');
+      if (type === 'condition' && (cfg.test || 'value') === 'value' && !cfg.left && !cfg.var) throw new Error('Say what to check — a value, or a live value.');
+      if (type === 'condition' && cfg.test === 'element' && !cfg.selector && !['page_text', 'url'].includes(cfg.element)) throw new Error('Name the element to look for (a selector or XPath).');
       if (type === 'loop' && !cfg.items && !cfg.times) throw new Error('Give it a list (For each item in) or a number of times.');
       if (type === 'command' && cfg.endpoint && !String(cfg.endpoint).startsWith('/')) throw new Error('The endpoint starts with /');
       const out = { type, config: cfg, label: label.value.trim(), saveAs: meta.saveAs || '', onError: meta.onError === 'fail' ? '' : meta.onError, timeoutMs: meta.timeoutMs || '' };
+      out.after = meta.after || '';   // PA4 (read by syncMeta above)
       out.retry = meta.retryCount > 0 ? { count: meta.retryCount, delayMs: meta.retryDelay || 2000, ...(meta.backoff ? { backoff: true } : {}) } : '';
       return out;
     } }] });
@@ -521,18 +556,19 @@
     id: 'automation', group: 'Agents', icon: '↻', label: 'Automation',
     keywords: 'workflow trigger schedule cron webhook event step condition loop delay command tasker automate notify macro daily every browser scrape extract dom click fill form wait variable http csv',
     blurb: 'Workflows read as sentences: when something happens, do these steps. Drive web pages (open, click, fill, read, wait), loop over what you read, ask agents and use their replies, call web APIs, save CSV/JSON, get notified — on a schedule, a cron, an event, a webhook, or when you press Run.',
-    related: ['macros', 'accounts'],
+    related: ['pipelines', 'macros', 'accounts'],   // 2026-11-05 PA — workflows, pipelines and macros one hop apart (CM1 merges them)
     async render({ tools, rerender }) {
       if (poll) { clearTimeout(poll); poll = null; }
-      const [wf, m, accounts, macros, cat, windows] = await Promise.all([
+      const [wf, m, accounts, macros, cat, windows, scripts] = await Promise.all([
         wire('/automation/workflows'), call(() => cg.mesh.list(), 'mesh'),
         cg.accounts.list().catch(() => []), cg.macros.list().then(r => (r && r.macros) || (Array.isArray(r) ? r : [])).catch(() => []),
         wire('/automation/catalogue').catch(() => null), agentOptions().catch(() => []),   // an older Clear Glass has no catalogue: the page still shows
+        wire('/automation/scripts').catch(() => ({ scripts: [] })),   // PA1 — his scripts for the script step and "if your script"
       ]);
       CAT = cat && Array.isArray(cat.catalogue) && cat.trigger ? cat : EMPTY_CAT;
       const view = await wire('/agent-mesh/view').then(v => v.nodes || []).catch(() => []);
       const ctx = {
-        registry: m.registry || [], accounts: accounts || [], macros: macros || [], view, windows, workflows: wf.workflows,
+        registry: m.registry || [], accounts: accounts || [], macros: macros || [], view, windows, workflows: wf.workflows, scripts: (scripts && scripts.scripts) || [], scriptsDir: scripts && scripts.dir,
         agentName: (k) => ((m.registry || []).find(a => a.id === k) || { name: k || '?' }).name,
         accountName: (id) => ((accounts || []).find(a => a.id === id) || { label: id ? id.slice(0, 8) + '…' : '' }).label,
         wfNameOf: (id) => (wf.workflows.find(x => x.id === id || x.name === id) || { name: id || '?' }).name,

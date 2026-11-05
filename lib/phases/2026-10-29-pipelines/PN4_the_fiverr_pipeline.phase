@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PN4_the_fiverr_pipeline
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PN4_the_fiverr_pipeline
+context: pipeline phase PN4_the_fiverr_pipeline of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PN4_the_fiverr_pipeline (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833922
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833922
+lastSeenAt: 1793911833922
+fingerprint: null
+payload:
+  id: PN4_the_fiverr_pipeline
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.296
+  files:
+    - clear-glass/automation/nodes/fiverr-gig.pipeline
+    - docs/automation-pipelines.spec
+    - lib/automation/steps.js
+    - docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec
+  depends_on:
+    - PN1_the_pipeline_node
+    - PL10_per_site_pipelines
+  blocks:
+    - MOD-FIVERR-PIPELINE
+  spec: docs/automation-pipelines.spec
+  graph: dcd5af53adf84fc9

@@ -232,6 +232,8 @@ phases:
   EAS4a_L0_evaluate:
     status: "BUILT 0.60.405 — test-warp2 7/7, test-emerge-core 6/6, emergence and WARP suites 198/198"
     depends_on: [EAS_D5_one_primitive_per_gate, EAS_D6_emerge_is_a_system_in_nexus]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
     files: [emerge/emerge/core/admit.js, emerge/emerge/core/constraint.js, lib/warp/adapters/_archive, tests/modules/test-warp2.test.js]
     requires: [node]
     prerequisites: ["Emerge's core constraint primitive present (EAS1)"]
@@ -240,6 +242,8 @@ phases:
   EAS4b_L1_compile:
     status: "BUILT 0.60.406 — compiler-door CD-01..04, test-spec-pipeline 13/13; one of two callers moved (lib/spec-collect), idearium/compiler-bridge stopped with its difference named"
     depends_on: [EAS4a_L0_evaluate, EAS_D7_the_spec_compiler_is_emerges]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
     files: [emerge/emerge/lib/compiler.js, emerge/emerge/server.js, emerge/emerge/registry-components.js, lib/spec-collect.js, emerge/emerge/tests/compiler-door.test.js]
     requires: [node, "Emerge's door up (:4900)"]
     prerequisites: ["emerge/ locked (EAS3)"]
@@ -248,6 +252,8 @@ phases:
   EAS4c_L2_build:
     status: "BUILT (Emerge's side) 0.60.407 — compiler-door CD-05..08; its caller (copilot/module-builder.js) not switched"
     depends_on: [EAS4b_L1_compile, EAS_D9_emerge_calls_back_by_route]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
     files: [emerge/emerge/compiler/pipeline.js, emerge/emerge/compiler/host.js, emerge/emerge/server.js, copilot/module-builder.js]
     requires: [node, "Emerge's door up", "a host by route (EAS4e) for a build that reports to Nexus; the local host otherwise"]
     prerequisites: ["EAS4b's compile"]
@@ -256,6 +262,8 @@ phases:
   EAS4d_L3_run:
     status: "BUILT (Emerge's side) 0.60.407 — compiler-door CD-07 (11 T2 nodes through a model route, 11 complete); its callers (guardian/server.js, lib/build-pipeline.js) not switched"
     depends_on: [EAS4c_L2_build]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
     files: [emerge/emerge/compiler/t2-gate.js, emerge/emerge/compiler/model.js, emerge/emerge/server.js, guardian/server.js, lib/build-pipeline.js]
     requires: [node, "Emerge's door up", "a model by route (Guardian's, EAS4e)", "a host by route (Cortex and Idearium, EAS4e)"]
     prerequisites: ["EAS4c's build"]
@@ -264,6 +272,8 @@ phases:
   EAS4e_the_callback_routes:
     status: OPEN
     depends_on: [EAS4d_L3_run, DO3_cortex_door]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
     files: [cortex/server.js, cortex/registry-components.js, lib/emerge/cortex-query/index.js, lib/emerge/cortex-query/writeback.js, lib/emerge/idearium/client.js, idearium/api/index.js, guardian/server.js]
     requires: ["Cortex's door (DO3a, built)", "Idearium reachable by its API", "Guardian's model route"]
     prerequisites: ["what lib/emerge's cortex-query (preflight 273 lines, writeback 410) and idearium/client do today, read and recorded as each route's expectation before it moves"]
@@ -276,6 +286,8 @@ phases:
   EAS4f_the_callers_switch:
     status: OPEN
     depends_on: [EAS4e_the_callback_routes]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
     files: [idearium/compiler-bridge.js, copilot/module-builder.js, guardian/server.js, lib/build-pipeline.js]
     requires: ["Emerge's door up", "the callback routes (EAS4e)"]
     prerequisites: ["each caller's answer before and after compared on one real spec, the difference named or none"]
@@ -284,6 +296,8 @@ phases:
   EAS4g_lib_emerge_archived:
     status: OPEN
     depends_on: [EAS4f_the_callers_switch]
+    spec: docs/emerge-system.spec
+    blocks: [MOD-EAS-CALLERS]
     files: [lib/emerge, _archive/lib/emerge, tests/modules/test-substrate-spec.test.js]
     requires: ["nothing requires lib/emerge (grep and the census)"]
     prerequisites: ["phase-specs.js and kg-builder.js run from emerge/ (EAS_D7)"]

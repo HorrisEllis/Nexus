@@ -1,0 +1,160 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PN1_the_pipeline_node:7893051b27023d65
+type: graph
+id: phase:PN1_the_pipeline_node:7893051b27023d65
+context: dependency graph of phase PN1_the_pipeline_node
+intent: null
+summary: 16 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793911833918
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833918
+lastSeenAt: 1793911833918
+fingerprint: null
+payload:
+  for: PN1_the_pipeline_node
+  kind: phase
+  repo: null
+  hash: 7893051b27023d65
+  nodes:
+    - path: lib/automation-nodes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: changes
+      exists: true
+      system: lib
+    - path: architect/schemas/index.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: clear-glass/schemas/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/macros/live-recording.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/schemas/index.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/schemas/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/failure-mode-forensics.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/clear-glass/macro.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/automation-nodes.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation-nodes.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/automation-nodes.js
+      kind: requires
+    - from: clear-glass/src/macros/live-recording.js
+      to: lib/automation-nodes.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: lib/automation-nodes.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation-nodes.js
+      kind: requires
+    - from: architect/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: clear-glass/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/self-heal/failure-mode-forensics.js
+      to: lib/node-export.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+    dependents:
+      - docs/2026-10-29-pipelines-phasemap.spec::PN2_pipelines_kept_as_node_files
+      - docs/2026-10-29-pipelines-phasemap.spec::PN4_the_fiverr_pipeline
+    upstream:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+    downstream:
+      - docs/2026-10-29-pipelines-phasemap.spec::PN2_pipelines_kept_as_node_files
+      - docs/2026-10-29-pipelines-phasemap.spec::PN3_the_editor_picks_from_clear_glass_and_files
+      - docs/2026-10-29-pipelines-phasemap.spec::PN4_the_fiverr_pipeline
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-29-pipelines-phasemap.spec::PN2_pipelines_kept_as_node_files
+      - docs/2026-10-29-pipelines-phasemap.spec::PN4_the_fiverr_pipeline
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): PL1_pipeline_core · all upstream 3'
+      - >-
+        needed by (2): PN2_pipelines_kept_as_node_files, PN4_the_fiverr_pipeline · all downstream 3
+        · finishing it unlocks PN2_pipelines_kept_as_node_files, PN4_the_fiverr_pipeline
+    edges:
+      - from: docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+        kind: declared

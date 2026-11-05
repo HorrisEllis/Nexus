@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PN3_the_editor_picks_from_clear_glass_and_files
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PN3_the_editor_picks_from_clear_glass_and_files
+context: >-
+  pipeline phase PN3_the_editor_picks_from_clear_glass_and_files of
+  docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PN3_the_editor_picks_from_clear_glass_and_files (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833921
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833921
+lastSeenAt: 1793911833921
+fingerprint: null
+payload:
+  id: PN3_the_editor_picks_from_clear_glass_and_files
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.296
+  files:
+    - clear-glass/renderer/settings/sections/pipelines.js
+  depends_on:
+    - PN2_pipelines_kept_as_node_files
+    - PL11_screens_for_gates_and_sites
+  blocks:
+    - MOD-PIPELINE-PICKER
+  spec: docs/automation-pipelines.spec
+  graph: 3e9719f9c5900168

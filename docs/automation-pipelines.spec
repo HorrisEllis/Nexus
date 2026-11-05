@@ -386,6 +386,69 @@ spec:
       error_paths: ["a required node missing → the import says which"]
       acceptance: ["test-pipeline-nodes PN-04: the bundled Fiverr pipeline parses, validates, and imports with its macros and workflows"]
 
+    - id: MOD-AUTOMATE-SCRIPT
+      name: automate-script-steps
+      uuid: nexus-automate-script-steps-v1-0000-2026-1105-001
+      path: lib/automation/scripts.js
+      phase: PA1_script_and_typescript_steps
+      description: >-
+        His own scripts as steps. A .js, .mjs, .cjs or .ts file in the engine's scripts folder (data/<ns>/automation-scripts) runs in its own
+        process (TypeScript through tsx), gets its input as JSON in NEXUS_STEP_INPUT and on stdin, and answers on stdout: the last line that
+        parses as JSON is the output, else the text. GET /automation/scripts lists them with their first comment line.
+      deps: [{ name: automation-engine }]
+      exports: ["dir(dataRoot, ns)", "list(dir)", "resolve(dir, name)", "run(dir, name, { input, timeoutMs }) → { output, stdout, stderr, code, ms }"]
+      gate_pipeline: ["GATE-PA1-001: the name stays inside the scripts folder", "GATE-PA1-002: exit 0 → output; else the code and stderr's end"]
+      behavioral_contracts: ["a script never runs from outside his folder", "a step that times out is stopped and says so"]
+      error_paths: ["non-zero exit → the step fails with the code and the error text", "no tsx → said, the .ts step fails"]
+      acceptance: ["test-automate-steps AS-01: a .js and a .ts script answer; a failing one says exit 3 and its error; ../ is refused; the list"]
+
+    - id: MOD-AUTOMATE-AUTOFILL
+      name: automate-autofill-step
+      uuid: nexus-automate-autofill-step-v1-0000-2026-1105-001
+      path: lib/automation/engine.js
+      phase: PA2_autofill_step
+      description: >-
+        The autofill step fills the form on the step's page from a profile, through Clear Glass's door (POST /cli/autofill/fill, the same fill as
+        the Autofill button), never its files. Its answer (what was filled, what was skipped and why) is the step's output.
+      deps: [{ name: automation-engine }]
+      exports: ["step type autofill { page, profileId, minConfidence }"]
+      gate_pipeline: ["GATE-PA2-001: Clear Glass answers, or the step fails saying it is not running"]
+      behavioral_contracts: ["nothing filled is said in the run log"]
+      error_paths: ["Clear Glass down → the step fails with its port"]
+      acceptance: ["test-automate-steps AS-02: the step fills through a stand-in door and returns what was filled"]
+
+    - id: MOD-AUTOMATE-CONDITIONS
+      name: automate-conditions-on-elements-and-scripts
+      uuid: nexus-automate-conditions-v1-0000-2026-1105-001
+      path: lib/automation/engine.js
+      phase: PA3_conditions_on_elements_and_scripts
+      description: >-
+        The "If…" step checks a value (as before), an element on the page (on the page, visible, gone, contains text, holds a value, ticked, the
+        page shows, the address matches — read once through the driver's gate action, PL6), or his script's answer (true unless it says false,
+        no, 0, nothing, or { ok|pass|passed: false }). Each branches to its next, a step, stop or fail.
+      deps: [{ name: automate-script-steps }, { name: gate-step }]
+      exports: ["condition.test value | element | script"]
+      gate_pipeline: ["GATE-PA3-001: an element check names its element", "GATE-PA3-002: a script check names its script"]
+      behavioral_contracts: ["a condition with no test reads as before (value)"]
+      error_paths: ["the element cannot be read → the step fails with why"]
+      acceptance: ["test-automate-steps AS-03: present → yes, missing → no, a script that prints no → no; an element check with no element refused"]
+
+    - id: MOD-AUTOMATE-GATE-AFTER
+      name: automate-gate-after-every-step
+      uuid: nexus-automate-gate-after-v1-0000-2026-1105-001
+      path: lib/automation/engine.js
+      phase: PA4_a_gate_after_every_step
+      description: >-
+        Any workflow step can carry after = { delay: fixed | range | human, then a gate (one of his by id, or a condition on an element),
+        timeoutMs, onClosed: stop | skip | retry } — the macro's gate between two blocks (MB1) for every step. Stop fails the step without
+        retrying; retry runs the step again within its retries; skip goes on and says so. Settings › Automation edits it under "Gate after this step".
+      deps: [{ name: gate-step }, { name: macro-element-gates }]
+      exports: ["step.after", "steps.afterProblems(after)"]
+      gate_pipeline: ["GATE-PA4-001: a gate after with neither a gate nor a delay is refused when saved"]
+      behavioral_contracts: ["a step without after runs exactly as before"]
+      error_paths: ["the gate stays closed → stop, retry or skip, each said with what the gate saw"]
+      acceptance: ["test-automate-steps AS-04: open, stop (not retried), skip (said), retry (ran twice); an empty one refused"]
+
   events:
     automation:
       - "automation.pipeline.start { pipelineId, runId }"

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PL4_pipelines_screen
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PL4_pipelines_screen
+context: pipeline phase PL4_pipelines_screen of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PL4_pipelines_screen (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833906
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833906
+lastSeenAt: 1793911833906
+fingerprint: null
+payload:
+  id: PL4_pipelines_screen
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE 0.60.284
+  files:
+    - clear-glass/renderer/settings/sections/pipelines.js
+    - clear-glass/renderer/settings/sections/pipelines.css
+    - clear-glass/renderer/settings.html
+  depends_on:
+    - PL2_pipeline_door
+  blocks:
+    - MOD-PIPELINE-UI
+  spec: docs/automation-pipelines.spec
+  graph: 60c2088ef56c9faf

@@ -1,0 +1,246 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PL10_per_site_pipelines:2f4aa7d160c7b5b4
+type: graph
+id: phase:PL10_per_site_pipelines:2f4aa7d160c7b5b4
+context: dependency graph of phase PL10_per_site_pipelines
+intent: null
+summary: 29 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793911833915
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833915
+lastSeenAt: 1793911833915
+fingerprint: null
+payload:
+  for: PL10_per_site_pipelines
+  kind: phase
+  repo: null
+  hash: 2f4aa7d160c7b5b4
+  nodes:
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/keys.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/automation/pipeline.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/autofill/matcher.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/chat-ledger.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/passwords/service.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/profile.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: lib/automation-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-procedures.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/automation/index.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: clear-glass/src/contexts/google-signin.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/compartment-window.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/window-frame.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/automation-nodes.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/cron.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/from-macro.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/steps.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/templates.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/automation/pipeline.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: lib/automation/steps.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/templates.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation-nodes.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/cron.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/from-macro.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/window-frame.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation-nodes.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/repo-procedures.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: orchestrator/automation/index.js
+      to: lib/automation/routes.js
+      kind: requires
+    - from: clear-glass/src/site-settings/profile.js
+      to: clear-glass/src/site-settings/keys.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/downloads/chat-ledger.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/passwords/service.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D5_per_site_pipelines
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+    dependents:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
+      - docs/2026-10-29-pipelines-phasemap.spec::PN4_the_fiverr_pipeline
+    upstream:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D5_per_site_pipelines
+    downstream:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
+      - docs/2026-10-29-pipelines-phasemap.spec::PN3_the_editor_picks_from_clear_glass_and_files
+      - docs/2026-10-29-pipelines-phasemap.spec::PN4_the_fiverr_pipeline
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
+      - docs/2026-10-29-pipelines-phasemap.spec::PN4_the_fiverr_pipeline
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (2): PL_D5_per_site_pipelines, PL1_pipeline_core · all upstream 4'
+      - >-
+        needed by (2): PL11_screens_for_gates_and_sites, PN4_the_fiverr_pipeline · all downstream 3
+        · finishing it unlocks PL11_screens_for_gates_and_sites, PN4_the_fiverr_pipeline
+    edges:
+      - from: docs/2026-10-29-pipelines-phasemap.spec::PL_D5_per_site_pipelines
+        kind: declared
+      - from: docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+        kind: declared

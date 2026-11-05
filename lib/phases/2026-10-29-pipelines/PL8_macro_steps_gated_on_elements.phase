@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PL8_macro_steps_gated_on_elements
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PL8_macro_steps_gated_on_elements
+context: pipeline phase PL8_macro_steps_gated_on_elements of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PL8_macro_steps_gated_on_elements (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833912
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833912
+lastSeenAt: 1793911833912
+fingerprint: null
+payload:
+  id: PL8_macro_steps_gated_on_elements
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.293
+  files:
+    - lib/agent-tools/tools/clear-glass/macro.js
+    - lib/agent-tools/tools/clear-glass/gate-eval.js
+  depends_on:
+    - PL6_the_gate_step
+    - KB4_gates_on_macro_steps
+  blocks:
+    - MOD-MACRO-ELEMENT-GATES
+  spec: docs/automation-pipelines.spec
+  graph: 1a1e88649240a99d

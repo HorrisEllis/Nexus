@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PL10_per_site_pipelines
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PL10_per_site_pipelines
+context: pipeline phase PL10_per_site_pipelines of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PL10_per_site_pipelines (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833915
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833915
+lastSeenAt: 1793911833915
+fingerprint: null
+payload:
+  id: PL10_per_site_pipelines
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.293
+  files:
+    - lib/automation/pipeline.js
+    - lib/automation/routes.js
+    - clear-glass/src/site-settings/keys.js
+    - clear-glass/src/site-settings/readers.js
+    - clear-glass/src/main/index.js
+  depends_on:
+    - PL_D5_per_site_pipelines
+    - PL1_pipeline_core
+  blocks:
+    - MOD-PIPELINE-SITE
+  spec: docs/automation-pipelines.spec
+  graph: 2f4aa7d160c7b5b4

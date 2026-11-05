@@ -174,3 +174,48 @@ phases_pn:
     files: [clear-glass/automation/nodes/fiverr-gig.pipeline]
     spec: docs/automation-pipelines.spec
     blocks: [MOD-FIVERR-PIPELINE]
+
+## ADDENDUM 2026-11-05 — PA1–PA4: Automate — scripts and TypeScript as steps, autofill as a step, conditions on elements and scripts, a gate after every step
+James, 2026-11-05, asked what "solidify them" meant: "oh i meant the macros, wait conditions with gates, i want it like automate. like i want
+the pipeline editor that uses the steps, with gates in between, maybe add conditions for detection of elements, scripts and type scripts,
+.macro nodes, workflows, autofill, like i want to be able to record macros, maybe pipelines are application wide, not just site. i want to be
+able to see, edit and manage pipeline workflows." Then: "1, then 3? can" (this first, then ErosmancerOS).
+Grounded (§0.1, read 2026-11-05) — most of it is already there, in three screens:
+- the engine's workflow is already "automate": triggers (manual, schedule, cron, event, webhook), 25 step kinds (browser, read, wait until,
+  macro, if, for each, wait, gate, pipeline, workflow, agent, command, http, file, notify, emit…), retries and on-error (lib/automation/steps.js);
+- macros have blocks with a gate between every two (MB1/MB2) and record from a tab; pipelines run tasks in a graph, gated (PL1–PL11);
+- .macro, .workflow and .pipeline are node files (PN1–PN4).
+What is missing, and what this addendum builds: a step that runs his own script (.js or .ts); an autofill step; "if" on an element on the
+page or on a script's answer; a gate after any workflow step (the macro's gate, one shape); and one screen for all of it (CM1, expanded in
+its own map, docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec).
+Reading, to confirm (his): "maybe pipelines are application wide, not just site" — (a) the coder's: they already are when no site is given
+(PL10), and a workflow's triggers (schedule, event, webhook) are app-wide; (b) Nexus-wide, run by the Orchestrator for every system — that is
+PL5 (open), not built here.
+Decided by his axioms: §8.6 (the engine's catalogue draws the forms, so a new step needs no new screen code; the gate after a step is the
+driver's gate action and _gateOf, no second gate engine); §5.9 (his scripts live in the engine's own data folder, never another system's);
+§1.2 (a script that fails says its exit code and its error; a gate that stays closed says what it saw).
+phases_pa:
+  PA1_script_and_typescript_steps:
+    status: "BUILT 0.60.408"
+    depends_on: [PL1_pipeline_core]
+    files: [lib/automation/steps.js, lib/automation/engine.js, lib/automation/scripts.js, tests/modules/test-automate-steps.test.js, tests/modules/run-all.js]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-AUTOMATE-SCRIPT]
+  PA2_autofill_step:
+    status: "BUILT 0.60.408"
+    depends_on: [PL1_pipeline_core]
+    files: [lib/automation/steps.js, lib/automation/engine.js, tests/modules/test-automate-steps.test.js]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-AUTOMATE-AUTOFILL]
+  PA3_conditions_on_elements_and_scripts:
+    status: "BUILT 0.60.408"
+    depends_on: [PA1_script_and_typescript_steps, PL6_the_gate_step]
+    files: [lib/automation/steps.js, lib/automation/engine.js, tests/modules/test-automate-steps.test.js]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-AUTOMATE-CONDITIONS]
+  PA4_a_gate_after_every_step:
+    status: "BUILT 0.60.408"
+    depends_on: [MB1_the_gate_between, PL6_the_gate_step]
+    files: [lib/automation/engine.js, lib/automation/steps.js, clear-glass/renderer/settings/sections/automation.js, tests/modules/test-automate-steps.test.js]
+    spec: docs/automation-pipelines.spec
+    blocks: [MOD-AUTOMATE-GATE-AFTER]

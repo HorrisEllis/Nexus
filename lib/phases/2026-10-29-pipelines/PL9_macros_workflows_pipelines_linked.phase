@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-29-pipelines-phasemap.spec::PL9_macros_workflows_pipelines_linked
+type: phase
+id: docs_2026-10-29-pipelines-phasemap.spec::PL9_macros_workflows_pipelines_linked
+context: pipeline phase PL9_macros_workflows_pipelines_linked of docs/2026-10-29-pipelines-phasemap.spec
+intent: null
+summary: PL9_macros_workflows_pipelines_linked (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793911833913
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793911833913
+lastSeenAt: 1793911833913
+fingerprint: null
+payload:
+  id: PL9_macros_workflows_pipelines_linked
+  map: docs/2026-10-29-pipelines-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.293
+  files:
+    - lib/automation/engine.js
+    - lib/automation/steps.js
+    - clear-glass/src/ipc/bridge.js
+    - lib/agent-tools/tools/browser/browser-action.js
+  depends_on:
+    - PL6_the_gate_step
+    - PL2_pipeline_door
+  blocks:
+    - MOD-LINKS
+  spec: docs/automation-pipelines.spec
+  graph: 3529e777f4e5fee8
