@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+type: phase
+id: docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+context: >-
+  pipeline phase IP5_invariants_into_rfr2 of
+  docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+intent: null
+summary: IP5_invariants_into_rfr2 (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793853812303
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793853812303
+lastSeenAt: 1793853812303
+fingerprint: null
+payload:
+  id: IP5_invariants_into_rfr2
+  map: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/pipeline/invariants.js
+    - intelligence/rfr2/sigma/index.js
+    - intelligence/data/baselines/README.md
+    - tests/modules/test-intelligence-pipeline.test.js
+  depends_on:
+    - IP4_invariants_across_series
+  blocks: []
+  spec: null
+  graph: a7abd4e8b9c3f8a8

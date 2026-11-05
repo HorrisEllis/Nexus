@@ -1,0 +1,197 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IP4_invariants_across_series:5656e465b1dd68aa
+type: graph
+id: phase:IP4_invariants_across_series:5656e465b1dd68aa
+context: dependency graph of phase IP4_invariants_across_series
+intent: null
+summary: 18 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793853812300
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793853812300
+lastSeenAt: 1793853812300
+fingerprint: null
+payload:
+  for: IP4_invariants_across_series
+  kind: phase
+  repo: null
+  hash: 5656e465b1dd68aa
+  nodes:
+    - path: intelligence/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/pipeline/invariants.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: tests/modules/test-intelligence-pipeline.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/coordination/intelligence-query.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/diagnostic-report.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/boot.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/intelligence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-intelligence-core-wired.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/cfr/graph.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/config.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/lib/domain-nodes.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/causality/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/self-register.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/lib/domain-nodes.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/config.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/self-register.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/index.js
+      kind: requires
+    - from: lib/diagnostic-report.js
+      to: intelligence/index.js
+      kind: requires
+    - from: lib/ledger-fanin/boot.js
+      to: intelligence/index.js
+      kind: requires
+    - from: tests/modules/intelligence.test.js
+      to: intelligence/index.js
+      kind: requires
+    - from: tests/modules/test-intelligence-core-wired.js
+      to: intelligence/index.js
+      kind: requires
+  crossings:
+    - from: intelligence/index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/diagnostic-report.js
+      to: intelligence/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/ledger-fanin/boot.js
+      to: intelligence/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+    dependents:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+    upstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
+    downstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
+    blockedBy:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+    unlocks:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by IP3_deviation_and_regime
+      - 'depends on (1): IP3_deviation_and_regime · all upstream 6'
+      - >-
+        needed by (1): IP5_invariants_into_rfr2 · all downstream 3 · finishing it unlocks
+        IP5_invariants_into_rfr2
+    edges:
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+        kind: declared

@@ -2021,3 +2021,8 @@ spec:
     | `docs/2026-11-03-registry-per-system-phasemap.spec` | 1.0.0 — every system's component registry is its own (AXIOMS §5.16); RG0, its enforcement, built 0.60.384; the rest in planning with him | RG0 built, planning | James: "No component registry is per system.  That needs to be implemented" · "It’s fucking sovereign. Do not  make this mistake again." |
 
 # 2026-11-02 (0.60.379 CA3) — cos/spec/network.spec: NetworkSettings; MOD-NET-SETTINGS, -ROUTES, -PAGE, -GATE. His 'Gate behind settings to open.'
+
+# ── ADDENDUM 2026-11-05 — docs/2026-11-05-intelligence-data-pipeline-phasemap.spec ─────────────────────────────────────────────────────────
+# James, 2026-11-05: "we need a pipeline for the intelligence system. i want to run data through it. thats what the input folders are for per
+# system ... like stock data, blood cells to measure deviation, investment oppertunities". Owner: intelligence.
+    | `docs/2026-11-05-intelligence-data-pipeline-phasemap.spec` | 1.0.0 — any data through the intelligence fields: input/ (genesis handoff states) → a baseline per series → deviations and RFR2 sigma regimes → invariants through the crystallizer → invariants into RFR2 as constraints for the next run; route, command, screen. IP_D1–IP_D3 his; IP1–IP7 open | mapped | James: "imagine running data through the fields. thats why theyre agnostic." · "invariants, crystals, primitives, could establish a baseline." |

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+type: phase
+id: docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+context: >-
+  pipeline phase IP3_deviation_and_regime of
+  docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+intent: null
+summary: IP3_deviation_and_regime (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793853812298
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793853812298
+lastSeenAt: 1793853812298
+fingerprint: null
+payload:
+  id: IP3_deviation_and_regime
+  map: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/pipeline/deviation.js
+    - intelligence/rfr2/sigma/index.js
+    - tests/modules/test-intelligence-pipeline.test.js
+  depends_on:
+    - IP2_baseline_per_series
+    - IP_D3_how_far_is_a_deviation
+  blocks: []
+  spec: null
+  graph: ebd8c396749808b3
