@@ -1,48 +1,69 @@
 envelope: 1
-uuid: nexus-export-graph-phase:IP11_risk_ambiguity_uncertainty_wired:9036bad80baafe64
+uuid: nexus-export-graph-phase:IP10_growth_tracking:400890b5827159ce
 type: graph
-id: phase:IP11_risk_ambiguity_uncertainty_wired:9036bad80baafe64
-context: dependency graph of phase IP11_risk_ambiguity_uncertainty_wired
+id: phase:IP10_growth_tracking:400890b5827159ce
+context: dependency graph of phase IP10_growth_tracking
 intent: null
-summary: 3 node(s), 0 crossing(s)
+summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793854400600
+exported_at: 1793854560009
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793854400600
-lastSeenAt: 1793854400600
+firstSeenAt: 1793854560009
+lastSeenAt: 1793854560009
 fingerprint: null
 payload:
-  for: IP11_risk_ambiguity_uncertainty_wired
+  for: IP10_growth_tracking
   kind: phase
   repo: null
-  hash: 9036bad80baafe64
+  hash: 400890b5827159ce
   nodes:
-    - path: intelligence/pipeline/assess.js
+    - path: intelligence/friction.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/intuition.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/pipeline/growth.js
       role: changes
       exists: false
       system: intelligence
-    - path: intelligence/schemas/assessment.schema.json
+    - path: intelligence/synthesis/engine.js
       role: changes
-      exists: false
+      exists: true
       system: intelligence
     - path: tests/modules/test-intelligence-pipeline.test.js
       role: changes
       exists: false
       system: null
-  edges: []
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/synthesis/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+  edges:
+    - from: intelligence/routes.js
+      to: intelligence/friction.js
+      kind: requires
+    - from: intelligence/synthesis/index.js
+      to: intelligence/synthesis/engine.js
+      kind: requires
   crossings: []
   ready: true
   dag:
-    layer: 7
+    layer: 8
     deps:
-      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
-      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D5_risk_weights
-    dependents:
-      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
+    dependents: []
     upstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
@@ -53,13 +74,10 @@ payload:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
-      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D5_risk_weights
-    downstream:
-      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+    downstream: []
     blockedBy:
-      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
-      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D5_risk_weights
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
     unlocks: []
     conflicts:
       - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
@@ -67,18 +85,16 @@ payload:
           - tests/modules/test-intelligence-pipeline.test.js
     dangling: []
     lines:
-      - layer 7 · blocked by IP8_negative_and_shadow_space, IP9_the_open_loop, IP_D5_risk_weights
+      - layer 8 · blocked by IP9_the_open_loop, IP11_risk_ambiguity_uncertainty_one_primitive
       - >-
-        depends on (3): IP8_negative_and_shadow_space, IP9_the_open_loop, IP_D5_risk_weights · all
+        depends on (2): IP9_the_open_loop, IP11_risk_ambiguity_uncertainty_one_primitive · all
         upstream 11
-      - 'needed by (1): IP10_growth_tracking'
+      - 'needed by (0): —'
       - >-
         same files as IP6_route_command_screen with no order between them:
         tests/modules/test-intelligence-pipeline.test.js
     edges:
-      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
-        kind: declared
       - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
         kind: declared
-      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D5_risk_weights
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
         kind: declared

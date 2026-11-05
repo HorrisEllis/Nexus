@@ -7,11 +7,11 @@ intent: null
 summary: IP10_growth_tracking (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793854390230
+exported_at: 1793854560009
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793854390230
-lastSeenAt: 1793854390230
+firstSeenAt: 1793854560009
+lastSeenAt: 1793854560009
 fingerprint: null
 payload:
   id: IP10_growth_tracking
@@ -27,7 +27,7 @@ payload:
     - tests/modules/test-intelligence-pipeline.test.js
   depends_on:
     - IP9_the_open_loop
-    - IP11_risk_ambiguity_uncertainty_wired
+    - IP11_risk_ambiguity_uncertainty_one_primitive
   blocks: []
   spec: null
-  graph: b585321ccfe43a8e
+  graph: 400890b5827159ce

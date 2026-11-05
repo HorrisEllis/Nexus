@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793854390214
+exported_at: 1793854559993
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793854390214
-lastSeenAt: 1793854390214
+firstSeenAt: 1793854559993
+lastSeenAt: 1793854559993
 fingerprint: null
 payload:
   for: IP4_invariants_across_series
@@ -179,7 +179,7 @@ payload:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
     downstream:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
-      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_wired
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen

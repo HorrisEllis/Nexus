@@ -56,13 +56,11 @@ decisions:
     by_the_axioms: "TRUTH_OVER_COHERENCE (say what the run showed), §1.2 (nothing silent: an unproven pattern is a hypothesis, said as one)"
 
   IP_D5_risk_weights:
-    status: "OPEN — his (weights and thresholds are his, like f(slope)'s)"
-    question: >-
-      How risk is made from the three. The coder's proposal: risk = impact × irreversibility × (1 + uncertainty + ambiguity), each 0..1 except
-      the factor, with the route thresholds at 0.3 (report) and 0.7 (hold or ask). His call: the formula, the weights, and whether ambiguity
-      weighs more than uncertainty (the coder's reading of his rule says it should: uncertainty waits for data, ambiguity waits for him).
-    note: "Cross-domain (the coder's, for him to judge): economics already splits these three — Knight's risk (known odds) vs uncertainty
-      (unknown odds), and Ellsberg's ambiguity (several models fit). His wiring carries that split into an AI pipeline's routing."
+    status: "SUPERSEDED 2026-11-05 by his correction (kept, §0.3) — no new formula; the primitives' own confidence scoring is used. A weight
+      becomes his question again only if a run shows the primitives cannot tell two routes apart."
+    was: "risk = impact × irreversibility × (1 + uncertainty + ambiguity), thresholds 0.3 and 0.7 (the coder's proposal)"
+    note: "Cross-domain (the coder's, for him to judge): economics splits these three — Knight's risk (known odds) vs uncertainty (unknown
+      odds), and Ellsberg's ambiguity (several models fit). In Nexus they are one primitive read three ways."
 
 phases:
   IP1_input_folder_and_reader:
@@ -141,7 +139,7 @@ phases:
   IP10_growth_tracking:
     status: "OPEN — waits on his reading of \"growth tracking for the self\" (above)"
     origin: "James, 2026-11-05: \"like growth tracking for the self. its for structure. integration and friction tracking. intution, and deomposition.\""
-    depends_on: [IP9_the_open_loop, IP11_risk_ambiguity_uncertainty_wired]
+    depends_on: [IP9_the_open_loop, IP11_risk_ambiguity_uncertainty_one_primitive]
     files: [intelligence/pipeline/growth.js, intelligence/friction.js, intelligence/intuition.js, intelligence/synthesis/engine.js, tests/modules/test-intelligence-pipeline.test.js]
     does: >-
       The same run repeated over time, tracked as growth along his five axes, each from a part that exists: structure (the invariants that
@@ -149,39 +147,40 @@ phases:
       the open gaps; uncertainty shrinking and ambiguity reconciled, from IP11, count as integration), intuition (intelligence/intuition.js, the fast pattern-first reading, scored afterwards by whether the run proved it) and
       decomposition (synthesis/engine.js breaking a problem into its chained gaps). A growth line per axis, per period.
 
-  IP11_risk_ambiguity_uncertainty_wired:
+  IP11_risk_ambiguity_uncertainty_one_primitive:
     status: OPEN
-    origin: "James, 2026-11-05: \"Risk assessment. Ambiguity. Uncertainty. They need to be wired together.\""
-    depends_on: [IP8_negative_and_shadow_space, IP9_the_open_loop, IP_D5_risk_weights]
-    files: [intelligence/pipeline/assess.js, intelligence/schemas/assessment.schema.json, tests/modules/test-intelligence-pipeline.test.js]
-    sovereignty: >-
-      The pieces it learns from live in lib/ (gap-field-engine, open-loop-taxonomy, intent-classifier, ambiguity-pull). His rule (2026-11-03):
-      "lib is not a directory for anything that a system uses". So assess.js does not require them: the three measures are written once in
-      intelligence's own assessment schema, and the lib pieces move to their systems (or are reached by route) in the per-system drawbridge
-      phases, not here.
+    origin: >-
+      James, 2026-11-05: "Risk assessment. Ambiguity. Uncertainty. They need to be wired together." Then, correcting the coder's first map of
+      it: "No I meant it’s also risk assessment. Ambiguity in a conversation. And uncertainty. Confidence scoring and crystallization. Nexus is
+      build on reusable primitives"
+    reading: >-
+      The coder's reading, to confirm: the end of the pipeline (negative and shadow space, IP8) IS also risk assessment, ambiguity in a
+      conversation and uncertainty. Not three new measures: the same primitives, reused. A gap (problem or deviation) gets a confidence score,
+      and crystallization decides its state — anomaly (one), coincidence (two), invariant past the floor and above chance, else a hypothesis.
+      Uncertainty is low confidence; ambiguity is two readings with close confidence (in data, or in a conversation through the liminal text
+      detectors); risk is what a low-confidence or ambiguous gap would cost if acted on.
+    depends_on: [IP8_negative_and_shadow_space, IP9_the_open_loop]
+    files: [intelligence/pipeline/assess.js, intelligence/index.js, intelligence/rfr2/sigma/index.js, intelligence/liminal/index.js, intelligence/gap/hunter.js, tests/modules/test-intelligence-pipeline.test.js]
     found: >-
-      (read 2026-11-05) The three exist apart and never meet: risk as action levels (lib/intent-classifier.js READ … IRREVERSIBLE) and as the
-      gap field's forecast risk factors; uncertainty as the gap field's UNCERTAINTY axis and lib/open-loop-taxonomy.js ("A gap is an open loop
-      … uncertainty that has been acknowledged and preserved with context"); ambiguity as the ambiguity_pull tool and the liminal detectors.
-      No gap carries all three, and none of them decides what happens next.
+      (read 2026-11-05) The primitives exist inside intelligence and already carry confidence: the crystallizer (count, confidence, the
+      maturity gate in intelligence/index.js), sigma's regime with its confidence (rfr2/sigma), the gap hunter and predicates (gap/), the
+      adversarial check, and the liminal detectors' signals (conversation: contrastive, reversal, assumption, shadow, negative space).
     does: >-
-      Every gap (problem or deviation) carries three measures, each from what exists, and the three decide its route:
-        uncertainty — what is not known yet and more data can settle: a short window, a baseline with few points, a hypothesis below the floor
-                      of three. Route: the open loop (IP9), the next run checks it.
-        ambiguity   — more than one reading fits the same data: two invariants explain one deviation, a liminal signal with two meanings.
-                      More data of the same kind does not settle it. Route: asked, with the readings side by side (his rule: "Ambiguity must
-                      be reconciled by me").
-        risk        — what it costs if the reading is wrong: the impact (the gap field's blast radius), how reversible acting on it is (the
-                      intent classifier's levels) and how likely it is, given the other two. Risk rises with uncertainty and ambiguity, never
-                      falls with them.
-      Together: low risk → reported; high risk with high uncertainty → hold and gather; high risk with high ambiguity → ask before anything;
-      high risk with both low → act or recommend, said with the numbers. Nothing is acted on that it has not assessed.
-
+      One assessment per gap from those primitives, nothing new beside them: { kind: problem | deviation, confidence, state: anomaly |
+      coincidence | hypothesis | invariant, readings: [...] }. Uncertainty, ambiguity and risk are read off it, never stored apart: uncertainty
+      = 1 − confidence; ambiguity = more than one reading within a close confidence of the best; risk = the gap's reach (what depends on it)
+      when it is uncertain or ambiguous. The route follows: uncertain → the open loop (IP9); ambiguous → asked with the readings side by side;
+      crystallized → reported as an invariant. The same assessment runs on data and on a conversation.
+    superseded_first_map: >-
+      (kept, §0.3) The coder's first version, 2026-11-05 (fc5099560), made the three separate measures with a new risk formula
+      (impact × irreversibility × (1 + uncertainty + ambiguity)) and reached into lib/ for gap-field-engine, open-loop-taxonomy,
+      intent-classifier and ambiguity-pull. He corrected it the same hour: they are the reusable primitives, confidence scoring and
+      crystallization.
 proof_planned: >-
   test-intelligence-pipeline on planted data, so the right answer is known before the run: one series with a step change (one deviation run,
   regime degraded), one oscillating (oscillatory), two series that deviate together five times (an invariant), two loud series that co-deviate
   only at chance (a hypothesis, never an invariant: F2's case on numbers), and a file with bad rows (counted and said). Then a second run of the
   same kind against the saved baseline and invariants (IP5): the break is named. IP8–IP10: a planted series with a missing stretch and a
   topic that stops being mentioned (negative space found), a run whose open questions are the next run's input (the loop stays open), and a
-  dated journal sample whose friction and integration are tracked across weeks. IP11: four planted gaps, one per route (reported, held for
-  data, asked, acted on), each routed by its measures; and the check that no gap is acted on unassessed.
+  dated journal sample whose friction and integration are tracked across weeks. IP11: planted gaps whose confidence and readings put one each on every route (open
+  loop, asked, invariant), the same assessment on a planted conversation with a contradiction in it, and no gap routed unassessed.
