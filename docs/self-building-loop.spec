@@ -231,7 +231,8 @@ spec:
 
     - id: IF-PHASE-SPECS
       name: phase-specs
-      path: lib/emerge/compiler/phase-specs.js
+      # EAS4g 2026-11-05 (his EAS_D10, "Idearium, via the door"): moved from lib/emerge/compiler/phase-specs.js (archived with lib/emerge)
+      path: idearium/spec-engine/phase-specs.cjs
       description: "PS1 — each phase specced again as a .phase with its .graph beside the owning system."
       exports: ["derive({ root, map }) → rows", "write(opts)", "check(opts)"]
       behavioral_contracts: ["the .phase holds what is authored; the .graph is derived and keyed by its hash"]
@@ -428,7 +429,8 @@ spec:
     - id: MOD-SL-NODES
       name: phase-nodes-all
       uuid: nexus-sl-phase-nodes-all-v1-0000-2026-1023-001
-      path: lib/emerge/compiler/phase-specs.js
+      # EAS4g 2026-11-05 (his EAS_D10, "Idearium, via the door"): moved from lib/emerge/compiler/phase-specs.js (archived with lib/emerge)
+      path: idearium/spec-engine/phase-specs.cjs
       phase: SL9_every_phase_a_node
       description: >-
         writeAll writes a .phase and its .graph for every phase of every phasemap, the DAG built once with MP1's mapping in it, and

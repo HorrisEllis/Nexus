@@ -691,7 +691,8 @@ spec:
     - id: MOD-PHASE-SPECS
       name: phase-specs
       uuid: nexus-substrate-phase-specs-v1-0000-2026-1020-001
-      path: lib/emerge/compiler/phase-specs.js
+      # EAS4g 2026-11-05 (his EAS_D10, "Idearium, via the door"): moved from lib/emerge/compiler/phase-specs.js (archived with lib/emerge)
+      path: idearium/spec-engine/phase-specs.cjs
       phase: PS1_phase_specs
       description: >-
         The step after a spec and its phases (his order: specs, then phases, then specced again with the dag and related files).

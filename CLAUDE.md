@@ -16,7 +16,7 @@ It’s what cos manages. The spine and component registry for each system routes
 "And enforce that. I’m sick of you confusing that. It’s fucking sovereign. Do not  make this mistake again."
 **Every phase needs a DAG.** James, 2026-11-03: "Okay we also need to clean the phases at some point. Add to the Claude.md. That every phase needs a
 dag." Every phase of every map has its `depends_on:` (`[]` when none, every name resolving, no cycles), its `files:`, and its graph written before
-any code (his 2026-10-18 and 2026-10-19 rules, in docs/CLAUDE.md: `node lib/emerge/compiler/phase-specs.js <map>`, `lib/phase-dag.js`). A phase
+any code (his 2026-10-18 and 2026-10-19 rules, in docs/CLAUDE.md: `node idearium/spec-engine/phase-specs.cjs <map>`, moved from lib/emerge 2026-11-05 by his EAS_D10, `lib/phase-dag.js`). A phase
 without them is not built. **Pending, his:** the phases need cleaning (the open ones are spread over many maps; when, his call).
 **Phases expand; they are not written again.** James, 2026-11-03: "Like they stop getting written and start getting, they expand." Before writing a
 phase, find the one that already covers its files or intent and expand it (a dated addendum quoting why); write a new phase only when none does.

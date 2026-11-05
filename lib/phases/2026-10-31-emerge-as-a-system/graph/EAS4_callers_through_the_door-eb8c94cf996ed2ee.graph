@@ -7,11 +7,11 @@ intent: null
 summary: 45 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793919176646
+exported_at: 1793920520035
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793919176646
-lastSeenAt: 1793919176646
+firstSeenAt: 1793920520035
+lastSeenAt: 1793920520035
 fingerprint: null
 payload:
   for: EAS4_callers_through_the_door
@@ -322,22 +322,14 @@ payload:
     downstream: []
     blockedBy: []
     unlocks: []
-    conflicts:
-      - with: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4g_lib_emerge_archived
-        files:
-          - tests/modules/test-substrate-spec.test.js
-          - lib/emerge
-          - _archive/lib/emerge
+    conflicts: []
     dangling: []
     lines:
-      - layer 3 · ready
+      - layer 3
       - >-
         depends on (2): EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus · all
         upstream 8
       - 'needed by (0): —'
-      - >-
-        same files as EAS4g_lib_emerge_archived with no order between them:
-        tests/modules/test-substrate-spec.test.js, lib/emerge, _archive/lib/emerge
     edges:
       - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
         kind: declared

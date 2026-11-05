@@ -11,7 +11,8 @@
     "commands": [
       "emerge.compiler.compile",
       "emerge.compiler.build",
-      "emerge.compiler.run"
+      "emerge.compiler.run",
+      "emerge.compiler.check"
     ]
   }
 }

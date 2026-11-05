@@ -98,4 +98,21 @@ async function run(args = {}) {
   });
 }
 
-module.exports = { compile, build, run };
+/** POST /compiler/check { spec } · cli `check-spec --file <path>` — the spec's knowledge graph (kg-builder), no files written:
+ *  { ok, ids: [every non-BLACK node's id and name], black: [ids], nodes } | { ok:false, error }. EAS_D10 (2026-11-05, his: "Idearium, via
+ *  the door"): Idearium's phase-specs asks this, through the CLI so it runs with no server up. */
+async function check(args = {}) {
+  let text = args.spec;
+  if ((typeof text !== 'string' || !text.trim()) && typeof args.file === 'string') { try { text = fs.readFileSync(path.resolve(args.file), 'utf8'); } catch (e) { return { ok: false, error: `the spec could not be read: ${e.message}` }; } }
+  if (typeof text !== 'string' || !text.trim()) throw _bad('spec (the spec\'s YAML text) or file (its path, on the command line)');
+  let raw; try { raw = require('js-yaml').load(text); } catch (e) { return { ok: false, error: `not YAML: ${e.message}` }; }
+  const log = console.log; console.log = () => {};
+  let r; try { r = require('../compiler/kg-builder.js').build(raw && raw.spec ? raw.spec : raw); } catch (e) { r = { ok: false, error: e.message }; } finally { console.log = log; }
+  if (!r || !r.ok) return { ok: false, error: (r && r.error) || 'kg-builder returned no graph' };
+  const nodes = r.graph.nodes instanceof Map ? [...r.graph.nodes.values()] : (r.graph.nodes || []);
+  const ids = new Set(), black = [];
+  for (const n of nodes) { if (n.isBlack) { black.push(n.id); continue; } ids.add(n.id); if (n.name) ids.add(n.name); }
+  return { ok: true, ids: [...ids], black, nodes: nodes.length };
+}
+
+module.exports = { compile, build, run, check };

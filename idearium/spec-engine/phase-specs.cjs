@@ -1,6 +1,10 @@
 'use strict';
 /**
- * emerge/compiler/phase-specs.js — PS1: each phase specced again, with its DAG and its related files, beside the system that owns it.
+ * idearium/spec-engine/phase-specs.cjs — PS1: each phase specced again, with its DAG and its related files, beside the system that owns it.
+ * §2026-11-05 EAS4g — moved from lib/emerge/compiler/phase-specs.js (archived with lib/emerge). James, asked where it lives: "Idearium, via
+ * the door" (EAS_D10, docs/2026-10-31-emerge-as-a-system-phasemap.spec). It is Nexus's phase tooling, Idearium's; its spec check is
+ * Emerge's kg-builder, asked through Emerge's door — its command line (`node emerge/emerge/cli.js check-spec --file <spec>`), so it runs
+ * with no server up. It never requires Emerge's files.
  * comp_id: nexus.emerge.phase-specs
  * Lives in emerge (the spec compiler's system), not lib/: it compiles specs with emerge's kg-builder, and lib/ requiring emerge/ is
  * a new upward crossing (lib/system-boundary.js). From here its uses of lib/ are the allowed system-uses-kernel kind.
@@ -21,14 +25,14 @@
  *
  *   write({ root, map, mapsDir, out }) → [{ phase, owner, phaseFile, graphFile, ready, blocks: { resolved, missing } }]
  *   check({ root, map, mapsDir, out }) → [{ phase, drift: [why] }]   — re-derives and compares with the files on disk
- *   cli: node lib/emerge/compiler/phase-specs.js <map.spec> [--check]
+ *   cli: node idearium/spec-engine/phase-specs.cjs <map.spec> [--check]
  */
 const fs = require('fs');
 const path = require('path');
 
 const MODULE_ID = 'nexus.emerge.phase-specs';
 const VERSION = '1.1.0';
-const ROOT = path.resolve(__dirname, '..', '..', '..');
+const ROOT = path.resolve(__dirname, '..', '..');
 
 const _field = (body, k) => { const m = String(body || '').match(new RegExp(`^\\s{4}${k}:\\s*(.+)$`, 'm')); return m ? m[1].trim() : null; };
 const _list = (v) => (v ? v.replace(/^\[|\]$/g, '').split(',').map(s => s.trim()).filter(Boolean) : []);
@@ -36,15 +40,14 @@ const _mapId = (map) => path.basename(String(map)).replace(/-phasemap\.spec$/, '
 
 /** the ids a spec declares (modules, schemas, interfaces, by id and by name), through emerge's own knowledge-graph builder */
 function specIds(specPath) {
-  const yaml = require('js-yaml');
-  const raw = yaml.load(fs.readFileSync(specPath, 'utf8'));
-  const { build } = require('./kg-builder.js');
-  const r = build(raw && raw.spec ? raw.spec : raw);
-  if (!r || !r.ok) throw new Error(`the spec did not build: ${(r && r.error) || 'kg-builder returned no graph'}`);
-  const ids = new Set();
-  const nodes = r.graph.nodes instanceof Map ? [...r.graph.nodes.values()] : (r.graph.nodes || []);
-  for (const n of nodes) if (!n.isBlack) { ids.add(n.id); if (n.name) ids.add(n.name); }
-  return ids;
+  // Emerge's door, its command line (EAS_D10): the same command as POST /compiler/check
+  const { spawnSync } = require('child_process');
+  const cli = path.join(ROOT, 'emerge', 'emerge', 'cli.js');
+  const out = spawnSync(process.execPath, [cli, 'check-spec', '--file', path.resolve(specPath)], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024, timeout: 60000, windowsHide: true });
+  if (out.error) throw new Error(`Emerge's door (its command line, ${cli}) did not run: ${out.error.message}`);
+  let r = null; try { r = JSON.parse(out.stdout); } catch (_) {}
+  if (!r || !r.ok) throw new Error(`the spec did not build: ${(r && r.error) || (out.stderr || '').trim().split('\n').pop() || 'Emerge returned nothing'}`);
+  return new Set(r.ids);
 }
 
 function _ownerDir(owner, SYS) {
@@ -80,9 +83,9 @@ function keptAgentMaps(root = ROOT) {
  * else the system most of its map's phases belong to, else its map's loom tags, else lib/ (core). Findings and decisions are not phases.
  */
 function _core({ root = ROOT, maps, only = null, mappings = null } = {}) {
-  const PD = require('../../phase-dag.js'), PF = require('../../phase-files.js'), PMA = require('../../phase-map-auto.js');
-  const PG = require('../../phase-graph.js'), PN = require('../../pipeline-nodes.js'), PP = require('../../phase-plan.js');
-  const SYS = require('../../nexus-self/systems.js');
+  const PD = require('../../lib/phase-dag.js'), PF = require('../../lib/phase-files.js'), PMA = require('../../lib/phase-map-auto.js');
+  const PG = require('../../lib/phase-graph.js'), PN = require('../../lib/pipeline-nodes.js'), PP = require('../../lib/phase-plan.js');
+  const SYS = require('../../lib/nexus-self/systems.js');
   const mp = {}; for (const [k, m] of PMA.forMaps({ root, maps }).byKey) mp[k] = m;
   const agent = mappings || {};
   for (const [k, m] of Object.entries(agent)) if (!(mp[k] && (mp[k].files || []).length)) {
@@ -93,7 +96,7 @@ function _core({ root = ROOT, maps, only = null, mappings = null } = {}) {
   const systemOf = PG.boundarySystemOf(root);
   let baseline = null; try { baseline = PG.baselineEdges(root); } catch (_) { baseline = null; }
   const ownerOfFiles = (files) => PP.targetSystem({ files, tags: [], ownerOf: SYS.ownerOf, tagSystem: SYS.systemForLoomTag }).system || null;
-  const loom = { parsePhasemapText: require('../../phase-dag.js').parsePhasemap };   // loom's reader through lib (emerge uses the kernel; no emerge → loom crossing)
+  const loom = { parsePhasemapText: require('../../lib/phase-dag.js').parsePhasemap };   // loom's reader through lib (emerge uses the kernel; no emerge → loom crossing)
   const specCache = new Map(), out = [];
   for (const m of maps) {
     if (only && m.path !== only) continue;
@@ -152,7 +155,7 @@ function derive({ root = ROOT, map, mapsDir = path.join(root, 'docs'), mappings 
 // a node is written only when its payload changed (exported_at would make every pass a change: SL9 "a second --all changes nothing");
 // an older .graph of the same phase (another hash) moves to graph/_superseded/, never deleted (§0.3)
 function _writeRow(d, out) {
-  const NE = require('../../node-export.js');
+  const NE = require('../../lib/node-export.js');
   const abs = path.join(out, d.dir);
   let changed = 0, superseded = 0;
   const put = (env, file) => {
@@ -185,14 +188,14 @@ function write(opts = {}) {
 function writeAll({ root = ROOT, out = null, mapsDir = path.join(root, 'docs'), mappings = null } = {}) {
   out = out || root;
   const maps = [], skipped = [];
-  for (const m of _maps(root, mapsDir)) { try { require('../../phase-dag.js').parsePhasemap(m.text, m.path); maps.push(m); } catch (e) { skipped.push({ map: m.path, why: e.message }); } }
+  for (const m of _maps(root, mapsDir)) { try { require('../../lib/phase-dag.js').parsePhasemap(m.text, m.path); maps.push(m); } catch (e) { skipped.push({ map: m.path, why: e.message }); } }
   const { rows, dag } = _core({ root, maps, mappings: mappings || keptAgentMaps(root) });
   // a .phase already in the tree for the same map::phase at another place (its owner changed: the old per-map pass had no mapping) moves,
   // with its graphs, to _archive/phases-moved/<its old path> — kept, said (§0.3); a .phase whose phase is in no map is listed, left in place
-  const NE = require('../../node-export.js');
+  const NE = require('../../lib/node-export.js');
   const want = new Map(rows.map(d => [`${d.map}::${d.phase}`, path.join(d.dir, `${d.phase}.phase`).split(path.sep).join('/')]));
   // entries their map holds as a decision or a finding are not phases (loom, 0.60.225/0.60.227): an old .phase of one is archived too
-  const notPhase = new Set(); for (const m of maps) for (const p of require('../../phase-dag.js').parsePhasemap(m.text, m.path)) if (p.kind) notPhase.add(`${m.path}::${p.id}`);
+  const notPhase = new Set(); for (const m of maps) for (const p of require('../../lib/phase-dag.js').parsePhasemap(m.text, m.path)) if (p.kind) notPhase.add(`${m.path}::${p.id}`);
   const moved = [], orphaned = [];
   const phaseDirs = [];
   try { for (const top of fs.readdirSync(out, { withFileTypes: true })) if (top.isDirectory() && !/^(\.|node_modules$|_archive$|data$)/.test(top.name)) { const pd = path.join(out, top.name, 'phases'); if (fs.existsSync(pd)) phaseDirs.push(pd); } } catch (_) {}
@@ -223,7 +226,7 @@ function writeAll({ root = ROOT, out = null, mapsDir = path.join(root, 'docs'), 
     const byMap = new Map(); for (const d of list) { if (!byMap.has(d.map)) byMap.set(d.map, []); byMap.get(d.map).push(d); }
     const open = list.filter(d => !d.done);
     const L = [`# ${sys === 'core' ? 'core (lib/)' : sys} — its phases`, '',
-      `Generated by \`node lib/emerge/compiler/phase-specs.js --all\` (SL9) from the phasemaps in docs/. The maps are the source; each \`.phase\` holds what its map authors, and each \`graph/<phase>-<hash>.graph\` its files, crossings and slice of the whole DAG (DAG ${dag.hash}). Do not edit these by hand: edit the map, then run it again.`, '',
+      `Generated by \`node idearium/spec-engine/phase-specs.cjs --all\` (SL9) from the phasemaps in docs/. The maps are the source; each \`.phase\` holds what its map authors, and each \`graph/<phase>-<hash>.graph\` its files, crossings and slice of the whole DAG (DAG ${dag.hash}). Do not edit these by hand: edit the map, then run it again.`, '',
       `${list.length} phases from ${byMap.size} maps · ${open.length} open · ${open.filter(d => !d.blockedBy.length && d.ready).length} open with every dependency closed and a graph`, ''];
     for (const [map, ds] of [...byMap].sort((a, b) => a[0].localeCompare(b[0]))) {
       L.push(`## ${_mapId(map)}`, '', '| phase | status | layer | graph | waits on |', '| --- | --- | --- | --- | --- |');
@@ -241,7 +244,7 @@ function writeAll({ root = ROOT, out = null, mapsDir = path.join(root, 'docs'), 
 
 /** checkAll(opts) — every phase's drift, as check() does for one map */
 function checkAll({ root = ROOT, out = null, mapsDir = path.join(root, 'docs'), mappings = null } = {}) {
-  const NE = require('../../node-export.js');
+  const NE = require('../../lib/node-export.js');
   const base = out || root;
   const { rows } = _core({ root, maps: _maps(root, mapsDir), mappings: mappings || keptAgentMaps(root) });
   return rows.map(d => {
@@ -257,7 +260,7 @@ function checkAll({ root = ROOT, out = null, mapsDir = path.join(root, 'docs'), 
 /** check(...) — re-derive; a .phase or .graph that differs from what the tree derives now is drift, said per phase */
 function check(opts = {}) {
   const root = opts.out || opts.root || ROOT;
-  const NE = require('../../node-export.js');
+  const NE = require('../../lib/node-export.js');
   return derive(opts).map(d => {
     const drift = [];
     const pf = path.join(root, d.dir, `${d.phase}.phase`);
@@ -283,7 +286,7 @@ if (require.main === module) {
     for (const sk of r.skipped) console.log(`skipped ${sk.map}: ${sk.why}`);
     process.exit(0);
   }
-  if (!map) { console.error('usage: node lib/emerge/compiler/phase-specs.js <map.spec> [--check] | --all [--check]'); process.exit(2); }
+  if (!map) { console.error('usage: node idearium/spec-engine/phase-specs.cjs <map.spec> [--check] | --all [--check]'); process.exit(2); }
   const quiet = console.log; console.log = () => {};
   let rows; try { rows = args.includes('--check') ? check({ map }) : write({ map }); } finally { console.log = quiet; }
   for (const r of rows) console.log(r.drift ? `${r.drift.length ? '✗' : '✓'} ${r.phase}${r.drift.length ? `  ${r.drift.join(' · ')}` : ''}`

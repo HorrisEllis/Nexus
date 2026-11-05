@@ -216,7 +216,8 @@ spec:
 
     - id: IF-SPEC-COMPILER
       name: spec-compiler
-      path: lib/emerge/compiler/kg-builder.js
+      # EAS4g 2026-11-05: Emerge's copy (EAS_D7, EAS_D10); lib/emerge/compiler/kg-builder.js archived with lib/emerge
+      path: emerge/emerge/compiler/kg-builder.js
       description: "Compiles a spec into its knowledge graph at a depth; phase-specs.js writes each phase's .phase and .graph."
       exports: ["build", "createKGPipeline", "computeGaps", "DEPTH", "phase-specs.js: derive, write, check"]
       behavioral_contracts: ["a module below depth 1.0 or a BLACK node is a gap, named"]

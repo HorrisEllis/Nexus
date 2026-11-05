@@ -34,7 +34,11 @@ test('T-001', 'every system registry-components file normalizes to a non-empty c
 test('T-002', 'every declared component has the fields register() requires', () => {
   const REQUIRED = ['id', 'namespace', 'name', 'version', 'grammar', 'route', 'description'];
   for (const sys of SYSTEMS) {
-    const comps = norm(require(path.join(ROOT, require('../../lib/nexus-self/systems.js').dirOf(sys), 'registry-components.js')));
+    // EAS4g 2026-11-05: Emerge's IDE registry in this shape is emerge/emerge/ide-registry.js (his EAS_D2, two names; it was
+    // lib/emerge/registry-components.js). emerge/emerge/registry-components.js is Emerge's own skeleton registry, checked by its own
+    // emerge/emerge/tests/skeleton.test.js (§5.16: each system's registry is its own).
+    const file = sys === 'emerge' ? 'ide-registry.js' : 'registry-components.js';
+    const comps = norm(require(path.join(ROOT, require('../../lib/nexus-self/systems.js').dirOf(sys), file)));
     for (const c of comps) {
       for (const f of REQUIRED) {
         assert.ok(c[f] !== undefined && c[f] !== null && c[f] !== '', `${sys}/${c.id || '?'} missing ${f}`);

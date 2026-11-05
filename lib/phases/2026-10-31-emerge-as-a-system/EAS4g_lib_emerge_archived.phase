@@ -4,26 +4,38 @@ type: phase
 id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4g_lib_emerge_archived
 context: pipeline phase EAS4g_lib_emerge_archived of docs/2026-10-31-emerge-as-a-system-phasemap.spec
 intent: null
-summary: EAS4g_lib_emerge_archived (?) — 1 file(s)
+summary: EAS4g_lib_emerge_archived (?) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1793917506300
+exported_at: 1793920520047
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793917506300
-lastSeenAt: 1793917506300
+firstSeenAt: 1793920520047
+lastSeenAt: 1793920520047
 fingerprint: null
 payload:
   id: EAS4g_lib_emerge_archived
   map: docs/2026-10-31-emerge-as-a-system-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "BUILT 0.60.415 — lib/emerge → _archive/lib/emerge (90 files, ARCHIVED.md); phase-specs →
+    Idearium (EAS_D10)"
   files:
     - tests/modules/test-substrate-spec.test.js
+    - idearium/spec-engine/phase-specs.cjs
+    - emerge/emerge/lib/compiler.js
+    - lib/nexus-self/systems.js
+    - lib/system-check.js
+    - lib/route-contract-check.js
+    - lib/cli/diagnose.js
+    - lib/file-integrity.js
+    - lib/hooks/emerge.hooks.js
+    - scripts/release.js
+    - scripts/precommit-check.js
   depends_on:
     - EAS4f_the_callers_switch
   blocks:
     - MOD-EAS-CALLERS
   spec: docs/emerge-system.spec
-  graph: 2f12ffaf0fb6715c
+  graph: dc862c1f6b5de448

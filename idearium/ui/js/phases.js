@@ -216,7 +216,7 @@ function _phGroomRail() {
 // 0.60.229 SL9 — every phase a .phase node with its graph, beside its owner system: how many, where, and what is missing or stale
 function _phNodesRail() {
   const n = PHASES.nodes;
-  const btn = `<button class="ph2-mini-btn" onclick="phNodes()" title="every phase's .phase node and its dependency graph, per owner system — read only; they are written by node emerge/compiler/phase-specs.js --all">◇ phase nodes</button>`;
+  const btn = `<button class="ph2-mini-btn" onclick="phNodes()" title="every phase's .phase node and its dependency graph, per owner system — read only; they are written by node idearium/spec-engine/phase-specs.cjs --all">◇ phase nodes</button>`;
   if (!n) return `<div class="ph2-pad">${btn}</div>`;
   return `<div class="ph2-rail-head">phase nodes · ${n.nodes} for ${n.phases} phases</div>
     <div class="ph2-dim ph2-pad">${escapeHtml(Object.entries(n.bySystem || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(' · '))}</div>

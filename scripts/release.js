@@ -13,7 +13,7 @@
  * test-release-version reads the committed tree: run it after the release, not in --tests.
  *
  * Steps: 1 bump (scripts/bump-version.py + VERSION) · 2 the changelog copied to versionium/changelogs/CHANGELOG-<v>.md · 3 each map's
- * .phase/.graph regenerated (lib/emerge/compiler/phase-specs.js) · 4 each test run, a red one stops the release before anything is
+ * .phase/.graph regenerated (idearium/spec-engine/phase-specs.cjs; was lib/emerge/compiler/phase-specs.js until 0.60.415, EAS_D10) · 4 each test run, a red one stops the release before anything is
  * committed · 5 everything changed or new staged, except data/** (never committed) · 6 one commit with the session's trailers · 7 push
  * with tracking set (the shallow-clone refspec). --dry-run says each step and changes nothing.
  */
@@ -57,7 +57,7 @@ function plan(a) {
   if (!a.resume) steps.push({ name: 'bump', cmd: ['python3', [path.join('scripts', 'bump-version.py'), a.version, a.line]] });
   if (!a.resume) steps.push({ name: 'VERSION', write: ['VERSION', `${a.version}\n`] });
   if (!a.resume) steps.push({ name: 'changelog', copy: [a.changelog, path.join('versionium', 'changelogs', `CHANGELOG-${a.version}.md`)] });
-  for (const m of a.maps) steps.push({ name: `graphs ${path.basename(m)}`, cmd: [process.execPath, [path.join('lib', 'emerge', 'compiler', 'phase-specs.js'), m]] });
+  for (const m of a.maps) steps.push({ name: `graphs ${path.basename(m)}`, cmd: [process.execPath, [path.join('idearium', 'spec-engine', 'phase-specs.cjs'), m]] });
   for (const t of a.tests) steps.push({ name: `test ${path.basename(t)}`, cmd: [process.execPath, [t]], test: true });
   steps.push({ name: 'stage (not data/)', stage: true });
   steps.push({ name: 'commit', commit: true });

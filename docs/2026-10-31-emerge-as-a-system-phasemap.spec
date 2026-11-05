@@ -8,7 +8,7 @@ origin: >-
   genesis and architecture spec in idearium. needs to be one" · on the coder's answer: "okay. do it as long as it gets up closer to building
   large projects, like i want to be buyilding an operating systems"
 
-status: "EAS1, EAS1a, EAS2, EAS5 BUILT 0.60.336; EAS3, EAS4 OPEN."
+status: "EAS1, EAS1a, EAS2, EAS5 BUILT 0.60.336; EAS3 BUILT 0.60.339; EAS4 BUILT 0.60.415 (EAS4a–g; lib/emerge archived)."
 
 decisions:
   EAS_D0_a_system_not_an_idearium_module:
@@ -128,6 +128,21 @@ decisions:
       writeback, sync each a URL; summarize stays local). Nexus: the system that owns each part serves it (Cortex: preflight, writeback;
       Idearium: sync; Guardian: the model). Then L2 build and L3 run go behind the door and the four callers switch.
 
+  EAS_D10_phase_specs_is_ideariums_kg_builder_is_emerges:
+    status: "DECIDED 2026-11-05 (his); supersedes EAS_D7 in part (kept, §0.3)"
+    james: 'asked where phase-specs.js lives once lib/emerge is archived, with three choices: "Idearium, via the door (Recommended)"'
+    context: >-
+      EAS_D7 (his, the same day) made kg-builder.js and phase-specs.js Emerge's. Read when EAS4g came up: phase-specs.js requires eight Nexus lib
+      modules (phase-dag, phase-files, phase-map-auto, phase-graph, pipeline-nodes, phase-plan, nexus-self/systems, node-export) and uses
+      Emerge only for its spec check (kg-builder build → the ids a spec declares). Moving it into Emerge would make Emerge require Nexus,
+      against his 2026-10-28 rule ("don't couple to nexus"). kg-builder.js needs only Emerge's own siso and chunk; Emerge's copy is the newer
+      (2026-10-28 scoring fixes) and test-substrate-spec passes 3/3 on it. Choices put to him: Idearium, via the door (the coder's
+      recommendation) · Emerge, coupled (EAS_D7 to the letter) · split it.
+    chosen: >-
+      phase-specs is Nexus's phase tooling and Idearium's (it owns specs and phases): idearium/spec-engine/phase-specs.cjs. It asks Emerge's
+      kg-builder through Emerge's door, its command line (emerge.compiler.check, `node emerge/emerge/cli.js check-spec --file <spec>`), so
+      it still runs with no server up; the same command is POST /compiler/check. kg-builder stays Emerge's (EAS_D7's half that holds).
+
 phases:
   EAS1_the_skeleton_in_emerge:
     status: BUILT 0.60.336 (Emerge 19200ff)
@@ -162,7 +177,7 @@ phases:
     does: "emerge/ at Nexus's root, a locked snapshot at one commit; registered as a system with its wires"
     proof: "the lock check passes and fails on a one-byte edit; Emerge's door boots from Nexus"
   EAS4_callers_through_the_door:
-    status: "OPEN — expanded 2026-11-05 into EAS4a–EAS4g (one per primitive, then the callback routes, the callers, the archive); done when they are"
+    status: "BUILT 0.60.415 — EAS4a–EAS4g all built; nothing in Nexus requires lib/emerge, and lib/emerge is archived (_archive/lib/emerge)"
     depends_on: [EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus]
     files: [guardian/server.js, idearium/compiler-bridge.js, copilot/module-builder.js, cortex/core/raid/contract-intake.js, lib/hooks/emerge.hooks.js, tests/modules/test-substrate-spec.test.js, lib/emerge, _archive/lib/emerge, emerge/emerge/core/admit.js, emerge/emerge/core/index.js, lib/warp/adapters/_archive/emerge-field.js, lib/warp/core/Engine.js, lib/warp/spec/warp.spec, tests/modules/test-warp2.test.js, emerge/emerge/lib/compiler.js, emerge/emerge/registry-components.js, emerge/emerge/data/nodes/command/emerge.compiler.compile.command, emerge/emerge/tests/compiler-door.test.js, emerge/emerge/compiler/host.js, emerge/emerge/compiler/model.js, emerge/emerge.cos, lib/spec-collect.js, tests/modules/test-spec-pipeline.test.js, idearium/api/index.js, idearium/cli/route-commands.js]
     spec: docs/emerge-system.spec
@@ -321,14 +336,30 @@ phases:
     does: "the four remaining callers call Emerge's door: idearium/compiler-bridge (compile, with Cortex around it by route), copilot/module-builder (build), guardian/server and lib/build-pipeline (run)"
     proof: "each caller's suite unchanged; the before/after compare clean"
   EAS4g_lib_emerge_archived:
-    status: OPEN
+    status: "BUILT 0.60.415 — lib/emerge → _archive/lib/emerge (90 files, ARCHIVED.md); phase-specs → Idearium (EAS_D10)"
     depends_on: [EAS4f_the_callers_switch]
     spec: docs/emerge-system.spec
     blocks: [MOD-EAS-CALLERS]
-    files: [lib/emerge, _archive/lib/emerge, tests/modules/test-substrate-spec.test.js]
+    files: [lib/emerge, _archive/lib/emerge, tests/modules/test-substrate-spec.test.js, idearium/spec-engine/phase-specs.cjs, emerge/emerge/lib/compiler.js, lib/nexus-self/systems.js, lib/system-check.js, lib/route-contract-check.js, lib/cli/diagnose.js, lib/file-integrity.js, lib/hooks/emerge.hooks.js, scripts/release.js, scripts/precommit-check.js]
     requires: ["nothing requires lib/emerge (grep and the census)"]
     prerequisites: ["phase-specs.js and kg-builder.js run from emerge/ (EAS_D7)"]
     does: "lib/emerge moved to _archive/lib/emerge with its reason (§0.3); every reference points at emerge/"
+    # ── EXPANDED 2026-11-05 (0.60.415) — built (James, the same day: "Let's fix the emerge issue") ──
+    # Its prerequisite (phase-specs and kg-builder run from Emerge, EAS_D7) met as his EAS_D10 settled it: "Idearium, via the door".
+    # - phase-specs.js → idearium/spec-engine/phase-specs.cjs; its spec check asks Emerge's kg-builder through Emerge's command line
+    #   (`node emerge/emerge/cli.js check-spec --file`, also POST /compiler/check), so it runs with no server up. Run across every map, old
+    #   tool vs new on the same tree: 2560 phases, 629 with drift, the same lines both ways (the drift was there before).
+    # - kg-builder: Emerge's copy (newer, 2026-10-28 fixes); test-substrate-spec 3/3 on it; spec module paths pointed at it.
+    # - lib/emerge → _archive/lib/emerge (90 files, git mv, with ARCHIVED.md saying where each part went); nothing deleted (§0.3).
+    # - Repointed (live code, tests, instructions; history kept as it was): the IDE's registry is emerge/emerge/ide-registry.js (his EAS_D2,
+    #   identical to the old lib copy), its contract ide-contract.json; diagnose, file integrity, blueprint index, boot list, hooks, system
+    #   check, route-contract check, precommit, release script, CLAUDE.md, docs/CLAUDE.md; MOVED.emerge = emerge/emerge (nexus-self/systems).
+    # - Found on the way: lib/cli/diagnose's kernel check required './emerge/emerge-kernel.js' from the repository root, a folder that did not
+    #   exist (fixed); RC-02 now checks Emerge's own guarded watcher (2026-10-28, not lib/safe-watch.js).
+    # - Census: none added; 1121 → 1129, all kind 'kernel': phase-specs' eight lib requires now run from Idearium (system → lib, allowed while
+    #   DB0a is open), where they were lib → lib.
+    # Compared with a clean checkout of the commit before (a worktree): the failures left are the base's own — RS-01, atlas refs, README size,
+    # registry-draft RD-04, NR-10, SCE-004, EM-005, kernel's emerge/io check, PN-04.
     proof: "nothing requires lib/emerge; the module suite unchanged"
   EAS5_a_system_of_systems:
     status: BUILT 0.60.336 (Emerge 58a12d8)

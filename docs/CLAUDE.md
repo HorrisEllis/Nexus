@@ -298,7 +298,7 @@ The order, for every new capability:
    at specDepth 1.0, no BLACK node, and the invariants engine valid — the bar for "can be rebuilt if lost". Examples:
    docs/substrate.spec, docs/belief-loop.spec. Checked by tests/modules/test-substrate-spec.test.js.
 2. **Phases** in a phasemap, each naming `spec:` and the module ids it builds in `blocks:` (DAG-checked, lib/phase-dag.js).
-3. **Each phase specced again**: `node lib/emerge/compiler/phase-specs.js <map>` writes <owner>/phases/<map-id>/<phase>.phase (what is
+3. **Each phase specced again**: `node idearium/spec-engine/phase-specs.cjs <map>` (Idearium's since 2026-11-05, his EAS_D10; was `lib/emerge/compiler/phase-specs.js`) writes <owner>/phases/<map-id>/<phase>.phase (what is
    authored) and graph/<phase>-<hash>.graph (its related files with roles, crossings, and its slice of the whole DAG), beside the
    system that owns it (the handoff's PN1 layout). `--check` reports drift.
 Only then is code written, and a phase's code is built against its .phase, its .graph and its spec modules.
