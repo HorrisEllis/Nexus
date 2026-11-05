@@ -214,6 +214,24 @@ phases_addendum_2026_11_03_sc8:
 #     acts only through RAID, or reads too. Not mapped twice; it waits on his answer.
 #   - "bridge not connected": the words are not in cos/, cos/ui or cos/manager/cli.js; where he sees them is asked (§0.1).
 phases_addendum_2026_11_04:
+  SC11_the_console_tab:
+    layer: ui
+    status: "BUILT 0.60.398 — test-cos-console-tab"
+    origin: >-
+      James, 2026-11-05: "next phase. cos needs the console from the autopilot. like a console tab". The retired autopilot
+      (lib/nexus/autopilot.retired-0.60.330.js) printed every system's output in one stream, each line timestamped and named
+      "[time] [system:file] line", errors in red, and took commands (--cli). COS keeps each system's lines (the supervisor's s.out, LOG_KEEP)
+      and has a command line (SC3, the bell's neighbour), but no place shows every system's output together, live.
+    depends_on: [SC3_system_command_line, SC5_the_console_ui]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/shell/page.js, cos/ui/console/index.html, cos/ui/console/page.js, cos/ui/console/page.css, tests/modules/test-cos-console-tab.test.js, tests/modules/run-all.js]
+    does: >-
+      Backend: the supervisor says each line a system prints ('line': { system, ts, stream, line }); the manager sends them on its stream as
+      cos.console, in batches every 200 ms (a burst past 500 lines says how many it dropped), and GET /api/cos/console?limit=&system= gives the
+      last lines of every system merged in time order. UI: a Console tab — every system's output together, newest at the bottom, each line
+      with its time and its system (coloured), errors in red; filter by system, errors only, search; follow on/off; and the command line at
+      the bottom (POST /api/cos/cli), its answers shown in the stream. Declared in COS's contract (the page, its routes, the event).
+    proof: "a system's printed lines reach GET /api/cos/console merged in time order and arrive live as cos.console; in Clear Glass the Console tab shows them with their system, filters to one, and runs a command"
   SC9_the_zip_dropzone_updater:
     layer: ui
     status: OPEN

@@ -17,7 +17,7 @@
     {
       "method": "GET",
       "path": "/api/cos/events",
-      "out": "text/event-stream: cos.ledger, cos.system.state"
+      "out": "text/event-stream: cos.ledger, cos.system.state, cos.console"
     },
     {
       "method": "GET",
@@ -263,6 +263,11 @@
       "in": "{ patch, by }",
       "personAct": true,
       "out": "{ settings, changed, gates } | 400 naming the field | 403 for an agent — CA3"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/console",
+      "out": "{ lines: [{ system, ts, stream, line }], systems } — every system's last lines (limit, default 500, max 5000; ?system= one), merged in time order (SC11)"
     }
   ],
   "door": {
@@ -326,7 +331,8 @@
     "cos.ui.notice": "{ level, text } — a page asks the shell to say something",
     "cos.ui.tab": "{ tab } — the shell tells a cockpit which tab the address names",
     "cos.update": "{ phase: started | refused | none | restarted | restart-failed | updated, mode, ... } — the update's steps, as they happen (CE2, 2026-11-02)",
-    "cos.notice": "{ notice, counts } | { read, counts } — the bell: a notice kept, or notices read (SC1, 2026-11-02)"
+    "cos.notice": "{ notice, counts } | { read, counts } — the bell: a notice kept, or notices read (SC1, 2026-11-02)",
+    "cos.console": "{ lines: [{ system, ts, stream: out | err, line }], dropped? } — what the systems print, in batches every 200 ms (SC11, 2026-11-05)"
   },
   "pages": [
     {
@@ -405,6 +411,28 @@
       ],
       "listens": [
         "cos.ledger"
+      ],
+      "emits": [
+        "cos.ui.navigate"
+      ]
+    },
+    {
+      "id": "console",
+      "title": "Console",
+      "path": "console/",
+      "route": "#/console",
+      "nav": "main",
+      "built": true,
+      "phase": "SC11_the_console_tab",
+      "routes": [
+        "GET /api/cos/console",
+        "GET /api/cos/systems",
+        "POST /api/cos/cli",
+        "GET /api/cos/cli"
+      ],
+      "listens": [
+        "cos.console",
+        "cos.system.state"
       ],
       "emits": [
         "cos.ui.navigate"
