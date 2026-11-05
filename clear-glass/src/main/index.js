@@ -218,7 +218,11 @@ app.setName('Clear Glass');
 // detectors read as a headless browser or a VM (fiverr's PerimeterX "It needs a human touch"). It stays off by default:
 // it was turned off for this machine's GPU crashes (below). CG_GPU=on turns it back on — try it when a site keeps
 // asking for a human; if the GPU crash comes back, unset it.
-if (process.env.CG_GPU !== 'on') app.disableHardwareAcceleration();
+// 2026-11-05 WG1 (docs/2026-11-05-clear-glass-webgl-phasemap.spec) — James: "i cant use fiverr at all. clearglass is my main driver". The note
+// above is out of date: newer Chromium dropped the automatic SwiftShader fallback, so with acceleration off WebGL was simply missing
+// (getContext('webgl') → null, measured on Electron 42) and Fiverr's bot-check script crashed reading its renderer. With acceleration off,
+// software WebGL is now asked for explicitly. CG_GPU=on (the real GPU) is still the better choice on a machine whose GPU works.
+if (process.env.CG_GPU !== 'on') { app.disableHardwareAcceleration(); app.commandLine.appendSwitch('enable-unsafe-swiftshader'); }
 // §BUG FIXED 2026-07-11, REVISED 2026-07-11 — the first version of this
 // fix (app.commandLine.appendSwitch('disable-gpu') + disable-gpu-compositing
 // + disable-software-rasterizer) stopped the fatal crash-loop but broke

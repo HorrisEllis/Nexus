@@ -2030,3 +2030,6 @@ spec:
 # ── ADDENDUM 2026-11-05 — docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec ──────────────────────────────────────────────────────
 # James, 2026-11-05: "i would love if guardian would automatically pick up agent tool commands regardless of request." Owner: guardian.
     | `docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec` | 1.0.0 — Guardian picks up ```tool_call blocks from any reply (not only its own jobs), gated by RAID's constitution (reads run, changes asked, irreversible refused — his AT_D0 to choose); result in a toast, the panel, or back into the chat (AT_D1). AT1–AT3 open | mapped | James: "pick up agent tool commands regardless of request" |
+
+# ── ADDENDUM 2026-11-05 (0.60.394) — docs/2026-11-05-clear-glass-webgl-phasemap.spec ───────────────────────────────────────────────────────
+    | `docs/2026-11-05-clear-glass-webgl-phasemap.spec` | 1.0.0 — Clear Glass has WebGL with hardware acceleration off (newer Chromium dropped the software fallback; Fiverr's bot check crashed on the absence). WG1 built 0.60.394 | built | James: "i cant use fiverr at all. clearglass is my main driver" |
