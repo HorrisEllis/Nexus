@@ -73,6 +73,30 @@ decisions:
       through Emerge's door (the coder's lean); (b) Idearium's.
     chosen: "(a) kg-builder.js (the spec compiler) and phase-specs.js are Emerge's; Idearium (its Phases screen, API, CLI) and the release script reach them through Emerge's door, never its files"
 
+  # ── ADDENDUM 2026-11-05 — the primitives as a small model's structure; one kernel from three sets (his) ──
+  EAS_D8_one_kernel_and_the_small_model_bench:
+    status: "DECIDED 2026-11-05 (his) — after EAS4; no phase written yet"
+    james: '"Yes. This could be huge." (on the primitives letting a 3B-7B local model do what needs a big one) · his own words a month before,
+      scripts/bench-file-prompt.js, 2026-10-05: "combining primitives or invariants to build higher leverage code for less tokens." · asked
+      when: "After EAS4" · asked which primitives: "One kernel, merged"'
+    context: >-
+      Shown, the same day, three primitive sets that are all his: Emerge's core (Rheon: Field, Constraint, Transition, Observation, Lens, Gap,
+      History, Level, Budget, Seed; read from emerge/emerge/core, a kernel of six leaves plus compounds), the ERAVOS kernel (ERAVOS.kernel.spec
+      1.0.0: Organism, Space, Hook, Wire, Projection, Constraint, Mutation, Event, Asset, Permission, + Port in amendment 3.1) with its proposed
+      object model (one store, stable ids, typed associations), and Nexus's shared primitives (lib/system-boundary.js PRIMITIVES: the bus,
+      nexus-connect, the hooks registry, SISO, WARP's Link/Expectation/Axiom/Ledger). They overlap (Constraint in all three; three hash-chained
+      logs; Event and Gate twice in lib) and each covers what the others lack (Emerge: law and evidence; ERAVOS: Relation, Identity,
+      Permission; WARP: causation and expectations). Choices put to him: merge into one kernel · Emerge's core as the kernel with Relation and
+      Identity added · three sets with a mapping · not yet. The idea of a benchmark (a small model, the same tasks with and without the
+      primitive contracts; tests passed, tokens, attempts; the unfavourable case reported, §17.11) was the coder's shaping of his idea.
+    chosen: >-
+      One kernel, merged from the three sets: each concept once. Taken up after EAS4. The small-model benchmark is built on that kernel's
+      contracts.
+    still_his: >-
+      Where the merged kernel lives and whose it is (a system of its own, Emerge, or the kernel; §5.15) · what Seed means (Emerge built
+      replayable randomness; ERAVOS's "seed-registry" and "generator id + seed" read the same; an outside analysis read "initial condition") ·
+      whether merging retires siso/ and warp/core's duplicates.
+
 phases:
   EAS1_the_skeleton_in_emerge:
     status: BUILT 0.60.336 (Emerge 19200ff)
