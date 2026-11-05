@@ -19,9 +19,11 @@ payload:
   repo:
     url: https://github.com/HorrisEllis/emerge
     commit: f02324025d60b9fe8a38e201f65770e2f13f0079
-    lockedAt: '2026-11-01'
+    lockedAt: '2026-11-05'
     path: emerge/
-    note: the Emerge repo is the one source; this snapshot changes only by a new lock (scripts/emerge-lock.js --write)
+    note: >-
+      the snapshot changes only by a new lock (scripts/emerge-lock.js --write). Since 2026-11-05 (EAS_D6, his "A": Emerge is a system in Nexus, emerge/ its
+      source) commit is the base this came from, and a new lock is taken in Nexus; 2026-11-05 EAS4 L0: core/admit.js added, core/index.js exports it
     state:
       - emerge/data/
       - emerge/input/
@@ -154,6 +156,7 @@ payload:
       emerge/compiler/tier-contract.js: 5c70ef897d41e107cb0160ee621073f0f68b5998f453b83df202b268c838371b
       emerge/config.js: 89c24c8656e0f5933d6e75d73e25e1af1ebf282bdb3cf71a845b1a21b8b0ca76
       emerge/contracts/handshake.js: e00de142f7ed57b291a7e214f7e4f14451fb2045017a4811172eb3fc2246387f
+      emerge/core/admit.js: af66c5083401aad4748cceac7f5e410fb64ccdb76e9ca299bc0b141b2482b04f
       emerge/core/budget.js: acd3f0490c2dd983169727e03929f5f49e8dc3e82b81fc7733e450788ab748c0
       emerge/core/clock.js: eb6596a2587fffb63f7b2dfca68ed90b0393def625e82947306e6ab044cf2dde
       emerge/core/constraint.js: 43c75a4c3fd4f84520a0fd2168192f3b4a79880115087abe71ff67ed27fac4b8
@@ -161,7 +164,7 @@ payload:
       emerge/core/gap.js: 47476184824a2e36d4b5a76566f27f004cf5bc613edd3cbc5a719f7dc8156e4a
       emerge/core/history.js: de6001e362d6e7a79a9641edeb62605669596118046261d13c29ed97621b7521
       emerge/core/identity.js: 924302a82936a6014cd8d4369a32ab767dae39aa86c61d3b1dd56bc8d1184845
-      emerge/core/index.js: 8aad1466d90e1b78be3bd2a6479fc02697830650726e679f6e1b897b2c00d339
+      emerge/core/index.js: 65a7680f7a5f452f0180dadf63f0487dc713f56f98ebf63ac015a7e18c0557fb
       emerge/core/lens.js: 228bf0144c5e554c4c82f3d7b2c6ef3fed3db897ed5932beeff31a84b498cb2a
       emerge/core/level.js: 3750fb41296eae7cc2d3fc3e738d8b547145456da300feda58e46752799c74e9
       emerge/core/observation.js: 6d96d89f6a5e46be91a8360a69859e881a01ddd192709b27ded9e455b46705ec

@@ -35,3 +35,12 @@ t2-gate's 52 lines that exist only in the lib copy are ported, phase-specs moves
 decisions after `order:`, under a new top-level key. The phase reader took them as part of EAS5's body; their `chosen:` made EAS5 read as a
 decision, so the test found no EAS5. They were moved, unchanged, into `decisions:`, and EAS5's .phase was written again. SS-02 passes
 (3/3).
+
+## Emerge's lock, taken again (found by the full suite, after the first push)
+`test-emerge-in-nexus` EN-01 and EN-03 failed: `emerge/` is held to its lock in `emerge/emerge.cos`, and this release changed
+`core/index.js` and added `core/admit.js`. Under his EAS_D6 ("A": Emerge is a system in Nexus, emerge/ its source), the lock was taken again
+in Nexus (`node scripts/emerge-lock.js --write`). The commit field stays f023240, named in the node's note as the base this came from.
+- `write()` hashes runtime state that `check()` skips (the run's ledger and node indexes, gitignored). The first new lock caught 20 of
+  those files; they were cleared and the lock taken again over the repo's files only (345). The script itself is unchanged: a fix to
+  `write()` is its own phase.
+- EN-01–EN-05 5/5.
