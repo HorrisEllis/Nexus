@@ -259,7 +259,7 @@ phases:
       James, 2026-11-05: "i was thinking we could use cos as a project management tool, have each compartment a idearium compartment. make it
       an option when importing a system. i want this to hold my projects." Expanded (his rule: phases expand), no code yet: CP9's one link is
       the base (every compartment its Idearium repo, both ways); his addition is COS as where his projects live and are managed, and, when a
-      system is imported, a choice to make its compartment an Idearium compartment too (on by default or asked: his to say). Files to add when
+      system is imported, a choice to make its compartment an Idearium compartment too. Settled 2026-11-05, asked with three choices (on by default, ask each time, off by default): "Ask each time" (the import form asks every time, no default). Files to add when
       built: cos/ui (the import form's option), cos/manager/add-system (the option carried), idearium/repo (the ingest under the compartment).
 
   CP10_miniworlds:
@@ -365,16 +365,17 @@ phases:
     does: "a compartment's network on, off (loopback only) or throttled (bytes/s): process tier in its wall (net, http, https, dgram refused or wrapped), machine tier by QMP set_link and the netdev throttle; switched live from its menu; each change by a person or RAID's rule, recorded"
     proof: "a fixture refused outbound when off; its throughput under the throttle; switched back live"
   CP6f_raid_balances_load:
-    status: "OPEN — mapped 2026-11-05; which balance he means is to confirm before any code"
+    status: "OPEN — mapped 2026-11-05; his reading settled the same day: balance the machine (below)"
     spec: cos/spec/compartment.spec
     blocks: [MOD-CP-RESOURCES]
     depends_on: [CP6a_caps_priority_accounting, CP6b_raid_approves_what_cos_does_by_rule]
     files: [cos/manager/resources.js, cos/manager/usage.js, cos/manager/supervisor.js, lib/raid-port.js, cos/manager/contract.json, cos/ui/resources/page.js, tests/modules/test-cos-resources.test.js]
     requires: [node, "COS's manager up (:7799)", "RAID reachable through lib/raid-port.js (fails closed)"]
-    prerequisites: ["usage sampled per compartment (CP6a's ring)", "his reading of 'load balancer' settled (below)"]
+    prerequisites: ["usage sampled per compartment (CP6a's ring)", "his reading settled: balance the machine (2026-11-05)"]
     # James, 2026-11-05: "map: once commited and released. build the load balancer." Written as CP6's own part (his rule: phases expand):
     # CP6b's record says "Still open of CP6: RAID balancing load across compartments", and CS11 says RAID "is the load balancer".
-    # Two readings live in the maps, to confirm with him before code (do not guess):
+    # Settled 2026-11-05, asked with both readings side by side: "Balance the machine" — reading (a). (b) stays CS11's, not this phase's.
+  # The two readings that were put to him:
     #   (a) balance the machine: under load, RAID shifts what compartments get (priority, memory limit, which waits), proposed or by rule;
     #       CP6's proof: "a load balanced across two compartments by RAID".
     #   (b) balance the work: of two compartments that can do the same job, RAID sends it to the less loaded one; CS11's proof: "of two fit

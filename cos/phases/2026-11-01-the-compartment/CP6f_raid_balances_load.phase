@@ -7,18 +7,18 @@ intent: null
 summary: CP6f_raid_balances_load (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1793917832791
+exported_at: 1793918058515
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793917832791
-lastSeenAt: 1793917832791
+firstSeenAt: 1793918058515
+lastSeenAt: 1793918058515
 fingerprint: null
 payload:
   id: CP6f_raid_balances_load
   map: docs/2026-11-01-the-compartment-phasemap.spec
   repo: null
   layer: null
-  status: '"OPEN — mapped 2026-11-05; which balance he means is to confirm before any code"'
+  status: '"OPEN — mapped 2026-11-05; his reading settled the same day: balance the machine (below)"'
   files:
     - cos/manager/resources.js
     - cos/manager/usage.js
