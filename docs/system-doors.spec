@@ -97,6 +97,22 @@ spec:
       behavioral_contracts: ["load order is law (§3.1)"]
       error_paths: ["the orchestrator down → registers later"]
 
+    - id: IF-ORCHESTRATOR-SERVICE
+      name: orchestrator-service
+      path: orchestrator/orchestrator.js
+      description: "The Orchestrator today: its routes inline in orchestrator.js, listening on :9000; its registry a draft (orchestrator/registry-components.draft.json)."
+      exports: ["routes: /health, /contract, the request handler and the ledgers"]
+      behavioral_contracts: ["started by COS from orchestrator/compartment.json"]
+      error_paths: ["a route that fails answers its error; the process stays up"]
+
+    - id: IF-COS-MANAGER
+      name: cos-manager
+      path: cos/manager/server.js
+      description: "COS's manager today: every /api/cos/* route, the supervisor and the event stream, on :7799; its registry a draft (cos/registry-components.draft.json)."
+      exports: ["createServer(sup, opts)", "listen(sup, port, opts)", "routes: /api/cos/*"]
+      behavioral_contracts: ["started by the COS app or npm run start:all"]
+      error_paths: ["its port held → said, no second supervisor"]
+
     - id: IF-CORTEX-BOOT
       name: cortex-boot
       path: cortex/boot.js
@@ -209,6 +225,39 @@ spec:
       error_paths: ["a route whose handler reaches another system's files → its crossing named, moved behind that system's route first"]
       acceptance: ["the replayed route table matches; autopilot boots cortex through server.js"]
 
+    - id: MOD-DOOR-ORCHESTRATOR
+      name: orchestrator-door
+      uuid: nexus-system-doors-orchestrator-v1-0000-2026-1105-001
+      path: orchestrator/server.js
+      phase: DO7_orchestrator_door
+      description: >-
+        orchestrator/server.js in front of orchestrator.js, the way cortex/server.js stands in front of boot.js (DO3a): GET /registry, GET
+        /handshake and POST /cli answered from the Orchestrator's own registry (its draft accepted first), every other route unchanged; COS
+        starts the door.
+      deps: [{ name: orchestrator-service }, { name: handshake-counts-real-routes }]
+      schema_refs: [DoorManifest]
+      exports: ["node orchestrator/server.js", "GET /registry", "GET /handshake", "POST /cli"]
+      gate_pipeline: ["GATE-DO7-001: the route table taken through orchestrator.js alone, replayed through the door: same status and keys", "GATE-DO7-002: COS's declaration names orchestrator/server.js"]
+      behavioral_contracts: ["the door answers only its three; everything else falls through unchanged"]
+      error_paths: ["a CLI line matching no grammar → refused with the commands, never guessed"]
+      acceptance: ["the replayed route table matches; COS starts the Orchestrator through server.js"]
+
+    - id: MOD-DOOR-COS
+      name: cos-door
+      uuid: nexus-system-doors-cos-v1-0000-2026-1105-001
+      path: cos/server.js
+      phase: DO8_cos_door
+      description: >-
+        COS's own door: GET /registry, GET /handshake and POST /cli from COS's registry (its draft accepted first), in front of the manager's
+        routes, unchanged; COS's command line (SC3) runs through POST /cli.
+      deps: [{ name: cos-manager }, { name: handshake-counts-real-routes }]
+      schema_refs: [DoorManifest]
+      exports: ["node cos/server.js", "GET /registry", "GET /handshake", "POST /cli"]
+      gate_pipeline: ["GATE-DO8-001: the manager's route table replayed through the door: same status and keys", "GATE-DO8-002: COS's CLI answers through POST /cli"]
+      behavioral_contracts: ["the manager's routes and its event stream unchanged behind the door"]
+      error_paths: ["a CLI line matching no grammar → refused with the commands, never guessed"]
+      acceptance: ["the replayed route table matches; ps runs through POST /cli"]
+
     - id: MOD-DOOR-CORTEX-RETIRE
       name: cortex-boot-retired
       uuid: nexus-system-doors-cortex-retire-v1-0000-2026-1031-001
@@ -275,3 +324,11 @@ spec:
 # ── ADDENDUM 2026-10-31 (0.60.324) — MOD-DOOR-HANDSHAKE built ───────────────────────────────────────────────────────────────────────
 # orchestrator/lib/contract-handshake.js exports countRoutes; HandshakeCount as specced (routes | channels | components, 'unknown' → null).
 # Acceptance met: Clear Glass's registry contract reports 117 routes with shape components (HR-03, HR-04).
+
+# ── ADDENDUM 2026-11-05 (0.60.392) — MOD-DOOR-CORTEX, its first half (DO3a) built ───────────────────────────────────────────────────
+# James, 2026-11-05: "they all need the door build". cortex/server.js exports createDoor({ registry, version, port, call }) → { handle(req,
+# res) → handled?, handshake(), match(line) }, registryHash(components), start({ port }). It serves GET /registry, GET /handshake and POST
+# /cli { line } from cortex/registry-components.js (the longest grammar the line starts with; a line matching none is refused with the
+# commands); everything else goes to boot.js's routes unchanged. boot.js exports start({ port }) and starts itself only when run directly.
+# Acceptance met for this half: the route table replayed through the door is the same (test-cortex-door DR-02, 14 GET routes). The other
+# half (handlers in cortex/routes, as registry components) is still open.

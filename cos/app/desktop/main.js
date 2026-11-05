@@ -53,7 +53,7 @@ async function retarget() {
   if (!win || win.isDestroyed()) return;
   const st = await ctl.state().catch(() => null); const name = (ctl.settings().settings.startOnLaunch) || 'nexus';
   const p = st && st.projects.find(x => x.project === name);
-  const t = W.windowTarget({ cockpitUp: await W.cockpitUp(), linked: p && p.linked, started: p && p.run ? p.run.running : lastStart.started, error: lastStart.error });
+  const t = W.windowTarget({ cockpitUp: await W.cockpitUp(), linked: p && p.linked, started: p && p.run ? p.run.running : lastStart.started, error: lastStart.error, installing: installState.step, installError: installState.error });
   if (!target || target.kind !== t.kind) { if (t.kind === 'cockpit') win.loadURL(t.url); else win.loadFile(path.join(__dirname, 'starting.html')); }
   target = t; if (t.kind === 'starting') win.webContents.send('cos:starting', t);
 }
@@ -78,6 +78,21 @@ async function applyLogon(force = false) {
   ctl.setSetting('logonApplied', rec); if (r.note) notify('COS at startup', r.note); return rec;
 }
 
+// 2026-11-04 CA4 (CA_D1b) — James: "run in service with admin privilages for more control and power." Nexus's headless part as the Windows service
+// NexusCOS (NSSM, LocalSystem, at boot); the windowed systems (Clear Glass) are started in his session by this window. Off removes the service.
+async function applyService(force = false) {
+  const S = ctl.settings().settings, dir = ctl.linkedDir(), want = { enable: !!S.runAsService, dir };
+  const was = S.serviceApplied || {};
+  if (!force && was.enable === want.enable && was.dir === want.dir && (was.ok || !want.enable)) return was;
+  if (!want.enable && !was.enable) return was;
+  const r = await ctl.applyService(want.enable);
+  const rec = { ...want, ok: !!r.ok, via: r.via, state: r.state || null, at: new Date().toISOString(), ...(r.error ? { error: r.error } : {}), ...(r.note ? { note: r.note } : {}) };
+  ctl.setSetting('serviceApplied', rec);
+  notify('Nexus as a Windows service', r.ok ? (want.enable ? `NexusCOS is installed (${r.state || 'state unknown'}): Nexus starts at boot, with admin rights. Clear Glass opens in your session.` : 'NexusCOS was removed: COS starts Nexus itself again.') : String(r.error || 'not done').slice(0, 220));
+  return rec;
+}
+const serviceOn = () => { const S = ctl.settings().settings; return !!(S.runAsService && S.serviceApplied && S.serviceApplied.ok && S.serviceApplied.enable); };
+
 function buildTray() {
   const icon = nativeImage.createFromPath(path.join(__dirname, 'icon.png')).resize({ width: 16, height: 16 });
   tray = new Tray(icon); tray.setToolTip('COS');
@@ -88,6 +103,7 @@ function buildTray() {
       { type: 'separator' }, { label: 'Start COS with Windows', type: 'checkbox', checked: !!S.startWithWindows, click: flip('startWithWindows') },
       { label: 'Start in the tray', type: 'checkbox', checked: !!S.startHidden, click: flip('startHidden') },
       { label: 'Admin rights at startup (one approval)', type: 'checkbox', checked: !!S.startElevated, enabled: !!S.startWithWindows, click: flip('startElevated') },
+      { label: 'Run Nexus as a Windows service (admin, at boot; needs nssm.exe)', type: 'checkbox', checked: !!S.runAsService, click: async () => { ctl.setSetting('runAsService', !S.runAsService); await applyService(true); } },   // CA4
       { type: 'separator' },   // CE1 — what the window's buttons do
       { label: 'Closing the window', submenu: [
         { label: 'Hides COS to the tray (systems keep running)', type: 'radio', checked: S.onClose !== 'quit', click: () => ctl.setSetting('onClose', 'tray') },
@@ -140,6 +156,7 @@ function ipc() {
   const h = (name, fn) => ipcMain.handle('cos:' + name, async (_e, ...a) => { try { return await fn(...a); } catch (e) { return { ok: false, error: e.message }; } });
   h('state', () => ctl.state());
   h('openVersions', () => openVersions()); h('starting', () => target || W.windowTarget({}));   // MG36
+  h('install', () => installNexus());   // CA5: Install Nexus (from GitHub), from the starting page
   // 0.1.2 — a newer COS: the check, and the release page opened in the browser (only a github.com release page of this repo)
   h('appUpdate', () => ctl.appUpdate());
   h('openRelease', (url) => { if (typeof url !== 'string' || !/^https:\/\/github\.com\/HorrisEllis\/[Nn]exus\/releases\/tag\/cos-v\d+\.\d+\.\d+$/.test(url)) return { ok: false, error: 'not a COS release page' }; shell.openExternal(url); return { ok: true }; });
@@ -162,12 +179,45 @@ app.whenReady().then(() => {
   ctl = new Controller({ root: process.env.COS_APP_ROOT || Store.defaultRoot(), onEvent: send }); fs.mkdirSync(ctl.root, { recursive: true });
   sh = new Shell({ root: ctl.root, project: 'nexus', stdio: 'pipe', out: (t) => send({ type: 'sh.data', text: t }) }); ipc(); createWindow(); buildTray(); watchInbox();
   startOnLaunch();
-  setInterval(() => { retarget().catch(() => {}); }, 2000); applyLogon().catch(() => {});
+  setInterval(() => { retarget().catch(() => {}); }, 2000); applyLogon().catch(() => {}); applyService().catch(() => {});   // CA4
   watchUpdates();   // CE4: the update as a Windows notification while COS is in the tray
 });
 // MG35 (MOD-COSA-START-ON-LAUNCH) — the exe is how Nexus starts: the project he chose starts when COS opens; a failure is said, never silent
+// CA5 (COS 0.6.0) — James: "have it pull from the git. it should be installing the cos ui." Nothing linked: Nexus is installed from GitHub, then started
+const installState = { step: null, error: null };
+// CA6 (2026-11-05) — James: "needs to ask for install location also." Every install asks where (the last place, else COS's root, preselected);
+// Nexus goes into <chosen>/nexus unless the folder is already named nexus or is empty (install.js targetDir). Cancel installs nothing, said.
+async function askInstallDir() {
+  const I = require('../install.js');
+  const last = ctl.settings().settings.installDir || ctl.root;
+  if (win && !win.isVisible()) win.show();   // first launch starts in the tray: the question has to be seen
+  const r = await dialog.showOpenDialog(win || undefined, { title: 'Where should Nexus be installed? (a "nexus" folder is made inside unless this one is empty)', defaultPath: last, buttonLabel: 'Install here', properties: ['openDirectory', 'createDirectory', 'promptToCreate'] });
+  if (r.canceled || !r.filePaths || !r.filePaths[0]) return null;
+  ctl.setSetting('installDir', r.filePaths[0]);
+  return I.targetDir(r.filePaths[0]);
+}
+async function installNexus() {
+  installState.error = null; installState.step = 'choosing where to install'; retarget();
+  const dir = await askInstallDir();
+  if (!dir) { installState.step = null; installState.error = 'no install location chosen'; retarget(); return { ok: false, error: 'no install location chosen' }; }
+  installState.step = 'starting'; retarget();
+  const r = await ctl.installNexus({ dir, onStep: (e) => { if (e.state === 'running') installState.step = e.what; if (e.state === 'failed') installState.error = e.error; retarget(); } });
+  installState.step = null; if (!r.ok) installState.error = r.error; retarget();
+  notify(r.ok ? 'Nexus is installed' : 'Nexus was not installed', r.ok ? `from GitHub (${r.via}${r.version ? `, ${r.version}` : ''}) into ${r.dir}${r.started ? ' — starting' : r.startError ? ` — it did not start: ${r.startError}` : ''}` : String(r.error).slice(0, 220));
+  return r;
+}
 async function startOnLaunch() {
+  // CA5 — nothing linked and nothing installed: COS installs Nexus itself (his "it should be installing"), then it starts like a linked folder
+  if (!ctl.linkedDir() && ctl.settings().settings.autoInstall !== false) { const st = ctl.store.list(ctl.root, 'nexus')[0]; if (!st || !st.current) { await installNexus(); return; } }
   const p = ctl.settings().settings.startOnLaunch; if (!p) return;
+  // CA4 — the service holds Nexus: this window only starts the systems with a window, in his session
+  if (serviceOn() && ctl.linkedDir()) {
+    const r = await ctl.startWindowed().catch(e => [{ name: '?', started: false, why: e.message }]);
+    lastStart = { started: true, error: null }; retarget();
+    const said = r.map(x => `${x.name}: ${x.started ? 'started' : x.why}`).join(' · ');
+    notify('Nexus runs as a service', said ? `the service holds Nexus; in your session — ${said}` : 'the service holds Nexus');
+    send({ type: 'launch.start', project: p, ok: true, via: 'service', desktop: r }); return;
+  }
   send({ type: 'op.start', project: p, what: 'starting when COS opened' });
   const r = await ctl.start(p); lastStart = { started: !!(r && r.ok), error: r && !r.ok ? r.error : null }; retarget();
   if (r && r.ok) notify('Nexus is running', `${p} started (${r.version || 'linked folder'}) — COS supervises it; closing this window keeps it running`);

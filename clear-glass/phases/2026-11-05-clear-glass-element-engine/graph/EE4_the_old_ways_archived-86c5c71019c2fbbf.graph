@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EE4_the_old_ways_archived:86c5c71019c2fbbf
+type: graph
+id: phase:EE4_the_old_ways_archived:86c5c71019c2fbbf
+context: dependency graph of phase EE4_the_old_ways_archived
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793892016597
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793892016597
+lastSeenAt: 1793892016597
+fingerprint: null
+payload:
+  for: EE4_the_old_ways_archived
+  kind: phase
+  repo: null
+  hash: 86c5c71019c2fbbf
+  nodes:
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+    dependents: []
+    upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+    downstream: []
+    blockedBy:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+        files:
+          - clear-glass/renderer/guardian-picker.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by EE3_one_panel
+      - 'depends on (1): EE3_one_panel · all upstream 4'
+      - 'needed by (0): —'
+      - >-
+        same files as EE1_one_identity_for_a_chosen_element with no order between them:
+        clear-glass/renderer/guardian-picker.js
+    edges:
+      - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+        kind: declared

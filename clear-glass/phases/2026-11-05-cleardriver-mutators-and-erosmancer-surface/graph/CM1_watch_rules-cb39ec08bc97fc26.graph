@@ -1,0 +1,235 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CM1_watch_rules:cb39ec08bc97fc26
+type: graph
+id: phase:CM1_watch_rules:cb39ec08bc97fc26
+context: dependency graph of phase CM1_watch_rules
+intent: null
+summary: 25 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793872153628
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793872153628
+lastSeenAt: 1793872153628
+fingerprint: null
+payload:
+  for: CM1_watch_rules
+  kind: phase
+  repo: null
+  hash: cb39ec08bc97fc26
+  nodes:
+    - path: clear-glass/src/driver/watch.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/event-taxonomy.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/schemas/watch.schema.json
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-watch-rules.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/clear-glass-gig.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-transfer.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/git-pr.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/git-pr.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/event-taxonomy.js
+      kind: requires
+    - from: tests/modules/clear-glass-gig.test.js
+      to: clear-glass/src/event-taxonomy.js
+      kind: requires
+    - from: tests/modules/test-autofill-transfer.test.js
+      to: clear-glass/src/event-taxonomy.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+    dependents:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM3_listeners_and_macros
+    upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+    downstream:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM3_listeners_and_macros
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM4_the_old_observers_on_the_rules
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES4_the_browser_panel
+    blockedBy:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+    unlocks:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM3_listeners_and_macros
+    conflicts:
+      - with: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES1_erosmancer_options_in_plain_words
+        files:
+          - idearium/cli/route-commands.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by EE1_one_identity_for_a_chosen_element
+      - 'depends on (1): EE1_one_identity_for_a_chosen_element · all upstream 3'
+      - >-
+        needed by (2): CM2_guardian_anchors_follow_the_page, CM3_listeners_and_macros · all
+        downstream 4 · finishing it unlocks CM2_guardian_anchors_follow_the_page,
+        CM3_listeners_and_macros
+      - >-
+        same files as ES1_erosmancer_options_in_plain_words with no order between them:
+        idearium/cli/route-commands.js
+    edges:
+      - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+        kind: declared

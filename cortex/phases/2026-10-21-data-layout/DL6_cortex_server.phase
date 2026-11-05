@@ -7,18 +7,21 @@ intent: null
 summary: DL6_cortex_server (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792878423548
+exported_at: 1793859699580
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792878423548
-lastSeenAt: 1792878423548
+firstSeenAt: 1793859699580
+lastSeenAt: 1793859699580
 fingerprint: null
 payload:
   id: DL6_cortex_server
   map: docs/2026-10-21-data-layout-phasemap.spec
   repo: null
   layer: integration
-  status: OPEN
+  status: >-
+    "SERVED BY DO3 (docs/2026-10-31-system-doors-phasemap.spec) — found 2026-11-05 to be the same
+    phase: one contract, not two (§12.5). DO3a built 0.60.392 (cortex/server.js the one entry, the
+    route table the same); DL6's cortex-v2.js part is carried into DO3b. Kept, §0.3."
   files:
     - cortex/server.js
     - cortex/boot.js
@@ -29,4 +32,4 @@ payload:
   blocks:
     - MOD-CORTEX-SERVER
   spec: docs/data-layout.spec
-  graph: 966511cd8f7bd4fd
+  graph: 4866b1b59b52def8

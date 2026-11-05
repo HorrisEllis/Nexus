@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-sovereignty-phasemap.spec::SV4_cortex_sovereign
+type: phase
+id: docs_2026-11-05-sovereignty-phasemap.spec::SV4_cortex_sovereign
+context: pipeline phase SV4_cortex_sovereign of docs/2026-11-05-sovereignty-phasemap.spec
+intent: null
+summary: SV4_cortex_sovereign (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793875440347
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793875440347
+lastSeenAt: 1793875440347
+fingerprint: null
+payload:
+  id: SV4_cortex_sovereign
+  map: docs/2026-11-05-sovereignty-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/server.js
+    - cortex/memory/jaa-db.js
+  depends_on:
+    - SV1_the_tables_and_their_writers
+    - DO3_cortex_door
+  blocks: []
+  spec: null
+  graph: 735a4b9eb7755e6a

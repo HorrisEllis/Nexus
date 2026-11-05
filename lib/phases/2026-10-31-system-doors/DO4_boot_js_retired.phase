@@ -7,11 +7,11 @@ intent: null
 summary: DO4_boot_js_retired (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793419906990
+exported_at: 1793859126593
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793419906990
-lastSeenAt: 1793419906990
+firstSeenAt: 1793859126593
+lastSeenAt: 1793859126593
 fingerprint: null
 payload:
   id: DO4_boot_js_retired
@@ -27,4 +27,4 @@ payload:
   blocks:
     - MOD-DOOR-CORTEX-RETIRE
   spec: docs/system-doors.spec
-  graph: a00e51a7b0694f39
+  graph: 244e5e9fb888a802

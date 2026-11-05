@@ -214,11 +214,30 @@ const bgTabUrls       = new Map(); // agentId → the real url it was opened wit
 
 // ── Single instance ────────────────────────────────────────────────────────
 app.setName('Clear Glass');
-// §0.60.3 — with hardware acceleration off, every page's WebGL reports "Google SwiftShader", the software renderer bot
+// (superseded 2026-11-05 by WG1/WG2 below, kept §0.3) §0.60.3 — with hardware acceleration off, every page's WebGL reports "Google SwiftShader", the software renderer bot
 // detectors read as a headless browser or a VM (fiverr's PerimeterX "It needs a human touch"). It stays off by default:
 // it was turned off for this machine's GPU crashes (below). CG_GPU=on turns it back on — try it when a site keeps
 // asking for a human; if the GPU crash comes back, unset it.
-if (process.env.CG_GPU !== 'on') app.disableHardwareAcceleration();
+// 2026-11-05 WG1 (docs/2026-11-05-clear-glass-webgl-phasemap.spec) — James: "i cant use fiverr at all. clearglass is my main driver". The note
+// above is out of date: newer Chromium dropped the automatic SwiftShader fallback, so with acceleration off WebGL was simply missing
+// (getContext('webgl') → null, measured on Electron 42) and Fiverr's bot-check script crashed reading its renderer. With acceleration off,
+// software WebGL is now asked for explicitly. CG_GPU=on (the real GPU) is still the better choice on a machine whose GPU works.
+// 2026-11-05 WG2 — James: "that might explain why the tv ui or idearium is so laggy in clearglass. enable it by default". Hardware
+// acceleration is ON by default now: with it off every page (the TV UI, Idearium) was drawn by the CPU. Off when: CG_GPU=off, or the GPU
+// process died 3 times in one run (a dead or failing GPU) — then gpu-off.flag in Clear Glass's own folder keeps the next starts in software
+// mode, said in the log; CG_GPU=on ignores the flag (and deleting it clears it). With acceleration off, software WebGL is asked for (WG1).
+const _gpuFlag = path.join(app.getPath('userData'), 'gpu-off.flag');
+const _gpuOff = process.env.CG_GPU === 'off' || (process.env.CG_GPU !== 'on' && require('fs').existsSync(_gpuFlag));
+if (_gpuOff) { app.disableHardwareAcceleration(); app.commandLine.appendSwitch('enable-unsafe-swiftshader'); console.log(`[clear-glass] hardware acceleration off (${process.env.CG_GPU === 'off' ? 'CG_GPU=off' : `the GPU failed before: ${_gpuFlag}`}); software WebGL`); }
+else {
+  let _gpuGone = 0;
+  app.on('child-process-gone', (_e, d) => {
+    if (!d || d.type !== 'GPU' || process.env.CG_GPU === 'on') return;
+    // WG3 (0.60.401) — disable-gpu-process-crash-limit (below) keeps a failing GPU process restarting forever, so waiting for the next start
+    // left this run looping. On the third death: the flag is written and Clear Glass restarts itself once, now in software mode.
+    if (++_gpuGone === 3) { try { require('fs').writeFileSync(_gpuFlag, JSON.stringify({ at: new Date().toISOString(), reason: d.reason, exitCode: d.exitCode }) + '\n'); } catch (_) {} console.warn(`[clear-glass] the GPU process died 3 times (${d.reason}): restarting once in software mode (${_gpuFlag}; delete it to try the GPU again)`); try { app.relaunch(); app.exit(0); } catch (_) {} }
+  });
+}
 // §BUG FIXED 2026-07-11, REVISED 2026-07-11 — the first version of this
 // fix (app.commandLine.appendSwitch('disable-gpu') + disable-gpu-compositing
 // + disable-software-rasterizer) stopped the fatal crash-loop but broke
@@ -1214,6 +1233,13 @@ async function bootstrap() {
   // §0.60.219 SP5 — James, 2026-10-23: "Also need a processes screen for background tabs and activity." The activity ring (src/processes)
   // reads what every system already says on this bus: the driver's actions, background tabs, downloads, workflow runs, captured errors.
   { const act = require('../processes').activity(); bus.on('*', (ev) => { try { act.fromEvent(ev.type, ev.data); } catch (_) {} }); }
+  // 2026-10-30 GF6 — James: "it needs to stop, and display toast with an error on any step." A pipeline task or a workflow run that fails is said in a
+  // toast in his window, with the pipeline, the task and its error (macros run as him toast from the bridge's runMacroAsPerson)
+  bus.on('*', (ev) => { try {
+    const d = ev.data || {};
+    if (ev.type === 'automation.pipeline.task' && d.status === 'failed') ipcBridge && ipcBridge._gigToast(`Pipeline "${d.pipeline || d.pipelineId}" stopped at ${d.label || d.task}: ${d.error || 'failed'}`);
+    else if (ev.type === 'automation.run.error') ipcBridge && ipcBridge._gigToast(`Workflow ${d.id} stopped${d.step ? ` at ${d.step}` : ''}: ${d.error}`);
+  } catch (_) {} });
   // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." Clear Glass's node registry: its listener over
   // clear-glass/data/nodes, indexed into clear-glass/data/node-index with every change, its node events on this SISO bus.
   try { require('../../../lib/node-registry.js').startForSystem('clear-glass', { bus: { emit: (e, d) => emit(e, d) } }); } catch (e) { console.warn(`[ClearGlass] node registry: ${e.message}`); }
@@ -2916,6 +2942,19 @@ function _siteOnLoad(contents, url) {
 // opens (onLoad) runs here, from this Clear Glass's own engine (the one Settings › Pipelines shows), with the page given as {{vars.page}}
 // (its window: wc:<id>) and {{vars.url}}; once per page and minute, like a site's macros; off when the site's Site settings say pipelines.enabled
 // false. A failure is said in the log with the pipeline and the site.
+// 2026-10-30 GF6 — the gig his gates are checked against: the vars a pipeline declares (category, subcategory, basic_name …) that the written gig
+// has, filled from it (src/autofill/gig-pages.js valueOf). A var the gig has no value for keeps the pipeline's own.
+function gigVars(p, bridge) {
+  let gig = null; try { gig = bridge && bridge.autofillStore && bridge.autofillStore.getLastGig(); } catch (_) {}
+  if (!gig || !p || !p.vars) return {};
+  const GP = require('../autofill/gig-pages'), out = {};
+  for (const k of Object.keys(p.vars)) {
+    const key = k.replace(/^(basic|standard|premium)_/, '$1.');
+    let v = null; try { v = k === 'subcategory' ? gig.subcategory : k === 'category' ? gig.category : GP.valueOf(gig, key); } catch (_) {}
+    if (v != null && v !== '') out[k] = Array.isArray(v) ? v.join(', ') : String(v);
+  }
+  return out;
+}
 function _sitePipelinesOnLoad(contents, url) {
   const A = ipcBridge && ipcBridge.mesh && ipcBridge.mesh._automation; if (!A) return;
   if (require('../site-settings/readers').pipelinesAllowed(url) === false) return;
@@ -2927,7 +2966,7 @@ function _sitePipelinesOnLoad(contents, url) {
     const key = `${contents.id}|${origin}|pipeline:${p.id}`;
     if (_siteLoadRuns.has(key)) continue;
     _siteLoadRuns.set(key, now);
-    Promise.resolve(P.run(p.id, { vars: { page: `wc:${contents.id}`, url }, wait: true }))
+    Promise.resolve(P.run(p.id, { vars: { ...gigVars(p, ipcBridge), page: `wc:${contents.id}`, url }, wait: true }))
       .then(r => { if (r && !r.ok) console.warn(`[pipelines] "${p.name}" on load at ${origin} did not finish: ${r.error || r.status}`); try { require('../processes').activity().push({ kind: 'pipeline', what: `pipeline "${p.name}" ${r && r.ok ? 'ran' : `did not finish: ${(r && r.error) || 'a task failed'}`}`, url, by: 'site pipeline (on load)', level: r && r.ok ? 'info' : 'warn' }); } catch (_) {} })
       .catch(e => console.warn(`[pipelines] "${p.name}" on load at ${origin} failed: ${e.message}`));
   }

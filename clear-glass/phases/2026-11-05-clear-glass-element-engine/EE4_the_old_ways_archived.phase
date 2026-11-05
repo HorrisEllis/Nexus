@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
+type: phase
+id: docs_2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
+context: >-
+  pipeline phase EE4_the_old_ways_archived of
+  docs/2026-11-05-clear-glass-element-engine-phasemap.spec
+intent: null
+summary: EE4_the_old_ways_archived (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793871876649
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793871876649
+lastSeenAt: 1793871876649
+fingerprint: null
+payload:
+  id: EE4_the_old_ways_archived
+  map: docs/2026-11-05-clear-glass-element-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/guardian-picker.js
+  depends_on:
+    - EE3_one_panel
+  blocks: []
+  spec: null
+  graph: 86c5c71019c2fbbf

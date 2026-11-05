@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-clear-glass-webgl-phasemap.spec::WG1_webgl_with_acceleration_off
+type: phase
+id: docs_2026-11-05-clear-glass-webgl-phasemap.spec::WG1_webgl_with_acceleration_off
+context: pipeline phase WG1_webgl_with_acceleration_off of docs/2026-11-05-clear-glass-webgl-phasemap.spec
+intent: null
+summary: WG1_webgl_with_acceleration_off (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793871560650
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793871560650
+lastSeenAt: 1793871560650
+fingerprint: null
+payload:
+  id: WG1_webgl_with_acceleration_off
+  map: docs/2026-11-05-clear-glass-webgl-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.394 — test-cg-webgl"'
+  files:
+    - clear-glass/src/main/index.js
+    - tests/modules/test-cg-webgl.test.js
+    - tests/modules/run-all.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c8ea4f69de3c357e

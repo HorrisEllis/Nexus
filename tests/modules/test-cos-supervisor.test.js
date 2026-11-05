@@ -107,7 +107,7 @@ const mk = (declarations, extra = {}) => { const s = createSupervisor({ root: di
     // CP1a (0.60.355): cortex is walled now, so the wall's --require comes first; the entry is {{root}}-filled (absolute), which this line
     // compared as 'cortex/boot.js' and failed on since MG17b (found running it, 2026-11-01)
     const a = calls[0].a; assert.deepStrictEqual([a[0], require('path').basename(a[1])], ['--require', 'boundary.js']);
-    assert.deepStrictEqual(a.slice(2, 4), ['--expose-gc', '--max-old-space-size=1024']); assert.ok(/cortex[\/]boot.js$/.test(a[4]), a[4]); assert.strictEqual(calls[0].o.cwd, ROOT);
+    assert.deepStrictEqual(a.slice(2, 4), ['--expose-gc', '--max-old-space-size=1024']); assert.ok(/cortex[\/]server.js$/.test(a[4]), a[4]);   // DO3a (2026-11-05): COS starts Cortex's door, cortex/server.js assert.strictEqual(calls[0].o.cwd, ROOT);
     assert.strictEqual(JSON.parse(calls[0].o.env.COS_BOUNDARY).mode, 'audit');
   });
   for (const s of sups) try { s.shutdown({ by: 'test' }); } catch (_) {}

@@ -1,0 +1,155 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DO8_cos_door:39102e7ba71eebf4
+type: graph
+id: phase:DO8_cos_door:39102e7ba71eebf4
+context: dependency graph of phase DO8_cos_door
+intent: null
+summary: 16 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793859698111
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793859698111
+lastSeenAt: 1793859698111
+fingerprint: null
+payload:
+  for: DO8_cos_door
+  kind: phase
+  repo: null
+  hash: 39102e7ba71eebf4
+  nodes:
+    - path: cos/compartment.json
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/registry-components.draft.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/server.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/cli.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/cli.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D9_registry_then_cos_through_the_door
+      - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
+    dependents: []
+    upstream:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D9_registry_then_cos_through_the_door
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-31-system-doors-phasemap.spec::DO6_every_door_on_its_registry_and_walled_by_cos
+        files:
+          - cos/manager/server.js
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - >-
+        depends on (2): DO_D9_registry_then_cos_through_the_door,
+        DO0_the_handshake_counts_real_routes
+      - 'needed by (0): —'
+      - >-
+        same files as DO6_every_door_on_its_registry_and_walled_by_cos with no order between them:
+        cos/manager/server.js
+    edges:
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO_D9_registry_then_cos_through_the_door
+        kind: declared
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
+        kind: declared

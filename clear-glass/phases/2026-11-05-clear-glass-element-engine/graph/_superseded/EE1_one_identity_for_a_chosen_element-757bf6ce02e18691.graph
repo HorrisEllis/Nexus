@@ -1,0 +1,104 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EE1_one_identity_for_a_chosen_element:757bf6ce02e18691
+type: graph
+id: phase:EE1_one_identity_for_a_chosen_element:757bf6ce02e18691
+context: dependency graph of phase EE1_one_identity_for_a_chosen_element
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793871876641
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793871876641
+lastSeenAt: 1793871876641
+fingerprint: null
+payload:
+  for: EE1_one_identity_for_a_chosen_element
+  kind: phase
+  repo: null
+  hash: 757bf6ce02e18691
+  nodes:
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/eros/supervisor.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/element-gate.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/schemas/element.schema.json
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: tests/modules/test-cg-element-engine.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/eros/supervisor.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+    dependents:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+    upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+    downstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
+    blockedBy:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+    unlocks:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by EE_D0_what_one_means, EE_D1_erosmancer_in_process_or_its_own
+      - 'depends on (2): EE_D0_what_one_means, EE_D1_erosmancer_in_process_or_its_own'
+      - >-
+        needed by (1): EE2_hide_what_you_point_at · all downstream 3 · finishing it unlocks
+        EE2_hide_what_you_point_at
+    edges:
+      - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+        kind: declared
+      - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+        kind: declared

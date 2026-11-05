@@ -1,0 +1,18 @@
+{
+  "name": "bridge",
+  "description": "NEXUS Bridge Server — AI routing, Guardian hooks, intent router (port 3747)",
+  "script": "bridge/nexus-bridge-server.js",
+  "cwd": "bridge",
+  "env": {
+    "NEXUS_PORT": "3747",
+    "NEXUS_HOST": "127.0.0.1",
+    "DATA_DIR": "./data",
+    "PROFILES_DIR": "../profiles"
+  },
+  "nodeOptions": [],
+  "maxRestarts": 10,
+  "restartDelay": 2000,
+  "windowsName": "NexusBridge",
+  "exeTargets": ["node20-win-x64"],
+  "verbose": false
+}

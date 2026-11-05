@@ -181,7 +181,7 @@ phases:
     # compound of the primitives below it. Callers are rebuilt on those primitives; lib/emerge is archived as it stands, carrying over only
     # what a primitive needs, into Emerge's own repo first (then a new lock). Nothing is copied again.
     still_his: "whose are compiler/phase-specs.js and kg-builder.js (they turn his maps into phase files and check the specs): the coder reads Idearium (it owns specs and phases), to confirm"
-    # ── EXPANDED 2026-11-05 (0.60.388) — L0 done: evaluate's one caller moved, with no new crossing ──
+    # ── EXPANDED 2026-11-05 (0.60.405, renumbered from 0.60.388 on merge) — L0 done: evaluate's one caller moved, with no new crossing ──
     # Tried first, as told to him: name emerge/emerge/core/constraint.js in lib/system-boundary.js PRIMITIVES and have
     # lib/warp/adapters/emerge-field.js require it. The ratchet refused it: PRIMITIVES only names a blocker, and the require was a NEW
     # upward edge (lib -> emerge, the kernel depending on a system, §5.9). Reverted, not pushed.
@@ -192,7 +192,7 @@ phases:
     # Proof: test-warp2 7/7, test-emerge-core 6/6, test-emergence-and-warp-suites 198/198 (same before and after); census 1120 crossings
     # before and after, and check() adds none of this change's (its two added edges, cos/manager/autopilot-door.js, were there before:
     # test-system-boundary 8/2 before and after). Left for L1-L3: compile, build and run as command nodes behind Emerge's door.
-    # ── EXPANDED 2026-11-05 (0.60.389) — L1 compile behind Emerge's door; one of its two callers moved; the other stopped, its difference named ──
+    # ── EXPANDED 2026-11-05 (0.60.406, renumbered from 0.60.389 on merge) — L1 compile behind Emerge's door; one of its two callers moved; the other stopped, its difference named ──
     # Before the switch (MOD-EAS-CALLERS): lib/emerge's compile and emerge/'s, on SPEC_COMPILER.spec, substrate.spec and belief-loop.spec
     # (50, 78, 70 files, skipCortex, T1), differ in one line only: the compiler's version stamp in src/index.ts and src/types/index.ts
     # (v1.1.0 from lib/emerge, v1.13.0 from emerge/). Named here; it is the stamp of the compiler that ran.
@@ -207,7 +207,7 @@ phases:
     # Proof: emerge tests/compiler-door.test.js 4/4 (CD-02: through the door, byte for byte the files compile() writes); lang-door 8/8,
     # nesting 5/5, skeleton green; test-spec-pipeline 13/13; census 1120 before and after; emerge/ locked again (352 files). The CLI and agents:
     # POST /api/emerge-system/compile and the row emerge.compile (EN-04 green); no screen yet, the UI deferred and said.
-    # ── EXPANDED 2026-11-05 (0.60.390) — L2 build and L3 run behind the door, Emerge's side (his EAS_D9: "Emerge calls back by route") ──
+    # ── EXPANDED 2026-11-05 (0.60.407, renumbered from 0.60.390 on merge) — L2 build and L3 run behind the door, Emerge's side (his EAS_D9: "Emerge calls back by route") ──
     # Corrected: "port t2-gate's 52 lib-only lines" (above) was wrong; they are the Guardian/Cortex coupling his 2026-10-28 rule removed.
     # Built: compiler/model.js api route; compiler/host.js routeHost; POST /compiler/build and /compiler/run (commands with expects:); a
     # host or model as a path is refused at the door. Run's progress comes back as a list, not live (named). Proof: compiler-door 8/8.

@@ -3582,7 +3582,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','emerge-system','modules'],     'emerge.modules'],
     ['POST',   ['api','emerge-system','modules'],     'emerge.module.new'],
     ['POST',   ['api','emerge-system','lang',':op'],  'emerge.lang'],
-    ['POST',   ['api','emerge-system','compile'],     'emerge.compile'],   // 0.60.389 EAS4 L1 — the spec compiler, Emerge's
+    ['POST',   ['api','emerge-system','compile'],     'emerge.compile'],   // 0.60.406 (0.60.389 before the merge renumbering) EAS4 L1 — the spec compiler, Emerge's
     ['GET',    ['api','economy'],                     'economy.get'],
     ['POST',   ['api','economy'],                     'economy.set'],
     ['GET',    ['api','economy',':what'],             'economy.view'],

@@ -1,0 +1,212 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IP8_negative_and_shadow_space:6f414e937ae7eaf9
+type: graph
+id: phase:IP8_negative_and_shadow_space:6f414e937ae7eaf9
+context: dependency graph of phase IP8_negative_and_shadow_space
+intent: null
+summary: 16 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793855146009
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793855146009
+lastSeenAt: 1793855146009
+fingerprint: null
+payload:
+  for: IP8_negative_and_shadow_space
+  kind: phase
+  repo: null
+  hash: 6f414e937ae7eaf9
+  nodes:
+    - path: intelligence/liminal-space/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/pipeline/liminal-stage.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: tests/modules/test-intelligence-pipeline.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: guardian/api-dispatch.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/gap/hunter.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/query/meta-query.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/chat-logger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/meta/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-liminal-space.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/lib/domain-nodes.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: intelligence/liminal-space/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/liminal-space/index.js
+      to: intelligence/lib/domain-nodes.js
+      kind: requires
+    - from: guardian/api-dispatch.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/gap/hunter.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/meta-query.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: lib/chat-logger.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: lib/meta/index.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: lib/shadow.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: tests/modules/test-liminal-space.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+  crossings:
+    - from: intelligence/liminal-space/index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: guardian/api-dispatch.js
+      to: intelligence/liminal/index.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/query/meta-query.js
+      to: intelligence/liminal/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/chat-logger.js
+      to: intelligence/liminal/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/meta/index.js
+      to: intelligence/liminal/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/shadow.js
+      to: intelligence/liminal-space/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: orchestrator/lib/request-handler.js
+      to: intelligence/liminal-space/index.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+    dependents:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
+    upstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
+    downstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP12_gaps_between_the_pieces
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+    blockedBy:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+        files:
+          - tests/modules/test-intelligence-pipeline.test.js
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+        files:
+          - tests/modules/test-intelligence-pipeline.test.js
+    dangling: []
+    lines:
+      - layer 5 · blocked by IP4_invariants_across_series
+      - 'depends on (1): IP4_invariants_across_series · all upstream 7'
+      - >-
+        needed by (2): IP9_the_open_loop, IP11_risk_ambiguity_uncertainty_one_primitive · all
+        downstream 4
+      - >-
+        same files as IP5_invariants_into_rfr2 with no order between them:
+        tests/modules/test-intelligence-pipeline.test.js
+      - >-
+        same files as IP6_route_command_screen with no order between them:
+        tests/modules/test-intelligence-pipeline.test.js
+    edges:
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+        kind: declared

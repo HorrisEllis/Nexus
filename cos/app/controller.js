@@ -95,6 +95,39 @@ class Controller {
   stop(project) { return this._exclusive(project, 'stopping', () => this.rt.stop(this.root, project, this.opts)); }
   remove(project, version) { return this._exclusive(project, `removing ${version}`, async () => this.store.remove(this.root, project, version)); }
   logs(project, lines = 80) { return { ok: true, ...this.rt.logs(this.root, project, { lines }) }; }
+  // 2026-11-04 CA5 — James: "have it pull from the git. it should be installing the cos ui." Nexus installed from GitHub into <root>/nexus (git
+  // clone, else the latest release zip; then npm install), then linked and started like a folder he linked himself (MG35)
+  // CA6 (2026-11-05) — James: "needs to ask for install location also." dir is where he chose (the window asks); without one, <root>/nexus
+  async installNexus({ project = 'nexus', install = require('./install.js'), onStep = null, dir = null } = {}) {
+    if (this._installing) return { ok: false, error: 'already installing' };
+    this._installing = true;
+    try {
+      dir = dir || require('path').join(this.root, project);
+      const step = (e) => { this.emit({ type: 'install.step', project, ...e }); if (onStep) onStep(e); };
+      const r = await install.run({ dir, onStep: step });
+      this.emit({ type: 'install.done', project, ok: !!r.ok, via: r.via || null, error: r.error || null });
+      if (!r.ok) return r;
+      const l = this.link(project, dir); if (!l.ok) return { ok: false, dir, error: `installed, but it could not be linked: ${l.error}` };
+      if (!this.settings().settings.startOnLaunch) this.setSetting('startOnLaunch', project);
+      const st = await this.start(project);
+      return { ...r, linked: true, started: !!(st && st.ok), ...(st && !st.ok ? { startError: st.error } : {}) };
+    } finally { this._installing = false; }
+  }
+  installing() { return !!this._installing; }
+  // 2026-11-04 CA4 (CA_D1b) — James: "run in service with admin privilages for more control and power." The linked folder's headless part as the
+  // Windows service NexusCOS (cos/app/service.js), and the systems with a window started in his session (cos/app/desktop-systems.js)
+  linkedDir(project = 'nexus') { const st = this.store.list(this.root, project)[0]; return st && st.linked && st.linked.present ? st.linked.dir : null; }
+  async applyService(enable, { project = 'nexus', service = require('./service.js'), fsx = require('fs'), pathx = require('path') } = {}) {
+    const dir = this.linkedDir(project);
+    const entry = dir ? this.rt.ENTRIES.map(e => pathx.join(dir, e)).find(f => fsx.existsSync(f)) : null;
+    const r = await service.apply({ enable: !!enable, node: this.rt.nodeBinary(), entry, dir, logDir: dir ? pathx.join(dir, 'data', 'cos-service') : null });
+    this.emit({ type: 'service', enable: !!enable, ok: !!r.ok, state: r.state || null, error: r.error || null });
+    return { ...r, dir };
+  }
+  startWindowed(project = 'nexus', { desktop = require('./desktop-systems.js') } = {}) {
+    const dir = this.linkedDir(project); if (!dir) return Promise.resolve([]);
+    return desktop.startAll(dir);
+  }
   /** stopAll() — on quit: the projects COS started are stopped with it (the window is the owner; a project left running with no window would be invisible) */
   async stopAll() { const out = []; for (const p of this.store.list(this.root)) out.push({ project: p.project, ...(await this.rt.stop(this.root, p.project, this.opts)) }); return out; }
 }

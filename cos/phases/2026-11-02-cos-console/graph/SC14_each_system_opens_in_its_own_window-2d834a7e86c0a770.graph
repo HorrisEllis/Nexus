@@ -1,0 +1,135 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC14_each_system_opens_in_its_own_window:2d834a7e86c0a770
+type: graph
+id: phase:SC14_each_system_opens_in_its_own_window:2d834a7e86c0a770
+context: dependency graph of phase SC14_each_system_opens_in_its_own_window
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793874058262
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793874058262
+lastSeenAt: 1793874058262
+fingerprint: null
+payload:
+  for: SC14_each_system_opens_in_its_own_window
+  kind: phase
+  repo: null
+  hash: 2d834a7e86c0a770
+  nodes:
+    - path: cos/app/desktop/main.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/console/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/serve.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/controller.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/install.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/logon.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/settings.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/store.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/window.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/app/desktop/main.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/store.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/settings.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/shell.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/window.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/logon.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/install.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/ui/serve.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
+    dependents: []
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+      - docs/2026-11-02-cos-console-phasemap.spec::SC4_add_a_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
+        files:
+          - cos/ui/console/page.js
+    dangling: []
+    lines:
+      - layer 5 · ready
+      - 'depends on (1): SC11_the_console_tab · all upstream 11'
+      - 'needed by (0): —'
+      - >-
+        same files as SC15_nexus_cli_in_the_console with no order between them:
+        cos/ui/console/page.js
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
+        kind: declared

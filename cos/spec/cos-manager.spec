@@ -1476,3 +1476,14 @@ spec:
 # MOD-MG-NOTICES, MOD-MG-SYSTEM-CONFIG, MOD-MG-ADD-SYSTEM, MOD-MG-CLI, MOD-MG-UI-UPDATES → cos/spec/cos-console.spec; MOD-COS-DISK, MOD-COS-VDISK →
 # cos/spec/cos-disk.spec. They were added here in 0.60.380–0.60.383 while their phases live in other maps, and three depended on names this
 # spec never declares; test-substrate-spec failed from 0.60.380 and the coder did not run it. Moved, not deleted (§0.3).
+
+# ── ADDENDUM 2026-11-05 (0.60.393) — MOD-MG-AUTOPILOT-DOOR: the graph read through the doors (MG32) ───────────────────────────────────
+# createDoorHandlers' _handleGraphRead(req, res, { get }) is async and reads Cortex through GET /api/memory?table=&n= and Intelligence through
+# GET /api/intelligence/friction; it requires no file of either. Its answer gains cortex: 'up' | 'down' and, when down, cortexWhy. Acceptance
+# met: AD-05 (through stand-in routes, and with Cortex refusing the connection).
+
+# ── ADDENDUM 2026-11-05 (0.60.398) — the Console tab (SC11, docs/2026-11-02-cos-console-phasemap.spec) ───────────────────────────────────
+# James, 2026-11-05: "next phase. cos needs the console from the autopilot. like a console tab". The supervisor emits 'line' { system, ts,
+# stream, line } for every line a child prints; the manager broadcasts cos.console { lines, dropped? } every 200 ms (at most 500 lines a batch)
+# and serves GET /api/cos/console?limit=&system= (every system's last lines, merged by ts). cos/ui/console/ is a page of the contract (routes:
+# GET /api/cos/console, GET /api/cos/systems, POST|GET /api/cos/cli; listens: cos.console, cos.system.state). Acceptance: test-cos-console-tab 4/4.

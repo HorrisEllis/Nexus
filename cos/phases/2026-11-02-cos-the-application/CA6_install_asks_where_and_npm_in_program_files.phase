@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-the-application-phasemap.spec::CA6_install_asks_where_and_npm_in_program_files
+type: phase
+id: docs_2026-11-02-cos-the-application-phasemap.spec::CA6_install_asks_where_and_npm_in_program_files
+context: >-
+  pipeline phase CA6_install_asks_where_and_npm_in_program_files of
+  docs/2026-11-02-cos-the-application-phasemap.spec
+intent: null
+summary: CA6_install_asks_where_and_npm_in_program_files (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1793847429754
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793847429754
+lastSeenAt: 1793847429754
+fingerprint: null
+payload:
+  id: CA6_install_asks_where_and_npm_in_program_files
+  map: docs/2026-11-02-cos-the-application-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.391 (COS 0.7.0) — test-cos-install IN-07..IN-09; on Windows unverified until his
+    run"
+  files:
+    - cos/app/install.js
+    - cos/app/controller.js
+    - cos/app/settings.js
+    - cos/app/desktop/main.js
+    - cos/app/version.js
+    - tests/modules/test-cos-install.test.js
+  depends_on:
+    - CA5_cos_installs_nexus_from_github
+  blocks: []
+  spec: null
+  graph: 14174252d2b349db

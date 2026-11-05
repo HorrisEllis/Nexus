@@ -1443,7 +1443,14 @@ require('../lib/raid-port.js').provide({
   listQueue:   ({ n = 50 } = {}) => jaaDB.tail('raid_contract_queue', n),
 });
 
-server.listen(PORT, '127.0.0.1', () => {
+// 2026-11-05 DO3 (docs/2026-10-31-system-doors-phasemap.spec) — James: "they all need the door build". Cortex's door is cortex/server.js: it
+// is the process COS starts, it answers the registry and the handshake, and it calls start() here. boot.js keeps every route it had; run
+// directly (node cortex/boot.js, an old launcher) it still starts itself, so nothing that names it breaks until DO4 retires it.
+let _started = false;
+function start({ port = PORT } = {}) {
+  if (_started) return server;
+  _started = true;
+server.listen(port, '127.0.0.1', () => {
   // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
   // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
   try { require('../lib/node-registry.js').startForSystem('cortex', { bus }); } catch (e) { console.warn(`[cortex] node registry: ${e.message}`); }
@@ -1682,5 +1689,8 @@ server.listen(PORT, '127.0.0.1', () => {
   }
 
 });
+  return server;
+}
+if (require.main === module) start();
 
-module.exports = { server, jaaDB };
+module.exports = { server, jaaDB, start, PORT, VERSION };

@@ -1,0 +1,14 @@
+{
+  "name": "nexus-stack",
+  "description": "NEXUS Full Stack — bridge + testenv + ollama + watchdogs",
+  "script": "service/stack-runner.js",
+  "env": {
+    "NEXUS_PORT": "3747",
+    "NEXUS_STACK_MODE": "full"
+  },
+  "maxRestarts": 10,
+  "restartDelay": 2000,
+  "windowsName": "NexusStack",
+  "verbose": true,
+  "stack": ["bridge", "ollama", "testenv"]
+}

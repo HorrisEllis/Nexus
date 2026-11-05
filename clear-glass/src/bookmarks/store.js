@@ -115,6 +115,17 @@ class BookmarkStore {
     return { bookmark: bk };
   }
 
+  // BM1 (0.60.403) — James, 2026-11-05: "bookmarks with ability to bind macros." One macro per bookmark, run when it opens; null unbinds.
+  // exists(name) → boolean checks the name against his macros (the bridge passes macros:list), so a bookmark never names a macro that is not there.
+  bindMacro({ id, macro = null, exists = null }) {
+    const bk = this.data.find(b => b.id === id);
+    if (!bk) return { error: `no bookmark "${id}"` };
+    const name = macro == null || macro === '' ? null : String(macro).trim();
+    if (name && typeof exists === 'function' && !exists(name)) return { error: `no macro "${name}"` };
+    bk.macro = name; bk.updatedAt = Date.now(); this._save();
+    return { bookmark: bk, bound: !!name };
+  }
+
   remove({ id, url, agentId }) {
     const before = this.data.length;
     if (id) {

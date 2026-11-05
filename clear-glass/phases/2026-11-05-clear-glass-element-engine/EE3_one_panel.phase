@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+type: phase
+id: docs_2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+context: pipeline phase EE3_one_panel of docs/2026-11-05-clear-glass-element-engine-phasemap.spec
+intent: null
+summary: EE3_one_panel (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793871876647
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793871876647
+lastSeenAt: 1793871876647
+fingerprint: null
+payload:
+  id: EE3_one_panel
+  map: docs/2026-11-05-clear-glass-element-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/guardian-picker.js
+    - clear-glass/renderer/element-panel.js
+    - clear-glass/renderer/element-panel.css
+  depends_on:
+    - EE2_hide_what_you_point_at
+  blocks: []
+  spec: null
+  graph: 7a8cc335a5d99cf1

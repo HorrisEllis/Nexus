@@ -1,10 +1,10 @@
 {
   "id": "8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f",
   "name": "adblocker",
-  "version": "2.1.0",
-  "displayName": "Ad Blocker",
+  "version": "3.0.0",
+  "displayName": "Element Engine",
   "icon": "🛡",
-  "description": "Blocks ads and trackers with the standard filter lists (EasyList, EasyPrivacy, Peter Lowe's; uBlock filters, annoyances and cookie banners when you turn them on), hides the empty ad boxes left on the page, and lets you allow a site in one click. Click it to choose lists, update them, add your own filters, import your own lists (a file, a folder, a hosts or domain list) or subscribe to one by its address and see what it blocked on this page. The engine is Clear Glass's (src/adblock); this plugin is how you reach it.",
+  "description": "One plugin for what Clear Glass does with a page's elements: Ad blocking (filter lists, element hiding, allowed sites, your own filters — as before), the Guardian picker (point at an element, then gate it or bind a key to it), ErosmancerOS (its state) and editing ErosmancerOS's TypeScript yourself (export a copy, show your changes, import them: syntax checked, old files kept, its own test run). Was the Ad Blocker (2.1.0); the same plugin, so your lists and settings stay.",
   "author": "James Brooks (Erosmancer)",
   "entryPoint": "index.js",
   "permissions": {
@@ -27,5 +27,10 @@
       }
     ]
   },
-  "settingsSection": "sites"
+  "settingsSection": "sites",
+  "previously": {
+    "displayName": "Ad Blocker",
+    "version": "2.1.0",
+    "description": "kept in git history and in this field (§0.3)"
+  }
 }

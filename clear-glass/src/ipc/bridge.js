@@ -1234,6 +1234,13 @@ class IpcBridge {
     ipcMain.handle('bookmarks:openWithState', async (e, d) => this._bookmarkOpenWithState(d));
     // §0.39.265 — attach / detach an account (the ★ dialog's check mark) or a snapshot
     ipcMain.handle('bookmarks:linkState',     async (e, d) => this.bookmarks?.linkState(d || {}));
+    // BM1 (0.60.403) — bind a macro to a bookmark; the name is checked against his macros
+    ipcMain.handle('bookmarks:bindMacro', async (e, d = {}) => {
+      if (!this.bookmarks) return { error: 'bookmarks not ready' };
+      let names = null;
+      if (d.macro && this.macroTool) { try { const l = await this.macroTool.execute({ action: 'list' }); names = new Set(((l && l.macros) || []).map(m => m.name)); } catch (_) {} }
+      return this.bookmarks.bindMacro({ id: d.id, macro: d.macro, exists: names ? (n) => names.has(n) : null });
+    });
 
     // Rewind
     ipcMain.handle('rewind:list',     async (e, d) => this.rewind?.list(d.agentId, d.limit));
@@ -2322,6 +2329,13 @@ class IpcBridge {
     if (r.error) return { ok: false, error: r.error };
     return { ok: true, drafted, warnings, title: gig.title, ...r };
   }
+  // 2026-10-30 GF6 — James: "it needs to stop, and display toast with an error on any step." In his Clear Glass window (the driver's toast);
+  // no window → the log says it, and the result still carries what stopped
+  _gigToast(msg, type = 'error') {
+    const text = String(msg).slice(0, 300);
+    if (!this.driver) { console.warn(`[toast] ${text}`); return; }
+    Promise.resolve().then(() => this.driver.exec({ agentId: 'default', action: 'toast', msg: text, type, durationMs: 9000, by: 'person' })).catch(e => console.warn(`[toast] not shown (${e.message}): ${text}`));
+  }
   // the profile a Fiverr gig is written from: one labelled/keyed fiverr, else the only profile, else none (said by the caller)
   _fiverrProfileId() {
     const list = (this.autofillStore && this.autofillStore.listProfiles && this.autofillStore.listProfiles()) || [];
@@ -2793,9 +2807,12 @@ class IpcBridge {
       const check = C.text({ cgId: f.cgId, key: f.key }, f.value);
       try {
         await gated(f.key, async (t) => { if (t) await this.driver.exec({ agentId, action: 'insertText', selector: `[data-cg-part="${f.key}"]`, text: f.value, by: 'person' }); }, check);
-      } catch (err) { r.filled.splice(r.filled.indexOf(f), 1); filledKeys.delete(f.key); await friction(f.key, f.value, err, check); }
+      } catch (err) {
+        r.filled.splice(r.filled.indexOf(f), 1); filledKeys.delete(f.key); await friction(f.key, f.value, err, check);
+        const nf = r.notFound.find(x => x.key === f.key); if (nf) { r.stopped = { key: f.key, why: nf.why }; break; }   // GF6
+      }
     }
-    for (const part of (where.page && GP.PARTS[where.page]) || []) {
+    for (const part of r.stopped ? [] : (where.page && GP.PARTS[where.page]) || []) {
       if (!wants(part)) continue;
       const value = valueOf(part); if (value === null || value === undefined || value === '') continue;
       if (filledKeys.has(part)) continue;   // filled and gated above
@@ -2891,21 +2908,34 @@ class IpcBridge {
           r.dropdowns.push({ key: part, ok: true, option: (c && c.option) || value, via: 'dropdown' }); continue;
         }
         if (part === 'category') {
-          check = C.shown(catShown);
+          // 2026-10-30 GF6 — the gate reads the two dropdowns (C.category), not the page's words: a suggestion that did not take passed C.shown
+          // (his screenshot: SELECT A CATEGORY still shown) and nothing else was tried. A suggestion that does not take now falls through.
+          check = C.category(gig.category, gig.subcategory || '');
+          void catShown;
           const sc = GP.suggestedCategory(read.links, gig);
+          let sugWhy = sc.ok ? null : sc.why;
           if (sc.ok) {
-            await gated(part, () => this.driver.exec({ agentId, action: 'pointer', selector: sc.link.selector, do: 'click', by: 'person' }), check);
-            r.dropdowns.push({ key: part, ok: true, option: sc.text, via: 'suggested' }); continue;
+            try {
+              await gated(part, () => this.driver.exec({ agentId, action: 'pointer', selector: sc.link.selector, do: 'click', by: 'person' }), check, 0, 'choice');
+              r.dropdowns.push({ key: part, ok: true, option: sc.text, via: 'suggested' }); continue;
+            } catch (err) { sugWhy = `the suggestion "${sc.text}" did not take: ${err.message}`; r.gates.pop(); }
           }
           // 0.60.283 — a new gig offers no suggestion, only SELECT A CATEGORY and SELECT A SUBCATEGORY: his node "Fiverr gig - choose
           // category" (gated, editable in Settings › Macros), else the same two picks built in, each read back; then the part's gate
-          if (!/select a category/i.test(String(read.text || ''))) throw new Error(sc.why);
+          const GFx = require('../autofill/gig-fields');
+          const unchosen = async () => { for (const t of ['SELECT A CATEGORY', 'SELECT A SUBCATEGORY']) { const x = await this.driver.exec({ agentId, action: 'eval', code: GFx.shownScript(t), by: 'person' }).catch(() => null); if (x && x.result) return true; } return false; };
+          if (!(await unchosen())) throw new Error(sugWhy || 'no dropdown to choose from');
           // 2026-10-30 — James, with a screenshot of a new gig (PROGRAMMING & TECH chosen, SELECT A SUBCATEGORY left): "the drop down didn't work
           // fully. it was a new gig." His node macro is gated on each value itself: when it ran, its gates are this part's gate. When it stopped
           // part way (the category chosen, the subcategory not), the built-in pick reads the page first and picks only what is still unchosen —
           // before, it looked for "SELECT A CATEGORY" again, which the page no longer showed, so the subcategory was never picked.
-          const viaMacro = typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose category', { category: gig.category, subcategory: gig.subcategory || '' }) : { ok: false, why: 'node macros not wired here' };
-          if (viaMacro.ok) { r.dropdowns.push({ key: part, ok: true, option: value, via: 'macro' }); continue; }
+          let viaMacro = typeof this._gigNodeMacro === 'function' ? await this._gigNodeMacro(agentId, 'Fiverr gig - choose category', { category: gig.category, subcategory: gig.subcategory || '' }) : { ok: false, why: 'node macros not wired here' };
+          // GF6 — the macro said it was done: the dropdowns are read to agree (a page that cannot be read is unchecked, not closed, NC0)
+          if (viaMacro.ok) {
+            const now = await check().catch(() => ({ unread: true }));
+            if (now.unread || now.open) { r.gates.push({ key: part, ...(now.unread ? { unchecked: now.saw } : { open: true, saw: now.saw }), via: 'macro' }); r.dropdowns.push({ key: part, ok: true, option: value, via: 'macro' }); continue; }
+            viaMacro = { ok: false, why: `the macro finished but ${now.saw}` };
+          }
           const GF = require('../autofill/gig-fields');
           const shows = async (t) => { const x = await this.driver.exec({ agentId, action: 'eval', code: GF.shownScript(t), by: 'person' }); return !!(x && x.result); };
           const picked = [];
@@ -2927,13 +2957,16 @@ class IpcBridge {
             }
             if (gig.subcategory && await shows('SELECT A SUBCATEGORY')) { const c2 = await this.driver.exec({ agentId, action: 'choose', shows: 'SELECT A SUBCATEGORY', option: gig.subcategory, by: 'person' }); picked.push(c2.option); }
           }, check, null, 'choice');
-          const rec = { key: part, ok: true, option: picked.length ? picked.join(' > ') : value, via: 'built-in', why: viaMacro.why, ...(picked.length < (gig.subcategory ? 2 : 1) ? { kept: 'what the page already showed' } : {}) };
+          const rec = { key: part, ok: true, option: picked.length ? picked.join(' > ') : value, via: 'built-in', why: [sugWhy, viaMacro.why].filter(Boolean).join(' · '), ...(picked.length < (gig.subcategory ? 2 : 1) ? { kept: 'what the page already showed' } : {}) };
           r.dropdowns.push(rec); continue;
         }
         throw new Error('not found on the page');
       } catch (err) {
         // 2026-10-30 GF4 — friction: his keys for this part on this site, gated like the part; else said, with how to bind one
         await friction(part, value, err, check);
+        // 2026-10-30 GF6 — James: "it needs to stop, and display toast with an error on any step." Still not done after his keys: nothing after it runs
+        const nf = r.notFound.find(x => x.key === part);
+        if (nf) { r.stopped = { key: part, why: nf.why }; break; }
       }
     }
     // GT5 — no service type in the gig while the page asks for one: left for him and said, never guessed (MOD-GT5 behavioral contract)
@@ -2942,22 +2975,30 @@ class IpcBridge {
       try { const read1 = async () => (await this.driver.exec({ agentId, action: 'eval', code: GP.serviceTypeScript(null), by: 'person' })) || {};
         let x = await read1(); const until = Date.now() + (r.dropdowns.some(dd => dd.key === 'category') ? 3000 : 0);
         while (!(x.result && x.result.found) && Date.now() < until) { await new Promise(res => setTimeout(res, 300)); x = await read1(); }
-        if (x && x.result && x.result.found) r.notFound.push({ key: 'serviceType', why: `the page asks for a service type${x.result.options ? ` (${x.result.options.join(' | ')})` : ''}; your gig has none (serviceType), so it is left for you` }); } catch (_) {}
+        if (x && x.result && x.result.found) r.notFound.push({ key: 'serviceType', why: `the page asks for a service type${x.result.options ? ` (${x.result.options.join(' | ')})` : ''}; your gig has none (serviceType), so it is left for you` });
+        if (x && x.result && x.result.found && !r.stopped) r.stopped = { key: 'serviceType', why: r.notFound[r.notFound.length - 1].why };   // GF6: said in the toast
+      } catch (_) {}
     }
     // 0.60.281 AP1 — James, 2026-10-29: "update the gig files." The package rows come from the gig (features), never from code: a number or text
     // is chosen in that tier's column and row (the gated choose, read back), yes/no ticks or clears that row's checkbox (checkAt, read back).
     // The page's rows the gig has no value for are listed (r.features.unlisted), so he can add them to the gig.
-    if (where.page === 'pricing' && this.driver) r.features = await this._gigFeatures(agentId, gig, want);
+    if (where.page === 'pricing' && this.driver && !r.stopped) r.features = await this._gigFeatures(agentId, gig, want);
     // GT6 — the metadata bullets, after the category and service type held (the tabs belong to the subcategory chosen)
     if (where.page === 'overview' && this.driver && wants('metadata') && typeof this._gigMetadata === 'function' && (gig.metadata && Object.keys(gig.metadata).length || /gig metadata/i.test(String((read && read.text) || '')))) r.metadata = await this._gigMetadata(agentId, gig);
     // 0.60.224 — his recorded choices for this page (Service type, the metadata boxes, the pricing rows …) replayed after the fill, as him
-    if (where.page && this.macroTool && replay !== false) {
+    if (where.page && this.macroTool && replay !== false && !r.stopped) {
       let has = null; try { has = await this.macroTool.execute({ action: 'get', name: GP.macroName(where.page) }); } catch (_) {}
       if (has && !has.error && (has.macro || has.steps || has.ok)) {
         let m; try { m = await this.runMacroAsPerson({ name: GP.macroName(where.page), agentId, skipSnapshot: true, by: 'person' }); } catch (e) { m = { error: e.message }; }
         r.macro = m && m.error ? { name: GP.macroName(where.page), ok: false, error: m.error, failedAtStep: m.failedAtStep } : { name: GP.macroName(where.page), ok: true, steps: m && m.stepsCompleted };
       }
     }
+    // 2026-10-30 GF6 — what is left, from what the page now holds; a stop is said in a toast in his window
+    const doneKeys = new Set([...(r.filled || []).map(f => f.key), ...r.dropdowns.filter(d => d.ok).map(d => d.key), ...r.learned.map(l => l.key), ...r.siteKeys.map(k => k.key),
+      ...(r.tags && r.tags.done && r.tags.done.length ? ['tags'] : []), ...(r.faqs && !r.faqs.failed.length ? ['faq'] : []), ...(r.requirements && !r.requirements.failed.length ? ['requirement'] : [])]);
+    const top = (k) => (k === 'subcategory' ? 'category' : k.startsWith('faq.') ? 'faq' : k.startsWith('requirement.') ? 'requirement' : k);
+    if (Array.isArray(r.leftToCopy)) r.leftToCopy = r.leftToCopy.filter(k => !doneKeys.has(k) && !doneKeys.has(top(k)));
+    if (r.stopped) (typeof this._gigToast === 'function' ? this._gigToast.bind(this) : IpcBridge.prototype._gigToast.bind(this))(`Gig fill stopped at ${r.stopped.key}: ${r.stopped.why}`);
     if (!r.error) this.postEvent('autofill.gig.filled', { agentId, page: r.page, filled: r.filled.length, learned: r.learned.length, notFound: r.notFound.length, failed: r.failed.length, features: r.features ? { filled: r.features.filled.length, failed: r.features.failed.length, unlisted: r.features.unlisted.length } : null, ts: Date.now() });
     return r;
   }
@@ -3580,12 +3621,16 @@ function gigChecks(driver, agentId) {
   const ev = async (code) => { const x = await driver.exec({ agentId, action: 'eval', code, by: 'person' }); return x && x.result; };
   const q = (v) => JSON.stringify(String(v == null ? '' : v).slice(0, 60));
   return {
-    text: (where, value) => async () => { const x = await ev(GF.valueAtScript(where)); if (!x || !x.found) return { open: false, saw: 'the box is gone' };
+    text: (where, value) => async () => { const x = await ev(GF.valueAtScript(where)); if (x == null) return { open: false, unread: true, saw: 'the page did not answer the read' };   // NC0: unchecked, not closed (GF6)
+      if (!x.found) return { open: false, saw: 'the box is gone' };
       return { open: GF.readsBack(x.value, value), saw: q(x.value) }; },
     choice: (where, value) => async () => { const g = await driver.exec({ agentId, action: 'readChoice', ...where, is: String(value), by: 'person' });
       if (!g || (g.shown == null && g.matches == null && !(g.texts && g.texts.length))) return { open: false, unread: true, saw: 'the page did not answer the read' };
       return { open: !!(g && g.matches), saw: q(g && g.shown != null ? g.shown : (g && g.texts || []).slice(0, 4).join(' | ')) }; },
     shown: (text) => async () => { const ok = !!(await ev(GF.shownScript(text))); return { open: ok, saw: ok ? `${q(text)} shown` : `${q(text)} not on the page` }; },
+    // 2026-10-30 GF6 — James: "a condition to the next gate, like what the element says, if it aligns with the gig." The dropdowns themselves, never
+    // words the page shows elsewhere (the Suggested categories links always show them, so a suggestion that did not take passed C.shown)
+    category: (cat, sub) => async () => { const x = await ev(GF.categoryChosenScript(cat, sub)); return x && typeof x.open === 'boolean' ? x : { open: false, unread: true, saw: 'the page did not answer the read' }; },
     allShown: (list) => async () => { const want = list(); if (!want.length) return { open: false, saw: 'nothing took' };
       const miss = []; for (const t of want) if (!(await ev(GF.shownScript(t)))) miss.push(t);
       return { open: !miss.length, saw: miss.length ? `not shown: ${miss.map(q).join(', ')}` : `${want.length} shown` }; },

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT3_result_and_screen
+type: phase
+id: docs_2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT3_result_and_screen
+context: >-
+  pipeline phase AT3_result_and_screen of
+  docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec
+intent: null
+summary: AT3_result_and_screen (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793861314904
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793861314904
+lastSeenAt: 1793861314904
+fingerprint: null
+payload:
+  id: AT3_result_and_screen
+  map: docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/server.js
+    - clear-glass/src/main/index.js
+    - clear-glass/src/renderer/toasts.js
+    - guardian/ui/tool-calls.html
+  depends_on:
+    - AT2_the_gate
+    - AT_D1_where_the_result_goes
+  blocks: []
+  spec: null
+  graph: a74bea7519ba2af9

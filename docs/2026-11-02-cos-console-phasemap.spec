@@ -200,3 +200,123 @@ phases_addendum_2026_11_03_sc8:
       as compartment.spec and nexus-update.spec): this map holds another system's phase (SC6, Intelligence's), and tying them waits for the
       phase cleanup he called for.
     proof: "test-substrate-spec SS-01..03 green with both specs listed"
+
+# ── ADDENDUM 2026-11-04 — the zip dropzone updater and his zip history, in the Updates section; the console through RAID is PL_D15 ─────────
+# James, 2026-11-04: "okay. cos.exe build. complete build. with the manual zip dropzone updator as a backup/offline update tool. also a drop
+# down for my 800 zips for nexus to be tracked and versioned, and diff tracked. there is a tool for this. also cli in cos ui doesn't work. bridge
+# not connected. i feed it should route through raid"
+# Grounded 2026-11-04 against main 0.60.387 (the coder):
+#   - SC7 updates from GitHub only (lib/nexus-update.js). A release zip can be dropped on the old desktop COS (COSA1/COSA6), not on this UI.
+#   - "there is a tool for this": lib/cli/import-history.js (N27, BUILT 0.39.282) puts a folder of release zips into git, one snapshot commit
+#     per zip on history/snapshots with Zip-Name / Zip-Sha256 / Nexus-Version trailers, resumable; lib/history-import-job.js runs it as a job.
+#     Nothing in COS shows it.
+#   - "route through raid" is mapped already: PL_D15 (docs/2026-11-03-registry-per-system-phasemap.spec), with his open question there —
+#     acts only through RAID, or reads too. Not mapped twice; it waits on his answer.
+#   - "bridge not connected": the words are not in cos/, cos/ui or cos/manager/cli.js; where he sees them is asked (§0.1).
+phases_addendum_2026_11_04:
+  SC11_the_console_tab:
+    layer: ui
+    status: "BUILT 0.60.398 — test-cos-console-tab"
+    origin: >-
+      James, 2026-11-05: "next phase. cos needs the console from the autopilot. like a console tab". The retired autopilot
+      (lib/nexus/autopilot.retired-0.60.330.js) printed every system's output in one stream, each line timestamped and named
+      "[time] [system:file] line", errors in red, and took commands (--cli). COS keeps each system's lines (the supervisor's s.out, LOG_KEEP)
+      and has a command line (SC3, the bell's neighbour), but no place shows every system's output together, live.
+    depends_on: [SC3_system_command_line, SC5_the_console_ui]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/shell/page.js, cos/ui/console/index.html, cos/ui/console/page.js, cos/ui/console/page.css, tests/modules/test-cos-console-tab.test.js, tests/modules/run-all.js]
+    does: >-
+      Backend: the supervisor says each line a system prints ('line': { system, ts, stream, line }); the manager sends them on its stream as
+      cos.console, in batches every 200 ms (a burst past 500 lines says how many it dropped), and GET /api/cos/console?limit=&system= gives the
+      last lines of every system merged in time order. UI: a Console tab — every system's output together, newest at the bottom, each line
+      with its time and its system (coloured), errors in red; filter by system, errors only, search; follow on/off; and the command line at
+      the bottom (POST /api/cos/cli), its answers shown in the stream. Declared in COS's contract (the page, its routes, the event).
+    proof: "a system's printed lines reach GET /api/cos/console merged in time order and arrive live as cos.console; in Clear Glass the Console tab shows them with their system, filters to one, and runs a command"
+  SC12_start_at_boot_each_system:
+    layer: ui
+    status: "BUILT 0.60.399 — test-cos-boot-and-deps BD-03, BD-04"
+    origin: "James, 2026-11-05: \"also this pc is getting its ass kicked. i need options for what systems start on boot.\""
+    depends_on: [SC2_configuration_per_system]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/ui/automation/index.html, cos/ui/automation/page.js, cos/ui/automation/page.css, cos/manager/contract.json, tests/modules/test-cos-boot-and-deps.test.js]
+    does: "Each system's Start at boot (start.autostart, SC2, until now one system's Configuration at a time) in one list on Automation: a switch per system, his, read back; the next boot skips what is off, said."
+    proof: "BD-03: switched off through the route, a system is skipped at boot with why; switched on, it starts. BD-04: the list and its routes"
+  SC13_dependencies_before_boot:
+    layer: backend
+    status: "BUILT 0.60.399 — test-cos-boot-and-deps BD-01, BD-02, BD-04"
+    origin: "James, 2026-11-05: \"cos also needs to install the dependancies.\""
+    depends_on: [SC12_start_at_boot_each_system]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/manager/deps.js, cos/manager/server.js, tests/modules/test-cos-boot-and-deps.test.js]
+    does: >-
+      Before --boot starts the systems: no node_modules, or a package-lock.json whose content changed since the last good install (its hash
+      kept in node_modules/.cos-deps.json; by time until the first install) → npm install first (npm.cmd quoted, CA6), said on the ledger; a
+      failure is said and the boot goes on. --no-deps skips it.
+    proof: "BD-01 the cases (a time-only change is not an install); BD-02 the command and no-npm said; BD-04 the boot runs the check first"
+  SC14_each_system_opens_in_its_own_window:
+    layer: ui
+    status: "OPEN — mapped 2026-11-05"
+    origin: >-
+      James, 2026-11-05: "i want each ui folder for each system to be the envirement. you open. it can be in a popout window for either the
+      console for that system or for the ui from the folder."
+    depends_on: [SC11_the_console_tab]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/ui/serve.js, cos/ui/shell/page.js, cos/ui/console/page.js, cos/app/desktop/main.js, cos/manager/contract.json]
+    does: >-
+      Each system's own ui/ folder is its environment: from its row in the rail, Open (its UI, served from <system>/ui/ through COS's cockpit
+      server, only that folder) or Console (the Console tab filtered to it, ?system=), each in its own pop-out window (in the COS app a new
+      window; in a browser window.open). A system with no ui/ folder offers Console only, said.
+    proof: "a fixture system's ui/index.html opens in a pop-out; its console pop-out shows only its lines; a path outside its ui/ folder is refused"
+  SC15_nexus_cli_in_the_console:
+    layer: backend
+    status: "OPEN — mapped 2026-11-05"
+    origin: "James, 2026-11-05: \"also look for nexus-cli\""
+    found: >-
+      (read 2026-11-05) nexus-cli is docs/nexus-cli.spec ("Dynamic CLI runtime. No hardcoded commands. All commands from component registry
+      grammar tree."), lib/cli/nexus-cli.js and lib/nexus-cli-interface.js (the retired autopilot's --cli, routing to co-pilot's capabilities,
+      awareness, self-model and grammar router). His DO_D10 (2026-11-05): each server.js's CLI is how every UI and co-pilot reach that system.
+    depends_on: [SC11_the_console_tab, DO_D10_the_cli_is_the_way_in_for_every_ui_and_copilot]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/manager/cli.js, cos/ui/console/page.js, docs/nexus-cli.spec]
+    does: >-
+      The Console's command line, past COS's own table: a line that starts with a system's name goes to that system's door (POST <origin>/cli,
+      DO3a's shape; Cortex has it), so the commands come from each system's own registry grammar, as nexus-cli specs. A system with no door yet
+      is said, never guessed.
+    proof: "`cortex health` in the Console runs through Cortex's door; a system with no /cli says so"
+  SC16_no_console_windows:
+    layer: backend
+    status: "BUILT 0.60.400 — test-cos-hidden-windows"
+    origin: "James, 2026-11-05: \"keeps spamming my screen. any way to have those node.exe windows open in the background?\""
+    found: >-
+      (read 2026-11-05) COS's supervisor started every system with spawn(cmd, args, { cwd, env, stdio, shell }) and no windowsHide: on Windows,
+      a child of a process with no console (COS's window) gets its own console window, one per system, each restart a new one. The COS app's
+      own spawns already pass windowsHide (runtime, install, service, shell); the supervisor, its test runner and core-duties did not.
+    depends_on: [SC11_the_console_tab]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/manager/supervisor.js, cos/manager/autopilot-door.js, lib/nexus/core-duties.js, tests/modules/test-cos-hidden-windows.test.js, tests/modules/run-all.js]
+    does: "Every process COS starts hides its console window (windowsHide); a windowed system (Electron: Clear Glass) is the one left as it was, so its own window shows. Their output is read in the Console tab (SC11), not in a window."
+    proof: "the supervisor passes windowsHide: true for a node system and false for an Electron one; every spawn in the supervisor, the door's test runner and core-duties hides its window"
+  SC9_the_zip_dropzone_updater:
+    layer: ui
+    status: OPEN
+    depends_on: [SC7_the_updates_section, COSA1_version_store_and_import]
+    spec: cos/spec/cos-console.spec
+    files: [cos/manager/updates.js, cos/manager/server.js, cos/ui/updates/page.js, cos/ui/updates/index.html]
+    origin: '"with the manual zip dropzone updator as a backup/offline update tool" (James, 2026-11-04)'
+    does: >-
+      The offline way, in Updates: drop a Nexus release zip (or pick one) → checked like SC7's download (its version, newer or not, its files
+      whole, its checksum) → applied through the same apply and rollback as SC7, recorded in Versionium (§17.12). Nothing is downloaded.
+    proof: "a fixture zip: refused when broken or not newer, said why; applied, rolled back, in the history"
+  SC10_the_zip_history:
+    layer: ui
+    status: OPEN
+    depends_on: [SC7_the_updates_section, N27_history_import_from_700_zips]
+    spec: cos/spec/cos-console.spec
+    files: [cos/manager/history.js, cos/manager/server.js, cos/ui/updates/page.js]
+    origin: '"also a drop down for my 800 zips for nexus to be tracked and versioned, and diff tracked. there is a tool for this" (James, 2026-11-04)'
+    does: >-
+      In Updates, a dropdown of every imported zip (history/snapshots, read through git): version, zip name, date, sha; picking one shows its
+      diff against the one before (files changed, added, removed; a file's lines on a click). "Import a folder of zips" runs import-history as
+      a job with its progress; a rerun adds nothing. Each import recorded in Versionium.
+    proof: "a fixture folder of three zips: imported once, listed in order, a diff between two shown; in Clear Glass"
+build_order_addendum_2026_11_04: "SC9 → SC10; the console through RAID when PL_D15's question is answered"

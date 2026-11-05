@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+type: phase
+id: docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+context: >-
+  pipeline phase IP1_input_folder_and_reader of
+  docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+intent: null
+summary: IP1_input_folder_and_reader (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793853812292
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793853812292
+lastSeenAt: 1793853812292
+fingerprint: null
+payload:
+  id: IP1_input_folder_and_reader
+  map: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/pipeline/reader.js
+    - intelligence/pipeline/handoff.js
+    - intelligence/schemas/dataset.schema.json
+    - intelligence/input/README.md
+    - tests/modules/test-intelligence-pipeline.test.js
+  depends_on:
+    - IP_D1_formats_and_rows
+  blocks: []
+  spec: null
+  graph: b2f79dd04582ade4

@@ -74,7 +74,7 @@ const FILES = [
   // 2026-10-30 UG — James: "it needs to be universal for all dom elements ... stop thinking so narrow"
   ['clear-glass/src/page/element-gate.js', I('clear-glass/src/page/element-gate.js'), [I('clear-glass/src/page/option-match.js')]],
   ['clear-glass/renderer/site-gates/gate-bar.js', I('clear-glass/renderer/site-gates/gate-bar.js'), []],
-  ['clear-glass/renderer/a11y-panel.js', I('clear-glass/renderer/a11y-panel.js'), []],   // 2026-10-30 AC2 a browser script: cg.siteProfile.a11yTrace / a11yKeepOff / a11yOpenControl over IPC   // a browser script: cg.shortcuts.gateAdd over IPC
+  ['clear-glass/renderer/a11y-panel.js', I('clear-glass/renderer/a11y-panel.js'), []],
   ['lib/repo-history-nodes.js', I('lib/repo-history-nodes.js'), [I('lib/node-export.js'), I('lib/test-sandbox.js')]],   // 0.60.285 HN1 — Idearium's history as nodes, one per unit
   ['lib/automation/pipeline.js', I('lib/automation/pipeline.js'), [I('lib/automation/engine.js'), I('lib/automation/steps.js')]],
   ['lib/automation/task-node.js', I('lib/automation/task-node.js'), [I('lib/automation/cron.js'), I('lib/versionium-record.js')]],

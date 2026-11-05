@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
+type: phase
+id: docs_2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
+context: >-
+  pipeline phase CA7_each_compartment_its_own_location of
+  docs/2026-11-02-cos-the-application-phasemap.spec
+intent: null
+summary: CA7_each_compartment_its_own_location (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1793847429757
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793847429757
+lastSeenAt: 1793847429757
+fingerprint: null
+payload:
+  id: CA7_each_compartment_its_own_location
+  map: docs/2026-11-02-cos-the-application-phasemap.spec
+  repo: null
+  layer: null
+  status: '"OPEN — his reading to settle first (do not guess)"'
+  files: []
+  depends_on:
+    - CA6_install_asks_where_and_npm_in_program_files
+  blocks: []
+  spec: null
+  graph: 9cb9ff914b074842

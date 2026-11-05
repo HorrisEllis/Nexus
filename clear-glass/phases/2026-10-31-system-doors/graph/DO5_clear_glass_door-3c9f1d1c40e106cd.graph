@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421248118
+exported_at: 1793859126600
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421248118
-lastSeenAt: 1793421248118
+firstSeenAt: 1793859126600
+lastSeenAt: 1793859126600
 fingerprint: null
 payload:
   for: DO5_clear_glass_door
@@ -170,20 +170,21 @@ payload:
     deps:
       - docs/2026-10-31-system-doors-phasemap.spec::DO_D1_clear_glass_door
       - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
-    dependents: []
+    dependents:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO6_every_door_on_its_registry_and_walled_by_cos
     upstream:
       - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
       - docs/2026-10-31-system-doors-phasemap.spec::DO_D1_clear_glass_door
-    downstream: []
-    blockedBy:
-      - docs/2026-10-31-system-doors-phasemap.spec::DO_D1_clear_glass_door
+    downstream:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO6_every_door_on_its_registry_and_walled_by_cos
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 1 · blocked by DO_D1_clear_glass_door
+      - layer 1 · ready
       - 'depends on (2): DO_D1_clear_glass_door, DO0_the_handshake_counts_real_routes'
-      - 'needed by (0): —'
+      - 'needed by (1): DO6_every_door_on_its_registry_and_walled_by_cos'
     edges:
       - from: docs/2026-10-31-system-doors-phasemap.spec::DO_D1_clear_glass_door
         kind: declared

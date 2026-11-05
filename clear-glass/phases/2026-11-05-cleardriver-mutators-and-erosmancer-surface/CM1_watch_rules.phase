@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+type: phase
+id: docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+context: >-
+  pipeline phase CM1_watch_rules of
+  docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+intent: null
+summary: CM1_watch_rules (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793872153628
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793872153628
+lastSeenAt: 1793872153628
+fingerprint: null
+payload:
+  id: CM1_watch_rules
+  map: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/driver/watch.js
+    - clear-glass/src/schemas/watch.schema.json
+    - clear-glass/src/event-taxonomy.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-cg-watch-rules.test.js
+  depends_on:
+    - EE1_one_identity_for_a_chosen_element
+  blocks: []
+  spec: null
+  graph: cb39ec08bc97fc26

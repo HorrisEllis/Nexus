@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- cos/ui/console/index.html — every system's output together, live, and the command line (SC11, 0.60.398).
+     James, 2026-11-05: "cos needs the console from the autopilot. like a console tab" -->
+<html lang="en" data-theme="nexus" data-accent="cycle">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Console · COS</title>
+  <link rel="stylesheet" href="../core/theme.css"><link rel="stylesheet" href="../core/core.css"><link rel="stylesheet" href="page.css">
+</head>
+<body class="cos-page">
+  <div data-refusals></div>
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">Compartment OS · what the systems say</span>
+      <h1 class="title">Console</h1>
+      <p class="lede">Every system's output in one stream, as the autopilot printed it: the time, the system, the line. Errors in red. Commands at the bottom.</p>
+    </div>
+    <div class="actions">
+      <button class="btn sm" id="follow" aria-pressed="true" title="Keep the newest line in view">Following</button>
+      <button class="btn sm" id="clear" title="Clear this view (nothing is deleted)">Clear view</button>
+      <span class="live" id="live"><span class="dot" data-s="starting"></span>connecting</span>
+    </div>
+  </header>
+  <div class="filters panel">
+    <div class="field systems"><label>Systems</label><div class="chips" id="f-sys"></div></div>
+    <div class="field"><label for="f-err">Show</label><button class="chip" id="f-err" aria-pressed="false">errors only</button></div>
+    <div class="field"><label for="f-q">Search</label><input class="input" id="f-q" placeholder="text in a line…" autocomplete="off"></div>
+  </div>
+  <section class="panel term" id="term" aria-live="polite"></section>
+  <form class="panel prompt" id="prompt" autocomplete="off">
+    <span class="ps1">cos&gt;</span><input class="input" id="line" placeholder="a command — try: ps · help" spellcheck="false">
+    <button class="btn" type="submit">Run</button>
+  </form>
+  <script src="../core/core.js"></script>
+  <script src="page.js"></script>
+</body>
+</html>

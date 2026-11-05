@@ -18,9 +18,12 @@ const http = require('http');
 const COCKPIT_PORT = Number(process.env.COS_UI_PORT) || 7797;
 const cockpitUrl = (port = COCKPIT_PORT) => `http://127.0.0.1:${port}/`;
 
-function windowTarget({ cockpitUp = false, linked = null, started = null, error = null, port = COCKPIT_PORT } = {}) {
+function windowTarget({ cockpitUp = false, linked = null, started = null, error = null, port = COCKPIT_PORT, installing = null, installError = null } = {}) {
   if (cockpitUp) return { kind: 'cockpit', url: cockpitUrl(port), why: 'the cockpit answers' };
-  if (!linked) return { kind: 'starting', why: 'no Nexus folder is linked yet: open Versions & manual update and press Link a Nexus folder…' };
+  // CA5 (0.6.0) — nothing linked: COS installs Nexus from GitHub itself; the step running, or why it stopped (Install Nexus tries again)
+  if (!linked && installing) return { kind: 'starting', why: `installing Nexus: ${installing}`, installing: true };
+  if (!linked && installError) return { kind: 'starting', why: `Nexus is not installed: ${String(installError).split('\n')[0]} — press Install Nexus to try again`, canInstall: true };
+  if (!linked) return { kind: 'starting', why: 'Nexus is not installed yet: press Install Nexus (from GitHub), or link your own folder in Versions & manual update', canInstall: true };
   if (error) return { kind: 'starting', why: `Nexus did not start: ${String(error).split('\n')[0]}` };
   if (started === false) return { kind: 'starting', why: `${linked.version || 'Nexus'} is linked but not started: press Start` };
   return { kind: 'starting', why: `starting Nexus ${linked.version || ''} from ${linked.dir} — the cockpit opens here when COS's manager answers on :${port}`.replace(/\s+/g, ' ') };

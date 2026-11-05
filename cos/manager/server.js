@@ -50,6 +50,13 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
   const streams = new Set(); let last = new Map();
   const broadcast = (event, data) => { const f = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`; for (const r of streams) { try { r.write(f); } catch (_) { streams.delete(r); } } };
   sup.on('ledger', (entry) => broadcast('cos.ledger', { entry }));
+  // 2026-11-05 SC11 — James: "cos needs the console from the autopilot. like a console tab". Every line a system prints, on the stream as
+  // cos.console, in batches every 200 ms; a burst past 500 lines in one batch says how many it dropped (never silently).
+  let _lines = [], _dropped = 0, _lineTimer = null;
+  sup.on('line', (l) => {
+    if (_lines.length < 500) _lines.push(l); else _dropped++;
+    if (!_lineTimer) _lineTimer = setTimeout(() => { const batch = _lines, dropped = _dropped; _lines = []; _dropped = 0; _lineTimer = null; broadcast('cos.console', { lines: batch, ...(dropped ? { dropped } : {}) }); }, 200);
+  });
   const watch = setInterval(() => { if (!streams.size) return; const now = new Map();
     for (const v of sup.list()) { now.set(v.name, `${v.state}|${v.pid}`); if (last.get(v.name) !== `${v.state}|${v.pid}`) broadcast('cos.system.state', { name: v.name, state: v.state, pid: v.pid }); }
     last = now; }, 1000); if (watch.unref) watch.unref();
@@ -61,6 +68,12 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
     try {
       if (m === 'GET' && p === '/api/cos/health') return send(res, 200, { ok: true, service: 'cos-manager', pid: process.pid, systems: sup.list().length, ledger: sup.ledgerFile });   // MG17: pid, so a launcher can prove it is the one it started
       if (m === 'GET' && p === '/api/cos/systems') return send(res, 200, { ok: true, systems: sup.list() });
+      if (m === 'GET' && p === '/api/cos/console') {   // SC11: the last lines of every system (or one), merged in time order
+        const limit = Math.min(Math.max(Number(u.searchParams.get('limit')) || 500, 1), 5000), only = u.searchParams.get('system');
+        const names = sup.list().map(v => v.name).filter(n => !only || n === only);
+        const lines = names.flatMap(n => { try { return sup.logs(n, { limit }).map(l => ({ system: n, ...l })); } catch (_) { return []; } }).sort((a, b) => a.ts - b.ts).slice(-limit);
+        return send(res, 200, { ok: true, lines, systems: names });
+      }
       if (m === 'GET' && p === '/api/cos/ledger') return send(res, 200, { ok: true, entries: sup.ledger({ limit: Number(u.searchParams.get('limit')) || 100, system: u.searchParams.get('system') }) });
       if (m === 'GET' && p === '/api/cos/legacy-callers') return send(res, 200, { ok: true, callers: door.legacyCallers() });   // MG16: who still calls /tables and /files
       // CA3 (cos/spec/network.spec MOD-NET-ROUTES) — James: "Gate behind settings to open. Make a full detailed settings for network."
@@ -210,7 +223,14 @@ if (require.main === module) {
       ui.once('error', (e) => { console.log(`[cos] the cockpit did not start on :${uiPort} (${e.code || e.message}) — the manager runs on without it; node cos/ui/serve.js --port <n> starts it by hand`); ui = null; });
       ui.listen(uiPort, '127.0.0.1', () => console.log(`[cos] cockpit on http://127.0.0.1:${ui.address().port}/ (COS's UI)`));
     }
-    if (process.argv.includes('--boot')) { const r = await sup.boot({ by: 'boot', ...(only ? { set: only } : {}) }); console.log(`[cos] booted ${r.started.length}, skipped ${r.skipped.length}`); }
+    if (process.argv.includes('--boot')) {
+      // 2026-11-05 DP1 — James: "cos also needs to install the dependancies." A pulled Nexus with a newer package-lock.json (or no node_modules)
+      // gets npm install before the systems start; said on the ledger; a failed install is said and the boot goes on (each system then says why).
+      if (!process.argv.includes('--no-deps')) { const D = require('./deps.js'); const c = D.check(root);
+        if (c.needed) { sup.note('deps', `installing Nexus's dependencies first: ${c.why} (npm install)`, { by: 'boot' }); console.log(`[cos] ${c.why} — npm install before boot`);
+          const r = await D.install(root); sup.note('deps', r.ok ? `dependencies installed in ${Math.round(r.ms / 1000)} s` : `npm install failed (exit ${r.code}): ${String(r.tail).trim().split('\n').slice(-3).join(' ').slice(0, 300)} — booting anyway`, { by: 'boot' }); } }
+      const r = await sup.boot({ by: 'boot', ...(only ? { set: only } : {}) }); console.log(`[cos] booted ${r.started.length}, skipped ${r.skipped.length}`);
+    }
     const bye = () => { sup.shutdown({ by: 'boot' }); srv.close(); if (ui) ui.close(); setTimeout(() => process.exit(0), 500).unref(); };
     process.on('SIGINT', bye); process.on('SIGTERM', bye);
   }).catch((e) => { console.error(`[cos] ${e.message}`); process.exit(1); });

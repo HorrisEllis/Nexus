@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421248107
+exported_at: 1793859126578
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421248107
-lastSeenAt: 1793421248107
+firstSeenAt: 1793859126578
+lastSeenAt: 1793859126578
 fingerprint: null
 payload:
   for: DO1_idearium_door
@@ -217,11 +217,13 @@ payload:
     deps:
       - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
       - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
-    dependents: []
+    dependents:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO6_every_door_on_its_registry_and_walled_by_cos
     upstream:
       - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
       - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
-    downstream: []
+    downstream:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO6_every_door_on_its_registry_and_walled_by_cos
     blockedBy:
       - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
     unlocks: []
@@ -233,7 +235,7 @@ payload:
     lines:
       - layer 1 · blocked by DO_D0_server_floats_on_the_registry
       - 'depends on (2): DO_D0_server_floats_on_the_registry, DO0_the_handshake_counts_real_routes'
-      - 'needed by (0): —'
+      - 'needed by (1): DO6_every_door_on_its_registry_and_walled_by_cos'
       - 'same files as DO3_cortex_door with no order between them: lib/nexus/autopilot.js'
     edges:
       - from: docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry

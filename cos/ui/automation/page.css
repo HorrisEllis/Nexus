@@ -12,3 +12,13 @@
 .rule.changed .layer { color: var(--ac-soft); } .rule.dirty .input { border-color: var(--ac-border-hi); }
 .rule.dirty .layer { color: var(--nx-warn); }
 .later { max-width: 980px; }
+
+/* BT1 — Start at boot, one row per system */
+.boot-rows { display: grid; gap: 2px; margin-top: var(--s3); }
+.boot-row { display: grid; grid-template-columns: 180px 1fr auto; gap: var(--s4); align-items: center; padding: 10px var(--s3); border-radius: 10px; }
+.boot-row:hover { background: var(--ac-ghost); }
+.boot-row .name { font-weight: 600; color: var(--nx-bright); }
+.boot-row .meta { font: 400 12px/1 var(--mono); color: var(--nx-muted); }
+.switch { width: 40px; height: 22px; border-radius: 999px; border: 1px solid var(--line-soft); background: var(--glass-hi); position: relative; cursor: pointer; }
+.switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--nx-muted); transition: left .15s, background .15s; }
+.switch[aria-checked="true"] { background: var(--ac-dim); border-color: var(--ac); } .switch[aria-checked="true"]::after { left: 20px; background: var(--ac); }

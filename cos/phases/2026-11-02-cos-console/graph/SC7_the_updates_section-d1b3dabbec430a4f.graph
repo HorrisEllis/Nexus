@@ -7,11 +7,11 @@ intent: null
 summary: 39 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793708276745
+exported_at: 1793873415693
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793708276745
-lastSeenAt: 1793708276745
+firstSeenAt: 1793873415693
+lastSeenAt: 1793873415693
 fingerprint: null
 payload:
   for: SC7_the_updates_section
@@ -257,6 +257,8 @@ payload:
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
     dependents:
       - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
+      - docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
+      - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
     upstream:
       - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
       - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
@@ -269,18 +271,23 @@ payload:
       - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
       - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
     downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
       - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
+      - docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
     blockedBy: []
     unlocks:
       - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
+      - docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
+      - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
     conflicts: []
     dangling: []
     lines:
       - layer 4
       - 'depends on (2): SC1_the_bell, SC5_the_console_ui · all upstream 10'
       - >-
-        needed by (1): SC8_the_specs_at_full_depth · finishing it unlocks
-        SC8_the_specs_at_full_depth
+        needed by (3): SC8_the_specs_at_full_depth, SC9_the_zip_dropzone_updater,
+        SC10_the_zip_history · finishing it unlocks SC8_the_specs_at_full_depth,
+        SC9_the_zip_dropzone_updater, SC10_the_zip_history
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
         kind: declared

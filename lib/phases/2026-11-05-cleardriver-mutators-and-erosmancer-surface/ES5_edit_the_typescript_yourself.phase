@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES5_edit_the_typescript_yourself
+type: phase
+id: docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES5_edit_the_typescript_yourself
+context: >-
+  pipeline phase ES5_edit_the_typescript_yourself of
+  docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+intent: null
+summary: ES5_edit_the_typescript_yourself (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793872583466
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793872583466
+lastSeenAt: 1793872583466
+fingerprint: null
+payload:
+  id: ES5_edit_the_typescript_yourself
+  map: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.396 — test-eros-edit"'
+  files:
+    - clear-glass/src/eros/edit.js
+    - tests/modules/test-eros-edit.test.js
+    - tests/modules/run-all.js
+    - package.json
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6a256ea78d989eb8

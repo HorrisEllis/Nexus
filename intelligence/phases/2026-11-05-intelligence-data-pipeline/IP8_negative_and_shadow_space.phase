@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+type: phase
+id: docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+context: >-
+  pipeline phase IP8_negative_and_shadow_space of
+  docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+intent: null
+summary: IP8_negative_and_shadow_space (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793854267659
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793854267659
+lastSeenAt: 1793854267659
+fingerprint: null
+payload:
+  id: IP8_negative_and_shadow_space
+  map: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/pipeline/liminal-stage.js
+    - intelligence/liminal/index.js
+    - intelligence/liminal-space/index.js
+    - tests/modules/test-intelligence-pipeline.test.js
+  depends_on:
+    - IP4_invariants_across_series
+  blocks: []
+  spec: null
+  graph: 6f414e937ae7eaf9

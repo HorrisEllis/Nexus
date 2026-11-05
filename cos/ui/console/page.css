@@ -1,0 +1,23 @@
+/* cos/ui/console/page.css — the Console (SC11, 0.60.398): every system's output together, one line each, monospace, errors in red. */
+.live { display: inline-flex; align-items: center; gap: 8px; font: 500 12px/1 var(--mono); color: var(--nx-dim); padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line-soft); }
+.page-head .actions { display: flex; gap: var(--s3); align-items: center; }
+#follow[aria-pressed="false"] { color: var(--nx-warn); }
+.filters { display: grid; grid-template-columns: 1fr auto 260px; gap: var(--s5); align-items: end; padding: var(--s5); margin-bottom: var(--s4); }
+.chip.sys { border-color: hsl(var(--h) 60% 50% / .45); }
+.chip.sys[aria-pressed="true"] { color: hsl(var(--h) 75% 72%); background: hsl(var(--h) 60% 40% / .14); }
+.term { font: 400 12.5px/1.55 var(--mono); padding: var(--s3) 0; height: calc(100vh - 420px); min-height: 220px; overflow: auto; }
+.ln { display: grid; grid-template-columns: 78px 120px 1fr; gap: var(--s3); padding: 1px var(--s5); align-items: baseline; }
+.ln:hover { background: var(--ac-ghost); }
+.ln .t { color: var(--nx-muted); }
+.ln .sys { color: hsl(var(--h) 75% 70%); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.ln .tx { color: var(--nx-text); white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+.ln.err .tx { color: var(--nx-err); }
+.ln.cmd .tx { color: var(--ac-soft); font-weight: 600; }
+.ln.reply .tx { color: var(--nx-bright); }
+.prompt { display: grid; grid-template-columns: auto 1fr auto; gap: var(--s3); align-items: center; padding: var(--s3) var(--s5); margin-top: var(--s3); position: sticky; bottom: 8px; z-index: 2; }   /* always in view */
+.prompt .ps1 { font: 600 13px/1 var(--mono); color: var(--ac-soft); }
+.prompt .input { font-family: var(--mono); }
+/* the window is often under 1100px wide: keep one line per line there; only a phone-narrow view stacks */
+.filters .field.systems { min-width: 0; } .filters .chips { flex-wrap: wrap; }
+@media (max-width: 1100px) { .filters { grid-template-columns: 1fr auto 200px; gap: var(--s4); padding: var(--s4); } .ln { grid-template-columns: 70px 96px 1fr; } }
+@media (max-width: 640px) { .filters { grid-template-columns: 1fr; } .ln { grid-template-columns: 62px 1fr; } .ln .tx { grid-column: 1 / -1; } }

@@ -573,6 +573,43 @@ spec:
       error_paths: ["neither picks → notFound with the macro's why and the pick's"]
       acceptance: ["test-fiverr-overview-and-a11y FO-04 in Clear Glass: the macro chose the category and stopped; the fill picks only the subcategory", "test-about-and-nodes AN-03"]
 
+    - id: MOD-GF6
+      name: gates-read-the-element-against-the-gig-and-a-failed-step-stops
+      uuid: nexus-gated-flows-element-says-the-gig-v1-0000-2026-1030-001
+      path: clear-glass/src/ipc/bridge.js
+      phase: GF6_the_element_says_the_gig_or_it_stops
+      description: "James, 2026-10-30, with the category menu open and nothing chosen, and Pipelines empty: 'how about having a condition to the next gate, like what the element says, if it aligns with the gig. it needs to stop, and display toast with an error on any step.' A gate reads the element, never the page: the category is open only when the dropdowns themselves show the gig's category and subcategory (SELECT A CATEGORY / SELECT A SUBCATEGORY gone) — the Suggested categories links, which always show the same words, no longer pass it. A choose's own gate reads the dropdown it opened (driver choose returns its selector; element-gate derive reads it). A suggestion that does not take falls through to his macro, then the built-in pick. The first part that fails stops the fill (nothing after it runs: no packages, no page macro), and a toast says which part and why; every macro run as him, every workflow and every pipeline task that fails says so in a toast too. The bundled Fiverr macro and pipeline gate on the dropdown element showing the gig's value (an xpath that excludes links), and a pipeline run on a page of its site gets the written gig's values for the vars it declares. Co-pilot's reply is built from the final result (done, stopped at, left). Settings › Pipelines lists the bundled pipelines (imported once)."
+      deps: [{ name: category-picked-from-what-the-page-shows }]
+      exports: ["gig-fields categoryChosenScript(category, subcategory)", "_gigFill → r.stopped { key, why }, r.leftToCopy recomputed", "_gigToast(msg)", "driver choose → { selector }", "element-gate derive(choose) → { selector, shows }", "pipeline task event carries label and error", "main gigVars(pipeline, gig)", "routes: bundled .pipeline seeded into Pipelines"]
+      gate_pipeline: ["GATE-GF6-001: act → read the element → aligns with the gig: next · else: stop → toast (part, why)"]
+      behavioral_contracts: ["a gate never passes on words the page shows elsewhere", "nothing runs after a failed part", "every failed step is said in a toast and in the result"]
+      error_paths: ["the toast cannot be shown (no window) → the result still carries stopped, said in the log"]
+      # ADDENDUM 2026-11-04 (c, on merge) — the Service type parts of (b) and the first addendum were built on a branch beside main's GT5 (gig-pages
+      # serviceTypeScript: waited for, chosen, read back, its options said). Main's GT5 stands; the branch's driver row-choose and list are not merged.
+      # What GF6 adds on top of GT5: a page that asks for a Service type while the gig names none also stops the fill with a toast.
+      # ADDENDUM 2026-11-04 (b) — James, with Service type still SELECT A SERVICE TYPE: "service type still gets skipped. needs more timing." The Service type
+      # row appears only after the subcategory is chosen: the fill waits for it; a gig with no serviceType while the page asks for one stops there with a
+      # toast naming the dropdown's options (driver choose list), never a silent skip.
+      # ADDENDUM 2026-11-04 — James: "fiverr ai engine doesn't work. it gets to the service drop down." The Overview's Service type is a part (gig.serviceType,
+      # optional): chosen in its row (driver choose with row alone: the dropdown right of the label), gated on that dropdown. A box check whose read the page
+      # does not answer is unchecked, not closed (NC0), like the choice check.
+      acceptance: ["test-gig-stop-and-toast GS-01..GS-05 in Clear Glass: a suggestion that does not take falls through and the dropdowns are read; a part that cannot be done stops the fill with a toast; the Co-pilot line names it; the bundled pipeline is listed; a failed pipeline task toasts"]
+
+    - id: MOD-MR1
+      name: macro-run-toast-with-controls
+      uuid: nexus-gated-flows-macro-run-toast-v1-0000-2026-1104-001
+      path: _archive/2026-11-04-mr1-duplicate-of-mb4/macro-run-toast.js
+      # SUPERSEDED 2026-11-04 by main's MB4 (0.60.359, the macro toast: step i of n, pause, skip, back) and MT1 (0.60.335, the recording toast);
+      # built on a branch that had not seen them, archived, not merged (CLAUDE.md rule 4: one contract)
+      phase: MR1_a_macro_run_says_its_step_and_can_be_paused
+      description: "James, 2026-11-04: 'also gating needs to hault. macros need a toast when executing. with a steps counter, pause and play. skip and previous. also when macros are recording a recording indicator in the taost when recording macros.' Every macro run as him shows a toast in his window: the macro, step n of m and what it does, its state; pause and play, skip (the next step), previous (run the last step again), stop. A gate that stays closed halts the run there and the toast says what it saw. While a macro is being recorded, the toast shows a red recording dot, the macro's name, the steps recorded so far, and Stop. The macro tool's run takes a control (lib/agent-tools/tools/clear-glass/macro.js run({ control })): before each step it may wait (paused), move (skip, previous) or end (stop). The bridge keeps one control per run and broadcasts each state to every window."
+      deps: [{ name: gates-read-the-element-against-the-gig-and-a-failed-step-stops }]
+      exports: ["macro run({ control: { before(i, total, step) → { goto?, stop? }, after(i, result) } })", "bridge _macroRunControl(runId, cmd) — pause | play | skip | previous | stop", "IPC macros:runControl, broadcast macros:runState { runId, name, i, total, label, state, error }", "broadcast macros:recState { recording, name, agentId, steps }", "window.CGMacroToast"]
+      gate_pipeline: ["GATE-MR1-001: each step → the toast says it → a closed gate halts and says what it saw"]
+      behavioral_contracts: ["a paused run does nothing until played or stopped", "previous runs the last step again; skip leaves the current one out, said", "a recording always shows it is recording"]
+      error_paths: ["no window → the run goes on; the log says the toast could not be shown"]
+      acceptance: ["test-macro-run-toast MR-01..MR-03 in Clear Glass: the toast counts the steps; pause holds, play goes on, skip and previous move; a closed gate halts it; the recording dot and its step count"]
+
     - id: MOD-EI1
       name: human-input-for-every-key
       uuid: nexus-gated-flows-human-input-v1-0000-2026-1030-001

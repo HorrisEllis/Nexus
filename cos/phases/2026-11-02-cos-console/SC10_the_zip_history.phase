@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
+type: phase
+id: docs_2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
+context: pipeline phase SC10_the_zip_history of docs/2026-11-02-cos-console-phasemap.spec
+intent: null
+summary: SC10_the_zip_history (ui) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793873415702
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793873415702
+lastSeenAt: 1793873415702
+fingerprint: null
+payload:
+  id: SC10_the_zip_history
+  map: docs/2026-11-02-cos-console-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - cos/manager/history.js
+    - cos/manager/server.js
+    - cos/ui/updates/page.js
+  depends_on:
+    - SC7_the_updates_section
+    - N27_history_import_from_700_zips
+  blocks: []
+  spec: cos/spec/cos-console.spec
+  graph: 27fa9927151e981f

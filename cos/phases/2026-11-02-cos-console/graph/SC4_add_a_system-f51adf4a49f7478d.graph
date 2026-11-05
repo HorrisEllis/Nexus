@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793708276732
+exported_at: 1793889272959
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793708276732
-lastSeenAt: 1793708276732
+firstSeenAt: 1793889272959
+lastSeenAt: 1793889272959
 fingerprint: null
 payload:
   for: SC4_add_a_system
@@ -135,9 +135,15 @@ payload:
     upstream:
       - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
     downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
+      - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
+      - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+      - docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
+      - docs/2026-11-02-cos-console-phasemap.spec::SC16_no_console_windows
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
       - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
       - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
+      - docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
     blockedBy: []
     unlocks:
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
@@ -147,7 +153,7 @@ payload:
       - layer 1
       - 'depends on (1): SC_D4_adding_a_system_is_a_proposal'
       - >-
-        needed by (1): SC5_the_console_ui · all downstream 3 · finishing it unlocks
+        needed by (1): SC5_the_console_ui · all downstream 9 · finishing it unlocks
         SC5_the_console_ui
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal

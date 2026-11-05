@@ -88,7 +88,7 @@ const A11Y = `<!doctype html><html><head><style>html.a11y-mode a{color:yellow;ba
     // the page is served locally; what it reads is said to be at Fiverr's new-gig address (the detection reads the address too)
     const FIVERR = 'https://www.fiverr.com/users/x/manage_gigs/new?wizard=0&tab=general';
     const self = { dom: { handleQuery: async () => [], handleMutate: async () => ({}) }, postEvent: () => {}, _humanCheckGate: async () => ({ pass: true }),
-      _gigTags: Bridge.prototype._gigTags, _gigFeatures: Bridge.prototype._gigFeatures,
+      _gigTags: Bridge.prototype._gigTags, _gigFeatures: Bridge.prototype._gigFeatures, _gigText: Bridge.prototype._gigText,   // GF6: a failed part stops the fill, so the stand-in has what the title needs
       driver: { exec: (a) => (a.action === 'readPage' ? d.exec(a).then(x => ({ ...x, url: FIVERR }))
         : d.exec({ ...a, ...(a.action === 'choose' ? fast : {}), ...(a.action === 'type' ? { delay: 5 } : {}) })) } };
     const r = await Bridge.prototype._gigFill.call(self, { gig });
@@ -131,7 +131,9 @@ const A11Y = `<!doctype html><html><head><style>html.a11y-mode a{color:yellow;ba
     assert.ok(node, 'bundled');
     const doc = N.parse(fs.readFileSync(CG('automation/nodes/fiverr-gig-choose-category.macro'), 'utf8'));
     const steps = doc.payload.steps.filter(s => s.action === 'choose');
-    assert.deepStrictEqual(steps.map(s => [s.data.shows, s.data.option, s.gate.text, s.gate.retries]), [['SELECT A CATEGORY', '{{category}}', '{{category}}', 2], ['SELECT A SUBCATEGORY', '{{subcategory}}', '{{subcategory}}', 2]]);
+    // 2026-10-30 GF6 — each pick gated on the dropdown element itself showing the value (an xpath outside links, menus and the spotlight)
+    assert.deepStrictEqual(steps.map(s => [s.data.shows, s.data.option, s.gate.visible, s.gate.retries, /translate\('\{\{(\w+)\}\}'/.exec(s.gate.xpath)[1], /not\(ancestor-or-self::a\)/.test(s.gate.xpath)]),
+      [['SELECT A CATEGORY', '{{category}}', true, 2, 'category', true], ['SELECT A SUBCATEGORY', '{{subcategory}}', true, 2, 'subcategory', true]]);
     assert.strictEqual(doc.fingerprint, N.macroFingerprint(doc.payload));
     const GE = require(path.join(ROOT, 'lib/agent-tools/tools/clear-glass/gate-eval.js'));
     for (const s of steps) assert.ok(GE.validateGate(s.gate).ok);

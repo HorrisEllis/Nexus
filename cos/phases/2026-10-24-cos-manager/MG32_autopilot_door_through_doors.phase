@@ -7,18 +7,20 @@ intent: null
 summary: MG32_autopilot_door_through_doors (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793577140026
+exported_at: 1793860899429
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577140026
-lastSeenAt: 1793577140026
+firstSeenAt: 1793860899429
+lastSeenAt: 1793860899429
 fingerprint: null
 payload:
   id: MG32_autopilot_door_through_doors
   map: docs/2026-10-24-cos-manager-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "BUILT 0.60.393 — test-cos-autopilot-door AD-05; the census adds nothing (402 → 400 edges, 0
+    past the baseline); CT-07 and FM-07 green"
   files:
     - cos/manager/autopilot-door.js
   depends_on:
@@ -26,4 +28,4 @@ payload:
   blocks:
     - MOD-MG-AUTOPILOT-DOOR
   spec: cos/spec/cos-manager.spec
-  graph: 49c8762935d57ced
+  graph: f8dff44f20f49cbf

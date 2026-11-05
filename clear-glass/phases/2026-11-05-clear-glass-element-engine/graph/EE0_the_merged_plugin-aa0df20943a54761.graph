@@ -1,0 +1,116 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EE0_the_merged_plugin:aa0df20943a54761
+type: graph
+id: phase:EE0_the_merged_plugin:aa0df20943a54761
+context: dependency graph of phase EE0_the_merged_plugin
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793892016580
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793892016580
+lastSeenAt: 1793892016580
+fingerprint: null
+payload:
+  for: EE0_the_merged_plugin
+  kind: phase
+  repo: null
+  hash: aa0df20943a54761
+  nodes:
+    - path: clear-glass/plugins/adblocker/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/plugins/adblocker/manifest.json
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/shell/extensions.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/eros/edit.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-element-engine-plugin.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-edit.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/adblock/engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/lists.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/adblock/engine.js
+      kind: requires
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/eros/edit.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: tests/modules/test-cg-element-engine-plugin.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: tests/modules/test-eros-edit.test.js
+      to: clear-glass/src/eros/edit.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+    dependents:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+    upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+    downstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM3_listeners_and_macros
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM4_the_old_observers_on_the_rules
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES4_the_browser_panel
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): EE_D0_what_one_means'
+      - >-
+        needed by (2): EE1_one_identity_for_a_chosen_element, EE2_hide_what_you_point_at · all
+        downstream 9 · finishing it unlocks EE2_hide_what_you_point_at
+    edges:
+      - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+        kind: declared

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-clear-glass-webgl-phasemap.spec::WG3_a_failing_gpu_restarts_in_software_now
+type: phase
+id: docs_2026-11-05-clear-glass-webgl-phasemap.spec::WG3_a_failing_gpu_restarts_in_software_now
+context: >-
+  pipeline phase WG3_a_failing_gpu_restarts_in_software_now of
+  docs/2026-11-05-clear-glass-webgl-phasemap.spec
+intent: null
+summary: WG3_a_failing_gpu_restarts_in_software_now (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793891033667
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793891033667
+lastSeenAt: 1793891033667
+fingerprint: null
+payload:
+  id: WG3_a_failing_gpu_restarts_in_software_now
+  map: docs/2026-11-05-clear-glass-webgl-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.401 — test-cg-webgl WG-01"'
+  files:
+    - clear-glass/src/main/index.js
+    - tests/modules/test-cg-webgl.test.js
+  depends_on:
+    - WG2_gpu_on_by_default
+  blocks: []
+  spec: null
+  graph: 2c33bd22b2b03aaa

@@ -1,0 +1,142 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IP2_baseline_per_series:eb7011d45230ef06
+type: graph
+id: phase:IP2_baseline_per_series:eb7011d45230ef06
+context: dependency graph of phase IP2_baseline_per_series
+intent: null
+summary: 8 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793855145990
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793855145990
+lastSeenAt: 1793855145990
+fingerprint: null
+payload:
+  for: IP2_baseline_per_series
+  kind: phase
+  repo: null
+  hash: eb7011d45230ef06
+  nodes:
+    - path: intelligence/baseline.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/pipeline/baseline.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: tests/modules/test-intelligence-pipeline.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: cortex/cortex-service.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: intelligence/baseline.js
+      kind: requires
+  crossings:
+    - from: cortex/cortex-service.js
+      to: intelligence/baseline.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/guardian-service.js
+      to: intelligence/baseline.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: idearium/idearium-service.js
+      to: intelligence/baseline.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
+    dependents:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+    upstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
+    downstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP12_gaps_between_the_pieces
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+    blockedBy:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+    unlocks:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by IP1_input_folder_and_reader
+      - >-
+        depends on (2): IP1_input_folder_and_reader, IP_D2_where_the_baseline_comes_from · all
+        upstream 3
+      - >-
+        needed by (1): IP3_deviation_and_regime · all downstream 10 · finishing it unlocks
+        IP3_deviation_and_regime
+    edges:
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+        kind: declared
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
+        kind: declared

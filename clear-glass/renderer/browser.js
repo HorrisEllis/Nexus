@@ -701,6 +701,9 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   window.CGSelectorAssign?.mount({ cg, wv, notify: (m) => addMsg('assistant', m) });
   window.CGSiteKeyBar?.mount({ cg });   // 0.60.275 KB3 — "Bind a key" after a pick
   window.CGGateBar?.mount({ cg });      // 0.60.292 UG5 — "Gate this element" after a pick
+  window.CGHideBar?.mount({ cg });      // 0.60.402 EE2 — "Hide this element" after a pick
+  // 0.60.404 MT6 — the macro toast hears every step of a macro this window runs (his runs, a bookmark's, a gate's): before this nothing listened
+  try { cg.macros.onProgress((s) => { if (s && s.agentId && s.agentId !== agentId) return; window.CGMacroToast?.fromProgress(s, (op) => cg.macros.control(op, agentId)); }); } catch (_) {}
 
   pickerBtn.addEventListener('click', async () => {
     pickerActive = !pickerActive;
@@ -784,6 +787,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       window.CGSelectorAssign?.offer({ xpath: pick.xpath, url: pick.url || wv.getURL() });
       window.CGSiteKeyBar?.offer({ xpath: pick.xpath, url: pick.url || wv.getURL() });   // 0.60.275 KB3 — elements to keys, per site
       window.CGGateBar?.offer({ xpath: pick.xpath, url: pick.url || wv.getURL() });      // 0.60.292 UG5 — a gate on any element, per site or page
+      window.CGHideBar?.offer({ selector: pick.selector, url: pick.url || wv.getURL() });   // 0.60.402 EE2 — hide what you point at (the Element Engine)
     } else if (e.channel === 'dom:event') {
       // Live MutationObserver stream — forward straight through, no local
       // UI cost (this can fire many times a second on a busy page).
@@ -1502,6 +1506,16 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     return all.filter(b => b.agentId === agentId || b.accountId);
   }
 
+  // BM1 (0.60.403) — James: "bookmarks with ability to bind macros." A bound bookmark runs its macro once its page has loaded (the webview's
+  // stop-loading, at most 30 s), as his act (macros:run, with its toast); a macro that is gone or fails is said, and the page stays open.
+  function _afterLoad(ms = 30000) { return new Promise((resolve) => { let done = false; const fin = () => { if (done) return; done = true; try { wv.removeEventListener('did-stop-loading', fin); } catch (_) {} resolve(); }; wv.addEventListener('did-stop-loading', fin); setTimeout(fin, ms); }); }
+  async function _runBoundMacro(bk, loaded = _afterLoad()) {
+    if (!bk || !bk.macro) return;
+    await loaded;
+    addMsg('assistant', `Running <code>${bk.macro}</code>, bound to this bookmark\u2026`);
+    const r = await cg.macros.run(bk.macro, { agentId }).catch(e => ({ error: e.message }));
+    if (!r || r.error || r.ok === false) addMsg('assistant', `The bookmark\u2019s macro <code>${bk.macro}</code> did not run: ${(r && (r.error || r.reason)) || 'no answer'}`);
+  }
   async function openBookmark(bk) {
     if (bk.accountId && bk.accountId !== myAccountId) {
       const target = ACCT_PREFIX + bk.accountId;
@@ -1512,14 +1526,17 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       return;
     }
     if (bk.snapshotId && bk.agentId === agentId) {
+      const loaded = _afterLoad();
       const r = await cg.bookmarks.openWithState({ id: bk.id, agentId }).catch(e => ({ restored: false, restoreError: e.message }));
-      if (r && r.restored) return;
+      if (r && r.restored) return _runBoundMacro(bk, loaded);
       navigate(bk.url);
       if (r && r.restoreError) addMsg('assistant', `Saved page state could not be restored (${r.restoreError}) \u2014 opened the page without it.`);
-      return;
+      return _runBoundMacro(bk, loaded);
     }
+    const loaded = _afterLoad();
     navigate(bk.url);
     cg.bookmarks.visit({ id: bk.id });
+    return _runBoundMacro(bk, loaded);
   }
 
   // An account window says whose it is, next to its tabs.
@@ -1543,6 +1560,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
         btn.title = [bk.url, bk.accountId ? `account: ${_accountLabel(bk.accountId)}` : null, bk.snapshotId ? 'restores saved page state' : null].filter(Boolean).join('\n');
         if (bk.accountId) { const a = document.createElement('span'); a.className = 'bk-acct'; a.textContent = '\u25C8'; btn.appendChild(a); }
         if (bk.snapshotId) { const st = document.createElement('span'); st.className = 'bk-state'; st.textContent = '\u23EE'; btn.appendChild(st); }
+        if (bk.macro) { const m = document.createElement('span'); m.className = 'bk-macro'; m.textContent = '\u26A1'; btn.appendChild(m); btn.title += `\nruns macro: ${bk.macro}`; }   // BM1
         btn.appendChild(document.createTextNode(bk.title || bk.url));
         btn.addEventListener('click', () => openBookmark(bk));
         btn.dataset.bid = bk.id; _bkById.set(bk.id, bk);   // BS18: the bookmark a right-click lands on

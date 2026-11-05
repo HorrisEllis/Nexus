@@ -443,6 +443,16 @@ const SUITES = [
   'test-cos-pause.test.js',
   'test-cos-app-link.test.js',
   'test-cos-app-window.test.js',
+  'test-cos-service.test.js',
+  'test-cg-bookmark-macros.test.js',   // 0.60.403 BM1 — a bookmark runs its bound macro when it opens (bar and Library)
+  'test-cos-hidden-windows.test.js',   // 0.60.400 SC16 — no console window per system; Clear Glass keeps its own
+  'test-cos-boot-and-deps.test.js',   // 0.60.399 SC12/SC13 — Start at boot for each system on Automation; npm install before boot when the lock changed
+  'test-cos-console-tab.test.js',   // 0.60.398 SC11 — COS's Console tab: every system's output together, live, and the command line
+  'test-cg-element-engine-plugin.test.js',   // 0.60.397 EE0 — the Ad Blocker plugin is the Element Engine: Ad blocking, the picker, ErosmancerOS, Edit ErosmancerOS
+  'test-eros-edit.test.js',   // 0.60.396 ES5 — edit ErosmancerOS's TypeScript yourself: export, diff, import (archived, tested, recorded)
+  'test-cg-webgl.test.js',   // 0.60.394 WG1 — Clear Glass has WebGL with acceleration off (Fiverr's bot check crashed on its absence)
+  'test-cortex-door.test.js',   // 0.60.392 DO3a — Cortex's door: cortex/server.js, registry, handshake, CLI; the route table replayed the same
+  'test-cos-install.test.js',   // 0.60.390 CA5 (COS 0.6.0) — COS installs Nexus from GitHub itself, first run   // 0.60.389 CA4 (COS 0.5.0) — Nexus as the Windows service NexusCOS; Clear Glass in his session
   'test-cg-idle-tray.test.js',
   'test-cos-network.test.js',
   'test-update-menu.test.js',
@@ -463,6 +473,8 @@ const SUITES = [
   'test-gig-features.test.js',             // 0.60.281 AP1 — a gig's package rows: features in the .gig, checkAt/rowLabels, the fill's rows
   'test-opportunity-contacts.test.js',     // 0.60.281 AP2–AP4 — contacts behind job applications: captured from the page, routes, command, tool, Settings › Applications
   'test-snowflake-steps.test.js',          // 0.60.281 SN1 — Snowflake as a step in macros and workflows (route, unroute, start, wait, check, stop)
+  'test-gig-stop-and-toast.test.js', // 0.60.388 GF6 — a gate reads the element against the gig; a failed step stops with a toast; bundled pipelines listed
+  'test-session-hub-signin.test.js', // 0.60.388 — the ChatGPT window's sign-in is not overwritten by the normal tab's sign-in flow cookies
   'test-a11y-trace.test.js', // 2026-10-30 AC2 — the accessibility look traced to what turns it on, kept off by the site setting, the popup panel
   'test-fiverr-overview-and-a11y.test.js', // 0.60.283 — a new gig's Overview (category, subcategory, tags, gated) and a site's remembered accessibility look reset
   'test-pipelines.test.js',                // 0.60.284 PL1–PL4 — pipelines: tasks in a dependency graph (macros, workflows, agents, commands), gated, a checklist

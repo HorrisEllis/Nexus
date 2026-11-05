@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM3_listeners_and_macros
+type: phase
+id: docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM3_listeners_and_macros
+context: >-
+  pipeline phase CM3_listeners_and_macros of
+  docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+intent: null
+summary: CM3_listeners_and_macros (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793872153634
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793872153634
+lastSeenAt: 1793872153634
+fingerprint: null
+payload:
+  id: CM3_listeners_and_macros
+  map: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/driver/watch.js
+    - lib/automation/pipeline.js
+    - clear-glass/src/event-taxonomy.js
+    - tests/modules/test-cg-watch-rules.test.js
+  depends_on:
+    - CM1_watch_rules
+  blocks: []
+  spec: null
+  graph: 065ed03119d6be0f

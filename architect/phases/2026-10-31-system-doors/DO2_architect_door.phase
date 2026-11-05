@@ -7,11 +7,11 @@ intent: null
 summary: DO2_architect_door (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793421628250
+exported_at: 1793859126584
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421628250
-lastSeenAt: 1793421628250
+firstSeenAt: 1793859126584
+lastSeenAt: 1793859126584
 fingerprint: null
 payload:
   id: DO2_architect_door
@@ -32,4 +32,4 @@ payload:
   blocks:
     - MOD-DOOR-ARCHITECT
   spec: docs/system-doors.spec
-  graph: 77bb612e50e01c55
+  graph: 99ada2db216151d8

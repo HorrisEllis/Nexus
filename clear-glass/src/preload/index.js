@@ -349,6 +349,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     addWithState:  (payload) => ipcRenderer.invoke('bookmarks:addWithState',  payload),
     openWithState: (payload) => ipcRenderer.invoke('bookmarks:openWithState', payload),
     linkState:     (payload) => ipcRenderer.invoke('bookmarks:linkState',     payload),
+    bindMacro:     (payload) => ipcRenderer.invoke('bookmarks:bindMacro',     payload),   // BM1 (0.60.403): { id, macro | null }
   },
 
   // ── History — §fix 2026-09-02 ────────────────────────────────────────

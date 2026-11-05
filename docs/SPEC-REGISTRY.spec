@@ -2021,3 +2021,30 @@ spec:
     | `docs/2026-11-03-registry-per-system-phasemap.spec` | 1.0.0 — every system's component registry is its own (AXIOMS §5.16); RG0, its enforcement, built 0.60.384; the rest in planning with him | RG0 built, planning | James: "No component registry is per system.  That needs to be implemented" · "It’s fucking sovereign. Do not  make this mistake again." |
 
 # 2026-11-02 (0.60.379 CA3) — cos/spec/network.spec: NetworkSettings; MOD-NET-SETTINGS, -ROUTES, -PAGE, -GATE. His 'Gate behind settings to open.'
+
+# ── ADDENDUM 2026-11-05 — docs/2026-11-05-intelligence-data-pipeline-phasemap.spec ─────────────────────────────────────────────────────────
+# James, 2026-11-05: "we need a pipeline for the intelligence system. i want to run data through it. thats what the input folders are for per
+# system ... like stock data, blood cells to measure deviation, investment oppertunities". Owner: intelligence.
+    | `docs/2026-11-05-intelligence-data-pipeline-phasemap.spec` | 1.0.0 — any data through the intelligence fields: input/ (genesis handoff states) → a baseline per series → deviations and RFR2 sigma regimes → invariants through the crystallizer → invariants into RFR2 as constraints for the next run; route, command, screen. IP_D1–IP_D3 his; IP1–IP7 open | mapped | James: "imagine running data through the fields. thats why theyre agnostic." · "invariants, crystals, primitives, could establish a baseline." |
+
+# ── ADDENDUM 2026-11-05 — docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec ──────────────────────────────────────────────────────
+# James, 2026-11-05: "i would love if guardian would automatically pick up agent tool commands regardless of request." Owner: guardian.
+    | `docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec` | 1.0.0 — Guardian picks up ```tool_call blocks from any reply (not only its own jobs), gated by RAID's constitution (reads run, changes asked, irreversible refused — his AT_D0 to choose); result in a toast, the panel, or back into the chat (AT_D1). AT1–AT3 open | mapped | James: "pick up agent tool commands regardless of request" |
+
+# ── ADDENDUM 2026-11-05 (0.60.394) — docs/2026-11-05-clear-glass-webgl-phasemap.spec ───────────────────────────────────────────────────────
+    | `docs/2026-11-05-clear-glass-webgl-phasemap.spec` | 1.0.0 — Clear Glass has WebGL with hardware acceleration off (newer Chromium dropped the software fallback; Fiverr's bot check crashed on the absence). WG1 built 0.60.394 | built | James: "i cant use fiverr at all. clearglass is my main driver" |
+
+# ── ADDENDUM 2026-11-05 — docs/2026-11-05-clear-glass-element-engine-phasemap.spec ────────────────────────────────────────────────────────
+# James, 2026-11-05: "can you integrate erosmanceros, the adblocker, and guardian picker into one? should be a phase for it." Owner: clear-glass.
+    | `docs/2026-11-05-clear-glass-element-engine-phasemap.spec` | 1.0.0 — one element engine: pick (the Guardian picker) → identify (ErosmancerOS's durable identity) → use (hide as an adblock ## rule, gate, fill, name); one panel. EE_D0/EE_D1 his; EE1–EE4 open | mapped | James: "integrate erosmanceros, the adblocker, and guardian picker into one" |
+
+# ── ADDENDUM 2026-11-05 — docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec ─────────────────────────────────────
+# James, 2026-11-05: "i want to be able to add dom mutators for node anchor for guardian, listeners, macros, etc." · "expand erosmanceros. add as much human ledgible options as possible ... all cli first, then into the browser.html." Owner: clear-glass.
+    | `docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec` | 1.0.0 — ClearDriver's watch rules (when an element appears/changes/goes → anchor, emit, macro, gate), the existing observers moved onto them; ErosmancerOS's options in plain words, his TypeScript actions, threats said and handed over (no evasion); CLI first, then browser.html. CM_D0 his; CM1–CM4, ES1–ES4 open | mapped | James: "expand it exponentially if possible" |
+
+# ── ADDENDUM 2026-11-05 — docs/2026-11-05-sovereignty-phasemap.spec ──────────────────────────────────────────────────────────────────────
+# James, 2026-11-05: "okay. doors. then we need to make each one soveriegn".
+    | `docs/2026-11-05-sovereignty-phasemap.spec` | 1.0.0 — every system sovereign, measured by lib/system-boundary.js sovereignty() (400 crossings on 0.60.399); each system keeps its own tables in its own store (SV_D0, by his axioms; Guardian's precedent); SV1 table owners, SV2 Versionium, SV3 Diagnostic and Ollama, SV4 Cortex, SV5 the rest | mapped | James: "doors. then we need to make each one soveriegn" |
+
+# ── ADDENDUM 2026-11-05 (0.60.403) — docs/2026-11-05-bookmark-macros-phasemap.spec ────────────────────────────────────────────────────────
+    | `docs/2026-11-05-bookmark-macros-phasemap.spec` | 1.0.0 — a bookmark bound to a macro runs it when it opens (bar: after the page loads; Library: on open). BM1 built 0.60.403 | built | James: "bookmarks with ability to bind macros." |

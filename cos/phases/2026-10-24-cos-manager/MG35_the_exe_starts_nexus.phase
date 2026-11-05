@@ -7,11 +7,11 @@ intent: null
 summary: MG35_the_exe_starts_nexus (?) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1793578686142
+exported_at: 1793860899436
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793578686142
-lastSeenAt: 1793578686142
+firstSeenAt: 1793860899436
+lastSeenAt: 1793860899436
 fingerprint: null
 payload:
   id: MG35_the_exe_starts_nexus
@@ -41,4 +41,4 @@ payload:
     - MOD-COSA-LINKED-RUN
     - MOD-COSA-START-ON-LAUNCH
   spec: cos/spec/cos-manager.spec
-  graph: 2e1153c3a5bdee53
+  graph: cfe3caae9e7662ed

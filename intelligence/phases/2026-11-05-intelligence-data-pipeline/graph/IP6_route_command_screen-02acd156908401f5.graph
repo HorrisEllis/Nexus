@@ -1,0 +1,277 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IP6_route_command_screen:02acd156908401f5
+type: graph
+id: phase:IP6_route_command_screen:02acd156908401f5
+context: dependency graph of phase IP6_route_command_screen
+intent: null
+summary: 30 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793855146003
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793855146003
+lastSeenAt: 1793855146003
+fingerprint: null
+payload:
+  for: IP6_route_command_screen
+  kind: phase
+  repo: null
+  hash: 02acd156908401f5
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/event-taxonomy.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/pipeline/report.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/registry-components.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: tests/modules/test-intelligence-pipeline.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: tests/modules/intuition-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mastermind-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/adversarial.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk-perception/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/anomaly.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/compound.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/config.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/intuition.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/mastermind.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: intelligence/routes.js
+      to: intelligence/intuition.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/mastermind.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/gap/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/anomaly.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/compound.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk-perception/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/config.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/intuition-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/mastermind-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+    dependents:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
+    upstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
+    downstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
+    blockedBy:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+    unlocks:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
+    conflicts:
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+        files:
+          - tests/modules/test-intelligence-pipeline.test.js
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+        files:
+          - intelligence/pipeline/report.js
+          - tests/modules/test-intelligence-pipeline.test.js
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+        files:
+          - tests/modules/test-intelligence-pipeline.test.js
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_one_primitive
+        files:
+          - tests/modules/test-intelligence-pipeline.test.js
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP12_gaps_between_the_pieces
+        files:
+          - tests/modules/test-intelligence-pipeline.test.js
+    dangling: []
+    lines:
+      - layer 6 · blocked by IP5_invariants_into_rfr2
+      - 'depends on (1): IP5_invariants_into_rfr2 · all upstream 8'
+      - 'needed by (1): IP7_the_screen · finishing it unlocks IP7_the_screen'
+      - >-
+        same files as IP8_negative_and_shadow_space with no order between them:
+        tests/modules/test-intelligence-pipeline.test.js
+      - >-
+        same files as IP9_the_open_loop with no order between them: intelligence/pipeline/report.js,
+        tests/modules/test-intelligence-pipeline.test.js
+      - >-
+        same files as IP10_growth_tracking with no order between them:
+        tests/modules/test-intelligence-pipeline.test.js
+      - >-
+        same files as IP11_risk_ambiguity_uncertainty_one_primitive with no order between them:
+        tests/modules/test-intelligence-pipeline.test.js
+      - >-
+        same files as IP12_gaps_between_the_pieces with no order between them:
+        tests/modules/test-intelligence-pipeline.test.js
+    edges:
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+        kind: declared

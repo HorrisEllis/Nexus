@@ -7,11 +7,11 @@ intent: null
 summary: 36 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793578686082
+exported_at: 1793860899393
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793578686082
-lastSeenAt: 1793578686082
+firstSeenAt: 1793860899393
+lastSeenAt: 1793860899393
 fingerprint: null
 payload:
   for: MG17_autopilot_hands_over
@@ -296,6 +296,12 @@ payload:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC11_the_cos_app_runs_alone
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
       - docs/2026-11-01-tv-ui-cleanup-phasemap.spec::TV4_the_overview_idearium_and_cos
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK4_boot_from_a_disk
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK5_machine_disks
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA4_the_supervisor_as_a_windows_service
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA5_cos_installs_nexus_from_github
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA6_install_asks_where_and_npm_in_program_files
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
     blockedBy: []
     unlocks:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG17b_registry_reads_the_declarations
@@ -310,7 +316,7 @@ payload:
         7
       - >-
         needed by (4): CS4a_cos_boots_alone, MG17b_registry_reads_the_declarations,
-        MG32_autopilot_door_through_doors, MG33_cos_ui_has_a_way_in · all downstream 33 · finishing
+        MG32_autopilot_door_through_doors, MG33_cos_ui_has_a_way_in · all downstream 39 · finishing
         it unlocks MG17b_registry_reads_the_declarations, MG32_autopilot_door_through_doors,
         MG33_cos_ui_has_a_way_in
     edges:

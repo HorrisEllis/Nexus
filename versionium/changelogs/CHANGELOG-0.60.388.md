@@ -1,46 +1,79 @@
-# CHANGELOG 0.60.388 — EAS4 L0: evaluate's caller moved into Emerge, with no new crossing
+# 0.60.388 — a gate reads the element against the gig; a failed step stops with a toast; the ChatGPT window's sign-in loop; merged with main
 
-James, 2026-11-05: "Primitive based coding?" · "Would also set expectations. One primitive per gate. Compounds, each layer."
+James, 2026-10-30, with Fiverr's category menu open and nothing chosen:
+> "how about having a condition to the next gate, like what the element says, if it aligns with the gig. it needs to stop, and display toast
+> with an error on any step."
 
-James, 2026-11-05, on whether Emerge is a system in Nexus or a separate repository: "A."
+James, 2026-11-04:
+> "reloading the sign in. it doesn't do on the main browser, only the popup window. maybe synbolic link or copying cookies?"
+>
+> "can you make a gig for: "spec and architect your project regardless of size, and reduce overwhelm""
+>
+> "merge and push. now get cos built."
 
-## What was done
-- `emerge/emerge/core/admit.js`, new: `admitFrom(constraints)` turns Emerge's constraints into `admit(link)` for WARP 2's
-  `Engine({ admit })`. It is an L0 compound on `./constraint` (`evaluate`, the primitive), and its header states its expectation: what
-  it takes, what it returns, and that a gap is never a pass. It is exported from `emerge/emerge/core/index.js`.
-- `lib/warp/adapters/emerge-field.js` is archived in `lib/warp/adapters/_archive/`, with a README saying why (§0.3). Its one caller,
-  `tests/modules/test-warp2.test.js`, now uses Emerge's core.
-- WARP itself is unchanged. The engine still takes `admit` from its caller, and `warp/` requires nothing of Emerge. Dated notes were
-  added to `lib/warp/spec/warp.spec` and to the comment in `lib/warp/core/Engine.js`.
+Built on the branch as 0.60.298 and 0.60.299. Main had moved 215 commits in the meantime, to 0.60.387, and had taken those numbers. This
+release is what of that work main did not already have, put on main's code.
 
-## What was tried first, and refused
-The coder's first plan, as told to him: add Emerge's `core/constraint.js` to `lib/system-boundary.js` PRIMITIVES, and have the lib adapter
-require it. The boundary ratchet counted that require as a new upward edge (lib → emerge: the kernel depending on a system, §5.9), because
-PRIMITIVES only names a blocker; it does not exempt an edge. The change was reverted before it was pushed. The adapter went instead to
-the system it serves (§5.15).
+## Grounded first
+
+- **Main's category gate read the page, not the dropdowns.** It passed when the page showed the subcategory's words, and Fiverr's
+  "Suggested categories" links always show them. So a suggestion that did not take passed, and nothing else was tried. That matches his
+  screenshot: SELECT A CATEGORY was still shown.
+- **A failed part of the gig fill was listed, and the fill carried on.** Co-pilot's line used a list made before the page-aware parts ran.
+- **The ChatGPT window's sign-in loop.** The cookie mirror (0.60.13) copied every chatgpt.com cookie both ways, a sign-in's own csrf, state
+  and callback cookies included. While he signed in in the window, the normal tab's copies overwrote them.
+- **Settings › Pipelines did not list the Fiverr pipeline Clear Glass ships.**
+
+## Built (GF6)
+
+- **The category gate reads the two dropdowns** (`gig-fields.js categoryChosenScript`). Words inside links, an open menu, or Clear Glass's
+  own spotlight label do not count.
+- **Fall through.** A suggestion that does not take goes to his macro, then the built-in pick. When the macro says done, the dropdowns are
+  read to agree.
+- **A choose is gated on its own dropdown.** The driver's `choose` returns the dropdown it opened, and its gate reads that element.
+- **The bundled Fiverr macro and pipeline gate on the dropdown element.** The macro lists the version it supersedes, so an unedited copy of
+  it upgrades.
+- **Stop, with a toast.**
+  - The first part of the gig fill that fails stops it, and nothing after it runs.
+  - A toast in his window says the part and why. That includes a page asking for a Service type the gig has none of; main's GT5 had only
+    listed it.
+  - A failed pipeline task or workflow also toasts, and a pipeline task's event now carries its label and error.
+- **The evidence rule.** A box whose read the page does not answer is unchecked, not closed (NC0).
+- **Co-pilot's line** comes from the final result: what was done, where it stopped and why, and what is left.
+- **Pipelines** imports each `.pipeline` Clear Glass ships, once each. A pipeline run on a page of its site gets the written gig's values.
+- **The ChatGPT sign-in.** Only the sign-in itself is mirrored (`isAuthCookie`); a flow's own cookies stay in the jar that set them.
+- **New gig:** `clear-glass/docs/gigs/spec-and-architect-any-size.gig`. Title: "I will spec and architect your project of any size and reduce
+  overwhelm" (71 characters). It loads with no warnings.
+
+## Not merged, because main already had it (one contract, CLAUDE.md rule 4)
+
+- **The branch's macro run toast (MR1).** Main has MB4 (0.60.359: step i of n, pause, skip, back) and MT1 (0.60.335: the recording toast).
+  Main's stands. The branch's copy is kept in `_archive/2026-11-04-mr1-duplicate-of-mb4/`, with its tests.
+- **The branch's Service type** (driver row choose and list). Main's GT5 (`gig-pages.js serviceTypeScript`) waits for it, chooses it, reads
+  it back and says its options. Main's stands; its GS-05 and GS-06 tests are archived beside MR1.
 
 ## Proof
-- `test-warp2` 7/7, `test-emerge-core` 6/6 and `test-emergence-and-warp-suites` 198/198 (the same before and after).
-- `lib/system-boundary.js` census: 1120 crossings before and after (system 152, upward 250, kernel 718). `check()` adds no edge from
-  this change.
-- `test-system-boundary` is 8 passed / 2 failed both before and after. The two failures (SB-06, SB-08) come from
-  `cos/manager/autopilot-door.js` edges that predate this release.
 
-## Left (EAS4)
-L1 compile, L2 build and L3 run become command nodes behind Emerge's door, each with its stated expectation. Then the six callers switch,
-t2-gate's 52 lines that exist only in the lib copy are ported, phase-specs moves into Emerge, and lib/emerge is archived.
+- `test-gig-stop-and-toast` 4/4, in Clear Glass:
+  - GS-01: a suggestion that does not take falls through, and the dropdowns are read.
+  - GS-02: a failed part stops the fill, with a toast and Co-pilot's line.
+  - GS-03: the check is closed on the links alone and open on the dropdowns, and the macro's xpath finds only the dropdown.
+  - GS-04: the bundled pipeline is listed once, and a failed task's event carries its label and error.
+- `test-session-hub-signin` 2/2. SH-01 fails on the old code.
+- 24 suites over main's and this branch's tests, all green except one, run on the merged tree:
+  - test-fiverr-overview-and-a11y 6/6, test-gig-all-fields 5/5, test-fiverr-works 11/11, test-about-and-nodes 4/4;
+  - test-gig-metadata-glass 7/7, test-gig-metadata-dropdown-glass 5/5;
+  - test-macro-blocks 6/6, test-macro-blocks-ui 3/3, test-macro-toast 5/5;
+  - test-autofill-page-chip-glass 3/3, test-autofill-radio-checkbox-glass 4/4;
+  - test-element-gates, test-pipeline-gates, test-pipeline-nodes, test-gated-dropdowns, test-gig-fill-menu, test-gig-features;
+  - test-site-settings-ui, test-a11y-trace, test-substrate-spec 3/3.
+- **test-cg-agent-doors AD-02 was red on main since 0.60.359.** MB4 moved the record handlers onto `_recorder()`, but the test's stand-in
+  bridge had no `_recorder`, and its source check looked for the old call text. Both are fixed to the contract (one recorder for IPC and
+  HTTP). 7/7.
+- **Fails the same on main, so not this release:** test-autofill-learn-macro JA5-04 ("a click on the label resolves to the box").
 
-## The coder's drift, found and fixed in the same release
-`test-substrate-spec` SS-02 had failed since the EAS_D5–D7 records (commits 7965c12e and 40c8bc29, 2026-11-05). The coder wrote those
-decisions after `order:`, under a new top-level key. The phase reader took them as part of EAS5's body; their `chosen:` made EAS5 read as a
-decision, so the test found no EAS5. They were moved, unchanged, into `decisions:`, and EAS5's .phase was written again. SS-02 passes
-(3/3).
+## Readings (to confirm)
 
-## Emerge's lock, taken again (found by the full suite, after the first push)
-`test-emerge-in-nexus` EN-01 and EN-03 failed: `emerge/` is held to its lock in `emerge/emerge.cos`, and this release changed
-`core/index.js` and added `core/admit.js`. Under his EAS_D6 ("A": Emerge is a system in Nexus, emerge/ its source), the lock was taken again
-in Nexus (`node scripts/emerge-lock.js --write`). The commit field stays f023240, named in the node's note as the base this came from.
-- `write()` hashes runtime state that `check()` skips (the run's ledger and node indexes, gitignored). The first new lock caught 20 of
-  those files; they were cleared and the lock taken again over the repo's files only (345). The script itself is unchanged: a fix to
-  `write()` is its own phase.
-- EN-01–EN-05 5/5.
+- **The sign-in loop's cause** is reproduced in a test, not seen in his run.
+- **"bridge not connected" in COS's command line.** The text is not in COS's code (`cos/`, `cos/ui`, `cos/manager/cli.js`). His screen will
+  show where it comes from.

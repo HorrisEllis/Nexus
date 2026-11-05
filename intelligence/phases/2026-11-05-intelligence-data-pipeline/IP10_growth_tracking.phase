@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+type: phase
+id: docs_2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+context: pipeline phase IP10_growth_tracking of docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+intent: null
+summary: IP10_growth_tracking (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793854560009
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793854560009
+lastSeenAt: 1793854560009
+fingerprint: null
+payload:
+  id: IP10_growth_tracking
+  map: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: '"OPEN — waits on his reading of \"growth tracking for the self\" (above)"'
+  files:
+    - intelligence/pipeline/growth.js
+    - intelligence/friction.js
+    - intelligence/intuition.js
+    - intelligence/synthesis/engine.js
+    - tests/modules/test-intelligence-pipeline.test.js
+  depends_on:
+    - IP9_the_open_loop
+    - IP11_risk_ambiguity_uncertainty_one_primitive
+  blocks: []
+  spec: null
+  graph: 400890b5827159ce

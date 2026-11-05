@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT4_claude_code_page
+type: phase
+id: docs_2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT4_claude_code_page
+context: pipeline phase AT4_claude_code_page of docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec
+intent: null
+summary: AT4_claude_code_page (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793861492477
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793861492477
+lastSeenAt: 1793861492477
+fingerprint: null
+payload:
+  id: AT4_claude_code_page
+  map: docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/nexus-hey-claude.user.js
+    - guardian/userscript-claude.js
+    - guardian/lib/wake-loop.js
+    - tests/modules/test-guardian-any-reply-tools.test.js
+  depends_on:
+    - AT1_pickup_from_any_reply
+    - AT_D1_where_the_result_goes
+  blocks: []
+  spec: null
+  graph: 695efbc1e3b9521a

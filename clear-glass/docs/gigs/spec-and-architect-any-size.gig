@@ -1,0 +1,84 @@
+# Clear Glass gig file (clearglass.gig/1) — load it in Settings → Autofill → Gig, or in the gig panel.
+# James, 2026-11-04: "can you make a gig for: "spec and architect your project regardless of size, and reduce overwhelm""
+# The numbers in the description are from his own tree on 2026-11-04 (docs/*phasemap.spec: 201 maps, 782 phases; tests/modules: 534 test
+# files). Change them when they change; never round them up.
+format: clearglass.gig/1
+platform: fiverr
+title: I will spec and architect your project of any size and reduce overwhelm
+category: Programming & Tech
+subcategory: Software Development
+# serviceType: the option exactly as Fiverr's "Service type" dropdown shows it for this subcategory (the fill picks it and checks it took)
+tags:
+  - architecture
+  - technical spec
+  - project planning
+  - system design
+  - roadmap
+description: >-
+  Is your project too big to hold in your head? Too many ideas and no clear next step? I turn it into a
+  spec and an architecture you can build from, one piece at a time.
+
+
+  I build my own large platform this way, spec-first: 201 build maps and 782 mapped phases, each naming
+  its files, what it depends on, and the test that proves it is done. That is what keeps a big project
+  calm and buildable, and it is what you get.
+
+
+  What you get:
+
+  - Your project in plain words: what it is for, who uses it, what "done" looks like
+
+  - The parts of the system, what each one owns, and how they talk to each other
+
+  - A dependency map, so you can see what must come first and what can wait
+
+  - A build plan in small phases, the smallest useful version first
+
+  - For each phase: what to build, what it needs, and how to test it
+
+  - Risks named up front, before they cost you
+
+
+  Small app or large platform, the method is the same: break it down until every next step is obvious.
+  Any developer or AI coding tool can start from it straight away.
+packages:
+  basic:
+    name: Clarity Brief
+    description: 'Your project on one page: goal, users, core parts, and the first three steps.'
+    deliveryDays: 2
+    revisions: 1
+    price: 60
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
+  standard:
+    name: Spec and Build Plan
+    description: 'Full spec: parts, data, flows, dependency map, and a phased plan with tests.'
+    deliveryDays: 5
+    revisions: 2
+    price: 180
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
+  premium:
+    name: Full Architecture
+    description: Spec, architecture, phased plan, dependency graph and risk review, ready to build.
+    deliveryDays: 10
+    revisions: 3
+    price: 420
+    features: {}        # Fiverr's package rows for this subcategory, as the page labels them; the fill lists the rows it finds
+faq:
+  - question: My project is huge and messy. Is that a problem?
+    answer: >-
+      No, that is what this is for. I break it into parts and phases until each next step is small and
+      clear, whatever the size.
+  - question: I already have some code. Can you work with it?
+    answer: >-
+      Yes. I map what exists first, so the plan builds on your work instead of starting over.
+  - question: Do I need technical knowledge?
+    answer: >-
+      No. You explain it in your words; I turn it into the technical plan and explain it back plainly.
+  - question: Can an AI coding tool build from it?
+    answer: Yes. It is written so that a developer or a tool like Claude Code can build it phase by phase.
+requirements:
+  - 'Describe your project: what it does, and for whom?'
+  - What exists already? (an idea, notes, designs, code — share whatever you have)
+  - What feels most overwhelming or stuck right now?
+  - What must it always do, and what must it never do?
+  - How will you know it is done? (what you will check or test)

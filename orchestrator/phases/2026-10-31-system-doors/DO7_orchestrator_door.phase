@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-31-system-doors-phasemap.spec::DO7_orchestrator_door
+type: phase
+id: docs_2026-10-31-system-doors-phasemap.spec::DO7_orchestrator_door
+context: pipeline phase DO7_orchestrator_door of docs/2026-10-31-system-doors-phasemap.spec
+intent: null
+summary: DO7_orchestrator_door (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793909471840
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793909471840
+lastSeenAt: 1793909471840
+fingerprint: null
+payload:
+  id: DO7_orchestrator_door
+  map: docs/2026-10-31-system-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/server.js
+    - orchestrator/orchestrator.js
+    - orchestrator/registry-components.draft.json
+    - orchestrator/compartment.json
+    - lib/cli/compartments.js
+  depends_on:
+    - DO_D9_registry_then_cos_through_the_door
+    - DO0_the_handshake_counts_real_routes
+  blocks:
+    - MOD-DOOR-ORCHESTRATOR
+  spec: docs/system-doors.spec
+  graph: 81dfab82c103b6ba
