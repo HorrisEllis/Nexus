@@ -1234,6 +1234,13 @@ class IpcBridge {
     ipcMain.handle('bookmarks:openWithState', async (e, d) => this._bookmarkOpenWithState(d));
     // §0.39.265 — attach / detach an account (the ★ dialog's check mark) or a snapshot
     ipcMain.handle('bookmarks:linkState',     async (e, d) => this.bookmarks?.linkState(d || {}));
+    // BM1 (0.60.403) — bind a macro to a bookmark; the name is checked against his macros
+    ipcMain.handle('bookmarks:bindMacro', async (e, d = {}) => {
+      if (!this.bookmarks) return { error: 'bookmarks not ready' };
+      let names = null;
+      if (d.macro && this.macroTool) { try { const l = await this.macroTool.execute({ action: 'list' }); names = new Set(((l && l.macros) || []).map(m => m.name)); } catch (_) {} }
+      return this.bookmarks.bindMacro({ id: d.id, macro: d.macro, exists: names ? (n) => names.has(n) : null });
+    });
 
     // Rewind
     ipcMain.handle('rewind:list',     async (e, d) => this.rewind?.list(d.agentId, d.limit));

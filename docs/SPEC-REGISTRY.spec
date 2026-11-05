@@ -2045,3 +2045,6 @@ spec:
 # ── ADDENDUM 2026-11-05 — docs/2026-11-05-sovereignty-phasemap.spec ──────────────────────────────────────────────────────────────────────
 # James, 2026-11-05: "okay. doors. then we need to make each one soveriegn".
     | `docs/2026-11-05-sovereignty-phasemap.spec` | 1.0.0 — every system sovereign, measured by lib/system-boundary.js sovereignty() (400 crossings on 0.60.399); each system keeps its own tables in its own store (SV_D0, by his axioms; Guardian's precedent); SV1 table owners, SV2 Versionium, SV3 Diagnostic and Ollama, SV4 Cortex, SV5 the rest | mapped | James: "doors. then we need to make each one soveriegn" |
+
+# ── ADDENDUM 2026-11-05 (0.60.403) — docs/2026-11-05-bookmark-macros-phasemap.spec ────────────────────────────────────────────────────────
+    | `docs/2026-11-05-bookmark-macros-phasemap.spec` | 1.0.0 — a bookmark bound to a macro runs it when it opens (bar: after the page loads; Library: on open). BM1 built 0.60.403 | built | James: "bookmarks with ability to bind macros." |

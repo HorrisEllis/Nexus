@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-bookmark-macros-phasemap.spec::BM1_a_bookmark_runs_its_macro
+type: phase
+id: docs_2026-11-05-bookmark-macros-phasemap.spec::BM1_a_bookmark_runs_its_macro
+context: pipeline phase BM1_a_bookmark_runs_its_macro of docs/2026-11-05-bookmark-macros-phasemap.spec
+intent: null
+summary: BM1_a_bookmark_runs_its_macro (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1793896059431
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793896059431
+lastSeenAt: 1793896059431
+fingerprint: null
+payload:
+  id: BM1_a_bookmark_runs_its_macro
+  map: docs/2026-11-05-bookmark-macros-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.403 — test-cg-bookmark-macros"'
+  files:
+    - clear-glass/src/bookmarks/store.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/preload/index.js
+    - clear-glass/renderer/browser.js
+    - clear-glass/renderer/library/sections/bookmarks.js
+    - tests/modules/test-cg-bookmark-macros.test.js
+    - tests/modules/run-all.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0a750dbaab48b139
