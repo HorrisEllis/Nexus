@@ -1,0 +1,84 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IP11_risk_ambiguity_uncertainty_wired:9036bad80baafe64
+type: graph
+id: phase:IP11_risk_ambiguity_uncertainty_wired:9036bad80baafe64
+context: dependency graph of phase IP11_risk_ambiguity_uncertainty_wired
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793854400600
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793854400600
+lastSeenAt: 1793854400600
+fingerprint: null
+payload:
+  for: IP11_risk_ambiguity_uncertainty_wired
+  kind: phase
+  repo: null
+  hash: 9036bad80baafe64
+  nodes:
+    - path: intelligence/pipeline/assess.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/schemas/assessment.schema.json
+      role: changes
+      exists: false
+      system: intelligence
+    - path: tests/modules/test-intelligence-pipeline.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D5_risk_weights
+    dependents:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+    upstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D5_risk_weights
+    downstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
+    blockedBy:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D5_risk_weights
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+        files:
+          - tests/modules/test-intelligence-pipeline.test.js
+    dangling: []
+    lines:
+      - layer 7 · blocked by IP8_negative_and_shadow_space, IP9_the_open_loop, IP_D5_risk_weights
+      - >-
+        depends on (3): IP8_negative_and_shadow_space, IP9_the_open_loop, IP_D5_risk_weights · all
+        upstream 11
+      - 'needed by (1): IP10_growth_tracking'
+      - >-
+        same files as IP6_route_command_screen with no order between them:
+        tests/modules/test-intelligence-pipeline.test.js
+    edges:
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
+        kind: declared
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP9_the_open_loop
+        kind: declared
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D5_risk_weights
+        kind: declared

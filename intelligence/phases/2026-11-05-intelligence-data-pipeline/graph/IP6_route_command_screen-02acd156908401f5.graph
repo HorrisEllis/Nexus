@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793854267655
+exported_at: 1793854390219
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793854267655
-lastSeenAt: 1793854267655
+firstSeenAt: 1793854390219
+lastSeenAt: 1793854390219
 fingerprint: null
 payload:
   for: IP6_route_command_screen
@@ -246,6 +246,9 @@ payload:
       - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP10_growth_tracking
         files:
           - tests/modules/test-intelligence-pipeline.test.js
+      - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP11_risk_ambiguity_uncertainty_wired
+        files:
+          - tests/modules/test-intelligence-pipeline.test.js
     dangling: []
     lines:
       - layer 6 · blocked by IP5_invariants_into_rfr2
@@ -259,6 +262,9 @@ payload:
         tests/modules/test-intelligence-pipeline.test.js
       - >-
         same files as IP10_growth_tracking with no order between them:
+        tests/modules/test-intelligence-pipeline.test.js
+      - >-
+        same files as IP11_risk_ambiguity_uncertainty_wired with no order between them:
         tests/modules/test-intelligence-pipeline.test.js
     edges:
       - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
