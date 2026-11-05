@@ -1,0 +1,78 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC12_start_at_boot_each_system:f8af70b4ea9b3208
+type: graph
+id: phase:SC12_start_at_boot_each_system:f8af70b4ea9b3208
+context: dependency graph of phase SC12_start_at_boot_each_system
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793874058258
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793874058258
+lastSeenAt: 1793874058258
+fingerprint: null
+payload:
+  for: SC12_start_at_boot_each_system
+  kind: phase
+  repo: null
+  hash: f8af70b4ea9b3208
+  nodes:
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/automation/index.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/automation/page.css
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/automation/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-boot-and-deps.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-cos-boot-and-deps.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+    dependents:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC13_dependencies_before_boot
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+    downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC13_dependencies_before_boot
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC13_dependencies_before_boot
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): SC2_configuration_per_system · all upstream 4'
+      - >-
+        needed by (1): SC13_dependencies_before_boot · finishing it unlocks
+        SC13_dependencies_before_boot
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+        kind: declared

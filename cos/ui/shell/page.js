@@ -14,7 +14,7 @@
   const $ = (id) => document.getElementById(id);
   const stage = $('stage');
   const S = { contract: null, systems: [], frames: new Map(), listens: new Map(), current: null, es: null, poll: null, events: 0, proposals: 0, last: new Map() };
-  const ICON = { overview: 'grid', ledger: 'list', proposals: 'inbox', automation: 'pulse', updates: 'download', planned: 'compass',   /* SC7: the gear is Updates' (his "With a gear"); Automation takes pulse */ cockpit: 'layers' };
+  const ICON = { overview: 'grid', ledger: 'list', console: 'terminal',   /* SC11 */ proposals: 'inbox', automation: 'pulse', updates: 'download', planned: 'compass',   /* SC7: the gear is Updates' (his "With a gear"); Automation takes pulse */ cockpit: 'layers' };
   const THEMES = ['nexus', 'midnight', 'graphite'];
 
   // ── fetch for the shell's own reads (declared in the contract as the "shell" page) ──
@@ -105,6 +105,7 @@
       BUS.pulse(entry.system, `${entry.kind}${/^person|^agent/.test(entry.by || '') ? ' by-person' : ''}`); relay('cos.ledger', { entry });
       if (/^proposal-/.test(entry.kind)) refreshProposals(); });
     es.addEventListener('cos.system.state', (m) => onState(JSON.parse(m.data)));
+    es.addEventListener('cos.console', (m) => { try { relay('cos.console', JSON.parse(m.data)); } catch (_) {} });   // SC11: the Console tab
     es.addEventListener('cos.notice', (m) => { try { dispatchEvent(new CustomEvent('cos-notice', { detail: JSON.parse(m.data) })); } catch (_) {} });   // SC5: the bell (console.js)
     es.onerror = () => { busState('starting', 'reconnecting — reading every 5 s'); startPoll(); };
   }

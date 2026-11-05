@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-console-phasemap.spec::SC12_start_at_boot_each_system
+type: phase
+id: docs_2026-11-02-cos-console-phasemap.spec::SC12_start_at_boot_each_system
+context: pipeline phase SC12_start_at_boot_each_system of docs/2026-11-02-cos-console-phasemap.spec
+intent: null
+summary: SC12_start_at_boot_each_system (ui) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793874058258
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793874058258
+lastSeenAt: 1793874058258
+fingerprint: null
+payload:
+  id: SC12_start_at_boot_each_system
+  map: docs/2026-11-02-cos-console-phasemap.spec
+  repo: null
+  layer: ui
+  status: '"BUILT 0.60.399 — test-cos-boot-and-deps BD-03, BD-04"'
+  files:
+    - cos/ui/automation/index.html
+    - cos/ui/automation/page.js
+    - cos/ui/automation/page.css
+    - cos/manager/contract.json
+    - tests/modules/test-cos-boot-and-deps.test.js
+  depends_on:
+    - SC2_configuration_per_system
+  blocks: []
+  spec: cos/spec/cos-manager.spec
+  graph: f8af70b4ea9b3208

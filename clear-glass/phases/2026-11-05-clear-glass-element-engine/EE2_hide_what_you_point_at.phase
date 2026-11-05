@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+type: phase
+id: docs_2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+context: >-
+  pipeline phase EE2_hide_what_you_point_at of
+  docs/2026-11-05-clear-glass-element-engine-phasemap.spec
+intent: null
+summary: EE2_hide_what_you_point_at (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793871876645
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793871876645
+lastSeenAt: 1793871876645
+fingerprint: null
+payload:
+  id: EE2_hide_what_you_point_at
+  map: docs/2026-11-05-clear-glass-element-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/adblock/engine.js
+    - clear-glass/src/adblock/lists.js
+    - clear-glass/renderer/guardian-picker.js
+    - tests/modules/test-cg-element-engine.test.js
+  depends_on:
+    - EE1_one_identity_for_a_chosen_element
+  blocks: []
+  spec: null
+  graph: ef3c16e3ff3e942d

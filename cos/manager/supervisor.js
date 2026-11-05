@@ -140,7 +140,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     s.proc = proc; s.pid = proc.pid || null; s.state = 'starting'; s.startedAt = Date.now(); s.by = by; s.sawAddrInUse = false;
     if (typeof hooks.spawned === 'function' && s.pid) { try { hooks.spawned(name, s.pid); } catch (e) { log(`[${name}] the spawn hook threw: ${e.message}`); } }
     const pipe = (st, stream) => st && st.on('data', (b) => { const t = b.toString(); if (/EADDRINUSE/.test(t)) s.sawAddrInUse = true;
-      for (const l of t.split('\n')) if (l.trim()) { log(`[${name}] ${l}`); if (/^\[cos-boundary\] /.test(l)) write('wall', name, l.replace(/^\[cos-boundary\] /, '')); s.out.push({ ts: Date.now(), stream, line: l.slice(0, 2000) }); if (s.out.length > LOG_KEEP) s.out.shift(); } });
+      for (const l of t.split('\n')) if (l.trim()) { log(`[${name}] ${l}`); if (/^\[cos-boundary\] /.test(l)) write('wall', name, l.replace(/^\[cos-boundary\] /, '')); s.out.push({ ts: Date.now(), stream, line: l.slice(0, 2000) }); bus.emit('line', { system: name, ...s.out[s.out.length - 1] });   /* SC11 (0.60.398): every line, for the Console tab */ if (s.out.length > LOG_KEEP) s.out.shift(); } });
     pipe(proc.stdout, 'out'); pipe(proc.stderr, 'err');
     later(s, P.stableMs, () => { if (s.proc === proc) s.backoffMs = P.restart.backoffMs[0]; });
     proc.on('exit', (code, signal) => onExit(name, proc, code, signal));

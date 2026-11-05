@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES2_your_typescript_actions
+type: phase
+id: docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES2_your_typescript_actions
+context: >-
+  pipeline phase ES2_your_typescript_actions of
+  docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+intent: null
+summary: ES2_your_typescript_actions (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793872153641
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793872153641
+lastSeenAt: 1793872153641
+fingerprint: null
+payload:
+  id: ES2_your_typescript_actions
+  map: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: '"OPEN — waits on CM_D0"'
+  files:
+    - clear-glass/erosmancer/erosmancer-os/src/api/server.ts
+    - tests/modules/test-eros-options.test.js
+  depends_on:
+    - CM_D0_what_typescripts_means
+    - ES1_erosmancer_options_in_plain_words
+  blocks: []
+  spec: null
+  graph: 3a4c1fc5e06168cf

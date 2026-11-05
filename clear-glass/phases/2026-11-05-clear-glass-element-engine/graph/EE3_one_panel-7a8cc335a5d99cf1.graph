@@ -1,0 +1,63 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EE3_one_panel:7a8cc335a5d99cf1
+type: graph
+id: phase:EE3_one_panel:7a8cc335a5d99cf1
+context: dependency graph of phase EE3_one_panel
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793872929073
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793872929073
+lastSeenAt: 1793872929073
+fingerprint: null
+payload:
+  for: EE3_one_panel
+  kind: phase
+  repo: null
+  hash: 7a8cc335a5d99cf1
+  nodes:
+    - path: clear-glass/renderer/element-panel.css
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/renderer/element-panel.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+    dependents:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
+    upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+    downstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
+    blockedBy:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+    unlocks:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by EE2_hide_what_you_point_at
+      - 'depends on (1): EE2_hide_what_you_point_at · all upstream 5'
+      - 'needed by (1): EE4_the_old_ways_archived · finishing it unlocks EE4_the_old_ways_archived'
+    edges:
+      - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE2_hide_what_you_point_at
+        kind: declared

@@ -1,0 +1,86 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CM2_guardian_anchors_follow_the_page:598678f57e813353
+type: graph
+id: phase:CM2_guardian_anchors_follow_the_page:598678f57e813353
+context: dependency graph of phase CM2_guardian_anchors_follow_the_page
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793872153631
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793872153631
+lastSeenAt: 1793872153631
+fingerprint: null
+payload:
+  for: CM2_guardian_anchors_follow_the_page
+  kind: phase
+  repo: null
+  hash: 598678f57e813353
+  nodes:
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/watch.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/page/page-memory.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-cg-watch-rules.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-memory.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/page/page-memory.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+    dependents:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM4_the_old_observers_on_the_rules
+    upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+    downstream:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM4_the_old_observers_on_the_rules
+    blockedBy:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM3_listeners_and_macros
+        files:
+          - clear-glass/src/driver/watch.js
+          - tests/modules/test-cg-watch-rules.test.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by CM1_watch_rules
+      - 'depends on (1): CM1_watch_rules · all upstream 4'
+      - 'needed by (1): CM4_the_old_observers_on_the_rules'
+      - >-
+        same files as CM3_listeners_and_macros with no order between them:
+        clear-glass/src/driver/watch.js, tests/modules/test-cg-watch-rules.test.js
+    edges:
+      - from: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+        kind: declared

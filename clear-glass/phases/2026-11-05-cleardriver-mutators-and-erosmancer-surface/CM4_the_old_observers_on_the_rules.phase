@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM4_the_old_observers_on_the_rules
+type: phase
+id: docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM4_the_old_observers_on_the_rules
+context: >-
+  pipeline phase CM4_the_old_observers_on_the_rules of
+  docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+intent: null
+summary: CM4_the_old_observers_on_the_rules (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793872153636
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793872153636
+lastSeenAt: 1793872153636
+fingerprint: null
+payload:
+  id: CM4_the_old_observers_on_the_rules
+  map: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/page/element-gate.js
+    - clear-glass/src/autofill/suggest.js
+    - clear-glass/src/dom/archaeology.js
+  depends_on:
+    - CM2_guardian_anchors_follow_the_page
+    - CM3_listeners_and_macros
+  blocks: []
+  spec: null
+  graph: 0ffafff78effea7f

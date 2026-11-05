@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
+type: phase
+id: docs_2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
+context: >-
+  pipeline phase CM2_guardian_anchors_follow_the_page of
+  docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+intent: null
+summary: CM2_guardian_anchors_follow_the_page (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793872153631
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793872153631
+lastSeenAt: 1793872153631
+fingerprint: null
+payload:
+  id: CM2_guardian_anchors_follow_the_page
+  map: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/driver/watch.js
+    - clear-glass/src/page/page-memory.js
+    - clear-glass/renderer/guardian-picker.js
+    - tests/modules/test-cg-watch-rules.test.js
+  depends_on:
+    - CM1_watch_rules
+  blocks: []
+  spec: null
+  graph: 598678f57e813353

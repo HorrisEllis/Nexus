@@ -1,0 +1,183 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC11_the_console_tab:56ef0ec62dfc1792
+type: graph
+id: phase:SC11_the_console_tab:56ef0ec62dfc1792
+context: dependency graph of phase SC11_the_console_tab
+intent: null
+summary: 21 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793874058256
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793874058256
+lastSeenAt: 1793874058256
+fingerprint: null
+payload:
+  for: SC11_the_console_tab
+  kind: phase
+  repo: null
+  hash: 56ef0ec62dfc1792
+  nodes:
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/console/index.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/console/page.css
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/console/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-console-tab.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/cli.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/suspend.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/manager/supervisor.js
+      to: cos/manager/suspend.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/cli.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+    dependents:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+      - docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+      - docs/2026-11-02-cos-console-phasemap.spec::SC4_add_a_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
+    downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+      - docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+      - docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4
+      - 'depends on (2): SC3_system_command_line, SC5_the_console_ui · all upstream 10'
+      - >-
+        needed by (2): SC14_each_system_opens_in_its_own_window, SC15_nexus_cli_in_the_console ·
+        finishing it unlocks SC14_each_system_opens_in_its_own_window, SC15_nexus_cli_in_the_console
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+        kind: declared
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+        kind: declared

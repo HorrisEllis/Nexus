@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-sovereignty-phasemap.spec::SV2_versionium_sovereign
+type: phase
+id: docs_2026-11-05-sovereignty-phasemap.spec::SV2_versionium_sovereign
+context: pipeline phase SV2_versionium_sovereign of docs/2026-11-05-sovereignty-phasemap.spec
+intent: null
+summary: SV2_versionium_sovereign (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1793875440342
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793875440342
+lastSeenAt: 1793875440342
+fingerprint: null
+payload:
+  id: SV2_versionium_sovereign
+  map: docs/2026-11-05-sovereignty-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - versionium/lib/store.js
+    - versionium/lib/causality.js
+    - versionium/lib/engine.js
+    - versionium/lib/snapshot.js
+    - intelligence/routes.js
+    - lib/change-record.js
+    - lib/repo-inject.js
+    - cortex/snapshot/index.js
+  depends_on:
+    - SV1_the_tables_and_their_writers
+  blocks: []
+  spec: null
+  graph: 1135100a87d19b97

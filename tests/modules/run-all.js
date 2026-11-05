@@ -444,6 +444,11 @@ const SUITES = [
   'test-cos-app-link.test.js',
   'test-cos-app-window.test.js',
   'test-cos-service.test.js',
+  'test-cos-boot-and-deps.test.js',   // 0.60.399 SC12/SC13 — Start at boot for each system on Automation; npm install before boot when the lock changed
+  'test-cos-console-tab.test.js',   // 0.60.398 SC11 — COS's Console tab: every system's output together, live, and the command line
+  'test-cg-element-engine-plugin.test.js',   // 0.60.397 EE0 — the Ad Blocker plugin is the Element Engine: Ad blocking, the picker, ErosmancerOS, Edit ErosmancerOS
+  'test-eros-edit.test.js',   // 0.60.396 ES5 — edit ErosmancerOS's TypeScript yourself: export, diff, import (archived, tested, recorded)
+  'test-cg-webgl.test.js',   // 0.60.394 WG1 — Clear Glass has WebGL with acceleration off (Fiverr's bot check crashed on its absence)
   'test-cortex-door.test.js',   // 0.60.392 DO3a — Cortex's door: cortex/server.js, registry, handshake, CLI; the route table replayed the same
   'test-cos-install.test.js',   // 0.60.390 CA5 (COS 0.6.0) — COS installs Nexus from GitHub itself, first run   // 0.60.389 CA4 (COS 0.5.0) — Nexus as the Windows service NexusCOS; Clear Glass in his session
   'test-cg-idle-tray.test.js',

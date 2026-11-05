@@ -1,0 +1,151 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CM3_listeners_and_macros:065ed03119d6be0f
+type: graph
+id: phase:CM3_listeners_and_macros:065ed03119d6be0f
+context: dependency graph of phase CM3_listeners_and_macros
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793872153634
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793872153634
+lastSeenAt: 1793872153634
+fingerprint: null
+payload:
+  for: CM3_listeners_and_macros
+  kind: phase
+  repo: null
+  hash: 065ed03119d6be0f
+  nodes:
+    - path: clear-glass/src/driver/watch.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/event-taxonomy.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/automation/pipeline.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-cg-watch-rules.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: lib/automation-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-procedures.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/clear-glass-gig.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-transfer.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/automation/engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/steps.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/automation/pipeline.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: lib/automation/steps.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation-nodes.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/repo-procedures.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: tests/modules/clear-glass-gig.test.js
+      to: clear-glass/src/event-taxonomy.js
+      kind: requires
+    - from: tests/modules/test-autofill-transfer.test.js
+      to: clear-glass/src/event-taxonomy.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+    dependents:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM4_the_old_observers_on_the_rules
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES4_the_browser_panel
+    upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+    downstream:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM4_the_old_observers_on_the_rules
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES4_the_browser_panel
+    blockedBy:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
+        files:
+          - clear-glass/src/driver/watch.js
+          - tests/modules/test-cg-watch-rules.test.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by CM1_watch_rules
+      - 'depends on (1): CM1_watch_rules · all upstream 4'
+      - 'needed by (2): CM4_the_old_observers_on_the_rules, ES4_the_browser_panel'
+      - >-
+        same files as CM2_guardian_anchors_follow_the_page with no order between them:
+        clear-glass/src/driver/watch.js, tests/modules/test-cg-watch-rules.test.js
+    edges:
+      - from: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+        kind: declared

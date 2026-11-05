@@ -1,0 +1,160 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC10_the_zip_history:27fa9927151e981f
+type: graph
+id: phase:SC10_the_zip_history:27fa9927151e981f
+context: dependency graph of phase SC10_the_zip_history
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793873415702
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793873415702
+lastSeenAt: 1793873415702
+fingerprint: null
+payload:
+  for: SC10_the_zip_history
+  kind: phase
+  repo: null
+  hash: 27fa9927151e981f
+  nodes:
+    - path: cos/manager/history.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/updates/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/cli.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/cli.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N27_history_import_from_700_zips
+    dependents: []
+    upstream:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N27_history_import_from_700_zips
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+      - docs/2026-11-02-cos-console-phasemap.spec::SC4_add_a_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
+        files:
+          - cos/manager/server.js
+          - cos/ui/updates/page.js
+    dangling: []
+    lines:
+      - layer 5 · ready
+      - 'depends on (2): SC7_the_updates_section, N27_history_import_from_700_zips · all upstream 12'
+      - 'needed by (0): —'
+      - >-
+        same files as SC9_the_zip_dropzone_updater with no order between them:
+        cos/manager/server.js, cos/ui/updates/page.js
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+        kind: declared
+      - from: docs/2026-09-29-nex-node-store-phasemap.spec::N27_history_import_from_700_zips
+        kind: declared

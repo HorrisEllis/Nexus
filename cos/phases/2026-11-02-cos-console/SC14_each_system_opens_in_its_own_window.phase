@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+type: phase
+id: docs_2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+context: >-
+  pipeline phase SC14_each_system_opens_in_its_own_window of
+  docs/2026-11-02-cos-console-phasemap.spec
+intent: null
+summary: SC14_each_system_opens_in_its_own_window (ui) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793874058262
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793874058262
+lastSeenAt: 1793874058262
+fingerprint: null
+payload:
+  id: SC14_each_system_opens_in_its_own_window
+  map: docs/2026-11-02-cos-console-phasemap.spec
+  repo: null
+  layer: ui
+  status: '"OPEN — mapped 2026-11-05"'
+  files:
+    - cos/ui/serve.js
+    - cos/ui/shell/page.js
+    - cos/ui/console/page.js
+    - cos/app/desktop/main.js
+    - cos/manager/contract.json
+  depends_on:
+    - SC11_the_console_tab
+  blocks: []
+  spec: cos/spec/cos-manager.spec
+  graph: 2d834a7e86c0a770

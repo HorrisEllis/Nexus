@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-clear-glass-webgl-phasemap.spec::WG2_gpu_on_by_default
+type: phase
+id: docs_2026-11-05-clear-glass-webgl-phasemap.spec::WG2_gpu_on_by_default
+context: pipeline phase WG2_gpu_on_by_default of docs/2026-11-05-clear-glass-webgl-phasemap.spec
+intent: null
+summary: WG2_gpu_on_by_default (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793871785240
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793871785240
+lastSeenAt: 1793871785240
+fingerprint: null
+payload:
+  id: WG2_gpu_on_by_default
+  map: docs/2026-11-05-clear-glass-webgl-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.395 — test-cg-webgl WG-01"'
+  files:
+    - clear-glass/src/main/index.js
+    - tests/modules/test-cg-webgl.test.js
+  depends_on:
+    - WG1_webgl_with_acceleration_off
+  blocks: []
+  spec: null
+  graph: 50bc446e21390e3d

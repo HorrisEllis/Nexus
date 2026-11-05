@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV3_diagnostic_and_ollama:e8f493ddc8852274
+type: graph
+id: phase:SV3_diagnostic_and_ollama:e8f493ddc8852274
+context: dependency graph of phase SV3_diagnostic_and_ollama
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1793875440344
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793875440344
+lastSeenAt: 1793875440344
+fingerprint: null
+payload:
+  for: SV3_diagnostic_and_ollama
+  kind: phase
+  repo: null
+  hash: e8f493ddc8852274
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV1_the_tables_and_their_writers
+    dependents: []
+    upstream:
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV1_the_tables_and_their_writers
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV_D0_each_system_keeps_its_own_tables
+    downstream: []
+    blockedBy:
+      - docs/2026-11-05-sovereignty-phasemap.spec::SV1_the_tables_and_their_writers
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-05-sovereignty-phasemap.spec::SV5_the_rest_one_at_a_time
+        files:
+          - lib
+    dangling: []
+    lines:
+      - layer 2 · blocked by SV1_the_tables_and_their_writers
+      - 'depends on (1): SV1_the_tables_and_their_writers · all upstream 2'
+      - 'needed by (0): —'
+      - 'same files as SV5_the_rest_one_at_a_time with no order between them: lib'
+    edges:
+      - from: docs/2026-11-05-sovereignty-phasemap.spec::SV1_the_tables_and_their_writers
+        kind: declared

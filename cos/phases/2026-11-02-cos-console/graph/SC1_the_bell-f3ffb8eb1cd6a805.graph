@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793708276723
+exported_at: 1793874058205
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793708276723
-lastSeenAt: 1793708276723
+firstSeenAt: 1793874058205
+lastSeenAt: 1793874058205
 fingerprint: null
 payload:
   for: SC1_the_bell
@@ -135,10 +135,15 @@ payload:
       - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
     upstream: []
     downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
+      - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
+      - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+      - docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
       - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
       - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
       - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
+      - docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
     blockedBy: []
     unlocks:
       - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
@@ -151,6 +156,6 @@ payload:
       - 'depends on (0): —'
       - >-
         needed by (3): SC3_system_command_line, SC5_the_console_ui, SC7_the_updates_section · all
-        downstream 4 · finishing it unlocks SC3_system_command_line, SC5_the_console_ui,
+        downstream 9 · finishing it unlocks SC3_system_command_line, SC5_the_console_ui,
         SC7_the_updates_section
     edges: []

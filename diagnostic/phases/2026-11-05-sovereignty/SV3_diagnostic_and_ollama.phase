@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-sovereignty-phasemap.spec::SV3_diagnostic_and_ollama
+type: phase
+id: docs_2026-11-05-sovereignty-phasemap.spec::SV3_diagnostic_and_ollama
+context: pipeline phase SV3_diagnostic_and_ollama of docs/2026-11-05-sovereignty-phasemap.spec
+intent: null
+summary: SV3_diagnostic_and_ollama (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793875440344
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793875440344
+lastSeenAt: 1793875440344
+fingerprint: null
+payload:
+  id: SV3_diagnostic_and_ollama
+  map: docs/2026-11-05-sovereignty-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic
+    - ollama
+    - lib
+  depends_on:
+    - SV1_the_tables_and_their_writers
+  blocks: []
+  spec: null
+  graph: e8f493ddc8852274

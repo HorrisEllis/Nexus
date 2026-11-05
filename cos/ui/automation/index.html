@@ -16,6 +16,11 @@
     <div class="actions"><button class="btn" id="revert" disabled>Revert</button><button class="btn primary" id="save" disabled>Apply changes</button></div>
   </header>
   <form id="form" class="groups" autocomplete="off"></form>
+  <!-- BT1 (0.60.399) — James, 2026-11-05: "this pc is getting its ass kicked. i need options for what systems start on boot." -->
+  <section class="panel rise" id="boot-list">
+    <div class="panel-head"><h2>Start at boot</h2><span class="tag">each system</span></div>
+    <div class="panel-body"><p class="muted">Switch off what this machine does not need. A system that is off is skipped at the next boot, said in the ledger, and can still be started by hand from its page or the Console (<code>start &lt;name&gt;</code>).</p><div id="boot-rows" class="boot-rows"></div></div>
+  </section>
   <section class="panel later rise">
     <div class="panel-head"><h2>Macros and rules</h2><span class="tag">MG7 · not built</span></div>
     <div class="panel-body muted">Macros of COS commands, run on one compartment or many, by hand or by rule, and hats bound to a compartment, wait on MG7 (automation, macros and hats). This page grows them when it is built; until then the supervisor's own rules above are what automates COS.</div>
