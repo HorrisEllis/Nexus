@@ -9,11 +9,11 @@ intent: null
 summary: ES5_edit_the_typescript_yourself (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793872583466
+exported_at: 1793912378788
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793872583466
-lastSeenAt: 1793872583466
+firstSeenAt: 1793912378788
+lastSeenAt: 1793912378788
 fingerprint: null
 payload:
   id: ES5_edit_the_typescript_yourself
@@ -29,4 +29,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 6a256ea78d989eb8
+  graph: 9d0c15c53b69022b

@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793872153628
+exported_at: 1793912378760
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793872153628
-lastSeenAt: 1793872153628
+firstSeenAt: 1793912378760
+lastSeenAt: 1793912378760
 fingerprint: null
 payload:
   for: CM1_watch_rules
@@ -195,13 +195,14 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 2
+    layer: 3
     deps:
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
     dependents:
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM3_listeners_and_macros
     upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
@@ -215,21 +216,15 @@ payload:
     unlocks:
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM3_listeners_and_macros
-    conflicts:
-      - with: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES1_erosmancer_options_in_plain_words
-        files:
-          - idearium/cli/route-commands.js
+    conflicts: []
     dangling: []
     lines:
-      - layer 2 · blocked by EE1_one_identity_for_a_chosen_element
-      - 'depends on (1): EE1_one_identity_for_a_chosen_element · all upstream 3'
+      - layer 3 · blocked by EE1_one_identity_for_a_chosen_element
+      - 'depends on (1): EE1_one_identity_for_a_chosen_element · all upstream 4'
       - >-
         needed by (2): CM2_guardian_anchors_follow_the_page, CM3_listeners_and_macros · all
         downstream 4 · finishing it unlocks CM2_guardian_anchors_follow_the_page,
         CM3_listeners_and_macros
-      - >-
-        same files as ES1_erosmancer_options_in_plain_words with no order between them:
-        idearium/cli/route-commands.js
     edges:
       - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
         kind: declared

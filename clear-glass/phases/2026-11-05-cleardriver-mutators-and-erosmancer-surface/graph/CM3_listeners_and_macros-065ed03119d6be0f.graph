@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793872153634
+exported_at: 1793912378768
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793872153634
-lastSeenAt: 1793872153634
+firstSeenAt: 1793912378768
+lastSeenAt: 1793912378768
 fingerprint: null
 payload:
   for: CM3_listeners_and_macros
@@ -116,13 +116,14 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 3
+    layer: 4
     deps:
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
     dependents:
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM4_the_old_observers_on_the_rules
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES4_the_browser_panel
     upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE1_one_identity_for_a_chosen_element
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
       - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
@@ -132,7 +133,8 @@ payload:
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES4_the_browser_panel
     blockedBy:
       - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
-    unlocks: []
+    unlocks:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES4_the_browser_panel
     conflicts:
       - with: docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
         files:
@@ -140,9 +142,11 @@ payload:
           - tests/modules/test-cg-watch-rules.test.js
     dangling: []
     lines:
-      - layer 3 · blocked by CM1_watch_rules
-      - 'depends on (1): CM1_watch_rules · all upstream 4'
-      - 'needed by (2): CM4_the_old_observers_on_the_rules, ES4_the_browser_panel'
+      - layer 4 · blocked by CM1_watch_rules
+      - 'depends on (1): CM1_watch_rules · all upstream 5'
+      - >-
+        needed by (2): CM4_the_old_observers_on_the_rules, ES4_the_browser_panel · finishing it
+        unlocks ES4_the_browser_panel
       - >-
         same files as CM2_guardian_anchors_follow_the_page with no order between them:
         clear-glass/src/driver/watch.js, tests/modules/test-cg-watch-rules.test.js

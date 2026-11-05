@@ -364,6 +364,25 @@ class IpcBridge {
       if (typeof this.erosTabs !== 'function') return res.status(503).json({ ok: false, error: 'the ErosmancerOS wire is not wired into this Clear Glass' });
       try { const r = await this.erosTabs(); res.status(r.ok ? 200 : 503).json(r); } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
     });
+    // 2026-11-05 ES1/ES3 — James: "can you expand erosmanceros. add as much human ledgible options as possible, inscluding adding typescripts,
+    // threats, etc, all cli first, then into the browser.html." Every option in plain words (src/eros/options.js), set from the CLI; the
+    // threats hostile/ sees, in plain words (src/eros/threats.js). ErosmancerOS's own code is not touched; its door takes these.
+    const EO = () => this.__erosOptions || (this.__erosOptions = require('../eros/options.js').createOptions({ file: require('path').join(process.env.EROS_DATA_DIR || require('path').join(__dirname, '..', '..', '..', 'data', 'erosmancer'), 'options.json'), record: (r) => { try { require('../../../lib/versionium-record.js').record(r); } catch (_) {} } }));
+    this.app.get('/cli/eros/options', (req, res) => { try { res.json({ ok: true, ...EO().list(), file: EO().file }); } catch (e) { res.status(500).json({ ok: false, error: e.message }); } });
+    this.app.post('/cli/eros/options', async (req, res) => {
+      const b = req.body || {};
+      let r; try { r = b.reset ? EO().reset(b.key) : EO().set(b.key, b.value, { by: b.by || 'person' }); } catch (e) { return res.status(400).json({ ok: false, error: e.message }); }
+      // the live ones go to the running ErosmancerOS now, through its own routes
+      if (r.key === 'pace') { const x = await this._erosCall('POST', '/api/behavior/profile', { sessionId: 'default', profile: r.value }); r.applied = x.ok ? 'now' : `kept; ErosmancerOS did not take it now (${x.error || (x.body && x.body.error) || x.status})`; }
+      if (r.key === 'routing') { const x = await this._erosCall('POST', '/api/routing/level', { level: r.value, reason: 'his setting' }); r.applied = x.ok ? 'now' : `kept; ErosmancerOS did not take it now (${x.error || (x.body && x.body.error) || x.status})`; }
+      res.json(r);
+    });
+    this.app.get('/cli/eros/threats', async (req, res) => {
+      const T = require('../eros/threats.js');
+      const x = await this._erosCall('GET', '/api/hostile/state');
+      if (!x.ok) return res.status(503).json({ ok: false, error: `ErosmancerOS is not answering (${x.error || (x.body && x.body.error) || x.status})`, words: T.WORDS });
+      res.json({ ok: true, threats: T.describe((x.body && x.body.states) || {}), words: T.WORDS, handOver: T.HAND_OVER });
+    });
     // §0.60.169 NP11 — the Snowflake plugin's menu row asks for this on the bus ('net.open'); the answer is a toast in the window that asked
     try {
       const { getBus, Event } = require('../core/bus.js');
@@ -1044,6 +1063,20 @@ class IpcBridge {
     require('../site-settings/readers').install((url) => this._siteProfile().siteProfile(url), { log: (m) => console.warn(m) });
   }
 
+  // 2026-11-05 ES1/ES3 — ErosmancerOS's own door (EROS_PORT, default 7432), as the main process's wire reaches it
+  _erosCall(method, urlPath, body, timeoutMs = 8000) {
+    const http = require('http'); const port = parseInt(process.env.EROS_PORT || '7432', 10);
+    return new Promise((resolve) => {
+      const payload = body && method !== 'GET' ? JSON.stringify(body) : null;
+      const req = http.request({ hostname: '127.0.0.1', port, path: urlPath, method, timeout: timeoutMs, headers: { 'Content-Type': 'application/json', ...(payload ? { 'Content-Length': Buffer.byteLength(payload) } : {}) } }, (r) => {
+        let d = ''; r.on('data', c => { d += c; }); r.on('end', () => { let j = d; try { j = JSON.parse(d); } catch (_) {} resolve({ ok: r.statusCode < 400, status: r.statusCode, body: j }); });
+      });
+      req.on('timeout', () => { req.destroy(); resolve({ ok: false, status: 504, error: 'no answer in time' }); });
+      req.on('error', (e) => resolve({ ok: false, status: 502, error: e.message }));
+      if (payload) req.write(payload); req.end();
+    });
+  }
+
   // §0.60.69 — James, 2026-10-15: "should not rely on raid." His run drives the driver in this process: no Guardian, no RAID.
   // A step that is not a driver action (dom_query, url_listen) still takes the Guardian path, and says so if that fails.
   // §0.60.216 SP2 — one helper for his Run button and for a site's macros run on load; a site whose macros are off refuses both.
@@ -1054,7 +1087,19 @@ class IpcBridge {
     const site = url ? require('../site-settings/readers').macrosOnLoad(url) : null;
     if (site && !site.enabled) return { error: `macros are off for ${new URL(url).origin} (its site settings, macros.enabled)` };
     const BA = require('../../../lib/agent-tools/tools/browser/browser-action.js');
+    // 2026-11-05 ES3 / CM_D1 — a page that shows a bot check (Cloudflare, a CAPTCHA, a rate limit) is his: the run pauses before the next
+    // step and he is told which check, on which page; it goes on when he presses resume. Nothing is done to get past the check.
+    let control = null;
+    const handOver = async () => {
+      if (!this.driver || !control || control.state().paused) return;
+      const T = require('../eros/threats.js');
+      const h = await T.handOver({ check: (code) => this.driver.exec({ agentId, action: 'eval', code, by: 'person' }), url, pause: () => control.pause(),
+        notify: (msg) => { this._macroProgress({ ...control.state(), agentId, note: msg, handOver: true }); try { const { getBus, Event } = require('../core/bus.js'); getBus().emit(new Event('driver.exec', { action: 'toast', agentId, msg, type: 'warn', durationMs: 12000 })); } catch (_) {} } });
+      if (h.handedOver) { try { require('../processes').activity().push({ kind: 'macro', what: `macro "${d.name}" paused: ${h.saw}`, url, by: 'erosmancer', level: 'warn', ref: d.name }); } catch (_) {}
+        while (control.state().paused && !control.state().done) await new Promise(r => setTimeout(r, 300)); }
+    };
     const runStep = async ({ action, data = {} }) => {
+      await handOver();
       // 2026-10-30 PL9 — a macro step that runs a workflow or a pipeline goes to this Clear Glass's own engine (the one Settings › Automation and
       // Pipelines show): macros → workflows → pipelines → macros, one engine, one store
       if (action === 'run_workflow' || action === 'run_pipeline') {
@@ -1068,7 +1113,7 @@ class IpcBridge {
       try { return { ok: true, action, result: await this.driver.exec({ agentId, ...call, by: 'person' }) }; } catch (err) { return { error: err.message }; }
     };
     // MB4: his run carries a control, so the toast can pause, skip, go back one step or stop it
-    const control = require('../../../lib/agent-tools/tools/clear-glass/macro-control.js').createControl({ name: d.name, onChange: (s) => this._macroProgress({ ...s, agentId }) });
+    control = require('../../../lib/agent-tools/tools/clear-glass/macro-control.js').createControl({ name: d.name, onChange: (s) => this._macroProgress({ ...s, agentId }) });
     this._macroRun = control;
     const r = await this.macroTool.execute({ action: 'run', name: d.name, agentId, params: d.params, skipSnapshot: d.skipSnapshot, runStep, control });
     if (!control.state().done) control.done(r || {});
