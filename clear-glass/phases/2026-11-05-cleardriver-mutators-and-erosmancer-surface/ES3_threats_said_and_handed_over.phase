@@ -6,14 +6,14 @@ context: >-
   pipeline phase ES3_threats_said_and_handed_over of
   docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec
 intent: null
-summary: ES3_threats_said_and_handed_over (?) — 4 file(s)
+summary: ES3_threats_said_and_handed_over (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793872153644
+exported_at: 1793872312631
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793872153644
-lastSeenAt: 1793872153644
+firstSeenAt: 1793872312631
+lastSeenAt: 1793872312631
 fingerprint: null
 payload:
   id: ES3_threats_said_and_handed_over
@@ -22,7 +22,6 @@ payload:
   layer: null
   status: OPEN
   files:
-    - clear-glass/erosmancer/erosmancer-os/src/hostile/index.ts
     - clear-glass/src/eros/supervisor.js
     - clear-glass/src/main/index.js
     - tests/modules/test-eros-options.test.js
@@ -31,4 +30,4 @@ payload:
     - CM_D1_a_threat_hands_over_never_evades
   blocks: []
   spec: null
-  graph: 69a5d12127d9a123
+  graph: 6968e13d33e8d1fa

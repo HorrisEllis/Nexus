@@ -89,7 +89,7 @@ phases:
   ES3_threats_said_and_handed_over:
     status: OPEN
     depends_on: [ES1_erosmancer_options_in_plain_words, CM_D1_a_threat_hands_over_never_evades]
-    files: [clear-glass/erosmancer/erosmancer-os/src/hostile/index.ts, clear-glass/src/eros/supervisor.js, clear-glass/src/main/index.js, tests/modules/test-eros-options.test.js]
+    files: [clear-glass/src/eros/supervisor.js, clear-glass/src/main/index.js, tests/modules/test-eros-options.test.js]
     does: "Each hostile/ detection in plain words (what it saw, where, how sure); `eros threats` lists them; a detection pauses the automation on that page and hands it to him (CM_D1). No evasion is built."
     proof: "a fixture challenge page pauses a running macro and raises the hand-over toast; the threat is listed with what was seen"
   ES4_the_browser_panel:
@@ -100,3 +100,10 @@ phases:
     proof: "Clear Glass driver: add a rule from a picked element in the panel, see it in `cg watch list`"
 
 order: "CLI first, as he asked: ES1 can start now; CM1 after the element engine's EE1; ES2 after his CM_D0; ES4 last."
+
+# ── ADDENDUM 2026-11-05 — his: leave the existing module alone ───────────────────────────────────────────────────────────────────────────
+# James, 2026-11-05: "can you at least leave them alone. how does that module work? i want to see if i can make it safge"
+# ErosmancerOS's hostile/ (clear-glass/erosmancer/erosmancer-os/src/hostile/index.ts) is his and stays exactly as it is: no phase here
+# edits, removes or archives it. ES3 now only READS it, through ErosmancerOS's own routes (GET /api/hostile/state, POST /api/hostile/probe)
+# and its threat:* events; its files list no longer names hostile/index.ts. CM_D1 is the coder's line for what the coder builds on top,
+# not a change to his module. Making it safe is his to design; the coder explained how it works the same day (in the conversation).
