@@ -915,6 +915,10 @@ export const SPEC = [
     req: (a) => { const op = a.args[0]; if (op === 'say') return { method: 'POST', path: '/api/emerge-system/lang/say', body: { sentence: a.args.slice(1).join(' ') } };
       let source = ''; try { source = require('fs').readFileSync(require('path').resolve(a.args[1] || ''), 'utf8'); } catch (e) { source = a.flags.source || ''; }
       return { method: 'POST', path: `/api/emerge-system/lang/${encodeURIComponent(op || 'check')}`, timeoutMs: 60000, body: { source, args: a.args.slice(2) } }; } },
+  // 0.60.406 (0.60.389 before the merge renumbering) EAS4 L1 — the spec compiler, Emerge's, through its door: a spec's text in, the T0/T1 package's files back (nothing written)
+  { key: 'emerge.compile', repo: false, usage: 'emerge compile <file.spec> [--tier 0|1]', about: 'compile a module spec (meta/modules/schemas) to its T0/T1 TypeScript package through Emerge\'s door, no model; the files come back as text, nothing is written',
+    req: (a) => { const f = a.args[1] || a.args[0] || ''; let spec = ''; try { spec = require('fs').readFileSync(require('path').resolve(f), 'utf8'); } catch (e) { spec = a.flags.spec || ''; }
+      return { method: 'POST', path: '/api/emerge-system/compile', timeoutMs: 120000, body: { spec, name: require('path').basename(f || 'spec.spec'), tier: a.flags.tier === '0' ? 0 : 1 } }; } },
   { key: 'repo.spine', repo: true, usage: 'repo spine <repo> [--write] [--unknown] [--limit n]', about: 'the project\'s component registry as its spine: every component and every wire with its evidence (discovered by which adapter, declared, or unknown), and the drift against nexus.spine.json; --write writes it',
     req: (a) => (a.flags.write ? { method: 'POST', path: `/api/repos/${a.repo.uuid}/spine`, body: {}, timeoutMs: 120000 } : { method: 'GET', path: `/api/repos/${a.repo.uuid}/spine${a.flags.limit ? `?limit=${parseInt(a.flags.limit, 10)}` : ''}`, timeoutMs: 120000 }),
     print: (d, a, h) => {

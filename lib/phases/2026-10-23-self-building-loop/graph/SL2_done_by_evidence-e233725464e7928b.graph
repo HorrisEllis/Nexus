@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792822478445
+exported_at: 1793899281138
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478445
-lastSeenAt: 1792822478445
+firstSeenAt: 1793899281138
+lastSeenAt: 1793899281138
 fingerprint: null
 payload:
   for: SL2_done_by_evidence
@@ -224,18 +224,23 @@ payload:
     layer: 1
     deps:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
-    dependents: []
+    dependents:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL11_the_phase_ledger_and_its_gate
     upstream:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
-    downstream: []
+    downstream:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL11_the_phase_ledger_and_its_gate
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL11_the_phase_ledger_and_its_gate
     conflicts: []
     dangling: []
     lines:
       - layer 1
       - 'depends on (1): SL0_what_can_be_built_now'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): SL11_the_phase_ledger_and_its_gate · finishing it unlocks
+        SL11_the_phase_ledger_and_its_gate
     edges:
       - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
         kind: declared

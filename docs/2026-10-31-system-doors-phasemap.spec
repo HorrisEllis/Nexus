@@ -114,6 +114,7 @@ phases:
     depends_on: [DO_D9_registry_then_cos_through_the_door, DO0_the_handshake_counts_real_routes]
     files: [orchestrator/server.js, orchestrator/orchestrator.js, orchestrator/registry-components.draft.json, orchestrator/compartment.json, lib/cli/compartments.js]
     spec: docs/system-doors.spec
+    blocks: [MOD-DOOR-ORCHESTRATOR]
     does: "orchestrator/server.js in front of orchestrator.js the way DO3a put cortex/server.js in front of boot.js: registry, handshake, CLI from its own registry (its draft accepted first), every other route unchanged; COS starts the door"
     proof: "its route table recorded through orchestrator.js alone and replayed through the door: the same"
   DO8_cos_door:
@@ -122,6 +123,7 @@ phases:
     depends_on: [DO_D9_registry_then_cos_through_the_door, DO0_the_handshake_counts_real_routes]
     files: [cos/server.js, cos/manager/server.js, cos/registry-components.draft.json, cos/compartment.json]
     spec: docs/system-doors.spec
+    blocks: [MOD-DOOR-COS]
     does: "COS's own door: its registry (the draft accepted), handshake and CLI served from it; the manager's routes unchanged behind it"
     proof: "the manager's route table the same through the door; COS's CLI (SC1–SC8) runs through POST /cli"
 

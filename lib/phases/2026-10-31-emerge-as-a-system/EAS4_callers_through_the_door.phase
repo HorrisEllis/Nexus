@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
 context: pipeline phase EAS4_callers_through_the_door of docs/2026-10-31-emerge-as-a-system-phasemap.spec
 intent: null
-summary: EAS4_callers_through_the_door (?) — 6 file(s)
+summary: EAS4_callers_through_the_door (?) — 21 file(s)
 system: idearium
 tags: []
-exported_at: 1793447691369
+exported_at: 1793905362596
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793447691369
-lastSeenAt: 1793447691369
+firstSeenAt: 1793905362596
+lastSeenAt: 1793905362596
 fingerprint: null
 payload:
   id: EAS4_callers_through_the_door
@@ -26,10 +26,25 @@ payload:
     - cortex/core/raid/contract-intake.js
     - lib/hooks/emerge.hooks.js
     - tests/modules/test-substrate-spec.test.js
+    - emerge/emerge/core/admit.js
+    - emerge/emerge/core/index.js
+    - lib/warp/adapters/_archive/emerge-field.js
+    - lib/warp/core/Engine.js
+    - lib/warp/spec/warp.spec
+    - tests/modules/test-warp2.test.js
+    - emerge/emerge/lib/compiler.js
+    - emerge/emerge/registry-components.js
+    - emerge/emerge/tests/compiler-door.test.js
+    - emerge/emerge/compiler/host.js
+    - emerge/emerge/compiler/model.js
+    - lib/spec-collect.js
+    - tests/modules/test-spec-pipeline.test.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
   depends_on:
     - EAS2_the_language_through_the_door
     - EAS3_emerge_at_the_top_of_nexus
   blocks:
     - MOD-EAS-CALLERS
   spec: docs/emerge-system.spec
-  graph: fc9964fecf5c8519
+  graph: eb8c94cf996ed2ee

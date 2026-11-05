@@ -1,0 +1,250 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EAS5_a_system_of_systems:697655ab6df85ecf
+type: graph
+id: phase:EAS5_a_system_of_systems:697655ab6df85ecf
+context: dependency graph of phase EAS5_a_system_of_systems
+intent: null
+summary: 31 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793900149015
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793900149015
+lastSeenAt: 1793900149015
+fingerprint: null
+payload:
+  for: EAS5_a_system_of_systems
+  kind: phase
+  repo: null
+  hash: 697655ab6df85ecf
+  nodes:
+    - path: docs/emerge-system.spec
+      role: changes
+      exists: true
+      system: null
+    - path: emerge/emerge/compiler/kg-builder.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: lib/emerge/compiler/kg-builder.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/phase-specs.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-connect.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: changes
+      exists: true
+      system: lib
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/drawbridge-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/registry-draft.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/lattice/associative-lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/capability-spec.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/heartbeat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-cli-interface.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/core-duties.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-dag.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pulse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus/autopilot.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/nexus/core-duties.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/nexus-cli-interface.js
+      kind: requires
+    - from: lib/system-boundary.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: lib/system-boundary.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus/nexus-connect.js
+      to: lib/heartbeat.js
+      kind: requires
+    - from: lib/nexus/nexus-connect.js
+      to: intelligence/lattice/associative-lattice.js
+      kind: requires
+    - from: lib/nexus/nexus-connect.js
+      to: lib/pulse.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-files.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-graph.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/registry-draft.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+  crossings:
+    - from: lib/nexus/nexus-connect.js
+      to: intelligence/lattice/associative-lattice.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+    dependents: []
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): EAS2_the_language_through_the_door · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+        kind: declared

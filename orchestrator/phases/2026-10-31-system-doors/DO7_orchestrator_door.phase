@@ -7,11 +7,11 @@ intent: null
 summary: DO7_orchestrator_door (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793859698109
+exported_at: 1793909471840
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793859698109
-lastSeenAt: 1793859698109
+firstSeenAt: 1793909471840
+lastSeenAt: 1793909471840
 fingerprint: null
 payload:
   id: DO7_orchestrator_door
@@ -28,6 +28,7 @@ payload:
   depends_on:
     - DO_D9_registry_then_cos_through_the_door
     - DO0_the_handshake_counts_real_routes
-  blocks: []
+  blocks:
+    - MOD-DOOR-ORCHESTRATOR
   spec: docs/system-doors.spec
   graph: 81dfab82c103b6ba

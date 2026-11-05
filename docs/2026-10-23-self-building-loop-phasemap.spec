@@ -417,3 +417,34 @@ few days old. But does this help. A project that had auto built 5 phases"
   - a phase spec copied from another (E3: SP5's text is SP1's with the name swapped): the map check flags two phases whose `does:` match
     after the name is removed.
   - a scene that fails its own schema (E6) and the README link (E5) are that project's to fix, not Nexus's.
+
+# ── ADDENDUM 2026-11-03 — phases stop being written; they expand (his rule). SL11, the phase ledger and its gate (mapped, not built; first numbered SL10, which another phase in this map already had — renumbered the same day) ──────
+# James, 2026-11-03: "We need a fucking ledger too of phases, and we need, like, so they stop getting written, you know what I mean?" · "Like they
+# stop getting written and start getting, they expand."
+# Context: asked what is left in Clear Glass. The phase census (lib/phase-census.js, CNS1) over Clear Glass's phases, the same day: 483 phases in
+# 51 maps — 228 done, 30 deferred, 111 not built, 4 partly, 6 mentioned, 103 naming no files (cannot be judged), 1 built-undeclared. The same id
+# written in two maps for two things: TB1 (browser-providers "a tab is its own webview"; identities "tab is a view"), PF1 (clear-glass-surfaces
+# "read the log"; portfolio "portfolio node"). Nothing checks, before a phase is written, whether one already covers it. Expanding this map, which
+# owns the census and the groomer, instead of starting a new one — his rule applied to itself.
+decisions_addendum_2026_11_03:
+  SL_D11_phases_expand:
+    status: DECIDED 2026-11-03 (his)
+    chosen: >-
+      A phase is never written twice. When new work touches what an existing phase covers (its files, or its intent), that phase expands — its
+      does:, files:, depends_on: and proof grow, with a dated addendum quoting why — and no new phase is written. A new phase is written only
+      when nothing in the ledger covers it. Every phase id is unique across all maps.
+    by: "his words; §0.3 (the earlier text kept in the addendum), §10.3 (one truth, not competing copies)"
+phases_addendum_2026_11_03:
+  SL11_the_phase_ledger_and_its_gate:
+    layer: library
+    status: OPEN
+    depends_on: [SL_D11_phases_expand, SL3_the_backlog_groomed, SL2_done_by_evidence]
+    spec: docs/self-building-loop.spec
+    blocks: [MOD-SL-GROOM]
+    files: [lib/phase-ledger.js (new), lib/phase-census.js, lib/phase-dag.js, lib/phase-groom.js, idearium/cli/route-commands.js, tests/modules/test-phase-ledger.test.js (new)]
+    does: >-
+      (1) The ledger: every phase of every map, one row each — id, map, owning system, files, depends_on, verdict from the census — generated,
+      never typed by hand. (2) The gate: a phase about to be written is checked against the ledger by its files and its intent (its does:,
+      name removed, as the E3 check already compares); a match refuses it and names the phase to expand. (3) Duplicate ids across maps listed
+      (TB1, PF1 …), each pair for him to merge into one that expands. CLI: `phases ledger [system]`, `phases check <map>`.
+    proof: "the ledger lists Clear Glass's 483; a fixture phase whose files match an existing one is refused with that phase named; TB1 and PF1 listed as duplicate ids"

@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792822478443
+exported_at: 1793899281132
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478443
-lastSeenAt: 1792822478443
+firstSeenAt: 1793899281132
+lastSeenAt: 1793899281132
 fingerprint: null
 payload:
   for: SL0_what_can_be_built_now
@@ -228,6 +228,7 @@ payload:
     upstream: []
     downstream:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL10_the_pipeline_simulated
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL11_the_phase_ledger_and_its_gate
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
@@ -250,7 +251,7 @@ payload:
       - 'depends on (0): —'
       - >-
         needed by (5): SL1_a_proven_phase_closes_itself, SL2_done_by_evidence,
-        SL3_the_backlog_groomed, SL4_the_loop, SL6_the_loop_counts_itself · all downstream 10 ·
+        SL3_the_backlog_groomed, SL4_the_loop, SL6_the_loop_counts_itself · all downstream 11 ·
         finishing it unlocks SL1_a_proven_phase_closes_itself, SL2_done_by_evidence,
         SL3_the_backlog_groomed, SL6_the_loop_counts_itself
     edges: []

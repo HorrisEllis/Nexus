@@ -464,3 +464,9 @@ v1_4_addendum:
 # adapters/emerge-field.js), before it is in the causal ledger. 1.x runs unchanged beside it; adapters/siso-gates.js
 # records a 1.x Stream as links. Open: 1.x's SISO-shaped files are still in core/, and consumers move one by one.
 # Proof: tests/modules/test-warp2.test.js 6/6; 1.x 43/43 unchanged.
+#
+# ## ADDENDUM 2026-11-05 — EAS4 L0: the Emerge adapter is Emerge's (docs/2026-10-31-emerge-as-a-system-phasemap.spec EAS4)
+# James, 2026-11-05: "One primitive per gate. Compounds, each layer." · "A" (Emerge is a system in Nexus).
+# adapters/emerge-field.js moved to emerge/emerge/core/admit.js (the same admitFrom, on Emerge's evaluate); the lib copy is in
+# adapters/_archive/ with its reason (§0.3). WARP is unchanged: Engine({ admit }) still takes the constraints handed in, so
+# warp/ requires nothing of Emerge, and lib/ gains no upward edge into emerge/ (a direct require was counted as one, 2026-11-05).

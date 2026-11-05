@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793448283185
+exported_at: 1793900594879
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793448283185
-lastSeenAt: 1793448283185
+firstSeenAt: 1793900594879
+lastSeenAt: 1793900594879
 fingerprint: null
 payload:
   for: EAS2_the_language_through_the_door
@@ -43,19 +43,18 @@ payload:
     downstream:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS5_a_system_of_systems
-    blockedBy:
-      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
-      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+    blockedBy: []
     unlocks:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS5_a_system_of_systems
     conflicts: []
     dangling: []
     lines:
-      - layer 2 · blocked by EAS1_the_skeleton_in_emerge, EAS_D3_handlers_run_the_cli
+      - layer 2
       - 'depends on (2): EAS1_the_skeleton_in_emerge, EAS_D3_handlers_run_the_cli · all upstream 5'
       - >-
         needed by (2): EAS4_callers_through_the_door, EAS5_a_system_of_systems · finishing it
-        unlocks EAS5_a_system_of_systems
+        unlocks EAS4_callers_through_the_door, EAS5_a_system_of_systems
     edges:
       - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
         kind: declared

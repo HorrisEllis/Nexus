@@ -1,23 +1,23 @@
 envelope: 1
-uuid: nexus-export-graph-phase:EAS4_callers_through_the_door:fc9964fecf5c8519
+uuid: nexus-export-graph-phase:EAS4_callers_through_the_door:5480c2c48609d667
 type: graph
-id: phase:EAS4_callers_through_the_door:fc9964fecf5c8519
+id: phase:EAS4_callers_through_the_door:5480c2c48609d667
 context: dependency graph of phase EAS4_callers_through_the_door
 intent: null
-summary: 30 node(s), 5 crossing(s)
+summary: 43 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793448283189
+exported_at: 1793903590540
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793448283189
-lastSeenAt: 1793448283189
+firstSeenAt: 1793903590540
+lastSeenAt: 1793903590540
 fingerprint: null
 payload:
   for: EAS4_callers_through_the_door
   kind: phase
   repo: null
-  hash: fc9964fecf5c8519
+  hash: 5480c2c48609d667
   nodes:
     - path: copilot/module-builder.js
       role: changes
@@ -27,10 +27,38 @@ payload:
       role: changes
       exists: true
       system: cortex
+    - path: emerge/emerge/core/admit.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/core/index.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lib/compiler.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/registry-components.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/tests/compiler-door.test.js
+      role: changes
+      exists: true
+      system: null
     - path: guardian/server.js
       role: changes
       exists: true
       system: guardian
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
     - path: idearium/compiler-bridge.js
       role: changes
       exists: true
@@ -39,7 +67,31 @@ payload:
       role: changes
       exists: true
       system: lib
+    - path: lib/spec-collect.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/warp/adapters/_archive/emerge-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/warp/core/Engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/warp/spec/warp.spec
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-spec-pipeline.test.js
+      role: changes
+      exists: true
+      system: null
     - path: tests/modules/test-substrate-spec.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-warp2.test.js
       role: changes
       exists: true
       system: null
@@ -75,10 +127,6 @@ payload:
       role: used-by
       exists: true
       system: guardian
-    - path: idearium/api/index.js
-      role: used-by
-      exists: true
-      system: idearium
     - path: lib/agent-tools/tools/faculty/faculty-tools.js
       role: used-by
       exists: true
@@ -88,6 +136,10 @@ payload:
       exists: true
       system: null
     - path: scripts/mco6-ic9-kill-and-restart.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/contract-intake-dependency-graph.test.js
       role: used-by
       exists: true
       system: null
@@ -182,9 +234,6 @@ payload:
     - from: guardian/guardian-service.js
       to: guardian/server.js
       kind: requires
-    - from: idearium/api/index.js
-      to: idearium/compiler-bridge.js
-      kind: requires
     - from: copilot/server.js
       to: copilot/module-builder.js
       kind: requires
@@ -210,6 +259,9 @@ payload:
       to: cortex/core/raid/contract-intake.js
       kind: requires
     - from: scripts/mco6-ic9-kill-and-restart.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/contract-intake-dependency-graph.test.js
       to: cortex/core/raid/contract-intake.js
       kind: requires
   crossings:
@@ -260,14 +312,12 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
     downstream: []
-    blockedBy:
-      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
-      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 3 · blocked by EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus
+      - layer 3 · ready
       - >-
         depends on (2): EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus · all
         upstream 8

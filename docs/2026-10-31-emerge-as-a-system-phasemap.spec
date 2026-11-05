@@ -41,6 +41,93 @@ decisions:
     chosen: "the door's language handlers run the eg command line in a child process with a timeout, rather than requiring the interpreter in the server"
     by: "his axioms, applied by the coder: §8.6 (the CLI is the tested surface), §5.15 rule 3 (a runaway program kills its child, not the door), §1.2 (a timeout is said)"
 
+  # ── ADDENDUM 2026-11-05 — primitive-based, one primitive per gate, compounds per layer (his) — moved here from after order: on 2026-11-05, where a phase reader took it as EAS5's body ──
+  EAS_D5_one_primitive_per_gate:
+    status: DECIDED 2026-11-05 (his)
+    james: '"Primitive based coding?" · "Would also set expectations. One primitive per gate. Compounds, each layer."'
+    context: "Shown, the same day, that EAS4's two copies have drifted both ways (37 differ, 31 only in lib/emerge), and two ways to finish it: (a) reconcile all 37 first, (b) primitives first. Emerge already keeps its base values in emerge/emerge/core/primitives.eg; Nexus names its shared primitives in lib/system-boundary.js PRIMITIVES."
+    chosen: "Each gate is one primitive with its expectation stated — what it takes, what it returns, how it fails — and each layer is a compound of the primitives of the layer below. A caller relies on a primitive's expectation, never on its code. EAS4 is done this way."
+
+  EAS_D6_emerge_is_a_system_in_nexus:
+    status: "DECIDED 2026-11-05 (his); supersedes EAS3's lock rule in part (kept, §0.3)"
+    james: '"It should be a system in nexus. You can request. Emerge was to help me learn to code. A, or migrate"'
+    context: >-
+      Asked whether the coder could add the Emerge repository (to build EAS4's primitives there, under EAS3's rule that "the Emerge repo is
+      the one source; this snapshot changes only by a new lock"), and which way for evaluate. Read the same day (public, read-only): the Emerge
+      repository's main is f023240, exactly the commit Nexus locked — nothing newer; its other branch claude/emerge-learn (9a7181c, 2026-10-30)
+      adds only docs/learn (the course, levels 0–6), and Nexus's emerge/docs/learn already holds a newer version of it (2s-say-it, the garden
+      examples). Nothing is lost by Nexus becoming the source.
+    chosen: >-
+      Emerge is a system in Nexus: emerge/ is its source, developed in Nexus; the separate repository was a learning project (his). EAS4's
+      primitives are built in emerge/ directly. evaluate (L0) is a shared primitive (his "A"; "or migrate" left open as the alternative), pure
+      and used directly — not through a handoff — beside the bus, nexus-connect, the WARP core, SISO and the hooks (lib/system-boundary.js
+      PRIMITIVES).
+    still_his: "whose are phase-specs.js and kg-builder.js (the coder reads Idearium)"
+  EAS_D7_the_spec_compiler_is_emerges:
+    status: "DECIDED 2026-11-05 (his)"
+    james: '"I don’t know idearium?" · then, shown both records side by side: "A."'
+    context: >-
+      Two records disagreed: PS1 (2026-10-20, phase-specs.js's own header) placed it in Emerge, "the spec compiler's system", on purpose; his
+      later words ("okay warp and emerge. spec compiler, ide, and idearium"; a voice note: "spec compiler's moving to Idearium") pointed to
+      Idearium, which is where the coder's first reading came from. Options: (a) Emerge's — the compiler stays Emerge's heart, Idearium a user
+      through Emerge's door (the coder's lean); (b) Idearium's.
+    chosen: "(a) kg-builder.js (the spec compiler) and phase-specs.js are Emerge's; Idearium (its Phases screen, API, CLI) and the release script reach them through Emerge's door, never its files"
+
+  # ── ADDENDUM 2026-11-05 — the primitives as a small model's structure; one kernel from three sets (his) ──
+  EAS_D8_one_kernel_and_the_small_model_bench:
+    status: "DECIDED 2026-11-05 (his) — after EAS4; no phase written yet"
+    james: '"Yes. This could be huge." (on the primitives letting a 3B-7B local model do what needs a big one) · his own words a month before,
+      scripts/bench-file-prompt.js, 2026-10-05: "combining primitives or invariants to build higher leverage code for less tokens." · asked
+      when: "After EAS4" · asked which primitives: "One kernel, merged"'
+    context: >-
+      Shown, the same day, three primitive sets that are all his: Emerge's core (Rheon: Field, Constraint, Transition, Observation, Lens, Gap,
+      History, Level, Budget, Seed; read from emerge/emerge/core, a kernel of six leaves plus compounds), the ERAVOS kernel (ERAVOS.kernel.spec
+      1.0.0: Organism, Space, Hook, Wire, Projection, Constraint, Mutation, Event, Asset, Permission, + Port in amendment 3.1) with its proposed
+      object model (one store, stable ids, typed associations), and Nexus's shared primitives (lib/system-boundary.js PRIMITIVES: the bus,
+      nexus-connect, the hooks registry, SISO, WARP's Link/Expectation/Axiom/Ledger). They overlap (Constraint in all three; three hash-chained
+      logs; Event and Gate twice in lib) and each covers what the others lack (Emerge: law and evidence; ERAVOS: Relation, Identity,
+      Permission; WARP: causation and expectations). Choices put to him: merge into one kernel · Emerge's core as the kernel with Relation and
+      Identity added · three sets with a mapping · not yet. The idea of a benchmark (a small model, the same tasks with and without the
+      primitive contracts; tests passed, tokens, attempts; the unfavourable case reported, §17.11) was the coder's shaping of his idea.
+    chosen: >-
+      One kernel, merged from the three sets: each concept once. Taken up after EAS4. The small-model benchmark is built on that kernel's
+      contracts.
+    still_his: >-
+      Where the merged kernel lives and whose it is (a system of its own, Emerge, or the kernel; §5.15) · what Seed means (Emerge built
+      replayable randomness; ERAVOS's "seed-registry" and "generator id + seed" read the same; an outside analysis read "initial condition") ·
+      whether merging retires siso/ and warp/core's duplicates.
+    # ── ADDENDUM 2026-11-05 — an idea, his, recorded (not a decision, no phase): a world simulation as a domain for the benchmark ──
+    # James, 2026-11-05, on an outside analysis of the primitives as the base of a large persistent game world ("This feels huge."), asked
+    # whether to log it: "Yes then finish eas4"
+    # Read against the code the same day (the coder's): simulation level-of-detail is the shape of Level (a node's summary stands for the
+    # detail under it, hashed over its children; the expand/collapse rule is not built); a consequence chain (bridge → route → supply →
+    # settlement → faction) is Transition's causedBy and WARP's Link and Expectation; a frame budget is Budget, and ERAVOS's audio thread
+    # (~2.7 ms per 128-sample block at 48 kHz, "timing and stability first") is already a tighter real-time deadline than a 60 FPS frame.
+    # Rendering, physics, animation and content are not what the primitives give.
+    # The coder's suggestion, his to place: one domain of the merged-kernel benchmark — a few thousand agents and settlements built only
+    # from the kernel, Level choosing detail by distance; measured: time per tick against a fixed budget, agents at full detail vs summarised,
+    # and that a collapsed settlement expanded again matches a run never collapsed.
+
+  EAS_D9_emerge_calls_back_by_route:
+    status: "DECIDED 2026-11-05 (his)"
+    james: 'asked how Nexus\'s pieces take part when it asks Emerge through its door: "Emerge calls back by route"'
+    context: >-
+      Found the same day, reading EAS4's last three callers (copilot/module-builder.js L2 build; guardian/server.js and lib/build-pipeline.js
+      L3 run; idearium/compiler-bridge.js): lib/emerge's pipeline runs Cortex's preflight and writeback and Idearium's sync in-process, and
+      its t2-gate sends T2 to Guardian (:7820 /command, the SEAM queue). emerge/ removed that coupling on purpose (his, 2026-10-28: "don't
+      couple to nexus"): it calls a host (compiler/host.js) and a model (compiler/model.js), and says Nexus keeps its own "in its repo"; none
+      exists. Through the door nothing can be handed over in-process. So the coder's earlier plan to "port t2-gate's 52 lib-only lines" was
+      wrong: those lines are the coupling his rule removed. The conflict put to him: Emerge depends on nothing above it (2026-10-28) vs model
+      work routes through RAID and Guardian (§5.2, §9.1). Choices: Emerge calls back by route · callers wrap the door (T2 on Emerge's own
+      Ollama, bypassing Guardian) · one Nexus build host placed in a system he names · plan it first.
+    chosen: >-
+      A request through Emerge's door may name a host and a model as routes. Emerge calls them over HTTP: still no Nexus file in Emerge, and
+      any system can be swapped in for any of them. Guardian stays the model for Nexus's builds, so routing and the economy hold.
+    changes: >-
+      emerge/: model.js gains api "route" (POST a URL: { prompt, meta } → { ok, text, … }); host.js accepts route settings (ping, preflight,
+      writeback, sync each a URL; summarize stays local). Nexus: the system that owns each part serves it (Cortex: preflight, writeback;
+      Idearium: sync; Guardian: the model). Then L2 build and L3 run go behind the door and the four callers switch.
+
 phases:
   EAS1_the_skeleton_in_emerge:
     status: BUILT 0.60.336 (Emerge 19200ff)
@@ -77,11 +164,67 @@ phases:
   EAS4_callers_through_the_door:
     status: OPEN
     depends_on: [EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus]
-    files: [guardian/server.js, idearium/compiler-bridge.js, copilot/module-builder.js, cortex/core/raid/contract-intake.js, lib/hooks/emerge.hooks.js, tests/modules/test-substrate-spec.test.js, lib/emerge, _archive/lib/emerge]
+    files: [guardian/server.js, idearium/compiler-bridge.js, copilot/module-builder.js, cortex/core/raid/contract-intake.js, lib/hooks/emerge.hooks.js, tests/modules/test-substrate-spec.test.js, lib/emerge, _archive/lib/emerge, emerge/emerge/core/admit.js, emerge/emerge/core/index.js, lib/warp/adapters/_archive/emerge-field.js, lib/warp/core/Engine.js, lib/warp/spec/warp.spec, tests/modules/test-warp2.test.js, emerge/emerge/lib/compiler.js, emerge/emerge/registry-components.js, emerge/emerge/data/nodes/command/emerge.compiler.compile.command, emerge/emerge/tests/compiler-door.test.js, emerge/emerge/compiler/host.js, emerge/emerge/compiler/model.js, emerge/emerge.cos, lib/spec-collect.js, tests/modules/test-spec-pipeline.test.js, idearium/api/index.js, idearium/cli/route-commands.js]
     spec: docs/emerge-system.spec
     blocks: [MOD-EAS-CALLERS]
     does: "run-time callers to Emerge's door, build-time ones to the snapshot; lib/emerge archived"
     proof: "nothing requires lib/emerge; the module suite green"
+    # ── EXPANDED 2026-11-05 (his rule: phases expand, not rewritten) — primitives first; one primitive per gate; compounds per layer ──
+    # James, 2026-11-05: "Primitive based coding?" · "Would also set expectations. One primitive per gate. Compounds, each layer."
+    # Found that day, before any switch (MOD-EAS-CALLERS: "a caller whose answer changes is stopped and the difference named"): lib/emerge
+    # and the emerge/ snapshot have drifted both ways — 37 files differ, 31 exist only in lib/emerge (compiler/t2-gate.js 343 lines there,
+    # 291 in the snapshot; kg-builder.js 605 / 615; compiler/phase-specs.js only in lib/emerge). Six run-time callers: copilot/module-builder.js
+    # (pipeline), guardian/server.js and lib/build-pipeline.js (t2-gate), idearium/compiler-bridge.js and lib/spec-collect.js (compiler index),
+    # lib/warp/adapters/emerge-field.js (core); thirteen files name lib/emerge paths as text.
+    # The approach (his, choosing the coder's (b) over reconciling all 37 first): what the callers use is found and each use becomes ONE
+    # primitive behind Emerge's door — one primitive per gate, its expectation stated (in, out, failures) — and each layer above is a
+    # compound of the primitives below it. Callers are rebuilt on those primitives; lib/emerge is archived as it stands, carrying over only
+    # what a primitive needs, into Emerge's own repo first (then a new lock). Nothing is copied again.
+    still_his: "whose are compiler/phase-specs.js and kg-builder.js (they turn his maps into phase files and check the specs): the coder reads Idearium (it owns specs and phases), to confirm"
+    # ── EXPANDED 2026-11-05 (0.60.405, renumbered from 0.60.388 on merge) — L0 done: evaluate's one caller moved, with no new crossing ──
+    # Tried first, as told to him: name emerge/emerge/core/constraint.js in lib/system-boundary.js PRIMITIVES and have
+    # lib/warp/adapters/emerge-field.js require it. The ratchet refused it: PRIMITIVES only names a blocker, and the require was a NEW
+    # upward edge (lib -> emerge, the kernel depending on a system, §5.9). Reverted, not pushed.
+    # Done instead, by §5.15 (a thing belongs to the system it serves): the adapter turns Emerge's constraints into admit(link), and WARP's
+    # Engine already takes admit handed in, so the adapter is Emerge's. It is emerge/emerge/core/admit.js (an L0 compound on ./constraint,
+    # its expectation in its header); the lib file is in lib/warp/adapters/_archive/ with its reason. Its one caller, test-warp2, uses
+    # Emerge's core now. PRIMITIVES is unchanged.
+    # Proof: test-warp2 7/7, test-emerge-core 6/6, test-emergence-and-warp-suites 198/198 (same before and after); census 1120 crossings
+    # before and after, and check() adds none of this change's (its two added edges, cos/manager/autopilot-door.js, were there before:
+    # test-system-boundary 8/2 before and after). Left for L1-L3: compile, build and run as command nodes behind Emerge's door.
+    # ── EXPANDED 2026-11-05 (0.60.406, renumbered from 0.60.389 on merge) — L1 compile behind Emerge's door; one of its two callers moved; the other stopped, its difference named ──
+    # Before the switch (MOD-EAS-CALLERS): lib/emerge's compile and emerge/'s, on SPEC_COMPILER.spec, substrate.spec and belief-loop.spec
+    # (50, 78, 70 files, skipCortex, T1), differ in one line only: the compiler's version stamp in src/index.ts and src/types/index.ts
+    # (v1.1.0 from lib/emerge, v1.13.0 from emerge/). Named here; it is the stamp of the compiler that ran.
+    # Built: component emerge.compiler (emerge/emerge/lib/compiler.js), capability emerge.compiler.spec, command emerge.compiler.compile with
+    # its expectation in the node (expects: in, out, fails), route POST /compiler/compile, event emerge.compiler.compiled, its registry entry.
+    # The spec comes in as text and the emitted files go back as text (a caller in another system shares no folder with Emerge). It runs on
+    # the local host: no Cortex, Emerge depends on nothing above it (his, 2026-10-28).
+    # Moved: lib/spec-collect.js's compiler template now posts to Emerge's door (lib/nexus-client.js, :4900); Emerge down is said, nothing
+    # proposed (SP-08d). Stopped, not moved: idearium/compiler-bridge.js. Its default (skipCortex false) runs Cortex's preflight and writeback
+    # inside lib/emerge's compile; Emerge's compile has no Cortex. Moving it changes its answer. By §5.15 and his 2026-10-28 rule, the coder's
+    # reading is that Idearium calls Cortex itself around the door; to do as its own step, with its difference shown first.
+    # Proof: emerge tests/compiler-door.test.js 4/4 (CD-02: through the door, byte for byte the files compile() writes); lang-door 8/8,
+    # nesting 5/5, skeleton green; test-spec-pipeline 13/13; census 1120 before and after; emerge/ locked again (352 files). The CLI and agents:
+    # POST /api/emerge-system/compile and the row emerge.compile (EN-04 green); no screen yet, the UI deferred and said.
+    # ── EXPANDED 2026-11-05 (0.60.407, renumbered from 0.60.390 on merge) — L2 build and L3 run behind the door, Emerge's side (his EAS_D9: "Emerge calls back by route") ──
+    # Corrected: "port t2-gate's 52 lib-only lines" (above) was wrong; they are the Guardian/Cortex coupling his 2026-10-28 rule removed.
+    # Built: compiler/model.js api route; compiler/host.js routeHost; POST /compiler/build and /compiler/run (commands with expects:); a
+    # host or model as a path is refused at the door. Run's progress comes back as a list, not live (named). Proof: compiler-door 8/8.
+    # Next: Cortex (preflight, writeback), Idearium (sync), Guardian (the model) each serve their route; then the four callers switch.
+    # ── EXPANDED 2026-11-05 — the primitives found (read from the six callers) ──
+    # Four functions, already layered, each a compound of the one below:
+    #   L0 evaluate (core)                constraint + state → { ok } | { gap } | { ok:false, constraint, reason }   ← warp's admit, every link
+    #   L1 compile  (compiler/index.js)   spec text + dir → the compiled graph, ok | error                          ← idearium/compiler-bridge, lib/spec-collect
+    #   L2 build    (compiler/pipeline)   spec file + out dir → { ok, skipped, error }                              ← copilot/module-builder
+    #   L3 run      (compiler/t2-gate)    spec file + out dir + provider → the closed loop, with progress events   ← guardian/server, lib/build-pipeline
+    # Emerge's door (emerge/emerge/server.js) is the template's: /contract, /handoff, /handoff/receipt, /health; work arrives as a handoff
+    # matched to a command node that accepts its kind. The snapshot's command nodes are lang.* (build, check, run, say, synth, test),
+    # handoff, modules, nodes, status — none of the four (command nodes emerge.compile, .check, .codegen … exist only in lib/emerge).
+    # So each primitive becomes a command node in Emerge (its expectation in the node), built in Emerge's own repo, then a new lock.
+    # Found, to raise with him (a cost before it is paid): L0 evaluate runs on every WARP link; a handoff is a file moved through
+    # input/ → processing/ → done/, far too slow per link, and Emerge down would stop WARP (§5.15 rule 3). L1–L3 become asynchronous
+    # (a handoff and its receipt) where their callers wait inline today.
   EAS5_a_system_of_systems:
     status: BUILT 0.60.336 (Emerge 58a12d8)
     depends_on: [EAS2_the_language_through_the_door]

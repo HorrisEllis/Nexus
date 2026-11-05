@@ -1,0 +1,77 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EAS5_a_system_of_systems:b0b250edc74f4180
+type: graph
+id: phase:EAS5_a_system_of_systems:b0b250edc74f4180
+context: dependency graph of phase EAS5_a_system_of_systems
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793905362597
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793905362597
+lastSeenAt: 1793905362597
+fingerprint: null
+payload:
+  for: EAS5_a_system_of_systems
+  kind: phase
+  repo: null
+  hash: b0b250edc74f4180
+  nodes:
+    - path: docs/emerge-system.spec
+      role: changes
+      exists: true
+      system: null
+    - path: lib/nexus/autopilot.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-cli-interface.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/core-duties.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus/autopilot.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/nexus/core-duties.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/nexus-cli-interface.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+    dependents: []
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): EAS2_the_language_through_the_door · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+        kind: declared

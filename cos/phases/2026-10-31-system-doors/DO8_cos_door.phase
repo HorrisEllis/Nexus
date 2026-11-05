@@ -7,11 +7,11 @@ intent: null
 summary: DO8_cos_door (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793859698111
+exported_at: 1793909471842
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793859698111
-lastSeenAt: 1793859698111
+firstSeenAt: 1793909471842
+lastSeenAt: 1793909471842
 fingerprint: null
 payload:
   id: DO8_cos_door
@@ -27,6 +27,7 @@ payload:
   depends_on:
     - DO_D9_registry_then_cos_through_the_door
     - DO0_the_handshake_counts_real_routes
-  blocks: []
+  blocks:
+    - MOD-DOOR-COS
   spec: docs/system-doors.spec
   graph: 39102e7ba71eebf4
