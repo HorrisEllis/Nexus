@@ -43,7 +43,8 @@ async function boot(entry) {
 }
 // what a route answers, without its moving parts: the status and the top-level keys of its JSON
 const shape = (r) => ({ status: r.status, keys: r.json && typeof r.json === 'object' && !Array.isArray(r.json) ? Object.keys(r.json).sort() : (Array.isArray(r.json) ? 'array' : typeof r.json) });
-const STABLE_GETS = REG.filter(c => c.route && c.route.method === 'GET' && !/[:*]/.test(c.route.path) && !/stream/.test((c.tags || []).join(' ')) && c.route.path !== '/events').map(c => c.route.path);
+// the door's own routes (tag 'door': /registry, /handshake, /cli) are new on the door, so they are not in boot.js's table to replay
+const STABLE_GETS = REG.filter(c => c.route && c.route.method === 'GET' && !/[:*]/.test(c.route.path) && !/stream/.test((c.tags || []).join(' ')) && !(c.tags || []).includes('door') && c.route.path !== '/events').map(c => c.route.path);
 
 (async () => {
   console.log('\n⬡  Cortex\'s door (DO3a)\n');
