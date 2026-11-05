@@ -15,8 +15,8 @@ found_before_mapping: >-
 readings_to_confirm:
   - "\"regardless of request\": any reply Guardian can see in Clear Glass (a chat he started himself, not only one Guardian sent), on the
      AI sites Guardian already watches."
-  - "\"agent tool commands\": the ```tool_call blocks Nexus's agents already write, and nexus.command lines (the one command table,
-     idearium/cli/route-commands.js)."
+  - "\"agent tool commands\": the ```tool_call blocks Nexus's agents already write, \"hey nexus,\" wake lines (the agent hint's
+     convention, guardian/userscript-nexus-wake.js), and nexus.command lines (the one command table, idearium/cli/route-commands.js)."
 
 risk_named: >-
   (TRUTH_OVER_COHERENCE, §1.2) Running whatever a reply says, from any page, means anything that can make a model write a tool_call block
@@ -64,4 +64,26 @@ phases:
       Run and Skip for the waiting ones. Tested in Clear Glass (AXIOMS §4.1).
     proof: "a waiting call shows in the panel with its chat; Run runs it once and the toast shows the result"
 
-order: "AT1 → AT2 → AT3, after his AT_D0 (and AT_D1 for AT3)."
+  AT4_claude_code_page:
+    status: OPEN
+    origin: "James, 2026-11-05, with this Claude Code session open in Clear Glass: \"i need a way for you to assist me in clearglass.\""
+    depends_on: [AT1_pickup_from_any_reply, AT_D1_where_the_result_goes]
+    files: [guardian/nexus-hey-claude.user.js, guardian/userscript-claude.js, guardian/lib/wake-loop.js, tests/modules/test-guardian-any-reply-tools.test.js]
+    does: >-
+      The Claude userscript matches claude.ai/* already, but reads claude.ai's chat page; Claude Code's page (claude.ai/code/session_…) has its
+      own message list and composer. Teach it that page: a completed assistant turn is read, its wake lines and tool_call blocks go through
+      AT1–AT2, and the answer is typed into its composer and sent, so the coder in the cloud receives Nexus's live answer as the next turn.
+    proof: "a recorded Claude Code page with one completed turn containing \"hey nexus, open gaps\" is answered into its composer once"
+
+order: "AT1 → AT2 → AT3, after his AT_D0 (and AT_D1 for AT3); AT4 after AT1 and AT_D1."
+
+# ── ADDENDUM 2026-11-05 — Hey Nexus is the same mechanism; one pickup for both ──────────────────────────────────────────────────────────────
+# James, 2026-11-05: "also look at hey nexus, it was meant to be a way for you to conversate with nexus." Read the same day: Hey Nexus is
+# built (guardian/userscript-nexus-wake.js, guardian/lib/wake-loop.js, 0.39.252). The agent hint tells a model it can write a line starting
+# "hey nexus," and guardian's wake-loop answers it from the COMPLETED reply, asking co-pilot (:3750/api/prompt/tools, the full tool loop),
+# and types the answer back into the same chat as a wake-reply job — his 2026-09-25 "it is for the agents to talk to nexus. not me." Its gap
+# is this map's gap: the wake-loop answers completions of guardian jobs; a chat with no job (one he opened himself, this Claude Code session)
+# is never answered. So AT1 reads both from any completed reply — tool_call blocks and wake lines — and AT2's gate holds both (co-pilot's tool
+# loop can change things, so a wake from a reply he did not ask Guardian to send is gated the same way). AT4 teaches the Claude userscript
+# Claude Code's page.
+

@@ -164,3 +164,16 @@ order: "DO0 first (it is a defect, and every door's handshake needs it); then DO
 #   - RELATED, not duplicates: SE7_the_door_in_the_dag (a phase with no way in is refused), EAS4_callers_through_the_door (Emerge's door),
 #     CP0/CP4 (the compartment), RG/PL in the registry-per-system map (each registry its own). Each names its own work; none builds a door.
 #   - MISSING: Orchestrator and COS had no door phase anywhere. Added here: DO7, DO8.
+
+# ── ADDENDUM 2026-11-05 — his: the CLI on each server.js is how every UI and co-pilot reach the system ───────────────────────────────────
+# James, 2026-11-05: "also the cli commands for each server.js is meant to be how each ui and copilot interact with the system through the
+# interaction contract." Recorded as his decision (DO_D10, below). It fixes what POST /cli on each door is for: not a convenience for people,
+# but the one way in for every UI and for co-pilot, through the system's own registry (its interaction contract). Cortex's door (DO3a) serves
+# it; every other door phase (DO1, DO2, DO5, DO7, DO8) carries it; co-pilot's tool loop is to call systems through their doors' /cli instead
+# of reaching their files or a central table — a phase to map once the doors stand (the reading of "through the interaction contract" as
+# "through each system's own registry" is the coder's, to confirm).
+decisions_addendum_2026_11_05:
+  DO_D10_the_cli_is_the_way_in_for_every_ui_and_copilot:
+    status: "DECIDED 2026-11-05 (his)"
+    chosen: "each system's server.js serves its CLI from its registry, and every UI and co-pilot interact with that system through it"
+    by: "his, 2026-11-05: \"the cli commands for each server.js is meant to be how each ui and copilot interact with the system through the interaction contract.\""

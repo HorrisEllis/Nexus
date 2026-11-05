@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793861314900
+exported_at: 1793861492469
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793861314900
-lastSeenAt: 1793861314900
+firstSeenAt: 1793861492469
+lastSeenAt: 1793861492469
 fingerprint: null
 payload:
   for: AT2_the_gate
@@ -69,12 +69,18 @@ payload:
     blockedBy:
       - docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT4_claude_code_page
+        files:
+          - tests/modules/test-guardian-any-reply-tools.test.js
     dangling: []
     lines:
       - layer 2 · blocked by AT1_pickup_from_any_reply
       - 'depends on (1): AT1_pickup_from_any_reply · all upstream 2'
       - 'needed by (1): AT3_result_and_screen'
+      - >-
+        same files as AT4_claude_code_page with no order between them:
+        tests/modules/test-guardian-any-reply-tools.test.js
     edges:
       - from: docs/2026-11-05-guardian-any-reply-tool-calls-phasemap.spec::AT1_pickup_from_any_reply
         kind: declared
