@@ -136,3 +136,18 @@ decisions_addendum_2026_11_05:
     context: "Shown, the same day, that EAS4's two copies have drifted both ways (37 differ, 31 only in lib/emerge), and two ways to finish it: (a) reconcile all 37 first, (b) primitives first. Emerge already keeps its base values in emerge/emerge/core/primitives.eg; Nexus names its shared primitives in lib/system-boundary.js PRIMITIVES."
     chosen: "Each gate is one primitive with its expectation stated — what it takes, what it returns, how it fails — and each layer is a compound of the primitives of the layer below. A caller relies on a primitive's expectation, never on its code. EAS4 is done this way."
 
+  EAS_D6_emerge_is_a_system_in_nexus:
+    status: "DECIDED 2026-11-05 (his); supersedes EAS3's lock rule in part (kept, §0.3)"
+    james: '"It should be a system in nexus. You can request. Emerge was to help me learn to code. A, or migrate"'
+    context: >-
+      Asked whether the coder could add the Emerge repository (to build EAS4's primitives there, under EAS3's rule that "the Emerge repo is
+      the one source; this snapshot changes only by a new lock"), and which way for evaluate. Read the same day (public, read-only): the Emerge
+      repository's main is f023240, exactly the commit Nexus locked — nothing newer; its other branch claude/emerge-learn (9a7181c, 2026-10-30)
+      adds only docs/learn (the course, levels 0–6), and Nexus's emerge/docs/learn already holds a newer version of it (2s-say-it, the garden
+      examples). Nothing is lost by Nexus becoming the source.
+    chosen: >-
+      Emerge is a system in Nexus: emerge/ is its source, developed in Nexus; the separate repository was a learning project (his). EAS4's
+      primitives are built in emerge/ directly. evaluate (L0) is a shared primitive (his "A"; "or migrate" left open as the alternative), pure
+      and used directly — not through a handoff — beside the bus, nexus-connect, the WARP core, SISO and the hooks (lib/system-boundary.js
+      PRIMITIVES).
+    still_his: "whose are phase-specs.js and kg-builder.js (the coder reads Idearium)"
