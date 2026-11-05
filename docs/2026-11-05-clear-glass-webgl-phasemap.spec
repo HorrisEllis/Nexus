@@ -24,3 +24,13 @@ phases:
       said: Chromium names the switch "unsafe" because software WebGL is less hardened than the GPU path; it is used only while acceleration is
       off.
     proof: "the source passes the switch exactly when acceleration is off; the probe in real Electron reads WebGL null without it and a renderer with it"
+  WG2_gpu_on_by_default:
+    status: "BUILT 0.60.395 — test-cg-webgl WG-01"
+    origin: "James, 2026-11-05: \"that might explain why the tv ui or idearium is so laggy in clearglass. enable it by default\" (the reading of \"it\" as hardware acceleration is the coder's, from the line before it)"
+    depends_on: [WG1_webgl_with_acceleration_off]
+    files: [clear-glass/src/main/index.js, tests/modules/test-cg-webgl.test.js]
+    does: >-
+      Hardware acceleration is on by default (with it off, every page — the TV UI, Idearium — was drawn by the CPU). It is off when CG_GPU=off,
+      or when the GPU process died 3 times in one run: then <userData>/gpu-off.flag keeps later starts in software mode (WG1's software WebGL),
+      said in the log, until the flag is deleted or CG_GPU=on. The 0.60.3 default (off) is superseded and kept in the comment (§0.3).
+    proof: "WG-01: on by default; off with CG_GPU=off or the flag; three GPU deaths write the flag"

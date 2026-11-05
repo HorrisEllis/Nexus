@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793871560649
+exported_at: 1793871785237
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793871560649
-lastSeenAt: 1793871560649
+firstSeenAt: 1793871785237
+lastSeenAt: 1793871785237
 fingerprint: null
 payload:
   for: WG1_webgl_with_acceleration_off
@@ -142,15 +142,18 @@ payload:
   dag:
     layer: 0
     deps: []
-    dependents: []
+    dependents:
+      - docs/2026-11-05-clear-glass-webgl-phasemap.spec::WG2_gpu_on_by_default
     upstream: []
-    downstream: []
+    downstream:
+      - docs/2026-11-05-clear-glass-webgl-phasemap.spec::WG2_gpu_on_by_default
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-11-05-clear-glass-webgl-phasemap.spec::WG2_gpu_on_by_default
     conflicts: []
     dangling: []
     lines:
       - layer 0
       - 'depends on (0): —'
-      - 'needed by (0): —'
+      - 'needed by (1): WG2_gpu_on_by_default · finishing it unlocks WG2_gpu_on_by_default'
     edges: []

@@ -3,7 +3,8 @@
  * tests/modules/test-cg-webgl.test.js — WG1 (docs/2026-11-05-clear-glass-webgl-phasemap.spec)
  * James, 2026-11-05: "i cant use fiverr at all. clearglass is my main driver"
  *
- *   WG-01  Clear Glass's main asks for software WebGL exactly when it turns hardware acceleration off (CG_GPU is not 'on')
+ *   WG-01  hardware acceleration on by default (WG2); off with CG_GPU=off or after the GPU process died 3 times (a flag file), and then
+ *          software WebGL is asked for (WG1)
  *   WG-02  in real Electron: with acceleration off, WebGL is null without the switch and has a renderer with it. Needs xvfb-run and
  *          node_modules/electron; skipped with the reason when either is missing (§1.2)
  */
@@ -20,9 +21,11 @@ function test(id, desc, fn) { try { const r = fn(); if (r === 'skip') return; co
 
 console.log('\n⬡  Clear Glass has WebGL (WG1)\n');
 
-test('WG-01', 'software WebGL is asked for exactly when hardware acceleration is off', () => {
+test('WG-01', 'acceleration on by default; off with CG_GPU=off or a failed GPU, and then software WebGL', () => {
   const src = fs.readFileSync(path.join(ROOT, 'clear-glass/src/main/index.js'), 'utf8');
-  assert.match(src, /if \(process\.env\.CG_GPU !== 'on'\) \{ app\.disableHardwareAcceleration\(\); app\.commandLine\.appendSwitch\('enable-unsafe-swiftshader'\); \}/);
+  assert.match(src, /const _gpuOff = process\.env\.CG_GPU === 'off' \|\| \(process\.env\.CG_GPU !== 'on' && require\('fs'\)\.existsSync\(_gpuFlag\)\);/);
+  assert.match(src, /if \(_gpuOff\) \{ app\.disableHardwareAcceleration\(\); app\.commandLine\.appendSwitch\('enable-unsafe-swiftshader'\);/);
+  assert.match(src, /d\.type !== 'GPU'[\s\S]{0,120}\+\+_gpuGone === 3\) \{ try \{ require\('fs'\)\.writeFileSync\(_gpuFlag/, 'three GPU deaths in a run write the flag');
   assert.strictEqual((src.match(/app\.disableHardwareAcceleration\(\)/g) || []).length, 1, 'acceleration is turned off in one place only');
 });
 

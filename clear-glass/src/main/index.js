@@ -214,7 +214,7 @@ const bgTabUrls       = new Map(); // agentId → the real url it was opened wit
 
 // ── Single instance ────────────────────────────────────────────────────────
 app.setName('Clear Glass');
-// §0.60.3 — with hardware acceleration off, every page's WebGL reports "Google SwiftShader", the software renderer bot
+// (superseded 2026-11-05 by WG1/WG2 below, kept §0.3) §0.60.3 — with hardware acceleration off, every page's WebGL reports "Google SwiftShader", the software renderer bot
 // detectors read as a headless browser or a VM (fiverr's PerimeterX "It needs a human touch"). It stays off by default:
 // it was turned off for this machine's GPU crashes (below). CG_GPU=on turns it back on — try it when a site keeps
 // asking for a human; if the GPU crash comes back, unset it.
@@ -222,7 +222,20 @@ app.setName('Clear Glass');
 // above is out of date: newer Chromium dropped the automatic SwiftShader fallback, so with acceleration off WebGL was simply missing
 // (getContext('webgl') → null, measured on Electron 42) and Fiverr's bot-check script crashed reading its renderer. With acceleration off,
 // software WebGL is now asked for explicitly. CG_GPU=on (the real GPU) is still the better choice on a machine whose GPU works.
-if (process.env.CG_GPU !== 'on') { app.disableHardwareAcceleration(); app.commandLine.appendSwitch('enable-unsafe-swiftshader'); }
+// 2026-11-05 WG2 — James: "that might explain why the tv ui or idearium is so laggy in clearglass. enable it by default". Hardware
+// acceleration is ON by default now: with it off every page (the TV UI, Idearium) was drawn by the CPU. Off when: CG_GPU=off, or the GPU
+// process died 3 times in one run (a dead or failing GPU) — then gpu-off.flag in Clear Glass's own folder keeps the next starts in software
+// mode, said in the log; CG_GPU=on ignores the flag (and deleting it clears it). With acceleration off, software WebGL is asked for (WG1).
+const _gpuFlag = path.join(app.getPath('userData'), 'gpu-off.flag');
+const _gpuOff = process.env.CG_GPU === 'off' || (process.env.CG_GPU !== 'on' && require('fs').existsSync(_gpuFlag));
+if (_gpuOff) { app.disableHardwareAcceleration(); app.commandLine.appendSwitch('enable-unsafe-swiftshader'); console.log(`[clear-glass] hardware acceleration off (${process.env.CG_GPU === 'off' ? 'CG_GPU=off' : `the GPU failed before: ${_gpuFlag}`}); software WebGL`); }
+else {
+  let _gpuGone = 0;
+  app.on('child-process-gone', (_e, d) => {
+    if (!d || d.type !== 'GPU' || process.env.CG_GPU === 'on') return;
+    if (++_gpuGone === 3) { try { require('fs').writeFileSync(_gpuFlag, JSON.stringify({ at: new Date().toISOString(), reason: d.reason, exitCode: d.exitCode }) + '\n'); } catch (_) {} console.warn(`[clear-glass] the GPU process died 3 times (${d.reason}): the next start runs in software mode (${_gpuFlag}; delete it to try the GPU again)`); }
+  });
+}
 // §BUG FIXED 2026-07-11, REVISED 2026-07-11 — the first version of this
 // fix (app.commandLine.appendSwitch('disable-gpu') + disable-gpu-compositing
 // + disable-software-rasterizer) stopped the fatal crash-loop but broke
