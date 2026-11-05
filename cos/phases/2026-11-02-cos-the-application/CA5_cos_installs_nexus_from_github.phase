@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-the-application-phasemap.spec::CA5_cos_installs_nexus_from_github
+type: phase
+id: docs_2026-11-02-cos-the-application-phasemap.spec::CA5_cos_installs_nexus_from_github
+context: >-
+  pipeline phase CA5_cos_installs_nexus_from_github of
+  docs/2026-11-02-cos-the-application-phasemap.spec
+intent: null
+summary: CA5_cos_installs_nexus_from_github (?) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1793847429750
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793847429750
+lastSeenAt: 1793847429750
+fingerprint: null
+payload:
+  id: CA5_cos_installs_nexus_from_github
+  map: docs/2026-11-02-cos-the-application-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.390 (COS 0.6.0) — test-cos-install 6/6; on Windows unverified until his run"'
+  files:
+    - cos/app/install.js
+    - cos/app/controller.js
+    - cos/app/window.js
+    - cos/app/settings.js
+    - cos/app/desktop/main.js
+    - cos/app/desktop/starting.html
+    - cos/app/desktop/starting-preload.js
+    - cos/app/version.js
+    - scripts/build-cos-app.js
+    - tests/modules/test-cos-install.test.js
+  depends_on:
+    - MG35_the_exe_starts_nexus
+    - MG36_the_cockpit_is_the_window
+  blocks: []
+  spec: null
+  graph: 3850cc5b005e855f

@@ -16,6 +16,8 @@
  *   plan({ dir, git, npm, repoUrl }) → [{ id, cmd?, args?, cwd?, what }]
  *   run({ dir, git, npm, exec, fetch, unzip, exists, onStep }) → Promise<{ ok, dir, via, version?, error?, step? }>
  *   findTool(name, where) → path | null
+ *   spawnSpec(cmd, args, platform?) → { file, args, verbatim }   (CA6: a .cmd under Program Files, quoted for cmd.exe)
+ *   targetDir(picked) → the install folder inside the one he picked (CA6)
  */
 const fs = require('fs');
 const path = require('path');
@@ -43,11 +45,26 @@ function plan({ dir, git = null, npm = null, repoUrl = REPO_URL, existing = fals
   return steps;
 }
 
+// CA6 (2026-11-05) — his screen: "'C:\\Program' is not recognized as an internal or external command". npm on Windows is npm.cmd under
+// C:\\Program Files\\nodejs; a .cmd needs cmd.exe, and spawn's shell:true joined the path unquoted, so cmd split it at the space. A .cmd now runs
+// as cmd.exe /d /s /c ""<path>" <args>" with verbatim arguments, every part with a space quoted. Arguments are COS's own, never his text.
+function spawnSpec(cmd, args, platform = process.platform, comspec = process.env.ComSpec || 'cmd.exe') {
+  if (platform !== 'win32' || !/\.(cmd|bat)$/i.test(cmd)) return { file: cmd, args, verbatim: false };
+  const q = (x) => (/[\s&()^|<>"]/.test(x) ? `"${String(x).replace(/"/g, '""')}"` : String(x));
+  return { file: comspec, args: ['/d', '/s', '/c', `"${[`"${cmd}"`, ...args.map(q)].join(' ')}"`], verbatim: true };
+}
+
+// CA6 — where Nexus goes inside the folder he picked: the folder itself when it is already named nexus or is empty, else <picked>/nexus
+function targetDir(picked, { readdir = (d) => { try { return fs.readdirSync(d); } catch (_) { return []; } } } = {}) {
+  if (!picked) return null;
+  if (path.basename(picked).toLowerCase() === 'nexus' || readdir(picked).length === 0) return picked;
+  return path.join(picked, 'nexus');
+}
+
 function execDefault(cmd, args, { cwd } = {}) {
   return new Promise((resolve) => {
-    // .cmd shims (npm.cmd) need a shell on Windows; arguments here are COS's own, never his text
-    const shell = process.platform === 'win32' && /\.cmd$/i.test(cmd);
-    const child = require('child_process').spawn(cmd, args, { cwd, shell, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
+    const sp = spawnSpec(cmd, args);
+    const child = require('child_process').spawn(sp.file, sp.args, { cwd, windowsVerbatimArguments: sp.verbatim, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
     let tail = '';
     const keep = (d) => { tail = (tail + d.toString()).slice(-2000); };
     child.stdout.on('data', keep); child.stderr.on('data', keep);
@@ -97,4 +114,4 @@ async function run({ dir, git = findTool('git'), npm = findTool(process.platform
   return { ok: true, dir, via: git ? (existing ? 'git-pull' : 'git-clone') : 'release-zip', version };
 }
 
-module.exports = { REPO, REPO_URL, findTool, plan, run, latestReleaseZip, MODULE_ID: 'cos.app.install', VERSION: '1.0.0' };
+module.exports = { REPO, REPO_URL, findTool, plan, run, latestReleaseZip, spawnSpec, targetDir, MODULE_ID: 'cos.app.install', VERSION: '1.1.0' };

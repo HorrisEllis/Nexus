@@ -185,9 +185,23 @@ app.whenReady().then(() => {
 // MG35 (MOD-COSA-START-ON-LAUNCH) — the exe is how Nexus starts: the project he chose starts when COS opens; a failure is said, never silent
 // CA5 (COS 0.6.0) — James: "have it pull from the git. it should be installing the cos ui." Nothing linked: Nexus is installed from GitHub, then started
 const installState = { step: null, error: null };
+// CA6 (2026-11-05) — James: "needs to ask for install location also." Every install asks where (the last place, else COS's root, preselected);
+// Nexus goes into <chosen>/nexus unless the folder is already named nexus or is empty (install.js targetDir). Cancel installs nothing, said.
+async function askInstallDir() {
+  const I = require('../install.js');
+  const last = ctl.settings().settings.installDir || ctl.root;
+  if (win && !win.isVisible()) win.show();   // first launch starts in the tray: the question has to be seen
+  const r = await dialog.showOpenDialog(win || undefined, { title: 'Where should Nexus be installed? (a "nexus" folder is made inside unless this one is empty)', defaultPath: last, buttonLabel: 'Install here', properties: ['openDirectory', 'createDirectory', 'promptToCreate'] });
+  if (r.canceled || !r.filePaths || !r.filePaths[0]) return null;
+  ctl.setSetting('installDir', r.filePaths[0]);
+  return I.targetDir(r.filePaths[0]);
+}
 async function installNexus() {
-  installState.error = null; installState.step = 'starting'; retarget();
-  const r = await ctl.installNexus({ onStep: (e) => { if (e.state === 'running') installState.step = e.what; if (e.state === 'failed') installState.error = e.error; retarget(); } });
+  installState.error = null; installState.step = 'choosing where to install'; retarget();
+  const dir = await askInstallDir();
+  if (!dir) { installState.step = null; installState.error = 'no install location chosen'; retarget(); return { ok: false, error: 'no install location chosen' }; }
+  installState.step = 'starting'; retarget();
+  const r = await ctl.installNexus({ dir, onStep: (e) => { if (e.state === 'running') installState.step = e.what; if (e.state === 'failed') installState.error = e.error; retarget(); } });
   installState.step = null; if (!r.ok) installState.error = r.error; retarget();
   notify(r.ok ? 'Nexus is installed' : 'Nexus was not installed', r.ok ? `from GitHub (${r.via}${r.version ? `, ${r.version}` : ''}) into ${r.dir}${r.started ? ' — starting' : r.startError ? ` — it did not start: ${r.startError}` : ''}` : String(r.error).slice(0, 220));
   return r;

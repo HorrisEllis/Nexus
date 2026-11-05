@@ -7,18 +7,21 @@ intent: null
 summary: CA3_network_settings (?) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1793592215345
+exported_at: 1793847429741
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793592215345
-lastSeenAt: 1793592215345
+firstSeenAt: 1793847429741
+lastSeenAt: 1793847429741
 fingerprint: null
 payload:
   id: CA3_network_settings
   map: docs/2026-11-02-cos-the-application-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "DONE 0.60.379 — test-cos-network 5/5 (the page through the real cockpit in Clear Glass). The
+    engines themselves (tunnel, rendezvous, mapping, DDNS, SSH) start behind the gate; wiring each
+    to its settings is CA2"
   files:
     - cos/manager/network-settings.js
     - cos/manager/server.js
@@ -37,4 +40,4 @@ payload:
     - MOD-NET-PAGE
     - MOD-NET-GATE
   spec: cos/spec/network.spec
-  graph: b37e8a4a1764b309
+  graph: c62138123487c859
