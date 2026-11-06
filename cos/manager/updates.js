@@ -9,13 +9,55 @@
  *     apply({ mode, by })     → mode 'update' (apply) or 'keep-local' (CE3); then each changed system restarted by itself through the
  *                               supervisor; Clear Glass never restarted under him (waitForHim); a change to COS itself said, not restarted
  *     busy()                  → the update running now, or null (one at a time: a second is refused)
+ *     pending()               → CE2b: what waits for his yes after an update (COS itself, Clear Glass), or null
+ *     restart({ what, by })   → CE2b: his yes — 'cos' (COS restarts itself, through restartCos) or a system's name; refused while an update
+ *                               is still writing
+ * CE2b (0.60.417) — James, 2026-11-06: "updates need to restart cos." · "the applicable system or module. as long as its done writting." ·
+ * on Clear Glass: "Ask me first". After an update or a roll back has finished writing (its process ended, git's index.lock gone), each
+ * changed system restarts by itself; what would close something under him (COS itself, Clear Glass) is asked, kept as pending until he
+ * answers. The coder's readings, to confirm: "done writing" = the update's own writes; "system or module" = the system whose folder changed.
  * The git work runs in update-run.js's own process; this file never blocks the supervisor. Every step is an event (emit 'cos.update').
  */
 const path = require('path');
 const { execFile } = require('child_process');
 
-function createUpdates(sup, { root = path.resolve(__dirname, '..', '..'), emit = () => {}, timeoutMs = 25 * 60000 } = {}) {
+function createUpdates(sup, { root = path.resolve(__dirname, '..', '..'), emit = () => {}, timeoutMs = 25 * 60000, restartCos = null, closesWithCos = () => [], settleMs = 15000 } = {}) {
   let running = null;
+  let asks = null;   // CE2b: { to, at, cos, systems: [names], closes: [names] } — what waits for his yes
+  const fs = require('fs');
+  // CE2b — "as long as its done writting": the update's process has ended (run() resolved) and git holds no index.lock (no write half done)
+  async function settled() {
+    const lock = path.join(root, '.git', 'index.lock'); const t0 = Date.now();
+    while (fs.existsSync(lock)) { if (Date.now() - t0 > settleMs) return { ok: false, why: `git is still writing (${path.relative(root, lock)} after ${settleMs < 1000 ? `${settleMs} ms` : `${Math.round(settleMs / 1000)} s`})` }; await new Promise(r => setTimeout(r, 250)); }
+    return { ok: true };
+  }
+  // after an update or a roll back: restart what restarts by itself, once the writing is done; keep the asks for what would close under him
+  async function afterWrite(ps, { to, by, label }) {
+    const done = await settled(); const restarted = [];
+    const ask = { to: to || null, at: Date.now(), cos: !!(ps.cosChanged || ps.kernelChanged), systems: ps.waitForHim.slice(), closes: [] };
+    if (!done.ok) { ask.systems = [...new Set([...ps.restart, ...ask.systems])]; emit('cos.update', { phase: 'not-settled', why: done.why }); }
+    else for (const name of ps.restart) {
+      try { const v = sup.restart(name, { by: `${label}:${by}` }); restarted.push({ name, ok: true, state: v && v.state }); emit('cos.update', { phase: 'restarted', name }); }
+      catch (e) { restarted.push({ name, ok: false, error: e.message }); emit('cos.update', { phase: 'restart-failed', name, error: e.message }); }
+    }
+    if (ask.cos) { try { ask.closes = (closesWithCos() || []).filter(Boolean); } catch (_) { ask.closes = []; } }
+    asks = ask.cos || ask.systems.length ? ask : null;
+    if (asks) emit('cos.update', { phase: 'ask-restart', to: asks.to, cos: asks.cos, systems: asks.systems, closes: asks.closes, notSettled: done.ok ? null : done.why });
+    return { restarted, settled: done };
+  }
+  async function restart({ what, by = 'person' } = {}) {
+    if (running) return { ok: false, code: 409, error: `an update is still writing (${running.mode}): restart once it is done` };
+    const w = String(what || '');
+    if (w === 'cos') {
+      if (typeof restartCos !== 'function') return { ok: false, code: 501, error: 'this COS cannot restart itself here (no restartCos wired)' };
+      if (asks) asks.cos = false; if (asks && !asks.systems.length) asks = null;
+      emit('cos.update', { phase: 'restarting-cos', by });
+      const r = await restartCos({ by }); return { ok: true, what: 'cos', ...(r || {}) };
+    }
+    if (!names().includes(w)) return { ok: false, code: 404, error: `no system ${w || '(none)'} — cos, or one of ${names().join(', ')}` };
+    try { const v = sup.restart(w, { by: `update-ask:${by}` }); if (asks) { asks.systems = asks.systems.filter(n => n !== w); if (!asks.cos && !asks.systems.length) asks = null; } emit('cos.update', { phase: 'restarted', name: w }); return { ok: true, what: w, state: v && v.state }; }
+    catch (e) { return { ok: false, code: 500, error: `${w} did not restart: ${e.message}` }; }
+  }
   const U = () => require('../../lib/nexus-update.js');
   const names = () => sup.list().map(s => s.name);
   function run(op, opts = {}) {
@@ -36,7 +78,7 @@ function createUpdates(sup, { root = path.resolve(__dirname, '..', '..'), emit =
   async function check({ fetch = false } = {}) {
     const c = await run('check', { fetch });
     if (!c || !c.ok) return c || { ok: false, error: 'no answer' };
-    return { ...c, perSystem: perSystem(c.systems || [], !!c.lockChanged), busy: running };
+    return { ...c, perSystem: perSystem(c.systems || [], !!c.lockChanged), busy: running, pending: asks };
   }
   async function apply({ mode = 'update', by = 'person' } = {}) {
     if (running) return { ok: false, busy: running, error: `an update is already running (${running.mode}, since ${new Date(running.at).toLocaleTimeString()})` };
@@ -47,14 +89,11 @@ function createUpdates(sup, { root = path.resolve(__dirname, '..', '..'), emit =
       if (!r || !r.ok || r.action === 'none') { emit('cos.update', { phase: r && r.ok ? 'none' : 'refused', mode, error: r && r.error, why: r && r.why }); return r; }
       const lockChanged = !!(r.npm && (r.npm.ran || /changed,/.test(r.npm.why || '')));
       const ps = perSystem(r.systems || [], lockChanged);
-      const restarted = [];
-      for (const name of ps.restart) {
-        try { const v = sup.restart(name, { by: `update:${by}` }); restarted.push({ name, ok: true, state: v && v.state }); emit('cos.update', { phase: 'restarted', name }); }
-        catch (e) { restarted.push({ name, ok: false, error: e.message }); emit('cos.update', { phase: 'restart-failed', name, error: e.message }); }
-      }
-      const out = { ...r, perSystem: ps, restarted, said: [
+      const { restarted, settled: done } = await afterWrite(ps, { to: r.to && r.to.version, by, label: 'update' });
+      const out = { ...r, perSystem: ps, restarted, pending: asks, said: [
+        ...(done.ok ? [] : [`${done.why}: nothing was restarted; each changed system asks instead`]),
         ...(ps.waitForHim.length ? [`${ps.waitForHim.join(', ')} changed too: restart it when you are not using it (never restarted under you)`] : []),
-        ...(ps.cosChanged || ps.kernelChanged ? ['COS or the kernel changed: the next start of COS loads it'] : []),
+        ...(ps.cosChanged || ps.kernelChanged ? [`COS or the kernel changed: COS asks to restart${asks && asks.closes.length ? ` (${asks.closes.join(', ')} would close)` : ''}`] : []),
       ] };
       emit('cos.update', { phase: 'updated', mode, from: r.from && r.from.version, to: r.to && r.to.version, restarted: restarted.map(x => x.name), waitForHim: ps.waitForHim, keptOn: r.keptOn || null });
       return out;
@@ -81,13 +120,13 @@ function createUpdates(sup, { root = path.resolve(__dirname, '..', '..'), emit =
     try {
       const r = await run('rollback', { confirm: true, by });
       if (!r || !r.ok) { emit('cos.update', { phase: 'refused', mode: 'rollback', error: r && r.error }); return r || { ok: false, error: 'no answer' }; }
-      const ps = perSystem(r.systems || [], !!(r.npm && r.npm.ran)); const restarted = [];
-      for (const name of ps.restart) { try { sup.restart(name, { by: `rollback:${by}` }); restarted.push({ name, ok: true }); emit('cos.update', { phase: 'restarted', name }); } catch (e) { restarted.push({ name, ok: false, error: e.message }); emit('cos.update', { phase: 'restart-failed', name, error: e.message }); } }
+      const ps = perSystem(r.systems || [], !!(r.npm && r.npm.ran));
+      const { restarted } = await afterWrite(ps, { to: r.to && r.to.version, by, label: 'rollback' });   // CE2b: after the writing, the same asks
       emit('cos.update', { phase: 'updated', mode: 'rollback', from: r.from && r.from.version, to: r.to && r.to.version, restarted: restarted.map(x => x.name), waitForHim: ps.waitForHim });
-      return { ...r, perSystem: ps, restarted };
+      return { ...r, perSystem: ps, restarted, pending: asks };
     } finally { running = null; }
   }
-  return { check, apply, rollback, settings, setSettings, history, busy: () => running, perSystem };
+  return { check, apply, rollback, settings, setSettings, history, busy: () => running, perSystem, pending: () => asks, restart, settled };
 }
 
 module.exports = { createUpdates };

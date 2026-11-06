@@ -7,11 +7,11 @@ intent: null
 summary: CE4_toasts_in_the_cockpit (ui) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793581138963
+exported_at: 1793934988065
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793581138963
-lastSeenAt: 1793581138963
+firstSeenAt: 1793934988065
+lastSeenAt: 1793934988065
 fingerprint: null
 payload:
   id: CE4_toasts_in_the_cockpit
@@ -31,4 +31,4 @@ payload:
     - CE3_keep_mine_and_update
   blocks: []
   spec: null
-  graph: ddfa1a93dcf1251d
+  graph: 0c12a2a86b5cd042

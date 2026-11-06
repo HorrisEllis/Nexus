@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-enterprise-phasemap.spec::CE2b_updates_restart_cos
+type: phase
+id: docs_2026-11-02-cos-enterprise-phasemap.spec::CE2b_updates_restart_cos
+context: pipeline phase CE2b_updates_restart_cos of docs/2026-11-02-cos-enterprise-phasemap.spec
+intent: null
+summary: CE2b_updates_restart_cos (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1793935654558
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793935654558
+lastSeenAt: 1793935654558
+fingerprint: null
+payload:
+  id: CE2b_updates_restart_cos
+  map: docs/2026-11-02-cos-enterprise-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.417 — test-cos-updates CU-08..CU-12 (12/12; CU-11 restarts the real manager both
+    ways); on Windows under NSSM and the COS exe unverified until his run"
+  files:
+    - cos/manager/updates.js
+    - cos/manager/relaunch.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - lib/nexus/autopilot.js
+    - cos/ui/updates/page.js
+    - cos/ui/updates/page.css
+    - idearium/cli/route-commands.js
+    - tests/modules/test-cos-updates.test.js
+  depends_on:
+    - CE2_updates_as_cos_routes
+    - CA4_the_supervisor_as_a_windows_service
+  blocks: []
+  spec: null
+  graph: 80d34bc678942ffa

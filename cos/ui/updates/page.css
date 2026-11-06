@@ -20,3 +20,9 @@
 .history li { display: grid; grid-template-columns: 110px 1fr auto; gap: var(--s3); align-items: center; font-size: 13px; padding: var(--s2) 0; border-bottom: 1px solid var(--line-soft); }
 .history li .kind { font: 500 10.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--nx-muted); } .history .empty { display: block; color: var(--nx-muted); }
 @media (max-width: 760px) { .rule { grid-template-columns: 1fr; } .history li { grid-template-columns: 1fr; } }
+
+/* CE2b (0.60.417) — what an update waits on him for: Restart now / Later */
+.asks { margin-top: 12px; border: 1px solid color-mix(in srgb, var(--warn, #f5b942) 45%, transparent); border-radius: 8px; padding: 10px 12px; display: grid; gap: 8px; }
+.asks-h { font-size: 12px; opacity: .8; }
+.ask { display: flex; gap: 8px; align-items: center; }
+.ask > span { flex: 1; }

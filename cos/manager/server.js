@@ -10,6 +10,7 @@
  *   GET  /api/cos/health · /api/cos/systems · /api/cos/systems/:name · /api/cos/ledger[?system&limit] · /api/cos/policy
  *   POST /api/cos/boot · /api/cos/systems/:name/(start|stop|restart|touch|reset-circuit|pause|resume) — each act carries { by } (MG-006); pause/resume CP5b
  *   PATCH /api/cos/policy
+ * CE2b (0.60.417): POST /api/cos/update/restart { by, what: cos | <system> } — his yes to an update's ask; COS restarts itself (relaunch.js)
  * MG18 (0.60.337, MG_D16): GET /api/cos/contract · /api/cos/events (server-sent: cos.ledger, cos.system.state) · /api/cos/usage ·
  *   /api/cos/systems/:name/logs · /api/cos/proposals; POST /api/cos/proposals (an agent's) · /api/cos/proposals/:id/(take|drop) (a person's)
  */
@@ -20,13 +21,18 @@ const { createProposals } = require('./proposals.js');
 const usage = require('./usage.js');
 const CONTRACT = path.join(__dirname, 'contract.json');
 
-function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) {
+function createServer(sup, opts = {}) {
+  const { root = path.resolve(__dirname, '..', '..') } = opts;
   const door = require('./autopilot-door.js').mount(sup, { ROOT: root });   // MG16: autopilot's routes, in its shapes (MG-003)
   const send = (res, code, body) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(body)); };
   const proposals = createProposals(sup);   // MG18: agents' held acts
   const resources = require('./resources.js').createResources(sup, { proposals });   // CP6a: caps by layer, read back; the account; pressure → a proposal
   // CE2 0.60.376 — Nexus's update as COS's: per system, the tool behind the toast (cos/manager/updates.js); every step on the event stream
-  const updates = require('./updates.js').createUpdates(sup, { root, emit: (e, d) => { broadcast(e, d); if (e === 'cos.update') notices.fromUpdate(d); } });
+  const updates = require('./updates.js').createUpdates(sup, { root, emit: (e, d) => { broadcast(e, d); if (e === 'cos.update') notices.fromUpdate(d); },
+    // CE2b 0.60.417 — James, 2026-11-06: "updates need to restart cos." · on Clear Glass: "Ask me first". The yes is his (POST /api/cos/update/restart);
+    // how COS restarts is the process's (listen's opts.restartCos, set by the main block below), and what would close with it is said first
+    restartCos: (x) => (typeof opts.restartCos === 'function' ? opts.restartCos(x) : { ok: false, error: 'this manager was not started to restart itself' }),
+    closesWithCos: () => sup.list().filter(s => s.name === 'clear-glass' && s.state === 'running').map(s => s.name) });
   // SC1–SC4 0.60.380 (docs/2026-11-02-cos-console-phasemap.spec) — James, 2026-11-02: "notification bell for update, system status,  notications" ·
   // "Need configuration for each system" · "add system" · "Need the system cli". The bell keeps what the ledger and the update tool say; the
   // configuration is applied by the supervisor through one hook (adjust); adding a system is a proposal; the CLI is COS's own table.
@@ -189,6 +195,8 @@ function createServer(sup, { root = path.resolve(__dirname, '..', '..') } = {}) 
         const fn = { start: sup.start, stop: sup.stop, restart: sup.restart, 'reset-circuit': sup.resetCircuit }[act[2]];
         return send(res, 200, { ok: true, system: fn(name, { by: body.by }) });
       }
+      // CE2b — his yes to an update's ask: { by: person, what: cos | <system> }; refused while the update is still writing, and never an agent's
+      if (m === 'POST' && p === '/api/cos/update/restart') { if (!body.by) return send(res, 400, { ok: false, error: 'say who acts: { "by": "person" }' }); if (/^agent:/.test(String(body.by))) return send(res, 403, { ok: false, error: 'an agent proposes; restarting after an update is a person\'s' }); const r = await updates.restart({ what: body.what, by: body.by }); return send(res, r.ok ? 200 : r.code || 409, r); }
       if (m === 'POST' && p === '/api/cos/update/apply') { if (!needBy()) return; const r = await updates.apply({ mode: body.mode || 'update', by: body.by }); return send(res, r.ok ? 200 : (r.busy ? 409 : 409), r); }   // CE2: mode update | keep-local; then each changed system restarted
       if (m === 'POST' && p === '/api/cos/boot') { if (!needBy()) return; return send(res, 200, { ok: true, ...(await sup.boot({ set: body.set, by: body.by })) }); }
       if (m === 'PATCH' && p === '/api/cos/policy') { if (!needBy()) return; return send(res, 200, { ok: true, policy: sup.setPolicy(body.patch || {}, { by: body.by }) }); }
@@ -211,7 +219,20 @@ if (require.main === module) {
   const root = arg('root') ? path.resolve(arg('root')) : path.resolve(__dirname, '..', '..');
   const only = arg('only') ? arg('only').split(',').map(s => s.trim()).filter(Boolean) : null;
   const sup = createSupervisor({ root });
-  listen(sup, undefined, { root }).then(async (srv) => {
+  let srvRef = null, uiRef = null;
+  // CE2b — COS restarts itself, after his yes: answer first, stop its systems, then come back — autopilot starts it again (exit 75), else relaunch.js
+  const restartCos = ({ by = 'person' } = {}) => {
+    const R = require('./relaunch.js'); const viaAutopilot = process.env.COS_LAUNCHER === 'autopilot';
+    if (sup.note) sup.note('restart', `COS restarts itself after an update — ${viaAutopilot ? 'autopilot starts it again' : 'relaunch.js starts it again'}`, { by });
+    setTimeout(() => {
+      try { sup.shutdown({ by: `restart:${by}` }); } catch (_) {}
+      try { if (srvRef) srvRef.close(); if (uiRef) uiRef.close(); } catch (_) {}
+      if (!viaAutopilot) R.spawnRelauncher({ args: process.argv.slice(1), port: srvRef && srvRef.address() ? srvRef.address().port : Number(process.env.COS_MANAGER_PORT) || 7799 });
+      setTimeout(() => process.exit(viaAutopilot ? R.RESTART_CODE : 0), 500);   // not unref'd: with the servers closed, an unref'd timer lets node end with 0 before it fires
+    }, 300).unref();
+    return { ok: true, how: viaAutopilot ? 'autopilot starts it again and boots its systems' : 'relaunch.js starts it again with --boot' };
+  };
+  listen(sup, undefined, { root, restartCos }).then(async (srv) => { srvRef = srv;
     console.log(`[cos] manager on 127.0.0.1:${srv.address().port} — ${sup.list().length} systems declared`);
     if (arg('handover')) sup.note('handover', `autopilot ${arg('handover')} handed supervision to COS's manager (MG17); its body is archived`, { by: 'boot' });
     // 2026-11-01 MG33 — James: "where is cos ui?". Nothing started the cockpit (cos/ui/serve.js) or linked to it: a screen with no way in. The
@@ -221,7 +242,7 @@ if (require.main === module) {
       const uiPort = Number(process.env.COS_UI_PORT) || 7797;
       ui = require('../ui/serve.js').createServer({ port: uiPort, manager: `http://127.0.0.1:${srv.address().port}` });
       ui.once('error', (e) => { console.log(`[cos] the cockpit did not start on :${uiPort} (${e.code || e.message}) — the manager runs on without it; node cos/ui/serve.js --port <n> starts it by hand`); ui = null; });
-      ui.listen(uiPort, '127.0.0.1', () => console.log(`[cos] cockpit on http://127.0.0.1:${ui.address().port}/ (COS's UI)`));
+      ui.listen(uiPort, '127.0.0.1', () => console.log(`[cos] cockpit on http://127.0.0.1:${ui.address().port}/ (COS's UI)`)); uiRef = ui;
     }
     if (process.argv.includes('--boot')) {
       // 2026-11-05 DP1 — James: "cos also needs to install the dependancies." A pulled Nexus with a newer package-lock.json (or no node_modules)
