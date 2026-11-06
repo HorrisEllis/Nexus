@@ -1,0 +1,8 @@
+// language.eg — CIE15: the rest of the language natively, one line per feature as it lands; native.test holds it equal to eg run.
+let xs = 1..5
+print(xs, len(0..0))
+expect len(xs) == 4, "four"
+print(upper("abc"), lower("XyZ"), ["a", "b"] |> map(upper))
+try { expect 1 == 2 } else e { print(e.message) }
+try { expect 1 == 2, "one is not two" } else e { print(e.message) }
+try { expect 3 } else e { print(e.message) }

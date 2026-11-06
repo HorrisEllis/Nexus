@@ -289,3 +289,12 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # equals it line for line. Compiler stages byte-identical (72df0919…).
 # Census of the examples natively: counter and components equal; refused by name: hello (..), idearium and modules/main (expect), tests (record),
 # axioms (axiom), primitives (kind), whatif (whatif). Those are the next phase's: CIE15_the_rest_of_the_language.
+
+# ── ADDENDUM 2026-11-06 (0.60.432) — CIE15 first slice: .. as a value, expect, upper and lower natively ──
+# James, 2026-11-06: "yes. get emerge complete. js removed completely."
+# Built: a .. range used as a value compiles to range(a, b) (codegen gen_binary); expect cond[, msg] parses (front.eg) and runs as rt_expect with
+# the interpreter's three messages word for word; upper and lower are native builtins for ASCII text, and refuse text outside ASCII by name (the
+# interpreter's are JavaScript's full Unicode mapping; the tables come with D5's text work). test/world/language.eg natively equals eg run.
+# The examples moved on to their next refusal: hello → matches (a regular-expression engine, to build in Emerge), idearium → promote,
+# modules/main → sort_by (native needs Emerge to have optional parameters, or a second name: his call, asked), tests → record, axioms → axiom,
+# primitives → kind, whatif → whatif.

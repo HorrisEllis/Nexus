@@ -5,6 +5,24 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-06 — .., expect, upper and lower natively (CIE15 first slice, 0.60.432)
+- **Measured:** Emerge coding. Four more language features natively.
+- **His words:** "yes. get emerge complete. js removed completely."
+- **Method:** each feature written into the native compiler (front.eg, codegen.eg, rt.eg), then held to `eg run` by
+  `test/world/language.eg`. The examples census rerun.
+- **Result:**
+  - `language.eg` natively equals the interpreter line for line, including its three `expect` messages.
+  - native 99/99, selfhost 16/16 (stages byte-identical, e9db36b9…), lang 166/166, differential 19/19.
+- **Speed:** stage 0 took 16.2 s. native.test took 42 s.
+- **Lines:** .eg +~70 (front.eg, codegen.eg, rt.eg). JS 0 removed.
+- **Failed runs before the pass:** 0. Each example went on to its next refusal, which is the list below.
+- **Gaps found:**
+  - `matches` needs a regular-expression engine in Emerge.
+  - `promote`.
+  - `sort_by` natively needs optional parameters.
+  - `upper` and `lower` beyond ASCII need the Unicode case tables.
+- **What came of it:** 2 of 8 examples are still equal; each of the six others now stops one feature later.
+
 ## 2026-11-06 — components, hooks, wires and the contract natively (CIE4 slice c, 0.60.431)
 - **Measured:** Emerge coding. Components, in and out hooks with shapes, `send`, `emit out`, wires, the contract and its roads, `components()`,
   all natively.

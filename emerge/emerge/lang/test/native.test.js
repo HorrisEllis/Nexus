@@ -393,6 +393,18 @@ for (const [label, file, withLedger] of [['components.eg as written, its ledger 
   else { fail++; console.log(`✗ components natively: ${label} — ` + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout)}` : (build.stderr || build.stdout))); }
 }
 
+// CIE15: the rest of the language natively, as each feature lands (.. as a value, expect, upper and lower on ASCII text): test/world/language.eg
+// natively equals eg run line for line, the interpreter's error messages included
+{
+  const file = path.join(__dirname, 'world', 'language.eg');
+  const ref = spawnSync(process.execPath, [EG, 'run', file], { encoding: 'utf8' });
+  const exe = path.join(TMP, 'language.bin');
+  const build = spawnSync(process.execPath, [EG, 'native', file, '-o', exe], { encoding: 'utf8' });
+  const run = build.status === 0 ? spawnSync(exe, [], { encoding: 'utf8' }) : null;
+  if (run && /expectation failed: one is not two/.test(ref.stdout) && run.stdout === ref.stdout && run.status === ref.status) { pass++; console.log('✓ the rest of the language natively (.., expect, upper, lower), line for line'); }
+  else { fail++; console.log('✗ the rest of the language natively — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout)}` : (build.stderr || build.stdout))); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');

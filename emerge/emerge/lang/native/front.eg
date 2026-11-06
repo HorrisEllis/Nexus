@@ -863,7 +863,18 @@ fn parse_stmt(top) {
       }
       return node("Emit", t, { name: name, payload: payload })
     }
-    if k == "despawn" or k == "record" or k == "gap" or k == "promote" or k == "expect" {
+    // CIE15: expect cond[, msg] (lang/parser.js), compiled to rt_b_expect: the interpreter's messages, word for word
+    if k == "expect" {
+      next()
+      let cond = parse_expr()
+      var msg = null
+      if is_op(",") {
+        next()
+        msg = parse_expr()
+      }
+      return node("Expect", t, { cond: cond, msg: msg })
+    }
+    if k == "despawn" or k == "record" or k == "gap" or k == "promote" {
       refuse_at(k, t)
     }
     if k == "use" or k == "compartment" or k == "component" or k == "template" or k == "axiom" or k == "test" or k == "on" {

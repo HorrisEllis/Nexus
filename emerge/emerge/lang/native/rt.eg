@@ -246,6 +246,25 @@ fn rt_str_from(p, n) {
   mem_copy(s + 24, p, n)
   return rt_str_finish(s)
 }
+// upper / lower natively (CIE15), for ASCII text: the interpreter's are JavaScript's full Unicode case mapping, so text outside ASCII is
+// refused by name natively rather than changed differently (the Unicode tables come with the text work, CIE-EG D5)
+fn rt_case(v, up, who) {
+  if rt_kind(v) != K_STR { rt_fail3(who, " needs a string, got ", rt_type_name(v)) }
+  let n = mem_get(v + 8)
+  let s = rt_str_new(n)
+  var i = 0
+  while i < n {
+    var c = mem_get8(v + 24 + i)
+    if c >= 128 { rt_fail2(who, " on text outside ASCII is not in the native subset yet (CIE15; the Unicode case tables come with CIE-EG D5)") }
+    if up and c >= 97 and c <= 122 { c = c - 32 }
+    if not up and c >= 65 and c <= 90 { c = c + 32 }
+    mem_set8(s + 24 + i, c)
+    i = i + 1
+  }
+  return rt_str_finish(s)
+}
+fn rt_b_upper(v) { return rt_case(v, 1, "upper") }
+fn rt_b_lower(v) { return rt_case(v, 0, "lower") }
 fn rt_str_eq(a, b) {
   let n = mem_get(a + 8)
   if n != mem_get(b + 8) { return 0 }
@@ -1693,6 +1712,15 @@ fn rt_b_find_text(s, sub) {
   return rt_mknum(rt_cp_count(s, at))
 }
 fn rt_b_raise(msg) { return rt_die_lit(rt_tostr(msg)) }
+// expect cond[, msg] (CIE15): lang/runtime.js rt.expect, the same messages
+fn rt_expect(c, msg) {
+  if c != TRUE and c != FALSE { rt_fail2("expect needs a bool, got ", rt_type_name(c)) }
+  if c == FALSE {
+    if msg == NULL { rt_fail("expectation failed") }
+    rt_fail2("expectation failed: ", rt_tostr(msg))
+  }
+  return NULL
+}
 fn rt_b_sqrt(x) {
   if not rt_isnum(x) { rt_fail2("sqrt needs a num, got ", rt_type_name(x)) }
   let b = rt_fbits(x)
