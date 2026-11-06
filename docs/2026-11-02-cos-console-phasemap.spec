@@ -267,6 +267,8 @@ phases_addendum_2026_11_04:
       server, only that folder) or Console (the Console tab filtered to it, ?system=), each in its own pop-out window (in the COS app a new
       window; in a browser window.open). A system with no ui/ folder offers Console only, said.
     proof: "a fixture system's ui/index.html opens in a pop-out; its console pop-out shows only its lines; a path outside its ui/ folder is refused"
+    expanded_2026_11_06: "his \"i want to be able to access the repos and open the ui from cos also\": beside Open and Console, a Repos entry lists Idearium's repos (asked of Idearium by route, never its files) and opens one in Idearium's own UI in a pop-out"
+    files_added: [cos/ui/repos, idearium/api/index.js]
   SC15_nexus_cli_in_the_console:
     layer: backend
     status: "OPEN — mapped 2026-11-05"
@@ -283,6 +285,11 @@ phases_addendum_2026_11_04:
       DO3a's shape; Cortex has it), so the commands come from each system's own registry grammar, as nexus-cli specs. A system with no door yet
       is said, never guessed.
     proof: "`cortex health` in the Console runs through Cortex's door; a system with no /cli says so"
+    expanded_2026_11_06: >-
+      His "all the systems cli interfaces (command nodes) should be accessable there" and "no more autopilot or orchastrator that should be in the
+      console": every system's command nodes in the Console, listed by system (each system's GET /commands or its door's /registry), with
+      completion; the orchestrator's commands among them (OC_D5's reading to confirm decides whether they stay the orchestrator's or move to COS).
+      Systems still without a door are listed with what is missing (the doors: DO1, DO2, DO5, DO7, DO8).
   SC16_no_console_windows:
     layer: backend
     status: "BUILT 0.60.400 — test-cos-hidden-windows"

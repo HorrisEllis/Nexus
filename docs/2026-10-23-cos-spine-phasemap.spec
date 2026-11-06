@@ -192,6 +192,11 @@ phases:
       Replicas of a system from the same version on their own ports, a request to its name sent to the least loaded healthy one, idle replicas
       despawned by his rule; a system whose data cannot be shared is refused replication, said.
     proof: two replicas of a stateless system share load; one stopped, traffic goes to the other
+    expanded_2026_11_06: >-
+      His "also the load balancing options, like should be immensely extensive settings for cos, since its all of nexus": every rule of the
+      balancer is a setting with its layer (CP7): the strategy (least loaded, round robin, weighted, by priority), the replica bounds, when to
+      spawn and despawn (load, memory, idle), what RAID may do by itself and what it proposes, and per-compartment overrides. Each shown on
+      the Resources page's Balancing panel (0.60.411, a placeholder today).
 
   CS9_every_project_a_compartment:
     layer: integration

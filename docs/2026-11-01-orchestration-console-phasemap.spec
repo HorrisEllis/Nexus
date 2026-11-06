@@ -17,6 +17,18 @@ decisions:
     chosen: "One orchestration console, a page of COS's UI, reading every system through its route; .task/.pipeline files the record; every act with by and through RAID."
     by_the_axioms: "§5.9/§5.15, §9.1, §0.3, §17.12, §8.6 (engine, pipelines, scheduler, cron, tool index, COS proposals reused)"
 
+  OC_D5_cos_is_the_hub:
+    status: "DECIDED 2026-11-06 (his) — confirms OC_D0's reading (one console in COS) and OC_D4"
+    chosen: >-
+      COS is the hub: cos.exe runs all of Nexus, and every compartment goes through COS. Autonomous management is BrainOS rebuilt (this map),
+      in COS. What the autopilot did is COS's already (MG17, 0.60.330, autopilot retired); what the orchestrator does is reached from COS's
+      Console. The load balancing and everything COS decides has extensive settings, since COS is all of Nexus.
+    by: 'James, 2026-11-06: "all compartments go through cos. need a compartment browser for all the compartments. that way they can be managed autononmouly. cos.exe is now what runs all of nexus. no more autopilot or orchastrator that should be in the console. all the systems cli interfaces (command nodes) should be accessable there. also the load balancing options, like should be immensely extensive settings for cos, since its all of nexus. like autonmous should be a rebuild of brain os. cos is the hub. i love the console tab though. i want to be able to access the repos and open the ui from cos also."'
+    readings_to_confirm:
+      - "\"no more autopilot or orchastrator that should be in the console\": (a) the orchestrator system is retired and its work moves into COS
+         (its routes archived once every caller asks COS); (b) the orchestrator stays its own system, but it is run and driven only from COS's
+         Console. (a) is a migration of its own (orchestrator/orchestrator.js, ~3,400 lines, and its callers); (b) is SC15 alone. His call."
+
   OC_D1_templates_and_schemas:
     status: DECIDED 2026-11-01 (his)
     chosen: >-
@@ -118,6 +130,7 @@ phases:
     files: [cos/ui/orchestration/index.html, cos/ui/orchestration/page.css, cos/ui/orchestration/page.js, cos/manager/contract.json, lib/ui/brainos/index.html, tests/modules/test-orchestration-console.test.js]
     interface: [html]
     does: "the console in COS's UI: overview, pipelines, tasks, calendar, agents, tools, history, triggers; BrainOS archived and linking here"
+    expanded_2026_11_06: "his \"like autonmous should be a rebuild of brain os. cos is the hub\" (OC_D5): this console is where COS manages every compartment autonomously, beside the Console tab he likes (SC11, kept as it is)"
     proof: "MOD-OC-CONSOLE's acceptance, in Clear Glass"
 
   OC9_templates:

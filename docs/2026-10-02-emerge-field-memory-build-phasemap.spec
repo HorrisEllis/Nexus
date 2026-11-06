@@ -535,6 +535,16 @@ spec:
         cfr-kernel rewind + the hash-chained history: any agent's memory and field replayed to any moment. Paired with
         RW1 (the VM rewind) — the OS and the mind rewound together, to the same point.
       proof: "rewind to entry N: the field, the context table and the agent memory read as they did at N"
+      expanded_2026_11_06_gates: >-
+        Asked which map carries rewind (the workshop's RS2 and this phase were the same intent twice, against his rule that phases expand),
+        James, 2026-11-06: "Rewind would live in the gates. Like ideariums. Flight recorder eventually." Decided (his, REWIND_D0): rewind is not
+        a separate engine; it lives in the gates. Each gate holds the state from before it opened, and a gate that stays closed rewinds to that
+        point, as Idearium's gates do today (lib/safe-apply.js: mirror → branch → check → mergeBack, RAID-gated; lib/change-record.js, GET
+        /api/repos/:uuid/changes). This phase carries it; RS2 (docs/2026-10-05-spec-workshop-rebuild-phasemap.spec) is superseded into it, kept
+        (§0.3). The flight recorder (every gate's before, after and why, replayable) is "eventually": RS1 later, after the gates rewind.
+        Reading, to confirm: "like ideariums" = Idearium's gate pipeline with safe-apply's branch and revert (the coder's reading of which
+        part of Idearium he meant).
+      decision_REWIND_D0: "DECIDED 2026-11-06 (his): rewind lives in the gates, like Idearium's; MR11 carries it; RS2 superseded into MR11; flight recorder later (RS1)"
       expanded_2026_11_06_field: >-
         James, 2026-11-06: "Let’s spec out the constrain field … Constrained relational field. Or emergence also. Replacing warp. Let’s get it all specced." · "build it as a layer of emerge like compounding". Expanded (his rule: phases expand): this phase builds MOD-CRF-REWIND of emerge/emerge/spec/field.spec, the constrained relational field (a layer of Emerge over Pillar, written in .eg): rewind on failure: refold to the last good seq of the CIE-EG ledger, branch, retry from there.
 
@@ -575,7 +585,12 @@ spec:
       expanded_2026_11_06_field: >-
         James, 2026-11-06: "Let’s spec out the constrain field … Constrained relational field. Or emergence also. Replacing warp. Let’s get it all specced." · "build it as a layer of emerge like compounding". Expanded (his rule: phases expand): this phase builds MOD-CRF-NARROW of emerge/emerge/spec/field.spec, the constrained relational field (a layer of Emerge over Pillar, written in .eg): the field generates code: narrowing from both ends, ranked by his weighting and leverage.
     CRF1_the_axioms_as_constraints:
-      status: OPEN
+      status: "HELD 2026-11-06 (his doubt) — kept, not built, not removed"
+      status_before_hold: OPEN
+      held: >-
+        James, 2026-11-06, after the field was specced with the axioms as its top layer: "I’m not confident about the axioms. They were an
+        example." Held in his words: the phase and MOD-CRF-AXIOMS stay (§0.3); nothing is built on them until he says what the top layer is.
+        Reading, to confirm with him: "an example" = the axioms illustrated what a top layer of laws could be, not a decision that they are it.
       depends_on: [RF1_relational_field]
       spec: emerge/emerge/spec/field.spec
       blocks: [MOD-CRF-AXIOMS]
@@ -936,7 +951,7 @@ spec:
       value: { score: 5, cost: L, for: [compounding, income], why: "agents iterate in a sandbox until the end-state conditions are met — the self-building engine" }
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
-      depends_on: [PR1_proof_run_the_delivery_checker, SH1_shadow_space, CB1_cfr_build_logic]
+      depends_on: [PR1_proof_run_the_delivery_checker, SH1_shadow_space, CB1_cfr_build_logic, V8_the_void_sets_the_end_state, FM1_mining_failure_modes]
       files: [cos/playground/llm-lab.js, cos/playground/sandbox.js, idearium/repo/proof-run.js, copilot/capability-extend.js]
       does: >-
         "Use cos end state to have agents in a lab to solve problems … keep filling the agent with feedback until it
@@ -1001,6 +1016,12 @@ spec:
         lab (LB1) iterates until the conditions pass, and the new capability is registered as nodes (registry, routes,
         CLI, loom — E12) so the next request finds it. A request is answered when its end state is proven, never before.
       proof: "a request no tool serves today: a gap, an end state, a lab run, a registered capability, then the same request completed by it"
+      expanded_2026_11_06_void: >-
+        James, 2026-11-06: "the spacial void, is for setting the endstate, which then creates the dag/conditions for the stopping condintions. agnostic problem solving, like synthesis filling a compartment. ierative build loops learning from each fault or failure mode report, until it meets the conditoins." The end state now comes from the void (V8, docs/2026-10-02-spatial-void-phasemap.spec, VOID_D1 his), with its conditions, its
+        DAG and its stopping conditions; the loop learns from each failure-mode report (docs/2026-10-17-failure-mode-report-phasemap.spec) and
+        from the field's failure-mode region (FM1: one an anomaly, two a coincidence, three a candidate invariant). The compartment is the
+        sandbox the loop fills (COS). Status kept LATER: his focus is Emerge first (CLAUDE.md, 2026-11-06); it is next after CB1 in Pillar's order.
+      depends_on_added: [V8_the_void_sets_the_end_state, FM1_mining_failure_modes]
 
     DA1_domain_agnostic_end_states:
       layer: library

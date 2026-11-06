@@ -192,6 +192,13 @@ phases:
       settings, deploy an agent), its screen (its own UI, or its desktop), its controls generated from its contract, and a tab for each phase
       below as it lands (Terminal, Files, Code, States, Resources, Settings, Agents, with MG29's Logs, Events, API, Data, Tests); its live
       thumbnail is its tile on COS's canvas.
+    expanded_2026_11_06_browser: >-
+      James, 2026-11-06: "all compartments go through cos. need a compartment browser for all the compartments. that way they can be managed autononmouly." The window's other half: a compartment browser listing every compartment COS holds (Nexus's systems and any
+      other: projects, VMs, test environments, imports), each with its state, its resources (the Resources page's row), its category and its
+      actions; search, filter by category and state; open one into its window. Autonomous management acts on what the browser lists, by the
+      rules of the orchestration console (OC_D5), each act through RAID and on the ledger.
+    files_added: [cos/ui/compartments, cos/manager/server.js, cos/manager/contract.json]
+    proof_added: "in Clear Glass: every compartment COS holds listed (count equals COS's own), filtered by state, one opened into its window"
     proof: "in Clear Glass: a window opened from a tile; its contract's routes as controls, one run; toolbar acts on COS's ledger; a new compartment gets its window with no new UI code"
   CP3_one_terminal_one_cli:
     status: OPEN
