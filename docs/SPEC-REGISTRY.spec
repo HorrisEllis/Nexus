@@ -2062,3 +2062,5 @@ spec:
 # modules, one per module. CIE1_the_contract_block (MOD-CONTRACT) BUILT 0.60.423. James, 2026-11-06 (D7): "New contract block" · "Next".
 # Written first as EAS6 in the emerge-as-a-system map and moved before it was merged: that map's phases build docs/emerge-system.spec's modules
 # (test-substrate-spec SS-02, one map per spec).
+# ADDENDUM 2026-11-06 — registered: docs/2026-11-06-agents-build-in-his-framework-phasemap.spec, the end state (no phases yet, his "end state
+# first. using my framework. emerge. and raid"): agents build codebases from specs through his Innovation Toolkit, Emerge and RAID. To confirm.
