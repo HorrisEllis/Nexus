@@ -1,7 +1,7 @@
 'use strict';
 // run-all: timeout 240000
 /**
- * tests/modules/test-emerge-rung.test.js — EW1 (0.60.421): Emerge writes the brick (docs/2026-10-17-pieces-not-order-phasemap.spec).
+ * tests/modules/test-emerge-rung.test.js — EMB1 (0.60.421): Emerge writes the brick (docs/2026-10-17-pieces-not-order-phasemap.spec).
  * James, 2026-11-06: "emerge, we need to get it coding remember. thats why emerge is important, also the test env, using the test file for
  * expectation, the primitive also, then emerge can also verify itself with the compiler." · "also the retry engine for emerge."
  *   ER-01  the brief (Emerge's card, the planned exports, the expectation, the gate's context, the last failure), the code pulled from a reply, the adapter
@@ -31,7 +31,7 @@ const runs = (check) => async ({ file, files }) => {
 const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.push(message); const r = replies[tryNo - 1]; if (r instanceof Error) throw r; return r; };
 
 (async () => {
-  console.log('\n⬡  Emerge writes the brick (EW1)\n');
+  console.log('\n⬡  Emerge writes the brick (EMB1)\n');
 
   await test('ER-01', 'the brief, the code from a reply, the adapter', () => {
     const b = R.brief({ file: 'lib/clamp.js', exports: [{ name: 'clamp' }], expectation: 'assert.strictEqual(clamp(9, 0, 5), 5)', context: 'NEXUS NOTE', feedback: 'main.eg:3:22: error: "high" is not defined' });

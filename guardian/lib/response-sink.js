@@ -162,6 +162,32 @@ function writeNode(rec, sinks = {}) {
 }
 
 /** readNode(jobId) -> the real payload, or null. */
+/**
+ * recent({ limit, agent, repo, provider, chars }) — §RC1 0.60.261: the newest .response nodes, newest first, each cut to `chars` of text,
+ * for an agent's context (lib/agent-tools/tools/nexus/recall.js through GET /api/responses/recent). James, 2026-10-26: "what if we have a
+ * tool for the agents to capture the recent event ledger or orchastrator? using the .response nodes, chat ledgers for the repo, and log
+ * for context. for persistent memory?" An unreadable node is skipped and counted, never hidden.
+ */
+function recent({ limit = 10, agent = null, repo = null, provider = null, chars = 600 } = {}) {
+  let files = []; try { files = fs.readdirSync(NODES_DIR).filter(f => f.endsWith('.response')); } catch (_) { return { responses: [], scanned: 0, unreadable: 0 }; }
+  const st = files.map(f => { try { return { f, t: fs.statSync(path.join(NODES_DIR, f)).mtimeMs }; } catch (_) { return null; } }).filter(Boolean).sort((a, b) => b.t - a.t);
+  const out = []; let unreadable = 0, scanned = 0;
+  for (const { f, t } of st) {
+    if (out.length >= Math.min(Number(limit) || 10, 100)) break;
+    scanned++;
+    let env = null; try { env = nodeExport.importFromFile(path.join(NODES_DIR, f)); } catch (_) { unreadable++; continue; }
+    const p = (env && env.payload) || {}, tags = (env && env.tags) || [];
+    const tag = (k) => { const x = tags.find(v => String(v).startsWith(`${k}:`)); return x ? String(x).slice(k.length + 1) : null; };
+    if (agent && p.agentId !== agent && tag('agent') !== agent) continue;
+    if (repo && tag('repo') !== repo) continue;
+    if (provider && p.provider !== provider) continue;
+    const text = String(p.text || '');
+    out.push({ jobId: p.jobId || env.id, provider: p.provider || tag('provider'), agentId: p.agentId || tag('agent'), status: p.status || tag('status'), kind: p.kind || tag('kind'),
+      repo: tag('repo'), run: tag('run'), at: new Date(t).toISOString(), chars: text.length, text: text.slice(0, Math.max(0, Number(chars) || 600)) });
+  }
+  return { responses: out, scanned, unreadable };
+}
+
 function readNode(jobId) {
   try {
     const p = path.join(NODES_DIR, `${jobId}.response`);
@@ -557,6 +583,6 @@ function synthesize(jobId, deps = {}) {
 
 module.exports = {
   deliver, synthesize,
-  writeNode, readNode, writeLedger, postToDownloads, emitToStream,
+  writeNode, readNode, recent, writeLedger, postToDownloads, emitToStream,
   NODES_DIR, DOWNLOADS_PENDING, MODULE_ID, VERSION, flushPendingDownloads,
 };

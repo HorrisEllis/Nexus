@@ -2347,6 +2347,12 @@ function handleExtendedRoutes(req, res, url, method) {
   // trustworthiness and says which one answered. If nothing holds it, the
   // response is a real 404 with a real reason — never a 200 with an empty
   // string.
+  // §RC1 0.60.261 — the newest .response nodes for an agent's context (lib/agent-tools/tools/nexus/recall.js); Guardian's own data, its own route
+  if (method==='GET' && url.pathname === '/api/responses/recent') {
+    const q = url.searchParams;
+    try { return pRes(res, 200, { ok: true, ...require('./lib/response-sink.js').recent({ limit: q.get('limit'), agent: q.get('agent'), repo: q.get('repo'), provider: q.get('provider'), chars: q.get('chars') }) }); }
+    catch (e) { return pRes(res, 500, { ok: false, error: e.message }); }
+  }
   if (method==='GET' && url.pathname.startsWith('/response/')) {
     const jid = url.pathname.split('/')[2];
     const job = jobs.get(jid) || jaa.get('jobs', { id: jid });

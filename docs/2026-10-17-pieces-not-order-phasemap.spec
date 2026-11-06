@@ -117,7 +117,7 @@ phases:
       Per project and per piece kind: auto (lands when its check passes), review (a proposal for him), manual (he writes it;
       the check still runs). The manifest is editable before it runs. Shown in the dock's Tools panel and the Plan.
     proof: "with 'function: review' and 'doc: auto', a build lands the docs and leaves the functions as proposals"
-  EW1_emerge_writes_the_brick:
+  EMB1_emerge_writes_the_brick:
     status: "BUILT 0.60.421 — test-emerge-rung 6/6 (the retry tests fail when the failure is not carried); with a real model on his machine, unmeasured"
     origin: >-
       James, 2026-11-06: "emerge, we need to get it coding remember. thats why emerge is important, also the test env, using the test file

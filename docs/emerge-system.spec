@@ -269,7 +269,7 @@ spec:
 #     for building large projects in Emerge.
 # Acceptance met: skeleton test "all checks passed"; lang-door 8/8; nesting 5/5; test-boundary-code-only 5/5; every older Emerge suite green.
 
-# ── ADDENDUM 2026-11-06 (0.60.421) — Idearium builds bricks in Emerge, through this door (EW1) ───────────────────────────────────────────────
+# ── ADDENDUM 2026-11-06 (0.60.421) — Idearium builds bricks in Emerge, through this door (EMB1) ───────────────────────────────────────────────
 # James, 2026-11-06: "emerge, we need to get it coding" · "also the retry engine for emerge". Idearium's ▶ build tries each new planned JS file
 # in Emerge first (idearium/lib/emerge-rung.cjs): the agent writes Emerge, MOD-EAS-LANG-DOOR's lang-check gives line, column and why, the error
 # goes into the next try, lang-build --standalone gives the module and its runtime, and the brick's expectation test (TF1) judges it. Emerge is
