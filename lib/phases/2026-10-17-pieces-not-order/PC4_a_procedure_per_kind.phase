@@ -7,11 +7,11 @@ intent: null
 summary: PC4_a_procedure_per_kind (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677800
+exported_at: 1793948004223
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677800
-lastSeenAt: 1792787677800
+firstSeenAt: 1793948004223
+lastSeenAt: 1793948004223
 fingerprint: null
 payload:
   id: PC4_a_procedure_per_kind
@@ -26,4 +26,4 @@ payload:
     - PC1_the_point_first
   blocks: []
   spec: null
-  graph: 6ad550aea45b1805
+  graph: d619fdfa97e7eccc

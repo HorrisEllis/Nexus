@@ -117,6 +117,29 @@ phases:
       Per project and per piece kind: auto (lands when its check passes), review (a proposal for him), manual (he writes it;
       the check still runs). The manifest is editable before it runs. Shown in the dock's Tools panel and the Plan.
     proof: "with 'function: review' and 'doc: auto', a build lands the docs and leaves the functions as proposals"
+  EW1_emerge_writes_the_brick:
+    status: "BUILT 0.60.421 — test-emerge-rung 6/6 (the retry tests fail when the failure is not carried); with a real model on his machine, unmeasured"
+    origin: >-
+      James, 2026-11-06: "emerge, we need to get it coding remember. thats why emerge is important, also the test env, using the test file
+      for expectation, the primitive also, then emerge can also verify itself with the compiler." · told most of the loop already exists in
+      Idearium (test first TF2, the expectation test TF1, the shadow test env, the failure carried into the retry, verify-first), and asked
+      whether Emerge is every brick's language or a rung tried first that falls back to JavaScript (the coder's recommendation): "yes
+      basically nexus holds as much complexity as possible, agent tools, context per gate, component registry as the spine so components can
+      be dumb. also the retry engine for emerge." Read as the rung first (his "yes" to the recommendation), to confirm.
+    depends_on: [VF1_verify_first, EAS2_the_language_through_the_door, CS0_projects_decomposed_into_components]
+    files: [idearium/lib/emerge-rung.cjs, idearium/api/index.js, lib/pipeline-routing.js, idearium/ui/settings.html, idearium/cli/route-commands.js, tests/modules/test-emerge-rung.test.js, tests/modules/run-all.js]
+    file_roles: "route: idearium/api/index.js; config: lib/pipeline-routing.js (routing.emerge_first); ui: settings.html; command: route-commands.js (system routing emerge_first)"
+    does: >-
+      Before the agent ladder writes a planned JS file in JavaScript, the Emerge rung tries it in Emerge: the brick's brief (its planned
+      exports, its expectation test, the gate's context — Nexus holds the complexity) asks the first rung's agent for Emerge; Emerge's own
+      compiler checks it through Emerge's door (node emerge/emerge/cli.js lang-check: line, column and why); a compile error goes into the next
+      try word for word (the retry engine for Emerge, bounded); a clean one is built to JavaScript (lang-build --standalone) and the planned
+      file becomes a three-line adapter over it (Emerge's runtime, plain exports); the brick's own expectation test (TF1) judges it in the
+      shadow, and its failure goes into the next try too. Passing: the .eg source, the built module, the runtime and the adapter land as
+      proposals, and the brick is stored as a verified primitive (component-store markTested). Not passing after its tries: said on the run,
+      and the JavaScript ladder builds it as before (nothing that works today breaks). routing.emerge_first: prefer (default) | off.
+    proof: "test-emerge-rung: a compile error carried into the next try and fixed; a test failure carried; a passing brick's adapter required by its expectation test; off and fallback leave the ladder unchanged; Emerge reached only through its command line"
+
   PC6_assembled_and_checked_whole:
     status: OPEN
     systems: [cortex]

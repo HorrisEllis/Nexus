@@ -1859,6 +1859,42 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const _carry = new Map();   // file → { why }: what its last check said, kept across the contract's retries of that brick
     const _carryFor = (f) => { if (!_carry.has(f)) _carry.set(f, { why: null }); return _carry.get(f); };
     const _verified = new Map();   // file + code hash → its verdict: the climb's check and the brick's are one run, not two
+    // EW1 0.60.421 — the Emerge rung for one brick: → the brick's result (passed in Emerge) or null (fall through to the ladder)
+    const _emergeBrick = async ({ f, msgV, ck, rung, ctxNote }) => {
+      const ER = _require('../lib/emerge-rung.cjs');
+      const pf = (plan.files || []).find(x => x.path === f) || {};
+      const tpath = (plan.testFirst && plan.testFirst.path) || null;
+      let expectation = null; try { if (tpath) expectation = String(codeOf(tpath) || '') || null; } catch (_) { expectation = null; }
+      const dp = paramsOf(rung);
+      const rung0 = ER.createRung({
+        root: _require('../../lib/nexus-self/systems.js').ROOT, maxTries: 3,
+        ask: async (message, { tryNo }) => {
+          const rd = await _agentDir(target.uuid);
+          const r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message, ...dp, layer: getRepoLayer(), session: `${runId}-ew-${ck.chunk}-t${tryNo}`, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, noContext: true }),
+            { kind: 'emerge-brick', provider: dp.provider || dp.model || dp.agent || dp.backend || null, key: `${target.uuid}\n${message}`, mode: 'cache', fresh: tryNo > 1 });
+          if (!r || !r.ok) throw new Error(String((r && r.error) || 'no reply'));
+          return r.text || '';
+        },
+        expect: async ({ files }) => {
+          if (!EXT.forFile(plan, f)) return { ok: true, why: 'no expectation test for this file: compiled, built and its exports defined' };
+          const r = await EXT.run({ root, plan, path: f, overlays: { ..._overlaysFor(f, files[f]), ...files } });
+          return r.ok ? { ok: true, why: `its expectation passed (${r.checks || 0} checks)` } : { ok: false, why: EXT.feedback(r, f) };
+        },
+      });
+      let res; try { res = await rung0.build({ file: f, exports: pf.exports || [], expectation, context: ctxNote }); } catch (e) { res = { ok: false, why: e.message, tries: [] }; }
+      appendRow('idearium_phase_runs', { uuid: `${runId}-${ck.brick}-ew-${Date.now().toString(36)}`, ...base, ...ck, state: res.ok ? 'emerge-passed' : 'emerge-fell-back', provider: `emerge:${rung && rung.provider || 'agent'}`, snapshot: commitId,
+        tries: res.tries, note: res.ok ? `${f} written in Emerge — ${res.why}` : `Emerge did not make ${f} (${res.why}); the JavaScript ladder builds it`, ts: Date.now() });
+      getIdeaOS().emit('idearium.repo.phase.run', { ...base, ...ck, state: res.ok ? 'emerge-passed' : 'emerge-fell-back', snapshot: commitId });
+      if (!res.ok) return null;
+      const RIp = _require('../../lib/repo-inject.js'); const landed = [];
+      for (const [rel, content] of Object.entries(res.files)) {
+        if (rel.startsWith('_emerge/') && codeOf(rel) === content) continue;   // the runtime lands once
+        try { RIp.propose({ layer: getRepoLayer(), repo: target, path: rel, content, source: { kind: 'agent', role: 'emerge-rung', provider: `emerge:${rung && rung.provider || 'agent'}`, run: runId, brick: ck.brick } }); landed.push(rel); } catch (e) { landed.push(`${rel} (not proposed: ${e.message})`); }
+      }
+      try { const CSx = _require('../../lib/component-store.js'); const st = CSx.put({ project: target.name || target.uuid, path: f.replace(/\.[cm]?js$/, '.eg'), content: res.source, builtBy: { via: 'emerge-rung', run: runId } });
+        CSx.markTested({ id: st.id, version: st.version, verdict: { state: 'verified', tests: res.tries.filter(t => t.stage === 'pass').map(t => ({ test: tpath || 'emerge check + build', ok: true, why: t.why, ms: t.ms })), by: 'emerge-rung' } }); } catch (_) { /* the store is a record, never the build's gate */ }
+      return { ok: true, agent: `emerge:${rung && rung.provider || 'agent'}`, evidence: { [`${ck.brick}.verified`]: `ok — ${res.why}`, [`${ck.brick}.emerge`]: `${res.tries.length} tr${res.tries.length === 1 ? 'y' : 'ies'}: ${res.tries.map(t => t.stage).join(' → ')}; landed ${landed.length} file(s)`, [`${ck.brick}.exports`]: JSON.stringify((pf.exports || []).map(e => e.name || e)) } };
+    };
     const verifyBrick = async (code, f) => {
       const v = PP.checkChunk(code, plan, f);
       if (!v.ok) return v;
@@ -1943,6 +1979,14 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const box = gate.parent ? null : _carryFor(f);
       if (box && !box.why && feedback) box.why = String(feedback).slice(0, 1200);
       if (!agent && !provider) order = PRt.preferFirst(order, policy);   // §0.60.171 CB2 — gemini first (a person's pick is never reordered)
+      // EW1 0.60.421 — James, 2026-11-06: "emerge, we need to get it coding" · "also the retry engine for emerge". A NEW planned JS file is
+      // tried in Emerge first (idearium/lib/emerge-rung.cjs): the first rung's agent writes Emerge, Emerge's compiler checks it (through its
+      // command line), what failed goes into the next try, it is built to JavaScript and its expectation test judges it. Passing: its files
+      // land as proposals and it is a verified primitive. Not passing: said, and the JavaScript ladder below builds it as before.
+      if (!gate.parent && policy.emergeFirst !== 'off' && /\.[cm]?js$/.test(f) && vfr && vfr.verdict === 'missing' && order.length) {
+        const ew = await _emergeBrick({ f, msgV, ck, rung: order[0], ctxNote: (ctx && ctx.text) || '' });
+        if (ew) return ew;
+      }
       const out = await PRt.climb({ rungs: order, policy,
         attempt: makeAttempt({ msg: msgV, files: [f], ck, verify: gate.parent ? null : (code) => verifyBrick(code, f), bare: true, carry: box }), onOutcome: makeOnOutcome(ck) });
       if (out.dp) lastDp = out.dp;

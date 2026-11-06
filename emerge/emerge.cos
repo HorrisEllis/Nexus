@@ -396,15 +396,19 @@ payload:
       emerge/tests/skeleton.test.js: d740e0fc50fe15fd4214d4cab0249003f37c6d5edfa1e4d609599dd65f72af19
       emerge/verify.js: 99273746e5977c75e82d571abf173316cbce2307c7ded5d51b40b948e3c191c8
       emerge/version.js: bb0ab190c523b5950bce5c04cda9b220c848dc20e6936d39519eeb8c493f96b6
-      phases/2026-10-31-emerge-as-a-system/EAS4a_L0_evaluate.phase: d1a448aaed5e43d0827f711f06da73db27a9b1526a77f79c0c1ba56c685170bc
-      phases/2026-10-31-emerge-as-a-system/EAS4b_L1_compile.phase: 6c29702d48dae3e3975803e8b354919443affeb5daeaeb1b01fa9bffa366a28b
-      phases/2026-10-31-emerge-as-a-system/EAS4c_L2_build.phase: 8b45d58cc5bdc90ee0fd472b9749588967252f95ce4418eb40361185c0fab28e
-      phases/2026-10-31-emerge-as-a-system/EAS4d_L3_run.phase: ea16fdd0ab8353e0039af5c0bee5bf157d74a275418ceccd53d54884d097f04e
-      phases/2026-10-31-emerge-as-a-system/graph/EAS4a_L0_evaluate-dd5d749dd87feb65.graph: 79f2ad6aecccda22da1fa7bbee7475a0a3693780a462de093c4763e5b9ccc1ab
-      phases/2026-10-31-emerge-as-a-system/graph/EAS4b_L1_compile-3d4cfb4736fa9ebf.graph: 0792305335aed3e946101dea89b0d403343b53f07af4a3262b5a0e94e534bbf5
-      phases/2026-10-31-emerge-as-a-system/graph/EAS4c_L2_build-e9a4063e9531c16a.graph: a9ece15e66981aa09f61c08ca3af7b0a3f19e217433562d2206d62a6af83694e
-      phases/2026-10-31-emerge-as-a-system/graph/EAS4d_L3_run-9524b42383548801.graph: a0d8dbe772c353a979ff0cf44869fe8b0f254dc1e2e5b80d5f3a5f3b24a0bc71
+      phases/2026-10-31-emerge-as-a-system/EAS4a_L0_evaluate.phase: 56625f30bc93e53c2d659c7b692e7ad13995404b13d00d466f37f805eecb4d70
+      phases/2026-10-31-emerge-as-a-system/EAS4b_L1_compile.phase: 27e5dec4abb700a78548cbf346e1498219e46fa2f4abc5455a2a51d566393e92
+      phases/2026-10-31-emerge-as-a-system/EAS4c_L2_build.phase: 29a37991e8d819875a2d94be3964bc85aead13afefb5612f0ef1e1d037fd439f
+      phases/2026-10-31-emerge-as-a-system/EAS4d_L3_run.phase: a788a781e18368cc72d18291d5b38c871fff90f35bee63da0687f2805f7207da
+      phases/2026-10-31-emerge-as-a-system/graph/EAS4a_L0_evaluate-7b08e8193b887f44.graph: 3087e92ae35a6d6958da938e12d26822dd908ad83aed41f39d8dc095e588a892
+      phases/2026-10-31-emerge-as-a-system/graph/EAS4b_L1_compile-711ff4bf6c27230e.graph: 504f28b91b63f659acd133b0730f1474b5fb2c85be9fdbd943a7498f715198ba
+      phases/2026-10-31-emerge-as-a-system/graph/EAS4c_L2_build-ad597961a6ac7cf4.graph: fb699178a0bc85aee6396d80a4f0043d984be76b51f8c5d272ac2d7af53eae46
+      phases/2026-10-31-emerge-as-a-system/graph/EAS4d_L3_run-f3c688d7074bd63d.graph: 34893c2c86184a031df8dfc9a6b03127ac4fb745442510c13bfacd5fc63b28d0
+      phases/2026-10-31-emerge-as-a-system/graph/_superseded/EAS4a_L0_evaluate-dd5d749dd87feb65.graph: 79f2ad6aecccda22da1fa7bbee7475a0a3693780a462de093c4763e5b9ccc1ab
       phases/2026-10-31-emerge-as-a-system/graph/_superseded/EAS4b_L1_compile-3b90647c4bc31ed0.graph: b0e645e38bf52aeb257bc4306288b0ab0ee9767f20564f5ee1d18c652fa69acf
+      phases/2026-10-31-emerge-as-a-system/graph/_superseded/EAS4b_L1_compile-3d4cfb4736fa9ebf.graph: 0792305335aed3e946101dea89b0d403343b53f07af4a3262b5a0e94e534bbf5
+      phases/2026-10-31-emerge-as-a-system/graph/_superseded/EAS4c_L2_build-e9a4063e9531c16a.graph: a9ece15e66981aa09f61c08ca3af7b0a3f19e217433562d2206d62a6af83694e
+      phases/2026-10-31-emerge-as-a-system/graph/_superseded/EAS4d_L3_run-9524b42383548801.graph: a0d8dbe772c353a979ff0cf44869fe8b0f254dc1e2e5b80d5f3a5f3b24a0bc71
   runtime:
     process:
       name: emerge

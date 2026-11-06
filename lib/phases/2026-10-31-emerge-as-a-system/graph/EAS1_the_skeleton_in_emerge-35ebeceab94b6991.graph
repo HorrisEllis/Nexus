@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793944983965
+exported_at: 1793957361865
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793944983965
-lastSeenAt: 1793944983965
+firstSeenAt: 1793957361865
+lastSeenAt: 1793957361865
 fingerprint: null
 payload:
   for: EAS1_the_skeleton_in_emerge
@@ -80,6 +80,7 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
     downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EW1_emerge_writes_the_brick
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
@@ -100,7 +101,7 @@ payload:
         EAS1a_the_boundary_reads_code_not_text
       - >-
         needed by (2): EAS2_the_language_through_the_door, EAS3_emerge_at_the_top_of_nexus · all
-        downstream 6 · finishing it unlocks EAS2_the_language_through_the_door
+        downstream 7 · finishing it unlocks EAS2_the_language_through_the_door
     edges:
       - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
         kind: declared

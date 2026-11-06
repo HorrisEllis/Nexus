@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793899854790
+exported_at: 1793957361868
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793899854790
-lastSeenAt: 1793899854790
+firstSeenAt: 1793957361868
+lastSeenAt: 1793957361868
 fingerprint: null
 payload:
   for: EAS1a_the_boundary_reads_code_not_text
@@ -47,6 +47,7 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
     upstream: []
     downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EW1_emerge_writes_the_brick
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
@@ -61,5 +62,5 @@ payload:
     lines:
       - layer 0
       - 'depends on (0): —'
-      - 'needed by (1): EAS1_the_skeleton_in_emerge · all downstream 7'
+      - 'needed by (1): EAS1_the_skeleton_in_emerge · all downstream 8'
     edges: []
