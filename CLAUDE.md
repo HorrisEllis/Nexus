@@ -34,7 +34,9 @@ docs/CLAUDE.md (addendum 2026-11-06, the focus).
 moment js is removed from emerge it becomes the replacement. focus on that first. no more js, we focus on .eg" · "No non-emerge code, unless
 specified in the contract or project. lack of capability is an opportunity to build it." First in order: the JavaScript removal from Emerge
 (docs/2026-11-06-cie-eg-build-phasemap.spec). **Crystallise verified primitives; log every benchmark** (his, the same day): the how is in
-docs/CLAUDE.md (addendum 2026-11-06, Emerge is the replacement).
+docs/CLAUDE.md (addendum 2026-11-06, Emerge is the replacement). **Note metrics while coding in Emerge, expand Emerge as you go, and define
+every new extension in a taxonomy and ledger** (his, the same day: "remember to take note of metrics while coding in emerge, and expanding emerge
+while you do." · "all new extensions need to be defined in a taxonomy and ledger."); the how is in docs/CLAUDE.md (addendum 0.60.429).
 **Every change and every version goes to Versionium, in full (§17.12).** James, 2026-10-29: "full changes, and versions have to be pushed
 to versionium? enforce it everywhere that you'd find it." The how is in docs/CLAUDE.md.
 

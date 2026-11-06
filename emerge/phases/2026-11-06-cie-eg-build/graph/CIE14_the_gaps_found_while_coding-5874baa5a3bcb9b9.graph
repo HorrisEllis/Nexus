@@ -1,0 +1,170 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CIE14_the_gaps_found_while_coding:5874baa5a3bcb9b9
+type: graph
+id: phase:CIE14_the_gaps_found_while_coding:5874baa5a3bcb9b9
+context: dependency graph of phase CIE14_the_gaps_found_while_coding
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793998100576
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793998100576
+lastSeenAt: 1793998100576
+fingerprint: null
+payload:
+  for: CIE14_the_gaps_found_while_coding
+  kind: phase
+  repo: null
+  hash: 5874baa5a3bcb9b9
+  nodes:
+    - path: emerge/emerge/lang/native/codegen.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/front.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/lower.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/rt.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/parser.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/test/native.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: emerge/emerge/lang/ide.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/index.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/map.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/test/contract.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/emerge/lang/build-loader.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/contract.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/errors.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/lexer.js
+      role: uses
+      exists: true
+      system: emerge
+  edges:
+    - from: emerge/emerge/lang/parser.js
+      to: emerge/emerge/lang/lexer.js
+      kind: requires
+    - from: emerge/emerge/lang/parser.js
+      to: emerge/emerge/lang/errors.js
+      kind: requires
+    - from: emerge/emerge/lang/parser.js
+      to: emerge/emerge/lang/contract.js
+      kind: requires
+    - from: emerge/emerge/lang/parser.js
+      to: emerge/emerge/lang/build-loader.js
+      kind: requires
+    - from: emerge/emerge/lang/ide.js
+      to: emerge/emerge/lang/parser.js
+      kind: requires
+    - from: emerge/emerge/lang/index.js
+      to: emerge/emerge/lang/parser.js
+      kind: requires
+    - from: emerge/emerge/lang/map.js
+      to: emerge/emerge/lang/parser.js
+      kind: requires
+    - from: emerge/emerge/lang/test/contract.test.js
+      to: emerge/emerge/lang/parser.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+    dependents: []
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+    downstream: []
+    blockedBy:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+        files:
+          - emerge/emerge/lang/native/front.eg
+          - emerge/emerge/lang/native/codegen.eg
+          - emerge/emerge/lang/test/native.test.js
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+        files:
+          - emerge/emerge/lang/native/rt.eg
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+        files:
+          - emerge/emerge/lang/native/rt.eg
+          - emerge/emerge/lang/native/codegen.eg
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+        files:
+          - emerge/emerge/lang/native/codegen.eg
+          - emerge/emerge/lang/native/rt.eg
+    dangling: []
+    lines:
+      - layer 6 · blocked by CIE4_native_components
+      - 'depends on (2): CIE_D1_remove_the_javascript_now, CIE4_native_components · all upstream 15'
+      - 'needed by (0): —'
+      - >-
+        same files as CIE5_native_test with no order between them:
+        emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/codegen.eg,
+        emerge/emerge/lang/test/native.test.js
+      - >-
+        same files as CIE10_the_door_in_emerge with no order between them:
+        emerge/emerge/lang/native/rt.eg
+      - >-
+        same files as CIE13_native_system_primitives with no order between them:
+        emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg
+      - >-
+        same files as CIE12_windows with no order between them:
+        emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg
+    edges:
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+        kind: declared
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+        kind: declared

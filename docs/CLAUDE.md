@@ -552,3 +552,30 @@ opportunity to build it." Map: docs/2026-11-06-emerge-is-the-replacement-phasema
 - **To build, his ideas the same day:** reference nodes for anything hot-swappable (EQ3, his "reference(primitive.eg)" for routing data
   structures, endpoints, primitives, "making it nonlinear"; readings to confirm in the map), and a guide small enough for any LLM to write
   Emerge, with an atlas tool in .eg for more context (EQ4).
+
+## ADDENDUM 2026-11-06 (0.60.429) — metrics while coding in Emerge; Emerge expanded as it goes; every extension defined (his)
+James, 2026-11-06: "remember to take note of metrics while coding in emerge, and expanding emerge while you do." · "node files, eg files, yaml
+files, and database files. all new extensions need to be defined in a taxonomy and ledger." Map: docs/2026-11-06-emerge-is-the-replacement-phasemap.spec
+EQ2 (expanded), EQ5, EQ_D1.
+- **Metrics, every slice of Emerge work, in docs/BENCHMARKS.md, in the same release.** Each slice records:
+  - the wall time of its runs;
+  - the .eg lines added, and the JS lines removed (Emerge's totals before and after);
+  - its tests and their counts;
+  - the failed runs before the pass, and what each taught;
+  - each gap found in Emerge.
+- **Expand Emerge as you go (§17.13).** A gap found while coding (a refusal, a trap, a missing builtin) is not worked around in silence. It
+  is said, and it gets the phase that builds it into Emerge. Gaps found on 2026-11-06, each to close:
+  - lenses not frozen natively;
+  - newlines inside a map literal swallow a lambda's lines;
+  - keywords (state, on, emit, compartment) cannot be names;
+  - native lets a map change through a let or a parameter, where the checker refuses it;
+  - no stderr natively.
+- **Every extension defined, with a ledger (EQ5).** No new file extension without its definition:
+  - what a file of it is;
+  - its schema;
+  - the system that owns it;
+  - who writes and reads it;
+  - its kind: code, data, node, config or database.
+
+  Each definition gets a ledger line, dated, with why. The definition lives in the owning system's own registry (§5.16, EQ_D1), not in
+  `lib/`. Today 66 of the tree's 141 extensions have no definition, among them .eg, .nex, .yaml and .sql. Emerge's are defined first.

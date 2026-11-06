@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
+type: phase
+id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
+context: pipeline phase CIE14_the_gaps_found_while_coding of docs/2026-11-06-cie-eg-build-phasemap.spec
+intent: null
+summary: CIE14_the_gaps_found_while_coding (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1793998100576
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793998100576
+lastSeenAt: 1793998100576
+fingerprint: null
+payload:
+  id: CIE14_the_gaps_found_while_coding
+  map: docs/2026-11-06-cie-eg-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/lang/native/front.eg
+    - emerge/emerge/lang/native/codegen.eg
+    - emerge/emerge/lang/native/rt.eg
+    - emerge/emerge/lang/native/lower.eg
+    - emerge/emerge/lang/parser.js
+    - emerge/emerge/lang/test/native.test.js
+  depends_on:
+    - CIE_D1_remove_the_javascript_now
+    - CIE4_native_components
+  blocks:
+    - MOD-NATIVE-SYSTEM
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: 5874baa5a3bcb9b9

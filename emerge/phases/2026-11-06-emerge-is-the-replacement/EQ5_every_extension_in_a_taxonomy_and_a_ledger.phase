@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ5_every_extension_in_a_taxonomy_and_a_ledger
+type: phase
+id: docs_2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ5_every_extension_in_a_taxonomy_and_a_ledger
+context: >-
+  pipeline phase EQ5_every_extension_in_a_taxonomy_and_a_ledger of
+  docs/2026-11-06-emerge-is-the-replacement-phasemap.spec
+intent: null
+summary: EQ5_every_extension_in_a_taxonomy_and_a_ledger (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793998078402
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793998078402
+lastSeenAt: 1793998078402
+fingerprint: null
+payload:
+  id: EQ5_every_extension_in_a_taxonomy_and_a_ledger
+  map: docs/2026-11-06-emerge-is-the-replacement-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/lang/cie/extensions.eg
+    - emerge/emerge/lang/test/extensions.test.eg
+    - emerge/emerge/extensions.eg
+  depends_on:
+    - EQ_D0_emerge_only
+    - EQ_D1_extensions_are_their_owners
+  blocks: []
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: d37b5d73da316886

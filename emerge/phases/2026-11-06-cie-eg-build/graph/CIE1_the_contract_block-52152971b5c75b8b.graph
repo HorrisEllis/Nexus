@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793997643468
+exported_at: 1793998100538
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997643468
-lastSeenAt: 1793997643468
+firstSeenAt: 1793998100538
+lastSeenAt: 1793998100538
 fingerprint: null
 payload:
   for: CIE1_the_contract_block
@@ -244,6 +244,7 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
@@ -266,7 +267,7 @@ payload:
       - layer 4
       - 'depends on (1): EAS4_callers_through_the_door · all upstream 9'
       - >-
-        needed by (2): CIE4_native_components, PIL2_contracts · all downstream 50 · finishing it
+        needed by (2): CIE4_native_components, PIL2_contracts · all downstream 51 · finishing it
         unlocks CIE4_native_components, PIL2_contracts
     edges:
       - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
