@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354175
+exported_at: 1793979426637
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354175
-lastSeenAt: 1793962354175
+firstSeenAt: 1793979426637
+lastSeenAt: 1793979426637
 fingerprint: null
 payload:
   for: CB4_the_emergence_loop_builds
@@ -140,6 +140,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
     blockedBy:
@@ -155,7 +156,7 @@ payload:
         MR2_vector_space_for_the_field
       - >-
         depends on (3): CB1_cfr_build_logic, CB2_analysis_then_synthesis,
-        MR2_vector_space_for_the_field · all upstream 16
+        MR2_vector_space_for_the_field · all upstream 17
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic

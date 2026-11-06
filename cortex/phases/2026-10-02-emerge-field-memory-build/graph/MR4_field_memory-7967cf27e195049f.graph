@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354128
+exported_at: 1793979426586
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354128
-lastSeenAt: 1793962354128
+firstSeenAt: 1793979426586
+lastSeenAt: 1793979426586
 fingerprint: null
 payload:
   for: MR4_field_memory
@@ -132,6 +132,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
     blockedBy:
@@ -142,7 +143,7 @@ payload:
     dangling: []
     lines:
       - layer 5 · blocked by OT1_one_write_path, CF1_cfr_improved_with_rfr2
-      - 'depends on (2): OT1_one_write_path, CF1_cfr_improved_with_rfr2 · all upstream 11'
+      - 'depends on (2): OT1_one_write_path, CF1_cfr_improved_with_rfr2 · all upstream 12'
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path

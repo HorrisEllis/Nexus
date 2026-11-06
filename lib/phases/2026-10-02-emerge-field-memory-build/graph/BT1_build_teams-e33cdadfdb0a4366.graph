@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354203
+exported_at: 1793979426666
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354203
-lastSeenAt: 1793962354203
+firstSeenAt: 1793979426666
+lastSeenAt: 1793979426666
 fingerprint: null
 payload:
   for: BT1_build_teams
@@ -228,6 +228,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
@@ -250,7 +251,7 @@ payload:
       - layer 5 · blocked by CB1_cfr_build_logic, SH1_shadow_space
       - >-
         depends on (3): GA1_guardian_source_of_truth, CB1_cfr_build_logic, SH1_shadow_space · all
-        upstream 14
+        upstream 15
       - 'needed by (1): FV1_client_jobs'
       - 'same files as RC1_the_repo_main_chat with no order between them: idearium/api/index.js'
       - 'same files as FV0_fulfil_a_taken_order with no order between them: idearium/api/index.js'

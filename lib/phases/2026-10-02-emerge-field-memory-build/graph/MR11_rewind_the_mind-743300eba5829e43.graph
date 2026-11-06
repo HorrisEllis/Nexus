@@ -1,0 +1,169 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MR11_rewind_the_mind:743300eba5829e43
+type: graph
+id: phase:MR11_rewind_the_mind:743300eba5829e43
+context: dependency graph of phase MR11_rewind_the_mind
+intent: null
+summary: 15 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793979426617
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979426617
+lastSeenAt: 1793979426617
+fingerprint: null
+payload:
+  for: MR11_rewind_the_mind
+  kind: phase
+  repo: null
+  hash: 743300eba5829e43
+  nodes:
+    - path: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: docs/2026-10-16-repo-carve-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: emerge/emerge/spec/field.spec
+      role: changes
+      exists: true
+      system: emerge
+    - path: lib/agent-tools/tools/execution/safe-apply.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/change-record.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/safe-apply.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/emergence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/cli/commands/list.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/run-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: versionium/lib/text-diff.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: lib/change-record.js
+      to: versionium/lib/text-diff.js
+      kind: requires
+    - from: lib/change-record.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/safe-apply.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/safe-apply.js
+      to: cos/cli/commands/list.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/emergence.js
+      to: lib/safe-apply.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/change-record.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/change-record.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/execution/safe-apply.js
+      kind: requires
+  crossings:
+    - from: lib/change-record.js
+      to: versionium/lib/text-diff.js
+      fromSystem: lib
+      toSystem: versionium
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/execution/safe-apply.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/execution/safe-apply.js
+      to: cos/cli/commands/list.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+    dependents:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+    downstream:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+    unlocks:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by RF1_relational_field, OT1_one_write_path
+      - 'depends on (2): RF1_relational_field, OT1_one_write_path · all upstream 11'
+      - >-
+        needed by (2): RS6d_saved_through_the_gates, BC2_the_editor · all downstream 4 · finishing
+        it unlocks RS6d_saved_through_the_gates
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+        kind: declared

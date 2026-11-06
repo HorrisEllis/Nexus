@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354056
+exported_at: 1793979426514
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354056
-lastSeenAt: 1793962354056
+firstSeenAt: 1793979426514
+lastSeenAt: 1793979426514
 fingerprint: null
 payload:
   for: EM0_ground
@@ -97,6 +97,10 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::UI0_the_stations_agree
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
     blockedBy: []
     unlocks:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
@@ -117,7 +121,7 @@ payload:
         needed by (9): EV0_contracts_for_every_system, UI0_the_stations_agree, EM1_emerge_core,
         MR1_recall_triad_and_context_table, SH1_shadow_space, GA1_guardian_source_of_truth,
         IN1_nexus_as_claude_codes_toolbox, PR1_proof_run_the_delivery_checker,
-        CX0_codex_component_store · all downstream 48 · finishing it unlocks
+        CX0_codex_component_store · all downstream 52 · finishing it unlocks
         EV0_contracts_for_every_system, UI0_the_stations_agree, EM1_emerge_core,
         MR1_recall_triad_and_context_table, SH1_shadow_space, GA1_guardian_source_of_truth,
         IN1_nexus_as_claude_codes_toolbox, PR1_proof_run_the_delivery_checker,

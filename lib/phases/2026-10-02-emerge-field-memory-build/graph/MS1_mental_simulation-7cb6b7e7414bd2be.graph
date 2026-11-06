@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354245
+exported_at: 1793979426708
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354245
-lastSeenAt: 1793962354245
+firstSeenAt: 1793979426708
+lastSeenAt: 1793979426708
 fingerprint: null
 payload:
   for: MS1_mental_simulation
@@ -27,7 +27,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 6
+    layer: 7
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
@@ -44,11 +44,21 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-10-02-spatial-void-phasemap.spec::V7_proof
+      - docs/2026-10-02-spatial-void-phasemap.spec::V8_the_void_sets_the_end_state
+      - docs/2026-10-02-spatial-void-phasemap.spec::VOID_D1_the_void_sets_the_end_state
+      - docs/2026-10-29-finish-any-project-phasemap.spec::FA11_bidirectional_causal_chain
+      - docs/2026-10-29-finish-any-project-phasemap.spec::FA1_adapters_javascript_and_documents
+      - docs/2026-10-29-finish-any-project-phasemap.spec::FA2_the_registry_is_the_spine
+      - docs/2026-10-29-finish-any-project-phasemap.spec::FA8_intent_to_contract
+      - docs/2026-10-29-finish-any-project-phasemap.spec::FA_D2_registry_is_the_spine_reading
+      - docs/2026-10-29-finish-any-project-phasemap.spec::FA_D4_adapters_first
       - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
     blockedBy:
@@ -61,8 +71,8 @@ payload:
           - intelligence/cfr/
     dangling: []
     lines:
-      - layer 6 · blocked by FM1_mining_failure_modes, LB1_the_end_state_lab
-      - 'depends on (2): FM1_mining_failure_modes, LB1_the_end_state_lab · all upstream 17'
+      - layer 7 · blocked by FM1_mining_failure_modes, LB1_the_end_state_lab
+      - 'depends on (2): FM1_mining_failure_modes, LB1_the_end_state_lab · all upstream 27'
       - 'needed by (0): —'
       - 'same files as MR2_vector_space_for_the_field with no order between them: intelligence/cfr/'
     edges:

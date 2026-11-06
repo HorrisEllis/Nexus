@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-build-from-cos-phasemap.spec::BC7_the_workshop_moves_into_cos
+type: phase
+id: docs_2026-11-01-build-from-cos-phasemap.spec::BC7_the_workshop_moves_into_cos
+context: pipeline phase BC7_the_workshop_moves_into_cos of docs/2026-11-01-build-from-cos-phasemap.spec
+intent: null
+summary: BC7_the_workshop_moves_into_cos (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1793979424482
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979424482
+lastSeenAt: 1793979424482
+fingerprint: null
+payload:
+  id: BC7_the_workshop_moves_into_cos
+  map: docs/2026-11-01-build-from-cos-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/workshop.js
+    - idearium/ui/workshop.html
+    - idearium/ui/js/workshop.js
+    - idearium/ui/spec-library.html
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - BC_D8_the_workshop_moves_into_cos
+    - BC0_the_full_spec
+  blocks: []
+  spec: null
+  graph: ed36857c03bfa2cb

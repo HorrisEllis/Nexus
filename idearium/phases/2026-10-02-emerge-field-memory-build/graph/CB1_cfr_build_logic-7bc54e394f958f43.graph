@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354160
+exported_at: 1793979426621
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354160
-lastSeenAt: 1793962354160
+firstSeenAt: 1793979426621
+lastSeenAt: 1793979426621
 fingerprint: null
 payload:
   for: CB1_cfr_build_logic
@@ -215,6 +215,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
@@ -242,7 +243,7 @@ payload:
         MR1_recall_triad_and_context_table
       - >-
         depends on (4): PIL2_contracts, PIL3_conformance, RF1_relational_field,
-        MR1_recall_triad_and_context_table · all upstream 11
+        MR1_recall_triad_and_context_table · all upstream 12
       - >-
         needed by (6): MR7_recipes, CB2_analysis_then_synthesis, CB4_the_emergence_loop_builds,
         RC1_the_repo_main_chat, BT1_build_teams, LB1_the_end_state_lab · all downstream 11

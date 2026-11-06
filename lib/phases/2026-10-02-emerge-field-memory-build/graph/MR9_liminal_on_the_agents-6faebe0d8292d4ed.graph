@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354149
+exported_at: 1793979426609
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354149
-lastSeenAt: 1793962354149
+firstSeenAt: 1793979426609
+lastSeenAt: 1793979426609
 fingerprint: null
 payload:
   for: MR9_liminal_on_the_agents
@@ -159,6 +159,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
@@ -170,7 +171,7 @@ payload:
     dangling: []
     lines:
       - layer 5 · blocked by CF1_cfr_improved_with_rfr2
-      - 'depends on (1): CF1_cfr_improved_with_rfr2 · all upstream 10'
+      - 'depends on (1): CF1_cfr_improved_with_rfr2 · all upstream 11'
       - >-
         needed by (1): MR10_the_field_between_james_and_the_agents · finishing it unlocks
         MR10_the_field_between_james_and_the_agents

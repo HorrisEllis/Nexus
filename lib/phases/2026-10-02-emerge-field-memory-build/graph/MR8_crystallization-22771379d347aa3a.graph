@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354143
+exported_at: 1793979426606
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354143
-lastSeenAt: 1793962354143
+firstSeenAt: 1793979426606
+lastSeenAt: 1793979426606
 fingerprint: null
 payload:
   for: MR8_crystallization
@@ -124,6 +124,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
@@ -135,7 +136,7 @@ payload:
     dangling: []
     lines:
       - layer 6 · blocked by MR7_recipes, EM2_warp_his_own
-      - 'depends on (2): MR7_recipes, EM2_warp_his_own · all upstream 17'
+      - 'depends on (2): MR7_recipes, EM2_warp_his_own · all upstream 18'
       - 'needed by (1): FV1_client_jobs'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes

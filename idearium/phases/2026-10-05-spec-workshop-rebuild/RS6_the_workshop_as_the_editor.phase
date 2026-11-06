@@ -9,11 +9,11 @@ intent: null
 summary: RS6_the_workshop_as_the_editor (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677046
+exported_at: 1793979429021
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677046
-lastSeenAt: 1792787677046
+firstSeenAt: 1793979429021
+lastSeenAt: 1793979429021
 fingerprint: null
 payload:
   id: RS6_the_workshop_as_the_editor
@@ -26,7 +26,6 @@ payload:
     - idearium/ui/js/spec-editor.js
   depends_on:
     - RS5_the_template_picker
-    - RS2_replay_rewind_branch
   blocks: []
   spec: null
   graph: 65ed3468201e5940

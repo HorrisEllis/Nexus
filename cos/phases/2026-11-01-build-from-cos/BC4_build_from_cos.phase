@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+type: phase
+id: docs_2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+context: pipeline phase BC4_build_from_cos of docs/2026-11-01-build-from-cos-phasemap.spec
+intent: null
+summary: BC4_build_from_cos (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793979424477
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979424477
+lastSeenAt: 1793979424477
+fingerprint: null
+payload:
+  id: BC4_build_from_cos
+  map: docs/2026-11-01-build-from-cos-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/server.js
+    - cos/manager/contract.json
+  depends_on:
+    - BC2_the_editor
+    - BC3_templates_to_start_from
+    - MG_D18_no_side_bar_every_compartment
+  blocks: []
+  spec: null
+  graph: 9dc2bf11b2eacc03

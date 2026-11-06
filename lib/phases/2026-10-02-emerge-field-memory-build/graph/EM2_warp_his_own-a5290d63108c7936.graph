@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354086
+exported_at: 1793979426546
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354086
-lastSeenAt: 1793962354086
+firstSeenAt: 1793979426546
+lastSeenAt: 1793979426546
 fingerprint: null
 payload:
   for: EM2_warp_his_own
@@ -118,6 +118,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
@@ -137,7 +138,7 @@ payload:
         PIL5_the_duplicates_census
       - >-
         depends on (3): RF1_relational_field, CF1_cfr_improved_with_rfr2, PIL5_the_duplicates_census
-        · all upstream 13
+        · all upstream 14
       - 'needed by (2): MR8_crystallization, CB3_the_causal_spec_block · all downstream 4'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field

@@ -7,11 +7,11 @@ intent: null
 summary: RS3_the_spec_document (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792841754944
+exported_at: 1793979429013
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754944
-lastSeenAt: 1792841754944
+firstSeenAt: 1793979429013
+lastSeenAt: 1793979429013
 fingerprint: null
 payload:
   id: RS3_the_spec_document
@@ -26,4 +26,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 25b27a27256aff05
+  graph: cea417527076a657

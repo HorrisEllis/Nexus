@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-build-from-cos-phasemap.spec::BC1_the_document_library
+type: phase
+id: docs_2026-11-01-build-from-cos-phasemap.spec::BC1_the_document_library
+context: pipeline phase BC1_the_document_library of docs/2026-11-01-build-from-cos-phasemap.spec
+intent: null
+summary: BC1_the_document_library (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793979424472
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979424472
+lastSeenAt: 1793979424472
+fingerprint: null
+payload:
+  id: BC1_the_document_library
+  map: docs/2026-11-01-build-from-cos-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/library.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/spec-library.html
+  depends_on:
+    - BC0_the_full_spec
+    - BC7_the_workshop_moves_into_cos
+  blocks: []
+  spec: null
+  graph: 0bdf99348f7b0088

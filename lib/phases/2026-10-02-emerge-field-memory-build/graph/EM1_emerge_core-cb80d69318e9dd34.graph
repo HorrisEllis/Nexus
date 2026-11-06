@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354080
+exported_at: 1793979426538
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354080
-lastSeenAt: 1793962354080
+firstSeenAt: 1793979426538
+lastSeenAt: 1793979426538
 fingerprint: null
 payload:
   for: EM1_emerge_core
@@ -115,6 +115,10 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
     blockedBy: []
     unlocks:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EC6_economy_and_the_tokenizer
@@ -126,7 +130,7 @@ payload:
       - 'depends on (2): EM0_ground, EV0_contracts_for_every_system'
       - >-
         needed by (3): RF1_relational_field, EC6_economy_and_the_tokenizer, ST1_settings · all
-        downstream 32 · finishing it unlocks EC6_economy_and_the_tokenizer, ST1_settings
+        downstream 36 · finishing it unlocks EC6_economy_and_the_tokenizer, ST1_settings
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
         kind: declared

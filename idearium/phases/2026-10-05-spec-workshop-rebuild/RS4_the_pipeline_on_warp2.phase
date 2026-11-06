@@ -7,11 +7,11 @@ intent: null
 summary: RS4_the_pipeline_on_warp2 (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792841754945
+exported_at: 1793979429016
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754945
-lastSeenAt: 1792841754945
+firstSeenAt: 1793979429016
+lastSeenAt: 1793979429016
 fingerprint: null
 payload:
   id: RS4_the_pipeline_on_warp2
@@ -28,4 +28,4 @@ payload:
     - RS3_the_spec_document
   blocks: []
   spec: null
-  graph: 9cd2a175aa69d759
+  graph: 6b8da554357674b7

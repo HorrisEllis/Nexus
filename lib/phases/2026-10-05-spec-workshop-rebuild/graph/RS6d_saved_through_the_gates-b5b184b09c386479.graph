@@ -1,0 +1,178 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RS6d_saved_through_the_gates:b5b184b09c386479
+type: graph
+id: phase:RS6d_saved_through_the_gates:b5b184b09c386479
+context: dependency graph of phase RS6d_saved_through_the_gates
+intent: null
+summary: 18 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793979429028
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979429028
+lastSeenAt: 1793979429028
+fingerprint: null
+payload:
+  for: RS6d_saved_through_the_gates
+  kind: phase
+  repo: null
+  hash: b5b184b09c386479
+  nodes:
+    - path: idearium/lib/workshop.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/safe-apply.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/plugins/adblocker/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/eros/edit.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/store.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cos/disk/disk.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/void.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/execution/emergence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/safe-apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/versionium-record.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/versionium-record.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/versionium-record.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/workshop.js
+      kind: requires
+    - from: idearium/lib/void.js
+      to: idearium/lib/workshop.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/emergence.js
+      to: lib/safe-apply.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/safe-apply.js
+      to: lib/safe-apply.js
+      kind: requires
+    - from: clear-glass/plugins/adblocker/index.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: clear-glass/src/eros/edit.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: clear-glass/src/site-settings/store.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: cos/disk/disk.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: cos/disk/vdisk.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: cos/manager/add-system.js
+      to: lib/versionium-record.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6b_one_editor_per_kind
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+    dependents: []
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6a_every_file_kind
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6b_one_editor_per_kind
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+    downstream: []
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · blocked by MR11_rewind_the_mind
+      - 'depends on (2): RS6b_one_editor_per_kind, MR11_rewind_the_mind · all upstream 15'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6b_one_editor_per_kind
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+        kind: declared

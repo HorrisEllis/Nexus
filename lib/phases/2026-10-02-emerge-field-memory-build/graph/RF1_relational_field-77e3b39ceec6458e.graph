@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354099
+exported_at: 1793979426559
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354099
-lastSeenAt: 1793962354099
+firstSeenAt: 1793979426559
+lastSeenAt: 1793979426559
 fingerprint: null
 payload:
   for: RF1_relational_field
@@ -148,6 +148,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
@@ -177,6 +178,10 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
     blockedBy:
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
     unlocks:
@@ -191,12 +196,12 @@ payload:
     dangling: []
     lines:
       - layer 3 · blocked by PIL2_contracts
-      - 'depends on (2): EM1_emerge_core, PIL2_contracts · all upstream 8'
+      - 'depends on (2): EM1_emerge_core, PIL2_contracts · all upstream 9'
       - >-
         needed by (10): EM2_warp_his_own, CF1_cfr_improved_with_rfr2, OT1_one_write_path,
         MR5_fractal_levels_with_the_field, MR6_contradictions_held, MR11_rewind_the_mind,
         CB1_cfr_build_logic, CRF1_the_axioms_as_constraints, LN1_lenses_on_the_canvas,
-        GL1_the_graphs_as_a_model · all downstream 27 · finishing it unlocks
+        GL1_the_graphs_as_a_model · all downstream 31 · finishing it unlocks
         CF1_cfr_improved_with_rfr2, OT1_one_write_path, MR5_fractal_levels_with_the_field,
         CRF1_the_axioms_as_constraints
       - 'same files as GG1_graphs_generate_code with no order between them: idearium/repo/graph.js'
