@@ -47,13 +47,16 @@ fn uses_world(n) {
     return false
   }
   if type_of(n) != "map" { return false }
-  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit" or n.type == "EmitOut" or n.type == "Send" or n.type == "Wire" or n.type == "Contract") { return true }
+  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit" or n.type == "EmitOut" or n.type == "Send" or n.type == "Wire" or n.type == "Contract" or n.type == "Record" or n.type == "Gap" or n.type == "Promote") { return true }
+  if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and has(WORLD_BUILTINS, n.callee.name) { return true }
   if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and (n.callee.name == "ledger" or n.callee.name == "spent" or n.callee.name == "ledger_verify") and len(n.args) == 0 { return true }
   for k, v in n { if uses_world(v) { return true } }
   return false
 }
 
 var comps = {}
+var FILE = "<input>"
+let WORLD_BUILTINS = { ledger: 1, spent: 1, ledger_verify: 1, components: 1, gaps: 1, random: 1, uid: 1 }
 let MEMBERS = { id: 1, name: 1, intent: 1, namespace: 1, version: 1, uuid: 1, hooks: 1, template: 1, kinds: 1 }
 
 /** rewrite one node and everything below it */
@@ -66,6 +69,20 @@ fn rw(n) {
   if type_of(n) != "map" { return n }
   if has(n, "type") {
     let t = n.type
+    if t == "Record" {
+      var p = mk("Null", n, {})
+      if n.payload != null { p = rw(n.payload) }
+      return stmt(n, wcall(n, "record_entry", [rw(n.name), p]))
+    }
+    if t == "Gap" { return stmt(n, wcall(n, "open_gap", [rw(n.msg), rw(n.pressure), opt_str(n, n.gtype), mk("Num", n, { value: n.line }), str_(n, FILE)])) }
+    if t == "Promote" { return stmt(n, wcall(n, "promote_value", [rw(n.value), rw(n.proof), mk("Num", n, { value: n.line }), str_(n, FILE)])) }
+    if t == "Call" and n.callee.type == "Ident" and n.callee.name == "gaps" and len(n.args) == 0 { return wcall(n, "gaps", []) }
+    if t == "Call" and n.callee.type == "Ident" and n.callee.name == "random" and len(n.args) == 0 { return wcall(n, "random", []) }
+    if t == "Call" and n.callee.type == "Ident" and n.callee.name == "uid" and len(n.args) <= 1 {
+      var a = [str_(n, "id")]
+      if len(n.args) == 1 { a = [rw(n.args[0])] }
+      return wcall(n, "uid", a)
+    }
     if t == "EmitOut" {
       var p = mk("Null", n, {})
       if n.payload != null { p = rw(n.payload) }
@@ -195,6 +212,7 @@ fn lower_on(o) {
 fn lower(ast, version) {
   if not uses_world(ast.items) { return ast }
   comps = {}
+  if has(ast, "file") and ast.file != null { FILE = ast.file }
   for it in ast.items { if it.type == "Compartment" { comps[it.name] = true } }
   let at = ast
   // the contract: given to start (genesis carries its hash); its roads wired after the later of the contract and the last compartment, as the

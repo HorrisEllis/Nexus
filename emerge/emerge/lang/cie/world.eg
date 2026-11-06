@@ -30,6 +30,8 @@ var CHECKPOINT_EVERY = 256
 var _contract = null
 var _contract_hash = null
 var _wires = []
+var _gaps = []
+var _rng = 0i
 
 var _entries = []
 var _comps = []
@@ -92,7 +94,76 @@ fn _chain_id(seed, version) {
   return slice(h, 0, 8) + "-" + slice(h, 8, 12) + "-" + slice(h, 12, 16) + "-" + slice(h, 16, 20) + "-" + slice(h, 20, 32)
 }
 
+// ── the seeded generator (mulberry32, as lang/runtime.js createRng), uid, gaps, records and promotion (CIE15) ──
+let M32 = 0xFFFFFFFFi
+// the low 32 bits of a * b (Math.imul's bits), from 16-bit halves so no product overflows: wrap_mul is not native (CIE15)
+fn _imul(a, b) {
+  let al = a & 0xFFFFi
+  let ah = (a >> 16i) & 0xFFFFi
+  let bl = b & 0xFFFFi
+  let bh = (b >> 16i) & 0xFFFFi
+  return ((((ah * bl + al * bh) & 0xFFFFi) << 16i) + al * bl) & M32
+}
+fn _rng_next() {
+  _rng = (_rng + 0x6D2B79F5i) & M32
+  var t = _rng
+  t = _imul(t ^ (t >> 15i), t | 1i)
+  t = t ^ ((t + _imul(t ^ (t >> 7i), t | 61i)) & M32)
+  return num((t ^ (t >> 14i)) & M32) / 4294967296
+}
+fn _hex8(n) {
+  let d = "0123456789abcdef"
+  var v = int(n)
+  var out = ""
+  for k in 0..8 {
+    let x = num(v & 15i)
+    out = slice(d, x, x + 1) + out
+    v = v >> 4i
+  }
+  return out
+}
+fn random() = _rng_next()
+fn uid(prefix) {
+  let a = _hex8(floor(_rng_next() * 4294967295))
+  let b = _hex8(floor(_rng_next() * 4294967295))
+  return "{prefix}-{a}{b}"
+}
+let RESERVED = { genesis: 1, boot: 1, register: 1, deliver: 1, gap: 1, "gap.ack": 1, "gap.close": 1, transition: 1, rejected: 1, checkpoint: 1, rekey: 1 }
+let GAP_TYPES = ["logical", "evidential", "temporal", "assumption", "contradiction", "structural", "contextual", "causal"]
+fn record_entry(kind, payload) {
+  if type_of(kind) != "string" { raise("record needs a string kind, got {type_of(kind)}") }
+  if has(RESERVED, kind) { raise("record cannot write the kind \"{kind}\": the runtime owns it") }
+  return _append(kind, clone(payload))
+}
+fn open_gap(message, pressure, gtype, line, file) {
+  if type_of(message) != "string" { raise("a gap message must be a string, got {type_of(message)}") }
+  if type_of(pressure) != "num" or pressure < 0 or pressure > 1 { raise("gap pressure must be a num in [0, 1], got {repr(pressure)}") }
+  var t = gtype
+  if t == null { t = "structural" }
+  if not (GAP_TYPES contains t) {
+    let types = join(GAP_TYPES, ", ")
+    raise("gap type must be one of {types}")
+  }
+  let g = freeze({ id: uid("gap"), message: message, pressure: pressure, type: t, line: line, file: file })
+  _gaps = push(_gaps, g)
+  _append("gap", { gap: g.id, message: message, pressure: pressure, type: t, line: line })
+  signal("gap.opened", g)
+  return g
+}
+fn gaps() = _gaps
+fn promote_value(value, proof, line, file) {
+  if type_of(proof) != "bool" { raise("a proof must be a bool, got {type_of(proof)}") }
+  if proof {
+    _append("promote", { value: clone(value), line: line })
+    signal("promoted", { value: value })
+  } else {
+    _append("promotion_refused", { value: clone(value), line: line })
+    open_gap("promotion refused at line {line}: its proof is false", 0.9, "logical", line, file)
+  }
+}
+
 fn start(seed, version, raw_contract) {
+  _rng = int(seed) & M32
   var body = { seed: seed, version: version, chain_id: _chain_id(seed, version), text: { encoding: "utf-8", normalization: "nfc" } }
   if raw_contract != null {
     _contract = C.normalize(raw_contract)

@@ -83,7 +83,8 @@ fn load_as(path, raw, text, want_id) {
   if src == null and has(EMBEDDED, path) { src = EMBEDDED[path] }
   if src == null { src = read_file(path) }
   var ast = front.parse(src, basename(path))
-  if not raw and want_id == null { ast = lower.lower(ast, VERSION) }
+  // the world itself (<cie>/…) is never lowered: it is what the lowering calls
+  if not raw and want_id == null and not (path starts_with "<") { ast = lower.lower(ast, VERSION) }
   var uses = {}
   for it in ast.items {
     if it.type == "Use" { uses[it.alias] = load(resolve_path(dirname(path), it.path), false, null) }
