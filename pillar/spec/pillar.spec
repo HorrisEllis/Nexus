@@ -273,3 +273,14 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node, invariants valid"
     - "pillar/test/*.eg — each module's acceptance as Emerge test blocks (eg test), written with its phase; tests/modules/test-pillar.test.js runs eg test over them for the Nexus suite"
+
+# ADDENDUM 2026-11-06 (0.60.422) — Pillar is a component in Emerge's component registry, reached by its hooks
+# James, 2026-11-06, after the coder found an Emerge module cannot be listed and kept a hand-written pillar/registry.eg: "why not just use compartments for modules? That's fucking stupid. It's already a primitive." · "Yeah, the component can be." · "it's supposed to be the component registry. Look at CIE-EG."
+# Context: the coder offered (A) Pillar written as an Emerge component, no language change, or (B) every module made a compartment (a language
+# change); the coder recommended A. His answer chose the component, and named CIE-EG's component registry as the registry.
+# What changed: pillar/pillar.eg is one `component Pillar` (id pillar.kernel, namespace pillar). Its record is in Emerge's component registry
+# (components(), CIE-EG §5.1), and it is reached only through its in hooks, contracts / contract / check / identity_of, which answer on its one
+# out hook, answer (§5.2). pillar/registry.eg, a second list of the same things, is removed: a duplicate, said here (§0.3).
+# MOD-PIL-SYSTEM's exports read as hooks now: send Pillar.contracts {} | contract {id} | check {id, impl} | identity_of {id, file} → out answer.
+# test-pillar PI-02 checks the record and that every in hook has a command and every command sends to a hook; a planted hook with no command fails it.
+# Open, his (B): whether every Emerge module should become a compartment, so any file can be listed. Not done.

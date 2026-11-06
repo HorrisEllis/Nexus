@@ -64,11 +64,11 @@ decisions:
 phases:
 
   PIL1_pillar_stands:
-    status: OPEN
+    status: BUILT
     depends_on: [PIL_D0_the_name_is_pillar, PIL_D1_the_shape_he_brought, PIL_D2_a_process_or_a_library, PIL_D3_written_in_emerge]
     spec: pillar/spec/pillar.spec
     blocks: [MOD-PIL-SYSTEM]
-    files: [pillar/pillar.eg, pillar/cli.eg, pillar/registry.eg, pillar/test/pillar.test.eg, lib/nexus-self/systems.js, tests/modules/test-pillar.test.js, tests/modules/run-all.js]
+    files: [pillar/pillar.eg, pillar/cli.eg, pillar/test/pillar.test.eg, lib/nexus-self/systems.js, tests/modules/test-pillar.test.js, tests/modules/run-all.js]
     requires: [node]
     prerequisites: ["the spec compiles at specDepth 1.0 (test-substrate-spec)"]
     does: "Pillar's folder as its own system, in Emerge: its version, its own registry, its CLI (eg run pillar/cli.eg); declared in nexus-self's systems; uses nothing outside pillar/ but the Emerge language"
@@ -138,3 +138,22 @@ order: "PIL1 → PIL2 → (PIL3, PIL4) → PIL5; PIL6 after PIL3. PIL_D2 settled
 # Pillar's contracts are written field-first (Field, Constraint, Transition, History, Observation at the core; Event, Gate, Stream as compounds of them).
 # After PIL2 and PIL3: CB1_cfr_build_logic (docs/2026-10-02-emerge-field-memory-build-phasemap.spec, expanded the same day): the field generates the
 # code. After Pillar: EM2 (WARP as the field), CF1 (CFR with RFR2), RF1 (the relational field), and SISO's retirement after PIL5's census.
+
+# ADDENDUM 2026-11-06 (0.60.422) — PIL1_pillar_stands BUILT
+# James, 2026-11-06: "Emerge first then fiverr maybe? I'm struggling. Emerge is the highest leverage." · "okay lets get this done. no more distractions"
+# Built in Emerge: pillar/pillar.eg (version, contracts(), contract(id); check and identity_of answer with the phase that builds them, PIL3, PIL4),
+# pillar/registry.eg (Pillar's own registry, §5.16), pillar/cli.eg (version|contracts|contract|check|conform|registry), pillar/test/pillar.test.eg
+# (3 tests); declared in lib/nexus-self/systems.js (entry null, per PIL_D2); tests/modules/test-pillar.test.js PI-01..05, 5/5.
+# Found and said: an Emerge module is not a map (has/keys refuse it), so GATE-PIL1-002's two-way check runs in PI-02 with Emerge's own parser;
+# a public top-level name with no registry entry fails PI-02 (checked by planting one). Names starting with _ are internal.
+# Drift, said: the phase graphs (pillar/phases/2026-11-06-pillar/) were written after PIL1's code, not before. PIL2 onward have theirs first.
+# ADDENDUM 2026-11-06 (0.60.422, later the same day) — PIL1 expanded: a component, not a module with a second registry
+# James, 2026-11-06, after the coder found an Emerge module cannot be listed and kept a hand-written pillar/registry.eg: "why not just use compartments for modules? That's fucking stupid. It's already a primitive." · "Yeah, the component can be." · "it's supposed to be the component registry. Look at CIE-EG."
+# Context: the coder offered (A) Pillar written as an Emerge component, no language change, or (B) every module made a compartment (a language
+# change); the coder recommended A. His answer chose the component, and named CIE-EG's component registry as the registry.
+# What changed: pillar/pillar.eg is one `component Pillar` (id pillar.kernel, namespace pillar). Its record is in Emerge's component registry
+# (components(), CIE-EG §5.1), and it is reached only through its in hooks, contracts / contract / check / identity_of, which answer on its one
+# out hook, answer (§5.2). pillar/registry.eg, a second list of the same things, is removed: a duplicate, said here (§0.3).
+# MOD-PIL-SYSTEM's exports read as hooks now: send Pillar.contracts {} | contract {id} | check {id, impl} | identity_of {id, file} → out answer.
+# test-pillar PI-02 checks the record and that every in hook has a command and every command sends to a hook; a planted hook with no command fails it.
+# Open, his (B): whether every Emerge module should become a compartment, so any file can be listed. Not done.
