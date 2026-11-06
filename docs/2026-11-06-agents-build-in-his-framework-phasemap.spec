@@ -8,7 +8,7 @@ origin: >-
   of agent tools for giving the agents what context is needed. what if we use my framework and coding language for agents?" · "end state
   first. using my framework. emerge. and raid"
 
-status: "END STATE DRAFTED 2026-11-06, to confirm with him. No phases (end state first)."
+status: "END STATE DRAFTED 2026-11-06; corrected by him the same day (RAID runs his framework: contract, DAG, compartment). No phases yet."
 
 end_state:
   one_line: >-
@@ -49,5 +49,24 @@ to_confirm:
     for agents" leans to (B) for languages Emerge cannot emit yet and (A) where it can; his to say.
   Q2_which_steps_of_the_toolkit: "the five sections named in E1, all of Parts 1–8 and Sections 0–10, or others he names"
   Q3_the_proof_codebase: "which codebase is built for done_when"
+
+# ── ADDENDUM 2026-11-06 — his correction: RAID does his framework; the framework is contract, DAG and compartment ──
+# James, 2026-11-06, after reading the draft: "im saying raid does my framework. end state first compartment. dag is the conditions. contract
+# is the end state. thats the framework, nexus and emerge"
+# Supersedes E1 and E3 of the draft above (kept, §0.3). The draft had his framework as prose (the toolkit's steps) injected into an agent's
+# prompt, and RAID only as the judge. His words make the framework structural, and RAID the one that runs it:
+correction:
+  his_words: "im saying raid does my framework. end state first compartment. dag is the conditions. contract is the end state. thats the framework, nexus and emerge"
+  the_framework:
+    contract: "the end state (what must hold when the piece is done): CIE1's contract block, the expectation test"
+    dag: "the conditions: what must hold before, and in what order (depends_on, requires, prerequisites; the phase graph)"
+    compartment: "where the end state is reached: the piece is built and proved inside its own compartment first"
+    raid: "runs it: takes the end state (contract), works back through the conditions (DAG), decides each step and accepts only what meets the contract"
+  E1_now: "the agent gets no framework prose; it gets one step RAID hands it: the contract to meet, the conditions already met, the context of that step"
+  E3_now: "RAID is not only the judge: RAID executes the framework (end state first, conditions back, compartment), the agents are its hands"
+  reading_to_confirm: >-
+    "end state first compartment" read as: the end state is set first, and reached inside a compartment (built and proved there before it
+    lands). The other reading: "end state first" and "compartment" as two separate items of the framework. The coder's reading; his to confirm.
+  questions_left: "Q1 (what the agent writes) and Q3 (the proof codebase) stand; Q2 is answered: the framework is contract, DAG and compartment, run by RAID, not the toolkit's prose"
 
 phases: {}
