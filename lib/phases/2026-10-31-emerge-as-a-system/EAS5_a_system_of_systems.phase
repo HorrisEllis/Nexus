@@ -7,11 +7,11 @@ intent: null
 summary: EAS5_a_system_of_systems (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793905362597
+exported_at: 1793944983993
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793905362597
-lastSeenAt: 1793905362597
+firstSeenAt: 1793944983993
+lastSeenAt: 1793944983993
 fingerprint: null
 payload:
   id: EAS5_a_system_of_systems
@@ -30,4 +30,4 @@ payload:
   blocks:
     - MOD-EAS-NESTING
   spec: docs/emerge-system.spec
-  graph: b0b250edc74f4180
+  graph: 261578503344a219

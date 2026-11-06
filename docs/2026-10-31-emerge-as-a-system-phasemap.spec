@@ -96,6 +96,20 @@ decisions:
       Where the merged kernel lives and whose it is (a system of its own, Emerge, or the kernel; §5.15) · what Seed means (Emerge built
       replayable randomness; ERAVOS's "seed-registry" and "generator id + seed" read the same; an outside analysis read "initial condition") ·
       whether merging retires siso/ and warp/core's duplicates.
+    # ── ADDENDUM 2026-11-06 — the three questions, recommendations he brought (to confirm, not yet his decisions) ──
+    # James, 2026-11-06, pasting an outside analysis (ChatGPT) that picked "by leverage" under one principle ("minimize irreversible
+    # commitments, preserve determinism, and avoid creating unnecessary architectural dependencies"); his own words: "Merge and commit first."
+    #   where the kernel lives:  a standalone system, with its own identity, versioning and compatibility contract; Emerge, ERAVOS and Nexus
+    #                            consume it (one canonical source, a stable public interface, no circular dependencies, its own
+    #                            conformance tests)
+    #   what Seed means:         an explicit deterministic replay input: seed value, algorithm and its version, scope, replay compatibility;
+    #                            never entropy, identity or a secret (matches what Emerge built and ERAVOS's seed-registry)
+    #   the duplicates:          retire siso/ and warp/core after a verified migration: every consumer found, behaviour compared, the
+    #                            canonical one chosen, consumers moved, compatibility tests, then removed; no blind deletion (§0.3)
+    #   added concern:           the kernel keeps semantic identity (what a primitive means), implementation identity (which code, by hash,
+    #                            D9) and version identity (which revision of its behaviour) separate and never interchangeable
+    #   overall:                 contracts first, then conformance tests, then consolidating implementations
+    # Coder's note: a standalone system is a new system, so its placement and name are his (§5.15, USER_AUTONOMY).
     # ── ADDENDUM 2026-11-05 — an idea, his, recorded (not a decision, no phase): a world simulation as a domain for the benchmark ──
     # James, 2026-11-05, on an outside analysis of the primitives as the base of a large persistent game world ("This feels huge."), asked
     # whether to log it: "Yes then finish eas4"
@@ -110,7 +124,7 @@ decisions:
 
   EAS_D9_emerge_calls_back_by_route:
     status: "DECIDED 2026-11-05 (his)"
-    james: 'asked how Nexus\'s pieces take part when it asks Emerge through its door: "Emerge calls back by route"'
+    james: 'asked how Nexus''s pieces take part when it asks Emerge through its door: "Emerge calls back by route"'
     context: >-
       Found the same day, reading EAS4's last three callers (copilot/module-builder.js L2 build; guardian/server.js and lib/build-pipeline.js
       L3 run; idearium/compiler-bridge.js): lib/emerge's pipeline runs Cortex's preflight and writeback and Idearium's sync in-process, and

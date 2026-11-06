@@ -7,11 +7,11 @@ intent: null
 summary: EAS4d_L3_run (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793917506294
+exported_at: 1793944983986
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793917506294
-lastSeenAt: 1793917506294
+firstSeenAt: 1793944983986
+lastSeenAt: 1793944983986
 fingerprint: null
 payload:
   id: EAS4d_L3_run
@@ -32,4 +32,4 @@ payload:
   blocks:
     - MOD-EAS-CALLERS
   spec: docs/emerge-system.spec
-  graph: 9524b42383548801
+  graph: f3c688d7074bd63d

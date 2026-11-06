@@ -9,11 +9,11 @@ intent: null
 summary: EAS2_the_language_through_the_door (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793905362592
+exported_at: 1793944983971
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793905362592
-lastSeenAt: 1793905362592
+firstSeenAt: 1793944983971
+lastSeenAt: 1793944983971
 fingerprint: null
 payload:
   id: EAS2_the_language_through_the_door
@@ -33,4 +33,4 @@ payload:
   blocks:
     - MOD-EAS-LANG-DOOR
   spec: docs/emerge-system.spec
-  graph: 36441d9d5b12df39
+  graph: b91058849352cc0a

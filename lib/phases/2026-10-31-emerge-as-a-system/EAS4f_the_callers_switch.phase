@@ -7,11 +7,11 @@ intent: null
 summary: EAS4f_the_callers_switch (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1793919176655
+exported_at: 1793944983990
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793919176655
-lastSeenAt: 1793919176655
+firstSeenAt: 1793944983990
+lastSeenAt: 1793944983990
 fingerprint: null
 payload:
   id: EAS4f_the_callers_switch
@@ -34,4 +34,4 @@ payload:
   blocks:
     - MOD-EAS-CALLERS
   spec: docs/emerge-system.spec
-  graph: dd5de290eb1b4a32
+  graph: 916dd1d4ef5dbba6
