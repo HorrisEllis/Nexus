@@ -1502,4 +1502,10 @@ spec:
 # - Readings to confirm (his): "done writing" read as the update's own writes; "system or module" as the system whose folder changed (no hot
 #   reload of one module inside a running system).
 # - Acceptance: test-cos-updates CU-08..CU-12 (CU-11 restarts the real manager both ways on a fixture tree); CU-03 and CU-07 extended.
+# ── ADDENDUM 2026-11-06 (0.60.418, COS 0.7.1) — COS uses the Nexus already running (MG35b, docs/2026-10-24-cos-manager-phasemap.spec) ─────────
+# James, 2026-11-06, with COS saying "Nexus did not start: nexus linked is already running (pid 7492): stop it first": "opening cos gives this error.
+# can you make it so  only one can and will open to the same instance." COS was already one instance (requestSingleInstanceLock); Nexus, started
+# detached by an earlier COS, outlived the window. MOD-COSA-START-ON-LAUNCH now: a start that finds Nexus running asks it; answering → attached (ok,
+# attached, its pid), the cockpit opens; alive but silent → "running (pid N) but not answering: press Restart Nexus" (controller.restart: stop, start),
+# never "stop it first". The starting page shows Restart Nexus; its bridge gains one call (restart). Acceptance: test-cos-app-link CL-02, CL-05.
 

@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793860899376
+exported_at: 1793937558019
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793860899376
-lastSeenAt: 1793860899376
+firstSeenAt: 1793937558019
+lastSeenAt: 1793937558019
 fingerprint: null
 payload:
   for: MG12_the_exe_is_the_compartment_manager

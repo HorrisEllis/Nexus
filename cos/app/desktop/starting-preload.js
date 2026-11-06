@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld('cosStart', {
   openVersions: () => ipcRenderer.invoke('cos:openVersions'),
   start: (project) => ipcRenderer.invoke('cos:start', String(project || 'nexus')),
   install: () => ipcRenderer.invoke('cos:install'),   // CA5: Install Nexus from GitHub
+  restart: (project) => ipcRenderer.invoke('cos:restart', String(project || 'nexus')),   // MG35b: Nexus runs but does not answer
   onStarting: (fn) => ipcRenderer.on('cos:starting', (_e, t) => fn(t)),
 });
 // CE7 — "Also make it borderless.": the window has no frame unless he chose Windows' one, so the page is told, and its top bar becomes where the

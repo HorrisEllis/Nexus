@@ -10,6 +10,9 @@ require('../../lib/test-sandbox.js').ensure();
  *         Glass), no NEXUS_DATA_ROOT, no NODE_PATH from COS — answers /status, stops
  *   CL-03 start on launch: a person's setting (a project or none), validated; unlink forgets the link and leaves the folder
  *   CL-04 the window: main.js starts the chosen project when COS opens and says a failure; preload exposes link; the page has Link a Nexus folder…
+ *   CL-05 MG35b (0.60.418) — James, 2026-11-06: "opening cos gives this error. can you make it so  only one can and will open to the same instance."
+ *         A Nexus already running and answering is attached to (CL-02); one alive but silent is said, never "stop it first", and Restart Nexus
+ *         stops it and starts one that answers; the starting page shows Restart for it
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), net = require('net');
 const ROOT = path.join(__dirname, '..', '..');
@@ -53,7 +56,8 @@ http.createServer((q,r)=>{r.writeHead(q.url==='/status'?200:404);r.end('{}');}).
       assert.deepStrictEqual([env.ERAN, env.DATA, env.NODE_PATH], [null, null, null], JSON.stringify(env));
       assert.strictEqual(env.execPath, RT.nodeBinary(), 'the system node'); assert.strictEqual(fs.realpathSync(env.cwd), fs.realpathSync(his), 'run in his folder');
       const st = await RT.status(root, 'nexus'); assert.strictEqual(st.running, true);
-      const again = await ctl.start('nexus'); assert.strictEqual(again.ok, false, 'one at a time');
+      // MG35b (0.60.418): was "one at a time" (refused); now the second start uses that same instance — his "only one can and will open to the same instance"
+      const again = await ctl.start('nexus'); assert.deepStrictEqual([again.ok, again.attached, again.pid], [true, true, st.pid], JSON.stringify(again));
       const s = await ctl.stop('nexus'); assert.ok(s.ok && s.stopped, JSON.stringify(s));
     } finally { for (const [k, v] of [['ELECTRON_RUN_AS_NODE', keep.ERAN], ['NODE_PATH', keep.NP], ['NEXUS_DATA_ROOT', keep.DR]]) { if (v === undefined) delete process.env[k]; else process.env[k] = v; } }
   });
@@ -66,6 +70,41 @@ http.createServer((q,r)=>{r.writeHead(q.url==='/status'?200:404);r.end('{}');}).
     const u = S.unlink(root, 'nexus'); assert.ok(u.ok && u.unlinked === his); assert.strictEqual(S.list(root, 'nexus')[0].linked, null);
     assert.ok(fs.existsSync(path.join(his, 'lib', 'nexus', 'autopilot.js')), 'the folder untouched');
     const ctl = new Controller({ root }); assert.match((await ctl.start('nexus')).error, /no current version/);
+  });
+
+  await test('CL-05', 'a Nexus alive but silent: said, with Restart; Restart brings one that answers; the page shows Restart', async () => {
+    const root2 = path.join(tmp, 'cos2'), his2 = path.join(tmp, 'nexus-silent'), flag = path.join(tmp, 'silent.flag');
+    fs.mkdirSync(path.join(his2, 'lib', 'nexus'), { recursive: true }); fs.writeFileSync(path.join(his2, 'VERSION'), '0.60.418\n');
+    fs.writeFileSync(path.join(his2, 'package.json'), JSON.stringify({ name: 'nexus', version: '0.60.418', dependencies: {} }));
+    // answers /status unless it was started while the flag file existed (then it stays up and says nothing useful: 503)
+    fs.writeFileSync(path.join(his2, 'lib', 'nexus', 'autopilot.js'), `const http=require('http'),fs=require('fs');const silent=fs.existsSync(${JSON.stringify(flag)});http.createServer((q,r)=>{r.writeHead(silent?503:(q.url==='/status'?200:404));r.end('{}');}).listen(+process.env.AUTOPILOT_STATUS_PORT,'127.0.0.1');`);
+    assert.ok(S.link(root2, 'nexus', his2).ok);
+    const port = await freePort();
+    const ctl = new Controller({ root: root2, opts: { statusPort: port, ports: [port], healthTimeoutMs: 3000, graceMs: 2000, pollMs: 100 } });
+    // started silent outside COS's health check: spawned by the runtime with a short health wait, so it stays running but not healthy
+    fs.writeFileSync(flag, '');
+    const first = await RT.start(root2, 'nexus', 'linked', { statusPort: port, ports: [port], healthTimeoutMs: 800, graceMs: 2000, pollMs: 100, dir: his2, node: RT.nodeBinary() });
+    let run = await RT.status(root2, 'nexus');
+    if (!run.running) { // the runtime stops what never became healthy: start it again without its health wait, as an earlier COS left it running
+      const { spawn } = require('child_process'); const c = spawn(RT.nodeBinary(), [path.join(his2, 'lib', 'nexus', 'autopilot.js')], { cwd: his2, env: { ...process.env, AUTOPILOT_STATUS_PORT: String(port) }, detached: true, stdio: 'ignore' }); c.unref();
+      fs.mkdirSync(path.join(root2, 'projects', 'nexus'), { recursive: true });
+      fs.writeFileSync(path.join(root2, 'projects', 'nexus', 'run.json'), JSON.stringify({ pid: c.pid, project: 'nexus', version: 'linked', dir: his2, statusPort: port, startedAt: new Date().toISOString() }));
+      await new Promise(r => setTimeout(r, 400)); run = await RT.status(root2, 'nexus');
+    }
+    assert.deepStrictEqual([run.running, run.healthy], [true, false], `alive but silent: ${JSON.stringify(run)} (${first && first.reason})`);
+    const r = await ctl.start('nexus');
+    assert.deepStrictEqual([r.ok, r.reason, r.pid], [false, 'not-answering', run.pid]); assert.match(r.error, /already running \(pid \d+\) but not answering: press Restart Nexus/); assert.doesNotMatch(r.error, /stop it first/);
+    const W = require(path.join(ROOT, 'cos/app/window.js'));
+    const t = W.windowTarget({ cockpitUp: false, linked: { version: '0.60.418', dir: his2 }, started: false, error: r.error });
+    assert.strictEqual(t.canRestart, true); assert.match(t.why, /^Nexus is already running \(pid \d+\) but not answering/);
+    fs.unlinkSync(flag);
+    const rs = await ctl.restart('nexus'); assert.ok(rs.ok, JSON.stringify(rs)); assert.notStrictEqual(rs.pid, run.pid, 'a new Nexus');
+    const after = await RT.status(root2, 'nexus'); assert.deepStrictEqual([after.running, after.healthy], [true, true]);
+    await ctl.stop('nexus');
+    const page = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/starting.html'), 'utf8');
+    assert.ok(/id="restart" hidden>Restart Nexus</.test(page) && /window\.cosStart\.restart\(\)/.test(page) && /getElementById\('restart'\)\.hidden = !t\.canRestart/.test(page));
+    assert.match(fs.readFileSync(path.join(ROOT, 'cos/app/desktop/starting-preload.js'), 'utf8'), /restart: \(project\) => ipcRenderer\.invoke\('cos:restart'/);
+    assert.match(fs.readFileSync(path.join(ROOT, 'cos/app/desktop/main.js'), 'utf8'), /h\('restart', async \(project\) => \{[^\n]*ctl\.restart\(String\(project\)\)/);
   });
 
   await test('CL-04', 'the window: starts the chosen project when COS opens, says a failure; link exposed; the button on the page', () => {
