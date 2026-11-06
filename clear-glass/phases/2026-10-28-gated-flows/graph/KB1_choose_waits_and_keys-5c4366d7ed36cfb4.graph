@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793402129260
+exported_at: 1793943652809
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793402129260
-lastSeenAt: 1793402129260
+firstSeenAt: 1793943652809
+lastSeenAt: 1793943652809
 fingerprint: null
 payload:
   for: KB1_choose_waits_and_keys
@@ -151,6 +151,7 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
       - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
       - docs/2026-10-28-gated-flows-phasemap.spec::GF5_category_and_subcategory_finished
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF6_the_element_says_the_gig_or_it_stops
       - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
       - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
       - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
@@ -161,11 +162,13 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
       - docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
       - docs/2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT6b_metadata_dropdown_tab
       - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
       - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
       - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
       - docs/2026-10-28-gated-flows-phasemap.spec::KB5_keys_in_macros_and_automation
       - docs/2026-10-28-gated-flows-phasemap.spec::KB6_bundled_nodes_upgrade
+      - docs/2026-10-28-gated-flows-phasemap.spec::MR1_a_macro_run_says_its_step_and_can_be_paused
       - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
       - docs/2026-10-28-gated-flows-phasemap.spec::UG2_every_driver_write_gated
       - docs/2026-10-28-gated-flows-phasemap.spec::UG3_every_dom_write_gated
@@ -173,6 +176,8 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::UG5_gates_made_with_the_picker
       - docs/2026-10-29-gigs-contacts-snowflake-phasemap.spec::AP1_gig_features
       - docs/2026-10-29-gigs-contacts-snowflake-phasemap.spec::SN1_snowflake_in_macros_and_workflows
+      - docs/2026-10-29-pipelines-phasemap.spec::PA3_conditions_on_elements_and_scripts
+      - docs/2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
       - docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
       - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
       - docs/2026-10-29-pipelines-phasemap.spec::PL7_pipeline_tasks_gated_on_elements
@@ -194,7 +199,7 @@ payload:
       - 'depends on (2): FG2_dropdown_choose, FG_D2_choice_is_read_back · all upstream 4'
       - >-
         needed by (4): KB2_site_keys, KB4_gates_on_macro_steps,
-        EI1_every_key_and_click_paced_through_eros, AF6_the_chip_on_dropdowns · all downstream 36 ·
+        EI1_every_key_and_click_paced_through_eros, AF6_the_chip_on_dropdowns · all downstream 41 ·
         finishing it unlocks KB2_site_keys, EI1_every_key_and_click_paced_through_eros,
         AF6_the_chip_on_dropdowns
     edges:

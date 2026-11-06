@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793402929602
+exported_at: 1793943652842
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793402929602
-lastSeenAt: 1793402929602
+firstSeenAt: 1793943652842
+lastSeenAt: 1793943652842
 fingerprint: null
 payload:
   for: GT4_pace_between_dropdowns_and_find_again
@@ -199,6 +199,7 @@ payload:
     downstream:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
       - docs/2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT6b_metadata_dropdown_tab
     blockedBy: []
     unlocks:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
@@ -207,7 +208,7 @@ payload:
     lines:
       - layer 13
       - 'depends on (1): GT1_gate_timing_for_dropdowns · all upstream 21'
-      - 'needed by (1): GT5_service_type · all downstream 2 · finishing it unlocks GT5_service_type'
+      - 'needed by (1): GT5_service_type · all downstream 3 · finishing it unlocks GT5_service_type'
     edges:
       - from: docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
         kind: declared

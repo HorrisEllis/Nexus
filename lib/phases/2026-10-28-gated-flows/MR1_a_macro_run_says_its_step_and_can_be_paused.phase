@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::MR1_a_macro_run_says_its_step_and_can_be_paused
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::MR1_a_macro_run_says_its_step_and_can_be_paused
+context: >-
+  pipeline phase MR1_a_macro_run_says_its_step_and_can_be_paused of
+  docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: MR1_a_macro_run_says_its_step_and_can_be_paused (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793943652835
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793943652835
+lastSeenAt: 1793943652835
+fingerprint: null
+payload:
+  id: MR1_a_macro_run_says_its_step_and_can_be_paused
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "SUPERSEDED 2026-11-04 by MB4 (0.60.359) and MT1 (0.60.335) on main — built on a branch that had
+    not seen them; archived in _archive/2026-11-04-mr1-duplicate-of-mb4"
+  files:
+    - _archive/2026-11-04-mr1-duplicate-of-mb4/macro-run-toast.js
+  depends_on:
+    - GF6_the_element_says_the_gig_or_it_stops
+  blocks:
+    - MOD-MR1
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 552bd383d0e6b82f
