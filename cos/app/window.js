@@ -24,6 +24,7 @@ function windowTarget({ cockpitUp = false, linked = null, started = null, error 
   if (!linked && installing) return { kind: 'starting', why: `installing Nexus: ${installing}`, installing: true };
   if (!linked && installError) return { kind: 'starting', why: `Nexus is not installed: ${String(installError).split('\n')[0]} — press Install Nexus to try again`, canInstall: true };
   if (!linked) return { kind: 'starting', why: 'Nexus is not installed yet: press Install Nexus (from GitHub), or link your own folder in Versions & manual update', canInstall: true };
+  if (error && /not answering/.test(String(error))) return { kind: 'starting', why: `Nexus ${String(error).split('\n')[0].replace(/^nexus /, '')}`, canRestart: true };   // MG35b
   if (error) return { kind: 'starting', why: `Nexus did not start: ${String(error).split('\n')[0]}` };
   if (started === false) return { kind: 'starting', why: `${linked.version || 'Nexus'} is linked but not started: press Start` };
   return { kind: 'starting', why: `starting Nexus ${linked.version || ''} from ${linked.dir} — the cockpit opens here when COS's manager answers on :${port}`.replace(/\s+/g, ' ') };

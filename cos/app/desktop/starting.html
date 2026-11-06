@@ -23,16 +23,18 @@
   <div class="logo">COS</div>
   <div class="spin" id="spin"></div>
   <div id="why">starting…</div>
-  <div class="row"><button class="primary" id="install" hidden>Install Nexus</button><button class="primary" id="start" hidden>Start Nexus</button><button id="versions">Versions &amp; manual update</button></div>
+  <div class="row"><button class="primary" id="install" hidden>Install Nexus</button><button class="primary" id="start" hidden>Start Nexus</button><button class="primary" id="restart" hidden>Restart Nexus</button><button id="versions">Versions &amp; manual update</button></div>
 </main>
 <script>
   const show = (t) => { if (!t) return; document.getElementById('why').textContent = t.why;
     const waiting = /^starting Nexus|^installing Nexus/.test(t.why); document.getElementById('spin').hidden = !waiting;
     document.getElementById('install').hidden = !t.canInstall;   // CA5
-    document.getElementById('start').hidden = !/not started|did not start/.test(t.why); };
+    document.getElementById('start').hidden = !/not started|did not start/.test(t.why) || !!t.canRestart; document.getElementById('restart').hidden = !t.canRestart; };   // MG35b
   window.cosStart.onStarting(show); window.cosStart.why().then(show);
   document.getElementById('install').onclick = async () => { document.getElementById('install').hidden = true; document.getElementById('why').textContent = 'installing Nexus…'; const r = await window.cosStart.install(); if (r && r.ok === false) document.getElementById('why').textContent = r.error; };
   document.getElementById('versions').onclick = () => window.cosStart.openVersions();
+  // MG35b — Nexus runs but does not answer: stop it, then start it
+  document.getElementById('restart').onclick = async () => { document.getElementById('restart').hidden = true; document.getElementById('why').textContent = 'restarting Nexus…'; const r = await window.cosStart.restart(); if (r && r.ok === false) document.getElementById('why').textContent = `Nexus did not restart: ${r.error}`; };
   document.getElementById('start').onclick = async () => { document.getElementById('why').textContent = 'starting…'; const r = await window.cosStart.start(); if (r && r.ok === false) document.getElementById('why').textContent = r.error; };
 </script>
 </body></html>

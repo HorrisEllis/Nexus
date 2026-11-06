@@ -1487,3 +1487,11 @@ spec:
 # stream, line } for every line a child prints; the manager broadcasts cos.console { lines, dropped? } every 200 ms (at most 500 lines a batch)
 # and serves GET /api/cos/console?limit=&system= (every system's last lines, merged by ts). cos/ui/console/ is a page of the contract (routes:
 # GET /api/cos/console, GET /api/cos/systems, POST|GET /api/cos/cli; listens: cos.console, cos.system.state). Acceptance: test-cos-console-tab 4/4.
+
+# ── ADDENDUM 2026-11-06 (0.60.418, COS 0.7.1) — COS uses the Nexus already running (MG35b, docs/2026-10-24-cos-manager-phasemap.spec) ─────────
+# James, 2026-11-06, with COS saying "Nexus did not start: nexus linked is already running (pid 7492): stop it first": "opening cos gives this error.
+# can you make it so  only one can and will open to the same instance." COS was already one instance (requestSingleInstanceLock); Nexus, started
+# detached by an earlier COS, outlived the window. MOD-COSA-START-ON-LAUNCH now: a start that finds Nexus running asks it; answering → attached (ok,
+# attached, its pid), the cockpit opens; alive but silent → "running (pid N) but not answering: press Restart Nexus" (controller.restart: stop, start),
+# never "stop it first". The starting page shows Restart Nexus; its bridge gains one call (restart). Acceptance: test-cos-app-link CL-02, CL-05.
+

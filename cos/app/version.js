@@ -17,4 +17,7 @@
 // linked: COS installs Nexus from GitHub itself (git clone, else the latest release zip; npm install), links it and starts it, so the cockpit opens.
 // 0.7.0 (Nexus 0.60.391, CA6): James, 2026-11-05, with 0.6.0 showing "'C:\\Program' is not recognized as an internal or external command": "needs
 // to ask for install location also." npm.cmd under Program Files now runs quoted through cmd.exe; every install asks where.
-module.exports = { version: '0.7.0' };
+// 0.7.1 (Nexus 0.60.418, MG35b): James, 2026-11-06, with COS saying "Nexus did not start: nexus linked is already running (pid 7492): stop it first":
+// "opening cos gives this error. can you make it so  only one can and will open to the same instance." COS uses the Nexus already running when it
+// answers; one running but silent is said, with Restart Nexus.
+module.exports = { version: '0.7.1' };

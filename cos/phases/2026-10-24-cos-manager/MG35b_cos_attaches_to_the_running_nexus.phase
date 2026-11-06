@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG35b_cos_attaches_to_the_running_nexus
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG35b_cos_attaches_to_the_running_nexus
+context: >-
+  pipeline phase MG35b_cos_attaches_to_the_running_nexus of
+  docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG35b_cos_attaches_to_the_running_nexus (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1793937558074
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793937558074
+lastSeenAt: 1793937558074
+fingerprint: null
+payload:
+  id: MG35b_cos_attaches_to_the_running_nexus
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.418 (COS 0.7.1) — test-cos-app-link 5/5 (CL-02 attaches, CL-05 silent → Restart;
+    both fail on the old controller); on Windows unverified until his run"
+  files:
+    - cos/app/controller.js
+    - cos/app/window.js
+    - cos/app/desktop/main.js
+    - cos/app/desktop/starting.html
+    - cos/app/desktop/starting-preload.js
+    - tests/modules/test-cos-app-link.test.js
+  depends_on:
+    - MG35_the_exe_starts_nexus
+    - MG36_the_cockpit_is_the_window
+  blocks:
+    - MOD-COSA-START-ON-LAUNCH
+  spec: cos/spec/cos-manager.spec
+  graph: 6a23a200b8486328
