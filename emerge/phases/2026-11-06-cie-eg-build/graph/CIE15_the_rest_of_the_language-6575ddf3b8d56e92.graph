@@ -1,0 +1,122 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CIE15_the_rest_of_the_language:6575ddf3b8d56e92
+type: graph
+id: phase:CIE15_the_rest_of_the_language:6575ddf3b8d56e92
+context: dependency graph of phase CIE15_the_rest_of_the_language
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793999607834
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793999607834
+lastSeenAt: 1793999607834
+fingerprint: null
+payload:
+  for: CIE15_the_rest_of_the_language
+  kind: phase
+  repo: null
+  hash: 6575ddf3b8d56e92
+  nodes:
+    - path: emerge/emerge/lang/cie/world.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/codegen.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/front.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/lower.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/rt.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/test/native.test.js
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+    dependents: []
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+        files:
+          - emerge/emerge/lang/native/front.eg
+          - emerge/emerge/lang/native/codegen.eg
+          - emerge/emerge/lang/test/native.test.js
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+        files:
+          - emerge/emerge/lang/native/rt.eg
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+        files:
+          - emerge/emerge/lang/native/codegen.eg
+          - emerge/emerge/lang/native/rt.eg
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
+        files:
+          - emerge/emerge/lang/native/front.eg
+          - emerge/emerge/lang/native/lower.eg
+          - emerge/emerge/lang/native/codegen.eg
+          - emerge/emerge/lang/native/rt.eg
+          - emerge/emerge/lang/test/native.test.js
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+        files:
+          - emerge/emerge/lang/native/codegen.eg
+          - emerge/emerge/lang/native/rt.eg
+    dangling: []
+    lines:
+      - layer 6 · ready
+      - 'depends on (1): CIE4_native_components · all upstream 15'
+      - 'needed by (0): —'
+      - >-
+        same files as CIE5_native_test with no order between them:
+        emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/codegen.eg,
+        emerge/emerge/lang/test/native.test.js
+      - >-
+        same files as CIE10_the_door_in_emerge with no order between them:
+        emerge/emerge/lang/native/rt.eg
+      - >-
+        same files as CIE13_native_system_primitives with no order between them:
+        emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg
+      - >-
+        same files as CIE14_the_gaps_found_while_coding with no order between them:
+        emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/lower.eg,
+        emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg,
+        emerge/emerge/lang/test/native.test.js
+      - >-
+        same files as CIE12_windows with no order between them:
+        emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg
+    edges:
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+        kind: declared

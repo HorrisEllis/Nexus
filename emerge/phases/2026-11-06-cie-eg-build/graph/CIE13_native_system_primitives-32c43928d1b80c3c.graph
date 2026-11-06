@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793998100574
+exported_at: 1793999607855
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793998100574
-lastSeenAt: 1793998100574
+firstSeenAt: 1793999607855
+lastSeenAt: 1793999607855
 fingerprint: null
 payload:
   for: CIE13_native_system_primitives
@@ -74,6 +74,10 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
     unlocks: []
     conflicts:
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE15_the_rest_of_the_language
+        files:
+          - emerge/emerge/lang/native/codegen.eg
+          - emerge/emerge/lang/native/rt.eg
       - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
         files:
           - emerge/emerge/spec/cie-eg.spec
@@ -99,6 +103,9 @@ payload:
         upstream 22
       - 'needed by (0): —'
       - >-
+        same files as CIE15_the_rest_of_the_language with no order between them:
+        emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg
+      - >-
         same files as CIE9_tests_in_emerge with no order between them:
         emerge/emerge/spec/cie-eg.spec
       - >-
@@ -110,9 +117,7 @@ payload:
       - >-
         same files as CIE14_the_gaps_found_while_coding with no order between them:
         emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg
-      - >-
-        same files as CIE12_windows with no order between them: emerge/emerge/lang/native/rt.eg,
-        emerge/emerge/lang/native/codegen.eg
+      - … and 1 more phases sharing its files without an order
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
         kind: declared

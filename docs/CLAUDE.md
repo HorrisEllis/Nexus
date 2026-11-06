@@ -569,7 +569,8 @@ EQ2 (expanded), EQ5, EQ_D1.
   - newlines inside a map literal swallow a lambda's lines;
   - keywords (state, on, emit, compartment) cannot be names;
   - native lets a map change through a let or a parameter, where the checker refuses it;
-  - no stderr natively.
+  - no stderr natively;
+  - no optional parameters (sort_by's third argument), and send and wire are keywords too (found 0.60.431).
 - **Every extension defined, with a ledger (EQ5).** No new file extension without its definition:
   - what a file of it is;
   - its schema;

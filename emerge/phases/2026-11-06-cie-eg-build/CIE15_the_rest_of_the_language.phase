@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-cie-eg-build-phasemap.spec::CIE15_the_rest_of_the_language
+type: phase
+id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE15_the_rest_of_the_language
+context: pipeline phase CIE15_the_rest_of_the_language of docs/2026-11-06-cie-eg-build-phasemap.spec
+intent: null
+summary: CIE15_the_rest_of_the_language (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1793999607834
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793999607834
+lastSeenAt: 1793999607834
+fingerprint: null
+payload:
+  id: CIE15_the_rest_of_the_language
+  map: docs/2026-11-06-cie-eg-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/lang/native/front.eg
+    - emerge/emerge/lang/native/lower.eg
+    - emerge/emerge/lang/native/codegen.eg
+    - emerge/emerge/lang/native/rt.eg
+    - emerge/emerge/lang/cie/world.eg
+    - emerge/emerge/lang/test/native.test.js
+  depends_on:
+    - CIE4_native_components
+  blocks:
+    - MOD-NATIVE-SYSTEM
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: 6575ddf3b8d56e92

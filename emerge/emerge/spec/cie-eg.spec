@@ -1409,6 +1409,8 @@ spec:
           copy (the interpreter's read-only error is not raised).
           2026-11-06 (CIE14 a, 0.60.430): closed. freeze(v) in both backends; a lens is frozen natively; examples/counter.eg natively equals the
           interpreter line for line.
+          2026-11-06 (CIE4 slice c, 0.60.431): components, hooks, wires, the contract and its roads natively (world.eg, front.eg, lower.eg);
+          components.eg natively equals the interpreter, 10 ledger entries hash for hash; examples/components.eg line for line.
         next: "the ledger natively (ECF, checkpoints — same bytes as lang/ledger.js; SHA-256 is built, CIE2), then compartments, constraints and signals, then components, hooks, wires and the gate; test blocks and expect, so `emerge test` replaces `eg test`."
       spec_ref: s04_ledger
       description: "The system half of the language, natively: ledger, compartments, constraints, signals, components, the gate, test blocks."
