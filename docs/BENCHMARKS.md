@@ -5,6 +5,28 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-06 — frozen lenses natively; the compiler 18× faster native than interpreted (CIE14 a, 0.60.430)
+- **Measured:** Emerge coding. A new builtin, `freeze`, in both backends; lenses frozen natively.
+- **His words:** "yes. get emerge complete. js removed completely."
+- **Method:** run `examples/counter.eg` both ways and diff the output; rebuild the compiler with itself and time each stage; run Emerge's six
+  suites.
+- **Code:** `lang/native/rt.eg` (rt_b_freeze, rt_check_writable, the kind word masked in four reads), `lang/native/codegen.eg` (the builtin
+  row), `lang/runtime.js` (one `def` line), `lang/cie/world.eg` (`state_of` returns `freeze(clone(…))`).
+- **Result:**
+  - `examples/counter.eg` natively equals the interpreter line for line, the read-only lens error included.
+  - native 96/96, selfhost 16/16, lang 166/166, differential 19/19, ledger 21/21, contract 8/8.
+- **Speed:** the compiler compiling itself took 15.2 s interpreted (stage 0), 0.84 s native (stage 1) and 0.71 s native (stage 2): about
+  18× faster native. native.test took 41 s, selfhost 29 s.
+- **Lines:** +31 of .eg in rt.eg; +1 builtin row; +1 line of JS (a `def` the interpreter needs until CIE11 retires it, the parity condition
+  §17.13 allows).
+- **Failed runs before the pass:** 2.
+  1. A frozen list reported itself as `fn`: `rt_type_name` read the kind word without the mask.
+  2. Equality, printing and the type name each read it directly too.
+
+  All four reads are masked now.
+- **What came of it:** the one line that differed is closed. Two gaps were moved to where they belong: the let-write refusal to CIE6 (the
+  checker in Emerge), and stderr to CIE11.
+
 ## 2026-11-06 — compartments compile natively, as written (CIE4 slice b, 0.60.428)
 - **Measured:** Emerge coding. The native compiler, written in Emerge, now accepts `compartment`, `on` and `emit`.
 - **His words:** "the moment js is removed from emerge it becomes the replacement. focus on that first. no more js, we focus on .eg" ·
