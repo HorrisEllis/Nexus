@@ -176,6 +176,19 @@ phases:
     does: "the JavaScript is archived, not deleted (§0.3): emerge/ holds .eg only; the stage-0 scaffold kept in the archive"
     proof: "git ls-files 'emerge/emerge/*.js' outside the archive is empty; every suite green"
 
+  CIE13_native_system_primitives:
+    status: OPEN
+    depends_on: [CIE_D1_remove_the_javascript_now, PIL2_contracts, CIE5_native_test]
+    spec: emerge/emerge/spec/cie-eg.spec
+    files: [emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/sys_process.eg, emerge/emerge/lang/native/sys_clock.eg,
+            emerge/emerge/lang/native/sys_file.eg, emerge/emerge/lang/test/native-sys.test.js, emerge/emerge/spec/cie-eg.spec]
+    requires: [node, "Linux syscalls (fork/execve/wait4/kill, clock_gettime, nanosleep/timerfd, getdents64/stat/inotify); Windows in CIE12 through kernel32 (CreateProcess, QueryPerformanceCounter, CreateWaitableTimer, FindFirstFile)"]
+    prerequisites: ["Pillar's Process, Clock and File contracts (PIL2, expanded 2026-11-06)"]
+    does: >-
+      His "code primitives to replace javascript. using pillar": Process, Clock and File as builtins of emerge.exe, from the kernel directly
+      (no libc, as the native compiler already is), each conforming to its Pillar contract. With CIE10's Port, they are what COS's manager
+      needs to be written in Emerge: serve its routes, supervise each system's process, schedule and time the gates.
+    proof: "a native program spawns a child, reads its exit code, kills one that hangs; times a 50 ms timer; lists and watches a folder; each case from its Pillar contract"
   CIE12_windows:
     status: OPEN
     depends_on: [CIE11_retire_the_interpreter]
@@ -188,3 +201,8 @@ phases:
     proof: "on his machine: emerge.exe stage 1 == stage 2; every suite green under emerge.exe"
 
 order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6, CIE7) → CIE8 → CIE9, CIE10 → CIE11 → CIE12. MOD-STORE's schema (PIL2's other prerequisite) waits."
+
+# ADDENDUM 2026-11-06 — CIE13 added: processes, time and files, native; CIE10 carries Pillar's Port
+# James, 2026-11-06, after the coder said COS's manager must stay JavaScript for HTTP, processes and timers until Emerge has them: "okay but no js then right?" · "im saying to code primitives to replace javascript. using pillar"
+# No phase had processes or time. CIE13 adds them (Process, Clock, File); CIE10's sockets are Pillar's Port, read against its contract.
+# Windows: Process, Clock and File are kernel32 (allowed by CIE-EG 0); only Port needs ws2_32, CIE_D2's open question, still his.

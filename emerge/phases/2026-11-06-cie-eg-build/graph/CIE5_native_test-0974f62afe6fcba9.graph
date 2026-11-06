@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793984231126
+exported_at: 1793995349284
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793984231126
-lastSeenAt: 1793984231126
+firstSeenAt: 1793995349284
+lastSeenAt: 1793995349284
 fingerprint: null
 payload:
   for: CIE5_native_test
@@ -34,6 +34,7 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
     upstream:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
@@ -54,6 +55,7 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
@@ -67,8 +69,8 @@ payload:
       - layer 6 · blocked by CIE4_native_components
       - 'depends on (1): CIE4_native_components · all upstream 15'
       - >-
-        needed by (3): CIE6_native_check, CIE9_tests_in_emerge, CIE10_the_door_in_emerge · all
-        downstream 6 · finishing it unlocks CIE6_native_check
+        needed by (4): CIE6_native_check, CIE9_tests_in_emerge, CIE10_the_door_in_emerge,
+        CIE13_native_system_primitives · all downstream 7 · finishing it unlocks CIE6_native_check
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
         kind: declared

@@ -1,0 +1,108 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CIE13_native_system_primitives:c5531d5e89a97eaa
+type: graph
+id: phase:CIE13_native_system_primitives:c5531d5e89a97eaa
+context: dependency graph of phase CIE13_native_system_primitives
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793995349301
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793995349301
+lastSeenAt: 1793995349301
+fingerprint: null
+payload:
+  for: CIE13_native_system_primitives
+  kind: phase
+  repo: null
+  hash: c5531d5e89a97eaa
+  nodes:
+    - path: emerge/emerge/lang/test/native-sys.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: emerge/emerge/spec/cie-eg.spec
+      role: changes
+      exists: true
+      system: emerge
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+    dependents: []
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+    downstream: []
+    blockedBy:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+        files:
+          - emerge/emerge/spec/cie-eg.spec
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+        files:
+          - emerge/emerge/lang/native/rt.eg
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+        files:
+          - emerge/emerge/spec/cie-eg.spec
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+        files:
+          - emerge/emerge/lang/native/rt.eg
+          - emerge/emerge/lang/native/codegen.eg
+          - emerge/emerge/spec/cie-eg.spec
+    dangling: []
+    lines:
+      - layer 7 · blocked by PIL2_contracts, CIE5_native_test
+      - >-
+        depends on (3): CIE_D1_remove_the_javascript_now, PIL2_contracts, CIE5_native_test · all
+        upstream 22
+      - 'needed by (0): —'
+      - >-
+        same files as CIE9_tests_in_emerge with no order between them:
+        emerge/emerge/spec/cie-eg.spec
+      - >-
+        same files as CIE10_the_door_in_emerge with no order between them:
+        emerge/emerge/lang/native/rt.eg
+      - >-
+        same files as CIE11_retire_the_interpreter with no order between them:
+        emerge/emerge/spec/cie-eg.spec
+      - >-
+        same files as CIE12_windows with no order between them: emerge/emerge/lang/native/rt.eg,
+        emerge/emerge/lang/native/codegen.eg, emerge/emerge/spec/cie-eg.spec
+    edges:
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+        kind: declared
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+        kind: declared
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+        kind: declared

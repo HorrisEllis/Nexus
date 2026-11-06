@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793992129884
+exported_at: 1793995351294
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793992129884
-lastSeenAt: 1793992129884
+firstSeenAt: 1793995351294
+lastSeenAt: 1793995351294
 fingerprint: null
 payload:
   for: AE6_the_engine_moves_into_cos
@@ -43,10 +43,11 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 4
+    layer: 6
     deps:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D3_the_home_is_cos
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
     dependents:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
     upstream:
@@ -57,19 +58,40 @@ payload:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D3_the_home_is_cos
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
-    blockedBy: []
+    blockedBy:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
     unlocks:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
     conflicts: []
     dangling: []
     lines:
-      - layer 4 · ready
-      - 'depends on (2): AE_D3_the_home_is_cos, AE4_repoint_the_registry · all upstream 7'
+      - layer 6 · blocked by PIL2_contracts
+      - >-
+        depends on (3): AE_D3_the_home_is_cos, AE4_repoint_the_registry, PIL2_contracts · all
+        upstream 23
       - 'needed by (1): AE5_ui_and_cleanup · finishing it unlocks AE5_ui_and_cleanup'
     edges:
       - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D3_the_home_is_cos
         kind: declared
       - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+        kind: declared
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
         kind: declared

@@ -159,3 +159,13 @@ order: "PIL1 → PIL2 → (PIL3, PIL4) → PIL5; PIL6 after PIL3. PIL_D2 settled
 # MOD-PIL-SYSTEM's exports read as hooks now: send Pillar.contracts {} | contract {id} | check {id, impl} | identity_of {id, file} → out answer.
 # test-pillar PI-02 checks the record and that every in hook has a command and every command sends to a hook; a planted hook with no command fails it.
 # Open, his (B): whether every Emerge module should become a compartment, so any file can be listed. Not done.
+
+# ADDENDUM 2026-11-06 — PIL2 expanded: the system primitives, so JavaScript can be replaced (his)
+# James, 2026-11-06, after the coder said COS's manager must stay JavaScript for HTTP, processes and timers until Emerge has them: "okay but no js then right?" · "im saying to code primitives to replace javascript. using pillar"
+# The coder's reading: what COS and every door need from JavaScript today (sockets, processes, wall time and timers, files) becomes Pillar
+# primitives, each defined once by its contract, and Emerge implements them natively (CIE10, CIE13); nothing reaches for Node. Port is
+# ERAVOS's (kernel amendment 3.1), Clock is Emerge's core leaf (now with wall time and timers), so two are merges, not new.
+# PIL2's list grows by: Port (listen, accept, read, write, close: the door's socket), Process (spawn, wait, signal, exit code: what COS
+# supervises), Clock (now, monotonic, sleep, timer, every: what the scheduler and the gate's timing stand on), File (read, write, list,
+# stat, watch). PIL2's proof grows by: each has its contract with its failures named (a refused port, a process that will not die, a
+# clock that goes back).

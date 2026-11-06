@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793984537471
+exported_at: 1793995349273
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793984537471
-lastSeenAt: 1793984537471
+firstSeenAt: 1793995349273
+lastSeenAt: 1793995349273
 fingerprint: null
 payload:
   for: CIE2_native_sha256
@@ -40,6 +40,7 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
@@ -56,7 +57,7 @@ payload:
       - layer 1
       - 'depends on (2): CIE_D1_remove_the_javascript_now, CIE_D3_sha256_from_the_cpu'
       - >-
-        needed by (1): CIE3_native_ledger · all downstream 10 · finishing it unlocks
+        needed by (1): CIE3_native_ledger · all downstream 11 · finishing it unlocks
         CIE3_native_ledger
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now

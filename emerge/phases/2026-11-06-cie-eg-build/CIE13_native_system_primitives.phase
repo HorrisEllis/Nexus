@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+type: phase
+id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+context: pipeline phase CIE13_native_system_primitives of docs/2026-11-06-cie-eg-build-phasemap.spec
+intent: null
+summary: CIE13_native_system_primitives (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1793995349301
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793995349301
+lastSeenAt: 1793995349301
+fingerprint: null
+payload:
+  id: CIE13_native_system_primitives
+  map: docs/2026-11-06-cie-eg-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/lang/native/rt.eg
+    - emerge/emerge/lang/native/codegen.eg
+    - emerge/emerge/lang/native/sys_process.eg
+    - emerge/emerge/lang/native/sys_clock.eg
+    - emerge/emerge/lang/native/sys_file.eg
+    - emerge/emerge/lang/test/native-sys.test.js
+    - emerge/emerge/spec/cie-eg.spec
+  depends_on:
+    - CIE_D1_remove_the_javascript_now
+    - PIL2_contracts
+    - CIE5_native_test
+  blocks: []
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: c5531d5e89a97eaa

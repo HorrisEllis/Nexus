@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793985190377
+exported_at: 1793995349277
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793985190377
-lastSeenAt: 1793985190377
+firstSeenAt: 1793995349277
+lastSeenAt: 1793995349277
 fingerprint: null
 payload:
   for: CIE3_native_ledger
@@ -123,6 +123,7 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
@@ -139,8 +140,8 @@ payload:
       - layer 2
       - 'depends on (1): CIE2_native_sha256 · all upstream 3'
       - >-
-        needed by (2): CIE4_native_components, CIE7_native_observe · all downstream 9 · finishing it
-        unlocks CIE4_native_components, CIE7_native_observe
+        needed by (2): CIE4_native_components, CIE7_native_observe · all downstream 10 · finishing
+        it unlocks CIE4_native_components, CIE7_native_observe
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
         kind: declared
