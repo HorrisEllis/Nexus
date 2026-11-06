@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-pillar-phasemap.spec::PIL3_conformance
+type: phase
+id: docs_2026-11-06-pillar-phasemap.spec::PIL3_conformance
+context: pipeline phase PIL3_conformance of docs/2026-11-06-pillar-phasemap.spec
+intent: null
+summary: PIL3_conformance (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793974541723
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793974541723
+lastSeenAt: 1793974541723
+fingerprint: null
+payload:
+  id: PIL3_conformance
+  map: docs/2026-11-06-pillar-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tests/modules/test-pillar-conform.test.js
+  depends_on:
+    - PIL2_contracts
+  blocks:
+    - MOD-PIL-CONFORMANCE
+  spec: pillar/spec/pillar.spec
+  graph: 9e57eff0cec1ee17
