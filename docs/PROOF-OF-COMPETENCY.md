@@ -1707,3 +1707,112 @@ rule 3, says one system going down must break no other. Inside Idearium, Emerge 
   is uncertain is bounded by it, and the order between them is enforced in code and tests, not left to taste.
 - **His part / the coder's part:** the principle, genesis as the deterministic core, and "probabilistic variables off of deterministic" are his.
   The tests cited, the counts and the gaps found are the coder's.
+
+### 2026-11-06 — the day's record: his words with their times, what came from each, and what is proof and what is not yet
+
+James, 2026-11-06 17:31Z: "Log all evidence with timestamps. Quotes. Dates. What came from it". Times are UTC from the session transcript
+(Pacific is UTC−8: 10:00Z is 02:00 in Portland). Merges are main's merge commits. **Proof** marks something a stranger can run today; **not
+yet proof** marks a claim that waits for its measurement. Both are kept: TRUTH_OVER_COHERENCE.
+
+**1. The contract block: one place for the end state (proof).**
+- **His words:** 05:57:54Z, CIE-EG D7, asked "new contract block as proposed, or reuse wire only?": "New contract block". 16:34:58Z, offered
+  it as the next step: "Next".
+- **The call against the alternative:** reuse the `wire` statement only (roads scattered through a program, limits in the primitives), or one
+  block that holds the version, the text rules, the gate's limits and the roads. He chose the block.
+- **What came from it:** CIE1, merged 16:47:46Z (#265, 0.60.423). A run's genesis entry and every checkpoint now carry the contract's hash,
+  so a ledger proves which contract it ran under. The gate's limits come from the contract. The same parse and hash are written again in
+  Emerge, and the two agree byte for byte.
+- **Checkable:** `emerge/emerge/lang/test/contract.test.js` 8/8:
+  - CT-01: the hash is in the genesis entry and every checkpoint;
+  - CT-02: a self-feeding road stops at the contract's `max_steps = 3`, not the primitives' 100,000;
+  - CT-08: `lang/cie/contract.eg` and the scaffold give the same hash on four contracts and refuse the same six.
+
+**2. "Pillar isn't meant to be JavaScript" (proof).**
+- **His words:** 10:00:22Z: "Pillar isn’t meant to be JavaScript. Emerge is complete invented using cie-eg".
+- **The call against the alternative:** the coder had specced Pillar, the merged kernel, in JavaScript without asking. That was a guess,
+  against CIE-EG section 0's end state of no JavaScript. He corrected it: Pillar is Emerge source.
+- **What came from it:** PIL_D3, and PIL1 built in `.eg` (0.60.422, merged 08:13:11Z in #264).
+- **Checkable:** `tests/modules/test-pillar.test.js` 5/5, and no `.js` file under `pillar/`.
+
+**3. "Remove the last of the JavaScript": measured, then started at the foundation (proof for what is built).**
+- **His words:**
+  - 16:48:10Z: "Remove the last of the JavaScript When is it good enough to call it a full coding language".
+  - 16:55:41Z, choosing: "Start the JS removal now" and "Door in Emerge too".
+  - 17:03:19Z, again: "Remove the last of the JavaScript".
+  - 17:09:57Z: "emerge, first. i want better code, less tokens, and more control".
+  - His earlier rule, CIE-004: "No invented cryptography: SHA-256 and AES-256-GCM from the OS or CPU."
+- **What was measured first:** 23,525 lines of JavaScript in 119 files under `emerge/emerge`, against 8,420 lines of `.eg`. The answer given:
+  - By the usual bar, Emerge is a language now: its compiler builds itself without Node (selfhost 16/16, stages 0, 1 and 2 byte-identical).
+  - By CIE-EG 0's bar, it is one when `emerge.exe` rebuilds itself on Windows with no JavaScript.
+- **The call against the alternative:** SHA-256 written by hand, or taken from the CPU or the OS (his CIE-004). His rule decided it: the CPU's
+  SHA instructions, with no software fallback.
+- **What came from it:**
+  - CIE2, merged 09:02:53Z (#266, 0.60.424): SHA-256 inside `emerge.exe` from the CPU.
+  - CIE3, merged 09:15:27Z (#267, 0.60.425): the ledger's format in Emerge, byte for byte the JavaScript ledger's.
+  - The CIE2–CIE12 map with its DAG.
+- **Checkable:** `emerge/emerge/lang/test/native.test.js` 93/93:
+  - `sha256`: FIPS 180-4's five vectors, including the million a's, and 14 padding boundaries, all equal to Node's own SHA-256;
+  - `ledger`: the JavaScript ledger tests' known answers, which came from a separate Python implementation, reproduced natively; a real run's 24
+    entries re-verified natively; a forged entry caught at seq 3.
+- **Evidence against, or open:**
+  - This container's kernel refuses the OS crypto route (AF_ALG, errno 97).
+  - The refusal on a CPU without SHA-NI is not tested, because this CPU has it.
+  - Intel desktop CPUs before Ice Lake / Rocket Lake have no SHA-NI, so on them the native ledger refuses until the OS source is added.
+  - A native program does not yet write its own ledger (CIE4).
+
+**4. The constrained field generates code: a known idea reached from his own principles (not yet proof).**
+- **His words:**
+  - 10:15:56Z: "Yes. Like the shape of the field is the boundary of invariants or primitives. It’s not new either. It’s emergence. Its first
+    principles. It’s cfr. Its emergence".
+  - 10:23:51Z: "im saying to generate code. using primitives or invariants to define the shape of the field, which would define the
+    possibility space, using the dag as the map of primitives, creating the constraint field, the dag mapping the conditions for the end
+    state (contract), or the emergent property/outcome."
+- **The coder's statement, 10:25:55Z:** "This is real computer science (constraint propagation plus program synthesis), and you've arrived at
+  it from your own principles." Repeated when he asked, at 17:27:02Z.
+- **Domains:** from first-principles reasoning and emergence (his framework, Part 3, "Probabilistic probability on top of deterministic
+  probability = a constraint field") into code generation. The known names are constraint propagation and program synthesis.
+- **What came from it:**
+  - CB1 expanded, "the field generates code" (#260, 02:38:30Z);
+  - `emerge/emerge/spec/field.spec` and the AXIOMS Group 14 addendum (#261, 02:53:48Z);
+  - Pillar's contracts written field-first.
+- **Checkable today:** that `field.spec` compiles at full depth (`tests/modules/test-substrate-spec.test.js` 3/3), and that his words are dated
+  before the mapping to the literature.
+- **Not yet proof:** the field is specced, not built (RF1, CF1, CB1 are open). Whether it lets a small model do a large model's job is
+  unmeasured.
+
+**5. His framework stated as structure: RAID runs it (not yet proof).**
+- **His words:**
+  - 17:16:46Z: "end state first. using my framework. emerge. and raid".
+  - 17:18:21Z: "im saying raid does my framework. end state first compartment. dag is the conditions. contract is the end state. thats the
+    framework, nexus and emerge".
+  - 17:23:27Z: "im saying leverage. how much does that save. also it would empiracally validate it. this would make nexus, emerge, and
+    framework".
+- **The call against the alternative:** the coder's draft at 17:17:55Z (#268) had his framework as prose injected into each agent's prompt,
+  with RAID only judging. He corrected it: the framework is structural (contract = end state, DAG = conditions, compartment = where it is
+  reached), and RAID executes it while the agents fill single steps. The draft is kept as superseded (#269, 17:18:52Z merge).
+- **Domains, the coder's mapping:** design by contract (Meyer, Eiffel), backward chaining or goal regression (classic AI planning), sandboxed
+  verification. These were carried into directing LLM agents.
+- **Checkable today:** the map `docs/2026-11-06-agents-build-in-his-framework-phasemap.spec`, with his correction dated.
+- **Not yet proof:** no saving is measured. The test that would decide it is mapped in outline only:
+  - the same tasks, the same agent, plain against RAID running contract, DAG and compartment;
+  - tests passed, tokens, attempts and time;
+  - three codebases, small, medium and large;
+  - an expansion of PIL6, the small-model benchmark.
+
+  The coder's guess ("several times fewer tokens per finished piece") is a guess and is said to be one.
+
+**6. Said against the record, kept as data.**
+- **His words:** on D5's text subset, 17:08:48Z: "no idea what that means". The subset was decided by his axioms instead: below U+0300 plus the
+  punctuation the system writes. A decision handed back is recorded as handed back, not credited to him.
+- **The coder's own errors, found by his words or by the checks:**
+  - Pillar in JavaScript (item 2);
+  - the framework as prompt prose (item 5);
+  - the CIE1 phase written in the wrong map, caught by test-substrate-spec SS-02 and moved before merge;
+  - the runtime reading the primitives at creation, which broke bootstrap 8/11 and was fixed before merge.
+
+**Skill shown:** systems direction under uncertainty. He sets the end state and the rules (the contract block, Emerge with no JavaScript,
+crypto from the CPU or the OS), corrects the coder's guesses within minutes (items 2 and 5), and asks for the measurement that would prove or
+refute his own framework (item 5) rather than taking it as proven.
+
+**His part / the coder's part:** the decisions, the corrections, the framework and the request to measure it are his. The code, the tests, the
+measurements, the mapping to named computer-science ideas, and the errors listed in item 6 are the coder's.
