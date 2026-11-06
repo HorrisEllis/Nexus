@@ -1,7 +1,7 @@
 'use strict';
 /**
  * idearium/lib/emerge-rung.cjs — the Emerge rung: a planned JS file written in Emerge, checked by Emerge's compiler, retried with what failed,
- * built to JavaScript and judged by its expectation test (EW1, 0.60.421). Map: docs/2026-10-17-pieces-not-order-phasemap.spec EW1.
+ * built to JavaScript and judged by its expectation test (EMB1, 0.60.421). Map: docs/2026-10-17-pieces-not-order-phasemap.spec EMB1.
  *
  * James, 2026-11-06: "emerge, we need to get it coding remember. thats why emerge is important, also the test env, using the test file for
  * expectation, the primitive also, then emerge can also verify itself with the compiler." · "yes basically nexus holds as much complexity as
@@ -69,7 +69,7 @@ function adapter(file) {
   const dir = path.posix.dirname(file); const base = path.posix.basename(file).replace(/\.[cm]?js$/, '');
   const up = dir === '.' ? '.' : dir.split('/').map(() => '..').join('/');
   return `'use strict';
-// built by Emerge from ${base}.eg (EW1) — edit the .eg, not this file
+// built by Emerge from ${base}.eg (EMB1) — edit the .eg, not this file
 const { createRuntime } = require('${up}/_emerge/lang/runtime.js');
 module.exports = require('./${base}.eg.js')(createRuntime({ file: '${base}.eg', loadModule: (abs, r) => require(abs.replace(/\\.eg$/, '.js'))(r) }));
 `;

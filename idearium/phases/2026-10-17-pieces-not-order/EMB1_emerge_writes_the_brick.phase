@@ -1,20 +1,20 @@
 envelope: 1
-uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::EW1_emerge_writes_the_brick
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
 type: phase
-id: docs_2026-10-17-pieces-not-order-phasemap.spec::EW1_emerge_writes_the_brick
-context: pipeline phase EW1_emerge_writes_the_brick of docs/2026-10-17-pieces-not-order-phasemap.spec
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
+context: pipeline phase EMB1_emerge_writes_the_brick of docs/2026-10-17-pieces-not-order-phasemap.spec
 intent: null
-summary: EW1_emerge_writes_the_brick (?) — 7 file(s)
+summary: EMB1_emerge_writes_the_brick (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1793948354094
+exported_at: 1793971500814
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793948354094
-lastSeenAt: 1793948354094
+firstSeenAt: 1793971500814
+lastSeenAt: 1793971500814
 fingerprint: null
 payload:
-  id: EW1_emerge_writes_the_brick
+  id: EMB1_emerge_writes_the_brick
   map: docs/2026-10-17-pieces-not-order-phasemap.spec
   repo: null
   layer: null
@@ -35,4 +35,4 @@ payload:
     - CS0_projects_decomposed_into_components
   blocks: []
   spec: null
-  graph: 88a84d15a5e1be91
+  graph: 8e275b4ef0e4e03d

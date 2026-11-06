@@ -1,4 +1,4 @@
-# CHANGELOG 0.60.421 — EW1: Emerge writes the brick, with its own retry engine
+# CHANGELOG 0.60.421 — EMB1: Emerge writes the brick, with its own retry engine
 
 James, 2026-11-06: "emerge, we need to get it coding remember. thats why emerge is important, also the test env, using the test file for
 expectation, the primitive also, then emerge can also verify itself with the compiler." · then, told most of the loop already exists in

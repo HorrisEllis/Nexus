@@ -281,7 +281,7 @@ const SCHEMA = {
     contract_build:      { default: 'on', enum: ['on', 'off'], copilot_writable: true, type: 'string' },
     // 0.60.141 TF2 — James: "needs to build a test first then use that to shape expectation and conditions." require: no usable test written first → not built · prefer: built anyway, said · off
     test_first:          { default: 'require', enum: ['require', 'prefer', 'off'], copilot_writable: true, type: 'string' },
-    emerge_first:        { default: 'prefer', enum: ['prefer', 'off'], copilot_writable: true, type: 'string' },   // EW1 0.60.421 — a new planned JS file tried in Emerge first
+    emerge_first:        { default: 'prefer', enum: ['prefer', 'off'], copilot_writable: true, type: 'string' },   // EMB1 0.60.421 — a new planned JS file tried in Emerge first
     contract_depth:      { default: 3, min: 1, max: 8, copilot_writable: true, type: 'number' },   // §BR2 0.60.40 — how deep a brick may split
     contract_concurrency: { default: 2, min: 1, max: 8, copilot_writable: true, type: 'number' },
   },

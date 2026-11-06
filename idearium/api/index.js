@@ -1859,7 +1859,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const _carry = new Map();   // file → { why }: what its last check said, kept across the contract's retries of that brick
     const _carryFor = (f) => { if (!_carry.has(f)) _carry.set(f, { why: null }); return _carry.get(f); };
     const _verified = new Map();   // file + code hash → its verdict: the climb's check and the brick's are one run, not two
-    // EW1 0.60.421 — the Emerge rung for one brick: → the brick's result (passed in Emerge) or null (fall through to the ladder)
+    // EMB1 0.60.421 — the Emerge rung for one brick: → the brick's result (passed in Emerge) or null (fall through to the ladder)
     const _emergeBrick = async ({ f, msgV, ck, rung, ctxNote }) => {
       const ER = _require('../lib/emerge-rung.cjs');
       const pf = (plan.files || []).find(x => x.path === f) || {};
@@ -1979,7 +1979,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const box = gate.parent ? null : _carryFor(f);
       if (box && !box.why && feedback) box.why = String(feedback).slice(0, 1200);
       if (!agent && !provider) order = PRt.preferFirst(order, policy);   // §0.60.171 CB2 — gemini first (a person's pick is never reordered)
-      // EW1 0.60.421 — James, 2026-11-06: "emerge, we need to get it coding" · "also the retry engine for emerge". A NEW planned JS file is
+      // EMB1 0.60.421 — James, 2026-11-06: "emerge, we need to get it coding" · "also the retry engine for emerge". A NEW planned JS file is
       // tried in Emerge first (idearium/lib/emerge-rung.cjs): the first rung's agent writes Emerge, Emerge's compiler checks it (through its
       // command line), what failed goes into the next try, it is built to JavaScript and its expectation test judges it. Passing: its files
       // land as proposals and it is a verified primitive. Not passing: said, and the JavaScript ladder below builds it as before.
