@@ -174,7 +174,7 @@ decisions_in_planning:
     plan_by_the_axioms: "what runs automation moves from the old orchestrator to COS (the orchestrator, PL_D8, PL_D11); the engine out of lib/ into COS's folder; COS's Automation page shows and runs workflows, macros and rules; Clear Glass keeps its browser automation, reached at its door"
     reading_to_confirm: "\"Cos ui stays the cos ui\" read as: the TV shell does not become COS's UI — then does the TV shell stay as its own thing, or go?"
   PL_D13_automation_follows_the_orchestrator:
-    status: "his words recorded 2026-11-03; the retargeting is the coder's reading of PL_D8 and PL_D11, to confirm"
+    status: "CONFIRMED 2026-11-06 by James: \"Cos I feel like. Have cos be the orchastrator complelelt.\" (AE_D3, AE6). Was: his words recorded 2026-11-03; the retargeting the coder's reading, to confirm"
     james: '"It’s in the orchastrator. Look a the phases. Cos"'
     found: >-
       docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec (his home choice that day: "the orchastrator"): AE1 done 0.60.256 (the

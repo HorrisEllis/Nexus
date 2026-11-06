@@ -38,6 +38,19 @@ decisions:
       and a server on :9000, and it is one of the 15 systems (no 16th is added, honoring his "There is only 15 systems"). RAID
       keeps the agent-step decision (§5.2/§9.1, already routed that way); Clear Glass keeps the browser steps as a driver port.
       RAID was ruled out for the CORE by its own role (a per-job decider, not a cron/trigger/long-run loop), said in the graph.
+  AE_D3_the_home_is_cos:
+    status: "DECIDED 2026-11-06 by James — supersedes AE_D1 (\"the orchastrator\", 2026-10-25), kept (§0.3)"
+    his_words: "Cos I feel like. Have cos be the orchastrator complelelt."
+    context: >-
+      Asked after the coder found the gate code in three places, none COS's, and the engine in lib/ against his 2026-11-03 rule. Choices: COS
+      or the old orchestrator/ process. It confirms PL_D13's reading (docs/2026-11-03-registry-per-system-phasemap.spec): AE1–AE4's host
+      and door move to COS, the engine leaves lib/ for COS's folder, AE5 becomes COS's Automation page; and MG_D5 (2026-10-30, "COS is the
+      orchestrator").
+    chosen: >-
+      COS is the orchestrator, completely. The engine core (lib/automation/*), the platform instance (orchestrator/automation/index.js) and its
+      routes move into cos/automation/, served by COS's manager on its own registry; callers reach it by COS's route. Clear Glass keeps its
+      browser driver (AE2) and is reached by its route. The old orchestrator/ is archived when nothing calls it (PL_D11 step 4).
+    by_the_axioms: "§5.9/§5.15 (each thing in its owner's folder), his 2026-11-03 rule (lib/ is not for what a system uses), §5.16, §0.3"
   AE_D2_state_stays:
     status: DECIDED 2026-10-25 by James — "yes, state stays"
     asked: "the engine's saved workflows/runs/macros (NEXUS_DATA_ROOT/brainos/*) — move the data, or leave it where it is?"
@@ -152,10 +165,24 @@ phases:
       test-automation-registry.test.js green with the engine at the orchestrator (the fake-engine transport re-pointed); a run
       records under its source; the orchestrator down is named, not thrown; clear-glass down names only browser steps
 
+  AE6_the_engine_moves_into_cos:
+    status: OPEN
+    layer: library
+    depends_on: [AE_D3_the_home_is_cos, AE4_repoint_the_registry]
+    files: [cos/automation/engine.js, cos/automation/pipeline.js, cos/automation/steps.js, cos/automation/cron.js, cos/automation/routes.js,
+            cos/automation/host.js, lib/automation/, orchestrator/automation/index.js, cos/manager/server.js, cos/manager/contract.json,
+            lib/automation-registry.js, tests/modules/test-cos-automation.test.js]
+    requires: [node]
+    prerequisites: ["each caller of lib/automation/* listed first (grep), so none breaks: it is repointed to COS's route or, for scripts and tests, to cos/automation/"]
+    does: >-
+      His "Have cos be the orchastrator complelelt": the engine core and the platform instance move into cos/automation/; COS's manager serves
+      /api/cos/automation/* (workflows, runs, pipelines, macros, triggers) on its own registry; agent steps still go RAID → Guardian, browser
+      steps to Clear Glass's driver, each by route. lib/automation/ is archived with a pointer (§0.3); the orchestrator stops running the engine.
+    proof: "a workflow and a pipeline run through COS's route (test-cos-automation); the existing automation and pipeline tests pass against cos/automation/; the boundary census shows no new crossing"
   AE5_ui_and_cleanup:
     status: OPEN
     layer: ui
-    depends_on: [AE4_repoint_the_registry]
+    depends_on: [AE4_repoint_the_registry, AE6_the_engine_moves_into_cos]   # AE6 added 2026-11-06: AE5 is COS's Automation page (PL_D13)
     files:
       - clear-glass/src/automation/routes.js
       - clear-glass/renderer/settings/sections/automation.js
@@ -206,3 +233,9 @@ order: >-
 # the orchestrator's browserFn/runMacroFn reach it; Clear Glass down → only browser steps named (test-automation-driver-port 3/3, a real page
 # through glass.js). AE4: lib/automation-registry.js sends every engine call to the orchestrator (:9000 /automation/*); clear-glass is a
 # driver; describe() names the engine (test-automation-registry 11/11). AE5 (UI and cleanup) stays open.
+
+# ── ADDENDUM 2026-11-06 — the home is COS (AE_D3), AE6 added, AE5 follows it ──
+# James, 2026-11-06, asked whether the rest of lib/automation/ (the engine, pipelines, the scheduler) goes to COS or to the Orchestrator: "Cos I feel like. Have cos be the orchastrator complelelt."
+# AE_D1 is superseded and kept. AE6 moves the engine and its host into cos/automation/. AE5 depends on it and becomes COS's Automation page.
+# The orchestration console (docs/2026-11-01-orchestration-console-phasemap.spec) builds in cos/automation/ from here: its lib/automation/ paths
+# are read as cos/automation/ once AE6 lands.

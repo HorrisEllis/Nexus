@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793442585150
+exported_at: 1793992129887
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793442585150
-lastSeenAt: 1793442585150
+firstSeenAt: 1793992129887
+lastSeenAt: 1793992129887
 fingerprint: null
 payload:
   for: AE5_ui_and_cleanup
@@ -35,26 +35,32 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 4
+    layer: 5
     deps:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
     dependents: []
     upstream:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D3_the_home_is_cos
     downstream: []
-    blockedBy: []
+    blockedBy:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 4 · ready
-      - 'depends on (1): AE4_repoint_the_registry · all upstream 6'
+      - layer 5 · blocked by AE6_the_engine_moves_into_cos
+      - 'depends on (2): AE4_repoint_the_registry, AE6_the_engine_moves_into_cos · all upstream 8'
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+        kind: declared
+      - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
         kind: declared

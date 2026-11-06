@@ -195,3 +195,7 @@ found_2026_11_06:
   - "OC1–OC7 put code in lib/automation/. By §5.15 and his 2026-11-03 rule (lib/ is not for what a system uses) the gate is COS's: cos/gate/.
      Where the rest of lib/automation goes (COS or the Orchestrator) is his; asked, not decided."
 # OC12 is in phases: above.
+# ── ADDENDUM 2026-11-06 (b) — where lib/automation/ goes: COS ──
+# James, 2026-11-06, asked whether the rest of lib/automation/ (the engine, pipelines, the scheduler) goes to COS or to the Orchestrator: "Cos I feel like. Have cos be the orchastrator complelelt."
+# Decided as AE_D3 (docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec); the move is AE6. OC1–OC11's lib/automation/ files are
+# read as cos/automation/ once AE6 lands. The question in found_2026_11_06 above is answered.
