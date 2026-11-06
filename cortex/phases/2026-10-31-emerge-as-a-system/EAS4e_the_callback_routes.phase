@@ -7,11 +7,11 @@ intent: null
 summary: EAS4e_the_callback_routes (?) — 12 file(s)
 system: idearium
 tags: []
-exported_at: 1793920520044
+exported_at: 1793944983988
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793920520044
-lastSeenAt: 1793920520044
+firstSeenAt: 1793944983988
+lastSeenAt: 1793944983988
 fingerprint: null
 payload:
   id: EAS4e_the_callback_routes
@@ -40,4 +40,4 @@ payload:
   blocks:
     - MOD-EAS-CALLERS
   spec: docs/emerge-system.spec
-  graph: 80dd9ccd8b210b8b
+  graph: 307aa189e5ac51b3

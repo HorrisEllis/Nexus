@@ -7,11 +7,11 @@ intent: null
 summary: EAS3_emerge_at_the_top_of_nexus (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793920520033
+exported_at: 1793944983975
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793920520033
-lastSeenAt: 1793920520033
+firstSeenAt: 1793944983975
+lastSeenAt: 1793944983975
 fingerprint: null
 payload:
   id: EAS3_emerge_at_the_top_of_nexus
@@ -31,4 +31,4 @@ payload:
   blocks:
     - MOD-EAS-NEXUS-PLACE
   spec: docs/emerge-system.spec
-  graph: 094f4a045a1bee70
+  graph: 58f2a07673622666

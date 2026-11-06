@@ -7,11 +7,11 @@ intent: null
 summary: EAS4g_lib_emerge_archived (?) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1793920520047
+exported_at: 1793944983991
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793920520047
-lastSeenAt: 1793920520047
+firstSeenAt: 1793944983991
+lastSeenAt: 1793944983991
 fingerprint: null
 payload:
   id: EAS4g_lib_emerge_archived
@@ -38,4 +38,4 @@ payload:
   blocks:
     - MOD-EAS-CALLERS
   spec: docs/emerge-system.spec
-  graph: dc862c1f6b5de448
+  graph: 71cd83d56631e9c7
