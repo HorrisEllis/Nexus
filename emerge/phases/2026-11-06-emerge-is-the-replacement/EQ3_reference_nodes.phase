@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ3_reference_nodes
+type: phase
+id: docs_2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ3_reference_nodes
+context: pipeline phase EQ3_reference_nodes of docs/2026-11-06-emerge-is-the-replacement-phasemap.spec
+intent: null
+summary: EQ3_reference_nodes (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793996385040
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793996385040
+lastSeenAt: 1793996385040
+fingerprint: null
+payload:
+  id: EQ3_reference_nodes
+  map: docs/2026-11-06-emerge-is-the-replacement-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/lang/cie/reference.eg
+    - emerge/emerge/lang/test/reference.test.eg
+    - emerge/emerge/spec/cie-eg.spec
+  depends_on:
+    - EQ_D0_emerge_only
+    - PIL2_contracts
+  blocks: []
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: 2b0dd331cda64f7c

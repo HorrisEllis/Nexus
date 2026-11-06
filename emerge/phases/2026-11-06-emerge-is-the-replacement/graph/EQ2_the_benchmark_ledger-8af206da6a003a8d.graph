@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EQ2_the_benchmark_ledger:8af206da6a003a8d
+type: graph
+id: phase:EQ2_the_benchmark_ledger:8af206da6a003a8d
+context: dependency graph of phase EQ2_the_benchmark_ledger
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793996385037
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793996385037
+lastSeenAt: 1793996385037
+fingerprint: null
+payload:
+  for: EQ2_the_benchmark_ledger
+  kind: phase
+  repo: null
+  hash: 8af206da6a003a8d
+  nodes:
+    - path: docs/BENCHMARKS.md
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+    dependents: []
+    upstream:
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): EQ_D0_emerge_only'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+        kind: declared

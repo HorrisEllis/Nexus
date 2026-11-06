@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ4_the_emerge_guide_for_any_llm
+type: phase
+id: docs_2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ4_the_emerge_guide_for_any_llm
+context: >-
+  pipeline phase EQ4_the_emerge_guide_for_any_llm of
+  docs/2026-11-06-emerge-is-the-replacement-phasemap.spec
+intent: null
+summary: EQ4_the_emerge_guide_for_any_llm (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793996385042
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793996385042
+lastSeenAt: 1793996385042
+fingerprint: null
+payload:
+  id: EQ4_the_emerge_guide_for_any_llm
+  map: docs/2026-11-06-emerge-is-the-replacement-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/GUIDE.eg.md
+    - docs/atlases/emerge-atlas.md
+    - idearium/lib/emerge-rung.cjs
+  depends_on:
+    - EQ_D0_emerge_only
+  blocks: []
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: c7f51b6789e63ed4

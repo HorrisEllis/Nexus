@@ -525,3 +525,30 @@ access." Earlier the same day, with the primitive factory: "okay lets get this d
 - The coder's estimate for Fiverr, given when he asked (to be checked against the work, not promised): the four phases are about one to two
   sessions of the coder's work; the live run on Fiverr is what needs his machine.
 
+
+## ADDENDUM 2026-11-06 (0.60.427) — Emerge is the replacement: .eg only; crystallise verified primitives; log every benchmark (his)
+James, 2026-11-06, after the world ran in Emerge hash for hash with the interpreter: "the moment js is removed from emerge it becomes the
+replacement. focus on that first. no more js, we focus on .eg" · "Crystalization memory for verified primitives. add that to claude.md, to also
+keep note of benchmarks of my framework, nexus, and emerge coding, with the framework, date and time, quotes, and what became from it, method,
+code, speed." · "I want an axiom when it's done. No non-emerge code, unless specified in the contract or project. lack of capability is an
+opportunity to build it." Map: docs/2026-11-06-emerge-is-the-replacement-phasemap.spec. Axiom: AXIOMS §17.13.
+- **.eg only (§17.13).** New code is Emerge. Another language only where a contract or the project names it: a client project in its own
+  language, or Emerge's own JavaScript while CIE4–CIE12 remove it. When Emerge lacks something, build it into Emerge: a Pillar primitive with
+  its contract, then natively (CIE13 for processes, time and files; CIE10 for sockets). Do not reach for JavaScript. Where a JS harness is
+  still unavoidable (a test that must start processes before CIE13), say so and name the phase that removes it.
+- **The focus, updated.** First the JavaScript removal from Emerge (CIE4 onward), because it is what makes Emerge the replacement. The earlier
+  focus (Emerge first, then Fiverr) stands around it.
+- **Crystallise verified primitives (EQ1).** A primitive that passed its contract's tests is kept as a crystal: its code hash, its contract,
+  the tests and the run that proved it. Before writing a primitive, look for its crystal. A crystal whose test fails later is demoted, and said.
+- **Log every benchmark (EQ2).** Every measured run of his framework, of Nexus, or of Emerge coding gets a row in docs/BENCHMARKS.md:
+  - what was measured, and with which framework;
+  - the date and time;
+  - his words;
+  - the method;
+  - the code (commit, files);
+  - the speed and the counts;
+  - what came of it.
+  Every number names its benchmark (§17.11). Losing runs are logged too (TRUTH_OVER_COHERENCE).
+- **To build, his ideas the same day:** reference nodes for anything hot-swappable (EQ3, his "reference(primitive.eg)" for routing data
+  structures, endpoints, primitives, "making it nonlinear"; readings to confirm in the map), and a guide small enough for any LLM to write
+  Emerge, with an atlas tool in .eg for more context (EQ4).
