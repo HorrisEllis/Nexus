@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792822478127
+exported_at: 1793948354092
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478127
-lastSeenAt: 1792822478127
+firstSeenAt: 1793948354092
+lastSeenAt: 1793948354092
 fingerprint: null
 payload:
   for: PC5_control_when_he_chooses

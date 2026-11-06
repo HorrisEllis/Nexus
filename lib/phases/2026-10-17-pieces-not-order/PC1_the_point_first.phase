@@ -7,11 +7,11 @@ intent: null
 summary: PC1_the_point_first (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792841755817
+exported_at: 1793948004215
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755817
-lastSeenAt: 1792841755817
+firstSeenAt: 1793948004215
+lastSeenAt: 1793948004215
 fingerprint: null
 payload:
   id: PC1_the_point_first
@@ -27,4 +27,4 @@ payload:
     - PC0c_who_cuts
   blocks: []
   spec: null
-  graph: 9eca658277fa4aeb
+  graph: ad13ebf1969df05f
