@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-pillar-phasemap.spec::PIL2_contracts
+type: phase
+id: docs_2026-11-06-pillar-phasemap.spec::PIL2_contracts
+context: pipeline phase PIL2_contracts of docs/2026-11-06-pillar-phasemap.spec
+intent: null
+summary: PIL2_contracts (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793974541719
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793974541719
+lastSeenAt: 1793974541719
+fingerprint: null
+payload:
+  id: PIL2_contracts
+  map: docs/2026-11-06-pillar-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - pillar/contracts/contracts.eg
+    - pillar/contracts/*.eg
+    - pillar/test/contracts.test.eg
+    - pillar/spec/pillar.spec
+  depends_on:
+    - PIL1_pillar_stands
+  blocks:
+    - MOD-PIL-CONTRACTS
+  spec: pillar/spec/pillar.spec
+  graph: 1bedf0bbc894f290

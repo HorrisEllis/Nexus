@@ -1,0 +1,24 @@
+// pillar/pillar.eg — Pillar, the one kernel of primitives, as its own system written in Emerge (MOD-PIL-SYSTEM, phase PIL1_pillar_stands).
+// James, 2026-11-06 (EAS_D8): "One kernel, merged". PIL_D2: until he settles a process with a door, Pillar is a library others use
+// (use "pillar/pillar.eg" as pillar) with a CLI. GATE-PIL-FLOOR: it uses nothing outside pillar/ but the Emerge language.
+
+let version = "0.1.0"
+
+// The contracts are PIL2's (pillar/contracts/contracts.eg). They need Emerge's contract block (CIE-EG MOD-CONTRACT) and schema
+// (MOD-STORE) built first, bottom-up (§3.1). Until then the list is empty, and says so; it does not pretend (§1.2).
+let _contracts = []
+
+fn contracts(): list = _contracts
+
+fn contract(id: string) {
+  for c in _contracts { if c.id == id { return c } }
+  return null
+}
+
+// Not built yet: each answers with the phase that builds it, never a silent pass (§1.2).
+fn check(id: string, impl: string): map {
+  if contract(id) == null { return { ok: false, why: "no contract " + id + " (contracts are PIL2_contracts)" } }
+  return { ok: false, why: "conformance is not built yet (PIL3_conformance)" }
+}
+
+fn identity_of(id: string, file: string): map = { ok: false, why: "three identities are not built yet (PIL4_three_identities)" }

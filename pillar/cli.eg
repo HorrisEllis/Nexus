@@ -1,0 +1,37 @@
+// pillar/cli.eg — Pillar's CLI (MOD-PIL-SYSTEM, phase PIL1_pillar_stands): eg run pillar/cli.eg <command> [args]
+// Every command is in Pillar's registry (registry.eg). An unknown command is refused and the commands are named (§1.2).
+use "./pillar.eg" as pillar
+use "./registry.eg" as registry
+
+let a = args()
+var cmd = "help"
+if len(a) > 0 { cmd = a[0] }
+
+fn usage() {
+  print("pillar " + pillar.version + " — commands:")
+  for c in registry.commands { print("  " + c.usage) }
+}
+
+if cmd == "version" { print(pillar.version) }
+else if cmd == "contracts" {
+  let cs = pillar.contracts()
+  var note = null
+  if len(cs) == 0 { note = "none yet: the contracts are PIL2_contracts" }
+  print(json({ system: "pillar", version: pillar.version, contracts: cs, count: len(cs), note: note }))
+}
+else if cmd == "contract" {
+  if len(a) < 2 { raise("usage: eg run pillar/cli.eg contract <id>") }
+  let c = pillar.contract(a[1])
+  if c == null { raise("no contract " + a[1]) }
+  print(json(c))
+}
+else if cmd == "check" {
+  if len(a) < 3 { raise("usage: eg run pillar/cli.eg check <contract> <impl>") }
+  let r = pillar.check(a[1], a[2])
+  print(json(r))
+  if not r.ok { raise(r.why) }
+}
+else if cmd == "conform" { raise("conformance is not built yet (PIL3_conformance)") }
+else if cmd == "registry" { print(json(registry.entries())) }
+else if cmd == "help" { usage() }
+else { usage(); raise("unknown command " + cmd) }

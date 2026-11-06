@@ -64,7 +64,7 @@ decisions:
 phases:
 
   PIL1_pillar_stands:
-    status: OPEN
+    status: BUILT
     depends_on: [PIL_D0_the_name_is_pillar, PIL_D1_the_shape_he_brought, PIL_D2_a_process_or_a_library, PIL_D3_written_in_emerge]
     spec: pillar/spec/pillar.spec
     blocks: [MOD-PIL-SYSTEM]
@@ -138,3 +138,12 @@ order: "PIL1 → PIL2 → (PIL3, PIL4) → PIL5; PIL6 after PIL3. PIL_D2 settled
 # Pillar's contracts are written field-first (Field, Constraint, Transition, History, Observation at the core; Event, Gate, Stream as compounds of them).
 # After PIL2 and PIL3: CB1_cfr_build_logic (docs/2026-10-02-emerge-field-memory-build-phasemap.spec, expanded the same day): the field generates the
 # code. After Pillar: EM2 (WARP as the field), CF1 (CFR with RFR2), RF1 (the relational field), and SISO's retirement after PIL5's census.
+
+# ADDENDUM 2026-11-06 (0.60.422) — PIL1_pillar_stands BUILT
+# James, 2026-11-06: "Emerge first then fiverr maybe? I'm struggling. Emerge is the highest leverage." · "okay lets get this done. no more distractions"
+# Built in Emerge: pillar/pillar.eg (version, contracts(), contract(id); check and identity_of answer with the phase that builds them, PIL3, PIL4),
+# pillar/registry.eg (Pillar's own registry, §5.16), pillar/cli.eg (version|contracts|contract|check|conform|registry), pillar/test/pillar.test.eg
+# (3 tests); declared in lib/nexus-self/systems.js (entry null, per PIL_D2); tests/modules/test-pillar.test.js PI-01..05, 5/5.
+# Found and said: an Emerge module is not a map (has/keys refuse it), so GATE-PIL1-002's two-way check runs in PI-02 with Emerge's own parser;
+# a public top-level name with no registry entry fails PI-02 (checked by planting one). Names starting with _ are internal.
+# Drift, said: the phase graphs (pillar/phases/2026-11-06-pillar/) were written after PIL1's code, not before. PIL2 onward have theirs first.

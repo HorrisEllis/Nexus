@@ -1,0 +1,31 @@
+// pillar/registry.eg — Pillar's own component registry (AXIOMS §5.16): what Pillar offers, written, stored and served by Pillar alone.
+// Phase PIL1_pillar_stands (docs/2026-11-06-pillar-phasemap.spec), module MOD-PIL-SYSTEM (pillar/spec/pillar.spec).
+// James, 2026-11-03: "The component registry is the system's component registry, you know, per system, right?"
+// GATE-PIL1-002: every export of pillar.eg and every CLI command is listed here; test/pillar.test.eg holds it.
+
+let system = "pillar"
+
+let exports = [
+  { name: "version",     kind: "value",    phase: "PIL1_pillar_stands", gives: "string" },
+  { name: "contracts",   kind: "function", phase: "PIL1_pillar_stands", gives: "[PrimitiveContract]" },
+  { name: "contract",    kind: "function", phase: "PIL1_pillar_stands", gives: "PrimitiveContract | null" },
+  { name: "check",       kind: "function", phase: "PIL3_conformance",   gives: "map: ok and why" },
+  { name: "identity_of", kind: "function", phase: "PIL4_three_identities", gives: "map: ok and why" }
+]
+
+let commands = [
+  { name: "version",   usage: "eg run pillar/cli.eg version" },
+  { name: "contracts", usage: "eg run pillar/cli.eg contracts" },
+  { name: "contract",  usage: "eg run pillar/cli.eg contract <id>" },
+  { name: "check",     usage: "eg run pillar/cli.eg check <contract> <impl>" },
+  { name: "conform",   usage: "eg run pillar/cli.eg conform" },
+  { name: "registry",  usage: "eg run pillar/cli.eg registry" }
+]
+
+fn entries(): map = { system: system, exports: exports, commands: commands }
+
+fn names(): list {
+  var out = []
+  for e in exports { out = push(out, e.name) }
+  return out
+}
