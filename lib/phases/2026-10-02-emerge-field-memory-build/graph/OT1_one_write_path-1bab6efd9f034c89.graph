@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793961419772
+exported_at: 1793962354105
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793961419772
-lastSeenAt: 1793961419772
+firstSeenAt: 1793962354105
+lastSeenAt: 1793962354105
 fingerprint: null
 payload:
   for: OT1_one_write_path
@@ -197,20 +197,22 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 6
+    layer: 4
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
     dependents:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
     upstream:
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
@@ -220,8 +222,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 6 · blocked by RF1_relational_field
-      - 'depends on (1): RF1_relational_field · all upstream 7'
+      - layer 4 · blocked by RF1_relational_field
+      - 'depends on (1): RF1_relational_field · all upstream 9'
       - 'needed by (2): MR4_field_memory, MR11_rewind_the_mind'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field

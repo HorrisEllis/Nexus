@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841754448
+exported_at: 1793962354128
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754448
-lastSeenAt: 1792841754448
+firstSeenAt: 1793962354128
+lastSeenAt: 1793962354128
 fingerprint: null
 payload:
   for: MR4_field_memory
@@ -116,7 +116,7 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 7
+    layer: 5
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
@@ -125,11 +125,14 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
     blockedBy:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
@@ -138,8 +141,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 7 · blocked by OT1_one_write_path, CF1_cfr_improved_with_rfr2
-      - 'depends on (2): OT1_one_write_path, CF1_cfr_improved_with_rfr2 · all upstream 8'
+      - layer 5 · blocked by OT1_one_write_path, CF1_cfr_improved_with_rfr2
+      - 'depends on (2): OT1_one_write_path, CF1_cfr_improved_with_rfr2 · all upstream 11'
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path

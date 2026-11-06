@@ -7,11 +7,11 @@ intent: null
 summary: EM2_warp_his_own (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1793961419757
+exported_at: 1793962354086
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793961419757
-lastSeenAt: 1793961419757
+firstSeenAt: 1793962354086
+lastSeenAt: 1793962354086
 fingerprint: null
 payload:
   id: EM2_warp_his_own
@@ -29,8 +29,9 @@ payload:
     - lib/warp/spec/warp.spec
     - lib/warp/MANIFEST.json
   depends_on:
-    - EM1_emerge_core
-    - SH1_shadow_space
+    - RF1_relational_field
+    - CF1_cfr_improved_with_rfr2
+    - PIL5_the_duplicates_census
   blocks: []
   spec: null
   graph: a5290d63108c7936

@@ -2055,3 +2055,6 @@ spec:
 # ADDENDUM 2026-11-06 — registered: pillar/spec/pillar.spec + docs/2026-11-06-pillar-phasemap.spec (PIL1–PIL6, PIL_D0–D2). Pillar, one kernel of
 # primitives merged from Emerge, ERAVOS and Nexus (his EAS_D8, "One kernel, merged"; the name his "Yes." to Pillar, from his 2026-08-17 "Pillars of
 # the Foundation"). Its own system; the spec compiles at specDepth 1.0 (6 modules, 4 schemas, 4 interfaces, no BLACK).
+# ADDENDUM 2026-11-06 — registered: emerge/emerge/spec/field.spec — the constrained relational field (name to confirm), a layer of Emerge over Pillar,
+# written in .eg, replacing WARP and SISO (his Group 14 addendum). 7 modules, 4 schemas, 7 interfaces; specDepth 1.0, no BLACK. Its phases are in
+# docs/2026-10-02-emerge-field-memory-build-phasemap.spec: RF1, CF1, MR11, FM1, CB1, EM2 (expanded) and CRF1 (new). James, 2026-11-06: "Let’s get it all specced."

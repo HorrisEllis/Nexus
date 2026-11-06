@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793961475672
+exported_at: 1793962354175
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793961475672
-lastSeenAt: 1793961475672
+firstSeenAt: 1793962354175
+lastSeenAt: 1793962354175
 fingerprint: null
 payload:
   for: CB4_the_emergence_loop_builds
@@ -118,7 +118,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 8
+    layer: 6
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
@@ -130,13 +130,11 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
       - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
@@ -153,11 +151,11 @@ payload:
     dangling: []
     lines:
       - >-
-        layer 8 · blocked by CB1_cfr_build_logic, CB2_analysis_then_synthesis,
+        layer 6 · blocked by CB1_cfr_build_logic, CB2_analysis_then_synthesis,
         MR2_vector_space_for_the_field
       - >-
         depends on (3): CB1_cfr_build_logic, CB2_analysis_then_synthesis,
-        MR2_vector_space_for_the_field · all upstream 18
+        MR2_vector_space_for_the_field · all upstream 16
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic

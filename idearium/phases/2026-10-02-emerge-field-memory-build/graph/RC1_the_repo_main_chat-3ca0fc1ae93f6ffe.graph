@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793961475680
+exported_at: 1793962354184
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793961475680
-lastSeenAt: 1793961475680
+firstSeenAt: 1793962354184
+lastSeenAt: 1793962354184
 fingerprint: null
 payload:
   for: RC1_the_repo_main_chat
@@ -205,7 +205,7 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 8
+    layer: 6
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
@@ -215,16 +215,13 @@ payload:
     upstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR3_gap_driven_search
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
       - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
@@ -250,10 +247,10 @@ payload:
           - idearium/api/index.js
     dangling: []
     lines:
-      - layer 8 · blocked by CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR3_gap_driven_search
+      - layer 6 · blocked by CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR3_gap_driven_search
       - >-
         depends on (3): CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR3_gap_driven_search ·
-        all upstream 18
+        all upstream 15
       - 'needed by (1): FV1_client_jobs'
       - 'same files as BT1_build_teams with no order between them: idearium/api/index.js'
       - 'same files as FV0_fulfil_a_taken_order with no order between them: idearium/api/index.js'

@@ -421,6 +421,16 @@ Every event is written to the ledger before any subscriber processes it. §7.6 a
 
 ---
 
+**§14 Addendum, 2026-11-06 — features are transitions in the constraint field (his amendment; §14.1–§14.5 above kept, §0.3)**
+James, 2026-11-06, asked whether Group 14 ("Every Cross-System Feature Is a SISO Pipeline. Event → Gate → Event.") stands now that the
+constrained relational field replaces WARP and SISO: "(a) Amend by addendum". From now on a cross-system feature is a transition in the
+constraint field: proposed, judged by every constraint that holds over the state it would make, recorded before it applies. SISO's laws stay as
+compounds of the field, not as its shape: §14.2 a gate is a pure constraint on a transition; §14.3 two constraints with one signature cannot
+coexist; §14.4 a transition that would re-cause itself is refused; §14.5 history is written before the change applies (the ledger is still the
+learning system). Spec: emerge/emerge/spec/field.spec. Existing SISO pipelines keep running unchanged until each is moved (no blind removal).
+
+---
+
 ### § Group 15 — Adaptive Fulfillment *(new, v3.0)*
 
 **§15.1 Co-pilot Iterates to Fulfillment, Not to a Single Attempt**
@@ -646,6 +656,7 @@ Wherever a change or a version is made, it is recorded in Versionium, the owner 
 §14.3  Signature collision is a hard error.
 §14.4  Infinite loop prevention is mandatory.
 §14.5  The ledger is the learning system.
+§14+   (2026-11-06, his) Features are transitions in the constraint field; SISO's rules stay as its compounds.
 §15.1  Co-pilot iterates to fulfillment, not to a single attempt.
 §15.2  Every iteration is a traceable event, not a hidden loop.
 §15.3  Learning is cumulative, not per-request.

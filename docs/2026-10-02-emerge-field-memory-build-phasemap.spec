@@ -281,9 +281,12 @@ spec:
       layer: foundation
       systems: [warp, cos, loom]
       value: { score: 3, cost: XL, for: [ownership], why: "an engine that is his, not SISO; high to him, slow to pay back" }
-      status: 'LATER — off the path; partly built — warp/core Link, Expectation, Engine, Ledger exist (declutter 2026-10-09)'
+      status: OPEN   # 2026-11-06: specced in emerge/emerge/spec/field.spec (MOD-CRF-WARP)
+      status_before_field: 'LATER — off the path; partly built — warp/core Link, Expectation, Engine, Ledger exist (declutter 2026-10-09)'
       status_before: "PARTIAL (1.7.18, 0.39.323, WARP 2.0.0) — Link, Expectation, Ledger, Engine in warp/core; warp/adapters/siso-gates.js and emerge-field.js; tests/modules/test-warp2.test.js 6/6. Proof: every link has causedBy or root:true — met; an unmet expectation is a gap naming both ends — met; 1.x tests pass unchanged and a 1.x Stream records through the adapter — met, but Nexus's consumers still run on 1.x directly, not yet through it; no file in warp/core carries SISO's shape — NOT met: 1.x's Event/Gate/Stream/StreamLog stay in core/ until the consumers move. Emerge's constraints come in through an adapter, not warp/core, because warp/core imports nothing outside warp/ (MANIFEST)."
-      depends_on: [EM1_emerge_core, SH1_shadow_space]
+      depends_on: [RF1_relational_field, CF1_cfr_improved_with_rfr2, PIL5_the_duplicates_census]   # 2026-11-06: was [EM1_emerge_core, SH1_shadow_space] (the field layering: core first)
+      spec: emerge/emerge/spec/field.spec
+      blocks: [MOD-CRF-WARP]
       james: '"maybe fork it, for me." · "and had it back." · "okay but keep updating it. i dont need it until its been converted to cfr"'
       handback: the forked warp/ (1.5.0 at 0.39.318) is kept updated here and zipped back to James only once it has been converted to CFR — not before.
       files: [lib/warp/core/Link.js, lib/warp/core/Expectation.js, lib/warp/core/Engine.js, lib/warp/core/Ledger.js, lib/warp/core/Axiom.js, lib/warp/adapters/siso-gates.js, lib/warp/spec/warp.spec, lib/warp/MANIFEST.json]
@@ -300,14 +303,19 @@ spec:
         Naming, as James called it: EMERGE is the language and the law; WARP is its engine; Emergence is the
         substrate built on both — to confirm with him.
       proof: "every link in the ledger has causedBy or root:true; an expectation unmet in its window is a gap naming both ends; every 1.x WARP test and every Nexus WARP consumer passes through the adapter; no file in warp/core carries SISO's shape"
+      expanded_2026_11_06_field: >-
+        James, 2026-11-06: "Let’s spec out the constrain field … Constrained relational field. Or emergence also. Replacing warp. Let’s get it all specced." · "build it as a layer of emerge like compounding". Expanded (his rule: phases expand): this phase builds MOD-CRF-WARP of emerge/emerge/spec/field.spec, the constrained relational field (a layer of Emerge over Pillar, written in .eg): WARP replaced: Link, Expectation, Gate, Stream as compounds of the field (Group 14 addendum); pipelines adapted until moved.
 
     CF1_cfr_improved_with_rfr2:
       layer: foundation
       systems: [intelligence, guardian, cortex, orchestrator, idearium]
       value: { score: 4, cost: L, for: [quality, compounding], why: "causes stop being guessed; every failure traces to its real source" }
-      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status: OPEN   # 2026-11-06: specced in emerge/emerge/spec/field.spec (MOD-CRF-CAUSAL)
+      status_before_field: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
-      depends_on: [EM1_emerge_core, EM2_warp_his_own]
+      depends_on: [RF1_relational_field]   # 2026-11-06: was [EM1_emerge_core, EM2_warp_his_own] (the field layering: core first)
+      spec: emerge/emerge/spec/field.spec
+      blocks: [MOD-CRF-CAUSAL]
       files: [intelligence/cfr/graph.js, intelligence/cfr/ledger.js, intelligence/cfr/field.js, intelligence/cfr/sigma.js, intelligence/cfr/delta.js, intelligence/cfr/contract-verifier.js, intelligence/rfr2/]
       does: >-
         "improve cfr with rfr2". CFR becomes the constraint field runtime its own name says it is, on RFR2's discipline:
@@ -323,14 +331,19 @@ spec:
         verifier reads typed edges, so a broken sequence names the broken link. (i) The ten liminal detectors as Lenses.
         The two RFR2 trees reconciled per EM0's report (Nexus causality 5.0.2 is newer than the upload's 5.0.0).
       proof: "a recorded 2s-adjacent pair no longer appears in traceToRoot; a seeded field replays identically; rewind to entry N reproduces the field at N; the verifier names the missing link on a broken sequence; CFR's existing consumers (idearium, guardian, cortex, orchestrator) pass unchanged"
+      expanded_2026_11_06_field: >-
+        James, 2026-11-06: "Let’s spec out the constrain field … Constrained relational field. Or emergence also. Replacing warp. Let’s get it all specced." · "build it as a layer of emerge like compounding". Expanded (his rule: phases expand): this phase builds MOD-CRF-CAUSAL of emerge/emerge/spec/field.spec, the constrained relational field (a layer of Emerge over Pillar, written in .eg): CFR on RFR2 in .eg, over the field: typed causal relations, time order never causal, sigma and delta.
 
     RF1_relational_field:
       layer: foundation
       systems: [nexstore, idearium, intelligence, emerge]
       value: { score: 3, cost: XL, for: [foundation, compounding], why: "one field instead of seven graphs; right, but the largest migration" }
-      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status: OPEN   # 2026-11-06: specced in emerge/emerge/spec/field.spec (MOD-CRF-FIELD)
+      status_before_field: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
-      depends_on: [EM1_emerge_core, CF1_cfr_improved_with_rfr2]
+      depends_on: [EM1_emerge_core, PIL2_contracts]   # 2026-11-06: was [EM1_emerge_core, CF1_cfr_improved_with_rfr2] (the field layering: core first)
+      spec: emerge/emerge/spec/field.spec
+      blocks: [MOD-CRF-FIELD]
       files: [lib/nexstore/, emerge/core/relation.js, idearium/repo/graph.js, intelligence/cfr/graph.js]
       does: >-
         "relational field". One field of nodes and typed relations, stored in main's node store (lib/nexstore — no new
@@ -342,6 +355,8 @@ spec:
         and CAUSAL first; SPEC, EXECUTION, MANIFEST, lattices, loom, the Architect canvas listed, each moved in its own
         step with its old reader kept until the Lens matches it.
       proof: "the CODE graph's answers from the old store and from the Lens agree on a fixture repo; a provenance node with five sources is accepted, a causal diamond is rejected; a semantic edge carries its confidence"
+      expanded_2026_11_06_field: >-
+        James, 2026-11-06: "Let’s spec out the constrain field … Constrained relational field. Or emergence also. Replacing warp. Let’s get it all specced." · "build it as a layer of emerge like compounding". Expanded (his rule: phases expand): this phase builds MOD-CRF-FIELD of emerge/emerge/spec/field.spec, the constrained relational field (a layer of Emerge over Pillar, written in .eg): the field core: nodes at levels, five relation families, constraints from Pillar; it now comes first, and causality (CF1) builds on it.
 
     OT1_one_write_path:
       layer: library
@@ -509,14 +524,19 @@ spec:
       layer: service
       systems: [intelligence, cos]
       value: { score: 3, cost: M, for: [safety], why: "rewind memory with the machine; pairs with RW1" }
-      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status: OPEN   # 2026-11-06: specced in emerge/emerge/spec/field.spec (MOD-CRF-REWIND)
+      status_before_field: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
-      depends_on: [CF1_cfr_improved_with_rfr2, OT1_one_write_path]
+      depends_on: [RF1_relational_field, OT1_one_write_path]   # 2026-11-06: was [CF1_cfr_improved_with_rfr2, OT1_one_write_path] (the field layering: core first)
+      spec: emerge/emerge/spec/field.spec
+      blocks: [MOD-CRF-REWIND]
       reuses: [docs/2026-10-02-workshop-codex-rewind-phasemap.spec RW1]
       does: >-
         cfr-kernel rewind + the hash-chained history: any agent's memory and field replayed to any moment. Paired with
         RW1 (the VM rewind) — the OS and the mind rewound together, to the same point.
       proof: "rewind to entry N: the field, the context table and the agent memory read as they did at N"
+      expanded_2026_11_06_field: >-
+        James, 2026-11-06: "Let’s spec out the constrain field … Constrained relational field. Or emergence also. Replacing warp. Let’s get it all specced." · "build it as a layer of emerge like compounding". Expanded (his rule: phases expand): this phase builds MOD-CRF-REWIND of emerge/emerge/spec/field.spec, the constrained relational field (a layer of Emerge over Pillar, written in .eg): rewind on failure: refold to the last good seq of the CIE-EG ledger, branch, retry from there.
 
     CB1_cfr_build_logic:
       layer: service
@@ -524,7 +544,9 @@ spec:
       value: { score: 4, cost: L, for: [quality], why: "the build steers itself and halts with a cause instead of looping" }
       status: OPEN   # 2026-11-06: in Pillar's order, after PIL2 and PIL3 (his yes to the field generating code)
       status_before: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
-      depends_on: [PIL2_contracts, PIL3_conformance, MR1_recall_triad_and_context_table]   # 2026-11-06: was [EM2_warp_his_own, CF1_cfr_improved_with_rfr2, MR1_recall_triad_and_context_table]; EM2 and CF1 now follow Pillar (the conversion) and no longer gate the field generating code
+      depends_on: [PIL2_contracts, PIL3_conformance, RF1_relational_field, MR1_recall_triad_and_context_table]   # RF1 added 2026-11-06 (narrowing runs on the field core); 2026-11-06: was [EM2_warp_his_own, CF1_cfr_improved_with_rfr2, MR1_recall_triad_and_context_table]; EM2 and CF1 now follow Pillar (the conversion) and no longer gate the field generating code
+      spec: emerge/emerge/spec/field.spec
+      blocks: [MOD-CRF-NARROW]
       files: [idearium/spec-engine/warp-build-dispatch.js, idearium/spec-engine/chunk-dispatch.js, lib/pipeline-routing.js, emerge/emerge/lang/cie/synth.eg, idearium/lib/emerge-rung.cjs, pillar/contracts/*.eg]
       does: >-
         "can we make cfr a build logic option?" Two build logics, chosen per build: LINEAR (the plan in order — today's)
@@ -550,6 +572,20 @@ spec:
         coder's assessment, said to him: better, with three costs — the work moves into the spec (a loose boundary is a wide space), outcomes that
         are not local (speed) need a system gate at the end state, and the search must prune at every node. Order: after Pillar's contracts and
         cases (PIL2, PIL3); the WARP/SISO conversion (EM2, CF1, RF1) stays after Pillar.
+      expanded_2026_11_06_field: >-
+        James, 2026-11-06: "Let’s spec out the constrain field … Constrained relational field. Or emergence also. Replacing warp. Let’s get it all specced." · "build it as a layer of emerge like compounding". Expanded (his rule: phases expand): this phase builds MOD-CRF-NARROW of emerge/emerge/spec/field.spec, the constrained relational field (a layer of Emerge over Pillar, written in .eg): the field generates code: narrowing from both ends, ranked by his weighting and leverage.
+    CRF1_the_axioms_as_constraints:
+      status: OPEN
+      depends_on: [RF1_relational_field]
+      spec: emerge/emerge/spec/field.spec
+      blocks: [MOD-CRF-AXIOMS]
+      files: [emerge/emerge/field/axioms.eg, emerge/emerge/field/test/axioms.test.eg, docs/AXIOMS-v3.1.md, cos/spec/check-catalogue.spec]
+      requires: [node, "the Emerge language (eg)"]
+      prerequisites: ["the field core (RF1)", "the existing checks named from cos/spec/check-catalogue.spec (exists:)"]
+      does: "his seventeen groups of axioms as the field's top layer: each law a constraint (needs, check, hard or soft), the existing checks named, the rest listed as gaps; a change is judged by all of them at once"
+      proof: "coverage() lists all 103 laws with a check or a named gap; a fixture change crossing a boundary is refused by §5.15's constraint"
+      # James, 2026-11-06: "Yeah, but I'm saying it's 17 groups of axioms. I'm not saying the actual... I'm saying zoom out and look at the entirety
+      # of the axioms." Written new: nothing covered the axioms as constraints (the phase ledger's covers found none).
 
     CB2_analysis_then_synthesis:
       layer: service
@@ -919,9 +955,12 @@ spec:
       layer: library
       systems: [cortex, intelligence, idearium]
       value: { score: 4, cost: M, for: [compounding, quality], why: "every failure teaches the next attempt; patterns become anti-recipes and fixes" }
-      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      status: OPEN   # 2026-11-06: specced in emerge/emerge/spec/field.spec (MOD-CRF-FAILURE)
+      status_before_field: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [PR1_proof_run_the_delivery_checker, CF1_cfr_improved_with_rfr2]
+      spec: emerge/emerge/spec/field.spec
+      blocks: [MOD-CRF-FAILURE]
       files: [cortex/self-heal/failure-mode-forensics.js, cortex/self-heal/fault-taxonomy.js, idearium/repo/proof-run.js]
       does: >-
         "Mine failure modes." Every unmet condition of every proof and lab run becomes a .failure_mode node through
@@ -929,6 +968,8 @@ spec:
         and ranked by how often and how costly; the top ones become anti-recipes (MR7) and checks added to future end
         states by default ("this kind of project usually breaks here — check it").
       proof: "three fixture runs failing the same way produce one clustered mode with its count, its replay macro, and a default check proposed for the next end state"
+      expanded_2026_11_06_field: >-
+        James, 2026-11-06: "Let’s spec out the constrain field … Constrained relational field. Or emergence also. Replacing warp. Let’s get it all specced." · "build it as a layer of emerge like compounding". Expanded (his rule: phases expand): this phase builds MOD-CRF-FAILURE of emerge/emerge/spec/field.spec, the constrained relational field (a layer of Emerge over Pillar, written in .eg): his D4 failure-mode report as a region of the field; his one/two/three rule; promoted only by a passing test.
 
     MS1_mental_simulation:
       layer: library

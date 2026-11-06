@@ -7,11 +7,11 @@ intent: null
 summary: RF1_relational_field (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793961419766
+exported_at: 1793962354099
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793961419766
-lastSeenAt: 1793961419766
+firstSeenAt: 1793962354099
+lastSeenAt: 1793962354099
 fingerprint: null
 payload:
   id: RF1_relational_field
@@ -25,7 +25,7 @@ payload:
     - intelligence/cfr/graph.js
   depends_on:
     - EM1_emerge_core
-    - CF1_cfr_improved_with_rfr2
+    - PIL2_contracts
   blocks: []
   spec: null
   graph: 77e3b39ceec6458e

@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793961475742
+exported_at: 1793962354238
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793961475742
-lastSeenAt: 1793961475742
+firstSeenAt: 1793962354238
+lastSeenAt: 1793962354238
 fingerprint: null
 payload:
   for: LB1_the_end_state_lab
@@ -153,9 +153,11 @@ payload:
     upstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
       - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
@@ -193,7 +195,7 @@ payload:
       - layer 5 · blocked by SH1_shadow_space, CB1_cfr_build_logic
       - >-
         depends on (3): PR1_proof_run_the_delivery_checker, SH1_shadow_space, CB1_cfr_build_logic ·
-        all upstream 12
+        all upstream 14
       - >-
         needed by (2): MS1_mental_simulation, RD1_raid_complete_or_build · finishing it unlocks
         RD1_raid_complete_or_build
