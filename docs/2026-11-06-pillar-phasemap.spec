@@ -124,3 +124,9 @@ phases:
     proof: "the runner's own test with a stand-in model; the real numbers from one run on his machine"
 
 order: "PIL1 → PIL2 → (PIL3, PIL4) → PIL5; PIL6 after PIL3. PIL_D2 settled before a server.js is added."
+# ── ADDENDUM 2026-11-06 — the field generates code (his) ──
+# James, 2026-11-06: "im saying to generate code. using primitives or invariants to define the shape of the field, which would define the possibility
+# space, using the dag as the map of primitives, creating the constraint field..." · "Yes, that's why, like, look at the axioms in the docs folder, the 3.1."
+# Pillar's contracts are written field-first (Field, Constraint, Transition, History, Observation at the core; Event, Gate, Stream as compounds of them).
+# After PIL2 and PIL3: CB1_cfr_build_logic (docs/2026-10-02-emerge-field-memory-build-phasemap.spec, expanded the same day): the field generates the
+# code. After Pillar: EM2 (WARP as the field), CF1 (CFR with RFR2), RF1 (the relational field), and SISO's retirement after PIL5's census.

@@ -9,11 +9,11 @@ intent: null
 summary: CB3_the_causal_spec_block (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792841754482
+exported_at: 1793961419842
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754482
-lastSeenAt: 1792841754482
+firstSeenAt: 1793961419842
+lastSeenAt: 1793961419842
 fingerprint: null
 payload:
   id: CB3_the_causal_spec_block
@@ -31,4 +31,4 @@ payload:
     - CF1_cfr_improved_with_rfr2
   blocks: []
   spec: null
-  graph: 7b89a19174263b23
+  graph: 8cd0c235dcf3df49

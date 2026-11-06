@@ -7,11 +7,11 @@ intent: null
 summary: GG1_graphs_generate_code (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792841754566
+exported_at: 1793961419937
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754566
-lastSeenAt: 1792841754566
+firstSeenAt: 1793961419937
+lastSeenAt: 1793961419937
 fingerprint: null
 payload:
   id: GG1_graphs_generate_code
@@ -29,4 +29,4 @@ payload:
     - EV0_contracts_for_every_system
   blocks: []
   spec: null
-  graph: 348d5e8a4911190d
+  graph: 2a6f8ddfd19b7f45

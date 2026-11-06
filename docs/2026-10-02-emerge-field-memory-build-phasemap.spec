@@ -522,10 +522,10 @@ spec:
       layer: service
       systems: [idearium, warp, intelligence]
       value: { score: 4, cost: L, for: [quality], why: "the build steers itself and halts with a cause instead of looping" }
-      status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
-      status_before: OPEN
-      depends_on: [EM2_warp_his_own, CF1_cfr_improved_with_rfr2, MR1_recall_triad_and_context_table]
-      files: [idearium/spec-engine/warp-build-dispatch.js, idearium/spec-engine/chunk-dispatch.js, lib/pipeline-routing.js]
+      status: OPEN   # 2026-11-06: in Pillar's order, after PIL2 and PIL3 (his yes to the field generating code)
+      status_before: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
+      depends_on: [PIL2_contracts, PIL3_conformance, MR1_recall_triad_and_context_table]   # 2026-11-06: was [EM2_warp_his_own, CF1_cfr_improved_with_rfr2, MR1_recall_triad_and_context_table]; EM2 and CF1 now follow Pillar (the conversion) and no longer gate the field generating code
+      files: [idearium/spec-engine/warp-build-dispatch.js, idearium/spec-engine/chunk-dispatch.js, lib/pipeline-routing.js, emerge/emerge/lang/cie/synth.eg, idearium/lib/emerge-rung.cjs, pillar/contracts/*.eg]
       does: >-
         "can we make cfr a build logic option?" Two build logics, chosen per build: LINEAR (the plan in order — today's)
         and CAUSAL. In CAUSAL every build step is a WARP 2 link caused by its contract, its synthesis and that
@@ -533,6 +533,23 @@ spec:
         stop, change approach; TURBULENT → decompose deeper (FG5's "retried smaller, not bigger"); CHAOTIC → halt,
         trace back to the source that misled it, show James. The build path finally records into CFR.
       proof: "a fixture build under CAUSAL: an injected repeated failure moves the regime to resonant and changes approach; an injected chaotic run halts with the root source named"
+      expanded_2026_11_06: >-
+        James, 2026-11-06: "Like the shape of the field is the boundary of invariants or primitives. It’s not new either. It’s emergence. Its
+        first principles. It’s cfr. Its emergence" · "im saying to generate code. using primitives or invariants to define the shape of the field,
+        which would define the possibility space, using the dag as the map of primitives, creating the constraint field, the dag mapping the
+        conditions for the end state (contract), or the emergent property/outcome. constained field runtime or emergence." · on why: "look at the
+        axioms in the docs folder, the 3.1." Expanded (his rule: phases expand): CAUSAL build logic is not only the field steering the build; the
+        field generates the code. Pillar's contracts (PIL2) and a chunk's invariants are the field's shape, which is the possibility space; the
+        chunk DAG is the map of primitives; the contract block (CIE-EG D7) is the end state, the emergent property. Each node's space is narrowed
+        by its own boundary, its neighbours' and the contract pulled back from the end (his bidirectional chaining, proof IF-05); a node narrowed to
+        one is derived (Emerge's synth rung 1, zero tokens, utf8_decode 6/6 on 2026-10-31); narrowed to a few, a template or a small model chooses
+        inside it and the field refuses what falls outside (EAS_D8's small-model bench measures that); the retry engine (EW1, 0.60.421) carries
+        each refusal into the next try; a failure is a point in the field with its cause (§11.1). By his axioms: the preamble ("invariants — the
+        constraints that define what a valid build is"), §5.10/§5.14 (the contract is the global invariant, the implementation is what may change),
+        §11.1–§11.4 (field, emergence, the CFR ledger as causal substrate), §12.4 (invariants crystallise from tests), §0.4 (optionality). The
+        coder's assessment, said to him: better, with three costs — the work moves into the spec (a loose boundary is a wide space), outcomes that
+        are not local (speed) need a system gate at the end state, and the search must prune at every node. Order: after Pillar's contracts and
+        cases (PIL2, PIL3); the WARP/SISO conversion (EM2, CF1, RF1) stays after Pillar.
 
     CB2_analysis_then_synthesis:
       layer: service

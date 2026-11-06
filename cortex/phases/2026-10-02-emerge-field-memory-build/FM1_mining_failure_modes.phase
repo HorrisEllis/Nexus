@@ -7,11 +7,11 @@ intent: null
 summary: FM1_mining_failure_modes (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676712
+exported_at: 1793961419913
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676712
-lastSeenAt: 1792787676712
+firstSeenAt: 1793961419913
+lastSeenAt: 1793961419913
 fingerprint: null
 payload:
   id: FM1_mining_failure_modes
@@ -28,4 +28,4 @@ payload:
     - CF1_cfr_improved_with_rfr2
   blocks: []
   spec: null
-  graph: 4584c0639e11da24
+  graph: f44d369a20c43a9b

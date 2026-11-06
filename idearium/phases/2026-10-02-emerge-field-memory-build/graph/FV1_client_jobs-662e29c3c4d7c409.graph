@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787676683
+exported_at: 1793961475708
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676683
-lastSeenAt: 1792787676683
+firstSeenAt: 1793961475708
+lastSeenAt: 1793961475708
 fingerprint: null
 payload:
   for: FV1_client_jobs
@@ -57,6 +57,12 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
     blockedBy:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
@@ -72,7 +78,7 @@ payload:
         MR8_crystallization
       - >-
         depends on (4): BT1_build_teams, RC1_the_repo_main_chat, EC6_economy_and_the_tokenizer,
-        MR8_crystallization · all upstream 18
+        MR8_crystallization · all upstream 24
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams

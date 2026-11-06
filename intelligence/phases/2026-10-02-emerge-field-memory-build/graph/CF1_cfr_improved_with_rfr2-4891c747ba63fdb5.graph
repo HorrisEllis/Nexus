@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841754427
+exported_at: 1793961475601
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754427
-lastSeenAt: 1792841754427
+firstSeenAt: 1793961475601
+lastSeenAt: 1793961475601
 fingerprint: null
 payload:
   for: CF1_cfr_improved_with_rfr2
@@ -181,7 +181,6 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
     upstream:
@@ -191,15 +190,12 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
     downstream:
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB4_the_emergence_loop_builds
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LN1_lenses_on_the_canvas
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
@@ -213,7 +209,6 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
     blockedBy:
@@ -228,10 +223,10 @@ payload:
       - layer 4 · blocked by EM2_warp_his_own
       - 'depends on (2): EM1_emerge_core, EM2_warp_his_own · all upstream 5'
       - >-
-        needed by (9): RF1_relational_field, MR2_vector_space_for_the_field, MR4_field_memory,
-        MR7_recipes, MR9_liminal_on_the_agents, MR11_rewind_the_mind, CB1_cfr_build_logic,
-        CB3_the_causal_spec_block, FM1_mining_failure_modes · all downstream 25 · finishing it
-        unlocks RF1_relational_field, MR9_liminal_on_the_agents, FM1_mining_failure_modes
+        needed by (8): RF1_relational_field, MR2_vector_space_for_the_field, MR4_field_memory,
+        MR7_recipes, MR9_liminal_on_the_agents, MR11_rewind_the_mind, CB3_the_causal_spec_block,
+        FM1_mining_failure_modes · all downstream 21 · finishing it unlocks RF1_relational_field,
+        MR9_liminal_on_the_agents, FM1_mining_failure_modes
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
         kind: declared

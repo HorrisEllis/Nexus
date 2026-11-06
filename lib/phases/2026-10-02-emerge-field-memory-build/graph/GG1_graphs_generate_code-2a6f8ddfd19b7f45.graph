@@ -1,0 +1,120 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GG1_graphs_generate_code:2a6f8ddfd19b7f45
+type: graph
+id: phase:GG1_graphs_generate_code:2a6f8ddfd19b7f45
+context: dependency graph of phase GG1_graphs_generate_code
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793961419937
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793961419937
+lastSeenAt: 1793961419937
+fingerprint: null
+payload:
+  for: GG1_graphs_generate_code
+  kind: phase
+  repo: null
+  hash: 2a6f8ddfd19b7f45
+  nodes:
+    - path: idearium/lib/wiring-gen.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/repo/graph.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/emerge/compiler/emit.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/emerge/compiler/index.js
+      role: changes
+      exists: false
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/scan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-repo-graph.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/scan.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/verify-lazy.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: tests/modules/test-repo-graph.js
+      to: idearium/repo/graph.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CL1_the_component_lab
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CL1_the_component_lab
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+        files:
+          - idearium/repo/graph.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+        files:
+          - lib/emerge/compiler/index.js
+          - lib/emerge/compiler/emit.js
+    dangling: []
+    lines:
+      - layer 3 · ready
+      - 'depends on (2): PH1_phase_runs_end_in_proof, EV0_contracts_for_every_system · all upstream 4'
+      - 'needed by (1): CL1_the_component_lab'
+      - 'same files as RF1_relational_field with no order between them: idearium/repo/graph.js'
+      - >-
+        same files as CB3_the_causal_spec_block with no order between them:
+        lib/emerge/compiler/index.js, lib/emerge/compiler/emit.js
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+        kind: declared
