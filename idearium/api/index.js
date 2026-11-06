@@ -7719,6 +7719,16 @@ async function handle(req, res, route, query, body) {
           r = PD.fromZip(buf, body.project || String(body.filename).replace(/\.zip$/i, ''));
         } else if (body.dir) r = PD.fromDir(String(body.dir), body.project || null);
         else return err(res, 400, 'a .zip (filename + contentBase64) or dir required');
+        // CS0 expanded (0.60.420) — James, 2026-11-06: "i want at some point to haveprimitives built and tested autonomously ... reusable primitives
+        // saving to the component store." test: true runs the project's own tests, each alone in a copy; what they prove is marked verified
+        if (body.test === true) {
+          const T = _require('../lib/primitive-tests.cjs');
+          let root = body.dir ? String(body.dir) : null, tmp = null;
+          if (!root) { const { extractZipToFiles } = _require('../../lib/zip-ingest.js'); const z = extractZipToFiles({ buf: Buffer.from(String(body.contentBase64), 'base64'), maxFiles: 4000, maxBytesPerFile: 512 * 1024, maxTotalBytes: 64 * 1024 * 1024, realFiles: false, includeBinary: false }); tmp = root = T.materialize(z.included || []); }
+          try { const t = T.testProject({ root, components: r.components, timeoutMs: Math.min(Math.max(parseInt(body.timeoutMs, 10) || 30000, 1000), 300000) }); r.tested = { stats: t.stats, results: t.results.map(x => ({ test: x.test, ok: x.ok, why: x.why, ms: x.ms, covers: x.covers })) }; }
+          finally { if (tmp) { try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {} } }
+          os.emit('idearium.components.tested', { project: r.project, ...r.tested.stats });
+        }
         os.emit('idearium.components.decomposed', { project: r.project, components: r.stats.components, created: r.stats.created, unresolved: r.stats.unresolved });
         return ok(res, r);
       } catch (e) { return err(res, e.status || 500, e.message); }
@@ -7738,7 +7748,7 @@ async function handle(req, res, route, query, body) {
       const CS = _require('../../lib/component-store.js');
       if (action === 'components.list') {
         const q = query.q || query.query;
-        return ok(res, { stats: CS.stats(), components: q ? CS.find(q, { limit: Math.min(parseInt(query.limit, 10) || 25, 200) }) : CS.list() });
+        return ok(res, { stats: CS.stats(), components: q ? CS.find(q, { limit: Math.min(parseInt(query.limit, 10) || 25, 200) }) : CS.list({ verified: query.verified === '1', project: query.project ? String(query.project) : null }) });   // ?verified=1: the primitives (CS0 0.60.420)
       }
       const ref = decodeURIComponent(params.id);
       if (action === 'components.invalidate') {

@@ -26,11 +26,16 @@
       try {
         const contentBase64 = await _b64(f);
         row.innerHTML = `<b>${esc(f.name)}</b> <span class="cmp-dim">decomposing…</span>`;
-        const r = await api('/api/components/decompose', { method: 'POST', body: JSON.stringify({ filename: f.name, contentBase64 }) }, 10 * 60000);
+        // CS0 expanded (0.60.420) — James: "i want at some point to haveprimitives built and tested autonomously". The project's own tests, when ticked
+        const test = !!($('cmp-test') && $('cmp-test').checked); if (test) row.innerHTML = `<b>${esc(f.name)}</b> <span class="cmp-dim">decomposing and running its tests…</span>`;
+        const r = await api('/api/components/decompose', { method: 'POST', body: JSON.stringify({ filename: f.name, contentBase64, ...(test ? { test: true } : {}) }) }, 30 * 60000);
         const s = r.stats || {};
         row.innerHTML = `<b>${esc(r.project)}</b> — ${s.components} component(s), ${s.created} new`
           + `${s.unresolved ? ` · <span class="cmp-warn">${s.unresolved} unresolved imports</span>` : ''}${s.skipped ? ` · <span class="cmp-dim">${s.skipped} skipped</span>` : ''}`
-          + `${(r.npm || []).length ? `<div class="cmp-dim">npm: ${esc(r.npm.join(', '))}</div>` : ''}`;
+          + `${(r.npm || []).length ? `<div class="cmp-dim">npm: ${esc(r.npm.join(', '))}</div>` : ''}`
+          + (r.tested ? `<div class="cmp-tested">tests ${r.tested.stats.passed}/${r.tested.stats.tests} passed · <b class="cmp-ok">${r.tested.stats.verified} verified primitive(s)</b> · ${r.tested.stats.failedModules} failed · ${r.tested.stats.untested} untested`
+            + `${r.tested.stats.needsNpm.length ? ` · <span class="cmp-warn">needs npm: ${esc(r.tested.stats.needsNpm.join(', '))}</span>` : ''}</div>`
+            + r.tested.results.filter(x => !x.ok).map(x => `<div class="cmp-dim">✗ ${esc(x.test)} — ${esc(x.why)}</div>`).join('') : '');
         say(`${r.project}: ${s.components} component(s) in the store`, 'ok');
       } catch (e) { row.innerHTML = `<b>${esc(f.name)}</b> <span class="cmp-warn">not decomposed: ${esc(e.message)}</span>`; }
     }
@@ -39,10 +44,12 @@
 
   async function search() {
     const q = ($('cmp-q') && $('cmp-q').value || '').trim();
-    let r; try { r = await api(`/api/components${q ? `?q=${encodeURIComponent(q)}&limit=60` : ''}`); } catch (e) { $('cmp-list').innerHTML = `<div class="cmp-warn">${esc(e.message)}</div>`; return; }
+    const ver = !!($('cmp-verified') && $('cmp-verified').checked);   // CS0 0.60.420: the primitives only
+    let r; try { r = await api(`/api/components${q ? `?q=${encodeURIComponent(q)}&limit=60` : (ver ? '?verified=1' : '')}`); } catch (e) { $('cmp-list').innerHTML = `<div class="cmp-warn">${esc(e.message)}</div>`; return; }
     const list = (r.components || []).slice(0, 200);
-    $('cmp-count').textContent = r.stats ? `${r.stats.components} in the store` : '';
-    $('cmp-list').innerHTML = list.length ? list.map(c => `<div class="cmp-row"><span class="cmp-id">${esc(c.id)}</span><span class="cmp-dim">${esc(c.path || '')}${c.latest ? ` @${esc(c.latest)}` : ''}</span>`
+    $('cmp-count').textContent = r.stats ? `${r.stats.components} in the store${r.stats.verified != null ? ` · ${r.stats.verified} verified` : ''}` : '';
+    const mark = (c) => c.tested === 'verified' ? '<span class="cmp-ok" title="its project\'s tests passed">✓</span> ' : c.tested === 'failed' ? '<span class="cmp-warn" title="a test that requires it failed">✗</span> ' : '';
+    $('cmp-list').innerHTML = list.length ? list.map(c => `<div class="cmp-row"><span class="cmp-id">${mark(c)}${esc(c.id)}</span><span class="cmp-dim">${esc(c.path || '')}${c.latest ? ` @${esc(c.latest)}` : ''}</span>`
       + `<a class="modal-btn cmp-dl" href="${esc(API_BASE)}/api/components/${encodeURIComponent(c.id)}/bundle" download title="this component and everything it requires, as one zip">⬇ bundle</a></div>`).join('')
       : '<div class="cmp-dim">nothing stored yet — drop a project zip above</div>';
   }
@@ -63,5 +70,6 @@
     zone.addEventListener('drop', e => { if (e.dataTransfer && e.dataTransfer.files.length) decomposeFiles(e.dataTransfer.files); });
     let t = null;
     $('cmp-q').addEventListener('input', () => { clearTimeout(t); t = setTimeout(search, 250); });
+    if ($('cmp-verified')) $('cmp-verified').addEventListener('change', search);
   });
 })();
