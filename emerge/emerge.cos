@@ -376,6 +376,7 @@ payload:
       emerge/spec/emerge.node-taxonomy.md: 2e832b0ed0f51b9e6620b4d4a5f57b366c188d2ec9f7a6eddcc300dff6acb621
       emerge/spec/emerge.node-taxonomy.spec: 7b9334ef66b7f42f69390de813ffd2191e102a968d147b267f4cb72725c4420c
       emerge/spec/emerge.spec: 400e575daf30aef13f0e3533cffec73574cd2073162ed027a7b0cb16b3f1709b
+      emerge/spec/field.spec: 41b73f40135faf57d5056dd95c257ece800f62eca2fd28a4fe01c44a429c9666
       emerge/spec/learn.spec: 5c8c7cac46202f07da01ac633c7f1cffb0be16913f292aec1b56faaf9df3dab5
       emerge/spec/say.spec: c7453c681d0402d7141701ac068a5ac91b9ad9ac532fd78fc65a3b8ccfc5701f
       emerge/template/nexus-system.template.json: 0f3c413e0a8c753745a0de4b2148873a8c32765164fd3133b5afe7957e3684b8
@@ -397,6 +398,10 @@ payload:
       emerge/tests/skeleton.test.js: d740e0fc50fe15fd4214d4cab0249003f37c6d5edfa1e4d609599dd65f72af19
       emerge/verify.js: 99273746e5977c75e82d571abf173316cbce2307c7ded5d51b40b948e3c191c8
       emerge/version.js: bb0ab190c523b5950bce5c04cda9b220c848dc20e6936d39519eeb8c493f96b6
+      phases/2026-10-02-emerge-field-memory-build/CRF1_the_axioms_as_constraints.phase: 14c2563305279b1a8a4af5ccf1e93c207e994a37bb85dfee96d0242bea86ff44
+      phases/2026-10-02-emerge-field-memory-build/MR11_rewind_the_mind.phase: c44b8244be70392b63c2877e78b42a50a03ecfb3f19185593318f84579c050ed
+      phases/2026-10-02-emerge-field-memory-build/graph/CRF1_the_axioms_as_constraints-697fc41691bf6a2f.graph: 0a0a7261e4392dffbc5630414e7d53bb9fe296aa506d63f8ed504bce086ab559
+      phases/2026-10-02-emerge-field-memory-build/graph/MR11_rewind_the_mind-253f63ad6dbcd990.graph: a93f04a7be057ae151b0302b335d6c910addc5377c995cbdcccf0c61fa7f2f4e
       phases/2026-10-31-emerge-as-a-system/EAS4a_L0_evaluate.phase: 56625f30bc93e53c2d659c7b692e7ad13995404b13d00d466f37f805eecb4d70
       phases/2026-10-31-emerge-as-a-system/EAS4b_L1_compile.phase: 27e5dec4abb700a78548cbf346e1498219e46fa2f4abc5455a2a51d566393e92
       phases/2026-10-31-emerge-as-a-system/EAS4c_L2_build.phase: 29a37991e8d819875a2d94be3964bc85aead13afefb5612f0ef1e1d037fd439f

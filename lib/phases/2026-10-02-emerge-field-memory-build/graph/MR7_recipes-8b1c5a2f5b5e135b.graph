@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793961475640
+exported_at: 1793962354139
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793961475640
-lastSeenAt: 1793961475640
+firstSeenAt: 1793962354139
+lastSeenAt: 1793962354139
 fingerprint: null
 payload:
   for: MR7_recipes
@@ -123,10 +123,9 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
@@ -148,7 +147,7 @@ payload:
     dangling: []
     lines:
       - layer 5 · blocked by CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic
-      - 'depends on (2): CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic · all upstream 14'
+      - 'depends on (2): CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic · all upstream 13'
       - 'needed by (2): MR8_crystallization, GL1_the_graphs_as_a_model · all downstream 3'
       - >-
         same files as MR10_the_field_between_james_and_the_agents with no order between them:

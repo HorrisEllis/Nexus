@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793961475750
+exported_at: 1793962354245
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793961475750
-lastSeenAt: 1793961475750
+firstSeenAt: 1793962354245
+lastSeenAt: 1793962354245
 fingerprint: null
 payload:
   for: MS1_mental_simulation
@@ -37,12 +37,12 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
       - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
