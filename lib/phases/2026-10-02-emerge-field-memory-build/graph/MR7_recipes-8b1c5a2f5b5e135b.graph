@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793979426598
+exported_at: 1793997639717
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793979426598
-lastSeenAt: 1793979426598
+firstSeenAt: 1793997639717
+lastSeenAt: 1793997639717
 fingerprint: null
 payload:
   for: MR7_recipes
@@ -111,7 +111,7 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 5
+    layer: 8
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
@@ -126,6 +126,16 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
       - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
@@ -147,8 +157,8 @@ payload:
           - lib/repo-hat-memory.js
     dangling: []
     lines:
-      - layer 5 · blocked by CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic
-      - 'depends on (2): CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic · all upstream 14'
+      - layer 8 · blocked by CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic
+      - 'depends on (2): CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic · all upstream 24'
       - 'needed by (2): MR8_crystallization, GL1_the_graphs_as_a_model · all downstream 3'
       - >-
         same files as MR10_the_field_between_james_and_the_agents with no order between them:

@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE7_native_observe
 context: pipeline phase CIE7_native_observe of docs/2026-11-06-cie-eg-build-phasemap.spec
 intent: null
-summary: CIE7_native_observe (?) — 3 file(s)
+summary: CIE7_native_observe (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793984231131
+exported_at: 1793997643490
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793984231131
-lastSeenAt: 1793984231131
+firstSeenAt: 1793997643490
+lastSeenAt: 1793997643490
 fingerprint: null
 payload:
   id: CIE7_native_observe
@@ -23,9 +23,10 @@ payload:
     - emerge/emerge/observe/index.js
     - emerge/emerge/observe/gaps.js
     - emerge/emerge/observe/debug.js
+    - emerge/emerge/lang/native/observe.eg
   depends_on:
     - CIE3_native_ledger
   blocks:
     - MOD-NATIVE-TOOLS
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: 25eb10608cce9715
+  graph: d7bfba08f4f6aedc

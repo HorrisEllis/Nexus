@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
 context: pipeline phase CIE4_native_components of docs/2026-11-06-cie-eg-build-phasemap.spec
 intent: null
-summary: CIE4_native_components (?) — 1 file(s)
+summary: CIE4_native_components (?) — 12 file(s)
 system: idearium
 tags: []
-exported_at: 1793984231123
+exported_at: 1793997643480
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793984231123
-lastSeenAt: 1793984231123
+firstSeenAt: 1793997643480
+lastSeenAt: 1793997643480
 fingerprint: null
 payload:
   id: CIE4_native_components
@@ -20,6 +20,17 @@ payload:
   layer: null
   status: OPEN
   files:
+    - emerge/emerge/lang/cie/world.eg
+    - emerge/emerge/lang/test/world/counter.eg
+    - emerge/emerge/lang/test/world/counter.world.eg
+    - emerge/emerge/lang/native/front.eg
+    - emerge/emerge/lang/native/lower.eg
+    - emerge/emerge/lang/native/emerge.eg
+    - emerge/emerge/lang/native/world_text.eg
+    - emerge/emerge/lang/native/ledger_text.eg
+    - emerge/emerge/lang/test/world/counter_ledger.eg
+    - emerge/emerge/lang/native/codegen.eg
+    - emerge/emerge/lang/native/rt.eg
     - emerge/emerge/lang/test/native.test.js
   depends_on:
     - CIE3_native_ledger
@@ -27,4 +38,4 @@ payload:
   blocks:
     - MOD-NATIVE-SYSTEM
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: 48433a529f33d4c9
+  graph: b198556902408203

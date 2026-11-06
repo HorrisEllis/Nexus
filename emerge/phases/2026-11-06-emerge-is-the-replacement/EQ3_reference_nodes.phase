@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ3_reference_nodes
 context: pipeline phase EQ3_reference_nodes of docs/2026-11-06-emerge-is-the-replacement-phasemap.spec
 intent: null
-summary: EQ3_reference_nodes (?) — 3 file(s)
+summary: EQ3_reference_nodes (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793996385040
+exported_at: 1793997645213
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793996385040
-lastSeenAt: 1793996385040
+firstSeenAt: 1793997645213
+lastSeenAt: 1793997645213
 fingerprint: null
 payload:
   id: EQ3_reference_nodes
@@ -22,10 +22,9 @@ payload:
   files:
     - emerge/emerge/lang/cie/reference.eg
     - emerge/emerge/lang/test/reference.test.eg
-    - emerge/emerge/spec/cie-eg.spec
   depends_on:
     - EQ_D0_emerge_only
     - PIL2_contracts
   blocks: []
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: 2b0dd331cda64f7c
+  graph: 72a7ccafe575ef5f

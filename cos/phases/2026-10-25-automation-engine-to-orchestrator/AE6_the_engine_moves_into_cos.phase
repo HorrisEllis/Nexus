@@ -6,14 +6,14 @@ context: >-
   pipeline phase AE6_the_engine_moves_into_cos of
   docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
 intent: null
-summary: AE6_the_engine_moves_into_cos (library) — 12 file(s)
+summary: AE6_the_engine_moves_into_cos (library) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793995363797
+exported_at: 1793997641729
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793995363797
-lastSeenAt: 1793995363797
+firstSeenAt: 1793997641729
+lastSeenAt: 1793997641729
 fingerprint: null
 payload:
   id: AE6_the_engine_moves_into_cos
@@ -27,17 +27,10 @@ payload:
     - cos/automation/steps.eg
     - cos/automation/cron.eg
     - cos/automation/routes.eg
-    - cos/automation/test/automation.test.eg
-    - lib/automation/
-    - orchestrator/automation/index.js
-    - cos/manager/server.js
-    - cos/manager/contract.json
-    - lib/automation-registry.js
-    - tests/modules/test-cos-automation.test.js
   depends_on:
     - AE_D3_the_home_is_cos
     - AE4_repoint_the_registry
     - PIL2_contracts
   blocks: []
   spec: null
-  graph: a5e34e1e2acb535b
+  graph: 5265ca195e4e94c4

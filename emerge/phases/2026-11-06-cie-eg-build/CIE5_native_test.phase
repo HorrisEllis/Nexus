@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
 context: pipeline phase CIE5_native_test of docs/2026-11-06-cie-eg-build-phasemap.spec
 intent: null
-summary: CIE5_native_test (?) — 1 file(s)
+summary: CIE5_native_test (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793984231126
+exported_at: 1793997643483
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793984231126
-lastSeenAt: 1793984231126
+firstSeenAt: 1793997643483
+lastSeenAt: 1793997643483
 fingerprint: null
 payload:
   id: CIE5_native_test
@@ -20,10 +20,13 @@ payload:
   layer: null
   status: OPEN
   files:
+    - emerge/emerge/lang/native/front.eg
+    - emerge/emerge/lang/native/codegen.eg
+    - emerge/emerge/lang/native/emerge.eg
     - emerge/emerge/lang/test/native.test.js
   depends_on:
     - CIE4_native_components
   blocks:
     - MOD-NATIVE-SYSTEM
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: 0974f62afe6fcba9
+  graph: 5197dd1f25dcc68b

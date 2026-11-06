@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
 context: pipeline phase CIE3_native_ledger of docs/2026-11-06-cie-eg-build-phasemap.spec
 intent: null
-summary: CIE3_native_ledger (?) — 4 file(s)
+summary: CIE3_native_ledger (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1793985190377
+exported_at: 1793997643476
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793985190377
-lastSeenAt: 1793985190377
+firstSeenAt: 1793997643476
+lastSeenAt: 1793997643476
 fingerprint: null
 payload:
   id: CIE3_native_ledger
@@ -20,13 +20,15 @@ payload:
   layer: null
   status: BUILT 0.60.425
   files:
+    - emerge/emerge/lang/cie/ledger.eg
     - emerge/emerge/lang/ledger.js
     - emerge/emerge/lang/test/ledger.test.js
     - emerge/emerge/lang/test/native.test.js
     - emerge/emerge/spec/cie-eg.spec
+    - rt.eg/codegen.eg
   depends_on:
     - CIE2_native_sha256
   blocks:
     - MOD-NATIVE-SYSTEM
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: 98fc867e04e6779d
+  graph: 26721ad34cdda479

@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
 context: pipeline phase CIE2_native_sha256 of docs/2026-11-06-cie-eg-build-phasemap.spec
 intent: null
-summary: CIE2_native_sha256 (?) — 1 file(s)
+summary: CIE2_native_sha256 (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793984537471
+exported_at: 1793997643473
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793984537471
-lastSeenAt: 1793984537471
+firstSeenAt: 1793997643473
+lastSeenAt: 1793997643473
 fingerprint: null
 payload:
   id: CIE2_native_sha256
@@ -20,6 +20,10 @@ payload:
   layer: null
   status: BUILT 0.60.424
   files:
+    - emerge/emerge/lang/native/x64.eg
+    - emerge/emerge/lang/native/codegen.eg
+    - emerge/emerge/lang/native/rt.eg
+    - emerge/emerge/lang/native/rt_text.eg
     - emerge/emerge/lang/test/native.test.js
   depends_on:
     - CIE_D1_remove_the_javascript_now
@@ -27,4 +31,4 @@ payload:
   blocks:
     - MOD-NATIVE-SYSTEM
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: ea159b87a8d31fb6
+  graph: cb41013e07a153cd

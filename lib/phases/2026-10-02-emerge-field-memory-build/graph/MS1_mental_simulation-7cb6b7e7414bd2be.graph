@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793979426708
+exported_at: 1793997639901
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793979426708
-lastSeenAt: 1793979426708
+firstSeenAt: 1793997639901
+lastSeenAt: 1793997639901
 fingerprint: null
 payload:
   for: MS1_mental_simulation
@@ -27,7 +27,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 7
+    layer: 10
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
@@ -53,6 +53,16 @@ payload:
       - docs/2026-10-29-finish-any-project-phasemap.spec::FA8_intent_to_contract
       - docs/2026-10-29-finish-any-project-phasemap.spec::FA_D2_registry_is_the_spine_reading
       - docs/2026-10-29-finish-any-project-phasemap.spec::FA_D4_adapters_first
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
       - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
@@ -71,8 +81,8 @@ payload:
           - intelligence/cfr/
     dangling: []
     lines:
-      - layer 7 · blocked by FM1_mining_failure_modes, LB1_the_end_state_lab
-      - 'depends on (2): FM1_mining_failure_modes, LB1_the_end_state_lab · all upstream 27'
+      - layer 10 · blocked by FM1_mining_failure_modes, LB1_the_end_state_lab
+      - 'depends on (2): FM1_mining_failure_modes, LB1_the_end_state_lab · all upstream 37'
       - 'needed by (0): —'
       - 'same files as MR2_vector_space_for_the_field with no order between them: intelligence/cfr/'
     edges:

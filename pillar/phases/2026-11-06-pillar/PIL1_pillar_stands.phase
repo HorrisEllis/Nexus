@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
 context: pipeline phase PIL1_pillar_stands of docs/2026-11-06-pillar-phasemap.spec
 intent: null
-summary: PIL1_pillar_stands (?) — 3 file(s)
+summary: PIL1_pillar_stands (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1793974583560
+exported_at: 1793997647020
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793974583560
-lastSeenAt: 1793974583560
+firstSeenAt: 1793997647020
+lastSeenAt: 1793997647020
 fingerprint: null
 payload:
   id: PIL1_pillar_stands
@@ -20,6 +20,9 @@ payload:
   layer: null
   status: BUILT
   files:
+    - pillar/pillar.eg
+    - pillar/cli.eg
+    - pillar/test/pillar.test.eg
     - lib/nexus-self/systems.js
     - tests/modules/test-pillar.test.js
     - tests/modules/run-all.js
@@ -31,4 +34,4 @@ payload:
   blocks:
     - MOD-PIL-SYSTEM
   spec: pillar/spec/pillar.spec
-  graph: 37780e456971d52a
+  graph: 893460d744009c25

@@ -1,0 +1,66 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EQ4_the_emerge_guide_for_any_llm:9261eda30468f30d
+type: graph
+id: phase:EQ4_the_emerge_guide_for_any_llm:9261eda30468f30d
+context: dependency graph of phase EQ4_the_emerge_guide_for_any_llm
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793997645215
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793997645215
+lastSeenAt: 1793997645215
+fingerprint: null
+payload:
+  for: EQ4_the_emerge_guide_for_any_llm
+  kind: phase
+  repo: null
+  hash: 9261eda30468f30d
+  nodes:
+    - path: docs/atlases/emerge-atlas.md
+      role: changes
+      exists: false
+      system: null
+    - path: emerge/emerge/GUIDE.eg.md
+      role: changes
+      exists: false
+      system: emerge
+    - path: emerge/emerge/lang/cie/atlas.eg
+      role: changes
+      exists: false
+      system: emerge
+    - path: idearium/lib/emerge-rung.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/lib/emerge-rung.cjs
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+    dependents: []
+    upstream:
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): EQ_D0_emerge_only'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+        kind: declared

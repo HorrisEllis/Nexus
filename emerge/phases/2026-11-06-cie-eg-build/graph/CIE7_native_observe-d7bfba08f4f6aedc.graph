@@ -1,0 +1,142 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CIE7_native_observe:d7bfba08f4f6aedc
+type: graph
+id: phase:CIE7_native_observe:d7bfba08f4f6aedc
+context: dependency graph of phase CIE7_native_observe
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793997643490
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793997643490
+lastSeenAt: 1793997643490
+fingerprint: null
+payload:
+  for: CIE7_native_observe
+  kind: phase
+  repo: null
+  hash: d7bfba08f4f6aedc
+  nodes:
+    - path: emerge/emerge/lang/native/observe.eg
+      role: changes
+      exists: false
+      system: emerge
+    - path: emerge/emerge/observe/debug.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/observe/gaps.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/observe/index.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/runtime.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/observe/cli.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/test/debug.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/emerge/test/observe.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/emerge/lang/build-loader.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/ledger.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/observe/delta.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/observe/entry.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/observe/field.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/observe/liminal.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/observe/sigma.js
+      role: uses
+      exists: true
+      system: emerge
+  edges:
+    - from: emerge/emerge/observe/index.js
+      to: emerge/emerge/lang/ledger.js
+      kind: requires
+    - from: emerge/emerge/observe/index.js
+      to: emerge/emerge/lang/build-loader.js
+      kind: requires
+    - from: emerge/emerge/observe/index.js
+      to: emerge/emerge/observe/delta.js
+      kind: requires
+    - from: emerge/emerge/observe/index.js
+      to: emerge/emerge/observe/sigma.js
+      kind: requires
+    - from: emerge/emerge/observe/index.js
+      to: emerge/emerge/observe/field.js
+      kind: requires
+    - from: emerge/emerge/observe/index.js
+      to: emerge/emerge/observe/liminal.js
+      kind: requires
+    - from: emerge/emerge/observe/index.js
+      to: emerge/emerge/observe/entry.js
+      kind: requires
+    - from: emerge/emerge/lang/runtime.js
+      to: emerge/emerge/observe/index.js
+      kind: requires
+    - from: emerge/emerge/observe/cli.js
+      to: emerge/emerge/observe/index.js
+      kind: requires
+    - from: emerge/emerge/test/observe.test.js
+      to: emerge/emerge/observe/index.js
+      kind: requires
+    - from: emerge/emerge/test/debug.test.js
+      to: emerge/emerge/observe/debug.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+    dependents:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+    upstream:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+    downstream:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · ready
+      - 'depends on (1): CIE3_native_ledger · all upstream 4'
+      - 'needed by (1): CIE11_retire_the_interpreter · all downstream 2'
+    edges:
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+        kind: declared

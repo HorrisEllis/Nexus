@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PIL6_the_small_model_bench:ca7d549be9a3a50f
+type: graph
+id: phase:PIL6_the_small_model_bench:ca7d549be9a3a50f
+context: dependency graph of phase PIL6_the_small_model_bench
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793997647036
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793997647036
+lastSeenAt: 1793997647036
+fingerprint: null
+payload:
+  for: PIL6_the_small_model_bench
+  kind: phase
+  repo: null
+  hash: ca7d549be9a3a50f
+  nodes:
+    - path: pillar/bench/bench.eg
+      role: changes
+      exists: false
+      system: pillar
+    - path: pillar/test/bench.test.eg
+      role: changes
+      exists: false
+      system: pillar
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+    dependents: []
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+    downstream: []
+    blockedBy:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 7 · blocked by PIL3_conformance
+      - 'depends on (1): PIL3_conformance · all upstream 17'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+        kind: declared

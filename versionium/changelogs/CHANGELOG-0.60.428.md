@@ -25,6 +25,10 @@ James, 2026-11-06: "the moment js is removed from emerge it becomes the replacem
   'world' cases fail if the two drift.
 - **No unrouted notice natively.** A native program doesn't print the interpreter CLI's unrouted notice (stderr) yet.
 
+- **Graphs couldn't see `.eg` files.** `lib/phase-files.js` had no `.eg` in its path pattern, so every Emerge file was invisible to every
+  phase's graph. CIE4's graph had listed only `native.test.js`. `.eg` is added (one word, a fix to existing code). The five maps that name
+  `.eg` files are regenerated. Graph drift across all maps stays at 603, all of it from before this release.
+
 ## Measured (docs/BENCHMARKS.md)
 - Stage 0 (the interpreter running the compiler on itself) took 15.9 s of wall time.
 

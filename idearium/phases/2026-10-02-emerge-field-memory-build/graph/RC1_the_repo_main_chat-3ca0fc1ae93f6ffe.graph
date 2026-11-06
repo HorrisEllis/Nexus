@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793979426645
+exported_at: 1793997639790
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793979426645
-lastSeenAt: 1793979426645
+firstSeenAt: 1793997639790
+lastSeenAt: 1793997639790
 fingerprint: null
 payload:
   for: RC1_the_repo_main_chat
@@ -205,7 +205,7 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 6
+    layer: 9
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
@@ -222,6 +222,16 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR3_gap_driven_search
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
       - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
@@ -248,10 +258,10 @@ payload:
           - idearium/api/index.js
     dangling: []
     lines:
-      - layer 6 · blocked by CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR3_gap_driven_search
+      - layer 9 · blocked by CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR3_gap_driven_search
       - >-
         depends on (3): CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR3_gap_driven_search ·
-        all upstream 16
+        all upstream 26
       - 'needed by (1): FV1_client_jobs'
       - 'same files as BT1_build_teams with no order between them: idearium/api/index.js'
       - 'same files as FV0_fulfil_a_taken_order with no order between them: idearium/api/index.js'
