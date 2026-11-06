@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793442585136
+exported_at: 1793992129800
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793442585136
-lastSeenAt: 1793442585136
+firstSeenAt: 1793992129800
+lastSeenAt: 1793992129800
 fingerprint: null
 payload:
   for: AE3_the_engine_door
@@ -147,6 +147,7 @@ payload:
     downstream:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
       - docs/2026-10-29-pipelines-phasemap.spec::PL5_orchestrator_runs_pipelines
     blockedBy: []
     unlocks:
@@ -158,7 +159,7 @@ payload:
       - layer 2
       - 'depends on (1): AE1_move_the_core · all upstream 3'
       - >-
-        needed by (2): AE4_repoint_the_registry, PL5_orchestrator_runs_pipelines · all downstream 3
+        needed by (2): AE4_repoint_the_registry, PL5_orchestrator_runs_pipelines · all downstream 4
         · finishing it unlocks AE4_repoint_the_registry, PL5_orchestrator_runs_pipelines
     edges:
       - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
