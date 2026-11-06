@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793847429748
+exported_at: 1793940673618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793847429748
-lastSeenAt: 1793847429748
+firstSeenAt: 1793940673618
+lastSeenAt: 1793940673618
 fingerprint: null
 payload:
   for: CA4_the_supervisor_as_a_windows_service
@@ -187,6 +187,7 @@ payload:
   dag:
     layer: 10
     deps:
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA_D1b_the_supervisor_as_a_service
       - docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
     dependents: []
     upstream:
@@ -211,17 +212,20 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D4_the_cos_app_is_the_application
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA_D1_with_windows_elevated_no_service
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA_D1b_the_supervisor_as_a_service
     downstream: []
     blockedBy: []
     unlocks: []
     conflicts: []
-    dangling:
-      - CA_D1b_the_supervisor_as_a_service
+    dangling: []
     lines:
       - layer 10
-      - 'depends on (1): MG37_starts_with_windows · all upstream 21'
+      - >-
+        depends on (2): CA_D1b_the_supervisor_as_a_service, MG37_starts_with_windows · all upstream
+        22
       - 'needed by (0): —'
-      - 'DANGLING depends_on: CA_D1b_the_supervisor_as_a_service'
     edges:
+      - from: docs/2026-11-02-cos-the-application-phasemap.spec::CA_D1b_the_supervisor_as_a_service
+        kind: declared
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
         kind: declared

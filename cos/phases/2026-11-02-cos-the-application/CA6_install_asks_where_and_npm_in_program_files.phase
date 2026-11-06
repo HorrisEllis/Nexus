@@ -9,11 +9,11 @@ intent: null
 summary: CA6_install_asks_where_and_npm_in_program_files (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1793847429754
+exported_at: 1793940673622
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793847429754
-lastSeenAt: 1793847429754
+firstSeenAt: 1793940673622
+lastSeenAt: 1793940673622
 fingerprint: null
 payload:
   id: CA6_install_asks_where_and_npm_in_program_files
@@ -34,4 +34,4 @@ payload:
     - CA5_cos_installs_nexus_from_github
   blocks: []
   spec: null
-  graph: 14174252d2b349db
+  graph: e618f06f03eaf782

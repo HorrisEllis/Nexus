@@ -43,6 +43,24 @@ decisions:
     status: DECIDED 2026-11-02 by his axioms
     chosen: "COS's own data (cos/data/disks/, COS_DISKS overrides), with an index; never in a system's folder, never committed (data/**)."
     by: "§5.15, the delivery rule (never commit data/**)"
+  # moved here 2026-11-06 from where it was written (outside decisions:, so the DAG could not resolve it); content unchanged
+  DK_D3_the_disk_is_a_qcow2_virtual_disk:
+    status: "DECIDED 2026-11-03 by his words; how it is filled on Windows is TO HIM (a cost, below)"
+    james: '"It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data, snapshots, system state."'
+    chosen: >-
+      A compartment's disk is <system>.qcow2: a qcow2 image (QEMU's own format, compressed clusters) holding one ext4 filesystem, labelled with
+      the system's name: /.cos/disk.json and /.cos/spec/… (the metadata: the spec and declaration, every file by hash, the kernel it runs on),
+      /code/<system>/… (its files), /state/<system>/… (all its data). Snapshots are qcow2 internal snapshots, inside the same file: a disk
+      snapshot (qemu-img snapshot, the system stopped) now; with the VM running, QMP savevm also keeps its memory and CPU (the system state,
+      DK8). A QEMU environment boots with this disk attached and mounts it. COS reads the metadata and files without mounting (debugfs), so no
+      root is needed. The .disk archive of 0.60.382 stays as the export and seed format (§0.3): a disk can be made from it.
+    problem: >-
+      The filesystem is written with e2fsprogs (mke2fs -d: a folder into ext4, no root) and read with debugfs. Linux has them; QEMU for Windows
+      ships qemu-img but not e2fsprogs. On his Windows machine one of: (a) WSL's e2fsprogs (no new binary if WSL is installed); (b) the QEMU
+      environment itself fills the disk (the guest mounts it and writes, the way the test VM already extracts a tar disk: slower, needs the
+      VM image); (c) a small e2fsprogs build for Windows, pinned and hash-checked like WinSW. The coder recommends (b) as the default, since
+      it needs nothing but what the QEMU environment already has, with (a) used when present.
+    by: "his words; §0.1 (every file by hash, re-read), §1.2 (a missing tool is said, never a silent fallback), §5.15 (disks in COS's data)"
 
 phases:
 
@@ -108,23 +126,6 @@ phases:
 # that holds its files, its data, its snapshots and its system state. cos/compartment/qemu-runtime.js already makes qcow2 disks, overlays on a
 # read-only base, and qcow2 internal snapshots (qemuImgSnapshotSave/Apply/List); nothing puts a system's files into one.
 decisions_addendum_2026_11_03:
-  DK_D3_the_disk_is_a_qcow2_virtual_disk:
-    status: "DECIDED 2026-11-03 by his words; how it is filled on Windows is TO HIM (a cost, below)"
-    james: '"It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data, snapshots, system state."'
-    chosen: >-
-      A compartment's disk is <system>.qcow2: a qcow2 image (QEMU's own format, compressed clusters) holding one ext4 filesystem, labelled with
-      the system's name: /.cos/disk.json and /.cos/spec/… (the metadata: the spec and declaration, every file by hash, the kernel it runs on),
-      /code/<system>/… (its files), /state/<system>/… (all its data). Snapshots are qcow2 internal snapshots, inside the same file: a disk
-      snapshot (qemu-img snapshot, the system stopped) now; with the VM running, QMP savevm also keeps its memory and CPU (the system state,
-      DK8). A QEMU environment boots with this disk attached and mounts it. COS reads the metadata and files without mounting (debugfs), so no
-      root is needed. The .disk archive of 0.60.382 stays as the export and seed format (§0.3): a disk can be made from it.
-    problem: >-
-      The filesystem is written with e2fsprogs (mke2fs -d: a folder into ext4, no root) and read with debugfs. Linux has them; QEMU for Windows
-      ships qemu-img but not e2fsprogs. On his Windows machine one of: (a) WSL's e2fsprogs (no new binary if WSL is installed); (b) the QEMU
-      environment itself fills the disk (the guest mounts it and writes, the way the test VM already extracts a tar disk: slower, needs the
-      VM image); (c) a small e2fsprogs build for Windows, pinned and hash-checked like WinSW. The coder recommends (b) as the default, since
-      it needs nothing but what the QEMU environment already has, with (a) used when present.
-    by: "his words; §0.1 (every file by hash, re-read), §1.2 (a missing tool is said, never a silent fallback), §5.15 (disks in COS's data)"
 
 phases_addendum_2026_11_03:
   DK6_the_virtual_disk:

@@ -51,6 +51,16 @@ decisions:
       TLS and its app passwords. Simplest, but every open port is internet-facing attack surface.
       UPnP itself cannot be reinvented: it is the router's protocol, and the router decides; only the outbound designs need no router at all.
     by_the_axioms: "§4.3 (military-grade security: no open inbound port by default), §5.11 (every boundary a handshake: identity first), §8.6 (the anonymous service's engines reused, not rebuilt), §0.5"
+  # moved here 2026-11-06 from where it was written (outside decisions:, so the DAG could not resolve it); content unchanged
+  CA_D1b_the_supervisor_as_a_service:
+    status: "DECIDED 2026-11-04 (his: \"run in service with admin privilages for more control and power\"); the split the axioms' (§0.0)"
+    chosen: >-
+      Nexus's headless part runs as the Windows service NexusCOS through NSSM (his named tool; a Node process cannot answer the service control
+      manager by itself): LocalSystem, automatic at boot, restarted by NSSM if it dies, logs rotated. In it, COS's manager starts every system
+      except the ones with a window (an Electron process, Clear Glass): those are said as "starts in your session" and the COS window starts them
+      at logon. A tray switch turns the service off (removed, the app starts Nexus again as before). Needs nssm.exe (cos/bin/nssm.exe, NSSM_EXE, or
+      PATH): without it, said with where to put it; nothing installed silently. CA_D1 is kept (§0.3): its logon task is still how the windows start.
+    by_the_axioms: "USER_AUTONOMY (his call), §0.0 (session 0 has no desktop: said, designed around), §4.3 (admin by one approval, his), §5.9 (one system down — the service — breaks no window), §8.6 (NSSM and COS's supervisor reused)"
 
 phases:
   CA1_clear_glass_to_the_tray:
@@ -98,15 +108,6 @@ phases:
 #   - A Windows service runs in session 0 with no desktop (§0.0): Clear Glass and the COS window cannot run there. So the service is the part with
 #     no window (Nexus started headless: autopilot → COS's manager → the headless systems), and the windows stay with the logon task in his session.
 decisions_addendum_2026_11_04:
-  CA_D1b_the_supervisor_as_a_service:
-    status: "DECIDED 2026-11-04 (his: \"run in service with admin privilages for more control and power\"); the split the axioms' (§0.0)"
-    chosen: >-
-      Nexus's headless part runs as the Windows service NexusCOS through NSSM (his named tool; a Node process cannot answer the service control
-      manager by itself): LocalSystem, automatic at boot, restarted by NSSM if it dies, logs rotated. In it, COS's manager starts every system
-      except the ones with a window (an Electron process, Clear Glass): those are said as "starts in your session" and the COS window starts them
-      at logon. A tray switch turns the service off (removed, the app starts Nexus again as before). Needs nssm.exe (cos/bin/nssm.exe, NSSM_EXE, or
-      PATH): without it, said with where to put it; nothing installed silently. CA_D1 is kept (§0.3): its logon task is still how the windows start.
-    by_the_axioms: "USER_AUTONOMY (his call), §0.0 (session 0 has no desktop: said, designed around), §4.3 (admin by one approval, his), §5.9 (one system down — the service — breaks no window), §8.6 (NSSM and COS's supervisor reused)"
 phases_addendum_2026_11_04:
   CA4_the_supervisor_as_a_windows_service:
     status: "BUILT 0.60.389 (COS 0.5.0) — test-cos-service 7/7; the service on Windows unverified until his run (no Windows here)"

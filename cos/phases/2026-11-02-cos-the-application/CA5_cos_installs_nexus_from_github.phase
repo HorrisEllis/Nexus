@@ -9,11 +9,11 @@ intent: null
 summary: CA5_cos_installs_nexus_from_github (?) — 10 file(s)
 system: idearium
 tags: []
-exported_at: 1793847429750
+exported_at: 1793940673620
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793847429750
-lastSeenAt: 1793847429750
+firstSeenAt: 1793940673620
+lastSeenAt: 1793940673620
 fingerprint: null
 payload:
   id: CA5_cos_installs_nexus_from_github
@@ -37,4 +37,4 @@ payload:
     - MG36_the_cockpit_is_the_window
   blocks: []
   spec: null
-  graph: 3850cc5b005e855f
+  graph: 28d40d162e17fb02

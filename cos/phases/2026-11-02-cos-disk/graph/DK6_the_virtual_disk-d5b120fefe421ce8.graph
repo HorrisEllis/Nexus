@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793708278770
+exported_at: 1793940671473
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793708278770
-lastSeenAt: 1793708278770
+firstSeenAt: 1793940671473
+lastSeenAt: 1793940671473
 fingerprint: null
 payload:
   for: DK6_the_virtual_disk
@@ -143,6 +143,7 @@ payload:
   dag:
     layer: 2
     deps:
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D3_the_disk_is_a_qcow2_virtual_disk
       - docs/2026-11-02-cos-disk-phasemap.spec::DK1_pack_inspect_verify_unpack
     dependents:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
@@ -151,6 +152,7 @@ payload:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D3_the_disk_is_a_qcow2_virtual_disk
     downstream:
       - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
       - docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
@@ -159,15 +161,17 @@ payload:
     unlocks:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
     conflicts: []
-    dangling:
-      - DK_D3_the_disk_is_a_qcow2_virtual_disk
+    dangling: []
     lines:
       - layer 2
-      - 'depends on (1): DK1_pack_inspect_verify_unpack · all upstream 4'
+      - >-
+        depends on (2): DK_D3_the_disk_is_a_qcow2_virtual_disk, DK1_pack_inspect_verify_unpack · all
+        upstream 5
       - >-
         needed by (1): DK7_snapshots_inside_the_disk · all downstream 3 · finishing it unlocks
         DK7_snapshots_inside_the_disk
-      - 'DANGLING depends_on: DK_D3_the_disk_is_a_qcow2_virtual_disk'
     edges:
+      - from: docs/2026-11-02-cos-disk-phasemap.spec::DK_D3_the_disk_is_a_qcow2_virtual_disk
+        kind: declared
       - from: docs/2026-11-02-cos-disk-phasemap.spec::DK1_pack_inspect_verify_unpack
         kind: declared
