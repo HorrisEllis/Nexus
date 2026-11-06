@@ -7,11 +7,11 @@ intent: null
 summary: GT6_gig_metadata_bullets_per_tab (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793412846511
+exported_at: 1793943652844
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793412846511
-lastSeenAt: 1793412846511
+firstSeenAt: 1793943652844
+lastSeenAt: 1793943652844
 fingerprint: null
 payload:
   id: GT6_gig_metadata_bullets_per_tab
@@ -30,4 +30,4 @@ payload:
   blocks:
     - MOD-GT6
   spec: clear-glass/spec/gated-flows.spec
-  graph: 0d1eff7b0fcef569
+  graph: 636e5856d199d76a

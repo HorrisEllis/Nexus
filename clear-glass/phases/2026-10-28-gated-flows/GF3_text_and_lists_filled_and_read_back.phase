@@ -9,11 +9,11 @@ intent: null
 summary: GF3_text_and_lists_filled_and_read_back (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793386281617
+exported_at: 1793943652823
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793386281617
-lastSeenAt: 1793386281617
+firstSeenAt: 1793943652823
+lastSeenAt: 1793943652823
 fingerprint: null
 payload:
   id: GF3_text_and_lists_filled_and_read_back
@@ -30,4 +30,4 @@ payload:
   blocks:
     - MOD-GF3
   spec: clear-glass/spec/gated-flows.spec
-  graph: 774e26a8703d38e8
+  graph: 5e36468882bfacc9

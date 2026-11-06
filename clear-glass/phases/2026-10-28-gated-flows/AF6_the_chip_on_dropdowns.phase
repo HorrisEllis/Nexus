@@ -7,11 +7,11 @@ intent: null
 summary: AF6_the_chip_on_dropdowns (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793386281630
+exported_at: 1793943652837
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793386281630
-lastSeenAt: 1793386281630
+firstSeenAt: 1793943652837
+lastSeenAt: 1793943652837
 fingerprint: null
 payload:
   id: AF6_the_chip_on_dropdowns
@@ -28,4 +28,4 @@ payload:
   blocks:
     - MOD-AF6
   spec: clear-glass/spec/gated-flows.spec
-  graph: 15cfca64abf4a4d3
+  graph: 7d2830b6be280cdc

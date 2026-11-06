@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793386281621
+exported_at: 1793943652826
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793386281621
-lastSeenAt: 1793386281621
+firstSeenAt: 1793943652826
+lastSeenAt: 1793943652826
 fingerprint: null
 payload:
   for: UG1_one_gate_for_every_element
@@ -85,10 +85,14 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
       - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
     downstream:
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF6_the_element_says_the_gig_or_it_stops
+      - docs/2026-10-28-gated-flows-phasemap.spec::MR1_a_macro_run_says_its_step_and_can_be_paused
       - docs/2026-10-28-gated-flows-phasemap.spec::UG2_every_driver_write_gated
       - docs/2026-10-28-gated-flows-phasemap.spec::UG3_every_dom_write_gated
       - docs/2026-10-28-gated-flows-phasemap.spec::UG4_his_gates_per_site
       - docs/2026-10-28-gated-flows-phasemap.spec::UG5_gates_made_with_the_picker
+      - docs/2026-10-29-pipelines-phasemap.spec::PA3_conditions_on_elements_and_scripts
+      - docs/2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
       - docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
       - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
       - docs/2026-10-29-pipelines-phasemap.spec::PL7_pipeline_tasks_gated_on_elements
@@ -107,7 +111,7 @@ payload:
       - 'depends on (1): GG1_every_part_gated · all upstream 17'
       - >-
         needed by (3): UG2_every_driver_write_gated, UG3_every_dom_write_gated, PL6_the_gate_step ·
-        all downstream 10 · finishing it unlocks UG2_every_driver_write_gated,
+        all downstream 14 · finishing it unlocks UG2_every_driver_write_gated,
         UG3_every_dom_write_gated, PL6_the_gate_step
     edges:
       - from: docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated

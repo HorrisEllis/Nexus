@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::GF6_the_element_says_the_gig_or_it_stops
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::GF6_the_element_says_the_gig_or_it_stops
+context: >-
+  pipeline phase GF6_the_element_says_the_gig_or_it_stops of
+  docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: GF6_the_element_says_the_gig_or_it_stops (?) — 12 file(s)
+system: idearium
+tags: []
+exported_at: 1793943652833
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793943652833
+lastSeenAt: 1793943652833
+fingerprint: null
+payload:
+  id: GF6_the_element_says_the_gig_or_it_stops
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.388 (built as 0.60.298 on a branch; renumbered on merge, main had taken 0.60.298)
+  files:
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/autofill/gig-fields.js
+    - clear-glass/src/autofill/gig.js
+    - clear-glass/src/autofill/gig-pages.js
+    - clear-glass/src/driver/index.js
+    - clear-glass/src/page/element-gate.js
+    - clear-glass/src/copilot/verbs.js
+    - clear-glass/src/main/index.js
+    - lib/automation/pipeline.js
+    - lib/automation/routes.js
+    - scripts/build-fiverr-pipeline.js
+    - tests/modules/test-gig-stop-and-toast.test.js
+  depends_on:
+    - GF5_category_and_subcategory_finished
+    - PL7_pipeline_tasks_gated_on_elements
+  blocks:
+    - MOD-GF6
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 571ef67174824776

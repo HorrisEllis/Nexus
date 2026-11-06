@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793402129280
+exported_at: 1793943652824
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793402129280
-lastSeenAt: 1793402129280
+firstSeenAt: 1793943652824
+lastSeenAt: 1793943652824
 fingerprint: null
 payload:
   for: GF4_friction_goes_to_his_site_keys
@@ -179,6 +179,7 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
     downstream:
       - docs/2026-10-28-gated-flows-phasemap.spec::GF5_category_and_subcategory_finished
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF6_the_element_says_the_gig_or_it_stops
       - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
       - docs/2026-10-28-gated-flows-phasemap.spec::GT1_gate_timing_for_dropdowns
       - docs/2026-10-28-gated-flows-phasemap.spec::GT2_the_fill_includes_and_reports_dropdowns
@@ -186,11 +187,15 @@ payload:
       - docs/2026-10-28-gated-flows-phasemap.spec::GT4_pace_between_dropdowns_and_find_again
       - docs/2026-10-28-gated-flows-phasemap.spec::GT5_service_type
       - docs/2026-10-28-gated-flows-phasemap.spec::GT6_gig_metadata_bullets_per_tab
+      - docs/2026-10-28-gated-flows-phasemap.spec::GT6b_metadata_dropdown_tab
+      - docs/2026-10-28-gated-flows-phasemap.spec::MR1_a_macro_run_says_its_step_and_can_be_paused
       - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
       - docs/2026-10-28-gated-flows-phasemap.spec::UG2_every_driver_write_gated
       - docs/2026-10-28-gated-flows-phasemap.spec::UG3_every_dom_write_gated
       - docs/2026-10-28-gated-flows-phasemap.spec::UG4_his_gates_per_site
       - docs/2026-10-28-gated-flows-phasemap.spec::UG5_gates_made_with_the_picker
+      - docs/2026-10-29-pipelines-phasemap.spec::PA3_conditions_on_elements_and_scripts
+      - docs/2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
       - docs/2026-10-29-pipelines-phasemap.spec::PL11_screens_for_gates_and_sites
       - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
       - docs/2026-10-29-pipelines-phasemap.spec::PL7_pipeline_tasks_gated_on_elements
@@ -209,7 +214,7 @@ payload:
         depends on (3): GF3_text_and_lists_filled_and_read_back, KB2_site_keys, KB3_site_keys_ui ·
         all upstream 15
       - >-
-        needed by (1): GG1_every_part_gated · all downstream 20 · finishing it unlocks
+        needed by (1): GG1_every_part_gated · all downstream 25 · finishing it unlocks
         GG1_every_part_gated
     edges:
       - from: docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back

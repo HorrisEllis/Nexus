@@ -101,6 +101,15 @@ phases:
       A gated macro from a written gig, page by page through Fiverr's gig editor, each dropdown one by one, url gates between pages, stopping
       before Publish; the gig panel's "Fill step by step".
     proof: the flow's blocks for a sample gig (dropdowns, gates, no Publish); live on Fiverr on his machine, the stopped block named if a label differs
+    expanded_2026_11_06: >-
+      James, 2026-11-06, asked whether to recover the old branch's gig wizard: "Port what's missing". Read first: claude/keen-davinci-rqxxpb
+      (2026-10-26, 0.60.261–0.60.269: FW1 the wizard walked page by page, FW2 FAQs, buyer questions and pricing dropdowns, FD1/FD2 category,
+      subcategory, service type and metadata, AF3 the inline chip) was rebuilt on main two days later on his first principles, in pure modules:
+      gig-pages.js (which page is open), gig-pricing.js (FP5), gig-fields.js (GF1: FAQs, requirements), gig-menu.js (GM1), GT5, GT6. Porting the
+      old 615-line gig.js would duplicate them, so it is not ported; the branch stays as the record (§0.3). What it had that main lacks is this
+      phase: the flow that walks the pages in order, gated between pages, stopping before Publish. Its prerequisites, read 2026-11-06: FP5 has its
+      code but not its named test (tests/modules/test-flow-cores.test.js does not exist); FG4 (pointer, select, choose in browser_action) is not
+      built; TC3 (links open as tabs) is not built; FG_D3 is decided by his axioms (no flow publishes, sends or pays).
 
   FG6_blocks_ui:
     layer: ui
