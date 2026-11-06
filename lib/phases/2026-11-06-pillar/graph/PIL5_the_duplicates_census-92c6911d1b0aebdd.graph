@@ -1,0 +1,67 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PIL5_the_duplicates_census:92c6911d1b0aebdd
+type: graph
+id: phase:PIL5_the_duplicates_census:92c6911d1b0aebdd
+context: dependency graph of phase PIL5_the_duplicates_census
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793958853644
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793958853644
+lastSeenAt: 1793958853644
+fingerprint: null
+payload:
+  for: PIL5_the_duplicates_census
+  kind: phase
+  repo: null
+  hash: 92c6911d1b0aebdd
+  nodes:
+    - path: pillar/migration.js
+      role: changes
+      exists: false
+      system: null
+    - path: tests/modules/test-pillar.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+    dependents: []
+    upstream:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+    downstream: []
+    blockedBy:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
+        files:
+          - tests/modules/test-pillar.test.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by PIL3_conformance, PIL4_three_identities
+      - 'depends on (2): PIL3_conformance, PIL4_three_identities · all upstream 6'
+      - 'needed by (0): —'
+      - >-
+        same files as PIL6_the_small_model_bench with no order between them:
+        tests/modules/test-pillar.test.js
+    edges:
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+        kind: declared
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+        kind: declared

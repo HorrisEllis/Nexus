@@ -2052,3 +2052,6 @@ spec:
 # ── ADDENDUM 2026-11-06 (0.60.416) — clear-glass/spec/element-engine.spec ─────────────────────────────────────────────────────────────
 # James, 2026-11-06: "It’s meant to replace the adblocker also like a full plugin page." · "It needs to have a full page to edit, change and add."
     | `clear-glass/spec/element-engine.spec` + `docs/2026-11-05-clear-glass-element-engine-phasemap.spec` (EE3a) | 1.0.0 — FULL build spec: the Element Engine's full page — every element-hiding rule by site (add, change, remove), his ErosmancerOS copy in an editor (save, new file, show changes, import with ES5's checks), lists, his filters, allowed sites, ErosmancerOS options and threats; /cli/element-engine/*, the element-engine command, renderer/element-engine.html. Built 0.60.416 | built | James: "It needs to have a full page to edit, change and add." |
+# ADDENDUM 2026-11-06 — registered: pillar/spec/pillar.spec + docs/2026-11-06-pillar-phasemap.spec (PIL1–PIL6, PIL_D0–D2). Pillar, one kernel of
+# primitives merged from Emerge, ERAVOS and Nexus (his EAS_D8, "One kernel, merged"; the name his "Yes." to Pillar, from his 2026-08-17 "Pillars of
+# the Foundation"). Its own system; the spec compiles at specDepth 1.0 (6 modules, 4 schemas, 4 interfaces, no BLACK).

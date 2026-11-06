@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+type: phase
+id: docs_2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+context: pipeline phase PIL4_three_identities of docs/2026-11-06-pillar-phasemap.spec
+intent: null
+summary: PIL4_three_identities (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793958853641
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793958853641
+lastSeenAt: 1793958853641
+fingerprint: null
+payload:
+  id: PIL4_three_identities
+  map: docs/2026-11-06-pillar-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - pillar/identity.js
+    - tests/modules/test-pillar.test.js
+  depends_on:
+    - PIL2_contracts
+  blocks:
+    - MOD-PIL-IDENTITY
+  spec: pillar/spec/pillar.spec
+  graph: 39a1dedeb091f8a3

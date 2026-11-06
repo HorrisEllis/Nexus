@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
+type: phase
+id: docs_2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
+context: pipeline phase PIL6_the_small_model_bench of docs/2026-11-06-pillar-phasemap.spec
+intent: null
+summary: PIL6_the_small_model_bench (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793958853645
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793958853645
+lastSeenAt: 1793958853645
+fingerprint: null
+payload:
+  id: PIL6_the_small_model_bench
+  map: docs/2026-11-06-pillar-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - pillar/bench/run.js
+    - tests/modules/test-pillar.test.js
+  depends_on:
+    - PIL3_conformance
+  blocks:
+    - MOD-PIL-BENCH
+  spec: pillar/spec/pillar.spec
+  graph: 83152b8ded8ff4cb
