@@ -232,3 +232,26 @@ spec:
 # valid YAML, so Nexus's tools read the same file), resolved beside the program like any module (lang/runtime.js rt.use).
 # eg check names a broken node file; eg build copies it beside the output; the native compiler refuses it by name for now.
 
+
+# ## ADDENDUM 2026-11-06 — the contract block (CIE-EG 6.1, D7; Nexus phase CIE1)
+# James, 2026-11-06 (CIE-EG D7, "Contract syntax: new contract block as proposed, or reuse wire only?"): "New contract block". Then, offered
+# it as the next step in the focus: "Next".
+#   contract <id> {
+#     version = "1.0.0"
+#     text { encoding = "utf-8"  normalization = "nfc" }
+#     gate { block_at = 0.9  max_steps = 100000  checkpoint_every = 256 }
+#     road Counter.changed -> Display.show
+#   }
+# - Top level of the program that runs, at most one; `contract` is a keyword only there (followed by a name and "{"), so a variable named
+#   contract still works. A module that declares one is refused when it is used.
+# - Checked at parse (lang/contract.js): id and road ends are identifiers (CIE-EG 2.4), version is semver, text speaks only utf-8/nfc, gate
+#   settings are the three named and in range, a road twice is refused. Defaults are the primitives' own values.
+# - Each road is a wire, checked like one (a hook that is not there is a check error; a road and a wire for the same pair is declared
+#   twice), wired once every component is declared (after the last component, or where the contract stands if later), in both backends.
+# - Its gate settings replace the primitives' for the run: max_steps is the storm limit, checkpoint_every the checkpoint interval, block_at
+#   what observe escalates against. contract_hash = SHA-256 over the canonical form (ECF, 4.3); the genesis entry carries the contract's
+#   id, version and hash, and every checkpoint the hash. With no contract, the genesis is exactly as before.
+# - Written again in Emerge: lang/cie/contract.eg (parse_contract, contract_hash, roads_from, canonical), byte for byte the scaffold's.
+# - Not yet: the native compiler (lang/native/front.eg) does not know the block (MOD-NATIVE-LANG); the gate does not yet close a road at
+#   block_at (MOD-GATE).
+# Proof: lang/test/contract.test.js CT-01..08 (8/8); lang, differential, bootstrap, ledger, native, selfhost unchanged.

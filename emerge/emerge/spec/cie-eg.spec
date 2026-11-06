@@ -380,7 +380,7 @@ spec:
       subsections:
         contract_format:
           number: "6.1"
-          status: PROPOSED
+          status: DECIDED   # D7, 2026-11-06 (James): "New contract block". BUILT 2026-11-06 (MOD-CONTRACT, Nexus phase CIE1). Was: PROPOSED (§0.3).
           text: "A contract is declared in Emerge's own syntax, as data."
           example: |
             contract emerge_main {
@@ -1096,10 +1096,21 @@ spec:
       name:  contract
       uuid:  cie-eg-contract-v0-3-1-0001
       build:
-        state: not_built
+        state: built
         file: emerge/lang/cie/contract.eg
         blocked_by: []   # D7 decided 2026-11-06 (James); removed per build_plan
-        next: "parse the contract block, contract_hash; wire compiles to a road."
+        built: >-
+          2026-11-06 (Nexus phase CIE1; James: "New contract block", then "Next"): contract <id> { version, text { }, gate { }, road A.h -> B.h }
+          in the language (lang/parser.js, checked by lang/contract.js; one per program, never in a module); its gate settings replace the
+          primitives' for the run (max_steps the storm limit, checkpoint_every, block_at for observe); contract_hash (SHA-256 over ECF) in the
+          genesis entry and every checkpoint; each road runs as a wire, wired once every component is declared, in both backends. The same
+          parse and hash in Emerge, lang/cie/contract.eg (parse_contract, contract_hash, roads_from, canonical), byte for byte the scaffold's
+          (lang/test/contract.test.js CT-08). Departures, said: roads are a set (sorted in the canonical form; a road twice is refused); a
+          program with no contract keeps its genesis exactly as before.
+        existing:
+          - "emerge/lang/contract.js"
+          - "emerge/lang/test/contract.test.js"
+        next: "emerge.exe's own parser (lang/native/front.eg) learns the block with MOD-NATIVE-LANG; the gate closes a road at block_at (MOD-GATE)."
       spec_ref: s06_contract_and_gate.contract_format
       description: "The interaction contract: version, text settings, gate settings, roads. wire compiles to a road. contract_hash goes into genesis and every checkpoint."
       deps:
@@ -1129,7 +1140,7 @@ spec:
         blocked_by: []
         existing:
           - "emerge/lang/runtime.js: wire dispatch, FIFO queue, max_deliveries storm"
-        next: "the seven steps of 6.2 in .eg (the runtime emerge.exe will run): a deliver entry per delivery, every failure a gap from the 6.3 table with from, to and event hash, block_at closes a road (AT-03, AT-04, AT-05). Until contract (D7) lands, roads come from wire."
+        next: "the seven steps of 6.2 in .eg (the runtime emerge.exe will run): a deliver entry per delivery, every failure a gap from the 6.3 table with from, to and event hash, block_at closes a road (AT-03, AT-04, AT-05). Roads come from wire and, since 2026-11-06 (CIE1), from the contract's road lines, which run as wires."
       spec_ref: s06_contract_and_gate.gate_pipeline
       description: "The event gate. Runs every event through the seven steps of 6.2; first failure stops it and writes a gap. FIFO queue, storm limit, road blocking at block_at."
       deps:

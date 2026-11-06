@@ -76,7 +76,7 @@ phases:
 
   PIL2_contracts:
     status: OPEN
-    depends_on: [PIL1_pillar_stands]
+    depends_on: [PIL1_pillar_stands, CIE1_the_contract_block]
     spec: pillar/spec/pillar.spec
     blocks: [MOD-PIL-CONTRACTS]
     files: [pillar/contracts/contracts.eg, pillar/contracts/*.eg, pillar/test/contracts.test.eg]
@@ -86,6 +86,8 @@ phases:
       One contract per primitive, each concept once, each naming where it came from: Constraint, Transition, Observation, Gap, Lens, Seed,
       History, Level, Budget, Field (Emerge); Relation, Identity (ERAVOS); Expectation, Link, Event, Gate (Nexus)
     proof: "validate passes on every contract; a second contract for one meaning is refused (test-pillar)"
+    # ── EXPANDED 2026-11-06 — the contract block it is written in is CIE1 (docs/2026-11-06-cie-eg-build-phasemap.spec) ──
+    # James, 2026-11-06: "Next". PIL2's prerequisite "Emerge's contract block ... built in the language first" is now a phase, so it is a dependency.
 
   PIL3_conformance:
     status: OPEN

@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+type: phase
+id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+context: pipeline phase CIE1_the_contract_block of docs/2026-11-06-cie-eg-build-phasemap.spec
+intent: null
+summary: CIE1_the_contract_block (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1793983606751
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793983606751
+lastSeenAt: 1793983606751
+fingerprint: null
+payload:
+  id: CIE1_the_contract_block
+  map: docs/2026-11-06-cie-eg-build-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.423
+  files:
+    - emerge/emerge/lang/parser.js
+    - emerge/emerge/lang/contract.js
+    - emerge/emerge/lang/index.js
+    - emerge/emerge/lang/runtime.js
+    - emerge/emerge/lang/interpreter.js
+    - emerge/emerge/lang/checker.js
+    - emerge/emerge/lang/emitter.js
+    - emerge/emerge/lang/test/contract.test.js
+    - emerge/emerge/spec/cie-eg.spec
+  depends_on:
+    - EAS4_callers_through_the_door
+  blocks:
+    - MOD-CONTRACT
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: 216544c5db00d522
