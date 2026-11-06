@@ -447,7 +447,17 @@ fn parse_item() {
     if t.v == "compartment" { return parse_compartment(false) }
     if t.v == "component" { return parse_compartment(true) }
     if t.v == "on" { return parse_on() }
-    if t.v == "template" or t.v == "axiom" or t.v == "test" {
+    if t.v == "axiom" {
+      next()
+      let name = want_ident("an axiom name").v
+      want_op("\{", "to open the axiom expression")
+      skip_nl()
+      let ex = parse_expr()
+      skip_nl()
+      want_op("\}", "to close the axiom expression")
+      return node("Axiom", t, { name: name, expr: ex })
+    }
+    if t.v == "template" or t.v == "test" {
       refuse_at(t.v, t)
     }
   }

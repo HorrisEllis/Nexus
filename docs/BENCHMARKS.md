@@ -5,6 +5,22 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-06 — axioms natively; stdout, stderr and exit status equal (CIE15 third slice, 0.60.434)
+- **Measured:** Emerge coding. His framework's program-wide axiom check, natively.
+- **His words:** "just keep going."
+- **Method:** `examples/axioms.eg` run both ways, comparing stdout, stderr and the exit status. Census rerun.
+- **Result:**
+  - All three equal, including the violation at the caller's line (`axioms.eg:33`).
+  - native 100/100, selfhost 16/16 (1c45b69e…), lang 166/166, differential 19/19.
+  - Census: 4 of 8 examples equal (was 3).
+- **Speed:** stage 0 took 15.7 s. native.test took 41 s.
+- **Failed runs before the pass:** 2.
+  1. `axiom` is a keyword and can't be a function name.
+  2. Native reported the error inside `world.eg`. The embedded world is now `no_loc`, like the prelude, which fixes every world error, not
+     only this one.
+- **What came of it:** the null-field constraint gap is now native. That is his "gap is first class" axiom at work: a check that can't be
+  evaluated opens a gap rather than failing.
+
 ## 2026-11-06 — record, gap, promote and the seeded generator natively (CIE15 second slice, 0.60.433)
 - **Measured:** Emerge coding. The seeded generator and the statements built on it.
 - **His words:** "just keep going. how are the benchmarks so fatr?"

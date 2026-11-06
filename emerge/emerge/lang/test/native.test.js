@@ -405,6 +405,18 @@ for (const [label, file, withLedger] of [['components.eg as written, its ledger 
   else { fail++; console.log('✗ the rest of the language natively — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout)}` : (build.stderr || build.stdout))); }
 }
 
+// CIE15: examples/axioms.eg natively equals the interpreter in all three: stdout, stderr (the axiom's violation, at the caller's line) and the
+// exit status; a constraint over a null field opens a gap, not a transition
+{
+  const file = path.join(LANG, 'examples', 'axioms.eg');
+  const ref = spawnSync(process.execPath, [EG, 'run', file], { encoding: 'utf8' });
+  const exe = path.join(TMP, 'axioms.bin');
+  const build = spawnSync(process.execPath, [EG, 'native', file, '-o', exe], { encoding: 'utf8' });
+  const run = build.status === 0 ? spawnSync(exe, [], { encoding: 'utf8' }) : null;
+  if (run && /BOOKS_BALANCE/.test(ref.stderr) && run.stdout === ref.stdout && run.stderr === ref.stderr && run.status === ref.status) { pass++; console.log('✓ examples/axioms.eg natively: stdout, stderr and exit status equal'); }
+  else { fail++; console.log('✗ examples/axioms.eg natively — ' + (run ? `native ${JSON.stringify(run.stdout + run.stderr)} ${run.status}\n    interp ${JSON.stringify(ref.stdout + ref.stderr)} ${ref.status}` : (build.stderr || build.stdout))); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');

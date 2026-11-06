@@ -307,3 +307,10 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # file; the world itself is never lowered (emerge.eg). test/world/language.eg: the same random number, uids, gap ids and 7 ledger hashes natively.
 # Census: 3 of 8 examples equal (idearium added). Refused: axioms (axiom), hello (matches), primitives (kind), tests (test blocks, CIE5),
 # whatif (whatif), modules/main (sort_by, his call on optional parameters).
+
+# ── ADDENDUM 2026-11-06 (0.60.434) — CIE15 third slice: axioms; a constraint over a null field is a gap; world errors at the caller's line ──
+# James, 2026-11-06: "just keep going."
+# world.eg: declare_axiom (recorded, checked at once) and check_axioms (after every top-level statement, at that statement's line, as the
+# interpreter's $.axioms); a constraint reading a null state field opens an evidential gap (0.8) and the state does not change, its fields found
+# by lower.eg (reads_of). codegen.eg: the embedded world is no_loc like the prelude, so its errors are reported at the caller's line.
+# examples/axioms.eg natively equals the interpreter in stdout, stderr and exit status (native.test). Census: 4 of 8 (axioms added).

@@ -1467,7 +1467,7 @@ fn declare_module(m) {
   if has(m, "uses") and m.uses != null { uses = m.uses }
   var file = m.id
   if has(m.ast, "file") and m.ast.file != null { file = m.ast.file }
-  mods[m.id] = { id: m.id, raw: m.raw, globals: globals, fns: fns, uses: uses, ast: m.ast, file: file, no_loc: m.id == "prelude" }
+  mods[m.id] = { id: m.id, raw: m.raw, globals: globals, fns: fns, uses: uses, ast: m.ast, file: file, no_loc: m.id == "prelude" or m.path starts_with "<cie>" }   // the prelude and the embedded world report errors at the caller's line, as the interpreter does
 }
 
 fn compile_bundle(bundle) {

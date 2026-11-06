@@ -47,7 +47,7 @@ fn uses_world(n) {
     return false
   }
   if type_of(n) != "map" { return false }
-  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit" or n.type == "EmitOut" or n.type == "Send" or n.type == "Wire" or n.type == "Contract" or n.type == "Record" or n.type == "Gap" or n.type == "Promote") { return true }
+  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit" or n.type == "EmitOut" or n.type == "Send" or n.type == "Wire" or n.type == "Contract" or n.type == "Record" or n.type == "Gap" or n.type == "Promote" or n.type == "Axiom") { return true }
   if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and has(WORLD_BUILTINS, n.callee.name) { return true }
   if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and (n.callee.name == "ledger" or n.callee.name == "spent" or n.callee.name == "ledger_verify") and len(n.args) == 0 { return true }
   for k, v in n { if uses_world(v) { return true } }
@@ -148,6 +148,18 @@ fn lit(at, v) {
   for k, x in v { es[len(es)] = ent(k, lit(at, x)) }
   return map_(at, es)
 }
+/** the state fields an expression reads (state.x), in order, once each: a constraint over a null one is a gap */
+fn reads_of(n, acc) {
+  var out = acc
+  if type_of(n) == "list" {
+    for x in n { out = reads_of(x, out) }
+    return out
+  }
+  if type_of(n) != "map" { return out }
+  if has(n, "type") and n.type == "Member" and n.obj.type == "Ident" and n.obj.name == "state" and not (out contains n.name) { out = push(out, n.name) }
+  for k, v in n { out = reads_of(v, out) }
+  return out
+}
 fn push_all(xs, ys) {
   var out = xs
   for y in ys { out[len(out)] = y }
@@ -188,7 +200,8 @@ fn lower_comp(c) {
   for k in c.constraints {
     let check = lam(c, [param(c, "state")], [mk("Return", c, { expr: rw(k.expr) })])
     cons[len(cons)] = map_(c, [ent("name", str_(c, k.name)), ent("hard", mk("Bool", c, { value: k.ctype == "hard" })),
-      ent("cost", mk("Num", c, { value: k.cost })), ent("boundary", mk("Bool", c, { value: k.boundary })), ent("check", check)])
+      ent("cost", mk("Num", c, { value: k.cost })), ent("boundary", mk("Bool", c, { value: k.boundary })), ent("check", check),
+      ent("reads", lit(c, reads_of(k.expr, [])))])
   }
   var fields = []
   for f in c.state { fields[len(fields)] = ent(f.name, rw(f.expr)) }
@@ -237,9 +250,13 @@ fn lower(ast, version) {
   var raw = mk("Null", at, {})
   if contract != null { raw = lit(at, contract.raw) }
   var items = [mk("Use", at, { path: WORLD_PATH, alias: W }), stmt(at, wcall(at, "start", [mk("Num", at, { value: 0 }), str_(at, version), raw]))]
+  var has_axioms = false
+  for it in ast.items { if it.type == "Axiom" { has_axioms = true } }
   k = 0
   for it in ast.items {
-    if it.type == "Contract" {
+    if it.type == "Axiom" {
+      items[len(items)] = stmt(it, wcall(it, "declare_axiom", [str_(it, it.name), mk("Num", it, { value: it.line }), lam(it, [], [mk("Return", it, { expr: rw(it.expr) })])]))
+    } else if it.type == "Contract" {
       // nothing here: its raw block went to start
     } else if it.type == "Compartment" {
       items = push_all(items, lower_comp(it))
@@ -249,6 +266,8 @@ fn lower(ast, version) {
       items[len(items)] = rw(it)
     }
     if contract != null and k == roads_after { items[len(items)] = stmt(contract, wcall(contract, "roads", [mk("Num", contract, { value: contract.line })])) }
+    // after every top-level statement the axioms are checked, at that statement's line (the interpreter's $.axioms(it.line))
+    if has_axioms and it.type != "FnDecl" and it.type != "Use" { items[len(items)] = stmt(it, wcall(it, "check_axioms", [])) }
     k += 1
   }
   items[len(items)] = stmt(at, wcall(at, "finish", []))
