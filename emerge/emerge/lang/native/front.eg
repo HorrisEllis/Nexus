@@ -440,12 +440,14 @@ fn parse_item() {
   if t.t == "IDENT" and t.v == "kind" and peek(1).t == "IDENT" and ((peek(2).t == "OP" and peek(2).v == "\{") or (peek(2).t == "IDENT" and peek(2).v == "is")) {
     refuse_at("kind", t)
   }
+  if t.t == "IDENT" and t.v == "contract" and peek(1).t == "IDENT" and peek(2).t == "OP" and peek(2).v == "\{" { return parse_contract_block() }
   if t.t == "KW" {
     if t.v == "use" { return parse_use() }
     // CIE4 slice b (0.60.428): a compartment and a top-level on are parsed; native/lower.eg turns them into lang/cie/world.eg calls
-    if t.v == "compartment" { return parse_compartment() }
+    if t.v == "compartment" { return parse_compartment(false) }
+    if t.v == "component" { return parse_compartment(true) }
     if t.v == "on" { return parse_on() }
-    if t.v == "component" or t.v == "template" or t.v == "axiom" or t.v == "test" {
+    if t.v == "template" or t.v == "axiom" or t.v == "test" {
       refuse_at(t.v, t)
     }
   }
@@ -453,16 +455,21 @@ fn parse_item() {
 }
 // ── compartments and handlers (CIE4 slice b): the same grammar as lang/parser.js parseCompartment / parseOn, for compartments ──
 var in_comp = false
-fn parse_compartment() {
+fn parse_compartment(is_comp) {
   let t = next()
-  let name = want_ident("a compartment name").v
-  var c = node("Compartment", t, { name: name, id: null, intent: null, state: [], constraints: [], handlers: [], fns: [] })
-  want_op("\{", "to open the compartment")
+  var kind = "compartment"
+  if is_comp { kind = "component" }
+  let name = want_ident("a {kind} name").v
+  if is_comp and is_word("is") { refuse_at("a component's kinds (is …)", peek(0)) }
+  var c = node("Compartment", t, { name: name, isComponent: is_comp, id: null, intent: null, namespace: null, version: null, uuid: null,
+    state: [], constraints: [], handlers: [], fns: [], ins: [], outs: [] })
+  want_op("\{", "to open the {kind}")
   skip_nl()
   in_comp = true
   while not is_op("\}") {
     let m = peek(0)
-    if m.t == "IDENT" and (m.v == "id" or m.v == "intent") and peek(1).t == "OP" and peek(1).v == "=" {
+    let ident_key = m.v == "id" or m.v == "intent" or (is_comp and (m.v == "namespace" or m.v == "version" or m.v == "uuid"))
+    if m.t == "IDENT" and ident_key and peek(1).t == "OP" and peek(1).v == "=" {
       let key = next().v
       next()
       if not is_tok("STR", null) or peek(0).v == null { perr("{key} must be a plain string", peek(0)) }
@@ -489,6 +496,26 @@ fn parse_compartment() {
       skip_nl()
       want_op("\}", "to close state")
       c.state = fields
+    } else if is_comp and is_word("boundary") {
+      next()
+      let bname = want_ident("a boundary name").v
+      want_op("\{", "to open the boundary expression")
+      skip_nl()
+      let bex = parse_expr()
+      skip_nl()
+      want_op("\}", "to close the boundary expression")
+      c.constraints[len(c.constraints)] = { name: bname, ctype: "hard", cost: 1, expr: bex, boundary: true }
+    } else if is_comp and is_kw("in") {
+      c.ins[len(c.ins)] = parse_in_hook()
+    } else if is_comp and is_word("out") {
+      next()
+      let h = want_ident("an out hook name")
+      var shape = null
+      if is_op(":") {
+        next()
+        shape = parse_shape()
+      }
+      c.outs[len(c.outs)] = { name: h.v, shape: shape, line: h.line, col: h.col }
     } else if is_kw("constraint") {
       next()
       let cname = want_ident("a constraint name").v
@@ -506,12 +533,14 @@ fn parse_compartment() {
       let ex = parse_expr()
       skip_nl()
       want_op("\}", "to close the constraint expression")
-      c.constraints[len(c.constraints)] = { name: cname, ctype: ctype, cost: cost, expr: ex }
+      c.constraints[len(c.constraints)] = { name: cname, ctype: ctype, cost: cost, expr: ex, boundary: false }
     } else if is_kw("on") {
+      if is_comp { perr("a component listens through in hooks — write in <hook>(param) \{ … \} and wire signals to it", m) }
       c.handlers[len(c.handlers)] = parse_on()
     } else if is_kw("fn") {
       c.fns[len(c.fns)] = parse_fn_decl()
     } else {
+      if is_comp { perr("a component holds id, namespace, version, uuid, intent, state, constraint, boundary, in, out and fn — found {describe(m)}", m) }
       perr("a compartment holds id, intent, state, constraint, on and fn — found {describe(m)}", m)
     }
     end_stmt()
@@ -519,6 +548,128 @@ fn parse_compartment() {
   next()
   in_comp = false
   return c
+}
+/** in name(param: { field: type, … }) { … } — a component's in hook (lang/parser.js parseInHook) */
+fn parse_in_hook() {
+  let t = next()
+  let h = want_ident("an in hook name")
+  var param = null
+  var shape = null
+  if is_op("(") {
+    next()
+    param = want_ident("a parameter name for the hook payload").v
+    if is_op(":") {
+      next()
+      shape = parse_shape()
+    }
+    want_op(")", "to close the hook parameter")
+  }
+  return node("InHook", t, { name: h.v, param: param, shape: shape, body: parse_block() })
+}
+/** { field: type, … } (lang/parser.js parseShape) */
+fn parse_shape() {
+  want_op("\{", "to open a shape \{ field: type, … \}")
+  var fields = []
+  var seen = {}
+  skip_nl()
+  while not is_op("\}") {
+    let f = peek(0)
+    if f.t != "IDENT" and f.t != "KW" { perr("expected a field name in the shape, found {describe(f)}", f) }
+    next()
+    if has(seen, f.v) { perr("shape field \"{f.v}\" appears twice", f) }
+    seen[f.v] = true
+    want_op(":", "after the shape field")
+    fields[len(fields)] = { name: f.v, type: parse_type() }
+    skip_nl()
+    if is_op(",") {
+      next()
+      skip_nl()
+    } else {
+      break
+    }
+  }
+  skip_nl()
+  want_op("\}", "to close the shape")
+  return { fields: fields }
+}
+/** contract <id> { version = "…"  text { … }  gate { … }  road A.h -> B.h } (lang/parser.js parseContract): kept raw, normalised and hashed at run
+ *  time by lang/cie/contract.eg, so the two backends hash the same canonical form */
+var contract_seen = null
+fn parse_contract_block() {
+  let t = next()
+  let id = next()
+  if contract_seen != null { perr("a program has one contract — {contract_seen} is already declared", t) }
+  contract_seen = id.v
+  want_op("\{", "to open the contract")
+  var raw = { id: id.v, text: {}, gate: {}, roads: [] }
+  var once = {}
+  skip_nl()
+  while not is_op("\}") {
+    if is_tok("EOF", null) { perr("unterminated contract — missing \"\}\"", t) }
+    let k = peek(0)
+    var word = null
+    if k.t == "IDENT" or k.t == "KW" { word = k.v }
+    if word == "version" or word == "text" or word == "gate" {
+      if has(once, word) { perr("the contract's {word} is written twice", k) }
+      once[word] = true
+      next()
+      if word == "version" {
+        want_op("=", "after version")
+        let v = peek(0)
+        if v.t != "STR" or v.v == null { perr("version is a plain string, e.g. version = \"1.0.0\"", v) }
+        raw.version = next().v
+      } else {
+        want_op("\{", "to open {word}")
+        var out = {}
+        skip_nl()
+        while not is_op("\}") {
+          let sk = want_ident("a {word} setting").v
+          if has(out, sk) { perr("{word}.{sk} is written twice", k) }
+          want_op("=", "after {word}.{sk}")
+          let sv = next()
+          if word == "text" {
+            if sv.t != "STR" or sv.v == null { perr("text.{sk} is a plain string", sv) }
+          } else if sv.t != "NUM" {
+            perr("gate.{sk} is a number", sv)
+          }
+          out[sk] = sv.v
+          end_stmt()
+        }
+        next()
+        raw[word] = out
+      }
+    } else if word == "road" {
+      next()
+      let a = want_ident("Component.hook").v
+      want_op(".", "Component.hook")
+      let b = want_ident("Component.hook").v
+      want_op("->", "between the two ends of a road")
+      let c2 = want_ident("Component.hook").v
+      want_op(".", "Component.hook")
+      let d = want_ident("Component.hook").v
+      raw.roads[len(raw.roads)] = { from: "{a}.{b}", to: "{c2}.{d}" }
+    } else {
+      perr("a contract holds version, text \{ \}, gate \{ \} and road Component.hook -> Component.hook — found {describe(k)}", k)
+    }
+    end_stmt()
+  }
+  next()
+  return node("Contract", t, { raw: raw })
+}
+/** "signal" | Component.hook (lang/parser.js parseEndpoint; an instance end is not native yet) */
+fn parse_endpoint() {
+  let t = peek(0)
+  if t.t == "STR" and t.v != null {
+    next()
+    return { signal: t.v }
+  }
+  if t.t == "IDENT" and peek(1).t == "OP" and peek(1).v == "." and (peek(2).t == "IDENT" or peek(2).t == "KW") {
+    next()
+    next()
+    let h = next()
+    return { comp: t.v, hook: h.v }
+  }
+  refuse_at("this wire end (an instance end)", t)
 }
 fn parse_on() {
   let t = next()
@@ -668,9 +819,40 @@ fn parse_stmt(top) {
       let handler = parse_block()
       return node("Try", t, { body: body, errName: err_name, handler: handler })
     }
+    if k == "send" {
+      next()
+      let to = parse_endpoint()
+      if has(to, "signal") { perr("send goes to Component.hook — to raise a signal use emit", t) }
+      var payload = null
+      if is_op("\{") {
+        payload = parse_primary()
+      } else if is_kw("with") {
+        next()
+        payload = parse_expr()
+      }
+      return node("Send", t, { comp: to.comp, hook: to.hook, payload: payload })
+    }
+    if k == "wire" {
+      next()
+      let from = parse_endpoint()
+      want_op("->", "between the two ends of a wire")
+      let to = parse_endpoint()
+      return node("Wire", t, { from: from, to: to })
+    }
     if k == "emit" {
       next()
-      if is_word("out") { refuse_at("emit out", t) }
+      if is_word("out") and peek(1).t == "IDENT" {
+        next()
+        let h = next()
+        var payload = null
+        if is_op("\{") {
+          payload = parse_primary()
+        } else if is_kw("with") {
+          next()
+          payload = parse_expr()
+        }
+        return node("EmitOut", t, { hook: h.v, payload: payload })
+      }
       let name = parse_expr()
       var payload = null
       if is_op("\{") {
@@ -681,7 +863,7 @@ fn parse_stmt(top) {
       }
       return node("Emit", t, { name: name, payload: payload })
     }
-    if k == "wire" or k == "despawn" or k == "send" or k == "record" or k == "gap" or k == "promote" or k == "expect" {
+    if k == "despawn" or k == "record" or k == "gap" or k == "promote" or k == "expect" {
       refuse_at(k, t)
     }
     if k == "use" or k == "compartment" or k == "component" or k == "template" or k == "axiom" or k == "test" or k == "on" {
