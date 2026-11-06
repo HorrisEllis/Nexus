@@ -6,7 +6,38 @@ origin: >-
   James, 2026-11-06, the focus: "Emerge first then fiverr maybe? I’m struggling. Emerge is the highest leverage." · on the contract (D7):
   "New contract block" · offered the contract block as the next step: "Next".
 
-status: "CIE1 BUILT 0.60.423."
+status: "CIE1 BUILT 0.60.423. CIE2 BUILT 0.60.424. CIE3–CIE12 MAPPED 2026-11-06 (his CIE_D1: \"Start the JS removal now\")."
+
+decisions:
+  CIE_D1_remove_the_javascript_now:
+    status: "DECIDED 2026-11-06 (his)"
+    james: '"Remove the last of the JavaScript" · "When is it good enough to call it a full coding language" · asked what comes next, chose: "Start the JS removal now"'
+    context: >-
+      Measured before he chose: 23,525 lines of JavaScript in 119 files under emerge/emerge (lang 8,338 with its tests; compiler 6,197; tests
+      5,335; top level 2,645 with server.js; lib, observe, core, siso 2,333), against 8,420 lines of .eg. The native compiler already rebuilds
+      itself without Node on Linux (selfhost 16/16), but components, roads, the gate, the ledger and the contract run only on the JavaScript
+      interpreter, the tools are JavaScript, and there is no Windows build. Offered: start now; Pillar's schema and PIL2 first; the
+      interpreter only; map it first. The coder's answer to his question, said to him: by the usual bar (a compiler written in itself that
+      builds itself) Emerge is a language now; by CIE-EG 0's own bar it is one when emerge.exe rebuilds itself on Windows with no JavaScript.
+    chosen: "the removal starts now, in CIE-EG's order (native system, native tools, Windows); Pillar's schema and PIL2 wait (MOD-STORE stays in this map)"
+  CIE_D2_the_door_in_emerge:
+    status: "DECIDED 2026-11-06 (his)"
+    james: '"Door in Emerge too" (asked what happens to server.js, the door COS runs and Nexus reaches on :4900, when the JavaScript goes)'
+    context: "Offered: the door in .eg, served by emerge.exe; keep a thin JS adapter outside the language (CIE-005); decide later."
+    chosen: "server.js is rewritten in Emerge and emerge.exe serves the door; COS runs emerge.exe in place of node server.js (CIE10, CIE11)"
+    open: >-
+      To bring to him when CIE10 is reached (not settled by the axioms): on Windows a socket needs ws2_32.dll, and CIE-EG 0 allows only
+      kernel32 and the OS crypto library ("Nothing else is borrowed"). On Linux sockets are plain syscalls and the conflict does not arise.
+  CIE_D3_sha256_from_the_cpu:
+    status: "DECIDED 2026-11-06 by his spec and axioms (CIE-004, 10.2, §0.1, §1.2)"
+    context: >-
+      CIE-004 (his, decided): "No invented cryptography: SHA-256 and AES-256-GCM from the OS or CPU." Checked in the container on 2026-11-06:
+      the kernel refuses AF_ALG (errno 97, the Linux OS crypto interface), the CPU has sha_ni. The CPU's SHA-256 instructions are the same on
+      Linux and Windows (no import, no allowlist question) and can be proved here (§0.1). A CPU without them is refused with a gap that names
+      it (§1.2), never a software fallback (CIE-004); the OS library (Windows bcrypt, Linux AF_ALG) is added with the Windows target as the
+      second source.
+    cost_to_say: "Intel desktop CPUs before Ice Lake / Rocket Lake (e.g. 8th–10th generation Core) have no SHA-NI; on those the native ledger refuses until the OS source is added (CIE12)."
+    chosen: "SHA-NI first (CIE2), the OS library second (CIE12)"
 
 phases:
 
@@ -30,4 +61,125 @@ phases:
       use of block_at to close a road (MOD-GATE).
     proof: "contract.test.js: the block parses and runs its roads; each refusal; the hash is in genesis and every checkpoint; changing the contract changes the hash; contract.eg gives the same hash as the scaffold; lang suites unchanged"
 
-order: "CIE1 (the contract block) first: Pillar's contracts (PIL2) are written in it; MOD-STORE's schema next (PIL2's other prerequisite)."
+  CIE2_native_sha256:
+    status: BUILT 0.60.424
+    depends_on: [CIE_D1_remove_the_javascript_now, CIE_D3_sha256_from_the_cpu]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-SYSTEM]
+    files: [emerge/emerge/lang/native/x64.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/rt_text.eg, emerge/emerge/lang/test/native.test.js, emerge/emerge/lang/native/bin/emerge]
+    requires: [node, "an x86-64 CPU with SHA-NI (CPUID leaf 7, EBX bit 29)"]
+    prerequisites: ["selfhost green before and after (stage 1 == stage 2)"]
+    does: "sha256(text or bytes) natively: CPUID check, padding in .eg, one SHA-NI compression per 64-byte block (an intrinsic); a CPU without it is refused by name"
+    proof: "known-answer vectors (FIPS 180-4: empty, abc, the 448-bit and 896-bit messages, a million a's) equal to the interpreter's sha256; selfhost byte-identical"
+
+  CIE3_native_ledger:
+    status: OPEN
+    depends_on: [CIE2_native_sha256]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-SYSTEM]
+    files: [emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/test/native.test.js]
+    requires: [node]
+    prerequisites: []
+    does: "ECF, the entry hash (domain tag, prev, seq, kind, body), genesis, checkpoints with the Merkle root, natively: the same bytes as lang/ledger.js"
+    proof: "a program's ledger from emerge equals the interpreter's hash for hash (differential); ledger.test's known answers natively"
+
+  CIE4_native_components:
+    status: OPEN
+    depends_on: [CIE3_native_ledger, CIE1_the_contract_block]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-SYSTEM]
+    files: [emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/test/native.test.js]
+    requires: [node]
+    prerequisites: []
+    does: "compartments, constraints, signals, components, hooks, wires, the contract block and the gate (FIFO, storm limit) natively"
+    proof: "the components examples and contract.test's programs give the same output and ledger natively as interpreted"
+
+  CIE5_native_test:
+    status: OPEN
+    depends_on: [CIE4_native_components]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-SYSTEM]
+    files: [emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/emerge.eg, emerge/emerge/lang/test/native.test.js]
+    requires: [node]
+    prerequisites: []
+    does: "test blocks and expect natively; emerge test replaces eg test"
+    proof: "every .eg test in the repository passes under emerge test with the same counts as eg test"
+
+  CIE6_native_check:
+    status: OPEN
+    depends_on: [CIE5_native_test]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-TOOLS]
+    files: [emerge/emerge/lang/native/check.eg, emerge/emerge/lang/native/emerge.eg, emerge/emerge/lang/checker.js]
+    requires: [node]
+    prerequisites: []
+    does: "the checker in .eg (lang/checker.js, 563 lines): emerge check"
+    proof: "lang.test's check cases give the same diagnostics from emerge check as from eg check"
+
+  CIE7_native_observe:
+    status: OPEN
+    depends_on: [CIE3_native_ledger]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-TOOLS]
+    files: [emerge/emerge/observe/index.js, emerge/emerge/observe/gaps.js, emerge/emerge/observe/debug.js, emerge/emerge/lang/native/observe.eg]
+    requires: [node]
+    prerequisites: []
+    does: "observe and debug (observe/*.js, 728 lines) in .eg"
+    proof: "observe.test and debug.test answers equal from the .eg"
+
+  CIE8_spec_compiler_in_emerge:
+    status: OPEN
+    depends_on: [CIE6_native_check]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-TOOLS]
+    files: [emerge/emerge/compiler/kg-builder.js, emerge/emerge/compiler/pipeline.js, emerge/emerge/compiler/tier-contract.js, emerge/emerge/compiler/target.js, emerge/emerge/compiler/*.eg]
+    requires: [node]
+    prerequisites: ["a YAML reader in .eg (the specs are YAML)"]
+    does: "the spec compiler (compiler/*.js, 6,197 lines) ported to .eg: emerge build-spec, emerge check-spec"
+    proof: "check-spec gives the same report from the .eg on every registered spec (test-substrate-spec's list)"
+
+  CIE9_tests_in_emerge:
+    status: OPEN
+    depends_on: [CIE5_native_test, CIE8_spec_compiler_in_emerge]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-TOOLS]
+    files: [emerge/emerge/lang/test/*.js, emerge/emerge/test/*.js, emerge/emerge/tests/*.js]
+    requires: [node]
+    prerequisites: []
+    does: "the test harnesses (5,335 lines of JavaScript) rewritten as .eg tests run by emerge test"
+    proof: "the same cases, the same counts; a planted fault fails each"
+
+  CIE10_the_door_in_emerge:
+    status: OPEN
+    depends_on: [CIE_D2_the_door_in_emerge, CIE5_native_test, CIE8_spec_compiler_in_emerge]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-TOOLS]
+    files: [emerge/emerge/server.js, emerge/emerge/door.eg, emerge/emerge/lang/native/rt.eg, emerge/compartment.json]
+    requires: [node, "sockets: Linux syscalls; Windows: CIE_D2's open question first"]
+    prerequisites: ["his answer to CIE_D2.open before the Windows door"]
+    does: "the door on :4900 (POST /compiler/*, /lang/*, the CLI) served by emerge.exe; COS runs emerge.exe in place of node server.js"
+    proof: "lang-door and test-emerge-in-nexus green against the .eg door; Nexus's callers unchanged"
+
+  CIE11_retire_the_interpreter:
+    status: OPEN
+    depends_on: [CIE6_native_check, CIE7_native_observe, CIE9_tests_in_emerge, CIE10_the_door_in_emerge]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-TOOLS]
+    files: [emerge/emerge/lang/*.js, emerge/emerge/lib/*.js, emerge/emerge/core/*.js, emerge/emerge/siso/*.js, emerge/emerge/*.js, _archive/emerge-js]
+    requires: [node]
+    prerequisites: ["nothing in Nexus requires emerge/emerge JavaScript (the census)"]
+    does: "the JavaScript is archived, not deleted (§0.3): emerge/ holds .eg only; the stage-0 scaffold kept in the archive"
+    proof: "git ls-files 'emerge/emerge/*.js' outside the archive is empty; every suite green"
+
+  CIE12_windows:
+    status: OPEN
+    depends_on: [CIE11_retire_the_interpreter]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-WINDOWS]
+    files: [emerge/emerge/lang/native/pe.eg, emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg]
+    requires: ["Windows x86-64 (his machine, through Remote Control)"]
+    prerequisites: []
+    does: "kernel32 imports and the PE import table; SHA-256 from the OS library as the second source (CIE_D3); emerge.exe rebuilds itself on Windows byte for byte"
+    proof: "on his machine: emerge.exe stage 1 == stage 2; every suite green under emerge.exe"
+
+order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6, CIE7) → CIE8 → CIE9, CIE10 → CIE11 → CIE12. MOD-STORE's schema (PIL2's other prerequisite) waits."

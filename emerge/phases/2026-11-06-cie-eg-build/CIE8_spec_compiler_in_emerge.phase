@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+type: phase
+id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+context: pipeline phase CIE8_spec_compiler_in_emerge of docs/2026-11-06-cie-eg-build-phasemap.spec
+intent: null
+summary: CIE8_spec_compiler_in_emerge (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793984231133
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793984231133
+lastSeenAt: 1793984231133
+fingerprint: null
+payload:
+  id: CIE8_spec_compiler_in_emerge
+  map: docs/2026-11-06-cie-eg-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/compiler/kg-builder.js
+    - emerge/emerge/compiler/pipeline.js
+    - emerge/emerge/compiler/tier-contract.js
+    - emerge/emerge/compiler/target.js
+  depends_on:
+    - CIE6_native_check
+  blocks:
+    - MOD-NATIVE-TOOLS
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: 19e737a93db3c3a8

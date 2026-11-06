@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-cie-eg-build-phasemap.spec::CIE7_native_observe
+type: phase
+id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE7_native_observe
+context: pipeline phase CIE7_native_observe of docs/2026-11-06-cie-eg-build-phasemap.spec
+intent: null
+summary: CIE7_native_observe (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793984231131
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793984231131
+lastSeenAt: 1793984231131
+fingerprint: null
+payload:
+  id: CIE7_native_observe
+  map: docs/2026-11-06-cie-eg-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/observe/index.js
+    - emerge/emerge/observe/gaps.js
+    - emerge/emerge/observe/debug.js
+  depends_on:
+    - CIE3_native_ledger
+  blocks:
+    - MOD-NATIVE-TOOLS
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: 25eb10608cce9715

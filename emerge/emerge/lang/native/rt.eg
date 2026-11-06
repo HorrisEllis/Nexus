@@ -1602,6 +1602,63 @@ fn rt_b_split(s, sep) {
   rt_list_push(l, rt_str_from(s + 24 + start, n - start))
   return l
 }
+// ── SHA-256 (CIE-EG CIE-004: from the CPU or the OS, never written here; Nexus phase CIE2, his CIE_D3) ─────────────────
+// The CPU's SHA extensions do the compression (cpu_sha, sha256_block: codegen intrinsics carrying the instructions); this does the
+// padding (FIPS 180-4 5.1.1) and the big-endian digest. A CPU without them is refused by name: no software fallback (CIE-004); the OS
+// library is the second source, added with the Windows target (CIE12).
+fn rt_sha_put_be32(p, w) {
+  mem_set8(p, (w >> 24) & 255)
+  mem_set8(p + 1, (w >> 16) & 255)
+  mem_set8(p + 2, (w >> 8) & 255)
+  mem_set8(p + 3, w & 255)
+  return 0
+}
+fn rt_b_sha256(x) {
+  let k = rt_kind(x)
+  var p = 0
+  if k == K_STR { p = x + 24 } else if k == K_BYTES { p = x + 16 } else { return rt_fail2("sha256 needs a string or bytes, got ", rt_type_name(x)) }
+  let n = mem_get(x + 8)
+  if cpu_sha() == 0 {
+    return rt_fail("sha256: this CPU has no SHA-256 instructions (CPUID leaf 7, EBX bit 29); CIE-EG CIE-004 takes SHA-256 from the CPU or the OS only, and the OS source comes with the Windows target (CIE12)")
+  }
+  let st = rt_alloc(40)
+  mem_set(st, (0xbb67ae85 << 32) | 0x6a09e667)
+  mem_set(st + 8, (0xa54ff53a << 32) | 0x3c6ef372)
+  mem_set(st + 16, (0x9b05688c << 32) | 0x510e527f)
+  mem_set(st + 24, (0x5be0cd19 << 32) | 0x1f83d9ab)
+  var i = 0
+  while i + 64 <= n {
+    sha256_block(st, p + i)
+    i = i + 64
+  }
+  let r = n - i
+  var total = 64
+  if r >= 56 { total = 128 }
+  let tail = rt_alloc(128)
+  var z = 0
+  while z < 128 {
+    mem_set(tail + z, 0)
+    z = z + 8
+  }
+  mem_copy(tail, p + i, r)
+  mem_set8(tail + r, 128)
+  let bits = n * 8
+  var j = 0
+  while j < 8 {
+    mem_set8(tail + total - 1 - j, (bits >> (8 * j)) & 255)
+    j = j + 1
+  }
+  sha256_block(st, tail)
+  if total == 128 { sha256_block(st, tail + 64) }
+  let out = rt_bytes_new(32)
+  j = 0
+  while j < 8 {
+    rt_sha_put_be32(out + 16 + 4 * j, mem_get(st + 4 * j) & 0xffffffff)
+    j = j + 1
+  }
+  return out
+}
+
 fn rt_b_find_text(s, sub) {
   rt_need_str(s, "find_text")
   rt_need_str(sub, "find_text")

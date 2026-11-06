@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+type: phase
+id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+context: pipeline phase CIE10_the_door_in_emerge of docs/2026-11-06-cie-eg-build-phasemap.spec
+intent: null
+summary: CIE10_the_door_in_emerge (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793984231137
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793984231137
+lastSeenAt: 1793984231137
+fingerprint: null
+payload:
+  id: CIE10_the_door_in_emerge
+  map: docs/2026-11-06-cie-eg-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/server.js
+    - emerge/compartment.json
+  depends_on:
+    - CIE_D2_the_door_in_emerge
+    - CIE5_native_test
+    - CIE8_spec_compiler_in_emerge
+  blocks:
+    - MOD-NATIVE-TOOLS
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: e41cf45dac320401

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+type: phase
+id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+context: pipeline phase CIE3_native_ledger of docs/2026-11-06-cie-eg-build-phasemap.spec
+intent: null
+summary: CIE3_native_ledger (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793984231120
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793984231120
+lastSeenAt: 1793984231120
+fingerprint: null
+payload:
+  id: CIE3_native_ledger
+  map: docs/2026-11-06-cie-eg-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/lang/test/native.test.js
+  depends_on:
+    - CIE2_native_sha256
+  blocks:
+    - MOD-NATIVE-SYSTEM
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: 891a9416038deae3

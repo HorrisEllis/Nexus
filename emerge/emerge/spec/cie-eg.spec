@@ -1384,10 +1384,16 @@ spec:
       name:  native_system
       uuid:  cie-eg-native-system-v0-3-1-0001
       build:
-        state: not_built
+        state: partial
         file: emerge/lang/native/rt.eg
         blocked_by: []
-        next: "the ledger natively (SHA-256 via the CPU or OS, ECF, checkpoints — same bytes as lang/ledger.js), then compartments, constraints and signals, then components, hooks, wires and the gate; test blocks and expect, so `emerge test` replaces `eg test`."
+        built: >-
+          2026-11-06 (Nexus phase CIE2; James: "Remove the last of the JavaScript", "Start the JS removal now"): sha256 natively from the
+          CPU's SHA extensions (CIE-004): codegen intrinsics cpu_sha and sha256_block carry the instructions (x64.eg, assembled from the
+          standard SHA-NI sequence, the round constants inline), rt.eg pads and writes the digest; a CPU without them is refused by name.
+          native.test 'sha256': FIPS 180-4's five vectors (the million a's among them) and 14 padding boundaries equal to the interpreter.
+          Not proved here: the refusal on a CPU without SHA-NI (this one has it).
+        next: "the ledger natively (ECF, checkpoints — same bytes as lang/ledger.js; SHA-256 is built, CIE2), then compartments, constraints and signals, then components, hooks, wires and the gate; test blocks and expect, so `emerge test` replaces `eg test`."
       spec_ref: s04_ledger
       description: "The system half of the language, natively: ledger, compartments, constraints, signals, components, the gate, test blocks."
       deps:

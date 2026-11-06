@@ -1,0 +1,64 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CIE3_native_ledger:891a9416038deae3
+type: graph
+id: phase:CIE3_native_ledger:891a9416038deae3
+context: dependency graph of phase CIE3_native_ledger
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793984537473
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793984537473
+lastSeenAt: 1793984537473
+fingerprint: null
+payload:
+  for: CIE3_native_ledger
+  kind: phase
+  repo: null
+  hash: 891a9416038deae3
+  nodes:
+    - path: emerge/emerge/lang/test/native.test.js
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+    dependents:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE7_native_observe
+    upstream:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+    downstream:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE7_native_observe
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE7_native_observe
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (1): CIE2_native_sha256 · all upstream 3'
+      - >-
+        needed by (2): CIE4_native_components, CIE7_native_observe · all downstream 9 · finishing it
+        unlocks CIE4_native_components, CIE7_native_observe
+    edges:
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+        kind: declared

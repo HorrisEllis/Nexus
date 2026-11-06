@@ -237,6 +237,40 @@ for (const [name, c] of Object.entries(CASES)) {
   if (problem) { fail++; console.log('✗ ' + name + ' — ' + problem); } else { pass++; console.log('✓ ' + name); }
 }
 
+// sha256 from the CPU (Nexus phase CIE2, CIE-EG CIE-004): FIPS 180-4's own answers, then every padding boundary against the interpreter
+{
+  const dir = path.join(TMP, 'sha256');
+  fs.mkdirSync(dir);
+  const src = [
+    'print(hex(sha256("")))',
+    'print(hex(sha256("abc")))',
+    'print(hex(sha256("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq")))',
+    'print(hex(sha256("abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu")))',
+    'var a = "a"',
+    'for i in 0..20 { a = a + a }',
+    'print(hex(sha256(slice(a, 0, 1000000))))',
+    'for n in [0, 1, 55, 56, 57, 63, 64, 65, 119, 120, 127, 128, 129, 1000] { print(n, hex(sha256(bytes(range(n))))) }',
+    'print(hex(sha256("é ✓ 𝄞")))',
+    'try { print(sha256(5)) } else e { print(e.message) }',
+  ].join('\n') + '\n';
+  const FIPS = [
+    'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+    'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad',
+    '248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1',
+    'cf5b16a778af8380036ce59e7b0492370b249b11e8f07a51afac45037afee9d1',
+    'cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0',
+  ];
+  fs.writeFileSync(path.join(dir, 'main.eg'), src);
+  const ref = spawnSync(process.execPath, [EG, 'run', path.join(dir, 'main.eg')], { encoding: 'utf8' });
+  const exe = path.join(dir, 'main.bin');
+  const build = spawnSync(process.execPath, [EG, 'native', path.join(dir, 'main.eg'), '-o', exe], { encoding: 'utf8' });
+  const run = build.status === 0 ? spawnSync(exe, [], { encoding: 'utf8' }) : null;
+  const lines = run ? run.stdout.split('\n') : [];
+  const fips = FIPS.every((h, i) => lines[i] === h);
+  if (run && fips && run.stdout === ref.stdout && run.status === ref.status) { pass++; console.log('✓ sha256 (FIPS 180-4 vectors, padding boundaries, refusal)'); }
+  else { fail++; console.log('✗ sha256 — ' + (run ? (fips ? 'differs from the interpreter: ' + JSON.stringify(run.stdout) + ' vs ' + JSON.stringify(ref.stdout) : 'FIPS vectors wrong: ' + JSON.stringify(lines.slice(0, 5))) : (build.stderr || build.stdout))); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');
