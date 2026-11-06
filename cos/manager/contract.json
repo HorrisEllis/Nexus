@@ -144,6 +144,12 @@
       "out": "the update applied (a backup first, asked of Idearium), then each changed system restarted by itself; Clear Glass waits for him (waitForHim); keep-local keeps local commits on local/<date> first (CE2, CE3, 2026-11-02)"
     },
     {
+      "method": "POST",
+      "path": "/api/cos/update/restart",
+      "in": "{ by: person, what: cos | <system> }",
+      "out": "his yes to an update's ask: a system restarted, or COS restarting itself (its systems stopped; autopilot starts it again, else relaunch.js, with --boot); refused while an update is still writing (409), an agent's refused (403). GET /api/cos/update carries pending { to, cos, systems, closes } (CE2b, 2026-11-06)"
+    },
+    {
       "method": "GET",
       "path": "/api/cos/notices",
       "out": "{ notices[] (newest first: id, at, kind update|system|notice, level info|warn|error, title, body, system, read, action), counts { unread, update, system, notice, error } } ?unread=1&kind=&limit= (SC1, 2026-11-02)"
@@ -353,6 +359,7 @@
         "GET /api/cos/update/notice",
         "GET /api/cos/update",
         "POST /api/cos/update/apply",
+        "POST /api/cos/update/restart",
         "POST /api/cos/systems/:name/:op",
         "GET /api/cos/notices",
         "POST /api/cos/notices/read",
@@ -590,6 +597,7 @@
         "PATCH /api/cos/update/settings",
         "GET /api/cos/update/history",
         "POST /api/cos/update/rollback",
+        "POST /api/cos/update/restart",
         "POST /api/cos/systems/:name/:op"
       ],
       "listens": [

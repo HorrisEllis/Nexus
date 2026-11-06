@@ -7,11 +7,11 @@ intent: null
 summary: CE7_borderless (ui) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1793583403071
+exported_at: 1793934988071
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793583403071
-lastSeenAt: 1793583403071
+firstSeenAt: 1793934988071
+lastSeenAt: 1793934988071
 fingerprint: null
 payload:
   id: CE7_borderless
@@ -35,4 +35,4 @@ payload:
     - CE6_the_exe_carries_it
   blocks: []
   spec: null
-  graph: ffad1fa03a192f60
+  graph: 25e7e4a1f19d15c8

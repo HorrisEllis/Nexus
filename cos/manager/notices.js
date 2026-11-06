@@ -68,6 +68,8 @@ function createNotices({ file, keep = 300, emit = () => {} } = {}) {
   function fromUpdate(ev) {
     if (!ev) return null;
     if (ev.phase === 'updated') return add({ kind: 'update', level: (ev.waitForHim || []).length ? 'warn' : 'info', title: `Nexus updated${ev.to ? ` to ${ev.to}` : ''}`, body: `${(ev.restarted || []).length ? `restarted: ${ev.restarted.join(', ')}` : 'nothing needed a restart'}${(ev.waitForHim || []).length ? `; waits for you: ${ev.waitForHim.join(', ')}` : ''}${ev.keptOn ? `; your commits kept on ${ev.keptOn}` : ''}` });
+    // CE2b (0.60.417) — what waits for his yes after an update: COS itself (and what closes with it), Clear Glass; the Updates page answers it
+    if (ev.phase === 'ask-restart') return add({ kind: 'update', level: 'warn', key: `ask-restart:${ev.to || ''}:${ev.cos ? 'cos' : ''}:${(ev.systems || []).join(',')}`, title: `Restart ${[...(ev.cos ? ['COS'] : []), ...(ev.systems || [])].join(' and ')} to load the update`, body: `${ev.cos && (ev.closes || []).length ? `Restarting COS closes ${ev.closes.join(', ')}. ` : ''}${ev.notSettled ? `${ev.notSettled}. ` : ''}Nothing restarts under you: the Updates page asks.` });
     if (ev.phase === 'refused') return add({ kind: 'update', level: 'warn', title: 'The update was refused', body: String(ev.error || ev.why || '') });
     if (ev.phase === 'restart-failed') return add({ kind: 'update', level: 'error', title: `${ev.name} did not restart after the update`, body: String(ev.error || ''), system: ev.name });
     return null;

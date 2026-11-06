@@ -7,11 +7,11 @@ intent: null
 summary: CE1_close_and_minimize_are_his (backend) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793581138957
+exported_at: 1793934988054
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793581138957
-lastSeenAt: 1793581138957
+firstSeenAt: 1793934988054
+lastSeenAt: 1793934988054
 fingerprint: null
 payload:
   id: CE1_close_and_minimize_are_his
@@ -26,4 +26,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: a8b22eacaee1a6de
+  graph: 9dd5e71b4e7b23a0

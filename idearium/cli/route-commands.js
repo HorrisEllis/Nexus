@@ -835,8 +835,12 @@ export const SPEC = [
     req: (a) => ({ method: 'POST', path: `/api/workshop/${encodeURIComponent(a.args[0] || '')}/skip`, body: { step: 'workshop.sections', by: 'person' } }) },
   { key: 'cos.ps', repo: false, usage: 'cos ps', about: 'every declared system as COS\'s supervisor sees it: state, pid, restarts, circuit',
     req: () => ({ method: 'GET', path: '/api/cos/systems' }) },
-  { key: 'cos.act', repo: false, usage: 'cos <start|stop|restart|touch|reset-circuit|pause|resume> <system>', about: 'a person\'s act on one system, through COS\'s supervisor (ledgered before it happens); pause and resume suspend its process tree and read it back from the OS (CP5b)',
-    req: (a) => ({ method: 'POST', path: `/api/cos/systems/${encodeURIComponent(a.args[1] || '')}/${encodeURIComponent(a.args[0] || 'start')}`, body: { by: 'person' } }) },
+  { key: 'cos.act', repo: false, usage: 'cos <start|stop|restart|touch|reset-circuit|pause|resume> <system> · cos restart cos', about: 'a person\'s act on one system, through COS\'s supervisor (ledgered before it happens); pause and resume suspend its process tree and read it back from the OS (CP5b); `cos restart cos` restarts COS itself to load an update (CE2b: its systems stop and come back)',
+    // CE2b (0.60.417) — James, 2026-11-06: "updates need to restart cos." `cos restart cos` is his yes to COS restarting itself (refused while an update writes)
+    personOnly: (a) => (a.args[0] === 'restart' && a.args[1] === 'cos' ? 'restarting COS stops every system it runs: his yes, never an agent\'s (an agent proposes)' : null),
+    req: (a) => (a.args[0] === 'restart' && a.args[1] === 'cos'
+      ? { method: 'POST', path: '/api/cos/update/restart', body: { by: 'person', what: 'cos' } }
+      : { method: 'POST', path: `/api/cos/systems/${encodeURIComponent(a.args[1] || '')}/${encodeURIComponent(a.args[0] || 'start')}`, body: { by: 'person' } }) },
   { key: 'cos.boot', repo: false, usage: 'cos boot [all|core]', about: 'boot the declared systems phase by phase (core = the critical set, CS4a)',
     req: (a) => ({ method: 'POST', path: '/api/cos/boot', timeoutMs: 120000, body: { set: a.args[0] || undefined, by: 'person' } }) },
   { key: 'cos.ledger', repo: false, usage: 'cos ledger [system] [--limit n]', about: 'the supervisor\'s ledger: every spawn, crash, restart, refusal and stop, with why',
