@@ -8,7 +8,7 @@ spec:
 
   meta:
     name:        pillar
-    version:     0.1.0
+    version:     0.2.0
     author:      james-brooks
     created_at:  2026-11-06T00:00:00Z
     status:      specced
@@ -20,17 +20,19 @@ spec:
       Distribute were weighed: "Yes." to Pillar, from his own words of 2026-08-17: "Bottom up, architectural first. Pillars of the
       Foundation... core foundation of each system first." Its shape (a standalone system; Seed a versioned deterministic replay input; the
       duplicates retired after a verified migration; three identities kept apart; contracts first, then conformance, then consolidation) is
-      an outside analysis he brought and took: "I guess" (PIL_D1, tentative, recorded as said).
+      an outside analysis he brought and took: "I guess" (PIL_D1, tentative, recorded as said). Its language, 2026-11-06: "Pillar isn’t meant
+      to be JavaScript. Emerge is complete invented using cie-eg" (PIL_D3): Pillar is written in Emerge (.eg), run by eg and, when native,
+      by emerge.exe; the coder had assumed JavaScript without asking (a guess, corrected).
     purpose: >-
       Today the same concepts exist several times: a constraint in all three sets, a hash-chained log three times (Emerge's History, WARP's
       Ledger, ERAVOS's causal ledger), Event and Gate twice inside Nexus's lib (siso/ and warp/core/). Copies drift, and most of the merge
       trouble of 2026-11-06 came from copies drifting. Pillar defines each concept once, as a contract (what goes in, what comes out, how it
       fails), and proves every implementation against it with conformance cases, so Emerge, ERAVOS and Nexus stand on one floor. It is the
       structure a small model composes from: the model picks primitives and fills their settings; Pillar's cases catch its mistakes.
-    target_runtime: [node]
-    language_stack: [javascript, emerge]
-    paradigm: [contracts-first, conformance-before-consolidation, one-concept-once, three-identities, deterministic-replay, move-then-archive]
-    axioms: ["§10.3 one truth, no competing layers", "§5.9–§5.16 sovereignty", "§0.3 nothing lost", "§1.2 nothing fails silently", "§8.6 reuse before build", "§3.1 bottom-up"]
+    target_runtime: [emerge]
+    language_stack: [emerge]
+    paradigm: [written-in-emerge, contracts-first, conformance-before-consolidation, one-concept-once, three-identities, deterministic-replay, move-then-archive]
+    axioms: ["§10.3 one truth, no competing layers", "§5.9–§5.16 sovereignty", "§0.3 nothing lost", "§1.2 nothing fails silently", "§8.6 reuse before build", "§3.1 bottom-up", "CIE-EG section 0: emerge.exe replaces node.exe; the Node runtime is scaffolding"]
     deps: []
 
     census: >-
@@ -54,8 +56,12 @@ spec:
         description: "Semantic identity (what it means), implementation identity (which code, by hash) and version identity (which revision of its behaviour) are three fields, never one."
         type: hard
         enforced_by: [GATE-PIL-IDENTITY]
+      - id: PIL-005
+        description: "Pillar is Emerge source (.eg): its contracts, cases, checks and CLI. Nothing in it is JavaScript; an implementation in another language is checked against its cases from outside (his PIL_D3)."
+        type: hard
+        enforced_by: [GATE-PIL-EG]
       - id: PIL-004
-        description: "Pillar depends on nothing above it: no require of Emerge, ERAVOS or Nexus code; they consume Pillar, never the reverse."
+        description: "Pillar depends on nothing above it: written in Emerge, it uses only the Emerge language (eg, emerge.exe) under it; it uses no Emerge core, ERAVOS or Nexus code; they consume Pillar, never the reverse."
         type: hard
         enforced_by: [GATE-PIL-FLOOR]
 
@@ -114,6 +120,14 @@ spec:
 
   interfaces:
 
+    - id: IF-EG
+      name: emerge-language
+      path: emerge/emerge/lang/eg.js
+      description: "The Emerge language Pillar is written in: eg check|run|test|build, use \"./file.eg\" as name, kinds, components, and (CIE-EG D7, D8, 2026-11-06) the contract block and schema; emerge.exe when native."
+      exports: ["eg check <file.eg>", "eg run <file.eg> [args]", "eg test <file.eg>", "use \"./file.eg\" as name"]
+      behavioral_contracts: ["deterministic: the same program and inputs give the same output and ledger"]
+      error_paths: ["an error names its line and column; a test block that fails names the test"]
+
     - id: IF-EMERGE-CORE
       name: emerge-core
       path: emerge/emerge/core/index.js
@@ -151,32 +165,34 @@ spec:
     - id: MOD-PIL-SYSTEM
       name: pillar-system
       uuid: nexus-pillar-system-v1-0000-2026-1106-001
-      path: pillar/index.js
+      path: pillar/pillar.eg
       phase: PIL1_pillar_stands
       description: >-
-        Pillar laid out as its own system: its folder, its package and version, its own component registry (§5.16), its CLI
-        (node pillar/cli.js contracts | check <contract> <impl> | conform), declared in lib/nexus-self/systems.js. Whether it also runs as a
-        process with a server.js is his to settle (PIL_D2): until he does, it is a library with a CLI, the floor others stand on.
-      deps: [{ name: pillar-contracts }]
+        Pillar laid out as its own system, written in Emerge: its folder, its version, its own component registry (§5.16), its CLI
+        (eg run pillar/cli.eg contracts | check <contract> <impl> | conform), declared in lib/nexus-self/systems.js. Whether it also runs as a
+        process with a door is his to settle (PIL_D2): until he does, it is an Emerge module others use (use "pillar/pillar.eg" as pillar) with a
+        CLI, the floor others stand on.
+      deps: [{ name: pillar-contracts }, { name: emerge-language }]
       schema_refs: [PrimitiveContract]
-      exports: ["require('pillar') → { contracts(), contract(id), check(id, impl), identityOf(id, file) }", "node pillar/cli.js contracts|check|conform"]
-      gate_pipeline: ["GATE-PIL-FLOOR: pillar/ requires nothing outside pillar/ (the boundary census)", "GATE-PIL1-002: its registry lists each export"]
+      exports: ["use \"pillar/pillar.eg\" as pillar → contracts(), contract(id), check(id, impl), identity_of(id, file)", "eg run pillar/cli.eg contracts|check|conform"]
+      gate_pipeline: ["GATE-PIL-FLOOR: pillar/ uses nothing outside pillar/ but the Emerge language", "GATE-PIL-EG: every source file is .eg and eg check passes", "GATE-PIL1-002: its registry lists each export"]
       behavioral_contracts: ["one system going down breaks no other: Emerge and Nexus keep their own code until conformance passes (PIL-002)"]
-      error_paths: ["a require out of pillar/ → the census names it and the phase is not built"]
-      acceptance: ["node pillar/cli.js contracts lists every contract; the census shows no edge out of pillar/"]
+      error_paths: ["a use out of pillar/ → refused and named; a .js file in pillar/ → GATE-PIL-EG refuses the phase"]
+      acceptance: ["eg run pillar/cli.eg contracts lists every contract; eg check passes on every pillar/*.eg; no use out of pillar/"]
 
     - id: MOD-PIL-CONTRACTS
       name: pillar-contracts
       uuid: nexus-pillar-contracts-v1-0000-2026-1106-001
-      path: pillar/contracts/index.js
+      path: pillar/contracts/contracts.eg
       phase: PIL2_contracts
       description: >-
-        One PrimitiveContract per primitive, as data (pillar/contracts/<name>.contract), merged from the three sets: Constraint, Transition,
+        One PrimitiveContract per primitive, written with Emerge's contract block and schema (CIE-EG D7, D8; pillar/contracts/<name>.eg), merged
+        from the three sets: Constraint, Transition,
         Observation, Gap, Lens, Seed, History, Level, Budget, Field (Emerge); Relation, Identity (ERAVOS); Expectation, Link, Event, Gate
         (Nexus), each concept once, each naming where it came from and under which name.
-      deps: []
+      deps: [{ name: emerge-language }]
       schema_refs: [PrimitiveContract, SeedSpec]
-      exports: ["load(dir) → PrimitiveContract[]", "get(id) → PrimitiveContract | null", "validate(contract) → { ok, errors }"]
+      exports: ["contracts() → [PrimitiveContract]", "contract(id) → PrimitiveContract | null", "validate(c) → { ok, errors }"]
       gate_pipeline: ["GATE-PIL-ONCE: no two contracts with one meaning", "GATE-PIL2-002: every field of PrimitiveContract present"]
       behavioral_contracts: ["a contract changes only by a new version, the old one kept"]
       error_paths: ["a missing field → refused, named", "two contracts for one meaning → refused, both named"]
@@ -185,14 +201,16 @@ spec:
     - id: MOD-PIL-CONFORMANCE
       name: pillar-conformance
       uuid: nexus-pillar-conformance-v1-0000-2026-1106-001
-      path: pillar/conformance/run.js
+      path: pillar/conformance/conform.eg
       phase: PIL3_conformance
       description: >-
-        Conformance cases per contract (pillar/conformance/<name>/*.case: ordinary, boundary, adversarial, regression, each with provenance),
-        and a runner that takes an implementation (Emerge's core, WARP, SISO) through an adapter and reports each case pass, fail or gap.
+        Conformance cases per contract as Emerge data (pillar/conformance/<name>.eg: ordinary, boundary, adversarial, regression, each with
+        provenance), and a checker in .eg. An implementation in Emerge is run directly; one in another language (Emerge's JS core, WARP,
+        SISO) is checked from outside: the cases are exported as data and that implementation's own harness runs them and returns the
+        answers, which Pillar judges. Pillar never runs or loads foreign code.
       deps: [{ name: pillar-contracts }, { name: emerge-core }, { name: warp-core }, { name: siso }]
       schema_refs: [ConformanceCase, PrimitiveContract]
-      exports: ["run(contractId, adapter) → { contract, cases: [{ id, kind, ok, got, why }], conforming }", "node pillar/cli.js conform [contract]"]
+      exports: ["conform(contract_id, answers) → { contract, cases: [{ id, kind, ok, got, why }], conforming }", "cases_of(contract_id) → [ConformanceCase] (the data a foreign harness runs)", "eg run pillar/cli.eg conform [contract]"]
       gate_pipeline: ["GATE-PIL-CONFORMS: an implementation is conforming only when every case passes", "GATE-PIL3-002: each case carries provenance"]
       behavioral_contracts: ["an implementation is never edited to pass: a failing case is a finding, recorded", "a case is independent of the implementation it tests"]
       error_paths: ["an adapter that throws → that case fails with the error, the run goes on", "a case with no provenance → refused"]
@@ -201,12 +219,12 @@ spec:
     - id: MOD-PIL-IDENTITY
       name: pillar-identity
       uuid: nexus-pillar-identity-v1-0000-2026-1106-001
-      path: pillar/identity.js
+      path: pillar/identity.eg
       phase: PIL4_three_identities
       description: "PrimitiveIdentity for a primitive in use: its contract id, the content hash of its code (CIE-EG D9: code by hash), its contract version."
       deps: [{ name: pillar-contracts }]
       schema_refs: [PrimitiveIdentity]
-      exports: ["identityOf(contractId, file) → PrimitiveIdentity", "compare(a, b) → { meaning, code, version } (each same | changed)"]
+      exports: ["identity_of(contract_id, file) → PrimitiveIdentity", "compare(a, b) → { meaning, code, version } (each same | changed)"]
       gate_pipeline: ["GATE-PIL-IDENTITY: all three fields present and kept apart"]
       behavioral_contracts: ["a reimplementation changes the code hash only; a behaviour change bumps the version; a meaning change is a new contract"]
       error_paths: ["a file that cannot be read → the identity says so, never a made-up hash"]
@@ -215,7 +233,7 @@ spec:
     - id: MOD-PIL-MIGRATION
       name: pillar-migration
       uuid: nexus-pillar-migration-v1-0000-2026-1106-001
-      path: pillar/migration.js
+      path: pillar/migration.eg
       phase: PIL5_the_duplicates_census
       description: >-
         The verified path to retiring duplicates: for lib/siso/ and lib/warp/core/ (Event, Gate, Stream twice), every consumer found, the
@@ -223,7 +241,7 @@ spec:
         census and compatibility tests (no blind deletion, §0.3).
       deps: [{ name: pillar-conformance }, { name: siso }, { name: warp-core }]
       schema_refs: [ConformanceCase]
-      exports: ["census() → { duplicates: [{ concept, copies: [{ path, consumers, conforming }] }], canonical }", "node pillar/cli.js duplicates"]
+      exports: ["census(answers) → { duplicates: [{ concept, copies: [{ path, consumers, conforming }] }], canonical }", "eg run pillar/cli.eg duplicates"]
       gate_pipeline: ["GATE-PIL5-001: every consumer of each copy named", "GATE-PIL-CONFORMS: each copy run against the cases"]
       behavioral_contracts: ["nothing is deleted by this module; it reports"]
       error_paths: ["a copy with behaviour no case covers → a gap, named, before any retirement"]
@@ -232,14 +250,14 @@ spec:
     - id: MOD-PIL-BENCH
       name: pillar-small-model-bench
       uuid: nexus-pillar-bench-v1-0000-2026-1106-001
-      path: pillar/bench/run.js
+      path: pillar/bench/bench.eg
       phase: PIL6_the_small_model_bench
       description: >-
         His idea (EAS_D8): a small local model (3B–7B) given the same tasks with and without Pillar's contracts; measured: tests passed, tokens,
         attempts; the unfavourable case reported beside the favourable (§17.11). A world-simulation domain is a candidate (EAS_D8 addendum).
       deps: [{ name: pillar-contracts }, { name: pillar-conformance }]
       schema_refs: [PrimitiveContract, ConformanceCase]
-      exports: ["run({ model, tasks, withContracts }) → { passed, tokens, attempts, perTask }", "node pillar/cli.js bench"]
+      exports: ["bench(model, tasks, with_contracts) → { passed, tokens, attempts, per_task }", "eg run pillar/cli.eg bench"]
       gate_pipeline: ["GATE-PIL6-001: both arms on the same tasks and the same model", "GATE-PIL6-002: the losing cases reported"]
       behavioral_contracts: ["no claim without the numbers; a run that cannot reach a model says so"]
       error_paths: ["no model reachable → the bench refuses and names the model it looked for"]
@@ -250,8 +268,8 @@ spec:
     - { name: pillar.conformance.ran,    payload: "{ contract, implementation, conforming, failed }" }
 
   enforcement:
-    gates: [GATE-PIL-ONCE, GATE-PIL-CONFORMS, GATE-PIL-IDENTITY, GATE-PIL-FLOOR]
+    gates: [GATE-PIL-ONCE, GATE-PIL-CONFORMS, GATE-PIL-IDENTITY, GATE-PIL-FLOOR, GATE-PIL-EG]
 
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node, invariants valid"
-    - "pillar/test/*.test.js — each module's acceptance, written with its phase"
+    - "pillar/test/*.eg — each module's acceptance as Emerge test blocks (eg test), written with its phase; tests/modules/test-pillar.test.js runs eg test over them for the Nexus suite"

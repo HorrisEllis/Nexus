@@ -38,29 +38,42 @@ decisions:
       (2026-11-06), is "a small library with its own tests, version and contract", the floor others stand on, not a room you walk into.
       Two readings: (a) Pillar has a server.js like every system, COS runs it, and others ask it by route; (b) Pillar is a library with a CLI
       that others depend on as code, the one kind of system that is not a process (as lib/warp is today).
-    until_settled: "PIL1 lays it out as a library with a CLI; a server.js is added only if he chooses (a)"
+    until_settled: "PIL1 lays it out as an Emerge module with a CLI; a door is added only if he chooses (a)"
+    # 2026-11-06, his follow-up: "Yeah but what if we want to use it for another system?" — answered: an Emerge system uses the module; a
+    # system in another language implements the contracts and passes the cases (the meaning travels, not the code); a door can be added
+    # later on top without rework. Still his to settle.
+  PIL_D3_written_in_emerge:
+    status: "DECIDED 2026-11-06 (his)"
+    james: '"Pillar isn’t meant to be JavaScript. Emerge is complete invented using cie-eg"'
+    context: >-
+      The coder had written Pillar's spec with JavaScript paths and a node CLI, without asking: a guess, against CIE-EG section 0 ("emerge.exe
+      replaces node.exe"; the Node runtime is scaffolding; what is added to it is worth adding only if it can be written again in .eg).
+    chosen: >-
+      Pillar is Emerge source (.eg): its contracts (with the contract block and schema, CIE-EG D7 and D8), its cases, its checks and its CLI,
+      run by eg and, when native, by emerge.exe. Implementations in another language (Emerge's JS core, WARP, SISO) are checked from outside:
+      Pillar exports the cases as data, their own harness answers, Pillar judges. pillar.spec 0.2.0, PIL-005, GATE-PIL-EG.
 
 phases:
 
   PIL1_pillar_stands:
     status: OPEN
-    depends_on: [PIL_D0_the_name_is_pillar, PIL_D1_the_shape_he_brought]
+    depends_on: [PIL_D0_the_name_is_pillar, PIL_D1_the_shape_he_brought, PIL_D3_written_in_emerge]
     spec: pillar/spec/pillar.spec
     blocks: [MOD-PIL-SYSTEM]
-    files: [pillar/index.js, pillar/cli.js, pillar/package.json, pillar/registry-components.js, lib/nexus-self/systems.js, tests/modules/test-pillar.test.js, tests/modules/run-all.js]
+    files: [pillar/pillar.eg, pillar/cli.eg, pillar/registry.eg, pillar/test/pillar.test.eg, lib/nexus-self/systems.js, tests/modules/test-pillar.test.js, tests/modules/run-all.js]
     requires: [node]
     prerequisites: ["the spec compiles at specDepth 1.0 (test-substrate-spec)"]
-    does: "Pillar's folder as its own system: package and version, its own registry, its CLI; declared in nexus-self's systems; requires nothing outside pillar/"
-    proof: "node pillar/cli.js contracts answers; the boundary census shows no edge out of pillar/; test-pillar PI-01"
+    does: "Pillar's folder as its own system, in Emerge: its version, its own registry, its CLI (eg run pillar/cli.eg); declared in nexus-self's systems; uses nothing outside pillar/ but the Emerge language"
+    proof: "eg run pillar/cli.eg contracts answers; eg check and eg test pass on every pillar/*.eg; no .js in pillar/; test-pillar PI-01 runs them for the Nexus suite"
 
   PIL2_contracts:
     status: OPEN
     depends_on: [PIL1_pillar_stands]
     spec: pillar/spec/pillar.spec
     blocks: [MOD-PIL-CONTRACTS]
-    files: [pillar/contracts/index.js, pillar/contracts/*.contract, tests/modules/test-pillar.test.js]
+    files: [pillar/contracts/contracts.eg, pillar/contracts/*.eg, pillar/test/contracts.test.eg]
     requires: [node]
-    prerequisites: ["the census of the three sets (pillar.spec meta.census)"]
+    prerequisites: ["the census of the three sets (pillar.spec meta.census)", "Emerge's contract block (CIE-EG MOD-CONTRACT, unblocked by D7 on 2026-11-06) and schema (MOD-STORE, D8) built in the language first: bottom-up (§3.1), the constructs before what is written in them"]
     does: >-
       One contract per primitive, each concept once, each naming where it came from: Constraint, Transition, Observation, Gap, Lens, Seed,
       History, Level, Budget, Field (Emerge); Relation, Identity (ERAVOS); Expectation, Link, Event, Gate (Nexus)
@@ -71,10 +84,10 @@ phases:
     depends_on: [PIL2_contracts]
     spec: pillar/spec/pillar.spec
     blocks: [MOD-PIL-CONFORMANCE]
-    files: [pillar/conformance/run.js, pillar/conformance/adapters/*.js, pillar/conformance/*/, tests/modules/test-pillar.test.js]
+    files: [pillar/conformance/conform.eg, pillar/conformance/*.eg, pillar/test/conform.test.eg, tests/modules/test-pillar-conform.test.js]
     requires: [node]
     prerequisites: ["Emerge's core, WARP and SISO readable as they are (no change to them in this phase)"]
-    does: "the cases per contract (ordinary, boundary, adversarial, regression, each with provenance) and the runner over Emerge's core, WARP and SISO through adapters"
+    does: "the cases per contract as Emerge data (ordinary, boundary, adversarial, regression, each with provenance) and the judge in .eg; foreign implementations (Emerge's JS core, WARP, SISO) answer the exported cases with their own harness (test-pillar-conform), Pillar judges"
     proof: "Emerge's evaluate conforms to pillar:constraint; History and WARP's Ledger both run against pillar:history, the differences named"
 
   PIL4_three_identities:
@@ -82,7 +95,7 @@ phases:
     depends_on: [PIL2_contracts]
     spec: pillar/spec/pillar.spec
     blocks: [MOD-PIL-IDENTITY]
-    files: [pillar/identity.js, tests/modules/test-pillar.test.js]
+    files: [pillar/identity.eg, pillar/test/identity.test.eg]
     requires: [node]
     prerequisites: []
     does: "a primitive in use as three identities: its contract (meaning), its code's hash (implementation, CIE-EG D9), its contract version"
@@ -93,7 +106,7 @@ phases:
     depends_on: [PIL3_conformance, PIL4_three_identities]
     spec: pillar/spec/pillar.spec
     blocks: [MOD-PIL-MIGRATION]
-    files: [pillar/migration.js, tests/modules/test-pillar.test.js]
+    files: [pillar/migration.eg, pillar/test/migration.test.eg]
     requires: [node]
     prerequisites: ["no removal in this phase (§0.3): it reports"]
     does: "siso/ and warp/core's Event, Gate and Stream: every consumer, each copy against the cases, the canonical one named; removal is a later phase"
@@ -104,7 +117,7 @@ phases:
     depends_on: [PIL3_conformance]
     spec: pillar/spec/pillar.spec
     blocks: [MOD-PIL-BENCH]
-    files: [pillar/bench/run.js, pillar/bench/tasks/*, tests/modules/test-pillar.test.js]
+    files: [pillar/bench/bench.eg, pillar/bench/tasks/*, pillar/test/bench.test.eg]
     requires: [node, "a local model (Ollama, 3B–7B) on his machine for the real run"]
     prerequisites: ["the contracts and their cases (PIL2, PIL3)"]
     does: "his EAS_D8 bench: the same tasks with and without Pillar's contracts; tests passed, tokens, attempts; the losing cases reported"

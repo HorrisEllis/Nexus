@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PIL5_the_duplicates_census:dc1013ffd795fa56
+type: graph
+id: phase:PIL5_the_duplicates_census:dc1013ffd795fa56
+context: dependency graph of phase PIL5_the_duplicates_census
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793959386839
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793959386839
+lastSeenAt: 1793959386839
+fingerprint: null
+payload:
+  for: PIL5_the_duplicates_census
+  kind: phase
+  repo: null
+  hash: dc1013ffd795fa56
+  nodes:
+    - path: pillar/spec/pillar.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+    dependents: []
+    upstream:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+    downstream: []
+    blockedBy:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
+        files:
+          - pillar/spec/pillar.spec
+    dangling: []
+    lines:
+      - layer 4 · blocked by PIL3_conformance, PIL4_three_identities
+      - 'depends on (2): PIL3_conformance, PIL4_three_identities · all upstream 7'
+      - 'needed by (0): —'
+      - 'same files as PIL6_the_small_model_bench with no order between them: pillar/spec/pillar.spec'
+    edges:
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+        kind: declared
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+        kind: declared

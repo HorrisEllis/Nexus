@@ -1,0 +1,163 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PIL1_pillar_stands:260a8a40857146ba
+type: graph
+id: phase:PIL1_pillar_stands:260a8a40857146ba
+context: dependency graph of phase PIL1_pillar_stands
+intent: null
+summary: 16 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793959386830
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793959386830
+lastSeenAt: 1793959386830
+fingerprint: null
+payload:
+  for: PIL1_pillar_stands
+  kind: phase
+  repo: null
+  hash: 260a8a40857146ba
+  nodes:
+    - path: lib/nexus-self/systems.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-pillar.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/living-spec.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/phase-specs.cjs
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/contract-queue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/run-all.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/contract-queue.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/apply.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+    dependents:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+    upstream:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+    downstream:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+      - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
+      - docs/2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - >-
+        depends on (3): PIL_D0_the_name_is_pillar, PIL_D1_the_shape_he_brought,
+        PIL_D3_written_in_emerge
+      - 'needed by (1): PIL2_contracts · all downstream 5 · finishing it unlocks PIL2_contracts'
+    edges:
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+        kind: declared
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+        kind: declared
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+        kind: declared

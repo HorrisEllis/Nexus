@@ -1098,7 +1098,7 @@ spec:
       build:
         state: not_built
         file: emerge/lang/cie/contract.eg
-        blocked_by: [D7]
+        blocked_by: []   # D7 decided 2026-11-06 (James); removed per build_plan
         next: "parse the contract block, contract_hash; wire compiles to a road."
       spec_ref: s06_contract_and_gate.contract_format
       description: "The interaction contract: version, text settings, gate settings, roads. wire compiles to a road. contract_hash goes into genesis and every checkpoint."
@@ -1196,7 +1196,7 @@ spec:
       build:
         state: not_built
         file: emerge/lang/cie/seal.eg
-        blocked_by: [D3]
+        blocked_by: []   # D3 decided 2026-11-06 (James); removed per build_plan
         next: "AES-256-GCM sealing once root key storage is decided."
       spec_ref: s08_sealing
       description: "AES-256-GCM sealing of entry bodies with readable AAD, per-component HKDF keys, nonce from chain id and seq, rekey entries."
@@ -1228,7 +1228,7 @@ spec:
       build:
         state: partial
         file: emerge/lang/cie/identity.eg
-        blocked_by: [D6]
+        blocked_by: []   # D6 decided 2026-11-06 (James); removed per build_plan
         existing:
           - "emerge/lang/runtime.js: chain id (UUID v8)"
           - "emerge/lang/components.js: component uuid in the emerge-component- prefix form"
@@ -1446,7 +1446,7 @@ spec:
       build:
         state: not_built
         file: emerge/lang/cie/store.eg
-        blocked_by: [D8]
+        blocked_by: []   # D8 decided 2026-11-06 (James); removed per build_plan
         next: "schemas and stores (section 14) once adopted."
       spec_ref: s14_data_types_and_stores
       status: PROPOSED
@@ -1482,7 +1482,7 @@ spec:
       build:
         state: partial
         file: emerge/lang/cie/synth.eg
-        blocked_by: [D9]
+        blocked_by: []   # D9 decided 2026-11-06 (James); removed per build_plan
         built: "2026-10-31: rungs 1 and 2 in .eg (CH-Q5 answered by doing: .eg first). Forms cases, predicate, formula, reject_if; template fail_fast_scan. bench/chunks.js derive: utf8_decode 6/6 units generated and passing, the assembled decoder passes the monolith tests, byte-identical on a second run, 0 model calls."
         next: "known-answer vectors from outside the spec (DF-06); a cached result by boundary hash (DF-03); more templates (fold, validate, route); rung 3 stays a gap, never a model (section 16, LP-03)."
       spec_ref: s15_chunks_as_layers.deterministic_first

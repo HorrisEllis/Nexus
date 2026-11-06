@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-pillar-phasemap.spec::PIL2_contracts
 context: pipeline phase PIL2_contracts of docs/2026-11-06-pillar-phasemap.spec
 intent: null
-summary: PIL2_contracts (?) — 2 file(s)
+summary: PIL2_contracts (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793958853637
+exported_at: 1793959386833
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793958853637
-lastSeenAt: 1793958853637
+firstSeenAt: 1793959386833
+lastSeenAt: 1793959386833
 fingerprint: null
 payload:
   id: PIL2_contracts
@@ -20,11 +20,13 @@ payload:
   layer: null
   status: OPEN
   files:
-    - pillar/contracts/index.js
-    - tests/modules/test-pillar.test.js
+    - pillar/contracts/contracts.eg
+    - pillar/contracts/*.eg
+    - pillar/test/contracts.test.eg
+    - pillar/spec/pillar.spec
   depends_on:
     - PIL1_pillar_stands
   blocks:
     - MOD-PIL-CONTRACTS
   spec: pillar/spec/pillar.spec
-  graph: 499dfbd5ad180675
+  graph: bc1b769ac9f239d7
