@@ -511,3 +511,17 @@ Idearium's: `idearium/spec-engine/phase-ledger.cjs`, its log the committed `idea
   the ids written in more than one map, and each phase's events.
 - The reading of "log" as an append-only record of phase events beside the generated table is the coder's, to confirm.
 
+## ADDENDUM 2026-11-06 — the focus: Emerge first, then Fiverr (his)
+James, 2026-11-06, asked what CLAUDE.md should name as the focus (Fiverr's gig flow, Emerge, the phase ledger, or the primitive factory): "Emerge
+first then fiverr maybe? I’m struggling. Emerge is the highest leverage. If fiverr isn’t days of work. I can also use remote control to give you
+access." Earlier the same day, with the primitive factory: "okay lets get this done. no more distractions".
+- **First, Emerge** (docs/2026-10-31-emerge-as-a-system-phasemap.spec; emerge/emerge/spec/cie-eg.spec):
+  - the open CIE-EG decisions: D3's default store and D4's reading (both to confirm), then D6–D10;
+  - the merged kernel (EAS_D8, his "One kernel, merged"), then the small-model benchmark on it.
+- **Then Fiverr, if it is not days of work** (his condition): FP5's test, FG4 (dropdown choose), TC3 (links as tabs), then FG5, the gig flow page by
+  page that stops before Publish (docs/2026-10-28-gated-flows-phasemap.spec FG5, expanded 2026-11-06). Its live proof runs on his machine, through
+  the Remote Control access he offered.
+- **Outside the focus,** work waits unless he asks for it. A finding outside it (a failure, a cost) is still said, not acted on.
+- The coder's estimate for Fiverr, given when he asked (to be checked against the work, not promised): the four phases are about one to two
+  sessions of the coder's work; the live run on Fiverr is what needs his machine.
+

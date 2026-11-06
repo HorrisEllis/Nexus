@@ -25,6 +25,11 @@ Every phase id is unique across all maps. (docs/2026-10-23-self-building-loop-ph
 ledger". Every phase written, expanded, built or closed gets one line, with why, in the same commit:
 `node idearium/spec-engine/phase-ledger.cjs log <phase> <written|expanded|built|closed|note> "<why>" --version <x.y.z>` (or `phases log`). Before
 writing a phase, `phase-ledger.cjs covers <files…> --does "…"` names the phase to expand instead. The how is in docs/CLAUDE.md.
+**THE FOCUS (his, 2026-11-06): Emerge first, then Fiverr.** James: "Emerge first then fiverr maybe? I’m struggling. Emerge is the highest
+leverage. If fiverr isn’t days of work. I can also use remote control to give you access." Emerge: the CIE-EG decisions (D3's default, D4's
+reading, D6–D10), then the merged kernel (EAS_D8) and the small-model benchmark. Fiverr after, if it is not days of work: FP5's test, FG4, TC3,
+FG5 (docs/2026-10-28-gated-flows-phasemap.spec), proved live through his Remote Control. Work outside the focus waits unless he asks. The how is in
+docs/CLAUDE.md (addendum 2026-11-06, the focus).
 **Every change and every version goes to Versionium, in full (§17.12).** James, 2026-10-29: "full changes, and versions have to be pushed
 to versionium? enforce it everywhere that you'd find it." The how is in docs/CLAUDE.md.
 
