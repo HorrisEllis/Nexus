@@ -91,7 +91,8 @@ phases:
     depends_on: [CIE3_native_ledger, CIE1_the_contract_block]
     spec: emerge/emerge/spec/cie-eg.spec
     blocks: [MOD-NATIVE-SYSTEM]
-    files: [emerge/emerge/lang/cie/world.eg, emerge/emerge/lang/test/world/counter.eg, emerge/emerge/lang/test/world/counter.world.eg, emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/lower.eg, emerge/emerge/lang/native/emerge.eg, emerge/emerge/lang/native/world_text.eg, emerge/emerge/lang/native/ledger_text.eg, emerge/emerge/lang/native/bin/emerge, emerge/emerge/lang/test/world/counter_ledger.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/test/native.test.js]   # world.eg and its fixtures added 2026-11-06 (slice a); lower.eg, the embedded world and the rebuilt compiler (slice b)
+    # files: world.eg and its fixtures added 2026-11-06 (slice a); lower.eg, the embedded world and the rebuilt compiler (slice b)
+    files: [emerge/emerge/lang/cie/world.eg, emerge/emerge/lang/test/world/counter.eg, emerge/emerge/lang/test/world/counter.world.eg, emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/lower.eg, emerge/emerge/lang/native/emerge.eg, emerge/emerge/lang/native/world_text.eg, emerge/emerge/lang/native/ledger_text.eg, emerge/emerge/lang/native/bin/emerge, emerge/emerge/lang/test/world/counter_ledger.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/test/native.test.js]
     requires: [node]
     prerequisites: []
     does: "compartments, constraints, signals, components, hooks, wires, the contract block and the gate (FIFO, storm limit) natively"

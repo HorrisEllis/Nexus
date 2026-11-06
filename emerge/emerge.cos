@@ -326,6 +326,8 @@ payload:
       emerge/data/ledger/2026-11-06T20-14-17-920Z/events.jsonl: 057f1f88b08ee0803a05c70a3deec503cdb5f09c46219761a00fb5f39d800e50
       emerge/data/ledger/2026-11-06T20-19-44-973Z/events.jsonl: 6fe5ae80b9af778a4fefd0e8f8acdb324d1b771b9620e997030841121cc74b0d
       emerge/data/ledger/2026-11-06T20-35-23-464Z/events.jsonl: 23da9e589eb138204b248da9cd503e787cbe77b080807faf4765fd5c7f6a3a51
+      emerge/data/ledger/2026-11-06T20-35-35-192Z/events.jsonl: 60502d4ffd16b7e31f3577299995ff8f89bb8019ae9b1ec55201c4704fd3e496
+      emerge/data/ledger/2026-11-06T20-36-05-418Z/events.jsonl: 7648063883b195f22abf4a59138bdad1c3ac2d3c7a3d93bc43dcd863a1f1aa84
       emerge/data/node-index/nodes_bundle.json: 26b084d77854dcf167cf911fd44352d098a90740953efee6384bdffadbbd44c6
       emerge/data/node-index/nodes_bundle_ledger.jsonl: d0e99fddafa5ff54d94163a6fcffd7a2592c039099a97bf0f04a675ee8f3f4c3
       emerge/data/node-index/nodes_capability.json: 693b003b324d149eef21f8ee211e610d399a198c3bea60d9f69078603248980b
