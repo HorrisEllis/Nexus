@@ -2849,6 +2849,48 @@ function openProcessesWindow() {
 }
 function closeProcessesWindow() { if (processesWin && !processesWin.isDestroyed()) processesWin.close(); }
 
+// EE3a (0.60.416) — the Element Engine's full page. James, 2026-11-06: "It’s meant to replace the adblocker also like a full plugin page." ·
+// "It needs to have a full page to edit, change and add. Like it needs to be fully featured. Not a small plugin at all dude." One window,
+// reused, like the Library (renderer/element-engine.html runs the Settings runtime); `area` opens a section (#lists, #hidden, #typescript …).
+let elementEngineWin = null;
+function openElementEngineWindow(area) {
+  const hash = /^[a-z-]{1,24}$/.test(String(area || '')) ? String(area) : undefined;
+  if (elementEngineWin && !elementEngineWin.isDestroyed()) {
+    if (elementEngineWin.isMinimized()) elementEngineWin.restore();
+    elementEngineWin.show(); elementEngineWin.focus();
+    if (hash) elementEngineWin.webContents.executeJavaScript(`location.hash = ${JSON.stringify('#' + hash)}`).catch(() => {});
+    return { ok: true, reused: true, area: hash || null };
+  }
+  elementEngineWin = new BrowserWindow({
+    width: 1180, height: 820, minWidth: 640, minHeight: 480, backgroundColor: '#08080d', frame: false,
+    webPreferences: { preload: path.join(__dirname, '../preload/index.js'), contextIsolation: true, nodeIntegration: false },
+    title: 'Clear Glass — Element Engine',
+  });
+  elementEngineWin.loadFile(path.join(__dirname, '../../renderer/element-engine.html'), hash ? { hash } : undefined);
+  elementEngineWin.on('closed', () => { elementEngineWin = null; });
+  emit('element-engine.opened', { area: hash || null });
+  return { ok: true, reused: false, area: hash || null };
+}
+function closeElementEngineWindow() { if (elementEngineWin && !elementEngineWin.isDestroyed()) elementEngineWin.close(); return { ok: true }; }
+// the browser window he used last (the page's Pick and "this site" act on it): kept from Electron's own focus event, so no window code changes
+let _lastBrowserWin = null;
+app.on('browser-window-focus', (_e, w) => { if ([...windows.values()].includes(w)) _lastBrowserWin = w; });
+function _browserWin() {
+  if (_lastBrowserWin && !_lastBrowserWin.isDestroyed()) return _lastBrowserWin;
+  return [...windows.values()].find(w => w && !w.isDestroyed() && w.isVisible()) || null;
+}
+/** pickInBrowser() — that window comes forward and its Guardian picker starts (the shell's own #picker-btn, as EE0's panel pressed it) */
+async function pickInBrowser() {
+  const w = _browserWin();
+  if (!w) return { ok: false, error: 'no browser window is open to pick from (open one first)' };
+  if (w.isMinimized()) w.restore(); w.show(); w.focus();
+  try {
+    const r = await w.webContents.executeJavaScript(`(() => { const b = document.getElementById('picker-btn'); if (!b) return 'no picker'; if (!b.classList.contains('active')) b.click(); let u = ''; try { u = document.getElementById('wv').getURL(); } catch (_) {} return u || 'started'; })()`);
+    if (r === 'no picker') return { ok: false, error: 'that window has no picker button' };
+    return { ok: true, url: r === 'started' ? null : r, note: 'Picker on in the browser window: click an element (Esc stops). The bar under the page offers Hide, Gate and Bind a key.' };
+  } catch (e) { return { ok: false, error: `the picker did not start: ${e.message}` }; }
+}
+
 function closeLibraryWindow() {
   if (libraryWin && !libraryWin.isDestroyed()) libraryWin.close();
 }
@@ -3121,5 +3163,6 @@ module.exports = {
   openBackgroundTab, closeBackgroundTab, listBackgroundTabs, processes,   // processes: SP5 (0.60.219)
   openProcessesWindow, closeProcessesWindow,   // SP6 (0.60.220)
   closeSettingsWindow, openLibraryWindow, closeLibraryWindow, windows, bgTabs,
+  openElementEngineWindow, closeElementEngineWindow, pickInBrowser,   // EE3a (0.60.416)
   freezeAgentWindow, thawAgentWindow,
 };

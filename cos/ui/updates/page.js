@@ -51,16 +51,38 @@
       if (u.local && u.local.count) acts.append(h('button', { class: 'btn primary', id: 'keep', onclick: () => apply('keep-local') }, 'Keep mine and update'));
       else acts.append(h('button', { class: 'btn primary', id: 'update', onclick: () => apply('update') }, 'Update now'));
     }
-    lines.push(acts); st.replaceChildren(...lines);
+    lines.push(acts);
+    // CE2b (0.60.417) — James, 2026-11-06: "updates need to restart cos." · on Clear Glass: "Ask me first". What the update changed that would close
+    // something under him waits here for his yes: COS itself (saying what closes with it), Clear Glass. Later keeps the ask; nothing restarts by itself.
+    const pd = u.pending;
+    if (pd && (pd.cos || (pd.systems || []).length)) {
+      const ask = h('div', { class: 'asks', id: 'asks' }, h('div', { class: 'asks-h' }, `Waiting for you${pd.to ? ` · the update to ${pd.to}` : ''}`));
+      if (pd.cos) ask.append(h('div', { class: 'ask', dataset: { what: 'cos' } }, h('span', {}, `Restart COS to load its new code${(pd.closes || []).length ? ` — ${pd.closes.join(', ')} closes and starts again` : ''}`), h('button', { class: 'btn sm primary', onclick: () => restartAfter('cos', pd) }, 'Restart COS now'), h('button', { class: 'btn sm', onclick: () => later('cos') }, 'Later')));
+      for (const n of pd.systems || []) ask.append(h('div', { class: 'ask', dataset: { what: n } }, h('span', {}, `Restart ${n} to load the update`), h('button', { class: 'btn sm primary', onclick: () => restartAfter(n, pd) }, `Restart ${n} now`), h('button', { class: 'btn sm', onclick: () => later(n) }, 'Later')));
+      lines.push(ask);
+    }
+    st.replaceChildren(...lines);
     const ps = u.perSystem || {}; const rows = [];
     for (const n of ps.restart || []) rows.push(h('li', {}, h('span', {}, n), h('span', {}, 'restarts by itself')));
     for (const n of ps.waitForHim || []) rows.push(h('li', { class: 'wait' }, h('span', {}, n), h('span', {}, 'waits for you')));
-    if (ps.kernelChanged || ps.cosChanged) rows.push(h('li', { class: 'wait' }, h('span', {}, ps.cosChanged ? 'cos' : 'lib'), h('span', {}, 'loads at COS\'s next start')));
+    if (ps.kernelChanged || ps.cosChanged) rows.push(h('li', { class: 'wait' }, h('span', {}, ps.cosChanged ? 'cos' : 'lib'), h('span', {}, 'COS asks to restart')));   // CE2b: was 'loads at COS\'s next start'
     $('files').textContent = behind ? `${u.files || 0} files · ${(u.systems || []).join(', ')}` : '';
     $('systems').replaceChildren(rows.length ? h('ul', { class: 'sys' }, ...rows) : h('p', { class: 'faint', style: 'margin:0' }, behind ? 'No supervised system changes.' : 'Nothing to change.'));
     const rel = (u.releases || []); $('releases-panel').hidden = !rel.length;
     $('releases').replaceChildren(...rel.map(r => h('li', {}, h('b', {}, r.version || ''), r.quote || r.line || r.text || '')));
   }
+  // CE2b — his yes (COS asks once more when something closes with it); Later only hides the row until the page reloads: the ask stays in the bell
+  async function restartAfter(what, pd) {
+    if (what === 'cos' && !await COS.confirm({ title: 'Restart COS now?', body: `COS stops its systems and starts again with the update${(pd.closes || []).length ? `; ${esc(pd.closes.join(', '))} closes and starts again` : ''}. This page reconnects when it is back.`, act: 'Restart COS' })) return;
+    if (what !== 'cos' && !await COS.confirm({ title: `Restart ${esc(what)} now?`, body: `${esc(what)} closes and starts again with the update.`, act: `Restart ${esc(what)}` })) return;
+    try {
+      const r = await COS.call('POST', '/api/cos/update/restart', { by: 'person', what });
+      if (what === 'cos') { COS.notice('ok', `COS is restarting: ${r.how || 'it comes back by itself'}`); setTimeout(() => location.reload(), 8000); return; }
+      COS.notice('ok', `${what} restarted`);
+    } catch (err) { if (!err.refused) COS.notice('err', err.message); }
+    load();
+  }
+  function later(what) { const row = document.querySelector(`#asks .ask[data-what="${CSS.escape(what)}"]`); if (row) row.remove(); }
   async function apply(mode) {
     const u = S.u, ps = u.perSystem || {};
     const body = `${esc(u.current)} → ${esc(u.latest)}. A backup first${mode === 'keep-local' ? `, your ${u.local.count} commit(s) kept on a local/&lt;date&gt; branch` : ''}; then ${ps.restart && ps.restart.length ? `${esc(ps.restart.join(', '))} restart by themselves` : 'no restart'}${ps.waitForHim && ps.waitForHim.length ? `; ${esc(ps.waitForHim.join(', '))} waits for you` : ''}.`;
@@ -90,6 +112,6 @@
     S.u = u; if (set) { S.set = set; renderSettings(); } S.hist = hist.history || []; renderState(); renderHistory();
   }
   $('check').onclick = async () => { $('check').disabled = true; $('check').textContent = 'Asking GitHub…'; try { await load(true); } finally { $('check').disabled = false; $('check').textContent = 'Check GitHub now'; } };
-  COS.on('cos.update', (d) => { if (d && (d.phase === 'updated' || d.phase === 'refused')) load(); });
+  COS.on('cos.update', (d) => { if (d && (d.phase === 'updated' || d.phase === 'refused' || d.phase === 'ask-restart' || d.phase === 'restarted')) load(); });
   load();
 })();

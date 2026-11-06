@@ -1,0 +1,254 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE2b_updates_restart_cos:5bcea4dd77936ede
+type: graph
+id: phase:CE2b_updates_restart_cos:5bcea4dd77936ede
+context: dependency graph of phase CE2b_updates_restart_cos
+intent: null
+summary: 33 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793934988060
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793934988060
+lastSeenAt: 1793934988060
+fingerprint: null
+payload:
+  for: CE2b_updates_restart_cos
+  kind: phase
+  repo: null
+  hash: 5bcea4dd77936ede
+  nodes:
+    - path: cos/app/runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/relaunch.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/updates/page.css
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/updates/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cos-updates.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/app/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/controller.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/switch.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-runtime.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-switch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-ui.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/nexus-update.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/updates.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: cos/manager/updates.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: cos/app/cli.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/shell.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/switch.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-runtime.test.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-switch.test.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-ui.test.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2_updates_as_cos_routes
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE5_cos_as_a_windows_service
+    dependents: []
+    upstream:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2_updates_as_cos_routes
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE5_cos_as_a_windows_service
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D0_per_system_reading
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D2_the_windows_service
+    downstream: []
+    blockedBy:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE5_cos_as_a_windows_service
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by CE5_cos_as_a_windows_service
+      - 'depends on (2): CE2_updates_as_cos_routes, CE5_cos_as_a_windows_service · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-02-cos-enterprise-phasemap.spec::CE2_updates_as_cos_routes
+        kind: declared
+      - from: docs/2026-11-02-cos-enterprise-phasemap.spec::CE5_cos_as_a_windows_service
+        kind: declared

@@ -171,7 +171,9 @@ function ipc() {
   h('pickFolder', async () => { const r = await dialog.showOpenDialog(win, { title: 'Pick your Nexus folder (the one with VERSION and lib/nexus/autopilot.js)', properties: ['openDirectory'] }); return r.canceled ? {} : { path: r.filePaths[0] }; });
   h('link', (project, folder) => { const r = ctl.link(String(project || 'nexus'), String(folder || '')); if (r.ok && !ctl.settings().settings.startOnLaunch) ctl.setSetting('startOnLaunch', r.project); return r; });
   h('unlink', (project) => ctl.unlink(String(project)));
-    h('start', (project) => ctl.start(String(project))); h('stop', (project) => ctl.stop(String(project))); h('remove', (project, v) => ctl.remove(String(project), String(v))); h('logs', (project) => ctl.logs(String(project)));
+    // MG35b (0.60.418) — the window's own start and Restart Nexus say what happened on the window too (lastStart), not only in their answer
+    h('start', async (project) => { const r = await ctl.start(String(project)); lastStart = { started: !!(r && r.ok), error: r && !r.ok ? r.error : null }; retarget(); return r; });
+    h('restart', async (project) => { lastStart = { started: null, error: null }; const r = await ctl.restart(String(project)); lastStart = { started: !!(r && r.ok), error: r && !r.ok ? r.error : null }; retarget(); return r; }); h('stop', (project) => ctl.stop(String(project))); h('remove', (project, v) => ctl.remove(String(project), String(v))); h('logs', (project) => ctl.logs(String(project)));
 }
 
 app.on('second-instance', show);
@@ -220,7 +222,8 @@ async function startOnLaunch() {
   }
   send({ type: 'op.start', project: p, what: 'starting when COS opened' });
   const r = await ctl.start(p); lastStart = { started: !!(r && r.ok), error: r && !r.ok ? r.error : null }; retarget();
-  if (r && r.ok) notify('Nexus is running', `${p} started (${r.version || 'linked folder'}) — COS supervises it; closing this window keeps it running`);
+  if (r && r.ok && r.attached) notify('Nexus is running', `${p} was already running (pid ${r.pid}) — this COS uses that same instance`);   // MG35b
+  else if (r && r.ok) notify('Nexus is running', `${p} started (${r.version || 'linked folder'}) — COS supervises it; closing this window keeps it running`);
   else notify('Nexus did not start', String((r && r.error) || 'no answer').split('\n')[0].slice(0, 200));
   send({ type: 'launch.start', project: p, ok: !!(r && r.ok), error: r && r.error });
 }

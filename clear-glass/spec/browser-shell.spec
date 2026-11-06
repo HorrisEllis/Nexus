@@ -629,3 +629,8 @@ spec:
 # profiles — Removed"), are set aside by him: they were written without knowing what is needed. The rest of the spec stands as written.
 # Read by the coder, to confirm: "action 5" as the spec's section 5, and "those axioms" as that spec's identity rules — not docs/AXIOMS-v3.1.md.
 # Nothing is built; the engine is a concept-stage spec.
+
+# ── ADDENDUM 2026-11-06 (0.60.416, EE3a) — the Element Engine opens its own page, not the popover ───────────────────────────────────────────
+# James, 2026-11-06: "It’s meant to replace the adblocker also like a full plugin page." MOD-BSH-EXTENSIONS's openPlugin opens the Element Engine
+# (the plugin that was the Ad Blocker, id 8c2f1a90-…) in its own window (renderer/element-engine.html, window:openElementEngine) for the 🧩 row
+# and the pinned 🛡; every other plugin keeps its page in the popover (BS13). If the window cannot open, the popover is shown and that is said.

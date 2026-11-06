@@ -65,6 +65,7 @@ const SPECS = [
   { spec: 'docs/friction-map.spec', map: 'docs/2026-11-01-friction-map-phasemap.spec' },
   { spec: 'cos/spec/compartment.spec', map: null },
   { spec: 'docs/nexus-update.spec', map: null },
+  { spec: 'clear-glass/spec/element-engine.spec', map: null },   // 2026-11-06 EE3a — his "It needs to have a full page to edit, change and add"; compile only (EE0–EE2 predate a spec)
   { spec: 'clear-glass/spec/tray.spec', map: null },   // 2026-11-02 CA1 — his 'clearglass needs a setting for automatically minimizing to tray after a period of time'   // 2026-11-01 UP13 — his 'make sure it hooks into idearium versionium, to backup the system'; compile only (UP0–UP12 predate the spec)   // 2026-11-01 CP0 begun — his 'continue moving the rest of the systems into cos ... resource management ... snapsjot'; compile only until every CP phase names it
   { spec: 'cos/spec/cos-console.spec', map: null },   // 2026-11-03 SC8 — the coder's 0.60.380–0.60.382 modules, moved out of cos-manager.spec
   { spec: 'cos/spec/cos-disk.spec', map: null },      // 2026-11-03 SC8 — DK1, DK6 modules, moved out of cos-manager.spec

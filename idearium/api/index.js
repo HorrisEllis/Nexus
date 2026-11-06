@@ -3348,6 +3348,7 @@ const ROUTE_CAP = {
   'repo.versions.index': CAPS.READ_IDEAS, 'repo.versions.diff': CAPS.READ_IDEAS, 'repo.versions.tree': CAPS.READ_IDEAS,   // §0.60.7
   'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
   'phases.census': CAPS.READ_IDEAS,   // 0.60.188 CNS1 — reads only
+  'phases.ledger': CAPS.READ_IDEAS, 'phases.ledger.history': CAPS.READ_IDEAS, 'phases.ledger.covers': CAPS.READ_IDEAS, 'phases.ledger.log': CAPS.WRITE_IDEAS,   // 0.60.419 SL11 the phase ledger
   'repo.changelog': CAPS.READ_IDEAS, 'ledger.out': CAPS.READ_IDEAS,   // 0.60.190 APV3/APV4 — read only
   'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS, 'releases.changes': CAPS.READ_IDEAS, 'releases.changelog': CAPS.READ_IDEAS, 'versionium.pending': CAPS.READ_IDEAS,   // §0.60.41 RN1 · 0.60.72 RN2 · 0.60.274
   'repo.integrity': CAPS.READ_IDEAS, 'repo.integrity.notes': CAPS.WRITE_IDEAS,
@@ -3879,6 +3880,10 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','releases'],                 'repo.releases.list'],
     ['POST',   ['api','repos',    ':uuid','releases'],                 'repo.releases.create'],     // { version?, quote?, notes? }
     ['GET',    ['api','phases','census'],                              'phases.census'],
+    ['GET',    ['api','phases','ledger'],                              'phases.ledger'],            // 0.60.419 SL11 every phase, the duplicates, the recent events (?system&limit)
+    ['GET',    ['api','phases','ledger','history'],                    'phases.ledger.history'],    // ?phase=
+    ['POST',   ['api','phases','ledger','covers'],                     'phases.ledger.covers'],     // { files, does } → the phases to expand instead
+    ['POST',   ['api','phases','ledger','log'],                        'phases.ledger.log'],        // { phase, event, why, by, version?, map? }
     ['GET',    ['api','phases','next'],                                'phases.next'],              // §SL0 0.60.222 what can be built now, and why the rest cannot (lib/build-queue.js)
     ['GET',    ['api','repos',':uuid','phases','next'],                'repo.phases.next'],            // §SL0 0.60.222 the same, over one repo's maps
     ['GET',    ['api','releases'],                                     'releases.list'],            // ?repository=nexus (default)
@@ -6143,6 +6148,18 @@ async function handle(req, res, route, query, body) {
       const group = query.group ? String(query.group) : null;
       return ok(res, { ...r, queue: r.queue.slice(0, limit), blocked: (group ? r.blocked.filter(b => b.group === group) : r.blocked).slice(0, group ? 2000 : limit), lines: _require('../../lib/build-queue.js').lines(r) });
     }
+    case 'phases.ledger': case 'phases.ledger.history': case 'phases.ledger.covers': case 'phases.ledger.log': {
+      // 0.60.419 SL11 — James, 2026-11-06: "we also need to add a phase ledger, to idearium, then add to claude.md to to always log in the ledger".
+      // Idearium's (idearium/spec-engine/phase-ledger.cjs) over Nexus's maps; the log is the committed idearium/phases/LEDGER.jsonl
+      const L = _require('../spec-engine/phase-ledger.cjs'); const root = _require('../../lib/nexus-self/systems.js').ROOT; const b = body || {};
+      try {
+        if (action === 'phases.ledger') return ok(res, L.ledger({ root, system: query.system ? String(query.system) : null, limit: query.limit }));
+        if (action === 'phases.ledger.history') return ok(res, { phase: String(query.phase || ''), history: L.history({ root, phase: String(query.phase || '') }) });
+        if (action === 'phases.ledger.covers') return ok(res, { covers: L.covers({ root, files: [].concat(b.files || []), does: String(b.does || '') }) });
+        const r = L.log({ root, phase: b.phase, event: b.event, why: b.why, by: b.by || 'idearium', version: b.version || null, map: b.map || null });
+        return r.ok ? ok(res, r) : err(res, 400, r.error);
+      } catch (e) { return err(res, 500, `ledger failed: ${e.message}`); }
+    }
     case 'phases.census': {
       // 0.60.188 CNS1 — every phase of Nexus's maps judged against commits, releases, files and proof (lib/phase-census.js); the
       // per-phase evidence stays in the answer so the UI and agents can show why a verdict was given
@@ -7702,6 +7719,16 @@ async function handle(req, res, route, query, body) {
           r = PD.fromZip(buf, body.project || String(body.filename).replace(/\.zip$/i, ''));
         } else if (body.dir) r = PD.fromDir(String(body.dir), body.project || null);
         else return err(res, 400, 'a .zip (filename + contentBase64) or dir required');
+        // CS0 expanded (0.60.420) — James, 2026-11-06: "i want at some point to haveprimitives built and tested autonomously ... reusable primitives
+        // saving to the component store." test: true runs the project's own tests, each alone in a copy; what they prove is marked verified
+        if (body.test === true) {
+          const T = _require('../lib/primitive-tests.cjs');
+          let root = body.dir ? String(body.dir) : null, tmp = null;
+          if (!root) { const { extractZipToFiles } = _require('../../lib/zip-ingest.js'); const z = extractZipToFiles({ buf: Buffer.from(String(body.contentBase64), 'base64'), maxFiles: 4000, maxBytesPerFile: 512 * 1024, maxTotalBytes: 64 * 1024 * 1024, realFiles: false, includeBinary: false }); tmp = root = T.materialize(z.included || []); }
+          try { const t = T.testProject({ root, components: r.components, timeoutMs: Math.min(Math.max(parseInt(body.timeoutMs, 10) || 30000, 1000), 300000) }); r.tested = { stats: t.stats, results: t.results.map(x => ({ test: x.test, ok: x.ok, why: x.why, ms: x.ms, covers: x.covers })) }; }
+          finally { if (tmp) { try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {} } }
+          os.emit('idearium.components.tested', { project: r.project, ...r.tested.stats });
+        }
         os.emit('idearium.components.decomposed', { project: r.project, components: r.stats.components, created: r.stats.created, unresolved: r.stats.unresolved });
         return ok(res, r);
       } catch (e) { return err(res, e.status || 500, e.message); }
@@ -7721,7 +7748,7 @@ async function handle(req, res, route, query, body) {
       const CS = _require('../../lib/component-store.js');
       if (action === 'components.list') {
         const q = query.q || query.query;
-        return ok(res, { stats: CS.stats(), components: q ? CS.find(q, { limit: Math.min(parseInt(query.limit, 10) || 25, 200) }) : CS.list() });
+        return ok(res, { stats: CS.stats(), components: q ? CS.find(q, { limit: Math.min(parseInt(query.limit, 10) || 25, 200) }) : CS.list({ verified: query.verified === '1', project: query.project ? String(query.project) : null }) });   // ?verified=1: the primitives (CS0 0.60.420)
       }
       const ref = decodeURIComponent(params.id);
       if (action === 'components.invalidate') {

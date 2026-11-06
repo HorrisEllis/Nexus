@@ -246,3 +246,13 @@ spec:
       - { id: GATE-ABK-PURE, name: pure-engine, severity: high, check: "engine.js requires nothing from fs, net or electron", on_failure: "build failure" }
       - { id: GATE-ABK-OFFLINE, name: offline-list, severity: high, check: "built-in list loads with no network; failed update keeps the copy", on_failure: "build failure" }
       - { id: GATE-ABK-DOC, name: page-not-blanked, severity: fatal, check: "mainFrame blocked only by $document", on_failure: "build failure" }
+
+# ── ADDENDUM 2026-11-06 (0.60.416, EE3a) — the Ad Blocker's page is the Element Engine's full page ─────────────────────────────────────────
+# James, 2026-11-06: "That plugin needs to be front end too." · "It’s meant to replace the adblocker also like a full plugin page." · "It needs to
+# have a full page to edit, change and add. Like it needs to be fully featured. Not a small plugin at all dude."
+# - MOD-ABK-SURFACE's UI ("the 🧩 panel's adblocker page") is now renderer/element-engine.html, its own window (clear-glass/spec/element-engine.spec;
+#   the module was written here first and moved there the same day: a module here must name a phase of the adblock map, SS-02). The
+#   popover (MOD-BSH-PLUGIN-SETTINGS) is kept for every other plugin, and for this one if the page cannot open (said).
+# - Reading, to confirm: "a full page" read as its own window, built like the Library; he was asked docked panel or window and answered with the
+#   lines above. The same area files can be docked into browser.html if he meant that.
+# - Driven in Clear Glass's engine (test-cg-element-engine-page-drive, 5/5); inside the full app (preload, Pick) on his PC.

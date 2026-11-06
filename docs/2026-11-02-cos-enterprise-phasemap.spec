@@ -78,6 +78,32 @@ phases:
       on the policy's schedule and broadcasts cos.update.available on its event stream. A command row: cos update.
     proof: "against a fixture repo: available, per-system list, apply restarts only the changed systems"
 
+  CE2b_updates_restart_cos:
+    status: "BUILT 0.60.417 — test-cos-updates CU-08..CU-12 (12/12; CU-11 restarts the real manager both ways); on Windows under NSSM and the COS exe unverified until his run"
+    origin: >-
+      Expanded from CE2 on 2026-11-06. James, 2026-11-06: "updates need to restart cos." Asked what restarts and what happens to Clear Glass
+      (restarting COS's manager stops every system it runs): "the applicable system or module. as long as its done writting." · on Clear
+      Glass: "Ask me first". Before this, an update that changed cos/ or lib/ only said "the next start of COS loads it" (CE2), and Clear
+      Glass only "waits for you".
+    readings_to_confirm:
+      - "\"done writing\": the update has finished writing: its own process ended (git and npm install done) and git's index.lock is gone. The
+         coder's reading; another is \"the system is not in the middle of writing its own data\"."
+      - "\"system or module\": the system whose folder changed, as CE2 does; COS itself when cos/ or lib/ changed. Restarting a single module
+         inside a running system (a hot reload) is not built: to confirm whether he meant it."
+    depends_on: [CE2_updates_as_cos_routes, CA4_the_supervisor_as_a_windows_service]
+    files: [cos/manager/updates.js, cos/manager/relaunch.js, cos/manager/server.js, cos/manager/contract.json, lib/nexus/autopilot.js, cos/ui/updates/page.js, cos/ui/updates/page.css, idearium/cli/route-commands.js, tests/modules/test-cos-updates.test.js]
+    file_roles: "route: server.js; config: contract.json; ui: page.js, page.css; command: route-commands.js"
+    does: >-
+      After an update or a roll back has finished writing, each changed system restarts by itself (CE2, now after the write is checked done).
+      What would close something under him is asked, never done: a change to COS (cos/ or lib/) asks "Restart COS now" (saying Clear Glass
+      closes, when this COS runs it), and Clear Glass asks "Restart Clear Glass now"; each is kept as a pending ask (the Updates page, the
+      bell) until he answers or a later update replaces it. POST /api/cos/update/restart { by: person, what: cos | <system> }, refused while
+      an update is still writing. COS restarting itself: its systems stopped, then the manager exits with code 75 ("restart me"). Started by
+      autopilot (the Windows service and the COS app both run lib/nexus/autopilot.js), autopilot starts the manager again and boots its
+      systems, under the same pid NSSM and the COS app track. Started by hand (no autopilot), relaunch.js waits for the old process to end
+      and its port to free, then starts the same command with --boot. A command row: cos restart <cos|system> (person-only).
+    proof: "test-cos-updates CU-08..CU-10: a change to cos/ asks, never restarts by itself; restart refused while writing; a system restarts on yes; COS restarts and comes back on its port (relaunch); the Updates page shows the asks"
+
   CE3_keep_mine_and_update:
     layer: backend
     status: DONE 0.60.376 — test-nexus-update UP-14, test-cos-updates CU-04

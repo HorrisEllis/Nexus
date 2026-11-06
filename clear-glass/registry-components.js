@@ -237,6 +237,20 @@ const components = [
   // v0.39.251 — the element picker assigns provider selectors (src/providers/selector-assign.js; handoff 2026-09-25 step 1)
   _c('selectors.providerFor', 'IPC', 'selectors:provider-for-url', 'Which NCP provider a page belongs to (src/providers/registry.js hosts) — decides whether a pick is offered as a provider selector', { tags: ['selectors', 'picker', 'providers'] }),
   _c('selectors.assign',      'IPC', 'selectors:assign',           'Record a picked, live-checked input/send/reply selector in guardian\'s selector map (POST :7820/api/agents/:id/selectors, source picker); refused without evidence or with evidence from another provider\'s page', { tags: ['selectors', 'picker', 'guardian'] }),
+  // EE3a (0.60.416) — the Element Engine's full page (renderer/element-engine.html; src/element-engine/index.js). James, 2026-11-06: "It needs to have a full page to edit, change and add."
+  _c('elementEngine.overview', 'GET',  '/cli/element-engine/overview',    'The Element Engine at a glance: blocking on/off, rule counts, every filter list, allowed sites, how many elements he hid, his ErosmancerOS copy', { tags: ['element-engine', 'adblock', 'agent'] }),
+  _c('elementEngine.hidden',   'GET',  '/cli/element-engine/hidden',      'Every element-hiding rule in his filters, by site (exceptions marked)', { tags: ['element-engine', 'adblock', 'agent'] }),
+  _c('elementEngine.hide',     'POST', '/cli/element-engine/hidden',      'Add, change or remove one element-hiding rule ({ op: add|edit|remove, site, selector, rule }) — his: person:true only', { tags: ['element-engine', 'adblock'], permissions: ['person'] }),
+  _c('elementEngine.copy',     'GET',  '/cli/element-engine/copy',        'His ErosmancerOS copy (ES5\'s export folder): its .ts files and which changed', { tags: ['element-engine', 'eros', 'agent'] }),
+  _c('elementEngine.copyRead', 'GET',  '/cli/element-engine/copy/file',   'One file of his ErosmancerOS copy (?file=)', { tags: ['element-engine', 'eros', 'agent'] }),
+  _c('elementEngine.copySave', 'POST', '/cli/element-engine/copy/file',   'Save one .ts file in his copy (inside his folder only; syntax said) — his: person:true only', { tags: ['element-engine', 'eros'], permissions: ['person'] }),
+  _c('elementEngine.export',   'POST', '/cli/element-engine/copy/export', 'Export ErosmancerOS\'s TypeScript to his copy (ES5)', { tags: ['element-engine', 'eros', 'agent'] }),
+  _c('elementEngine.diff',     'POST', '/cli/element-engine/copy/diff',   'What changed in his copy (ES5)', { tags: ['element-engine', 'eros', 'agent'] }),
+  _c('elementEngine.import',   'POST', '/cli/element-engine/copy/import', 'Import his copy into ErosmancerOS with ES5\'s checks — his: person:true only', { tags: ['element-engine', 'eros'], permissions: ['person'] }),
+  _c('elementEngine.pick',     'POST', '/cli/element-engine/pick',        'Bring the browser window he used last forward and start the Guardian picker', { tags: ['element-engine', 'picker', 'agent'] }),
+  _c('elementEngine.open',     'POST', '/cli/element-engine/open',        'Open (or focus) the Element Engine page at an area', { tags: ['element-engine', 'window', 'agent'] }),
+  _c('window.openElementEngine',  'IPC', 'window:openElementEngine',  'Open (or focus) the Element Engine page (the 🧩 row and the pinned 🛡)', { tags: ['window', 'element-engine'] }),
+  _c('window.closeElementEngine', 'IPC', 'window:closeElementEngine', 'Close the Element Engine page', { tags: ['window', 'element-engine'] }),
 ];
 
 module.exports = {

@@ -497,3 +497,17 @@ James, 2026-11-04: "also put in the claude to add any empirical evidence for my 
   run or open) plus: the domain the idea came from, the domain it was carried into, and the number that shows it worked (a test id and its
   count, a measurement before and after). Evidence that goes against the framework is recorded too (TRUTH_OVER_COHERENCE): it is data.
 - No evidence, no entry. A claim with nothing to run or open is left out.
+
+## ADDENDUM 2026-11-06 (0.60.419) — always log in the phase ledger (his rule)
+James, 2026-11-06: "we also need to add a phase ledger, to idearium, then add to claude.md to to always log in the ledger". Said the day he asked
+to stay focused, after a session that wrote and expanded phases in four maps. The ledger is SL11 (docs/2026-10-23-self-building-loop-phasemap.spec),
+Idearium's: `idearium/spec-engine/phase-ledger.cjs`, its log the committed `idearium/phases/LEDGER.jsonl`.
+- **Always log in the ledger.** Every phase written, expanded, built or closed gets one line, in the same commit as the work:
+  `node idearium/spec-engine/phase-ledger.cjs log <phase> <written|expanded|built|closed|note> "<why>" --version <x.y.z> [--map docs/…] [--by coder]`
+  (the command `phases log`, the route POST /api/phases/ledger/log, or the Phases tab's Ledger view). The why quotes him when the work is his ask.
+- **Before writing a phase,** ask the ledger what already covers it: `phase-ledger.cjs covers <files…> --does "what it does"` (`phases covers`). A
+  phase it names is expanded (his 2026-11-03 rule, SL_D11); a new phase is written only when nothing covers the work, and then logged as written.
+- **Read it** with `phase-ledger.cjs ledger` / `history <phase>` / `dups`, `phases ledger`, or the Phases tab › ledger: every phase of every map,
+  the ids written in more than one map, and each phase's events.
+- The reading of "log" as an append-only record of phase events beside the generated table is the coder's, to confirm.
+

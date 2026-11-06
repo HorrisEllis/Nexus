@@ -500,3 +500,10 @@ spec:
 #   regressed test (repo-inject attachEvidence's `regressions`).
 # - MOD-SL-LOOP: start / stop / status / step as specced; deps passed in (load, save, queue, build, runState, land, close, now, emit).
 #   Stop rule: MISSES_MAX (3) phases in a row that did not close (FR10 itself is not wired). Default budget 5 phases, 240 minutes.
+
+# ── ADDENDUM 2026-11-06 (0.60.419) — SL11, the phase ledger (MOD-SL-GROOM grows; the code is Idearium's) ────────────────────────────────────
+# James, 2026-11-06: "we also need to add a phase ledger, to idearium, then add to claude.md to to always log in the ledger". The groom's ledger half
+# lives in idearium/spec-engine/phase-ledger.cjs (not lib/: his 2026-11-03 sovereignty rule): rows (every phase of every map), exactDuplicates and
+# duplicates (ids in more than one map; short ids reused), covers (the phase to expand instead of writing a new one, SL_D11), log / history / recent
+# (idearium/phases/LEDGER.jsonl, committed; events written · expanded · built · closed · note, each with who and why). Acceptance: test-phase-ledger 7/7.
+

@@ -7,11 +7,11 @@ intent: null
 summary: 32 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793708311183
+exported_at: 1793934999558
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793708311183
-lastSeenAt: 1793708311183
+firstSeenAt: 1793934999558
+lastSeenAt: 1793934999558
 fingerprint: null
 payload:
   for: CE2_updates_as_cos_routes
@@ -227,15 +227,18 @@ payload:
     deps:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D0_per_system_reading
     dependents:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2b_updates_restart_cos
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
     upstream:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D0_per_system_reading
     downstream:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2b_updates_restart_cos
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE6_the_exe_carries_it
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE7_borderless
     blockedBy: []
     unlocks:
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2b_updates_restart_cos
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE4_toasts_in_the_cockpit
     conflicts: []
     dangling: []
@@ -243,8 +246,8 @@ payload:
       - layer 1
       - 'depends on (1): CE_D0_per_system_reading'
       - >-
-        needed by (1): CE4_toasts_in_the_cockpit · all downstream 3 · finishing it unlocks
-        CE4_toasts_in_the_cockpit
+        needed by (2): CE2b_updates_restart_cos, CE4_toasts_in_the_cockpit · all downstream 4 ·
+        finishing it unlocks CE2b_updates_restart_cos, CE4_toasts_in_the_cockpit
     edges:
       - from: docs/2026-11-02-cos-enterprise-phasemap.spec::CE_D0_per_system_reading
         kind: declared

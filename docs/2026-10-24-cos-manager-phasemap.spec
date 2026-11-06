@@ -835,6 +835,24 @@ phases_addendum_2026_11_01_mg33:
       on launch when he sets it. COS 0.2.0: the workflow publishes cos-v0.2.0 (portable exe and installer) when this reaches main.
     proof: "test-cos-app-link: a fixture folder linked, started with the system node and no ELECTRON_RUN_AS_NODE, up on /status, stopped; start on launch on and off"
 
+  MG35b_cos_attaches_to_the_running_nexus:
+    status: "BUILT 0.60.418 (COS 0.7.1) — test-cos-app-link 5/5 (CL-02 attaches, CL-05 silent → Restart; both fail on the old controller); on Windows unverified until his run"
+    origin: >-
+      Expanded from MG35 on 2026-11-06. James, 2026-11-06, with a screenshot of COS's window saying "Nexus did not start: nexus linked is
+      already running (pid 7492): stop it first": "opening cos gives this error. can you make it so  only one can and will open to the same
+      instance." Found: COS is already one instance (requestSingleInstanceLock; a second launch shows the first window; Task Manager's "COS (4)"
+      is one app's four Electron processes). The bug is that Nexus, started detached by an earlier COS, outlives the window, and the next COS
+      refuses to start it instead of using it. (His taskbar: "not a cos problem", his words; nothing here.)
+    depends_on: [MG35_the_exe_starts_nexus, MG36_the_cockpit_is_the_window]
+    spec: cos/spec/cos-manager.spec
+    blocks: [MOD-COSA-START-ON-LAUNCH]
+    files: [cos/app/controller.js, cos/app/window.js, cos/app/desktop/main.js, cos/app/desktop/starting.html, cos/app/desktop/starting-preload.js, tests/modules/test-cos-app-link.test.js]
+    file_roles: "ui: starting.html, starting-preload.js"
+    does: >-
+      Start, when the linked Nexus already runs: answering → COS attaches to that same instance (ok, attached, its pid) and the cockpit opens;
+      alive but not answering → said ("running (pid N) but not answering") with Restart Nexus (stop it, then start it), never "stop it first".
+    proof: "test-cos-app-link CL-05: started once, a second start attaches to the same pid; a process alive but silent is said, Restart brings a new one that answers; the starting page shows Restart"
+
   MG36_the_cockpit_is_the_window:
     status: "DONE 0.60.365 (COS 0.3.0) — test-cos-app-window 6/6; on Windows unverified until his run: the UAC approval, the logon task, the tray at logon"
     depends_on: [MG35_the_exe_starts_nexus, CA_D0_the_cockpit_is_the_window]

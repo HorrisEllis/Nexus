@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793860899342
+exported_at: 1793937427718
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793860899342
-lastSeenAt: 1793860899342
+firstSeenAt: 1793937427718
+lastSeenAt: 1793937427718
 fingerprint: null
 payload:
   for: MG0b_the_full_spec
@@ -92,6 +92,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
       - docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
       - docs/2026-10-24-cos-manager-phasemap.spec::MG35_the_exe_starts_nexus
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG35b_cos_attaches_to_the_running_nexus
       - docs/2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
       - docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
       - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
@@ -132,7 +133,7 @@ payload:
         needed by (9): MG1_loom_on_its_registry_spine, MG3_the_state_manager,
         MG5_browsers_and_editors, MG6_settings_by_template_and_type, MG10_categories,
         MG15a_every_system_declares_its_process, MG15_the_supervisor_in_cos,
-        MG18_the_supervisor_screen, MG19_the_spec_bundle · all downstream 63 · finishing it unlocks
+        MG18_the_supervisor_screen, MG19_the_spec_bundle · all downstream 64 · finishing it unlocks
         MG3_the_state_manager, MG5_browsers_and_editors, MG15a_every_system_declares_its_process
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order

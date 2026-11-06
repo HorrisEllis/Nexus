@@ -1487,3 +1487,25 @@ spec:
 # stream, line } for every line a child prints; the manager broadcasts cos.console { lines, dropped? } every 200 ms (at most 500 lines a batch)
 # and serves GET /api/cos/console?limit=&system= (every system's last lines, merged by ts). cos/ui/console/ is a page of the contract (routes:
 # GET /api/cos/console, GET /api/cos/systems, POST|GET /api/cos/cli; listens: cos.console, cos.system.state). Acceptance: test-cos-console-tab 4/4.
+
+# ── ADDENDUM 2026-11-06 (0.60.417) — updates restart COS: asked, once the writing is done (CE2b, docs/2026-11-02-cos-enterprise-phasemap.spec) ─
+# James, 2026-11-06: "updates need to restart cos." Asked what restarts and what happens to Clear Glass (restarting COS's manager stops every
+# system it runs): "the applicable system or module. as long as its done writting." · on Clear Glass: "Ask me first".
+# - cos/manager/updates.js: after an update or a roll back, settled() (the update's process ended, git's index.lock gone) before any restart; each
+#   changed system restarts by itself; COS (cos/ or lib/ changed) and Clear Glass are asked: pending() { to, cos, systems, closes }, on GET
+#   /api/cos/update, the event cos.update { phase: ask-restart }, and the bell. restart({ what: cos | <system> }) is his yes, refused while an
+#   update writes. Before this, a change to COS was only said ("the next start of COS loads it").
+# - POST /api/cos/update/restart { by: person, what } (agents refused, 403). COS restarts itself: its systems stopped, then exit 75 when autopilot
+#   started it (COS_LAUNCHER=autopilot: the Windows service and the COS app) and autopilot starts it again and boots it; started by hand,
+#   cos/manager/relaunch.js waits for it to end and its port to free and starts the same command with --boot.
+# - `cos restart cos` (person-only). The Updates page and the update tool's card ask: Restart now / Later.
+# - Readings to confirm (his): "done writing" read as the update's own writes; "system or module" as the system whose folder changed (no hot
+#   reload of one module inside a running system).
+# - Acceptance: test-cos-updates CU-08..CU-12 (CU-11 restarts the real manager both ways on a fixture tree); CU-03 and CU-07 extended.
+# ── ADDENDUM 2026-11-06 (0.60.418, COS 0.7.1) — COS uses the Nexus already running (MG35b, docs/2026-10-24-cos-manager-phasemap.spec) ─────────
+# James, 2026-11-06, with COS saying "Nexus did not start: nexus linked is already running (pid 7492): stop it first": "opening cos gives this error.
+# can you make it so  only one can and will open to the same instance." COS was already one instance (requestSingleInstanceLock); Nexus, started
+# detached by an earlier COS, outlived the window. MOD-COSA-START-ON-LAUNCH now: a start that finds Nexus running asks it; answering → attached (ok,
+# attached, its pid), the cockpit opens; alive but silent → "running (pid N) but not answering: press Restart Nexus" (controller.restart: stop, start),
+# never "stop it first". The starting page shows Restart Nexus; its bridge gains one call (restart). Acceptance: test-cos-app-link CL-02, CL-05.
+

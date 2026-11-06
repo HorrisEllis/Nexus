@@ -7,11 +7,11 @@ intent: null
 summary: 33 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793860899436
+exported_at: 1793937427820
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793860899436
-lastSeenAt: 1793860899436
+firstSeenAt: 1793937427820
+lastSeenAt: 1793937427820
 fingerprint: null
 payload:
   for: MG35_the_exe_starts_nexus
@@ -239,6 +239,7 @@ payload:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D4_the_cos_app_is_the_application
     dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG35b_cos_attaches_to_the_running_nexus
       - docs/2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
       - docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA5_cos_installs_nexus_from_github
@@ -262,6 +263,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D4_the_cos_app_is_the_application
     downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG35b_cos_attaches_to_the_running_nexus
       - docs/2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
       - docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA4_the_supervisor_as_a_windows_service
@@ -270,6 +272,7 @@ payload:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
     blockedBy: []
     unlocks:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG35b_cos_attaches_to_the_running_nexus
       - docs/2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
       - docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA5_cos_installs_nexus_from_github
@@ -281,9 +284,10 @@ payload:
         depends on (3): MG34_the_cos_channel_always_has_a_way_in, COSA14_versionium_record,
         OC_D4_the_cos_app_is_the_application · all upstream 18
       - >-
-        needed by (3): MG36_the_cockpit_is_the_window, MG37_starts_with_windows,
-        CA5_cos_installs_nexus_from_github · all downstream 6 · finishing it unlocks
-        MG36_the_cockpit_is_the_window, MG37_starts_with_windows, CA5_cos_installs_nexus_from_github
+        needed by (4): MG35b_cos_attaches_to_the_running_nexus, MG36_the_cockpit_is_the_window,
+        MG37_starts_with_windows, CA5_cos_installs_nexus_from_github · all downstream 7 · finishing
+        it unlocks MG35b_cos_attaches_to_the_running_nexus, MG36_the_cockpit_is_the_window,
+        MG37_starts_with_windows, CA5_cos_installs_nexus_from_github
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
         kind: declared

@@ -90,8 +90,20 @@ class Controller {
   unlink(project) { const r = this.store.unlink(this.root, project); if (r.ok) this.emit({ type: 'unlinked', project }); return r; }
   async start(project) { const st = this.store.list(this.root, project)[0];
     if (st && st.linked) { if (!st.linked.present) return { ok: false, error: `the linked folder is gone: ${st.linked.dir} — link it again` };
-      return this._exclusive(project, `starting ${st.linked.version || 'the linked folder'}`, () => this.rt.start(this.root, project, 'linked', { ...this.opts, dir: st.linked.dir })); }
-    if (!st || !st.current) return { ok: false, error: `${project} has no current version: switch to one first` }; return this._exclusive(project, `starting ${st.current}`, () => this.rt.start(this.root, project, st.current, this.opts)); }
+      return this._attachOr(project, () => this._exclusive(project, `starting ${st.linked.version || 'the linked folder'}`, () => this.rt.start(this.root, project, 'linked', { ...this.opts, dir: st.linked.dir }))); }
+    if (!st || !st.current) return { ok: false, error: `${project} has no current version: switch to one first` }; return this._attachOr(project, () => this._exclusive(project, `starting ${st.current}`, () => this.rt.start(this.root, project, st.current, this.opts))); }
+  // MG35b (0.60.418) — James, 2026-11-06: "opening cos gives this error. can you make it so  only one can and will open to the same instance." Nexus
+  // started by an earlier COS outlives the window; the next COS uses that same instance when it answers, and says it is silent (Restart) when not
+  async _attachOr(project, startFn) {
+    const r = await startFn();
+    if (!r || r.ok || r.reason !== 'already-running') return r;
+    const run = await this.rt.status(this.root, project);
+    if (run.running && run.healthy) { this.emit({ type: 'attached', project, pid: run.pid, version: run.version }); return { ok: true, attached: true, pid: run.pid, version: run.version, note: `${project} was already running (pid ${run.pid}): COS uses it` }; }
+    if (run.running) return { ok: false, reason: 'not-answering', pid: run.pid, error: `${project} is already running (pid ${run.pid}) but not answering: press Restart Nexus` };
+    return startFn();   // it ended between the two looks: start it now
+  }
+  // MG35b — Restart Nexus: stop the running one (its whole tree), then start it again
+  async restart(project) { const s = await this.stop(project); if (s && s.ok === false) return { ok: false, error: `it would not stop: ${s.error}` }; return this.start(project); }
   stop(project) { return this._exclusive(project, 'stopping', () => this.rt.stop(this.root, project, this.opts)); }
   remove(project, version) { return this._exclusive(project, `removing ${version}`, async () => this.store.remove(this.root, project, version)); }
   logs(project, lines = 80) { return { ok: true, ...this.rt.logs(this.root, project, { lines }) }; }

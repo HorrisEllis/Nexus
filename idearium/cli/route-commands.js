@@ -541,6 +541,23 @@ export const SPEC = [
   { key: 'trust', usage: 'trust [--repo <uuid>] | trust --set A|B|C --words "<his words>" [--repo <uuid>] [--kept a,b]', about: "his rule for what lands without him (SL5): A every change asks; B a proven change whose gates all passed lands in his project repos, Nexus stays review; C as B and Nexus too, except kept files. Setting it needs his words",
     req: (a) => a.flags.set ? { method: 'POST', path: '/api/trust-rule', body: { rule: String(a.flags.set).toUpperCase(), words: a.flags.words, repo: a.flags.repo || '*', kept: a.flags.kept ? String(a.flags.kept).split(',') : [] } } : { method: 'GET', path: `/api/trust-rule${a.flags.repo ? `?repo=${encodeURIComponent(a.flags.repo)}` : ''}` },
     print: (d) => { const r = d.rule; console.log(`rule ${r.rule} (${r.scope}) — his words: "${r.words || '—'}"${r.kept && r.kept.length ? ` · kept: ${r.kept.join(', ')}` : ''}`); if (r.context) console.log(`  ${r.context}`); } },
+  // 0.60.419 SL11 — James, 2026-11-06: "we also need to add a phase ledger, to idearium, then add to claude.md to to always log in the ledger". Every phase of
+  // every map (generated), each event logged with who and why (idearium/phases/LEDGER.jsonl), and the phases that already cover a piece of work.
+  { key: 'phases.ledger', usage: 'phases ledger [--system s] [--limit n]', about: 'the phase ledger: every phase of every map (done, open, logged), ids written in more than one map, short ids reused, and the latest logged events',
+    req: (a) => ({ method: 'GET', path: `/api/phases/ledger?${a.flags.system ? `system=${encodeURIComponent(a.flags.system)}&` : ''}limit=${encodeURIComponent(a.flags.limit || 20)}` }),
+    print: (d, a, h) => { console.log(`  ${d.total} phases in ${d.maps} maps · ${d.done} done · ${d.open} open · ${d.logged} logged · ${h.c.amber(`${(d.exactDuplicates || []).length} ids in more than one map`)} · ${d.duplicates.length} short ids reused`);
+      for (const e of d.recent || []) console.log(`  ${h.c.dim(e.at.slice(0, 16))} ${e.event.padEnd(8)} ${e.phase} ${h.c.dim('— ' + e.why.slice(0, 100))}`); } },
+  { key: 'phases.log', usage: 'phases log <phase> <written|expanded|built|closed|note> "<why>" [--version x.y.z] [--map docs/…] [--by who]', about: 'log one phase event in the ledger (who, when, why); a phase not in any map is refused unless it is being written',
+    need: (a) => (a.args.length < 3 ? '<phase> <event> "<why>"' : null),
+    req: (a) => ({ method: 'POST', path: '/api/phases/ledger/log', body: { phase: a.args[0], event: a.args[1], why: a.args.slice(2).join(' '), by: a.flags.by ? String(a.flags.by) : 'person', version: a.flags.version ? String(a.flags.version) : null, map: a.flags.map ? String(a.flags.map) : null } }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  logged: ${d.entry.event} ${d.entry.phase}`) : h.c.amber(`  ${d.error}`)) },
+  { key: 'phases.history', usage: 'phases history <phase>', about: 'every ledger event of one phase, oldest first',
+    need: (a) => (a.args[0] ? null : '<phase>'),
+    req: (a) => ({ method: 'GET', path: `/api/phases/ledger/history?phase=${encodeURIComponent(a.args[0])}` }),
+    print: (d, a, h) => { if (!(d.history || []).length) return console.log(h.c.dim('  nothing logged for it yet')); for (const e of d.history) console.log(`  ${h.c.dim(e.at.slice(0, 16))} ${e.event.padEnd(8)} ${e.by} ${h.c.dim('— ' + e.why)}${e.version ? h.c.dim(` (${e.version})`) : ''}`); } },
+  { key: 'phases.covers', usage: 'phases covers <file…> [--does "what the work does"]', about: 'before writing a phase: the phases that already cover these files or this intent — expand one of them instead (his rule, SL_D11)',
+    req: (a) => ({ method: 'POST', path: '/api/phases/ledger/covers', body: { files: a.args, does: a.flags.does ? String(a.flags.does) : '' } }),
+    print: (d, a, h) => { if (!(d.covers || []).length) return console.log(h.c.dim('  nothing covers it: a new phase may be written')); for (const c of d.covers) console.log(`  ${c.id} ${h.c.dim(c.map)} — ${c.why}`); } },
   { key: 'phases.census', usage: 'phases census [--system idearium] [--open]', about: "every phase of Nexus's phasemaps judged against its evidence (commits that name it and touched its code, release lines, its files, its proof's tests and ids): done, partly, mentioned, not-built, no-files, deferred, superseded — and the open ones bottom-up. Deterministic, no model",
     req: (a) => ({ method: 'GET', path: `/api/phases/census?system=${encodeURIComponent(a.flags.system || 'idearium')}` }),
     print: (d, a, h) => { console.log(`  ${d.total} phases · ${Object.entries(d.counts).map(([k, v]) => `${k} ${v}`).join(' · ')}${d.shallow ? h.c.amber(' · SHALLOW history') : ''}`); if (a.flags.open) d.order.forEach((k, i) => console.log(h.c.dim(`  ${String(i + 1).padStart(3)}. ${k.replace(/^docs\//, '')}`))); else console.log(h.c.dim(`  ${d.order.length} open, bottom-up: --open lists them · docs/idearium-phase-census.md is the full table`)); } },
@@ -835,8 +852,12 @@ export const SPEC = [
     req: (a) => ({ method: 'POST', path: `/api/workshop/${encodeURIComponent(a.args[0] || '')}/skip`, body: { step: 'workshop.sections', by: 'person' } }) },
   { key: 'cos.ps', repo: false, usage: 'cos ps', about: 'every declared system as COS\'s supervisor sees it: state, pid, restarts, circuit',
     req: () => ({ method: 'GET', path: '/api/cos/systems' }) },
-  { key: 'cos.act', repo: false, usage: 'cos <start|stop|restart|touch|reset-circuit|pause|resume> <system>', about: 'a person\'s act on one system, through COS\'s supervisor (ledgered before it happens); pause and resume suspend its process tree and read it back from the OS (CP5b)',
-    req: (a) => ({ method: 'POST', path: `/api/cos/systems/${encodeURIComponent(a.args[1] || '')}/${encodeURIComponent(a.args[0] || 'start')}`, body: { by: 'person' } }) },
+  { key: 'cos.act', repo: false, usage: 'cos <start|stop|restart|touch|reset-circuit|pause|resume> <system> · cos restart cos', about: 'a person\'s act on one system, through COS\'s supervisor (ledgered before it happens); pause and resume suspend its process tree and read it back from the OS (CP5b); `cos restart cos` restarts COS itself to load an update (CE2b: its systems stop and come back)',
+    // CE2b (0.60.417) — James, 2026-11-06: "updates need to restart cos." `cos restart cos` is his yes to COS restarting itself (refused while an update writes)
+    personOnly: (a) => (a.args[0] === 'restart' && a.args[1] === 'cos' ? 'restarting COS stops every system it runs: his yes, never an agent\'s (an agent proposes)' : null),
+    req: (a) => (a.args[0] === 'restart' && a.args[1] === 'cos'
+      ? { method: 'POST', path: '/api/cos/update/restart', body: { by: 'person', what: 'cos' } }
+      : { method: 'POST', path: `/api/cos/systems/${encodeURIComponent(a.args[1] || '')}/${encodeURIComponent(a.args[0] || 'start')}`, body: { by: 'person' } }) },
   { key: 'cos.boot', repo: false, usage: 'cos boot [all|core]', about: 'boot the declared systems phase by phase (core = the critical set, CS4a)',
     req: (a) => ({ method: 'POST', path: '/api/cos/boot', timeoutMs: 120000, body: { set: a.args[0] || undefined, by: 'person' } }) },
   { key: 'cos.ledger', repo: false, usage: 'cos ledger [system] [--limit n]', about: 'the supervisor\'s ledger: every spawn, crash, restart, refusal and stop, with why',
@@ -1064,13 +1085,16 @@ export const SPEC = [
       if (!(d.projects || []).length) console.log(h.c.gray('  no projects yet'));
     } },
   // 0.60.5 — the component store from the command line and for every agent (lib/project-decompose.js)
-  { key: 'components', repo: false, usage: 'components [--q words] [--limit n]', about: 'the component store: every stored component, or those matching words',
-    req: (a) => ({ method: 'GET', path: `/api/components${a.flags.q ? `?q=${encodeURIComponent(a.flags.q)}&limit=${parseInt(a.flags.limit, 10) || 25}` : ''}` }),
-    print: (d, a, h) => { for (const c of (d.components || []).slice(0, 200)) console.log(`  ${c.id}${c.latest ? h.c.dim(` @${c.latest}`) : ''}  ${h.c.dim(c.path || '')}`); console.log(h.c.dim(`\n  ${d.stats ? d.stats.components : (d.components || []).length} component(s)`)); } },
-  { key: 'components.decompose', repo: false, usage: 'components decompose <folder> [--project name]', about: 'decompose a project folder into the component store: every code file a component, its requires resolved, its npm packages named',
+  { key: 'components', repo: false, usage: 'components [--q words] [--limit n] [--verified] [--project name]', about: 'the component store: every stored component, or those matching words; --verified: only the primitives a project\'s own tests proved',
+    req: (a) => ({ method: 'GET', path: `/api/components${a.flags.q ? `?q=${encodeURIComponent(a.flags.q)}&limit=${parseInt(a.flags.limit, 10) || 25}` : `?${a.flags.verified ? 'verified=1&' : ''}${a.flags.project ? `project=${encodeURIComponent(a.flags.project)}` : ''}`}` }),
+    print: (d, a, h) => { for (const c of (d.components || []).slice(0, 200)) console.log(`  ${c.tested === 'verified' ? h.c.mint('✓') : c.tested === 'failed' ? h.c.amber('✗') : ' '} ${c.id}${c.latest ? h.c.dim(` @${c.latest}`) : ''}  ${h.c.dim(c.path || '')}`); const s = d.stats || {}; console.log(h.c.dim(`\n  ${s.components != null ? s.components : (d.components || []).length} component(s)${s.verified != null ? ` · ${s.verified} verified · ${s.testedFailed} failed their tests · ${s.untested} untested` : ''}`)); } },
+  // CS0 expanded (0.60.420) — James, 2026-11-06: "i want at some point to haveprimitives built and tested autonomously". --test runs the project's own tests
+  { key: 'components.decompose', repo: false, usage: 'components decompose <folder> [--project name] [--test] [--timeout ms]', about: 'decompose a project folder into the component store: every code file a component, its requires resolved, its npm packages named; --test runs each of its tests alone in a copy and marks the modules they prove as verified primitives',
     need: (a) => (a.args[0] ? null : '<folder>'),
-    req: (a) => ({ method: 'POST', path: '/api/components/decompose', timeoutMs: 10 * 60000, body: { dir: a.args.join(' '), ...(a.flags.project ? { project: a.flags.project } : {}) } }),
-    print: (d, a, h) => { const s = d.stats || {}; console.log(`${h.c.mint('✓')} ${d.project}: ${s.components} component(s), ${s.created} new, ${s.unresolved} unresolved require(s), ${s.skipped} skipped`); if ((d.npm || []).length) console.log(h.c.dim(`  npm: ${d.npm.join(', ')}`)); } },
+    req: (a) => ({ method: 'POST', path: '/api/components/decompose', timeoutMs: 30 * 60000, body: { dir: a.args.join(' '), ...(a.flags.project ? { project: a.flags.project } : {}), ...(a.flags.test ? { test: true } : {}), ...(a.flags.timeout ? { timeoutMs: parseInt(a.flags.timeout, 10) } : {}) } }),
+    print: (d, a, h) => { const s = d.stats || {}; console.log(`${h.c.mint('✓')} ${d.project}: ${s.components} component(s), ${s.created} new, ${s.unresolved} unresolved require(s), ${s.skipped} skipped`); if ((d.npm || []).length) console.log(h.c.dim(`  npm: ${d.npm.join(', ')}`));
+      if (d.tested) { const t = d.tested.stats; console.log(`  tests ${t.passed}/${t.tests} passed · ${h.c.mint(`${t.verified} verified primitives`)} · ${t.failedModules} failed · ${t.untested} untested${t.needsNpm.length ? h.c.amber(` · needs npm: ${t.needsNpm.join(', ')}`) : ''}`);
+        for (const r of d.tested.results.filter(x => !x.ok)) console.log(h.c.dim(`    ✗ ${r.test} — ${r.why}`)); } } },
   { key: 'components.bundle', repo: false, usage: 'components bundle <id>', about: 'one component and everything it requires as one organized zip (component.json, package.json, README, files at their project paths)',
     need: (a) => (a.args[0] ? null : '<id> (idearium components --q words)'),
     req: (a) => ({ method: 'GET', path: `/api/components/${encodeURIComponent(a.args[0])}/bundle?save=1` }),
@@ -1661,6 +1685,25 @@ export const SPEC = [
       if (v === 'check') return { system: 'clear-glass', method: 'GET', path: `/cli/adblock/check?url=${encodeURIComponent(String(a.args[1] || ''))}&page=${encodeURIComponent(String(a.args[2] || ''))}` };
       if (v === 'rules') return { system: 'clear-glass', method: 'POST', path: '/cli/adblock/rules', body: { text: a.args.slice(1).join(' ').replace(/\\n/g, '\n'), person: true } };
       return { system: 'clear-glass', method: 'GET', path: '/cli/adblock/status' };
+    } },
+  // EE3a (0.60.416) — James, 2026-11-06: "It needs to have a full page to edit, change and add. Like it needs to be fully featured." Everything
+  // the Element Engine page does that `adblock` and `eros` do not: element-hiding rules across every site, his ErosmancerOS copy, Pick, the page.
+  // Changing his filters or his copy is his (personOnly); reading is open.
+  { key: 'element-engine', repo: false, usage: 'element-engine <overview|hidden|hide <site|*> <selector>|unhide "<rule>"|copy|copy-read <file.ts>|export|diff|import|pick|open [section]>',
+    about: 'the Element Engine (ad blocking, the Guardian picker, ErosmancerOS): what it holds, every element-hiding rule by site (add, remove), his ErosmancerOS copy (files, read, export, show changes, import with its checks), start the picker in the browser window, open its full page',
+    personOnly: (a) => (['hide', 'unhide', 'import'].includes(a.args[0]) ? 'his filters and his ErosmancerOS code are his to change: ask him (the Element Engine page, or he runs it)' : null),
+    build: (a) => {
+      const v = String(a.args[0] || 'overview'); const C = (method, p, body, t) => ({ system: 'clear-glass', method, path: `/cli/element-engine${p}`, ...(body ? { body } : {}), ...(t ? { timeoutMs: t } : {}) });
+      if (v === 'hidden') return C('GET', '/hidden');
+      if (v === 'hide') return C('POST', '/hidden', { op: 'add', site: a.args[1] === '*' ? '' : String(a.args[1] || ''), selector: a.args.slice(2).join(' '), person: true });
+      if (v === 'unhide') return C('POST', '/hidden', { op: 'remove', rule: a.args.slice(1).join(' '), person: true });
+      if (v === 'copy') return C('GET', '/copy');
+      if (v === 'copy-read') return C('GET', `/copy/file?file=${encodeURIComponent(String(a.args[1] || ''))}`);
+      if (v === 'export' || v === 'diff') return C('POST', `/copy/${v}`, {});
+      if (v === 'import') return C('POST', '/copy/import', { person: true }, 180000);
+      if (v === 'pick') return C('POST', '/pick', {});
+      if (v === 'open') return C('POST', '/open', { area: a.args[1] ? String(a.args[1]) : undefined });
+      return C('GET', '/overview');
     } },
   // BS7 (0.60.179) — James: "can you build a import for firefox profiles and cookies for clearglass.?" Listing is open; importing is his (cookies are sign-ins).
   { key: 'firefox', repo: false, usage: 'firefox <profiles|import [profile name or folder] [--no-cookies] [--bookmarks] [--persona] [--into default|ncp-<provider>]>',

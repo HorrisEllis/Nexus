@@ -54,8 +54,8 @@ spec:
       name: updates
       path: cos/manager/updates.js
       description: "Nexus's update, per system, as COS's (CE2): check, apply, rollback, settings, history."
-      exports: ["createUpdates(sup, { root, emit }) → { check, apply, rollback, settings, setSettings, history, busy, perSystem }"]
-      behavioral_contracts: ["one update at a time; each changed system restarted through the supervisor"]
+      exports: ["createUpdates(sup, { root, emit, restartCos, closesWithCos, settleMs }) → { check, apply, rollback, settings, setSettings, history, busy, perSystem, pending, restart, settled }"]
+      behavioral_contracts: ["one update at a time; each changed system restarted through the supervisor once the writing is done (CE2b, 0.60.417)", "what would close under him (COS itself, Clear Glass) is asked, kept as pending until he answers (CE2b)"]
       error_paths: ["an update running → refused, said"]
 
     - id: IF-RESOURCES

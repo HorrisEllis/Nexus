@@ -1,0 +1,2 @@
+/* Element Engine → typescript (EE3a, 0.60.416). Shared look: ../element-engine.css; this file is for what only this area needs (UI1). */
+body[data-area="typescript"] .ee-files .pane-body { max-height: 360px; overflow: auto; }

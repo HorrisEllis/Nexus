@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- EE3a (0.60.416) — James, 2026-11-06: "It’s meant to replace the adblocker also like a full plugin page." · "It needs to have a full page to
+     edit, change and add. Like it needs to be fully featured. Not a small plugin at all dude."
+     The Element Engine's own window. Like the Library, it IS the Settings runtime (settings/core.js, settings/settings.css): the same frame,
+     rail, panes, rows, modals and toasts. Each area is one JS + one CSS file under element-engine/sections/ (UI1). It reaches only Clear Glass's
+     own doors: the bridge (:7702, /cli/adblock/*, /cli/eros/*, /cli/element-engine/*) and the wire (:7704, ErosmancerOS's workbench).
+     Opened by openElementEngineWindow() (src/main/index.js): the Element Engine in the 🧩 panel, its pinned 🛡, `element-engine open`.
+     Spec: docs/2026-11-05-clear-glass-element-engine-phasemap.spec EE3a_the_full_page. CSP: identical to library.html. -->
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               script-src 'self';
+               style-src 'self' 'unsafe-inline';
+               connect-src 'self' http://127.0.0.1:*;
+               img-src 'self' data:;
+               frame-src 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clear Glass Element Engine</title>
+<link rel="stylesheet" href="settings/settings.css">
+<link rel="stylesheet" href="cos-theme.css">
+<link rel="stylesheet" href="element-engine/element-engine.css">
+</head>
+<body>
+<div id="titlebar">
+  <span class="mark" aria-hidden="true"></span><span class="cos-glyph" aria-hidden="true">🛡</span>
+  <span class="title"><b>Clear Glass</b> element engine</span>
+  <button id="close" title="Close the Element Engine" aria-label="Close the Element Engine">&#x2715;</button>
+</div>
+<div id="shell">
+  <nav id="rail" aria-label="Element Engine sections"></nav>
+  <main id="main" tabindex="-1"></main>
+</div>
+<div id="toasts" aria-live="polite"></div>
+<script src="settings/core.js"></script>
+<script src="library/api.js"></script>
+<script src="element-engine/shared.js"></script>
+<script src="element-engine/sections/overview.js"></script>
+<script src="element-engine/sections/lists.js"></script>
+<script src="element-engine/sections/filters.js"></script>
+<script src="element-engine/sections/allowed.js"></script>
+<script src="element-engine/sections/hidden.js"></script>
+<script src="element-engine/sections/eros-options.js"></script>
+<script src="element-engine/sections/threats.js"></script>
+<script src="element-engine/sections/typescript.js"></script>
+<script src="settings/sections/eros.js"></script>
+<script src="element-engine/boot.js"></script>
+</body>
+</html>
