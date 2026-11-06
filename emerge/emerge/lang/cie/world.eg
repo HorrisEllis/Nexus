@@ -169,6 +169,35 @@ fn check_axioms() {
   for a in _axioms { _check_one(a) }
 }
 
+// ── test blocks (CIE5): each runs after the program, from the same world, as a whatif (lang/runtime.js runTests) ──
+// The try around each test is written by lower.eg into the program itself: an error caught here, inside the world, would be stamped with the
+// caller's line (the world is no_loc, like the prelude), and the ✗ line must name the line that failed.
+var _passed = 0
+var _failed = 0
+fn whatif_begin() {
+  let snap = _snapshot()
+  _ctx = push(_ctx, { kind: "whatif", queue: [], draining: false })
+  return snap
+}
+fn whatif_end(snap, line) {
+  _restore(snap)
+  _append("whatif", { line: line })
+}
+fn whatif_abort(snap) { _restore(snap) }
+fn test_pass(name) {
+  _passed += 1
+  print("✓ {name}")
+}
+fn test_fail(name, e) {
+  _failed += 1
+  print("✗ {name} — {e.file}:{e.line}: {e.message}")
+}
+fn test_summary() {
+  print("{_passed} passed, {_failed} failed")
+  if _failed > 0 { return 1 }
+  return 0
+}
+
 // ── whatif (CIE15): fork the world, run the branch, put every part back, record one entry (lang/runtime.js snapshot / restore) ──
 fn _snapshot() {
   var states = []

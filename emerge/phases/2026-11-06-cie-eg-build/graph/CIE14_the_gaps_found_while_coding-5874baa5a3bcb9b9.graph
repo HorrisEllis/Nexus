@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793999607857
+exported_at: 1794003313103
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793999607857
-lastSeenAt: 1793999607857
+firstSeenAt: 1794003313103
+lastSeenAt: 1794003313103
 fingerprint: null
 payload:
   for: CIE14_the_gaps_found_while_coding
@@ -135,11 +135,6 @@ payload:
           - emerge/emerge/lang/native/codegen.eg
           - emerge/emerge/lang/native/rt.eg
           - emerge/emerge/lang/test/native.test.js
-      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
-        files:
-          - emerge/emerge/lang/native/front.eg
-          - emerge/emerge/lang/native/codegen.eg
-          - emerge/emerge/lang/test/native.test.js
       - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
         files:
           - emerge/emerge/lang/native/rt.eg
@@ -160,10 +155,6 @@ payload:
         same files as CIE15_the_rest_of_the_language with no order between them:
         emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/lower.eg,
         emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg,
-        emerge/emerge/lang/test/native.test.js
-      - >-
-        same files as CIE5_native_test with no order between them:
-        emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/codegen.eg,
         emerge/emerge/lang/test/native.test.js
       - >-
         same files as CIE10_the_door_in_emerge with no order between them:

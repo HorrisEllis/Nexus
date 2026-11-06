@@ -47,7 +47,7 @@ fn uses_world(n) {
     return false
   }
   if type_of(n) != "map" { return false }
-  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit" or n.type == "EmitOut" or n.type == "Send" or n.type == "Wire" or n.type == "Contract" or n.type == "Record" or n.type == "Gap" or n.type == "Promote" or n.type == "Axiom" or n.type == "Whatif") { return true }
+  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit" or n.type == "EmitOut" or n.type == "Send" or n.type == "Wire" or n.type == "Contract" or n.type == "Record" or n.type == "Gap" or n.type == "Promote" or n.type == "Axiom" or n.type == "Whatif" or n.type == "Test") { return true }
   if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and has(WORLD_BUILTINS, n.callee.name) { return true }
   if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and (n.callee.name == "ledger" or n.callee.name == "spent" or n.callee.name == "ledger_verify") and len(n.args) == 0 { return true }
   for k, v in n { if uses_world(v) { return true } }
@@ -231,8 +231,8 @@ fn lower_on(o) {
   return stmt(o, wcall(o, "listen", [str_(o, o.signal), lam(o, [param(o, p)], rw(o.body.body))]))
 }
 
-fn lower(ast, version) {
-  if not uses_world(ast.items) { return ast }
+fn lower(ast, version, test_mode) {
+  if not uses_world(ast.items) and not test_mode { return ast }
   comps = {}
   if has(ast, "file") and ast.file != null { FILE = ast.file }
   for it in ast.items { if it.type == "Compartment" { comps[it.name] = true } }
@@ -259,11 +259,15 @@ fn lower(ast, version) {
   var raw = mk("Null", at, {})
   if contract != null { raw = lit(at, contract.raw) }
   var items = [mk("Use", at, { path: WORLD_PATH, alias: W }), stmt(at, wcall(at, "start", [mk("Num", at, { value: 0 }), str_(at, version), raw]))]
+  var tests = []
   var has_axioms = false
   for it in ast.items { if it.type == "Axiom" { has_axioms = true } }
   k = 0
   for it in ast.items {
-    if it.type == "Axiom" {
+    if it.type == "Test" {
+      // eg test: run after the program (below); eg run: skipped, as the interpreter does
+      if test_mode { tests[len(tests)] = it }
+    } else if it.type == "Axiom" {
       items[len(items)] = stmt(it, wcall(it, "declare_axiom", [str_(it, it.name), mk("Num", it, { value: it.line }), lam(it, [], [mk("Return", it, { expr: rw(it.expr) })])]))
     } else if it.type == "Contract" {
       // nothing here: its raw block went to start
@@ -280,6 +284,22 @@ fn lower(ast, version) {
     k += 1
   }
   items[len(items)] = stmt(at, wcall(at, "finish", []))
+  if test_mode {
+    // each test from the same world, as a whatif, its try in the program so a failure names its own line (lang/runtime.js runTests)
+    var ti = 0
+    for t in tests {
+      let tn = "__test_" + str(ti)
+      let sn = "__snap_" + str(ti)
+      items[len(items)] = let_(t, "let", tn, lam(t, [], rw(t.body.body)))
+      items[len(items)] = let_(t, "let", sn, wcall(t, "whatif_begin", []))
+      let ok = block(t, [stmt(t, call(t, ident(t, tn), [])), stmt(t, wcall(t, "whatif_end", [ident(t, sn), mk("Num", t, { value: t.line })])),
+        stmt(t, wcall(t, "test_pass", [str_(t, t.name)]))])
+      let bad = block(t, [stmt(t, wcall(t, "whatif_abort", [ident(t, sn)])), stmt(t, wcall(t, "test_fail", [str_(t, t.name), ident(t, "__e")]))])
+      items[len(items)] = mk("Try", t, { body: ok, errName: "__e", handler: bad })
+      ti += 1
+    }
+    items[len(items)] = stmt(at, call(at, ident(at, "__exit"), [wcall(at, "test_summary", [])]))
+  }
   var out = {}
   for k, v in ast { out[k] = v }
   out.items = items

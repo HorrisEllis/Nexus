@@ -457,7 +457,13 @@ fn parse_item() {
       want_op("\}", "to close the axiom expression")
       return node("Axiom", t, { name: name, expr: ex })
     }
-    if t.v == "template" or t.v == "test" {
+    if t.v == "test" {
+      next()
+      if not is_tok("STR", null) or peek(0).v == null { perr("expected a plain string test name after test", peek(0)) }
+      let name = next().v
+      return node("Test", t, { name: name, body: parse_block() })
+    }
+    if t.v == "template" {
       refuse_at(t.v, t)
     }
   }

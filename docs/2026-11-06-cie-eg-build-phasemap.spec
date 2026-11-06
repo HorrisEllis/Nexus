@@ -114,7 +114,7 @@ phases:
       world, never skipped. The census of 2026-11-06 (0.60.431) is the starting line: 2 of 8 examples equal.
     proof: "every examples/*.eg natively equals eg run, line for line (native.test 'every example')"
   CIE5_native_test:
-    status: OPEN
+    status: BUILT 0.60.436
     depends_on: [CIE4_native_components]
     spec: emerge/emerge/spec/cie-eg.spec
     blocks: [MOD-NATIVE-SYSTEM]
@@ -323,3 +323,15 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # is the world's next draw (restored) and its whatif entry hash for hash.
 # Census: 5 of 9 (whatif added). Correction, the coder's: earlier addenda said "of 8"; the census has always counted 9 (eight examples and
 # modules/main), so the line was 2, 3, 4 and now 5 of 9. Refused: hello (matches), primitives (kind), tests (test blocks), modules/main (sort_by).
+
+# ── ADDENDUM 2026-11-06 (0.60.436) — CIE5 built: test blocks natively ──
+# James, 2026-11-06: "okay. so are you removing it when you're finisged?" · "continue"
+# emerge <file> --test (native/emerge.eg TEST_MODE, the main file's tests only): front.eg parses test "name" { … }; lower.eg writes, after the
+# program, one try per test in the program itself (an error caught inside the world would carry the caller's line, the world being no_loc), each
+# test run as a whatif from the same world (world.eg whatif_begin / whatif_end / whatif_abort), test_pass / test_fail / test_summary printing what
+# eg test prints, and __exit (rt_b_exit, native-only, called only by lowered code) giving the status. Without --test, test blocks are skipped as
+# eg run skips them. examples/tests.eg natively equals eg test in stdout, stderr and exit status (native.test 101/101); census 6 of 9 in run mode.
+# Found: whatif_branch re-raises an error from inside a whatif expression, so such an error names the whatif's line, not its own; the test runner
+# avoids it, a whatif expression does not yet (CIE14, to close).
+# On his question, said to him: the JavaScript goes file by file, archived (§0.3) as each .eg replacement passes the same tests; the first drop
+# is the interpreter core at CIE11.
