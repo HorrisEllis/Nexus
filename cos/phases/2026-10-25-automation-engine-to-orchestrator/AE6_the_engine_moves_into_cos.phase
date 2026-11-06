@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
+type: phase
+id: docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
+context: >-
+  pipeline phase AE6_the_engine_moves_into_cos of
+  docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+intent: null
+summary: AE6_the_engine_moves_into_cos (library) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793992129885
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793992129885
+lastSeenAt: 1793992129885
+fingerprint: null
+payload:
+  id: AE6_the_engine_moves_into_cos
+  map: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - cos/automation/engine.js
+    - cos/automation/pipeline.js
+    - cos/automation/steps.js
+    - cos/automation/cron.js
+    - cos/automation/routes.js
+  depends_on:
+    - AE_D3_the_home_is_cos
+    - AE4_repoint_the_registry
+  blocks: []
+  spec: null
+  graph: 5546e42168a44181
