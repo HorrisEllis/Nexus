@@ -1,0 +1,252 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BC1_the_document_library:0bdf99348f7b0088
+type: graph
+id: phase:BC1_the_document_library:0bdf99348f7b0088
+context: dependency graph of phase BC1_the_document_library
+intent: null
+summary: 28 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793979424471
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979424471
+lastSeenAt: 1793979424471
+fingerprint: null
+payload:
+  for: BC1_the_document_library
+  kind: phase
+  repo: null
+  hash: 0bdf99348f7b0088
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/library.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/ui/spec-library.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-projects-overview.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-carve.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-undo-any-change.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/core/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: intelligence/spatial/lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/core/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-projects-overview.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-repo-carve.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-undo-any-change.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC0_the_full_spec
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC7_the_workshop_moves_into_cos
+    dependents:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC3_templates_to_start_from
+    upstream:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC0_the_full_spec
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC7_the_workshop_moves_into_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D0_add_has_build
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D1_one_document_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D2_his_editors_are_the_substrate
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D8_the_workshop_moves_into_cos
+    downstream:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC3_templates_to_start_from
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
+    blockedBy:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC0_the_full_spec
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC7_the_workshop_moves_into_cos
+    unlocks:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC3_templates_to_start_from
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by BC0_the_full_spec, BC7_the_workshop_moves_into_cos
+      - 'depends on (2): BC0_the_full_spec, BC7_the_workshop_moves_into_cos · all upstream 6'
+      - >-
+        needed by (2): BC2_the_editor, BC3_templates_to_start_from · all downstream 4 · finishing it
+        unlocks BC3_templates_to_start_from
+    edges:
+      - from: docs/2026-11-01-build-from-cos-phasemap.spec::BC0_the_full_spec
+        kind: declared
+      - from: docs/2026-11-01-build-from-cos-phasemap.spec::BC7_the_workshop_moves_into_cos
+        kind: declared

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6a_every_file_kind
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6a_every_file_kind
+context: pipeline phase RS6a_every_file_kind of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS6a_every_file_kind (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793979429023
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979429023
+lastSeenAt: 1793979429023
+fingerprint: null
+payload:
+  id: RS6a_every_file_kind
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/spec-document.js
+    - idearium/lib/workshop.js
+    - idearium/lib/file-kinds.js
+    - tests/modules/test-workshop-file-kinds.test.js
+  depends_on:
+    - RS3_the_spec_document
+  blocks: []
+  spec: null
+  graph: c4770c1440e3152d

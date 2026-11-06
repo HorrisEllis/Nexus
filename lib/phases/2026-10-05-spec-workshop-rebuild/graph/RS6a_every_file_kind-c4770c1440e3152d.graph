@@ -1,0 +1,87 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RS6a_every_file_kind:c4770c1440e3152d
+type: graph
+id: phase:RS6a_every_file_kind:c4770c1440e3152d
+context: dependency graph of phase RS6a_every_file_kind
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793979429023
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979429023
+lastSeenAt: 1793979429023
+fingerprint: null
+payload:
+  for: RS6a_every_file_kind
+  kind: phase
+  repo: null
+  hash: c4770c1440e3152d
+  nodes:
+    - path: idearium/lib/file-kinds.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/lib/workshop.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/spec-document.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-workshop-file-kinds.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/void.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/api/index.js
+      to: lib/spec-document.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: lib/spec-document.js
+      kind: requires
+    - from: idearium/lib/void.js
+      to: idearium/lib/workshop.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+    dependents:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6b_one_editor_per_kind
+    upstream:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+    downstream:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6b_one_editor_per_kind
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6c_tabs_tree_and_search
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6b_one_editor_per_kind
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): RS3_the_spec_document'
+      - >-
+        needed by (1): RS6b_one_editor_per_kind · all downstream 3 · finishing it unlocks
+        RS6b_one_editor_per_kind
+    edges:
+      - from: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+        kind: declared

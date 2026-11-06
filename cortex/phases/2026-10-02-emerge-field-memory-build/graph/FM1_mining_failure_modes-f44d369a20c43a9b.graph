@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354242
+exported_at: 1793979426705
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354242
-lastSeenAt: 1793962354242
+firstSeenAt: 1793979426705
+lastSeenAt: 1793979426705
 fingerprint: null
 payload:
   for: FM1_mining_failure_modes
@@ -150,6 +150,7 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
     dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
     upstream:
@@ -163,10 +164,13 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
     blockedBy:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
     unlocks: []
@@ -175,12 +179,6 @@ payload:
         files:
           - idearium/repo/proof-run.js
       - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR2_screenshots_through_clear_glass
-        files:
-          - idearium/repo/proof-run.js
-      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
-        files:
-          - idearium/repo/proof-run.js
-      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
         files:
           - idearium/repo/proof-run.js
       - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::DA1_domain_agnostic_end_states
@@ -194,22 +192,20 @@ payload:
       - layer 5 · blocked by CF1_cfr_improved_with_rfr2
       - >-
         depends on (2): PR1_proof_run_the_delivery_checker, CF1_cfr_improved_with_rfr2 · all
-        upstream 11
-      - 'needed by (2): MS1_mental_simulation, GL1_the_graphs_as_a_model'
+        upstream 12
+      - >-
+        needed by (3): LB1_the_end_state_lab, MS1_mental_simulation, GL1_the_graphs_as_a_model · all
+        downstream 4
       - >-
         same files as FV0_fulfil_a_taken_order with no order between them:
         idearium/repo/proof-run.js
       - >-
         same files as PR2_screenshots_through_clear_glass with no order between them:
         idearium/repo/proof-run.js
-      - 'same files as LB1_the_end_state_lab with no order between them: idearium/repo/proof-run.js'
-      - >-
-        same files as RD1_raid_complete_or_build with no order between them:
-        idearium/repo/proof-run.js
       - >-
         same files as DA1_domain_agnostic_end_states with no order between them:
         idearium/repo/proof-run.js
-      - … and 1 more phases sharing its files without an order
+      - 'same files as CL1_the_component_lab with no order between them: idearium/repo/proof-run.js'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
         kind: declared

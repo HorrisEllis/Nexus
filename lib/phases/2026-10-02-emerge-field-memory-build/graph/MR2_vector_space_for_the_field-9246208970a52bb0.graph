@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354120
+exported_at: 1793979426578
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354120
-lastSeenAt: 1793962354120
+firstSeenAt: 1793979426578
+lastSeenAt: 1793979426578
 fingerprint: null
 payload:
   for: MR2_vector_space_for_the_field
@@ -155,6 +155,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB4_the_emergence_loop_builds
@@ -171,7 +172,7 @@ payload:
       - layer 5 · blocked by MR1_recall_triad_and_context_table, CF1_cfr_improved_with_rfr2
       - >-
         depends on (2): MR1_recall_triad_and_context_table, CF1_cfr_improved_with_rfr2 · all
-        upstream 11
+        upstream 12
       - 'needed by (1): CB4_the_emergence_loop_builds'
       - 'same files as MS1_mental_simulation with no order between them: intelligence/cfr/'
     edges:

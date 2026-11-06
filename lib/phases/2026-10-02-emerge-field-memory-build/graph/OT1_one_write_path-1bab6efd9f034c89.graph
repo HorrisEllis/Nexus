@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354105
+exported_at: 1793979426566
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354105
-lastSeenAt: 1793962354105
+firstSeenAt: 1793979426566
+lastSeenAt: 1793979426566
 fingerprint: null
 payload:
   for: OT1_one_write_path
@@ -212,10 +212,15 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
     blockedBy:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
     unlocks: []
@@ -223,8 +228,8 @@ payload:
     dangling: []
     lines:
       - layer 4 · blocked by RF1_relational_field
-      - 'depends on (1): RF1_relational_field · all upstream 9'
-      - 'needed by (2): MR4_field_memory, MR11_rewind_the_mind'
+      - 'depends on (1): RF1_relational_field · all upstream 10'
+      - 'needed by (2): MR4_field_memory, MR11_rewind_the_mind · all downstream 6'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
         kind: declared

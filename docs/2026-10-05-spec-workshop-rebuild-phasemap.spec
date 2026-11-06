@@ -113,6 +113,11 @@ spec:
         Replay a macro: the document rebuilt from the recorded outputs, byte-identical, no model asked. Rewind to any
         step (the rewind engine's seek over the snapshots). Branch from a step: ask again from there, the old path kept.
       proof: "a recorded spec replays byte-identical with zero model calls; rewinding to step 2 gives the document as it was; a branch keeps both paths"
+      expanded_2026_11_06_rewind: >-
+        James, 2026-11-06, asked which of RS2 (the workshop's rewind) and MR11 (the field's) carries rewind: "Rewind would live in the gates. Like
+        ideariums. Flight recorder eventually." Expanded (his rule: phases expand): rewind is the gates' — a snapshot per gate (docs/2026-10-15-gate-
+        held-work-phasemap.spec GW11) and the failure macro and rewind (GW7) — and in time the flight recorder (docs/2026-10-16-repo-carve-phasemap.spec
+        FR4, FR6). This phase does not build its own rewind engine: it uses the gates'.
 
     RS3_the_spec_document:
       layer: library

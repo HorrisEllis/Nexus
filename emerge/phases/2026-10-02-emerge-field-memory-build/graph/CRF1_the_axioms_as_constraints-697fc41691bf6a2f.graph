@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354164
+exported_at: 1793979426625
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354164
-lastSeenAt: 1793962354164
+firstSeenAt: 1793979426625
+lastSeenAt: 1793979426625
 fingerprint: null
 payload:
   for: CRF1_the_axioms_as_constraints
@@ -44,6 +44,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
     blockedBy:
@@ -53,7 +54,7 @@ payload:
     dangling: []
     lines:
       - layer 4 · blocked by RF1_relational_field
-      - 'depends on (1): RF1_relational_field · all upstream 9'
+      - 'depends on (1): RF1_relational_field · all upstream 10'
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field

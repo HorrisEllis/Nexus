@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-build-from-cos-phasemap.spec::BC5_open_loops_imported
+type: phase
+id: docs_2026-11-01-build-from-cos-phasemap.spec::BC5_open_loops_imported
+context: pipeline phase BC5_open_loops_imported of docs/2026-11-01-build-from-cos-phasemap.spec
+intent: null
+summary: BC5_open_loops_imported (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793979424478
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979424478
+lastSeenAt: 1793979424478
+fingerprint: null
+payload:
+  id: BC5_open_loops_imported
+  map: docs/2026-11-01-build-from-cos-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/open-loops/OPEN-LOOPS.spec
+  depends_on:
+    - MG19_the_spec_bundle
+    - MG20_add_deploy_connect
+  blocks: []
+  spec: null
+  graph: 9f5df4175c7c5fc2

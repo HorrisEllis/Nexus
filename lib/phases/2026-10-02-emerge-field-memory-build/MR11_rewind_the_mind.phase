@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
 context: pipeline phase MR11_rewind_the_mind of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
 intent: null
-summary: MR11_rewind_the_mind (?) — 1 file(s)
+summary: MR11_rewind_the_mind (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676648
+exported_at: 1793979426617
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676648
-lastSeenAt: 1792787676648
+firstSeenAt: 1793979426617
+lastSeenAt: 1793979426617
 fingerprint: null
 payload:
   id: MR11_rewind_the_mind
@@ -20,10 +20,16 @@ payload:
   layer: null
   status: OPEN
   files:
+    - emerge/emerge/spec/field.spec
     - docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+    - lib/safe-apply.js
+    - lib/change-record.js
+    - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+    - docs/2026-10-16-repo-carve-phasemap.spec
+    - lib/agent-tools/tools/execution/safe-apply.js
   depends_on:
-    - CF1_cfr_improved_with_rfr2
+    - RF1_relational_field
     - OT1_one_write_path
   blocks: []
   spec: null
-  graph: 7408928bead323c8
+  graph: 743300eba5829e43

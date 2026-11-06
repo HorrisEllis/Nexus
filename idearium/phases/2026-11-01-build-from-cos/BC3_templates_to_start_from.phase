@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-build-from-cos-phasemap.spec::BC3_templates_to_start_from
+type: phase
+id: docs_2026-11-01-build-from-cos-phasemap.spec::BC3_templates_to_start_from
+context: pipeline phase BC3_templates_to_start_from of docs/2026-11-01-build-from-cos-phasemap.spec
+intent: null
+summary: BC3_templates_to_start_from (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793979424475
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979424475
+lastSeenAt: 1793979424475
+fingerprint: null
+payload:
+  id: BC3_templates_to_start_from
+  map: docs/2026-11-01-build-from-cos-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/workshop.html
+  depends_on:
+    - BC1_the_document_library
+  blocks: []
+  spec: null
+  graph: 698e9e6ea0aa91e3

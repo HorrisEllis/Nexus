@@ -180,6 +180,12 @@ phases:
       routes; Idearium's /api/workshop answers by asking COS until every caller is moved, then is archived (§0.3). The workshop reads and saves
       a repo's spec through Idearium's route. The rest of BC (the library, the editor, templates, Build, the compiler) is built in COS from here.
     proof: "the same sessions before and after (count and content); every caller answered through COS; a spec saved from COS's workshop lands in its repo through Idearium's route; driven in Clear Glass"
+    expanded_2026_11_06_scope: >-
+      James, 2026-11-06, asked whether the workshop is for Emerge: "The workshop is for nexus. It’s for yaml files. I want it for all of the node
+      files, schemas, templates, and specs, eg files. Image files etc. like a fully build like office or Libra". Expanded (his rule: phases
+      expand): the workshop in COS edits every kind of Nexus file, not only YAML specs: node files, schemas, templates, specs, .eg (checked and run
+      through Emerge's door), and images; a full suite, as an office suite is (his "Libra" read as LibreOffice, to confirm). Each kind opens in its
+      own editor inside the one workshop. Kept from before: block ids, the template picker, proposals he accepts.
 
 build_order: "BC0 → BC7 (the workshop into COS, BC_D8) → BC1 → (BC2, BC3) → BC4 → BC6 (with MB2 and MG22). BC4 also waits on the open canvas (MG_D18), where Add lives. BC5 waits on MG19/MG20."
 

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6b_one_editor_per_kind
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6b_one_editor_per_kind
+context: pipeline phase RS6b_one_editor_per_kind of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS6b_one_editor_per_kind (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793979429024
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979429024
+lastSeenAt: 1793979429024
+fingerprint: null
+payload:
+  id: RS6b_one_editor_per_kind
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/workshop.html
+    - idearium/ui/js/workshop.js
+    - idearium/ui/css/workshop.css
+  depends_on:
+    - RS6a_every_file_kind
+  blocks: []
+  spec: null
+  graph: 5558084bacc9deff

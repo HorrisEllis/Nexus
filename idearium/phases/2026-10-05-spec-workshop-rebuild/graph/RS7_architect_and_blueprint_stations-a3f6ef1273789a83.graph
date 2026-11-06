@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677047
+exported_at: 1793979429030
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677047
-lastSeenAt: 1792787677047
+firstSeenAt: 1793979429030
+lastSeenAt: 1793979429030
 fingerprint: null
 payload:
   for: RS7_architect_and_blueprint_stations
@@ -116,20 +116,18 @@ payload:
     dependents: []
     upstream:
       - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS1_the_generation_recorder
-      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS2_replay_rewind_branch
       - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
       - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
       - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS5_the_template_picker
       - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
     downstream: []
-    blockedBy:
-      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 4 · blocked by RS6_the_workshop_as_the_editor
-      - 'depends on (1): RS6_the_workshop_as_the_editor · all upstream 6'
+      - layer 4 · ready
+      - 'depends on (1): RS6_the_workshop_as_the_editor · all upstream 5'
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-build-from-cos-phasemap.spec::BC0_the_full_spec
+type: phase
+id: docs_2026-11-01-build-from-cos-phasemap.spec::BC0_the_full_spec
+context: pipeline phase BC0_the_full_spec of docs/2026-11-01-build-from-cos-phasemap.spec
+intent: null
+summary: BC0_the_full_spec (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793979424469
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979424469
+lastSeenAt: 1793979424469
+fingerprint: null
+payload:
+  id: BC0_the_full_spec
+  map: docs/2026-11-01-build-from-cos-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec/document-editor.spec
+    - docs/SPEC-REGISTRY.spec
+  depends_on:
+    - BC_D0_add_has_build
+    - BC_D1_one_document_editor
+    - BC_D2_his_editors_are_the_substrate
+  blocks: []
+  spec: null
+  graph: 101d451414a6021d

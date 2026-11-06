@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6c_tabs_tree_and_search
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6c_tabs_tree_and_search
+context: pipeline phase RS6c_tabs_tree_and_search of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS6c_tabs_tree_and_search (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793979429026
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979429026
+lastSeenAt: 1793979429026
+fingerprint: null
+payload:
+  id: RS6c_tabs_tree_and_search
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/workshop.html
+    - idearium/ui/js/workshop.js
+  depends_on:
+    - RS6b_one_editor_per_kind
+  blocks: []
+  spec: null
+  graph: e614f51e6a0aa8d8

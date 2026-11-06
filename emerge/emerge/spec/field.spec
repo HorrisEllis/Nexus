@@ -227,6 +227,8 @@ spec:
       path: emerge/emerge/field/rewind.eg
       phase: MR11_rewind_the_mind
       description: >-
+        2026-11-06, his: "Rewind would live in the gates. Like ideariums. Flight recorder eventually." The rewind itself is the gates'
+        (GW11 a snapshot per gate, GW7 the failure macro and rewind) and in time the flight recorder (FR4, FR6); this module reads it.
         Rewind on failure: the field refolded from its seed to the last good point of the CIE-EG ledger (through MOD-REPLAY), a branch from
         there, and the retry engine's next attempt (EW1) made from that state instead of from scratch. History is never rewritten; a branch is
         new history that names its fork point.
@@ -278,6 +280,7 @@ spec:
       uuid: nexus-emerge-field-axioms-v1-0000-2026-1106-001
       path: emerge/emerge/field/axioms.eg
       phase: CRF1_the_axioms_as_constraints
+      status: held   # 2026-11-06, his: "I’m not confident about the axioms. They were an example." Not built until he says otherwise.
       description: >-
         His seventeen groups of axioms as the field's top layer: each law a constraint with what it needs, what it checks and whether it is hard
         or soft (as WARP's Axiom weighs them), the checks that already exist named (the boundary and registry ratchets, the DAG, the Versionium

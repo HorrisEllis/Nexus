@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354180
+exported_at: 1793979426641
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354180
-lastSeenAt: 1793962354180
+firstSeenAt: 1793979426641
+lastSeenAt: 1793979426641
 fingerprint: null
 payload:
   for: WS6_workshop_parts_and_modes
@@ -68,6 +68,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
     blockedBy:
@@ -80,7 +81,7 @@ payload:
     dangling: []
     lines:
       - layer 7 · blocked by CB3_the_causal_spec_block
-      - 'depends on (1): CB3_the_causal_spec_block · all upstream 15'
+      - 'depends on (1): CB3_the_causal_spec_block · all upstream 16'
       - 'needed by (0): —'
       - 'same files as UI0_the_stations_agree with no order between them: idearium/ui/workshop.html'
     edges:

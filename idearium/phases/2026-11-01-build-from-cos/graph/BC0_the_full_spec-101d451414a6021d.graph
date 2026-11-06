@@ -1,0 +1,72 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BC0_the_full_spec:101d451414a6021d
+type: graph
+id: phase:BC0_the_full_spec:101d451414a6021d
+context: dependency graph of phase BC0_the_full_spec
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793979424469
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979424469
+lastSeenAt: 1793979424469
+fingerprint: null
+payload:
+  for: BC0_the_full_spec
+  kind: phase
+  repo: null
+  hash: 101d451414a6021d
+  nodes:
+    - path: docs/SPEC-REGISTRY.spec
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/spec/document-editor.spec
+      role: changes
+      exists: false
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D0_add_has_build
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D1_one_document_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D2_his_editors_are_the_substrate
+    dependents:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC1_the_document_library
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC7_the_workshop_moves_into_cos
+    upstream:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D0_add_has_build
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D1_one_document_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D2_his_editors_are_the_substrate
+    downstream:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC1_the_document_library
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC3_templates_to_start_from
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC7_the_workshop_moves_into_cos
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC7_the_workshop_moves_into_cos
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - >-
+        depends on (3): BC_D0_add_has_build, BC_D1_one_document_editor,
+        BC_D2_his_editors_are_the_substrate
+      - >-
+        needed by (2): BC1_the_document_library, BC7_the_workshop_moves_into_cos · all downstream 6
+        · finishing it unlocks BC7_the_workshop_moves_into_cos
+    edges:
+      - from: docs/2026-11-01-build-from-cos-phasemap.spec::BC_D0_add_has_build
+        kind: declared
+      - from: docs/2026-11-01-build-from-cos-phasemap.spec::BC_D1_one_document_editor
+        kind: declared
+      - from: docs/2026-11-01-build-from-cos-phasemap.spec::BC_D2_his_editors_are_the_substrate
+        kind: declared

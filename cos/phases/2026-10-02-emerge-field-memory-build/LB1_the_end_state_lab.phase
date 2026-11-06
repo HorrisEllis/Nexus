@@ -7,11 +7,11 @@ intent: null
 summary: LB1_the_end_state_lab (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676709
+exported_at: 1793979426701
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676709
-lastSeenAt: 1792787676709
+firstSeenAt: 1793979426701
+lastSeenAt: 1793979426701
 fingerprint: null
 payload:
   id: LB1_the_end_state_lab
@@ -28,6 +28,8 @@ payload:
     - PR1_proof_run_the_delivery_checker
     - SH1_shadow_space
     - CB1_cfr_build_logic
+    - V8_the_void_sets_the_end_state
+    - FM1_mining_failure_modes
   blocks: []
   spec: null
   graph: e780bee785bbcbb0

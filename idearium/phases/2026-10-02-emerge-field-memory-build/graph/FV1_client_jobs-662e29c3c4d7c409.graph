@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354208
+exported_at: 1793979426670
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354208
-lastSeenAt: 1793962354208
+firstSeenAt: 1793979426670
+lastSeenAt: 1793979426670
 fingerprint: null
 payload:
   for: FV1_client_jobs
@@ -64,6 +64,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
     blockedBy:
@@ -80,7 +81,7 @@ payload:
         MR8_crystallization
       - >-
         depends on (4): BT1_build_teams, RC1_the_repo_main_chat, EC6_economy_and_the_tokenizer,
-        MR8_crystallization · all upstream 26
+        MR8_crystallization · all upstream 27
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams

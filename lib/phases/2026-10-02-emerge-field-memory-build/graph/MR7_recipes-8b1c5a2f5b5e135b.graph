@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354139
+exported_at: 1793979426598
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354139
-lastSeenAt: 1793962354139
+firstSeenAt: 1793979426598
+lastSeenAt: 1793979426598
 fingerprint: null
 payload:
   for: MR7_recipes
@@ -131,6 +131,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
@@ -147,7 +148,7 @@ payload:
     dangling: []
     lines:
       - layer 5 · blocked by CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic
-      - 'depends on (2): CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic · all upstream 13'
+      - 'depends on (2): CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic · all upstream 14'
       - 'needed by (2): MR8_crystallization, GL1_the_graphs_as_a_model · all downstream 3'
       - >-
         same files as MR10_the_field_between_james_and_the_agents with no order between them:

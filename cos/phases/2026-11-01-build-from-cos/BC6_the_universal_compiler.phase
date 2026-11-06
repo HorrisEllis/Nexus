@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
+type: phase
+id: docs_2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
+context: pipeline phase BC6_the_universal_compiler of docs/2026-11-01-build-from-cos-phasemap.spec
+intent: null
+summary: BC6_the_universal_compiler (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1793979424480
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979424480
+lastSeenAt: 1793979424480
+fingerprint: null
+payload:
+  id: BC6_the_universal_compiler
+  map: docs/2026-11-01-build-from-cos-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/compile.js
+    - cos/archetype/registry.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - tests/modules/test-cos-compile.test.js
+  depends_on:
+    - BC4_build_from_cos
+    - MB2_android_compartment
+    - MG22_template_and_archetype_builder
+  blocks: []
+  spec: null
+  graph: fa159ba1be8f8d98

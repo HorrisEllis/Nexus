@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RS6c_tabs_tree_and_search:e614f51e6a0aa8d8
+type: graph
+id: phase:RS6c_tabs_tree_and_search:e614f51e6a0aa8d8
+context: dependency graph of phase RS6c_tabs_tree_and_search
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793979429026
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979429026
+lastSeenAt: 1793979429026
+fingerprint: null
+payload:
+  for: RS6c_tabs_tree_and_search
+  kind: phase
+  repo: null
+  hash: e614f51e6a0aa8d8
+  nodes:
+    - path: idearium/ui/js/workshop.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/workshop.html
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6b_one_editor_per_kind
+    dependents: []
+    upstream:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6a_every_file_kind
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6b_one_editor_per_kind
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): RS6b_one_editor_per_kind · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6b_one_editor_per_kind
+        kind: declared

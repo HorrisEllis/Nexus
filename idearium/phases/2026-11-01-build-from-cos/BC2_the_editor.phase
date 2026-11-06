@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+type: phase
+id: docs_2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+context: pipeline phase BC2_the_editor of docs/2026-11-01-build-from-cos-phasemap.spec
+intent: null
+summary: BC2_the_editor (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1793979424473
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979424473
+lastSeenAt: 1793979424473
+fingerprint: null
+payload:
+  id: BC2_the_editor
+  map: docs/2026-11-01-build-from-cos-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/workshop.html
+  depends_on:
+    - BC1_the_document_library
+    - BC_D7_the_workshop_is_deterministic_first
+    - MR11_rewind_the_mind
+  blocks: []
+  spec: null
+  graph: 3a8ec164a7d0231f

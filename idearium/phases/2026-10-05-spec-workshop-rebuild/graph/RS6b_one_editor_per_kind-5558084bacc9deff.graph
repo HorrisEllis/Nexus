@@ -1,0 +1,63 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RS6b_one_editor_per_kind:5558084bacc9deff
+type: graph
+id: phase:RS6b_one_editor_per_kind:5558084bacc9deff
+context: dependency graph of phase RS6b_one_editor_per_kind
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793979429024
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979429024
+lastSeenAt: 1793979429024
+fingerprint: null
+payload:
+  for: RS6b_one_editor_per_kind
+  kind: phase
+  repo: null
+  hash: 5558084bacc9deff
+  nodes:
+    - path: idearium/ui/css/workshop.css
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/workshop.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/workshop.html
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6a_every_file_kind
+    dependents:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6c_tabs_tree_and_search
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+    upstream:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6a_every_file_kind
+    downstream:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6c_tabs_tree_and_search
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6c_tabs_tree_and_search
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): RS6a_every_file_kind · all upstream 2'
+      - >-
+        needed by (2): RS6c_tabs_tree_and_search, RS6d_saved_through_the_gates · finishing it
+        unlocks RS6c_tabs_tree_and_search
+    edges:
+      - from: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6a_every_file_kind
+        kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677050
+exported_at: 1793979429036
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677050
-lastSeenAt: 1792787677050
+firstSeenAt: 1793979429036
+lastSeenAt: 1793979429036
 fingerprint: null
 payload:
   for: RS10_the_phases_tab_rebuilt
@@ -42,13 +42,16 @@ payload:
     downstream:
       - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS11_workshop_and_phases_one_surface
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS11_workshop_and_phases_one_surface
     conflicts: []
     dangling: []
     lines:
       - layer 2
       - 'depends on (1): RS9_the_thread · all upstream 2'
-      - 'needed by (1): RS11_workshop_and_phases_one_surface'
+      - >-
+        needed by (1): RS11_workshop_and_phases_one_surface · finishing it unlocks
+        RS11_workshop_and_phases_one_surface
     edges:
       - from: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS9_the_thread
         kind: declared

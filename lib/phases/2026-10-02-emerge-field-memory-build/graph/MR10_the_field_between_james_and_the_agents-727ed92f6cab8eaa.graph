@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354153
+exported_at: 1793979426613
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354153
-lastSeenAt: 1793962354153
+firstSeenAt: 1793979426613
+lastSeenAt: 1793979426613
 fingerprint: null
 payload:
   for: MR10_the_field_between_james_and_the_agents
@@ -94,6 +94,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
     blockedBy:
@@ -106,7 +107,7 @@ payload:
     dangling: []
     lines:
       - layer 6 · blocked by MR9_liminal_on_the_agents
-      - 'depends on (1): MR9_liminal_on_the_agents · all upstream 11'
+      - 'depends on (1): MR9_liminal_on_the_agents · all upstream 12'
       - 'needed by (0): —'
       - 'same files as MR7_recipes with no order between them: lib/repo-hat-memory.js'
     edges:

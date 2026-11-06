@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 7 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793962354066
+exported_at: 1793979426525
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354066
-lastSeenAt: 1793962354066
+firstSeenAt: 1793979426525
+lastSeenAt: 1793979426525
 fingerprint: null
 payload:
   for: EV0_contracts_for_every_system
@@ -285,6 +285,10 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
     blockedBy: []
     unlocks:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
@@ -303,7 +307,7 @@ payload:
       - >-
         needed by (8): EM1_emerge_core, MR1_recall_triad_and_context_table,
         EC6_economy_and_the_tokenizer, SH1_shadow_space, GA1_guardian_source_of_truth, ST1_settings,
-        IN1_nexus_as_claude_codes_toolbox, GG1_graphs_generate_code · all downstream 41 · finishing
+        IN1_nexus_as_claude_codes_toolbox, GG1_graphs_generate_code · all downstream 45 · finishing
         it unlocks EM1_emerge_core, MR1_recall_triad_and_context_table,
         EC6_economy_and_the_tokenizer, SH1_shadow_space, GA1_guardian_source_of_truth, ST1_settings,
         IN1_nexus_as_claude_codes_toolbox, GG1_graphs_generate_code

@@ -1,0 +1,251 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BC6_the_universal_compiler:fa159ba1be8f8d98
+type: graph
+id: phase:BC6_the_universal_compiler:fa159ba1be8f8d98
+context: dependency graph of phase BC6_the_universal_compiler
+intent: null
+summary: 22 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793979424480
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793979424480
+lastSeenAt: 1793979424480
+fingerprint: null
+payload:
+  for: BC6_the_universal_compiler
+  kind: phase
+  repo: null
+  hash: fa159ba1be8f8d98
+  nodes:
+    - path: cos/archetype/registry.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/compile.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-compile.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: cos/archetype/detector.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/archetype/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/blueprint/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/blueprint/registry.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/blueprint.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/archetype/eravos.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/archetype/schema.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/archetype/registry.js
+      to: cos/archetype/schema.js
+      kind: requires
+    - from: cos/archetype/registry.js
+      to: cos/archetype/nexus-system.js
+      kind: requires
+    - from: cos/archetype/registry.js
+      to: cos/archetype/eravos.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/archetype/detector.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: cos/archetype/index.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: cos/blueprint/index.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: cos/blueprint/registry.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: cos/cli/commands/blueprint.js
+      to: cos/archetype/registry.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-10-16-mobile-compartments-phasemap.spec::MB2_android_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG22_template_and_archetype_builder
+    dependents: []
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
+      - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
+      - docs/2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
+      - docs/2026-10-16-mobile-compartments-phasemap.spec::MB2_android_compartment
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG22_template_and_archetype_builder
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D10_the_cockpit_has_its_own_server
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D11_idearium_look_forked
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D12_pages_in_frames_bus_declared
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D16_the_ui_floats_above_the_bus
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D18_no_side_bar_every_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D1_ui_isolated_per_component
+      - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
+      - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+      - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC0_the_full_spec
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC1_the_document_library
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC3_templates_to_start_from
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC7_the_workshop_moves_into_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D0_add_has_build
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D1_one_document_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D2_his_editors_are_the_substrate
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D7_the_workshop_is_deterministic_first
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC_D8_the_workshop_moves_into_cos
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+    downstream: []
+    blockedBy:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-10-16-mobile-compartments-phasemap.spec::MB2_android_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG22_template_and_archetype_builder
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 8 · blocked by BC4_build_from_cos, MB2_android_compartment,
+        MG22_template_and_archetype_builder
+      - >-
+        depends on (3): BC4_build_from_cos, MB2_android_compartment,
+        MG22_template_and_archetype_builder · all upstream 57
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+        kind: declared
+      - from: docs/2026-10-16-mobile-compartments-phasemap.spec::MB2_android_compartment
+        kind: declared
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG22_template_and_archetype_builder
+        kind: declared

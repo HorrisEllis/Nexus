@@ -547,6 +547,11 @@ spec:
       decision_REWIND_D0: "DECIDED 2026-11-06 (his): rewind lives in the gates, like Idearium's; MR11 carries it; RS2 superseded into MR11; flight recorder later (RS1)"
       expanded_2026_11_06_field: >-
         James, 2026-11-06: "Let’s spec out the constrain field … Constrained relational field. Or emergence also. Replacing warp. Let’s get it all specced." · "build it as a layer of emerge like compounding". Expanded (his rule: phases expand): this phase builds MOD-CRF-REWIND of emerge/emerge/spec/field.spec, the constrained relational field (a layer of Emerge over Pillar, written in .eg): rewind on failure: refold to the last good seq of the CIE-EG ledger, branch, retry from there.
+      expanded_2026_11_06_rewind: >-
+        James, 2026-11-06, asked which of RS2 (the workshop's rewind) and MR11 (the field's) carries rewind: "Rewind would live in the gates. Like
+        ideariums. Flight recorder eventually." Expanded (his rule: phases expand): rewind is the gates' — a snapshot per gate (docs/2026-10-15-gate-
+        held-work-phasemap.spec GW11) and the failure macro and rewind (GW7) — and in time the flight recorder (docs/2026-10-16-repo-carve-phasemap.spec
+        FR4, FR6). This phase does not build its own rewind engine: it uses the gates'.
 
     CB1_cfr_build_logic:
       layer: service
