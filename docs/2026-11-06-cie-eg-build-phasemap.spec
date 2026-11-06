@@ -298,3 +298,12 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # The examples moved on to their next refusal: hello → matches (a regular-expression engine, to build in Emerge), idearium → promote,
 # modules/main → sort_by (native needs Emerge to have optional parameters, or a second name: his call, asked), tests → record, axioms → axiom,
 # primitives → kind, whatif → whatif.
+
+# ── ADDENDUM 2026-11-06 (0.60.433) — CIE15 second slice: record, gap, promote, gaps(), random(), uid() natively ──
+# James, 2026-11-06: "just keep going. how are the benchmarks so fatr?"
+# world.eg: the seeded generator (mulberry32, as lang/runtime.js createRng; Math.imul's bits from 16-bit halves, since wrap_mul is not native),
+# uid, random, record_entry (the reserved kinds refused), open_gap (types and pressure checked, gap.opened signalled), gaps(), promote_value (a
+# false proof refused and a logical gap opened). front.eg parses record, gap and promote; lower.eg lowers them with each statement's line and
+# file; the world itself is never lowered (emerge.eg). test/world/language.eg: the same random number, uids, gap ids and 7 ledger hashes natively.
+# Census: 3 of 8 examples equal (idearium added). Refused: axioms (axiom), hello (matches), primitives (kind), tests (test blocks, CIE5),
+# whatif (whatif), modules/main (sort_by, his call on optional parameters).

@@ -874,7 +874,40 @@ fn parse_stmt(top) {
       }
       return node("Expect", t, { cond: cond, msg: msg })
     }
-    if k == "despawn" or k == "record" or k == "gap" or k == "promote" {
+    if k == "record" {
+      next()
+      let name = parse_expr()
+      var payload = null
+      if is_op("\{") {
+        payload = parse_primary()
+      } else if is_kw("with") {
+        next()
+        payload = parse_expr()
+      }
+      return node("Record", t, { name: name, payload: payload })
+    }
+    if k == "gap" {
+      next()
+      let msg = parse_expr()
+      if not is_word("pressure") { perr("GAP_IS_FIRST_CLASS: a gap declares its pressure — gap <message> pressure <0..1> [type <kind>]", peek(0)) }
+      next()
+      let pressure = parse_expr()
+      var gtype = null
+      if is_word("type") {
+        next()
+        gtype = want_ident("a gap type").v
+      }
+      return node("Gap", t, { msg: msg, pressure: pressure, gtype: gtype })
+    }
+    if k == "promote" {
+      next()
+      let value = parse_expr()
+      if not is_kw("with") or not (peek(1).t == "IDENT" and peek(1).v == "proof") { perr("PROOF_REQUIRED_FOR_PROMOTION: promote <value> with proof <bool expr>", peek(0)) }
+      next()
+      next()
+      return node("Promote", t, { value: value, proof: parse_expr() })
+    }
+    if k == "despawn" {
       refuse_at(k, t)
     }
     if k == "use" or k == "compartment" or k == "component" or k == "template" or k == "axiom" or k == "test" or k == "on" {

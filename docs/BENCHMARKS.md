@@ -5,6 +5,25 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-06 — record, gap, promote and the seeded generator natively (CIE15 second slice, 0.60.433)
+- **Measured:** Emerge coding. The seeded generator and the statements built on it.
+- **His words:** "just keep going. how are the benchmarks so fatr?"
+- **Method:** `test/world/language.eg` prints `random()`, two `uid()`s and the gap ids, then every ledger hash. Native must equal `eg run`.
+  Census rerun.
+- **Result:**
+  - The same random number (0.26642920868471265), the same uids and gap ids, and 7 of 7 ledger hashes equal natively.
+  - `examples/idearium.eg` natively equals the interpreter.
+  - native 99/99, selfhost 16/16 (69a576f8…), lang 166/166, differential 19/19.
+- **Speed:** stage 0 took 15.9 s. native.test took 44 s.
+- **Failed runs before the pass:** 5, each one a gap:
+  1. an escaped quote inside an interpolation (again);
+  2. `record`, `gap` and `promote` are keywords and can't be function names;
+  3. the lowering lowered the world itself, which made a use cycle;
+  4. `wrap_mul` is not native, so the 32-bit multiply is built from 16-bit halves;
+  5. a missing reference file in the test setup (the coder's).
+- **Census:** 3 of 8 examples equal natively (was 2).
+- **What came of it:** promotion and gaps, which carry his framework's "gap is first class" axiom, run natively with the interpreter's ids.
+
 ## 2026-11-06 — .., expect, upper and lower natively (CIE15 first slice, 0.60.432)
 - **Measured:** Emerge coding. Four more language features natively.
 - **His words:** "yes. get emerge complete. js removed completely."

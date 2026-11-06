@@ -6,3 +6,11 @@ print(upper("abc"), lower("XyZ"), ["a", "b"] |> map(upper))
 try { expect 1 == 2 } else e { print(e.message) }
 try { expect 1 == 2, "one is not two" } else e { print(e.message) }
 try { expect 3 } else e { print(e.message) }
+// record, gap, promote, gaps(), random() and uid() (CIE15): the seeded generator draws the same numbers natively, so a gap's id, and the
+// ledger's hashes that carry it, are equal
+print(random(), uid("x"), uid())
+record "note" { said: "hello" }
+gap "a test gap" pressure 0.4 type logical
+promote "idea" with proof false
+print(gaps() |> map(fn(g) = "{g.id} {g.type}/{g.pressure}"))
+for e in ledger() { print(e.seq, e.kind, e.hash) }
