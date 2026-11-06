@@ -1,23 +1,23 @@
 envelope: 1
-uuid: nexus-export-graph-phase:EW1_emerge_writes_the_brick:88a84d15a5e1be91
+uuid: nexus-export-graph-phase:EMB1_emerge_writes_the_brick:8e275b4ef0e4e03d
 type: graph
-id: phase:EW1_emerge_writes_the_brick:88a84d15a5e1be91
-context: dependency graph of phase EW1_emerge_writes_the_brick
+id: phase:EMB1_emerge_writes_the_brick:8e275b4ef0e4e03d
+context: dependency graph of phase EMB1_emerge_writes_the_brick
 intent: null
 summary: 31 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793948354094
+exported_at: 1793971500814
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793948354094
-lastSeenAt: 1793948354094
+firstSeenAt: 1793971500814
+lastSeenAt: 1793971500814
 fingerprint: null
 payload:
-  for: EW1_emerge_writes_the_brick
+  for: EMB1_emerge_writes_the_brick
   kind: phase
   repo: null
-  hash: 88a84d15a5e1be91
+  hash: 8e275b4ef0e4e03d
   nodes:
     - path: idearium/api/index.js
       role: changes
