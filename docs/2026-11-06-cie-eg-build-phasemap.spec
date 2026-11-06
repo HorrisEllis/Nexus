@@ -251,3 +251,15 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # the build: native/emerge.eg holds VERSION "1.13.0" beside package.json; the 'world' cases fail if they drift. (3) The interpreter's CLI prints
 # the unrouted notice to stderr; a native program does not print it yet.
 # Next: slice c, components, hooks, wires, the contract block and the gate.
+
+# ── ADDENDUM 2026-11-06 (0.60.430) — CIE14 (a) built: lenses frozen natively; (c) and (d) placed ──
+# James, 2026-11-06: "yes. get emerge complete. js removed completely." · earlier: "remember to take note of metrics while coding in emerge, and expanding emerge while you do."
+# (a) BUILT: freeze(v) is a builtin in both backends (lang/runtime.js def, native rt_b_freeze: bit 256 of the kind word, set through the whole
+#     value); rt_setindex and rt_setmember refuse a write into a frozen value with the interpreter's message; rt_kind, rt_type_name, printing and
+#     equality mask the bit. world.eg's state_of returns freeze(clone(state)). examples/counter.eg natively equals the interpreter line for line,
+#     its read-only lens error included (native.test). Compiler rebuilt, stages byte-identical (9f2aa3db…).
+# (c) PLACED IN CIE6: the bare native compiler has no checker; eg native runs the JS checker first, which refuses a write through a let or a
+#     parameter. The refusal moves into Emerge with the checker (CIE6), not into codegen.
+# (d) PLACED IN CIE11: the unrouted notice is the CLI's (eg.js, stderr); a native program's own stderr comes with a builtin both backends share,
+#     written when the CLI is retired (CIE11).
+# (b) HIS: newlines inside a map literal; a change to both parsers, asked.

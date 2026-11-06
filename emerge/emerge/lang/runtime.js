@@ -1125,6 +1125,7 @@ function createRuntime(opts = {}) {
   def('upper', 1, s => needStr(s, 'upper').toUpperCase());
   def('lower', 1, s => needStr(s, 'lower').toLowerCase());
   def('type_of', 1, v => typeOf(v));
+  def('freeze', 1, v => freeze(v));   // CIE4/CIE14 a: a value made read-only, as a lens is; the same builtin natively (rt_b_freeze)
   def('json', 1, v => stringifyBig(toData(v, 'json')));
   def('parse_json', 1, s => {
     let v;

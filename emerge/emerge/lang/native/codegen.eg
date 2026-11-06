@@ -730,7 +730,7 @@ let BUILTINS = {
   write_file: ["rt_b_write_file", 2, 2], write_bytes: ["rt_b_write_bytes", 2, 2], chmod_exec: ["rt_b_chmod_exec", 1, 1],
   args: ["rt_b_args", 0, 0], idiv: ["rt_idiv", 2, 2], shr_u: ["rt_shr_u", 2, 2], floor: ["rt_b_floor", 1, 1],
   utf8: ["rt_b_utf8", 1, 1], sqrt: ["rt_b_sqrt", 1, 1], truthy: ["rt_b_truthy", 2, 2], split: ["rt_b_split", 2, 2],
-  find_text: ["rt_b_find_text", 2, 2], sha256: ["rt_b_sha256", 1, 1]
+  find_text: ["rt_b_find_text", 2, 2], sha256: ["rt_b_sha256", 1, 1], freeze: ["rt_b_freeze", 1, 1]
 }
 // builtins that take any number of arguments: the arguments go to the runtime as one list
 let VARIADIC = { print: "rt_print", min: "rt_b_min", max: "rt_b_max" }
