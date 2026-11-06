@@ -11,10 +11,10 @@
 //
 // Runs interpreted and native (emerge.exe); SHA-256 comes from the CPU natively (CIE2) and from the OS through Node when interpreted.
 //
-// Text, his D5: the ledger takes text whose every code point is below U+0300 (Basic Latin to Spacing Modifier Letters, all NFC by
-// definition: no character there is changed by normalization). In UTF-8 that is exactly "every byte below 0xCC", one test. Anything
-// beyond is refused by name, never normalized silently; the full NFC tables come later (D5). lang/ledger.js normalizes-checks with the
-// platform's tables, so it accepts more text than this; on the subset the two agree byte for byte (lang/test/native.test.js 'ledger').
+// Text, his D5 ("Restricted subset first"; the subset decided by the axioms 2026-11-06 after his "no idea what that means"): every code
+// point below U+0300, plus – — ‘ ’ “ ” … → ─ ✓ ✗, the punctuation the system writes itself. None decomposes or combines, so such text is
+// NFC by construction. Anything else is refused by name, never normalized; the full NFC tables come later. lang/ledger.js holds the same
+// rule (SUBSET_EXTRA), so a program behaves the same interpreted and native (lang/test/native.test.js 'ledger').
 
 let ZERO = "0000000000000000000000000000000000000000000000000000000000000000"
 let TAG_ENTRY = "eg.ledger.entry.v1\0"
@@ -22,22 +22,58 @@ let TAG_ENTRY = "eg.ledger.entry.v1\0"
 fn _refuse(what) { raise("ledger: {what}") }
 
 // ── ECF (4.3) ────────────────────────────────────────────────────────────────
+/** the punctuation the system writes itself, in the subset beside every code point below U+0300 (D5; lang/ledger.js SUBSET_EXTRA) */
+let SUBSET_EXTRA = [0x2013, 0x2014, 0x2018, 0x2019, 0x201C, 0x201D, 0x2026, 0x2192, 0x2500, 0x2713, 0x2717]
+
+fn _hex4(cp) {
+  let d = "0123456789ABCDEF"
+  var out = ""
+  var k = 12
+  while k >= 0 {
+    let v = (cp >> k) & 15
+    out = out + slice(d, v, v + 1)
+    k -= 4
+  }
+  return out
+}
+
+fn _outside(what, cp) {
+  _refuse("{what} holds U+{_hex4(cp)}, outside the ledger's text subset (CIE-EG D5: below U+0300 and – — ‘ ’ “ ” … → ─ ✓ ✗); the full NFC tables come later")
+}
+
 /** the subset (D5) and JSON's minimal escapes: \" \\ \b \f \n \r \t, other C0 controls as \u00xx, everything else raw UTF-8 */
 fn ecf_string(s, what) {
   let b = bytes(s)
+  let n = len(b)
   let digits = "0123456789abcdef"
   var out = [34]
-  for c in b {
-    if c >= 204 { _refuse("{what} holds a character at or beyond U+0300 — outside the text subset (CIE-EG D5, his \"Restricted subset first\")") }
-    if c == 34 { out = push(push(out, 92), 34) }
-    else if c == 92 { out = push(push(out, 92), 92) }
-    else if c == 8 { out = push(push(out, 92), 98) }
-    else if c == 12 { out = push(push(out, 92), 102) }
-    else if c == 10 { out = push(push(out, 92), 110) }
-    else if c == 13 { out = push(push(out, 92), 114) }
-    else if c == 9 { out = push(push(out, 92), 116) }
-    else if c < 32 { out = push(out, bytes("\\u00{slice(digits, c >> 4, (c >> 4) + 1)}{slice(digits, c & 15, (c & 15) + 1)}")) }
-    else { out = push(out, c) }
+  var i = 0
+  while i < n {
+    let c = b[i]
+    if c >= 0xF0 {
+      _outside(what, ((c & 7) << 18) | ((b[i + 1] & 63) << 12) | ((b[i + 2] & 63) << 6) | (b[i + 3] & 63))
+    } else if c >= 0xE0 {
+      let cp = ((c & 15) << 12) | ((b[i + 1] & 63) << 6) | (b[i + 2] & 63)
+      if index_of(SUBSET_EXTRA, cp) < 0 { _outside(what, cp) }
+      out = push(push(push(out, c), b[i + 1]), b[i + 2])
+      i += 3
+    } else if c >= 0xC0 {
+      let cp = ((c & 31) << 6) | (b[i + 1] & 63)
+      if cp >= 0x300 { _outside(what, cp) }
+      out = push(push(out, c), b[i + 1])
+      i += 2
+    } else {
+      if c == 34 { out = push(push(out, 92), 34) }
+      else if c == 92 { out = push(push(out, 92), 92) }
+      else if c == 8 { out = push(push(out, 92), 98) }
+      else if c == 12 { out = push(push(out, 92), 102) }
+      else if c == 10 { out = push(push(out, 92), 110) }
+      else if c == 13 { out = push(push(out, 92), 114) }
+      else if c == 9 { out = push(push(out, 92), 116) }
+      else if c < 32 { out = push(out, bytes("\\u00{slice(digits, c >> 4, (c >> 4) + 1)}{slice(digits, c & 15, (c & 15) + 1)}")) }
+      else { out = push(out, c) }
+      i += 1
+    }
   }
   return utf8(bytes(push(out, 34)))
 }

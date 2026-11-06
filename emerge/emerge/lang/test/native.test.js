@@ -271,6 +271,69 @@ for (const [name, c] of Object.entries(CASES)) {
   else { fail++; console.log('✗ sha256 — ' + (run ? (fips ? 'differs from the interpreter: ' + JSON.stringify(run.stdout) + ' vs ' + JSON.stringify(ref.stdout) : 'FIPS vectors wrong: ' + JSON.stringify(lines.slice(0, 5))) : (build.stderr || build.stdout))); }
 }
 
+// the ledger's format in Emerge (Nexus phase CIE3, lang/cie/ledger.eg): the independent known answers of ledger.test (a separate Python
+// implementation of §4.2 and §4.6), a real run's ledger re-verified, a forged entry caught, and the text subset (D5) refused the same way
+{
+  const dir = path.join(TMP, 'ledger');
+  fs.mkdirSync(dir);
+  const LEDGER_EG = path.join(LANG, 'cie', 'ledger.eg');
+  const JSON_EG = path.join(LANG, 'native', 'json.eg');
+  fs.writeFileSync(path.join(dir, 'prog.eg'), [
+    'contract demo_main {', '  version = "1.0.0"', '  gate { checkpoint_every = 5 }', '  road Counter.changed -> Display.show', '}',
+    'component Counter {', '  id = "demo.counter"', '  namespace = "demo"', '  version = "1.0.0"', '  state { n: 0 }',
+    '  in bump(x: { by: num }) {', '    state.n += x.by', '    emit out changed { count: state.n }', '  }', '  out changed: { count: num }', '}',
+    'component Display {', '  id = "demo.display"', '  namespace = "demo"', '  version = "1.0.0"', '  in show(v: { count: num }) { print("count {v.count}") }', '}',
+    'for i in range(6) { send Counter.bump { by: 0.5 } }', 'gap "a test gap — with its own punctuation" pressure 0.4 type logical', 'send Counter.bump { by: 1 }',
+  ].join('\n') + '\n');
+  const ledgerFile = path.join(dir, 'ledger.json');
+  spawnSync(process.execPath, [EG, 'run', path.join(dir, 'prog.eg'), '--ledger', ledgerFile], { encoding: 'utf8' });
+  const src = [
+    `use ${JSON.stringify(LEDGER_EG)} as L`, `use ${JSON.stringify(JSON_EG)} as J`,
+    'let e1 = { seq: 1, kind: "genesis", body: { seed: 0, version: "1.7.2", text: { normalization: "nfc", encoding: "utf-8" } }, prev: L.ZERO }',
+    'let h1 = L.hash_entry(e1)',
+    'let e2 = { seq: 2, kind: "note", body: { x: 1, "é": [true, null, "a\\"b\\n"] }, prev: h1 }',
+    'let h2 = L.hash_entry(e2)',
+    'let e3 = { seq: 3, kind: "note", body: { big: 9223372036854775807i }, prev: h2 }',
+    'let h3 = L.hash_entry(e3)',
+    'print(h1)', 'print(h2)', 'print(h3)',
+    'print(L.merkle_root([h1]))', 'print(L.merkle_root([h1, h2, h3]))', 'print(L.merkle_root([]))',
+    'let es = J.parse(read_file(args()[0]))',
+    'var same = 0',
+    'for e in es { if L.hash_entry(e) == e.hash { same += 1 } }',
+    'print("entries", len(es), "rehashed", same, "verify", L.verify(es).ok)',
+    'let hs = map(es, fn(e) = e.hash)',
+    'print("proofs", all(range(len(hs)), fn(i) = L.merkle_fold(hs[i], L.merkle_proof(hs, i)) == L.merkle_root(hs)))',
+    'var t = J.parse(read_file(args()[0]))', 't[2]["kind"] = "forged"', 'let r = L.verify(t)', 'print("forged", r.ok, r.seq, r.reason)',
+    'try { print(L.ecf({ k: "～" })) } else e { print(e.message) }',
+    'try { print(L.ecf("e" + utf8(bytes([0xCC, 0x81])))) } else e { print(e.message) }',
+    'print(L.ecf({ b: 1, "→": 1, "é": 2, z: 3, q: "– — ‘ ’ “ ” … ─ ✓ ✗" }))',
+  ].join('\n') + '\n';
+  fs.writeFileSync(path.join(dir, 'main.eg'), src);
+  const ref = spawnSync(process.execPath, [EG, 'run', path.join(dir, 'main.eg'), ledgerFile], { encoding: 'utf8' });
+  const exe = path.join(dir, 'main.bin');
+  const build = spawnSync(process.execPath, [EG, 'native', path.join(dir, 'main.eg'), '-o', exe], { encoding: 'utf8' });
+  const run = build.status === 0 ? spawnSync(exe, [ledgerFile], { encoding: 'utf8' }) : null;
+  const L = require(path.join(LANG, 'ledger.js'));
+  const es = JSON.parse(fs.readFileSync(ledgerFile, 'utf8'));
+  const want = [
+    '04b037e1547c2ce22ff3ca14ffba18e38246b05590b86c93bfeefe76d6b158f7',
+    'c0ebe12c6a09dfdc17fa8a3df75d457dae05d7a58658b725f6d3e1f8c3481b61',
+    '0cb05ed671bcec5e9e4cefc83ef537f8bc9dbd7137b35a0ab70303f5625347f4',
+    'f8d1a6bdd2e92b6da5486d0b3d33f9e4d4398c7e49191d00bc36b1a581fb5a9c',
+    'a82a29ac215ae0e2b6d4c5cd34c75a0de4a6acdb5915c4396b172f6cdac43493',
+    'ead4e0984ebf7eaf44723405667252a1eca1d5b1d3da97bb97be035163be8fca',
+    `entries ${es.length} rehashed ${es.length} verify true`,
+    'proofs true',
+    'forged false 3 hash does not match the entry',
+    "ledger: value.k holds U+FF5E, outside the ledger's text subset (CIE-EG D5: below U+0300 and – — ‘ ’ “ ” … → ─ ✓ ✗); the full NFC tables come later",
+    "ledger: value holds U+0301, outside the ledger's text subset (CIE-EG D5: below U+0300 and – — ‘ ’ “ ” … → ─ ✓ ✗); the full NFC tables come later",
+    L.ecf({ b: 1, '→': 1, 'é': 2, z: 3, q: '– — ‘ ’ “ ” … ─ ✓ ✗' }),
+  ].join('\n') + '\n';
+  const ok = run && L.verify(es).ok && es.some(e => /→/.test(JSON.stringify(e.body))) && run.stdout === want && ref.stdout === want && run.status === 0;
+  if (ok) { pass++; console.log('✓ ledger (known answers, a real run re-verified, a forged entry, the text subset)'); }
+  else { fail++; console.log('✗ ledger — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout + ref.stderr)}\n    want   ${JSON.stringify(want)}` : (build.stderr || build.stdout))); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');

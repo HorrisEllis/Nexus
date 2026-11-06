@@ -6,7 +6,7 @@ origin: >-
   James, 2026-11-06, the focus: "Emerge first then fiverr maybe? I’m struggling. Emerge is the highest leverage." · on the contract (D7):
   "New contract block" · offered the contract block as the next step: "Next".
 
-status: "CIE1 BUILT 0.60.423. CIE2 BUILT 0.60.424. CIE3–CIE12 MAPPED 2026-11-06 (his CIE_D1: \"Start the JS removal now\")."
+status: "CIE1 BUILT 0.60.423. CIE2 BUILT 0.60.424. CIE3 BUILT 0.60.425 (the format; writing moves to CIE4). CIE4–CIE12 MAPPED 2026-11-06 (his CIE_D1: \"Start the JS removal now\")."
 
 decisions:
   CIE_D1_remove_the_javascript_now:
@@ -73,15 +73,18 @@ phases:
     proof: "known-answer vectors (FIPS 180-4: empty, abc, the 448-bit and 896-bit messages, a million a's) equal to the interpreter's sha256; selfhost byte-identical"
 
   CIE3_native_ledger:
-    status: OPEN
+    status: BUILT 0.60.425
     depends_on: [CIE2_native_sha256]
     spec: emerge/emerge/spec/cie-eg.spec
     blocks: [MOD-NATIVE-SYSTEM]
-    files: [emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/test/native.test.js]
+    files: [emerge/emerge/lang/cie/ledger.eg, emerge/emerge/lang/ledger.js, emerge/emerge/lang/test/ledger.test.js, emerge/emerge/lang/test/native.test.js, emerge/emerge/spec/cie-eg.spec]   # expanded 2026-11-06 from rt.eg/codegen.eg: the format is an Emerge module, not the raw runtime
     requires: [node]
     prerequisites: []
     does: "ECF, the entry hash (domain tag, prev, seq, kind, body), genesis, checkpoints with the Merkle root, natively: the same bytes as lang/ledger.js"
     proof: "a program's ledger from emerge equals the interpreter's hash for hash (differential); ledger.test's known answers natively"
+    # ── BUILT 0.60.425, its scope said: the ledger's format in Emerge (lang/cie/ledger.eg), the same bytes as lang/ledger.js interpreted and
+    # native, and D5's text subset in both (decided by the axioms after his "no idea what that means"). A native program does not write its
+    # own ledger yet: that needs the world natively (components, the gate), so it moves into CIE4, expanded the same day.
 
   CIE4_native_components:
     status: OPEN
@@ -93,6 +96,8 @@ phases:
     prerequisites: []
     does: "compartments, constraints, signals, components, hooks, wires, the contract block and the gate (FIFO, storm limit) natively"
     proof: "the components examples and contract.test's programs give the same output and ledger natively as interpreted"
+    # ── EXPANDED 2026-11-06 (from CIE3): the native world writes its ledger with lang/cie/ledger.eg (genesis with the contract hash, every
+    # entry, checkpoints), and the proof becomes "a native run's ledger equals the interpreter's, hash for hash".
 
   CIE5_native_test:
     status: OPEN
