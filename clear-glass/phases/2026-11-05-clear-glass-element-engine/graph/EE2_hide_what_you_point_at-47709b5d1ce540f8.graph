@@ -1,0 +1,133 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EE2_hide_what_you_point_at:47709b5d1ce540f8
+type: graph
+id: phase:EE2_hide_what_you_point_at:47709b5d1ce540f8
+context: dependency graph of phase EE2_hide_what_you_point_at
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793930492199
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793930492199
+lastSeenAt: 1793930492199
+fingerprint: null
+payload:
+  for: EE2_hide_what_you_point_at
+  kind: phase
+  repo: null
+  hash: 47709b5d1ce540f8
+  nodes:
+    - path: clear-glass/plugins/adblocker/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/browser.html
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/site-hide/hide-bar.css
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/site-hide/hide-bar.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-cg-element-engine-plugin.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/adblock/engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/lists.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/element-engine/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/eros/edit.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/eros/options.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/eros/threats.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/adblock/engine.js
+      kind: requires
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/eros/edit.js
+      kind: requires
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/eros/options.js
+      kind: requires
+    - from: clear-glass/plugins/adblocker/index.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/eros/threats.js
+      kind: requires
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/element-engine/index.js
+      kind: requires
+    - from: tests/modules/test-cg-element-engine-plugin.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
+    dependents:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3a_the_full_page
+    upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+    downstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3a_the_full_page
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3a_the_full_page
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): EE0_the_merged_plugin · all upstream 2'
+      - >-
+        needed by (2): EE3_one_panel, EE3a_the_full_page · all downstream 3 · finishing it unlocks
+        EE3_one_panel, EE3a_the_full_page
+    edges:
+      - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
+        kind: declared

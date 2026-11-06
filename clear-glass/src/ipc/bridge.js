@@ -312,6 +312,29 @@ class IpcBridge {
     this.app.post('/cli/adblock/import', _netRoute(async (b) => b.url ? _ab().addUrl(String(b.url), b.title) : b.text ? _ab().importText(String(b.text), b.title || 'pasted list') : _ab().importPaths([].concat(b.paths || b.path || []))));
     this.app.post('/cli/adblock/remove', _netRoute((b) => _ab().removeList(String(b.id || ''))));
     this.app.get('/cli/adblock/check',    _netRoute((b, q) => ({ ok: true, ..._ab().engine.match({ url: String(q.url || ''), type: String(q.type || 'script'), pageUrl: String(q.page || '') }) })));
+    // EE3a (0.60.416) — the Element Engine's full page. James, 2026-11-06: "It needs to have a full page to edit, change and add. Like it needs
+    // to be fully featured." What the page edits beyond /cli/adblock/* and /cli/eros/*: every element-hiding rule, and his ErosmancerOS copy.
+    // Writes to his filters and to his copy are his: taken only with person:true (the page and the command row set it; an agent's tool never).
+    const _ee = () => require('../element-engine/index.js');
+    const _eeEdit = () => require('../eros/edit.js');
+    const _eeDir = () => process.env.EROS_EDIT_DIR || _eeEdit().defaultDir();
+    const _svcOrNull = () => require('../adblock/lists').service() || null;
+    const _his = (b, fn) => (b.person === true ? fn() : { ok: false, error: 'his filters and his ErosmancerOS copy are his to change (the Element Engine page, or idearium element-engine …)' });
+    this.app.get('/cli/element-engine/overview', _netRoute(() => _ee().overview(_svcOrNull(), { editDir: _eeDir(), edit: _eeEdit() })));
+    this.app.get('/cli/element-engine/hidden', _netRoute(() => _ee().hidden.list(_svcOrNull())));
+    this.app.post('/cli/element-engine/hidden', _netRoute((b) => _his(b, () => {
+      const op = String(b.op || 'add'); const H = _ee().hidden; const s = _svcOrNull();
+      return op === 'add' ? H.add(s, b) : op === 'edit' ? H.edit(s, b) : op === 'remove' ? H.remove(s, b) : { ok: false, error: `op is add, edit or remove (not ${op})` };
+    })));
+    this.app.get('/cli/element-engine/copy', _netRoute(() => _ee().copy.list(_eeDir(), { edit: _eeEdit() })));
+    this.app.get('/cli/element-engine/copy/file', _netRoute((b, q) => _ee().copy.read(_eeDir(), q.file)));
+    this.app.post('/cli/element-engine/copy/file', _netRoute((b) => _his(b, () => _ee().copy.write(_eeDir(), b.file, b.text, { edit: _eeEdit() }))));
+    this.app.post('/cli/element-engine/copy/export', _netRoute(() => _eeEdit().exportTo(_eeDir())));
+    this.app.post('/cli/element-engine/copy/diff', _netRoute(() => _eeEdit().diff(_eeDir())));
+    this.app.post('/cli/element-engine/copy/import', _netRoute((b) => _his(b, () => _eeEdit().importFrom(_eeDir(), { apply: b.apply !== false, force: b.force === true, by: 'james (Element Engine page)' }))));
+    // Pick an element from the page: the browser window comes forward and its picker starts (main/index.js pickInBrowser)
+    this.app.post('/cli/element-engine/pick', _netRoute(() => require('../main/index').pickInBrowser()));
+    this.app.post('/cli/element-engine/open', _netRoute((b) => require('../main/index').openElementEngineWindow(b.area)));
     // SF8 (0.60.184) — host lists through Snowflake: { paths } (files or folders) or { text }, via transport by default; listed and removed as one
     const _hl = () => require('../net/host-import');
     this.app.post('/cli/net/routes/import', _netRoute((b) => { const via = b.via || 'transport'; if (b.text) return _hl().importHosts(_net(), _hl().hostsOf(String(b.text)), { via, list: b.list || 'pasted' }); return _hl().importPaths(_net(), [].concat(b.paths || b.path || []), { via, list: b.list || null }); }));
@@ -1542,6 +1565,9 @@ class IpcBridge {
     // §LIBRARY 0.39.241 — the Library window (renderer/library.html); area picks its section.
     ipcMain.handle('window:openLibrary',  async (e, d) => this.openLibraryFn ? this.openLibraryFn(d && d.area) : { ok: false, error: 'library window not wired' });
     ipcMain.handle('window:closeLibrary', async () => { this.closeLibraryFn?.(); return { ok: true }; });
+    // EE3a (0.60.416) — the Element Engine's full page, and Pick from it
+    ipcMain.handle('window:openElementEngine',  async (e, d) => require('../main/index').openElementEngineWindow(d && d.area));
+    ipcMain.handle('window:closeElementEngine', async () => require('../main/index').closeElementEngineWindow());
     ipcMain.handle('window:list',  async ()    => require('../main/index').listOpenAgents());
     ipcMain.handle('window:focus', async (e, d) => require('../main/index').focusAgentWindow(d));
 

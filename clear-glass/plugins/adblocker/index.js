@@ -129,8 +129,10 @@ function _hide(svc, url, selector) {
   const host = hostOf(url); const sel = String(selector || '').trim();
   if (!svc) return { note: 'The blocker is not running yet; open a window first.' };
   if (!host) return { note: 'Only an http(s) page can hide an element.' };
-  if (!sel || sel.length > 400 || /\n|##|#@#/.test(sel) || sel === 'unknown') return { note: `That element has no selector a rule can use (${sel.slice(0, 60) || 'none'}); nothing was hidden.` };
-  const rule = `${host}##${sel}`;
+  // EE3a (0.60.416): the one check every hide goes through, the full page's too (src/element-engine hideRule)
+  const v = require('../../src/element-engine/index.js').hideRule(host, sel);
+  if (!v.ok) return { note: `That element has no selector a rule can use (${sel.slice(0, 60) || 'none'}); nothing was hidden.` };
+  const rule = v.rule;
   const cur = String(svc.state().custom || '');
   if (cur.split('\n').some(l => l.trim() === rule)) return { note: `Already hidden on ${host}: ${sel}`, rule };
   const r = svc.setCustom(cur.replace(/\s*$/, '') + (cur.trim() ? '\n' : '') + rule + '\n');

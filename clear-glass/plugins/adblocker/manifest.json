@@ -1,10 +1,10 @@
 {
   "id": "8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f",
   "name": "adblocker",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "displayName": "Element Engine",
   "icon": "🛡",
-  "description": "One plugin for what Clear Glass does with a page's elements: Ad blocking (filter lists, element hiding, allowed sites, your own filters — as before), the Guardian picker (point at an element, then gate it or bind a key to it), ErosmancerOS (its state) and editing ErosmancerOS's TypeScript yourself (export a copy, show your changes, import them: syntax checked, old files kept, its own test run). Was the Ad Blocker (2.1.0); the same plugin, so your lists and settings stay.",
+  "description": "One plugin for what Clear Glass does with a page's elements: Ad blocking (filter lists, element hiding, allowed sites, your own filters — as before), the Guardian picker (point at an element, then gate it or bind a key to it), ErosmancerOS (its state) and editing ErosmancerOS's TypeScript yourself (export a copy, show your changes, import them: syntax checked, old files kept, its own test run). It has its own full page (🧩 or the pinned 🛡 opens it): filter lists, your filters, allowed sites, the elements you hid, ErosmancerOS's options and threats, and an editor for your TypeScript copy. Was the Ad Blocker (2.1.0); the same plugin, so your lists and settings stay.",
   "author": "James Brooks (Erosmancer)",
   "entryPoint": "index.js",
   "permissions": {

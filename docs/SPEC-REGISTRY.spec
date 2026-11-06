@@ -2048,3 +2048,7 @@ spec:
 
 # ── ADDENDUM 2026-11-05 (0.60.403) — docs/2026-11-05-bookmark-macros-phasemap.spec ────────────────────────────────────────────────────────
     | `docs/2026-11-05-bookmark-macros-phasemap.spec` | 1.0.0 — a bookmark bound to a macro runs it when it opens (bar: after the page loads; Library: on open). BM1 built 0.60.403 | built | James: "bookmarks with ability to bind macros." |
+
+# ── ADDENDUM 2026-11-06 (0.60.416) — clear-glass/spec/element-engine.spec ─────────────────────────────────────────────────────────────
+# James, 2026-11-06: "It’s meant to replace the adblocker also like a full plugin page." · "It needs to have a full page to edit, change and add."
+    | `clear-glass/spec/element-engine.spec` + `docs/2026-11-05-clear-glass-element-engine-phasemap.spec` (EE3a) | 1.0.0 — FULL build spec: the Element Engine's full page — every element-hiding rule by site (add, change, remove), his ErosmancerOS copy in an editor (save, new file, show changes, import with ES5's checks), lists, his filters, allowed sites, ErosmancerOS options and threats; /cli/element-engine/*, the element-engine command, renderer/element-engine.html. Built 0.60.416 | built | James: "It needs to have a full page to edit, change and add." |

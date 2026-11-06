@@ -331,6 +331,8 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     openProcesses:  ()      => ipcRenderer.invoke('window:openProcesses'),    // SP6 (0.60.220) — renderer/processes.html
     closeProcesses: ()      => ipcRenderer.invoke('window:closeProcesses'),   // §LIBRARY 0.39.241 — renderer/library.html
     closeLibrary: ()        => ipcRenderer.invoke('window:closeLibrary'),
+    openElementEngine: (area) => ipcRenderer.invoke('window:openElementEngine', { area }),   // EE3a (0.60.416) — renderer/element-engine.html
+    closeElementEngine: ()    => ipcRenderer.invoke('window:closeElementEngine'),
     list:         ()        => ipcRenderer.invoke('window:list'),
     focus:        (agentId) => ipcRenderer.invoke('window:focus', { agentId }),
   },

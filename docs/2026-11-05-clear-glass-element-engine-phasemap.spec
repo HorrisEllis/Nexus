@@ -89,12 +89,36 @@ phases:
     proof: "Hide on a page element writes one site##selector rule; the element is hidden on reload; Undo removes the rule"
   EE3_one_panel:
     status: OPEN
+    expanded_2026_11_06: >-
+      James, 2026-11-06: "That plugin needs to be front end too." · "It’s meant to replace the adblocker also like a full plugin page." · "It
+      needs to have a full page to edit, change and add. Like it needs to be fully featured. Not a small plugin at all dude." Context: the
+      coder showed him the Element Engine was only the 🧩 popover (a generic form drawn from the plugin's data) and asked (a) a docked panel in
+      browser.html or (b) its own window; he answered with the three lines above, not with a or b. The coder's reading, TO CONFIRM: "a full
+      page" is its own Clear Glass page, built as Library is (the Settings runtime, one file per section), opened from the 🛡 Element Engine
+      in the 🧩 panel and the toolbar, replacing the popover for this plugin; the same section files can be docked into browser.html later if
+      he meant (a). EE3a (the next phase) is that page; the per-element panel (Hide, Gate, Fill, Name) stays EE3's last part, after EE1.
     depends_on: [EE2_hide_what_you_point_at]
     files: [clear-glass/renderer/guardian-picker.js, clear-glass/renderer/element-panel.js, clear-glass/renderer/element-panel.css]
     does: >-
       One panel for a chosen element: Hide, Gate on it, Fill it, Name it (for a macro), with the element's identity and where it is used.
       The adblock settings and the picked elements of this site are one click away. Tested in Clear Glass (AXIOMS §4.1).
     proof: "Clear Glass driver: pick an element, Hide it, see it in the site's list, Undo"
+  EE3a_the_full_page:
+    status: "BUILT 0.60.416 — test-cg-element-engine-page EG-01..EG-09 (9/9); test-cg-element-engine-page-drive ED-01..ED-05 (5/5, driven in Clear Glass's engine); inside the full app (preload, Pick) to drive on his PC"
+    origin: "expanded from EE3 on 2026-11-06 (his words in EE3.expanded_2026_11_06); the full page first, the per-element panel after EE1"
+    depends_on: [EE2_hide_what_you_point_at, ES3_threats_said_and_handed_over, ES5_edit_the_typescript_yourself]
+    files: [clear-glass/src/element-engine/index.js, clear-glass/src/ipc/bridge.js, clear-glass/src/main/index.js, clear-glass/src/preload/index.js, idearium/cli/route-commands.js, clear-glass/renderer/element-engine.html, clear-glass/renderer/element-engine/boot.js, clear-glass/renderer/element-engine/sections, clear-glass/renderer/settings/core.js, clear-glass/renderer/shell/extensions.js, clear-glass/plugins/adblocker/index.js, clear-glass/plugins/adblocker/manifest.json, tests/modules/test-cg-element-engine-page.test.js, tests/modules/run-all.js]
+    spec: clear-glass/spec/element-engine.spec
+    blocks: [MOD-CGE-BACKEND, MOD-CGE-SURFACE, MOD-CGE-PAGE]
+    file_roles: "route: bridge.js; window: index.js; ui: index.js; command: route-commands.js; ui: element-engine.html; ui: boot.js; ui: sections; ui: core.js; ui: extensions.js; config: manifest.json"
+    does: >-
+      Backend first: src/element-engine/index.js (every element-hiding rule across all sites, listed, added, edited, removed in his own
+      filters; his ErosmancerOS copy's files listed, read and saved, inside his folder only, .ts only). Routes /cli/element-engine/* on
+      Clear Glass's bridge; the command `element-engine` (writes to his filters and his copy are his: personOnly). Then the page, Clear
+      Glass's own window: Overview, Filter lists, My filters, Hidden elements, Allowed sites, ErosmancerOS options, Threats, Edit
+      TypeScript (an editor over his copy: open, change, save, show changes, import with ES5's checks), Pick an element (brings the browser
+      window forward and starts the picker). The 🧩 row and the pinned 🛡 open it. Nothing the CLI cannot do.
+    proof: "test-cg-element-engine-page: the backend's lists, adds, edits and removes; path escapes refused; the page's files load in order, each section registered; the 🧩 row opens the page. Clear Glass (AXIOMS §4.1) cannot run in the coder's sandbox (no Electron here): said, run on his PC."
   EE4_the_old_ways_archived:
     status: OPEN
     depends_on: [EE3_one_panel]

@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-05-clear-glass-element-engine-phasemap.spec::EE3a_the_full_page
+type: phase
+id: docs_2026-11-05-clear-glass-element-engine-phasemap.spec::EE3a_the_full_page
+context: pipeline phase EE3a_the_full_page of docs/2026-11-05-clear-glass-element-engine-phasemap.spec
+intent: null
+summary: EE3a_the_full_page (?) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1793933659915
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793933659915
+lastSeenAt: 1793933659915
+fingerprint: null
+payload:
+  id: EE3a_the_full_page
+  map: docs/2026-11-05-clear-glass-element-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.416 — test-cg-element-engine-page EG-01..EG-09 (9/9);
+    test-cg-element-engine-page-drive ED-01..ED-05 (5/5, driven in Clear Glass's engine); inside the
+    full app (preload, Pick) to drive on his PC"
+  files:
+    - clear-glass/src/element-engine/index.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/main/index.js
+    - clear-glass/src/preload/index.js
+    - idearium/cli/route-commands.js
+    - clear-glass/renderer/element-engine.html
+    - clear-glass/renderer/element-engine/boot.js
+    - clear-glass/renderer/settings/core.js
+    - clear-glass/renderer/shell/extensions.js
+    - clear-glass/plugins/adblocker/index.js
+    - clear-glass/plugins/adblocker/manifest.json
+    - tests/modules/test-cg-element-engine-page.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - EE2_hide_what_you_point_at
+    - ES3_threats_said_and_handed_over
+    - ES5_edit_the_typescript_yourself
+  blocks:
+    - MOD-CGE-BACKEND
+    - MOD-CGE-SURFACE
+    - MOD-CGE-PAGE
+  spec: clear-glass/spec/element-engine.spec
+  graph: 74949cdd1fb15104
