@@ -31,6 +31,7 @@ var _contract = null
 var _contract_hash = null
 var _wires = []
 var _gaps = []
+var _axioms = []
 var _rng = 0i
 
 var _entries = []
@@ -151,6 +152,22 @@ fn open_gap(message, pressure, gtype, line, file) {
   return g
 }
 fn gaps() = _gaps
+
+// ── axioms (CIE15): an axiom guards the whole program, checked when declared and after every top-level statement (lang/runtime.js) ──
+fn _check_one(a) {
+  let check = a.check
+  let v = check()
+  if type_of(v) != "bool" { raise("axiom {a.name} must give a bool, got {type_of(v)}") }
+  if not v { raise("axiom {a.name} (line {a.line}) violated") }
+}
+fn declare_axiom(name, line, check) {
+  _axioms = push(_axioms, { name: name, line: line, check: check })
+  _append("axiom", { name: name })
+  _check_one(_axioms[len(_axioms) - 1])
+}
+fn check_axioms() {
+  for a in _axioms { _check_one(a) }
+}
 fn promote_value(value, proof, line, file) {
   if type_of(proof) != "bool" { raise("a proof must be a bool, got {type_of(proof)}") }
   if proof {
@@ -533,6 +550,18 @@ fn _run_handler(at, comp, sig, run) {
   _ctx = slice(_ctx, 0, len(_ctx) - 1)
   var violations = []
   for k in c.constraints {
+    // a constraint that reads a state field that is null cannot be evaluated: a gap, and the state does not change (lang/runtime.js)
+    var missing = null
+    if has(k, "reads") {
+      for f in k.reads { if missing == null and (not has(working, f) or working[f] == null) { missing = f } }
+    }
+    if missing != null {
+      let g = freeze({ id: uid("gap"), message: "{c.name}.{k.name} cannot be evaluated: state.{missing} is null", pressure: 0.8, type: "evidential", line: null, file: null })
+      _gaps = push(_gaps, g)
+      _append("gap", { compartment: c.name, signal: _label(sig), constraint: k.name, missing: missing, gap: g.id, discarded: _names(hx.buffer) })
+      cx.queue = push(cx.queue, { kind: "signal", name: "gap.opened", payload: g })
+      return null
+    }
     let check = k.check
     if not check(clone(working)) {
       if k.hard {
