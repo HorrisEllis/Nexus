@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
 context: pipeline phase PIL6_the_small_model_bench of docs/2026-11-06-pillar-phasemap.spec
 intent: null
-summary: PIL6_the_small_model_bench (?) — 4 file(s)
+summary: PIL6_the_small_model_bench (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793959386840
+exported_at: 1793961478179
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793959386840
-lastSeenAt: 1793959386840
+firstSeenAt: 1793961478179
+lastSeenAt: 1793961478179
 fingerprint: null
 payload:
   id: PIL6_the_small_model_bench
@@ -24,9 +24,10 @@ payload:
     - pillar/bench/tasks/*
     - pillar/test/bench.test.eg
     - pillar/spec/pillar.spec
+    - docs/2026-10-02-emerge-field-memory-build-phasemap.spec
   depends_on:
     - PIL3_conformance
   blocks:
     - MOD-PIL-BENCH
   spec: pillar/spec/pillar.spec
-  graph: a944ab38a1ddb0f7
+  graph: 376c8a936bf2ea78

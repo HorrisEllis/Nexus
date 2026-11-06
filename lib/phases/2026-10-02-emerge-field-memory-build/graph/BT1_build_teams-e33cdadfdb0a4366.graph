@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792878421502
+exported_at: 1793961475704
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792878421502
-lastSeenAt: 1792878421502
+firstSeenAt: 1793961475704
+lastSeenAt: 1793961475704
 fingerprint: null
 payload:
   for: BT1_build_teams
@@ -207,7 +207,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 6
+    layer: 5
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
@@ -216,14 +216,17 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
     upstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
     blockedBy:
@@ -242,10 +245,10 @@ payload:
           - idearium/api/index.js
     dangling: []
     lines:
-      - layer 6 · blocked by CB1_cfr_build_logic, SH1_shadow_space
+      - layer 5 · blocked by CB1_cfr_build_logic, SH1_shadow_space
       - >-
         depends on (3): GA1_guardian_source_of_truth, CB1_cfr_build_logic, SH1_shadow_space · all
-        upstream 9
+        upstream 12
       - 'needed by (1): FV1_client_jobs'
       - 'same files as RC1_the_repo_main_chat with no order between them: idearium/api/index.js'
       - 'same files as FV0_fulfil_a_taken_order with no order between them: idearium/api/index.js'

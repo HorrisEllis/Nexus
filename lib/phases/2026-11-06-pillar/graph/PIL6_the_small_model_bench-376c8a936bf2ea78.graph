@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PIL6_the_small_model_bench:376c8a936bf2ea78
+type: graph
+id: phase:PIL6_the_small_model_bench:376c8a936bf2ea78
+context: dependency graph of phase PIL6_the_small_model_bench
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793961478179
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793961478179
+lastSeenAt: 1793961478179
+fingerprint: null
+payload:
+  for: PIL6_the_small_model_bench
+  kind: phase
+  repo: null
+  hash: 376c8a936bf2ea78
+  nodes:
+    - path: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: pillar/spec/pillar.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+    dependents: []
+    upstream:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+    downstream: []
+    blockedBy:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+        files:
+          - pillar/spec/pillar.spec
+      - with: docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
+        files:
+          - pillar/spec/pillar.spec
+    dangling: []
+    lines:
+      - layer 4 · blocked by PIL3_conformance
+      - 'depends on (1): PIL3_conformance · all upstream 6'
+      - 'needed by (0): —'
+      - 'same files as PIL4_three_identities with no order between them: pillar/spec/pillar.spec'
+      - 'same files as PIL5_the_duplicates_census with no order between them: pillar/spec/pillar.spec'
+    edges:
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+        kind: declared

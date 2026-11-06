@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 9 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877949856
+exported_at: 1793961475755
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877949856
-lastSeenAt: 1792877949856
+firstSeenAt: 1793961475755
+lastSeenAt: 1793961475755
 fingerprint: null
 payload:
   for: RD1_raid_complete_or_build
@@ -250,22 +250,25 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 7
+    layer: 6
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
     dependents: []
     upstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
     blockedBy:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
@@ -288,8 +291,8 @@ payload:
           - idearium/repo/proof-run.js
     dangling: []
     lines:
-      - layer 7 · blocked by LB1_the_end_state_lab
-      - 'depends on (2): PR1_proof_run_the_delivery_checker, LB1_the_end_state_lab · all upstream 10'
+      - layer 6 · blocked by LB1_the_end_state_lab
+      - 'depends on (2): PR1_proof_run_the_delivery_checker, LB1_the_end_state_lab · all upstream 13'
       - 'needed by (0): —'
       - >-
         same files as FV0_fulfil_a_taken_order with no order between them:

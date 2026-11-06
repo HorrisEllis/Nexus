@@ -7,11 +7,11 @@ intent: null
 summary: EM1_emerge_core (?) — 12 file(s)
 system: idearium
 tags: []
-exported_at: 1792841754419
+exported_at: 1793961419752
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754419
-lastSeenAt: 1792841754419
+firstSeenAt: 1793961419752
+lastSeenAt: 1793961419752
 fingerprint: null
 payload:
   id: EM1_emerge_core
@@ -37,4 +37,4 @@ payload:
     - EV0_contracts_for_every_system
   blocks: []
   spec: null
-  graph: 3081873fda6fe4b1
+  graph: cb80d69318e9dd34

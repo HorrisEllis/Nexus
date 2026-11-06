@@ -9,11 +9,11 @@ intent: null
 summary: EV0_contracts_for_every_system (?) — 13 file(s)
 system: idearium
 tags: []
-exported_at: 1792879043522
+exported_at: 1793961419734
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792879043522
-lastSeenAt: 1792879043522
+firstSeenAt: 1793961419734
+lastSeenAt: 1793961419734
 fingerprint: null
 payload:
   id: EV0_contracts_for_every_system
@@ -39,4 +39,4 @@ payload:
     - EM0_ground
   blocks: []
   spec: null
-  graph: 60509f2745f35707
+  graph: c404b474d03b5d17

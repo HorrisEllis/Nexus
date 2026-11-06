@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841754500
+exported_at: 1793961475696
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754500
-lastSeenAt: 1792841754500
+firstSeenAt: 1793961475696
+lastSeenAt: 1793961475696
 fingerprint: null
 payload:
   for: SH1_shadow_space
@@ -142,7 +142,6 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
     downstream:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
-      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB4_the_emergence_loop_builds
@@ -179,7 +178,7 @@ payload:
       - 'depends on (2): EM0_ground, EV0_contracts_for_every_system'
       - >-
         needed by (4): EM2_warp_his_own, BT1_build_teams, IN2_claude_code_inside_nexus,
-        LB1_the_end_state_lab · all downstream 28 · finishing it unlocks EM2_warp_his_own
+        LB1_the_end_state_lab · all downstream 27 · finishing it unlocks EM2_warp_his_own
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
         kind: declared

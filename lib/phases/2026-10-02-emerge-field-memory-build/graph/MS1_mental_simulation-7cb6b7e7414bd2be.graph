@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787676714
+exported_at: 1793961475750
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676714
-lastSeenAt: 1792787676714
+firstSeenAt: 1793961475750
+lastSeenAt: 1793961475750
 fingerprint: null
 payload:
   for: MS1_mental_simulation
@@ -27,7 +27,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 7
+    layer: 6
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
@@ -44,6 +44,12 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
     blockedBy:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
@@ -55,8 +61,8 @@ payload:
           - intelligence/cfr/
     dangling: []
     lines:
-      - layer 7 · blocked by FM1_mining_failure_modes, LB1_the_end_state_lab
-      - 'depends on (2): FM1_mining_failure_modes, LB1_the_end_state_lab · all upstream 11'
+      - layer 6 · blocked by FM1_mining_failure_modes, LB1_the_end_state_lab
+      - 'depends on (2): FM1_mining_failure_modes, LB1_the_end_state_lab · all upstream 17'
       - 'needed by (0): —'
       - 'same files as MR2_vector_space_for_the_field with no order between them: intelligence/cfr/'
     edges:

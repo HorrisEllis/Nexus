@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793959386830
+exported_at: 1793961478169
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793959386830
-lastSeenAt: 1793959386830
+firstSeenAt: 1793961478169
+lastSeenAt: 1793961478169
 fingerprint: null
 payload:
   for: PIL1_pillar_stands
@@ -138,6 +138,18 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB4_the_emergence_loop_builds
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
@@ -153,7 +165,7 @@ payload:
       - >-
         depends on (3): PIL_D0_the_name_is_pillar, PIL_D1_the_shape_he_brought,
         PIL_D3_written_in_emerge
-      - 'needed by (1): PIL2_contracts · all downstream 5 · finishing it unlocks PIL2_contracts'
+      - 'needed by (1): PIL2_contracts · all downstream 17 · finishing it unlocks PIL2_contracts'
     edges:
       - from: docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
         kind: declared

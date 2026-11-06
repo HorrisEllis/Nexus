@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
 context: pipeline phase CB1_cfr_build_logic of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
 intent: null
-summary: CB1_cfr_build_logic (?) — 3 file(s)
+summary: CB1_cfr_build_logic (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792841754476
+exported_at: 1793961475660
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754476
-lastSeenAt: 1792841754476
+firstSeenAt: 1793961475660
+lastSeenAt: 1793961475660
 fingerprint: null
 payload:
   id: CB1_cfr_build_logic
@@ -23,10 +23,11 @@ payload:
     - idearium/spec-engine/warp-build-dispatch.js
     - idearium/spec-engine/chunk-dispatch.js
     - lib/pipeline-routing.js
+    - idearium/lib/emerge-rung.cjs
   depends_on:
-    - EM2_warp_his_own
-    - CF1_cfr_improved_with_rfr2
+    - PIL2_contracts
+    - PIL3_conformance
     - MR1_recall_triad_and_context_table
   blocks: []
   spec: null
-  graph: e36acd3c35dd5b48
+  graph: 7bc54e394f958f43

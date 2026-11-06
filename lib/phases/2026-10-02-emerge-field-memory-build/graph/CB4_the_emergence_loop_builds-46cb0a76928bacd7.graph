@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841754485
+exported_at: 1793961475672
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754485
-lastSeenAt: 1792841754485
+firstSeenAt: 1793961475672
+lastSeenAt: 1793961475672
 fingerprint: null
 payload:
   for: CB4_the_emergence_loop_builds
@@ -137,6 +137,12 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
     blockedBy:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
@@ -151,7 +157,7 @@ payload:
         MR2_vector_space_for_the_field
       - >-
         depends on (3): CB1_cfr_build_logic, CB2_analysis_then_synthesis,
-        MR2_vector_space_for_the_field · all upstream 12
+        MR2_vector_space_for_the_field · all upstream 18
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic

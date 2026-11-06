@@ -1,0 +1,114 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CB3_the_causal_spec_block:8cd0c235dcf3df49
+type: graph
+id: phase:CB3_the_causal_spec_block:8cd0c235dcf3df49
+context: dependency graph of phase CB3_the_causal_spec_block
+intent: null
+summary: 7 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793961419842
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793961419842
+lastSeenAt: 1793961419842
+fingerprint: null
+payload:
+  for: CB3_the_causal_spec_block
+  kind: phase
+  repo: null
+  hash: 8cd0c235dcf3df49
+  nodes:
+    - path: idearium/spec-engine/blocks.yaml
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/cfr/contract-verifier.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/emerge/compiler/emit.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/emerge/compiler/index.js
+      role: changes
+      exists: false
+      system: lib
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: intelligence/cfr/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/cli/cfr-debug.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: intelligence/cfr/index.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+  crossings:
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+    unlocks:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+    conflicts:
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GG1_graphs_generate_code
+        files:
+          - lib/emerge/compiler/index.js
+          - lib/emerge/compiler/emit.js
+    dangling: []
+    lines:
+      - layer 5 · blocked by EM2_warp_his_own, CF1_cfr_improved_with_rfr2
+      - 'depends on (2): EM2_warp_his_own, CF1_cfr_improved_with_rfr2 · all upstream 6'
+      - >-
+        needed by (1): WS6_workshop_parts_and_modes · finishing it unlocks
+        WS6_workshop_parts_and_modes
+      - >-
+        same files as GG1_graphs_generate_code with no order between them:
+        lib/emerge/compiler/index.js, lib/emerge/compiler/emit.js
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+        kind: declared
