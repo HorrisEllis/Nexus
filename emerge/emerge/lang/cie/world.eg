@@ -103,7 +103,7 @@ fn _comp(name) {
 }
 
 /** a lens: a copy of the state, so nothing outside a handler writes it */
-fn state_of(name) = clone(_comp(name).state)
+fn state_of(name) = freeze(clone(_comp(name).state))
 fn spent() = _spent
 fn unrouted() = _unrouted
 fn entries() = _entries

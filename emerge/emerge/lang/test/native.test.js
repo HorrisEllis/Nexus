@@ -365,6 +365,19 @@ for (const [name, c] of Object.entries(CASES)) {
   else { fail++; console.log('✗ compartments natively — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout)}` : (build.stderr || build.stdout))); }
 }
 
+// CIE14 (a): examples/counter.eg as the language ships it, lens functions and a write into a lens included, natively equal to the interpreter
+// line for line: a lens is a frozen copy natively too (freeze, rt_b_freeze), and writing it raises the interpreter's read-only error.
+{
+  const file = path.join(LANG, 'examples', 'counter.eg');
+  const ref = spawnSync(process.execPath, [EG, 'run', file], { encoding: 'utf8' });
+  const exe = path.join(TMP, 'counter_example.bin');
+  const build = spawnSync(process.execPath, [EG, 'native', file, '-o', exe], { encoding: 'utf8' });
+  const run = build.status === 0 ? spawnSync(exe, [], { encoding: 'utf8' }) : null;
+  const lens = /lens: this value is read-only/.test(ref.stdout);
+  if (run && lens && run.stdout === ref.stdout && run.status === ref.status) { pass++; console.log('✓ examples/counter.eg natively, line for line (the frozen lens included)'); }
+  else { fail++; console.log('✗ examples/counter.eg natively — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout)}` : (build.stderr || build.stdout))); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');

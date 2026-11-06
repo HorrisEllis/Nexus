@@ -149,8 +149,30 @@ fn rt_unsupported(what) { return rt_fail3("native: ", what, " is not in the nati
 // ── tags ─────────────────────────────────────────────────────────────────────
 fn rt_is_ptr(v) { return (v & 7) == 0 and v != 0 }
 fn rt_kind(v) {
-  if (v & 7) == 0 { return mem_get(v) }
+  if (v & 7) == 0 { return mem_get(v) & 255 }
   return 0
+}
+// a frozen list or map (CIE14 a): bit 256 of the kind word; freeze(v) sets it through the whole value, and a write into it is refused with the
+// interpreter's message, so a lens over state reads the same natively (lang/runtime.js frozenCopy)
+fn rt_is_frozen(o) { return (mem_get(o) & 256) != 0 }
+fn rt_check_writable(o) {
+  if rt_is_frozen(o) { rt_fail("this value is read-only — it is a lens over state, copy it with clone() to change it") }
+  return 0
+}
+fn rt_b_freeze(v) {
+  let k = rt_kind(v)
+  if k != K_MAP and k != K_LIST { return v }
+  if rt_is_frozen(v) { return v }
+  mem_set(v, mem_get(v) | 256)
+  let n = mem_get(v + 8)
+  var at = mem_get(v + 24)
+  if k == K_MAP { at = mem_get(v + 32) }
+  var i = 0
+  while i < n {
+    rt_b_freeze(mem_get(at + i * 8))
+    i = i + 1
+  }
+  return v
 }
 fn rt_bool(c) {
   if c { return TRUE }
@@ -191,7 +213,7 @@ fn rt_type_name(v) {
   if t == 3 { return "int" }
   if v == NULL { return "null" }
   if v == TRUE or v == FALSE { return "bool" }
-  let k = mem_get(v)
+  let k = mem_get(v) & 255
   if k == K_STR { return "string" }
   if k == K_LIST { return "list" }
   if k == K_MAP { return "map" }
@@ -402,7 +424,7 @@ fn rt_show_into(b, v, nested) {
   if v == NULL { return rt_sb_str(b, "null") }
   if v == TRUE { return rt_sb_str(b, "true") }
   if v == FALSE { return rt_sb_str(b, "false") }
-  let k = mem_get(v)
+  let k = mem_get(v) & 255
   if k == K_INT { return rt_sb_dec(b, mem_get(v + 8)) }
   if k == K_FLT { return rt_sb_double(b, mem_get(v + 8)) }
   if k == K_STR {
@@ -986,8 +1008,8 @@ fn rt_eq_raw(a, b) {
     return 0
   }
   if a == 0 or b == 0 { return 0 }
-  let k = mem_get(a)
-  if k != mem_get(b) { return 0 }
+  let k = mem_get(a) & 255
+  if k != (mem_get(b) & 255) { return 0 }
   if k == K_STR { return rt_str_eq(a, b) }
   if k == K_INT { return mem_get(a + 8) == mem_get(b + 8) }
   if k == K_FLT { return f_eq(mem_get(a + 8), mem_get(b + 8)) }
@@ -1169,6 +1191,7 @@ fn rt_index(o, i) {
 }
 fn rt_setindex(o, i, v) {
   let k = rt_kind(o)
+  if k == K_MAP or k == K_LIST { rt_check_writable(o) }
   if k == K_MAP { return rt_map_set(o, i, v) }
   if k == K_LIST {
     let n = mem_get(o + 8)
@@ -1187,7 +1210,10 @@ fn rt_member(o, name) {
   return rt_fail3("a ", rt_type_name(o), " has no fields")
 }
 fn rt_setmember(o, name, v) {
-  if rt_kind(o) == K_MAP { return rt_map_set(o, name, v) }
+  if rt_kind(o) == K_MAP {
+    rt_check_writable(o)
+    return rt_map_set(o, name, v)
+  }
   return rt_fail3("a ", rt_type_name(o), " has no fields")
 }
 fn rt_coalesce_null(a) { return a == NULL }

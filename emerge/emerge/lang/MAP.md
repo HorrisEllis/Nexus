@@ -152,7 +152,7 @@ Annotations (`: type`, `?` for nullable) on let/var, params, returns and hook sh
 
 Native (JavaScript) — name/arity:
 
-`print/0+` · `str/1` · `num/1` · `int/1` · `floor/1` · `sqrt/1` · `min/1+` · `max/1+` · `len/1` · `keys/1` · `values/1` · `has/2` · `get/2–3` · `slice/2–3` · `sort_by/2–3` · `range/1–3` · `join/1–2` · `split/2` · `upper/1` · `lower/1` · `type_of/1` · `json/1` · `parse_json/1` · `random/0` · `uid/0–1` · `gaps/0` · `ledger/0` · `ledger_verify/0–1` · `ledger_proof/1` · `ledger_check_proof/1` · `observe/0` · `ledger_why/1` · `observe_gaps/0` · `spent/0` · `components/0` · `is_kind/2` · `instances/1` · `args/0` · `raise/1` · `read_file/1` · `write_file/2` · `bytes/1` · `byte_len/1` · `utf8/1` · `sha256/1` · `read_bytes/1` · `write_bytes/2` · `chmod_exec/1` · `shr_u/2` · `wrap_add/2` · `wrap_sub/2` · `wrap_mul/2` · `idiv/2` · `truthy/2` · `find_text/2` · `repr/1`
+`print/0+` · `str/1` · `num/1` · `int/1` · `floor/1` · `sqrt/1` · `min/1+` · `max/1+` · `len/1` · `keys/1` · `values/1` · `has/2` · `get/2–3` · `slice/2–3` · `sort_by/2–3` · `range/1–3` · `join/1–2` · `split/2` · `upper/1` · `lower/1` · `type_of/1` · `freeze/1` · `json/1` · `parse_json/1` · `random/0` · `uid/0–1` · `gaps/0` · `ledger/0` · `ledger_verify/0–1` · `ledger_proof/1` · `ledger_check_proof/1` · `observe/0` · `ledger_why/1` · `observe_gaps/0` · `spent/0` · `components/0` · `is_kind/2` · `instances/1` · `args/0` · `raise/1` · `read_file/1` · `write_file/2` · `bytes/1` · `byte_len/1` · `utf8/1` · `sha256/1` · `read_bytes/1` · `write_bytes/2` · `chmod_exec/1` · `shr_u/2` · `wrap_add/2` · `wrap_sub/2` · `wrap_mul/2` · `idiv/2` · `truthy/2` · `find_text/2` · `repr/1`
 
 Prelude (Emerge, `lang/core/prelude.eg`) — name/arity:
 

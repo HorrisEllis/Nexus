@@ -1407,6 +1407,8 @@ spec:
           native/lower.eg rewrites them into world.eg calls; the compiler carries world.eg and ledger.eg inside it. native.test: counter_ledger.eg
           native equals the interpreter, 9 ledger entries hash for hash; selfhost byte-identical. Gap: a lens is a copy natively, not a frozen
           copy (the interpreter's read-only error is not raised).
+          2026-11-06 (CIE14 a, 0.60.430): closed. freeze(v) in both backends; a lens is frozen natively; examples/counter.eg natively equals the
+          interpreter line for line.
         next: "the ledger natively (ECF, checkpoints — same bytes as lang/ledger.js; SHA-256 is built, CIE2), then compartments, constraints and signals, then components, hooks, wires and the gate; test blocks and expect, so `emerge test` replaces `eg test`."
       spec_ref: s04_ledger
       description: "The system half of the language, natively: ledger, compartments, constraints, signals, components, the gate, test blocks."
