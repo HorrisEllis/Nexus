@@ -287,9 +287,9 @@ payload:
       emerge/lang/ledger.js: f32735db8514cad63ece73c6c36d9e0b8c2f9e61199ef7c3dc2f8bdc8f780c5b
       emerge/lang/lexer.js: a5175f00c4e8daae4c23dac25b28451b935f17d45526cbfec006b31b18e452e7
       emerge/lang/map.js: 0814f101854c4806637104248a4bfdfc1de99021b8377db416d627cc15e931b0
-      emerge/lang/native/bin/emerge: ea2e39961ca40749f9711edf6491eabb779a01d35dcb53e846a4772dc59e0946
-      emerge/lang/native/bin/emerge.sha256: 594acd84ed2b26584df68ecf7bb9d5c8a4272106fda861595bb5138ca74f54ce
-      emerge/lang/native/codegen.eg: 73247dd55c83fa957447e36c4fd496041fe5bf7a24c8e915f0fe1fb236caff76
+      emerge/lang/native/bin/emerge: 1f9b90b92fcb9957d7fff521100e40d7e392fa776cee420d2e772e783e0c0c73
+      emerge/lang/native/bin/emerge.sha256: eccbb1553b6a7955391af89423a756152ad60c0cec8bd7f41d1668aa35e47c43
+      emerge/lang/native/codegen.eg: a96fa531fda160aeab1bac1f5811c9907427bb6f8c94072ad670459d9315e6e6
       emerge/lang/native/elf.eg: 6cde0b848c06618474392eb5638d599082fdbbdf617b172c57562a2124c18516
       emerge/lang/native/embed.eg: d5d91204dbb3796042e6a5bd5a47ab46a6e994c7c6815da2488205e762aeebac
       emerge/lang/native/emerge.eg: d8d775b2571e5f3b251bb298bdcefc011568c5da2cbaca0e0c27eca00294a883
@@ -300,9 +300,9 @@ payload:
       emerge/lang/native/milestone.eg: 9adeb1a116cd66794300242ce23c56affdf2bdbaa72a8aa4f6aaf1cb73af92d8
       emerge/lang/native/pe.eg: 6155fc55918e79f62f0a513a122c1ddca7ef9b37ced1b6ad31ebfc1c71e95ccd
       emerge/lang/native/prelude_text.eg: afa1415dc88981169c7b98326a0b5ff1eb8b37af5767a09b83b04739cfab1270
-      emerge/lang/native/rt.eg: 5d815320a94eb14bef9e1c1b646a9df156ef1f473bd957a4b4832d1135c16594
-      emerge/lang/native/rt_text.eg: fbab30806c82e38a1a631c15761b7bc1079727361e335e7ef02cccfebee4807a
-      emerge/lang/native/x64.eg: 0861be5f80571e2b020a050f90ff6ac106d4e67e79e3d9654944ae4cacfdc60c
+      emerge/lang/native/rt.eg: 199d010572082a811ba1b292de331f8c1ca5703bf359ef9448f8b8a08a62bff3
+      emerge/lang/native/rt_text.eg: 1d34e3021e9d56f5c28388edaef49206f744c64a6aee2cb0e61f61f50033be3c
+      emerge/lang/native/x64.eg: e0ab26508f708c05cb4c27bed288db92e9a4802c99618f52f745e5a7e6044e17
       emerge/lang/parser.js: 7e7369922f1ac8ab45a7499fdb2081281fad12295e4daeb1416847c892d4e8e5
       emerge/lang/runtime.js: b09b63e40579c54e873b9a2d93d77b18d3152eb9de67d8c158b09c0afb2560a5
       emerge/lang/say/say.eg: 2bfdb4ec5556eec969736722958bdd05940d5950c69aa2ba6e091ecb3a388c66
@@ -316,7 +316,7 @@ payload:
       emerge/lang/test/lang.test.js: 076d67877bf2dd4f12541a2e3bf83bb534616702d9f416ab09336b1bd0f0ba82
       emerge/lang/test/learn.test.js: 11108ab4bbaae852fc490f9f9e621710169d2b9fcfd55c6b63388e07c30d5884
       emerge/lang/test/ledger.test.js: 05d2238a6a8842bfd1f138d4e3a924e059a174101b038c53d51c21037bb23309
-      emerge/lang/test/native.test.js: a175167097eb1fdc7b4bb79de193ed2a1e230633892cc5951176aef71711609e
+      emerge/lang/test/native.test.js: 1027fa4c52d11306c282faa9797740d797e3d0544333fbccd4176438b54b463f
       emerge/lang/test/say.test.js: 30313e1d3b77c1c30b8312fc768c7797396d9f3fb1c532ca0da03b0494c3345b
       emerge/lang/test/selfhost.test.js: 976c80cfc4748bf1cdee47d44d304be204d6150597af2aff06b4005febe87ed6
       emerge/lib/atomic-write.js: 72fc7c59a747579ff815967d0f6e1a9da24638e9e292063f2e64956a85c13853
@@ -374,7 +374,7 @@ payload:
       emerge/siso/StreamLog.js: 69b5eac796b87662dc84e3d36a7fc84847b644c059fd61a138c03917e72a7a2d
       emerge/siso/index.js: 67844385ebccdcbb60b09efcef466fc6b6034e46dc00131cb18884ade72a590a
       emerge/spec/_archive/emerge-1.1.0.spec: 7305e91dbb425c6c0889ee5f83df513ac9d8d13f55f63cc642ab1e0e46fdc5fe
-      emerge/spec/cie-eg.spec: 8e1e35338defe8fffc2e855cfc85569a68a5171843298a69d2e33674b1717a4a
+      emerge/spec/cie-eg.spec: c268af99b6f5966794883743ee441b80004f7cc5e073ad345f55f82a465b7b58
       emerge/spec/emerge-core.spec: 1b4186d99a342384a105a85e160d4677464a30f80dba28bf472c7ce718c0b653
       emerge/spec/emerge.node-taxonomy.md: 2e832b0ed0f51b9e6620b4d4a5f57b366c188d2ec9f7a6eddcc300dff6acb621
       emerge/spec/emerge.node-taxonomy.spec: 7b9334ef66b7f42f69390de813ffd2191e102a968d147b267f4cb72725c4420c
@@ -418,8 +418,30 @@ payload:
       phases/2026-10-31-emerge-as-a-system/graph/_superseded/EAS4b_L1_compile-3d4cfb4736fa9ebf.graph: 0792305335aed3e946101dea89b0d403343b53f07af4a3262b5a0e94e534bbf5
       phases/2026-10-31-emerge-as-a-system/graph/_superseded/EAS4c_L2_build-e9a4063e9531c16a.graph: a9ece15e66981aa09f61c08ca3af7b0a3f19e217433562d2206d62a6af83694e
       phases/2026-10-31-emerge-as-a-system/graph/_superseded/EAS4d_L3_run-9524b42383548801.graph: a0d8dbe772c353a979ff0cf44869fe8b0f254dc1e2e5b80d5f3a5f3b24a0bc71
+      phases/2026-11-06-cie-eg-build/CIE10_the_door_in_emerge.phase: 1dccd65491c9a02243cb44279d4ce4c11d1a10f6381e5092edeea38c3f4a1643
+      phases/2026-11-06-cie-eg-build/CIE11_retire_the_interpreter.phase: c149bf2a635142391f7eb908db2108a7ac7b201c40c92676b07b0f8a169e3013
+      phases/2026-11-06-cie-eg-build/CIE12_windows.phase: a31a423a1dc20899028a89d555419de760f410446c4e563d5d45911cd4f20741
       phases/2026-11-06-cie-eg-build/CIE1_the_contract_block.phase: 141f5ef24fb8b6bff5a2183e3951b47d290908e8db47a9443d16746c0ceeb614
-      phases/2026-11-06-cie-eg-build/graph/CIE1_the_contract_block-216544c5db00d522.graph: f1ea4f4c3901957dbf9e2fb97430a9d9454b246228704c6fdbc256a8ba59e3a7
+      phases/2026-11-06-cie-eg-build/CIE2_native_sha256.phase: d9c7f29380754d10c984fb4ffa770ebe914a26b1cda27f4c841f070ba1968b4e
+      phases/2026-11-06-cie-eg-build/CIE3_native_ledger.phase: ab0d69f96fc28651a5d4c26192f0dc63b6088fc36f712df360a927d8e325207a
+      phases/2026-11-06-cie-eg-build/CIE4_native_components.phase: fe3b246ecf9228f958436db705c1eae24b0755a5e7787dbf07f1739707e43dd7
+      phases/2026-11-06-cie-eg-build/CIE5_native_test.phase: db3094d39e9a344ab3830e2205c8a01c29926631adf0a1167e8b0762793dec03
+      phases/2026-11-06-cie-eg-build/CIE6_native_check.phase: af67f96cae9d1804201b005bf4bc20c63203f1e53f8d2429e9c7b6873cd7d040
+      phases/2026-11-06-cie-eg-build/CIE7_native_observe.phase: cfad82e9c048e174866b8ffa7262e38a7bcb8d0ca88d034324a13e9eba92f927
+      phases/2026-11-06-cie-eg-build/CIE8_spec_compiler_in_emerge.phase: 4b928c76857db3cdb88f874345ea86660e7c4af6fdc8bdc8b68bf927157bfdb5
+      phases/2026-11-06-cie-eg-build/CIE9_tests_in_emerge.phase: 5aa90cb5be429b9aa6da6ebd250487a2eb7bb1bbeec4dd240181b05a324c6575
+      phases/2026-11-06-cie-eg-build/graph/CIE10_the_door_in_emerge-e41cf45dac320401.graph: d3c2c3bb6c015e4077e730a8972fd392e5d3979ef0d740e35401453df5070b5b
+      phases/2026-11-06-cie-eg-build/graph/CIE11_retire_the_interpreter-a6d8fd060a156072.graph: 8fa92cccb6997794ebd35ca2072517a71bdbb09c892c9d0f084514150aee856c
+      phases/2026-11-06-cie-eg-build/graph/CIE12_windows-f236cb7c00e45a0b.graph: d7de7ed57ee49b3ba40a18745fde3dfa31ad18c219ccd13de5c092875b1fd72d
+      phases/2026-11-06-cie-eg-build/graph/CIE1_the_contract_block-216544c5db00d522.graph: e4ecafbd1f1af4d70dadd271f53f43a7a6552ddf8b94d3fc61db2513ac1b85ca
+      phases/2026-11-06-cie-eg-build/graph/CIE2_native_sha256-ea159b87a8d31fb6.graph: ec53f5a183c22ab205dee7c3746b656de3f8e6fee9c31b9baad8f930f68df473
+      phases/2026-11-06-cie-eg-build/graph/CIE3_native_ledger-891a9416038deae3.graph: 0be8388379cc44c80d8dd8bf8bb37e28ad8afcbcbd3657d14b506098340ea8de
+      phases/2026-11-06-cie-eg-build/graph/CIE4_native_components-48433a529f33d4c9.graph: 5f0bda89b595eba1dc3c86632198e0e97e7a5734ad8f4f24073cd5d407a400a8
+      phases/2026-11-06-cie-eg-build/graph/CIE5_native_test-0974f62afe6fcba9.graph: 1023c20a00ee0b1fd60848adf51c1947b603811ccbb1d73c16e91f55f6339a00
+      phases/2026-11-06-cie-eg-build/graph/CIE6_native_check-ba0108d1c2048364.graph: b9ed4b20fc3e055dd54c1f57fc9bb46edb8315973dc52a9669566080edd13d00
+      phases/2026-11-06-cie-eg-build/graph/CIE7_native_observe-25eb10608cce9715.graph: 38c22426891f326da8f075bab1ce21294b8e7df2aa19401e94f4e5f86b8c13ee
+      phases/2026-11-06-cie-eg-build/graph/CIE8_spec_compiler_in_emerge-19e737a93db3c3a8.graph: 2c7efbd11e1f33bd9c6f8493d5af38b6d9bf626ef7e16342a3795f3b7fffe4fc
+      phases/2026-11-06-cie-eg-build/graph/CIE9_tests_in_emerge-2dd42cd4c21d4317.graph: 6487aae04d67068c8c488d12001fbbf58685e2f105e16ba9016be9cb4ab8cfef
   runtime:
     process:
       name: emerge

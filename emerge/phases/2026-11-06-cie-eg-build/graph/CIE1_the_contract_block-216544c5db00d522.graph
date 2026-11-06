@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793983606751
+exported_at: 1793984231112
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793983606751
-lastSeenAt: 1793983606751
+firstSeenAt: 1793984231112
+lastSeenAt: 1793984231112
 fingerprint: null
 payload:
   for: CIE1_the_contract_block
@@ -189,6 +189,7 @@ payload:
     deps:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
     dependents:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
     upstream:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
@@ -233,6 +234,14 @@ payload:
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
@@ -246,7 +255,9 @@ payload:
     lines:
       - layer 4
       - 'depends on (1): EAS4_callers_through_the_door · all upstream 9'
-      - 'needed by (1): PIL2_contracts · all downstream 37 · finishing it unlocks PIL2_contracts'
+      - >-
+        needed by (2): CIE4_native_components, PIL2_contracts · all downstream 45 · finishing it
+        unlocks PIL2_contracts
     edges:
       - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
         kind: declared

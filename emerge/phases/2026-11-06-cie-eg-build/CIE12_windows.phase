@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+type: phase
+id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+context: pipeline phase CIE12_windows of docs/2026-11-06-cie-eg-build-phasemap.spec
+intent: null
+summary: CIE12_windows (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1793984231141
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793984231141
+lastSeenAt: 1793984231141
+fingerprint: null
+payload:
+  id: CIE12_windows
+  map: docs/2026-11-06-cie-eg-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/lang/native/pe.eg
+    - emerge/emerge/lang/native/rt.eg
+    - emerge/emerge/lang/native/codegen.eg
+    - emerge/emerge/spec/cie-eg.spec
+  depends_on:
+    - CIE11_retire_the_interpreter
+  blocks:
+    - MOD-NATIVE-WINDOWS
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: f236cb7c00e45a0b

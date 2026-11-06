@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+type: phase
+id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+context: pipeline phase CIE11_retire_the_interpreter of docs/2026-11-06-cie-eg-build-phasemap.spec
+intent: null
+summary: CIE11_retire_the_interpreter (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1793984231139
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793984231139
+lastSeenAt: 1793984231139
+fingerprint: null
+payload:
+  id: CIE11_retire_the_interpreter
+  map: docs/2026-11-06-cie-eg-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/lang/*.js
+    - emerge/emerge/lib/*.js
+    - emerge/emerge/core/*.js
+    - emerge/emerge/siso/*.js
+    - emerge/emerge/*.js
+    - _archive/emerge-js
+    - emerge/emerge/spec/cie-eg.spec
+  depends_on:
+    - CIE6_native_check
+    - CIE7_native_observe
+    - CIE9_tests_in_emerge
+    - CIE10_the_door_in_emerge
+  blocks:
+    - MOD-NATIVE-TOOLS
+  spec: emerge/emerge/spec/cie-eg.spec
+  graph: a6d8fd060a156072

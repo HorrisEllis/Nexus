@@ -730,13 +730,13 @@ let BUILTINS = {
   write_file: ["rt_b_write_file", 2, 2], write_bytes: ["rt_b_write_bytes", 2, 2], chmod_exec: ["rt_b_chmod_exec", 1, 1],
   args: ["rt_b_args", 0, 0], idiv: ["rt_idiv", 2, 2], shr_u: ["rt_shr_u", 2, 2], floor: ["rt_b_floor", 1, 1],
   utf8: ["rt_b_utf8", 1, 1], sqrt: ["rt_b_sqrt", 1, 1], truthy: ["rt_b_truthy", 2, 2], split: ["rt_b_split", 2, 2],
-  find_text: ["rt_b_find_text", 2, 2]
+  find_text: ["rt_b_find_text", 2, 2], sha256: ["rt_b_sha256", 1, 1]
 }
 // builtins that take any number of arguments: the arguments go to the runtime as one list
 let VARIADIC = { print: "rt_print", min: "rt_b_min", max: "rt_b_max" }
 let INTRINSICS = { mem_get: 1, mem_set: 2, mem_get8: 1, mem_set8: 2, mem_copy: 3, sys6: 6, add_ovf: 2, sub_ovf: 2,
   mul_ovf: 2, entry_sp: 0, shr_u: 2, unwind: 1, f_add: 2, f_sub: 2, f_mul: 2, f_div: 2, f_sqrt: 1, f_of_int: 1,
-  f_trunc: 1, f_lt: 2, f_le: 2, f_eq: 2 }
+  f_trunc: 1, f_lt: 2, f_le: 2, f_eq: 2, cpu_sha: 0, sha256_block: 2 }
 // IEEE double operations on 64-bit patterns (SSE2): rax = first operand, rcx = second → xmm0, xmm1
 let MOVQ_X0_RAX = [0x66, 0x48, 0x0F, 0x6E, 0xC0]
 let MOVQ_X1_RCX = [0x66, 0x48, 0x0F, 0x6E, 0xC9]
@@ -937,6 +937,18 @@ fn gen_intrinsic(name, args) {
     e(x.pop(x.RAX))
     e([0x4D, 0x31, 0xC9])
     e(x.syscall())
+    return null
+  }
+  // SHA-256 from the CPU (CIE2): cpu_sha() → 1 or 0; sha256_block(state, block) compresses one 64-byte block into state
+  if name == "cpu_sha" {
+    e(x.cpu_sha_code())
+    return null
+  }
+  if name == "sha256_block" {
+    push_args(args)
+    e(x.pop(x.RSI))
+    e(x.pop(x.RDI))
+    e(x.sha256_block_code())
     return null
   }
   if name == "f_sqrt" or name == "f_of_int" or name == "f_trunc" {
