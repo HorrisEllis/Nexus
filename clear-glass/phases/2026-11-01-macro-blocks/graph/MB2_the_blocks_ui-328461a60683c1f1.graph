@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MB2_the_blocks_ui:328461a60683c1f1
+type: graph
+id: phase:MB2_the_blocks_ui:328461a60683c1f1
+context: dependency graph of phase MB2_the_blocks_ui
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793991935931
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793991935931
+lastSeenAt: 1793991935931
+fingerprint: null
+payload:
+  for: MB2_the_blocks_ui
+  kind: phase
+  repo: null
+  hash: 328461a60683c1f1
+  nodes:
+    - path: clear-glass/renderer/settings/sections/macros.css
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/settings/sections/macros.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+    dependents:
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+    upstream:
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB_D0_blocks_and_gates
+    downstream:
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): MB1_the_gate_between · all upstream 2'
+      - 'needed by (1): MB3_one_shape_with_pipelines'
+    edges:
+      - from: docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+        kind: declared

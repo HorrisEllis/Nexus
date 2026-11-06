@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+type: phase
+id: docs_2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+context: pipeline phase MB1_the_gate_between of docs/2026-11-01-macro-blocks-phasemap.spec
+intent: null
+summary: MB1_the_gate_between (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793991935928
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793991935928
+lastSeenAt: 1793991935928
+fingerprint: null
+payload:
+  id: MB1_the_gate_between
+  map: docs/2026-11-01-macro-blocks-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE 0.60.343"'
+  files:
+    - clear-glass/src/macros/recording.js
+    - clear-glass/src/driver/index.js
+    - clear-glass/src/page/element-gate.js
+  depends_on:
+    - MB_D0_blocks_and_gates
+  blocks: []
+  spec: null
+  graph: e0b8f56074cf7c64

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+type: phase
+id: docs_2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+context: pipeline phase MB2_the_blocks_ui of docs/2026-11-01-macro-blocks-phasemap.spec
+intent: null
+summary: MB2_the_blocks_ui (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793991935932
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793991935932
+lastSeenAt: 1793991935932
+fingerprint: null
+payload:
+  id: MB2_the_blocks_ui
+  map: docs/2026-11-01-macro-blocks-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE 0.60.343"'
+  files:
+    - clear-glass/renderer/settings/sections/macros.js
+    - clear-glass/renderer/settings/sections/macros.css
+  depends_on:
+    - MB1_the_gate_between
+  blocks: []
+  spec: null
+  graph: 328461a60683c1f1
