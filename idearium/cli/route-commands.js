@@ -1662,6 +1662,25 @@ export const SPEC = [
       if (v === 'rules') return { system: 'clear-glass', method: 'POST', path: '/cli/adblock/rules', body: { text: a.args.slice(1).join(' ').replace(/\\n/g, '\n'), person: true } };
       return { system: 'clear-glass', method: 'GET', path: '/cli/adblock/status' };
     } },
+  // EE3a (0.60.416) — James, 2026-11-06: "It needs to have a full page to edit, change and add. Like it needs to be fully featured." Everything
+  // the Element Engine page does that `adblock` and `eros` do not: element-hiding rules across every site, his ErosmancerOS copy, Pick, the page.
+  // Changing his filters or his copy is his (personOnly); reading is open.
+  { key: 'element-engine', repo: false, usage: 'element-engine <overview|hidden|hide <site|*> <selector>|unhide "<rule>"|copy|copy-read <file.ts>|export|diff|import|pick|open [section]>',
+    about: 'the Element Engine (ad blocking, the Guardian picker, ErosmancerOS): what it holds, every element-hiding rule by site (add, remove), his ErosmancerOS copy (files, read, export, show changes, import with its checks), start the picker in the browser window, open its full page',
+    personOnly: (a) => (['hide', 'unhide', 'import'].includes(a.args[0]) ? 'his filters and his ErosmancerOS code are his to change: ask him (the Element Engine page, or he runs it)' : null),
+    build: (a) => {
+      const v = String(a.args[0] || 'overview'); const C = (method, p, body, t) => ({ system: 'clear-glass', method, path: `/cli/element-engine${p}`, ...(body ? { body } : {}), ...(t ? { timeoutMs: t } : {}) });
+      if (v === 'hidden') return C('GET', '/hidden');
+      if (v === 'hide') return C('POST', '/hidden', { op: 'add', site: a.args[1] === '*' ? '' : String(a.args[1] || ''), selector: a.args.slice(2).join(' '), person: true });
+      if (v === 'unhide') return C('POST', '/hidden', { op: 'remove', rule: a.args.slice(1).join(' '), person: true });
+      if (v === 'copy') return C('GET', '/copy');
+      if (v === 'copy-read') return C('GET', `/copy/file?file=${encodeURIComponent(String(a.args[1] || ''))}`);
+      if (v === 'export' || v === 'diff') return C('POST', `/copy/${v}`, {});
+      if (v === 'import') return C('POST', '/copy/import', { person: true }, 180000);
+      if (v === 'pick') return C('POST', '/pick', {});
+      if (v === 'open') return C('POST', '/open', { area: a.args[1] ? String(a.args[1]) : undefined });
+      return C('GET', '/overview');
+    } },
   // BS7 (0.60.179) — James: "can you build a import for firefox profiles and cookies for clearglass.?" Listing is open; importing is his (cookies are sign-ins).
   { key: 'firefox', repo: false, usage: 'firefox <profiles|import [profile name or folder] [--no-cookies] [--bookmarks] [--persona] [--into default|ncp-<provider>]>',
     about: 'Firefox profiles on this machine, and a real import into Clear Glass: cookies (into the everyday session or a provider tab), bookmarks, and the profile\'s user agent',

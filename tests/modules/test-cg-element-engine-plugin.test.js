@@ -32,7 +32,7 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
   console.log('\n⬡  The Element Engine plugin (EE0)\n');
 
   await test('EP-01', 'the same plugin, now the Element Engine; the manifest validates', () => {
-    assert.deepStrictEqual([M.id, M.name, M.entryPoint, M.version, M.displayName], ['8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f', 'adblocker', 'index.js', '3.0.0', 'Element Engine']);
+    assert.deepStrictEqual([M.id, M.name, M.entryPoint, M.version, M.displayName], ['8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f', 'adblocker', 'index.js', '3.1.0', 'Element Engine']);
     assert.deepStrictEqual(M.contributes['content-filter'][0].handler, 'filterRequest');
     assert.strictEqual(M.previously.displayName, 'Ad Blocker');
     require(path.join(ROOT, 'clear-glass/src/plugins/schema.js')).validateManifest(M);

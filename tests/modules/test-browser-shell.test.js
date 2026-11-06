@@ -21,6 +21,7 @@
  *   BST-12  0.60.182 context decided by Co-pilot per message (page / picks / sign-in cookies); the chips gone; /ctx still forces
  *   BST-11  0.60.180 the start page over a blank tab: search, agent cards, bookmarks; hidden once the tab navigates
  *   BST-13  0.60.183 a plugin's page: clicking its row in the 🧩 panel opens about, permissions, its fields; a field's change asks the plugin
+ *           (0.60.416 EE3a: the adblocker's row asks for the Element Engine's full page first; when it cannot open, this popover page is shown)
  *   BST-14  0.60.183 page zoom in the core: Firefox's ladder, saved per site (100% = no row), restored on navigate; the driver and the window use it
  *   BST-17  0.60.185 the ☰ menu from one model, no bookmarks list; EVERY row clicked in Clear Glass and its effect checked
  *   BST-18  0.60.185 Firefox's menus for the UI: a tab, a bookmark, the bookmarks bar, the address bar, the toolbar; submenu; Never hides the bar
@@ -507,13 +508,17 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
       await page.addInitScript(initScript({ answers: {
         'plugins.list': [{ id: 'a', name: 'adblocker', displayName: 'Ad Blocker', version: '2.0.0', description: 'Blocks ads and trackers with the standard filter lists.', icon: '🛡', state: 'active', commands: [], author: 'James Brooks (Erosmancer)', permissions: { webRequest: true, network: false }, settings: 'plugin:a:settings', settingsSection: 'sites' },
           { id: 'p', name: 'passwords', displayName: 'Passwords', version: '1.0.0', description: 'Saved logins.', icon: '🔑', state: 'active', commands: [], permissions: {}, settings: null, settingsSection: 'privacy' }],
-        'plugins.settings': { ok: true, view }, 'options.get': { pinnedPlugins: ['a'] }, 'toolbar.commands': [], 'bookmarks.list': [], 'webext.list': { extensions: [] } } }));
+        'plugins.settings': { ok: true, view }, 'options.get': { pinnedPlugins: ['a'] }, 'toolbar.commands': [], 'bookmarks.list': [], 'webext.list': { extensions: [] },
+        // 0.60.416 EE3a — the adblocker (now the Element Engine) opens its own full page first (his: "It’s meant to replace the adblocker also like a
+        // full plugin page."); here that window cannot open, so the popover page this test has always checked is shown instead, said
+        'window.openElementEngine': { ok: false, error: 'no window in this test' } } }));
       await page.goto(require('url').pathToFileURL(CG('renderer/browser.html')).href + '?agentId=t');
       await page.waitForFunction(() => { const b = document.querySelector('#sh-ext-pinned [data-plugin="a"] .sh-badge'); return b && !b.hidden; }, null, { timeout: 8000 });
       assert.strictEqual(await page.innerText('#sh-ext-pinned [data-plugin="a"] .sh-badge'), '37', 'the count on the pinned shield');
       await page.click('#btn-extensions'); await page.waitForSelector('#sh-extensions-panel .sh-ext-row[data-id="a"]');
       await page.click('#sh-extensions-panel .sh-ext-row[data-id="a"] .sh-ext-name');
       await page.waitForSelector('#sh-extensions-panel .ps-summary');
+      assert.ok(await page.evaluate(() => window.__cgCalls.some(c => c.key === 'window.openElementEngine')), 'EE3a: the row asks for the Element Engine\'s full page first');
       const t = await page.innerText('#sh-extensions-panel');
       for (const w of ['Ad Blocker', '37', 'Block ads and trackers', 'EasyList', 'Update lists now', 'My filters', 'https://bank.com', 'Sees requests', 'Open Site settings in Settings']) assert.ok(t.includes(w), `${w} in: ${t}`);
       await page.screenshot({ path: path.join(SHOTS, 'bst13-adblock-page.png') });

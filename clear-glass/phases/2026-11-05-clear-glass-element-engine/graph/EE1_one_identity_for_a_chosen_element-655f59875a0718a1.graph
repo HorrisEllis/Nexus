@@ -1,0 +1,125 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EE1_one_identity_for_a_chosen_element:655f59875a0718a1
+type: graph
+id: phase:EE1_one_identity_for_a_chosen_element:655f59875a0718a1
+context: dependency graph of phase EE1_one_identity_for_a_chosen_element
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793929860366
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793929860366
+lastSeenAt: 1793929860366
+fingerprint: null
+payload:
+  for: EE1_one_identity_for_a_chosen_element
+  kind: phase
+  repo: null
+  hash: 655f59875a0718a1
+  nodes:
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/eros/supervisor.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/element-gate.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/schemas/element.schema.json
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: tests/modules/test-cg-element-engine.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/eros/options.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/eros/supervisor.js
+      to: clear-glass/src/eros/options.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/eros/supervisor.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+    dependents:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+    upstream:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D0_what_one_means
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+    downstream:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM2_guardian_anchors_follow_the_page
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM3_listeners_and_macros
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM4_the_old_observers_on_the_rules
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::ES4_the_browser_panel
+    blockedBy:
+      - docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+    unlocks:
+      - docs/2026-11-05-cleardriver-mutators-and-erosmancer-surface-phasemap.spec::CM1_watch_rules
+    conflicts:
+      - with: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE3_one_panel
+        files:
+          - clear-glass/renderer/guardian-picker.js
+      - with: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE4_the_old_ways_archived
+        files:
+          - clear-glass/renderer/guardian-picker.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by EE_D1_erosmancer_in_process_or_its_own
+      - >-
+        depends on (2): EE0_the_merged_plugin, EE_D1_erosmancer_in_process_or_its_own · all upstream
+        3
+      - 'needed by (1): CM1_watch_rules · all downstream 5 · finishing it unlocks CM1_watch_rules'
+      - >-
+        same files as EE3_one_panel with no order between them:
+        clear-glass/renderer/guardian-picker.js
+      - >-
+        same files as EE4_the_old_ways_archived with no order between them:
+        clear-glass/renderer/guardian-picker.js
+    edges:
+      - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE0_the_merged_plugin
+        kind: declared
+      - from: docs/2026-11-05-clear-glass-element-engine-phasemap.spec::EE_D1_erosmancer_in_process_or_its_own
+        kind: declared

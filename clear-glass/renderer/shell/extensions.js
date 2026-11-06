@@ -107,9 +107,18 @@
   const pageOf = () => { const sh = window.CGShell; let url = '', tabId = null; try { url = sh.wv.getURL(); } catch (_) {} try { tabId = sh.wv.getWebContentsId(); } catch (_) {} return { url, tabId }; };
   const tog = (on, label) => { const b = el('button', 'tog'); b.setAttribute('role', 'switch'); b.setAttribute('aria-checked', String(!!on)); b.setAttribute('aria-label', label); return b; };
 
+  // EE3a (0.60.416) — James, 2026-11-06: "It’s meant to replace the adblocker also like a full plugin page." · "Not a small plugin at all dude."
+  // The Element Engine (the plugin that was the Ad Blocker) opens its own full page, not this popover. The popover below stays for every
+  // other plugin, and for this one if the page cannot open (an older preload), said.
+  const FULL_PAGE = new Set(['adblocker', '8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f']);
   async function openPlugin(id, anchor) {
     const pop = $('sh-extensions-panel');
     const { plugins } = await load(); const p = plugins.find(x => x.id === id); if (!p) return open();
+    if ((FULL_PAGE.has(p.id) || FULL_PAGE.has(p.name)) && cg().window && typeof cg().window.openElementEngine === 'function') {
+      const r = await cg().window.openElementEngine().catch(err => ({ ok: false, error: err.message }));
+      if (r && r.ok !== false) { UI().close(); return; }
+      UI().toast(`The Element Engine page did not open (${(r && r.error) || 'no answer'}); its small page instead`);
+    }
     pop.dataset.plugin = id;
     const name = p.displayName || p.name;
     const head = el('div', 'sh-pop-head ps-head');
