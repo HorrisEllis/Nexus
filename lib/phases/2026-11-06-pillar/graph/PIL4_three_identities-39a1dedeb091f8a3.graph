@@ -1,0 +1,67 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PIL4_three_identities:39a1dedeb091f8a3
+type: graph
+id: phase:PIL4_three_identities:39a1dedeb091f8a3
+context: dependency graph of phase PIL4_three_identities
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793958853641
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793958853641
+lastSeenAt: 1793958853641
+fingerprint: null
+payload:
+  for: PIL4_three_identities
+  kind: phase
+  repo: null
+  hash: 39a1dedeb091f8a3
+  nodes:
+    - path: pillar/identity.js
+      role: changes
+      exists: false
+      system: null
+    - path: tests/modules/test-pillar.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+    dependents:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
+    upstream:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+    downstream:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
+    blockedBy:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+        files:
+          - tests/modules/test-pillar.test.js
+      - with: docs/2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
+        files:
+          - tests/modules/test-pillar.test.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by PIL2_contracts
+      - 'depends on (1): PIL2_contracts · all upstream 4'
+      - 'needed by (1): PIL5_the_duplicates_census'
+      - 'same files as PIL3_conformance with no order between them: tests/modules/test-pillar.test.js'
+      - >-
+        same files as PIL6_the_small_model_bench with no order between them:
+        tests/modules/test-pillar.test.js
+    edges:
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+        kind: declared

@@ -61,6 +61,7 @@ const SPECS = [
   { spec: 'intelligence/spec/causal-interconnect.spec', map: 'docs/2026-10-31-causal-interconnect-phasemap.spec' },   // 2026-10-31 CI — his "the intelligence system, rfr2 and cfr need to be interconnected"
   { spec: 'idearium/spec/agent-control.spec', map: 'docs/2026-10-31-agent-control-phasemap.spec' },   // 2026-10-31 AC — his agents' control panel, phase folders, page agents, skip buttons
   { spec: 'docs/emerge-system.spec', map: 'docs/2026-10-31-emerge-as-a-system-phasemap.spec' },
+  { spec: 'pillar/spec/pillar.spec', map: 'docs/2026-11-06-pillar-phasemap.spec' },   // 2026-11-06 Pillar (his EAS_D8, PIL_D0)
   { spec: 'docs/outperform.spec', map: 'docs/2026-11-01-outperform-phasemap.spec' },
   { spec: 'docs/friction-map.spec', map: 'docs/2026-11-01-friction-map-phasemap.spec' },
   { spec: 'cos/spec/compartment.spec', map: null },

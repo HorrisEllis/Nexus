@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PIL6_the_small_model_bench:83152b8ded8ff4cb
+type: graph
+id: phase:PIL6_the_small_model_bench:83152b8ded8ff4cb
+context: dependency graph of phase PIL6_the_small_model_bench
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793958853645
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793958853645
+lastSeenAt: 1793958853645
+fingerprint: null
+payload:
+  for: PIL6_the_small_model_bench
+  kind: phase
+  repo: null
+  hash: 83152b8ded8ff4cb
+  nodes:
+    - path: pillar/bench/run.js
+      role: changes
+      exists: false
+      system: null
+    - path: tests/modules/test-pillar.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+    dependents: []
+    upstream:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+    downstream: []
+    blockedBy:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+        files:
+          - tests/modules/test-pillar.test.js
+      - with: docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
+        files:
+          - tests/modules/test-pillar.test.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by PIL3_conformance
+      - 'depends on (1): PIL3_conformance · all upstream 5'
+      - 'needed by (0): —'
+      - >-
+        same files as PIL4_three_identities with no order between them:
+        tests/modules/test-pillar.test.js
+      - >-
+        same files as PIL5_the_duplicates_census with no order between them:
+        tests/modules/test-pillar.test.js
+    edges:
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+        kind: declared

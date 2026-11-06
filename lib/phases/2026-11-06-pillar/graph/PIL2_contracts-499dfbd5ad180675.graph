@@ -1,0 +1,64 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PIL2_contracts:499dfbd5ad180675
+type: graph
+id: phase:PIL2_contracts:499dfbd5ad180675
+context: dependency graph of phase PIL2_contracts
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793958853637
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793958853637
+lastSeenAt: 1793958853637
+fingerprint: null
+payload:
+  for: PIL2_contracts
+  kind: phase
+  repo: null
+  hash: 499dfbd5ad180675
+  nodes:
+    - path: pillar/contracts/index.js
+      role: changes
+      exists: false
+      system: null
+    - path: tests/modules/test-pillar.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+    dependents:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+    upstream:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+    downstream:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+      - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
+      - docs/2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
+    blockedBy:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+    unlocks:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by PIL1_pillar_stands
+      - 'depends on (1): PIL1_pillar_stands · all upstream 3'
+      - >-
+        needed by (2): PIL3_conformance, PIL4_three_identities · all downstream 4 · finishing it
+        unlocks PIL3_conformance, PIL4_three_identities
+    edges:
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+        kind: declared

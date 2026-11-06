@@ -110,6 +110,8 @@ decisions:
     #                            D9) and version identity (which revision of its behaviour) separate and never interchangeable
     #   overall:                 contracts first, then conformance tests, then consolidating implementations
     # Coder's note: a standalone system is a new system, so its placement and name are his (§5.15, USER_AUTONOMY).
+    # ── ADDENDUM 2026-11-06 — settled: Pillar (his "Yes." to the name; "I guess" to the shape). Mapped in docs/2026-11-06-pillar-phasemap.spec
+    # (PIL1–PIL6, decisions PIL_D0–D2), spec pillar/spec/pillar.spec. EAS_D8's kernel and bench are built there.
     # ── ADDENDUM 2026-11-05 — an idea, his, recorded (not a decision, no phase): a world simulation as a domain for the benchmark ──
     # James, 2026-11-05, on an outside analysis of the primitives as the base of a large persistent game world ("This feels huge."), asked
     # whether to log it: "Yes then finish eas4"
