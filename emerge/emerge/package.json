@@ -14,7 +14,7 @@
     "plan": "node build-spec.js spec/cie-eg.spec --dry-run",
     "scaffold": "node build-spec.js spec/cie-eg.spec",
     "build:spec": "node build-spec.js spec/cie-eg.spec --build",
-    "test:lang": "node lang/test/lang.test.js && node lang/test/differential.test.js && node lang/test/bootstrap.test.js && node lang/test/ide.test.js && node lang/test/ledger.test.js && node lang/test/native.test.js && node lang/test/selfhost.test.js && node lang/test/say.test.js && node lang/test/learn.test.js",
+    "test:lang": "node lang/test/lang.test.js && node lang/test/differential.test.js && node lang/test/bootstrap.test.js && node lang/test/ide.test.js && node lang/test/ledger.test.js && node lang/test/contract.test.js && node lang/test/native.test.js && node lang/test/selfhost.test.js && node lang/test/say.test.js && node lang/test/learn.test.js",
     "eg": "node lang/eg.js",
     "build": "node lang/eg.js bootstrap"
   },

@@ -315,6 +315,15 @@ function createInterpreter(rt, file) {
     return { comp: ep.comp, hook: ep.hook };
   }
 
+  /** where a program's contract wires its roads: { contract, after } — after the later of the contract and the last compartment */
+  function roadsPoint(items) {
+    const c = items.find(i => i.type === 'Contract');
+    if (!c) return null;
+    let after = c;
+    items.forEach((i, k) => { if (i.type === 'Compartment' && k > items.indexOf(after)) after = i; });
+    return { contract: c, after };
+  }
+
   /** run a whole program; returns the top-level Env (the module's exports live there) */
   function runProgram(program, absPath) {
     const env = new Env(null);
@@ -324,6 +333,8 @@ function createInterpreter(rt, file) {
 
   /** runs top-level items into env — the REPL calls this with one persistent env */
   function runItems(items, env, absPath, hasAxioms) {
+    // the contract's roads are wired once every component is declared: after the last compartment, or where the contract stands if later (CIE1)
+    const contractAt = roadsPoint(items);
     for (const it of items) {
       if (it.type === 'Let') env.reserve(it.name);
       else if (it.type === 'Use') env.reserve(it.alias);
@@ -335,6 +346,7 @@ function createInterpreter(rt, file) {
         case 'Use': at(it.line); env.define(it.alias, $.use(it.path, it.alias, absPath)); break;
         case 'Compartment': compartment(it, env); break;
         case 'Kind': continue;
+        case 'Contract': break;
         case 'On':
           at(it.line);
           $.onTop(it.signal, (payload) => {
@@ -357,6 +369,7 @@ function createInterpreter(rt, file) {
           continue;
         default: exec(it, env);
       }
+      if (contractAt && contractAt.after === it) { at(contractAt.contract.line); $.roads(contractAt.contract.contract.roads, contractAt.contract.line); }
       if (hasAxioms) $.axioms(it.line, file);
     }
     return env;

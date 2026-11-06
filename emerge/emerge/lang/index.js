@@ -14,7 +14,7 @@ const { check } = require('./checker');
 const { createRuntime, finishRun, VERSION } = require('./runtime');
 const { createInterpreter } = require('./interpreter');
 const { emitProgram } = require('./emitter');
-const { EmergeSyntaxError } = require('./errors');
+const { EmergeSyntaxError, EmergeError } = require('./errors');
 
 function compileSource(src, file = '<input>') {
   let program;
@@ -55,10 +55,14 @@ function runFile(mainPath, opts = {}) {
   }
   for (const w of main.warnings) if (opts.warnings) errOut(fmtDiag(w, 'warning') + '\n');
 
+  const declared = main.program.items.find(i => i.type === 'Contract');   // CIE-EG 6.1 (CIE1): read before the genesis entry is written
   const rt = createRuntime({
     file: main.file, seed: opts.seed || 0, argv: opts.args || [], out: opts.out, err: opts.err,
+    contract: declared ? { contract: declared.contract, hash: declared.hash } : null,
     loadModule: (modAbs, r) => {
       const m = compileOrThrow(modAbs, root);
+      const c = m.program.items.find(i => i.type === 'Contract');
+      if (c) throw new EmergeError(`${path.basename(modAbs)} declares a contract — a contract belongs to the program that runs, not to a module it uses`, m.file, c.line);
       const interp = createInterpreter(r, m.file);
       const env = interp.runProgram(m.program, modAbs);
       return interp.exportsOf(m.program, env);

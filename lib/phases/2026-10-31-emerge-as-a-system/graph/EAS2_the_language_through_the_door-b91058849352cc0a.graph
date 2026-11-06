@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793971826700
+exported_at: 1793983608876
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793971826700
-lastSeenAt: 1793971826700
+firstSeenAt: 1793983608876
+lastSeenAt: 1793983608876
 fingerprint: null
 payload:
   for: EAS2_the_language_through_the_door
@@ -42,9 +42,47 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
     downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB4_the_emergence_loop_builds
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CRF1_the_axioms_as_constraints
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LN1_lenses_on_the_canvas
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR6_contradictions_held
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS5_a_system_of_systems
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+      - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
+      - docs/2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
     blockedBy: []
     unlocks:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
@@ -57,8 +95,8 @@ payload:
       - 'depends on (2): EAS1_the_skeleton_in_emerge, EAS_D3_handlers_run_the_cli · all upstream 5'
       - >-
         needed by (3): EMB1_emerge_writes_the_brick, EAS4_callers_through_the_door,
-        EAS5_a_system_of_systems · finishing it unlocks EMB1_emerge_writes_the_brick,
-        EAS4_callers_through_the_door, EAS5_a_system_of_systems
+        EAS5_a_system_of_systems · all downstream 41 · finishing it unlocks
+        EMB1_emerge_writes_the_brick, EAS4_callers_through_the_door, EAS5_a_system_of_systems
     edges:
       - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
         kind: declared

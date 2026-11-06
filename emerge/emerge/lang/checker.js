@@ -319,6 +319,13 @@ function check(program) {
         break;
       }
       case 'Kind': flatKind(it.name, []); break;
+      case 'Contract':   // CIE-EG 6.1: each road is a wire, checked like one once every component is declared (phase CIE1)
+        deferred.push(() => it.contract.roads.forEach((r, i) => {
+          const at = (it.roadAt && it.roadAt[i]) || it;
+          const end = s => { const [comp, hook] = s.split('.'); return { comp, hook, line: at.line, col: at.col }; };
+          wire({ type: 'Wire', from: end(r.from), to: end(r.to), line: at.line, col: at.col }, top, topCtx);
+        }));
+        break;
       case 'On':
         patterns.push(it.signal);
         deferred.push(() => {

@@ -5,6 +5,7 @@
 
 const { lex } = require('./lexer');
 const { EmergeSyntaxError } = require('./errors');
+const Contract = require('./contract');
 
 const TYPES = new Set(['int', 'float', 'num', 'string', 'bool', 'list', 'map', 'bytes', 'fn', 'any']);
 const build = require('./build-loader');
@@ -77,6 +78,10 @@ class Parser {
         ((this.peek(2).t === 'OP' && this.peek(2).v === '{') || (this.peek(2).t === 'IDENT' && this.peek(2).v === 'is'))) {
       return this.parseKind();
     }
+    // contract is contextual too: contract Name { … } (CIE-EG 6.1, D7 "New contract block"; phase CIE1)
+    if (t.t === 'IDENT' && t.v === 'contract' && this.peek(1).t === 'IDENT' && this.peek(2).t === 'OP' && this.peek(2).v === '{') {
+      return this.parseContract();
+    }
     if (t.t === 'KW') {
       switch (t.v) {
         case 'use': return this.parseUse();
@@ -87,6 +92,95 @@ class Parser {
       }
     }
     return this.parseStmt(true);
+  }
+
+  /**
+   * contract <id> {
+   *   version = "1.0.0"
+   *   text { encoding = "utf-8"  normalization = "nfc" }
+   *   gate { block_at = 0.9  max_steps = 100000  checkpoint_every = 256 }
+   *   road Counter.changed -> Display.show
+   * }
+   * lang/contract.js checks it and gives its canonical form and hash; every refusal is a syntax error at the line it names.
+   */
+  parseContract() {
+    const t = this.next();
+    const id = this.next();
+    if (this.contractSeen) this.err(`a program has one contract — ${this.contractSeen} is already declared`, t);
+    this.contractSeen = id.v;
+    this.expectOp('{', 'to open the contract');
+    const raw = { id: id.v, text: {}, gate: {}, roads: [] };
+    const once = new Set();
+    this.skipNL();
+    while (!this.isOp('}')) {
+      if (this.is('EOF')) this.err('unterminated contract — missing "}"', t);
+      const k = this.peek();
+      const word = k.t === 'IDENT' || k.t === 'KW' ? k.v : null;
+      if (word === 'version' || word === 'text' || word === 'gate') {
+        if (once.has(word)) this.err(`the contract's ${word} is written twice`, k);
+        once.add(word);
+        this.next();
+        if (word === 'version') {
+          this.expectOp('=', 'after version');
+          const v = this.peek();
+          if (v.t !== 'STR' || v.v === null) this.err('version is a plain string, e.g. version = "1.0.0"', v);
+          raw.version = this.next().v;
+        } else {
+          raw[word] = this.parseContractSettings(word);
+        }
+      } else if (word === 'road') {
+        this.next();
+        const from = this.parseRoadEnd();
+        this.expectOp('->', 'between the two ends of a road');
+        const to = this.parseRoadEnd();
+        raw.roads.push({ from: from.v, to: to.v, at: { line: from.line, col: from.col } });
+      } else {
+        this.err(`a contract holds version, text { }, gate { } and road Component.hook -> Component.hook — found ${describe(k)}`, k);
+      }
+      this.endStmt();
+    }
+    this.next();
+    let contract;
+    try { contract = Contract.normalize(raw); }
+    catch (e) {
+      if (!(e instanceof Contract.ContractError)) throw e;
+      this.err(e.message, e.at || t);
+    }
+    return this.node('Contract', t, { id: id.v, contract, hash: Contract.contractHash(contract), roadAt: raw.roads.map(r => r.at) });
+  }
+
+  /** text { key = "value" … } · gate { key = number … }: one setting per key, on one line or several */
+  parseContractSettings(which) {
+    this.expectOp('{', `to open the contract's ${which}`);
+    const out = {};
+    this.skipNL();
+    while (!this.isOp('}')) {
+      if (this.is('EOF')) this.err(`unterminated ${which} block — missing "}"`);
+      const k = this.expectIdent(`a ${which} setting name`);
+      if (Object.prototype.hasOwnProperty.call(out, k.v)) this.err(`${which}.${k.v} is written twice`, k);
+      this.expectOp('=', `after ${which}.${k.v}`);
+      const v = this.peek();
+      if (which === 'text') {
+        if (v.t !== 'STR' || v.v === null) this.err(`text.${k.v} is a plain string`, v);
+      } else if (v.t !== 'NUM') {
+        this.err(`gate.${k.v} is a number`, v);
+      }
+      out[k.v] = this.next().v;
+      this.skipNL();
+    }
+    this.next();
+    return out;
+  }
+
+  /** a road end: Component.hook, identifiers only (CIE-EG 2.4); a string or an expression is refused */
+  parseRoadEnd() {
+    const a = this.peek();
+    if (a.t === 'IDENT' && this.peek(1).t === 'OP' && this.peek(1).v === '.' && this.peek(2).t === 'IDENT') {
+      this.next(); this.next();
+      const b = this.next();
+      return { v: `${a.v}.${b.v}`, line: a.line, col: a.col };
+    }
+    this.err(`a road end is Component.hook (identifiers only, CIE-EG 2.4), found ${describe(a)}`, a);
   }
 
   parseUse() {

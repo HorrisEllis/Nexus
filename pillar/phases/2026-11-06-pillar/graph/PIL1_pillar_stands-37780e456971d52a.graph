@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793974583559
+exported_at: 1793983611070
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793974583559
-lastSeenAt: 1793974583559
+firstSeenAt: 1793983611070
+lastSeenAt: 1793983611070
 fingerprint: null
 payload:
   for: PIL1_pillar_stands

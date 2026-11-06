@@ -1,0 +1,261 @@
+// lang/cie/contract.eg — the interaction contract, in Emerge (CIE-EG 6.1, MOD-CONTRACT; phase CIE1).
+// James, 2026-11-06 (D7): "New contract block".
+//
+//   parse_contract(src)      → Contract { id, version, text, gate, roads }   or raise("contract: …"), said why
+//   contract_hash(c)         → 64 hex: SHA-256 over the canonical form (ECF, CIE-EG 4.3)
+//   roads_from(c, hook)      → the roads leaving "Comp.hook"
+//   canonical(v)             → the ECF text of a value (keys in byte order, minimal JSON escapes)
+//
+// The scaffold reads the same block (lang/parser.js → lang/contract.js). The two are held to the same answer, byte for byte, by
+// lang/test/contract.test.js: the same hash, and the same refusals. Written in Emerge so it survives the scaffold (CIE-EG 0: the Node
+// runtime is retired; what is added to it is worth adding only if it can be written again in .eg).
+//
+// Roads are a set: sorted in the canonical form, so the order they are written in does not change the hash; a road twice is refused.
+// Defaults are the primitives' own values (dispatch.max_deliveries, ledger.checkpoint_every, observe.gaps.block_at).
+
+let DEFAULT_TEXT = { encoding: "utf-8", normalization: "nfc" }
+let DEFAULT_GATE = { block_at: 0.9, max_steps: 100000, checkpoint_every: 256 }
+
+var src = bytes("")
+var pos = 0
+var n = 0
+var line = 1
+
+fn fail(what) { raise("contract: line {line}: {what}") }
+
+// ── characters ───────────────────────────────────────────────────────────────
+fn is_letter(c) = (c >= 65 and c <= 90) or (c >= 97 and c <= 122) or c == 95
+fn is_digit(c) = c >= 48 and c <= 57
+fn is_ident(s) {
+  let b = bytes(s)
+  if len(b) == 0 or not is_letter(b[0]) { return false }
+  for c in b { if not (is_letter(c) or is_digit(c)) { return false } }
+  return true
+}
+
+/** blanks and comments; a newline ends a statement, so it is reported, not skipped, unless asked */
+fn blank(newlines) {
+  while pos < n {
+    let c = src[pos]
+    if c == 32 or c == 9 or c == 13 { pos += 1 }
+    else if c == 10 and newlines { pos += 1; line += 1 }
+    else if c == 59 and newlines { pos += 1 }
+    else if c == 47 and pos + 1 < n and src[pos + 1] == 47 {
+      while pos < n and src[pos] != 10 { pos += 1 }
+    } else { return null }
+  }
+}
+
+fn peek_byte() {
+  if pos < n { return src[pos] }
+  return -1
+}
+
+fn ident() {
+  blank(false)
+  let s = pos
+  if pos >= n or not is_letter(src[pos]) { fail("expected a name") }
+  while pos < n and (is_letter(src[pos]) or is_digit(src[pos])) { pos += 1 }
+  if pos < n and src[pos] >= 128 { fail("a name is [A-Za-z_][A-Za-z0-9_]* (CIE-EG 2.4)") }
+  return utf8(slice(src, s, pos))
+}
+
+fn op(c, what) {
+  blank(false)
+  if pos >= n or src[pos] != c { fail("expected {what}") }
+  pos += 1
+}
+
+fn plain_string(what) {
+  blank(false)
+  if pos >= n or src[pos] != 34 { fail("{what} is a plain string") }
+  pos += 1
+  let s = pos
+  while pos < n and src[pos] != 34 {
+    if src[pos] == 92 or src[pos] == 123 or src[pos] == 10 { fail("{what} is a plain string (no escapes, braces or newlines)") }
+    pos += 1
+  }
+  if pos >= n { fail("unterminated string") }
+  let v = utf8(slice(src, s, pos))
+  pos += 1
+  return v
+}
+
+fn number(what) {
+  blank(false)
+  let s = pos
+  while pos < n and (is_digit(src[pos]) or src[pos] == 46 or src[pos] == 95 or src[pos] == 101 or src[pos] == 69 or
+                     ((src[pos] == 43 or src[pos] == 45) and pos > s and (src[pos - 1] == 101 or src[pos - 1] == 69))) { pos += 1 }
+  if pos == s { fail("{what} is a number") }
+  return num(replace(utf8(slice(src, s, pos)), "_", ""))
+}
+
+/** the end of a statement inside a block: a newline, ";", or the closing brace next */
+fn end_stmt() {
+  blank(false)
+  let c = peek_byte()
+  if c == 10 or c == 59 { blank(true); return null }
+  if c == 125 or c == -1 { return null }
+  fail("expected the end of the statement")
+}
+
+// ── the block ────────────────────────────────────────────────────────────────
+fn settings(which) {
+  op(123, "\{ to open {which}")
+  var out = {}
+  blank(true)
+  while peek_byte() != 125 {
+    if pos >= n { fail("unterminated {which} block") }
+    let k = ident()
+    if has(out, k) { fail("{which}.{k} is written twice") }
+    op(61, "= after {which}.{k}")
+    if which == "text" { out[k] = plain_string("text.{k}") } else { out[k] = number("gate.{k}") }
+    blank(true)
+  }
+  pos += 1
+  return out
+}
+
+fn road_end() {
+  let a = ident()
+  op(46, "Component.hook (identifiers only, CIE-EG 2.4)")
+  let b = ident()
+  return "{a}.{b}"
+}
+
+/** contract <id> { version = "…"  text { … }  gate { … }  road A.h -> B.h } */
+fn parse_contract(text) {
+  src = bytes(text)
+  pos = 0
+  n = len(src)
+  line = 1
+  blank(true)
+  let kw = ident()
+  if kw != "contract" { fail("expected contract, found {kw}") }
+  let id = ident()
+  op(123, "\{ to open the contract")
+  var raw = { id: id, text: {}, gate: {}, roads: [] }
+  var once = {}
+  blank(true)
+  while peek_byte() != 125 {
+    if pos >= n { fail("unterminated contract — missing \}") }
+    let w = ident()
+    if w == "version" or w == "text" or w == "gate" {
+      if has(once, w) { fail("the contract's {w} is written twice") }
+      once[w] = true
+      if w == "version" {
+        op(61, "= after version")
+        raw["version"] = plain_string("version")
+      } else {
+        raw[w] = settings(w)
+      }
+    } else if w == "road" {
+      let from = road_end()
+      op(45, "-> between the two ends of a road")
+      op(62, "-> between the two ends of a road")
+      let to = road_end()
+      raw["roads"] = push(raw.roads, { from: from, to: to })
+    } else {
+      fail("a contract holds version, text \{ \}, gate \{ \} and road Component.hook -> Component.hook — found {w}")
+    }
+    end_stmt()
+  }
+  pos += 1
+  blank(true)
+  if pos < n { fail("one contract per source; something follows it") }
+  return normalize(raw)
+}
+
+// ── the rules (the same as lang/contract.js) ────────────────────────────────
+fn digits_only(s) {
+  let b = bytes(s)
+  if len(b) == 0 { return false }
+  for c in b { if not is_digit(c) { return false } }
+  return true
+}
+
+fn tag_ok(s) {
+  let b = bytes(s)
+  if len(b) == 0 { return false }
+  for c in b { if not (is_letter(c) and c != 95 or is_digit(c) or c == 46 or c == 45) { return false } }
+  return true
+}
+
+/** x.y.z, no leading zeros, an optional -pre and +build */
+fn is_semver(v) {
+  var core = v
+  var rest = ""
+  let plus = find_text(core, "+")
+  if plus >= 0 {
+    if not tag_ok(slice(core, plus + 1)) { return false }
+    core = slice(core, 0, plus)
+  }
+  let dash = find_text(core, "-")
+  if dash >= 0 {
+    if not tag_ok(slice(core, dash + 1)) { return false }
+    core = slice(core, 0, dash)
+  }
+  let parts = split(core, ".")
+  if len(parts) != 3 { return false }
+  for p in parts {
+    if not digits_only(p) { return false }
+    if len(p) > 1 and slice(p, 0, 1) == "0" { return false }
+  }
+  return true
+}
+
+fn normalize(r) {
+  if not is_ident(r.id) { raise("contract: contract id \"{r.id}\" is not an identifier") }
+  if not has(r, "version") { raise("contract: contract {r.id} has no version — write version = \"1.0.0\"") }
+  if not is_semver(r.version) { raise("contract: contract {r.id}: version \"{r.version}\" is not semver (x.y.z)") }
+
+  var text = clone(DEFAULT_TEXT)
+  for k in keys(r.text) {
+    if not has(DEFAULT_TEXT, k) { raise("contract: contract {r.id}: text has no setting \"{k}\"") }
+    if r.text[k] != DEFAULT_TEXT[k] { raise("contract: contract {r.id}: text.{k} = \"{r.text[k]}\" — only \"{DEFAULT_TEXT[k]}\" is spoken") }
+    text[k] = r.text[k]
+  }
+
+  var gate = clone(DEFAULT_GATE)
+  for k in keys(r.gate) {
+    if not has(DEFAULT_GATE, k) { raise("contract: contract {r.id}: gate has no setting \"{k}\"") }
+    let v = r.gate[k]
+    if k == "block_at" {
+      if v < 0 or v > 1 { raise("contract: contract {r.id}: gate.block_at = {v} — a pressure is in [0, 1]") }
+    } else if v < 1 or floor(v) != v {
+      raise("contract: contract {r.id}: gate.{k} = {v} — a whole number, at least 1")
+    }
+    gate[k] = v
+  }
+
+  var seen = {}
+  for rd in r.roads {
+    let key = "{rd.from} -> {rd.to}"
+    if has(seen, key) { raise("contract: contract {r.id}: road {key} is written twice") }
+    seen[key] = true
+  }
+  let roads = sort_by(r.roads, fn(x) = "{x.from}\0{x.to}")
+  return { id: r.id, version: r.version, text: text, gate: gate, roads: roads }
+}
+
+// ── the canonical form and the hash ─────────────────────────────────────────
+/** ECF (CIE-EG 4.3): null, bools, numbers as written by the ledger, strings with minimal JSON escapes, keys in byte order */
+fn canonical(v) {
+  let t = type_of(v)
+  if v == null { return "null" }
+  if t == "bool" {
+    if v { return "true" }
+    return "false"
+  }
+  if t == "num" or t == "int" or t == "string" { return json(v) }
+  if t == "list" { return "[" + join(map(v, canonical), ",") + "]" }
+  if t == "map" {
+    let ks = sort(keys(v))
+    return "\{" + join(map(ks, fn(k) = json(k) + ":" + canonical(v[k])), ",") + "\}"
+  }
+  raise("contract: a {t} is not data")
+}
+
+fn contract_hash(c) = hex(sha256(canonical(c)))
+
+fn roads_from(c, hook) = filter(c.roads, fn(r) = r.from == hook)

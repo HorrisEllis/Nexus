@@ -1,24 +1,28 @@
 envelope: 1
-uuid: nexus-export-graph-phase:EAS5_a_system_of_systems:261578503344a219
+uuid: nexus-export-graph-phase:EAS5_a_system_of_systems:287fc088738b916b
 type: graph
-id: phase:EAS5_a_system_of_systems:261578503344a219
+id: phase:EAS5_a_system_of_systems:287fc088738b916b
 context: dependency graph of phase EAS5_a_system_of_systems
 intent: null
-summary: 5 node(s), 0 crossing(s)
+summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793944983993
+exported_at: 1793983608902
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793944983993
-lastSeenAt: 1793944983993
+firstSeenAt: 1793983608902
+lastSeenAt: 1793983608902
 fingerprint: null
 payload:
   for: EAS5_a_system_of_systems
   kind: phase
   repo: null
-  hash: 261578503344a219
+  hash: 287fc088738b916b
   nodes:
+    - path: docs/2026-11-06-cie-eg-build-phasemap.spec
+      role: changes
+      exists: true
+      system: null
     - path: docs/emerge-system.spec
       role: changes
       exists: true

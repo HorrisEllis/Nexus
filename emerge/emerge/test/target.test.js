@@ -160,11 +160,12 @@ test('compile(cie-eg.spec): parsedSpec returned, buckets as planned, .eg only', 
   const r = await compile(path.join(__dirname, '..', 'spec', 'cie-eg.spec'), out, { skipCortex: true, skipIdearium: true, tier: 1 });
   assert(r.ok, 'compiled'); assert(r.parsedSpec && r.parsedSpec.meta.name === 'cie-eg', 'parsedSpec returned');
   const names = b => r.executionPlan[b].map(x => x.name).sort().join(',');
-  eq(names('skip'), 'ledger,native,observe');
+  // 2026-11-06 (CIE1): contract built, so it is skipped (DONE) and no longer planned to run. Was: skip 'ledger,native,observe' (§0.3).
+  eq(names('skip'), 'contract,ledger,native,observe');
   // 2026-11-06: James decided D3, D6, D7, D8 and D9 (cie-eg.spec section 12), so contract, identity, seal, store and synth are no longer
   // deferred: they plan to run. Was: defer 'contract,identity,seal,store,synth' (kept here, §0.3).
   eq(names('defer'), '');
-  eq(names('run'), 'boot,contract,gate,identity,ledger_file,native_lang,native_system,native_tools,native_windows,registry,replay,seal,store,synth,text');
+  eq(names('run'), 'boot,gate,identity,ledger_file,native_lang,native_system,native_tools,native_windows,registry,replay,seal,store,synth,text');
   eq(names('block'), '');
   assert(r.executionPlan.run.every(x => x.tier === 'T2'), 'every runnable module reaches T2');
   const files = walk(out);

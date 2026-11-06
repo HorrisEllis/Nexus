@@ -385,6 +385,8 @@ phases:
     blocks: [MOD-EAS-NESTING]
     does: "the shape of a large project, small: three levels of systems, an Emerge program built at the deepest, a handoff between siblings"
     proof: "nesting.test.js green"
+  # EAS6_the_contract_block, written 2026-11-06, moved before it was merged to docs/2026-11-06-cie-eg-build-phasemap.spec as
+  # CIE1_the_contract_block: it builds a cie-eg.spec module, and this map's phases build docs/emerge-system.spec's (test-substrate-spec SS-02).
 
 order: |
   EAS1 → EAS2 → EAS5 in the Emerge repo (Emerge becomes a system, speaks through its door, and nests);

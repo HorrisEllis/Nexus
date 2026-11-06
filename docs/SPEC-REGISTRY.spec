@@ -2058,3 +2058,7 @@ spec:
 # ADDENDUM 2026-11-06 — registered: emerge/emerge/spec/field.spec — the constrained relational field (name to confirm), a layer of Emerge over Pillar,
 # written in .eg, replacing WARP and SISO (his Group 14 addendum). 7 modules, 4 schemas, 7 interfaces; specDepth 1.0, no BLACK. Its phases are in
 # docs/2026-10-02-emerge-field-memory-build-phasemap.spec: RF1, CF1, MR11, FM1, CB1, EM2 (expanded) and CRF1 (new). James, 2026-11-06: "Let’s get it all specced."
+# ADDENDUM 2026-11-06 (0.60.423) — registered: docs/2026-11-06-cie-eg-build-phasemap.spec, the phases that build emerge/emerge/spec/cie-eg.spec's
+# modules, one per module. CIE1_the_contract_block (MOD-CONTRACT) BUILT 0.60.423. James, 2026-11-06 (D7): "New contract block" · "Next".
+# Written first as EAS6 in the emerge-as-a-system map and moved before it was merged: that map's phases build docs/emerge-system.spec's modules
+# (test-substrate-spec SS-02, one map per spec).

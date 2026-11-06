@@ -166,6 +166,18 @@ function createRuntime(opts = {}) {
   // the core rules: lang/core/primitives.eg, built. Read once per runtime, so a program sees one consistent set.
   const P = build.primitives();
   rt.primitives = P;
+  // the program's contract (CIE-EG 6.1, phase CIE1): its gate settings replace the primitives' for this run; its hash goes into the
+  // genesis entry and every checkpoint. No contract: the primitives' values, and the ledger exactly as before.
+  const contract = opts.contract && opts.contract.contract ? opts.contract : null;
+  const gate = contract ? contract.contract.gate
+    : {   // read when used, never at creation: the seed-mode build (bootstrap) has no primitives to read yet
+        get max_steps() { return P.dispatch.max_deliveries; },
+        get checkpoint_every() { return P.ledger.checkpoint_every; },
+        get block_at() { return P.observe.gaps.block_at; },
+      };
+  rt.contract = contract ? { ...contract.contract, hash: contract.hash } : null;
+  /** what observe reads: the primitives, with the contract's block_at in place of observe.gaps.block_at (the primitive says it supersedes it) */
+  const OP = contract ? { ...P, observe: { ...P.observe, gaps: { ...P.observe.gaps, block_at: gate.block_at } } } : P;
 
   // ── errors & location ──
   rt.at = (line, file) => { rt.line = line; if (file !== undefined) rt.file = file; };
@@ -469,7 +481,7 @@ function createRuntime(opts = {}) {
     W.ledger.push(entry);
     if (kind === 'gap') W.gapEntries++;
     if (kind === 'checkpoint') W.lastCkpt = entry.seq;
-    else if (!W.inCkpt && W.ledger.length - W.lastCkpt >= P.ledger.checkpoint_every) checkpoint();
+    else if (!W.inCkpt && W.ledger.length - W.lastCkpt >= gate.checkpoint_every) checkpoint();
     return entry;
   }
   rt.append = append;
@@ -481,7 +493,8 @@ function createRuntime(opts = {}) {
       const last = W.ledger[W.ledger.length - 1];
       const digests = mkMap();
       for (const c of W.comps) digests[c.handle.id] = L.sha(L.ecfBytes(toData(c.state, 'state'), `state of ${c.handle.id}`)).toString('hex');
-      append('checkpoint', { head: last.hash, entries: last.seq, gaps: W.gapEntries, digests, root: L.merkleRoot(W.ledger.slice(W.lastCkpt).map(e => e.hash)) });
+      append('checkpoint', Object.assign({ head: last.hash, entries: last.seq, gaps: W.gapEntries, digests, root: L.merkleRoot(W.ledger.slice(W.lastCkpt).map(e => e.hash)) },
+        contract ? { contract_hash: contract.hash } : {}));
     } finally { W.inCkpt = false; }
   }
 
@@ -493,7 +506,10 @@ function createRuntime(opts = {}) {
     return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
   })();
   W.inCkpt = true;     // the genesis entry never triggers a checkpoint (and reads no primitive: the seed-mode build has none to read)
-  try { append('genesis', { seed, version: VERSION, chain_id: chainId, text: { encoding: 'utf-8', normalization: 'nfc' } }); } finally { W.inCkpt = false; }
+  try {
+    append('genesis', Object.assign({ seed, version: VERSION, chain_id: chainId, text: contract ? contract.contract.text : { encoding: 'utf-8', normalization: 'nfc' } },
+      contract ? { contract: { id: contract.contract.id, version: contract.contract.version }, contract_hash: contract.hash } : {}));
+  } finally { W.inCkpt = false; }
 
   function verifyLedger(from) {
     if (from === undefined || from === null) return L.verify(W.ledger).ok;
@@ -746,6 +762,13 @@ function createRuntime(opts = {}) {
     if (e.handle !== undefined) return { comp: getComponent(e.handle, what).handle.name, hook: e.hook };
     return { comp: e.comp, hook: e.hook };
   };
+  /** the contract's roads: each one a wire (CIE-EG 6.1: "The existing wire statement is the same thing and compiles to a road") */
+  rt.roads = (roads, line) => {
+    for (const r of roads) {
+      const [fc, fh] = r.from.split('.'), [tc, th] = r.to.split('.');
+      rt.wire({ comp: fc, hook: fh }, { comp: tc, hook: th }, line);
+    }
+  };
   rt.wire = (fromEnd, toEnd, line) => {
     worldChange('wire');
     if (fromEnd.signal !== undefined && toEnd.signal !== undefined) err('a wire joins at least one hook — signal to signal is an on handler');
@@ -773,7 +796,7 @@ function createRuntime(opts = {}) {
     let deliveries = 0;
     try {
       while (cx.queue.length) {
-        if (++deliveries > P.dispatch.max_deliveries) err(`signal storm — more than ${P.dispatch.max_deliveries} deliveries in one drain`);
+        if (++deliveries > gate.max_steps) err(`signal storm — more than ${gate.max_steps} deliveries in one drain${contract ? ` (contract ${contract.contract.id}: gate.max_steps)` : ''}`);
         deliver(cx, cx.queue.shift());
       }
     } catch (e) {
@@ -1138,7 +1161,7 @@ function createRuntime(opts = {}) {
   // It refuses a ledger that does not verify. It writes nothing. observe_gaps() hands the hunter's proposals to the gate: each becomes a gap
   // entry carrying its dedup key and evidence, unless a gap with that key is already open. Returns the gaps it opened.
   const observeReport = (what) => {
-    const r = require('../observe').observe(W.ledger, { primitives: P });
+    const r = require('../observe').observe(W.ledger, { primitives: OP });
     if (!r.ok) err(`${what}: the ledger does not verify (entry ${r.verify.seq}: ${r.verify.reason})`);
     return r;
   };
@@ -1360,8 +1383,12 @@ function runCompiled(load, { file, argv = process.argv.slice(2), out, err } = {}
   let opts;
   try { opts = parseRunArgs(argv); } catch (e) { (err || (s => process.stderr.write(s)))(`error: ${e.message}\n`); return 2; }
   const rt = createRuntime({
-    file, seed: opts.seed, argv: opts.args, out, err,
-    loadModule: (abs, r) => require(abs.replace(/\.eg$/, '.js'))(r),
+    file, seed: opts.seed, argv: opts.args, out, err, contract: load.contract || null,
+    loadModule: (abs, r) => {
+      const m = require(abs.replace(/\.eg$/, '.js'));
+      if (m.contract) throw new EmergeError(`${require('path').basename(abs)} declares a contract — a contract belongs to the program that runs, not to a module it uses`, abs, 1);
+      return m(r);
+    },
   });
   const main = () => load(rt);
   const code = opts.test ? rt.runTests(main).exit : rt.runMain(main);

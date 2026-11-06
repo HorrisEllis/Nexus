@@ -278,6 +278,10 @@ function emitProgram(program, { file, runtimeRequire }) {
   line('module.exports = function load($) {');
   depth++;
   for (const it of program.items) if (it.type === 'FnDecl') line(`$.fn(${J(it.name)}, ${it.params.length}, ${v(it.name)});`);
+  // the contract's roads: after the later of the contract and the last compartment (the interpreter's roadsPoint, CIE1)
+  const contract = program.items.find(i => i.type === 'Contract');
+  let roadsAfter = contract || null;
+  if (contract) program.items.forEach((i, k) => { if (i.type === 'Compartment' && k > program.items.indexOf(roadsAfter)) roadsAfter = i; });
   for (const it of program.items) {
     switch (it.type) {
       case 'FnDecl': stmt(it, {}); continue;
@@ -287,6 +291,7 @@ function emitProgram(program, { file, runtimeRequire }) {
         break;
       case 'Compartment': compartment(it); break;
       case 'Kind': continue;
+      case 'Contract': break;
       case 'On':
         line(at(it.line));
         line(`$.onTop(${J(it.signal)}, ${handlerFn([it.param ? v(it.param) : '$payload'], it.body.body)});`);
@@ -301,6 +306,7 @@ function emitProgram(program, { file, runtimeRequire }) {
         continue;
       default: stmt(it, {});
     }
+    if (contract && roadsAfter === it) { line(at(contract.line)); line(`$.roads(${J(contract.contract.roads)}, ${contract.line});`); }
     if (hasAxioms) line(`$.axioms(${it.line}, F);`);
   }
   const exp = program.exports.map(name => {
@@ -310,6 +316,7 @@ function emitProgram(program, { file, runtimeRequire }) {
   line(`return Object.assign(Object.create(null), {\n${exp.map(x => '  '.repeat(depth) + x).join('\n')}\n${'  '.repeat(depth)}});`);
   depth--;
   line('};');
+  if (contract) line(`module.exports.contract = ${J({ contract: contract.contract, hash: contract.hash })};   // CIE-EG 6.1: read before the genesis entry is written`);
   line('if (require.main === module) {');
   line(`  process.exitCode = require(${J(runtimeRequire)}).runCompiled(module.exports, { file: F });`);
   line('}');
