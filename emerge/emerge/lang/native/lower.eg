@@ -1,0 +1,151 @@
+// lang/native/lower.eg — CIE4 slice b (Nexus phase CIE4_native_components): a program's compartments, top-level on handlers and emits,
+// rewritten into calls to lang/cie/world.eg, so the native compiler builds them with no new runtime. The rewrite is the one written by hand
+// in lang/test/world/counter.world.eg; native.test 'world' holds the two to the same ledger, hash for hash, as the interpreter.
+// James, 2026-11-06: "the moment js is removed from emerge it becomes the replacement. focus on that first. no more js, we focus on .eg"
+//
+//   lower(ast, version) → ast        unchanged when the program declares no compartment, on handler or emit
+//
+//   compartment C { id, state { … }, constraint k hard|soft [cost n] { e }, on "s" (p) { … }, fn f() { … } }
+//     → fn __C_f() { let state = __world.state_of("C") … }       a lens: reads a copy
+//       let __h_C_0 = fn(__s, p) { var state = __s … }           a handler: writes its working copy
+//       __world.declare({ name, id, state, constraints: [{ name, hard, cost, check: fn(state) = e }], handlers: [{ signal, run }] })
+//   on "s" (p) { … }      → __world.listen("s", fn(p) { … })
+//   emit "s" { … }        → __world.signal("s", { … })
+//   C.state · C.f(…) · spent() · ledger() · ledger_verify()
+//                        → __world.state_of("C") · __C_f(…) · __world.spent() · __world.entries() · __world.verify()
+//   first: use "<cie>/world.eg" as __world and __world.start(0, version); last: __world.finish() (the closing checkpoint)
+
+let W = "__world"
+let WORLD_PATH = "<cie>/world.eg"
+
+fn mk(type, at, fields) {
+  var m = { type: type, line: at.line, col: at.col }
+  for k, v in fields { m[k] = v }
+  return m
+}
+fn ident(at, n) = mk("Ident", at, { name: n })
+fn str_(at, s) = mk("Str", at, { parts: [s] })
+fn call(at, callee, args) = mk("Call", at, { callee: callee, args: args })
+fn wcall(at, fname, args) = call(at, mk("Member", at, { obj: ident(at, W), name: fname }), args)
+fn ent(k, v) = { key: k, value: v }
+fn map_(at, entries) = mk("Map", at, { entries: entries })
+fn list_(at, items) = mk("List", at, { items: items })
+fn stmt(at, ex) = mk("ExprStmt", at, { expr: ex })
+fn param(at, n) = { name: n, type: null, line: at.line, col: at.col }
+fn block(at, body) = mk("Block", at, { body: body })
+fn lam(at, params, body) = mk("Lambda", at, { name: null, params: params, ret: null, body: block(at, body) })
+fn let_(at, kind, name, ex) = mk("Let", at, { kind: kind, name: name, vtype: null, expr: ex })
+fn opt_str(at, s) {
+  if s == null { return mk("Null", at, {}) }
+  return str_(at, s)
+}
+
+/** does any node below n have one of these types? */
+fn uses_world(n) {
+  if type_of(n) == "list" {
+    for x in n { if uses_world(x) { return true } }
+    return false
+  }
+  if type_of(n) != "map" { return false }
+  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit") { return true }
+  if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and (n.callee.name == "ledger" or n.callee.name == "spent" or n.callee.name == "ledger_verify") and len(n.args) == 0 { return true }
+  for k, v in n { if uses_world(v) { return true } }
+  return false
+}
+
+var comps = {}
+
+/** rewrite one node and everything below it */
+fn rw(n) {
+  if type_of(n) == "list" {
+    var out = []
+    for x in n { out[len(out)] = rw(x) }
+    return out
+  }
+  if type_of(n) != "map" { return n }
+  if has(n, "type") {
+    let t = n.type
+    if t == "Emit" {
+      var p = mk("Null", n, {})
+      if n.payload != null { p = rw(n.payload) }
+      return stmt(n, wcall(n, "signal", [rw(n.name), p]))
+    }
+    if t == "Member" and n.obj.type == "Ident" and has(comps, n.obj.name) and n.name == "state" {
+      return wcall(n, "state_of", [str_(n, n.obj.name)])
+    }
+    if t == "Call" and n.callee.type == "Member" and n.callee.obj.type == "Ident" and has(comps, n.callee.obj.name) {
+      return call(n, ident(n, "__" + n.callee.obj.name + "_" + n.callee.name), rw(n.args))
+    }
+    if t == "Call" and n.callee.type == "Ident" and n.callee.name == "spent" and len(n.args) == 0 { return wcall(n, "spent", []) }
+    if t == "Call" and n.callee.type == "Ident" and n.callee.name == "ledger" and len(n.args) == 0 { return wcall(n, "entries", []) }
+    if t == "Call" and n.callee.type == "Ident" and n.callee.name == "ledger_verify" and len(n.args) == 0 { return wcall(n, "verify", []) }
+  }
+  var out = {}
+  for k, v in n { out[k] = rw(v) }
+  return out
+}
+
+fn push_all(xs, ys) {
+  var out = xs
+  for y in ys { out[len(out)] = y }
+  return out
+}
+
+fn lower_comp(c) {
+  var items = []
+  for f in c.fns {
+    let body = push_all([let_(f, "let", "state", wcall(f, "state_of", [str_(f, c.name)]))], rw(f.body.body))
+    items[len(items)] = mk("FnDecl", f, { name: "__" + c.name + "_" + f.name, params: f.params, ret: f.ret, body: block(f, body) })
+  }
+  var handlers = []
+  var i = 0
+  for h in c.handlers {
+    let hn = "__h_" + c.name + "_" + str(i)
+    var p = "__ev"
+    if h.param != null { p = h.param }
+    let body = push_all([let_(h, "var", "state", ident(h, "__s"))], rw(h.body.body))
+    items[len(items)] = let_(h, "let", hn, lam(h, [param(h, "__s"), param(h, p)], body))
+    handlers[len(handlers)] = map_(h, [ent("signal", str_(h, h.signal)), ent("run", ident(h, hn))])
+    i += 1
+  }
+  var cons = []
+  for k in c.constraints {
+    let check = lam(c, [param(c, "state")], [mk("Return", c, { expr: rw(k.expr) })])
+    cons[len(cons)] = map_(c, [ent("name", str_(c, k.name)), ent("hard", mk("Bool", c, { value: k.ctype == "hard" })),
+      ent("cost", mk("Num", c, { value: k.cost })), ent("check", check)])
+  }
+  var fields = []
+  for f in c.state { fields[len(fields)] = ent(f.name, rw(f.expr)) }
+  let spec = map_(c, [ent("name", str_(c, c.name)), ent("id", opt_str(c, c.id)), ent("state", map_(c, fields)),
+    ent("constraints", list_(c, cons)), ent("handlers", list_(c, handlers))])
+  items[len(items)] = stmt(c, wcall(c, "declare", [spec]))
+  return items
+}
+
+fn lower_on(o) {
+  var p = "__ev"
+  if o.param != null { p = o.param }
+  return stmt(o, wcall(o, "listen", [str_(o, o.signal), lam(o, [param(o, p)], rw(o.body.body))]))
+}
+
+fn lower(ast, version) {
+  if not uses_world(ast.items) { return ast }
+  comps = {}
+  for it in ast.items { if it.type == "Compartment" { comps[it.name] = true } }
+  let at = ast
+  var items = [mk("Use", at, { path: WORLD_PATH, alias: W }), stmt(at, wcall(at, "start", [mk("Num", at, { value: 0 }), str_(at, version)]))]
+  for it in ast.items {
+    if it.type == "Compartment" {
+      items = push_all(items, lower_comp(it))
+    } else if it.type == "On" {
+      items[len(items)] = lower_on(it)
+    } else {
+      items[len(items)] = rw(it)
+    }
+  }
+  items[len(items)] = stmt(at, wcall(at, "finish", []))
+  var out = {}
+  for k, v in ast { out[k] = v }
+  out.items = items
+  return out
+}

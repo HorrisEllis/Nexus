@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793995349269
+exported_at: 1793997323580
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793995349269
-lastSeenAt: 1793995349269
+firstSeenAt: 1793997323580
+lastSeenAt: 1793997323580
 fingerprint: null
 payload:
   for: CIE1_the_contract_block
@@ -245,6 +245,8 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ1_the_crystal_memory
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ3_reference_nodes
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
@@ -260,7 +262,7 @@ payload:
       - layer 4
       - 'depends on (1): EAS4_callers_through_the_door · all upstream 9'
       - >-
-        needed by (2): CIE4_native_components, PIL2_contracts · all downstream 48 · finishing it
+        needed by (2): CIE4_native_components, PIL2_contracts · all downstream 50 · finishing it
         unlocks CIE4_native_components, PIL2_contracts
     edges:
       - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door

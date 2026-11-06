@@ -1,0 +1,29 @@
+// counter_ledger.eg — counter.eg as written, its ledger printed at the end: compiled natively (CIE4 slice b), it must print what the interpreter prints.
+compartment Counter {
+  id = "co-counter-001"
+  state { count: 0, history: [] }
+  constraint never_negative hard { state.count >= 0 }
+  constraint stays_small soft cost 3 { state.count <= 10 }
+  on "tick" (ev) {
+    state.count += ev.by
+    state.history = push(state.history, ev.by)
+    emit "counted" { count: state.count }
+  }
+}
+compartment Log {
+  id = "co-log-001"
+  state { lines: [] }
+  on "count*" (ev) { state.lines = push(state.lines, ev.count) }
+}
+on "counted" (ev) {
+  print("counted", ev.count)
+  if ev.count > 10 { emit "too.big" { count: ev.count } }
+}
+on "rejected" (ev) { print("refused:", ev.signal, "broke", ev.constraint) }
+on "too.big" (ev) { print("too big:", ev.count) }
+emit "tick" { by: 4 }
+emit "tick" { by: -20 }
+emit "tick" { by: 9 }
+emit "nobody"
+print("state", Counter.state, "log", Log.state, "spent", spent())
+for e in ledger() { print(e.seq, e.kind, e.hash) }

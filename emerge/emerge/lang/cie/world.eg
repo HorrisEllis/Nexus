@@ -11,7 +11,7 @@
 //                                               handlers: [{signal, run: fn(state, payload)}]}
 //   listen(signal, run)                    a top-level handler: run(payload)
 //   signal(name, payload)                 FIFO; from inside a handler, buffered until the handler commits
-//   state_of(name) · spent() · unrouted() · entries()
+//   state_of(name) · spent() · unrouted() · entries() · verify()
 //   finish()                             the clean-shutdown checkpoint (4.6); returns the entries
 //
 // Defaults are the primitives' own (lang/build/current/primitives.json): max_deliveries 100000, checkpoint_every 256, unrouted "log",
@@ -107,6 +107,8 @@ fn state_of(name) = clone(_comp(name).state)
 fn spent() = _spent
 fn unrouted() = _unrouted
 fn entries() = _entries
+/** ledger_verify(): every hash, link, seq and checkpoint (4.4), through lang/cie/ledger.eg */
+fn verify() = L.verify(_entries).ok
 
 fn listen(signal, run) { _globals = push(_globals, { signal: signal, run: run }) }
 

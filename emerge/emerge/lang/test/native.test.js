@@ -352,6 +352,19 @@ for (const [name, c] of Object.entries(CASES)) {
   else { fail++; console.log('✗ world — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(interp.stdout + interp.stderr)}\n    want   ${JSON.stringify(want)}` : (build.stderr || build.stdout))); }
 }
 
+// CIE4 slice b: counter.eg as written (compartment, constraints, on, emit, a wildcard, spent, ledger()) compiled natively; native/lower.eg turns
+// it into world.eg calls. Its output and its ledger, printed at the end, equal the interpreter's, hash for hash.
+{
+  const file = path.join(__dirname, 'world', 'counter_ledger.eg');
+  const ref = spawnSync(process.execPath, [EG, 'run', file], { encoding: 'utf8' });
+  const exe = path.join(TMP, 'counter_ledger.bin');
+  const build = spawnSync(process.execPath, [EG, 'native', file, '-o', exe], { encoding: 'utf8' });
+  const run = build.status === 0 ? spawnSync(exe, [], { encoding: 'utf8' }) : null;
+  const n = (ref.stdout.match(/^\d+ \w+ [0-9a-f]{64}$/gm) || []).length;
+  if (run && n >= 9 && run.stdout === ref.stdout && run.status === 0) { pass++; console.log(`✓ compartments natively, as written (${n} ledger entries equal to the interpreter's)`); }
+  else { fail++; console.log('✗ compartments natively — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout)}` : (build.stderr || build.stdout))); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');
@@ -391,7 +404,7 @@ for (const [name, c] of Object.entries(CASES)) {
 // refusals name the thing and exit 1; nothing is silently skipped
 {
   const REFUSE = {
-    'a compartment (native_system, next)': 'compartment A {\n  id = "co-a"\n  state { n: 0 }\n}',
+    'a component (CIE4 slice c, next)': 'component A {\n  id = "cm.a"\n  namespace = "a"\n  version = "1.0.0"\n  state { n: 0 }\n}',
   };
   for (const [what, src] of Object.entries(REFUSE)) {
     const file = path.join(TMP, 'refuse.eg');
