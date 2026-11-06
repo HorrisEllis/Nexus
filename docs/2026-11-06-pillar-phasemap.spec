@@ -32,7 +32,15 @@ decisions:
       implementation and version identity are kept apart; contracts first, then conformance, then consolidation. CIE-EG CH-Q2 and CH-Q4 as
       recorded in emerge/emerge/spec/cie-eg.spec.
   PIL_D2_a_process_or_a_library:
-    status: "OPEN — his to settle (do not guess)"
+    status: "DECIDED 2026-11-06 (his): (b) a library"
+    james: '"library"'
+    decided_context: >-
+      Asked with the readings side by side and the coder's recommendation, (b): a constraint is checked on every WARP link (on 2026-11-05 a
+      check sent through a door was "far too slow per link"); a library cannot go down under the systems that use it (his rule: one system
+      down breaks no other); and his 2026-11-05 call already used Emerge's evaluate "directly", as a shared primitive. His answer: "library".
+      Pillar is code each Emerge system loads, with its CLI for him and the agents (its tests, its contracts); no server.js, no door. A door
+      can still be added on top later without rework if another language needs to ask it.
+    status_before: "OPEN — his to settle (do not guess)"
     question: >-
       His rule (2026-11-03): "the server.js is the process for each system. It’s what cos manages." Pillar, as he heard it described
       (2026-11-06), is "a small library with its own tests, version and contract", the floor others stand on, not a room you walk into.
@@ -57,7 +65,7 @@ phases:
 
   PIL1_pillar_stands:
     status: OPEN
-    depends_on: [PIL_D0_the_name_is_pillar, PIL_D1_the_shape_he_brought, PIL_D3_written_in_emerge]
+    depends_on: [PIL_D0_the_name_is_pillar, PIL_D1_the_shape_he_brought, PIL_D2_a_process_or_a_library, PIL_D3_written_in_emerge]
     spec: pillar/spec/pillar.spec
     blocks: [MOD-PIL-SYSTEM]
     files: [pillar/pillar.eg, pillar/cli.eg, pillar/registry.eg, pillar/test/pillar.test.eg, lib/nexus-self/systems.js, tests/modules/test-pillar.test.js, tests/modules/run-all.js]
