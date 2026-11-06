@@ -18,7 +18,12 @@ then they are written by hand.
   - native.test 95/95; selfhost 16/16; stages 0, 1 and 2 byte-identical (sha256 7d094db6…).
   - `examples/counter.eg` differs in one line, the read-only lens error (a gap).
 - **Speed:** stage 0 (the interpreter running the compiler on itself) took 15.9 s of wall time. Stages 1 and 2 (native) were not timed
-  separately.
+  separately. Compiling counter.eg with the stage-0 compiler took about 4.7 s.
+- **Lines:** .eg added: `front.eg` +95, `lower.eg` 146 new, `emerge.eg` +12. JS removed: 0 (this slice adds the native path; the JS it
+  replaces goes at CIE11). Emerge before: 22,694 lines of JS, 9,099 of .eg.
+- **Failed runs before the pass:** 1. The embedded path `<cie>/world.eg` was resolved against the program's folder; embedded paths now
+  count as absolute.
+- **Gaps found:** lenses are not frozen natively; no stderr natively.
 - **What came of it:** an ordinary compartment program builds to a native executable with no Node. Next: frozen lenses, then components.
 
 ## 2026-11-06 — the world in Emerge, hash for hash (CIE4 slice a, 0.60.426)
@@ -31,7 +36,17 @@ then they are written by hand.
   same compiled native), and every output line and ledger hash compared.
 - **Code:** `emerge/emerge/lang/cie/world.eg`, commit 707c7f380; the test is `lang/test/native.test.js` 'world'.
 - **Result:** 10 of 10 ledger entries equal across all three runs. native.test 94 passed, 0 failed.
-- **Speed:** not measured in this run. The next row times the three runs.
+- **Speed:** not measured in this run.
+- **Lines:** `world.eg` 210 new lines of .eg. JS removed: 0.
+- **Failed runs before the pass:** 7. Each taught something about Emerge:
+  1. `state` can't be a parameter;
+  2. it can't be a variable either;
+  3. newlines inside a map literal run a lambda's lines together;
+  4. an escaped quote inside an interpolation is refused;
+  5. `compartment`, `on`, `emit` and `state` can't be function names;
+  6. the checker refuses changing a map through a `let` or a parameter;
+  7. the unrouted notice belongs on stderr, not in the world.
+- **Gaps found:** items 1, 2, 3 and 5 are language limits. Item 6 is a native-versus-checker difference.
 - **What came of it:** the world needs no JavaScript to run natively. The next step (slice b) is the compiler accepting `compartment` and
   `on` as written.
 

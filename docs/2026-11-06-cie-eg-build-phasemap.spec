@@ -190,6 +190,22 @@ phases:
       (no libc, as the native compiler already is), each conforming to its Pillar contract. With CIE10's Port, they are what COS's manager
       needs to be written in Emerge: serve its routes, supervise each system's process, schedule and time the gates.
     proof: "a native program spawns a child, reads its exit code, kills one that hangs; times a 50 ms timer; lists and watches a folder; each case from its Pillar contract"
+  CIE14_the_gaps_found_while_coding:
+    status: OPEN
+    depends_on: [CIE_D1_remove_the_javascript_now, CIE4_native_components]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-SYSTEM]
+    files: [emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/lower.eg, emerge/emerge/lang/parser.js, emerge/emerge/lang/test/native.test.js]
+    requires: [node]
+    prerequisites: ["for (b): his call, a language change both parsers carry"]
+    does: >-
+      His "expanding emerge while you do" (2026-11-06): the gaps found while writing world.eg and lower.eg, each built into Emerge, none worked
+      around in silence. (a) Lenses frozen natively, so writing Counter.state raises the interpreter's read-only error (examples/counter.eg's one
+      differing line). (b) Newlines inside a map literal end statements in a lambda written there; today the lambda's lines run together. Both
+      parsers change, so it is his to say. (c) Native refuses a change through a let or a parameter, as the checker does. (d) stderr natively, for
+      the unrouted notice and errors written by programs. Keywords as names (state, on, emit, compartment) are the grammar's, not a gap: named,
+      not changed, unless he asks.
+    proof: "examples/counter.eg native equals the interpreter line for line; a lambda in a map literal runs each line; native refuses a let write as the checker does"
   CIE12_windows:
     status: OPEN
     depends_on: [CIE11_retire_the_interpreter]

@@ -27,7 +27,34 @@ decisions:
       named by the CIE map, is the exception the axiom allows until CIE11 retires it. The other reading: the axiom is written only once Emerge's
       JS is gone. The coder wrote it now; his to confirm.
 
+  EQ_D1_extensions_are_their_owners:
+    status: "DECIDED 2026-11-06 by his axioms (§5.9, §5.15, §5.16); the reading of \"database files\" his to confirm"
+    james: '"node files, eg files, yaml files, and database files. all new extensions need to be defined in a taxonomy and ledger."'
+    chosen: >-
+      Each extension is defined by the system that owns its files, in that system's own registry (§5.16), never in one central list in lib/;
+      the system registry joins the lists into the one taxonomy he reads. lib/node-schemas (75 schemas, one central folder in lib/) is the
+      prior form: its schemas are reused as the definitions, moved to their owners over time, not copied.
+    reading_to_confirm: >-
+      "database files": read as the files a store keeps (Emerge's stores, MOD-STORE; the .jsonl ledgers; any .sql/.sqlite/.db). The other reading:
+      a database's own schema files only. His to confirm.
+
 phases:
+
+  EQ5_every_extension_in_a_taxonomy_and_a_ledger:
+    status: OPEN
+    depends_on: [EQ_D0_emerge_only, EQ_D1_extensions_are_their_owners]
+    spec: emerge/emerge/spec/cie-eg.spec
+    files: [emerge/emerge/lang/cie/extensions.eg, emerge/emerge/lang/test/extensions.test.eg, emerge/emerge/extensions.eg]
+    requires: [node]
+    prerequisites: ["his answer to EQ_D1's reading (where each system's list lives)"]
+    does: >-
+      His "node files, eg files, yaml files, and database files. all new extensions need to be defined in a taxonomy and ledger": every
+      extension is defined once by the system that owns it: its name, what a file of it is, its schema (the node schema where one exists, e.g.
+      lib/node-schemas/schema.crystal), who writes and reads it, and whether it is code, data, a node, config or a database. A ledger records each
+      extension added, changed or retired, dated, with why. A census in .eg (lang/cie/extensions.eg) reads the tree and names every extension
+      with no definition. Measured 2026-11-06 (git ls-files, data/ excluded): 141 extensions, 66 with no node schema, among them .eg (67 files),
+      .nex (168), .yaml/.yml, .sql, .jsonl, .ndjson. Emerge's own (.eg, its .node, its stores) are defined first, in emerge/emerge/extensions.eg.
+    proof: "the census lists 0 undefined extensions in Emerge's folder; a new extension without a definition fails the census; each definition has its ledger line"
 
   EQ1_the_crystal_memory:
     status: OPEN
@@ -46,6 +73,8 @@ phases:
 
   EQ2_the_benchmark_ledger:
     status: OPEN
+    # expanded 2026-11-06, his "remember to take note of metrics while coding in emerge, and expanding emerge while you do": every slice of
+    # Emerge work logs its metrics (below), and every gap it finds in Emerge is a phase that builds it into Emerge (§17.13).
     depends_on: [EQ_D0_emerge_only]
     spec: emerge/emerge/spec/cie-eg.spec
     files: [docs/BENCHMARKS.md, emerge/emerge/lang/cie/bench.eg, emerge/emerge/lang/test/bench.test.eg]
@@ -91,3 +120,11 @@ phases:
       examples, for a model that needs more. The Emerge rung's CARD (idearium/lib/emerge-rung.cjs, 0.60.421) is the first draft; it moves to read
       the guide, so there is one.
     proof: "every example in the guide passes eg check; a model given only the guide writes a program that passes eg check; the atlas tool answers a topic"
+
+# ── ADDENDUM 2026-11-06 (0.60.429) — EQ2 expanded (metrics while coding in Emerge); EQ5 and EQ_D1 written (every extension defined) ──
+# James, 2026-11-06: "remember to take note of metrics while coding in emerge, and expanding emerge while you do."
+# James, 2026-11-06: "node files, eg files, yaml files, and database files. all new extensions need to be defined in a taxonomy and ledger."
+# EQ2 now also asks, per slice of Emerge work: wall time of each run, .eg lines added, JS lines removed (Emerge's total before and after),
+# tests and their counts, the failed runs before the pass and what each taught, and each gap in Emerge found, with the phase that builds it.
+# EQ5: the extension taxonomy and its ledger. The ledger's covers named only shared files (no phase covers the intent; OC7 types COS's
+# orchestration nodes, a part of it).

@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793997643503
+exported_at: 1793998100578
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997643503
-lastSeenAt: 1793997643503
+firstSeenAt: 1793998100578
+lastSeenAt: 1793998100578
 fingerprint: null
 payload:
   for: CIE12_windows
@@ -72,6 +72,10 @@ payload:
         files:
           - emerge/emerge/lang/native/rt.eg
           - emerge/emerge/lang/native/codegen.eg
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
+        files:
+          - emerge/emerge/lang/native/codegen.eg
+          - emerge/emerge/lang/native/rt.eg
     dangling: []
     lines:
       - layer 11 · blocked by CIE11_retire_the_interpreter
@@ -80,6 +84,9 @@ payload:
       - >-
         same files as CIE13_native_system_primitives with no order between them:
         emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg
+      - >-
+        same files as CIE14_the_gaps_found_while_coding with no order between them:
+        emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
         kind: declared

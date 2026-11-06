@@ -483,6 +483,8 @@ payload:
       emerge/data/ledger/2026-11-06T20-40-58-141Z/events.jsonl: 67fd6b53aa91f26ba55d3045edf013af451a5446edc76f4a067dae7e735007a7
       emerge/data/ledger/2026-11-06T20-40-58-285Z/events.jsonl: 6f0befe5bc236d01d56f92bd5f6f64059a9eca5ac8d4f697301480744d1fd4d6
       emerge/data/ledger/2026-11-06T20-40-58-419Z/events.jsonl: a9fc484ac6d28c2c8b6187f6af9f2bdce5c9c18e229887414ab6113fd5f1a5d9
+      emerge/data/ledger/2026-11-06T20-47-58-301Z/events.jsonl: eaa68c1a4075b6d86011f2c3f8433132dd6bfee7bb3a8ea36ef65bbf5c779e84
+      emerge/data/ledger/2026-11-06T20-48-20-457Z/events.jsonl: 2bada74869d17bbf19984066cc5451542948b8a106f1230eeec61ec0d7566507
       emerge/data/node-index/nodes_bundle.json: 26b084d77854dcf167cf911fd44352d098a90740953efee6384bdffadbbd44c6
       emerge/data/node-index/nodes_bundle_ledger.jsonl: d0e99fddafa5ff54d94163a6fcffd7a2592c039099a97bf0f04a675ee8f3f4c3
       emerge/data/node-index/nodes_capability.json: 693b003b324d149eef21f8ee211e610d399a198c3bea60d9f69078603248980b
@@ -762,6 +764,7 @@ payload:
       phases/2026-11-06-cie-eg-build/CIE11_retire_the_interpreter.phase: c149bf2a635142391f7eb908db2108a7ac7b201c40c92676b07b0f8a169e3013
       phases/2026-11-06-cie-eg-build/CIE12_windows.phase: 3ac15963afb6ea600da27da63d53e589bdaf437e7dbfdac11817c0a62816cd77
       phases/2026-11-06-cie-eg-build/CIE13_native_system_primitives.phase: e0da42f6ac0eccb1b7806b8ddfa793b6c59cbf9af620af2c7e28096e5d23f89e
+      phases/2026-11-06-cie-eg-build/CIE14_the_gaps_found_while_coding.phase: ed02daaf218c12f8a1b1cc0e4e7d366ad78e741d8de66be098296d45aada9a37
       phases/2026-11-06-cie-eg-build/CIE1_the_contract_block.phase: 495b6ecaad24704b1d2adf71b11ce7d495c99ffb9907c198a4d75ddb79304a94
       phases/2026-11-06-cie-eg-build/CIE2_native_sha256.phase: f0a2b42223ecef4259e187059b11b3f6b4797871ab845d45a6fedfce97b1c668
       phases/2026-11-06-cie-eg-build/CIE3_native_ledger.phase: d80f86c7882a899f80b1a1fdf844764a209659b6e93ec394d47ee385f46c0bf2
@@ -771,15 +774,16 @@ payload:
       phases/2026-11-06-cie-eg-build/CIE7_native_observe.phase: 4b166661a692fafe3f68e2e31f56205f6cf972ee12cd14e83c8bd585115495ce
       phases/2026-11-06-cie-eg-build/CIE8_spec_compiler_in_emerge.phase: 4b928c76857db3cdb88f874345ea86660e7c4af6fdc8bdc8b68bf927157bfdb5
       phases/2026-11-06-cie-eg-build/CIE9_tests_in_emerge.phase: 5aa90cb5be429b9aa6da6ebd250487a2eb7bb1bbeec4dd240181b05a324c6575
-      phases/2026-11-06-cie-eg-build/graph/CIE10_the_door_in_emerge-03f3047c8942307c.graph: 93f7f543006c4ddbe9ec7318455b3bf8e1e0528fac7d4c8ee4fbf49b0c31ced2
+      phases/2026-11-06-cie-eg-build/graph/CIE10_the_door_in_emerge-03f3047c8942307c.graph: 7caa01da8fadc805a5b8dda4b2218e8b3eaf78ca3fee1aca9ef843767a08fa94
       phases/2026-11-06-cie-eg-build/graph/CIE11_retire_the_interpreter-a6d8fd060a156072.graph: 935e6e18f54dfaf0afddecc0fe1a244f6732a2011a8a3d3eb42aee17975fc39a
-      phases/2026-11-06-cie-eg-build/graph/CIE12_windows-f28180b43a648d54.graph: 8129d3fb921ef64b03ca28bc11d2060838c06fb576d36c87d98172e275a7f5c3
-      phases/2026-11-06-cie-eg-build/graph/CIE13_native_system_primitives-32c43928d1b80c3c.graph: 4b65b567be9f220baf86e03c5bce739b811e564d99dde03b9be092bcb0d0ab67
-      phases/2026-11-06-cie-eg-build/graph/CIE1_the_contract_block-52152971b5c75b8b.graph: a9f67931efbd0e9f01c07872bac2f6c7f64a03fb98126260c1ed1c0bd6f9985b
-      phases/2026-11-06-cie-eg-build/graph/CIE2_native_sha256-cb41013e07a153cd.graph: 11c90faeace2f95ac75122897267c27d90cf2499ddab7a3220a255544f02a68b
-      phases/2026-11-06-cie-eg-build/graph/CIE3_native_ledger-26721ad34cdda479.graph: 05435fd8de2af137728714bf0f2acce44017514132d59592e181cddcdc2e5dfb
-      phases/2026-11-06-cie-eg-build/graph/CIE4_native_components-b198556902408203.graph: bbfb6f5c8af1759f17efd65c2dbf65a7293b971657df0ecbe78170e69728a023
-      phases/2026-11-06-cie-eg-build/graph/CIE5_native_test-5197dd1f25dcc68b.graph: 7add40f8ae9e5cb15661d09de1d564bd7d68d9761cb57e114428d3f0860c2bff
+      phases/2026-11-06-cie-eg-build/graph/CIE12_windows-f28180b43a648d54.graph: a1751d959c61a8aec9f904260fe4449fd7bedf4aa5101d0926c1cdd54c6d636f
+      phases/2026-11-06-cie-eg-build/graph/CIE13_native_system_primitives-32c43928d1b80c3c.graph: 94f84ddace860ad477852f290b15e210b38ebaaa8ae4cb50cef94388e78bcfa9
+      phases/2026-11-06-cie-eg-build/graph/CIE14_the_gaps_found_while_coding-5874baa5a3bcb9b9.graph: aa6826630e194806eb9b2cc1c4027b23d7fceb85b88c46e908ca55aa9915cafe
+      phases/2026-11-06-cie-eg-build/graph/CIE1_the_contract_block-52152971b5c75b8b.graph: 68b730e965b88de760f54390c7611600a74273ddc7266022f9f38709f4b18412
+      phases/2026-11-06-cie-eg-build/graph/CIE2_native_sha256-cb41013e07a153cd.graph: 2c247b5300e4ab32fcd8b499b14d1aedd6ae0fd5ebc251b0270a08b263c2d509
+      phases/2026-11-06-cie-eg-build/graph/CIE3_native_ledger-26721ad34cdda479.graph: 5ff7d211ef814f0b7663ba8cf401d53447d0c043efbdefac6472389f07e61e53
+      phases/2026-11-06-cie-eg-build/graph/CIE4_native_components-b198556902408203.graph: a342679f61ee1cfc4d5d1afdf51377463082fec7710bda2751a90ea6a254652a
+      phases/2026-11-06-cie-eg-build/graph/CIE5_native_test-5197dd1f25dcc68b.graph: 82cb1542a47e9bccede2cabb3d2e27f2b6444df0ef6cee40fbbae54ae70008a8
       phases/2026-11-06-cie-eg-build/graph/CIE6_native_check-29095b91f487f9dc.graph: 5ab77256e70b65cb33d15656e5b3c6b182e15a9d2365bea72a6436ad34fd4b29
       phases/2026-11-06-cie-eg-build/graph/CIE7_native_observe-d7bfba08f4f6aedc.graph: ba007b5c74b3704cbeba7bdf7713a3821fa2478c96982a7f76922e0d2d04d109
       phases/2026-11-06-cie-eg-build/graph/CIE8_spec_compiler_in_emerge-19e737a93db3c3a8.graph: 2c7efbd11e1f33bd9c6f8493d5af38b6d9bf626ef7e16342a3795f3b7fffe4fc
@@ -799,10 +803,12 @@ payload:
       phases/2026-11-06-emerge-is-the-replacement/EQ2_the_benchmark_ledger.phase: 9ddcca0e751690979d64afc01d51ed2451ea45859c0fb531d99674c617d664c5
       phases/2026-11-06-emerge-is-the-replacement/EQ3_reference_nodes.phase: 84ea8f977d6569ed7c6dd1f712de597d13a85ae947f8d623ba5dbedc01c0e024
       phases/2026-11-06-emerge-is-the-replacement/EQ4_the_emerge_guide_for_any_llm.phase: 8addb5afe196cae1860904adabdb6651af65c5a553b1e6825a13dc9e98b7af9e
+      phases/2026-11-06-emerge-is-the-replacement/EQ5_every_extension_in_a_taxonomy_and_a_ledger.phase: 6da12954800d6961b0cdc9fe2041977f4b288e85c4f8a602a2e82268a12dbd57
       phases/2026-11-06-emerge-is-the-replacement/graph/EQ1_the_crystal_memory-9c7c665a411fda02.graph: 1664a36764367a92613cbfacd73a1485ace02d3b81528b710fd30da4db504255
       phases/2026-11-06-emerge-is-the-replacement/graph/EQ2_the_benchmark_ledger-551ff3dbd8851b16.graph: 934466b0f29db809b3b436dc3acbc73d9fa3c1879c0794ae2763f90851b02ce7
       phases/2026-11-06-emerge-is-the-replacement/graph/EQ3_reference_nodes-72a7ccafe575ef5f.graph: 49e814c8ad80b53a22710d9c8d357a8f54377ad4ca34160b52a51fc343b484de
       phases/2026-11-06-emerge-is-the-replacement/graph/EQ4_the_emerge_guide_for_any_llm-9261eda30468f30d.graph: 0333fef448bb39470efe4c570d24984fe11cf26e4782f3545a3c01f145ec869e
+      phases/2026-11-06-emerge-is-the-replacement/graph/EQ5_every_extension_in_a_taxonomy_and_a_ledger-d37b5d73da316886.graph: dbac8a2b0c23fdbc08b3128e8308db339c80b279780a1b02b1887375f834dafb
       phases/2026-11-06-emerge-is-the-replacement/graph/_superseded/EQ1_the_crystal_memory-65d6cd5a11325ebf.graph: 144f9dd7f4e61d38ae2a74768ea222ab769fc7dd3c3a02c3618a7dcbbcd040a2
       phases/2026-11-06-emerge-is-the-replacement/graph/_superseded/EQ2_the_benchmark_ledger-8af206da6a003a8d.graph: d86b9856fff458c9c1848625d02f443f1eaf0002e086ecee2eef26a856fa345f
       phases/2026-11-06-emerge-is-the-replacement/graph/_superseded/EQ3_reference_nodes-2b0dd331cda64f7c.graph: 95ef0696471e064e0f8543c2fc413fb234a9228738c65376a2b06572f7485399

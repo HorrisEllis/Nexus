@@ -1,0 +1,59 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EQ5_every_extension_in_a_taxonomy_and_a_ledger:d37b5d73da316886
+type: graph
+id: phase:EQ5_every_extension_in_a_taxonomy_and_a_ledger:d37b5d73da316886
+context: dependency graph of phase EQ5_every_extension_in_a_taxonomy_and_a_ledger
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793998078401
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793998078401
+lastSeenAt: 1793998078401
+fingerprint: null
+payload:
+  for: EQ5_every_extension_in_a_taxonomy_and_a_ledger
+  kind: phase
+  repo: null
+  hash: d37b5d73da316886
+  nodes:
+    - path: emerge/emerge/extensions.eg
+      role: changes
+      exists: false
+      system: emerge
+    - path: emerge/emerge/lang/cie/extensions.eg
+      role: changes
+      exists: false
+      system: emerge
+    - path: emerge/emerge/lang/test/extensions.test.eg
+      role: changes
+      exists: false
+      system: emerge
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D1_extensions_are_their_owners
+    dependents: []
+    upstream:
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D1_extensions_are_their_owners
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (2): EQ_D0_emerge_only, EQ_D1_extensions_are_their_owners'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+        kind: declared
+      - from: docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D1_extensions_are_their_owners
+        kind: declared

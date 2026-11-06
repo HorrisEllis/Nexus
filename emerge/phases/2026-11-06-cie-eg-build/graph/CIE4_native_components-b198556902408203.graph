@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793997643480
+exported_at: 1793998100550
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997643480
-lastSeenAt: 1793997643480
+firstSeenAt: 1793998100550
+lastSeenAt: 1793998100550
 fingerprint: null
 payload:
   for: CIE4_native_components
@@ -77,6 +77,7 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
     dependents:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
     upstream:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
@@ -97,6 +98,7 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
@@ -104,12 +106,15 @@ payload:
     blockedBy: []
     unlocks:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
     conflicts: []
     dangling: []
     lines:
       - layer 5 · ready
       - 'depends on (2): CIE3_native_ledger, CIE1_the_contract_block · all upstream 14'
-      - 'needed by (1): CIE5_native_test · all downstream 8 · finishing it unlocks CIE5_native_test'
+      - >-
+        needed by (2): CIE5_native_test, CIE14_the_gaps_found_while_coding · all downstream 9 ·
+        finishing it unlocks CIE5_native_test, CIE14_the_gaps_found_while_coding
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
         kind: declared
