@@ -39,6 +39,11 @@ decisions:
       its wall, as Loom runs since 0.60.338 (LM6). A system with ways still open out is first walled in audit mode, so the wall says what it
       would break; enforce follows when the audit is empty.
     by: "his, 2026-11-01: \"each server.js in each system needs to connect to the component registry, then cos connects to the server.js. isolated and sandboxed.\""
+  # moved here 2026-11-06 from where it was written (outside decisions:, so the DAG could not resolve it); content unchanged
+  DO_D10_the_cli_is_the_way_in_for_every_ui_and_copilot:
+    status: "DECIDED 2026-11-05 (his)"
+    chosen: "each system's server.js serves its CLI from its registry, and every UI and co-pilot interact with that system through it"
+    by: "his, 2026-11-05: \"the cli commands for each server.js is meant to be how each ui and copilot interact with the system through the interaction contract.\""
 phases:
   DO6_every_door_on_its_registry_and_walled_by_cos:
     status: OPEN
@@ -175,7 +180,4 @@ order: "DO0 first (it is a defect, and every door's handshake needs it); then DO
 # of reaching their files or a central table — a phase to map once the doors stand (the reading of "through the interaction contract" as
 # "through each system's own registry" is the coder's, to confirm).
 decisions_addendum_2026_11_05:
-  DO_D10_the_cli_is_the_way_in_for_every_ui_and_copilot:
-    status: "DECIDED 2026-11-05 (his)"
-    chosen: "each system's server.js serves its CLI from its registry, and every UI and co-pilot interact with that system through it"
-    by: "his, 2026-11-05: \"the cli commands for each server.js is meant to be how each ui and copilot interact with the system through the interaction contract.\""
+  # 2026-11-06: its one entry, DO_D10, moved into decisions: above (the DAG reads decisions only there); content unchanged

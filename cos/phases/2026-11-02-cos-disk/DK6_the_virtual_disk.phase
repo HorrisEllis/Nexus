@@ -7,11 +7,11 @@ intent: null
 summary: DK6_the_virtual_disk (backend) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793708290560
+exported_at: 1793940671473
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793708290560
-lastSeenAt: 1793708290560
+firstSeenAt: 1793940671473
+lastSeenAt: 1793940671473
 fingerprint: null
 payload:
   id: DK6_the_virtual_disk
@@ -26,6 +26,7 @@ payload:
     - tests/modules/test-cos-vdisk.test.js
     - tests/modules/run-all.js
   depends_on:
+    - DK_D3_the_disk_is_a_qcow2_virtual_disk
     - DK1_pack_inspect_verify_unpack
   blocks:
     - MOD-COS-VDISK

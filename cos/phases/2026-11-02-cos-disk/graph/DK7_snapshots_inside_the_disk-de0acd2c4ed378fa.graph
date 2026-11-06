@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793708278772
+exported_at: 1793940671475
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793708278772
-lastSeenAt: 1793708278772
+firstSeenAt: 1793940671475
+lastSeenAt: 1793940671475
 fingerprint: null
 payload:
   for: DK7_snapshots_inside_the_disk
@@ -78,6 +78,7 @@ payload:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D3_the_disk_is_a_qcow2_virtual_disk
     downstream:
       - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
       - docs/2026-11-02-cos-disk-phasemap.spec::DK8_the_disk_in_cos_and_its_vm
@@ -89,7 +90,7 @@ payload:
     dangling: []
     lines:
       - layer 3
-      - 'depends on (1): DK6_the_virtual_disk · all upstream 5'
+      - 'depends on (1): DK6_the_virtual_disk · all upstream 6'
       - >-
         needed by (2): SC8_the_specs_at_full_depth, DK8_the_disk_in_cos_and_its_vm · finishing it
         unlocks SC8_the_specs_at_full_depth, DK8_the_disk_in_cos_and_its_vm

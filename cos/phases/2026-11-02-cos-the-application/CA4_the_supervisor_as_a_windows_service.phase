@@ -9,11 +9,11 @@ intent: null
 summary: CA4_the_supervisor_as_a_windows_service (?) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1793847429748
+exported_at: 1793940673618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793847429748
-lastSeenAt: 1793847429748
+firstSeenAt: 1793940673618
+lastSeenAt: 1793940673618
 fingerprint: null
 payload:
   id: CA4_the_supervisor_as_a_windows_service
@@ -34,6 +34,7 @@ payload:
     - scripts/build-cos-app.js
     - tests/modules/test-cos-service.test.js
   depends_on:
+    - CA_D1b_the_supervisor_as_a_service
     - MG37_starts_with_windows
   blocks: []
   spec: null

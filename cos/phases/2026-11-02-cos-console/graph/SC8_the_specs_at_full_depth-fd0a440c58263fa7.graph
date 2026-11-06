@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793708276746
+exported_at: 1793940675902
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793708276746
-lastSeenAt: 1793708276746
+firstSeenAt: 1793940675902
+lastSeenAt: 1793940675902
 fingerprint: null
 payload:
   for: SC8_the_specs_at_full_depth
@@ -69,6 +69,7 @@ payload:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D3_the_disk_is_a_qcow2_virtual_disk
     downstream: []
     blockedBy: []
     unlocks: []
@@ -76,7 +77,7 @@ payload:
     dangling: []
     lines:
       - layer 5
-      - 'depends on (2): SC7_the_updates_section, DK7_snapshots_inside_the_disk · all upstream 17'
+      - 'depends on (2): SC7_the_updates_section, DK7_snapshots_inside_the_disk · all upstream 18'
       - 'needed by (0): —'
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section

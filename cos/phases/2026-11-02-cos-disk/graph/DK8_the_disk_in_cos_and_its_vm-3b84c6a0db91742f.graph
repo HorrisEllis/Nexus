@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793705608398
+exported_at: 1793940671477
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793705608398
-lastSeenAt: 1793705608398
+firstSeenAt: 1793940671477
+lastSeenAt: 1793940671477
 fingerprint: null
 payload:
   for: DK8_the_disk_in_cos_and_its_vm
@@ -201,6 +201,7 @@ payload:
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D0_spec_is_metadata_the_disk_holds_the_content
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D1_the_disk_file
       - docs/2026-11-02-cos-disk-phasemap.spec::DK_D2_where_disks_live
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK_D3_the_disk_is_a_qcow2_virtual_disk
     downstream: []
     blockedBy: []
     unlocks: []
@@ -213,7 +214,7 @@ payload:
       - layer 4 · ready
       - >-
         depends on (3): DK7_snapshots_inside_the_disk, DK2_disks_in_cos, DK3_the_disk_tab · all
-        upstream 8
+        upstream 9
       - 'needed by (0): —'
       - 'same files as DK5_machine_disks with no order between them: cos/compartment/qemu-runtime.js'
     edges:

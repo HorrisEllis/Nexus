@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793874058264
+exported_at: 1793940675911
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793874058264
-lastSeenAt: 1793874058264
+firstSeenAt: 1793940675911
+lastSeenAt: 1793940675911
 fingerprint: null
 payload:
   for: SC15_nexus_cli_in_the_console
@@ -45,8 +45,10 @@ payload:
     layer: 5
     deps:
       - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D10_the_cli_is_the_way_in_for_every_ui_and_copilot
     dependents: []
     upstream:
+      - docs/2026-10-31-system-doors-phasemap.spec::DO_D10_the_cli_is_the_way_in_for_every_ui_and_copilot
       - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
       - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
       - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
@@ -65,16 +67,18 @@ payload:
       - with: docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
         files:
           - cos/ui/console/page.js
-    dangling:
-      - DO_D10_the_cli_is_the_way_in_for_every_ui_and_copilot
+    dangling: []
     lines:
       - layer 5 · ready
-      - 'depends on (1): SC11_the_console_tab · all upstream 11'
+      - >-
+        depends on (2): SC11_the_console_tab, DO_D10_the_cli_is_the_way_in_for_every_ui_and_copilot
+        · all upstream 12
       - 'needed by (0): —'
-      - 'DANGLING depends_on: DO_D10_the_cli_is_the_way_in_for_every_ui_and_copilot'
       - >-
         same files as SC14_each_system_opens_in_its_own_window with no order between them:
         cos/ui/console/page.js
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
+        kind: declared
+      - from: docs/2026-10-31-system-doors-phasemap.spec::DO_D10_the_cli_is_the_way_in_for_every_ui_and_copilot
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793909471833
+exported_at: 1793940669286
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793909471833
-lastSeenAt: 1793909471833
+firstSeenAt: 1793940669286
+lastSeenAt: 1793940669286
 fingerprint: null
 payload:
   for: DO3_cortex_door
@@ -150,6 +150,7 @@ payload:
       - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
       - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
     dependents:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
       - docs/2026-10-31-system-doors-phasemap.spec::DO6_every_door_on_its_registry_and_walled_by_cos
       - docs/2026-10-31-system-doors-phasemap.spec::DO4_boot_js_retired
       - docs/2026-11-05-sovereignty-phasemap.spec::SV4_cortex_sovereign
@@ -157,6 +158,9 @@ payload:
       - docs/2026-10-31-system-doors-phasemap.spec::DO0_the_handshake_counts_real_routes
       - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
     downstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4f_the_callers_switch
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4g_lib_emerge_archived
       - docs/2026-10-31-system-doors-phasemap.spec::DO4_boot_js_retired
       - docs/2026-10-31-system-doors-phasemap.spec::DO6_every_door_on_its_registry_and_walled_by_cos
       - docs/2026-11-05-sovereignty-phasemap.spec::SV4_cortex_sovereign
@@ -164,6 +168,7 @@ payload:
     blockedBy:
       - docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
     unlocks:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4e_the_callback_routes
       - docs/2026-10-31-system-doors-phasemap.spec::DO4_boot_js_retired
     conflicts:
       - with: docs/2026-10-31-system-doors-phasemap.spec::DO1_idearium_door
@@ -174,8 +179,9 @@ payload:
       - layer 1 · blocked by DO_D0_server_floats_on_the_registry
       - 'depends on (2): DO_D0_server_floats_on_the_registry, DO0_the_handshake_counts_real_routes'
       - >-
-        needed by (3): DO6_every_door_on_its_registry_and_walled_by_cos, DO4_boot_js_retired,
-        SV4_cortex_sovereign · all downstream 4 · finishing it unlocks DO4_boot_js_retired
+        needed by (4): EAS4e_the_callback_routes, DO6_every_door_on_its_registry_and_walled_by_cos,
+        DO4_boot_js_retired, SV4_cortex_sovereign · all downstream 7 · finishing it unlocks
+        EAS4e_the_callback_routes, DO4_boot_js_retired
       - 'same files as DO1_idearium_door with no order between them: lib/nexus/autopilot.js'
     edges:
       - from: docs/2026-10-31-system-doors-phasemap.spec::DO_D0_server_floats_on_the_registry
