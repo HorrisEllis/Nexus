@@ -174,7 +174,7 @@ spec:
           on_non_nfc: { gap_type: structural, pressure: 0.5 }
           explicit_hook: text.normalize
           open:
-            status: OPEN
+            status: DECIDED   # 2026-11-06, D5: "Restricted subset first" (James)
             question: "Build the Unicode composition tables in .eg, or limit hashed text to a stated subset at first (ASCII identifiers are trivially NFC)?"
             decision_ref: D5
         identifiers:
@@ -326,7 +326,7 @@ spec:
           optional: "A checkpoint can carry the full sealed state, making it a restorable snapshot."
         dedup:
           number: "4.7"
-          status: OPEN
+          status: DECIDED   # D4 (James, 2026-11-06): no lossy dedup; a failure-mode report to learn from (reading to confirm)
           text: "Cobalt counts repeated events instead of storing copies. That conflicts with an exact, replayable history."
           proposal: "Chain every event; keep the repeat count as a separate index, or write periodic count entries."
           question: "Do you want dedup at all?"
@@ -487,7 +487,7 @@ spec:
           rule: "Unique by construction. A nonce must never repeat under one key, since repetition breaks GCM."
         keys:
           number: "8.4"
-          status: OPEN
+          status: DECIDED   # D3 (James, 2026-11-06): all four stores, a file backup always (reading to confirm)
           derivation: "A root key derives one key per component with HKDF-SHA-256, using the component uuid as context. A component can decrypt only its own entries."
           release: "The root key is released only if the genesis verifies, so altered code cannot open the ledger."
           question: "Where does the root key live, and what happens if it is lost? (OS credential store, a file, a passphrase, hardware token.)"
@@ -522,7 +522,7 @@ spec:
       subsections:
         stages:
           number: "10.1"
-          status: OPEN
+          status: DECIDED   # D1: Node was stage 0, self-hosting proven (selfhost.test.js 16/16, 2026-11-06)
           stages:
             - { stage: 0, name: scaffold,  text: "The existing Node interpreter, used once and then retired. It runs the .eg compiler to emit the first emerge.exe." }
             - { stage: 1, name: compiler,  text: "The compiler, written in Emerge: lexer, parser, checker, code generator." }
@@ -927,11 +927,11 @@ spec:
       number: "12"
       title: Open decisions, in priority order
       decisions:
-        - { id: D1, priority: 1, question: "Node as stage 0?",                                          ref: "10.1", status: OPEN }
+        - { id: D1, priority: 1, question: "Node as stage 0?",                                          ref: "10.1", status: DECIDED, resolution: "Yes, and already done: Node ran once as stage 0; native/bin/emerge rebuilds itself byte for byte (lang/test/selfhost.test.js 16/16, AT-11, 2026-11-06). James, asked: \"Look at main. Some of this might be addressed already\"" }
         - { id: D2, priority: 2, question: "Add int, bytes, and bitwise operators",                     ref: "3",    status: DECIDED, resolution: "Real 64-bit int added." }
-        - { id: D3, priority: 3, question: "Root key storage and loss policy.",                         ref: "8.4",  status: OPEN }
-        - { id: D4, priority: 4, question: "Keep Cobalt-style dedup?",                                  ref: "4.7",  status: OPEN, note: "13.6 proposes the count as an index" }
-        - { id: D5, priority: 5, question: "NFC tables in .eg, or a restricted subset first?",          ref: "2.3",  status: OPEN }
+        - { id: D3, priority: 3, question: "Root key storage and loss policy.",                         ref: "8.4",  status: DECIDED, resolution: "James, 2026-11-06: \"Options for all maybe? Backup to a file for sure.\" Read as: all four stores offered, chosen per machine (OS credential store, passphrase, file, hardware token), and a backup to a file always kept. Which store is the default, and his \"maybe\", to confirm." }
+        - { id: D4, priority: 4, question: "Keep Cobalt-style dedup?",                                  ref: "4.7",  status: DECIDED, note: "13.6 proposes the count as an index", resolution: "James, 2026-11-06: \"Keep a failure more report so it can learn.\" Read as (to confirm: \"more\" read as \"mode\"): no lossy dedup; every event stays chained; the repeats of a failure are gathered into a failure-mode report the system learns from (the count kept beside the history, as 13.6)." }
+        - { id: D5, priority: 5, question: "NFC tables in .eg, or a restricted subset first?",          ref: "2.3",  status: DECIDED, resolution: "James, 2026-11-06: \"Restricted subset first\". Hashed text, ids and ledger bodies are limited to a stated subset at first (ASCII identifiers are trivially NFC); anything outside it is refused with a gap, never normalized silently; the full tables later." }
         - { id: D6, priority: 6, question: "UUID layout: standard form or prefix form?",                ref: "9",    status: OPEN }
         - { id: D7, priority: 7, question: "Contract syntax: new contract block as proposed, or reuse wire only?", ref: "6.1", status: OPEN }
         - { id: D8, priority: 8, question: "Data types and stores (14): adopt, and answer DT-Q1..Q5?",  ref: "14",   status: OPEN, note: "new in cie-eg.spec" }
