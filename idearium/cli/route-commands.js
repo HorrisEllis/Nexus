@@ -1634,6 +1634,12 @@ export const SPEC = [
     need: (a) => (a.args[0] ? null : '<url>'),
     req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/open', body: { url: /^[a-z][\w+.-]*:\/\//i.test(a.args[0]) ? a.args[0] : `${/^(?:localhost|127\.|\d+\.\d+\.\d+\.\d+)/.test(a.args[0]) ? 'http' : 'https'}://${a.args[0]}` } }),   // a local system is plain http
     print: (d) => console.log(`  ${d.reused ? 'brought to the front' : d.navigated ? 'the main window went to' : 'opened'} ${d.url}${d.agentId ? `  (window ${d.agentId})` : ''}`) },
+  // §RC1 0.60.261 — James, 2026-10-26: "what if we have a tool for the agents to capture the recent event ledger or orchastrator? using the
+  // .response nodes, chat ledgers for the repo, and log for context. for persistent memory?" The same read as nexus.recall.tool
+  { key: 'recall', repo: false, usage: 'recall [--sources activity,runs,ledger,responses,chats,log] [--repo <uuid>] [--agent a] [--grep w] [--log errors|autopilot] [--limit n] [--budget chars]', about: 'what just happened, in one compact read: the event ledger, a repo\'s runs, the orchestrator ledger, the newest agent replies, the chat ledgers, a log; each source says ok or why not',
+    maxChars: 30000,
+    local: async (a) => require('../../lib/agent-tools/tools/nexus/recall.js').recall({ sources: a.flags.sources ? String(a.flags.sources).split(',') : null, repo: a.flags.repo, agent: a.flags.agent, grep: a.flags.grep, log: a.flags.log, limit: a.flags.limit, budget: a.flags.budget, failedOnly: !!a.flags.failed }),
+    print: (d) => console.log(d.text) },
   { key: 'log', repo: false, usage: 'log [autopilot|errors|<path>.log] [--lines n] [--grep pattern]', about: 'the end of a Nexus log (autopilot by default; errors = data/error.log), keys redacted',
     maxChars: 8000,
     local: (a) => require('../../lib/nexus-read.js').tailLog(a.args[0] || 'autopilot', { lines: a.flags.lines, grep: a.flags.grep }),

@@ -35,6 +35,8 @@ const FILES = [
   ]],
   ['idearium/ui/settings.html', I('idearium/ui/settings.html'), [I('idearium/api/index.js')]],   // HTTP /api/economy*
   // §AT1 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." The autofill data as one .autofill file
+  ['clear-glass/src/autofill/inline.js', I('clear-glass/src/autofill/inline.js'), [I('clear-glass/src/autofill/matcher.js')]],   // §AF3 0.60.263
+  ['lib/agent-tools/tools/nexus/recall.js', I('lib/agent-tools/tools/nexus/recall.js'), [I('lib/chat-ledger-client.js'), I('lib/nexus-read.js')]],   // §RC1 0.60.261
   ['clear-glass/src/contexts/human-check.js', I('clear-glass/src/contexts/human-check.js'), [I('clear-glass/src/net/compartment.js')]],   // §HC1 0.60.260
   ['clear-glass/src/main/glass-frame.js', I('clear-glass/src/main/glass-frame.js'), []],   // §GF1 0.60.258 the Clear Glass title bar over a foreign page
   ['clear-glass/src/autofill/transfer.js', I('clear-glass/src/autofill/transfer.js'), [I('clear-glass/src/autofill/learn-pick.js'), I('clear-glass/src/autofill/matcher.js')]],
