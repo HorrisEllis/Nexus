@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793984231112
+exported_at: 1793985179352
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793984231112
-lastSeenAt: 1793984231112
+firstSeenAt: 1793985179352
+lastSeenAt: 1793985179352
 fingerprint: null
 payload:
   for: CIE1_the_contract_block
@@ -249,6 +249,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
     blockedBy: []
     unlocks:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
     conflicts: []
     dangling: []
@@ -257,7 +258,7 @@ payload:
       - 'depends on (1): EAS4_callers_through_the_door · all upstream 9'
       - >-
         needed by (2): CIE4_native_components, PIL2_contracts · all downstream 45 · finishing it
-        unlocks PIL2_contracts
+        unlocks CIE4_native_components, PIL2_contracts
     edges:
       - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
         kind: declared

@@ -1,0 +1,234 @@
+// lang/cie/ledger.eg — the ledger's format in Emerge (CIE-EG section 4, MOD-LEDGER; Nexus phase CIE3). The same bytes as lang/ledger.js.
+// James, 2026-11-06: "Remove the last of the JavaScript" · "Start the JS removal now". Text: his D5, "Restricted subset first".
+//
+//   ecf(v)                    → the canonical text of a value (4.3)
+//   hash_entry(e)             → 64 hex: SHA-256("eg.ledger.entry.v1" 0x00 ‖ prev ‖ seq u64 BE ‖ len(kind) u32 BE ‖ kind ‖ len(body) u32 BE ‖ ecf(body)) (4.2)
+//   merkle_root(hashes)       → 64 hex (4.6): leaf = SHA-256(0x00 ‖ h), node = SHA-256(0x01 ‖ l ‖ r), an odd node carried up
+//   merkle_proof(hashes, i)   → [{ side: "L"|"R", hash }]
+//   merkle_fold(h, path)      → the root a proof leads to
+//   verify(entries)           → { ok: true } | { ok: false, seq, reason }   every hash, link, seq and checkpoint (4.4)
+//   verify_from(entries, n)   → the same, from the checkpoint at seq n
+//
+// Runs interpreted and native (emerge.exe); SHA-256 comes from the CPU natively (CIE2) and from the OS through Node when interpreted.
+//
+// Text, his D5 ("Restricted subset first"; the subset decided by the axioms 2026-11-06 after his "no idea what that means"): every code
+// point below U+0300, plus – — ‘ ’ “ ” … → ─ ✓ ✗, the punctuation the system writes itself. None decomposes or combines, so such text is
+// NFC by construction. Anything else is refused by name, never normalized; the full NFC tables come later. lang/ledger.js holds the same
+// rule (SUBSET_EXTRA), so a program behaves the same interpreted and native (lang/test/native.test.js 'ledger').
+
+let ZERO = "0000000000000000000000000000000000000000000000000000000000000000"
+let TAG_ENTRY = "eg.ledger.entry.v1\0"
+
+fn _refuse(what) { raise("ledger: {what}") }
+
+// ── ECF (4.3) ────────────────────────────────────────────────────────────────
+/** the punctuation the system writes itself, in the subset beside every code point below U+0300 (D5; lang/ledger.js SUBSET_EXTRA) */
+let SUBSET_EXTRA = [0x2013, 0x2014, 0x2018, 0x2019, 0x201C, 0x201D, 0x2026, 0x2192, 0x2500, 0x2713, 0x2717]
+
+fn _hex4(cp) {
+  let d = "0123456789ABCDEF"
+  var out = ""
+  var k = 12
+  while k >= 0 {
+    let v = (cp >> k) & 15
+    out = out + slice(d, v, v + 1)
+    k -= 4
+  }
+  return out
+}
+
+fn _outside(what, cp) {
+  _refuse("{what} holds U+{_hex4(cp)}, outside the ledger's text subset (CIE-EG D5: below U+0300 and – — ‘ ’ “ ” … → ─ ✓ ✗); the full NFC tables come later")
+}
+
+/** the subset (D5) and JSON's minimal escapes: \" \\ \b \f \n \r \t, other C0 controls as \u00xx, everything else raw UTF-8 */
+fn ecf_string(s, what) {
+  let b = bytes(s)
+  let n = len(b)
+  let digits = "0123456789abcdef"
+  var out = [34]
+  var i = 0
+  while i < n {
+    let c = b[i]
+    if c >= 0xF0 {
+      _outside(what, ((c & 7) << 18) | ((b[i + 1] & 63) << 12) | ((b[i + 2] & 63) << 6) | (b[i + 3] & 63))
+    } else if c >= 0xE0 {
+      let cp = ((c & 15) << 12) | ((b[i + 1] & 63) << 6) | (b[i + 2] & 63)
+      if index_of(SUBSET_EXTRA, cp) < 0 { _outside(what, cp) }
+      out = push(push(push(out, c), b[i + 1]), b[i + 2])
+      i += 3
+    } else if c >= 0xC0 {
+      let cp = ((c & 31) << 6) | (b[i + 1] & 63)
+      if cp >= 0x300 { _outside(what, cp) }
+      out = push(push(out, c), b[i + 1])
+      i += 2
+    } else {
+      if c == 34 { out = push(push(out, 92), 34) }
+      else if c == 92 { out = push(push(out, 92), 92) }
+      else if c == 8 { out = push(push(out, 92), 98) }
+      else if c == 12 { out = push(push(out, 92), 102) }
+      else if c == 10 { out = push(push(out, 92), 110) }
+      else if c == 13 { out = push(push(out, 92), 114) }
+      else if c == 9 { out = push(push(out, 92), 116) }
+      else if c < 32 { out = push(out, bytes("\\u00{slice(digits, c >> 4, (c >> 4) + 1)}{slice(digits, c & 15, (c & 15) + 1)}")) }
+      else { out = push(out, c) }
+      i += 1
+    }
+  }
+  return utf8(bytes(push(out, 34)))
+}
+
+fn ecf_number(n, what) {
+  if n != n or n - n != 0 { _refuse("{what}: {n} cannot be recorded — NaN and infinity are not data") }
+  if n == 0 { return "0" }
+  return str(n)
+}
+
+fn ecf(v) = _ecf(v, "value")
+
+fn _ecf(v, what) {
+  if v == null { return "null" }
+  let t = type_of(v)
+  if t == "bool" {
+    if v { return "true" }
+    return "false"
+  }
+  if t == "num" { return ecf_number(v, what) }
+  if t == "int" { return str(v) }
+  if t == "string" { return ecf_string(v, what) }
+  if t == "list" {
+    var parts = []
+    var i = 0
+    for x in v {
+      parts = push(parts, _ecf(x, "{what}[{i}]"))
+      i += 1
+    }
+    return "[" + join(parts, ",") + "]"
+  }
+  if t == "map" {
+    var parts = []
+    for k in sort(keys(v)) { parts = push(parts, ecf_string(k, "{what} key") + ":" + _ecf(v[k], "{what}.{k}")) }
+    return "\{" + join(parts, ",") + "\}"
+  }
+  _refuse("{what} is a {t}, not data")
+}
+
+// ── the entry hash (4.2) ─────────────────────────────────────────────────────
+fn _hex32(h, what) {
+  if type_of(h) != "string" or len(h) != 64 { _refuse("{what} must be 64 lowercase hex digits") }
+  for c in split(h, "") { if find_text("0123456789abcdef", c) < 0 { _refuse("{what} must be 64 lowercase hex digits") } }
+  return from_hex(h)
+}
+
+fn hash_entry(e) {
+  let k = bytes(e.kind)
+  var body = null
+  if has(e, "body") { body = e.body }
+  let b = bytes(_ecf(body, "{e.kind} body"))
+  return hex(sha256(bytes([bytes(TAG_ENTRY), _hex32(e.prev, "prev"), u64be(e.seq), u32be(len(k)), k, u32be(len(b)), b])))
+}
+
+// ── Merkle root and proofs (4.6) ─────────────────────────────────────────────
+fn _leaf(h) = sha256(bytes([0, _hex32(h, "entry hash")]))
+fn _node(l, r) = sha256(bytes([1, l, r]))
+
+fn _up(level) {
+  var next = []
+  var i = 0
+  while i < len(level) {
+    if i + 1 < len(level) { next = push(next, _node(level[i], level[i + 1])) } else { next = push(next, level[i]) }
+    i += 2
+  }
+  return next
+}
+
+fn merkle_root(hashes) {
+  if len(hashes) == 0 { return hex(sha256("eg.merkle.empty.v1")) }
+  var level = map(hashes, _leaf)
+  while len(level) > 1 { level = _up(level) }
+  return hex(level[0])
+}
+
+fn merkle_proof(hashes, index) {
+  if type_of(index) != "num" or floor(index) != index or index < 0 or index >= len(hashes) { _refuse("no leaf {index}") }
+  var level = map(hashes, _leaf)
+  var i = index
+  var path = []
+  while len(level) > 1 {
+    if i % 2 == 1 { path = push(path, { side: "L", hash: hex(level[i - 1]) }) }
+    else if i + 1 < len(level) { path = push(path, { side: "R", hash: hex(level[i + 1]) }) }
+    level = _up(level)
+    i = floor(i / 2)
+  }
+  return path
+}
+
+fn merkle_fold(entry_hash, path) {
+  var cur = _leaf(entry_hash)
+  for s in path {
+    if s.side == "L" { cur = _node(_hex32(s.hash, "sibling"), cur) } else { cur = _node(cur, _hex32(s.hash, "sibling")) }
+  }
+  return hex(cur)
+}
+
+// ── verify (4.4) ─────────────────────────────────────────────────────────────
+fn _bad(seq, reason) = { ok: false, seq: seq, reason: reason }
+
+/** the entry's hash, or the refusal as text (a refusal is a failed entry, never a crash) */
+fn _rehash(e) {
+  try { return { h: hash_entry(e) } } else err { return { err: err.message } }
+}
+
+fn verify(entries) {
+  var prev = ZERO
+  var since = []
+  var gaps = 0
+  var at = 0
+  for e in entries {
+    at += 1
+    if e.seq != at { return _bad(at, "seq is {e.seq}, expected {at}") }
+    if e.prev != prev { return _bad(at, "prev does not link to the previous entry") }
+    let r = _rehash(e)
+    if has(r, "err") { return _bad(at, r.err) }
+    if r.h != e.hash { return _bad(at, "hash does not match the entry") }
+    if e.kind == "checkpoint" {
+      let b = e.body
+      if b == null or b.head != prev or b.entries != at - 1 { return _bad(at, "checkpoint head/entries do not match the chain") }
+      if b.gaps != gaps { return _bad(at, "checkpoint gap count does not match the chain") }
+      if b.root != merkle_root(since) { return _bad(at, "checkpoint Merkle root does not match the entries since the last checkpoint") }
+      since = []
+    } else {
+      since = push(since, e.hash)
+    }
+    if e.kind == "gap" { gaps += 1 }
+    prev = e.hash
+  }
+  return { ok: true }
+}
+
+fn verify_from(entries, from) {
+  var at = -1
+  var i = 0
+  for e in entries {
+    if at < 0 and e.seq == from { at = i }
+    i += 1
+  }
+  if at < 0 { return _bad(from, "no entry {from}") }
+  if entries[at].kind != "checkpoint" { return _bad(from, "entry {from} is not a checkpoint") }
+  var prev = entries[at].prev
+  if entries[at].body.head != prev { return _bad(from, "checkpoint head does not match its prev") }
+  var j = at
+  while j < len(entries) {
+    let e = entries[j]
+    var want = from
+    if j > at { want = entries[j - 1].seq + 1 }
+    if e.seq != want { return _bad(e.seq, "seq out of order") }
+    if e.prev != prev { return _bad(e.seq, "prev does not link to the previous entry") }
+    let r = _rehash(e)
+    if has(r, "err") { return _bad(e.seq, r.err) }
+    if r.h != e.hash { return _bad(e.seq, "hash does not match the entry") }
+    prev = e.hash
+    j += 1
+  }
+  return { ok: true }
+}

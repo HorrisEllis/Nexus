@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793984231131
+exported_at: 1793985179367
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793984231131
-lastSeenAt: 1793984231131
+firstSeenAt: 1793985179367
+lastSeenAt: 1793985179367
 fingerprint: null
 payload:
   for: CIE7_native_observe
@@ -125,13 +125,12 @@ payload:
     downstream:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
-    blockedBy:
-      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 3 · blocked by CIE3_native_ledger
+      - layer 3 · ready
       - 'depends on (1): CIE3_native_ledger · all upstream 4'
       - 'needed by (1): CIE11_retire_the_interpreter · all downstream 2'
     edges:

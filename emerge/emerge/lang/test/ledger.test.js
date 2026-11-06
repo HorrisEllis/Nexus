@@ -32,7 +32,12 @@ t('the Merkle root matches the independent implementation, including the empty a
   assert.strictEqual(L.merkleRoot([]), 'ead4e0984ebf7eaf44723405667252a1eca1d5b1d3da97bb97be035163be8fca');
 });
 t('ECF: sorted by raw bytes, no whitespace, ints in decimal, -0 is 0, int and num of one value agree', () => {
-  assert.strictEqual(L.ecf({ b: 1, a: [2, { d: null, c: true }], '\u{1F600}': 1, '\uFF5E': 2 }), '{"a":[2,{"c":true,"d":null}],"b":1,"\uFF5E":2,"\u{1F600}":1}');   // U+FF5E (EF BD 9E) sorts before U+1F600 (F0 …) in UTF-8, after it in UTF-16
+  // 2026-11-06 (D5's subset, CIE3): U+FF5E and U+1F600 are outside the ledger's text now, so the byte-order case is within the subset (all
+  // BMP, where UTF-8 and UTF-16 order agree) and the two characters are refused. Was (kept, §0.3):
+  //   L.ecf({ b: 1, a: [2, { d: null, c: true }], '\u{1F600}': 1, '\uFF5E': 2 }) === '{"a":[2,{"c":true,"d":null}],"b":1,"\uFF5E":2,"\u{1F600}":1}'
+  assert.strictEqual(L.ecf({ b: 1, a: [2, { d: null, c: true }], '\u2192': 1, '\u00e9': 2, z: 3 }), '{"a":[2,{"c":true,"d":null}],"b":1,"z":3,"\u00e9":2,"\u2192":1}');
+  assert.throws(() => L.ecf({ '\uFF5E': 1 }), /U\+FF5E, outside the ledger's text subset/);
+  assert.throws(() => L.ecf('\u{1F600}'), /U\+1F600, outside the ledger's text subset/);
   assert.strictEqual(L.ecf(-0), '0');
   assert.strictEqual(L.ecf(5n), L.ecf(5));
   assert.strictEqual(L.ecf(0.1), '0.1');
@@ -40,7 +45,7 @@ t('ECF: sorted by raw bytes, no whitespace, ints in decimal, -0 is 0, int and nu
 t('ECF refuses what is not data: NaN, infinity, non-NFC text, lone surrogates, functions', () => {
   assert.throws(() => L.ecf(NaN), /NaN and infinity/);
   assert.throws(() => L.ecf(Infinity), /NaN and infinity/);
-  assert.throws(() => L.ecf('e\u0301'), /not NFC/);
+  assert.throws(() => L.ecf('e\u0301'), /U\+0301, outside the ledger's text subset/);   // was /not NFC/: the subset (D5) refuses the combining mark first
   assert.throws(() => L.ecf('\uD800'), /lone surrogate/);
   assert.throws(() => L.ecf({ k: () => 1 }), /not data/);
 });

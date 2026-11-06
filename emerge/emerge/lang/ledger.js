@@ -24,8 +24,19 @@ const RESERVED_KINDS = new Set(['genesis', 'boot', 'register', 'deliver', 'gap',
 // ── ECF: the one byte sequence per value (§4.3) ───────────────────────────────
 const wellFormed = s => { for (let i = 0; i < s.length; i++) { const c = s.charCodeAt(i); if (c >= 0xD800 && c <= 0xDBFF) { const d = s.charCodeAt(i + 1); if (d >= 0xDC00 && d <= 0xDFFF) { i++; continue; } return false; } if (c >= 0xDC00 && c <= 0xDFFF) return false; } return true; };
 
+// The text subset (CIE-EG D5, his "Restricted subset first", 2026-11-06; the subset itself decided by the axioms the same day, after
+// his "no idea what that means"): every code point below U+0300, plus the punctuation the system writes itself. None of these
+// decomposes or combines, so text made of them is NFC by construction; anything else is refused by name, never normalized. The same
+// rule is in lang/cie/ledger.eg (Nexus phase CIE3), so a program behaves the same interpreted and under emerge.exe.
+const SUBSET_EXTRA = new Set([0x2013, 0x2014, 0x2018, 0x2019, 0x201C, 0x201D, 0x2026, 0x2192, 0x2500, 0x2713, 0x2717]);   // – — ‘ ’ “ ” … → ─ ✓ ✗
+const inSubset = cp => cp < 0x300 || SUBSET_EXTRA.has(cp);
+
 function ecfString(s, what) {
   if (!wellFormed(s)) throw new LedgerDataError(`${what} holds a lone surrogate — not valid text`);
+  for (const ch of s) {
+    const cp = ch.codePointAt(0);
+    if (!inSubset(cp)) throw new LedgerDataError(`${what} holds U+${cp.toString(16).toUpperCase().padStart(4, '0')}, outside the ledger's text subset (CIE-EG D5: below U+0300 and – — ‘ ’ “ ” … → ─ ✓ ✗); the full NFC tables come later`);
+  }
   if (s !== s.normalize('NFC')) throw new LedgerDataError(`${what} is not NFC-normalized (ledger text must be NFC; normalize it explicitly)`);
   return JSON.stringify(s);                       // minimal JSON escapes: \" \\ \b \f \n \r \t, other C0 controls as \u00xx; everything else raw UTF-8
 }
@@ -154,4 +165,4 @@ function verifyFrom(entries, from) {
   return { ok: true };
 }
 
-module.exports = { ZERO, EMPTY_ROOT, RESERVED_KINDS, LedgerDataError, ecf, ecfBytes, hashEntry, merkleRoot, merkleProof, merkleFold, verify, verifyFrom, sha };
+module.exports = { inSubset, SUBSET_EXTRA, ZERO, EMPTY_ROOT, RESERVED_KINDS, LedgerDataError, ecf, ecfBytes, hashEntry, merkleRoot, merkleProof, merkleFold, verify, verifyFrom, sha };

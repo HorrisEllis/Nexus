@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793984231123
+exported_at: 1793985179361
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793984231123
-lastSeenAt: 1793984231123
+firstSeenAt: 1793985179361
+lastSeenAt: 1793985179361
 fingerprint: null
 payload:
   for: CIE4_native_components
@@ -56,14 +56,13 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
-    blockedBy:
-      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+    blockedBy: []
     unlocks:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
     conflicts: []
     dangling: []
     lines:
-      - layer 5 · blocked by CIE3_native_ledger
+      - layer 5 · ready
       - 'depends on (2): CIE3_native_ledger, CIE1_the_contract_block · all upstream 14'
       - 'needed by (1): CIE5_native_test · all downstream 7 · finishing it unlocks CIE5_native_test'
     edges:
