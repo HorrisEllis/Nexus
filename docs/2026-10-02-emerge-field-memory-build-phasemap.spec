@@ -535,6 +535,16 @@ spec:
         cfr-kernel rewind + the hash-chained history: any agent's memory and field replayed to any moment. Paired with
         RW1 (the VM rewind) — the OS and the mind rewound together, to the same point.
       proof: "rewind to entry N: the field, the context table and the agent memory read as they did at N"
+      expanded_2026_11_06_gates: >-
+        Asked which map carries rewind (the workshop's RS2 and this phase were the same intent twice, against his rule that phases expand),
+        James, 2026-11-06: "Rewind would live in the gates. Like ideariums. Flight recorder eventually." Decided (his, REWIND_D0): rewind is not
+        a separate engine; it lives in the gates. Each gate holds the state from before it opened, and a gate that stays closed rewinds to that
+        point, as Idearium's gates do today (lib/safe-apply.js: mirror → branch → check → mergeBack, RAID-gated; lib/change-record.js, GET
+        /api/repos/:uuid/changes). This phase carries it; RS2 (docs/2026-10-05-spec-workshop-rebuild-phasemap.spec) is superseded into it, kept
+        (§0.3). The flight recorder (every gate's before, after and why, replayable) is "eventually": RS1 later, after the gates rewind.
+        Reading, to confirm: "like ideariums" = Idearium's gate pipeline with safe-apply's branch and revert (the coder's reading of which
+        part of Idearium he meant).
+      decision_REWIND_D0: "DECIDED 2026-11-06 (his): rewind lives in the gates, like Idearium's; MR11 carries it; RS2 superseded into MR11; flight recorder later (RS1)"
       expanded_2026_11_06_field: >-
         James, 2026-11-06: "Let’s spec out the constrain field … Constrained relational field. Or emergence also. Replacing warp. Let’s get it all specced." · "build it as a layer of emerge like compounding". Expanded (his rule: phases expand): this phase builds MOD-CRF-REWIND of emerge/emerge/spec/field.spec, the constrained relational field (a layer of Emerge over Pillar, written in .eg): rewind on failure: refold to the last good seq of the CIE-EG ledger, branch, retry from there.
 
@@ -575,7 +585,12 @@ spec:
       expanded_2026_11_06_field: >-
         James, 2026-11-06: "Let’s spec out the constrain field … Constrained relational field. Or emergence also. Replacing warp. Let’s get it all specced." · "build it as a layer of emerge like compounding". Expanded (his rule: phases expand): this phase builds MOD-CRF-NARROW of emerge/emerge/spec/field.spec, the constrained relational field (a layer of Emerge over Pillar, written in .eg): the field generates code: narrowing from both ends, ranked by his weighting and leverage.
     CRF1_the_axioms_as_constraints:
-      status: OPEN
+      status: "HELD 2026-11-06 (his doubt) — kept, not built, not removed"
+      status_before_hold: OPEN
+      held: >-
+        James, 2026-11-06, after the field was specced with the axioms as its top layer: "I’m not confident about the axioms. They were an
+        example." Held in his words: the phase and MOD-CRF-AXIOMS stay (§0.3); nothing is built on them until he says what the top layer is.
+        Reading, to confirm with him: "an example" = the axioms illustrated what a top layer of laws could be, not a decision that they are it.
       depends_on: [RF1_relational_field]
       spec: emerge/emerge/spec/field.spec
       blocks: [MOD-CRF-AXIOMS]

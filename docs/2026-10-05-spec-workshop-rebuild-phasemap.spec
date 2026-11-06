@@ -102,7 +102,9 @@ spec:
 
     RS2_replay_rewind_branch:
       layer: library
-      status: 'LATER — off the path — the recorder, replay, the pipeline on WARP 2 and the architect stations come after the loop works by hand (declutter 2026-10-09)'
+      superseded_by: "MR11_rewind_the_mind (docs/2026-10-02-emerge-field-memory-build-phasemap.spec) — James, 2026-11-06: \"Rewind would live in the gates. Like ideariums. Flight recorder eventually.\" Kept as written (§0.3); its intent is carried there"
+      status: "SUPERSEDED 2026-11-06 by MR11 (rewind lives in the gates, his)"
+      status_was: 'LATER — off the path — the recorder, replay, the pipeline on WARP 2 and the architect stations come after the loop works by hand (declutter 2026-10-09)'
       status_before: OPEN
       james: '"to rebuild or reconstruct data using events, snapshots etc."'
       depends_on: [RS1_the_generation_recorder]
@@ -179,10 +181,11 @@ spec:
 
     RS6_the_workshop_as_the_editor:
       layer: ui
-      status: 'LATER — off the path — the recorder, replay, the pipeline on WARP 2 and the architect stations come after the loop works by hand (declutter 2026-10-09)'
+      status: "OPEN 2026-11-06 — expanded into RS6a–RS6d (his: the workshop is Nexus's office for every file kind); done when they are"
+      status_was: 'LATER — off the path — the recorder, replay, the pipeline on WARP 2 and the architect stations come after the loop works by hand (declutter 2026-10-09)'
       status_before: "MOSTLY BUILT AS WS7 (0.39.354, docs/2026-10-02-workshop-codex-rewind-phasemap.spec) — the full writer: one document, the outline, the parts in tiers, the agent in three modes whose proposals need his yes, SEND TO THE PIPELINE; RS5's picker is its start. Not rebuilt here (two workshops would drift). What is left of RS6 is the macro's timeline along the bottom — scrub to rewind, replay, branch — which needs RS1 (the recorder) and RS2 (replay) first."
       james: '"rebuild the spec workshop."'
-      depends_on: [RS5_the_template_picker, RS2_replay_rewind_branch]
+      depends_on: [RS5_the_template_picker]
       closes: [WS5, WS6, UI0]
       files: [idearium/ui/workshop.html, idearium/ui/js/spec-editor.js]
       does: >-
@@ -191,6 +194,61 @@ spec:
         all); the macro's timeline along the bottom — scrub to rewind, replay, branch. No reach dial. Enterprise grade,
         driven in Clear Glass.
       proof: "driven in Clear Glass: a genesis spec drafted, accepted, rewound to step 2 and replayed to the end byte-identical"
+      expanded_2026_11_06_office: >-
+        Asked whether "use the spec workshop specifically for Emerge" meant the workshop for Emerge's files only, James, 2026-11-06: "The
+        workshop is for nexus. It’s for yaml files. I want it for all of the node files, schemas, templates, and specs, eg files. Image files
+        etc. like a fully build like office or Libra". So the workshop is Nexus's editor for every kind of file Nexus is made of, not Emerge's
+        alone, and a full suite like an office (his "Libra", read as LibreOffice). Expanded into RS6a–RS6d below (his rule: phases expand);
+        LATER → OPEN. The rewind it named (RS2) is carried by the gates (MR11, his the same day), so RS6 no longer waits on RS2.
+      depends_on_before_office: [RS5_the_template_picker, RS2_replay_rewind_branch]
+      readings_to_confirm:
+        - "Whose it is. Today the workshop is Idearium's (idearium/lib/workshop.js, its editor and template picker). Every file kind across Nexus means
+           it opens other systems' files: (a) it stays Idearium's and reaches another system's files through that system's route (sovereignty, §5.15);
+           (b) it becomes its own system (an office with its server.js). The coder recommends (a) now, (b) only if it outgrows Idearium. His call."
+        - "Emerge's own IDE (emerge/emerge-ide.js, :4242) stays as Emerge's; the workshop edits .eg files as one kind among the rest. To confirm."
+        - "Images: view, crop, resize and annotate (an office's image tool), not a full paint program. To confirm."
+    RS6a_every_file_kind:
+      layer: library
+      status: OPEN
+      depends_on: [RS3_the_spec_document]
+      files: [lib/spec-document.js, idearium/lib/workshop.js, idearium/lib/file-kinds.js, tests/modules/test-workshop-file-kinds.test.js]
+      requires: [node]
+      prerequisites: ["every file kind Nexus has, counted from the tree before it is listed (node types from lib/node-schemas, .eg, .spec, .yaml, templates, schemas, images)"]
+      does: >-
+        RS3's detect grows from emerge, yaml and markdown to every kind Nexus is made of: node files (.macro, .workflow, .pipeline, .capability,
+        .command, .response, … each read against its schema in lib/node-schemas), schemas, templates, specs (.spec), Emerge (.eg), YAML, Markdown,
+        JSON and images (png, jpg, svg, webp). One table: kind → how it is parsed into blocks, how it is checked, which editor opens it.
+      proof: "every kind counted in the tree is named in the table (none unknown); a node file with a missing field is caught by its schema"
+    RS6b_one_editor_per_kind:
+      layer: ui
+      status: OPEN
+      depends_on: [RS6a_every_file_kind]
+      files: [idearium/ui/workshop.html, idearium/ui/js/workshop.js, idearium/ui/js/workshop-kinds, idearium/ui/css/workshop.css]
+      requires: [node, "Clear Glass for the UI proof (never Playwright)"]
+      prerequisites: ["RS6a's table"]
+      does: >-
+        The office: each kind opens in the editor that fits it. Text kinds (spec, yaml, eg, markdown) in the block editor RS3 and WS7 already
+        have, with their blocks by id. A node file or a schema as a form drawn from its schema, with the raw text one click away. A template
+        with its slots. An image in a viewer with crop, resize and annotate. One save path: checked against the kind, then written.
+      proof: "driven in Clear Glass: a .macro edited as a form and saved, a .eg block edited, an image cropped; a value its schema refuses is not saved and says why"
+    RS6c_tabs_tree_and_search:
+      layer: ui
+      status: OPEN
+      depends_on: [RS6b_one_editor_per_kind]
+      files: [idearium/ui/workshop.html, idearium/ui/js/workshop.js]
+      requires: [node]
+      prerequisites: ["RS6b"]
+      does: "an office's frame: several files open in tabs, a tree of every system's files by kind, search across them, recent files, and new-from-template (RS5's picker) for every kind"
+      proof: "driven in Clear Glass: three kinds open in tabs, a file found by search, a new node file made from its template"
+    RS6d_saved_through_the_gates:
+      layer: library
+      status: OPEN
+      depends_on: [RS6b_one_editor_per_kind, MR11_rewind_the_mind]
+      files: [idearium/lib/workshop.js, lib/safe-apply.js, lib/versionium-record.js]
+      requires: [node]
+      prerequisites: ["MR11's gates hold the state before they open"]
+      does: "every save goes through a gate: the file's kind is checked, the save is recorded in Versionium (§17.12), and a save the gate refuses rewinds to the file as it was (his: rewind lives in the gates)"
+      proof: "a save its check refuses leaves the file byte-identical to before, said; an accepted save is in Versionium with before and after"
 
     RS7_architect_and_blueprint_stations:
       layer: ui
