@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
 context: pipeline phase CIE1_the_contract_block of docs/2026-11-06-cie-eg-build-phasemap.spec
 intent: null
-summary: CIE1_the_contract_block (?) — 9 file(s)
+summary: CIE1_the_contract_block (?) — 10 file(s)
 system: idearium
 tags: []
-exported_at: 1793983606751
+exported_at: 1793997643469
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793983606751
-lastSeenAt: 1793983606751
+firstSeenAt: 1793997643469
+lastSeenAt: 1793997643469
 fingerprint: null
 payload:
   id: CIE1_the_contract_block
@@ -27,6 +27,7 @@ payload:
     - emerge/emerge/lang/interpreter.js
     - emerge/emerge/lang/checker.js
     - emerge/emerge/lang/emitter.js
+    - emerge/emerge/lang/cie/contract.eg
     - emerge/emerge/lang/test/contract.test.js
     - emerge/emerge/spec/cie-eg.spec
   depends_on:
@@ -34,4 +35,4 @@ payload:
   blocks:
     - MOD-CONTRACT
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: 216544c5db00d522
+  graph: 52152971b5c75b8b

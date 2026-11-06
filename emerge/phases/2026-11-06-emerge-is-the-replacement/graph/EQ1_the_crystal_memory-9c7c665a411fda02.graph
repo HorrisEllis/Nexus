@@ -1,0 +1,159 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EQ1_the_crystal_memory:9c7c665a411fda02
+type: graph
+id: phase:EQ1_the_crystal_memory:9c7c665a411fda02
+context: dependency graph of phase EQ1_the_crystal_memory
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793997645206
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793997645206
+lastSeenAt: 1793997645206
+fingerprint: null
+payload:
+  for: EQ1_the_crystal_memory
+  kind: phase
+  repo: null
+  hash: 9c7c665a411fda02
+  nodes:
+    - path: emerge/emerge/lang/cie/crystal.eg
+      role: changes
+      exists: false
+      system: emerge
+    - path: emerge/emerge/lang/test/crystal.test.eg
+      role: changes
+      exists: false
+      system: emerge
+    - path: lib/component-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/build-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-sources.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-decompose.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-build-context.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-build-verify.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-component-store.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-project-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/component-store.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/build-context.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/project-decompose.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/project-registry.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/component-store.js
+      kind: requires
+    - from: tests/modules/test-build-context.test.js
+      to: lib/component-store.js
+      kind: requires
+    - from: tests/modules/test-build-verify.test.js
+      to: lib/component-store.js
+      kind: requires
+    - from: tests/modules/test-component-store.test.js
+      to: lib/component-store.js
+      kind: requires
+    - from: tests/modules/test-project-registry.test.js
+      to: lib/component-store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+    dependents: []
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+    downstream: []
+    blockedBy:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · blocked by PIL2_contracts
+      - 'depends on (2): EQ_D0_emerge_only, PIL2_contracts · all upstream 17'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+        kind: declared
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+        kind: declared

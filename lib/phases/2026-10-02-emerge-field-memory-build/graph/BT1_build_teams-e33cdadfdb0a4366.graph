@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793979426666
+exported_at: 1793997639828
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793979426666
-lastSeenAt: 1793979426666
+firstSeenAt: 1793997639828
+lastSeenAt: 1793997639828
 fingerprint: null
 payload:
   for: BT1_build_teams
@@ -207,7 +207,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 5
+    layer: 8
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
@@ -223,6 +223,16 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
       - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
@@ -248,10 +258,10 @@ payload:
           - idearium/api/index.js
     dangling: []
     lines:
-      - layer 5 · blocked by CB1_cfr_build_logic, SH1_shadow_space
+      - layer 8 · blocked by CB1_cfr_build_logic, SH1_shadow_space
       - >-
         depends on (3): GA1_guardian_source_of_truth, CB1_cfr_build_logic, SH1_shadow_space · all
-        upstream 15
+        upstream 25
       - 'needed by (1): FV1_client_jobs'
       - 'same files as RC1_the_repo_main_chat with no order between them: idearium/api/index.js'
       - 'same files as FV0_fulfil_a_taken_order with no order between them: idearium/api/index.js'

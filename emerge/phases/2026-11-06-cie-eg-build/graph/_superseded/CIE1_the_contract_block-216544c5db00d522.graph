@@ -1,0 +1,269 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CIE1_the_contract_block:216544c5db00d522
+type: graph
+id: phase:CIE1_the_contract_block:216544c5db00d522
+context: dependency graph of phase CIE1_the_contract_block
+intent: null
+summary: 27 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793997323580
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793997323580
+lastSeenAt: 1793997323580
+fingerprint: null
+payload:
+  for: CIE1_the_contract_block
+  kind: phase
+  repo: null
+  hash: 216544c5db00d522
+  nodes:
+    - path: emerge/emerge/lang/checker.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/contract.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/emitter.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/index.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/interpreter.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/parser.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/runtime.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/test/contract.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: emerge/emerge/spec/cie-eg.spec
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/compiler/emit-emerge.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/compiler/t2-gate.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/bootstrap.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/eg.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/ide.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/map.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/test/harness.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/test/say.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/emerge/test/target.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/emerge/core/constraint.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/build-loader.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/components.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/errors.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/ledger.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/lexer.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/test/harness.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/observe/debug.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/observe/index.js
+      role: uses
+      exists: true
+      system: emerge
+  edges:
+    - from: emerge/emerge/lang/parser.js
+      to: emerge/emerge/lang/lexer.js
+      kind: requires
+    - from: emerge/emerge/lang/parser.js
+      to: emerge/emerge/lang/errors.js
+      kind: requires
+    - from: emerge/emerge/lang/parser.js
+      to: emerge/emerge/lang/build-loader.js
+      kind: requires
+    - from: emerge/emerge/lang/contract.js
+      to: emerge/emerge/lang/ledger.js
+      kind: requires
+    - from: emerge/emerge/lang/runtime.js
+      to: emerge/emerge/core/constraint.js
+      kind: requires
+    - from: emerge/emerge/lang/runtime.js
+      to: emerge/emerge/lang/components.js
+      kind: requires
+    - from: emerge/emerge/lang/runtime.js
+      to: emerge/emerge/observe/index.js
+      kind: requires
+    - from: emerge/emerge/lang/runtime.js
+      to: emerge/emerge/observe/debug.js
+      kind: requires
+    - from: emerge/emerge/lang/test/contract.test.js
+      to: emerge/emerge/lang/test/harness.js
+      kind: requires
+    - from: emerge/emerge/lang/ide.js
+      to: emerge/emerge/lang/parser.js
+      kind: requires
+    - from: emerge/emerge/lang/map.js
+      to: emerge/emerge/lang/parser.js
+      kind: requires
+    - from: emerge/emerge/compiler/emit-emerge.js
+      to: emerge/emerge/lang/index.js
+      kind: requires
+    - from: emerge/emerge/compiler/t2-gate.js
+      to: emerge/emerge/lang/index.js
+      kind: requires
+    - from: emerge/emerge/lang/bootstrap.js
+      to: emerge/emerge/lang/index.js
+      kind: requires
+    - from: emerge/emerge/lang/eg.js
+      to: emerge/emerge/lang/index.js
+      kind: requires
+    - from: emerge/emerge/lang/test/harness.js
+      to: emerge/emerge/lang/index.js
+      kind: requires
+    - from: emerge/emerge/lang/test/say.test.js
+      to: emerge/emerge/lang/index.js
+      kind: requires
+    - from: emerge/emerge/test/target.test.js
+      to: emerge/emerge/lang/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+    dependents:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB4_the_emergence_loop_builds
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CRF1_the_axioms_as_constraints
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LN1_lenses_on_the_canvas
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR6_contradictions_held
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ1_the_crystal_memory
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ3_reference_nodes
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+      - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
+      - docs/2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4
+      - 'depends on (1): EAS4_callers_through_the_door · all upstream 9'
+      - >-
+        needed by (2): CIE4_native_components, PIL2_contracts · all downstream 50 · finishing it
+        unlocks CIE4_native_components, PIL2_contracts
+    edges:
+      - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+        kind: declared

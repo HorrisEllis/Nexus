@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
 context: pipeline phase CIE10_the_door_in_emerge of docs/2026-11-06-cie-eg-build-phasemap.spec
 intent: null
-summary: CIE10_the_door_in_emerge (?) — 2 file(s)
+summary: CIE10_the_door_in_emerge (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793984231137
+exported_at: 1793997643497
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793984231137
-lastSeenAt: 1793984231137
+firstSeenAt: 1793997643497
+lastSeenAt: 1793997643497
 fingerprint: null
 payload:
   id: CIE10_the_door_in_emerge
@@ -21,6 +21,8 @@ payload:
   status: OPEN
   files:
     - emerge/emerge/server.js
+    - emerge/emerge/door.eg
+    - emerge/emerge/lang/native/rt.eg
     - emerge/compartment.json
   depends_on:
     - CIE_D2_the_door_in_emerge
@@ -29,4 +31,4 @@ payload:
   blocks:
     - MOD-NATIVE-TOOLS
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: e41cf45dac320401
+  graph: 03f3047c8942307c

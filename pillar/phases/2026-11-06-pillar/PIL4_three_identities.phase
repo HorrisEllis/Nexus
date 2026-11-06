@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-pillar-phasemap.spec::PIL4_three_identities
 context: pipeline phase PIL4_three_identities of docs/2026-11-06-pillar-phasemap.spec
 intent: null
-summary: PIL4_three_identities (?) — 3 file(s)
+summary: PIL4_three_identities (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793974541728
+exported_at: 1793997647031
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793974541728
-lastSeenAt: 1793974541728
+firstSeenAt: 1793997647031
+lastSeenAt: 1793997647031
 fingerprint: null
 payload:
   id: PIL4_three_identities
@@ -22,10 +22,9 @@ payload:
   files:
     - pillar/identity.eg
     - pillar/test/identity.test.eg
-    - pillar/spec/pillar.spec
   depends_on:
     - PIL2_contracts
   blocks:
     - MOD-PIL-IDENTITY
   spec: pillar/spec/pillar.spec
-  graph: 45c8834b06937ffe
+  graph: f726ddb2d222813c

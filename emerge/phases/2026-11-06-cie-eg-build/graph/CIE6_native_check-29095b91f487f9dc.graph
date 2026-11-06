@@ -1,0 +1,109 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CIE6_native_check:29095b91f487f9dc
+type: graph
+id: phase:CIE6_native_check:29095b91f487f9dc
+context: dependency graph of phase CIE6_native_check
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793997643487
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793997643487
+lastSeenAt: 1793997643487
+fingerprint: null
+payload:
+  for: CIE6_native_check
+  kind: phase
+  repo: null
+  hash: 29095b91f487f9dc
+  nodes:
+    - path: emerge/emerge/lang/checker.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/check.eg
+      role: changes
+      exists: false
+      system: emerge
+    - path: emerge/emerge/lang/native/emerge.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/index.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/build-loader.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/components.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: emerge
+  edges:
+    - from: emerge/emerge/lang/checker.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: emerge/emerge/lang/checker.js
+      to: emerge/emerge/lang/build-loader.js
+      kind: requires
+    - from: emerge/emerge/lang/checker.js
+      to: emerge/emerge/lang/components.js
+      kind: requires
+    - from: emerge/emerge/lang/index.js
+      to: emerge/emerge/lang/checker.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+    dependents:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+    downstream:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+    blockedBy:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+    unlocks:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 7 · blocked by CIE5_native_test
+      - 'depends on (1): CIE5_native_test · all upstream 16'
+      - >-
+        needed by (2): CIE8_spec_compiler_in_emerge, CIE11_retire_the_interpreter · all downstream 5
+        · finishing it unlocks CIE8_spec_compiler_in_emerge
+    edges:
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+        kind: declared

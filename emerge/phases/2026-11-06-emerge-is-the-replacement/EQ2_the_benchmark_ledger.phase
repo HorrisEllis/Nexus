@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ2_the_benchmark_ledger
 context: pipeline phase EQ2_the_benchmark_ledger of docs/2026-11-06-emerge-is-the-replacement-phasemap.spec
 intent: null
-summary: EQ2_the_benchmark_ledger (?) — 1 file(s)
+summary: EQ2_the_benchmark_ledger (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793996385037
+exported_at: 1793997645210
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793996385037
-lastSeenAt: 1793996385037
+firstSeenAt: 1793997645210
+lastSeenAt: 1793997645210
 fingerprint: null
 payload:
   id: EQ2_the_benchmark_ledger
@@ -21,8 +21,10 @@ payload:
   status: OPEN
   files:
     - docs/BENCHMARKS.md
+    - emerge/emerge/lang/cie/bench.eg
+    - emerge/emerge/lang/test/bench.test.eg
   depends_on:
     - EQ_D0_emerge_only
   blocks: []
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: 8af206da6a003a8d
+  graph: 551ff3dbd8851b16

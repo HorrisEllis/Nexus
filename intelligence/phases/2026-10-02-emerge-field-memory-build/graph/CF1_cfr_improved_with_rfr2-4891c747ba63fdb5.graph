@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793979426553
+exported_at: 1793997639656
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793979426553
-lastSeenAt: 1793979426553
+firstSeenAt: 1793997639656
+lastSeenAt: 1793997639656
 fingerprint: null
 payload:
   for: CF1_cfr_improved_with_rfr2
@@ -170,7 +170,7 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 4
+    layer: 7
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
     dependents:
@@ -186,6 +186,16 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
       - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
@@ -217,8 +227,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 4 · blocked by RF1_relational_field
-      - 'depends on (1): RF1_relational_field · all upstream 10'
+      - layer 7 · blocked by RF1_relational_field
+      - 'depends on (1): RF1_relational_field · all upstream 20'
       - >-
         needed by (7): EM2_warp_his_own, MR2_vector_space_for_the_field, MR4_field_memory,
         MR7_recipes, MR9_liminal_on_the_agents, CB3_the_causal_spec_block, FM1_mining_failure_modes

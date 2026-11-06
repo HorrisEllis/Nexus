@@ -325,6 +325,164 @@ payload:
       emerge/data/ledger/2026-11-06T20-14-15-926Z/events.jsonl: ee2a58b7d37fb97f11de537e50888dc2233a818228ab7d7de78a738c8b4e3d9d
       emerge/data/ledger/2026-11-06T20-14-17-920Z/events.jsonl: 057f1f88b08ee0803a05c70a3deec503cdb5f09c46219761a00fb5f39d800e50
       emerge/data/ledger/2026-11-06T20-19-44-973Z/events.jsonl: 6fe5ae80b9af778a4fefd0e8f8acdb324d1b771b9620e997030841121cc74b0d
+      emerge/data/ledger/2026-11-06T20-35-23-464Z/events.jsonl: 23da9e589eb138204b248da9cd503e787cbe77b080807faf4765fd5c7f6a3a51
+      emerge/data/ledger/2026-11-06T20-35-35-192Z/events.jsonl: 60502d4ffd16b7e31f3577299995ff8f89bb8019ae9b1ec55201c4704fd3e496
+      emerge/data/ledger/2026-11-06T20-36-05-418Z/events.jsonl: 7648063883b195f22abf4a59138bdad1c3ac2d3c7a3d93bc43dcd863a1f1aa84
+      emerge/data/ledger/2026-11-06T20-40-04-901Z/events.jsonl: 06b91e5b79af8ed2d0d0e9fbef85e89ab1fb0589acdeda92a01cae256b1f0859
+      emerge/data/ledger/2026-11-06T20-40-05-098Z/events.jsonl: 6a52c73642a2891010e4a36130a14754c58b8857d3c8d75caae281f1736ab013
+      emerge/data/ledger/2026-11-06T20-40-05-246Z/events.jsonl: 8996d1c6f85b08b33b9699566274af05fdb49088203031083705733dd301cbcf
+      emerge/data/ledger/2026-11-06T20-40-05-378Z/events.jsonl: 42632c223ad839baada7eb6975a29f7f102b64b83bfe6857c1224e0e9d4e91e8
+      emerge/data/ledger/2026-11-06T20-40-05-460Z/events.jsonl: c9b41be91a8f6609a1d86db536d3825e0eec87fc8afa953a37b39ce78c3f0efe
+      emerge/data/ledger/2026-11-06T20-40-05-558Z/events.jsonl: 8fe69f4dcc2f02f5773a042663a08752713eb2c5e24f8382150abb06e4034f79
+      emerge/data/ledger/2026-11-06T20-40-05-654Z/events.jsonl: dd945b75b5a46cefa8c567ead72667de2bdca26816167f91d534dae65c9b1cbb
+      emerge/data/ledger/2026-11-06T20-40-05-758Z/events.jsonl: 8f81a4e6ed93b9ec302c42554c7e2e545a812c95d042797006909334820764eb
+      emerge/data/ledger/2026-11-06T20-40-05-841Z/events.jsonl: 62f977af699592634cbfb6055beaba720c0885d508d76903bb64a3f7c2e04d48
+      emerge/data/ledger/2026-11-06T20-40-05-932Z/events.jsonl: f5a9c5bb5e36da2114b1953f21dcd04f0a599c4cb8734ef6a561808fb5ecfb89
+      emerge/data/ledger/2026-11-06T20-40-06-013Z/events.jsonl: 9efbd4860912942ab492951001ab6363cf65f5e3d0b765511d4941b9fd9f3e46
+      emerge/data/ledger/2026-11-06T20-40-06-100Z/events.jsonl: 9b9e044ded5f3c04fcbfbae7582252db0019219179ccff3c2df21c32c845bed4
+      emerge/data/ledger/2026-11-06T20-40-06-186Z/events.jsonl: 027b602447d6881af1aada3852b8d563f434805fdc392f6af046ca0f481ab48f
+      emerge/data/ledger/2026-11-06T20-40-06-283Z/events.jsonl: 8d78b84762da82c13d99e7cd64cb815dfcbc096e696863bc0aaf85a660744b41
+      emerge/data/ledger/2026-11-06T20-40-06-383Z/events.jsonl: 75d4921378a4b475f763197e7e98b55b531436bbfb42c5e9fdad45213fdcd0d0
+      emerge/data/ledger/2026-11-06T20-40-06-486Z/events.jsonl: 1caaced94e6e83d4f591c4d70b36edd812843b41d2e5193e59344db81c1dc071
+      emerge/data/ledger/2026-11-06T20-40-06-584Z/events.jsonl: 1b7527967469e82b8d24a66cb5238382691f878afa1757694790b22a6919c878
+      emerge/data/ledger/2026-11-06T20-40-06-767Z/events.jsonl: 3d481f71c0d159a65af9379d8df1a2a3daca5cb250a235efaf86956032b33a54
+      emerge/data/ledger/2026-11-06T20-40-06-859Z/events.jsonl: 781097eb8efd9d9b81f88a42c766ac3cb80217d664d16caa6d6c5130bde77ed0
+      emerge/data/ledger/2026-11-06T20-40-06-958Z/events.jsonl: cda1181ef5a92dfe89fb9b2fa762e1d8d8f1bdef5b0989ca7e169aded8628358
+      emerge/data/ledger/2026-11-06T20-40-07-066Z/events.jsonl: b1724d14117ad10d9a3de873c6d48d20058041128bf33950cf61d2eaf1f4f376
+      emerge/data/ledger/2026-11-06T20-40-07-264Z/events.jsonl: b78301016604971c613746e3f6e53f0980c1448ce87b78aa061b71af5e5cb4fd
+      emerge/data/ledger/2026-11-06T20-40-07-455Z/events.jsonl: c350dd658432cfb185418b4169a66f76140a806ab740073e81f214bfcac92c98
+      emerge/data/ledger/2026-11-06T20-40-07-556Z/events.jsonl: 2211b00e565d3246bd62801dd5883fafed7c8811c51dba832d798690f254df76
+      emerge/data/ledger/2026-11-06T20-40-07-700Z/events.jsonl: 3300c31fb45416912a7e398fc2848e3ff2fd5d385b153b90e2b565aa634f5edc
+      emerge/data/ledger/2026-11-06T20-40-07-780Z/events.jsonl: c586d204b07b560810472467548d9b742b187e1e0da43c2f55b496f8222c082e
+      emerge/data/ledger/2026-11-06T20-40-07-916Z/events.jsonl: e27049f2e5c138df40465656a41aeadc7089029a7e9d9a3314a2a7e8e0c70aef
+      emerge/data/ledger/2026-11-06T20-40-07-996Z/events.jsonl: 91eea94afcf79bd683ac6902df7cbd47d249a000f74bc3f3deb56ed2997e7380
+      emerge/data/ledger/2026-11-06T20-40-08-114Z/events.jsonl: 612171dcf9062f13b1a5595c0291162efb2265f3e077d4f3e828fc8a8f38cdbb
+      emerge/data/ledger/2026-11-06T20-40-08-216Z/events.jsonl: efe739490f05f383bab1cfb255345b7632874a8c795847faba118cdcd092e69b
+      emerge/data/ledger/2026-11-06T20-40-08-296Z/events.jsonl: f2286b35fafd49c0eda6e31ee669e430887723c2b6b4198bbde4b0e3fed2039b
+      emerge/data/ledger/2026-11-06T20-40-08-391Z/events.jsonl: 8e06a2572c642813b79b8b3c25e8f3afd6f7904abf0e2d4768f666f21aa0cbec
+      emerge/data/ledger/2026-11-06T20-40-08-480Z/events.jsonl: 61db3164b7157127dd5d231552f5b2d0b06522e27f5ac97edff4f9375e808468
+      emerge/data/ledger/2026-11-06T20-40-08-564Z/events.jsonl: 235e9ec14827b614787fc070444d4436ee55bbb5a6a2c9b0f784047bb7f90d39
+      emerge/data/ledger/2026-11-06T20-40-08-694Z/events.jsonl: 9d7586cc02707b6a83b0eb8d28895f084a0da732cd80f02efa04613a2275006e
+      emerge/data/ledger/2026-11-06T20-40-08-787Z/events.jsonl: 4091b5644d7e5fe9cba44226b01994e9f4508615820a367f43cbe1f6f12827bb
+      emerge/data/ledger/2026-11-06T20-40-08-899Z/events.jsonl: 6799d8d9f3432298cf945f4ac4fc59dc50cf288f972a4b689bc41d74bc92e002
+      emerge/data/ledger/2026-11-06T20-40-09-046Z/events.jsonl: 970d969d0c6413bfeff140061a6e92f81f0566f4e1df25b731a6f2243cb40495
+      emerge/data/ledger/2026-11-06T20-40-09-148Z/events.jsonl: 48e4625961e5a192842c98d9a910c3633e5596cbea20b2b543779d161c374abc
+      emerge/data/ledger/2026-11-06T20-40-09-252Z/events.jsonl: d018e9f867062dc87897a3e052dc3bf60c73be37da118d5c7610c6efeb827bc6
+      emerge/data/ledger/2026-11-06T20-40-09-411Z/events.jsonl: 41794e4f18a69fa707fb6b3e26badcb7a8db170d6b86648dbbf72002c0dd2c55
+      emerge/data/ledger/2026-11-06T20-40-09-579Z/events.jsonl: a4d654e8d037fbfa5c2a4ad7abfe74f30a755ac303fcd926025d4266fd091ac2
+      emerge/data/ledger/2026-11-06T20-40-09-673Z/events.jsonl: 807b9b8166150960a17b1f35a8d53bb6f04cc7b7caa1721c31e5c1ca47dd5f55
+      emerge/data/ledger/2026-11-06T20-40-09-795Z/events.jsonl: 09d526fd36058878483c1087c540203b218f4069858355ffe4afbd7a9e98279e
+      emerge/data/ledger/2026-11-06T20-40-09-894Z/events.jsonl: 25f3f17bf7d143d314a3d35f847f3d3d5eeef943de926ae8083f6a7f28e4ae27
+      emerge/data/ledger/2026-11-06T20-40-09-972Z/events.jsonl: 75676682b0549ec18d7a149538a63ad94ec7c87429394893458ce922ad03a646
+      emerge/data/ledger/2026-11-06T20-40-10-048Z/events.jsonl: ff5061337091c67481a11dec42e2b81c1f801ae22c6401a0f2cd6eefd42b9dc7
+      emerge/data/ledger/2026-11-06T20-40-10-133Z/events.jsonl: 9735fcbd8b2ed478a3d15a5cf599e850e1317ff9438303de937bc723f2a2425c
+      emerge/data/ledger/2026-11-06T20-40-10-284Z/events.jsonl: af9650eb163e00f73d7cff2f600132306391471b6ff30c19ea9089a2362e5fd8
+      emerge/data/ledger/2026-11-06T20-40-10-407Z/events.jsonl: 2699b64c09b93a01c0c6aaa31b67026051d513387a21032da0fcb5b5624d2e8c
+      emerge/data/ledger/2026-11-06T20-40-24-802Z/events.jsonl: 3d1f28512bdbaf72270f24e9498a2c9ffeaad46cb8af4a6baa07f89f33576dda
+      emerge/data/ledger/2026-11-06T20-40-24-980Z/events.jsonl: 5e289e658d6ec6d8da8a5e8516d6290b2f38d0ceb37084ef8be59a03efb3cc33
+      emerge/data/ledger/2026-11-06T20-40-25-091Z/events.jsonl: d8f67fc7a07686ebc532e47ab7c77b4d227b789a0d6bb79bd7cb87978fc52318
+      emerge/data/ledger/2026-11-06T20-40-25-216Z/events.jsonl: 4f74bd33db68481b73b3e68b805fd23ca356cadcde5460eed5a6fc7724bdef85
+      emerge/data/ledger/2026-11-06T20-40-25-308Z/events.jsonl: 81d9f897781b1066812503a191c927bb984286352c49e75e8bdf47633b8d282a
+      emerge/data/ledger/2026-11-06T20-40-25-401Z/events.jsonl: 5f83f14d3b10b360fae3a0ec858ac3596da17d3d12c991b4d7f2a018e274b334
+      emerge/data/ledger/2026-11-06T20-40-25-497Z/events.jsonl: dd6da8cc0a2ff3e8669ddcbee275aeca07d43ee1e18540ceac9197062f9e924a
+      emerge/data/ledger/2026-11-06T20-40-25-600Z/events.jsonl: 21a5df41aae0572642e7304c63d741fc0a034b500642f634b414e491a3d4cb06
+      emerge/data/ledger/2026-11-06T20-40-25-682Z/events.jsonl: da65f39f8e07fd4ef5f76abed88f51d793bb9126710e23a40d87e77e308025a2
+      emerge/data/ledger/2026-11-06T20-40-25-770Z/events.jsonl: 0163c6879d52d84956288c789a80bcea00701c06a779f6041009e9a67c6c8f38
+      emerge/data/ledger/2026-11-06T20-40-25-864Z/events.jsonl: f2272d89512ebe6596cf7f0c36bf11281bf6bead7db9c6116fbf079b1c504d8f
+      emerge/data/ledger/2026-11-06T20-40-25-957Z/events.jsonl: 15ce07ed8b8baa606e0107f0252216fa04e7ee4c810b59472a7c541aee6566e6
+      emerge/data/ledger/2026-11-06T20-40-26-056Z/events.jsonl: 7cc397d38553d5d3854d7be589c8baca3c1a1bed18dd2b0acb1261d6e31cd71c
+      emerge/data/ledger/2026-11-06T20-40-26-184Z/events.jsonl: d07d4ca0141d6a825e79d304a5b26036832f5ce680ccd74e94c364484ede9ec3
+      emerge/data/ledger/2026-11-06T20-40-26-299Z/events.jsonl: 350712d6f1341dd147f6014e0d09e9576e2134380b69155fa6969d2599497151
+      emerge/data/ledger/2026-11-06T20-40-26-401Z/events.jsonl: 88a8bf4fb77404e32cc785cbbc9eb39b1ea75d8ed135a1f4aadaeae1d8264575
+      emerge/data/ledger/2026-11-06T20-40-26-491Z/events.jsonl: a1a140f97bf9350e03369057b991aa0bc31e8676267cc0287b740bbf875c8b3f
+      emerge/data/ledger/2026-11-06T20-40-26-677Z/events.jsonl: f66c040855ce98be1d74168f19b83424d225b388a98f4d13fe089680b04ab13e
+      emerge/data/ledger/2026-11-06T20-40-26-774Z/events.jsonl: 99026a87d83ea62f665b66421923550afaa78ac55035f3dae0a0335882c2d9c6
+      emerge/data/ledger/2026-11-06T20-40-26-864Z/events.jsonl: 66ccb3bda15e12597dcf2901e3fa0d20c959a96d2c29f1379a9dd66c5188e889
+      emerge/data/ledger/2026-11-06T20-40-26-945Z/events.jsonl: ca65dd68c46d9b37fcf6ad2a4146f8451aca3661931ba3a8015dd871b3db92f9
+      emerge/data/ledger/2026-11-06T20-40-27-160Z/events.jsonl: 46fe3620ea49caed46655f64c3f5da784aa2867a7f83d2db94616124c4b1f2b1
+      emerge/data/ledger/2026-11-06T20-40-27-360Z/events.jsonl: 67e45757b863ea7ba19f66884f1bf7312ea912dcb9c40d16b32fd1e97ab4fc06
+      emerge/data/ledger/2026-11-06T20-40-27-455Z/events.jsonl: a7b323f6aa3f8034d9531419e8d4c766e955326352acf5135788937e8c253942
+      emerge/data/ledger/2026-11-06T20-40-27-613Z/events.jsonl: 127e55001afa6ac687eaec74ef43fdb66fa8ce97fa944eced0953dba5a7dbcdd
+      emerge/data/ledger/2026-11-06T20-40-27-696Z/events.jsonl: 34391e443465a0c7feeab08e514d16bfc67188e02e80b41fef5777e64dfbe44b
+      emerge/data/ledger/2026-11-06T20-40-27-840Z/events.jsonl: 17db72bff91d4ec58e117685d12753e0d463b3ec366bdaed9e22a4aba610666e
+      emerge/data/ledger/2026-11-06T20-40-27-922Z/events.jsonl: 63d3566450418295c2a6a442bcdc36ded45ea05dd08868cf920b4dea496151d7
+      emerge/data/ledger/2026-11-06T20-40-28-040Z/events.jsonl: 92934d13a7f98fdbce8e22e6e87fd74e4da4423d8536dc1545a265d6366df8a2
+      emerge/data/ledger/2026-11-06T20-40-28-168Z/events.jsonl: 1901fa26c7b3ca46cfd635d611e64aa87d8ea38463595f401da15cbcd688031a
+      emerge/data/ledger/2026-11-06T20-40-28-272Z/events.jsonl: 98b9dc6ff040bdaa6a1b61b0f4ee5aaf6f2e7b7f9f2e172bec953e7aed6512d0
+      emerge/data/ledger/2026-11-06T20-40-28-369Z/events.jsonl: ed32732dfe78617ee60eb4283100fc56574b5bcbe0e9890252c9713828731d37
+      emerge/data/ledger/2026-11-06T20-40-28-455Z/events.jsonl: 7266c4997bf4452536a63723c9d3611e7bfb5a1656ec2cea6aba009b3954f906
+      emerge/data/ledger/2026-11-06T20-40-28-545Z/events.jsonl: 0695f9f3e036c26fb193aa7e7f262e2891e17f8ea4be24d7a308399f62fb149f
+      emerge/data/ledger/2026-11-06T20-40-28-653Z/events.jsonl: 45cc52cce3cb8322a8ff3685161f05e0a4908e089e02c6637132faecf8de63f4
+      emerge/data/ledger/2026-11-06T20-40-28-740Z/events.jsonl: 6e17061bae9ae35d6083ff78acef2cade3795a0d50bda9dbc924f62c42b3454c
+      emerge/data/ledger/2026-11-06T20-40-28-827Z/events.jsonl: 95e7d73ad631f770576fd2408afe0fb1fa28d1b1971ff498fa9b5f7af58a2240
+      emerge/data/ledger/2026-11-06T20-40-28-959Z/events.jsonl: 79df7aaf37d7ead98136ae194c3b84feaebe6ba787c6cc1daa555a4a46b8ec8d
+      emerge/data/ledger/2026-11-06T20-40-29-046Z/events.jsonl: 5e24c9c3d8f12a492826ddadf5135af29cd1aadb70e66593216f40ff8eef9fff
+      emerge/data/ledger/2026-11-06T20-40-29-154Z/events.jsonl: a670d8c223b7dad54a5e239f2f360cb4ea9ac14d45daaf27551663d2b3e5bc78
+      emerge/data/ledger/2026-11-06T20-40-29-307Z/events.jsonl: 8621bfaea9fbe01a825d5c3b7ef9aa7ee2393a5b3e45595efcb83201b1381358
+      emerge/data/ledger/2026-11-06T20-40-29-478Z/events.jsonl: 12b0adb272f945ba76a0a054a6d83e50b6af6898a2345d1f6f21a288d1b01b10
+      emerge/data/ledger/2026-11-06T20-40-29-563Z/events.jsonl: 69a9b67415804998ab0010d8aad2e7226660abe706e8378d7db71b2c8f127f3a
+      emerge/data/ledger/2026-11-06T20-40-29-665Z/events.jsonl: a94dd1952f6a2f83fd1aa64024cb5e2f9c50ab01f7aef358cd9c5843778595dc
+      emerge/data/ledger/2026-11-06T20-40-29-765Z/events.jsonl: 75e81c03c28cbc226697360a73b658273a2495b694d0fe8c40ac5e4f2d456923
+      emerge/data/ledger/2026-11-06T20-40-29-844Z/events.jsonl: 396157a3433d20dffac57b15fab6e55f890462e2ffbe1046a497bcbf44f1c15b
+      emerge/data/ledger/2026-11-06T20-40-29-927Z/events.jsonl: 0a9c0c06086cb424dfb5ed2aab548c16c0d4a56e1ae9152003391f83dc46d949
+      emerge/data/ledger/2026-11-06T20-40-30-035Z/events.jsonl: b4761683becee575c30ef320cd1c102a1ee4da6cd1ab8856748fd5ff3107b036
+      emerge/data/ledger/2026-11-06T20-40-30-213Z/events.jsonl: bea9b5b6410f2041ea6a66a61e9c2a9b08062b807e2a45365376dfd63240ac89
+      emerge/data/ledger/2026-11-06T20-40-30-361Z/events.jsonl: 92e3d5ef85a4d21d96f8e86bc853434fde1fb602e1f11df22360d904c17962d4
+      emerge/data/ledger/2026-11-06T20-40-41-605Z/events.jsonl: 29e15380a58c22d9390fa521b6c7619982d8b607dfe59d9dc4d05f5f53b6122c
+      emerge/data/ledger/2026-11-06T20-40-41-700Z/events.jsonl: 4155b0ad94cd8d369fa04b021be7ffdaf37f5a24c8ae924d193e6331f9480227
+      emerge/data/ledger/2026-11-06T20-40-43-395Z/events.jsonl: 59d65e975e904521c8c3368e1ebbed3ae1030a4f97c79a5dce3b26c685ae0f0e
+      emerge/data/ledger/2026-11-06T20-40-45-147Z/events.jsonl: db44d460ceba803f6ff786c209ad12154cc4e6bfb3d8f0e5b4fa09a68f120ae4
+      emerge/data/ledger/2026-11-06T20-40-46-970Z/events.jsonl: 1d26dc6f3fa274c5e608fab45fca5c3fc84ee89c1aac6d1f971c7ba0eea6d61a
+      emerge/data/ledger/2026-11-06T20-40-52-859Z/events.jsonl: 6894827f86e0118571f0e819c2cf861d49ffff76b086c4b23fca52e298c0422a
+      emerge/data/ledger/2026-11-06T20-40-53-021Z/events.jsonl: d3b686aa202c7aece75bdf2cbbd35632de96c3c6bb9566c2e88bb7a14528abe6
+      emerge/data/ledger/2026-11-06T20-40-53-126Z/events.jsonl: b18ff2bd11067dcd78c64105b142a776b245a53524a2d73ac4dbeaf13f1f8655
+      emerge/data/ledger/2026-11-06T20-40-53-238Z/events.jsonl: c13d59225b3df99d0a4683860c3de82763100a5a3073b1c4d7747a6cbb4bce21
+      emerge/data/ledger/2026-11-06T20-40-53-323Z/events.jsonl: e4025d579898fb4753671779bb62eb9ed4fd21cee572aebe538f56ea001f816b
+      emerge/data/ledger/2026-11-06T20-40-53-413Z/events.jsonl: 131b965c9608c46d0a31a3dc145ef538c20d3cd2d1c2c1e072407054882b4cc7
+      emerge/data/ledger/2026-11-06T20-40-53-512Z/events.jsonl: aa47c4777cf17f9d9a96542e1f64a5af3a33a28560e65c4d9967da04c29c9f96
+      emerge/data/ledger/2026-11-06T20-40-53-622Z/events.jsonl: fbc6cd25543af7f3ee2a60bb8300f20e87550494d8ff142da9ed3bd6c29af9f2
+      emerge/data/ledger/2026-11-06T20-40-53-701Z/events.jsonl: 187f687ad16f82d76d0696e37149ecc04156d2a9a6038c45938e363b953471f9
+      emerge/data/ledger/2026-11-06T20-40-53-791Z/events.jsonl: 484f4bb1b26e1f0c17ffac4c72502857062baff6647bfda31b399bb568e861ac
+      emerge/data/ledger/2026-11-06T20-40-53-868Z/events.jsonl: 870d09b2937058a4330658a6ce04259955d35758ba2fe3fd4bebed6b08be8ae0
+      emerge/data/ledger/2026-11-06T20-40-53-968Z/events.jsonl: 444570cd926a5d69b7f584f65470d6b1f6c429ce6a24c3abaf6906c7a979003e
+      emerge/data/ledger/2026-11-06T20-40-54-067Z/events.jsonl: ec1191990692527d6ac2ff91d137f42ea8d39f6f404090ae75cef60eb2b9d076
+      emerge/data/ledger/2026-11-06T20-40-54-173Z/events.jsonl: b820f49a9b14bb4a2636ac158d345ab9b4bc67d25646ad14d5fb6b81cdd1234e
+      emerge/data/ledger/2026-11-06T20-40-54-288Z/events.jsonl: 1b932cdc9421bb3f8e35daf5c1ac24662d6c8c586a87a5d20d399ab5c23c3c05
+      emerge/data/ledger/2026-11-06T20-40-54-390Z/events.jsonl: 2eadd71f85535306a41815baf228f91c89c47a6fb56b6c17d21e9ff67f983e97
+      emerge/data/ledger/2026-11-06T20-40-54-481Z/events.jsonl: a038f0253dbe2bad910af4b58a39c8fe0b8aeb4c17753035b3be92bc4d56ba8f
+      emerge/data/ledger/2026-11-06T20-40-54-672Z/events.jsonl: 0eae0a983e7635cf5ff659545a9edd844f1283d10542495e597794642deb84ab
+      emerge/data/ledger/2026-11-06T20-40-54-768Z/events.jsonl: 6d9bde617c3ed9ef3e4187bc01e5fda41e15da5bdd15d2ad603d5b5172e50d2d
+      emerge/data/ledger/2026-11-06T20-40-54-852Z/events.jsonl: eb8407b46299a68d348088aae7046eb1ba2542001f63a4dfe8a6246aa9f308bc
+      emerge/data/ledger/2026-11-06T20-40-54-922Z/events.jsonl: f36e5a0bce3623b398afba735262a9836c152e508a3e3667caad9f038001d01c
+      emerge/data/ledger/2026-11-06T20-40-55-120Z/events.jsonl: ba4ce07950e89ba52ab4decb3b18a4a3aad4fe439b51c0f4ff7c0dbcfe630b1a
+      emerge/data/ledger/2026-11-06T20-40-55-299Z/events.jsonl: 1936826889b76b00d67b1dea0e0ac9f38d04999b43c905aa8992ab003e8a8fad
+      emerge/data/ledger/2026-11-06T20-40-55-395Z/events.jsonl: f1edbe000a66e261dc99c84d999ccfe6dc924afa38bfece1c57f47d83b5e1783
+      emerge/data/ledger/2026-11-06T20-40-55-552Z/events.jsonl: 556cee5a93c819e25cd84b75a801424179179f1b2b203ec2127ca0083627de3c
+      emerge/data/ledger/2026-11-06T20-40-55-661Z/events.jsonl: 09b70dcb77ee940526dc3193ae82e1a335be882e42442dd812ac724794bfff80
+      emerge/data/ledger/2026-11-06T20-40-55-803Z/events.jsonl: d6317ff81be1744a8883b4b562699cb3197afd7536f6533398960359ea3c6caa
+      emerge/data/ledger/2026-11-06T20-40-55-891Z/events.jsonl: d2299a022c743bda62e0005967b9f0e43c73c6f6fdc833c6879fc5ece3120fa1
+      emerge/data/ledger/2026-11-06T20-40-56-011Z/events.jsonl: 11931e5771e46bf974514d8b168d8e47951e04edc9c8c8b4a19bb1688b24e92e
+      emerge/data/ledger/2026-11-06T20-40-56-119Z/events.jsonl: ef3a1b5fe8c47d13727798b131d739cbc478fd848142d8018f305d72fdeb208f
+      emerge/data/ledger/2026-11-06T20-40-56-210Z/events.jsonl: 8d3260e27b8e1a782649fbf83c5f4daf93cad985769551c7ba30b9032512cfb3
+      emerge/data/ledger/2026-11-06T20-40-56-326Z/events.jsonl: 3aa0506b2cbcbecad6375f56b98a226d819c485f01c3aa85978cac5c13fa173c
+      emerge/data/ledger/2026-11-06T20-40-56-434Z/events.jsonl: f1dd9de28b9cac4426ecf7d9866cbc166553fec7494c15d769c3a2e7604e6f32
+      emerge/data/ledger/2026-11-06T20-40-56-543Z/events.jsonl: 57b092baa47f73c05adb17a764af54d59116361a1e18307f4a0f4f3bf584ad63
+      emerge/data/ledger/2026-11-06T20-40-56-690Z/events.jsonl: 28674cd887c6bf493dad39482d13889b37e49e98e313e22bfd4257bafb47b627
+      emerge/data/ledger/2026-11-06T20-40-56-797Z/events.jsonl: 4c121a5c986387347862280c86e6137caed94288ca28d1087cba552c66f6991f
+      emerge/data/ledger/2026-11-06T20-40-56-913Z/events.jsonl: e33e7381206b816e7fa0838827e010bf9230f87f700a8234c264152187ec5a5a
+      emerge/data/ledger/2026-11-06T20-40-57-067Z/events.jsonl: e29b1a649a0b2311b84e851c3373b3f9e251cf991bae6ea9900a3742b1ff15aa
+      emerge/data/ledger/2026-11-06T20-40-57-160Z/events.jsonl: 72b8f57068220da4a7ae05212d5e9adb168be48f516a1f998497f688443e8d56
+      emerge/data/ledger/2026-11-06T20-40-57-268Z/events.jsonl: ce279a52e2d57affdffb0d1f3a659b0ff07c8510d86804aa85299aee84221813
+      emerge/data/ledger/2026-11-06T20-40-57-424Z/events.jsonl: e5190b1c9b13c74bdec7510965f4e96c1381fe677e5af829ff70705670b14525
+      emerge/data/ledger/2026-11-06T20-40-57-576Z/events.jsonl: bac0c7789e38e4cefcafb9fe7b62c955781e00d1c9d3ba8849c81c4c710c05f0
+      emerge/data/ledger/2026-11-06T20-40-57-667Z/events.jsonl: d744410936dfc7cbd490a861fd618b2c340a1a1b08cb13592eb06b9b54d81d27
+      emerge/data/ledger/2026-11-06T20-40-57-772Z/events.jsonl: e3930a439e65261f18d8dc4992052c133b7121b18afe4226cba94ef3c68dadae
+      emerge/data/ledger/2026-11-06T20-40-57-885Z/events.jsonl: 1f4763245bb026d61e4021fda9ee1fe0af3288c2f665e5200452ac4b7991ca52
+      emerge/data/ledger/2026-11-06T20-40-57-971Z/events.jsonl: 444baf77e0487788d299e18ecd3f2f88dac1bc6da69f4ee1075db48fadd733d5
+      emerge/data/ledger/2026-11-06T20-40-58-054Z/events.jsonl: 4893579297d5b84ba1e7c5971dd443ed42bab605442678eee89203d4b8a98547
+      emerge/data/ledger/2026-11-06T20-40-58-141Z/events.jsonl: 67fd6b53aa91f26ba55d3045edf013af451a5446edc76f4a067dae7e735007a7
+      emerge/data/ledger/2026-11-06T20-40-58-285Z/events.jsonl: 6f0befe5bc236d01d56f92bd5f6f64059a9eca5ac8d4f697301480744d1fd4d6
+      emerge/data/ledger/2026-11-06T20-40-58-419Z/events.jsonl: a9fc484ac6d28c2c8b6187f6af9f2bdce5c9c18e229887414ab6113fd5f1a5d9
       emerge/data/node-index/nodes_bundle.json: 26b084d77854dcf167cf911fd44352d098a90740953efee6384bdffadbbd44c6
       emerge/data/node-index/nodes_bundle_ledger.jsonl: d0e99fddafa5ff54d94163a6fcffd7a2592c039099a97bf0f04a675ee8f3f4c3
       emerge/data/node-index/nodes_capability.json: 693b003b324d149eef21f8ee211e610d399a198c3bea60d9f69078603248980b
@@ -432,7 +590,7 @@ payload:
       emerge/lang/cie/contract.eg: 0e95251d76dd0319817c76bf957a5248333f2eba1915c59b787be9b00df7cd45
       emerge/lang/cie/ledger.eg: 566f4ec093a298a722ed2eadb084b555adb5760bb12ab91ec5f633b694ccf06d
       emerge/lang/cie/synth.eg: 6eb643100f1c3c8ffe4828e59f4db46f2d2e79d9bc4b322e13172a8e065ede81
-      emerge/lang/cie/world.eg: 3ec42c0e64bf81ce0c5289522cc6a3bfce4e67dd18d772a7aae888e37959fae7
+      emerge/lang/cie/world.eg: 61c6cf9638a347cc700f7b1fcdb90136ff4eb45b187a8d5cd9d41ed1303f4e1f
       emerge/lang/components.js: 68286225eccd91ff0b40880e685218c1edc2987ac19d8b1abd911d50e85204b7
       emerge/lang/contract.js: 21af311616d86bbc913acfe1ad82a2b2fc165522b0f2532b2891e235440dc949
       emerge/lang/core/prelude.eg: 05b9fde22b65bc9f2f6b92df21b9775fdffede613b59d267c15bdea11a02e750
@@ -462,21 +620,24 @@ payload:
       emerge/lang/ledger.js: 258c7a45d0af50be69449d8a2c8c6eb5c762065cb382a7297c24b6a603711e7b
       emerge/lang/lexer.js: a5175f00c4e8daae4c23dac25b28451b935f17d45526cbfec006b31b18e452e7
       emerge/lang/map.js: 0814f101854c4806637104248a4bfdfc1de99021b8377db416d627cc15e931b0
-      emerge/lang/native/bin/emerge: 1f9b90b92fcb9957d7fff521100e40d7e392fa776cee420d2e772e783e0c0c73
-      emerge/lang/native/bin/emerge.sha256: eccbb1553b6a7955391af89423a756152ad60c0cec8bd7f41d1668aa35e47c43
+      emerge/lang/native/bin/emerge: 7d094db6c48785aaecf5daa43e753b05a079dd7cf9a419783e65685560be7a82
+      emerge/lang/native/bin/emerge.sha256: 4eb66a0bb6a3aea28faca75e303c6b993865fd780124aad3c5bfdf7de600cf2c
       emerge/lang/native/codegen.eg: a96fa531fda160aeab1bac1f5811c9907427bb6f8c94072ad670459d9315e6e6
       emerge/lang/native/elf.eg: 6cde0b848c06618474392eb5638d599082fdbbdf617b172c57562a2124c18516
       emerge/lang/native/embed.eg: d5d91204dbb3796042e6a5bd5a47ab46a6e994c7c6815da2488205e762aeebac
-      emerge/lang/native/emerge.eg: d8d775b2571e5f3b251bb298bdcefc011568c5da2cbaca0e0c27eca00294a883
-      emerge/lang/native/front.eg: 94381b1f6e5df57201780fcb5ea92a66477f966c4e0e03a72b5ca199f62403dd
+      emerge/lang/native/emerge.eg: e676e7772da193fdff3ca879f290c84ef924e54e8f37263b398e26c949abf3e7
+      emerge/lang/native/front.eg: f0973aa9ac22265af29aabe2647d2094687919d2be38b8089baf3947e661c3ed
       emerge/lang/native/hello: ee9b52b8c13131c2a6221baca663c0006960b348aa40bebea3a03f6f29e1fe73
       emerge/lang/native/hello.exe: 40ebae4595da614a1ab436968d2adb136ca5015415b0b9da7853bdb33a01ed3c
       emerge/lang/native/json.eg: 87a715c3099af633c4851973e655741cd6416fbbd5a995123315fbb0461b9efc
+      emerge/lang/native/ledger_text.eg: eb2ea70f445d98b8941a19632c4e9eb5259d244260d52c77b40c3d1c0be4644b
+      emerge/lang/native/lower.eg: 1b3cfb99554c9f8dc55f012c248a9266255dd5bdbc45ebe09f1a6668e692cc40
       emerge/lang/native/milestone.eg: 9adeb1a116cd66794300242ce23c56affdf2bdbaa72a8aa4f6aaf1cb73af92d8
       emerge/lang/native/pe.eg: 6155fc55918e79f62f0a513a122c1ddca7ef9b37ced1b6ad31ebfc1c71e95ccd
       emerge/lang/native/prelude_text.eg: afa1415dc88981169c7b98326a0b5ff1eb8b37af5767a09b83b04739cfab1270
       emerge/lang/native/rt.eg: 199d010572082a811ba1b292de331f8c1ca5703bf359ef9448f8b8a08a62bff3
       emerge/lang/native/rt_text.eg: 1d34e3021e9d56f5c28388edaef49206f744c64a6aee2cb0e61f61f50033be3c
+      emerge/lang/native/world_text.eg: 727ef7c78a5914374d8cd8571c98e52431bb80fb15d45e1689f5b5fc0a6ceea6
       emerge/lang/native/x64.eg: e0ab26508f708c05cb4c27bed288db92e9a4802c99618f52f745e5a7e6044e17
       emerge/lang/parser.js: 7e7369922f1ac8ab45a7499fdb2081281fad12295e4daeb1416847c892d4e8e5
       emerge/lang/runtime.js: b09b63e40579c54e873b9a2d93d77b18d3152eb9de67d8c158b09c0afb2560a5
@@ -491,11 +652,12 @@ payload:
       emerge/lang/test/lang.test.js: 076d67877bf2dd4f12541a2e3bf83bb534616702d9f416ab09336b1bd0f0ba82
       emerge/lang/test/learn.test.js: 11108ab4bbaae852fc490f9f9e621710169d2b9fcfd55c6b63388e07c30d5884
       emerge/lang/test/ledger.test.js: 69f33e267c4750a1755dd501dfc84e95f468f3fc414be457519c1251b97982a9
-      emerge/lang/test/native.test.js: 0d5d0bb90292a300aff0c7f3eca58e8840d7f637fa9e9ab384a84d70faf45a7c
+      emerge/lang/test/native.test.js: 9c3381127a2f5ee9ac6799e0174352c2052c20f3aee3d2a30f437a74962a37ac
       emerge/lang/test/say.test.js: 30313e1d3b77c1c30b8312fc768c7797396d9f3fb1c532ca0da03b0494c3345b
       emerge/lang/test/selfhost.test.js: 976c80cfc4748bf1cdee47d44d304be204d6150597af2aff06b4005febe87ed6
       emerge/lang/test/world/counter.eg: 1987eac7e4c640f2c0af567c75fefdf310eb546dd58c78c9074b5214def45c0c
       emerge/lang/test/world/counter.world.eg: 2b381859f0164258fa5700051e79cd75d1404318676d03ad956ad778526beb6d
+      emerge/lang/test/world/counter_ledger.eg: 2517cb264f3bbdda11088cb0db260a43730854c3a443e033c0683aede6fd328f
       emerge/lib/atomic-write.js: 72fc7c59a747579ff815967d0f6e1a9da24638e9e292063f2e64956a85c13853
       emerge/lib/boundary.js: 551f2943c872ad16f0f24c3bda78064896b21145ea348b007841650d23ab6f04
       emerge/lib/bus.js: 024e9c348cad6dd9a8628a6bd2a9f3362209e33ba428bb5b8cb83daf7ab5c5f9
@@ -551,7 +713,7 @@ payload:
       emerge/siso/StreamLog.js: 69b5eac796b87662dc84e3d36a7fc84847b644c059fd61a138c03917e72a7a2d
       emerge/siso/index.js: 67844385ebccdcbb60b09efcef466fc6b6034e46dc00131cb18884ade72a590a
       emerge/spec/_archive/emerge-1.1.0.spec: 7305e91dbb425c6c0889ee5f83df513ac9d8d13f55f63cc642ab1e0e46fdc5fe
-      emerge/spec/cie-eg.spec: 4cbbe400ccc5e321b1ce227fa76640fe58c1d77090986c71fedb53c2e0e4397e
+      emerge/spec/cie-eg.spec: 1d73c6a710077ea782161ffaca2f1ca7d041f921a4bb8a85052e9b77f56641c7
       emerge/spec/emerge-core.spec: 1b4186d99a342384a105a85e160d4677464a30f80dba28bf472c7ce718c0b653
       emerge/spec/emerge.node-taxonomy.md: 2e832b0ed0f51b9e6620b4d4a5f57b366c188d2ec9f7a6eddcc300dff6acb621
       emerge/spec/emerge.node-taxonomy.spec: 7b9334ef66b7f42f69390de813ffd2191e102a968d147b267f4cb72725c4420c
@@ -578,10 +740,11 @@ payload:
       emerge/tests/skeleton.test.js: d740e0fc50fe15fd4214d4cab0249003f37c6d5edfa1e4d609599dd65f72af19
       emerge/verify.js: 99273746e5977c75e82d571abf173316cbce2307c7ded5d51b40b948e3c191c8
       emerge/version.js: bb0ab190c523b5950bce5c04cda9b220c848dc20e6936d39519eeb8c493f96b6
-      phases/2026-10-02-emerge-field-memory-build/CRF1_the_axioms_as_constraints.phase: 14c2563305279b1a8a4af5ccf1e93c207e994a37bb85dfee96d0242bea86ff44
+      phases/2026-10-02-emerge-field-memory-build/CRF1_the_axioms_as_constraints.phase: 13c3b994136bfec388cd90ae7efa9cbad774ee3e322b1da43017f35a698f5351
       phases/2026-10-02-emerge-field-memory-build/MR11_rewind_the_mind.phase: c44b8244be70392b63c2877e78b42a50a03ecfb3f19185593318f84579c050ed
-      phases/2026-10-02-emerge-field-memory-build/graph/CRF1_the_axioms_as_constraints-697fc41691bf6a2f.graph: 818f006e869aecb05e669cc3a626d7ae88af7c98f81565307cc8fe378aab75c5
+      phases/2026-10-02-emerge-field-memory-build/graph/CRF1_the_axioms_as_constraints-6b50ac38551278d5.graph: 17ea2b7310d84aaf6c10a4ad43c29e087a52ac47ac744f0e4143148e90d8c126
       phases/2026-10-02-emerge-field-memory-build/graph/MR11_rewind_the_mind-253f63ad6dbcd990.graph: a93f04a7be057ae151b0302b335d6c910addc5377c995cbdcccf0c61fa7f2f4e
+      phases/2026-10-02-emerge-field-memory-build/graph/_superseded/CRF1_the_axioms_as_constraints-697fc41691bf6a2f.graph: 818f006e869aecb05e669cc3a626d7ae88af7c98f81565307cc8fe378aab75c5
       phases/2026-10-31-emerge-as-a-system/EAS4a_L0_evaluate.phase: 56625f30bc93e53c2d659c7b692e7ad13995404b13d00d466f37f805eecb4d70
       phases/2026-10-31-emerge-as-a-system/EAS4b_L1_compile.phase: 27e5dec4abb700a78548cbf346e1498219e46fa2f4abc5455a2a51d566393e92
       phases/2026-10-31-emerge-as-a-system/EAS4c_L2_build.phase: 29a37991e8d819875a2d94be3964bc85aead13afefb5612f0ef1e1d037fd439f
@@ -595,41 +758,55 @@ payload:
       phases/2026-10-31-emerge-as-a-system/graph/_superseded/EAS4b_L1_compile-3d4cfb4736fa9ebf.graph: 0792305335aed3e946101dea89b0d403343b53f07af4a3262b5a0e94e534bbf5
       phases/2026-10-31-emerge-as-a-system/graph/_superseded/EAS4c_L2_build-e9a4063e9531c16a.graph: a9ece15e66981aa09f61c08ca3af7b0a3f19e217433562d2206d62a6af83694e
       phases/2026-10-31-emerge-as-a-system/graph/_superseded/EAS4d_L3_run-9524b42383548801.graph: a0d8dbe772c353a979ff0cf44869fe8b0f254dc1e2e5b80d5f3a5f3b24a0bc71
-      phases/2026-11-06-cie-eg-build/CIE10_the_door_in_emerge.phase: 1dccd65491c9a02243cb44279d4ce4c11d1a10f6381e5092edeea38c3f4a1643
+      phases/2026-11-06-cie-eg-build/CIE10_the_door_in_emerge.phase: effd0f8d033963c1208b7112a5e90bc21b7146e57c9f4a19bd6cdcc86cffdd3f
       phases/2026-11-06-cie-eg-build/CIE11_retire_the_interpreter.phase: c149bf2a635142391f7eb908db2108a7ac7b201c40c92676b07b0f8a169e3013
-      phases/2026-11-06-cie-eg-build/CIE12_windows.phase: a31a423a1dc20899028a89d555419de760f410446c4e563d5d45911cd4f20741
-      phases/2026-11-06-cie-eg-build/CIE13_native_system_primitives.phase: c669f1d53561ac569c8cbf53df419a5d9fe6d30f23ae010246aee7de94e7a742
-      phases/2026-11-06-cie-eg-build/CIE1_the_contract_block.phase: 141f5ef24fb8b6bff5a2183e3951b47d290908e8db47a9443d16746c0ceeb614
-      phases/2026-11-06-cie-eg-build/CIE2_native_sha256.phase: d9c7f29380754d10c984fb4ffa770ebe914a26b1cda27f4c841f070ba1968b4e
-      phases/2026-11-06-cie-eg-build/CIE3_native_ledger.phase: ba5036ef187384ad2bac74160bb4bebc1071f107e9461fffc34006bb08fe4bad
-      phases/2026-11-06-cie-eg-build/CIE4_native_components.phase: fe3b246ecf9228f958436db705c1eae24b0755a5e7787dbf07f1739707e43dd7
-      phases/2026-11-06-cie-eg-build/CIE5_native_test.phase: db3094d39e9a344ab3830e2205c8a01c29926631adf0a1167e8b0762793dec03
-      phases/2026-11-06-cie-eg-build/CIE6_native_check.phase: af67f96cae9d1804201b005bf4bc20c63203f1e53f8d2429e9c7b6873cd7d040
-      phases/2026-11-06-cie-eg-build/CIE7_native_observe.phase: cfad82e9c048e174866b8ffa7262e38a7bcb8d0ca88d034324a13e9eba92f927
+      phases/2026-11-06-cie-eg-build/CIE12_windows.phase: 3ac15963afb6ea600da27da63d53e589bdaf437e7dbfdac11817c0a62816cd77
+      phases/2026-11-06-cie-eg-build/CIE13_native_system_primitives.phase: e0da42f6ac0eccb1b7806b8ddfa793b6c59cbf9af620af2c7e28096e5d23f89e
+      phases/2026-11-06-cie-eg-build/CIE1_the_contract_block.phase: 495b6ecaad24704b1d2adf71b11ce7d495c99ffb9907c198a4d75ddb79304a94
+      phases/2026-11-06-cie-eg-build/CIE2_native_sha256.phase: f0a2b42223ecef4259e187059b11b3f6b4797871ab845d45a6fedfce97b1c668
+      phases/2026-11-06-cie-eg-build/CIE3_native_ledger.phase: d80f86c7882a899f80b1a1fdf844764a209659b6e93ec394d47ee385f46c0bf2
+      phases/2026-11-06-cie-eg-build/CIE4_native_components.phase: fba35e1e1663171b53dd6e2ba4b4a4a1fc9c2142f4230604319e6d103898935d
+      phases/2026-11-06-cie-eg-build/CIE5_native_test.phase: 15e647cbde4526c90985ab06e1a0db67c380f7fe62c7608a307f330d9ebc4a28
+      phases/2026-11-06-cie-eg-build/CIE6_native_check.phase: 9759d46b8fadb506f8a7594d6bb5b4a4217cc99b0e5438692f9ad380abb84fd3
+      phases/2026-11-06-cie-eg-build/CIE7_native_observe.phase: 4b166661a692fafe3f68e2e31f56205f6cf972ee12cd14e83c8bd585115495ce
       phases/2026-11-06-cie-eg-build/CIE8_spec_compiler_in_emerge.phase: 4b928c76857db3cdb88f874345ea86660e7c4af6fdc8bdc8b68bf927157bfdb5
       phases/2026-11-06-cie-eg-build/CIE9_tests_in_emerge.phase: 5aa90cb5be429b9aa6da6ebd250487a2eb7bb1bbeec4dd240181b05a324c6575
-      phases/2026-11-06-cie-eg-build/graph/CIE10_the_door_in_emerge-e41cf45dac320401.graph: 126f481a7c794a096d2d01c24e1f5396a0e8de8415937a001317dd71f52bd705
+      phases/2026-11-06-cie-eg-build/graph/CIE10_the_door_in_emerge-03f3047c8942307c.graph: 93f7f543006c4ddbe9ec7318455b3bf8e1e0528fac7d4c8ee4fbf49b0c31ced2
       phases/2026-11-06-cie-eg-build/graph/CIE11_retire_the_interpreter-a6d8fd060a156072.graph: 935e6e18f54dfaf0afddecc0fe1a244f6732a2011a8a3d3eb42aee17975fc39a
-      phases/2026-11-06-cie-eg-build/graph/CIE12_windows-f236cb7c00e45a0b.graph: fa430ddacd321ce54d6726ba73d6fae85b16c786a00cdedadf5586eed6bc6c11
-      phases/2026-11-06-cie-eg-build/graph/CIE13_native_system_primitives-c5531d5e89a97eaa.graph: 283b6b4e64132c846f1b110553fc592d3b748be70b598aef309f31432a19e2ac
-      phases/2026-11-06-cie-eg-build/graph/CIE1_the_contract_block-216544c5db00d522.graph: 22bece40cbb272930a4b17925693b834f7613661658ddfcc635ed66fb2a18cea
-      phases/2026-11-06-cie-eg-build/graph/CIE2_native_sha256-ea159b87a8d31fb6.graph: f5100c408560d5cd53e0e1faeb626910f727ace06ac0447218daa8d1c005e149
-      phases/2026-11-06-cie-eg-build/graph/CIE3_native_ledger-98fc867e04e6779d.graph: f43ecd8fa97d38ed34f67d63b7c1525e8fa2405f2604cb3eb973b686160f9795
-      phases/2026-11-06-cie-eg-build/graph/CIE4_native_components-48433a529f33d4c9.graph: 38ed90d8394b3dac4894cc88167f3aadf6e4e2b0e50d766c3520345b893bd516
-      phases/2026-11-06-cie-eg-build/graph/CIE5_native_test-0974f62afe6fcba9.graph: 9586adb214cc903560782ab6e340e125a2729d39cd3ee6e72166642c74444d54
-      phases/2026-11-06-cie-eg-build/graph/CIE6_native_check-ba0108d1c2048364.graph: b9ed4b20fc3e055dd54c1f57fc9bb46edb8315973dc52a9669566080edd13d00
-      phases/2026-11-06-cie-eg-build/graph/CIE7_native_observe-25eb10608cce9715.graph: 4a3b7f19387d56cc91524e76a3ea9a6f0eb5fb55de8d430a470dd02d87a98a66
+      phases/2026-11-06-cie-eg-build/graph/CIE12_windows-f28180b43a648d54.graph: 8129d3fb921ef64b03ca28bc11d2060838c06fb576d36c87d98172e275a7f5c3
+      phases/2026-11-06-cie-eg-build/graph/CIE13_native_system_primitives-32c43928d1b80c3c.graph: 4b65b567be9f220baf86e03c5bce739b811e564d99dde03b9be092bcb0d0ab67
+      phases/2026-11-06-cie-eg-build/graph/CIE1_the_contract_block-52152971b5c75b8b.graph: a9f67931efbd0e9f01c07872bac2f6c7f64a03fb98126260c1ed1c0bd6f9985b
+      phases/2026-11-06-cie-eg-build/graph/CIE2_native_sha256-cb41013e07a153cd.graph: 11c90faeace2f95ac75122897267c27d90cf2499ddab7a3220a255544f02a68b
+      phases/2026-11-06-cie-eg-build/graph/CIE3_native_ledger-26721ad34cdda479.graph: 05435fd8de2af137728714bf0f2acce44017514132d59592e181cddcdc2e5dfb
+      phases/2026-11-06-cie-eg-build/graph/CIE4_native_components-b198556902408203.graph: bbfb6f5c8af1759f17efd65c2dbf65a7293b971657df0ecbe78170e69728a023
+      phases/2026-11-06-cie-eg-build/graph/CIE5_native_test-5197dd1f25dcc68b.graph: 7add40f8ae9e5cb15661d09de1d564bd7d68d9761cb57e114428d3f0860c2bff
+      phases/2026-11-06-cie-eg-build/graph/CIE6_native_check-29095b91f487f9dc.graph: 5ab77256e70b65cb33d15656e5b3c6b182e15a9d2365bea72a6436ad34fd4b29
+      phases/2026-11-06-cie-eg-build/graph/CIE7_native_observe-d7bfba08f4f6aedc.graph: ba007b5c74b3704cbeba7bdf7713a3821fa2478c96982a7f76922e0d2d04d109
       phases/2026-11-06-cie-eg-build/graph/CIE8_spec_compiler_in_emerge-19e737a93db3c3a8.graph: 2c7efbd11e1f33bd9c6f8493d5af38b6d9bf626ef7e16342a3795f3b7fffe4fc
       phases/2026-11-06-cie-eg-build/graph/CIE9_tests_in_emerge-2dd42cd4c21d4317.graph: 6b25c7a9f2d31fbf43d65df5ddf80dccc34d4e6a6ac5ae04347fb080421cff01
+      phases/2026-11-06-cie-eg-build/graph/_superseded/CIE10_the_door_in_emerge-e41cf45dac320401.graph: 126f481a7c794a096d2d01c24e1f5396a0e8de8415937a001317dd71f52bd705
+      phases/2026-11-06-cie-eg-build/graph/_superseded/CIE12_windows-f236cb7c00e45a0b.graph: fa430ddacd321ce54d6726ba73d6fae85b16c786a00cdedadf5586eed6bc6c11
+      phases/2026-11-06-cie-eg-build/graph/_superseded/CIE13_native_system_primitives-c5531d5e89a97eaa.graph: 283b6b4e64132c846f1b110553fc592d3b748be70b598aef309f31432a19e2ac
+      phases/2026-11-06-cie-eg-build/graph/_superseded/CIE1_the_contract_block-216544c5db00d522.graph: a3c9ceaee50fa56420b9e23fc752336aa1c325106269a7a95cc990fb48b5cff3
+      phases/2026-11-06-cie-eg-build/graph/_superseded/CIE2_native_sha256-ea159b87a8d31fb6.graph: f5100c408560d5cd53e0e1faeb626910f727ace06ac0447218daa8d1c005e149
       phases/2026-11-06-cie-eg-build/graph/_superseded/CIE3_native_ledger-891a9416038deae3.graph: 635aed248e9c6adea32f3226dceeb48d2e7e4c31e23534169a77f60ad4ad5ddd
-      phases/2026-11-06-emerge-is-the-replacement/EQ1_the_crystal_memory.phase: 0d4ab88c0549d81bbff7375405a7328572de652c0a1f68f6a3afe5bf28decdfe
-      phases/2026-11-06-emerge-is-the-replacement/EQ2_the_benchmark_ledger.phase: ca3e2dfbca901c0d8ed4d502a56f5dca482caf9677700190bba780161dcae4a2
-      phases/2026-11-06-emerge-is-the-replacement/EQ3_reference_nodes.phase: ad38e150838d2e39782ad6defb1f78a04953a4e4b2108e8bdb83e0da3ce2bde9
-      phases/2026-11-06-emerge-is-the-replacement/EQ4_the_emerge_guide_for_any_llm.phase: b74d961b46ef6f57a3d529e9918ebacc5c669a319f7b3e2d88c64a8efadc6475
-      phases/2026-11-06-emerge-is-the-replacement/graph/EQ1_the_crystal_memory-65d6cd5a11325ebf.graph: 144f9dd7f4e61d38ae2a74768ea222ab769fc7dd3c3a02c3618a7dcbbcd040a2
-      phases/2026-11-06-emerge-is-the-replacement/graph/EQ2_the_benchmark_ledger-8af206da6a003a8d.graph: d86b9856fff458c9c1848625d02f443f1eaf0002e086ecee2eef26a856fa345f
-      phases/2026-11-06-emerge-is-the-replacement/graph/EQ3_reference_nodes-2b0dd331cda64f7c.graph: 95ef0696471e064e0f8543c2fc413fb234a9228738c65376a2b06572f7485399
-      phases/2026-11-06-emerge-is-the-replacement/graph/EQ4_the_emerge_guide_for_any_llm-c7f51b6789e63ed4.graph: f4da74d485fe845750e98b25fdd6d8607b3e248a43178fd73f3ffef6608f8228
+      phases/2026-11-06-cie-eg-build/graph/_superseded/CIE3_native_ledger-98fc867e04e6779d.graph: f43ecd8fa97d38ed34f67d63b7c1525e8fa2405f2604cb3eb973b686160f9795
+      phases/2026-11-06-cie-eg-build/graph/_superseded/CIE4_native_components-48433a529f33d4c9.graph: 38ed90d8394b3dac4894cc88167f3aadf6e4e2b0e50d766c3520345b893bd516
+      phases/2026-11-06-cie-eg-build/graph/_superseded/CIE5_native_test-0974f62afe6fcba9.graph: 9586adb214cc903560782ab6e340e125a2729d39cd3ee6e72166642c74444d54
+      phases/2026-11-06-cie-eg-build/graph/_superseded/CIE6_native_check-ba0108d1c2048364.graph: b9ed4b20fc3e055dd54c1f57fc9bb46edb8315973dc52a9669566080edd13d00
+      phases/2026-11-06-cie-eg-build/graph/_superseded/CIE7_native_observe-25eb10608cce9715.graph: 4a3b7f19387d56cc91524e76a3ea9a6f0eb5fb55de8d430a470dd02d87a98a66
+      phases/2026-11-06-emerge-is-the-replacement/EQ1_the_crystal_memory.phase: b90f834979d2110098a0c228dadb320150788a47b58609ca6a164080df3e349a
+      phases/2026-11-06-emerge-is-the-replacement/EQ2_the_benchmark_ledger.phase: 9ddcca0e751690979d64afc01d51ed2451ea45859c0fb531d99674c617d664c5
+      phases/2026-11-06-emerge-is-the-replacement/EQ3_reference_nodes.phase: 84ea8f977d6569ed7c6dd1f712de597d13a85ae947f8d623ba5dbedc01c0e024
+      phases/2026-11-06-emerge-is-the-replacement/EQ4_the_emerge_guide_for_any_llm.phase: 8addb5afe196cae1860904adabdb6651af65c5a553b1e6825a13dc9e98b7af9e
+      phases/2026-11-06-emerge-is-the-replacement/graph/EQ1_the_crystal_memory-9c7c665a411fda02.graph: 1664a36764367a92613cbfacd73a1485ace02d3b81528b710fd30da4db504255
+      phases/2026-11-06-emerge-is-the-replacement/graph/EQ2_the_benchmark_ledger-551ff3dbd8851b16.graph: 934466b0f29db809b3b436dc3acbc73d9fa3c1879c0794ae2763f90851b02ce7
+      phases/2026-11-06-emerge-is-the-replacement/graph/EQ3_reference_nodes-72a7ccafe575ef5f.graph: 49e814c8ad80b53a22710d9c8d357a8f54377ad4ca34160b52a51fc343b484de
+      phases/2026-11-06-emerge-is-the-replacement/graph/EQ4_the_emerge_guide_for_any_llm-9261eda30468f30d.graph: 0333fef448bb39470efe4c570d24984fe11cf26e4782f3545a3c01f145ec869e
+      phases/2026-11-06-emerge-is-the-replacement/graph/_superseded/EQ1_the_crystal_memory-65d6cd5a11325ebf.graph: 144f9dd7f4e61d38ae2a74768ea222ab769fc7dd3c3a02c3618a7dcbbcd040a2
+      phases/2026-11-06-emerge-is-the-replacement/graph/_superseded/EQ2_the_benchmark_ledger-8af206da6a003a8d.graph: d86b9856fff458c9c1848625d02f443f1eaf0002e086ecee2eef26a856fa345f
+      phases/2026-11-06-emerge-is-the-replacement/graph/_superseded/EQ3_reference_nodes-2b0dd331cda64f7c.graph: 95ef0696471e064e0f8543c2fc413fb234a9228738c65376a2b06572f7485399
+      phases/2026-11-06-emerge-is-the-replacement/graph/_superseded/EQ4_the_emerge_guide_for_any_llm-c7f51b6789e63ed4.graph: f4da74d485fe845750e98b25fdd6d8607b3e248a43178fd73f3ffef6608f8228
   runtime:
     process:
       name: emerge

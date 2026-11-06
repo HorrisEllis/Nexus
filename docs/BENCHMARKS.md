@@ -5,6 +5,22 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-06 — compartments compile natively, as written (CIE4 slice b, 0.60.428)
+- **Measured:** Emerge coding. The native compiler, written in Emerge, now accepts `compartment`, `on` and `emit`.
+- **His words:** "the moment js is removed from emerge it becomes the replacement. focus on that first. no more js, we focus on .eg" ·
+  "next. how much more?"
+- **Framework:** contract first again. The interpreter's output and ledger are the end state.
+- **Method:** compile `lang/test/world/counter_ledger.eg` natively, run it, and compare with `eg run`. Then rebuild the compiler with itself
+  (stages 0, 1 and 2) and compare the bytes.
+- **Code:** `lang/native/front.eg`, `lower.eg` and `emerge.eg`, plus the embedded `world_text.eg`.
+- **Result:**
+  - 9 of 9 ledger entries equal to the interpreter's, and identical output.
+  - native.test 95/95; selfhost 16/16; stages 0, 1 and 2 byte-identical (sha256 7d094db6…).
+  - `examples/counter.eg` differs in one line, the read-only lens error (a gap).
+- **Speed:** stage 0 (the interpreter running the compiler on itself) took 15.9 s of wall time. Stages 1 and 2 (native) were not timed
+  separately.
+- **What came of it:** an ordinary compartment program builds to a native executable with no Node. Next: frozen lenses, then components.
+
 ## 2026-11-06 — the world in Emerge, hash for hash (CIE4 slice a, 0.60.426)
 - **Measured:** Emerge coding. Emerge's world (compartments, constraints, signals, ledger), rewritten from the interpreter's JavaScript into
   .eg.

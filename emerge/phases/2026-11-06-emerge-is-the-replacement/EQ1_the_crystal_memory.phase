@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ1_the_crystal_memory
 context: pipeline phase EQ1_the_crystal_memory of docs/2026-11-06-emerge-is-the-replacement-phasemap.spec
 intent: null
-summary: EQ1_the_crystal_memory (?) — 1 file(s)
+summary: EQ1_the_crystal_memory (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793996385034
+exported_at: 1793997645206
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793996385034
-lastSeenAt: 1793996385034
+firstSeenAt: 1793997645206
+lastSeenAt: 1793997645206
 fingerprint: null
 payload:
   id: EQ1_the_crystal_memory
@@ -20,10 +20,12 @@ payload:
   layer: null
   status: OPEN
   files:
+    - emerge/emerge/lang/cie/crystal.eg
+    - emerge/emerge/lang/test/crystal.test.eg
     - lib/component-store.js
   depends_on:
     - EQ_D0_emerge_only
     - PIL2_contracts
   blocks: []
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: 65d6cd5a11325ebf
+  graph: 9c7c665a411fda02

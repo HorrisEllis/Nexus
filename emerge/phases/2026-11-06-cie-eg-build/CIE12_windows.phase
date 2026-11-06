@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
 context: pipeline phase CIE12_windows of docs/2026-11-06-cie-eg-build-phasemap.spec
 intent: null
-summary: CIE12_windows (?) — 4 file(s)
+summary: CIE12_windows (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793984231141
+exported_at: 1793997643503
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793984231141
-lastSeenAt: 1793984231141
+firstSeenAt: 1793997643503
+lastSeenAt: 1793997643503
 fingerprint: null
 payload:
   id: CIE12_windows
@@ -23,10 +23,9 @@ payload:
     - emerge/emerge/lang/native/pe.eg
     - emerge/emerge/lang/native/rt.eg
     - emerge/emerge/lang/native/codegen.eg
-    - emerge/emerge/spec/cie-eg.spec
   depends_on:
     - CIE11_retire_the_interpreter
   blocks:
     - MOD-NATIVE-WINDOWS
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: f236cb7c00e45a0b
+  graph: f28180b43a648d54

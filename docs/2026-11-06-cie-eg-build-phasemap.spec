@@ -91,7 +91,8 @@ phases:
     depends_on: [CIE3_native_ledger, CIE1_the_contract_block]
     spec: emerge/emerge/spec/cie-eg.spec
     blocks: [MOD-NATIVE-SYSTEM]
-    files: [emerge/emerge/lang/cie/world.eg, emerge/emerge/lang/test/world/counter.eg, emerge/emerge/lang/test/world/counter.world.eg, emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/test/native.test.js]   # world.eg and its fixtures added 2026-11-06 (slice a)
+    # files: world.eg and its fixtures added 2026-11-06 (slice a); lower.eg, the embedded world and the rebuilt compiler (slice b)
+    files: [emerge/emerge/lang/cie/world.eg, emerge/emerge/lang/test/world/counter.eg, emerge/emerge/lang/test/world/counter.world.eg, emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/lower.eg, emerge/emerge/lang/native/emerge.eg, emerge/emerge/lang/native/world_text.eg, emerge/emerge/lang/native/ledger_text.eg, emerge/emerge/lang/native/bin/emerge, emerge/emerge/lang/test/world/counter_ledger.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/test/native.test.js]
     requires: [node]
     prerequisites: []
     does: "compartments, constraints, signals, components, hooks, wires, the contract block and the gate (FIFO, storm limit) natively"
@@ -221,3 +222,16 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # is laxer, a difference to close (front.eg). (2) Newlines inside a map literal are spaces, so a multi-line lambda written inside { … } runs its
 # lines together; the lowering must lift handlers to top-level lets, as counter.world.eg does. (3) compartment, on, emit, state are keywords, so
 # world.eg names them declare, listen, signal, state_of.
+
+# ── ADDENDUM 2026-11-06 (0.60.428) — CIE4 slice b built: compartments compile natively, as written ──
+# James, 2026-11-06: "the moment js is removed from emerge it becomes the replacement. focus on that first. no more js, we focus on .eg" · "next. how much more?"
+# front.eg parses compartment (id, intent, state, constraint hard|soft [cost n], on, fn), top-level on, and emit; native/lower.eg rewrites them,
+# and C.state, C.f(), spent(), ledger() and ledger_verify(), into lang/cie/world.eg calls; the driver carries world.eg and ledger.eg inside it
+# (world_text.eg, ledger_text.eg, as rt and the prelude are). No runtime change: the world is the .eg of slice a.
+# Proof: native.test 'compartments natively, as written': lang/test/world/counter_ledger.eg compiled natively prints what the interpreter prints,
+# its 9 ledger entries hash for hash. native.test 95/95; selfhost 16/16 (stages 0, 1, 2 byte-identical; front.eg parses every example as the JS parser).
+# Found: (1) natively a lens is a copy, not a frozen copy: examples/counter.eg differs in exactly one line, the read-only error the interpreter
+# raises when a lens is written (the state itself is safe). Frozen values natively are the gap to close (slice b'). (2) The genesis entry names
+# the build: native/emerge.eg holds VERSION "1.13.0" beside package.json; the 'world' cases fail if they drift. (3) The interpreter's CLI prints
+# the unrouted notice to stderr; a native program does not print it yet.
+# Next: slice c, components, hooks, wires, the contract block and the gate.

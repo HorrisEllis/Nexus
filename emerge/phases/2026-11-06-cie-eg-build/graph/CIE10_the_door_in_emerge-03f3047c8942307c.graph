@@ -1,0 +1,145 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CIE10_the_door_in_emerge:03f3047c8942307c
+type: graph
+id: phase:CIE10_the_door_in_emerge:03f3047c8942307c
+context: dependency graph of phase CIE10_the_door_in_emerge
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793997643497
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793997643497
+lastSeenAt: 1793997643497
+fingerprint: null
+payload:
+  for: CIE10_the_door_in_emerge
+  kind: phase
+  repo: null
+  hash: 03f3047c8942307c
+  nodes:
+    - path: emerge/compartment.json
+      role: changes
+      exists: false
+      system: emerge
+    - path: emerge/emerge/door.eg
+      role: changes
+      exists: false
+      system: emerge
+    - path: emerge/emerge/lang/native/rt.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/server.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/tests/compiler-door.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/emerge/tests/lang-door.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/emerge/tests/nesting.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/emerge/tests/skeleton.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/emerge/lib/commands.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lib/handoff.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lib/system.js
+      role: uses
+      exists: true
+      system: emerge
+  edges:
+    - from: emerge/emerge/server.js
+      to: emerge/emerge/lib/system.js
+      kind: requires
+    - from: emerge/emerge/server.js
+      to: emerge/emerge/lib/commands.js
+      kind: requires
+    - from: emerge/emerge/server.js
+      to: emerge/emerge/lib/handoff.js
+      kind: requires
+    - from: emerge/emerge/tests/compiler-door.test.js
+      to: emerge/emerge/server.js
+      kind: requires
+    - from: emerge/emerge/tests/lang-door.test.js
+      to: emerge/emerge/server.js
+      kind: requires
+    - from: emerge/emerge/tests/nesting.test.js
+      to: emerge/emerge/server.js
+      kind: requires
+    - from: emerge/emerge/tests/skeleton.test.js
+      to: emerge/emerge/server.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 9
+    deps:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D2_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+    dependents:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D2_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+    downstream:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+    blockedBy:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+        files:
+          - emerge/emerge/lang/native/rt.eg
+    dangling: []
+    lines:
+      - layer 9 · blocked by CIE5_native_test, CIE8_spec_compiler_in_emerge
+      - >-
+        depends on (3): CIE_D2_the_door_in_emerge, CIE5_native_test, CIE8_spec_compiler_in_emerge ·
+        all upstream 19
+      - 'needed by (1): CIE11_retire_the_interpreter · all downstream 2'
+      - >-
+        same files as CIE13_native_system_primitives with no order between them:
+        emerge/emerge/lang/native/rt.eg
+    edges:
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D2_the_door_in_emerge
+        kind: declared
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+        kind: declared
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+        kind: declared

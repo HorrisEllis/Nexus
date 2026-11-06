@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793979426628
+exported_at: 1793997639765
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793979426628
-lastSeenAt: 1793979426628
+firstSeenAt: 1793997639765
+lastSeenAt: 1793997639765
 fingerprint: null
 payload:
   for: CB2_analysis_then_synthesis
@@ -27,7 +27,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 5
+    layer: 8
     deps:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
@@ -43,6 +43,16 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
       - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
@@ -63,11 +73,11 @@ payload:
     dangling: []
     lines:
       - >-
-        layer 5 · blocked by MR1_recall_triad_and_context_table, MR5_fractal_levels_with_the_field,
+        layer 8 · blocked by MR1_recall_triad_and_context_table, MR5_fractal_levels_with_the_field,
         CB1_cfr_build_logic
       - >-
         depends on (3): MR1_recall_triad_and_context_table, MR5_fractal_levels_with_the_field,
-        CB1_cfr_build_logic · all upstream 14
+        CB1_cfr_build_logic · all upstream 24
       - 'needed by (2): CB4_the_emergence_loop_builds, RC1_the_repo_main_chat · all downstream 3'
     edges:
       - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table

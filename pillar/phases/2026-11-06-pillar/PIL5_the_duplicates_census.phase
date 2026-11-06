@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
 context: pipeline phase PIL5_the_duplicates_census of docs/2026-11-06-pillar-phasemap.spec
 intent: null
-summary: PIL5_the_duplicates_census (?) — 3 file(s)
+summary: PIL5_the_duplicates_census (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793974541732
+exported_at: 1793997647033
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793974541732
-lastSeenAt: 1793974541732
+firstSeenAt: 1793997647033
+lastSeenAt: 1793997647033
 fingerprint: null
 payload:
   id: PIL5_the_duplicates_census
@@ -22,11 +22,10 @@ payload:
   files:
     - pillar/migration.eg
     - pillar/test/migration.test.eg
-    - pillar/spec/pillar.spec
   depends_on:
     - PIL3_conformance
     - PIL4_three_identities
   blocks:
     - MOD-PIL-MIGRATION
   spec: pillar/spec/pillar.spec
-  graph: 2f281d6fc0f5eb50
+  graph: ad59146bf1b81886

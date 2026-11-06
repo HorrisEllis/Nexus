@@ -442,11 +442,95 @@ fn parse_item() {
   }
   if t.t == "KW" {
     if t.v == "use" { return parse_use() }
-    if t.v == "compartment" or t.v == "component" or t.v == "template" or t.v == "axiom" or t.v == "test" or t.v == "on" {
+    // CIE4 slice b (0.60.428): a compartment and a top-level on are parsed; native/lower.eg turns them into lang/cie/world.eg calls
+    if t.v == "compartment" { return parse_compartment() }
+    if t.v == "on" { return parse_on() }
+    if t.v == "component" or t.v == "template" or t.v == "axiom" or t.v == "test" {
       refuse_at(t.v, t)
     }
   }
   return parse_stmt(true)
+}
+// ── compartments and handlers (CIE4 slice b): the same grammar as lang/parser.js parseCompartment / parseOn, for compartments ──
+var in_comp = false
+fn parse_compartment() {
+  let t = next()
+  let name = want_ident("a compartment name").v
+  var c = node("Compartment", t, { name: name, id: null, intent: null, state: [], constraints: [], handlers: [], fns: [] })
+  want_op("\{", "to open the compartment")
+  skip_nl()
+  in_comp = true
+  while not is_op("\}") {
+    let m = peek(0)
+    if m.t == "IDENT" and (m.v == "id" or m.v == "intent") and peek(1).t == "OP" and peek(1).v == "=" {
+      let key = next().v
+      next()
+      if not is_tok("STR", null) or peek(0).v == null { perr("{key} must be a plain string", peek(0)) }
+      if c[key] != null { perr("{key} is declared twice", m) }
+      c[key] = next().v
+    } else if is_kw("state") {
+      next()
+      want_op("\{", "to open state")
+      skip_nl()
+      var fields = []
+      while not is_op("\}") {
+        let f = want_ident("a state field name")
+        want_op(":", "after the field name")
+        skip_nl()
+        fields[len(fields)] = { name: f.v, expr: parse_expr() }
+        skip_nl()
+        if is_op(",") {
+          next()
+          skip_nl()
+        } else {
+          break
+        }
+      }
+      skip_nl()
+      want_op("\}", "to close state")
+      c.state = fields
+    } else if is_kw("constraint") {
+      next()
+      let cname = want_ident("a constraint name").v
+      var ctype = "hard"
+      var cost = 1
+      if is_tok("IDENT", null) and peek(0).v != "cost" { ctype = next().v }
+      if ctype != "hard" and ctype != "soft" { refuse_at("a {ctype} constraint", m) }
+      if is_word("cost") {
+        next()
+        if not is_tok("NUM", null) { perr("expected a number after cost", peek(0)) }
+        cost = next().v
+      }
+      want_op("\{", "to open the constraint expression")
+      skip_nl()
+      let ex = parse_expr()
+      skip_nl()
+      want_op("\}", "to close the constraint expression")
+      c.constraints[len(c.constraints)] = { name: cname, ctype: ctype, cost: cost, expr: ex }
+    } else if is_kw("on") {
+      c.handlers[len(c.handlers)] = parse_on()
+    } else if is_kw("fn") {
+      c.fns[len(c.fns)] = parse_fn_decl()
+    } else {
+      perr("a compartment holds id, intent, state, constraint, on and fn — found {describe(m)}", m)
+    }
+    end_stmt()
+  }
+  next()
+  in_comp = false
+  return c
+}
+fn parse_on() {
+  let t = next()
+  if not is_tok("STR", null) or peek(0).v == null { perr("expected a plain string signal name after on", peek(0)) }
+  let signal = next().v
+  var param = null
+  if is_op("(") {
+    next()
+    param = want_ident("a parameter name for the signal payload").v
+    want_op(")", "to close the signal parameter")
+  }
+  return node("On", t, { signal: signal, param: param, body: parse_block() })
 }
 fn parse_use() {
   let t = next()
@@ -584,7 +668,20 @@ fn parse_stmt(top) {
       let handler = parse_block()
       return node("Try", t, { body: body, errName: err_name, handler: handler })
     }
-    if k == "wire" or k == "despawn" or k == "send" or k == "emit" or k == "record" or k == "gap" or k == "promote" or k == "expect" {
+    if k == "emit" {
+      next()
+      if is_word("out") { refuse_at("emit out", t) }
+      let name = parse_expr()
+      var payload = null
+      if is_op("\{") {
+        payload = parse_primary()
+      } else if is_kw("with") {
+        next()
+        payload = parse_expr()
+      }
+      return node("Emit", t, { name: name, payload: payload })
+    }
+    if k == "wire" or k == "despawn" or k == "send" or k == "record" or k == "gap" or k == "promote" or k == "expect" {
       refuse_at(k, t)
     }
     if k == "use" or k == "compartment" or k == "component" or k == "template" or k == "axiom" or k == "test" or k == "on" {
@@ -816,6 +913,10 @@ fn parse_primary() {
     if t.v == "fn" {
       next()
       return node("Lambda", t, parse_fn_rest(null))
+    }
+    if t.v == "state" and in_comp {
+      next()
+      return node("Ident", t, { name: "state" })
     }
     if t.v == "state" or t.v == "whatif" or t.v == "spawn" { refuse_at(t.v, t) }
   }

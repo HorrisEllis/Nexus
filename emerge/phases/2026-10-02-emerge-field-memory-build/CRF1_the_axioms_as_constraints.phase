@@ -6,14 +6,14 @@ context: >-
   pipeline phase CRF1_the_axioms_as_constraints of
   docs/2026-10-02-emerge-field-memory-build-phasemap.spec
 intent: null
-summary: CRF1_the_axioms_as_constraints (?) — 2 file(s)
+summary: CRF1_the_axioms_as_constraints (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793962354164
+exported_at: 1793997639759
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793962354164
-lastSeenAt: 1793962354164
+firstSeenAt: 1793997639759
+lastSeenAt: 1793997639759
 fingerprint: null
 payload:
   id: CRF1_the_axioms_as_constraints
@@ -22,10 +22,12 @@ payload:
   layer: null
   status: OPEN
   files:
+    - emerge/emerge/field/axioms.eg
+    - emerge/emerge/field/test/axioms.test.eg
     - docs/AXIOMS-v3.1.md
     - cos/spec/check-catalogue.spec
   depends_on:
     - RF1_relational_field
   blocks: []
   spec: null
-  graph: 697fc41691bf6a2f
+  graph: 6b50ac38551278d5

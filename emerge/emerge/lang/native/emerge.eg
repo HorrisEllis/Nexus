@@ -7,6 +7,16 @@ use "./front.eg" as front
 use "./codegen.eg" as cg
 use "./rt_text.eg" as rt_text
 use "./prelude_text.eg" as prelude_text
+use "./lower.eg" as lower
+use "./world_text.eg" as world_text
+use "./ledger_text.eg" as ledger_text
+
+// CIE4 slice b: lang/cie/world.eg and lang/cie/ledger.eg carried inside the compiler, as the runtime and the prelude are (regenerate:
+// eg run embed.eg ../cie/world.eg world_text.eg; eg run embed.eg ../cie/ledger.eg ledger_text.eg). A program with a compartment, an on handler
+// or an emit is lowered to world.eg calls (lower.eg).
+let EMBEDDED = { "<cie>/world.eg": world_text.TEXT, "<cie>/ledger.eg": ledger_text.TEXT }
+// The genesis entry names the build, as lang/runtime.js does (package.json "version"); native.test 'world' fails if the two drift.
+let VERSION = "1.13.0"
 
 fn last_slash(p) {
   var i = len(p) - 1
@@ -53,6 +63,7 @@ fn normalize(p) {
   return out
 }
 fn resolve_path(base, rel) {
+  if len(rel) > 0 and rel[0] == "<" { return rel }   // an embedded module (<cie>/world.eg), carried inside the compiler
   if len(rel) > 0 and rel[0] == "/" { return normalize(rel) }
   return normalize(base + "/" + rel)
 }
@@ -68,8 +79,10 @@ fn load_as(path, raw, text, want_id) {
   if path ends_with ".node" { raise("native: a node file (use \"{basename(path)}\") is not in the native subset yet") }
   visiting[path] = true
   var src = text
+  if src == null and has(EMBEDDED, path) { src = EMBEDDED[path] }
   if src == null { src = read_file(path) }
-  let ast = front.parse(src, basename(path))
+  var ast = front.parse(src, basename(path))
+  if not raw and want_id == null { ast = lower.lower(ast, VERSION) }
   var uses = {}
   for it in ast.items {
     if it.type == "Use" { uses[it.alias] = load(resolve_path(dirname(path), it.path), false, null) }
