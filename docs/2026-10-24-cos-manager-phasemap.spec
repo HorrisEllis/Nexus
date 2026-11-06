@@ -508,6 +508,11 @@ phases:
     blocks: [MOD-MG-BUILDER, MOD-MG-UI-BUILDER]
     does: "build a template or archetype from parts, declare its runtime, allocation, networks, volumes, settings and UI, validate, try it in a scratch compartment, save; backend, route, row, screen"
     proof: "a web-server template built from parts, tried, saved and deployed; driven in Clear Glass"
+    expanded_2026_11_06: >-
+      James, 2026-11-06: "like add like a framework builder ... templates, architetypes, schemas, like cos needs that already from the ui
+      roadmap." The builder builds frameworks too: a framework is an archetype with its templates and schemas (the nexus-system skeleton is one),
+      made from parts, validated, tried in a scratch compartment and saved; the universal compiler's targets are templates made here
+      (docs/2026-11-01-build-from-cos-phasemap.spec BC6).
   MG23_allocation_and_balance:
     status: "SUPERSEDED 2026-11-01 by CP6_resources in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
     status_before: OPEN

@@ -181,7 +181,7 @@ spec:
 
     RS6_the_workshop_as_the_editor:
       layer: ui
-      status: "OPEN 2026-11-06 — expanded into RS6a–RS6d (his: the workshop is Nexus's office for every file kind); done when they are"
+      status: "SUPERSEDED 2026-11-06 by BC1/BC2 (docs/2026-11-01-build-from-cos-phasemap.spec): his one editor for all of Nexus is BC_D1 (2026-11-01); this phase and RS6a–RS6d are folded in there, kept"
       status_was: 'LATER — off the path — the recorder, replay, the pipeline on WARP 2 and the architect stations come after the loop works by hand (declutter 2026-10-09)'
       status_before: "MOSTLY BUILT AS WS7 (0.39.354, docs/2026-10-02-workshop-codex-rewind-phasemap.spec) — the full writer: one document, the outline, the parts in tiers, the agent in three modes whose proposals need his yes, SEND TO THE PIPELINE; RS5's picker is its start. Not rebuilt here (two workshops would drift). What is left of RS6 is the macro's timeline along the bottom — scrub to rewind, replay, branch — which needs RS1 (the recorder) and RS2 (replay) first."
       james: '"rebuild the spec workshop."'
@@ -202,14 +202,13 @@ spec:
         LATER → OPEN. The rewind it named (RS2) is carried by the gates (MR11, his the same day), so RS6 no longer waits on RS2.
       depends_on_before_office: [RS5_the_template_picker, RS2_replay_rewind_branch]
       readings_to_confirm:
-        - "Whose it is. Today the workshop is Idearium's (idearium/lib/workshop.js, its editor and template picker). Every file kind across Nexus means
-           it opens other systems' files: (a) it stays Idearium's and reaches another system's files through that system's route (sovereignty, §5.15);
-           (b) it becomes its own system (an office with its server.js). The coder recommends (a) now, (b) only if it outgrows Idearium. His call."
+        - "Whose it is: answered already by BC_D4 (his, 2026-11-01, \"maybe\"): a full module of Idearium, each document through its owner's routes. Still his \"maybe\" to confirm."
         - "Emerge's own IDE (emerge/emerge-ide.js, :4242) stays as Emerge's; the workshop edits .eg files as one kind among the rest. To confirm."
         - "Images: view, crop, resize and annotate (an office's image tool), not a full paint program. To confirm."
     RS6a_every_file_kind:
       layer: library
-      status: OPEN
+      status: "SUPERSEDED 2026-11-06 by BC1_the_document_library (docs/2026-11-01-build-from-cos-phasemap.spec): written an hour earlier, then found that BC_D1 (his, 2026-11-01) already decided the one editor; folded in, kept (§0.3)"
+      status_was: OPEN
       depends_on: [RS3_the_spec_document]
       files: [lib/spec-document.js, idearium/lib/workshop.js, idearium/lib/file-kinds.js, tests/modules/test-workshop-file-kinds.test.js]
       requires: [node]
@@ -221,7 +220,8 @@ spec:
       proof: "every kind counted in the tree is named in the table (none unknown); a node file with a missing field is caught by its schema"
     RS6b_one_editor_per_kind:
       layer: ui
-      status: OPEN
+      status: "SUPERSEDED 2026-11-06 by BC2_the_editor (docs/2026-11-01-build-from-cos-phasemap.spec): written an hour earlier, then found that BC_D1 (his, 2026-11-01) already decided the one editor; folded in, kept (§0.3)"
+      status_was: OPEN
       depends_on: [RS6a_every_file_kind]
       files: [idearium/ui/workshop.html, idearium/ui/js/workshop.js, idearium/ui/js/workshop-kinds, idearium/ui/css/workshop.css]
       requires: [node, "Clear Glass for the UI proof (never Playwright)"]
@@ -233,7 +233,8 @@ spec:
       proof: "driven in Clear Glass: a .macro edited as a form and saved, a .eg block edited, an image cropped; a value its schema refuses is not saved and says why"
     RS6c_tabs_tree_and_search:
       layer: ui
-      status: OPEN
+      status: "SUPERSEDED 2026-11-06 by BC2_the_editor (docs/2026-11-01-build-from-cos-phasemap.spec): written an hour earlier, then found that BC_D1 (his, 2026-11-01) already decided the one editor; folded in, kept (§0.3)"
+      status_was: OPEN
       depends_on: [RS6b_one_editor_per_kind]
       files: [idearium/ui/workshop.html, idearium/ui/js/workshop.js]
       requires: [node]
@@ -242,7 +243,8 @@ spec:
       proof: "driven in Clear Glass: three kinds open in tabs, a file found by search, a new node file made from its template"
     RS6d_saved_through_the_gates:
       layer: library
-      status: OPEN
+      status: "SUPERSEDED 2026-11-06 by BC2_the_editor (docs/2026-11-01-build-from-cos-phasemap.spec): written an hour earlier, then found that BC_D1 (his, 2026-11-01) already decided the one editor; folded in, kept (§0.3)"
+      status_was: OPEN
       depends_on: [RS6b_one_editor_per_kind, MR11_rewind_the_mind]
       files: [idearium/lib/workshop.js, lib/safe-apply.js, lib/versionium-record.js]
       requires: [node]
