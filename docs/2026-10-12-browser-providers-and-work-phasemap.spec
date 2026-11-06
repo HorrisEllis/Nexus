@@ -520,7 +520,7 @@ spec:
       component: lib.project-decompose
       status: "DONE — 0.60.5"
       james: '"i want to be able to copy projects and decompose them into components for the component store with the dependancies zipped together in a organized structured way. like make a tool for it"'
-      files: [lib/project-decompose.js, lib/component-store.js, idearium/api/index.js, idearium/cli/route-commands.js, loom/maps/component-intake-map.js]
+      files: [lib/project-decompose.js, lib/component-store.js, idearium/api/index.js, idearium/cli/route-commands.js, loom/maps/component-intake-map.js, idearium/lib/primitive-tests.cjs, idearium/ui/js/components-panel.js, tests/modules/test-primitive-factory.test.js]
       does: >-
         A project (a zip or a folder) → every code file a component in the component store (requires resolved whatever
         order the files come in, npm packages named, builtins not, a require that points nowhere reported); a component +
@@ -528,6 +528,20 @@ spec:
         (the project's npm versions) and a README. Routes components.decompose / components.bundle; commands components,
         components decompose, components bundle (every agent has them); mapped in loom with its wires.
       proof: "tests/modules/test-project-decompose.test.js PD-01–PD-10"
+      expanded_2026_11_06: >-
+        James, 2026-11-06, with his Bridge-OS and anonymousservers zips: "look at these. reusable components." · "i want at some point to
+        haveprimitives built and tested autonomously. using clearglass also for github repos. reusable primitives saving to the component
+        store." · then, told step 1 was the primitive factory with no AI: "okay but lets stay focused" · "okay lets get this done. no more
+        distractions". Expanded, not written again (SL_D11): decompose stored every file but ran nothing. Now, with test: true, each test file
+        of the project runs on its own (node, in a throwaway copy of the project, a time limit, no network keys), its result is put on every
+        stored module it requires: verified (passed, with the test, its output tail and when) — the reusable primitives — or tested and
+        failed (with why: a missing npm package said as that, not as broken code). Modules with no test are stored as before, marked
+        untested. find and list can ask for verified only. The coder's readings, to confirm: "smallest real units" read as one module (a
+        file) for this step; GitHub through Clear Glass is step 4, after this. Running a project's tests runs its code: for his own zips
+        here; a repo from the web runs in a COS compartment before it is trusted (step 4).
+      status_2026_11_06: "BUILT 0.60.420 — test-primitive-factory 6/6; Bridge-OS run for real: 45 tests, 35 passed in 36 s"
+      files_2026_11_06: [idearium/lib/primitive-tests.cjs (new), lib/component-store.js, lib/project-decompose.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/components-panel.js, tests/modules/test-primitive-factory.test.js (new), tests/modules/run-all.js]
+      proof_2026_11_06: "test-primitive-factory: a fixture project whose passing test marks its module verified, a failing one marked with why, a missing npm package said as that, an untested module left untested; Bridge-OS run for real and its verified count reported"
     CS1_drop_zips_to_decompose:
       layer: ui
       systems: [idearium]

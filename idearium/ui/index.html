@@ -2493,10 +2493,12 @@ async function saveToIdearium(){
   <div class="modal" style="max-width:720px;width:92vw">
     <div class="modal-title">Decompose into components</div>
     <div class="project-drop" id="cmp-drop"><span class="pd-big">⬇</span><span>drop project .zip files here (several at once), or click to choose — each is decomposed straight away</span></div>
+    <label class="cmp-dim" style="display:block;margin:6px 0" title="each test file of the project runs on its own in a copy; the modules it proves are marked verified (CS0, 0.60.420)"><input type="checkbox" id="cmp-test" checked> run its tests — what they prove becomes a verified primitive</label>
     <input type="file" id="cmp-file" accept=".zip" multiple style="display:none">
     <div id="cmp-results" style="margin:10px 0;display:grid;gap:6px;font-family:var(--mono);font-size:11px"></div>
     <div style="display:flex;gap:8px;align-items:center;margin:8px 0">
       <input type="text" id="cmp-q" placeholder="search the store…" autocomplete="off" style="flex:1;font-family:var(--mono);font-size:12px;padding:7px 10px;background:var(--b0);border:1px solid var(--b1);border-radius:5px;color:var(--text)">
+      <label class="cmp-dim" title="only the primitives a project's own tests proved (CS0, 0.60.420)"><input type="checkbox" id="cmp-verified"> verified only</label>
       <span id="cmp-count" class="cmp-dim"></span>
     </div>
     <div id="cmp-list" style="max-height:42vh;overflow:auto;display:grid;gap:4px"></div>
@@ -2508,6 +2510,8 @@ async function saveToIdearium(){
   #components-modal .cmp-id{color:var(--text);flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   #components-modal .cmp-dim{color:var(--text3)}
   #components-modal .cmp-warn{color:var(--amber,#fbbf24)}
+  #components-modal .cmp-ok{color:var(--mint,#34d399)}   /* CS0 0.60.420: a verified primitive */
+  #components-modal .cmp-tested{margin-top:3px}
   #components-modal .cmp-dl{margin-left:auto;text-decoration:none;padding:3px 8px;font-size:10px}
   #components-modal .cmp-line{padding:6px 8px;border-left:2px solid var(--sky,#38bdf8);background:var(--b0)}
 </style>

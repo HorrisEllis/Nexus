@@ -1,0 +1,59 @@
+envelope: 1
+uuid: nexus-export-graph-phase:JB7_the_follow_up:d383a68644d26fd9
+type: graph
+id: phase:JB7_the_follow_up:d383a68644d26fd9
+context: dependency graph of phase JB7_the_follow_up
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793939486001
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793939486001
+lastSeenAt: 1793939486001
+fingerprint: null
+payload:
+  for: JB7_the_follow_up
+  kind: phase
+  repo: null
+  hash: d383a68644d26fd9
+  nodes:
+    - path: clear-glass/src/automation/cron.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/automation/steps.js
+      role: changes
+      exists: false
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB6_the_application_ledger
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB5_varied_wording_true_facts
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB0_gig_files
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB4_resume_import
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB5_varied_wording_true_facts
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB6_the_application_ledger
+    downstream: []
+    blockedBy:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB6_the_application_ledger
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB5_varied_wording_true_facts
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by JB6_the_application_ledger, JB5_varied_wording_true_facts
+      - 'depends on (2): JB6_the_application_ledger, JB5_varied_wording_true_facts · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB6_the_application_ledger
+        kind: declared
+      - from: docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB5_varied_wording_true_facts
+        kind: declared

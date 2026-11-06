@@ -450,6 +450,8 @@ const SUITES = [
   'test-cos-console-tab.test.js',   // 0.60.398 SC11 — COS's Console tab: every system's output together, live, and the command line
   'test-cg-element-engine-page.test.js',
   'test-cg-element-engine-page-drive.test.js',   // 0.60.416 EE3a — the page driven in Clear Glass's engine: write/change/remove a hidden rule, My filters, edit his TypeScript, an option   // 0.60.416 EE3a — the Element Engine's full page: hidden rules, his TypeScript copy, routes, command, every area rendered
+  'test-primitive-factory.test.js',   // 0.60.420 CS0 expanded — a project's own tests prove its modules into verified primitives
+  'test-phase-ledger.test.js',   // 0.60.419 SL11 — the phase ledger: every phase, every event logged, the phase to expand instead
   'test-cg-element-engine-plugin.test.js',   // 0.60.397 EE0 — the Ad Blocker plugin is the Element Engine: Ad blocking, the picker, ErosmancerOS, Edit ErosmancerOS
   'test-eros-edit.test.js',   // 0.60.396 ES5 — edit ErosmancerOS's TypeScript yourself: export, diff, import (archived, tested, recorded)
   'test-cg-webgl.test.js',   // 0.60.394 WG1 — Clear Glass has WebGL with acceleration off (Fiverr's bot check crashed on its absence)

@@ -437,14 +437,24 @@ decisions_addendum_2026_11_03:
 phases_addendum_2026_11_03:
   SL11_the_phase_ledger_and_its_gate:
     layer: library
-    status: OPEN
+    status: "BUILT 0.60.419 — test-phase-ledger 7/7 (the Ledger view rendered in a stand-in window, not yet driven in Clear Glass)"
     depends_on: [SL_D11_phases_expand, SL3_the_backlog_groomed, SL2_done_by_evidence]
     spec: docs/self-building-loop.spec
     blocks: [MOD-SL-GROOM]
-    files: [lib/phase-ledger.js (new), lib/phase-census.js, lib/phase-dag.js, lib/phase-groom.js, idearium/cli/route-commands.js, tests/modules/test-phase-ledger.test.js (new)]
+    expanded_2026_11_06: >-
+      James, 2026-11-06: "we also need to add a phase ledger, to idearium, then add to claude.md to to always log in the ledger". Expanded, not
+      written again (SL_D11). Two things his words add: (a) it is Idearium's — idearium/spec-engine/, beside phase-specs (his EAS_D10), not lib/
+      (his 2026-11-03 sovereignty rule); (b) it is a log too: every phase written, expanded, built, closed or noted is appended with who, when and
+      why, in a committed file (idearium/phases/LEDGER.jsonl — data/ is never committed, and the log has to outlive a session). CLAUDE.md gains
+      the rule: always log in the ledger. The reading of "log" as an append-only record of phase events (beside the generated table) is the
+      coder's, to confirm.
+    files: [idearium/spec-engine/phase-ledger.cjs (new), idearium/phases/LEDGER.jsonl (new), idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/phases.js, CLAUDE.md, docs/CLAUDE.md, tests/modules/test-phase-ledger.test.js (new), tests/modules/run-all.js]
+    file_roles: "route: idearium/api/index.js; command: route-commands.js; ui: phases.js; config: LEDGER.jsonl, CLAUDE.md"
+    files_were: "lib/phase-ledger.js (new), lib/phase-census.js, lib/phase-dag.js, lib/phase-groom.js, idearium/cli/route-commands.js, tests/modules/test-phase-ledger.test.js (new)"
     does: >-
       (1) The ledger: every phase of every map, one row each — id, map, owning system, files, depends_on, verdict from the census — generated,
       never typed by hand. (2) The gate: a phase about to be written is checked against the ledger by its files and its intent (its does:,
       name removed, as the E3 check already compares); a match refuses it and names the phase to expand. (3) Duplicate ids across maps listed
       (TB1, PF1 …), each pair for him to merge into one that expands. CLI: `phases ledger [system]`, `phases check <map>`.
     proof: "the ledger lists Clear Glass's 483; a fixture phase whose files match an existing one is refused with that phase named; TB1 and PF1 listed as duplicate ids"
+    proof_added_2026_11_06: "an event logged is read back in the phase's history and in the Phases tab's Ledger view; a phase not in any map cannot be logged as built; an unknown event is refused"

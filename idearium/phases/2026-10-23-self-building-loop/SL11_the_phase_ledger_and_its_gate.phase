@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-self-building-loop-phasemap.spec::SL11_the_phase_ledger_and_its_gate
+type: phase
+id: docs_2026-10-23-self-building-loop-phasemap.spec::SL11_the_phase_ledger_and_its_gate
+context: >-
+  pipeline phase SL11_the_phase_ledger_and_its_gate of
+  docs/2026-10-23-self-building-loop-phasemap.spec
+intent: null
+summary: SL11_the_phase_ledger_and_its_gate (library) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1793939050764
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793939050764
+lastSeenAt: 1793939050764
+fingerprint: null
+payload:
+  id: SL11_the_phase_ledger_and_its_gate
+  map: docs/2026-10-23-self-building-loop-phasemap.spec
+  repo: null
+  layer: library
+  status: >-
+    "BUILT 0.60.419 — test-phase-ledger 7/7 (the Ledger view rendered in a stand-in window, not yet
+    driven in Clear Glass)"
+  files:
+    - idearium/spec-engine/phase-ledger.cjs
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/phases.js
+    - CLAUDE.md
+    - docs/CLAUDE.md
+    - tests/modules/test-phase-ledger.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - SL3_the_backlog_groomed
+    - SL2_done_by_evidence
+  blocks:
+    - MOD-SL-GROOM
+  spec: docs/self-building-loop.spec
+  graph: 704f0fae92727cf1

@@ -7,11 +7,11 @@ intent: null
 summary: TB6_element_endpoints (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677295
+exported_at: 1793939485956
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677295
-lastSeenAt: 1792787677295
+firstSeenAt: 1793939485956
+lastSeenAt: 1793939485956
 fingerprint: null
 payload:
   id: TB6_element_endpoints
@@ -27,4 +27,4 @@ payload:
     - TB5_site_and_account_nodes
   blocks: []
   spec: null
-  graph: 43ef5bbbbaab7af2
+  graph: 09eab4ea0369e810
