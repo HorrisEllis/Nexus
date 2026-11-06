@@ -335,3 +335,16 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # avoids it, a whatif expression does not yet (CIE14, to close).
 # On his question, said to him: the JavaScript goes file by file, archived (§0.3) as each .eg replacement passes the same tests; the first drop
 # is the interpreter core at CIE11.
+
+# ── ADDENDUM 2026-11-06 (0.60.437) — CIE15 fifth slice: kinds, templates, spawn, despawn and instance handles natively ──
+# James, 2026-11-06: "I hit my usage limit while you were working, but it has reset now. Please continue from where you left off." · earlier: "continue"
+# front.eg: kind (its parents and typed state kept; conformance is the checker's), template T(params) [is K], component … is K, spawn T(id, …),
+# despawn, instance wire ends (prev.give, stages[0].take). lower.eg: kinds flattened at compile time (Clamp is Filter → [Filter, Stage]) with
+# their typed state; a template becomes define_template(name, arity, factory) whose spec holds its handlers, hooks, constraints and lens fns as
+# closures over the parameters; in a program with templates, member reads and method calls on values go through the world (member_any,
+# call_any), which answers for a live instance, refuses a stale one with the interpreter's message, and reads a plain map as before.
+# world.eg: handles {__h token, name, id, template}, spawn_of, despawn_of (unwire and despawn entries), end_of, is_kind_of, instances_of, the
+# initial-state check at declare (the boundary refused at spawn) and the typed-state check at declare and before every commit.
+# examples/primitives.eg natively equals the interpreter line for line and its 22 ledger entries hash for hash, on the first native run.
+# Census: 7 of 9. Left: hello (matches: a regular-expression engine in Emerge) and modules/main (sort_by: his call on optional parameters).
+# Found: a field read on a non-map is worded differently by the two backends ("num has no member .x" vs "a num has no fields"); CIE14.

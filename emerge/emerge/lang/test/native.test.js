@@ -433,6 +433,20 @@ for (const [label, file, withLedger] of [['components.eg as written, its ledger 
   else { fail++; console.log('✗ test blocks natively — ' + (run ? `native ${JSON.stringify(run.stdout)} ${run.status}\n    interp ${JSON.stringify(ref.stdout)} ${ref.status}` : (build.stderr || build.stdout))); }
 }
 
+// CIE15: kinds, templates, spawn, instance wires, despawn (inside and outside a whatif), stale handles, the boundary refused at spawn:
+// examples/primitives.eg natively equals the interpreter line for line, and its ledger (22 entries) hash for hash
+{
+  const src = path.join(TMP, 'primitives_ledger.eg');
+  fs.writeFileSync(src, fs.readFileSync(path.join(LANG, 'examples', 'primitives.eg'), 'utf8') + 'for e in ledger() { print(e.seq, e.kind, e.hash) }\n');
+  const ref = spawnSync(process.execPath, [EG, 'run', src], { encoding: 'utf8' });
+  const exe = path.join(TMP, 'primitives.bin');
+  const build = spawnSync(process.execPath, [EG, 'native', src, '-o', exe], { encoding: 'utf8' });
+  const run = build.status === 0 ? spawnSync(exe, [], { encoding: 'utf8' }) : null;
+  const n = (ref.stdout.match(/^\d+ [\w.]+ [0-9a-f]{64}$/gm) || []).length;
+  if (run && n >= 20 && /stale handle/.test(ref.stdout) && run.stdout === ref.stdout && run.status === ref.status) { pass++; console.log(`✓ kinds, templates, spawn and despawn natively: primitives.eg line for line, ${n} ledger entries hash for hash`); }
+  else { fail++; console.log('✗ primitives natively — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout)}` : (build.stderr || build.stdout))); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');
@@ -472,7 +486,7 @@ for (const [label, file, withLedger] of [['components.eg as written, its ledger 
 // refusals name the thing and exit 1; nothing is silently skipped
 {
   const REFUSE = {
-    'a kind (next)': 'kind Sized {\n  state { n: num }\n}',
+    'a regular expression (matches, next)': 'print("abc" matches "b")',
   };
   for (const [what, src] of Object.entries(REFUSE)) {
     const file = path.join(TMP, 'refuse.eg');

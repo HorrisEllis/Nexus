@@ -47,7 +47,7 @@ fn uses_world(n) {
     return false
   }
   if type_of(n) != "map" { return false }
-  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit" or n.type == "EmitOut" or n.type == "Send" or n.type == "Wire" or n.type == "Contract" or n.type == "Record" or n.type == "Gap" or n.type == "Promote" or n.type == "Axiom" or n.type == "Whatif" or n.type == "Test") { return true }
+  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit" or n.type == "EmitOut" or n.type == "Send" or n.type == "Wire" or n.type == "Contract" or n.type == "Record" or n.type == "Gap" or n.type == "Promote" or n.type == "Axiom" or n.type == "Whatif" or n.type == "Test" or n.type == "Kind" or n.type == "Spawn" or n.type == "Despawn") { return true }
   if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and has(WORLD_BUILTINS, n.callee.name) { return true }
   if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and (n.callee.name == "ledger" or n.callee.name == "spent" or n.callee.name == "ledger_verify") and len(n.args) == 0 { return true }
   for k, v in n { if uses_world(v) { return true } }
@@ -56,6 +56,39 @@ fn uses_world(n) {
 
 var comps = {}
 var FILE = "<input>"
+var KINDS = {}
+var MODULES = {}
+var HAS_TEMPLATES = false
+let HANDLE_MEMBERS = { state: 1, id: 1, name: 1, intent: 1, namespace: 1, version: 1, uuid: 1, hooks: 1, template: 1, kinds: 1 }
+/** is n a name the lowering resolves statically (a declared compartment, a module, the world)? */
+fn static_obj(n) = n.type == "Ident" and (has(comps, n.name) or has(MODULES, n.name) or n.name == W)
+/** a kind and its parents, in order, once each (the checker's flatKind names) */
+fn kind_names(name, acc) {
+  var out = acc
+  if out contains name or not has(KINDS, name) { return out }
+  out = push(out, name)
+  for p in KINDS[name].parents { out = kind_names(p, out) }
+  return out
+}
+fn kinds_of(c) {
+  var out = []
+  for k in c.kinds { out = kind_names(k, out) }
+  return out
+}
+/** the state fields the kinds type, each once, with the kind that typed it */
+fn typed_of(names) {
+  var out = []
+  var seen = {}
+  for k in names {
+    for f in KINDS[k].state {
+      if not has(seen, f.name) {
+        seen[f.name] = true
+        out = push(out, { name: f.name, type: f.type.name, nullable: f.type.nullable, kind: k })
+      }
+    }
+  }
+  return out
+}
 let WORLD_BUILTINS = { ledger: 1, spent: 1, ledger_verify: 1, components: 1, gaps: 1, random: 1, uid: 1 }
 let MEMBERS = { id: 1, name: 1, intent: 1, namespace: 1, version: 1, uuid: 1, hooks: 1, template: 1, kinds: 1 }
 
@@ -103,6 +136,18 @@ fn rw(n) {
       return stmt(n, wcall(n, "send_in", [str_(n, n.comp), str_(n, n.hook), p]))
     }
     if t == "Wire" { return stmt(n, wcall(n, "connect", [end_(n, n.from), end_(n, n.to), mk("Num", n, { value: n.line })])) }
+    if t == "Spawn" { return wcall(n, "spawn_of", [str_(n, n.template), list_(n, rw(n.args))]) }
+    if t == "Despawn" { return stmt(n, wcall(n, "despawn_of", [rw(n.expr)])) }
+    if t == "Call" and n.callee.type == "Ident" and n.callee.name == "is_kind" and len(n.args) == 2 { return wcall(n, "is_kind_of", rw(n.args)) }
+    if t == "Call" and n.callee.type == "Ident" and n.callee.name == "instances" and len(n.args) == 1 { return wcall(n, "instances_of", rw(n.args)) }
+    // handles exist only where templates do: there, a member read or a method call on a value is asked of the world, which answers for an
+    // instance (live, or an error if stale) and for a plain map alike
+    if HAS_TEMPLATES and t == "Member" and not static_obj(n.obj) and has(HANDLE_MEMBERS, n.name) {
+      return wcall(n, "member_any", [rw(n.obj), str_(n, n.name)])
+    }
+    if HAS_TEMPLATES and t == "Call" and n.callee.type == "Member" and not static_obj(n.callee.obj) {
+      return wcall(n, "call_any", [rw(n.callee.obj), str_(n, n.callee.name), list_(n, rw(n.args))])
+    }
     if t == "Emit" {
       var p = mk("Null", n, {})
       if n.payload != null { p = rw(n.payload) }
@@ -130,6 +175,8 @@ fn rw(n) {
 /** a wire end as data: { signal } or { comp, hook } */
 fn end_(at, e) {
   if has(e, "signal") { return map_(at, [ent("signal", str_(at, e.signal))]) }
+  if has(e, "expr") { return wcall(at, "end_of", [rw(e.expr), str_(at, e.hook)]) }
+  if not has(comps, e.comp) { return wcall(at, "end_of", [ident(at, e.comp), str_(at, e.hook)]) }
   return map_(at, [ent("comp", str_(at, e.comp)), ent("hook", str_(at, e.hook))])
 }
 /** a shape { fields: [{ name, type: { name, nullable } }] } as data: [{ name, type, nullable }], or null */
@@ -176,6 +223,7 @@ fn push_all(xs, ys) {
 }
 
 fn lower_comp(c) {
+  if c.isTemplate { return lower_template(c) }
   var items = []
   for f in c.fns {
     let body = push_all([let_(f, "let", "state", wcall(f, "state_of", [str_(f, c.name)]))], rw(f.body.body))
@@ -219,10 +267,63 @@ fn lower_comp(c) {
   if c.isComponent {
     spec_entries = push_all(spec_entries, [ent("component", mk("Bool", c, { value: true })), ent("namespace", opt_str(c, c.namespace)),
       ent("version", opt_str(c, c.version)), ent("uuid", opt_str(c, c.uuid)), ent("ins", list_(c, ins)), ent("outs", list_(c, outs))])
+    let kn = kinds_of(c)
+    spec_entries = push_all(spec_entries, [ent("kinds", lit(c, kn)), ent("typed_state", lit(c, typed_of(kn)))])
   }
   let spec = map_(c, spec_entries)
   items[len(items)] = stmt(c, wcall(c, "declare", [spec]))
   return items
+}
+
+/** template T(p…) is K { … } → define_template("T", arity, fn(__args) { let __id = __args[0]; let p = __args[1] … return spec }): the
+ *  handlers, hooks, constraints and lens fns are closures in the spec, so they see the instance's parameters */
+fn lower_template(c) {
+  let binds = fn(at, offset) {
+    var out = []
+    var i = 0
+    for p in c.params {
+      out = push(out, let_(at, "let", p.name, mk("Index", at, { obj: ident(at, "__args"), index: mk("Num", at, { value: i + offset }) })))
+      i += 1
+    }
+    return out
+  }
+  var ins = []
+  for h in c.ins {
+    var p = "__ev"
+    if h.param != null { p = h.param }
+    let body = push_all([let_(h, "var", "state", ident(h, "__s"))], rw(h.body.body))
+    ins = push(ins, map_(h, [ent("name", str_(h, h.name)), ent("shape", shape_(h, h.shape)), ent("run", lam(h, [param(h, "__s"), param(h, p)], body))]))
+  }
+  var outs = []
+  for o in c.outs { outs = push(outs, map_(c, [ent("name", str_(c, o.name)), ent("shape", shape_(c, o.shape))])) }
+  var cons = []
+  for k in c.constraints {
+    let check = lam(c, [param(c, "state")], [mk("Return", c, { expr: rw(k.expr) })])
+    cons = push(cons, map_(c, [ent("name", str_(c, k.name)), ent("hard", mk("Bool", c, { value: k.ctype == "hard" })),
+      ent("cost", mk("Num", c, { value: k.cost })), ent("boundary", mk("Bool", c, { value: k.boundary })), ent("check", check),
+      ent("reads", lit(c, reads_of(k.expr, [])))]))
+  }
+  var fns = []
+  for f in c.fns {
+    var fbody = [let_(f, "let", "state", ident(f, "__state"))]
+    var i = 0
+    for fp in f.params {
+      fbody = push(fbody, let_(f, "let", fp.name, mk("Index", f, { obj: ident(f, "__fargs"), index: mk("Num", f, { value: i }) })))
+      i += 1
+    }
+    fns = push(fns, ent(f.name, lam(f, [param(f, "__state"), param(f, "__fargs")], push_all(fbody, rw(f.body.body)))))
+  }
+  var fields = []
+  for f in c.state { fields = push(fields, ent(f.name, rw(f.expr))) }
+  let kn = kinds_of(c)
+  let name_expr = mk("Str", c, { parts: [c.name + "(", ident(c, "__id"), ")"] })
+  let spec = map_(c, [ent("name", name_expr), ent("id", ident(c, "__id")), ent("intent", opt_str(c, c.intent)), ent("state", map_(c, fields)),
+    ent("constraints", list_(c, cons)), ent("handlers", list_(c, [])), ent("component", mk("Bool", c, { value: true })),
+    ent("namespace", opt_str(c, c.namespace)), ent("version", opt_str(c, c.version)), ent("ins", list_(c, ins)), ent("outs", list_(c, outs)),
+    ent("fns", map_(c, fns)), ent("kinds", lit(c, kn)), ent("typed_state", lit(c, typed_of(kn)))])
+  let factory_body = push_all(push_all([let_(c, "let", "__id", mk("Index", c, { obj: ident(c, "__args"), index: mk("Num", c, { value: 0 }) }))], binds(c, 1)),
+    [mk("Return", c, { expr: spec })])
+  return [stmt(c, wcall(c, "define_template", [str_(c, c.name), mk("Num", c, { value: len(c.params) }), lam(c, [param(c, "__args")], factory_body)]))]
 }
 
 fn lower_on(o) {
@@ -234,8 +335,16 @@ fn lower_on(o) {
 fn lower(ast, version, test_mode) {
   if not uses_world(ast.items) and not test_mode { return ast }
   comps = {}
+  KINDS = {}
+  MODULES = {}
+  HAS_TEMPLATES = false
   if has(ast, "file") and ast.file != null { FILE = ast.file }
-  for it in ast.items { if it.type == "Compartment" { comps[it.name] = true } }
+  for it in ast.items {
+    if it.type == "Kind" { KINDS[it.name] = { parents: it.parents, state: it.state } }
+    if it.type == "Use" { MODULES[it.alias] = true }
+    if it.type == "Compartment" and it.isTemplate { HAS_TEMPLATES = true }
+  }
+  for it in ast.items { if it.type == "Compartment" and not it.isTemplate { comps[it.name] = true } }
   let at = ast
   // the contract: given to start (genesis carries its hash); its roads wired after the later of the contract and the last compartment, as the
   // interpreter's roadsPoint does
@@ -264,7 +373,9 @@ fn lower(ast, version, test_mode) {
   for it in ast.items { if it.type == "Axiom" { has_axioms = true } }
   k = 0
   for it in ast.items {
-    if it.type == "Test" {
+    if it.type == "Kind" {
+      // a kind is a schema: the checker holds components to it, the lowering takes its names and typed state (KINDS); nothing runs
+    } else if it.type == "Test" {
       // eg test: run after the program (below); eg run: skipped, as the interpreter does
       if test_mode { tests[len(tests)] = it }
     } else if it.type == "Axiom" {
