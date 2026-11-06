@@ -168,6 +168,47 @@ fn declare_axiom(name, line, check) {
 fn check_axioms() {
   for a in _axioms { _check_one(a) }
 }
+
+// ── whatif (CIE15): fork the world, run the branch, put every part back, record one entry (lang/runtime.js snapshot / restore) ──
+fn _snapshot() {
+  var states = []
+  for c in _comps { states = push(states, c.state) }
+  return { comps: _comps, states: states, globals: len(_globals), entries: len(_entries), last_ckpt: _last_ckpt, gaps: len(_gaps), rng: _rng,
+    spent: _spent, unrouted: len(_unrouted), axioms: len(_axioms), ctx: len(_ctx), wires: _wires }
+}
+fn _restore(s) {
+  _comps = s.comps
+  var i = 0
+  for c in _comps {
+    var cc = c
+    cc.state = s.states[i]
+    i += 1
+  }
+  _globals = slice(_globals, 0, s.globals)
+  _entries = slice(_entries, 0, s.entries)
+  _last_ckpt = s.last_ckpt
+  _gap_entries = 0
+  for e in _entries { if e.kind == "gap" { _gap_entries += 1 } }
+  _gaps = slice(_gaps, 0, s.gaps)
+  _rng = s.rng
+  _spent = s.spent
+  _unrouted = slice(_unrouted, 0, s.unrouted)
+  _axioms = slice(_axioms, 0, s.axioms)
+  _ctx = slice(_ctx, 0, s.ctx)
+  _wires = s.wires
+}
+fn whatif_branch(body, line) {
+  let snap = _snapshot()
+  _ctx = push(_ctx, { kind: "whatif", queue: [], draining: false })
+  var result = null
+  try { result = body() } else e {
+    _restore(snap)
+    raise(e.message)
+  }
+  _restore(snap)
+  _append("whatif", { line: line })
+  return result
+}
 fn promote_value(value, proof, line, file) {
   if type_of(proof) != "bool" { raise("a proof must be a bool, got {type_of(proof)}") }
   if proof {

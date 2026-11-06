@@ -47,7 +47,7 @@ fn uses_world(n) {
     return false
   }
   if type_of(n) != "map" { return false }
-  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit" or n.type == "EmitOut" or n.type == "Send" or n.type == "Wire" or n.type == "Contract" or n.type == "Record" or n.type == "Gap" or n.type == "Promote" or n.type == "Axiom") { return true }
+  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit" or n.type == "EmitOut" or n.type == "Send" or n.type == "Wire" or n.type == "Contract" or n.type == "Record" or n.type == "Gap" or n.type == "Promote" or n.type == "Axiom" or n.type == "Whatif") { return true }
   if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and has(WORLD_BUILTINS, n.callee.name) { return true }
   if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and (n.callee.name == "ledger" or n.callee.name == "spent" or n.callee.name == "ledger_verify") and len(n.args) == 0 { return true }
   for k, v in n { if uses_world(v) { return true } }
@@ -69,6 +69,15 @@ fn rw(n) {
   if type_of(n) != "map" { return n }
   if has(n, "type") {
     let t = n.type
+    if t == "Whatif" {
+      // the block's last expression is the branch's value
+      var body = rw(n.body.body)
+      if len(body) > 0 and body[len(body) - 1].type == "ExprStmt" {
+        let last = body[len(body) - 1]
+        body[len(body) - 1] = mk("Return", last, { expr: last.expr })
+      }
+      return wcall(n, "whatif_branch", [lam(n, [], body), mk("Num", n, { value: n.line })])
+    }
     if t == "Record" {
       var p = mk("Null", n, {})
       if n.payload != null { p = rw(n.payload) }
