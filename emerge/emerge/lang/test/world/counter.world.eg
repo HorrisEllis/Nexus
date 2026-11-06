@@ -1,0 +1,35 @@
+// counter.world.eg — counter.eg written on lang/cie/world.eg: what the native front end will lower compartment / on / emit to (CIE4 slice b).
+use "../../cie/world.eg" as world
+
+world.start(0, args()[0])
+
+let counter_tick = fn(s, ev) {
+  var st = s
+  st.count += ev.by
+  st.history = push(st.history, ev.by)
+  world.signal("counted", { count: st.count })
+}
+world.declare({ name: "Counter", id: "co-counter-001", state: { count: 0, history: [] },
+  constraints: [{ name: "never_negative", hard: true, cost: 0, check: fn(s) = s.count >= 0 },
+                { name: "stays_small", hard: false, cost: 3, check: fn(s) = s.count <= 10 }],
+  handlers: [{ signal: "tick", run: counter_tick }] })
+
+let log_count = fn(s, ev) {
+  var st = s
+  st.lines = push(st.lines, ev.count)
+}
+world.declare({ name: "Log", id: "co-log-001", state: { lines: [] }, constraints: [], handlers: [{ signal: "count*", run: log_count }] })
+
+let on_counted = fn(ev) {
+  print("counted", ev.count)
+  if ev.count > 10 { world.signal("too.big", { count: ev.count }) }
+}
+world.listen("counted", on_counted)
+world.listen("rejected", fn(ev) { print("refused:", ev.signal, "broke", ev.constraint) })
+world.listen("too.big", fn(ev) { print("too big:", ev.count) })
+world.signal("tick", { by: 4 })
+world.signal("tick", { by: -20 })
+world.signal("tick", { by: 9 })
+world.signal("nobody", null)
+print("state", world.state_of("Counter"), "log", world.state_of("Log"), "spent", world.spent())
+for e in world.finish() { print(e.seq, e.kind, e.hash) }

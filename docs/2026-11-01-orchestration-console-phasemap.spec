@@ -71,6 +71,9 @@ phases:
   OC12_the_survey:
     status: OPEN
     depends_on: [OC_D0_one_console_in_cos]
+    spec: docs/orchestration-console.spec
+    # blocks: the console's origin asked for the survey; it also fixes the fields of MB3's gate
+    blocks: [MOD-OC-CONSOLE]
     files: [cos/spec/orchestration-survey.md]
     does: >-
       His "look at all other major services and frameworks that have orchadteation and automation": Tasker, Automate (LlamaLab), Node-RED,

@@ -7,11 +7,11 @@ intent: null
 summary: OC12_the_survey (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793991934242
+exported_at: 1793996055995
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793991934242
-lastSeenAt: 1793991934242
+firstSeenAt: 1793996055995
+lastSeenAt: 1793996055995
 fingerprint: null
 payload:
   id: OC12_the_survey
@@ -23,6 +23,7 @@ payload:
     - cos/spec/orchestration-survey.md
   depends_on:
     - OC_D0_one_console_in_cos
-  blocks: []
-  spec: null
+  blocks:
+    - MOD-OC-CONSOLE
+  spec: docs/orchestration-console.spec
   graph: 63599d75364caad0
