@@ -309,6 +309,10 @@ phases:
       A browser and editor, backend first, for each kind: archetypes, schemas, blueprints and templates. List, read, diff, validate against
       its schema, write (versioned, undoable), make a new one from an existing one.
     proof: "each kind listed, edited, validated, versioned and reverted through its routes and commands"
+    expanded_2026_11_06: >-
+      James, 2026-11-06, beside the planned Catalog page (MG5's, labelled MG9 in COS's contract): "Catalog <-- this when adding a system. connects to the the workshop also." The Catalog is what Add opens: pick an archetype, template or blueprint to make the new system from, or open one in the workshop
+      (now COS's, BC_D8) to edit it first. COS's contract labels the Catalog page MG9 (superseded by CP2); its phase is this one, corrected when
+      the page is built.
 
   MG6_settings_by_template_and_type:
     status: "SUPERSEDED 2026-11-01 by CP7_settings in docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each compartment should be all of it."); the text below is kept"
