@@ -262,7 +262,7 @@ function _phPaint() {
     : 'edits write this repo\'s own phasemap files';
   const f = PHASES.filter;
   const mapOpts = d.maps.map(m => `<option value="${escapeHtml(m.path)}" ${f.map === m.path ? 'selected' : ''}>${escapeHtml(_phShortMap(m.path))} (${m.summary.total})</option>`).join('');
-  const views = [['lanes', 'lanes'], ['table', 'table'], ['maps', 'maps']].map(([v, l]) => `<button class="ph-view ${PHASES.view === v ? 'on' : ''}" onclick="phasesView('${v}')">${l}</button>`).join('');
+  const views = [['lanes', 'lanes'], ['table', 'table'], ['maps', 'maps'], ['ledger', 'ledger']].map(([v, l]) => `<button class="ph-view ${PHASES.view === v ? 'on' : ''}" onclick="phasesView('${v}')">${l}</button>`).join('');
   const header = `<div class="ph-head">
       <div class="ph-title">phases · ${escapeHtml(d.scope.label)} <span>${s.maps} phasemap${s.maps === 1 ? '' : 's'} · ${s.total} phases${d.scope.system ? ` · ${s.mine} tagged ${escapeHtml(d.scope.system)}` : ''}${PHASES.spec ? ` · <b>${escapeHtml(PHASES.spec)}</b>` : ''}</span></div>
       <div class="ph-bar"><div style="width:${pct}%"></div></div>
@@ -298,7 +298,8 @@ function _phPaint() {
       : 'This repo has no *phasemap*.spec file yet. Plan a spec below (its phases land here), "+ phase" starts roadmap-phasemap.spec, or add an idea iteration from the Idea tab.'}${(d.skipped || []).length ? `\n\nnot read:\n${d.skipped.map(x => `${x.path} — ${x.reason}`).join('\n')}` : ''}</div></div>
       ${d.scope.source === 'nexus' ? '' : '<div class="ds" id="ph-plan-specs"><div class="ds-label">plan a spec</div><div class="ds-mono">reading the specs…</div></div>'}`;
     if (d.scope.source !== 'nexus') setTimeout(_phPlanSpecs, 0);
-  } else if (PHASES.view === 'maps') body = _phMaps(d);
+  } else if (PHASES.view === 'ledger') body = _phLedger();   // 0.60.419 SL11 — the phase ledger
+  else if (PHASES.view === 'maps') body = _phMaps(d);
   else if (PHASES.view === 'table') body = _phTable(list);
   else body = _phLanes(list);
 
@@ -318,6 +319,7 @@ function _phPaint() {
         <div class="ph2-mid">${_phLiftOffer()}${threadNote}${body}<div class="ph-count">${list.length} of ${d.phases.length} shown</div>${notes}</div>
         ${PHASES.open ? `<aside class="ph-detail ph2-detail" id="ph-detail">${_phDetail(d, PHASES.open)}</aside>` : ''}
       </div></div>`;
+  setTimeout(_phLedgerHistory, 0);   // 0.60.419 SL11 — the open phase's ledger events
   setTimeout(phasesMapLoad, 0);   // 0.60.29 PM — the mapping's line
 }
 
@@ -431,6 +433,7 @@ function _phDetail(d, uuid) {
     <div class="ph-d-row"><label>closes</label><span>${escapeHtml((p.closes || []).join(' ') || '—')}</span></div>
     ${_phMappedHtml(p)}
     ${typeof pgSlot === 'function' ? pgSlot(p) : ''}   <!-- §0.60.147 DG2: the dependency graph a build is refused without (js/phase-graph-view.js) -->
+    <div class="ph-d-sec">ledger</div><div class="ph2-files" id="ph-ledger-hist" data-phase="${escapeHtml(p.phase_key || '')}"><span class="ph2-dim">reading…</span></div>   <!-- 0.60.419 SL11: this phase's ledger events -->
     <div class="ph-d-sec">files · ${files.length}</div>
     <div class="ph2-files">${files.map(f => `<a href="#" class="ph2-file" title="open in the Code tab" onclick="${typeof wsOpenInCode === 'function' ? `wsOpenInCode('${_phq(f)}')` : ''};return false">${escapeHtml(f)}</a>`).join('') || '<span class="ph2-dim">—</span>'}</div>
     ${changes.length ? `<div class="ph-d-sec">changes waiting · ${changes.length}</div><div class="ph2-files">${changes.map(c => `<a href="#" class="ph2-file warn" onclick="${typeof wsOpenInCode === 'function' ? `wsOpenInCode('${_phq(c.path)}')` : ''};return false">${escapeHtml(c.op)} ${escapeHtml(c.path)} — ${escapeHtml(c.status)}</a>`).join('')}</div>` : ''}
@@ -670,3 +673,50 @@ function _phMappedHtml(p) {
   if ((m.dependsOnInferred || []).length) rows.push(`<div class="ph-d-row"><label>waits on</label><span>${m.dependsOnInferred.map(d => `${escapeHtml(d.on)} <span class="ph2-dim">(both change ${escapeHtml(d.file)})</span>`).join(' · ')}</span></div>`);
   return rows.join('\n');
 }
+
+// ── 0.60.419 SL11 — the phase ledger ────────────────────────────────────────────────────────────────────────────────────────────
+// James, 2026-11-06: "we also need to add a phase ledger, to idearium, then add to claude.md to to always log in the ledger". Every phase of every
+// map (GET /api/phases/ledger), the ids written in more than one map, the latest events; an event logged here is his (POST …/ledger/log, by person).
+// Each phase's own events show in its detail pane (GET …/ledger/history). Nothing here edits a map.
+async function phLedgerLoad() {
+  PHASES.ledger = { busy: true };
+  try { PHASES.ledger = { data: await api('/api/phases/ledger?limit=40', {}, 60000) }; } catch (e) { PHASES.ledger = { error: e.message }; }
+  if (PHASES.view === 'ledger') _phPaint();
+}
+function _phLedger() {
+  const L = PHASES.ledger;
+  if (!L) { setTimeout(phLedgerLoad, 0); return '<div class="ds"><div class="ds-label">ledger</div><div class="ds-mono">reading the ledger…</div></div>'; }
+  if (L.busy) return '<div class="ds"><div class="ds-label">ledger</div><div class="ds-mono">reading the ledger…</div></div>';
+  if (L.error) return `<div class="ds"><div class="ds-label">ledger</div><div class="ds-mono">${escapeHtml(L.error)}</div></div>`;
+  const d = L.data; const ev = ['written', 'expanded', 'built', 'closed', 'note'];
+  const recent = (d.recent || []).map(e => `<tr><td class="ph2-dim">${escapeHtml(e.at.slice(0, 16).replace('T', ' '))}</td><td>${escapeHtml(e.event)}</td><td><b>${escapeHtml(e.phase)}</b></td><td>${escapeHtml(e.by)}</td><td>${escapeHtml(e.why)}${e.version ? ` <span class="ph2-dim">${escapeHtml(e.version)}</span>` : ''}</td></tr>`).join('');
+  const dups = (d.exactDuplicates || []).map(x => `<div class="ph2-spec" title="${escapeHtml(x.maps.join('\n'))}"><span class="ph2-spec-name">${escapeHtml(x.id)}</span><span class="ph2-dim">${x.maps.length} maps</span></div>`).join('');
+  return `<div class="ds" id="ph-ledger"><div class="ds-label">ledger · ${d.total} phases in ${d.maps} maps · ${d.done} done · ${d.open} open · ${d.logged} logged</div>
+    <div class="ds-mono">${escapeHtml(d.file)} — every phase written, expanded, built or closed is logged here with who and why.</div></div>
+    <div class="ds"><div class="ds-label">log an event</div>
+      <div class="ph2-pad" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+        <input id="ph-led-phase" class="ph2-input" placeholder="phase id, e.g. SL11_the_phase_ledger_and_its_gate" style="flex:2 1 260px">
+        <select id="ph-led-event" class="ph2-input">${ev.map(x => `<option>${x}</option>`).join('')}</select>
+        <input id="ph-led-why" class="ph2-input" placeholder="why (his words, or what was done)" style="flex:3 1 300px">
+        <button class="ph2-mini-btn" id="ph-led-go" onclick="phLedgerLog()">log</button><span class="ph2-dim" id="ph-led-msg"></span></div></div>
+    <div class="ds"><div class="ds-label">latest events · ${(d.recent || []).length}</div>${recent ? `<table class="ph-table" id="ph-led-recent"><tbody>${recent}</tbody></table>` : '<div class="ds-mono">nothing logged yet</div>'}</div>
+    <div class="ds"><div class="ds-label">ids written in more than one map · ${(d.exactDuplicates || []).length} <span class="ph2-dim">(every phase id is unique across all maps: these are his to merge)</span></div>${dups || '<div class="ds-mono">none</div>'}</div>`;
+}
+async function phLedgerLog() {
+  const v = (id) => (document.getElementById(id) || {}).value || ''; const msg = document.getElementById('ph-led-msg');
+  try {
+    const r = await api('/api/phases/ledger/log', { method: 'POST', body: JSON.stringify({ phase: v('ph-led-phase').trim(), event: v('ph-led-event'), why: v('ph-led-why').trim(), by: 'person' }), headers: { 'Content-Type': 'application/json' } }, 30000);
+    if (msg) msg.textContent = r && r.entry ? `logged: ${r.entry.event} ${r.entry.phase}` : (r && r.error) || 'no answer';
+    if (r && r.entry) { PHASES.ledger = null; _phPaint(); }
+  } catch (e) { if (msg) msg.textContent = e.message; }
+}
+// the detail pane's ledger section: filled after the pane is drawn
+async function _phLedgerHistory() {
+  const el = document.getElementById('ph-ledger-hist'); if (!el || el.dataset.done) return; el.dataset.done = '1';
+  try {
+    const r = await api(`/api/phases/ledger/history?phase=${encodeURIComponent(el.dataset.phase)}`, {}, 30000);
+    const h = (r && r.history) || [];
+    el.innerHTML = h.length ? h.map(e => `<div class="ph2-dim">${escapeHtml(e.at.slice(0, 16).replace('T', ' '))} · ${escapeHtml(e.event)} · ${escapeHtml(e.by)} — ${escapeHtml(e.why)}</div>`).join('') : '<span class="ph2-dim">nothing logged for it yet</span>';
+  } catch (e) { el.innerHTML = `<span class="ph2-dim">${escapeHtml(e.message)}</span>`; }
+}
+

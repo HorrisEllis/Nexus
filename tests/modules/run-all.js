@@ -448,6 +448,7 @@ const SUITES = [
   'test-cos-hidden-windows.test.js',   // 0.60.400 SC16 — no console window per system; Clear Glass keeps its own
   'test-cos-boot-and-deps.test.js',   // 0.60.399 SC12/SC13 — Start at boot for each system on Automation; npm install before boot when the lock changed
   'test-cos-console-tab.test.js',   // 0.60.398 SC11 — COS's Console tab: every system's output together, live, and the command line
+  'test-phase-ledger.test.js',   // 0.60.419 SL11 — the phase ledger: every phase, every event logged, the phase to expand instead
   'test-cg-element-engine-plugin.test.js',   // 0.60.397 EE0 — the Ad Blocker plugin is the Element Engine: Ad blocking, the picker, ErosmancerOS, Edit ErosmancerOS
   'test-eros-edit.test.js',   // 0.60.396 ES5 — edit ErosmancerOS's TypeScript yourself: export, diff, import (archived, tested, recorded)
   'test-cg-webgl.test.js',   // 0.60.394 WG1 — Clear Glass has WebGL with acceleration off (Fiverr's bot check crashed on its absence)

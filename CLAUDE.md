@@ -21,6 +21,10 @@ without them is not built. **Pending, his:** the phases need cleaning (the open 
 **Phases expand; they are not written again.** James, 2026-11-03: "Like they stop getting written and start getting, they expand." Before writing a
 phase, find the one that already covers its files or intent and expand it (a dated addendum quoting why); write a new phase only when none does.
 Every phase id is unique across all maps. (docs/2026-10-23-self-building-loop-phasemap.spec SL_D11, SL11.)
+**Always log in the phase ledger.** James, 2026-11-06: "we also need to add a phase ledger, to idearium, then add to claude.md to to always log in the
+ledger". Every phase written, expanded, built or closed gets one line, with why, in the same commit:
+`node idearium/spec-engine/phase-ledger.cjs log <phase> <written|expanded|built|closed|note> "<why>" --version <x.y.z>` (or `phases log`). Before
+writing a phase, `phase-ledger.cjs covers <files…> --does "…"` names the phase to expand instead. The how is in docs/CLAUDE.md.
 **Every change and every version goes to Versionium, in full (§17.12).** James, 2026-10-29: "full changes, and versions have to be pushed
 to versionium? enforce it everywhere that you'd find it." The how is in docs/CLAUDE.md.
 
