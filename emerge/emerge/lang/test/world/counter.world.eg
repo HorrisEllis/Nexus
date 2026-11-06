@@ -1,7 +1,7 @@
 // counter.world.eg — counter.eg written on lang/cie/world.eg: what the native front end will lower compartment / on / emit to (CIE4 slice b).
 use "../../cie/world.eg" as world
 
-world.start(0, args()[0])
+world.start(0, args()[0], null)
 
 let counter_tick = fn(s, ev) {
   var st = s

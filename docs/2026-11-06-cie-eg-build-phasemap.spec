@@ -87,7 +87,7 @@ phases:
     # own ledger yet: that needs the world natively (components, the gate), so it moves into CIE4, expanded the same day.
 
   CIE4_native_components:
-    status: OPEN
+    status: BUILT 0.60.431
     depends_on: [CIE3_native_ledger, CIE1_the_contract_block]
     spec: emerge/emerge/spec/cie-eg.spec
     blocks: [MOD-NATIVE-SYSTEM]
@@ -100,6 +100,19 @@ phases:
     # ── EXPANDED 2026-11-06 (from CIE3): the native world writes its ledger with lang/cie/ledger.eg (genesis with the contract hash, every
     # entry, checkpoints), and the proof becomes "a native run's ledger equals the interpreter's, hash for hash".
 
+  CIE15_the_rest_of_the_language:
+    status: OPEN
+    depends_on: [CIE4_native_components]
+    spec: emerge/emerge/spec/cie-eg.spec
+    blocks: [MOD-NATIVE-SYSTEM]
+    files: [emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/lower.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/cie/world.eg, emerge/emerge/lang/test/native.test.js]
+    requires: [node]
+    prerequisites: []
+    does: >-
+      Every example natively, equal to the interpreter: the .. range operator (hello), expect (idearium, modules), record and gap (tests), axiom
+      (axioms), kind, template and spawn (primitives), whatif (whatif). Each refused by name today; each built into the native compiler or the
+      world, never skipped. The census of 2026-11-06 (0.60.431) is the starting line: 2 of 8 examples equal.
+    proof: "every examples/*.eg natively equals eg run, line for line (native.test 'every example')"
   CIE5_native_test:
     status: OPEN
     depends_on: [CIE4_native_components]
@@ -263,3 +276,16 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # (d) PLACED IN CIE11: the unrouted notice is the CLI's (eg.js, stderr); a native program's own stderr comes with a builtin both backends share,
 #     written when the CLI is retired (CIE11).
 # (b) HIS: newlines inside a map literal; a change to both parsers, asked.
+
+# ── ADDENDUM 2026-11-06 (0.60.431) — CIE4 slice c built: components, hooks, wires, the contract and its roads, natively; CIE4 BUILT ──
+# James, 2026-11-06: "yes. get emerge complete. js removed completely."
+# world.eg: declare with component (the register entry, the derived uuid, boundary), send_in, emit_out, connect (wires out → in, signal → hook),
+# roads (the contract's, after the later of the contract and the last compartment), shapes checked at send, emit out and delivery; the contract
+# normalised and hashed by contract.eg (gate.max_steps and checkpoint_every honoured; contract_hash in genesis and every checkpoint);
+# components_graph() and member_of() for components() and Name.version / .hooks / …. front.eg parses component, contract, in/out hooks, shapes,
+# boundary, send, wire, emit out; lower.eg lowers them; the compiler carries contract.eg. contract.eg now sorts roads with the prelude's sort
+# and writes its canonical form with ledger.eg's ecf (sort_by and json are not native): the hash is unchanged (contract.test 8/8).
+# Proof: native.test 98/98: test/world/components.eg natively equals the interpreter, its 10 ledger entries hash for hash; examples/components.eg
+# equals it line for line. Compiler stages byte-identical (72df0919…).
+# Census of the examples natively: counter and components equal; refused by name: hello (..), idearium and modules/main (expect), tests (record),
+# axioms (axiom), primitives (kind), whatif (whatif). Those are the next phase's: CIE15_the_rest_of_the_language.

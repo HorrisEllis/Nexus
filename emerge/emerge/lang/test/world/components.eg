@@ -1,0 +1,26 @@
+// components.eg — the reference for CIE4 slice c: a contract with a road, two components, in and out hooks with shapes, send and emit out.
+// components.world.eg is the same program on lang/cie/world.eg; both give the same output and ledger, hash for hash (native.test).
+contract demo_main {
+  version = "1.0.0"
+  gate { checkpoint_every = 5 }
+  road Counter.changed -> Display.show
+}
+component Counter {
+  id = "demo.counter"
+  namespace = "demo"
+  version = "1.0.0"
+  state { n: 0 }
+  in bump(x: { by: num }) {
+    state.n += x.by
+    emit out changed { count: state.n }
+  }
+  out changed: { count: num }
+}
+component Display {
+  id = "demo.display"
+  namespace = "demo"
+  version = "1.0.0"
+  in show(v: { count: num }) { print("count {v.count}") }
+}
+send Counter.bump { by: 1 }
+send Counter.bump { by: 2 }

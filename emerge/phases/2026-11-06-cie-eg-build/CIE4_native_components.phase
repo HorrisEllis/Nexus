@@ -7,18 +7,18 @@ intent: null
 summary: CIE4_native_components (?) — 12 file(s)
 system: idearium
 tags: []
-exported_at: 1793997643480
+exported_at: 1793999607829
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997643480
-lastSeenAt: 1793997643480
+firstSeenAt: 1793999607829
+lastSeenAt: 1793999607829
 fingerprint: null
 payload:
   id: CIE4_native_components
   map: docs/2026-11-06-cie-eg-build-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: BUILT 0.60.431
   files:
     - emerge/emerge/lang/cie/world.eg
     - emerge/emerge/lang/test/world/counter.eg

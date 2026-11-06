@@ -1,0 +1,22 @@
+// components.world.eg — components.eg written on lang/cie/world.eg: what lower.eg turns contract / component / send / emit out into (slice c).
+use "../../cie/world.eg" as world
+
+world.start(0, args()[0], { id: "demo_main", version: "1.0.0", text: {}, gate: { checkpoint_every: 5 }, roads: [{ from: "Counter.changed", to: "Display.show" }] })
+
+let counter_bump = fn(s, x) {
+  var st = s
+  st.n += x.by
+  world.emit_out("changed", { count: st.n })
+}
+world.declare({ name: "Counter", id: "demo.counter", component: true, namespace: "demo", version: "1.0.0", state: { n: 0 }, constraints: [],
+  handlers: [], ins: [{ name: "bump", shape: [{ name: "by", type: "num", nullable: false }], run: counter_bump }],
+  outs: [{ name: "changed", shape: [{ name: "count", type: "num", nullable: false }] }] })
+
+let display_show = fn(s, v) { print("count {v.count}") }
+world.declare({ name: "Display", id: "demo.display", component: true, namespace: "demo", version: "1.0.0", state: {}, constraints: [],
+  handlers: [], ins: [{ name: "show", shape: [{ name: "count", type: "num", nullable: false }], run: display_show }], outs: [] })
+
+world.roads(3)
+world.send_in("Counter", "bump", { by: 1 })
+world.send_in("Counter", "bump", { by: 2 })
+for e in world.finish() { print(e.seq, e.kind, e.hash) }

@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793998100550
+exported_at: 1793999607828
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793998100550
-lastSeenAt: 1793998100550
+firstSeenAt: 1793999607828
+lastSeenAt: 1793999607828
 fingerprint: null
 payload:
   for: CIE4_native_components
@@ -76,6 +76,7 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
     dependents:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE15_the_rest_of_the_language
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
     upstream:
@@ -99,22 +100,25 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE15_the_rest_of_the_language
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
     blockedBy: []
     unlocks:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE15_the_rest_of_the_language
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
     conflicts: []
     dangling: []
     lines:
-      - layer 5 · ready
+      - layer 5
       - 'depends on (2): CIE3_native_ledger, CIE1_the_contract_block · all upstream 14'
       - >-
-        needed by (2): CIE5_native_test, CIE14_the_gaps_found_while_coding · all downstream 9 ·
-        finishing it unlocks CIE5_native_test, CIE14_the_gaps_found_while_coding
+        needed by (3): CIE15_the_rest_of_the_language, CIE5_native_test,
+        CIE14_the_gaps_found_while_coding · all downstream 10 · finishing it unlocks
+        CIE15_the_rest_of_the_language, CIE5_native_test, CIE14_the_gaps_found_while_coding
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
         kind: declared

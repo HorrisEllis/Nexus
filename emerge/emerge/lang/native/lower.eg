@@ -47,13 +47,14 @@ fn uses_world(n) {
     return false
   }
   if type_of(n) != "map" { return false }
-  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit") { return true }
+  if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit" or n.type == "EmitOut" or n.type == "Send" or n.type == "Wire" or n.type == "Contract") { return true }
   if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and (n.callee.name == "ledger" or n.callee.name == "spent" or n.callee.name == "ledger_verify") and len(n.args) == 0 { return true }
   for k, v in n { if uses_world(v) { return true } }
   return false
 }
 
 var comps = {}
+let MEMBERS = { id: 1, name: 1, intent: 1, namespace: 1, version: 1, uuid: 1, hooks: 1, template: 1, kinds: 1 }
 
 /** rewrite one node and everything below it */
 fn rw(n) {
@@ -65,6 +66,17 @@ fn rw(n) {
   if type_of(n) != "map" { return n }
   if has(n, "type") {
     let t = n.type
+    if t == "EmitOut" {
+      var p = mk("Null", n, {})
+      if n.payload != null { p = rw(n.payload) }
+      return stmt(n, wcall(n, "emit_out", [str_(n, n.hook), p]))
+    }
+    if t == "Send" {
+      var p = mk("Null", n, {})
+      if n.payload != null { p = rw(n.payload) }
+      return stmt(n, wcall(n, "send_in", [str_(n, n.comp), str_(n, n.hook), p]))
+    }
+    if t == "Wire" { return stmt(n, wcall(n, "connect", [end_(n, n.from), end_(n, n.to), mk("Num", n, { value: n.line })])) }
     if t == "Emit" {
       var p = mk("Null", n, {})
       if n.payload != null { p = rw(n.payload) }
@@ -73,11 +85,15 @@ fn rw(n) {
     if t == "Member" and n.obj.type == "Ident" and has(comps, n.obj.name) and n.name == "state" {
       return wcall(n, "state_of", [str_(n, n.obj.name)])
     }
+    if t == "Member" and n.obj.type == "Ident" and has(comps, n.obj.name) and has(MEMBERS, n.name) {
+      return wcall(n, "member_of", [str_(n, n.obj.name), str_(n, n.name)])
+    }
     if t == "Call" and n.callee.type == "Member" and n.callee.obj.type == "Ident" and has(comps, n.callee.obj.name) {
       return call(n, ident(n, "__" + n.callee.obj.name + "_" + n.callee.name), rw(n.args))
     }
     if t == "Call" and n.callee.type == "Ident" and n.callee.name == "spent" and len(n.args) == 0 { return wcall(n, "spent", []) }
     if t == "Call" and n.callee.type == "Ident" and n.callee.name == "ledger" and len(n.args) == 0 { return wcall(n, "entries", []) }
+    if t == "Call" and n.callee.type == "Ident" and n.callee.name == "components" and len(n.args) == 0 { return wcall(n, "components_graph", []) }
     if t == "Call" and n.callee.type == "Ident" and n.callee.name == "ledger_verify" and len(n.args) == 0 { return wcall(n, "verify", []) }
   }
   var out = {}
@@ -85,6 +101,36 @@ fn rw(n) {
   return out
 }
 
+/** a wire end as data: { signal } or { comp, hook } */
+fn end_(at, e) {
+  if has(e, "signal") { return map_(at, [ent("signal", str_(at, e.signal))]) }
+  return map_(at, [ent("comp", str_(at, e.comp)), ent("hook", str_(at, e.hook))])
+}
+/** a shape { fields: [{ name, type: { name, nullable } }] } as data: [{ name, type, nullable }], or null */
+fn shape_(at, sh) {
+  if sh == null { return mk("Null", at, {}) }
+  var fs = []
+  for f in sh.fields {
+    fs[len(fs)] = map_(at, [ent("name", str_(at, f.name)), ent("type", str_(at, f.type.name)), ent("nullable", mk("Bool", at, { value: f.type.nullable }))])
+  }
+  return list_(at, fs)
+}
+/** any value the parser kept as data (the contract's raw block) as a literal */
+fn lit(at, v) {
+  let t = type_of(v)
+  if v == null { return mk("Null", at, {}) }
+  if t == "string" { return str_(at, v) }
+  if t == "num" { return mk("Num", at, { value: v }) }
+  if t == "bool" { return mk("Bool", at, { value: v }) }
+  if t == "list" {
+    var items = []
+    for x in v { items[len(items)] = lit(at, x) }
+    return list_(at, items)
+  }
+  var es = []
+  for k, x in v { es[len(es)] = ent(k, lit(at, x)) }
+  return map_(at, es)
+}
 fn push_all(xs, ys) {
   var out = xs
   for y in ys { out[len(out)] = y }
@@ -108,16 +154,34 @@ fn lower_comp(c) {
     handlers[len(handlers)] = map_(h, [ent("signal", str_(h, h.signal)), ent("run", ident(h, hn))])
     i += 1
   }
+  var ins = []
+  var j = 0
+  for h in c.ins {
+    let hn = "__in_" + c.name + "_" + str(j)
+    var p = "__ev"
+    if h.param != null { p = h.param }
+    let body = push_all([let_(h, "var", "state", ident(h, "__s"))], rw(h.body.body))
+    items[len(items)] = let_(h, "let", hn, lam(h, [param(h, "__s"), param(h, p)], body))
+    ins[len(ins)] = map_(h, [ent("name", str_(h, h.name)), ent("shape", shape_(h, h.shape)), ent("run", ident(h, hn))])
+    j += 1
+  }
+  var outs = []
+  for o in c.outs { outs[len(outs)] = map_(c, [ent("name", str_(c, o.name)), ent("shape", shape_(c, o.shape))]) }
   var cons = []
   for k in c.constraints {
     let check = lam(c, [param(c, "state")], [mk("Return", c, { expr: rw(k.expr) })])
     cons[len(cons)] = map_(c, [ent("name", str_(c, k.name)), ent("hard", mk("Bool", c, { value: k.ctype == "hard" })),
-      ent("cost", mk("Num", c, { value: k.cost })), ent("check", check)])
+      ent("cost", mk("Num", c, { value: k.cost })), ent("boundary", mk("Bool", c, { value: k.boundary })), ent("check", check)])
   }
   var fields = []
   for f in c.state { fields[len(fields)] = ent(f.name, rw(f.expr)) }
-  let spec = map_(c, [ent("name", str_(c, c.name)), ent("id", opt_str(c, c.id)), ent("state", map_(c, fields)),
-    ent("constraints", list_(c, cons)), ent("handlers", list_(c, handlers))])
+  var spec_entries = [ent("name", str_(c, c.name)), ent("id", opt_str(c, c.id)), ent("intent", opt_str(c, c.intent)), ent("state", map_(c, fields)),
+    ent("constraints", list_(c, cons)), ent("handlers", list_(c, handlers))]
+  if c.isComponent {
+    spec_entries = push_all(spec_entries, [ent("component", mk("Bool", c, { value: true })), ent("namespace", opt_str(c, c.namespace)),
+      ent("version", opt_str(c, c.version)), ent("uuid", opt_str(c, c.uuid)), ent("ins", list_(c, ins)), ent("outs", list_(c, outs))])
+  }
+  let spec = map_(c, spec_entries)
   items[len(items)] = stmt(c, wcall(c, "declare", [spec]))
   return items
 }
@@ -133,15 +197,41 @@ fn lower(ast, version) {
   comps = {}
   for it in ast.items { if it.type == "Compartment" { comps[it.name] = true } }
   let at = ast
-  var items = [mk("Use", at, { path: WORLD_PATH, alias: W }), stmt(at, wcall(at, "start", [mk("Num", at, { value: 0 }), str_(at, version)]))]
+  // the contract: given to start (genesis carries its hash); its roads wired after the later of the contract and the last compartment, as the
+  // interpreter's roadsPoint does
+  var contract = null
+  var roads_after = -1
+  var k = 0
   for it in ast.items {
-    if it.type == "Compartment" {
+    if it.type == "Contract" {
+      contract = it
+      roads_after = k
+    }
+    k += 1
+  }
+  if contract != null {
+    k = 0
+    for it in ast.items {
+      if it.type == "Compartment" and k > roads_after { roads_after = k }
+      k += 1
+    }
+  }
+  var raw = mk("Null", at, {})
+  if contract != null { raw = lit(at, contract.raw) }
+  var items = [mk("Use", at, { path: WORLD_PATH, alias: W }), stmt(at, wcall(at, "start", [mk("Num", at, { value: 0 }), str_(at, version), raw]))]
+  k = 0
+  for it in ast.items {
+    if it.type == "Contract" {
+      // nothing here: its raw block went to start
+    } else if it.type == "Compartment" {
       items = push_all(items, lower_comp(it))
     } else if it.type == "On" {
       items[len(items)] = lower_on(it)
     } else {
       items[len(items)] = rw(it)
     }
+    if contract != null and k == roads_after { items[len(items)] = stmt(contract, wcall(contract, "roads", [mk("Num", contract, { value: contract.line })])) }
+    k += 1
   }
   items[len(items)] = stmt(at, wcall(at, "finish", []))
   var out = {}

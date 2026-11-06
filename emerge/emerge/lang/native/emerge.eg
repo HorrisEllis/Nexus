@@ -10,11 +10,12 @@ use "./prelude_text.eg" as prelude_text
 use "./lower.eg" as lower
 use "./world_text.eg" as world_text
 use "./ledger_text.eg" as ledger_text
+use "./contract_text.eg" as contract_text
 
 // CIE4 slice b: lang/cie/world.eg and lang/cie/ledger.eg carried inside the compiler, as the runtime and the prelude are (regenerate:
-// eg run embed.eg ../cie/world.eg world_text.eg; eg run embed.eg ../cie/ledger.eg ledger_text.eg). A program with a compartment, an on handler
-// or an emit is lowered to world.eg calls (lower.eg).
-let EMBEDDED = { "<cie>/world.eg": world_text.TEXT, "<cie>/ledger.eg": ledger_text.TEXT }
+// eg run embed.eg ../cie/world.eg world_text.eg; the same for ledger.eg and contract.eg). A program with a compartment, a component, a contract,
+// an on handler, an emit, a send or a wire is lowered to world.eg calls (lower.eg).
+let EMBEDDED = { "<cie>/world.eg": world_text.TEXT, "<cie>/ledger.eg": ledger_text.TEXT, "<cie>/contract.eg": contract_text.TEXT }
 // The genesis entry names the build, as lang/runtime.js does (package.json "version"); native.test 'world' fails if the two drift.
 let VERSION = "1.13.0"
 

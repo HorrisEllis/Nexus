@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793998100546
+exported_at: 1793999607824
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793998100546
-lastSeenAt: 1793998100546
+firstSeenAt: 1793999607824
+lastSeenAt: 1793999607824
 fingerprint: null
 payload:
   for: CIE3_native_ledger
@@ -133,6 +133,7 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE15_the_rest_of_the_language
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
@@ -149,7 +150,7 @@ payload:
       - layer 2
       - 'depends on (1): CIE2_native_sha256 · all upstream 3'
       - >-
-        needed by (2): CIE4_native_components, CIE7_native_observe · all downstream 11 · finishing
+        needed by (2): CIE4_native_components, CIE7_native_observe · all downstream 12 · finishing
         it unlocks CIE4_native_components, CIE7_native_observe
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256

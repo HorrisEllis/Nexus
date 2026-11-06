@@ -3,25 +3,33 @@
 // checkpoints, written through lang/cie/ledger.eg. The same behaviour and the same ledger, hash for hash, as lang/runtime.js.
 // James, 2026-11-06: "Remove the last of the JavaScript" · "actaully keep remove js from emerge." · "lets code what we can using emerge, that
 // way we can have a good test."
-// Runs interpreted and native (emerge.exe). A program reaches it as a module (use "lang/cie/world.eg" as world) until the native front end
-// lowers compartment / on / emit to these calls (slice b).
+// Runs interpreted and native (emerge.exe). The native compiler lowers compartment, component, contract, on, emit, send and wire to these
+// calls (lang/native/lower.eg, slices b and c).
 //
-//   start(seed, version)                 → genesis {seed, version, chain_id, text}
-//   declare(spec)                        spec: {name, id, state, constraints: [{name, hard, cost, check: fn(view) → bool}],
+//   start(seed, version, contract)       → genesis {seed, version, chain_id, text[, contract, contract_hash]}; contract: the raw block or null
+//   declare(spec)                        spec: {name, id, state, constraints: [{name, hard, cost, boundary, check: fn(view) → bool}],
 //                                               handlers: [{signal, run: fn(state, payload)}]}
+//                                        a component (slice c) also: component: true, namespace, version, ins: [{name, shape, run}],
+//                                               outs: [{name, shape}]; a shape is [{name, type, nullable}] or null
+//   send_in(comp, hook, payload) · emit_out(hook, payload) · connect(from, to, line) · roads(line)   ends: {comp, hook} or {signal}
+//   (send and wire are keywords, so the calls are send_in and connect)
 //   listen(signal, run)                    a top-level handler: run(payload)
 //   signal(name, payload)                 FIFO; from inside a handler, buffered until the handler commits
-//   state_of(name) · spent() · unrouted() · entries() · verify()
+//   state_of(name) · member_of(name, field) · spent() · unrouted() · entries() · verify()
 //   finish()                             the clean-shutdown checkpoint (4.6); returns the entries
 //
 // Defaults are the primitives' own (lang/build/current/primitives.json): max_deliveries 100000, checkpoint_every 256, unrouted "log",
 // discard_emits_on_refusal true, signals.rejected "rejected". A pattern ending in * matches a prefix.
 
 use "./ledger.eg" as L
+use "./contract.eg" as C
 
 let ZERO = "0000000000000000000000000000000000000000000000000000000000000000"
-let MAX_STEPS = 100000
-let CHECKPOINT_EVERY = 256
+var MAX_STEPS = 100000
+var CHECKPOINT_EVERY = 256
+var _contract = null
+var _contract_hash = null
+var _wires = []
 
 var _entries = []
 var _comps = []
@@ -34,6 +42,8 @@ var _gap_entries = 0
 var _in_ckpt = false
 
 fn _refuse(what) { raise("world: {what}") }
+/** a string as JSON writes it (a signal end in a wire entry), through the ledger's ECF: the same minimal escapes */
+fn json_str(s) = L.ecf(s)
 
 // ── the ledger (4.2, 4.6) ────────────────────────────────────────────────────
 fn _append(kind, body) {
@@ -59,7 +69,9 @@ fn _checkpoint() {
   var i = _last_ckpt
   while i < len(_entries) { hashes = push(hashes, _entries[i].hash)
     i += 1 }
-  _append("checkpoint", { head: last.hash, entries: last.seq, gaps: _gap_entries, digests: digests, root: L.merkle_root(hashes) })
+  var body = { head: last.hash, entries: last.seq, gaps: _gap_entries, digests: digests, root: L.merkle_root(hashes) }
+  if _contract != null { body.contract_hash = _contract_hash }
+  _append("checkpoint", body)
   _in_ckpt = false
 }
 
@@ -80,9 +92,19 @@ fn _chain_id(seed, version) {
   return slice(h, 0, 8) + "-" + slice(h, 8, 12) + "-" + slice(h, 12, 16) + "-" + slice(h, 16, 20) + "-" + slice(h, 20, 32)
 }
 
-fn start(seed, version) {
+fn start(seed, version, raw_contract) {
+  var body = { seed: seed, version: version, chain_id: _chain_id(seed, version), text: { encoding: "utf-8", normalization: "nfc" } }
+  if raw_contract != null {
+    _contract = C.normalize(raw_contract)
+    _contract_hash = C.contract_hash(_contract)
+    MAX_STEPS = _contract.gate.max_steps
+    CHECKPOINT_EVERY = _contract.gate.checkpoint_every
+    body.text = _contract.text
+    body.contract = { id: _contract.id, version: _contract.version }
+    body.contract_hash = _contract_hash
+  }
   _in_ckpt = true
-  _append("genesis", { seed: seed, version: version, chain_id: _chain_id(seed, version), text: { encoding: "utf-8", normalization: "nfc" } })
+  _append("genesis", body)
   _in_ckpt = false
 }
 
@@ -93,8 +115,143 @@ fn declare(spec) {
   if has(spec, "constraints") { constraints = spec.constraints }
   var handlers = []
   if has(spec, "handlers") { handlers = spec.handlers }
-  _comps = push(_comps, { name: spec.name, id: spec.id, state: clone(spec.state), constraints: constraints, handlers: handlers })
+  var intent = null
+  if has(spec, "intent") { intent = spec.intent }
+  var c = { name: spec.name, id: spec.id, intent: intent, state: clone(spec.state), constraints: constraints, handlers: handlers, component: false,
+    ins: {}, outs: {}, in_names: [], out_names: [], namespace: null, version: null, uuid: null }
+  if has(spec, "component") and spec.component {
+    c.component = true
+    for h in spec.ins {
+      c.ins[h.name] = h
+      c.in_names = push(c.in_names, h.name)
+    }
+    for h in spec.outs {
+      c.outs[h.name] = h
+      c.out_names = push(c.out_names, h.name)
+    }
+    c.namespace = spec.namespace
+    c.version = spec.version
+    var boundary = []
+    for k in constraints { if has(k, "boundary") and k.boundary { boundary = push(boundary, k.name) } }
+    var uuid = "emerge-component-" + slice(hex(sha256("{spec.namespace}/{spec.id}@{spec.version}")), 0, 24)
+    c.uuid_derived = true
+    if has(spec, "uuid") and spec.uuid != null {
+      uuid = spec.uuid
+      c.uuid_derived = false
+    }
+    c.uuid = uuid
+    c.boundary = boundary
+    _comps = push(_comps, c)
+    _append("register", { name: spec.name, id: spec.id, namespace: spec.namespace, version: spec.version, uuid: uuid, boundary: boundary,
+      kinds: [], template: null, state: clone(spec.state) })
+    return null
+  }
+  _comps = push(_comps, c)
   _append("compartment", { name: spec.name, id: spec.id, state: clone(spec.state) })
+}
+
+// ── components: hooks, shapes, wires (slice c), as lang/runtime.js send / emitOut / wire / roads ──
+fn _component(name, what) {
+  let c = _comp(name)
+  if not c.component { _refuse("{what}: {name} is a compartment, not a component — only components have hooks") }
+  return c
+}
+fn _shape_text(shape) {
+  var parts = []
+  for f in shape {
+    var q = ""
+    if f.nullable { q = "?" }
+    parts = push(parts, "{f.name}: {f.type}{q}")
+  }
+  return join(parts, ", ")
+}
+fn _ty_ok(v, name) {
+  let t = type_of(v)
+  if name == "any" { return true }
+  if name == "float" { return t == "num" }
+  return t == name
+}
+fn _check_shape(payload, shape, what) {
+  if shape == null { return null }
+  var names = {}
+  for f in shape { names[f.name] = true }
+  for k in keys(payload) { if not has(names, k) { raise("{what} has no field \"{k}\" — its shape is \{{_shape_text(shape)}\}") } }
+  for f in shape {
+    var v = null
+    if has(payload, f.name) { v = payload[f.name] }
+    if v == null {
+      if not f.nullable and f.type != "any" { raise("{what} field {f.name} must be {f.type}, got null") }
+    } else if not _ty_ok(v, f.type) {
+      raise("{what} field {f.name} must be {f.type}, got {type_of(v)} {repr(v)}")
+    }
+  }
+}
+fn _port_payload(payload, what) {
+  var p = payload
+  if p == null { p = {} }
+  if type_of(p) != "map" { raise("{what} payload must be a map, got {type_of(p)}") }
+  return freeze(clone(p))
+}
+fn send_in(comp, hook, payload) {
+  let c = _component(comp, "send")
+  if not has(c.ins, hook) { raise("component {comp} has no in hook \"{hook}\"") }
+  let p = _port_payload(payload, "{comp}.{hook}")
+  _check_shape(p, c.ins[hook].shape, "in hook {comp}.{hook}")
+  _enqueue({ kind: "port", comp: comp, hook: hook, payload: p })
+}
+fn emit_out(hook, payload) {
+  var owner = null
+  var i = len(_ctx) - 1
+  while i >= 0 and owner == null {
+    if has(_ctx[i], "comp") { owner = _ctx[i].comp }
+    i -= 1
+  }
+  if owner == null or not owner.component { raise("emit out is only possible inside a component's in hook") }
+  if not has(owner.outs, hook) { raise("component {owner.name} has no out hook \"{hook}\"") }
+  let p = _port_payload(payload, "{owner.name}.{hook}")
+  _check_shape(p, owner.outs[hook].shape, "out hook {owner.name}.{hook}")
+  _enqueue({ kind: "out", comp: owner.name, hook: hook, payload: p })
+}
+fn _end_text(e) {
+  if has(e, "signal") { return json_str(e.signal) }
+  return "{e.comp}.{e.hook}"
+}
+fn _same_end(a, b) {
+  if has(a, "signal") { return has(b, "signal") and a.signal == b.signal }
+  return not has(b, "signal") and a.comp == b.comp and a.hook == b.hook
+}
+fn connect(from, to, line) {
+  if has(from, "signal") and has(to, "signal") { raise("a wire joins at least one hook — signal to signal is an on handler") }
+  if not has(from, "signal") {
+    let c = _component(from.comp, "wire")
+    if not has(c.outs, from.hook) {
+      if has(c.ins, from.hook) { raise("{from.comp}.{from.hook} is an in hook — a wire runs out → in") }
+      raise("component {from.comp} has no out hook \"{from.hook}\"")
+    }
+  }
+  if not has(to, "signal") {
+    let c = _component(to.comp, "wire")
+    if not has(c.ins, to.hook) {
+      if has(c.outs, to.hook) { raise("{to.comp}.{to.hook} is an out hook — a wire runs out → in") }
+      raise("component {to.comp} has no in hook \"{to.hook}\"")
+    }
+  }
+  for w in _wires { if _same_end(w.from, from) and _same_end(w.to, to) { raise("wire {_end_text(from)} -> {_end_text(to)} is declared twice") } }
+  _wires = push(_wires, { from: from, to: to, line: line })
+  _append("wire", { from: _end_text(from), to: _end_text(to), line: line })
+}
+/** the contract's roads: each one a wire (CIE-EG 6.1) */
+fn roads(line) {
+  if _contract == null { return null }
+  for r in _contract.roads {
+    let a = split(r.from, ".")
+    let b = split(r.to, ".")
+    connect({ comp: a[0], hook: a[1] }, { comp: b[0], hook: b[1] }, line)
+  }
+}
+fn _wire_target(to, payload) {
+  if has(to, "signal") { return { kind: "signal", name: to.signal, payload: payload } }
+  return { kind: "port", comp: to.comp, hook: to.hook, payload: payload }
 }
 
 fn _comp(name) {
@@ -104,6 +261,70 @@ fn _comp(name) {
 
 /** a lens: a copy of the state, so nothing outside a handler writes it */
 fn state_of(name) = freeze(clone(_comp(name).state))
+// ── components(): the registry as records (CIE-EG §5; lang/components.js graphRecords) ──
+fn _sha24(s) = slice(hex(sha256(s)), 0, 24)
+fn _shape_rec(shape) {
+  if shape == null { return null }
+  var m = {}
+  for f in shape {
+    var q = ""
+    if f.nullable { q = "?" }
+    m[f.name] = f.type + q
+  }
+  return m
+}
+fn _end_id(e) {
+  if has(e, "signal") { return "signal:{e.signal}" }
+  return "{_comp(e.comp).id}.{e.hook}"
+}
+fn components_graph() {
+  var comps = []
+  var hooks = []
+  for c in _comps {
+    if c.component {
+      comps = push(comps, { id: c.id, namespace: c.namespace, name: c.name, version: c.version, uuid: c.uuid, uuid_derived: c.uuid_derived,
+        boundary: c.boundary, intent: c.intent, kinds: [], template: null })
+      for hn in c.in_names {
+        let hid = "{c.id}.{hn}"
+        hooks = push(hooks, { id: hid, component_id: c.id, name: hn, type: "event_bus", direction: "in", uuid: "emerge-hook-" + _sha24(hid), shape: _shape_rec(c.ins[hn].shape) })
+      }
+      for hn in c.out_names {
+        let hid = "{c.id}.{hn}"
+        hooks = push(hooks, { id: hid, component_id: c.id, name: hn, type: "event_bus", direction: "out", uuid: "emerge-hook-" + _sha24(hid), shape: _shape_rec(c.outs[hn].shape) })
+      }
+    }
+  }
+  var wires = []
+  for w in _wires {
+    let a = _end_id(w.from)
+    let b = _end_id(w.to)
+    let wid = "{a}->{b}"
+    var rec = { id: wid, from_hook_id: a, to_hook_id: b, uuid: "emerge-wire-" + _sha24(wid) }
+    if has(w.from, "signal") or has(w.to, "signal") { rec.signal_endpoint = true }
+    wires = push(wires, rec)
+  }
+  return freeze({ components: comps, hooks: hooks, wires: wires })
+}
+
+/** Name.field on a compartment or component handle, as lang/runtime.js answers it */
+fn member_of(name, field) {
+  let c = _comp(name)
+  if field == "state" { return state_of(name) }
+  if field == "id" { return c.id }
+  if field == "name" { return c.name }
+  if field == "intent" { return c.intent }
+  if c.component {
+    if field == "namespace" { return c.namespace }
+    if field == "version" { return c.version }
+    if field == "uuid" { return c.uuid }
+    if field == "hooks" { return freeze({ in: c.in_names, out: c.out_names }) }
+    if field == "template" { return null }
+    if field == "kinds" { return [] }
+  }
+  var what = "compartment"
+  if c.component { what = "component" }
+  raise("{what} {name} has no member .{field}")
+}
 fn spent() = _spent
 fn unrouted() = _unrouted
 fn entries() = _entries
@@ -126,7 +347,7 @@ fn signal(name, payload) {
   var p = payload
   if p == null { p = {} }
   if type_of(p) != "map" { _refuse("a signal payload must be a map") }
-  _enqueue({ name: name, payload: clone(p) })
+  _enqueue({ kind: "signal", name: name, payload: clone(p) })
 }
 
 fn _enqueue(sig) {
@@ -137,9 +358,14 @@ fn _enqueue(sig) {
   if not cx.draining { _drain(cx) }
 }
 
+fn _label(it) {
+  if it.kind == "port" { return "→{it.comp}.{it.hook}" }
+  if it.kind == "out" { return "{it.comp}.{it.hook}" }
+  return it.name
+}
 fn _names(sigs) {
   var out = []
-  for s in sigs { out = push(out, s.name) }
+  for s in sigs { out = push(out, _label(s)) }
   return out
 }
 
@@ -150,7 +376,11 @@ fn _drain(at) {
   try {
     while len(cx.queue) > 0 {
       deliveries += 1
-      if deliveries > MAX_STEPS { _refuse("signal storm — more than {MAX_STEPS} deliveries in one drain") }
+      if deliveries > MAX_STEPS {
+        var note = ""
+        if _contract != null { note = " (contract {_contract.id}: gate.max_steps)" }
+        raise("signal storm — more than {MAX_STEPS} deliveries in one drain{note}")
+      }
       let sig = cx.queue[0]
       cx.queue = slice(cx.queue, 1)
       _deliver(cx, sig)
@@ -167,6 +397,27 @@ fn _drain(at) {
 
 fn _deliver(at, sig) {
   var cx = at
+  if sig.kind == "port" {
+    let c = _component(sig.comp, "deliver")
+    let h = c.ins[sig.hook]
+    _check_shape(sig.payload, h.shape, "in hook {sig.comp}.{sig.hook}")
+    _run_handler(cx, c, sig, h.run)
+    return null
+  }
+  if sig.kind == "out" {
+    var n = 0
+    for w in _wires {
+      if not has(w.from, "signal") and w.from.comp == sig.comp and w.from.hook == sig.hook {
+        cx.queue = push(cx.queue, _wire_target(w.to, sig.payload))
+        n += 1
+      }
+    }
+    if n == 0 {
+      _unrouted = push(_unrouted, _label(sig))
+      _append("unrouted", { signal: _label(sig), payload: sig.payload })
+    }
+    return null
+  }
   var claimed = false
   for c in _comps {
     for h in c.handlers {
@@ -174,6 +425,12 @@ fn _deliver(at, sig) {
         claimed = true
         _run_handler(cx, c, sig, h.run)
       }
+    }
+  }
+  for w in _wires {
+    if has(w.from, "signal") and _matches(w.from.signal, sig.name) {
+      claimed = true
+      cx.queue = push(cx.queue, _wire_target(w.to, sig.payload))
     }
   }
   for h in _globals {
@@ -198,7 +455,7 @@ fn _run_handler(at, comp, sig, run) {
   var cx = at
   var c = comp
   var working = clone(c.state)
-  let hx = { kind: "handler", buffer: [] }
+  let hx = { kind: "handler", buffer: [], comp: c }
   _ctx = push(_ctx, hx)
   try { run(working, sig.payload) } else e { _ctx = slice(_ctx, 0, len(_ctx) - 1)
     raise(e.message) }
@@ -208,8 +465,10 @@ fn _run_handler(at, comp, sig, run) {
     let check = k.check
     if not check(clone(working)) {
       if k.hard {
-        _append("rejected", { compartment: c.name, signal: sig.name, constraint: k.name, boundary: false, reason: "{k.name} does not hold", discarded: _names(hx.buffer) })
-        cx.queue = push(cx.queue, { name: "rejected", payload: { compartment: c.name, signal: sig.name, constraint: k.name, boundary: false } })
+        var bnd = false
+        if has(k, "boundary") { bnd = k.boundary }
+        _append("rejected", { compartment: c.name, signal: _label(sig), constraint: k.name, boundary: bnd, reason: "{k.name} does not hold", discarded: _names(hx.buffer) })
+        cx.queue = push(cx.queue, { kind: "signal", name: "rejected", payload: { compartment: c.name, signal: _label(sig), constraint: k.name, boundary: bnd } })
         return null
       }
       violations = push(violations, { constraint: k.name, cost: k.cost })
@@ -221,7 +480,7 @@ fn _run_handler(at, comp, sig, run) {
   for v in violations { cost += v.cost }
   _spent += cost
   c.state = working
-  _append("transition", { compartment: c.name, signal: sig.name, changes: changes, violations: violations, spent: _spent })
+  _append("transition", { compartment: c.name, signal: _label(sig), changes: changes, violations: violations, spent: _spent })
   for s in hx.buffer { cx.queue = push(cx.queue, s) }
 }
 

@@ -378,6 +378,21 @@ for (const [name, c] of Object.entries(CASES)) {
   else { fail++; console.log('✗ examples/counter.eg natively — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout)}` : (build.stderr || build.stdout))); }
 }
 
+// CIE4 slice c: components, in and out hooks with shapes, send, emit out, wires, the contract and its road, components() and Name.hooks, natively.
+// lang/test/world/components.eg (with its ledger printed) and examples/components.eg as the language ships it, each equal to the interpreter.
+for (const [label, file, withLedger] of [['components.eg as written, its ledger hash for hash', path.join(__dirname, 'world', 'components.eg'), true],
+                                          ['examples/components.eg, line for line', path.join(LANG, 'examples', 'components.eg'), false]]) {
+  let src = file;
+  if (withLedger) { src = path.join(TMP, 'components_ledger.eg'); fs.writeFileSync(src, fs.readFileSync(file, 'utf8') + 'for e in ledger() { print(e.seq, e.kind, e.hash) }\n'); }
+  const ref = spawnSync(process.execPath, [EG, 'run', src], { encoding: 'utf8' });
+  const exe = path.join(TMP, path.basename(src, '.eg') + '.bin');
+  const build = spawnSync(process.execPath, [EG, 'native', src, '-o', exe], { encoding: 'utf8' });
+  const run = build.status === 0 ? spawnSync(exe, [], { encoding: 'utf8' }) : null;
+  const n = (ref.stdout.match(/^\d+ \w+ [0-9a-f]{64}$/gm) || []).length;
+  if (run && (!withLedger || n >= 9) && run.stdout === ref.stdout && run.status === ref.status) { pass++; console.log(`✓ components natively: ${label}${withLedger ? ` (${n} entries)` : ''}`); }
+  else { fail++; console.log(`✗ components natively: ${label} — ` + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout)}` : (build.stderr || build.stdout))); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');
@@ -417,7 +432,7 @@ for (const [name, c] of Object.entries(CASES)) {
 // refusals name the thing and exit 1; nothing is silently skipped
 {
   const REFUSE = {
-    'a component (CIE4 slice c, next)': 'component A {\n  id = "cm.a"\n  namespace = "a"\n  version = "1.0.0"\n  state { n: 0 }\n}',
+    'a kind (next)': 'kind Sized {\n  state { n: num }\n}',
   };
   for (const [what, src] of Object.entries(REFUSE)) {
     const file = path.join(TMP, 'refuse.eg');

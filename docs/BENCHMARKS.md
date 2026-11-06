@@ -5,6 +5,40 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-06 — components, hooks, wires and the contract natively (CIE4 slice c, 0.60.431)
+- **Measured:** Emerge coding. Components, in and out hooks with shapes, `send`, `emit out`, wires, the contract and its roads, `components()`,
+  all natively.
+- **His words:** "yes. get emerge complete. js removed completely."
+- **Framework:** contract first. The interpreter's ledger is the end state. The component world was first written by hand on `world.eg`
+  (`components.world.eg`) and proved there. Only then was the compiler taught the syntax.
+- **Method:** the reference run three ways (interpreter, `world.eg` interpreted, native). Then `components.eg` and `examples/components.eg`
+  compiled as written. Then a census of every example.
+- **Code:** `world.eg` +278/−19, `front.eg` +192/−10, `lower.eg` +96/−6, `contract.eg` +15/−16, `emerge.eg` +4/−3. New fixtures
+  `test/world/components.eg` and `components.world.eg`.
+- **Result:**
+  - 10 of 10 ledger entries equal across the three runs.
+  - `examples/components.eg` natively equals the interpreter line for line.
+  - native 98/98, selfhost 16/16, lang 166/166, differential 19/19, ledger 21/21, contract 8/8.
+  - Census: 2 of 8 examples equal natively. The other 6 are refused by name: `..`, `expect`, `record`, `axiom`, `kind`, `whatif`.
+- **Speed:** the compiler compiling itself: 15.9 s interpreted, 0.74 s native (stage 1), 0.82 s (stage 2). The hand-written component world
+  compiled natively in 0.49 s. native.test took 41 s.
+- **Lines:** Emerge's totals went from 22,694 JS and 9,099 .eg (start of the day) to 22,736 JS and 10,006 .eg. JS removed so far: 0. It grew
+  by 42 lines: new native.test cases and one `def`. The JS falls only when the native path replaces the interpreter (CIE11).
+- **Failed runs before the pass:** 4, each one a gap:
+  1. `sort_by` not native (contract.eg);
+  2. `json` not native (contract.eg);
+  3. `Sensor.version` not lowered;
+  4. `components()` not native.
+
+  Gaps 1 and 2 went to the prelude's `sort` and the ledger's `ecf`, which also removed a second writer of the canonical form. Gaps 3 and 4
+  were built (`member_of`, `components_graph`). The hand-written component world matched on its first run.
+- **One mistake of the coder's, on the way:** a stale local copy of main made the branch start from 0.60.429, and the stash conflicted. It was
+  recovered without losing anything: conflicts resolved with the stashed versions, then main merged in. Each conflicting file was checked equal
+  to 0.60.430 on main's side, and the suites were rerun green.
+- **Gaps found:** Emerge has no optional parameters (`sort_by`'s third argument), so `sort_by` can't move to the prelude. `send` and `wire` are
+  keywords too (the world's calls are `send_in` and `connect`).
+- **What came of it:** CIE4 is built. The rest of the language natively is CIE15.
+
 ## 2026-11-06 — frozen lenses natively; the compiler 18× faster native than interpreted (CIE14 a, 0.60.430)
 - **Measured:** Emerge coding. A new builtin, `freeze`, in both backends; lenses frozen natively.
 - **His words:** "yes. get emerge complete. js removed completely."

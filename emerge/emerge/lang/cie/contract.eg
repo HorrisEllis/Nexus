@@ -13,6 +13,8 @@
 // Roads are a set: sorted in the canonical form, so the order they are written in does not change the hash; a road twice is refused.
 // Defaults are the primitives' own values (dispatch.max_deliveries, ledger.checkpoint_every, observe.gaps.block_at).
 
+use "./ledger.eg" as L
+
 let DEFAULT_TEXT = { encoding: "utf-8", normalization: "nfc" }
 let DEFAULT_GATE = { block_at: 0.9, max_steps: 100000, checkpoint_every: 256 }
 
@@ -234,27 +236,24 @@ fn normalize(r) {
     if has(seen, key) { raise("contract: contract {r.id}: road {key} is written twice") }
     seen[key] = true
   }
-  let roads = sort_by(r.roads, fn(x) = "{x.from}\0{x.to}")
+  // sorted by the same key sort_by used ("from\0to", by code point), with the prelude's sort: sort_by is not native yet (CIE14 e)
+  var by_key = {}
+  var road_keys = []
+  for rd in r.roads {
+    let rk = "{rd.from}\0{rd.to}"
+    by_key[rk] = rd
+    road_keys = push(road_keys, rk)
+  }
+  var roads = []
+  for rk in sort(road_keys) { roads = push(roads, by_key[rk]) }
   return { id: r.id, version: r.version, text: text, gate: gate, roads: roads }
 }
 
 // ── the canonical form and the hash ─────────────────────────────────────────
 /** ECF (CIE-EG 4.3): null, bools, numbers as written by the ledger, strings with minimal JSON escapes, keys in byte order */
-fn canonical(v) {
-  let t = type_of(v)
-  if v == null { return "null" }
-  if t == "bool" {
-    if v { return "true" }
-    return "false"
-  }
-  if t == "num" or t == "int" or t == "string" { return json(v) }
-  if t == "list" { return "[" + join(map(v, canonical), ",") + "]" }
-  if t == "map" {
-    let ks = sort(keys(v))
-    return "\{" + join(map(ks, fn(k) = json(k) + ":" + canonical(v[k])), ",") + "\}"
-  }
-  raise("contract: a {t} is not data")
-}
+// One writer of the canonical form: lang/cie/ledger.eg's ecf (CIE-EG 4.3), which also runs natively. Until 2026-11-06 this file had its own,
+// built on json(), which is not native (CIE14 e); the two gave the same text, so the hash is unchanged (contract.test).
+fn canonical(v) = L.ecf(v)
 
 fn contract_hash(c) = hex(sha256(canonical(c)))
 
