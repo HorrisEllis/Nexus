@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-06-pillar-phasemap.spec::PIL3_conformance
 context: pipeline phase PIL3_conformance of docs/2026-11-06-pillar-phasemap.spec
 intent: null
-summary: PIL3_conformance (?) — 2 file(s)
+summary: PIL3_conformance (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793958853640
+exported_at: 1793959386835
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793958853640
-lastSeenAt: 1793958853640
+firstSeenAt: 1793959386835
+lastSeenAt: 1793959386835
 fingerprint: null
 payload:
   id: PIL3_conformance
@@ -20,11 +20,10 @@ payload:
   layer: null
   status: OPEN
   files:
-    - pillar/conformance/run.js
-    - tests/modules/test-pillar.test.js
+    - tests/modules/test-pillar-conform.test.js
   depends_on:
     - PIL2_contracts
   blocks:
     - MOD-PIL-CONFORMANCE
   spec: pillar/spec/pillar.spec
-  graph: b8b5d7caa6ffff6d
+  graph: 9e57eff0cec1ee17

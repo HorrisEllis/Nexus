@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PIL2_contracts:bc1b769ac9f239d7
+type: graph
+id: phase:PIL2_contracts:bc1b769ac9f239d7
+context: dependency graph of phase PIL2_contracts
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793959386833
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793959386833
+lastSeenAt: 1793959386833
+fingerprint: null
+payload:
+  for: PIL2_contracts
+  kind: phase
+  repo: null
+  hash: bc1b769ac9f239d7
+  nodes:
+    - path: pillar/spec/pillar.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+    dependents:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+    upstream:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+    downstream:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+      - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
+      - docs/2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
+    blockedBy:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+    unlocks:
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by PIL1_pillar_stands
+      - 'depends on (1): PIL1_pillar_stands · all upstream 4'
+      - >-
+        needed by (2): PIL3_conformance, PIL4_three_identities · all downstream 4 · finishing it
+        unlocks PIL3_conformance, PIL4_three_identities
+    edges:
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+        kind: declared

@@ -371,7 +371,7 @@ payload:
       emerge/siso/StreamLog.js: 69b5eac796b87662dc84e3d36a7fc84847b644c059fd61a138c03917e72a7a2d
       emerge/siso/index.js: 67844385ebccdcbb60b09efcef466fc6b6034e46dc00131cb18884ade72a590a
       emerge/spec/_archive/emerge-1.1.0.spec: 7305e91dbb425c6c0889ee5f83df513ac9d8d13f55f63cc642ab1e0e46fdc5fe
-      emerge/spec/cie-eg.spec: f918ac024ed897c9b9433609af252d3625af4a506512dc596afa752b4ce68ef2
+      emerge/spec/cie-eg.spec: 3ca077f94eb4f50e06bc143e2412ebf659350c279d785345dbb816849e533c77
       emerge/spec/emerge-core.spec: 1b4186d99a342384a105a85e160d4677464a30f80dba28bf472c7ce718c0b653
       emerge/spec/emerge.node-taxonomy.md: 2e832b0ed0f51b9e6620b4d4a5f57b366c188d2ec9f7a6eddcc300dff6acb621
       emerge/spec/emerge.node-taxonomy.spec: 7b9334ef66b7f42f69390de813ffd2191e102a968d147b267f4cb72725c4420c
@@ -379,16 +379,17 @@ payload:
       emerge/spec/learn.spec: 5c8c7cac46202f07da01ac633c7f1cffb0be16913f292aec1b56faaf9df3dab5
       emerge/spec/say.spec: c7453c681d0402d7141701ac068a5ac91b9ad9ac532fd78fc65a3b8ccfc5701f
       emerge/template/nexus-system.template.json: 0f3c413e0a8c753745a0de4b2148873a8c32765164fd3133b5afe7957e3684b8
-      emerge/test/build-spec.test.js: 37a5533b10fb0c783235d0f77c13e59d3dc65fbeb041c5ad607a8911a19115d7
+      emerge/test/build-spec.test.js: 04d13a9b5a321de4f5e7e0c269d0cc52fa5dc17a34124ac856b2d43a134b9a15
       emerge/test/core.test.js: ad5ab8278ac6286beb8fca7d1e19b24f8f095a900b016d8ad95af878bb64d935
       emerge/test/debug.test.js: 134084ce638d0c122e60cbef2f391035925acacfd97baa74902faa403586b9c6
+      emerge/test/fixtures/cie-eg.before-2026-11-06.spec: f918ac024ed897c9b9433609af252d3625af4a506512dc596afa752b4ce68ef2
       emerge/test/gap-field.test.js: 8c967eb4649bfb0317c8b2ca423b5b6a3d8c2ab3ed0c728623fb80908fc433fc
       emerge/test/invariants.test.js: 307be2b7f0292112adde624c168528ecaf45f934ef2e131fc2cb556c260b73b1
       emerge/test/kg.test.js: 3c010ae09f79166970f239e30817080aabd1174d37fe9f521347ba4c90c05785
       emerge/test/observe.test.js: 508527e4948ae64973c2adeafb9f30e89a29cd642a170e50a789470bb636eee1
       emerge/test/propagation.test.js: 2e49334e032f4eaa1bc3f1142aedcbf86059affa3477c42331cf55e57304973b
       emerge/test/reply-engine.test.js: 40f8513b6d9eaef90e52c8c01d3b8862c750af388b8082720e9ba47777625bc6
-      emerge/test/target.test.js: f369e7dd14d391b84d43266f7a4443383fd4422742feb4079eba2d959486e672
+      emerge/test/target.test.js: 32d038acd18ee68ee448dfb49e4bc68f278f3d12f69dddde6e0c6f52afa685d4
       emerge/test/tier-contract.test.js: f4abe1b07caddef983ab5f36fe8f52d4747349d77a1d91c5a820a237eccd6ee5
       emerge/tests/compiler-door.test.js: 3d9034ca71912d43f997135b9f149ae54401fdc60923fc01096f2492d2737dc8
       emerge/tests/lang-door.test.js: 9ce73533af138f82816200f91e6c1bebb600da9d83dcbaf4fa0b7ca19f09b306
