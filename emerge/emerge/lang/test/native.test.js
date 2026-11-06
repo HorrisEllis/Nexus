@@ -334,6 +334,24 @@ for (const [name, c] of Object.entries(CASES)) {
   else { fail++; console.log('✗ ledger — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout + ref.stderr)}\n    want   ${JSON.stringify(want)}` : (build.stderr || build.stdout))); }
 }
 
+// the world in Emerge (Nexus phase CIE4, slice a; lang/cie/world.eg): compartments, constraints (hard and soft), signals, a wildcard, a handler
+// that sends, rejection, spent, unrouted and the closing checkpoint. world/counter.eg is run by the interpreter (lang/runtime.js);
+// world/counter.world.eg is the same program on world.eg. Both must give the same output and the same ledger, hash for hash, interpreted and native.
+{
+  const W = path.join(__dirname, 'world');
+  const ledgerFile = path.join(TMP, 'world-ref.json');
+  const ref = spawnSync(process.execPath, [EG, 'run', path.join(W, 'counter.eg'), '--ledger', ledgerFile], { encoding: 'utf8' });
+  const want = ref.stdout + JSON.parse(fs.readFileSync(ledgerFile, 'utf8')).map(e => `${e.seq} ${e.kind} ${e.hash}\n`).join('');
+  const version = require(path.join(LANG, 'index.js')).VERSION;
+  const interp = spawnSync(process.execPath, [EG, 'run', path.join(W, 'counter.world.eg'), version], { encoding: 'utf8' });
+  const exe = path.join(TMP, 'world.bin');
+  const build = spawnSync(process.execPath, [EG, 'native', path.join(W, 'counter.world.eg'), '-o', exe], { encoding: 'utf8' });
+  const run = build.status === 0 ? spawnSync(exe, [version], { encoding: 'utf8' }) : null;
+  const n = (want.match(/^\d+ \w+ [0-9a-f]{64}$/gm) || []).length;
+  if (run && n >= 10 && interp.stdout === want && run.stdout === want && run.status === 0) { pass++; console.log(`✓ world (${n} ledger entries equal to the interpreter's, hash for hash, interpreted and native)`); }
+  else { fail++; console.log('✗ world — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(interp.stdout + interp.stderr)}\n    want   ${JSON.stringify(want)}` : (build.stderr || build.stdout))); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');

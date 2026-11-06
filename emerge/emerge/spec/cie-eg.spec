@@ -1396,6 +1396,13 @@ spec:
           standard SHA-NI sequence, the round constants inline), rt.eg pads and writes the digest; a CPU without them is refused by name.
           native.test 'sha256': FIPS 180-4's five vectors (the million a's among them) and 14 padding boundaries equal to the interpreter.
           Not proved here: the refusal on a CPU without SHA-NI (this one has it).
+          2026-11-06 (Nexus phase CIE4, slice a; James, 2026-11-06: \"actaully keep remove js from emerge.\" · \"lets code what we can using emerge, that way we can have a good test. maybe everything from this point should be emerge?\"): the world in Emerge,
+          lang/cie/world.eg: compartments with state, hard and soft constraints, signals FIFO with a handler's emits buffered until it
+          commits, wildcard patterns, rejection (emits discarded), spent, unrouted, the storm limit, genesis with the chain id, and checkpoints,
+          the ledger written through lang/cie/ledger.eg. native.test 'world': lang/test/world/counter.eg run by the interpreter and
+          counter.world.eg on world.eg give the same output and the same 10 ledger entries, hash for hash, interpreted and native. Not yet:
+          the native front end lowering compartment / on / emit to it (slice b); gaps on a null constraint read, lenses and record (slice b);
+          components, hooks, wires, the contract block and the gate (slice c).
         next: "the ledger natively (ECF, checkpoints — same bytes as lang/ledger.js; SHA-256 is built, CIE2), then compartments, constraints and signals, then components, hooks, wires and the gate; test blocks and expect, so `emerge test` replaces `eg test`."
       spec_ref: s04_ledger
       description: "The system half of the language, natively: ledger, compartments, constraints, signals, components, the gate, test blocks."

@@ -91,7 +91,7 @@ phases:
     depends_on: [CIE3_native_ledger, CIE1_the_contract_block]
     spec: emerge/emerge/spec/cie-eg.spec
     blocks: [MOD-NATIVE-SYSTEM]
-    files: [emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/test/native.test.js]
+    files: [emerge/emerge/lang/cie/world.eg, emerge/emerge/lang/test/world/counter.eg, emerge/emerge/lang/test/world/counter.world.eg, emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/test/native.test.js]   # world.eg and its fixtures added 2026-11-06 (slice a)
     requires: [node]
     prerequisites: []
     does: "compartments, constraints, signals, components, hooks, wires, the contract block and the gate (FIFO, storm limit) natively"
@@ -206,3 +206,18 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # James, 2026-11-06, after the coder said COS's manager must stay JavaScript for HTTP, processes and timers until Emerge has them: "okay but no js then right?" · "im saying to code primitives to replace javascript. using pillar"
 # No phase had processes or time. CIE13 adds them (Process, Clock, File); CIE10's sockets are Pillar's Port, read against its contract.
 # Windows: Process, Clock and File are kernel32 (allowed by CIE-EG 0); only Port needs ws2_32, CIE_D2's open question, still his.
+
+# ── ADDENDUM 2026-11-06 (0.60.426) — CIE4 slice a built: the world in Emerge, hash for hash ──
+# James, 2026-11-06: "actaully keep remove js from emerge." · "lets code what we can using emerge, that way we can have a good test. maybe everything from this point should be emerge?"
+# The coder's cut of CIE4 into slices (the phase expands, not split; his 2026-11-03 rule):
+#   a (BUILT 0.60.426): lang/cie/world.eg, the world itself in plain Emerge (no new construct needed: the native subset already has lambdas,
+#     closures, clone, deep equality, try). Compartments, hard/soft constraints, FIFO signals with buffered emits, wildcards, rejection, spent,
+#     unrouted, storm limit, genesis and checkpoints through lang/cie/ledger.eg. native.test 'world': the interpreter on world/counter.eg and
+#     world.eg on world/counter.world.eg give the same output and the same 10 ledger entries, hash for hash, interpreted and native. 94/94.
+#   b (next): the native front end (front.eg) lowers compartment / on / emit / Name.state to world.eg calls, so counter.eg itself compiles;
+#     gaps on a null read in a constraint, lenses, record, ledger(), spent() as builtins.
+#   c: components, hooks, wires, the contract block and the gate (FIFO, storm limit from the contract), on the same world.
+# Found: (1) the native compiler lets a map's contents change through a let or a parameter, which the interpreter's checker refuses; native
+# is laxer, a difference to close (front.eg). (2) Newlines inside a map literal are spaces, so a multi-line lambda written inside { … } runs its
+# lines together; the lowering must lift handlers to top-level lets, as counter.world.eg does. (3) compartment, on, emit, state are keywords, so
+# world.eg names them declare, listen, signal, state_of.
