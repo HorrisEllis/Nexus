@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793999607855
+exported_at: 1794003313101
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793999607855
-lastSeenAt: 1793999607855
+firstSeenAt: 1794003313101
+lastSeenAt: 1794003313101
 fingerprint: null
 payload:
   for: CIE13_native_system_primitives
@@ -71,7 +71,6 @@ payload:
     downstream: []
     blockedBy:
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
-      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
     unlocks: []
     conflicts:
       - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE15_the_rest_of_the_language
@@ -97,7 +96,7 @@ payload:
           - emerge/emerge/lang/native/codegen.eg
     dangling: []
     lines:
-      - layer 7 · blocked by PIL2_contracts, CIE5_native_test
+      - layer 7 · blocked by PIL2_contracts
       - >-
         depends on (3): CIE_D1_remove_the_javascript_now, PIL2_contracts, CIE5_native_test · all
         upstream 22

@@ -7,18 +7,18 @@ intent: null
 summary: CIE5_native_test (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793997643483
+exported_at: 1794003313083
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997643483
-lastSeenAt: 1793997643483
+firstSeenAt: 1794003313083
+lastSeenAt: 1794003313083
 fingerprint: null
 payload:
   id: CIE5_native_test
   map: docs/2026-11-06-cie-eg-build-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: BUILT 0.60.436
   files:
     - emerge/emerge/lang/native/front.eg
     - emerge/emerge/lang/native/codegen.eg

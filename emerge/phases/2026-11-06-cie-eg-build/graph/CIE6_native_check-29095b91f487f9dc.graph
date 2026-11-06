@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793997643487
+exported_at: 1794003313086
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997643487
-lastSeenAt: 1793997643487
+firstSeenAt: 1794003313086
+lastSeenAt: 1794003313086
 fingerprint: null
 payload:
   for: CIE6_native_check
@@ -92,14 +92,13 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
-    blockedBy:
-      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+    blockedBy: []
     unlocks:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
     conflicts: []
     dangling: []
     lines:
-      - layer 7 · blocked by CIE5_native_test
+      - layer 7 · ready
       - 'depends on (1): CIE5_native_test · all upstream 16'
       - >-
         needed by (2): CIE8_spec_compiler_in_emerge, CIE11_retire_the_interpreter · all downstream 5

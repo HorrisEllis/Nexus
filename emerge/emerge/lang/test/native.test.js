@@ -417,6 +417,22 @@ for (const [label, file, withLedger] of [['components.eg as written, its ledger 
   else { fail++; console.log('✗ examples/axioms.eg natively — ' + (run ? `native ${JSON.stringify(run.stdout + run.stderr)} ${run.status}\n    interp ${JSON.stringify(ref.stdout + ref.stderr)} ${ref.status}` : (build.stderr || build.stdout))); }
 }
 
+// CIE5: test blocks natively. emerge <file> --test builds a program whose test blocks run after it, each from the same world as a whatif, and
+// prints what eg test prints; examples/tests.eg (one test fails on purpose) natively equals eg test in stdout, stderr and exit status
+{
+  const file = path.join(LANG, 'examples', 'tests.eg');
+  const ref = spawnSync(process.execPath, [EG, 'test', file], { encoding: 'utf8' });
+  const exe = path.join(TMP, 'tests.bin');
+  const build = spawnSync(path.join(LANG, 'native', 'bin', 'emerge'), [file, '--test', '-o', exe], { encoding: 'utf8' });
+  const run = build.status === 0 ? spawnSync(exe, [], { encoding: 'utf8' }) : null;
+  const plain = build.status === 0 ? spawnSync(path.join(LANG, 'native', 'bin', 'emerge'), [file, '-o', exe + '.run'], { encoding: 'utf8' }) : null;
+  const runOnly = plain && plain.status === 0 ? spawnSync(exe + '.run', [], { encoding: 'utf8' }) : null;
+  const refRun = spawnSync(process.execPath, [EG, 'run', file], { encoding: 'utf8' });
+  if (run && /4 passed, 1 failed/.test(ref.stdout) && run.stdout === ref.stdout && run.stderr === ref.stderr && run.status === ref.status &&
+      runOnly && runOnly.stdout === refRun.stdout) { pass++; console.log('✓ test blocks natively: --test equals eg test (stdout, stderr, status); without it they are skipped, as eg run'); }
+  else { fail++; console.log('✗ test blocks natively — ' + (run ? `native ${JSON.stringify(run.stdout)} ${run.status}\n    interp ${JSON.stringify(ref.stdout)} ${ref.status}` : (build.stderr || build.stdout))); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');

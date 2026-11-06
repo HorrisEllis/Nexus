@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793999607834
+exported_at: 1794003313081
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793999607834
-lastSeenAt: 1793999607834
+firstSeenAt: 1794003313081
+lastSeenAt: 1794003313081
 fingerprint: null
 payload:
   for: CIE15_the_rest_of_the_language
@@ -71,11 +71,6 @@ payload:
     blockedBy: []
     unlocks: []
     conflicts:
-      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
-        files:
-          - emerge/emerge/lang/native/front.eg
-          - emerge/emerge/lang/native/codegen.eg
-          - emerge/emerge/lang/test/native.test.js
       - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
         files:
           - emerge/emerge/lang/native/rt.eg
@@ -99,10 +94,6 @@ payload:
       - layer 6 · ready
       - 'depends on (1): CIE4_native_components · all upstream 15'
       - 'needed by (0): —'
-      - >-
-        same files as CIE5_native_test with no order between them:
-        emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/codegen.eg,
-        emerge/emerge/lang/test/native.test.js
       - >-
         same files as CIE10_the_door_in_emerge with no order between them:
         emerge/emerge/lang/native/rt.eg

@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793999607837
+exported_at: 1794003313083
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793999607837
-lastSeenAt: 1793999607837
+firstSeenAt: 1794003313083
+lastSeenAt: 1794003313083
 fingerprint: null
 payload:
   for: CIE5_native_test
@@ -74,32 +74,14 @@ payload:
     blockedBy: []
     unlocks:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
-    conflicts:
-      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE15_the_rest_of_the_language
-        files:
-          - emerge/emerge/lang/native/front.eg
-          - emerge/emerge/lang/native/codegen.eg
-          - emerge/emerge/lang/test/native.test.js
-      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
-        files:
-          - emerge/emerge/lang/native/front.eg
-          - emerge/emerge/lang/native/codegen.eg
-          - emerge/emerge/lang/test/native.test.js
+    conflicts: []
     dangling: []
     lines:
-      - layer 6 · ready
+      - layer 6
       - 'depends on (1): CIE4_native_components · all upstream 15'
       - >-
         needed by (4): CIE6_native_check, CIE9_tests_in_emerge, CIE10_the_door_in_emerge,
         CIE13_native_system_primitives · all downstream 7 · finishing it unlocks CIE6_native_check
-      - >-
-        same files as CIE15_the_rest_of_the_language with no order between them:
-        emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/codegen.eg,
-        emerge/emerge/lang/test/native.test.js
-      - >-
-        same files as CIE14_the_gaps_found_while_coding with no order between them:
-        emerge/emerge/lang/native/front.eg, emerge/emerge/lang/native/codegen.eg,
-        emerge/emerge/lang/test/native.test.js
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
         kind: declared

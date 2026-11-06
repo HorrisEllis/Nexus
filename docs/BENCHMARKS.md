@@ -5,6 +5,21 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-06 — test blocks natively (CIE5, 0.60.436)
+- **Measured:** Emerge coding. `test` blocks natively, with `emerge prog.eg --test`.
+- **His words:** "okay. so are you removing it when you're finisged?" · "continue"
+- **Method:** `examples/tests.eg` (one test fails on purpose) through `eg test` and through the native binary with `--test`. Stdout, stderr and
+  exit status compared. Run mode checked to skip the tests, as `eg run` does.
+- **Result:**
+  - All three equal, the failing test's own line (`tests.eg:42`) included.
+  - native 101/101, selfhost 16/16 (5b2b49f3…), lang 166/166, differential 19/19.
+  - Census: 6 of 9 in run mode (tests added).
+- **Speed:** stage 0 took 15.4 s. native.test took 41 s.
+- **Failed runs before the pass:** 1. The first runner caught errors inside the world, which stamps the caller's line, so the failure said
+  line 3. Each test's `try` now sits in the program itself.
+- **Gap found:** an error inside a `whatif` expression names the `whatif`'s line. Logged in CIE14.
+- **What came of it:** CIE5 is built. The tests themselves can now be written in Emerge (CIE9) and run natively.
+
 ## 2026-11-06 — whatif natively (CIE15 fourth slice, 0.60.435)
 - **Measured:** Emerge coding. Speculative branches (`whatif`), natively.
 - **His words:** "just keep going."

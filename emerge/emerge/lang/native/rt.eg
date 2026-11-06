@@ -1879,6 +1879,11 @@ fn rt_exit(code) {
   sys6(60, code, 0, 0, 0, 0)
   return 0
 }
+// __exit(n): the exit status of a native test run (CIE5); only lowered code calls it, so no program sees a new builtin
+fn rt_b_exit(v) {
+  if not rt_is_num(v) { rt_fail("__exit needs a num") }
+  return rt_exit(v >> 3)
+}
 
 // ── fractional nums (GATE-NL-004, 2026-10-31): IEEE doubles, from the former native/float_draft.eg ──────
 
