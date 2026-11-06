@@ -5,6 +5,22 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-06 — kinds, templates, spawn and despawn natively (CIE15 fifth slice, 0.60.437)
+- **Measured:** Emerge coding. His dynamic primitives natively: kinds, templates, spawn, despawn, and instances wired at run time.
+- **His words:** "Please continue from where you left off." · "continue"
+- **Method:** `examples/primitives.eg` run both ways. Then the same file with its ledger printed. Census rerun.
+- **Result:**
+  - Line for line equal, and 22 of 22 ledger entries hash for hash (despawn, unwire, whatif, register, wire, transition), on the first
+    native run.
+  - native 102/102, selfhost 16/16 (523aec34…), lang 166/166, differential 19/19.
+  - Census: 7 of 9 (primitives added).
+- **Speed:** stage 0 took 16.2 s; stage 1 (native) took 0.94 s. native.test took 42 s.
+- **Failed runs before the pass:** 0 for the program. 3 check errors on the way: `template` and `state` are keywords and can't be variable
+  names (twice), and a placeholder branch left in `front.eg`.
+- **Gaps found:** a field read on a non-map is worded differently by the two backends.
+- **What came of it:** only two features stand between the native compiler and every example: a regex engine, and `sort_by` (optional
+  parameters).
+
 ## 2026-11-06 — test blocks natively (CIE5, 0.60.436)
 - **Measured:** Emerge coding. `test` blocks natively, with `emerge prog.eg --test`.
 - **His words:** "okay. so are you removing it when you're finisged?" · "continue"

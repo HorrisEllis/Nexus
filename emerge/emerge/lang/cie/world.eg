@@ -32,6 +32,8 @@ var _contract_hash = null
 var _wires = []
 var _gaps = []
 var _axioms = []
+var _templates = {}
+var _next_handle = 0
 var _rng = 0i
 
 var _entries = []
@@ -275,8 +277,34 @@ fn declare(spec) {
   if has(spec, "handlers") { handlers = spec.handlers }
   var intent = null
   if has(spec, "intent") { intent = spec.intent }
+  var tpl = null
+  if has(spec, "template") { tpl = spec.template }
+  var kinds = []
+  if has(spec, "kinds") { kinds = spec.kinds }
+  var typed = []
+  if has(spec, "typed_state") { typed = spec.typed_state }
+  var fns = {}
+  if has(spec, "fns") { fns = spec.fns }
+  _next_handle += 1
   var c = { name: spec.name, id: spec.id, intent: intent, state: clone(spec.state), constraints: constraints, handlers: handlers, component: false,
-    ins: {}, outs: {}, in_names: [], out_names: [], namespace: null, version: null, uuid: null }
+    ins: {}, outs: {}, in_names: [], out_names: [], namespace: null, version: null, uuid: null, template: null, kinds: kinds, typed: typed,
+    fns: fns, token: _next_handle }
+  c.template = tpl
+  for other in _comps { if other.id == spec.id { raise("id \"{spec.id}\" is already used by {other.name}") } }
+  // the initial state: every hard constraint whose fields are present must hold (lang/runtime.js declare)
+  for k in constraints {
+    var present = true
+    if has(k, "reads") { for f in k.reads { if not has(spec.state, f) or spec.state[f] == null { present = false } } }
+    let check = k.check
+    if present and k.hard and not check(clone(spec.state)) {
+      var what = "compartment"
+      if has(spec, "component") and spec.component { what = "component" }
+      var kw = "constraint"
+      if has(k, "boundary") and k.boundary { kw = "boundary" }
+      raise("{what} {spec.name}: initial state breaks {kw} {k.name}")
+    }
+  }
+  _check_typed(c, c.state)
   if has(spec, "component") and spec.component {
     c.component = true
     for h in spec.ins {
@@ -301,11 +329,101 @@ fn declare(spec) {
     c.boundary = boundary
     _comps = push(_comps, c)
     _append("register", { name: spec.name, id: spec.id, namespace: spec.namespace, version: spec.version, uuid: uuid, boundary: boundary,
-      kinds: [], template: null, state: clone(spec.state) })
-    return null
+      kinds: kinds, template: tpl, state: clone(spec.state) })
+    return _handle(c)
   }
   _comps = push(_comps, c)
   _append("compartment", { name: spec.name, id: spec.id, state: clone(spec.state) })
+  return _handle(c)
+}
+
+// ── templates, spawn, despawn, handles (CIE15): a handle names its instance and its token; a stale one is an error (lang/runtime.js liveOf) ──
+fn _handle(c) = freeze({ __h: c.token, name: c.name, id: c.id, template: c.template })
+fn _is_handle(v) = type_of(v) == "map" and has(v, "__h")
+fn _live(h) {
+  for c in _comps { if c.name == h.name and c.token == h.__h { return c } }
+  raise("{h.name} no longer exists — it was despawned, or spawned inside a whatif")
+}
+/** the state fields a kind types: checked when a component appears and before every commit */
+fn _check_typed(c, st) {
+  for f in c.typed {
+    var v = null
+    if has(st, f.name) { v = st[f.name] }
+    var ok = true
+    if v == null { ok = f.nullable or f.type == "any" } else { ok = _ty_ok(v, f.type) }
+    if not ok {
+      var q = ""
+      if f.nullable { q = "?" }
+      raise("{c.name} breaks kind {f.kind}: state.{f.name} must be {f.type}{q}, got {type_of(v)} {repr(v)}")
+    }
+  }
+}
+fn define_template(name, arity, factory) { _templates[name] = { arity: arity, factory: factory } }
+fn spawn_of(name, args) {
+  if not has(_templates, name) { raise("template {name} is used before its declaration ran") }
+  let t = _templates[name]
+  if len(args) != t.arity + 1 { raise("spawn {name} takes an id and {t.arity} argument(s), got {len(args)} in all") }
+  let id = args[0]
+  if type_of(id) != "string" or id == "" { raise("spawn {name}: the first argument is the instance id, a non-empty string — got {type_of(id)} {repr(id)}") }
+  let factory = t.factory
+  var spec = factory(args)
+  spec.template = name
+  return declare(spec)
+}
+fn despawn_of(h) {
+  if not _is_handle(h) { raise("despawn needs a component instance, got {type_of(h)}") }
+  let c = _live(h)
+  if c.template == null { raise("{h.name} was declared, not spawned — only spawned instances can be despawned") }
+  var kept = []
+  for w in _wires {
+    let touches = (not has(w.from, "signal") and w.from.comp == c.name) or (not has(w.to, "signal") and w.to.comp == c.name)
+    if touches { _append("unwire", { from: _end_text(w.from), to: _end_text(w.to), reason: "despawn" }) } else { kept = push(kept, w) }
+  }
+  _wires = kept
+  var left = []
+  for x in _comps { if x.token != c.token { left = push(left, x) } }
+  _comps = left
+  _append("despawn", { name: c.name, id: c.id, template: c.template, state: clone(c.state) })
+}
+/** a wire end on an instance held in a variable: wire prev.give -> next.take */
+fn end_of(h, hook) {
+  if _is_handle(h) { return { comp: _live(h).name, hook: hook } }
+  raise("expected Component.hook or instance.hook as a wire end, got {type_of(h)}")
+}
+/** h.field on an instance, or a plain map's field (null when missing), as the interpreter reads either */
+fn member_any(o, field) {
+  if _is_handle(o) { return member_of(_live(o).name, field) }
+  if type_of(o) == "map" { return get(o, field, null) }
+  raise("{type_of(o)} has no member .{field}")
+}
+/** h.f(…) on an instance (its lens fn, over a frozen copy of its state), or a map's fn field */
+fn call_any(o, field, args) {
+  if _is_handle(o) {
+    let c = _live(o)
+    if not has(c.fns, field) { raise("component {c.name} has no member .{field}") }
+    let f = c.fns[field]
+    return f(freeze(clone(c.state)), args)
+  }
+  let g = member_any(o, field)
+  if len(args) == 0 { return g() }
+  if len(args) == 1 { return g(args[0]) }
+  if len(args) == 2 { return g(args[0], args[1]) }
+  if len(args) == 3 { return g(args[0], args[1], args[2]) }
+  if len(args) == 4 { return g(args[0], args[1], args[2], args[3]) }
+  raise("native: a call through a map field with more than 4 arguments is not in the native subset yet (CIE15)")
+}
+fn is_kind_of(x, k) {
+  if type_of(k) != "string" { raise("is_kind needs a string, got {type_of(k)}") }
+  if not _is_handle(x) { return false }
+  for c in _comps { if c.name == x.name and c.token == x.__h and c.component { return c.kinds contains k } }
+  return false
+}
+fn instances_of(t) {
+  if type_of(t) != "string" { raise("instances needs a string, got {type_of(t)}") }
+  if not has(_templates, t) { raise("instances: {t} is not a declared template") }
+  var out = []
+  for c in _comps { if c.template == t { out = push(out, _handle(c)) } }
+  return out
 }
 
 // ── components: hooks, shapes, wires (slice c), as lang/runtime.js send / emitOut / wire / roads ──
@@ -441,7 +559,7 @@ fn components_graph() {
   for c in _comps {
     if c.component {
       comps = push(comps, { id: c.id, namespace: c.namespace, name: c.name, version: c.version, uuid: c.uuid, uuid_derived: c.uuid_derived,
-        boundary: c.boundary, intent: c.intent, kinds: [], template: null })
+        boundary: c.boundary, intent: c.intent, kinds: c.kinds, template: c.template })
       for hn in c.in_names {
         let hid = "{c.id}.{hn}"
         hooks = push(hooks, { id: hid, component_id: c.id, name: hn, type: "event_bus", direction: "in", uuid: "emerge-hook-" + _sha24(hid), shape: _shape_rec(c.ins[hn].shape) })
@@ -476,8 +594,8 @@ fn member_of(name, field) {
     if field == "version" { return c.version }
     if field == "uuid" { return c.uuid }
     if field == "hooks" { return freeze({ in: c.in_names, out: c.out_names }) }
-    if field == "template" { return null }
-    if field == "kinds" { return [] }
+    if field == "template" { return c.template }
+    if field == "kinds" { return c.kinds }
   }
   var what = "compartment"
   if c.component { what = "component" }
@@ -646,6 +764,7 @@ fn _run_handler(at, comp, sig, run) {
   }
   var changes = {}
   for key in keys(working) { if not has(c.state, key) or working[key] != c.state[key] { changes[key] = working[key] } }
+  if c.component { _check_typed(c, working) }
   var cost = 0
   for v in violations { cost += v.cost }
   _spent += cost
