@@ -5,6 +5,19 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-06 — whatif natively (CIE15 fourth slice, 0.60.435)
+- **Measured:** Emerge coding. Speculative branches (`whatif`), natively.
+- **His words:** "just keep going."
+- **Method:** `examples/whatif.eg` run both ways. `language.eg` gets a branch that records and draws before its ledger printout.
+- **Result:**
+  - `whatif.eg` equal on the first native run.
+  - The branch's draw equals the world's next draw (the generator was restored), and the `whatif` entry matches hash for hash.
+  - native 100/100, selfhost 16/16 (c9a09bf1…), lang 166/166, differential 19/19.
+- **Speed:** stage 0 took 15.6 s. native.test took 41 s.
+- **Failed runs before the pass:** 0.
+- **Census:** 5 of 9 examples equal. A correction, the coder's: earlier rows said "of 8", but the census always counted 9. The real line
+  today is 2, 3, 4, 5 of 9.
+
 ## 2026-11-06 — axioms natively; stdout, stderr and exit status equal (CIE15 third slice, 0.60.434)
 - **Measured:** Emerge coding. His framework's program-wide axiom check, natively.
 - **His words:** "just keep going."
@@ -72,7 +85,7 @@ then they are written by hand.
   - 10 of 10 ledger entries equal across the three runs.
   - `examples/components.eg` natively equals the interpreter line for line.
   - native 98/98, selfhost 16/16, lang 166/166, differential 19/19, ledger 21/21, contract 8/8.
-  - Census: 2 of 8 examples equal natively. The other 6 are refused by name: `..`, `expect`, `record`, `axiom`, `kind`, `whatif`.
+  - Census: 2 of 9 (said "of 8" at the time, corrected 0.60.435) examples equal natively. The other 7 are refused by name: `..`, `expect`, `record`, `axiom`, `kind`, `whatif`.
 - **Speed:** the compiler compiling itself: 15.9 s interpreted, 0.74 s native (stage 1), 0.82 s (stage 2). The hand-written component world
   compiled natively in 0.49 s. native.test took 41 s.
 - **Lines:** Emerge's totals went from 22,694 JS and 9,099 .eg (start of the day) to 22,736 JS and 10,006 .eg. JS removed so far: 0. It grew

@@ -1154,7 +1154,11 @@ fn parse_primary() {
       next()
       return node("Ident", t, { name: "state" })
     }
-    if t.v == "state" or t.v == "whatif" or t.v == "spawn" { refuse_at(t.v, t) }
+    if t.v == "whatif" {
+      next()
+      return node("Whatif", t, { body: parse_block() })
+    }
+    if t.v == "state" or t.v == "spawn" { refuse_at(t.v, t) }
   }
   if t.t == "OP" {
     if t.v == "(" {

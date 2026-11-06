@@ -401,7 +401,7 @@ for (const [label, file, withLedger] of [['components.eg as written, its ledger 
   const exe = path.join(TMP, 'language.bin');
   const build = spawnSync(process.execPath, [EG, 'native', file, '-o', exe], { encoding: 'utf8' });
   const run = build.status === 0 ? spawnSync(exe, [], { encoding: 'utf8' }) : null;
-  if (run && /expectation failed: one is not two/.test(ref.stdout) && run.stdout === ref.stdout && run.status === ref.status) { pass++; console.log('✓ the rest of the language natively (.., expect, upper, lower, record, gap, promote, random, uid), line for line, ledger hash for hash'); }
+  if (run && /expectation failed: one is not two/.test(ref.stdout) && run.stdout === ref.stdout && run.status === ref.status) { pass++; console.log('✓ the rest of the language natively (.., expect, upper, lower, record, gap, promote, random, uid, whatif), line for line, ledger hash for hash'); }
   else { fail++; console.log('✗ the rest of the language natively — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout)}` : (build.stderr || build.stdout))); }
 }
 

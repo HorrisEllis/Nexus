@@ -314,3 +314,12 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # interpreter's $.axioms); a constraint reading a null state field opens an evidential gap (0.8) and the state does not change, its fields found
 # by lower.eg (reads_of). codegen.eg: the embedded world is no_loc like the prelude, so its errors are reported at the caller's line.
 # examples/axioms.eg natively equals the interpreter in stdout, stderr and exit status (native.test). Census: 4 of 8 (axioms added).
+
+# ── ADDENDUM 2026-11-06 (0.60.435) — CIE15 fourth slice: whatif natively ──
+# James, 2026-11-06: "just keep going."
+# world.eg whatif_branch: the world snapshotted (states, comps, handlers, entries, checkpoint, gaps, the generator, spent, unrouted, axioms,
+# context, wires), the branch run in its own context, everything put back (also on error), one whatif entry kept. front.eg parses whatif { … };
+# lower.eg makes the block's last expression its value. examples/whatif.eg natively equals the interpreter; language.eg shows the branch's draw
+# is the world's next draw (restored) and its whatif entry hash for hash.
+# Census: 5 of 9 (whatif added). Correction, the coder's: earlier addenda said "of 8"; the census has always counted 9 (eight examples and
+# modules/main), so the line was 2, 3, 4 and now 5 of 9. Refused: hello (matches), primitives (kind), tests (test blocks), modules/main (sort_by).

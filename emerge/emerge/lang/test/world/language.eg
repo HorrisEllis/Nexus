@@ -13,4 +13,10 @@ record "note" { said: "hello" }
 gap "a test gap" pressure 0.4 type logical
 promote "idea" with proof false
 print(gaps() |> map(fn(g) = "{g.id} {g.type}/{g.pressure}"))
+// whatif (CIE15): the branch's records are put back, one whatif entry is kept, and the branch's draw is not the world's
+let branch = whatif {
+  record "inside" { n: 1 }
+  random()
+}
+print("branch drew", branch, "the world draws", random())
 for e in ledger() { print(e.seq, e.kind, e.hash) }
