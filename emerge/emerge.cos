@@ -371,7 +371,7 @@ payload:
       emerge/siso/StreamLog.js: 69b5eac796b87662dc84e3d36a7fc84847b644c059fd61a138c03917e72a7a2d
       emerge/siso/index.js: 67844385ebccdcbb60b09efcef466fc6b6034e46dc00131cb18884ade72a590a
       emerge/spec/_archive/emerge-1.1.0.spec: 7305e91dbb425c6c0889ee5f83df513ac9d8d13f55f63cc642ab1e0e46fdc5fe
-      emerge/spec/cie-eg.spec: 58192fedddc54bd9915c2359e23eb056d4662db94f65c824d3567bbace9ef78b
+      emerge/spec/cie-eg.spec: 4a8ae8e13a3fc034c9cd40358c9c03d5bf36243fbbd28d73987bcca6a59e81ce
       emerge/spec/emerge-core.spec: 1b4186d99a342384a105a85e160d4677464a30f80dba28bf472c7ce718c0b653
       emerge/spec/emerge.node-taxonomy.md: 2e832b0ed0f51b9e6620b4d4a5f57b366c188d2ec9f7a6eddcc300dff6acb621
       emerge/spec/emerge.node-taxonomy.spec: 7b9334ef66b7f42f69390de813ffd2191e102a968d147b267f4cb72725c4420c
