@@ -7,11 +7,11 @@ intent: null
 summary: OC11_the_cos_app_runs_alone (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793557554810
+exported_at: 1793991934271
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793557554810
-lastSeenAt: 1793557554810
+firstSeenAt: 1793991934271
+lastSeenAt: 1793991934271
 fingerprint: null
 payload:
   id: OC11_the_cos_app_runs_alone
@@ -32,4 +32,4 @@ payload:
   blocks:
     - MOD-OC-CONSOLE
   spec: docs/orchestration-console.spec
-  graph: d49c0504d8afae24
+  graph: 82e5e3a24001c2b5

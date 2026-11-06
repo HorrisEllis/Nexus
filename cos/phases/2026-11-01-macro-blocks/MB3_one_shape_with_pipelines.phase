@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+type: phase
+id: docs_2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+context: pipeline phase MB3_one_shape_with_pipelines of docs/2026-11-01-macro-blocks-phasemap.spec
+intent: null
+summary: MB3_one_shape_with_pipelines (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1793991935936
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793991935936
+lastSeenAt: 1793991935936
+fingerprint: null
+payload:
+  id: MB3_one_shape_with_pipelines
+  map: docs/2026-11-01-macro-blocks-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/spec/gate.spec
+    - cos/gate/gate.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - lib/automation/pipeline.js
+    - clear-glass/renderer/settings/sections/pipelines.js
+    - tests/modules/test-cos-gate.test.js
+  depends_on:
+    - MB2_the_blocks_ui
+    - OC12_the_survey
+  blocks: []
+  spec: null
+  graph: bf3cf81c043fb54b

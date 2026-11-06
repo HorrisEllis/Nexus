@@ -48,8 +48,8 @@ phases:
     proof: "driven in Clear Glass: a gate added between two blocks, saved, read back from the node, run"
   MB3_one_shape_with_pipelines:
     status: OPEN
-    depends_on: [MB2_the_blocks_ui]
-    files: [clear-glass/renderer/settings/sections/pipelines.js]
+    depends_on: [MB2_the_blocks_ui, OC12_the_survey]   # OC12 added 2026-11-06 (expanded, addendum below)
+    files: [cos/spec/gate.spec, cos/gate/gate.js, cos/gate/schema.gate, cos/manager/server.js, cos/manager/contract.json, lib/automation/pipeline.js, clear-glass/renderer/settings/sections/pipelines.js, tests/modules/test-cos-gate.test.js]
     interface: [html]
     does: "pipelines' task gate and the macro's gate are one editor (the same fields, one file), so a gate made in one reads the same in the other"
     proof: "the same gate shown in a pipeline task and between two macro blocks"
@@ -72,3 +72,21 @@ phases:
 # reports step i of n to one toast for playback and for recording; pause holds before the next step; skip moves past one; back reruns the
 # step before. Proof in Clear Glass (never Playwright).
 #   MB4_the_macro_toast: { status: BUILT 0.60.359 (test-macro-toast 5/5; the toast itself not yet driven in Clear Glass), depends_on: [MB2_the_blocks_ui], files: [lib/agent-tools/tools/clear-glass/macro-control.js, lib/agent-tools/tools/clear-glass/macro.js, clear-glass/src/macros/live-recording.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/src/bookmarks/browser.js, tests/modules/test-macro-toast.test.js] }
+
+# ── ADDENDUM 2026-11-06 — MB3 expanded: one gate, COS's, between every step of every pipeline ──
+# James, 2026-11-06: "I want cos to be used for the gates between each step. Using brain os, libs automation, and clearglass automation. Like
+# each step has extensive conditions, triggers, timing, etc. like tasker, automate". MB3 already asked for one gate shape (pipeline and macro);
+# it grows to every kind of step: pipeline tasks, macro blocks, .task, .procedure steps, BrainOS steps, and the build loop's gates (Emerge,
+# RAID, Guardian's agents). Expanded, not a new phase (his 2026-11-03 rule).
+# MB3 as expanded (its depends_on and files above changed to these):
+MB3_expanded_2026_11_06:
+  depends_on: [MB2_the_blocks_ui, OC12_the_survey]
+  spec: cos/spec/gate.spec
+  files: [cos/spec/gate.spec, cos/gate/gate.js, cos/gate/schema.gate, cos/manager/server.js, cos/manager/contract.json, lib/automation/pipeline.js,
+          clear-glass/renderer/settings/sections/pipelines.js, tests/modules/test-cos-gate.test.js]
+  does: >-
+    One gate: triggers (event, time, cron, element, file, webhook, a run's result), conditions (all/any/not over outputs, elements, the
+    contract), timing (delay, wait-until with timeout, debounce, retry with backoff), on-fail (retry, branch, compensate, ask him), and the
+    feedback it records. Held and evaluated by COS (POST /api/cos/gate/evaluate, its own registry entry); pipeline.js gateOpen and the macro gate
+    ask COS through that route, and keep their own answer when COS is down, said (§1.2). The fields are fixed by OC12, not before.
+  proof: "the same gate shown in a pipeline task and between two macro blocks, evaluated by COS (test-cos-gate); COS stopped → the step says so"

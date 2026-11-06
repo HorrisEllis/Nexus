@@ -1,0 +1,198 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MB3_one_shape_with_pipelines:bf3cf81c043fb54b
+type: graph
+id: phase:MB3_one_shape_with_pipelines:bf3cf81c043fb54b
+context: dependency graph of phase MB3_one_shape_with_pipelines
+intent: null
+summary: 24 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793991935936
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793991935936
+lastSeenAt: 1793991935936
+fingerprint: null
+payload:
+  for: MB3_one_shape_with_pipelines
+  kind: phase
+  repo: null
+  hash: bf3cf81c043fb54b
+  nodes:
+    - path: clear-glass/renderer/settings/sections/pipelines.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cos/gate/gate.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/spec/gate.spec
+      role: changes
+      exists: false
+      system: cos
+    - path: lib/automation/pipeline.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-gate.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: lib/automation-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-procedures.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/cli.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/cli.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/automation-nodes.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: lib/repo-procedures.js
+      to: lib/automation/pipeline.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+    dependents: []
+    upstream:
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB_D0_blocks_and_gates
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+    downstream: []
+    blockedBy:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by OC12_the_survey
+      - 'depends on (2): MB2_the_blocks_ui, OC12_the_survey · all upstream 5'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+        kind: declared
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+        kind: declared

@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OC12_the_survey:63599d75364caad0
+type: graph
+id: phase:OC12_the_survey:63599d75364caad0
+context: dependency graph of phase OC12_the_survey
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793991934242
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793991934242
+lastSeenAt: 1793991934242
+fingerprint: null
+payload:
+  for: OC12_the_survey
+  kind: phase
+  repo: null
+  hash: 63599d75364caad0
+  nodes:
+    - path: cos/spec/orchestration-survey.md
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+    dependents:
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+    upstream:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+    downstream:
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): OC_D0_one_console_in_cos'
+      - >-
+        needed by (1): MB3_one_shape_with_pipelines · finishing it unlocks
+        MB3_one_shape_with_pipelines
+    edges:
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+        kind: declared
