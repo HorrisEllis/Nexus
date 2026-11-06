@@ -70,3 +70,23 @@ correction:
   questions_left: "Q1 (what the agent writes) and Q3 (the proof codebase) stand; Q2 is answered: the framework is contract, DAG and compartment, run by RAID, not the toolkit's prose"
 
 phases: {}
+
+# ── ADDENDUM 2026-11-06 — his answers to Q1, Q2 and Q3 ──
+# Asked: "my .framework" — the contract/DAG/compartment run by RAID, docs/innovation-toolkit.framework, or both? · what the agent writes · the proof build.
+answers:
+  Q2_the_framework:
+    his_words: >-
+      "Both. I want cos to be used for the gates between each step. Using brain os, libs automation, and clearglass automation. Like each step
+      has extensive conditions, triggers, timing, etc. like tasker, automate, look at all other major services and frameworks that have
+      orchadteation and automation, extend and expand macros, feedback loops, route to nexus, outside of Nexus, let’s build a full pipeline
+      editor and manager for all the pipelines in nexus, automation workflow and pipeline management."
+    reads_as: >-
+      The framework is both: contract, DAG and compartment run by RAID, and his toolkit's method. Between every step COS holds the gate. The
+      gate's conditions, triggers and timing come from BrainOS, lib/automation and Clear Glass's automation, made one. The editor and manager
+      are the orchestration console (docs/2026-11-01-orchestration-console-phasemap.spec), expanded the same day, not a new map.
+  Q1_what_the_agent_writes:
+    his_words: "The projects language for now, prioritize emerge first."
+    reads_as: "(B) the project's language for now; where Emerge can be used it goes first (the Emerge rung, EMB1, already tries Emerge before JS)."
+  Q3_the_proof_codebase:
+    his_words: "All three"
+    reads_as: "a Fiverr gig, Pillar's contracts (PIL2), and a small new system he names; each built end to end in COS on his machine."

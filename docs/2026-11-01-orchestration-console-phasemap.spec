@@ -68,6 +68,15 @@ phases:
     interface: [cli]
     does: "the .task node: write, parse, validate against the engine's catalogue, one file per task"
     proof: "MOD-OC-TASK-NODE's acceptance"
+  OC12_the_survey:
+    status: OPEN
+    depends_on: [OC_D0_one_console_in_cos]
+    files: [cos/spec/orchestration-survey.md]
+    does: >-
+      His "look at all other major services and frameworks that have orchadteation and automation": Tasker, Automate (LlamaLab), Node-RED,
+      n8n, Zapier/Make, Home Assistant, Temporal, Airflow, Prefect/Dagster, AWS Step Functions, Argo, GitHub Actions; per one: its trigger,
+      condition, timing, retry, compensation, human-in-the-loop and feedback model; what Nexus has of each (file:line); what the gate takes.
+    proof: "every field of the gate (MB3, expanded) names the platforms it came from, or says it is his own"
   OC7_the_taxonomy_expanded:
     status: OPEN
     depends_on: [OC1_task_nodes]
@@ -169,3 +178,20 @@ build_order: "OC1 → OC7 → OC2 → (OC3, OC6) and (OC4, OC5) from OC1 → OC8
 # canvas for the automation pipeline and workflow, to replace the brainos, and build tools for it instead, it already uses cos, and then the
 # canvas for the cos ui?"
 # (the decisions OC_D1–OC_D4 and the phases OC9–OC11 of this addendum are written into the decisions: and phases: blocks above)
+
+# ── ADDENDUM 2026-11-06 — expanded: COS holds the gate between every step; one editor and manager for every pipeline ──
+# James, 2026-11-06, asked what "my .framework" meant for the automation: "Both. I want cos to be used for the gates between each step. Using
+# brain os, libs automation, and clearglass automation. Like each step has extensive conditions, triggers, timing, etc. like tasker, automate,
+# look at all other major services and frameworks that have orchadteation and automation, extend and expand macros, feedback loops, route to
+# nexus, outside of Nexus, let’s build a full pipeline editor and manager for all the pipelines in nexus, automation workflow and pipeline
+# management." Before it: "Need to get the automation working fully in cos using guardian, emerge, my .framework, and nexus."
+# The same intent as this map's origin (2026-11-01), so this map expands (his rule, 2026-11-03: "they expand"). OC_D0 (one console in COS)
+# now has his words; it was PROPOSED.
+found_2026_11_06:
+  - "Gates between steps live in three places, none COS's: lib/automation/pipeline.js gateOpen (PL6, PL7), Clear Glass's macro gate (MB1:
+     steps[i].after, EG.settle), and GWK1's schema.step_chain (mapped, not built). MB3 (docs/2026-11-01-macro-blocks-phasemap.spec) is the
+     phase for one shape; it is expanded below, not rewritten."
+  - "This map's origin asked to look at every orchestration platform; no survey was ever written. It is OC12, before the gate's fields are fixed."
+  - "OC1–OC7 put code in lib/automation/. By §5.15 and his 2026-11-03 rule (lib/ is not for what a system uses) the gate is COS's: cos/gate/.
+     Where the rest of lib/automation goes (COS or the Orchestrator) is his; asked, not decided."
+# OC12 is in phases: above.
