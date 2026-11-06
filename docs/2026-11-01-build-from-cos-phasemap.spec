@@ -81,6 +81,19 @@ decisions:
     by: "his, 2026-11-06: \"what about the deterministic workshop\"; and 2026-10-05 (RS4/RS8, docs/2026-10-05-spec-workshop-rebuild-phasemap.spec): \"i wanted it to use deterministic primitives, and then anything on top is probabilistic. like a constraint field, or emergence.\""
     by_the_axioms: "§0.4 (deterministic first), PIL_D0 (Pillar's primitives), BC_D1 (one editor), REWIND_D0 (a gate rewinds a refused save)"
 
+  BC_D8_the_workshop_moves_into_cos:
+    status: "DECIDED 2026-11-06 (his) — supersedes BC_D4 (the workshop a module of Idearium, his \"maybe\" of 2026-11-01), kept (§0.3)"
+    chosen: >-
+      The spec workshop moves into COS: COS's folder, COS's routes, COS's UI. COS is a system manager like Idearium, and the two are the build
+      team: COS holds the workshop, the compartments, the builder and the compiler; Idearium keeps the ideas, the void, the repos, their specs
+      and the phases, and each reaches the other only by route (§5.15). The workshop opens a repo's spec through Idearium's route, never its
+      files.
+    by: "James, 2026-11-06: "can we move the spec workshop into cos. cos can be a system manager, like idearium. i want cos to use the ui. like cos is huge, idearium and cos are the build team, imagine with emerge what they can build.""
+    readings_to_confirm:
+      - "\"i want cos to use the ui\": (a) the coder's reading: COS takes the workshop's UI (and has Idearium's look already, MG_D11); (b) COS becomes
+         the one UI over every system (Idearium's screens inside COS's window). (a) is this move; (b) would be its own phase."
+      - "The void stays Idearium's (it holds his ideas) and hands the end state to COS by route (V8). To confirm."
+
 phases:
   BC0_the_full_spec:
     status: OPEN
@@ -90,7 +103,7 @@ phases:
     proof: "test-substrate-spec compiles it with every module at full depth"
   BC1_the_document_library:
     status: OPEN
-    depends_on: [BC0_the_full_spec]
+    depends_on: [BC0_the_full_spec, BC7_the_workshop_moves_into_cos]
     files: [idearium/spec-engine/library.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/spec-library.html]
     does: "every document of every kind (spec, template, schema, node type, phasemap, code) in one list from its owner's routes: kind, owner, path, updated, last opened; sort by type, date or recent from one dropdown; the same list as a command row"
     proof: "the list's counts equal each owner's own count; each sort orders as said; the row prints what the screen shows"
@@ -155,7 +168,20 @@ phases:
       - "\"work surface/area\": read as Idearium's work surface (the Code tab's area: code, diff, versions, run) brought into COS beside the builder. To confirm."
     proof: "a fixture compartment compiled to Node and to a PWA (both checked: the service runs, the PWA's manifest and worker load); Electron and Android each either built or refused naming the missing toolchain"
 
-build_order: "BC0 → BC1 → (BC2, BC3) → BC4 → BC6 (with MB2 and MG22). BC4 also waits on the open canvas (MG_D18), where Add lives. BC5 waits on MG19/MG20."
+  BC7_the_workshop_moves_into_cos:
+    status: OPEN
+    depends_on: [BC_D8_the_workshop_moves_into_cos, BC0_the_full_spec]
+    files: [idearium/lib/workshop.js, idearium/ui/workshop.html, idearium/ui/js/workshop.js, idearium/ui/spec-library.html, idearium/api/index.js, idearium/cli/route-commands.js, cos/workshop, cos/manager/server.js, cos/manager/contract.json, cos/ui/workshop, clear-glass/src/ipc/bridge.js, _archive]
+    requires: [node]
+    prerequisites: ["every caller of /api/workshop named before the move (found 2026-11-06: clear-glass's bridge, the command table, 7 test files)", "the table idearium_workshops read and its rows counted"]
+    does: >-
+      The workshop's engine (idearium/lib/workshop.js, 469 lines) and its pages (workshop.html, js/workshop.js, spec-library.html) move into
+      COS (cos/workshop, cos/ui/workshop), its sessions table into COS's own store (counted before and after). COS serves the workshop's
+      routes; Idearium's /api/workshop answers by asking COS until every caller is moved, then is archived (§0.3). The workshop reads and saves
+      a repo's spec through Idearium's route. The rest of BC (the library, the editor, templates, Build, the compiler) is built in COS from here.
+    proof: "the same sessions before and after (count and content); every caller answered through COS; a spec saved from COS's workshop lands in its repo through Idearium's route; driven in Clear Glass"
+
+build_order: "BC0 → BC7 (the workshop into COS, BC_D8) → BC1 → (BC2, BC3) → BC4 → BC6 (with MB2 and MG22). BC4 also waits on the open canvas (MG_D18), where Add lives. BC5 waits on MG19/MG20."
 
 # ── ADDENDUM 2026-11-01 (b) — measured for his decoupling question, before any move ────────────────────────────────────────────────────
 # James: "tell me how close we are to decoupling each system. which systems fully use the node based memory, database, and aligns with the

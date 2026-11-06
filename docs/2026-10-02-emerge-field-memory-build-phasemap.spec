@@ -951,7 +951,7 @@ spec:
       value: { score: 5, cost: L, for: [compounding, income], why: "agents iterate in a sandbox until the end-state conditions are met — the self-building engine" }
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
-      depends_on: [PR1_proof_run_the_delivery_checker, SH1_shadow_space, CB1_cfr_build_logic]
+      depends_on: [PR1_proof_run_the_delivery_checker, SH1_shadow_space, CB1_cfr_build_logic, V8_the_void_sets_the_end_state, FM1_mining_failure_modes]
       files: [cos/playground/llm-lab.js, cos/playground/sandbox.js, idearium/repo/proof-run.js, copilot/capability-extend.js]
       does: >-
         "Use cos end state to have agents in a lab to solve problems … keep filling the agent with feedback until it
@@ -1016,6 +1016,12 @@ spec:
         lab (LB1) iterates until the conditions pass, and the new capability is registered as nodes (registry, routes,
         CLI, loom — E12) so the next request finds it. A request is answered when its end state is proven, never before.
       proof: "a request no tool serves today: a gap, an end state, a lab run, a registered capability, then the same request completed by it"
+      expanded_2026_11_06_void: >-
+        James, 2026-11-06: "the spacial void, is for setting the endstate, which then creates the dag/conditions for the stopping condintions. agnostic problem solving, like synthesis filling a compartment. ierative build loops learning from each fault or failure mode report, until it meets the conditoins." The end state now comes from the void (V8, docs/2026-10-02-spatial-void-phasemap.spec, VOID_D1 his), with its conditions, its
+        DAG and its stopping conditions; the loop learns from each failure-mode report (docs/2026-10-17-failure-mode-report-phasemap.spec) and
+        from the field's failure-mode region (FM1: one an anomaly, two a coincidence, three a candidate invariant). The compartment is the
+        sandbox the loop fills (COS). Status kept LATER: his focus is Emerge first (CLAUDE.md, 2026-11-06); it is next after CB1 in Pillar's order.
+      depends_on_added: [V8_the_void_sets_the_end_state, FM1_mining_failure_modes]
 
     DA1_domain_agnostic_end_states:
       layer: library

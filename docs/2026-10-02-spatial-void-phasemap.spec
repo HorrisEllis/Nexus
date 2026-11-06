@@ -99,3 +99,33 @@ spec:
 # (entering, empty, unreachable + try again; a lost server said while the field stays), contrast on everything read,
 # names that never overprint, unplaced ideas spread over the whole field. Measured: 150 ideas load + paint 77–85 ms,
 # repaint 10–12 ms; no console errors. tests/modules/test-spatial-void.test.js 7/7 (VD-07).
+
+## ADDENDUM 2026-11-06 — the void sets the end state (his); V8 written
+# James, 2026-11-06: "the spacial void, is for setting the endstate, which then creates the dag/conditions for the stopping condintions. agnostic problem solving, like synthesis filling a compartment. ierative build loops learning from each fault or failure mode report, until it meets the conditoins."
+# Read first (§0.1): the void is built (V1–V7: ideas, the two dials, echoes, the exit gate "→ spec"). The end state, its conditions and the
+# loop to them already exist as pieces: lib/end-state.js (conditions frozen, check kinds), FA11 (lib/intent-flow.js: backward from the end
+# state, forward from the change, the meeting set is the DAG), PR1's proof run, the failure-mode report (FMR), LB1 (the end-state lab: attempt,
+# proof, failures fed back, strategy changed, until met) and DA1 (end states for any domain). Nothing joined the void to them: the void's exit
+# went to the spec workshop only. V8 is that join; the loop itself is LB1's (expanded, not written again).
+decisions:
+  VOID_D1_the_void_sets_the_end_state:
+    status: DECIDED 2026-11-06 (his)
+    chosen: >-
+      The void is where the end state is set. From it come the conditions (lib/end-state.js), the DAG to it (FA11, backward and forward) and
+      the stopping conditions (met, or the budget spent and said). The build loop (LB1) runs against them, learning from each failure-mode
+      report, until the conditions are met. Domain agnostic (DA1): code, research, a problem; "synthesis filling a compartment" — the
+      compartment is the sandbox the loop fills (reading, to confirm).
+    by: "his, 2026-11-06 (quoted above)"
+phases_v8:
+  V8_the_void_sets_the_end_state:
+    status: OPEN
+    depends_on: [VOID_D1_the_void_sets_the_end_state, V7_proof, FA11_bidirectional_causal_chain]
+    files: [idearium/lib/void.js, idearium/ui/void.html, lib/end-state.js, lib/intent-flow.js, idearium/api/index.js, tests/modules/test-void-end-state.test.js]
+    requires: [node, "an agent for the conditions' wording (a stand-in in the test)"]
+    prerequisites: ["lib/end-state.js's condition kinds read and listed before any is added"]
+    does: >-
+      From an idea in the void: SET THE END STATE. He states it; the void proposes its conditions (each a machine check of lib/end-state.js's
+      kinds, his yes on each), the DAG to it (FA11), and the stopping conditions (all met; or the budget of attempts, tokens and time he sets,
+      spent, and then what was tried said). Saved with the idea; handed to LB1's lab as its end state. Deterministic first: the conditions
+      are checks, never the model's say-so.
+    proof: "a fixture idea given an end state: its conditions frozen and checkable, its DAG built, its stopping conditions saved; LB1 receives exactly that end state"
