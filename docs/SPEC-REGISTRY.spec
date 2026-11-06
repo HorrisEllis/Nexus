@@ -2064,3 +2064,7 @@ spec:
 # (test-substrate-spec SS-02, one map per spec).
 # ADDENDUM 2026-11-06 — registered: docs/2026-11-06-agents-build-in-his-framework-phasemap.spec, the end state (no phases yet, his "end state
 # first. using my framework. emerge. and raid"): agents build codebases from specs through his Innovation Toolkit, Emerge and RAID. To confirm.
+# ADDENDUM 2026-11-06 — registered: docs/2026-11-06-emerge-is-the-replacement-phasemap.spec (EQ_D0, EQ1–EQ4). James: "no more js, we focus on .eg"
+# · "No non-emerge code, unless specified in the contract or project. lack of capability is an opportunity to build it." (AXIOMS §17.13). Its
+# phases add modules to emerge/emerge/spec/cie-eg.spec when each is specced: the crystal memory, the benchmark ledger, reference nodes, the guide
+# and atlas tool for any LLM.

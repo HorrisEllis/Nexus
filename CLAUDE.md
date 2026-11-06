@@ -30,6 +30,11 @@ leverage. If fiverr isn’t days of work. I can also use remote control to give 
 reading, D6–D10), then the merged kernel (EAS_D8) and the small-model benchmark. Fiverr after, if it is not days of work: FP5's test, FG4, TC3,
 FG5 (docs/2026-10-28-gated-flows-phasemap.spec), proved live through his Remote Control. Work outside the focus waits unless he asks. The how is in
 docs/CLAUDE.md (addendum 2026-11-06, the focus).
+**No non-Emerge code unless the contract or the project names it; a missing capability is built (AXIOMS §17.13).** James, 2026-11-06: "the
+moment js is removed from emerge it becomes the replacement. focus on that first. no more js, we focus on .eg" · "No non-emerge code, unless
+specified in the contract or project. lack of capability is an opportunity to build it." First in order: the JavaScript removal from Emerge
+(docs/2026-11-06-cie-eg-build-phasemap.spec). **Crystallise verified primitives; log every benchmark** (his, the same day): the how is in
+docs/CLAUDE.md (addendum 2026-11-06, Emerge is the replacement).
 **Every change and every version goes to Versionium, in full (§17.12).** James, 2026-10-29: "full changes, and versions have to be pushed
 to versionium? enforce it everywhere that you'd find it." The how is in docs/CLAUDE.md.
 

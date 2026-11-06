@@ -51,6 +51,11 @@ historical record, not edited further.*
 > Versionium, in full; a record made while it is down waits in a durable buffer. The wording is the coder's, and "in full" is the coder's
 > reading of "full changes" (each path before and after), to confirm. One quick-reference line added. Nothing else in this file changed.
 
+> **§ADDENDUM 2026-11-06** — James: "I want an axiom when it's done. No non-emerge code, unless specified in the contract or project. lack of
+> capability is an opportunity to build it." Added §17.13 (Group 17, after §17.12) and one quick-reference line. Written now; whether "when it's
+> done" meant now or once Emerge's own JavaScript is gone is his to confirm (docs/2026-11-06-emerge-is-the-replacement-phasemap.spec EQ_D0).
+> Nothing else in this file changed.
+
 
 ---
 
@@ -520,6 +525,15 @@ Wherever a change or a version is made, it is recorded in Versionium, the owner 
 
 ---
 
+**§17.13 No Non-Emerge Code Unless the Contract or the Project Names It; a Missing Capability Is Built** *(2026-11-06, his words)*
+New code is Emerge (.eg). Code in another language is written only where a contract or the project specifies it: a project in its own
+language, or Emerge's own JavaScript while its removal is under way (docs/2026-11-06-cie-eg-build-phasemap.spec). When Emerge lacks a
+capability, that is the opportunity to build it into Emerge, as a primitive with its contract (Pillar) and then natively, never a reason to
+reach for another language.
+*↳ James, 2026-11-06: "I want an axiom when it's done. No non-emerge code, unless specified in the contract or project. lack of capability is an opportunity to build it." · "no more js, we focus on .eg". The wording of his two sentences is kept; the scope note (a project's own language, Emerge's JS under removal) is the coder's reading, to confirm.*
+
+---
+
 ## Part II — Flexible Principles
 
 **The End-State:** A system that is as reliable, resilient, and flexible as possible — while remaining fluid. Novel, not neat little boxes.
@@ -679,6 +693,7 @@ Wherever a change or a version is made, it is recorded in Versionium, the owner 
 §17.10 Verify before you promote. Cost cuts may skip soft checks, never hard ones.
 §17.11 Every performance claim names its benchmark.
 §17.12 Every change and every version is recorded in Versionium, in full; a record made while it is down waits, never dropped.
+§17.13 No non-Emerge code unless the contract or the project names it; a missing capability is built.
 ```
 
 > **§** End-state: as reliable, resilient, and flexible as possible — while remaining fluid.

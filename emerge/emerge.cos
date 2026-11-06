@@ -323,6 +323,8 @@ payload:
       emerge/data/ledger/2026-11-06T20-02-43-768Z/events.jsonl: f0f7ff247b38ace2241c8d01aad63e0b13dc7f2acaa1c454b0179ce9514d5aab
       emerge/data/ledger/2026-11-06T20-13-16-563Z/events.jsonl: 5fde8d37f1b72d54cbcd4af894759707f212e5de6f1ca28284667ad0821381cf
       emerge/data/ledger/2026-11-06T20-14-15-926Z/events.jsonl: ee2a58b7d37fb97f11de537e50888dc2233a818228ab7d7de78a738c8b4e3d9d
+      emerge/data/ledger/2026-11-06T20-14-17-920Z/events.jsonl: 057f1f88b08ee0803a05c70a3deec503cdb5f09c46219761a00fb5f39d800e50
+      emerge/data/ledger/2026-11-06T20-19-44-973Z/events.jsonl: 6fe5ae80b9af778a4fefd0e8f8acdb324d1b771b9620e997030841121cc74b0d
       emerge/data/node-index/nodes_bundle.json: 26b084d77854dcf167cf911fd44352d098a90740953efee6384bdffadbbd44c6
       emerge/data/node-index/nodes_bundle_ledger.jsonl: d0e99fddafa5ff54d94163a6fcffd7a2592c039099a97bf0f04a675ee8f3f4c3
       emerge/data/node-index/nodes_capability.json: 693b003b324d149eef21f8ee211e610d399a198c3bea60d9f69078603248980b
@@ -620,6 +622,14 @@ payload:
       phases/2026-11-06-cie-eg-build/graph/CIE8_spec_compiler_in_emerge-19e737a93db3c3a8.graph: 2c7efbd11e1f33bd9c6f8493d5af38b6d9bf626ef7e16342a3795f3b7fffe4fc
       phases/2026-11-06-cie-eg-build/graph/CIE9_tests_in_emerge-2dd42cd4c21d4317.graph: 6b25c7a9f2d31fbf43d65df5ddf80dccc34d4e6a6ac5ae04347fb080421cff01
       phases/2026-11-06-cie-eg-build/graph/_superseded/CIE3_native_ledger-891a9416038deae3.graph: 635aed248e9c6adea32f3226dceeb48d2e7e4c31e23534169a77f60ad4ad5ddd
+      phases/2026-11-06-emerge-is-the-replacement/EQ1_the_crystal_memory.phase: 0d4ab88c0549d81bbff7375405a7328572de652c0a1f68f6a3afe5bf28decdfe
+      phases/2026-11-06-emerge-is-the-replacement/EQ2_the_benchmark_ledger.phase: ca3e2dfbca901c0d8ed4d502a56f5dca482caf9677700190bba780161dcae4a2
+      phases/2026-11-06-emerge-is-the-replacement/EQ3_reference_nodes.phase: ad38e150838d2e39782ad6defb1f78a04953a4e4b2108e8bdb83e0da3ce2bde9
+      phases/2026-11-06-emerge-is-the-replacement/EQ4_the_emerge_guide_for_any_llm.phase: b74d961b46ef6f57a3d529e9918ebacc5c669a319f7b3e2d88c64a8efadc6475
+      phases/2026-11-06-emerge-is-the-replacement/graph/EQ1_the_crystal_memory-65d6cd5a11325ebf.graph: 144f9dd7f4e61d38ae2a74768ea222ab769fc7dd3c3a02c3618a7dcbbcd040a2
+      phases/2026-11-06-emerge-is-the-replacement/graph/EQ2_the_benchmark_ledger-8af206da6a003a8d.graph: d86b9856fff458c9c1848625d02f443f1eaf0002e086ecee2eef26a856fa345f
+      phases/2026-11-06-emerge-is-the-replacement/graph/EQ3_reference_nodes-2b0dd331cda64f7c.graph: 95ef0696471e064e0f8543c2fc413fb234a9228738c65376a2b06572f7485399
+      phases/2026-11-06-emerge-is-the-replacement/graph/EQ4_the_emerge_guide_for_any_llm-c7f51b6789e63ed4.graph: f4da74d485fe845750e98b25fdd6d8607b3e248a43178fd73f3ffef6608f8228
   runtime:
     process:
       name: emerge
