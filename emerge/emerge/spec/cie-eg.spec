@@ -511,7 +511,7 @@ spec:
       chain_id: "a UUID written in the genesis, used in nonces"
       entry_identity: "its hash; no separate entry id"
       layout:
-        status: OPEN
+        status: DECIDED   # D6, James, 2026-11-06: "Standard form"
         options: ["standard 8-4-4-4-12 with version and variant bits set", "emerge-component- prefix form"]
         built: "for the chain id only: the standard form, version 8 and variant 10, derived from SHA-256(\"eg.chain.v1\" 0x00 seed \" \" version) so two runs from one seed and build agree."
         decision_ref: D6
@@ -712,11 +712,11 @@ spec:
         - { failure: "delete of a row another row refs", type: causal, pressure: 0.7 }
       schema_refs: [SchemaDecl, StoreDecl, RowEntryBody]
       open:
-        - { id: DT-Q1, question: "Keyword: schema (as here), type, or record? record is already a statement and type is a contextual word in gap." }
-        - { id: DT-Q2, question: "Is the ledger the only storage (tables rebuilt by replaying from the last checkpoint), or does a store keep a sealed snapshot file with the ledger as its log?" }
-        - { id: DT-Q3, question: "Queries: one table only at first, or joins along ref fields from the start?" }
-        - { id: DT-Q4, question: "Indexes beyond the key: declared in the schema, in the store, or not at all at first?" }
-        - { id: DT-Q5, question: "Deleting a referenced row: refuse with a gap (as proposed), or allow a declared cascade?" }
+        - { id: DT-Q1, question: "Keyword: schema (as here), type, or record? record is already a statement and type is a contextual word in gap.", answer: "James, 2026-11-06: \"schema\"" }
+        - { id: DT-Q2, question: "Is the ledger the only storage (tables rebuilt by replaying from the last checkpoint), or does a store keep a sealed snapshot file with the ledger as its log?", answer: "James, 2026-11-06: \"Snapshot + ledger\"" }
+        - { id: DT-Q3, question: "Queries: one table only at first, or joins along ref fields from the start?", answer: "James, 2026-11-06: \"One table, no indexes\" (one table at first)" }
+        - { id: DT-Q4, question: "Indexes beyond the key: declared in the schema, in the store, or not at all at first?", answer: "James, 2026-11-06: \"One table, no indexes\" (no indexes beyond the key at first)" }
+        - { id: DT-Q5, question: "Deleting a referenced row: refuse with a gap (as proposed), or allow a declared cascade?", answer: "James, 2026-11-06: \"Refuse with a gap\"" }
 
     s15_chunks_as_layers:
       number: "15"
@@ -817,9 +817,9 @@ spec:
         - "component boundary (1 to 5 invariants) becomes the boundary of every chunk."
         - "roads become one edge type among several."
       open:
-        - { id: CH-Q1, question: "Does layer I (the contract) hold every edge, including links between data rows, or only structural ones (roads, dependencies) while data edges stay inside their store? Holding all makes every new row link change the contract hash." }
+        - { id: CH-Q1, question: "Does layer I (the contract) hold every edge, including links between data rows, or only structural ones (roads, dependencies) while data edges stay inside their store? Holding all makes every new row link change the contract hash.", answer: "the coder's pick by his delegation, 2026-11-06 (his: \"Pick the most effective and high leverage\"): structural edges only (roads, dependencies, part_of) in layer I; data links stay inside their store; his to overturn" }
         - { id: CH-Q2, question: "Edge types: a fixed set (road, ref, depends_on, part_of), or declarable like kinds?" }
-        - { id: CH-Q3, question: "Code as chunks: store .eg source content-addressed (fns and components by hash), or keep files and derive chunks from them?" }
+        - { id: CH-Q3, question: "Code as chunks: store .eg source content-addressed (fns and components by hash), or keep files and derive chunks from them?", answer: "the coder's pick by his delegation, 2026-11-06 (his: \"Pick the most effective and high leverage\"): .eg code stored content-addressed (fns and components by hash); his to overturn" }
         - { id: CH-Q4, question: "Where do known-answer vectors come from for each chunk (DF-06), and who signs off that a source is independent?" }
         - { id: CH-Q5, question: "Is the synthesizer written in .eg from the start (so emerge.exe runs it, section 0), or prototyped in the spec compiler first?" }
 
@@ -932,11 +932,11 @@ spec:
         - { id: D3, priority: 3, question: "Root key storage and loss policy.",                         ref: "8.4",  status: DECIDED, resolution: "James, 2026-11-06: \"Options for all maybe? Backup to a file for sure.\" Read as: all four stores offered, chosen per machine (OS credential store, passphrase, file, hardware token), and a backup to a file always kept. Confirmed 2026-11-06: \"Credential store with an export to file. Optional passphrase.\" — the OS credential store is the default, with an export to a file; a passphrase is optional." }
         - { id: D4, priority: 4, question: "Keep Cobalt-style dedup?",                                  ref: "4.7",  status: DECIDED, note: "13.6 proposes the count as an index", resolution: "James, 2026-11-06: \"Keep a failure more report so it can learn.\" Confirmed 2026-11-06: \"Failure mode report.\" — no lossy dedup; every event stays chained; the repeats of a failure are gathered into a failure-mode report the system learns from (the count kept beside the history, as 13.6)." }
         - { id: D5, priority: 5, question: "NFC tables in .eg, or a restricted subset first?",          ref: "2.3",  status: DECIDED, resolution: "James, 2026-11-06: \"Restricted subset first\". Hashed text, ids and ledger bodies are limited to a stated subset at first (ASCII identifiers are trivially NFC); anything outside it is refused with a gap, never normalized silently; the full tables later." }
-        - { id: D6, priority: 6, question: "UUID layout: standard form or prefix form?",                ref: "9",    status: OPEN }
-        - { id: D7, priority: 7, question: "Contract syntax: new contract block as proposed, or reuse wire only?", ref: "6.1", status: OPEN }
-        - { id: D8, priority: 8, question: "Data types and stores (14): adopt, and answer DT-Q1..Q5?",  ref: "14",   status: OPEN, note: "new in cie-eg.spec" }
-        - { id: D9, priority: 9, question: "Chunks as layers (15): adopt, and answer CH-Q1..Q3?",       ref: "15",   status: OPEN, note: "new in cie-eg.spec; bench/chunks.js measures it" }
-        - { id: D10, priority: 10, question: "The loop (16): adopt, and keep or override its defaults_to_override?", ref: "16", status: OPEN, note: "new 2026-10-31; MOD-REPLAY builds on it" }
+        - { id: D6, priority: 6, question: "UUID layout: standard form or prefix form?",                ref: "9",    status: DECIDED, resolution: "James, 2026-11-06: \"Standard form\" — 8-4-4-4-12 with version and variant bits set (the chain ids already are)." }
+        - { id: D7, priority: 7, question: "Contract syntax: new contract block as proposed, or reuse wire only?", ref: "6.1", status: DECIDED, resolution: "James, 2026-11-06: \"New contract block\" — a contract { … } block as proposed (gates, steps, limits in one place)." }
+        - { id: D8, priority: 8, question: "Data types and stores (14): adopt, and answer DT-Q1..Q5?",  ref: "14",   status: DECIDED, note: "new in cie-eg.spec", resolution: "Adopted with DT-Q1..Q5 answered by James, 2026-11-06: schema · snapshot + ledger · one table, no indexes at first · refuse with a gap." }
+        - { id: D9, priority: 9, question: "Chunks as layers (15): adopt, and answer CH-Q1..Q3?",       ref: "15",   status: DECIDED, note: "new in cie-eg.spec; bench/chunks.js measures it", resolution: "Adopted 2026-11-06. CH-Q1 and CH-Q3 were his to pick and he delegated them: \"Pick the most effective and high leverage\". The coder picked structural edges in the contract (a row link must not change the contract hash) and code stored by hash (stable identity, stored once, provable in the ledger, one hash per verified primitive). CH-Q5 answered by doing (.eg first, 2026-10-31). CH-Q2 (edge types fixed or declarable) and CH-Q4 (known-answer vectors and who signs them off) still open." }
+        - { id: D10, priority: 10, question: "The loop (16): adopt, and keep or override its defaults_to_override?", ref: "16", status: DECIDED, note: "new 2026-10-31; MOD-REPLAY builds on it", resolution: "James, 2026-11-06: \"Adopt, keep defaults\" — the loop adopted with every default as stated." }
 
   # ══════════════════════════════════════════════════════════════════════════
   # COMPILER VIEW — modules, events, schemas, enforcement, derived from the sections above
