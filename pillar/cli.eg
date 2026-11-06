@@ -1,37 +1,52 @@
-// pillar/cli.eg — Pillar's CLI (MOD-PIL-SYSTEM, phase PIL1_pillar_stands): eg run pillar/cli.eg <command> [args]
-// Every command is in Pillar's registry (registry.eg). An unknown command is refused and the commands are named (§1.2).
+// pillar/cli.eg — Pillar's CLI (MOD-PIL-SYSTEM, PIL1_pillar_stands): eg run pillar/cli.eg <command> [args]
+// It reaches Pillar only through its hooks (CIE-EG §5.2): a command sends to the in hook of the same name, the answer comes back on "pillar.answer".
+// `registry` prints Pillar's record from Emerge's component registry, components(). An unknown command is refused and the hooks named (§1.2).
 use "./pillar.eg" as pillar
-use "./registry.eg" as registry
+
+wire pillar.Pillar.answer -> "pillar.answer"
+var last = null
+on "pillar.answer" (a) { last = a }
+
+fn pillar_record(): map {
+  for c in components().components { if c.namespace == "pillar" { return c } }
+  return null
+}
+
+fn hooks(): list {
+  var out = []
+  for h in components().hooks { if h.component_id == "pillar.kernel" { out = push(out, h) } }
+  return out
+}
+
+fn usage() {
+  print("pillar " + pillar.Pillar.version + " — eg run pillar/cli.eg version | registry | <in hook> [args]; the in hooks:")
+  for h in hooks() { if h.direction == "in" { print("  " + h.name) } }
+}
 
 let a = args()
 var cmd = "help"
 if len(a) > 0 { cmd = a[0] }
 
-fn usage() {
-  print("pillar " + pillar.version + " — commands:")
-  for c in registry.commands { print("  " + c.usage) }
-}
-
-if cmd == "version" { print(pillar.version) }
-else if cmd == "contracts" {
-  let cs = pillar.contracts()
-  var note = null
-  if len(cs) == 0 { note = "none yet: the contracts are PIL2_contracts" }
-  print(json({ system: "pillar", version: pillar.version, contracts: cs, count: len(cs), note: note }))
-}
+if cmd == "version" { print(pillar.Pillar.version) }
+else if cmd == "registry" { print(json({ record: pillar_record(), hooks: hooks() })) }
+else if cmd == "contracts" { send pillar.Pillar.contracts {} }
 else if cmd == "contract" {
   if len(a) < 2 { raise("usage: eg run pillar/cli.eg contract <id>") }
-  let c = pillar.contract(a[1])
-  if c == null { raise("no contract " + a[1]) }
-  print(json(c))
+  send pillar.Pillar.contract { id: a[1] }
 }
 else if cmd == "check" {
   if len(a) < 3 { raise("usage: eg run pillar/cli.eg check <contract> <impl>") }
-  let r = pillar.check(a[1], a[2])
-  print(json(r))
-  if not r.ok { raise(r.why) }
+  send pillar.Pillar.check { id: a[1], impl: a[2] }
+}
+else if cmd == "identity_of" {
+  if len(a) < 3 { raise("usage: eg run pillar/cli.eg identity_of <contract> <file>") }
+  send pillar.Pillar.identity_of { id: a[1], file: a[2] }
 }
 else if cmd == "conform" { raise("conformance is not built yet (PIL3_conformance)") }
-else if cmd == "registry" { print(json(registry.entries())) }
 else if cmd == "help" { usage() }
 else { usage(); raise("unknown command " + cmd) }
+
+if last != null {
+  print(json(last))
+  if not last.ok and last.hook != "contracts" { raise(last.why) }
+}

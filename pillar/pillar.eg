@@ -1,24 +1,39 @@
-// pillar/pillar.eg — Pillar, the one kernel of primitives, as its own system written in Emerge (MOD-PIL-SYSTEM, phase PIL1_pillar_stands).
-// James, 2026-11-06 (EAS_D8): "One kernel, merged". PIL_D2: until he settles a process with a door, Pillar is a library others use
-// (use "pillar/pillar.eg" as pillar) with a CLI. GATE-PIL-FLOOR: it uses nothing outside pillar/ but the Emerge language.
+// pillar/pillar.eg — Pillar, the one kernel of primitives, as an Emerge component (MOD-PIL-SYSTEM, phase PIL1_pillar_stands).
+// James, 2026-11-06 (EAS_D8): "One kernel, merged". · "Yeah, the component can be." · "it's supposed to be the component registry. Look at CIE-EG."
+// CIE-EG §5: Pillar is known by its record in Emerge's component registry (id, namespace, version, uuid, hooks) and §5.2: it is reached only
+// through its in hooks. What it offers is its hooks; there is no second list. Every answer leaves by the one out hook, answer.
+// PIL_D2: a library others use (use "pillar/pillar.eg"), no process of its own until he settles it. It uses nothing outside pillar/ but Emerge.
 
-let version = "0.1.0"
+component Pillar {
+  id = "pillar.kernel"
+  namespace = "pillar"
+  version = "0.1.0"
+  intent = "the one kernel of primitives: each primitive's contract, defined once"
+  // The contracts are PIL2's. They need Emerge's contract block (CIE-EG MOD-CONTRACT) and schema (MOD-STORE) first, bottom-up (§3.1).
+  state { contracts: [] }
 
-// The contracts are PIL2's (pillar/contracts/contracts.eg). They need Emerge's contract block (CIE-EG MOD-CONTRACT) and schema
-// (MOD-STORE) built first, bottom-up (§3.1). Until then the list is empty, and says so; it does not pretend (§1.2).
-let _contracts = []
+  in contracts(q: {}) {
+    var note = null
+    if len(state.contracts) == 0 { note = "none yet: the contracts are PIL2_contracts" }
+    emit out answer { hook: "contracts", ok: true, value: state.contracts, why: note }
+  }
 
-fn contracts(): list = _contracts
+  in contract(q: { id: string }) {
+    var found = null
+    for c in state.contracts { if c.id == q.id { found = c } }
+    var why = null
+    if found == null { why = "no contract " + q.id }
+    emit out answer { hook: "contract", ok: found != null, value: found, why: why }
+  }
 
-fn contract(id: string) {
-  for c in _contracts { if c.id == id { return c } }
-  return null
+  // Not built yet: each answers with the phase that builds it, never a silent pass (§1.2).
+  in check(q: { id: string, impl: string }) {
+    emit out answer { hook: "check", ok: false, value: null, why: "conformance is not built yet (PIL3_conformance)" }
+  }
+
+  in identity_of(q: { id: string, file: string }) {
+    emit out answer { hook: "identity_of", ok: false, value: null, why: "three identities are not built yet (PIL4_three_identities)" }
+  }
+
+  out answer: { hook: string, ok: bool, value: any, why: any }
 }
-
-// Not built yet: each answers with the phase that builds it, never a silent pass (§1.2).
-fn check(id: string, impl: string): map {
-  if contract(id) == null { return { ok: false, why: "no contract " + id + " (contracts are PIL2_contracts)" } }
-  return { ok: false, why: "conformance is not built yet (PIL3_conformance)" }
-}
-
-fn identity_of(id: string, file: string): map = { ok: false, why: "three identities are not built yet (PIL4_three_identities)" }

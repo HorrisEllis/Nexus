@@ -6,19 +6,23 @@ The idea and the order are his: one kernel of primitives, Pillar, written in Eme
 whether it gets a process (PIL_D2). The code is the coder's.
 
 ## Built (docs/2026-11-06-pillar-phasemap.spec PIL1_pillar_stands, pillar/spec/pillar.spec MOD-PIL-SYSTEM)
-- `pillar/pillar.eg`: version, `contracts()`, `contract(id)`. `check` and `identity_of` answer `ok: false` with the phase that builds them
-  (PIL3, PIL4). The contract list is empty until PIL2, and says so (§1.2).
-- `pillar/registry.eg`: Pillar's own component registry (§5.16), with its exports and commands.
-- `pillar/cli.eg`: `eg run pillar/cli.eg version|contracts|contract <id>|check <c> <impl>|conform|registry`. An unknown command is refused and
+- `pillar/pillar.eg`: one `component Pillar` (id `pillar.kernel`). Its record is in Emerge's component registry (`components()`, CIE-EG §5),
+  and it is reached only through its in hooks (§5.2): `contracts`, `contract`, `check`, `identity_of`, answering on its out hook `answer`.
+  `check` and `identity_of` answer `ok: false` with the phase that builds them (PIL3, PIL4). No contracts until PIL2, and it says so (§1.2).
+  James: "why not just use compartments for modules? That's fucking stupid. It's already a primitive." · "Yeah, the component can be." ·
+  "it's supposed to be the component registry. Look at CIE-EG." The first cut kept a hand-written `pillar/registry.eg`; it is removed, a
+  duplicate of what Emerge's registry already holds.
+- `pillar/cli.eg`: `eg run pillar/cli.eg version|registry|contracts|contract <id>|check <c> <impl>|identity_of <c> <file>|conform`; each command sends to the hook of its name. An unknown command is refused and
   the commands are listed.
-- `pillar/test/pillar.test.eg`: 3 tests, `eg test` (3 passed, 0 failed).
+- `pillar/test/pillar.test.eg`: 4 tests, `eg test` (4 passed, 0 failed), one of them a wrong payload refused at the seam.
 - `lib/nexus-self/systems.js`: `pillar` owns `pillar/` (entry null, port null).
-- `tests/modules/test-pillar.test.js` PI-01..05, 5/5, registered in run-all. PI-02 checks the registry against pillar.eg both ways. A
-  planted public function with no registry entry failed it.
+- `tests/modules/test-pillar.test.js` PI-01..05, 5/5, registered in run-all. PI-02 checks Pillar's record and that every in hook
+  has a command, and every command sends to a hook. A planted hook with no command failed it.
 
 ## Found
-- An Emerge module is not a map (`has` and `keys` refuse it), so a .eg test cannot list what a module exports. The two-way check runs in
-  PI-02 with Emerge's own parser. Names starting with `_` are internal.
+- An Emerge module is not a map (`has` and `keys` refuse it). A component lists itself: `Pillar.hooks` and `components()`. Whether every
+  module should become a compartment is his, open.
+- `emerge check` on a library component warns that its in hooks are never fed (5 warnings). Its users feed them; the check reads one file.
 - Emerge has no if-expression, `!` or `||`. Use `not` and `or`.
 
 ## Drift, said

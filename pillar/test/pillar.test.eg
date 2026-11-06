@@ -1,22 +1,36 @@
-// pillar/test/pillar.test.eg — PIL1_pillar_stands: Pillar stands, its registry lists what it offers (GATE-PIL1-002). eg test pillar/test/pillar.test.eg
+// pillar/test/pillar.test.eg — PIL1_pillar_stands: Pillar is a component in Emerge's component registry (CIE-EG §5), reached only through its
+// hooks (§5.2). eg test pillar/test/pillar.test.eg
 use "../pillar.eg" as pillar
-use "../registry.eg" as registry
 
-test "the registry is Pillar's own" {
-  expect registry.system == "pillar"
+wire pillar.Pillar.answer -> "pillar.answer"
+var last = null
+on "pillar.answer" (a) { last = a }
+
+test "Pillar is registered in Emerge's component registry, by its own record" {
+  var rec = null
+  for c in components().components { if c.id == "pillar.kernel" { rec = c } }
+  expect rec != null, "pillar.kernel is not in components()"
+  expect rec.namespace == "pillar" and rec.version == "0.1.0"
 }
 
-// A module is not a map in Emerge (has/keys refuse it), so the two-way check, registry ⇄ pillar.eg's top level, is test-pillar PI-02's,
-// read with Emerge's own parser. Here: each registered name answers.
-test "every registered export answers" {
-  expect registry.names() == ["version", "contracts", "contract", "check", "identity_of"]
-  expect pillar.version == "0.1.0"
-  expect type_of(pillar.contracts()) == "list"
+test "what Pillar offers is its hooks" {
+  expect pillar.Pillar.hooks.in == ["contracts", "contract", "check", "identity_of"]
+  expect pillar.Pillar.hooks.out == ["answer"]
 }
 
-test "no contracts yet, and nothing pretends" {
-  expect len(pillar.contracts()) == 0
-  expect pillar.contract("pillar:constraint") == null
-  expect not pillar.check("pillar:constraint", "x").ok
-  expect not pillar.identity_of("pillar:constraint", "x").ok
+test "no contracts yet, said, not pretended" {
+  send pillar.Pillar.contracts {}
+  expect last.ok and len(last.value) == 0 and last.why != null
+  send pillar.Pillar.contract { id: "pillar:constraint" }
+  expect not last.ok
+  send pillar.Pillar.check { id: "pillar:constraint", impl: "x" }
+  expect not last.ok
+  send pillar.Pillar.identity_of { id: "pillar:constraint", file: "x" }
+  expect not last.ok
+}
+
+test "a wrong payload is refused at the seam" {
+  var refused = false
+  try { send pillar.Pillar.contract { id: 7 } } else e { refused = true }
+  expect refused
 }
