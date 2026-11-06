@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793984231139
+exported_at: 1793995349298
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793984231139
-lastSeenAt: 1793984231139
+firstSeenAt: 1793995349298
+lastSeenAt: 1793995349298
 fingerprint: null
 payload:
   for: CIE11_retire_the_interpreter
@@ -67,7 +67,10 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
     unlocks:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+        files:
+          - emerge/emerge/spec/cie-eg.spec
     dangling: []
     lines:
       - >-
@@ -77,6 +80,9 @@ payload:
         depends on (4): CIE6_native_check, CIE7_native_observe, CIE9_tests_in_emerge,
         CIE10_the_door_in_emerge · all upstream 22
       - 'needed by (1): CIE12_windows · finishing it unlocks CIE12_windows'
+      - >-
+        same files as CIE13_native_system_primitives with no order between them:
+        emerge/emerge/spec/cie-eg.spec
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
         kind: declared

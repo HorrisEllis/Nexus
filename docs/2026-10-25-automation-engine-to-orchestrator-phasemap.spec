@@ -168,9 +168,9 @@ phases:
   AE6_the_engine_moves_into_cos:
     status: OPEN
     layer: library
-    depends_on: [AE_D3_the_home_is_cos, AE4_repoint_the_registry]
-    files: [cos/automation/engine.js, cos/automation/pipeline.js, cos/automation/steps.js, cos/automation/cron.js, cos/automation/routes.js,
-            cos/automation/host.js, lib/automation/, orchestrator/automation/index.js, cos/manager/server.js, cos/manager/contract.json,
+    depends_on: [AE_D3_the_home_is_cos, AE4_repoint_the_registry, PIL2_contracts]   # PIL2 added 2026-11-06 (b)
+    files: [cos/automation/engine.eg, cos/automation/pipeline.eg, cos/automation/steps.eg, cos/automation/cron.eg, cos/automation/routes.eg,
+            cos/automation/test/automation.test.eg, lib/automation/, orchestrator/automation/index.js, cos/manager/server.js, cos/manager/contract.json,
             lib/automation-registry.js, tests/modules/test-cos-automation.test.js]
     requires: [node]
     prerequisites: ["each caller of lib/automation/* listed first (grep), so none breaks: it is repointed to COS's route or, for scripts and tests, to cos/automation/"]
@@ -239,3 +239,10 @@ order: >-
 # AE_D1 is superseded and kept. AE6 moves the engine and its host into cos/automation/. AE5 depends on it and becomes COS's Automation page.
 # The orchestration console (docs/2026-11-01-orchestration-console-phasemap.spec) builds in cos/automation/ from here: its lib/automation/ paths
 # are read as cos/automation/ once AE6 lands.
+
+# ── ADDENDUM 2026-11-06 (b) — AE6 expanded: the engine is rewritten in Emerge on Pillar's primitives, not moved as JavaScript ──
+# James, 2026-11-06, after the coder said COS's manager must stay JavaScript for HTTP, processes and timers until Emerge has them: "okay but no js then right?" · "im saying to code primitives to replace javascript. using pillar"
+# AE6 now: cos/automation/*.eg (the engine, pipelines, steps, triggers, cron), standing on Pillar's contracts (Event, Gate, Clock, Process,
+# Port), built and run by emerge.exe. The JS in lib/automation/ is archived when the .eg engine passes its tests (§0.3). Until CIE10 and CIE13
+# land, the .eg engine runs under Emerge's interpreter behind COS's route; no new JavaScript is written for it.
+# AE6's depends_on grows by PIL2_contracts; CIE10 and CIE13 are what make it run without Node.

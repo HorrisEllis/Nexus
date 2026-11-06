@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793985179361
+exported_at: 1793995349281
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793985179361
-lastSeenAt: 1793985179361
+firstSeenAt: 1793995349281
+lastSeenAt: 1793995349281
 fingerprint: null
 payload:
   for: CIE4_native_components
@@ -52,6 +52,7 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
@@ -64,7 +65,7 @@ payload:
     lines:
       - layer 5 · ready
       - 'depends on (2): CIE3_native_ledger, CIE1_the_contract_block · all upstream 14'
-      - 'needed by (1): CIE5_native_test · all downstream 7 · finishing it unlocks CIE5_native_test'
+      - 'needed by (1): CIE5_native_test · all downstream 8 · finishing it unlocks CIE5_native_test'
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
         kind: declared

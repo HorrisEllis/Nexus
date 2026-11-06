@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793983611073
+exported_at: 1793995353100
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793983611073
-lastSeenAt: 1793983611073
+firstSeenAt: 1793995353100
+lastSeenAt: 1793995353100
 fingerprint: null
 payload:
   for: PIL2_contracts
@@ -38,6 +38,8 @@ payload:
     dependents:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
     upstream:
@@ -86,9 +88,12 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
       - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
       - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
@@ -96,6 +101,7 @@ payload:
     blockedBy: []
     unlocks:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
     conflicts: []
@@ -104,8 +110,9 @@ payload:
       - layer 5 · ready
       - 'depends on (2): PIL1_pillar_stands, CIE1_the_contract_block · all upstream 15'
       - >-
-        needed by (4): RF1_relational_field, CB1_cfr_build_logic, PIL3_conformance,
-        PIL4_three_identities · all downstream 36 · finishing it unlocks RF1_relational_field,
+        needed by (6): RF1_relational_field, CB1_cfr_build_logic, AE6_the_engine_moves_into_cos,
+        CIE13_native_system_primitives, PIL3_conformance, PIL4_three_identities · all downstream 39
+        · finishing it unlocks RF1_relational_field, AE6_the_engine_moves_into_cos,
         PIL3_conformance, PIL4_three_identities
     edges:
       - from: docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands

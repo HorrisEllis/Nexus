@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793983611070
+exported_at: 1793995353096
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793983611070
-lastSeenAt: 1793983611070
+firstSeenAt: 1793995353096
+lastSeenAt: 1793995353096
 fingerprint: null
 payload:
   for: PIL1_pillar_stands
@@ -169,9 +169,12 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
       - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
@@ -187,7 +190,7 @@ payload:
       - >-
         depends on (4): PIL_D0_the_name_is_pillar, PIL_D1_the_shape_he_brought,
         PIL_D2_a_process_or_a_library, PIL_D3_written_in_emerge
-      - 'needed by (1): PIL2_contracts · all downstream 37 · finishing it unlocks PIL2_contracts'
+      - 'needed by (1): PIL2_contracts · all downstream 40 · finishing it unlocks PIL2_contracts'
     edges:
       - from: docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
         kind: declared
