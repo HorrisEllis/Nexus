@@ -208,3 +208,9 @@ the framework. The coder has still not traced RAID's code against page 13; that 
 What exists is the parts. What is **open** is one loop through all four: an idea in a compartment whose end state is its contract, its conditions
 a DAG, with the intelligence system recognising the patterns on the way, and the output fed back in as input (his page 13). No prediction is
 registered yet; one will be before any of it is wired.
+
+**Where the architecture lives, his, 2026-11-07.** "It’s way deeper than that. Cos my hyper compartmentalization." Asked whether that meant (a)
+COS is his compartmentalization put outside his head, or (b) "because of", he answered: "A. All of nexus’ architecture is in my head. Those notes
+I showed you are the only notes I have." So the sixteen pages are the whole written trail of the design before the repository. Everything
+else went from his head straight into direction for the coder: the axioms, the phasemaps, the decisions quoted with dates in this repository.
+The claim that COS's compartments mirror how he holds the design is his account of himself, recorded as his words, not as something measured.
