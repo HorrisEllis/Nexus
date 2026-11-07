@@ -451,9 +451,10 @@ spec:
         load balancing beyond the spec's spawn-and-balance."
   phases_added_g:
     DB21_one_registry_schema_every_level:
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "OPEN — picked up 2026-11-07 for the wiring harness (idearium/spec-engine/templates/wiring-harness.spec; his 'The wiring harness' · 'spec it.'); LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       depends_on: [DB16_a_registry_for_each_system, DB9_every_repo_generates_its_registry]
       files: [loom/templates/registry-level.spec, lib/registry-level.js, tests/modules/test-registry-level.test.js]
+      # files grew 2026-11-07 (the harness, .eg per §17.13): idearium/spec-engine/templates/harness/harness.eg (MOD-HARNESS-READER) in place of loom/templates and lib/registry-level.js
       does: >-
         One schema for a registry at any level: level (root | system | component), id, its children (each a registry of the next
         level), the events it emits and accepts (the bus), the routes and commands it offers (the contract), its components and their
@@ -670,3 +671,8 @@ stays the ratchet; the wall is the proof.
 # optional transport field and payload shapes added to Nexus's hooks. COS's registry bus (cos-manager MG_D7) is the CIE-EG gate.
 # Readings TO CONFIRM: (1) the source of truth for the record is Emerge's (cie-eg.spec), and Nexus's loom schemas conform to it, not the
 # reverse; (2) Nexus's hook `type` goes into CIE-EG upstream, or stays a Nexus extension. DB21 is still OPEN; nothing is built by this.
+
+# ── ADDENDUM 2026-11-07 — DB21 expanded: the wiring harness's reader (MOD-HARNESS-READER) ──
+# James, 2026-11-07: "The wiring harness" · "spec it." His "one registry schema every level" is the harness's HarnessEntry and Harness schemas
+# (idearium/spec-engine/templates/wiring-harness.spec). Built as a template in .eg, copied into each system as its own (PIC_D3), not in lib/ or
+# loom/ (§5.16, his "Not loom"). Taken off the shelf it was put on that morning (PIC0).

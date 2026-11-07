@@ -85,9 +85,10 @@ phases:
 
   IN5_architect_mirrors_the_registry:
     layer: interface
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "OPEN — picked up 2026-11-07 for the wiring harness (idearium/spec-engine/templates/wiring-harness.spec; his 'The wiring harness' · 'spec it.'); LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [IN3_registry_is_the_spine]
     files: [architect/service.js, architect/src/ui/]
+    # files grew 2026-11-07 (the harness, .eg per §17.13): architect/harness-canvas.eg (MOD-ARCHITECT-HARNESS)
     does: >-
       His "a mirror of the registry": architect shows the registry live (systems → components → edges) and edits it — an edit is a
       registry proposal (through the approval gate), never a direct code change; loom, the build and the DAG read the result.
@@ -462,3 +463,8 @@ phases:
 # - Changes to the plan: IN3 = a generated registry per system (one schema, NC0's schema rule; each system runs it on itself); IN4 = loom
 #   aggregates those and its hand maps are archived; IN6 = each system onto it, alongside CS4 (every system a compartment). To be specced
 #   in full (emerge format) before any phase is built.
+
+# ── ADDENDUM 2026-11-07 — IN5 expanded: Architect edits each system's harness (MOD-ARCHITECT-HARNESS) ──
+# James, 2026-11-07: "using the architect in idearium can edit the architecture" · his 2026-10-19 origin of this map: "then when making changes,
+# only need to rewire the component registry, like in architect". The registry is now the system's harness; the edit goes through that
+# system's door, gated, recorded in Versionium. Proof sharpened: one rewiring, 0 lines of component code changed. Off the shelf (PIC0).

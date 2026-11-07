@@ -179,7 +179,7 @@ phases:
     proof: "lang.test's check cases give the same diagnostics from emerge check as from eg check"
 
   CIE7_native_observe:
-    status: OPEN
+    status: BUILT   # 2026-11-07: slice a 0.60.442 (the observer), slice b 0.60.443 (the debugger); observe/cli.js (eg debug on a file) waits on CIE13
     depends_on: [CIE3_native_ledger]
     spec: emerge/emerge/spec/cie-eg.spec
     blocks: [MOD-NATIVE-TOOLS]
@@ -459,3 +459,20 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # examples/observe.eg is equal natively. log2 built into the prelude. Found: this observer already measures sigma as he decided for CF1.
 # Slice b: debug.js (why, at, follow, diff, blame, clip), judged against ledger_why() and readings recorded mid-run. cli.js (eg debug) waits on
 # CIE13 (files, processes) for its command-line form.
+
+# ── ADDENDUM 2026-11-07 — CIE10 expanded: Emerge's door is the first wiring harness (MOD-EMERGE-DOOR) ──
+# James, 2026-11-07: "The door is the interaction contract, also called the draw bridge. Cie-eg is meant to slot in to it. It's the foundation."
+# · "The wiring harness" · "spec it." CIE10 also builds idearium/spec-engine/templates/wiring-harness.spec's MOD-EMERGE-DOOR: emerge/emerge/door.eg
+# serves only what Emerge's harness declares, through cie-world's registry, roads and gate; an undeclared call is refused and on the ledger.
+# Its proof grows: WH1's conformance test passes against it.
+
+# ── ADDENDUM 2026-11-07 (0.60.443) — CIE7 slice b built: the debugger in Emerge, judged by Emerge ──
+# James, 2026-11-07: "spec it. then lets continue emerge" · in the other session: "Okay so don’t create js unless you have to and that’s only to replace it."
+# lang/cie/debug.eg ports observe/debug.js (why, at, follow, diff, blame, clip, verifyClip). The judge, lang/test/world/debug.eg, is Emerge only,
+# 18/18: why equal to ledger_why() (the JS) on every entry of 7 real runs; at equal to observe() and each compartment's state read mid-run; the 11
+# expected answers of test/debug.test.js carried over. 13 planted mistakes: 10 caught, 3 shown unobservable (no two edges of one entry share a
+# weight; a weight is seen only through ordering and the 0.8 threshold). ledger_why() native (lower.eg onto the port); json() native (rt.eg);
+# examples/debug.eg natively equal; selfhost 16/16. Not ported: observe/cli.js (CIE13). debug.js stays until CIE11 (the interpreter calls it).
+# CIE14 grows (gaps found): a fn declared inside a block is not native (lifted in the port); json was not native (closed). Still open and known:
+# a module fn with defaults called through its module with fewer arguments; a module as a value natively. Found: emerge.cos's lock takes in
+# whatever is on the writing disk (untracked data/ ledgers, the gitignored lang/build/previous/); re-locked for code files only, those kept.

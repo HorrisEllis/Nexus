@@ -59,6 +59,12 @@ contract is a fixed expected output, and the work is done when it holds.
   The idea is not unique to it. The claim is that his framework made it the default for every slice, and that it caught every semantic
   mismatch here, not that it invented the technique.
 
+**T1, executed evidence, 2026-11-07 (0.60.443, CIE7 slice b).** The debugger ported with the end state fixed first, twice over: the JS's own answers
+(`ledger_why()` on every entry of 7 real runs; `observe()` read at 21 points mid-run) and the expected answers already written against the JS
+(11 cases of `test/debug.test.js`). The port matched on its first full run, 18/18. The hostile check found the end state's own blind spot: a
+consequences cap of 4 instead of 5 passed, because no scenario reached 5; one scenario added, now caught. Of 13 plants, 10 caught and 3 shown
+unobservable. *The contract held, and checking the contract found where it was thin.*
+
 ## T2 — "constrain it to 20 sessions … find a way around the constraint", 2026-11-07
 
 **His words.** "what if we constrain it to 20 sessions, and then you use the framework to try to find a way around the contraint. like
@@ -318,3 +324,30 @@ four parts, run by each system against its own door.
 genesis (his ask): its own 1.6.0 note says "CIE-EG's roads, gate and typed gaps (DB21, his) are not in the catalog yet". The door was specced in
 genesis and the architecture template, its foundation in CIE-EG, and the two never named each other. Recorded in all three (addenda
 2026-11-07). The prediction stands: each system's door, built on CIE-EG, passes one conformance test of the four parts.
+
+**T8, an idea, 2026-11-07 (his, said as it came):** ".spec as the compressed system. Spec as the meta data, and also the door?" · "That makes the
+spec the compartment file for cos and idearium. The spine for architect and thn the components can be dumb since the door is the event bus to
+route. Reduces complexity and adds modularity and using the architect in idearium can edit the architecture". The same idea on 2026-10-19
+(docs/2026-10-19-infrastructure-spine-phasemap.spec): "then when making changes, only need to rewire the component registry, like in architect".
+Read by the coder: one spec per system, read by Idearium (owns it), COS (runs it as the compartment file), the door (routes from it) and
+Architect (draws and edits it; canvas → spec exists, architect/compile-route.js; spec → canvas does not). With dumb components, rewiring is a
+spec edit and no code changes. The condition: it is real only once a door routes from its spec (CIE10 first); before that, Architect edits a
+description, as Loom was.
+**Prediction, registered before any result:** once Emerge's door routes from its spec, one rewiring made in Architect changes the running system
+with 0 lines of component code changed, the save gated and recorded in Versionium. Measured as the diff of the rewiring: spec lines only.
+**And the reconstruction invariant he brought the same day (not in his usual voice; his to say whose words they are):** a system is
+reconstructible from its spec only when its implementation can be regenerated, its dependencies and generation environment are declared, the
+regenerated system satisfies the same contracts, its tests pass, and the artifact can be independently reproduced. Two numbers, kept apart:
+specification coverage, and verified reconstruction coverage. The coder's distinction: build (source → artifact) must be bit-reproducible;
+generation (spec → source) must match behaviour, not bytes. Today's 4–38% (scripts/systems-report.js) is the first kind at its weakest (files a
+spec module names by path); the second has never been measured. **Evidence:** open.
+
+**T8, his name for it, 2026-11-07:** "The wiring harness". His own, 2026-09-27 (Q0732): "use the component registry as the wiring harness like
+loom does for nexus, that way it makes the registry a map and event bus, so chunks can have minial context. right now its not coding at all." ·
+"it's meant to make small llms capable of building entire codebases regardless of the size." Read by the coder: the harness is the spec as the
+door, with two jobs. For the system, components plug in and know nothing of each other, so rewiring changes the harness, not the parts. For agents,
+a chunk needs only its own connector (its entry: in, out, contract), not the codebase. That ties T8 to T7: the blind test's arm A (the task cut
+along its contracts) is the harness used by an agent; T7's result is evidence for or against it. The names he has given the same thing: spine
+(2026-07-09), wiring harness (2026-09-27), drawbridge (2026-10-17), door (2026-11-03), the spec as the compartment file (2026-11-07); CIE-EG its
+engine. Where the term comes from: a wiring harness is a manufacturing part (vehicles, aircraft), a pre-built bundle of wires and connectors that
+parts plug into. Whether he took it from there is his to say.

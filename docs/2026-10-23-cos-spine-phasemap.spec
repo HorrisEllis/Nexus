@@ -119,9 +119,10 @@ phases:
 
   CS3_the_registry_is_the_bridge:
     layer: integration
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "OPEN — picked up 2026-11-07 for the wiring harness (idearium/spec-engine/templates/wiring-harness.spec; his 'The wiring harness' · 'spec it.'); LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake, DB16_a_registry_for_each_system, CP1_the_machine_and_its_door]
     files: [cos/spine/bridge.js, orchestrator/lib/contract-handshake.js, idearium/repo/snapshot.js]
+    # files grew 2026-11-07 (the harness, .eg per §17.13): cos/spine/bridge.eg (MOD-COS-BRIDGE)
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-BRIDGE]
     does: >-
@@ -419,3 +420,8 @@ are not boundary work, so they are deferred too; the coder will flag one if it s
 
 # ── ADDENDUM 2026-10-31 — CS4a is the supervisor's bootSet 'core' (MG_D13, docs/2026-10-24-cos-manager-phasemap.spec) ─────────────
 # CS4a now follows MG17: once COS's supervisor runs the system, "COS boots alone" is its policy bootSet = 'core', not a change to autopilot.
+
+# ── ADDENDUM 2026-11-07 — CS3 expanded: COS bridges only what both harnesses declare (MOD-COS-BRIDGE) ──
+# James, 2026-11-07: "The wiring harness" · "spec it." CS3 is the enforcement of his 2026-10-23 decision ("a compartment declares itself
+# through its .spec"); the coder had shelved it as an idea that morning (PIC0) and said so. Picked up; COS reads each harness through that
+# system's own door, never its files.

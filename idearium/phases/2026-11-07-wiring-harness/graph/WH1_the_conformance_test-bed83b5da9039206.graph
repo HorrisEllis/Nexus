@@ -1,0 +1,94 @@
+envelope: 1
+uuid: nexus-export-graph-phase:WH1_the_conformance_test:bed83b5da9039206
+type: graph
+id: phase:WH1_the_conformance_test:bed83b5da9039206
+context: dependency graph of phase WH1_the_conformance_test
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794060748482
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794060748482
+lastSeenAt: 1794060748482
+fingerprint: null
+payload:
+  for: WH1_the_conformance_test
+  kind: phase
+  repo: null
+  hash: bed83b5da9039206
+  nodes:
+    - path: idearium/spec-engine/templates/harness/conformance.eg
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/spec-engine/templates/wiring-harness.spec
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 10
+    deps:
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH_D0_the_spec_is_the_harness
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+    dependents:
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D2_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH_D0_the_spec_is_the_harness
+    downstream:
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
+    blockedBy:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 10 · blocked by DB21_one_registry_schema_every_level, CIE10_the_door_in_emerge
+      - >-
+        depends on (3): WH_D0_the_spec_is_the_harness, DB21_one_registry_schema_every_level,
+        CIE10_the_door_in_emerge · all upstream 32
+      - 'needed by (1): WH2_verified_reconstruction_coverage'
+    edges:
+      - from: docs/2026-11-07-wiring-harness-phasemap.spec::WH_D0_the_spec_is_the_harness
+        kind: declared
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+        kind: declared
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+        kind: declared

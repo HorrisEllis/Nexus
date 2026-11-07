@@ -5,6 +5,43 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-07 — the debugger in Emerge, judged by Emerge (CIE7 slice b, 0.60.443)
+- **Measured:** Emerge coding. 180 lines of the JS debugger (`observe/debug.js`) written again in Emerge, under his rule: no new JS unless it
+  replaces JS.
+- **His words:** "spec it. then lets continue emerge" · "Okay so don’t create js unless you have to and that’s only to replace it."
+- **Framework:** end state first, two oracles, no new code outside Emerge:
+  - the interpreter's own `ledger_why()` (the JS) for `why`, and `observe()` read mid-run for `at`, on real runs;
+  - the expected answers already written in `test/debug.test.js`, carried over as `expect` lines, for what no builtin exposes.
+- **Method:** 7 real-run scenarios (every entry's `why` compared, `at` compared at 21 recorded points) and 11 carried-over cases; then a hostile
+  check: 13 mistakes planted in the port, one at a time.
+- **Result:**
+  - the judge 18/18; `ledger_why()` and `json()` native, each equal to the interpreter; `examples/debug.eg` equal natively;
+  - native.test 109/109 (13 examples natively), selfhost 16/16 (stage 0 = 1 = 2), bootstrap 11/11, lang 166/166, differential 19/19.
+- **Speed:**
+  - the Emerge judge: 1.31 s interpreted (the JS test: 0.11 s);
+  - stage 0: ~25 s (was ~17 s at slice a); stages 1 and 2: ~1.2 s each;
+  - native.test: ~67 s.
+- **Lines:** .eg +~800:
+  - debug.eg 376, the judge 306, the example 31;
+  - rt.eg +59 (`json`), lower.eg +21, emerge.eg +2, codegen.eg +1; debug_text.eg (generated).
+
+  JS: 0 added, 0 removed. `debug.js` stays until CIE11, since the interpreter's `ledger_why()` calls it.
+- **Failed runs before the pass, and what each taught:**
+  1. `on` is a keyword and cannot be a state field (a gap known since 2026-11-06).
+  2. Natively, the builtin `json` did not exist. Built into the native runtime instead of avoided (§17.13).
+  3. Natively, a function declared inside a block is refused. The port's two were lifted to the top level.
+  4. Natively, the judge cannot run: a module fn with defaults called through its module, and a module as a value, are both refused
+     (known). Native equality is proven by the example and by direct comparisons, as slice a did.
+  5. **The judge was blind to a real mistake.** The consequences list capped at 4 instead of 5 passed all 16 scenarios; none gave an entry
+     more than 5 consequences. A scenario was added (seven refusals); the plant now fails. Three other plants pass and are shown
+     unobservable, not hidden.
+
+  The port matched the oracle on its first full run.
+- **Gaps:** closed, `json` native. Found and said: a fn inside a block is not native; the `emerge.cos` lock takes in untracked and gitignored
+  files from the disk that writes it.
+- **What came of it:** Emerge debugs a run from its own ledger, natively. With slice a, CIE7's observer and debugger are both in Emerge.
+- **Tension meter, session 1 of 20 (continued):** 22,951 JS lines left (+0); 19 sessions left.
+
 ## 2026-11-07 — the observer in Emerge, judged by Emerge (CIE7 slice a, 0.60.442)
 - **Measured:** Emerge coding. 471 lines of the JS observer written again in Emerge, under his new rule: no new JS unless it replaces JS.
 - **His words:** "lets continue." · "Okay so don’t create js unless you have to and that’s only to replace it." · "You gotta think dialectically".

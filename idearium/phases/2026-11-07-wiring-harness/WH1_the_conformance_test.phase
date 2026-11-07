@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-07-wiring-harness-phasemap.spec::WH1_the_conformance_test
+type: phase
+id: docs_2026-11-07-wiring-harness-phasemap.spec::WH1_the_conformance_test
+context: pipeline phase WH1_the_conformance_test of docs/2026-11-07-wiring-harness-phasemap.spec
+intent: null
+summary: WH1_the_conformance_test (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794060748483
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794060748483
+lastSeenAt: 1794060748483
+fingerprint: null
+payload:
+  id: WH1_the_conformance_test
+  map: docs/2026-11-07-wiring-harness-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/templates/harness/conformance.eg
+    - idearium/spec-engine/templates/wiring-harness.spec
+  depends_on:
+    - WH_D0_the_spec_is_the_harness
+    - DB21_one_registry_schema_every_level
+    - CIE10_the_door_in_emerge
+  blocks:
+    - MOD-HARNESS-CONFORMANCE
+  spec: idearium/spec-engine/templates/wiring-harness.spec
+  graph: bed83b5da9039206
