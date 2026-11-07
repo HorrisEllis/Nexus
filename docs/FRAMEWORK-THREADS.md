@@ -162,3 +162,31 @@ were built from his earlier direction.
 - **The coder's reading, to confirm:** this is Emerge's compartment boundary used as an idea gate.
 
 **Prediction (open):** none registered yet. One will be written before anything is built.
+
+## T6 — "it’s also how idearium works. And raid": the notebook, 2025-12 to 2026-06
+
+**His words, 2026-11-07,** giving sixteen notebook pages (docs/notebook-pages-2025-12-to-2026-06.md): "Its emergence, embodied manifestatuon,
+it’s also how idearium works. And raid."
+
+**What the pages show (checked by reading them, not run).** Every dated page is older than the repository's first commit (2026-09-25). His
+handwriting already names what Nexus later built:
+- **The gap ladder, page 7 (12/30):** anomaly, coincidence, pattern. These are the same three steps as "One gap is an anomaly / Two gaps a
+  coincidence / Three gaps = A invariant" (T4).
+- **The vocabulary of sigma and delta, page 6 (02/23/26):** "Gaps, Slopes, Friction, Tension, Data, Deltas, Differentials/residuals,
+  Constraints, Invariants, Rhythm".
+- **Rhythm, page 7:** the same oscillation in Love, Life and Physics. "Relation oscillion Theory".
+- **Compartments as mini-worlds, page 14 (01/12/26):** a hub joined to The architect, Shadow, Playground, E-lab and Erosmancer. Architect is
+  now a Nexus system; Shadow space is SH1.
+- **Gates in a lattice from micro to macro, page 10:** "Signal integrated, noise channeled".
+- **His loop, page 13:** input → believe → create compartment → simulate → find invariants and map conditions → hold the loop open →
+  emergence, end-state, idea/system in a compartment, constraint field and structure → output → loop into input.
+
+**Against Idearium (read from its atlas, docs/atlases/idearium-atlas.md):** "An idea goes in as a node with a tension score … It grows through
+brainstorms and a workbench of lanes, becomes a spec, and the spec is built chunk by chunk by agents into a repo. The repo gets its own COS
+compartment". His loop and Idearium's flow line up step for step: input, a compartment, simulation by the workbench, invariants and
+conditions by the spec, then the output built. Whether the loop back into input exists in Idearium is **open** (not checked).
+
+**Against RAID:** **open**. The coder has not yet read RAID against page 13; nothing is claimed.
+
+**Limits.** The dates are his handwriting, seen in photos; they are not a timestamp anyone else can verify. The photos are not committed.
+Committing them, with the one name blacked out, would let a stranger see the pages, and that is his call.
