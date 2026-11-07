@@ -356,6 +356,12 @@ spec:
         The coder's reading of "depends on what you're measuring", to confirm: each measured signal declares the direction of its gap
         (latency spikes, throughput dips). Thread T4 (docs/FRAMEWORK-THREADS.md), predictions T4-P1, T4-P2. That also answers the open question of
         whether sigma measures the deviation of the delta: yes, from the waveform's baseline.
+      corrected_2026_11_07_origin: >-
+        James, 2026-11-07: "I don’t know about wavelength or waveforms. And oscillations are a part of nature. Hermetic principles or esoteric
+        philosophy". The idea's source is his, from Hermetic and esoteric philosophy (oscillation as a law of nature), not signal processing.
+        "Waveform" was the coder's term, offered in a question. The decision above stands as his (baseline from the signal's own peaks; the
+        deepest dip carries the most tension; delta the gap, sigma the deviation). Only its credit and source are corrected. The coder's
+        reading that the nearest principles are Rhythm and Polarity is to confirm.
 
     RF1_relational_field:
       layer: foundation

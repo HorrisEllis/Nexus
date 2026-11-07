@@ -94,8 +94,13 @@ The tension points, are the baseline or if it dips is the point with the most te
 or the trajectory's and the invariant's: "Yes like oscillations or a wavelength/waveform. Depends on what you’re measuring. I’m cross domain
 synthesizing. Structural intuition is intuiting."
 
-**Cross-domain.** From signal processing (a waveform's crest and trough, the midline they set, the dip below it) into system health (where a
-system's tension sits and where a gap opens). No hardcoded scale: the baseline is learned from each signal's own peaks.
+**Cross-domain.** ~~From signal processing (a waveform's crest and trough, the midline they set, the dip below it) into system health (where a
+system's tension sits and where a gap opens).~~ *Corrected 2026-11-07, his:* "I don’t know about wavelength or waveforms. And oscillations are a
+part of nature. Hermetic principles or esoteric philosophy". The source domain is Hermetic and esoteric philosophy: oscillation as a law of
+nature. "Waveform" and "wavelength" were the coder's words, offered in a question, and he answered "yes like". The coder's reading of which
+principles: Rhythm (the pendulum swing, out and in) and Polarity (opposite poles, one thing in degree). This is to confirm, not his claim.
+Carried into system health: where a system's tension sits and where a gap opens. No hardcoded scale: the baseline is learned from each signal's
+own peaks.
 
 **What the coder did (conceptual).**
 - **Recorded on CF1** (docs/2026-10-02-emerge-field-memory-build-phasemap.spec):
