@@ -345,6 +345,17 @@ spec:
         measures gaps learns its scale over time too. To confirm with him: whether sigma then measures how far a delta deviates from its
         own baseline (a gap opened when the change is N sigma unusual), or the two stay independent. Measured evidence: the ledger note
         on CF1, 2026-11-07. Built in .eg with the field (AXIOMS §17.13), not in JS.
+      expanded_2026_11_07_waveform: >-
+        James, 2026-11-07, asked which two peaks make his baseline (the coder's readings: (a) the trajectory's peak and the invariant's, or
+        (b) the crest and trough of one signal): "What about trajectory and invariants? Basically the baseline is the sum of both peaks. The
+        tension points, are the baseline or if it dips is the point with the most tension" · "Yes like oscillations or a wavelength/waveform.
+        Depends on what you’re measuring. I’m cross domain synthesizing. Structural intuition is intuiting." Decided, his: the baseline is
+        a waveform's, set by each signal's own peaks (crest and trough), learned, never a hardcoded scale; tension sits on the baseline, and
+        the deepest point of a dip from it carries the most tension; delta measures that gap, sigma how far it departs. The parts exist and are
+        composed, not rebuilt: rfr2/sigma's trajectory window and peaks, telemetry-codec/engines.js's peaks, troughs, period and amplitude.
+        The coder's reading of "depends on what you're measuring", to confirm: each measured signal declares the direction of its gap
+        (latency spikes, throughput dips). Thread T4 (docs/FRAMEWORK-THREADS.md), predictions T4-P1, T4-P2. That also answers the open question of
+        whether sigma measures the deviation of the delta: yes, from the waveform's baseline.
 
     RF1_relational_field:
       layer: foundation

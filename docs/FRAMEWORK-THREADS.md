@@ -85,3 +85,32 @@ by RF1's first run on Nexus's own code: the share of modules inside the field, a
 duplicate census, PIL5).
 
 **Evidence:** none yet.
+
+## T4 — "Deltas measure gaps and sigmas measure deviation": the waveform baseline, 2026-11-07
+
+**His words.** Shown that CFR's sigma can't raise its own gap for an ordinary event (it tops out at 0.234; the threshold is 0.70): "Its gaps.
+Deltas measure gaps and sigmas measure deviation" · "What about trajectory and invariants? Basically the baseline is the sum of both peaks.
+The tension points, are the baseline or if it dips is the point with the most tension" · asked which two peaks, crest and trough of one signal
+or the trajectory's and the invariant's: "Yes like oscillations or a wavelength/waveform. Depends on what you’re measuring. I’m cross domain
+synthesizing. Structural intuition is intuiting."
+
+**Cross-domain.** From signal processing (a waveform's crest and trough, the midline they set, the dip below it) into system health (where a
+system's tension sits and where a gap opens). No hardcoded scale: the baseline is learned from each signal's own peaks.
+
+**What the coder did (conceptual).**
+- **Recorded on CF1** (docs/2026-10-02-emerge-field-memory-build-phasemap.spec):
+  - delta measures the gap;
+  - sigma measures the deviation;
+  - the baseline is set from each measured signal's own peaks, as a waveform.
+- **Already exists:** the parts are in the code (RFR2's trajectory window and its peaks; telemetry-codec's peak, trough, period and amplitude).
+- **Nothing is built.**
+- **Coder's reading of "depends on what you're measuring", to confirm:** each signal declares whether its gap is a dip below the baseline or a
+  spike above it. Latency's gap is a spike; throughput's is a dip.
+
+**Predictions (open, registered before any result).**
+- **T4-P1:** an ordinary event that is far off its baseline opens a gap, which today's sigma can never do. Measured by replaying CFR's ledger,
+  counting the gaps opened by ordinary events (today: 0 by construction).
+- **T4-P2:** the waveform baseline opens fewer false gaps than today's hardcoded delta (payload ÷ 2000, threshold 0.75), on the same replay. A
+  false gap is one that a known-good run raised.
+
+**Evidence:** the measured cap of 0.234 (ledger note on CF1, 2026-11-07) is the before. The after is open.
