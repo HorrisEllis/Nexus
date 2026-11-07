@@ -469,7 +469,7 @@ for (const [label, file, withLedger] of [['components.eg as written, its ledger 
 // CIE15's proof: every example natively equals eg run, line for line, and sort_by natively equals the interpreter (stable, both directions)
 {
   const files = fs.readdirSync(path.join(LANG, 'examples')).filter(f => f.endsWith('.eg')).map(f => path.join(LANG, 'examples', f));
-  files.push(path.join(LANG, 'examples', 'modules', 'main.eg'), path.join(__dirname, 'world', 'sort_by.eg'));
+  files.push(path.join(LANG, 'examples', 'modules', 'main.eg'), path.join(__dirname, 'world', 'sort_by.eg'), path.join(__dirname, 'world', 'optional.eg'));
   const bad = [];
   for (const file of files) {
     const ref = spawnSync(process.execPath, [EG, 'run', file], { encoding: 'utf8' });

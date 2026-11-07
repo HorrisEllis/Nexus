@@ -1,0 +1,87 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CIE5_native_test:6d92cad78baa4c7a
+type: graph
+id: phase:CIE5_native_test:6d92cad78baa4c7a
+context: dependency graph of phase CIE5_native_test
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794023236610
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794023236610
+lastSeenAt: 1794023236610
+fingerprint: null
+payload:
+  for: CIE5_native_test
+  kind: phase
+  repo: null
+  hash: 6d92cad78baa4c7a
+  nodes:
+    - path: emerge/emerge/lang/native/codegen.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/emerge.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/front.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/test/native.test.js
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+    dependents:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+    downstream:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6
+      - 'depends on (1): CIE4_native_components · all upstream 15'
+      - >-
+        needed by (4): CIE6_native_check, CIE9_tests_in_emerge, CIE10_the_door_in_emerge,
+        CIE13_native_system_primitives · all downstream 7 · finishing it unlocks CIE6_native_check
+    edges:
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+        kind: declared

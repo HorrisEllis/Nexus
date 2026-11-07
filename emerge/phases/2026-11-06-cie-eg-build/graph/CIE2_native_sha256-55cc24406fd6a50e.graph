@@ -1,0 +1,84 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CIE2_native_sha256:55cc24406fd6a50e
+type: graph
+id: phase:CIE2_native_sha256:55cc24406fd6a50e
+context: dependency graph of phase CIE2_native_sha256
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794023236602
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794023236602
+lastSeenAt: 1794023236602
+fingerprint: null
+payload:
+  for: CIE2_native_sha256
+  kind: phase
+  repo: null
+  hash: 55cc24406fd6a50e
+  nodes:
+    - path: emerge/emerge/lang/native/codegen.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/rt_text.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/rt.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/x64.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/test/native.test.js
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+    dependents:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+    upstream:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+    downstream:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE15_the_rest_of_the_language
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE7_native_observe
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (2): CIE_D1_remove_the_javascript_now, CIE_D3_sha256_from_the_cpu'
+      - >-
+        needed by (1): CIE3_native_ledger · all downstream 13 · finishing it unlocks
+        CIE3_native_ledger
+    edges:
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+        kind: declared
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+        kind: declared

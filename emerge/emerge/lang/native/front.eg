@@ -815,7 +815,19 @@ fn parse_params() {
       next()
       ty = parse_type()
     }
-    params[len(params)] = { name: p.v, type: ty, line: p.line, col: p.col }
+    // an optional parameter: name = default (James, 2026-11-07: "I feel optional parameter's is always good."); native/defaults.eg gives the
+    // fn an entry per shorter arity, which evaluates the defaults in order and calls the whole fn
+    var dflt = null
+    if is_op("=") {
+      next()
+      dflt = parse_expr()
+    } else {
+      for q in params { if has(q, "default") { perr("parameter \"{p.v}\" follows an optional parameter — give it a default too", p) } }
+    }
+    // the key only when there is a default, as lang/parser.js writes it (selfhost compares the two trees)
+    var prm = { name: p.v, type: ty, line: p.line, col: p.col }
+    if dflt != null { prm.default = dflt }
+    params[len(params)] = prm
     if is_op(",") { next() } else { break }
   }
   want_op(")", "to close the parameter list")

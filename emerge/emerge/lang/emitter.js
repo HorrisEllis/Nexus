@@ -5,6 +5,8 @@
 // Names: a local x becomes v_x; state becomes $state; builtins are $.b.name; compartments are looked up by $.comp().
 
 const { VERSION } = require('./runtime');
+/** a fn's arity as JavaScript: its parameter count, or [required, all] when some are optional (2026-11-07) */
+const arityJs = (params) => { const req = params.filter(p => !p.default).length; return req === params.length ? String(req) : `[${req}, ${params.length}]`; };
 
 const J = JSON.stringify;
 const v = name => `v_${name}`;
@@ -76,10 +78,12 @@ function emitProgram(program, { file, runtimeRequire }) {
     depth--;
     const body = out.splice(saved).join('\n');
     const head = `function (${lens ? ['$state', ...params].join(', ') : params.join(', ')}) {\n${body}\n${'  '.repeat(depth)}}`;
-    return lens ? head : `$.fn(${J(name)}, ${f.params.length}, ${head})`;
+    return lens ? head : `$.fn(${J(name)}, ${arityJs(f.params)}, ${head})`;
   }
 
   function fnPrologueAndBody(f, name) {
+    // optional parameters: a missing argument (undefined in JavaScript; Emerge has no undefined) takes its default, in order
+    for (const p of f.params) if (p.default) line(`if (${v(p.name)} === undefined) ${v(p.name)} = ${ex(p.default)};`);
     for (const p of f.params) if (p.type) line(`${v(p.name)} = ${ty(v(p.name), p.type, `parameter ${p.name} of ${name}`)};`);
     const ctx = { ret: f.ret, fnName: name };
     blockBody(f.body.body, false, ctx);
@@ -89,7 +93,7 @@ function emitProgram(program, { file, runtimeRequire }) {
   // ── statements ─────────────────────────────────────────────────────────────
   function blockBody(list, valueOfLast, ctx = {}) {
     // hoisted fn declarations: JS hoists the declaration; tag it as an Emerge fn first thing in the block
-    for (const s of list) if (s.type === 'FnDecl') line(`$.fn(${J(s.name)}, ${s.params.length}, ${v(s.name)});`);
+    for (const s of list) if (s.type === 'FnDecl') line(`$.fn(${J(s.name)}, ${arityJs(s.params)}, ${v(s.name)});`);
     list.forEach((s, i) => {
       if (valueOfLast && i === list.length - 1 && s.type === 'ExprStmt') {
         line(at(s.line));
@@ -238,7 +242,7 @@ function emitProgram(program, { file, runtimeRequire }) {
   function specLines(c) {
     line(`const $st = $.map([${c.state.map(f => `${J(f.name)}, ($.at(${f.line}, F), ${ex(f.expr)})`).join(', ')}]);`);
     line('const $fns = Object.create(null);');
-    for (const f of c.fns) line(`$fns[${J(f.name)}] = { arity: ${f.params.length}, impl: ${fnExpr(f, true)} };`);
+    for (const f of c.fns) line(`$fns[${J(f.name)}] = { arity: ${arityJs(f.params)}, impl: ${fnExpr(f, true)} };`);
     line('const $constraints = [');
     depth++;
     for (const k of c.constraints) {
@@ -277,7 +281,7 @@ function emitProgram(program, { file, runtimeRequire }) {
   line(`const F = ${J(file)};`);
   line('module.exports = function load($) {');
   depth++;
-  for (const it of program.items) if (it.type === 'FnDecl') line(`$.fn(${J(it.name)}, ${it.params.length}, ${v(it.name)});`);
+  for (const it of program.items) if (it.type === 'FnDecl') line(`$.fn(${J(it.name)}, ${arityJs(it.params)}, ${v(it.name)});`);
   // the contract's roads: after the later of the contract and the last compartment (the interpreter's roadsPoint, CIE1)
   const contract = program.items.find(i => i.type === 'Contract');
   let roadsAfter = contract || null;

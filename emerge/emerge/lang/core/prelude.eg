@@ -245,6 +245,68 @@ fn sort(xs) {
   return _merge_sort(xs)
 }
 
+// sort_by, moved here from JavaScript (2026-11-07) once Emerge had optional parameters: James, "I feel optional parameter's is always good."
+// Each element keyed once by f; nums compared with nums, strings with strings by code point; stable, equal keys keeping their order in "desc" too.
+fn _sb_cmp(a, b) {
+  let ta = type_of(a)
+  let tb = type_of(b)
+  if ta == "num" and tb == "num" { return a - b }
+  if ta == "string" and tb == "string" {
+    if a < b { return -1 }
+    if a > b { return 1 }
+    return 0
+  }
+  raise("sort_by compares nums with nums or strings with strings, got {ta} and {tb}")
+}
+fn _sb_before(p, q, sign) {
+  let c = sign * _sb_cmp(p.k, q.k)
+  if c != 0 { return c < 0 }
+  return p.i < q.i
+}
+fn _sb_merge(xs, sign) {
+  let n = len(xs)
+  if n < 2 { return xs }
+  let a = _sb_merge(slice(xs, 0, idiv(n, 2)), sign)
+  let b = _sb_merge(slice(xs, idiv(n, 2)), sign)
+  var out = []
+  var i = 0
+  var j = 0
+  while i < len(a) and j < len(b) {
+    if _sb_before(b[j], a[i], sign) {
+      out[len(out)] = b[j]
+      j += 1
+    } else {
+      out[len(out)] = a[i]
+      i += 1
+    }
+  }
+  while i < len(a) {
+    out[len(out)] = a[i]
+    i += 1
+  }
+  while j < len(b) {
+    out[len(out)] = b[j]
+    j += 1
+  }
+  return out
+}
+fn sort_by(xs, f, dir = "asc") {
+  _need_list(xs, "sort_by")
+  _need_fn(f, "sort_by")
+  if dir != "asc" and dir != "desc" { raise("sort_by direction is \"asc\" or \"desc\"") }
+  var sign = 1
+  if dir == "desc" { sign = -1 }
+  var keyed = []
+  var i = 0
+  for x in xs {
+    keyed[len(keyed)] = { x: x, i: i, k: f(x) }
+    i += 1
+  }
+  var out = []
+  for p in _sb_merge(keyed, sign) { out[len(out)] = p.x }
+  return out
+}
+
 fn clone(v) {
   let t = type_of(v)
   if t == "list" {

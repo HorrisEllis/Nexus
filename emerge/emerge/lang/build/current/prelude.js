@@ -30,6 +30,10 @@ module.exports = function load($) {
   $.fn("abs", 1, v_abs);
   $.fn("_merge_sort", 1, v__merge_sort);
   $.fn("sort", 1, v_sort);
+  $.fn("_sb_cmp", 2, v__sb_cmp);
+  $.fn("_sb_before", 3, v__sb_before);
+  $.fn("_sb_merge", 2, v__sb_merge);
+  $.fn("sort_by", [2, 3], v_sort_by);
   $.fn("clone", 1, v_clone);
   $.fn("_space", 1, v__space);
   $.fn("trim", 1, v_trim);
@@ -525,382 +529,526 @@ module.exports = function load($) {
     return $.call(v__merge_sort, [v_xs]);
     return null;
   }
+  function v__sb_cmp(v_a, v_b) {
+    $.at(251, F);
+    let v_ta = $.call($.b["type_of"], [v_a]);
+    $.at(252, F);
+    let v_tb = $.call($.b["type_of"], [v_b]);
+    $.at(253, F);
+    if ($.truth($.and($.eq(v_ta, $.str(["num"])), () => $.eq(v_tb, $.str(["num"]))), "if")) {
+      $.at(253, F);
+      return $.sub(v_a, v_b);
+    }
+    $.at(254, F);
+    if ($.truth($.and($.eq(v_ta, $.str(["string"])), () => $.eq(v_tb, $.str(["string"]))), "if")) {
+      $.at(255, F);
+      if ($.truth($.cmp("<", v_a, v_b), "if")) {
+        $.at(255, F);
+        return $.neg(1);
+      }
+      $.at(256, F);
+      if ($.truth($.cmp(">", v_a, v_b), "if")) {
+        $.at(256, F);
+        return 1;
+      }
+      $.at(257, F);
+      return 0;
+    }
+    $.at(259, F);
+    $.call($.b["raise"], [$.str(["sort_by compares nums with nums or strings with strings, got ", v_ta, " and ", v_tb])]);
+    return null;
+  }
+  function v__sb_before(v_p, v_q, v_sign) {
+    $.at(262, F);
+    let v_c = $.mul(v_sign, $.call(v__sb_cmp, [$.get(v_p, "k"), $.get(v_q, "k")]));
+    $.at(263, F);
+    if ($.truth($.neq(v_c, 0), "if")) {
+      $.at(263, F);
+      return $.cmp("<", v_c, 0);
+    }
+    $.at(264, F);
+    return $.cmp("<", $.get(v_p, "i"), $.get(v_q, "i"));
+    return null;
+  }
+  function v__sb_merge(v_xs, v_sign) {
+    $.at(267, F);
+    let v_n = $.call($.b["len"], [v_xs]);
+    $.at(268, F);
+    if ($.truth($.cmp("<", v_n, 2), "if")) {
+      $.at(268, F);
+      return v_xs;
+    }
+    $.at(269, F);
+    let v_a = $.call(v__sb_merge, [$.call($.b["slice"], [v_xs, 0, $.call($.b["idiv"], [v_n, 2])]), v_sign]);
+    $.at(270, F);
+    let v_b = $.call(v__sb_merge, [$.call($.b["slice"], [v_xs, $.call($.b["idiv"], [v_n, 2])]), v_sign]);
+    $.at(271, F);
+    let v_out = $.list([]);
+    $.at(272, F);
+    let v_i = 0;
+    $.at(273, F);
+    let v_j = 0;
+    $.at(274, F);
+    for (;;) {
+      $.at(274, F);
+      if (!$.truth($.and($.cmp("<", v_i, $.call($.b["len"], [v_a])), () => $.cmp("<", v_j, $.call($.b["len"], [v_b]))), "while")) break;
+      {
+        $.at(275, F);
+        if ($.truth($.call(v__sb_before, [$.index(v_b, v_j), $.index(v_a, v_i), v_sign]), "if")) {
+          $.at(276, F);
+          $.setIndex(v_out, $.call($.b["len"], [v_out]), $.index(v_b, v_j));
+          $.at(277, F);
+          v_j = $.add(v_j, 1);
+        } else {
+          $.at(279, F);
+          $.setIndex(v_out, $.call($.b["len"], [v_out]), $.index(v_a, v_i));
+          $.at(280, F);
+          v_i = $.add(v_i, 1);
+        }
+      }
+    }
+    $.at(283, F);
+    for (;;) {
+      $.at(283, F);
+      if (!$.truth($.cmp("<", v_i, $.call($.b["len"], [v_a])), "while")) break;
+      {
+        $.at(284, F);
+        $.setIndex(v_out, $.call($.b["len"], [v_out]), $.index(v_a, v_i));
+        $.at(285, F);
+        v_i = $.add(v_i, 1);
+      }
+    }
+    $.at(287, F);
+    for (;;) {
+      $.at(287, F);
+      if (!$.truth($.cmp("<", v_j, $.call($.b["len"], [v_b])), "while")) break;
+      {
+        $.at(288, F);
+        $.setIndex(v_out, $.call($.b["len"], [v_out]), $.index(v_b, v_j));
+        $.at(289, F);
+        v_j = $.add(v_j, 1);
+      }
+    }
+    $.at(291, F);
+    return v_out;
+    return null;
+  }
+  function v_sort_by(v_xs, v_f, v_dir) {
+    if (v_dir === undefined) v_dir = $.str(["asc"]);
+    $.at(294, F);
+    $.call(v__need_list, [v_xs, $.str(["sort_by"])]);
+    $.at(295, F);
+    $.call(v__need_fn, [v_f, $.str(["sort_by"])]);
+    $.at(296, F);
+    if ($.truth($.and($.neq(v_dir, $.str(["asc"])), () => $.neq(v_dir, $.str(["desc"]))), "if")) {
+      $.at(296, F);
+      $.call($.b["raise"], [$.str(["sort_by direction is \"asc\" or \"desc\""])]);
+    }
+    $.at(297, F);
+    let v_sign = 1;
+    $.at(298, F);
+    if ($.truth($.eq(v_dir, $.str(["desc"])), "if")) {
+      $.at(298, F);
+      v_sign = $.neg(1);
+    }
+    $.at(299, F);
+    let v_keyed = $.list([]);
+    $.at(300, F);
+    let v_i = 0;
+    $.at(301, F);
+    for (const v_x of $.iter(v_xs, false)) {
+      $.at(302, F);
+      $.setIndex(v_keyed, $.call($.b["len"], [v_keyed]), $.map(["x", v_x, "i", v_i, "k", $.call(v_f, [v_x])]));
+      $.at(303, F);
+      v_i = $.add(v_i, 1);
+    }
+    $.at(305, F);
+    let v_out = $.list([]);
+    $.at(306, F);
+    for (const v_p of $.iter($.call(v__sb_merge, [v_keyed, v_sign]), false)) {
+      $.at(306, F);
+      $.setIndex(v_out, $.call($.b["len"], [v_out]), $.get(v_p, "x"));
+    }
+    $.at(307, F);
+    return v_out;
+    return null;
+  }
   function v_clone(v_v) {
-    $.at(249, F);
+    $.at(311, F);
     let v_t = $.call($.b["type_of"], [v_v]);
-    $.at(250, F);
+    $.at(312, F);
     if ($.truth($.eq(v_t, $.str(["list"])), "if")) {
-      $.at(251, F);
+      $.at(313, F);
       let v_out = $.list([]);
-      $.at(252, F);
+      $.at(314, F);
       for (const v_x of $.iter(v_v, false)) {
-        $.at(252, F);
+        $.at(314, F);
         $.setIndex(v_out, $.call($.b["len"], [v_out]), $.call(v_clone, [v_x]));
       }
-      $.at(253, F);
+      $.at(315, F);
       return v_out;
     }
-    $.at(255, F);
+    $.at(317, F);
     if ($.truth($.eq(v_t, $.str(["map"])), "if")) {
-      $.at(256, F);
+      $.at(318, F);
       let v_out = $.map([]);
-      $.at(257, F);
+      $.at(319, F);
       for (const [v_k, v_x] of $.iter(v_v, true)) {
-        $.at(257, F);
+        $.at(319, F);
         $.setIndex(v_out, v_k, $.call(v_clone, [v_x]));
       }
-      $.at(258, F);
+      $.at(320, F);
       return v_out;
     }
-    $.at(260, F);
+    $.at(322, F);
     return v_v;
     return null;
   }
   function v__space(v_c) {
-    $.at(265, F);
+    $.at(327, F);
     if ($.truth($.or($.or($.or($.eq(v_c, $.str([" "])), () => $.eq(v_c, $.str(["\t"]))), () => $.eq(v_c, $.str(["\n"]))), () => $.eq(v_c, $.str(["\r"]))), "if")) {
-      $.at(265, F);
+      $.at(327, F);
       return true;
     }
-    $.at(266, F);
+    $.at(328, F);
     let v_b = $.call($.b["bytes"], [v_c]);
-    $.at(267, F);
+    $.at(329, F);
     if ($.truth($.eq($.call($.b["len"], [v_b]), 1), "if")) {
-      $.at(267, F);
+      $.at(329, F);
       return $.or($.eq($.index(v_b, 0), 11), () => $.eq($.index(v_b, 0), 12));
     }
-    $.at(268, F);
+    $.at(330, F);
     let v_cp = $.neg(1);
-    $.at(269, F);
+    $.at(331, F);
     if ($.truth($.eq($.call($.b["len"], [v_b]), 2), "if")) {
-      $.at(269, F);
+      $.at(331, F);
       v_cp = $.bor($.shl($.band($.index(v_b, 0), 31), 6), $.band($.index(v_b, 1), 63));
     }
-    $.at(270, F);
+    $.at(332, F);
     if ($.truth($.eq($.call($.b["len"], [v_b]), 3), "if")) {
-      $.at(270, F);
+      $.at(332, F);
       v_cp = $.bor($.bor($.shl($.band($.index(v_b, 0), 15), 12), $.shl($.band($.index(v_b, 1), 63), 6)), $.band($.index(v_b, 2), 63));
     }
-    $.at(271, F);
+    $.at(333, F);
     return $.or($.or($.or($.or($.or($.or($.or($.or($.eq(v_cp, 160), () => $.eq(v_cp, 5760)), () => $.and($.cmp(">=", v_cp, 8192), () => $.cmp("<=", v_cp, 8202))), () => $.eq(v_cp, 8232)), () => $.eq(v_cp, 8233)), () => $.eq(v_cp, 8239)), () => $.eq(v_cp, 8287)), () => $.eq(v_cp, 12288)), () => $.eq(v_cp, 65279));
     return null;
   }
   function v_trim(v_s) {
-    $.at(275, F);
+    $.at(337, F);
     $.call(v__need_str, [v_s, $.str(["trim"])]);
-    $.at(276, F);
+    $.at(338, F);
     let v_cs = $.call($.b["split"], [v_s, $.str([""])]);
-    $.at(277, F);
+    $.at(339, F);
     let v_a = 0;
-    $.at(278, F);
+    $.at(340, F);
     let v_b = $.call($.b["len"], [v_cs]);
-    $.at(279, F);
+    $.at(341, F);
     for (;;) {
-      $.at(279, F);
+      $.at(341, F);
       if (!$.truth($.and($.cmp("<", v_a, v_b), () => $.call(v__space, [$.index(v_cs, v_a)])), "while")) break;
       {
-        $.at(279, F);
+        $.at(341, F);
         v_a = $.add(v_a, 1);
       }
     }
-    $.at(280, F);
+    $.at(342, F);
     for (;;) {
-      $.at(280, F);
+      $.at(342, F);
       if (!$.truth($.and($.cmp(">", v_b, v_a), () => $.call(v__space, [$.index(v_cs, $.sub(v_b, 1))])), "while")) break;
       {
-        $.at(280, F);
+        $.at(342, F);
         v_b = $.sub(v_b, 1);
       }
     }
-    $.at(281, F);
+    $.at(343, F);
     return $.call($.b["slice"], [v_s, v_a, v_b]);
     return null;
   }
   function v_replace(v_s, v_a, v_b) {
-    $.at(285, F);
+    $.at(347, F);
     $.call(v__need_str, [v_s, $.str(["replace"])]);
-    $.at(286, F);
+    $.at(348, F);
     $.call(v__need_str, [v_a, $.str(["replace"])]);
-    $.at(287, F);
+    $.at(349, F);
     $.call(v__need_str, [v_b, $.str(["replace"])]);
-    $.at(288, F);
+    $.at(350, F);
     return $.call($.b["join"], [$.call($.b["split"], [v_s, v_a]), v_b]);
     return null;
   }
   function v_hex(v_b) {
-    $.at(293, F);
+    $.at(355, F);
     $.call(v__need_bytes, [v_b, $.str(["hex"])]);
-    $.at(294, F);
+    $.at(356, F);
     let v_digits = $.call($.b["split"], [$.str(["0123456789abcdef"]), $.str([""])]);
-    $.at(295, F);
+    $.at(357, F);
     let v_out = $.list([]);
-    $.at(296, F);
+    $.at(358, F);
     for (const v_x of $.iter(v_b, false)) {
-      $.at(297, F);
+      $.at(359, F);
       $.setIndex(v_out, $.call($.b["len"], [v_out]), $.index(v_digits, $.shr(v_x, 4)));
-      $.at(298, F);
+      $.at(360, F);
       $.setIndex(v_out, $.call($.b["len"], [v_out]), $.index(v_digits, $.band(v_x, 15)));
     }
-    $.at(300, F);
+    $.at(362, F);
     return $.call($.b["join"], [v_out, $.str([""])]);
     return null;
   }
   function v__hex_digit(v_c) {
-    $.at(304, F);
+    $.at(366, F);
     let v_i = $.call($.b["find_text"], [$.str(["0123456789abcdef"]), v_c]);
-    $.at(305, F);
+    $.at(367, F);
     if ($.truth($.cmp(">=", v_i, 0), "if")) {
-      $.at(305, F);
+      $.at(367, F);
       return v_i;
     }
-    $.at(306, F);
+    $.at(368, F);
     return $.call($.b["find_text"], [$.str(["0123456789ABCDEF"]), v_c]);
     return null;
   }
   function v_from_hex(v_s) {
-    $.at(310, F);
+    $.at(372, F);
     $.call(v__need_str, [v_s, $.str(["from_hex"])]);
-    $.at(311, F);
+    $.at(373, F);
     let v_cs = $.call($.b["split"], [v_s, $.str([""])]);
-    $.at(312, F);
+    $.at(374, F);
     if ($.truth($.neq($.mod($.call($.b["len"], [v_cs]), 2), 0), "if")) {
-      $.at(312, F);
+      $.at(374, F);
       $.call($.b["raise"], [$.str(["from_hex needs pairs of hex digits"])]);
     }
-    $.at(313, F);
+    $.at(375, F);
     let v_out = $.list([]);
-    $.at(314, F);
+    $.at(376, F);
     let v_i = 0;
-    $.at(315, F);
+    $.at(377, F);
     for (;;) {
-      $.at(315, F);
+      $.at(377, F);
       if (!$.truth($.cmp("<", v_i, $.call($.b["len"], [v_cs])), "while")) break;
       {
-        $.at(316, F);
+        $.at(378, F);
         let v_hi = $.call(v__hex_digit, [$.index(v_cs, v_i)]);
-        $.at(317, F);
+        $.at(379, F);
         let v_lo = $.call(v__hex_digit, [$.index(v_cs, $.add(v_i, 1))]);
-        $.at(318, F);
+        $.at(380, F);
         if ($.truth($.or($.or($.or($.cmp("<", v_hi, 0), () => $.cmp("<", v_lo, 0)), () => $.neq($.call($.b["len"], [$.index(v_cs, v_i)]), 1)), () => $.neq($.call($.b["len"], [$.index(v_cs, $.add(v_i, 1))]), 1)), "if")) {
-          $.at(318, F);
+          $.at(380, F);
           $.call($.b["raise"], [$.str(["from_hex needs pairs of hex digits"])]);
         }
-        $.at(319, F);
+        $.at(381, F);
         $.setIndex(v_out, $.call($.b["len"], [v_out]), $.add($.mul(v_hi, 16), v_lo));
-        $.at(320, F);
+        $.at(382, F);
         v_i = $.add(v_i, 2);
       }
     }
-    $.at(322, F);
+    $.at(384, F);
     return $.call($.b["bytes"], [v_out]);
     return null;
   }
   function v__fixed(v_n, v_who, v_width, v_signed, v_big, v_range) {
-    $.at(327, F);
+    $.at(389, F);
     let v_v = 0n;
-    $.at(328, F);
+    $.at(390, F);
     if ($.truth($.eq($.call($.b["type_of"], [v_n]), $.str(["int"])), "if")) {
-      $.at(329, F);
+      $.at(391, F);
       v_v = v_n;
     } else {
-      $.at(330, F);
+      $.at(392, F);
       if ($.truth($.and($.and($.and($.eq($.call($.b["type_of"], [v_n]), $.str(["num"])), () => $.eq($.call($.b["floor"], [v_n]), v_n)), () => $.cmp(">=", v_n, $.neg(9007199254740991))), () => $.cmp("<=", v_n, 9007199254740991)), "if")) {
-        $.at(331, F);
+        $.at(393, F);
         v_v = $.call($.b["int"], [v_n]);
       } else {
-        $.at(333, F);
+        $.at(395, F);
         $.call($.b["raise"], [$.str([v_who, " needs an int in ", v_range, ", got ", $.call($.b["repr"], [v_n])])]);
       }
     }
-    $.at(335, F);
+    $.at(397, F);
     if ($.truth($.cmp("<", v_width, 8), "if")) {
-      $.at(336, F);
+      $.at(398, F);
       let v_lo = 0n;
-      $.at(337, F);
+      $.at(399, F);
       let v_hi = $.sub($.shl(1n, $.mul(v_width, 8)), 1n);
-      $.at(338, F);
+      $.at(400, F);
       if ($.truth(v_signed, "if")) {
-        $.at(339, F);
+        $.at(401, F);
         v_lo = $.neg($.shl(1n, $.sub($.mul(v_width, 8), 1)));
-        $.at(340, F);
+        $.at(402, F);
         v_hi = $.sub($.shl(1n, $.sub($.mul(v_width, 8), 1)), 1n);
       }
-      $.at(342, F);
+      $.at(404, F);
       if ($.truth($.or($.cmp("<", v_v, v_lo), () => $.cmp(">", v_v, v_hi)), "if")) {
-        $.at(342, F);
+        $.at(404, F);
         $.call($.b["raise"], [$.str([v_who, " needs an int in ", v_range, ", got ", $.call($.b["repr"], [v_n])])]);
       }
     } else {
-      $.at(343, F);
+      $.at(405, F);
       if ($.truth($.and($.not(v_signed), () => $.cmp("<", v_v, 0n)), "if")) {
-        $.at(344, F);
+        $.at(406, F);
         $.call($.b["raise"], [$.str([v_who, " needs an int in ", v_range, ", got ", $.call($.b["repr"], [v_n])])]);
       }
     }
-    $.at(346, F);
+    $.at(408, F);
     let v_out = $.list([]);
-    $.at(347, F);
+    $.at(409, F);
     for (const v_k of $.iter($.range(0, v_width), false)) {
-      $.at(347, F);
+      $.at(409, F);
       $.setIndex(v_out, v_k, 0);
     }
-    $.at(348, F);
+    $.at(410, F);
     for (const v_k of $.iter($.range(0, v_width), false)) {
-      $.at(349, F);
+      $.at(411, F);
       let v_at = v_k;
-      $.at(350, F);
+      $.at(412, F);
       if ($.truth(v_big, "if")) {
-        $.at(350, F);
+        $.at(412, F);
         v_at = $.sub($.sub(v_width, 1), v_k);
       }
-      $.at(351, F);
+      $.at(413, F);
       $.setIndex(v_out, v_at, $.call($.b["num"], [$.band($.call($.b["shr_u"], [v_v, $.mul(v_k, 8)]), 255n)]));
     }
-    $.at(353, F);
+    $.at(415, F);
     return $.call($.b["bytes"], [v_out]);
     return null;
   }
   function v_u8(v_n) {
-    $.at(356, F);
+    $.at(418, F);
     return $.call(v__fixed, [v_n, $.str(["u8"]), 1, false, false, $.str(["0..255"])]);
     return null;
   }
   function v_u16le(v_n) {
-    $.at(357, F);
+    $.at(419, F);
     return $.call(v__fixed, [v_n, $.str(["u16le"]), 2, false, false, $.str(["0..65535"])]);
     return null;
   }
   function v_u32le(v_n) {
-    $.at(358, F);
+    $.at(420, F);
     return $.call(v__fixed, [v_n, $.str(["u32le"]), 4, false, false, $.str(["0..4294967295"])]);
     return null;
   }
   function v_u64le(v_n) {
-    $.at(359, F);
+    $.at(421, F);
     return $.call(v__fixed, [v_n, $.str(["u64le"]), 8, false, false, $.str(["0..18446744073709551615"])]);
     return null;
   }
   function v_i32le(v_n) {
-    $.at(360, F);
+    $.at(422, F);
     return $.call(v__fixed, [v_n, $.str(["i32le"]), 4, true, false, $.str(["-2147483648..2147483647"])]);
     return null;
   }
   function v_i64le(v_n) {
-    $.at(361, F);
+    $.at(423, F);
     return $.call(v__fixed, [v_n, $.str(["i64le"]), 8, true, false, $.str(["-9223372036854775808..9223372036854775807"])]);
     return null;
   }
   function v_u16be(v_n) {
-    $.at(362, F);
+    $.at(424, F);
     return $.call(v__fixed, [v_n, $.str(["u16be"]), 2, false, true, $.str(["0..65535"])]);
     return null;
   }
   function v_u32be(v_n) {
-    $.at(363, F);
+    $.at(425, F);
     return $.call(v__fixed, [v_n, $.str(["u32be"]), 4, false, true, $.str(["0..4294967295"])]);
     return null;
   }
   function v_u64be(v_n) {
-    $.at(364, F);
+    $.at(426, F);
     return $.call(v__fixed, [v_n, $.str(["u64be"]), 8, false, true, $.str(["0..18446744073709551615"])]);
     return null;
   }
   function v_read_u64be(v_b, v_off) {
-    $.at(368, F);
+    $.at(430, F);
     $.call(v__need_bytes, [v_b, $.str(["read_u64be"])]);
-    $.at(369, F);
+    $.at(431, F);
     $.call(v__need_num, [v_off, $.str(["read_u64be"])]);
-    $.at(370, F);
+    $.at(432, F);
     if ($.truth($.or($.or($.neq($.call($.b["floor"], [v_off]), v_off), () => $.cmp("<", v_off, 0)), () => $.cmp(">", $.add(v_off, 8), $.call($.b["len"], [v_b]))), "if")) {
-      $.at(371, F);
+      $.at(433, F);
       $.call($.b["raise"], [$.str(["read_u64be: offset ", $.call($.b["repr"], [v_off]), " needs 8 bytes inside ", $.call($.b["len"], [v_b])])]);
     }
-    $.at(373, F);
+    $.at(435, F);
     if ($.truth($.cmp(">=", $.index(v_b, v_off), 128), "if")) {
-      $.at(374, F);
+      $.at(436, F);
       $.call($.b["raise"], [$.str(["int overflow in read_u64be: result does not fit in 64 bits (use wrap_add / wrap_sub / wrap_mul to wrap)"])]);
     }
-    $.at(376, F);
+    $.at(438, F);
     let v_v = 0n;
-    $.at(377, F);
+    $.at(439, F);
     for (const v_k of $.iter($.range(0, 8), false)) {
-      $.at(377, F);
+      $.at(439, F);
       v_v = $.bor($.shl(v_v, 8), $.call($.b["int"], [$.index(v_b, $.add(v_off, v_k))]));
     }
-    $.at(378, F);
+    $.at(440, F);
     return v_v;
     return null;
   }
   function v_wrap32(v_x) {
-    $.at(383, F);
+    $.at(445, F);
     if ($.truth($.or($.or($.or($.neq($.call($.b["type_of"], [v_x]), $.str(["num"])), () => $.neq($.call($.b["floor"], [v_x]), v_x)), () => $.cmp(">", v_x, 9007199254740991)), () => $.cmp("<", v_x, $.neg(9007199254740991))), "if")) {
-      $.at(384, F);
+      $.at(446, F);
       $.call($.b["raise"], [$.str(["wrap32 needs a safe int, got ", $.call($.b["repr"], [v_x])])]);
     }
-    $.at(386, F);
+    $.at(448, F);
     return $.mod(v_x, 4294967296);
     return null;
   }
   function v__rot(v_x, v_n, v_left, v_who) {
-    $.at(390, F);
+    $.at(452, F);
     if ($.truth($.eq($.call($.b["type_of"], [v_x]), $.str(["int"])), "if")) {
-      $.at(391, F);
+      $.at(453, F);
       let v_c = $.neg(1);
-      $.at(392, F);
+      $.at(454, F);
       if ($.truth($.and($.and($.eq($.call($.b["type_of"], [v_n]), $.str(["int"])), () => $.cmp(">=", v_n, 0n)), () => $.cmp("<=", v_n, 63n)), "if")) {
-        $.at(392, F);
+        $.at(454, F);
         v_c = $.call($.b["num"], [v_n]);
       }
-      $.at(393, F);
+      $.at(455, F);
       if ($.truth($.and($.and($.and($.eq($.call($.b["type_of"], [v_n]), $.str(["num"])), () => $.eq($.call($.b["floor"], [v_n]), v_n)), () => $.cmp(">=", v_n, 0)), () => $.cmp("<=", v_n, 63)), "if")) {
-        $.at(393, F);
+        $.at(455, F);
         v_c = v_n;
       }
-      $.at(394, F);
+      $.at(456, F);
       if ($.truth($.cmp("<", v_c, 0), "if")) {
-        $.at(394, F);
+        $.at(456, F);
         $.call($.b["raise"], [$.str([v_who, " on an int needs a shift count in 0..63, got ", $.call($.b["repr"], [v_n])])]);
       }
-      $.at(395, F);
+      $.at(457, F);
       let v_k = v_c;
-      $.at(396, F);
+      $.at(458, F);
       if ($.truth($.not(v_left), "if")) {
-        $.at(396, F);
+        $.at(458, F);
         v_k = $.mod($.sub(64, v_c), 64);
       }
-      $.at(397, F);
+      $.at(459, F);
       return $.bor($.shl(v_x, v_k), $.call($.b["shr_u"], [v_x, $.mod($.sub(64, v_k), 64)]));
     }
-    $.at(399, F);
+    $.at(461, F);
     if ($.truth($.or($.or($.or($.neq($.call($.b["type_of"], [v_x]), $.str(["num"])), () => $.neq($.call($.b["floor"], [v_x]), v_x)), () => $.cmp("<", v_x, $.neg(2147483648))), () => $.cmp(">", v_x, 4294967295)), "if")) {
-      $.at(400, F);
+      $.at(462, F);
       $.call($.b["raise"], [$.str([v_who, " works on 32-bit words: an int in [-2^31, 2^32), got ", $.call($.b["repr"], [v_x])])]);
     }
-    $.at(402, F);
+    $.at(464, F);
     if ($.truth($.or($.or($.or($.neq($.call($.b["type_of"], [v_n]), $.str(["num"])), () => $.neq($.call($.b["floor"], [v_n]), v_n)), () => $.cmp("<", v_n, 0)), () => $.cmp(">", v_n, 31)), "if")) {
-      $.at(403, F);
+      $.at(465, F);
       $.call($.b["raise"], [$.str([v_who, " needs a shift count in 0..31, got ", $.call($.b["repr"], [v_n])])]);
     }
-    $.at(405, F);
+    $.at(467, F);
     let v_w = $.call($.b["int"], [$.mod(v_x, 4294967296)]);
-    $.at(406, F);
+    $.at(468, F);
     let v_k = v_n;
-    $.at(407, F);
+    $.at(469, F);
     if ($.truth($.not(v_left), "if")) {
-      $.at(407, F);
+      $.at(469, F);
       v_k = $.mod($.sub(32, v_n), 32);
     }
-    $.at(408, F);
+    $.at(470, F);
     return $.call($.b["num"], [$.band($.bor($.shl(v_w, v_k), $.call($.b["shr_u"], [v_w, $.mod($.sub(32, v_k), 32)])), 4294967295n)]);
     return null;
   }
   function v_rotl(v_x, v_n) {
-    $.at(411, F);
+    $.at(473, F);
     return $.call(v__rot, [v_x, v_n, true, $.str(["rotl"])]);
     return null;
   }
   function v_rotr(v_x, v_n) {
-    $.at(412, F);
+    $.at(474, F);
     return $.call(v__rot, [v_x, v_n, false, $.str(["rotr"])]);
     return null;
   }
@@ -933,6 +1081,10 @@ module.exports = function load($) {
     "abs": v_abs,
     "_merge_sort": v__merge_sort,
     "sort": v_sort,
+    "_sb_cmp": v__sb_cmp,
+    "_sb_before": v__sb_before,
+    "_sb_merge": v__sb_merge,
+    "sort_by": v_sort_by,
     "clone": v_clone,
     "_space": v__space,
     "trim": v_trim,

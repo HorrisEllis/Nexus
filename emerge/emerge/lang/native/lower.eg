@@ -384,7 +384,8 @@ fn lower(ast, version, test_mode) {
   OWN_SORT_BY = false
   for it in ast.items { if it.type == "FnDecl" and it.name == "sort_by" { OWN_SORT_BY = true } }
   let rx = uses_matches(ast.items)
-  let sb = uses_sort_by(ast.items, OWN_SORT_BY)
+  // sort_by lives in the prelude since 2026-11-07 (optional parameters); the <cie>/sort.eg rewrite it replaced is archived
+  let sb = false
   var src = ast
   if rx or sb {
     var uses = []

@@ -9,6 +9,8 @@
 const { builtinArity, runtimeSignals } = require('./runtime');
 const build = require('./build-loader');
 const { SEMVER, shapeMismatches } = require('./components');
+/** a fn's arity: its parameter count, or [required, all] when some are optional (optional parameters, 2026-11-07) */
+const arityOf = (params) => { const req = params.filter(p => !p.default).length; return req === params.length ? req : [req, params.length]; };
 
 class Scope {
   constructor(parent, boundary = false) { this.parent = parent; this.vars = new Map(); this.boundary = boundary; }
@@ -134,7 +136,10 @@ function check(program) {
 
   function fnBody(f, scope, ctx, kind) {
     const s = new Scope(scope);
-    for (const p of f.params) declare(s, p.name, { kind: 'param' }, p);
+    for (const p of f.params) {
+      if (p.default) expr(p.default, s, ctx);   // a default sees the parameters before it
+      declare(s, p.name, { kind: 'param' }, p);
+    }
     stmts(f.body.body, s, { ...ctx, fn: kind, loop: false, whatifDirect: false });
   }
 
@@ -175,7 +180,7 @@ function check(program) {
 
   // ── statements ─────────────────────────────────────────────────────────────
   function hoist(list, scope) {
-    for (const s of list) if (s.type === 'FnDecl') declare(scope, s.name, { kind: 'fn', arity: s.params.length }, s);
+    for (const s of list) if (s.type === 'FnDecl') declare(scope, s.name, { kind: 'fn', arity: arityOf(s.params) }, s);
   }
 
   function stmts(list, scope, ctx) {
@@ -298,7 +303,7 @@ function check(program) {
 
   // hoist: fns, compartments, modules
   for (const it of program.items) {
-    if (it.type === 'FnDecl') declare(top, it.name, { kind: 'fn', arity: it.params.length }, it);
+    if (it.type === 'FnDecl') declare(top, it.name, { kind: 'fn', arity: arityOf(it.params) }, it);
     else if (it.type === 'Compartment') declare(top, it.name, { kind: it.isTemplate ? 'template' : 'comp' }, it);
     else if (it.type === 'Kind') { declare(top, it.name, { kind: 'kind' }, it); kindsByName.set(it.name, it); }
     else if (it.type === 'Use') declare(top, it.alias, { kind: 'module' }, it);
@@ -503,7 +508,7 @@ function check(program) {
       expr(f.expr, tscope, topCtx);
     }
     const cscope = new Scope(tscope);
-    for (const f of c.fns) declare(cscope, f.name, { kind: 'compfn', comp: c.name, arity: f.params.length }, f);
+    for (const f of c.fns) declare(cscope, f.name, { kind: 'compfn', comp: c.name, arity: arityOf(f.params) }, f);
 
     const cnames = new Set();
     for (const k of c.constraints) {

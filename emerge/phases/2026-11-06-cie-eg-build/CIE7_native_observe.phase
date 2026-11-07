@@ -7,11 +7,11 @@ intent: null
 summary: CIE7_native_observe (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793997643490
+exported_at: 1794023236615
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997643490
-lastSeenAt: 1793997643490
+firstSeenAt: 1794023236615
+lastSeenAt: 1794023236615
 fingerprint: null
 payload:
   id: CIE7_native_observe
@@ -29,4 +29,4 @@ payload:
   blocks:
     - MOD-NATIVE-TOOLS
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: d7bfba08f4f6aedc
+  graph: 9dd920685c08cb26
