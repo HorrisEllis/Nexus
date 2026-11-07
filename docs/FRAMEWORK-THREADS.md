@@ -318,3 +318,20 @@ four parts, run by each system against its own door.
 genesis (his ask): its own 1.6.0 note says "CIE-EG's roads, gate and typed gaps (DB21, his) are not in the catalog yet". The door was specced in
 genesis and the architecture template, its foundation in CIE-EG, and the two never named each other. Recorded in all three (addenda
 2026-11-07). The prediction stands: each system's door, built on CIE-EG, passes one conformance test of the four parts.
+
+**T8, an idea, 2026-11-07 (his, said as it came):** ".spec as the compressed system. Spec as the meta data, and also the door?" · "That makes the
+spec the compartment file for cos and idearium. The spine for architect and thn the components can be dumb since the door is the event bus to
+route. Reduces complexity and adds modularity and using the architect in idearium can edit the architecture". The same idea on 2026-10-19
+(docs/2026-10-19-infrastructure-spine-phasemap.spec): "then when making changes, only need to rewire the component registry, like in architect".
+Read by the coder: one spec per system, read by Idearium (owns it), COS (runs it as the compartment file), the door (routes from it) and
+Architect (draws and edits it; canvas → spec exists, architect/compile-route.js; spec → canvas does not). With dumb components, rewiring is a
+spec edit and no code changes. The condition: it is real only once a door routes from its spec (CIE10 first); before that, Architect edits a
+description, as Loom was.
+**Prediction, registered before any result:** once Emerge's door routes from its spec, one rewiring made in Architect changes the running system
+with 0 lines of component code changed, the save gated and recorded in Versionium. Measured as the diff of the rewiring: spec lines only.
+**And the reconstruction invariant he brought the same day (not in his usual voice; his to say whose words they are):** a system is
+reconstructible from its spec only when its implementation can be regenerated, its dependencies and generation environment are declared, the
+regenerated system satisfies the same contracts, its tests pass, and the artifact can be independently reproduced. Two numbers, kept apart:
+specification coverage, and verified reconstruction coverage. The coder's distinction: build (source → artifact) must be bit-reproducible;
+generation (spec → source) must match behaviour, not bytes. Today's 4–38% (scripts/systems-report.js) is the first kind at its weakest (files a
+spec module names by path); the second has never been measured. **Evidence:** open.
