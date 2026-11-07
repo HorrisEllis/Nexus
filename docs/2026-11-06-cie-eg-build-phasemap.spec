@@ -168,7 +168,7 @@ phases:
     proof: "every .eg test in the repository passes under emerge test with the same counts as eg test"
 
   CIE6_native_check:
-    status: OPEN
+    status: BUILT   # 2026-11-07: slice a 0.60.440 (check.eg), slice b 0.60.441 (the compiler runs it)
     depends_on: [CIE5_native_test]
     spec: emerge/emerge/spec/cie-eg.spec
     blocks: [MOD-NATIVE-TOOLS]
@@ -436,3 +436,16 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # James, 2026-11-07: "make sure to log it in the ledger. what your approach was, and how my framework helped you."
 # See CIE_D6: the toolkit's sections 4, 3 and 6 applied to the 20-session constraint; the interpreter retired not ported, the spec compiler's home
 # asked, the porting automated through Idearium's Emerge rung with a perfect oracle per module. Logged in the ledger (CIE11, CIE8, CIE9 notes).
+
+# ── ADDENDUM 2026-11-07 (0.60.441) — CIE6 slice b built: Emerge checks its own code when it compiles ──
+# James, 2026-11-07: "its meant to debug it's own code when compiling. so that js harness is only temporary until emerge can also do it." ·
+# "okay. lets continue."
+# front.eg builds lang/parser.js's tree field for field (211/211 corpus programs; the baseline was 129): kinds parsed in full, compartments with
+# kind, idTok, stateDeclared and positions, cost null until given, state as a State node (lower.eg binds it), wire ends, emits and gap types
+# with positions, the contract normalised by lang/cie/contract.eg with each road's position, and columns counted as JavaScript counts them.
+# native/emerge.eg runs lang/cie/check.eg on the main program and refuses one with errors, printing eg native's messages (72/72), exit 1, no
+# executable. The checker's environment is carried as Emerge text (native/check_env_text.eg), not a .json file (his rule, 2026-11-01).
+# Built to do it: exit(n) and eprint in both backends (the stderr gap of 2026-11-06 closed). CIE14 (c), the let-write gap, closes natively.
+# Found and said: a send to an instance's hook is not native (lower.eg refuses it by name); eg check stops at the first error, while the
+# compiler, like eg native's check, reports them all.
+# The JS checker is now only a test oracle; it goes with the interpreter at CIE11, the harness at CIE9. native.test 109/109.

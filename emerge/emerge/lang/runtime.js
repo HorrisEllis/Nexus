@@ -11,6 +11,8 @@
 const fs = require('fs');
 const crypto = require('crypto');
 const { EmergeError } = require('./errors');
+/** exit(n): ends the run with status n. Thrown, so it unwinds through every frame; no try catches it (errValue rethrows it). */
+class ExitRequest { constructor(code) { this.code = code; this.egExit = true; } }
 const { defineConstraint, evaluate } = require('../core/constraint');
 const { graphRecords } = require('./components');
 const build = require('./build-loader');
@@ -216,7 +218,7 @@ function createRuntime(opts = {}) {
     const file = rt.file, line = rt.line;
     rt.frames.push({ file, line });
     try { return f(...args); }
-    catch (e) { throw (e instanceof EmergeError || (e && e.name === 'EmergeSyntaxError')) ? e : rt.toError(e); } // located where it happened, before the caller's line is restored
+    catch (e) { throw (e instanceof EmergeError || (e && (e.name === 'EmergeSyntaxError' || e.egExit))) ? e : rt.toError(e); } // located where it happened, before the caller's line is restored
     finally { rt.frames.pop(); rt.file = file; rt.line = line; }
   };
 
@@ -994,6 +996,7 @@ function createRuntime(opts = {}) {
   };
 
   rt.errValue = (e) => {
+    if (e && e.egExit) throw e;   // exit(n) is not an error: no try catches it
     const x = rt.toError(e);
     const m = mkMap(); m.message = x.bare || x.message; m.line = x.line; m.file = x.file;
     return m;
@@ -1042,6 +1045,12 @@ function createRuntime(opts = {}) {
   const needMap = (v, who) => { if (!isMap(v)) err(`${who} needs a map, got ${typeOf(v)}`); return v; };
 
   def('print', [0, -1], (...xs) => { out(xs.map(x => show(x)).join(' ') + '\n'); return null; });
+  // eprint: print to stderr (a gap found 2026-11-06, closed 2026-11-07 so the native compiler can report a checked program's errors)
+  def('eprint', [0, -1], (...xs) => { errOut(xs.map(x => show(x)).join(' ') + '\n'); return null; });
+  def('exit', 1, (n) => {
+    if (typeof n !== 'number' || !Number.isInteger(n) || n < 0 || n > 255) err('exit needs a whole num from 0 to 255');
+    throw new ExitRequest(n);
+  });
   def('str', 1, v => show(v));
   def('num', 1, v => {
     if (typeof v === 'number') return v;
@@ -1299,6 +1308,7 @@ function createRuntime(opts = {}) {
     try {
       main();
     } catch (e) {
+      if (e && e.egExit) { summary(); return e.code; }
       const x = rt.toError(e);
       summary();
       errOut(`error: ${x.message}\n`);
@@ -1311,6 +1321,7 @@ function createRuntime(opts = {}) {
 
   rt.runTests = (main) => {
     try { main(); } catch (e) {
+      if (e && e.egExit) return { exit: e.code, passed: 0, failed: 0 };
       errOut(`error: ${rt.toError(e).message}\n`);
       return { exit: 1, passed: 0, failed: 0 };
     }

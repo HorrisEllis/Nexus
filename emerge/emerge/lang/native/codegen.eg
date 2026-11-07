@@ -733,10 +733,11 @@ let BUILTINS = {
   args: ["rt_b_args", 0, 0], idiv: ["rt_idiv", 2, 2], shr_u: ["rt_shr_u", 2, 2], floor: ["rt_b_floor", 1, 1],
   utf8: ["rt_b_utf8", 1, 1], sqrt: ["rt_b_sqrt", 1, 1], truthy: ["rt_b_truthy", 2, 2], split: ["rt_b_split", 2, 2],
   find_text: ["rt_b_find_text", 2, 2], sha256: ["rt_b_sha256", 1, 1], freeze: ["rt_b_freeze", 1, 1],
-  upper: ["rt_b_upper", 1, 1], lower: ["rt_b_lower", 1, 1], __exit: ["rt_b_exit", 1, 1]
+  upper: ["rt_b_upper", 1, 1], lower: ["rt_b_lower", 1, 1], __exit: ["rt_b_exit", 1, 1],
+  exit: ["rt_b_exit", 1, 1]
 }
 // builtins that take any number of arguments: the arguments go to the runtime as one list
-let VARIADIC = { print: "rt_print", min: "rt_b_min", max: "rt_b_max" }
+let VARIADIC = { print: "rt_print", eprint: "rt_eprint", min: "rt_b_min", max: "rt_b_max" }
 let INTRINSICS = { mem_get: 1, mem_set: 2, mem_get8: 1, mem_set8: 2, mem_copy: 3, sys6: 6, add_ovf: 2, sub_ovf: 2,
   mul_ovf: 2, entry_sp: 0, shr_u: 2, unwind: 1, f_add: 2, f_sub: 2, f_mul: 2, f_div: 2, f_sqrt: 1, f_of_int: 1,
   f_trunc: 1, f_lt: 2, f_le: 2, f_eq: 2, cpu_sha: 0, sha256_block: 2 }

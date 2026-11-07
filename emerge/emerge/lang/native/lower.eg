@@ -125,17 +125,22 @@ var HAS_TEMPLATES = false
 let HANDLE_MEMBERS = { state: 1, id: 1, name: 1, intent: 1, namespace: 1, version: 1, uuid: 1, hooks: 1, template: 1, kinds: 1 }
 /** is n a name the lowering resolves statically (a declared compartment, a module, the world)? */
 fn static_obj(n) = n.type == "Ident" and (has(comps, n.name) or has(MODULES, n.name) or n.name == W)
+/** a constraint's cost: its own, or its type's default_cost from primitives.eg (lang/runtime.js), 1 for every type there today */
+fn cost_of(k) {
+  if k.cost == null { return 1 }
+  return k.cost
+}
 /** a kind and its parents, in order, once each (the checker's flatKind names) */
 fn kind_names(name, acc) {
   var out = acc
   if out contains name or not has(KINDS, name) { return out }
   out = push(out, name)
-  for p in KINDS[name].parents { out = kind_names(p, out) }
+  for p in KINDS[name].parents { out = kind_names(p.name, out) }
   return out
 }
 fn kinds_of(c) {
   var out = []
-  for k in c.kinds { out = kind_names(k, out) }
+  for k in c.kinds { out = kind_names(k.name, out) }
   return out
 }
 /** the state fields the kinds type, each once, with the kind that typed it */
@@ -165,6 +170,8 @@ fn rw(n) {
   if type_of(n) != "map" { return n }
   if has(n, "type") {
     let t = n.type
+    // lang/parser.js's State node: inside a compartment it is the state binding each handler and fn opens with
+    if t == "State" { return mk("Ident", n, { name: "state" }) }
     if t == "Whatif" {
       // the block's last expression is the branch's value
       var body = rw(n.body.body)
@@ -194,6 +201,7 @@ fn rw(n) {
       return stmt(n, wcall(n, "emit_out", [str_(n, n.hook), p]))
     }
     if t == "Send" {
+      if has(n, "expr") { raise("{n.line}:{n.col}: send to an instance's hook is not in the native subset yet") }
       var p = mk("Null", n, {})
       if n.payload != null { p = rw(n.payload) }
       return stmt(n, wcall(n, "send_in", [str_(n, n.comp), str_(n, n.hook), p]))
@@ -275,7 +283,7 @@ fn reads_of(n, acc) {
     return out
   }
   if type_of(n) != "map" { return out }
-  if has(n, "type") and n.type == "Member" and n.obj.type == "Ident" and n.obj.name == "state" and not (out contains n.name) { out = push(out, n.name) }
+  if has(n, "type") and n.type == "Member" and (n.obj.type == "State" or (n.obj.type == "Ident" and n.obj.name == "state")) and not (out contains n.name) { out = push(out, n.name) }
   for k, v in n { out = reads_of(v, out) }
   return out
 }
@@ -320,7 +328,7 @@ fn lower_comp(c) {
   for k in c.constraints {
     let check = lam(c, [param(c, "state")], [mk("Return", c, { expr: rw(k.expr) })])
     cons[len(cons)] = map_(c, [ent("name", str_(c, k.name)), ent("hard", mk("Bool", c, { value: k.ctype == "hard" })),
-      ent("cost", mk("Num", c, { value: k.cost })), ent("boundary", mk("Bool", c, { value: k.boundary })), ent("check", check),
+      ent("cost", mk("Num", c, { value: cost_of(k) })), ent("boundary", mk("Bool", c, { value: k.boundary })), ent("check", check),
       ent("reads", lit(c, reads_of(k.expr, [])))])
   }
   var fields = []
@@ -363,7 +371,7 @@ fn lower_template(c) {
   for k in c.constraints {
     let check = lam(c, [param(c, "state")], [mk("Return", c, { expr: rw(k.expr) })])
     cons = push(cons, map_(c, [ent("name", str_(c, k.name)), ent("hard", mk("Bool", c, { value: k.ctype == "hard" })),
-      ent("cost", mk("Num", c, { value: k.cost })), ent("boundary", mk("Bool", c, { value: k.boundary })), ent("check", check),
+      ent("cost", mk("Num", c, { value: cost_of(k) })), ent("boundary", mk("Bool", c, { value: k.boundary })), ent("check", check),
       ent("reads", lit(c, reads_of(k.expr, [])))]))
   }
   var fns = []

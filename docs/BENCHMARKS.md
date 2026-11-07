@@ -5,6 +5,48 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-07 — Emerge checks its own code when it compiles (CIE6 slice b, 0.60.441)
+- **Measured:** Emerge coding. The native compiler made to run the checker written in Emerge, so Emerge debugs its own code when compiling.
+- **His words:** "its meant to debug it's own code when compiling. so that js harness is only temporary until emerge can also do it." · "okay.
+  lets continue."
+- **Framework:** end state first. Two contracts were fixed before any code changed:
+  1. `front.eg`'s tree equals `parser.js`'s tree, field for field, on the 211-program corpus;
+  2. the compiler refuses every corpus program that has errors with `eg native`'s exact messages.
+
+  The baseline was measured first: 129 of 211 equal, 70 crashing inside `check.eg`, 12 different. The differences were then listed by node type
+  and field, and closed one by one.
+- **Method:** a judge in Emerge (`front.eg` → `check.eg`, interpreted) and a tree diff, both against `parser.js` and `checker.js` as oracles.
+  Then the refusal judged through the built compiler alone.
+- **Result:**
+  - trees: 211/211 equal;
+  - refusals: 72/72 identical, exit 1, no executable;
+  - native.test 109/109 (4 new), differential 19/19, selfhost 16/16, lang 166/166.
+- **Speed:**
+  - stage 0 (the interpreter compiles the compiler): 17.0 s;
+  - stages 1 and 2 (the compiler compiles itself): 0.90 s and 0.83 s;
+  - the corpus judge, interpreted: 1.6 s;
+  - native.test: 38.6 s.
+- **Lines:**
+  - .eg: about +73 net (front.eg +41, emerge.eg +17, lower.eg +8, rt.eg +6, codegen.eg +1), plus the generated `check_env_text.eg`;
+  - JS: +83 (runtime.js +11 for `exit` and `eprint`, native.test +72 for the four proofs), 0 removed.
+
+  The JavaScript harness grew this slice; it goes at CIE9 and CIE11.
+- **Failed runs before the pass, and what each taught:**
+  1. The coder's judge wrote `catch`, which isn't Emerge. Emerge says `else e`, and a `try` with no handler is refused (NO_SILENT_DROP).
+  2. `components.eg` crashed `check.eg` at line 840 after the corpus matched. The `Contract` node's shape wasn't in the corpus, and native.test
+     caught it. This was a semantic mismatch, caught by the end state before merge.
+  3. differential failed: `lang/MAP.md` was stale after `exit` and `eprint` were added. The generated map caught it.
+  4. A `.json` file had been added (`check_env.json`), against his rule "no .json files. only nodes". The coder caught it by rereading his
+     rule, and replaced it with Emerge text.
+- **Gaps:**
+  - found and closed: native stderr (`eprint`); `exit` for programs (it existed only as a hidden `__exit` for test runs); the let-write gap
+    (CIE14 c);
+  - found and said: sending to an instance's hook is not native.
+- **What came of it:** the compiler refuses bad code by itself, with no Node. The JS checker is now only a test oracle.
+- **Tension meter, session 1 of 20:** 25,176 JS lines (every `.js` file under `emerge/emerge`, counted with `find … | xargs cat | wc -l`;
+  25,093 before this slice). The session-0 figure, 22,865, was counted with a scope the coder can't reproduce, so the two aren't comparable.
+  From here every line uses this stated method. 19 sessions left.
+
 ## 2026-11-07 — his framework applied to his 20-session constraint (CIE_D6, proposed): a re-estimate, not a run
 - **Measured:** his framework, applied by the coder to a planning problem: removing Emerge's JavaScript in less time.
 - **His words:** "what if we constrain it to 20 sessions, and then you use the framework to try to find a way around the contraint. like

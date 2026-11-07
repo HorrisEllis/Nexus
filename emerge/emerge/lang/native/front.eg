@@ -17,6 +17,8 @@ let KEYWORDS = { use: 1, as: 1, fn: 1, compartment: 1, component: 1, template: 1
 let OPS = ["->", "**", "..", "|>", "??", "==", "!=", "<<", ">>", "<=", ">=", "+=", "-=", "*=", "/=", "&", "|", "^", "~",
   "(", ")", "[", "]", "\{", "\}", ",", ".", ":", ";", "=", "<", ">", "+", "-", "*", "/", "%", "?"]
 
+use "../cie/contract.eg" as CT
+
 var file = "<input>"
 var src = bytes("")
 var ops_bytes = []
@@ -30,6 +32,12 @@ fn hex_digit(c) {
   if is_digit(c) { return c - 48 }
   if c >= 97 { return c - 87 }
   return c - 55
+}
+// the columns lang/lexer.js counts: JavaScript string units, so a continuation byte adds 0 and a 4-byte character 2
+fn cw(b) {
+  if b >= 128 and b < 192 { return 0 }
+  if b >= 240 { return 2 }
+  return 1
 }
 fn byte_at(i, end) {
   if i < end { return src[i] }
@@ -101,7 +109,7 @@ fn lex_range(start, end, line0, col0) {
           line += 1
           col = 1
         } else {
-          col += 1
+          col += cw(src[i])
         }
         i += 1
       }
@@ -263,8 +271,8 @@ fn lex_range(start, end, line0, col0) {
                   col += 1
                 }
                 if byte_at(i, end) == 10 { syntax_error("unterminated string", el, ec) }
+                col += cw(src[i])
                 i += 1
-                col += 1
               }
               i += 1
               col += 1
@@ -275,7 +283,7 @@ fn lex_range(start, end, line0, col0) {
               if lvl == 0 { break }
             }
             i += 1
-            col += 1
+            col += cw(xb)
           }
           if lvl != 0 { syntax_error("unterminated interpolation", el, ec - 1) }
           var blank = true
@@ -297,7 +305,7 @@ fn lex_range(start, end, line0, col0) {
         if dch == 125 { syntax_error("unmatched \} in string — write \\\} for a literal brace", line, col) }
         buf[len(buf)] = dch
         i += 1
-        col += 1
+        col += cw(dch)
       }
       if len(buf) > 0 or len(parts) == 0 { parts[len(parts)] = utf8(bytes(buf)) }
       var plain = true
@@ -472,10 +480,12 @@ var in_comp = false
 fn parse_is_list() {
   next()
   var list = []
-  list[len(list)] = want_ident("a kind name").v
+  var k = want_ident("a kind name")
+  list[len(list)] = { name: k.v, line: k.line, col: k.col }
   while is_op(",") {
     next()
-    list[len(list)] = want_ident("a kind name").v
+    k = want_ident("a kind name")
+    list[len(list)] = { name: k.v, line: k.line, col: k.col }
   }
   return list
 }
@@ -483,62 +493,74 @@ fn parse_is_list() {
 fn parse_kind() {
   let t = next()
   let name = want_ident("a kind name").v
-  var parents = []
-  if is_word("is") { parents = parse_is_list() }
-  var typed = []
+  var k = node("Kind", t, { name: name, parents: [], requires: [], ins: [], outs: [], state: [], boundaryCount: null, fns: [] })
+  if is_word("is") { k.parents = parse_is_list() }
   want_op("\{", "to open the kind")
   skip_nl()
   while not is_op("\}") {
     let m = peek(0)
     if is_word("require") {
       next()
-      want_ident("an identity field to require")
-      while is_op(",") {
-        next()
-        want_ident("an identity field to require")
+      var more = true
+      while more {
+        let f = want_ident("an identity field to require")
+        if not (f.v == "id" or f.v == "namespace" or f.v == "version" or f.v == "intent" or f.v == "uuid") {
+          perr("require names identity fields: id, namespace, version, intent, uuid — not \"{f.v}\"", f)
+        }
+        k.requires = push(k.requires, f.v)
+        more = is_op(",")
+        if more { next() }
       }
     } else if is_kw("in") {
       next()
-      want_ident("an in hook name")
+      let h = want_ident("an in hook name")
+      var shape = null
       if is_op("(") {
         next()
         want_ident("a parameter name")
         if is_op(":") {
           next()
-          parse_shape()
+          shape = parse_shape()
         }
-        want_op(")", "to close the hook parameter")
+        want_op(")", "")
       }
+      k.ins = push(k.ins, { name: h.v, shape: shape, line: h.line, col: h.col })
     } else if is_word("out") {
       next()
-      want_ident("an out hook name")
+      let h = want_ident("an out hook name")
+      var shape = null
       if is_op(":") {
         next()
-        parse_shape()
+        shape = parse_shape()
       }
+      k.outs = push(k.outs, { name: h.v, shape: shape, line: h.line, col: h.col })
     } else if is_kw("state") {
       next()
       let sh = parse_shape()
-      for f in sh.fields { typed[len(typed)] = f }
+      for f in sh.fields { k.state = push(k.state, { name: f.name, type: f.type, line: m.line, col: m.col }) }
     } else if is_word("boundary_count") {
       next()
-      next()
+      if not is_tok("NUM", null) { perr("expected a number after boundary_count", peek(0)) }
+      let lo = next().v
+      var hi = lo
       if is_op("..") {
         next()
-        next()
+        if not is_tok("NUM", null) { perr("expected a number after ..", peek(0)) }
+        hi = next().v
       }
+      if lo != floor(lo) or hi != floor(hi) or lo < 0 or hi < lo or hi > 5 { perr("boundary_count is a range inside 0..5", m) }
+      k.boundaryCount = { lo: lo, hi: hi, line: m.line, col: m.col }
     } else if is_kw("fn") {
       next()
-      want_ident("a fn name")
-      parse_params()
+      let f = want_ident("a fn name")
+      k.fns = push(k.fns, { name: f.v, arity: len(parse_params()), line: f.line, col: f.col })
     } else {
       perr("a kind holds require, in, out, state, boundary_count and fn — found {describe(m)}", m)
     }
     end_stmt()
   }
-  next()
-  // the conformance checks are the checker's (eg native runs it first); the native world needs a kind's parents and typed state
-  return node("Kind", t, { name: name, parents: parents, state: typed })
+  want_op("\}", "to close the kind")
+  return k
 }
 fn parse_compartment(is_comp) {
   let t = next()
@@ -551,8 +573,9 @@ fn parse_compartment(is_comp) {
   if is_template { params = parse_params() }
   var kinds = []
   if is_comp and is_word("is") { kinds = parse_is_list() }
-  var c = node("Compartment", t, { name: name, isComponent: is_comp, isTemplate: is_template, params: params, kinds: kinds, id: null, intent: null,
-    namespace: null, version: null, uuid: null, state: [], constraints: [], handlers: [], fns: [], ins: [], outs: [] })
+  var c = node("Compartment", t, { name: name, kind: kind, isComponent: is_comp, isTemplate: is_template, id: null, intent: null,
+    namespace: null, version: null, uuid: null, state: [], constraints: [], handlers: [], fns: [], ins: [], outs: [], idTok: null, params: params,
+    kinds: kinds })
   want_op("\{", "to open the {kind}")
   skip_nl()
   in_comp = true
@@ -566,8 +589,11 @@ fn parse_compartment(is_comp) {
       if not is_tok("STR", null) or peek(0).v == null { perr("{key} must be a plain string", peek(0)) }
       if c[key] != null { perr("{key} is declared twice", m) }
       c[key] = next().v
+      if key == "id" { c.idTok = m }
     } else if is_kw("state") {
       next()
+      if get(c, "stateDeclared", false) { perr("state is declared twice", m) }
+      c.stateDeclared = true
       want_op("\{", "to open state")
       skip_nl()
       var fields = []
@@ -575,7 +601,7 @@ fn parse_compartment(is_comp) {
         let f = want_ident("a state field name")
         want_op(":", "after the field name")
         skip_nl()
-        fields[len(fields)] = { name: f.v, expr: parse_expr() }
+        fields[len(fields)] = { name: f.v, expr: parse_expr(), line: f.line, col: f.col }
         skip_nl()
         if is_op(",") {
           next()
@@ -595,7 +621,7 @@ fn parse_compartment(is_comp) {
       let bex = parse_expr()
       skip_nl()
       want_op("\}", "to close the boundary expression")
-      c.constraints[len(c.constraints)] = { name: bname, ctype: "hard", cost: 1, expr: bex, boundary: true }
+      c.constraints[len(c.constraints)] = { name: bname, ctype: "hard", cost: null, expr: bex, boundary: true, line: m.line, col: m.col }
     } else if is_comp and is_kw("in") {
       c.ins[len(c.ins)] = parse_in_hook()
     } else if is_comp and is_word("out") {
@@ -611,7 +637,7 @@ fn parse_compartment(is_comp) {
       next()
       let cname = want_ident("a constraint name").v
       var ctype = "hard"
-      var cost = 1
+      var cost = null
       if is_tok("IDENT", null) and peek(0).v != "cost" { ctype = next().v }
       if ctype != "hard" and ctype != "soft" { refuse_at("a {ctype} constraint", m) }
       if is_word("cost") {
@@ -624,7 +650,7 @@ fn parse_compartment(is_comp) {
       let ex = parse_expr()
       skip_nl()
       want_op("\}", "to close the constraint expression")
-      c.constraints[len(c.constraints)] = { name: cname, ctype: ctype, cost: cost, expr: ex, boundary: false }
+      c.constraints[len(c.constraints)] = { name: cname, ctype: ctype, cost: cost, expr: ex, boundary: false, line: m.line, col: m.col }
     } else if is_kw("on") {
       if is_comp { perr("a component listens through in hooks — write in <hook>(param) \{ … \} and wire signals to it", m) }
       c.handlers[len(c.handlers)] = parse_on()
@@ -655,11 +681,11 @@ fn parse_in_hook() {
     }
     want_op(")", "to close the hook parameter")
   }
-  return node("InHook", t, { name: h.v, param: param, shape: shape, body: parse_block() })
+  return node("InHook", t, { name: h.v, param: param, shape: shape, body: parse_block(), nameLine: h.line, nameCol: h.col })
 }
 /** { field: type, … } (lang/parser.js parseShape) */
 fn parse_shape() {
-  want_op("\{", "to open a shape \{ field: type, … \}")
+  let st = want_op("\{", "to open a shape \{ field: type, … \}")
   var fields = []
   var seen = {}
   skip_nl()
@@ -681,7 +707,7 @@ fn parse_shape() {
   }
   skip_nl()
   want_op("\}", "to close the shape")
-  return { fields: fields }
+  return { fields: fields, line: st.line, col: st.col }
 }
 /** contract <id> { version = "…"  text { … }  gate { … }  road A.h -> B.h } (lang/parser.js parseContract): kept raw, normalised and hashed at run
  *  time by lang/cie/contract.eg, so the two backends hash the same canonical form */
@@ -693,6 +719,7 @@ fn parse_contract_block() {
   contract_seen = id.v
   want_op("\{", "to open the contract")
   var raw = { id: id.v, text: {}, gate: {}, roads: [] }
+  var road_at = []
   var once = {}
   skip_nl()
   while not is_op("\}") {
@@ -731,6 +758,7 @@ fn parse_contract_block() {
       }
     } else if word == "road" {
       next()
+      let ra = peek(0)
       let a = want_ident("Component.hook").v
       want_op(".", "Component.hook")
       let b = want_ident("Component.hook").v
@@ -739,20 +767,29 @@ fn parse_contract_block() {
       want_op(".", "Component.hook")
       let d = want_ident("Component.hook").v
       raw.roads[len(raw.roads)] = { from: "{a}.{b}", to: "{c2}.{d}" }
+      road_at = push(road_at, { line: ra.line, col: ra.col })
     } else {
       perr("a contract holds version, text \{ \}, gate \{ \} and road Component.hook -> Component.hook — found {describe(k)}", k)
     }
     end_stmt()
   }
   next()
-  return node("Contract", t, { raw: raw })
+  // as lang/parser.js: the normalised contract (lang/cie/contract.eg, the form the run hashes) and where each road was written, for the
+  // checker; raw stays for lower.eg, which hands it to the world at run time
+  var normal = null
+  try { normal = CT.normalize(raw) } else e {
+    var why = e.message
+    if why starts_with "contract: " { why = slice(why, 10) }
+    perr(why, t)
+  }
+  return node("Contract", t, { id: id.v, contract: normal, roadAt: road_at, raw: raw })
 }
 /** "signal" | Component.hook | <an expression giving an instance>.hook (lang/parser.js parseEndpoint) */
 fn parse_endpoint() {
   let t = peek(0)
   if t.t == "STR" and t.v != null {
     next()
-    return { signal: t.v }
+    return { signal: t.v, line: t.line, col: t.col }
   }
   let three = peek(3)
   let simple = not (three.t == "OP" and (three.v == "." or three.v == "[" or three.v == "("))
@@ -760,12 +797,12 @@ fn parse_endpoint() {
     next()
     next()
     let h = next()
-    return { comp: t.v, hook: h.v }
+    return { comp: t.v, hook: h.v, line: t.line, col: t.col }
   }
   if t.t == "IDENT" or (t.t == "OP" and t.v == "(") {
     let e = parse_postfix()
     if e.type != "Member" { perr("expected Component.hook or instance.hook as a wire end", t) }
-    return { expr: e.obj, hook: e.name }
+    return { expr: e.obj, hook: e.name, line: t.line, col: t.col }
   }
   perr("expected Component.hook or a \"signal\" as a wire end, found {describe(t)}", t)
 }
@@ -940,6 +977,8 @@ fn parse_stmt(top) {
         next()
         payload = parse_expr()
       }
+      // as lang/parser.js: comp for Component.hook, expr for instance.hook, never both
+      if has(to, "expr") { return node("Send", t, { expr: to.expr, hook: to.hook, payload: payload }) }
       return node("Send", t, { comp: to.comp, hook: to.hook, payload: payload })
     }
     if k == "wire" {
@@ -961,7 +1000,7 @@ fn parse_stmt(top) {
           next()
           payload = parse_expr()
         }
-        return node("EmitOut", t, { hook: h.v, payload: payload })
+        return node("EmitOut", t, { hook: h.v, payload: payload, hookLine: h.line, hookCol: h.col })
       }
       let name = parse_expr()
       var payload = null
@@ -1003,11 +1042,13 @@ fn parse_stmt(top) {
       next()
       let pressure = parse_expr()
       var gtype = null
+      var gtype_tok = null
       if is_word("type") {
         next()
+        gtype_tok = peek(0)
         gtype = want_ident("a gap type").v
       }
-      return node("Gap", t, { msg: msg, pressure: pressure, gtype: gtype })
+      return node("Gap", t, { msg: msg, pressure: pressure, gtype: gtype, gtypeTok: gtype_tok })
     }
     if k == "promote" {
       next()
@@ -1263,15 +1304,15 @@ fn parse_primary() {
       want_op(")", "to close spawn")
       return node("Spawn", t, { template: tpl, args: args })
     }
-    if t.v == "state" and in_comp {
+    // a State node, as lang/parser.js builds it; the checker refuses state outside a compartment, and lower.eg binds it inside one
+    if t.v == "state" {
       next()
-      return node("Ident", t, { name: "state" })
+      return node("State", t, {})
     }
     if t.v == "whatif" {
       next()
       return node("Whatif", t, { body: parse_block() })
     }
-    if t.v == "state" { refuse_at(t.v, t) }
   }
   if t.t == "OP" {
     if t.v == "(" {

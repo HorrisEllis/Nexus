@@ -517,7 +517,10 @@ fn rt_show(v, nested) {
   return rt_sb_done(b)
 }
 fn rt_tostr(v) { return rt_show(v, 0) }
-fn rt_print(list) {
+fn rt_print(list) { return rt_print_to(1, list) }
+// eprint (2026-11-07): print to stderr
+fn rt_eprint(list) { return rt_print_to(2, list) }
+fn rt_print_to(fd, list) {
   let b = rt_sb_new()
   let n = mem_get(list + 8)
   let items = mem_get(list + 24)
@@ -528,7 +531,7 @@ fn rt_print(list) {
     i = i + 1
   }
   rt_sb_byte(b, 10)
-  rt_write(1, mem_get(b), mem_get(b + 8))
+  rt_write(fd, mem_get(b), mem_get(b + 8))
   return NULL
 }
 fn rt_concat(a, b) {
@@ -1880,9 +1883,12 @@ fn rt_exit(code) {
   return 0
 }
 // __exit(n): the exit status of a native test run (CIE5); only lowered code calls it, so no program sees a new builtin
+// exit(n) (2026-11-07): ends the program with status n, as the interpreter's exit does; __exit is the same, for lowered test runs
 fn rt_b_exit(v) {
-  if not rt_is_num(v) { rt_fail("__exit needs a num") }
-  return rt_exit(v >> 3)
+  if not rt_is_num(v) { rt_fail("exit needs a whole num from 0 to 255") }
+  let n = v >> 3
+  if n < 0 or n > 255 { rt_fail("exit needs a whole num from 0 to 255") }
+  return rt_exit(n)
 }
 
 // ── fractional nums (GATE-NL-004, 2026-10-31): IEEE doubles, from the former native/float_draft.eg ──────
