@@ -5,6 +5,34 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-07 — his framework applied to his 20-session constraint (CIE_D6, proposed): a re-estimate, not a run
+- **Measured:** his framework, applied by the coder to a planning problem: removing Emerge's JavaScript in less time.
+- **His words:** "what if we constrain it to 20 sessions, and then you use the framework to try to find a way around the contraint. like
+  creating a open loop, until it's done. like tension building as creative fuel." · "make sure to log it in the ledger. what your approach was,
+  and how my framework helped you."
+- **Framework:** the Innovation Toolkit, three of its steps.
+  - Section 4, constraints and deconstruct: the JavaScript measured by kind.
+  - Section 3, find the gap: what needn't be ported at all.
+  - Section 6, map the leverage: the loop that needs no coder in the middle.
+- **Method:** the 22,865 JS lines split into what they are:
+  - the interpreter core: 4,295;
+  - the spec compiler: 6,197;
+  - the tests: 5,618;
+  - the door and tools: the rest.
+
+  Each bucket gets its cheapest path: retire, relocate, port by agents against an oracle, or wait on native sockets and processes.
+- **What the framework changed:**
+  - The interpreter core is retired, not ported, because native already replaces it.
+  - The spec compiler's home becomes a question rather than a cost.
+  - The checker's port (harvest, oracle, port, diff) becomes a loop Idearium's agents can run.
+- **Result:**
+  - An estimate, not a measurement: about 15 sessions down to about 8–10 for the JS removal.
+  - The coder's first guesses at the bucket sizes were wrong (~5,500 and ~7,000; measured 4,295 and 5,618). Corrected.
+- **What came of it:**
+  - A proposal (CIE_D6) awaiting his three calls.
+  - A tension meter from here on: JS lines left against sessions left, logged every session.
+- **Tension meter, session 0 of 20:** 22,865 JS lines left; 20 sessions left.
+
 ## 2026-11-07 — the checker in Emerge: 211 programs, every diagnostic equal (CIE6 slice a, 0.60.440)
 - **Measured:** Emerge coding. The language's checker (575 lines of JS) written again in Emerge.
 - **His words:** "continue"

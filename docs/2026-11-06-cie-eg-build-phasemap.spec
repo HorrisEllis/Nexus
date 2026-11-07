@@ -59,6 +59,29 @@ decisions:
       CF1_cfr_improved_with_rfr2, specced in emerge/emerge/spec/field.spec), then the field's view (CP11_the_diagnostic_map, expanded the same day).
       And Emerge debugs its own code when compiling: the checker runs inside the native compiler (CIE6 slice b); the JavaScript harness that judges
       check.eg today is temporary, until Emerge can do it (CIE9).
+  CIE_D6_the_open_loop_20_sessions:
+    status: "PROPOSED 2026-11-07 (his idea; three calls his, below)"
+    james: '"what if we constrain it to 20 sessions, and then you use the framework to try to find a way around the contraint. like creating a open loop, until it's done. like tension building as creative fuel."'
+    the_framework_pass: >-
+      The coder applied his Innovation Toolkit (docs/innovation-toolkit.framework) to the constraint, three of its steps:
+      (1) Section 4, constraints and deconstruct: Emerge's JavaScript measured by kind instead of as one number (22,865 lines on 2026-11-07):
+          the interpreter core 4,295 (runtime, interpreter, emitter, parser, lexer, checker, components, ledger, contract, index, errors), the spec
+          compiler 6,197 (compiler/), the tests 5,618, the door and the tools the rest. Deconstructed, the job is four different jobs, not one.
+      (2) Section 3, find the gap: the interpreter core does not need porting — native already replaces it (every example and 211 checker programs
+          equal), so it is retired at CIE11, not rewritten; the spec compiler may not belong in the language at all (spec tooling Idearium uses).
+      (3) Section 6, map the leverage: the loop that ported the checker this session (harvest a corpus, the JS version's answers as the end state,
+          write the .eg, judge by diff) needs no coder in the middle. It is an expectation test with a perfect oracle, and Idearium already has the
+          machinery (the Emerge rung EMB1: write .eg, compiler-check, retry with the exact failure, judge by the expectation test). So the coder sets up
+          each module's judge, and agents do the porting in a loop.
+      Effect, an estimate to be checked against the work: the JS removal from about 15 sessions to about 8–10, leaving 10–12 of the 20 for WARP 2
+      and the field. The coder's first estimates of the buckets were wrong (said ~5,500 and ~7,000; measured 4,295 and 5,618), corrected here.
+    the_open_loop: >-
+      A tension meter logged every session in docs/BENCHMARKS.md: JavaScript lines left against sessions left. When tension rises above the plan,
+      the next session opens with a framework pass to find another way around, not more of the same.
+    his_calls: >-
+      (1) whether the 20 sessions cover the JS removal only, or through WARP 2 and the field; (2) whether the spec compiler (compiler/) moves out of
+      Emerge to Idearium (sovereignty: its owner is the system that uses it); (3) whether the porting uses his Guardian agents (his machine, Remote
+      Control) and/or sibling Claude Code sessions here (faster, spends his usage).
 phases:
 
   CIE1_the_contract_block:
@@ -407,3 +430,9 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # James, 2026-11-07, after the checker was proven in Emerge with a JavaScript harness: "its meant to debug it's own code when compiling. so that js harness is only temporary until emerge can also do it. once emerge is done then warp 2 and the relational constraint field. then code can be represented as nodes moving through the field, tension and friction can be color coded, the primitives define the shape of the structure or field, anything outsiide of the field is noise, friction introduced. with that we can visualize the process of code development or debugging, pipelines and workflow automation immutable nodes like packets of data or primitive from emerge running through each gate."
 # CIE6 slice b reads it: the native compiler runs check.eg on every program before it builds, and refuses to build on an error, printing the
 # diagnostics as eg check does; the JS judge of check.eg (native.test) stays only until CIE9 rewrites the tests in Emerge.
+
+# ── ADDENDUM 2026-11-07 — the open loop, his idea (CIE_D6, proposed); how his framework found the way around ──
+# James, 2026-11-07: "ive been running it across sessions. what if we get idearium working to automate the removal? or something? what if we constrain it to 20 sessions, and then you use the framework to try to find a way around the contraint. like creating a open loop, until it's done. like tension building as creative fuel."
+# James, 2026-11-07: "make sure to log it in the ledger. what your approach was, and how my framework helped you."
+# See CIE_D6: the toolkit's sections 4, 3 and 6 applied to the 20-session constraint; the interpreter retired not ported, the spec compiler's home
+# asked, the porting automated through Idearium's Emerge rung with a perfect oracle per module. Logged in the ledger (CIE11, CIE8, CIE9 notes).
