@@ -1,0 +1,179 @@
+// lang/test/world/observe.eg — CIE7's judge, in Emerge: run with  eg test lang/test/world/observe.eg
+// Each test writes a ledger the way a program does (signals, refusals, soft violations, gaps, writes), then asks two observers the same
+// question: the interpreter's observe() builtin (observe/*.js, the end state) and lang/cie/observe.eg (the port). The reports must be equal
+// in their canonical form (lang/cie/ledger.eg ecf), every field. Test blocks run inside a whatif, so each starts from the same ledger.
+use "../../cie/observe.eg" as OB
+use "../../cie/ledger.eg" as L
+use "../../core/primitives.eg" as P
+
+let SCRATCH = "/tmp/emerge-observe-judge.txt"
+
+compartment C {
+  id = "co-observe-c"
+  state { n: 0 }
+  on "tick" { state.n = state.n + 1 }
+}
+compartment E {
+  id = "co-observe-e"
+  state { n: 0 }
+  on "tock" { state.n = state.n + 1 }
+}
+compartment R {
+  id = "co-observe-r"
+  state { n: 0 }
+  constraint never hard { state.n < 1 }
+  on "poke" { state.n = state.n + 1 }
+}
+compartment D {
+  id = "co-observe-d"
+  state { v: 0 }
+  constraint small hard { state.v < 5 }
+  on "set" (ev) { state.v = ev.v }
+}
+compartment S {
+  id = "co-observe-s"
+  state { n: 0 }
+  constraint gentle soft cost 3 { state.n < 1 }
+  on "push" { state.n = state.n + 1 }
+}
+compartment G {
+  id = "co-observe-g"
+  state { n: 0, need: null }
+  constraint needs hard { state.need != null or state.n < 1 }
+  on "step" { state.n = state.n + 1 }
+  on "fill" { state.need = 1 }
+}
+
+fn tick(n) {
+  for i in 0..n { emit "tick" }
+}
+fn filler(n) {
+  for i in 0..n { write_file(SCRATCH, "f") }
+}
+fn gaps(n, pressure, type) {
+  for i in 0..n {
+    if type == "logical" { gap "m{i}" pressure pressure type logical } else { gap "m{i}" pressure pressure type structural }
+  }
+}
+fn without_series(r) {
+  var out = {}
+  for k, v in r {
+    if k != "series" { out[k] = v }
+  }
+  return out
+}
+/** the two observers agree on this ledger; on a disagreement, both reports are printed */
+fn agree() {
+  let want = L.ecf(observe())
+  let got = L.ecf(without_series(OB.observe(ledger(), P)))
+  if want != got {
+    print("builtin: {want}")
+    print("port:    {got}")
+  }
+  return want == got
+}
+
+test "a ledger with nothing in it but its compartments" {
+  expect agree()
+}
+test "a steady run of transitions" {
+  tick(20)
+  expect agree()
+}
+test "a key that came every 3 ticks, then went silent: sigma degraded" {
+  for i in 0..6 {
+    tick(1)
+    filler(2)
+  }
+  filler(40)
+  tick(1)
+  expect agree()
+}
+test "fast and slow in turn: the signed z flips, sigma oscillatory" {
+  for i in 0..14 {
+    tick(1)
+    if i % 2 == 1 { filler(3) } else { filler(1) }
+  }
+  expect agree()
+}
+test "two keys that fell silent together deviate equally: the strongest-first order breaks the tie by tick" {
+  for i in 0..6 {
+    tick(1)
+    emit "tock"
+    filler(1)
+  }
+  filler(40)
+  tick(1)
+  emit "tock"
+  expect agree()
+}
+test "a sudden share of struggle: sigma collapsing" {
+  tick(16)
+  for i in 0..16 { emit "lost{i}" }
+  expect agree()
+}
+test "stress outrunning integration: the velocity field runs away" {
+  gaps(8, 0.3, "logical")
+  expect agree()
+}
+test "transitions bring the velocity back down" {
+  gaps(8, 0.3, "logical")
+  tick(30)
+  expect agree()
+}
+test "a hot field: pressure-1 gaps drive it chaotic" {
+  gaps(10, 1, "structural")
+  expect agree()
+}
+test "a constraint that keeps refusing crystallises" {
+  for i in 0..6 { emit "poke" }
+  tick(1)
+  expect agree()
+}
+test "one signal accepted and refused again and again: the coherence surface" {
+  for i in 0..4 {
+    emit "set" { v: 1 }
+    emit "set" { v: 9 }
+  }
+  expect agree()
+}
+test "signals that reach nowhere: the terminus, and resonance from the same struggle repeated" {
+  for i in 0..12 { emit "lost" }
+  expect agree()
+}
+test "a soft violation is absorbed at its cost" {
+  emit "push"
+  emit "push"
+  expect agree()
+}
+test "a constraint gap closed by the predicate: the missing field set later" {
+  emit "step"
+  emit "fill"
+  emit "step"
+  tick(3)
+  expect agree()
+}
+test "the hunter's own gaps: observe_gaps opens them, and the next report leaves them out and does not propose them again" {
+  gaps(8, 0.3, "logical")
+  observe_gaps()
+  expect agree()
+  tick(5)
+  expect agree()
+}
+test "everything at once" {
+  tick(5)
+  filler(3)
+  for i in 0..5 { emit "poke" }
+  emit "push"
+  emit "push"
+  emit "step"
+  gaps(4, 0.6, "structural")
+  for i in 0..6 { emit "lost" }
+  emit "fill"
+  tick(10)
+  for i in 0..3 {
+    emit "set" { v: 2 }
+    emit "set" { v: 7 }
+  }
+  expect agree()
+}

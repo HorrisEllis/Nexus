@@ -5,6 +5,48 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-07 — the observer in Emerge, judged by Emerge (CIE7 slice a, 0.60.442)
+- **Measured:** Emerge coding. 471 lines of the JS observer written again in Emerge, under his new rule: no new JS unless it replaces JS.
+- **His words:** "lets continue." · "Okay so don’t create js unless you have to and that’s only to replace it." · "You gotta think dialectically".
+- **Framework:** end state first, with the oracle chosen dialectically. Three options were laid side by side:
+  - port observe.test's hand-built chains (needs the JS observer as a library: new JS);
+  - a shell diff (non-Emerge);
+  - real Emerge programs, each calling the interpreter's `observe()` builtin (the JS, as it already exists) beside the port.
+
+  The third needs no new code outside Emerge, and was chosen.
+- **Method:**
+  - 16 scenarios in `lang/test/world/observe.eg`, compared in canonical form (ledger.eg's ecf).
+  - Then a hostile check: each scenario's regimes printed, and mistakes planted in the port.
+- **Result:**
+  - 16/16 equal;
+  - `observe()` native, with the example identical natively;
+  - native.test 109/109, bootstrap 11/11, differential 19/19, selfhost 16/16, lang 166/166.
+- **Speed:**
+  - the judge: 0.68 s for 16 scenarios, interpreted;
+  - stage 0: ~17 s; stages 1 and 2: under 1 s each;
+  - native.test: ~39 s.
+- **Lines:** .eg +~670:
+  - observe.eg 535, the judge 179, the example 32;
+  - prelude +33, lower +30, world +5, emerge.eg +3.
+
+  JS: +3 (the bootstrap test's copy), 0 removed.
+- **Failed runs before the pass, and what each taught:**
+  1. `gap` is a keyword and can't be a variable (a gap known since 2026-11-06).
+  2. The test compartment's initial state broke its own constraint. Emerge refused it.
+  3. `hex` lives in the prelude, not in ledger.eg; the coder's grep had mixed the two files.
+  4. **The judge was blind to two mistakes.** A reversed tie-break and an oscillation threshold off by one passed all 14 scenarios, because none
+     reached a tie or oscillation. Two scenarios were added; both mistakes now fail. *A judge that passes is not yet a judge that sees.*
+  5. Natively, a module is not a value. The lowering hands the observer a map of the three primitive sections.
+  6. `log2` changed the builtins, so the compiler's checker environment drifted. native.test's drift check caught it.
+  7. The bootstrap test's tree lacked `observe/`. It was a latent gap, revealed by the new example.
+
+  The port itself matched all 14 scenarios on its first run after the name fixes.
+- **Gaps:** found and closed, Emerge had no logarithm (`log2`) and `observe()` was not native. Found and said, a module is not a value natively.
+- **What came of it:**
+  - Emerge observes itself natively.
+  - The observer CF1 needs is in Emerge, and it already measures sigma as he decided.
+- **Tension meter, session 1 of 20 (continued):** 22,951 JS lines left (+3); 19 sessions left.
+
 ## 2026-11-07 — Emerge checks its own code when it compiles (CIE6 slice b, 0.60.441)
 - **Measured:** Emerge coding. The native compiler made to run the checker written in Emerge, so Emerge debugs its own code when compiling.
 - **His words:** "its meant to debug it's own code when compiling. so that js harness is only temporary until emerge can also do it." · "okay.
