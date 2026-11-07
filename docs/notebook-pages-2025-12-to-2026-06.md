@@ -8,6 +8,8 @@
   His rule for personal material, 2026-10-31: "If they’re proof or evidence for competency or validity, yes but strip
   identity if not, no." One name is replaced by "[name withheld]", on pages 2 and 16 (page 16's binder tab). Page 2 is
   kept: its love↔fear loop is one of his methods. These are the coder's readings of his rule; he can overrule them.
+  Corrected the same day, his: "Not all of those notes." The coder's reading, to confirm: not every page was written after
+  they met. The pages are his framework first.
   The photos themselves are not committed. Whether they are, with the name blacked out, is his call.
   Dates are as he wrote them on the pages. Pages 7 and 8 carry a month and day with no year. The repository's first
   commit is 2026-09-25, so every dated page is older than the code.
