@@ -459,3 +459,9 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # examples/observe.eg is equal natively. log2 built into the prelude. Found: this observer already measures sigma as he decided for CF1.
 # Slice b: debug.js (why, at, follow, diff, blame, clip), judged against ledger_why() and readings recorded mid-run. cli.js (eg debug) waits on
 # CIE13 (files, processes) for its command-line form.
+
+# ── ADDENDUM 2026-11-07 — CIE10 expanded: Emerge's door is the first wiring harness (MOD-EMERGE-DOOR) ──
+# James, 2026-11-07: "The door is the interaction contract, also called the draw bridge. Cie-eg is meant to slot in to it. It's the foundation."
+# · "The wiring harness" · "spec it." CIE10 also builds idearium/spec-engine/templates/wiring-harness.spec's MOD-EMERGE-DOOR: emerge/emerge/door.eg
+# serves only what Emerge's harness declares, through cie-world's registry, roads and gate; an undeclared call is refused and on the ledger.
+# Its proof grows: WH1's conformance test passes against it.

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
+type: phase
+id: docs_2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
+context: >-
+  pipeline phase WH2_verified_reconstruction_coverage of
+  docs/2026-11-07-wiring-harness-phasemap.spec
+intent: null
+summary: WH2_verified_reconstruction_coverage (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794060748485
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794060748485
+lastSeenAt: 1794060748485
+fingerprint: null
+payload:
+  id: WH2_verified_reconstruction_coverage
+  map: docs/2026-11-07-wiring-harness-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/reconstruction.eg
+    - docs/FRAMEWORK-THREADS.md
+    - docs/BENCHMARKS.md
+  depends_on:
+    - WH1_the_conformance_test
+    - CIE11_retire_the_interpreter
+  blocks:
+    - MOD-RECONSTRUCTION
+  spec: idearium/spec-engine/templates/wiring-harness.spec
+  graph: 1ed90778757af27d

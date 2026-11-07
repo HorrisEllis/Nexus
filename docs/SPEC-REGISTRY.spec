@@ -2076,3 +2076,7 @@ spec:
 # ADDENDUM 2026-11-07 — registered: docs/2026-11-07-phases-are-ideas-phasemap.spec (PIC_D0–PIC_D2, PIC0–PIC2): his "Look at the phases. Those
 # are all top of my head ideas" · "Yes. Anything that can give proof needs to be archived and logged in the proof of compentency". PIC0 built:
 # the door's 143 open phases in 10 maps shelved as ideas; 56 of 65 tests that cite the door's built phases pass (docs/cleaning/2026-11-07-the-door.md).
+# ADDENDUM 2026-11-07 — registered: idearium/spec-engine/templates/wiring-harness.spec (6 modules, 4 schemas, 5 interfaces; specDepth 1.0, no BLACK)
+# and docs/2026-11-07-wiring-harness-phasemap.spec (WH_D0, WH1, WH2). James: "The wiring harness" · "spec it. then lets continue emerge". The
+# template every system's door is built from, beside genesis: each system's .spec carries its harness, its door serves only that, on CIE-EG.
+# Its other four modules are built by phases expanded the same day: DB21, CIE10, CS3, IN5 (the first three taken off the morning's shelf).
