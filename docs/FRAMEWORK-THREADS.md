@@ -127,3 +127,16 @@ deltas are how nexus finds gaps, measures tension or friction. It’s meant to b
 - **T4-P3 (open):** the one instrument, with no domain knowledge, reproduces RFR2's regime calls (stable, degraded, collapsing, oscillatory)
   and CFR's delta gaps on their own recorded data, with no per-domain constants. Measured by running both on the same windows and counting
   agreement.
+
+**His addendum, 2026-11-07, the same thread.** In docs/innovation-toolkit-addendum.md, his words on what sigma and delta are for: "Invariants in
+this scenario are two or more points in deviation, the deviation can be measured using sigmas. The gaps inbetween can be measured using deltas."
+· "One gap is an anomaly / Two gaps a coincidence / Three gaps = A invariant, not fact." · "Probabilistic probability, built on top of
+deterministic probability. I call it a constraint field." · "f(slope) = slope amplifies leverage up to a threshold, then inverts it."
+- **What it adds to CF1 (conceptual).**
+  - Sigma and delta measure points.
+  - An invariant is a recurrence across them: an observation is promoted from anomaly to coincidence to invariant, at one, two, then three
+    gaps. It is never promoted to fact.
+  - The coder's reading is that the instrument should keep that ladder as a state on each pattern; this is to confirm.
+- **T4-P4 (open):** a gap pattern that recurs three times on the replayed ledger predicts a fourth more often than one seen once does. That
+  would make his three-gap rule a measurable promotion, not a label. Measured by replaying CFR's ledger: the hit rate of the fourth occurrence,
+  for patterns seen three times against patterns seen once.
