@@ -9,6 +9,9 @@ James, 2026-10-24: "then look through nexus and document all proof." · (2026-10
 credibility, and skills, portfolio, and proof of compentancy." · "log anything that helps establish credibility, value
 and proof of compentancy with quotes and explicit context."
 
+> **The evidence matrix** (2026-11-07, `docs/EVIDENCE-MATRIX.md`) sets each claim of his framework, Emerge and Nexus against its
+> evidence and status (proven, signal, not yet, against), re-run the day it was written.
+
 > How to read this: every number below is reproduced by the command in its "check" column, run from the repo root on the
 > branch `claude/sleepy-gates-9lc085`. Numbers move as the project grows; re-run to get the current figure. A claim with
 > no check does not belong in this file.
