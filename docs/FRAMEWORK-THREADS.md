@@ -201,6 +201,10 @@ idearium. Contracts the end state, dag the conditions. Intelligence is the patte
 | The DAG holds the conditions | each phase's `depends_on:`, `files:`, `requires:`, `prerequisites:` (lib/phase-dag.js, his 2026-10-18 and 2026-11-02 rules) | exists; `requires:`/`prerequisites:` checker still to build |
 | Intelligence is the pattern recognition | the intelligence system: CFR, sigma, delta, and the gap ladder decided today (CF1, T4) | exists, to be reconciled (CF1) |
 
+He said the same the day before (T1, 2026-11-06): "im saying raid does my framework. end state first compartment. dag is the conditions.
+contract is the end state." The same mapping on two days, unprompted the second time. That answers T6's open RAID line in his words: RAID runs
+the framework. The coder has still not traced RAID's code against page 13; that check stays open.
+
 What exists is the parts. What is **open** is one loop through all four: an idea in a compartment whose end state is its contract, its conditions
 a DAG, with the intelligence system recognising the patterns on the way, and the output fed back in as input (his page 13). No prediction is
 registered yet; one will be before any of it is wired.
