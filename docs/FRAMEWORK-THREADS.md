@@ -305,3 +305,9 @@ the component registry as a spine"); 2026-11-03 the component registry as the sp
 the coder had written "the door spec" as if one spec built every door. Each system writes, owns and serves its own; shared are only genesis's
 template and the entry schema (his PL_D9, 2026-11-03). So the prediction above stands as written, read per system: one conformance test of the
 four parts, run by each system against its own door.
+
+**T8, his answer, 2026-11-07:** "Cie-eg. Component registry, interaction contract, and event bus with handshake verification and event ledger."
+· "The door is the interaction contract, also called the draw bridge. Cie-eg is meant to slot in to it. It's the foundation." Found on reading
+genesis (his ask): its own 1.6.0 note says "CIE-EG's roads, gate and typed gaps (DB21, his) are not in the catalog yet". The door was specced in
+genesis and the architecture template, its foundation in CIE-EG, and the two never named each other. Recorded in all three (addenda
+2026-11-07). The prediction stands: each system's door, built on CIE-EG, passes one conformance test of the four parts.
