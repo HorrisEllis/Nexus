@@ -449,3 +449,13 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # Found and said: a send to an instance's hook is not native (lower.eg refuses it by name); eg check stops at the first error, while the
 # compiler, like eg native's check, reports them all.
 # The JS checker is now only a test oracle; it goes with the interpreter at CIE11, the harness at CIE9. native.test 109/109.
+
+# ── ADDENDUM 2026-11-07 (0.60.442) — CIE7 slice a built: the observer in Emerge, judged by Emerge ──
+# James, 2026-11-07: "lets continue." · "Okay so don’t create js unless you have to and that’s only to replace it." · "You gotta think dialectically"
+# lang/cie/observe.eg ports observe/{entry,delta,sigma,field,liminal,gaps,index}.js. The judge, lang/test/world/observe.eg, is Emerge only: 16
+# scenarios write real ledgers and compare the interpreter's observe() (the JS end state) with the port in canonical form; 16/16. Planted mistakes
+# are caught (rounding, a reversed tie-break, an off-by-one oscillation threshold); the last two were missed until two scenarios were added.
+# observe() is native: lower.eg rewrites it onto the port (primitives.eg and the port embedded; a contract's block_at honoured);
+# examples/observe.eg is equal natively. log2 built into the prelude. Found: this observer already measures sigma as he decided for CF1.
+# Slice b: debug.js (why, at, follow, diff, blame, clip), judged against ledger_why() and readings recorded mid-run. cli.js (eg debug) waits on
+# CIE13 (files, processes) for its command-line form.

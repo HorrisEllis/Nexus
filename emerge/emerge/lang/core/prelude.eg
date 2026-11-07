@@ -189,6 +189,39 @@ fn round(x) {
   return r
 }
 
+// log2(x), x > 0 (2026-11-07, CIE7: the observer's gap tension needs it, and Emerge had no logarithm): the exponent by halving or doubling,
+// which is exact, then ln of the mantissa in [0.707, 1.414] by the atanh series, ln m = 2(t + t^3/3 + t^5/5 + …), t = (m - 1)/(m + 1).
+// Exact on powers of two; elsewhere within a few units in the last place, not correctly rounded.
+fn log2(x) {
+  _need_num(x, "log2")
+  if not (x > 0) or x > 1.7976931348623157e308 { raise("log2 needs a positive, finite num, got {x}") }
+  var m = x
+  var e = 0
+  while m >= 2 {
+    m = m / 2
+    e += 1
+  }
+  while m < 1 {
+    m = m * 2
+    e -= 1
+  }
+  if m > 1.4142135623730951 {
+    m = m / 2
+    e += 1
+  }
+  let t = (m - 1) / (m + 1)
+  let t2 = t * t
+  var term = t
+  var sum = 0
+  var k = 1
+  while k < 60 {
+    sum += term / k
+    term = term * t2
+    k += 2
+  }
+  return e + 2 * sum * 1.4426950408889634
+}
+
 fn abs(x) {
   if type_of(x) == "int" {
     if x == -9223372036854775807i - 1i {

@@ -156,7 +156,7 @@ Native (JavaScript) — name/arity:
 
 Prelude (Emerge, `lang/core/prelude.eg`) — name/arity:
 
-`map/2` · `filter/2` · `reduce/3` · `find/2` · `any/2` · `all/2` · `count/2` · `push/2` · `reverse/1` · `sum/1` · `index_of/2` · `without/2` · `flatten/1` · `zip/2` · `unique/1` · `group_by/2` · `take/2` · `drop/2` · `ceil/1` · `round/1` · `abs/1` · `sort/1` · `sort_by/2–3` · `clone/1` · `trim/1` · `replace/3` · `hex/1` · `from_hex/1` · `u8/1` · `u16le/1` · `u32le/1` · `u64le/1` · `i32le/1` · `i64le/1` · `u16be/1` · `u32be/1` · `u64be/1` · `read_u64be/2` · `wrap32/1` · `rotl/2` · `rotr/2`
+`map/2` · `filter/2` · `reduce/3` · `find/2` · `any/2` · `all/2` · `count/2` · `push/2` · `reverse/1` · `sum/1` · `index_of/2` · `without/2` · `flatten/1` · `zip/2` · `unique/1` · `group_by/2` · `take/2` · `drop/2` · `ceil/1` · `round/1` · `log2/1` · `abs/1` · `sort/1` · `sort_by/2–3` · `clone/1` · `trim/1` · `replace/3` · `hex/1` · `from_hex/1` · `u8/1` · `u16le/1` · `u32le/1` · `u64le/1` · `i32le/1` · `i64le/1` · `u16be/1` · `u32be/1` · `u64be/1` · `read_u64be/2` · `wrap32/1` · `rotl/2` · `rotr/2`
 
 ## Ledger entry kinds
 

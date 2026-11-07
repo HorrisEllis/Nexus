@@ -48,6 +48,9 @@ contract is a fixed expected output, and the work is done when it holds.
   - One semantic mismatch: `components.eg`'s `Contract` node. It was caught by native.test before merge.
   - The first runnable build of the compiler matched both end states (211/211, 72/72).
   - 109/109 at 0.60.441.
+- **Slice 15, 0.60.442 (CIE7 slice a):** the oracle was chosen dialectically, after his correction ("You gotta think dialectically"): three
+  options were laid side by side, and the Emerge-only one was taken. 16/16 equal. The end state was tested hostilely: two planted mistakes
+  passed at first, and the scenarios were widened until both failed.
 
 **What this does not show.**
 - There is no control. No slice was done without a fixed end state, so the data can't say how many mismatches would have escaped without
@@ -260,3 +263,8 @@ to a post-hoc signal (PROOF-OF-COMPETENCY.md).
 
 **State:** registered. Nothing in the hash list yet. The task set needs Pillar's contracts (PIL2, PIL3), and the focus orders the JavaScript removal
 first.
+
+**T4, executed evidence, 2026-11-07 (0.60.442).** Porting Emerge's own observer showed that one of the existing sigmas already does what he
+decided. It is a z-score of each delta (the tick gap for a key) against that key's rolling baseline, and the 16-scenario judge holds the Emerge
+port equal to it. What it doesn't have yet is the waveform baseline learned from peaks: its thresholds are fixed values in `primitives.eg`.
+This changes no prediction (T4-P1..P4 stay open). It gives CF1 its starting point in Emerge.
