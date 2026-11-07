@@ -43,9 +43,12 @@ then they are written by hand.
     (CIE14 c);
   - found and said: sending to an instance's hook is not native.
 - **What came of it:** the compiler refuses bad code by itself, with no Node. The JS checker is now only a test oracle.
-- **Tension meter, session 1 of 20:** 25,176 JS lines (every `.js` file under `emerge/emerge`, counted with `find … | xargs cat | wc -l`;
-  25,093 before this slice). The session-0 figure, 22,865, was counted with a scope the coder can't reproduce, so the two aren't comparable.
-  From here every line uses this stated method. 19 sessions left.
+- **Tension meter, session 1 of 20:** 22,948 JS lines left (22,865 at session 0, +83 this slice); 19 sessions left. Method, the same as
+  session 0's: every `.js` file under `emerge/emerge`, leaving out `node_modules`, `data/`, `_archive/`, `output/` and `build/`
+  (`find . -name '*.js' -not -path '*/node_modules/*' -not -path './data/*' -not -path '*/_archive/*' -not -path '*/output/*' -not -path
+  '*/build/*' | xargs cat | wc -l`).
+  - *Corrected the same day:* this line first said 25,176 and that the session-0 scope couldn't be reproduced. It was found in the session's
+    own transcript, after James said "I can find it in the chat". The first wording is kept here (§0.3), and 25,176 was that wider count.
 
 ## 2026-11-07 — his framework applied to his 20-session constraint (CIE_D6, proposed): a re-estimate, not a run
 - **Measured:** his framework, applied by the coder to a planning problem: removing Emerge's JavaScript in less time.
