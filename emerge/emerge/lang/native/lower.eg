@@ -20,6 +20,24 @@ let RX = "__regex"
 let REGEX_PATH = "<cie>/regex.eg"
 let JSONM = "__json"
 let JSON_PATH = "<cie>/json.eg"
+// observe() → __observe.report(__world.entries(), __prims, __world.gate_block_at()): lang/cie/observe.eg, the observer in Emerge (CIE7)
+let OBS = "__observe"
+let OBS_PATH = "<cie>/observe.eg"
+let PRIMS = "__prims"
+let PRIMS_PATH = "<cie>/primitives.eg"
+// a module is not a value natively, so the primitives the observer reads are handed over as a map of their three sections
+fn prim(at, name) = mk("Member", at, { obj: ident(at, PRIMS), name: name })
+fn is_observe(n) = has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and n.callee.name == "observe" and len(n.args) == 0
+fn uses_observe(n) {
+  if type_of(n) == "list" {
+    for x in n { if uses_observe(x) { return true } }
+    return false
+  }
+  if type_of(n) != "map" { return false }
+  if is_observe(n) { return true }
+  for k, v in n { if uses_observe(v) { return true } }
+  return false
+}
 fn is_parse_json(n) = has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and n.callee.name == "parse_json" and len(n.args) == 1
 fn uses_parse_json(n) {
   if type_of(n) == "list" {
@@ -112,7 +130,7 @@ fn uses_world(n) {
   if type_of(n) != "map" { return false }
   if has(n, "type") and (n.type == "Compartment" or n.type == "On" or n.type == "Emit" or n.type == "EmitOut" or n.type == "Send" or n.type == "Wire" or n.type == "Contract" or n.type == "Record" or n.type == "Gap" or n.type == "Promote" or n.type == "Axiom" or n.type == "Whatif" or n.type == "Test" or n.type == "Kind" or n.type == "Spawn" or n.type == "Despawn") { return true }
   if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and has(WORLD_BUILTINS, n.callee.name) { return true }
-  if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and (n.callee.name == "ledger" or n.callee.name == "spent" or n.callee.name == "ledger_verify") and len(n.args) == 0 { return true }
+  if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and (n.callee.name == "ledger" or n.callee.name == "spent" or n.callee.name == "ledger_verify" or n.callee.name == "observe") and len(n.args) == 0 { return true }
   for k, v in n { if uses_world(v) { return true } }
   return false
 }
@@ -235,6 +253,11 @@ fn rw(n) {
     }
     if t == "Call" and n.callee.type == "Ident" and n.callee.name == "spent" and len(n.args) == 0 { return wcall(n, "spent", []) }
     if t == "Call" and n.callee.type == "Ident" and n.callee.name == "ledger" and len(n.args) == 0 { return wcall(n, "entries", []) }
+    if is_observe(n) {
+      return mk("Call", n, { callee: mk("Member", n, { obj: ident(n, OBS), name: "report" }),
+        args: [wcall(n, "entries", []), map_(n, [ent("observe", prim(n, "observe")), ent("gaps", prim(n, "gaps")), ent("signals", prim(n, "signals"))]),
+          wcall(n, "gate_block_at", [])] })
+    }
     if t == "Call" and n.callee.type == "Ident" and n.callee.name == "components" and len(n.args) == 0 { return wcall(n, "components_graph", []) }
     if t == "Call" and n.callee.type == "Ident" and n.callee.name == "ledger_verify" and len(n.args) == 0 { return wcall(n, "verify", []) }
   }
@@ -408,11 +431,16 @@ fn lower(ast, version, test_mode) {
   for it in ast.items { if it.type == "FnDecl" and it.name == "sort_by" { OWN_SORT_BY = true } }
   let rx = uses_matches(ast.items)
   let pj = uses_parse_json(ast.items)
+  let ob = uses_observe(ast.items)
   // sort_by lives in the prelude since 2026-11-07 (optional parameters); the <cie>/sort.eg rewrite it replaced is archived
   let sb = false
   var src = ast
-  if rx or sb or pj {
+  if rx or sb or pj or ob {
     var uses = []
+    if ob {
+      uses = push(uses, mk("Use", ast, { path: OBS_PATH, alias: OBS }))
+      uses = push(uses, mk("Use", ast, { path: PRIMS_PATH, alias: PRIMS }))
+    }
     if pj { uses = push(uses, mk("Use", ast, { path: JSON_PATH, alias: JSONM })) }
     if rx { uses = push(uses, mk("Use", ast, { path: REGEX_PATH, alias: RX })) }
     if sb { uses = push(uses, mk("Use", ast, { path: SORT_PATH, alias: SORT })) }
@@ -435,6 +463,8 @@ fn lower_world(ast, version, test_mode) {
     if it.type == "Use" { MODULES[it.alias] = true }
     MODULES[RX] = true
     MODULES[JSONM] = true
+    MODULES[OBS] = true
+    MODULES[PRIMS] = true
     MODULES[SORT] = true
     if it.type == "Compartment" and it.isTemplate { HAS_TEMPLATES = true }
   }

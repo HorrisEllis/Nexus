@@ -1,0 +1,32 @@
+// observe.eg — a program reading its own ledger as a field (CIE-EG §13). Run with: eg run observe.eg
+// A delta is the gap in ticks since the previous entry of the same key; sigma is that gap's deviation from the key's own rhythm, read as a
+// regime (James, 2026-11-07: "Deltas measure gaps and sigmas measure deviation"). The field folds coherence, friction, resonance and
+// entropy over every entry; the liminal readings are the boundaries; the hunter proposes gaps, each with its evidence.
+compartment Pump {
+  id = "co-example-pump"
+  state { level: 0 }
+  constraint not_over hard { state.level <= 5 }
+  on "fill" { state.level = state.level + 1 }
+  on "drain" { state.level = 0 }
+}
+
+// a steady rhythm: fill, then drain, again and again
+for i in 0..6 {
+  emit "fill"
+  emit "fill"
+  emit "drain"
+}
+let calm = observe()
+print("calm:     sigma {calm.sigma.regime} · field {calm.field.now.regime} · {len(calm.gaps.proposals)} proposals")
+
+// then it overflows: the same refusal again and again, and a signal nobody handles
+for i in 0..8 { emit "fill" }
+for i in 0..5 { emit "alarm" }
+let hot = observe()
+print("overflow: sigma {hot.sigma.regime} · field {hot.field.now.regime} · velocity {hot.liminal.velocity.now} · refused {hot.liminal.threshold.bounced}")
+for c in hot.liminal.crystals { print("  crystal: {c.suggestion}") }
+for p in hot.gaps.proposals { print("  would open [{p.type} {p.pressure}]: {p.message}") }
+
+// the sigma timeline: where the regime changed, tick by tick; and how many entries the field spent in each regime
+for t in hot.sigma.timeline { print("  tick {t.seq}: {t.regime}") }
+print("field counts: {hot.field.counts}")

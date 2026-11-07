@@ -604,6 +604,11 @@ fn member_of(name, field) {
 fn spent() = _spent
 fn unrouted() = _unrouted
 fn entries() = _entries
+/** the contract's gate.block_at, or null without a contract: the observe() builtin measures against it (lang/runtime.js OP) */
+fn gate_block_at() {
+  if _contract == null { return null }
+  return _contract.gate.block_at
+}
 /** ledger_verify(): every hash, link, seq and checkpoint (4.4), through lang/cie/ledger.eg */
 fn verify() = L.verify(_entries).ok
 

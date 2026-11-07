@@ -17,6 +17,9 @@ fs.mkdirSync(path.join(COPY, 'core'), { recursive: true });
 fs.copyFileSync(path.join(EMERGE, 'package.json'), path.join(COPY, 'package.json'));
 fs.copyFileSync(path.join(EMERGE, 'core', 'constraint.js'), path.join(COPY, 'core', 'constraint.js'));
 fs.cpSync(path.join(EMERGE, 'schemas'), path.join(COPY, 'schemas'), { recursive: true });
+// the interpreter's observe(), ledger_why() and observe_gaps() load observe/ (until CIE7's port replaces them at CIE11): a program that observes itself
+// must run in the copy too (found 2026-11-07, when examples/observe.eg became the first example to call observe())
+fs.cpSync(path.join(EMERGE, 'observe'), path.join(COPY, 'observe'), { recursive: true });
 fs.cpSync(path.join(EMERGE, 'lang'), path.join(COPY, 'lang'), {
   recursive: true,
   filter: (src) => !/[\\/]build[\\/](next|previous)([\\/]|$)/.test(src),

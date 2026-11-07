@@ -1,0 +1,535 @@
+// lang/cie/observe.eg — the observer in Emerge (CIE7, CIE-EG §13): the ledger read as a field. Written again from observe/*.js
+// (entry, delta, sigma, field, liminal, gaps, index), rule for rule; its end state is the interpreter's own observe() builtin, report for
+// report (native.test's judge has no JavaScript of its own: an Emerge program calls both and compares them).
+//
+//   observe(entries, P) → { ok, version, head, entries, measured, field, sigma, deviations, liminal, gaps, series }   or { ok: false, verify }
+//
+// P is lang/core/primitives.eg (its observe, gaps and signals sections); a run under a contract passes its gate's block_at in P.observe.gaps.
+// Pure: the same entries and the same P always give the same report. Nothing here writes to the ledger.
+//
+// The two measures, as James set them on 2026-11-07 ("Deltas measure gaps and sigmas measure deviation"): a delta is the gap in ticks since
+// the previous entry of the same key; sigma is that gap's deviation from the key's own rolling baseline (a z-score), read as a regime.
+use "./ledger.eg" as L
+
+// ── entry: how the observer reads one ledger entry (observe/entry.js) ─────────────────────────────────────
+// kinds that are the system struggling, and kinds that are it integrating
+let STRESS = ["gap", "rejected", "unrouted", "aborted", "promotion_refused"]
+let INTEGRATING = ["transition", "promote", "axiom"]
+
+fn body_of(e) {
+  if e != null and type_of(e.body) == "map" { return e.body }
+  return {}
+}
+fn _str_or(b, k, d) {
+  if has(b, k) and b[k] != null { return b[k] }
+  return d
+}
+/** what an entry is about: kind | compartment-or-name | signal, constraint, message, path or wire ends */
+fn key_of(e) {
+  let b = body_of(e)
+  let who = _str_or(b, "compartment", _str_or(b, "name", ""))
+  var what = ""
+  if has(b, "signal") and b.signal != null { what = b.signal }
+  else if has(b, "constraint") and b.constraint != null { what = b.constraint }
+  else if has(b, "message") and b.message != null { what = b.message }
+  else if has(b, "path") and b.path != null { what = b.path }
+  else if has(b, "from") { what = "{b.from}>{get(b, "to", null)}" }
+  return "{e.kind}|{who}|{what}"
+}
+/** the pressure of a gap or a refused promotion; null for any other kind */
+fn pressure_of(e, P) {
+  let b = body_of(e)
+  if e.kind == "gap" {
+    if has(b, "pressure") and type_of(b.pressure) == "num" { return b.pressure }
+    return P.gaps.constraint_gap.pressure
+  }
+  if e.kind == "promotion_refused" { return P.gaps.promotion_refused.pressure }
+  return null
+}
+/** a consequence, not evidence: a gap the observer opened, or an unrouted notification of the runtime's own signals */
+fn is_derived(e, P) {
+  let b = body_of(e)
+  if e.kind == "gap" and get(b, "source", null) == "observe" { return true }
+  if e.kind == "unrouted" and has(b, "signal") and values(P.signals) contains b.signal { return true }
+  return false
+}
+fn q4(x) = round(x * 10000) / 10000
+/** a stable name for a condition: the first `hex_n` digits of SHA-256 over the canonical form of `parts` */
+fn dedup_key(parts, hex_n) = slice(hex(sha256(bytes("eg.observe.dedup.v1\0" + L._ecf(parts, "dedup parts")))), 0, hex_n)
+fn mean(xs) {
+  if len(xs) == 0 { return 0 }
+  var s = 0
+  for x in xs { s += x }
+  return s / len(xs)
+}
+fn std(xs) {
+  if len(xs) < 2 { return 0 }
+  let m = mean(xs)
+  var sq = []
+  for x in xs { sq[len(sq)] = (x - m) * (x - m) }
+  return sqrt(mean(sq))
+}
+fn clamp01(x) = max(0, min(1, x))
+/** a stable sort by a comparator: before(a, b) is true when a goes first (JavaScript's Array.prototype.sort is stable too) */
+fn sort_with(xs, before) {
+  var out = []
+  for x in xs {
+    var j = len(out)
+    out[j] = x
+    while j > 0 and before(x, out[j - 1]) {
+      out[j] = out[j - 1]
+      j -= 1
+    }
+    out[j] = x
+  }
+  return out
+}
+
+// ── delta: kinematic deltas in logical ticks (observe/delta.js) ────────────────────────────────────────────
+fn compute_deltas(entries, O) {
+  let D = O.deviation
+  var last_seq = {}
+  var gaps_of = {}
+  var cum = [0]
+  var out = []
+  var i = 0
+  for e in entries {
+    var c = cum[i]
+    if STRESS contains e.kind { c += 1 }
+    cum[len(cum)] = c
+    let key = key_of(e)
+    var gap_n = null
+    var zs = 0
+    var z = 0
+    var measured = false
+    if e.kind != "checkpoint" {
+      var w = get(gaps_of, key, [])
+      if has(last_seq, key) {
+        gap_n = e.seq - last_seq[key]
+        if len(w) >= D.min_samples {
+          zs = (gap_n - mean(w)) / max(std(w), D.tick_floor)
+          z = max(0, zs)
+          measured = true
+        }
+        w[len(w)] = gap_n
+        if len(w) > D.window { w = slice(w, 1) }
+      }
+      gaps_of[key] = w
+      last_seq[key] = e.seq
+    }
+    let n = i + 1
+    let W = D.rate_window
+    let accel_measured = n >= 2 * W
+    var accel = 0
+    if accel_measured { accel = ((cum[n] - cum[n - W]) - (cum[n - W] - cum[n - 2 * W])) / W }
+    out[len(out)] = { seq: e.seq, kind: e.kind, key: key, gap: gap_n, latencyImpact: q4(z), zs: q4(zs), measured: measured, acceleration: q4(accel),
+      accelMeasured: accel_measured, structuralDeviation: null }
+    i += 1
+  }
+  return out
+}
+
+// ── sigma: a window of deltas in, a regime out (observe/sigma.js) ───────────────────────────────────────────
+fn _conf(value, threshold) {
+  if threshold > 0 { return q4(min(1, value / threshold)) }
+  if value > 0 { return 1 }
+  return 0
+}
+fn features(window, O) {
+  var S = 0
+  var K = 0
+  var flips = 0
+  var last = 0
+  for d in window {
+    if d.measured {
+      S = max(S, d.latencyImpact)
+      if abs(d.zs) >= O.deviation.flip_z {
+        var s = -1
+        if d.zs > 0 { s = 1 }
+        if last != 0 and s != last { flips += 1 }
+        last = s
+      }
+    }
+    if d.accelMeasured { K = max(K, abs(d.acceleration)) }
+  }
+  return { S: q4(S), K: q4(K), O: flips }
+}
+fn classify(window, O) {
+  let C = O.sigma
+  var span = [0, 0]
+  if len(window) > 0 { span = [window[0].seq, window[len(window) - 1].seq] }
+  let f = features(window, O)
+  let res = fn(regime, cause, confidence) = { regime: regime, dominant_cause: cause, confidence: confidence, features: f, window: span, policy_version: O.version }
+  if len(window) < C.min_window { return res("insufficient_data", null, 0) }
+  if f.K >= C.accel_threshold { return res("collapsing", "K", _conf(f.K, C.accel_threshold)) }
+  if f.O >= C.oscillation_count { return res("oscillatory", "O", _conf(f.O, C.oscillation_count)) }
+  if f.S >= C.slope_threshold { return res("degraded", "S", _conf(f.S, C.slope_threshold)) }
+  return res("stable", null, 0)
+}
+/** the regime at the end of the ledger, and a timeline of where it changed (a rolling window, one reading per entry) */
+fn scan(deltas, O) {
+  let W = O.sigma.window
+  var timeline = []
+  var prev = null
+  var i = 0
+  while i < len(deltas) {
+    let r = classify(slice(deltas, max(0, i + 1 - W), i + 1), O)
+    if r.regime != prev {
+      timeline[len(timeline)] = { seq: deltas[i].seq, regime: r.regime }
+      prev = r.regime
+    }
+    i += 1
+  }
+  return { now: classify(slice(deltas, max(0, len(deltas) - W)), O), timeline: timeline }
+}
+/** the entries that deviated most from their own key's rhythm, one per key, strongest first */
+fn deviations(deltas, O, top = 5) {
+  var best = {}
+  var order = []
+  for d in deltas {
+    if d.measured and d.latencyImpact >= O.deviation.z_flag {
+      if not has(best, d.key) { order[len(order)] = d.key }
+      if not has(best, d.key) or d.latencyImpact > best[d.key].z { best[d.key] = { seq: d.seq, key: d.key, z: d.latencyImpact, gap: d.gap } }
+    }
+  }
+  var list = []
+  for k in order { list[len(list)] = best[k] }
+  let sorted = sort_with(list, fn(a, b) = a.z > b.z or (a.z == b.z and a.seq < b.seq))
+  return slice(sorted, 0, min(top, len(sorted)))
+}
+
+// ── field: the CFR field, a pure fold over the ledger (observe/field.js) ─────────────────────────────────────
+let DIMS = ["coherence", "friction", "resonance", "entropy"]
+fn regime_of(s, R) {
+  if s.entropy > R.chaotic_entropy or s.coherence < R.chaotic_coherence { return "chaotic" }
+  if s.friction > R.turbulent_friction or s.resonance > R.turbulent_resonance { return "turbulent" }
+  if s.coherence > R.resonant_coherence and s.entropy < R.resonant_entropy { return "resonant" }
+  return "stable"
+}
+fn fold_field(entries, deltas, O, P) {
+  let F = O.field
+  var st = {}
+  for k in DIMS { st[k] = F.start[k] }
+  var recent = []
+  var out = []
+  var i = 0
+  for e in entries {
+    for k in DIMS { st[k] = st[k] + (F.neutral - st[k]) * F.damping }
+    if has(F.nudges, e.kind) {
+      let nudge = F.nudges[e.kind]
+      var scale = 1
+      if F.pressure_scaled contains e.kind { scale = pressure_of(e, P) ?? 1 }
+      for k in DIMS {
+        if has(nudge, k) and nudge[k] != 0 and nudge[k] != null { st[k] = st[k] + nudge[k] * scale }
+      }
+    }
+    if e.kind != "checkpoint" {
+      let key = key_of(e)
+      if (STRESS contains e.kind) and (recent contains key) { st.resonance = st.resonance + F.repeat_step } else { st.resonance = st.resonance - F.repeat_relief }
+      recent[len(recent)] = key
+      if len(recent) > F.repeat_window { recent = slice(recent, 1) }
+    }
+    let d = deltas[i]
+    if d.measured {
+      let w = min(1, d.latencyImpact / F.deviation_full_z)
+      st.entropy = st.entropy + w * F.deviation_entropy
+      st.friction = st.friction + w * F.deviation_friction
+    }
+    for k in DIMS { st[k] = clamp01(st[k]) }
+    out[len(out)] = { seq: e.seq, coherence: q4(st.coherence), friction: q4(st.friction), resonance: q4(st.resonance), entropy: q4(st.entropy),
+      regime: regime_of(st, F.regimes) }
+    i += 1
+  }
+  return out
+}
+/** how long the latest regime has held, counted in entries */
+fn hold_of(series) {
+  if len(series) == 0 { return { regime: "stable", since: 0, entries: 0 } }
+  let last = series[len(series) - 1]
+  var i = len(series) - 1
+  while i > 0 and series[i - 1].regime == last.regime { i -= 1 }
+  return { regime: last.regime, since: series[i].seq, entries: len(series) - i }
+}
+
+// ── liminal: the boundaries, read from the ledger (observe/liminal.js) ───────────────────────────────────────
+fn velocity(entries, O) {
+  let V = O.liminal.velocity
+  var v = 0
+  var peak = 0
+  var peak_seq = 0
+  var runaway_seq = null
+  for e in entries {
+    v = max(0, min(1, v * (1 - V.decay) + get(V.step, e.kind, 0)))
+    if v > peak {
+      peak = v
+      peak_seq = e.seq
+    }
+    if v >= V.runaway and runaway_seq == null { runaway_seq = e.seq }
+  }
+  return { now: q4(v), peak: q4(peak), peak_seq: peak_seq, runaway_seq: runaway_seq, runaway_now: v >= V.runaway }
+}
+fn threshold(entries) {
+  var bounced = 0
+  var absorbed = 0
+  var dissolved = 0
+  for e in entries {
+    let b = body_of(e)
+    if e.kind == "rejected" or e.kind == "promotion_refused" { bounced += 1 }
+    if e.kind == "rejected" and type_of(get(b, "discarded", null)) == "list" { dissolved += len(b.discarded) }
+    if e.kind == "transition" and type_of(get(b, "violations", null)) == "list" and len(b.violations) > 0 { absorbed += 1 }
+  }
+  return { bounced: bounced, absorbed: absorbed, dissolved: dissolved }
+}
+fn surface(entries, O) {
+  let S = O.liminal.surface
+  let tail = slice(entries, max(0, len(entries) - S.window))
+  var last = {}
+  var flips = {}
+  var order = []
+  for e in tail {
+    if e.kind == "transition" or e.kind == "rejected" {
+      let b = body_of(e)
+      let key = "{_str_or(b, "compartment", "")}|{_str_or(b, "signal", "")}"
+      if has(last, key) and last[key] != e.kind {
+        if not has(flips, key) { order[len(order)] = key }
+        flips[key] = get(flips, key, 0) + 1
+      }
+      last[key] = e.kind
+    }
+  }
+  var out = []
+  for k in order {
+    if flips[k] >= S.flips { out[len(out)] = { key: k, flips: flips[k] } }
+  }
+  return sort_with(out, fn(a, b) = a.flips > b.flips or (a.flips == b.flips and a.key < b.key))
+}
+fn terminus(entries) {
+  var aborted = 0
+  var unrouted = 0
+  var transitions = 0
+  for e in entries {
+    if e.kind == "aborted" { aborted += 1 } else if e.kind == "unrouted" { unrouted += 1 } else if e.kind == "transition" { transitions += 1 }
+  }
+  return { aborted: aborted, unrouted: unrouted, unrouted_share: q4(unrouted / max(1, unrouted + transitions)) }
+}
+fn crystals(entries, O) {
+  let C = O.liminal.crystal
+  var refused = {}
+  var refused_order = []
+  var accepted = {}
+  var unrouted = {}
+  var unrouted_order = []
+  for e in entries {
+    let b = body_of(e)
+    let scope = "{_str_or(b, "compartment", "")}|{_str_or(b, "signal", "")}"
+    if e.kind == "transition" {
+      accepted[scope] = get(accepted, scope, 0) + 1
+    } else if e.kind == "rejected" {
+      let k = "{scope}|{_str_or(b, "constraint", "")}"
+      if not has(refused, k) { refused_order[len(refused_order)] = k }
+      refused[k] = get(refused, k, 0) + 1
+    } else if e.kind == "unrouted" {
+      let k = str(_str_or(b, "signal", ""))
+      if not has(unrouted, k) { unrouted_order[len(unrouted_order)] = k }
+      unrouted[k] = get(unrouted, k, 0) + 1
+    }
+  }
+  var out = []
+  for k in refused_order {
+    let n = refused[k]
+    let parts = split(k, "|")
+    let ok = get(accepted, "{parts[0]}|{parts[1]}", 0)
+    let confidence = q4(n / (n + ok))
+    if n >= C.min_count and confidence >= C.min_confidence {
+      out[len(out)] = { kind: "refusal", scope: "{parts[0]}.{parts[1]}", constraint: parts[2], count: n, confidence: confidence,
+        suggestion: "{parts[2]} refuses {parts[1]} on {parts[0]} {n} of {n + ok} times: the sender or the constraint is wrong" }
+    }
+  }
+  for sig in unrouted_order {
+    let n = unrouted[sig]
+    if n >= C.min_count {
+      out[len(out)] = { kind: "unrouted", scope: sig, constraint: "", count: n, confidence: 1, suggestion: "nobody handles {sig} ({n} times): wire it or stop emitting it" }
+    }
+  }
+  return sort_with(out, fn(a, b) = a.count > b.count or (a.count == b.count and a.scope < b.scope))
+}
+fn liminal(entries, O) = { velocity: velocity(entries, O), threshold: threshold(entries), coherence_surface: surface(entries, O), terminus: terminus(entries),
+  crystals: crystals(entries, O) }
+
+// ── gaps: the gap hunter, for a ledger (observe/gaps.js) ─────────────────────────────────────────────────────
+/** every gap entry, with the name of its condition, its occurrences, and whether and how it closed */
+fn inventory(entries, O, P) {
+  let G = O.gaps
+  var closers = {}
+  for e in entries {
+    if e.kind == "gap.close" {
+      let id = get(body_of(e), "gap", null)
+      if id != null and not has(closers, str(id)) { closers[str(id)] = e.seq }
+    }
+  }
+  var transitions = []
+  for e in entries {
+    if e.kind == "transition" { transitions[len(transitions)] = e }
+  }
+  var list = []
+  for e in entries {
+    if e.kind == "gap" {
+      let b = body_of(e)
+      let type = _str_or(b, "type", P.gaps.constraint_gap.type)
+      var dedup = get(b, "dedup_key", null)
+      if dedup == null {
+        dedup = dedup_key({ type: type, message: _str_or(b, "message", ""), compartment: _str_or(b, "compartment", ""), signal: _str_or(b, "signal", ""),
+          constraint: _str_or(b, "constraint", "") }, G.dedup_hex)
+      }
+      var closed = null
+      if has(b, "gap") and has(closers, str(b.gap)) {
+        closed = { by: "gap.close", seq: closers[str(b.gap)] }
+      } else if has(b, "compartment") and has(b, "missing") {
+        for t in transitions {
+          if closed == null {
+            let tb = body_of(t)
+            if t.seq > e.seq and get(tb, "compartment", null) == b.compartment and type_of(get(tb, "changes", null)) == "map" and get(tb.changes, b.missing, null) != null {
+              closed = { by: "predicate", seq: t.seq }
+            }
+          }
+        }
+      }
+      var pressure = P.gaps.constraint_gap.pressure
+      if has(b, "pressure") and type_of(b.pressure) == "num" { pressure = b.pressure }
+      list[len(list)] = { gap: get(b, "gap", null), seq: e.seq, type: type, pressure: pressure, dedup_key: dedup, source: _str_or(b, "source", "program"),
+        closed: closed }
+    }
+  }
+  var seen = {}
+  for g in list { seen[g.dedup_key] = get(seen, g.dedup_key, 0) + 1 }
+  var i = 0
+  while i < len(list) {
+    list[i].occurrences = seen[list[i].dedup_key]
+    i += 1
+  }
+  return list
+}
+fn tension(g, head_seq, O) {
+  let T = O.gaps.tension
+  let age = max(0, head_seq - g.seq)
+  let age_factor = clamp01(log2(1 + age) / log2(1 + T.age_cap))
+  let repeat_factor = clamp01((g.occurrences - 1) / T.repeat_cap)
+  let composite = q4(clamp01(g.pressure * T.weight_pressure + age_factor * T.weight_age + repeat_factor * T.weight_repeat))
+  let escalated = max(g.pressure, composite)
+  var floor_ = "low"
+  if composite >= T.critical { floor_ = "critical" } else if composite >= T.high { floor_ = "high" } else if composite >= T.medium { floor_ = "medium" }
+  return { gap: g.gap, seq: g.seq, dedup_key: g.dedup_key, pressure: q4(g.pressure), age: age, occurrences: g.occurrences, composite: composite,
+    pressure_after: q4(escalated), severity: floor_, would_block: escalated >= O.gaps.block_at,
+    blocked_by_tension: g.pressure < O.gaps.block_at and composite >= O.gaps.block_at }
+}
+fn propose(parts, type, pressure, confidence, message, evidence, O, P) {
+  if type_of(evidence) != "map" or len(keys(evidence)) == 0 { raise("observe: a gap proposal needs evidence") }
+  let p = max(P.gaps.pressure_min, min(P.gaps.pressure_max, pressure))
+  var named = { source: "observe" }
+  for k, v in parts { named[k] = v }
+  return { type: type, pressure: q4(p), confidence: q4(confidence), message: message, evidence: evidence, dedup_key: dedup_key(named, O.gaps.dedup_hex) }
+}
+/** everything the ledger's own measurements say is worth a gap, minus what is already open */
+fn hunt(entries, sigma, field, lim, O, P) {
+  let G = O.gaps
+  var head_seq = 0
+  if len(entries) > 0 { head_seq = entries[len(entries) - 1].seq }
+  let inv = inventory(entries, O, P)
+  var open = []
+  var closed = []
+  for g in inv {
+    if g.closed == null { open[len(open)] = g } else { closed[len(closed)] = g }
+  }
+  var escalations = []
+  for g in open { escalations[len(escalations)] = tension(g, head_seq, O) }
+
+  var cand = []
+  let s = sigma.now
+  if get(G.regime_types, s.regime, null) != null {
+    let f = s.features
+    cand[len(cand)] = propose({ pattern: "sigma", regime: s.regime, cause: s.dominant_cause }, G.regime_types[s.regime], G.regime_pressure[s.regime] * s.confidence,
+      s.confidence, "sigma: {s.regime} ({s.dominant_cause}) over ticks {s.window[0]} to {s.window[1]}: S {f.S}, K {f.K}, O {f.O}",
+      { pattern: "sigma", regime: s.regime, cause: s.dominant_cause, S: f.S, K: f.K, O: f.O, from: s.window[0], to: s.window[1] }, O, P)
+  }
+  let h = field.hold
+  let cur = field.now
+  if get(G.field_types, h.regime, null) != null and h.entries >= G.field_persist {
+    cand[len(cand)] = propose({ pattern: "field", regime: h.regime }, G.field_types[h.regime], G.field_pressure[h.regime], min(1, h.entries / (G.field_persist * 2)),
+      "field: {h.regime} for {h.entries} entries since tick {h.since} (coherence {cur.coherence}, friction {cur.friction}, entropy {cur.entropy})",
+      { pattern: "field", regime: h.regime, since: h.since, entries: h.entries, coherence: cur.coherence, friction: cur.friction, resonance: cur.resonance,
+        entropy: cur.entropy }, O, P)
+  }
+  let v = lim.velocity
+  if v.runaway_now {
+    cand[len(cand)] = propose({ pattern: "velocity_field" }, O.liminal.velocity.gap_type, O.liminal.velocity.gap_pressure, v.now,
+      "velocity field ran away ({v.now}) since tick {v.runaway_seq}: stress is arriving faster than the program integrates it, ahead of any signal storm",
+      { pattern: "velocity_field", velocity: v.now, peak: v.peak, since: v.runaway_seq }, O, P)
+  }
+  for c in lim.crystals {
+    cand[len(cand)] = propose({ pattern: "crystal", kind: c.kind, scope: c.scope, constraint: c.constraint }, G.crystal_types[c.kind], G.crystal_pressure[c.kind] * c.confidence,
+      c.confidence, "crystal: {c.suggestion}", { pattern: "crystal", kind: c.kind, scope: c.scope, constraint: c.constraint, count: c.count, confidence: c.confidence }, O, P)
+  }
+
+  var open_keys = []
+  for g in open { open_keys[len(open_keys)] = g.dedup_key }
+  var fresh = []
+  for c in cand {
+    if not (open_keys contains c.dedup_key) { fresh[len(fresh)] = c }
+  }
+  let proposals = sort_with(fresh, fn(a, b) = a.pressure > b.pressure or (a.pressure == b.pressure and a.dedup_key < b.dedup_key))
+  var confidence = null
+  for p in proposals {
+    if confidence == null or p.confidence < confidence { confidence = p.confidence }
+  }
+  return { open: open, closed: closed, escalations: escalations, proposals: proposals, confidence: confidence }
+}
+
+// ── observe: the report (observe/index.js) ────────────────────────────────────────────────────────────────
+fn observe(entries, P) {
+  let O = P.observe
+  let v = L.verify(entries)
+  if not v.ok { return { ok: false, verify: v } }
+  var seen = []
+  for e in entries {
+    if not is_derived(e, P) { seen[len(seen)] = e }
+  }
+  let deltas = compute_deltas(seen, O)
+  let sig = scan(deltas, O)
+  let series = fold_field(seen, deltas, O, P)
+  var counts = { stable: 0, resonant: 0, turbulent: 0, chaotic: 0 }
+  for r in series { counts[r.regime] = counts[r.regime] + 1 }
+  var now = null
+  if len(series) > 0 { now = series[len(series) - 1] }
+  let field = { now: now, hold: hold_of(series), counts: counts }
+  let lim = liminal(seen, O)
+  let gaps = hunt(entries, sig, field, lim, O, P)
+  var head = { seq: 0, hash: L.ZERO }
+  if len(entries) > 0 { head = { seq: entries[len(entries) - 1].seq, hash: entries[len(entries) - 1].hash } }
+  var sigma = {}
+  for k, x in sig.now { sigma[k] = x }
+  sigma.timeline = slice(sig.timeline, max(0, len(sig.timeline) - 8))
+  return { ok: true, version: O.version, head: head, entries: len(entries), measured: len(seen), field: field, sigma: sigma,
+    deviations: deviations(deltas, O), liminal: lim, gaps: gaps, series: series }
+}
+
+// ── the observe() builtin, natively (lower.eg rewrites observe() to this): the report without its series, as data, frozen; a run under a
+// contract measures against its gate's block_at, as lang/runtime.js does; a ledger that does not verify is refused, not measured
+fn report(entries, P, block_at) {
+  var PP = P
+  if block_at != null {
+    var gaps = {}
+    for k, v in P.observe.gaps { gaps[k] = v }
+    gaps.block_at = block_at
+    var O = {}
+    for k, v in P.observe { O[k] = v }
+    O.gaps = gaps
+    PP = { observe: O, gaps: P.gaps, signals: P.signals }
+  }
+  let r = observe(entries, PP)
+  if not r.ok { raise("observe: the ledger does not verify (entry {r.verify.seq}: {r.verify.reason})") }
+  var out = {}
+  for k, v in r {
+    if k != "series" { out[k] = v }
+  }
+  return freeze(out)
+}
