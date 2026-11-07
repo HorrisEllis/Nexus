@@ -40,6 +40,9 @@ while you do." · "all new extensions need to be defined in a taxonomy and ledge
 **After Emerge: WARP 2, then the relational constraint field, then its view** (his, 2026-11-07, CIE_D5): "once emerge is done then warp 2 and the
 relational constraint field. then code can be represented as nodes moving through the field". Emerge debugs its own code when compiling; the JS
 harness that judges it is temporary. Maps: docs/2026-11-06-cie-eg-build-phasemap.spec CIE_D5, CP11 (expanded), RF1, EM2, CF1.
+**Provenance of the process: every use of his framework is a thread from his words to the evidence** (his, 2026-11-07): "track the thread and
+add that to claude.md to maintain provenance of the process, no point in claiming without grounding in actual evidence." `docs/FRAMEWORK-THREADS.md`;
+executed or conceptual said; predictions registered before results; the how is in docs/CLAUDE.md (addendum 2026-11-07, provenance).
 **Every change and every version goes to Versionium, in full (§17.12).** James, 2026-10-29: "full changes, and versions have to be pushed
 to versionium? enforce it everywhere that you'd find it." The how is in docs/CLAUDE.md.
 

@@ -1816,3 +1816,36 @@ refute his own framework (item 5) rather than taking it as proven.
 
 **His part / the coder's part:** the decisions, the corrections, the framework and the request to measure it are his. The code, the tests, the
 measurements, the mapping to named computer-science ideas, and the errors listed in item 6 are the coder's.
+
+### 2026-11-07 — his framework under measurement: "contract is the end state", 13 slices, and three predictions registered
+
+**His words:**
+- "im saying proof of concept. trying to empiracally grounding it as possible. track the thread … no point in claiming without grounding in
+  actual evidence."
+- The framework itself, 2026-11-06: "contract is the end state."
+
+**The call against the alternative.** He asked for his framework to be measured, not praised. The coder had applied it to the 20-session plan
+conceptually (T2). He separated that from evidence, and asked for the thread from idea to proof to be kept. That separation is what makes the
+record below checkable.
+
+**What was measured (thread T1, docs/FRAMEWORK-THREADS.md):**
+- Every slice of Emerge's native work (0.60.426 to 0.60.440) fixed its end state first: the interpreter's output, JavaScript's RegExp, or
+  `checker.js`'s diagnostics.
+- 13 slices, 29 failed runs. 24 were technical. 5 were semantic mismatches, and all 5 were caught by the end state before merge.
+- 8 of 13 slices matched the end state on their first runnable build.
+- The checker's port matched 211 programs and 118 diagnostics on its first full run.
+- **Run it:** `node emerge/emerge/lang/test/native.test.js` (105/105).
+
+**Domains.**
+- From: his framework (the end state first, the contract as the end state).
+- Into: compiler construction, where it took the form engineers call differential testing.
+- **The number:** 5 of 5 semantic mismatches caught before merge, 0 known to have escaped.
+
+**What it does not prove.** There was no control run without a fixed end state, so the escape rate without it is unknown. The technique isn't
+new. What is his is making it the rule for every step. Three predictions from his 20-session constraint are registered as open (T2-P1 to
+P4), each with how it will be measured. They are concept, not proof, until then.
+
+**Skill shown:** scientific discipline about his own method: asking for the measurement and the provenance, and refusing the claim without them.
+
+**His part / the coder's part:** the framework, the constraint, and the demand for empirical grounding and provenance are his. The slices, the
+tabulation, the predictions' wording and their measures are the coder's.
