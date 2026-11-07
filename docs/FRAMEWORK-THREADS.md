@@ -351,3 +351,40 @@ along its contracts) is the harness used by an agent; T7's result is evidence fo
 (2026-07-09), wiring harness (2026-09-27), drawbridge (2026-10-17), door (2026-11-03), the spec as the compartment file (2026-11-07); CIE-EG its
 engine. Where the term comes from: a wiring harness is a manufacturing part (vehicles, aircraft), a pre-built bundle of wires and connectors that
 parts plug into. Whether he took it from there is his to say.
+
+## T9 — "it seems like it's best at ambiguity … its agnostic": the framework's scope, registered 2026-11-07
+
+**His words, 2026-11-07.** "it seems like it's best at ambiguity. its not just problem solving. its strategy, planning, creating,
+synthesizing, innovating, its agnostic, at least as far as ive been able to tell". He said it after reading the evidence matrix
+(docs/EVIDENCE-MATRIX.md).
+
+**What the coder did (conceptual).** Nothing has run for this claim yet. The claim is taken in two parts, each testable:
+- **Ambiguity:** the framework's advantage grows as the task is less specified. The coder's reading of why: its first move, the end state as a
+  contract, turns an open question into a checkable target, and the DAG turns "how" into conditions. A well-specified task already has both,
+  so there is less for the framework to add.
+- **Agnostic:** nothing in its moves (end state, conditions, compartment, gaps, invariants) names a domain.
+
+**Evidence so far, and its limit.** Every executed use is software: T1 (the JavaScript removal), F1–F6 in the evidence matrix, IF-05, the
+crystallizer, and the 2026-10-31 small-model run (a post-hoc signal, see T7). His record shows uses outside code in his own words (the
+notebook, T6; the Innovation Toolkit's sections on strategy and creative flow). None of them was measured. So: **agnostic is untested** beyond
+software, and **"best at ambiguity" is untested** everywhere. Both are concept until a run holds.
+
+**Predictions (registered 2026-11-07, before any task or run):**
+- **T9-P1, ambiguity:** on one set of tasks written at three levels of specification (full contract given, a goal only, a vague ask), arm A
+  (his framework: end state first, conditions, compartment) beats arm B (the plain prompt) by more at each lower level. That means A's
+  margin grows from full, to goal, to vague.
+- **T9-P2, agnostic:** in at least two domains that are not software (for example, a business plan and a research design), arm A's outputs
+  score higher than arm B's under a rubric written before the run, scored blind (the scorer does not know which arm wrote which).
+- **T9-P3, the limit:** on fully specified tasks, A and B are within the noise of each other. If A still wins by a lot there, the reading
+  above (the framework adds most where the end state is missing) is wrong, and that is recorded.
+
+**How it is measured.** By T7's protocol, extended:
+- the tasks, the rubric, the predictions, the scorer and the runner are each committed, with their hashes, before the run;
+- he runs it in isolation from the coder, on his machine;
+- non-software outputs are scored blind against the rubric.
+
+A failed prediction is kept, and the claim is narrowed to what held.
+
+**State:** registered, conceptual. It runs after T7's runner exists (it reuses its arms and its isolation), so after the JavaScript removal,
+by the focus.
+
