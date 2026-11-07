@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794032238853
+exported_at: 1794074382592
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794032238853
-lastSeenAt: 1794032238853
+firstSeenAt: 1794074382592
+lastSeenAt: 1794074382592
 fingerprint: null
 payload:
   for: CIE1_the_contract_block
@@ -260,6 +260,9 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
       - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
       - docs/2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH1_the_conformance_test
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
     blockedBy: []
     unlocks:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
@@ -270,7 +273,7 @@ payload:
       - layer 4
       - 'depends on (1): EAS4_callers_through_the_door · all upstream 9'
       - >-
-        needed by (2): CIE4_native_components, PIL2_contracts · all downstream 54 · finishing it
+        needed by (2): CIE4_native_components, PIL2_contracts · all downstream 57 · finishing it
         unlocks CIE4_native_components, PIL2_contracts
     edges:
       - from: docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door

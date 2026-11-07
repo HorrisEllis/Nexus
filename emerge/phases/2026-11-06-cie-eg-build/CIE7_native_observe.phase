@@ -7,18 +7,20 @@ intent: null
 summary: CIE7_native_observe (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1794023236615
+exported_at: 1794074382604
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794023236615
-lastSeenAt: 1794023236615
+firstSeenAt: 1794074382604
+lastSeenAt: 1794074382604
 fingerprint: null
 payload:
   id: CIE7_native_observe
   map: docs/2026-11-06-cie-eg-build-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    BUILT   # 2026-11-07: slice a 0.60.442 (the observer), slice b 0.60.443 (the debugger);
+    observe/cli.js (eg debug on a file) waits on CIE13
   files:
     - emerge/emerge/observe/index.js
     - emerge/emerge/observe/gaps.js
