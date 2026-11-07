@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794023236620
+exported_at: 1794074382609
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794023236620
-lastSeenAt: 1794023236620
+firstSeenAt: 1794074382609
+lastSeenAt: 1794074382609
 fingerprint: null
 payload:
   for: CIE10_the_door_in_emerge
@@ -95,6 +95,7 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
     dependents:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH1_the_conformance_test
     upstream:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
@@ -115,9 +116,13 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D2_the_door_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D7_the_spec_compiler_moves_to_idearium
     downstream:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH1_the_conformance_test
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
     blockedBy:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
     unlocks: []
@@ -133,8 +138,8 @@ payload:
       - layer 9 · blocked by CIE8_spec_compiler_in_emerge
       - >-
         depends on (3): CIE_D2_the_door_in_emerge, CIE5_native_test, CIE8_spec_compiler_in_emerge ·
-        all upstream 19
-      - 'needed by (1): CIE11_retire_the_interpreter · all downstream 2'
+        all upstream 20
+      - 'needed by (2): CIE11_retire_the_interpreter, WH1_the_conformance_test · all downstream 5'
       - >-
         same files as CIE13_native_system_primitives with no order between them:
         emerge/emerge/lang/native/rt.eg

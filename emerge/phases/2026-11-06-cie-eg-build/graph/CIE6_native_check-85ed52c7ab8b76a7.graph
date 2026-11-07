@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794023236612
+exported_at: 1794074382602
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794023236612
-lastSeenAt: 1794023236612
+firstSeenAt: 1794074382602
+lastSeenAt: 1794074382602
 fingerprint: null
 payload:
   for: CIE6_native_check
@@ -92,16 +92,19 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH1_the_conformance_test
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
     blockedBy: []
     unlocks:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
     conflicts: []
     dangling: []
     lines:
-      - layer 7 · ready
+      - layer 7
       - 'depends on (1): CIE5_native_test · all upstream 16'
       - >-
-        needed by (2): CIE8_spec_compiler_in_emerge, CIE11_retire_the_interpreter · all downstream 5
+        needed by (2): CIE8_spec_compiler_in_emerge, CIE11_retire_the_interpreter · all downstream 8
         · finishing it unlocks CIE8_spec_compiler_in_emerge
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test

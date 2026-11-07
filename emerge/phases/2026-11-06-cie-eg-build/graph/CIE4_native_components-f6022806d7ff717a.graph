@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794023236606
+exported_at: 1794074382598
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794023236606
-lastSeenAt: 1794023236606
+firstSeenAt: 1794074382598
+lastSeenAt: 1794074382598
 fingerprint: null
 payload:
   for: CIE4_native_components
@@ -105,6 +105,9 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH1_the_conformance_test
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
     blockedBy: []
     unlocks:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE15_the_rest_of_the_language
@@ -117,7 +120,7 @@ payload:
       - 'depends on (2): CIE3_native_ledger, CIE1_the_contract_block · all upstream 14'
       - >-
         needed by (3): CIE15_the_rest_of_the_language, CIE5_native_test,
-        CIE14_the_gaps_found_while_coding · all downstream 10 · finishing it unlocks
+        CIE14_the_gaps_found_while_coding · all downstream 13 · finishing it unlocks
         CIE15_the_rest_of_the_language, CIE5_native_test, CIE14_the_gaps_found_while_coding
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger

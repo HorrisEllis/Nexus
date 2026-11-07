@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794023236621
+exported_at: 1794074382611
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794023236621
-lastSeenAt: 1794023236621
+firstSeenAt: 1794074382611
+lastSeenAt: 1794074382611
 fingerprint: null
 payload:
   for: CIE11_retire_the_interpreter
@@ -35,6 +35,8 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
     dependents:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
     upstream:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
@@ -58,11 +60,12 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D2_the_door_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D7_the_spec_compiler_moves_to_idearium
     downstream:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
     blockedBy:
-      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
-      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE7_native_observe
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
     unlocks:
@@ -73,13 +76,13 @@ payload:
           - emerge/emerge/spec/cie-eg.spec
     dangling: []
     lines:
-      - >-
-        layer 10 · blocked by CIE6_native_check, CIE7_native_observe, CIE9_tests_in_emerge,
-        CIE10_the_door_in_emerge
+      - layer 10 · blocked by CIE9_tests_in_emerge, CIE10_the_door_in_emerge
       - >-
         depends on (4): CIE6_native_check, CIE7_native_observe, CIE9_tests_in_emerge,
-        CIE10_the_door_in_emerge · all upstream 22
-      - 'needed by (1): CIE12_windows · finishing it unlocks CIE12_windows'
+        CIE10_the_door_in_emerge · all upstream 23
+      - >-
+        needed by (3): CIE12_windows, ERV5_the_visual_coding_and_debug_environment,
+        WH2_verified_reconstruction_coverage · finishing it unlocks CIE12_windows
       - >-
         same files as CIE13_native_system_primitives with no order between them:
         emerge/emerge/spec/cie-eg.spec

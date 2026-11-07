@@ -7,18 +7,18 @@ intent: null
 summary: CIE6_native_check (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1794023236612
+exported_at: 1794074382602
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794023236612
-lastSeenAt: 1794023236612
+firstSeenAt: 1794074382602
+lastSeenAt: 1794074382602
 fingerprint: null
 payload:
   id: CIE6_native_check
   map: docs/2026-11-06-cie-eg-build-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: 'BUILT   # 2026-11-07: slice a 0.60.440 (check.eg), slice b 0.60.441 (the compiler runs it)'
   files:
     - emerge/emerge/lang/native/check.eg
     - emerge/emerge/lang/native/emerge.eg

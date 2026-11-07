@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794023236602
+exported_at: 1794074382595
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794023236602
-lastSeenAt: 1794023236602
+firstSeenAt: 1794074382595
+lastSeenAt: 1794074382595
 fingerprint: null
 payload:
   for: CIE2_native_sha256
@@ -66,6 +66,9 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE7_native_observe
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH1_the_conformance_test
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
     blockedBy: []
     unlocks:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
@@ -75,7 +78,7 @@ payload:
       - layer 1
       - 'depends on (2): CIE_D1_remove_the_javascript_now, CIE_D3_sha256_from_the_cpu'
       - >-
-        needed by (1): CIE3_native_ledger · all downstream 13 · finishing it unlocks
+        needed by (1): CIE3_native_ledger · all downstream 16 · finishing it unlocks
         CIE3_native_ledger
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now

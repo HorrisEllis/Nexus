@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794023236618
+exported_at: 1794074382608
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794023236618
-lastSeenAt: 1794023236618
+firstSeenAt: 1794074382608
+lastSeenAt: 1794074382608
 fingerprint: null
 payload:
   for: CIE9_tests_in_emerge
@@ -52,9 +52,12 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D7_the_spec_compiler_moves_to_idearium
     downstream:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
     blockedBy:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
     unlocks: []
@@ -65,8 +68,8 @@ payload:
     dangling: []
     lines:
       - layer 9 · blocked by CIE8_spec_compiler_in_emerge
-      - 'depends on (2): CIE5_native_test, CIE8_spec_compiler_in_emerge · all upstream 18'
-      - 'needed by (1): CIE11_retire_the_interpreter · all downstream 2'
+      - 'depends on (2): CIE5_native_test, CIE8_spec_compiler_in_emerge · all upstream 19'
+      - 'needed by (1): CIE11_retire_the_interpreter · all downstream 4'
       - >-
         same files as CIE13_native_system_primitives with no order between them:
         emerge/emerge/spec/cie-eg.spec

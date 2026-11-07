@@ -82,6 +82,23 @@ decisions:
       (1) whether the 20 sessions cover the JS removal only, or through WARP 2 and the field; (2) whether the spec compiler (compiler/) moves out of
       Emerge to Idearium (sovereignty: its owner is the system that uses it); (3) whether the porting uses his Guardian agents (his machine, Remote
       Control) and/or sibling Claude Code sessions here (faster, spends his usage).
+  CIE_D7_the_spec_compiler_moves_to_idearium:
+    status: "DECIDED 2026-11-07 (his)"
+    james: '"yeah move it, until we have something to slot in the gap it will leave. then we could even invent something ground up, thats another point of emerge. build towards a world a bit more me."'
+    context: >-
+      Asked, with the coder's recommendation: does the spec compiler (emerge/emerge/compiler/, 6,197 lines of JavaScript, spec tooling Idearium
+      uses) move out of Emerge to Idearium, its user, by sovereignty, or get ported into Emerge as .eg (CIE8 as first mapped)?
+    chosen: >-
+      It moves to Idearium for now, as a relocation of existing code, not new code. Later, the gap it leaves in Emerge is filled by something
+      invented ground up in Emerge, his: "build towards a world a bit more me".
+    supersedes_in_part: >-
+      EAS_D10 (his, 2026-11-05), "kg-builder stays Emerge's", kept (§0.3). That half is superseded by his words above; phase-specs being
+      Idearium's still holds.
+    the_coders_part: >-
+      The cut into slices and the crossings named in CIE8. A JavaScript count that drops by moving code is said as a move, not as JavaScript
+      removed from the system (TRUTH_OVER_COHERENCE).
+    still_open: "the other three calls put to him the same day: who does the porting, what the 20 sessions cover (CIE_D6), CIE14 (b)"
+
 phases:
 
   CIE1_the_contract_block:
@@ -190,8 +207,8 @@ phases:
     proof: "observe.test and debug.test answers equal from the .eg"
 
   CIE8_spec_compiler_in_emerge:
-    status: OPEN
-    depends_on: [CIE6_native_check]
+    status: OPEN   # 2026-11-07: moved, not ported (his CIE_D7)
+    depends_on: [CIE6_native_check, CIE_D7_the_spec_compiler_moves_to_idearium]
     spec: emerge/emerge/spec/cie-eg.spec
     blocks: [MOD-NATIVE-TOOLS]
     files: [emerge/emerge/compiler/kg-builder.js, emerge/emerge/compiler/pipeline.js, emerge/emerge/compiler/tier-contract.js, emerge/emerge/compiler/target.js, emerge/emerge/compiler/*.eg]
@@ -199,6 +216,23 @@ phases:
     prerequisites: ["a YAML reader in .eg (the specs are YAML)"]
     does: "the spec compiler (compiler/*.js, 6,197 lines) ported to .eg: emerge build-spec, emerge check-spec"
     proof: "check-spec gives the same report from the .eg on every registered spec (test-substrate-spec's list)"
+    # ── EXPANDED 2026-11-07 (his CIE_D7): not ported, MOVED to Idearium, until Emerge has its own ground-up replacement ──
+    # James: "yeah move it, until we have something to slot in the gap it will leave." Census the same day: compiler/ 6,197 lines in 15 files.
+    moved_by_his_d7:
+      to: "idearium/spec-engine/compiler/ (beside phase-specs.cjs, already Idearium's)"
+      crossings_to_design_out_first:
+        - "compiler → Emerge's language (emit-emerge.js, t2-gate.js require ../lang): through Emerge's command line (lang-check, as Idearium's emerge-rung already does)"
+        - "compiler → ../siso (kg-builder, pipeline, gap-field, invariants, reply engines: Event, Gate, Stream, StreamLog): a copy in Idearium's folder, named as a duplicate for PIL5's census, until Pillar's contracts replace both"
+        - "compiler ↔ chunk/ (kg-builder needs buildChunk; chunk/index.js needs compiler/host): a cycle. Emerge must not come to depend on Idearium (CIE-005), so chunk's use of host is cut first"
+        - "Emerge's own users: lib/compiler.js (the door's /compiler/* routes), events-compiler.js, registry-components.js, verify.js, build-spec.js and seven test files move with it, or answer by name that it moved (§1.2)"
+      callers_to_repoint: [idearium/compiler-bridge.js, idearium/spec-engine/phase-specs.cjs, idearium/api/index.js, guardian/server.js, copilot/module-builder.js, lib/build-pipeline.js, lib/spec-collect.js, cortex/boot.js]
+      slices:
+        a: "the crossings designed out inside Emerge first (chunk's cycle; ../lang through the CLI), no move yet; Emerge's suites unchanged"
+        b: "the compiler copied to Idearium with its tests; Idearium serves POST /api/idearium/compiler/compile|build|run|check, the CLI rows and a command; outputs equal Emerge's on every registered spec"
+        c: "the callers repointed one at a time, each caller's suite unchanged"
+        d: "Emerge's copy archived (_archive, §0.3), its door's /compiler/* answering where it moved; the tension meter counts it as moved, not removed"
+      proof: "every registered spec compiles to the same files through Idearium as through Emerge before the move (test-substrate-spec, kg/tier/target/build-spec suites moved); Emerge's suites green without compiler/"
+    files_added_2026_11_07: [idearium/spec-engine/compiler/, emerge/emerge/lib/compiler.js, emerge/emerge/chunk/index.js, emerge/emerge/events-compiler.js, emerge/emerge/registry-components.js, emerge/emerge/verify.js, emerge/emerge/build-spec.js, idearium/compiler-bridge.js, idearium/api/index.js, guardian/server.js, copilot/module-builder.js, lib/build-pipeline.js, lib/spec-collect.js, cortex/boot.js]
 
   CIE9_tests_in_emerge:
     status: OPEN

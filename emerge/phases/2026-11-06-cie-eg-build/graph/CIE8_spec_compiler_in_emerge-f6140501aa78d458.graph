@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794023236617
+exported_at: 1794074382607
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794023236617
-lastSeenAt: 1794023236617
+firstSeenAt: 1794074382607
+lastSeenAt: 1794074382607
 fingerprint: null
 payload:
   for: CIE8_spec_compiler_in_emerge
@@ -175,6 +175,7 @@ payload:
     layer: 8
     deps:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D7_the_spec_compiler_moves_to_idearium
     dependents:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
@@ -196,24 +197,31 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D7_the_spec_compiler_moves_to_idearium
     downstream:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
-    blockedBy:
-      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH1_the_conformance_test
+      - docs/2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
+    blockedBy: []
     unlocks:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
     conflicts: []
     dangling: []
     lines:
-      - layer 8 · blocked by CIE6_native_check
-      - 'depends on (1): CIE6_native_check · all upstream 17'
+      - layer 8 · ready
       - >-
-        needed by (2): CIE9_tests_in_emerge, CIE10_the_door_in_emerge · all downstream 4 · finishing
+        depends on (2): CIE6_native_check, CIE_D7_the_spec_compiler_moves_to_idearium · all upstream
+        18
+      - >-
+        needed by (2): CIE9_tests_in_emerge, CIE10_the_door_in_emerge · all downstream 7 · finishing
         it unlocks CIE9_tests_in_emerge, CIE10_the_door_in_emerge
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+        kind: declared
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D7_the_spec_compiler_moves_to_idearium
         kind: declared
