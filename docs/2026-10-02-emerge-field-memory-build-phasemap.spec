@@ -362,6 +362,17 @@ spec:
         "Waveform" was the coder's term, offered in a question. The decision above stands as his (baseline from the signal's own peaks; the
         deepest dip carries the most tension; delta the gap, sigma the deviation). Only its credit and source are corrected. The coder's
         reading that the nearest principles are Rhythm and Polarity is to confirm.
+      expanded_2026_11_07_agnostic: >-
+        James, 2026-11-07, asked to confirm two readings (the principles are Rhythm and Polarity; each signal declares which way its gap runs):
+        "Yes though. Hardcoded needs to earn its place. Nexus is meant to be non-linear, agnostic. Sigmas and deltas are how nexus finds gaps,
+        measures tension or friction. It’s meant to be an agnostic way to systems think." Both readings confirmed. Decided, his: sigma and delta
+        are not CFR's alone. They are Nexus's one agnostic instrument for systems thinking, how it finds gaps and measures tension and friction
+        in any system, on any signal. So part (c) of does: grows from "CFR's and RFR2's two implementations reconciled" to one sigma and one delta
+        for the whole of Nexus: today's four sigmas (cfr/sigma.js, baseline.js, rfr2/sigma, spatial/sigma) and two deltas (cfr/delta.js,
+        rfr2/delta) become one, each old one kept as a tested alias (§0.3). The instrument knows nothing of the domain: a signal brings its own
+        name, its own direction and its own peaks, and every scale is learned from them. A constant stays only where it earns its place, said
+        and justified (his 2026-10-05 rule, idearium/spec-engine/templates/architecture-spec.template.yaml). Built in .eg as a primitive with its
+        contract (AXIOMS §17.13), which makes it reusable by any system through Emerge rather than through intelligence's files (§5.15). Thread T4.
 
     RF1_relational_field:
       layer: foundation
