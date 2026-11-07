@@ -132,6 +132,13 @@ phases:
     prerequisites: ["the contracts and their cases (PIL2, PIL3)"]
     does: "his EAS_D8 bench: the same tasks with and without Pillar's contracts; tests passed, tokens, attempts; the losing cases reported"
     proof: "the runner's own test with a stand-in model; the real numbers from one run on his machine"
+    expanded_2026_11_07_blind: >-
+      James, 2026-11-07, on the 2026-10-31 run offered as proof: "yeah but that's bias information. you would have to use it to predict and i
+      would have to run it in isolation from you." Expanded (phases expand): the bench is preregistered and blind (thread T7). Before any run, in
+      this order, each committed with its SHA-256 in docs/FRAMEWORK-THREADS.md T7: the task set and contract tests, the coder's per-unit PASS/FAIL
+      predictions made from invariants alone, the scorer, the runner. He runs it in isolation on his machine; no fixes between trials, no re-runs;
+      the results file is his commit; the scorer's output is the result. Predictions T7-P1..P3, failure recorded as failure. The runner talks to
+      Ollama over HTTP, which native Emerge cannot yet do (CIE10 sockets): a JS harness is unavoidable until CIE10, said here, removed there.
 
 order: "PIL1 → PIL2 → (PIL3, PIL4) → PIL5; PIL6 after PIL3. PIL_D2 settled before a server.js is added."
 # ── ADDENDUM 2026-11-06 — the field generates code (his) ──

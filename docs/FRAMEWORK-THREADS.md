@@ -214,3 +214,42 @@ COS is his compartmentalization put outside his head, or (b) "because of", he an
 I showed you are the only notes I have." So the sixteen pages are the whole written trail of the design before the repository. Everything
 else went from his head straight into direction for the coder: the axioms, the phasemaps, the decisions quoted with dates in this repository.
 The claim that COS's compartments mirror how he holds the design is his account of himself, recorded as his words, not as something measured.
+
+## T7 — "you would have to use it to predict and i would have to run it in isolation from you": the blind test, registered 2026-11-07
+
+**His words, 2026-11-07.** Shown the 2026-10-31 small-model run as "a prediction that held": "yeah but that's bias information. you would have
+to use it to predict and i would have to run it in isolation from you." Asked whether to set up a controlled test, he answered "A" and "okay.
+lets continue." The coder reads "A" as yes to the controlled test; to confirm.
+
+**Why.** The 2026-10-31 run was designed, predicted and judged by the same hands, and nothing was written down first. That entry is downgraded
+to a post-hoc signal (PROOF-OF-COMPETENCY.md).
+
+**The protocol, fixed now, before any task or run exists.**
+1. **Order, each step committed before the next:**
+   - the task set and each task's contract tests;
+   - the coder's predictions, made with his framework;
+   - the scorer;
+   - the runner.
+
+   Each is committed, and its SHA-256 is written here, before the run. Nothing is changed after the run starts.
+2. **His framework, used to predict:** a unit's difficulty is set by its declared invariants ("Invariants are the skeleton"; "Zoom in …
+   until you hit bedrock"). For every unit, the coder writes PASS or FAIL in advance, from its invariants alone.
+3. **Two arms, the same model, the same tasks:**
+   - **A, his method:** the task cut into units along its Pillar contracts, end state first, the DAG holding the order;
+   - **B, the usual way:** the whole task in one prompt.
+
+   Run with qwen2.5-coder:7b, plus a 3B model if he has one. 5 trials per task per arm, a fixed temperature, a fixed seed per trial.
+4. **In isolation, his:** he runs the runner on his machine with the coder out of the loop. There are no fixes between trials and nothing is
+   re-run. The results file is committed by him. The fixed scorer reads it, and its output is what the record shows.
+
+**Predictions (registered 2026-11-07, before tasks, runs or results):**
+- **T7-P1:** A solves more tasks end to end than B (summed over trials).
+- **T7-P2:** the coder's per-unit PASS/FAIL calls are more accurate than the trivial baseline, which calls every unit the majority outcome.
+  This is the test that answers his bias critique: the framework has to predict better than a guess that needs no framework.
+- **T7-P3:** units with one invariant pass at least twice as often as units with three or more.
+
+**Failure is recorded.** If A does not beat B, or the calls do not beat the baseline, the prediction failed. It is kept as failed
+(TRUTH_OVER_COHERENCE), and the framework's claim is narrowed to what held.
+
+**State:** registered. Nothing in the hash list yet. The task set needs Pillar's contracts (PIL2, PIL3), and the focus orders the JavaScript removal
+first.
