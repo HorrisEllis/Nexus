@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793999607858
+exported_at: 1794009913566
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793999607858
-lastSeenAt: 1793999607858
+firstSeenAt: 1794009913566
+lastSeenAt: 1794009913566
 fingerprint: null
 payload:
   for: CIE12_windows
@@ -68,10 +68,6 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
     unlocks: []
     conflicts:
-      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE15_the_rest_of_the_language
-        files:
-          - emerge/emerge/lang/native/codegen.eg
-          - emerge/emerge/lang/native/rt.eg
       - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
         files:
           - emerge/emerge/lang/native/rt.eg
@@ -85,9 +81,6 @@ payload:
       - layer 11 · blocked by CIE11_retire_the_interpreter
       - 'depends on (1): CIE11_retire_the_interpreter · all upstream 23'
       - 'needed by (0): —'
-      - >-
-        same files as CIE15_the_rest_of_the_language with no order between them:
-        emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg
       - >-
         same files as CIE13_native_system_primitives with no order between them:
         emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg

@@ -447,6 +447,41 @@ for (const [label, file, withLedger] of [['components.eg as written, its ledger 
   else { fail++; console.log('✗ primitives natively — ' + (run ? `native ${JSON.stringify(run.stdout)}\n    interp ${JSON.stringify(ref.stdout)}` : (build.stderr || build.stdout))); }
 }
 
+// CIE15: regular expressions in Emerge (lang/cie/regex.eg). Each case of test/world/regex-cases.json is judged by JavaScript's own RegExp (u flag),
+// and regex.eg, interpreted and native, must give the same answer every time
+{
+  const cases = JSON.parse(fs.readFileSync(path.join(__dirname, 'world', 'regex-cases.json'), 'utf8'));
+  const want = [];
+  const q = (x) => JSON.stringify(x).replace(/[{}]/g, c => '\\' + c);
+  const lines = [`use ${JSON.stringify(path.join(LANG, 'cie', 'regex.eg'))} as R`];
+  for (const [p, ts] of cases) for (const t of ts) { want.push(String(new RegExp(p, 'u').test(t))); lines.push(`print(R.search(${q(t)}, ${q(p)}))`); }
+  const src = path.join(TMP, 'regex.eg');
+  fs.writeFileSync(src, lines.join('\n') + '\n');
+  const interp = spawnSync(process.execPath, [EG, 'run', src], { encoding: 'utf8' });
+  const exe = path.join(TMP, 'regex.bin');
+  const build = spawnSync(process.execPath, [EG, 'native', src, '-o', exe], { encoding: 'utf8' });
+  const run = build.status === 0 ? spawnSync(exe, [], { encoding: 'utf8' }) : null;
+  const w = want.join('\n') + '\n';
+  if (run && interp.stdout === w && run.stdout === w) { pass++; console.log(`✓ regular expressions in Emerge: ${want.length} cases equal to JavaScript's RegExp, interpreted and native`); }
+  else { fail++; console.log('✗ regular expressions — ' + (run ? `interp ${interp.stdout === w} native ${run.stdout === w}` : (build.stderr || build.stdout))); }
+}
+
+// CIE15's proof: every example natively equals eg run, line for line, and sort_by natively equals the interpreter (stable, both directions)
+{
+  const files = fs.readdirSync(path.join(LANG, 'examples')).filter(f => f.endsWith('.eg')).map(f => path.join(LANG, 'examples', f));
+  files.push(path.join(LANG, 'examples', 'modules', 'main.eg'), path.join(__dirname, 'world', 'sort_by.eg'));
+  const bad = [];
+  for (const file of files) {
+    const ref = spawnSync(process.execPath, [EG, 'run', file], { encoding: 'utf8' });
+    const exe = path.join(TMP, 'ex-' + path.basename(file, '.eg') + '.bin');
+    const build = spawnSync(process.execPath, [EG, 'native', file, '-o', exe], { encoding: 'utf8' });
+    const run = build.status === 0 ? spawnSync(exe, [], { encoding: 'utf8' }) : null;
+    if (!run || run.stdout !== ref.stdout || run.status !== ref.status) bad.push(path.basename(file) + (run ? '' : ': ' + (build.stderr || build.stdout).split('\n')[0]));
+  }
+  if (!bad.length) { pass++; console.log(`✓ every example natively, line for line (${files.length} programs)`); }
+  else { fail++; console.log('✗ every example natively — ' + bad.join('; ')); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');
@@ -486,7 +521,7 @@ for (const [label, file, withLedger] of [['components.eg as written, its ledger 
 // refusals name the thing and exit 1; nothing is silently skipped
 {
   const REFUSE = {
-    'a regular expression (matches, next)': 'print("abc" matches "b")',
+    'state outside a compartment': 'print(state)',
   };
   for (const [what, src] of Object.entries(REFUSE)) {
     const file = path.join(TMP, 'refuse.eg');

@@ -1,0 +1,332 @@
+// lang/cie/regex.eg — regular expressions in Emerge (Nexus phase CIE15): what `text matches pattern` means, written so the native compiler needs no
+// JavaScript. The interpreter's meaning is JavaScript's new RegExp(pattern, "u").test(text): a search anywhere in the text, code point by code point.
+// James, 2026-11-06: "No non-emerge code, unless specified in the contract or project. lack of capability is an opportunity to build it."
+//
+//   search(text, pattern) → bool        compile(pattern) → a node tree        refuses a pattern it cannot read, by name
+//
+// The grammar (JavaScript's, u flag): alternation |, groups ( ) and (?: ), classes [ ] with ranges and negation, . (not a line terminator),
+// anchors ^ $, escapes \d \D \w \W \s \S \b \B \n \t \r \f \v \0 \xHH \uHHHH \u{H…} and the syntax characters, quantifiers * + ? {n} {n,} {n,m},
+// each lazy with a trailing ?. Not here yet, refused by name: lookaround (?= (?! (?<= (?<!, named groups (?<name>, backreferences \1, flags.
+// The matcher backtracks with continuations; an empty iteration of a loop stops it, as JavaScript's does.
+
+fn _refuse(what) { raise("bad pattern: {what}") }
+
+// a character's code point, from its UTF-8 bytes
+fn _cp(ch) {
+  let b = bytes(ch)
+  if len(b) == 1 { return b[0] }
+  if len(b) == 2 { return ((b[0] & 31) << 6) | (b[1] & 63) }
+  if len(b) == 3 { return ((b[0] & 15) << 12) | ((b[1] & 63) << 6) | (b[2] & 63) }
+  return ((b[0] & 7) << 18) | ((b[1] & 63) << 12) | ((b[2] & 63) << 6) | (b[3] & 63)
+}
+fn _hexval(c) {
+  let i = find_text("0123456789abcdef", lower(c))
+  return i
+}
+
+// ── the classes JavaScript names ─────────────────────────────────────────────
+fn _is_digit(c) = c >= 48 and c <= 57
+fn _is_word(c) = (c >= 48 and c <= 57) or (c >= 65 and c <= 90) or (c >= 97 and c <= 122) or c == 95
+fn _is_space(c) = c == 9 or c == 10 or c == 11 or c == 12 or c == 13 or c == 32 or c == 0xA0 or c == 0x1680 or (c >= 0x2000 and c <= 0x200A) or
+  c == 0x2028 or c == 0x2029 or c == 0x202F or c == 0x205F or c == 0x3000 or c == 0xFEFF
+fn _is_line_end(c) = c == 10 or c == 13 or c == 0x2028 or c == 0x2029
+
+// ── the parser: pattern text → nodes ─────────────────────────────────────────
+var _p = []
+var _i = 0
+fn _peek() {
+  if _i < len(_p) { return _p[_i] }
+  return null
+}
+fn _eat() {
+  let c = _p[_i]
+  _i += 1
+  return c
+}
+fn _num() {
+  var n = -1
+  while _i < len(_p) and _is_digit(_cp(_p[_i])) {
+    if n < 0 { n = 0 }
+    n = n * 10 + (_cp(_p[_i]) - 48)
+    _i += 1
+  }
+  return n
+}
+fn compile(pattern) {
+  if type_of(pattern) != "string" { _refuse("a pattern is a string") }
+  _p = split(pattern, "")
+  _i = 0
+  let node = _alt()
+  if _i < len(_p) { _refuse("unmatched ) in {repr(pattern)}") }
+  return node
+}
+fn _alt() {
+  var xs = [_seq()]
+  while _peek() == "|" {
+    _eat()
+    xs = push(xs, _seq())
+  }
+  if len(xs) == 1 { return xs[0] }
+  return { t: "alt", xs: xs }
+}
+fn _seq() {
+  var xs = []
+  while _peek() != null and _peek() != "|" and _peek() != ")" {
+    xs = push(xs, _quantified())
+  }
+  return { t: "seq", xs: xs }
+}
+fn _quantified() {
+  let c = _peek()
+  if c == "*" or c == "+" or c == "?" { _refuse("nothing to repeat") }
+  if c == "\{" { _refuse("a lone quantifier bracket \{") }
+  let atom = _atom()
+  var lo = -1
+  var hi = -1
+  let q = _peek()
+  if q == "*" {
+    _eat()
+    lo = 0
+  } else if q == "+" {
+    _eat()
+    lo = 1
+  } else if q == "?" {
+    _eat()
+    lo = 0
+    hi = 1
+  } else if q == "\{" {
+    let save = _i
+    _eat()
+    let a = _num()
+    if a < 0 { _refuse("a lone quantifier bracket \{") }
+    lo = a
+    hi = a
+    if _peek() == "," {
+      _eat()
+      let b = _num()
+      hi = b
+      if b >= 0 and b < a { _refuse("numbers out of order in \{\} quantifier") }
+    }
+    if _peek() != "\}" { _refuse("an incomplete quantifier") }
+    _eat()
+  }
+  if lo < 0 { return atom }
+  if atom.t == "bol" or atom.t == "eol" or atom.t == "wordb" or atom.t == "nwordb" { _refuse("nothing to repeat") }
+  var greedy = true
+  if _peek() == "?" {
+    _eat()
+    greedy = false
+  }
+  return { t: "rep", x: atom, lo: lo, hi: hi, greedy: greedy }
+}
+fn _atom() {
+  let c = _eat()
+  if c == "(" {
+    if _peek() == "?" {
+      _eat()
+      let k = _peek()
+      if k == ":" {
+        _eat()
+      } else if k == "=" or k == "!" {
+        _refuse("lookahead (?{k} is not in Emerge's regular expressions yet")
+      } else if k == "<" {
+        _refuse("lookbehind and named groups (?< are not in Emerge's regular expressions yet")
+      } else {
+        _refuse("an invalid group (?{k}")
+      }
+    }
+    let inner = _alt()
+    if _peek() != ")" { _refuse("an unterminated group") }
+    _eat()
+    return { t: "group", x: inner }
+  }
+  if c == ")" { _refuse("unmatched )") }
+  if c == "[" { return _class() }
+  if c == "." { return { t: "any" } }
+  if c == "^" { return { t: "bol" } }
+  if c == "$" { return { t: "eol" } }
+  if c == "\\" { return _escape(false) }
+  return { t: "char", c: _cp(c) }
+}
+let SYNTAX = "^$\\.*+?()[]\{\}|/"
+fn _escape(in_class) {
+  if _peek() == null { _refuse("\\ at the end of the pattern") }
+  let c = _eat()
+  if c == "d" { return { t: "set", f: "d", neg: false } }
+  if c == "D" { return { t: "set", f: "d", neg: true } }
+  if c == "w" { return { t: "set", f: "w", neg: false } }
+  if c == "W" { return { t: "set", f: "w", neg: true } }
+  if c == "s" { return { t: "set", f: "s", neg: false } }
+  if c == "S" { return { t: "set", f: "s", neg: true } }
+  if c == "b" {
+    if in_class { return { t: "char", c: 8 } }
+    return { t: "wordb" }
+  }
+  if c == "B" {
+    if in_class { _refuse("\\B in a class") }
+    return { t: "nwordb" }
+  }
+  if c == "n" { return { t: "char", c: 10 } }
+  if c == "t" { return { t: "char", c: 9 } }
+  if c == "r" { return { t: "char", c: 13 } }
+  if c == "f" { return { t: "char", c: 12 } }
+  if c == "v" { return { t: "char", c: 11 } }
+  if c == "0" {
+    if _peek() != null and _is_digit(_cp(_peek())) { _refuse("an octal escape") }
+    return { t: "char", c: 0 }
+  }
+  if _is_digit(_cp(c)) { _refuse("backreferences (\\{c}) are not in Emerge's regular expressions yet") }
+  if c == "x" {
+    var v = 0
+    for k in 0..2 {
+      if _peek() == null or _hexval(_peek()) < 0 { _refuse("an invalid escape \\x") }
+      v = v * 16 + _hexval(_eat())
+    }
+    return { t: "char", c: v }
+  }
+  if c == "u" {
+    var v = 0
+    if _peek() == "\{" {
+      _eat()
+      var n = 0
+      while _peek() != null and _peek() != "\}" {
+        if _hexval(_peek()) < 0 { _refuse("an invalid unicode escape") }
+        v = v * 16 + _hexval(_eat())
+        n += 1
+      }
+      if _peek() != "\}" or n == 0 or v > 0x10FFFF { _refuse("an invalid unicode escape") }
+      _eat()
+      return { t: "char", c: v }
+    }
+    for k in 0..4 {
+      if _peek() == null or _hexval(_peek()) < 0 { _refuse("an invalid unicode escape") }
+      v = v * 16 + _hexval(_eat())
+    }
+    return { t: "char", c: v }
+  }
+  if in_class and c == "-" { return { t: "char", c: 45 } }
+  if find_text(SYNTAX, c) >= 0 { return { t: "char", c: _cp(c) } }
+  _refuse("an invalid escape \\{c}")
+}
+fn _class() {
+  var neg = false
+  if _peek() == "^" {
+    _eat()
+    neg = true
+  }
+  var items = []
+  while _peek() != null and _peek() != "]" {
+    var a = null
+    if _peek() == "\\" {
+      _eat()
+      a = _escape(true)
+    } else {
+      a = { t: "char", c: _cp(_eat()) }
+    }
+    if _peek() == "-" and _i + 1 < len(_p) and _p[_i + 1] != "]" {
+      _eat()
+      var b = null
+      if _peek() == "\\" {
+        _eat()
+        b = _escape(true)
+      } else {
+        b = { t: "char", c: _cp(_eat()) }
+      }
+      if a.t != "char" or b.t != "char" { _refuse("an invalid character class") }
+      if b.c < a.c { _refuse("a range out of order in a character class") }
+      items = push(items, { t: "range", lo: a.c, hi: b.c })
+    } else {
+      items = push(items, a)
+    }
+  }
+  if _peek() != "]" { _refuse("an unterminated character class") }
+  _eat()
+  return { t: "class", items: items, neg: neg }
+}
+
+// ── the matcher: backtracking with continuations ─────────────────────────────
+var _s = []
+fn _set_has(f, c) {
+  if f == "d" { return _is_digit(c) }
+  if f == "w" { return _is_word(c) }
+  return _is_space(c)
+}
+fn _one(n, c) {
+  if n.t == "char" { return c == n.c }
+  if n.t == "any" { return not _is_line_end(c) }
+  if n.t == "set" { return _set_has(n.f, c) != n.neg }
+  if n.t == "class" {
+    var hit = false
+    for it in n.items {
+      if not hit {
+        if it.t == "char" { hit = c == it.c }
+        else if it.t == "range" { hit = c >= it.lo and c <= it.hi }
+        else if it.t == "set" { hit = _set_has(it.f, c) != it.neg }
+      }
+    }
+    return hit != n.neg
+  }
+  return false
+}
+fn _word_at(i) = i >= 0 and i < len(_s) and _is_word(_s[i])
+fn _m(n, i, k) {
+  let t = n.t
+  if t == "char" or t == "any" or t == "set" or t == "class" {
+    if i < len(_s) and _one(n, _s[i]) { return k(i + 1) }
+    return false
+  }
+  if t == "seq" { return _seq_m(n.xs, 0, i, k) }
+  if t == "alt" {
+    for x in n.xs { if _m(x, i, k) { return true } }
+    return false
+  }
+  if t == "group" { return _m(n.x, i, k) }
+  if t == "bol" {
+    if i == 0 { return k(i) }
+    return false
+  }
+  if t == "eol" {
+    if i == len(_s) { return k(i) }
+    return false
+  }
+  if t == "wordb" {
+    if _word_at(i - 1) != _word_at(i) { return k(i) }
+    return false
+  }
+  if t == "nwordb" {
+    if _word_at(i - 1) == _word_at(i) { return k(i) }
+    return false
+  }
+  if t == "rep" { return _rep(n, i, 0, k) }
+  return false
+}
+fn _seq_m(xs, j, i, k) {
+  if j == len(xs) { return k(i) }
+  return _m(xs[j], i, fn(i2) = _seq_m(xs, j + 1, i2, k))
+}
+fn _rep(n, i, count, k) {
+  let more = n.hi < 0 or count < n.hi
+  let once = fn() = more and _m(n.x, i, fn(i2) = i2 != i and _rep(n, i2, count + 1, k))
+  if count < n.lo { return _m(n.x, i, fn(i2) = _rep(n, i2, count + 1, k)) }
+  if n.greedy {
+    if once() { return true }
+    return k(i)
+  }
+  if k(i) { return true }
+  return once()
+}
+
+/** text matches pattern: true when the pattern matches anywhere in the text (JavaScript's RegExp.test, u flag) */
+fn search(text, pattern) {
+  if type_of(text) != "string" or type_of(pattern) != "string" { raise("matches needs a string and a pattern string") }
+  let node = compile(pattern)
+  var cps = []
+  for ch in split(text, "") { cps = push(cps, _cp(ch)) }
+  _s = cps
+  var start = 0
+  while start <= len(_s) {
+    if _m(node, start, fn(j) = true) { return true }
+    start += 1
+  }
+  return false
+}
