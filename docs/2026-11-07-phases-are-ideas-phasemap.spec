@@ -40,6 +40,16 @@ decisions:
       "archived" read as kept where it is, shelved and recorded, not moved to _archive/: lib/phase-dag.js reads only docs/*-phasemap.spec, so a
       moved map would leave every phase that depends on it dangling. To confirm.
 
+  PIC_D3_no_central_door:
+    status: "DECIDED 2026-11-07 (his)"
+    james: '"Each system is sovereign. Each is responsible for their own door"'
+    context: >-
+      Said after the coder had written "the door spec" and "the one door spec" (here, in T8, in the shelved phases' tag), as if one spec built
+      every system's door. Corrected: there is no central door. Each system writes, owns and serves its own door; what is shared is only
+      genesis's template and the entry schema (his PL_D9, 2026-11-03: "The door's code lives inside each system (from genesis's template), only
+      the entry schema shared"). The shelved phases' tag retagged the same day.
+    by_the_axioms: "§5.9, §5.15, §5.16"
+
   PIC_D2_the_shelf_not_a_new_status:
     status: "DECIDED 2026-11-07 by his axioms (§8.6 reuse before build, §0.3)"
     chosen: >-
@@ -58,7 +68,7 @@ phases:
     prerequisites: []
     does: >-
       The ten door maps with open phases (each holds one of the door's four parts, T8: register, contract, gate, ledger): their 143 open phases
-      shelved as ideas pointing at T8 and ERV0 (the one door spec, when he picks it up); the built phases of all 24 door maps matched to the tests
+      shelved as ideas pointing at T8, each picked up by the system that owns it (his, 2026-11-07: "Each system is sovereign. Each is responsible for their own door"); the built phases of all 24 door maps matched to the tests
       that cite them, the tests run, the result written in docs/cleaning/2026-11-07-the-door.md and, where it holds, in the proof doc.
     proof: "the parser counts 0 open unshelved phases in the ten maps; every phase that was open there is on the shelf with its old status kept; the DAG check finds nothing new dangling"
 

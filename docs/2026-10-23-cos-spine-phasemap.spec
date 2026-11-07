@@ -107,7 +107,7 @@ phases:
 
   CS2_test_every_version:
     layer: integration
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS1_a_version_is_a_system_state, SN1_open_a_snapshot_as_a_compartment, CP5_states_rewind_versions]
     files: [cos/spine/test-version.js, cos/testenv/index.js, cos/workspace/index.js]
     spec: cos/spec/cos-spine.spec
@@ -119,7 +119,7 @@ phases:
 
   CS3_the_registry_is_the_bridge:
     layer: integration
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine, CE3_the_handshake, DB16_a_registry_for_each_system, CP1_the_machine_and_its_door]
     files: [cos/spine/bridge.js, orchestrator/lib/contract-handshake.js, idearium/repo/snapshot.js]
     spec: cos/spec/cos-spine.spec
@@ -131,7 +131,7 @@ phases:
 
   CS4_every_system_a_compartment:
     layer: backend
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS4a_cos_boots_alone, CS3_the_registry_is_the_bridge, CS_D7_sovereign_first, DB6_move_the_crossings, DB16_a_registry_for_each_system, DB4_one_bus_per_system, DB5_the_handshake_for_every_system, DB11_cos_compartment_per_system]
     files: [cos/spine/systems.js, cos/compartment/process-runner.js, cos/watchdog/monitor.js, cos/app/runtime.js]
     spec: cos/spec/cos-spine.spec
@@ -144,7 +144,7 @@ phases:
 
   CS4a_cos_boots_alone:
     layer: foundation
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS_D7_sovereign_first, COSA3_run_and_supervise, MG17_autopilot_hands_over]
     files: [cos/spine/boot.js, cos/app/runtime.js, lib/nexus/autopilot.js, cos/compartment/process-runner.js]
     spec: cos/spec/cos-spine.spec
@@ -157,7 +157,7 @@ phases:
 
   CS5_caps_per_compartment:
     layer: backend
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS4_every_system_a_compartment, CS_D4_caps_by_the_os]
     files: [cos/spine/caps.js, cos/compartment/qemu-runtime.js]
     spec: cos/spec/cos-spine.spec
@@ -169,7 +169,7 @@ phases:
 
   CS6_rebuild_from_the_spec:
     layer: integration
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS1_a_version_is_a_system_state, CS4_every_system_a_compartment, CS_D3_the_spec_rebuilds_the_system, CP5_states_rewind_versions]
     files: [cos/spine/rebuild.js, cos/spine/version.js, cos/workspace/index.js, lib/emerge/compiler/kg-builder.js, lib/emerge/compiler/phase-specs.js]
     spec: cos/spec/cos-spine.spec
@@ -183,7 +183,7 @@ phases:
 
   CS7_spawn_despawn_and_balance:
     layer: backend
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS5_caps_per_compartment, CS11_raid_in_the_exe]
     files: [cos/spine/scale.js, cos/spine/systems.js, cos/spine/bridge.js]
     spec: cos/spec/cos-spine.spec
@@ -213,7 +213,7 @@ phases:
 
   CS10_hats_bound_to_the_compartment:
     layer: integration
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS9_every_project_a_compartment, CS5_caps_per_compartment, CS3_the_registry_is_the_bridge]
     files: [cos/spine/hat-bind.js, lib/repo-hat.js, lib/hat-forge.js, lib/repo-agent.js]
     spec: cos/spec/cos-spine.spec
@@ -225,7 +225,7 @@ phases:
 
   CS11_raid_in_the_exe:
     layer: backend
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS4_every_system_a_compartment, DB6_move_the_crossings, IM6_cortex_unclumped, CS_D8_raid_home]
     files: [cos/raid/index.js, cos/raid/store.js, cos/raid/routes.js, cos/app/desktop/main.js, cortex/core/raid/router.js, cortex/core/raid/worker.js, cortex/core/raid/officiator.js]
     spec: cos/spec/cos-spine.spec
@@ -239,7 +239,7 @@ phases:
 
   CS8_the_cos_screen:
     layer: ui
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS2_test_every_version, CS5_caps_per_compartment, CS7_spawn_despawn_and_balance]
     files: [cos/app/desktop/spine.html, cos/app/desktop/spine.js, cos/app/controller.js]
     spec: cos/spec/cos-spine.spec

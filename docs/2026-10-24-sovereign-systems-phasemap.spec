@@ -28,7 +28,7 @@ status: "SV0 DONE 0.60.244; the rest OPEN"
 # to be sovereign first?"). So CS12–CS21 come before DB6, and DB6 before CS4.
 phases_b:
   CS12_the_mover_is_proven:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: []
     files: [lib/architecture-apply.js, tests/modules/test-architecture-apply.test.js, tests/modules/run-all.js]
     does: >-
@@ -38,19 +38,19 @@ phases_b:
       misreads included (a bare 'dir/' label, a git hooks path, a regex).
     proof: "the fixture test passes, and re-running RF2's 22 moves in a scratch copy of the pre-RF2 tree yields today's tree, with none of the 15 hand fixes needed"
   CS13_autopilot_to_orchestrator:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS12_the_mover_is_proven, CS_D14_autopilot_to_orchestrator]
     files: [orchestrator/autopilot.js, lib/nexus/autopilot.js, package.json, cos/app/runtime.js, lib/nexus-self/systems.js]
     does: "the move (DB23): npm scripts and COS's entryOf learn orchestrator/autopilot.js, and keep the two old paths for installed releases"
     proof: "npm run start:all boots every system; a COS release with lib/nexus/autopilot.js or nexus/autopilot.js still starts"
   CS14_cli_inside_nexus:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS12_the_mover_is_proven, CS_D9_cli_inside_nexus]
     files: [lib/cli, lib/nexus/cli, package.json, cos/app/shell.js]
     does: "lib/cli → lib/nexus/cli; COS's shell finds the first of lib/nexus/cli/nexus.js, lib/cli/nexus.js, cli/nexus.js"
     proof: "the CLI runs from the new path; COS's shell runs it in old and new releases"
   CS15_changelogs_to_versionium:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS12_the_mover_is_proven, CS_D13_changelogs_to_versionium]
     files: [versionium/changelogs, versionium/server.js, lib/release-notes.js, lib/nexus-releases.js, lib/release-version.js, lib/checks/ck-253-versions.js, scripts/release-zip.js, lib/phase-census.js, lib/spec-census.js, lib/context-atlas.js, lib/readme-generate.js, docs/CLAUDE.md]
     does: >-
@@ -58,19 +58,19 @@ phases_b:
       censuses read that route. The rule in docs/CLAUDE.md names the new place. Old releases (changelogs at the root) are still read.
     proof: "release notes, the releases list, ck-253 and the censuses give the same answers as before; the ratchet adds no crossing; the root holds no CHANGELOG"
   CS16_erosmancer_os:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS12_the_mover_is_proven]
     files: [clear-glass/erosmancer, clear-glass/erosmancer-os]
     does: "clear-glass/erosmancer → clear-glass/erosmancer-os (his name, CN_D4); Clear Glass's spawn path follows (RF3_erosmancer_os)"
     proof: "Clear Glass starts ErosmancerOS from the new path"
   CS17_cockpit_home:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS12_the_mover_is_proven, CS_D10_cockpit_home]
     files: [lib/cockpit, lib/ui/brainos]
     does: "after his answer to CS_D10: cockpit's back end joins BrainOS, under its UI (a), or the folder is renamed (b). Nothing moves before."
     proof: "BrainOS works from the new place, and cockpit's two consumers (copilot/cli.js, guardian/server.js) are repointed"
   CS18_one_copy_of_the_primitives:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS12_the_mover_is_proven]
     files: [lib/siso, lib/siso/core, lib/warp/core, lib/emerge/siso]
     does: >-
@@ -79,7 +79,7 @@ phases_b:
       wrapper for the ESM copy.
     proof: "every caller of the four copies passes its tests on the one copy; warp's own tests pass on it"
   CS19_warp_the_system:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS18_one_copy_of_the_primitives, CS_D11_warp_is_a_system]
     files: [warp, lib/warp, lib/emerge, lib/nexus-self/systems.js, warp/registry-components.js, warp/compartment.json, warp/spec/warp.spec]
     does: >-
@@ -89,7 +89,7 @@ phases_b:
       is in the ratchet's baseline and comes down with DB6.
     proof: "warp boots under autopilot and answers /health; the census lists 15 systems besides core; the ratchet adds no crossing beyond the listed baseline"
   CS20_spec_compiler_and_ide_to_idearium:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS19_warp_the_system, CS_D12_spec_compiler_and_ide_to_idearium]
     files: [lib/emerge/compiler, lib/emerge/emerge-ide.js, idearium/spec-engine, copilot/module-builder.js, guardian/server.js, lib/cli/boot-systems.js]
     does: >-
@@ -98,7 +98,7 @@ phases_b:
       IDE's boot entry (emerge :4242) follows.
     proof: "test-substrate-spec compiles every spec at specDepth 1.0 from idearium; copilot and guardian compile through the route; the IDE boots"
   CS21_the_registry_at_every_level:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS19_warp_the_system]
     files: [lib/registry-level.js, registry-components.js]
     does: "the drawbridge map's DB21 (one registry schema for root, system and component) and DB22 (the root and the missing registries), run here so that the 16 systems are what they cover"
@@ -141,7 +141,7 @@ phases_c:
       compartment.json and its registry, so it shows each system's step on CS_D7's road.
     proof: "a require in a comment is not a crossing; the table above comes back from the route (`system sovereign`) with in, up and the step"
   SV1_every_table_has_one_owner:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: PARTLY — the census DONE 0.60.250 (lib/system-boundary.js tables(): 127 tables, 43 one writer, 3 one system + core, 31 only core, 3 contested: event_log, failures, gaps; 47 read only; 21 of 106 store users name no table it can read); the declaration OPEN, his call (SV1_D1)"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: PARTLY — the census DONE 0.60.250 (lib/system-boundary.js tables(): 127 tables, 43 one writer, 3 one system + core, 31 only core, 3 contested: event_log, failures, gaps; 47 read only; 21 of 106 store users name no table it can read); the declaration OPEN, his call (SV1_D1)"
     depends_on: [SV0_the_census_tells_the_truth]
     files: [lib/system-store.js, lib/table-owners.js, lib/jaa-store.js, cortex/memory/jaa-db.js, cortex/boot.js, idearium/cli/route-commands.js]
     reuse: "found 2026-10-24 (§8.6): lib/system-store.js openStore(system, { tables, migrate }) already gives a system its own store and brings its tables home from cortex's once, keeping the rows there (SV-01; guardian uses it, test-guardian-own-data). SV1 builds the ownership census on it, not beside it."
@@ -156,9 +156,9 @@ phases_c:
   # there, to confirm: each system declares its tables in Emergence (<system>.eg), and the owner map is compiled from the declarations.
   # No .eg program exists yet. guardian and loom already declare theirs as lib/system-store.js table lists. Which one is his call:
   SV1_D1_how_a_system_declares_its_tables:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN — his to choose: (a) Emergence, <system>.eg compiled to its store module (brave-cori's proposal from his /'Look at emerge. Deeply Custom/'); (b) the system-store table lists already in use (lib/system-store.js openStore tables, guardian and loom); the three contested tables (event_log, failures, gaps) are his to assign either way"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN — his to choose: (a) Emergence, <system>.eg compiled to its store module (brave-cori's proposal from his /'Look at emerge. Deeply Custom/'); (b) the system-store table lists already in use (lib/system-store.js openStore tables, guardian and loom); the three contested tables (event_log, failures, gaps) are his to assign either way"
   SV2_core_files_go_home:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [SV0_the_census_tells_the_truth, CS12_the_mover_is_proven]
     files: [lib, lib/system-boundary.js]
     does: >-
@@ -167,7 +167,7 @@ phases_c:
       system's route instead. Each file's verdict is listed before it moves, with the users that decided it.
     proof: "per system, its 'up' count reaches 0; nothing that stays in core loads a system's code"
   SV3_components_and_architect:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [SV1_every_table_has_one_owner]
     files: [components/compartment.json, architect/compartment.json, architect/service.js]
     does: >-
@@ -176,25 +176,25 @@ phases_c:
       (registry, handshake, compartment, opened on demand), proving the road once end to end.
     proof: "both sovereign in the census; COS opens each in its compartment and closes it (CS4's proof, on these two)"
   SV4_ollama_versionium_diagnostic:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [SV3_components_and_architect, SV2_core_files_go_home]
     files: [ollama, versionium, diagnostic]
     does: "The next three (12 crossings each). ollama: 7 in + 5 up, other systems loading ollama's code, which become ollama's routes. versionium: 9 out (5 of them data). diagnostic: 11 out, its reach into intelligence's cfr and cortex's healer, which become routes (DH5 makes heal-loop diagnostic's own)."
     proof: "each sovereign in the census; each opened by COS in its compartment"
   SV5_clear_glass_guardian_orchestrator:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [SV4_ollama_versionium_diagnostic]
     files: [clear-glass, guardian, orchestrator, orchestrator/compartment.json]
     does: "20, 28 and 37 crossings. Almost all are capability crossings: each becomes a route on the system that owns it. orchestrator gets its compartment.json."
     proof: "each sovereign; each opened by COS in its compartment"
   SV6_loom_idearium_copilot:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [SV5_clear_glass_guardian_orchestrator]
     files: [loom, idearium, copilot]
     does: "40, 40 and 59 crossings. loom's are mostly core reading its scanners (26 up, through SV2). idearium's 33 out are mostly loom's phasemap scanner and cos's testenv. copilot has 12 data crossings (SV1)."
     proof: "each sovereign; each opened by COS in its compartment"
   SV7_intelligence_cos_cortex:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [SV6_loom_idearium_copilot]
     files: [intelligence, cos, cortex]
     does: >-
@@ -203,7 +203,7 @@ phases_c:
       their routes. cos is the host, so its "compartment" is the exe itself (CS4a, CS11).
     proof: "the census reports every system sovereign; DB6 is done"
   SV8_warp_sovereign:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [CS19_warp_the_system, SV7_intelligence_cos_cortex]
     files: [warp]
     does: "warp, once it is a system (CS19): its users reach it by route except for the one copy of the primitives in core (CS18), then its compartment."

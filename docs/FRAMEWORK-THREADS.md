@@ -300,3 +300,8 @@ after, in tokens.
 record: 2026-07-09 (Q0006) "warp is the spine for each system, supposed to be."; 2026-10-19 the infrastructure-spine map ("migrate each system to
 the component registry as a spine"); 2026-11-03 the component registry as the spine; 2026-11-07 the door. At ecosystem scale the word was COS's
 (2026-10-23, "COS would be the spine"). How WARP, his first spine, relates to the door is his to say (asked 2026-11-07).
+
+**T8, his second correction, 2026-11-07:** "Each system is sovereign. Each is responsible for their own door". There is no central door spec:
+the coder had written "the door spec" as if one spec built every door. Each system writes, owns and serves its own; shared are only genesis's
+template and the entry schema (his PL_D9, 2026-11-03). So the prediction above stands as written, read per system: one conformance test of the
+four parts, run by each system against its own door.

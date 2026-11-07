@@ -223,7 +223,7 @@ spec:
   phases:
     RQ0_the_inventory_proved:
       layer: docs
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"Priorities and getting it all coding since it’s not really doing much currently."'
       depends_on: []
       files: [docs/2026-10-12-request-spine-phasemap.spec, tests/modules/test-request-spine-inventory.js (new)]
@@ -237,7 +237,7 @@ spec:
 
     RQ1_the_verifier_library:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"gated, with checks"'
       depends_on: [RQ0]
       files: [lib/chunk-verify.js (new), lib/phase-plan.js (checkChunk becomes one verifier), lib/seam/axioms.js, cos/runtime/run.js (reused, not copied), lib/code-edit.js]
@@ -255,7 +255,7 @@ spec:
 
     RQ2_the_generation_failure_vocabulary_and_index:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"logging fault or failure to taxonomy or faulirue mode index to learn from."'
       depends_on: [RQ1]
       files: [lib/failure-vocab.js (new), lib/pipeline-routing.js (VERDICTS read from it), lib/agent-record.js (byClass), lib/component-ledger.js, lib/agent-capability-profile.js]
@@ -273,7 +273,7 @@ spec:
 
     RQ3_repair_with_the_checks_own_words:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"retry logic"'
       depends_on: [RQ1, RQ2]
       files: [lib/phase-plan.js (chunkBrief gains a REPAIR section), lib/pipeline-routing.js (climb passes the failing checks), idearium/api/index.js (_phaseBuild)]
@@ -286,7 +286,7 @@ spec:
 
     RQ4_escalate_on_the_checks_and_keep_the_lesson:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"only use the agents or bigger models if we need to."'
       depends_on: [RQ3]
       files: [lib/pipeline-routing.js (escalateOn reads verdict classes and K), lib/warp-cascade adapter (exactCacheOnFirstSuccess for a proven chunk), lib/case-library.js, lib/component-store.js, idearium/lib/config-core.cjs (routing.repairs_per_rung, routing.escalate_on_checks)]
@@ -301,7 +301,7 @@ spec:
 
     RQ5_the_small_model_baseline:
       layer: tests
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"how capable would this make small models. what could this build? if the pipeline works from end to end?"'
       depends_on: [RQ4]
       files: [tests/bench/request-spine/ (new: ~10 real tasks from the open phases, each with a starting revision and a proof), tests/sim/loop.js (reused)]
@@ -315,7 +315,7 @@ spec:
 
     RQ6_one_intent_map:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"Need the intent map for the reasoning. Need intents for speccing, debugging, test and attacking, contracting? Observing?"'
       depends_on: [RQ0]
       files: [lib/intent-classifier.js (VALID_VERBS gain the verbs; a table maps each to a workflow), copilot/intents.js, orchestrator/lib/intent-map.js, cos/foundation/intent.js (not merged — an end state, linked)]
@@ -331,7 +331,7 @@ spec:
 
     RQ7_the_context_obligations:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"a checklist of context needed per dependancy. Incremental and one step at a time, to account for small llms."'
       depends_on: [RQ6, RQ1]
       files: [cortex/core/raid/obligations.js (new), cortex/core/raid/context-synthesis.js, cortex/core/raid/context-gate.js, lib/registry-harness.js, lib/context-atlas.js, lib/build-context.js, cortex/registry-components.js]
@@ -349,7 +349,7 @@ spec:
 
     RQ8_the_gap_is_a_question:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"anything that it can’t find context to, is a gap that the agents needs to prompt the user for."'
       depends_on: [RQ7]
       files: [cortex/core/raid/obligations.js, lib/gap-field.js (a request gap is a gap), intelligence/gap/hunter.js (OBLIGATION type, reused), copilot/server.js (the pane), idearium/ui/js (the question card)]
@@ -363,7 +363,7 @@ spec:
 
     RQ9_the_chunked_contract:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"Begin a .contract file using each block as chunks for each file that needs to be changed."'
       depends_on: [RQ7, RQ1]
       files: ["cortex/core/raid/contract-intake.js (BUILD_CONTRACT_SCHEMA gains chunks[] and a revision)", cortex/core/raid/officiator.js, lib/phase-plan.js (parsePlan is the ancestor), lib/seam/spec-parser.js, cortex/schemas/schema.contract]
@@ -379,7 +379,7 @@ spec:
 
     RQ10_anchors_and_the_diff_reconciled:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"Basically need full provenance, mapped to current codebase"'
       depends_on: [RQ9]
       files: [lib/chunk-verify.js (the anchor and scope checks), lib/repo-inject.js (`before`), lib/code-edit.js, versionium (snapshot hash)]
@@ -395,7 +395,7 @@ spec:
 
     RQ11_spec_and_registry_reconciled:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"Add addendum or change the .spec" · "anything new specced, mapped to the architecture using the registry"'
       depends_on: [RQ9]
       files: [loom/scanners/spec-map.js, orchestrator/lib/spec-drift.js, docs/SPEC-REGISTRY.spec, lib/registry-plan.js, loom/maps]
@@ -411,7 +411,7 @@ spec:
 
     RQ12_the_phase_dag:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"Build phases per file change?"'
       depends_on: [RQ9]
       files: [idearium/spec-engine/index.js, idearium/ui/js/plan-panel.js, loom/scanners/phasemap-map.js]
@@ -426,7 +426,7 @@ spec:
 
     RQ13_the_work_surface_and_provenance:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"Create a compartment for the uncomited changes, maybe in raid, to hold each file that has changed, and the contract, and relavent context"'
       depends_on: [RQ9, RQ10]
       files: [cortex/core/raid/contract-intake.js (the compartment), idearium/repo/work-surface.js, lib/provenance-query.js (new, a read-only join), idearium/cli/route-commands.js (rows: spine, trace), lib/agent-tools/tools/nexus/command.js]
@@ -443,7 +443,7 @@ spec:
 
     RQ14_the_spine_end_to_end:
       layer: tests
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"Basically get context, one step at a time using dependencies, then then synthesize just what is needed to understand what is needed, if the agent doesn’t understand ask the user."'
       depends_on: [RQ5, RQ8, RQ10, RQ11, RQ12, RQ13]
       files: [tests/bench/request-spine/, tests/sim/fake-tab.js, tests/sim/loop.js]
@@ -458,7 +458,7 @@ spec:
 
     RQ15_cells_in_parallel:
       layer: cos
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"Independent contract chunks can run in separate COS branches or test environments simultaneously."'
       depends_on: [RQ14]
       files: [cos/playground/branch.js, cos/spec/torture-chamber.spec (the cell), docs/2026-10-10-snapshot-compartments-phasemap.spec (SN0 SN1 SN2), cos/testenv, cos/event-taxonomy.js]
@@ -476,7 +476,7 @@ spec:
 
     RQ16_hypotheses_in_parallel:
       layer: cos
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"like maybe monitoring the logs, or have a way for an agent to get event log with errors or something."'
       depends_on: [RQ15, RQ17]
       files: [docs/2026-10-05-failure-reproduction-phasemap.spec (FM2 FM3), cortex/self-heal/failure-mode-forensics.js, intelligence/rfr2]
@@ -491,7 +491,7 @@ spec:
 
     RQ17_observe_by_request:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"Observing? Like maybe monitoring the logs, or have a way for an agent to get event log with errors or something."'
       depends_on: [RQ6]
       files: [lib/component-ledger.js, lib/ledger-fanin.js, lib/agent-tools/tools/diagnostic, idearium/cli/route-commands.js (row: observe), docs/2026-10-05-failure-reproduction-phasemap.spec (FM1)]
@@ -505,7 +505,7 @@ spec:
 
     RQ18_test_and_attack_intents:
       layer: cos
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"Need intents for speccing, debugging, test and attacking"'
       depends_on: [RQ15]
       files: [cos/spec/torture-chamber.spec, cos/spec/qa-catalog.spec, intelligence (adversary-suite), copilot/adversarial.js]
@@ -520,7 +520,7 @@ spec:
 
     RQ19_what_nexus_can_take_over:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"anything deterministic or reusable can be created into a tool, schema, framework, macro, or anything that can use nexus instead of the agents. Anything that it can be offloaded onto nexus can be suggested. Automatically created."'
       depends_on: [RQ14]
       files: [lib/tool-index.js, lib/tool-forge.js, lib/case-library.js, lib/component-store.js, docs/2026-10-01-work-visibility-job-reuse-phasemap.spec (J4)]
@@ -537,7 +537,7 @@ spec:
 
     RQ20_the_budget_meter:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"remember to use as little tokens for as much leverage and power as possible."'
       depends_on: [RQ14]
       files: [lib/economy, docs/2026-10-09-one-model-engine-phasemap.spec (ME3), lib/pipeline-routing.js]
@@ -551,7 +551,7 @@ spec:
 
     RQ21_the_contract_file_is_its_record:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"like these need to be real .contract files(literally .contract as the extension using the yaml files like the rest of the system uses for nodes.)" · "each gate, tags, updates the progress in idearium"'
       depends_on: [RQ0]
       files: [lib/node-export.js, lib/node-schemas/schema.contract and cortex/schemas/schema.contract (the sovereign copy; both change together), cortex/core/raid/contract-intake.js (the file is written again at every transition), cortex/core/raid/event-taxonomy.js]
@@ -573,7 +573,7 @@ spec:
 
     RQ22_the_dependency_boundary_with_invariants_that_run:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"synthesis using primitives, invariants, principles, etc as a boundary using dependancies"'
       depends_on: [RQ7, RQ9, RQ1]
       files: [cortex/core/raid/contract-boundary.js, cortex/core/raid/context-gate.js, lib/registry-harness.js, lib/charter.js, cos/foundation/intent.js, lib/chunk-verify.js (RQ1 - its scope check reads this)]
@@ -595,7 +595,7 @@ spec:
 
     RQ23_acceptance_conditions_that_cannot_be_moved:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"creates conditions for acceptable to complete the contract."'
       depends_on: [RQ9, RQ1]
       files: [lib/end-state.js, lib/charter.js, cos/foundation/intent.js, cortex/core/raid/contract-intake.js (BUILD_CONTRACT_SCHEMA conditions grows from pre/post strings to checks), idearium/repo/proof-run.js (the check kinds)]
@@ -640,7 +640,7 @@ spec:
 
     RQ25_progress_is_evidence_not_activity:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"updates the progress in idearium"'
       depends_on: [RQ21, RQ23]
       files: [idearium/api/index.js (POST /api/queue/:queueId/progress and /api/ideas/:uuid/progress exist), lib/charter.js (idearium_charter_runs), cortex/core/raid/event-taxonomy.js, idearium/cli/route-commands.js (row: progress), idearium/ui/js/plan-panel.js]
@@ -659,7 +659,7 @@ spec:
 
     RQ26_comparison_and_drift_on_real_signals:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"uses the comparison engine, behaioral drift engine"'
       depends_on: [RQ0, RQ23]
       files: [cos/playground/compare.js, lib/execution-pipeline.js, cortex/core/raid/index.js (_scoreRun), intelligence/bda, intelligence/cfr/sigma.js, intelligence/cfr/ledger.js, lib/component-ledger.js]
@@ -684,7 +684,7 @@ spec:
 
     RQ27_the_reasoning_half_gets_its_home:
       layer: library
-      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN - blocked on decision_raid_home"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN - blocked on decision_raid_home"
       james: '"what if we move raid to a copilot module or intelligence system? we can use decomposition, analysis, all the memory, ledgers, etc, and synthesis"'
       depends_on: [RQ7, RQ9, RQ12, RQ21]
       files: [cortex/core/raid/context-synthesis.js, cortex/core/raid/context-gate.js, cortex/core/raid/officiator.js, intelligence (one module beside bda cfr gap rfr2 - the name is his; not synthesis, which is gap synthesis), lib/registry-harness.js, lib/context-atlas.js, lib/case-library.js, lib/agent-memory.js, lib/component-store.js, copilot/analysis.js (reads the same), intelligence/registry-components.js, idearium/cli/route-commands.js (rows)]
