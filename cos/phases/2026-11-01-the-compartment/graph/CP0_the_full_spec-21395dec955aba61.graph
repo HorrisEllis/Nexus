@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793917832739
+exported_at: 1794032239991
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793917832739
-lastSeenAt: 1793917832739
+firstSeenAt: 1794032239991
+lastSeenAt: 1794032239991
 fingerprint: null
 payload:
   for: CP0_the_full_spec
@@ -74,6 +74,7 @@ payload:
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
       - docs/2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC5_open_loops_imported
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
       - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO4_measure_tools
       - docs/2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
       - docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
@@ -104,7 +105,7 @@ payload:
       - layer 1 · ready
       - 'depends on (1): CP_D0_a_compartment_is_all_of_it'
       - >-
-        needed by (1): CP1_the_machine_and_its_door · all downstream 50 · finishing it unlocks
+        needed by (1): CP1_the_machine_and_its_door · all downstream 51 · finishing it unlocks
         CP1_the_machine_and_its_door
       - 'same files as CP5e_parallel with no order between them: cos/spec/compartment.spec'
       - 'same files as CP5f_benchmark with no order between them: cos/spec/compartment.spec'

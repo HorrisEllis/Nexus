@@ -37,6 +37,9 @@ specified in the contract or project. lack of capability is an opportunity to bu
 docs/CLAUDE.md (addendum 2026-11-06, Emerge is the replacement). **Note metrics while coding in Emerge, expand Emerge as you go, and define
 every new extension in a taxonomy and ledger** (his, the same day: "remember to take note of metrics while coding in emerge, and expanding emerge
 while you do." · "all new extensions need to be defined in a taxonomy and ledger."); the how is in docs/CLAUDE.md (addendum 0.60.429).
+**After Emerge: WARP 2, then the relational constraint field, then its view** (his, 2026-11-07, CIE_D5): "once emerge is done then warp 2 and the
+relational constraint field. then code can be represented as nodes moving through the field". Emerge debugs its own code when compiling; the JS
+harness that judges it is temporary. Maps: docs/2026-11-06-cie-eg-build-phasemap.spec CIE_D5, CP11 (expanded), RF1, EM2, CF1.
 **Every change and every version goes to Versionium, in full (§17.12).** James, 2026-10-29: "full changes, and versions have to be pushed
 to versionium? enforce it everywhere that you'd find it." The how is in docs/CLAUDE.md.
 

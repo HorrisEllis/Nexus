@@ -283,7 +283,8 @@ phases:
 
   CP11_the_diagnostic_map:
     status: OPEN
-    depends_on: [CP_D4_the_diagnostic_map_on_the_eravos_canvas, CI1_one_feed, CI3_the_measures_chained, CP1_the_machine_and_its_door]
+    # depends_on grew 2026-11-07 (his CIE_D5): the field and WARP 2 come first, so the map draws the field itself
+    depends_on: [CP_D4_the_diagnostic_map_on_the_eravos_canvas, CI1_one_feed, CI3_the_measures_chained, CP1_the_machine_and_its_door, RF1_relational_field, CF1_cfr_improved_with_rfr2, EM2_warp_his_own]
     files: [cos/ui/map, cos/archetype/eravos-canvas, intelligence/cfr, intelligence/rfr2, cos/manager/server.js]
     interface: [html, route]
     does: >-
@@ -470,3 +471,15 @@ phases_addendum_cp3a:
       Genesis serves GET /commands from its command nodes; every running system's /commands is merged live with the one table; each agent's
       mode is that set filtered by its hat's scope, personOnly rows held for him. Copilot's update already runs as procedure update-nexus (PD1).
     proof: "a command node added to a running system appears in an agent's mode without a restart of that agent; a personOnly row is held"
+
+# ── ADDENDUM 2026-11-07 — CP11 expanded: code itself as nodes moving through the field (his) ──
+# James, 2026-11-07, after the checker was proven in Emerge with a JavaScript harness: "its meant to debug it's own code when compiling. so that js harness is only temporary until emerge can also do it. once emerge is done then warp 2 and the relational constraint field. then code can be represented as nodes moving through the field, tension and friction can be color coded, the primitives define the shape of the structure or field, anything outsiide of the field is noise, friction introduced. with that we can visualize the process of code development or debugging, pipelines and workflow automation immutable nodes like packets of data or primitive from emerge running through each gate."
+# CP11 drew the system: compartments as nodes, wires as edges, tension and friction on them. His words carry it inward, to the code and the work:
+#   - the field: the relational constraint field (RF1, field.spec), its shape defined by the primitives (Pillar's contracts, PIL2); what lies
+#     outside the field is noise, and its presence is friction;
+#   - the nodes: immutable packets, data or Emerge primitives, each moving through the gates of a pipeline, a workflow, a build or a debug run;
+#   - tension and friction colour coded on nodes, edges and gates, from real readings (CF1's tension, RFR2's friction), never invented;
+#   - the views: code development and debugging (a build's nodes through its gates: the checker's diagnostics, the compiler's refusals, the tests),
+#     pipelines and workflow automation (COS's gates, AE6, MB3).
+# Reading to confirm, the coder's: "nodes moving through the field" read as each packet drawn at the gate it is in, its position and colour from
+# the field's values at that moment, replayable from the ledger; the other reading, a continuous physical simulation of the field. His to say.

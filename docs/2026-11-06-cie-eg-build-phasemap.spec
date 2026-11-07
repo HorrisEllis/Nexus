@@ -51,6 +51,14 @@ decisions:
       cannot follow an optional one. In the parser, checker, interpreter and emitter (JavaScript, until CIE11) and natively (front.eg,
       native/defaults.eg: an entry per shorter arity). sort_by moves into lang/core/prelude.eg as fn sort_by(xs, f, dir = "asc"); the interpreter's
       JavaScript sort_by and its comparer are deleted; lang/cie/sort.eg, the native stopgap, is archived as a duplicate.
+  CIE_D5_after_emerge_warp2_then_the_field:
+    status: "DECIDED 2026-11-07 (his)"
+    james: '"once emerge is done then warp 2 and the relational constraint field."'
+    chosen: >-
+      The order after the JavaScript removal (CIE4–CIE13, CIE11 last): WARP 2 (EM2_warp_his_own) and the relational constraint field (RF1_relational_field,
+      CF1_cfr_improved_with_rfr2, specced in emerge/emerge/spec/field.spec), then the field's view (CP11_the_diagnostic_map, expanded the same day).
+      And Emerge debugs its own code when compiling: the checker runs inside the native compiler (CIE6 slice b); the JavaScript harness that judges
+      check.eg today is temporary, until Emerge can do it (CIE9).
 phases:
 
   CIE1_the_contract_block:
@@ -394,3 +402,8 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # parse_json lowered natively onto lang/native/json.eg (a gap found writing the judge, built).
 # Slice b, next: front.eg builds the same tree as lang/parser.js (State nodes, Kind and Contract in full), so the native compiler runs check.eg
 # itself, and the let-write gap (CIE14 c) closes natively.
+
+# ── ADDENDUM 2026-11-07 — his direction: Emerge debugs its own code when compiling; then WARP 2 and the field (CIE_D5) ──
+# James, 2026-11-07, after the checker was proven in Emerge with a JavaScript harness: "its meant to debug it's own code when compiling. so that js harness is only temporary until emerge can also do it. once emerge is done then warp 2 and the relational constraint field. then code can be represented as nodes moving through the field, tension and friction can be color coded, the primitives define the shape of the structure or field, anything outsiide of the field is noise, friction introduced. with that we can visualize the process of code development or debugging, pipelines and workflow automation immutable nodes like packets of data or primitive from emerge running through each gate."
+# CIE6 slice b reads it: the native compiler runs check.eg on every program before it builds, and refuses to build on an error, printing the
+# diagnostics as eg check does; the JS judge of check.eg (native.test) stays only until CIE9 rewrites the tests in Emerge.

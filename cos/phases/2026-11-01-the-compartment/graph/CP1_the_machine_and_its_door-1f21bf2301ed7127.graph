@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793917832745
+exported_at: 1794032239998
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793917832745
-lastSeenAt: 1793917832745
+firstSeenAt: 1794032239998
+lastSeenAt: 1794032239998
 fingerprint: null
 payload:
   for: CP1_the_machine_and_its_door
@@ -177,6 +177,7 @@ payload:
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
       - docs/2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC5_open_loops_imported
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
       - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO4_measure_tools
       - docs/2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
       - docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
@@ -215,7 +216,7 @@ payload:
         needed by (13): CS3_the_registry_is_the_bridge, MG7_automation_macros_and_hats,
         MG8_the_factory, CP2_the_window, CP3_one_terminal_one_cli, CP4_files_and_code,
         CP5_states_rewind_versions, CP6_resources, CP7_settings, CP8_agents_in_the_compartment,
-        CP9_cos_and_idearium_one_link, CP10_miniworlds, CP11_the_diagnostic_map · all downstream 49
+        CP9_cos_and_idearium_one_link, CP10_miniworlds, CP11_the_diagnostic_map · all downstream 50
         · finishing it unlocks CP2_the_window, CP3_one_terminal_one_cli, CP5_states_rewind_versions,
         CP6_resources, CP7_settings, CP9_cos_and_idearium_one_link
       - >-

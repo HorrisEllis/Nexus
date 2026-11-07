@@ -7,11 +7,11 @@ intent: null
 summary: CP11_the_diagnostic_map (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1793917832769
+exported_at: 1794032240026
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793917832769
-lastSeenAt: 1793917832769
+firstSeenAt: 1794032240026
+lastSeenAt: 1794032240026
 fingerprint: null
 payload:
   id: CP11_the_diagnostic_map
@@ -26,6 +26,9 @@ payload:
     - CI1_one_feed
     - CI3_the_measures_chained
     - CP1_the_machine_and_its_door
+    - RF1_relational_field
+    - CF1_cfr_improved_with_rfr2
+    - EM2_warp_his_own
   blocks: []
   spec: null
-  graph: a0dc6822d8a7b46f
+  graph: 67c6c1aa333fab98
