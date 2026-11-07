@@ -201,7 +201,7 @@ async function dispatch(compileResult, opts = {}) {
       if (isEmergeTarget((parsedSpec || {}).meta || {})) {
         const clean = result.response.replace(/^```(?:eg|emerge)?\n?/m, '').replace(/\n?```\s*$/m, '').trim();
         let err = null;
-        try { const c = require('../lang').compileSource(clean, modName + '.eg'); if (c.errors.length) err = String(c.errors[0].message ?? c.errors[0]); }
+        try { err = require('./emerge-check').compileError(clean); }   // through Emerge's command line (CIE8 slice a)
         catch (e) { err = e.message; }
         if (err) {
           const rej = stubPath.replace(/(\.[a-z]+)$/, '.t2-rejected$1');
