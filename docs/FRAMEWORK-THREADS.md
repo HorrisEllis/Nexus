@@ -15,6 +15,40 @@ A prediction is never rewritten after the fact. It is marked held, failed or ope
 
 ---
 
+## Provenance: where each method is first dated, from artifacts only (recorded 2026-11-07)
+
+James, 2026-11-07: "context and provenance matters". Asked how to back it, he chose "2": dated artifacts only, nothing from the personal
+account he had shared. So every row below points at something dated that a stranger can open.
+
+The sources:
+- his notebook pages (`docs/notebook-pages-2025-12-to-2026-06.md`, transcribed from his photos; a page's date is as he wrote it);
+- the index of his quotes (`docs/2026-10-31-his-words-quotes.md`, each dated, with the file where it is cited).
+
+Where he wrote no year, the year is the coder's reading from the page set's span (2025-12 to 2026-06), marked "read as".
+
+| Method | First dated artifact | Next | Where it shows in Nexus | Does it work? (docs/EVIDENCE-MATRIX.md) |
+|---|---|---|---|---|
+| End state first, then the conditions | notebook page 8 "End-state", 12/24 (read as 2025): "Start-State + Gap + End-State (Creativity & Innovation)" · page 3 "Horizon Planning", 02/23/26: "Take the end-state and work backwards. Ask yourself, what conditions need to exist for this outcome to exist?" | Q0071, 2026-08-13: "say you set axioms, end-state, and have the system try" | the contract as end state (CIE1), the DAG as conditions, RAID running them | F1 proven; F2 proven; F8 not yet |
+| Anomaly, coincidence, pattern (three = an invariant) | notebook page 7 "Cross-Domain synthesis", 12/30 (read as 2025): one dot "Anomaly", two "coincidence", three "Pattern" | framework Part 3, committed 2026-10-24 (`14ae68dc`) | the crystallizer's gate | F4 proven; F4− against (slope rule) |
+| Cross-domain synthesis | notebook page 7, 12/30 (read as 2025): Love · Life · Physics, "Stack the structure and see if it fits." | — | one pattern at every scale (T8) | T9 not yet (registered) |
+| Compartments, mini-worlds, redundancy | notebook page 14 "Compartments/Mini-Worlds", 01/12/26: "Mini-worlds · … Revision/redundancy — Layers" · "Playground — Innovation Gradient" | Q0067, 2026-08-13: "a snapshot before the compartment just in case. a test env." | COS compartments; archive, don't delete (§0.3) | proven where built (the shadow test env) |
+| Gaps as the way in | notebook page 8, 12/24 (read as 2025): "Mind will fill in gap." | Q0038, 2026-08-08 (gaps among what autopilot must see) | the gap field; gaps from invariants | F5 proven where built |
+| Axioms | Q0071, 2026-08-13 ("set axioms") | Q0077, 2026-08-14: "axioms." | docs/AXIOMS-v3.1.md, RAID's constitution | the law the record cites; not itself a measured claim |
+| Bottom up, foundation first | Q0093, 2026-08-17: "Bottom up, architectural first. Pillars of the Foundation... core foundation of each system first." | — | §3.1; Pillar (named from these words, PIL_D0) | N2 proven |
+| Primitives and invariants as the boundary | Q0289, 2026-09-02: "primitives, principles, and invariants are a boundary. contract schemas must have primitive." | Q0921, 2026-10-05 (combining primitives or invariants for less tokens) | Pillar's contracts; the constraint field | F7 not yet |
+| A DAG and gates per interaction | Q0008, 2026-07-11: "each interaction gated, that way each gate can be a different agent" | Q0093, 2026-08-17 | the phase DAG; gates | F3 signal |
+
+**What this shows.**
+- **Order.** Each method is written in his hand, dated, months before the code that carries it. The quotes are dated too, and they come before
+  their phases.
+- **Not that the methods work.** That is the evidence matrix and threads T7 and T9.
+
+**Not here, by his choice.** Anything from the personal account. Earlier artifacts would push some rows back further, and he can add them as
+dated entries: his Threads posts, his Obsidian notes, his earlier repositories and server work. Each one would then be a row's "first dated
+artifact".
+
+---
+
 ## T1 — "contract is the end state": the JavaScript removal, 2026-11-06 to 2026-11-07
 
 **His words.**
