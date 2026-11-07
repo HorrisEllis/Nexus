@@ -335,3 +335,13 @@ regenerated system satisfies the same contracts, its tests pass, and the artifac
 specification coverage, and verified reconstruction coverage. The coder's distinction: build (source → artifact) must be bit-reproducible;
 generation (spec → source) must match behaviour, not bytes. Today's 4–38% (scripts/systems-report.js) is the first kind at its weakest (files a
 spec module names by path); the second has never been measured. **Evidence:** open.
+
+**T8, his name for it, 2026-11-07:** "The wiring harness". His own, 2026-09-27 (Q0732): "use the component registry as the wiring harness like
+loom does for nexus, that way it makes the registry a map and event bus, so chunks can have minial context. right now its not coding at all." ·
+"it's meant to make small llms capable of building entire codebases regardless of the size." Read by the coder: the harness is the spec as the
+door, with two jobs. For the system, components plug in and know nothing of each other, so rewiring changes the harness, not the parts. For agents,
+a chunk needs only its own connector (its entry: in, out, contract), not the codebase. That ties T8 to T7: the blind test's arm A (the task cut
+along its contracts) is the harness used by an agent; T7's result is evidence for or against it. The names he has given the same thing: spine
+(2026-07-09), wiring harness (2026-09-27), drawbridge (2026-10-17), door (2026-11-03), the spec as the compartment file (2026-11-07); CIE-EG its
+engine. Where the term comes from: a wiring harness is a manufacturing part (vehicles, aircraft), a pre-built bundle of wires and connectors that
+parts plug into. Whether he took it from there is his to say.
