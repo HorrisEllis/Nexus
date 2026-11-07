@@ -7,11 +7,11 @@ intent: null
 summary: CP3a_the_agent_cli (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793576104510
+exported_at: 1794032240123
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793576104510
-lastSeenAt: 1793576104510
+firstSeenAt: 1794032240123
+lastSeenAt: 1794032240123
 fingerprint: null
 payload:
   id: CP3a_the_agent_cli
@@ -30,4 +30,4 @@ payload:
     - PD1_procedure_nodes_and_commands
   blocks: []
   spec: null
-  graph: 3112df40ed54514d
+  graph: 9d9596a200a6ae59

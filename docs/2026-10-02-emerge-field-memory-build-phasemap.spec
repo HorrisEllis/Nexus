@@ -1485,3 +1485,9 @@ spec:
 # lib/repo-inject.js fromChanges() → land(), the path a reply's fenced blocks take: code.write gate, collapse guard,
 # staged / proposed / applied by mode, a Nexus repo always proposed. applyChanges() is kept for other callers.
 # Proof: test-claude-code-backend CC-04 (review → proposals, nothing written; auto → written), test-nexus-inject-approval IG-009.
+
+# ── ADDENDUM 2026-11-07 — RF1, EM2, CF1: after Emerge, in this order (his CIE_D5); the primitives shape the field ──
+# James, 2026-11-07, after the checker was proven in Emerge with a JavaScript harness: "its meant to debug it's own code when compiling. so that js harness is only temporary until emerge can also do it. once emerge is done then warp 2 and the relational constraint field. then code can be represented as nodes moving through the field, tension and friction can be color coded, the primitives define the shape of the structure or field, anything outsiide of the field is noise, friction introduced. with that we can visualize the process of code development or debugging, pipelines and workflow automation immutable nodes like packets of data or primitive from emerge running through each gate."
+# Next after the JavaScript removal: EM2 (WARP 2) and RF1 with CF1 (the relational constraint field). His words for the field's shape: the primitives
+# (Pillar's contracts) define the structure; anything outside it is noise, and friction introduced. CP11 (docs/2026-11-01-the-compartment-phasemap.spec)
+# is where it is seen.

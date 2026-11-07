@@ -1,0 +1,223 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP11_the_diagnostic_map:67c6c1aa333fab98
+type: graph
+id: phase:CP11_the_diagnostic_map:67c6c1aa333fab98
+context: dependency graph of phase CP11_the_diagnostic_map
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794032240026
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794032240026
+lastSeenAt: 1794032240026
+fingerprint: null
+payload:
+  for: CP11_the_diagnostic_map
+  kind: phase
+  repo: null
+  hash: 67c6c1aa333fab98
+  nodes:
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/cli.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/cli.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 9
+    deps:
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D4_the_diagnostic_map_on_the_eravos_canvas
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+    dependents:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO4_measure_tools
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D0_interconnected
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D1_one_graph_cfr_builds_rfr2_reads
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D4_the_diagnostic_map_on_the_eravos_canvas
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+      - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+    downstream:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO4_measure_tools
+    blockedBy:
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP9_cos_and_idearium_one_link
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP10_miniworlds
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP5a_snapshots_per_compartment
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-01-the-compartment-phasemap.spec::CP7a_the_nexus_sync_options
+        files:
+          - cos/manager/server.js
+    dangling: []
+    lines:
+      - >-
+        layer 9 · blocked by CI1_one_feed, CI3_the_measures_chained, CP1_the_machine_and_its_door,
+        RF1_relational_field, CF1_cfr_improved_with_rfr2, EM2_warp_his_own
+      - >-
+        depends on (7): CP_D4_the_diagnostic_map_on_the_eravos_canvas, CI1_one_feed,
+        CI3_the_measures_chained, CP1_the_machine_and_its_door, RF1_relational_field,
+        CF1_cfr_improved_with_rfr2, EM2_warp_his_own · all upstream 42
+      - 'needed by (1): EO4_measure_tools'
+      - >-
+        same files as CP9_cos_and_idearium_one_link with no order between them:
+        cos/manager/server.js
+      - 'same files as CP10_miniworlds with no order between them: cos/manager/server.js'
+      - >-
+        same files as CP5a_snapshots_per_compartment with no order between them:
+        cos/manager/server.js
+      - 'same files as CP7a_the_nexus_sync_options with no order between them: cos/manager/server.js'
+    edges:
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP_D4_the_diagnostic_map_on_the_eravos_canvas
+        kind: declared
+      - from: docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+        kind: declared
+      - from: docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+        kind: declared
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+        kind: declared
