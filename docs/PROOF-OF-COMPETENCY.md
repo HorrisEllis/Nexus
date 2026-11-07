@@ -1876,7 +1876,10 @@ one that separates evidence from intent; it is the same separation he asked for 
   main (the §5.16 ratchet: two Loom maps grew in the 2026-11-06 merge), 5 are not diagnosed.
 - **Run it:** the loop at the end of docs/cleaning/2026-11-07-the-door.md.
 
-**What it does not prove.** That the door works as one system: it is still many partial builds, and 41 built phases have no test that cites
+**Corrected the same day (his):** "The door was supposed to be that. The spine for each system". The door is not one system; it is the spine
+inside each system (T8). The line below first said "one system", which was the coder's misreading.
+
+**What it does not prove.** That any system's door works as its spine yet: each is still a partial build, and 41 built phases have no test that cites
 them. That 24 maps cost more than one spec would have: no control. Consistency of an idea is evidence of a stable design intuition, not of the
 design's correctness.
 
