@@ -140,3 +140,25 @@ deterministic probability. I call it a constraint field." · "f(slope) = slope a
 - **T4-P4 (open):** a gap pattern that recurs three times on the replayed ledger predicts a fourth more often than one seen once does. That
   would make his three-gap rule a measurable promotion, not a label. Measured by replaying CFR's ledger: the hit rate of the fourth occurrence,
   for patterns seen three times against patterns seen once.
+
+## T5 — "Then take another box and declare constraints and set axioms": Toolkit 2's compartments, 2026-11-07
+
+**His words** (docs/innovation-toolkit-2-novelty.md): "Take a compartment and call it whatever feels right for your inner child. This is a
+judgement free zone." · "Then take another box and declare constraints and set axioms." · "Compartments should mutate/integrate if the idea is
+no longer useful" · "end-state first reasoning, and reverse causal chaining … Innovate from both sides."
+
+**What already exists in Emerge (executed: the code runs, with tests).** His method is already in Emerge's world layer
+(emerge/emerge/lang/cie/world.eg):
+- a compartment, made with `declare`;
+- axioms declared on it and checked, with `declare_axiom` and `check_axioms`;
+- a counterfactual run in a branch that can be dropped, with `whatif_branch`, `whatif_begin`, `whatif_end` and `whatif_abort`.
+
+His bidirectional chaining was proven in Nexus before this (IF-05, PROOF-OF-COMPETENCY). Toolkit 2 is the method in his words. The primitives
+were built from his earlier direction.
+
+**Conceptual (not built).**
+- His two boxes: a judgement-free compartment with no axioms, and a constrained compartment ideas are copied into with a label.
+- An idea crossing from the first box into the second only by meeting the second box's axioms.
+- **The coder's reading, to confirm:** this is Emerge's compartment boundary used as an idea gate.
+
+**Prediction (open):** none registered yet. One will be written before anything is built.
