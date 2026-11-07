@@ -1538,6 +1538,10 @@ thing at once.
   what turn it into one.
 - **His part / the coder's part:** the chunking thesis and the framework are his. The benchmark and the reading of its numbers are the
   coder's.
+- **Downgraded 2026-11-07, his critique.** James: "yeah but that's bias information. you would have to use it to predict and i would have to run
+  it in isolation from you." He's right. The coder chose the units, knew their invariant counts and read the results, and the "prediction" was
+  stated in the same hands that judged it. Nothing was written down before the run. This entry is **a post-hoc signal, not a blind test**. The
+  blind test he described is registered as thread T7 (docs/FRAMEWORK-THREADS.md) and phase PIL6 (docs/2026-11-06-pillar-phasemap.spec).
 
 ## 2026-10-31 — Emerge made his to code in: his words in, code out, no AI
 
