@@ -581,3 +581,19 @@ EQ2 (expanded), EQ5, EQ_D1.
 
   Each definition gets a ledger line, dated, with why. The definition lives in the owning system's own registry (§5.16, EQ_D1), not in
   `lib/`. Today 66 of the tree's 141 extensions have no definition, among them .eg, .nex, .yaml and .sql. Emerge's are defined first.
+
+## ADDENDUM 2026-11-07 — provenance of the process: every use of his framework is a thread, from his words to the evidence (his)
+James, 2026-11-07: "im saying proof of concept. trying to empiracally grounding it as possible. track the thread and add that to claude.md to
+maintain provenance of the process, no point in claiming without grounding in actual evidence. you conceptually used my framework. but tell me
+more and log it in proof of componetency and concept"
+- **Track the thread.** Every time his framework is used, it goes in `docs/FRAMEWORK-THREADS.md` as a thread:
+  - his words, dated;
+  - what the coder did with it, marked **executed** (it ran, there is output) or **conceptual** (it shaped a plan, no output yet);
+  - the prediction it makes, written before the result, with how it will be measured;
+  - the evidence (a commit, a test and its count, a number from a real run), or **open**.
+- **No claim without evidence.** A conceptual use is never written as a result. A prediction is never rewritten after the fact. It is marked
+  held, failed or open, and a failed one is kept.
+- **The ledger and the proof doc point at the thread.** The phase ledger's line names the thread (e.g. "T2"). A `PROOF-OF-COMPETENCY.md`
+  entry is written when a thread has evidence. Until then it's listed as concept, with its open predictions.
+- **The tension meter** (his open loop, CIE_D6) is a thread's measure too. Each session adds one line to `BENCHMARKS.md`: JS lines left
+  against sessions left.
