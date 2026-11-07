@@ -5,6 +5,29 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-07 — the checker in Emerge: 211 programs, every diagnostic equal (CIE6 slice a, 0.60.440)
+- **Measured:** Emerge coding. The language's checker (575 lines of JS) written again in Emerge.
+- **His words:** "continue"
+- **Framework:** contract first, with a harvested end state.
+  1. Every program `lang.test.js` checks or runs was recorded (227 programs).
+  2. `checker.js`'s answers on them became the expected output.
+  3. `check.eg` was held to those answers, interpreted and native.
+- **Method:** the JS parser's trees passed to `check.eg` as JSON, with the builtin arities, primitives and signals given as data. The outputs
+  compared byte for byte.
+- **Result:**
+  - 211 programs (the 16 others are parse errors, the parser's): 75 errors and 43 warnings identical, interpreted and native.
+  - native 105/105, selfhost 16/16 (6ecb02c7…), lang 166/166, differential 19/19.
+- **Speed:** native, the checker checks all 211 programs in 0.17 s. Compiling the judge natively took 0.40 s. Stage 0 took 13.3 s; stage 1
+  took 0.65 s.
+- **Lines:** `check.eg` is ~600 lines of .eg. JS removed: 0, since `checker.js` goes with the interpreter at CIE11.
+- **Failed runs before the pass:**
+  1. The coder's corpus harvester dropped its own output path.
+  2. Missing context flags were `null`, not `false`, and Emerge's `or` needs real booleans; read through a `_flag` helper now.
+  3. `parse_json` was not native. Lowered onto `json.eg`; a gap built.
+
+  The port itself matched every diagnostic on its first full run.
+- **What came of it:** the checker no longer needs JavaScript to exist. Slice b makes the native compiler run it.
+
 ## 2026-11-07 — optional parameters; sort_by into the Emerge prelude; the first JavaScript deleted (0.60.439)
 - **Measured:** Emerge coding, and his framework: a decision of his built through every backend the same day.
 - **His words:** "I feel optional parameter's is always good."
