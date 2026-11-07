@@ -14,6 +14,13 @@ use "./ledger_text.eg" as ledger_text
 use "./contract_text.eg" as contract_text
 use "./regex_text.eg" as regex_text
 use "./json_text.eg" as json_text
+// CIE6 slice b: Emerge checks its own code when it compiles. lang/cie/check.eg (the checker, equal to lang/checker.js on the 211-program
+// corpus) runs on the main program before anything is built; its environment (builtin arities, primitives, the runtime's signals) is
+// carried as Emerge text in check_env_text.eg, never as a .json file (his rule for Emerge, 2026-11-01: "no .json files. only nodes"); native.test
+// fails if it drifts from lang/runtime.js and says how to regenerate it.
+use "../cie/check.eg" as checker
+use "./check_env_text.eg" as check_env_text
+use "./json.eg" as json
 
 // CIE4 slice b: lang/cie/world.eg and lang/cie/ledger.eg carried inside the compiler, as the runtime and the prelude are (regenerate:
 // eg run embed.eg ../cie/world.eg world_text.eg; the same for ledger.eg and contract.eg). A program with a compartment, a component, a contract,
@@ -85,6 +92,16 @@ fn shown_name(path) {
   return basename(path)
 }
 
+var CHECK_ENV = null
+// the main program's errors, as eg check reports them (file:line:col: error: message), and a refusal to build
+fn check_main(ast, path) {
+  if CHECK_ENV == null { CHECK_ENV = json.parse(check_env_text.TEXT) }
+  let r = checker.check(ast, CHECK_ENV)
+  if len(r.errors) == 0 { return null }
+  for d in r.errors { eprint("{shown_name(path)}:{d.line}:{d.col}: error: {d.message}") }
+  exit(1)
+}
+
 var modules = []
 var ids = {}
 var visiting = {}
@@ -99,6 +116,7 @@ fn load_as(path, raw, text, want_id) {
   if src == null and has(EMBEDDED, path) { src = EMBEDDED[path] }
   if src == null { src = read_file(path) }
   var ast = front.parse(src, shown_name(path))
+  if path == MAIN_PATH and not raw { check_main(ast, path) }
   // optional parameters (native/defaults.eg): every module but the runtime, the prelude first, so programs find the prelude's entries
   if not raw { ast = defaults.desugar(ast, KNOWN_DEFAULTS) }
   // the world itself (<cie>/…) is never lowered: it is what the lowering calls

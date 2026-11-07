@@ -41,6 +41,13 @@ contract is a fixed expected output, and the work is done when it holds.
 - The checker's port: 211 programs, 75 errors and 43 warnings, equal on its first full run (0.60.440). `primitives.eg`: 22 ledger entries
   equal on its first native run (0.60.437).
 - Anyone can run it: `node emerge/emerge/lang/test/native.test.js` (105/105 at 0.60.440).
+- **Slice 14, 0.60.441 (CIE6 slice b):**
+  - Two end states were fixed before code: tree equality with `parser.js` on 211 programs, and refusal equality with `eg native` on the 72 with
+    errors.
+  - The baseline was measured first (129/211).
+  - One semantic mismatch: `components.eg`'s `Contract` node. It was caught by native.test before merge.
+  - The first runnable build of the compiler matched both end states (211/211, 72/72).
+  - 109/109 at 0.60.441.
 
 **What this does not show.**
 - There is no control. No slice was done without a fixed end state, so the data can't say how many mismatches would have escaped without

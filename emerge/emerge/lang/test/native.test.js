@@ -515,6 +515,78 @@ for (const [label, file, withLedger] of [['components.eg as written, its ledger 
   else { fail++; console.log('✗ the checker in Emerge — ' + (run ? `interp ${interp.stdout === w} native ${run.stdout === w} ${interp.stderr.slice(0, 200)}` : (build2.stderr || build2.stdout))); }
 }
 
+// CIE6 slice b: Emerge checks its own code when it compiles. (1) front.eg builds lang/parser.js's tree, field for field, on the whole corpus, so
+// lang/cie/check.eg reads either. (2) The compiler (native/bin/emerge, no Node) runs check.eg on the main program and refuses one with errors,
+// printing eg check's messages, exit 1, no executable. (3) Its environment, native/check_env.json, is the one lang/runtime.js gives.
+{
+  const { parse } = require(path.join(LANG, 'parser.js'));
+  const { check } = require(path.join(LANG, 'checker.js'));
+  const { builtinArity, runtimeSignals } = require(path.join(LANG, 'runtime.js'));
+  const build = require(path.join(LANG, 'build-loader.js'));
+  const rep = (k, v) => (typeof v === 'bigint' ? { bigint: v.toString() } : v);
+  const srcs = [], trees = [];
+  for (const src of JSON.parse(fs.readFileSync(path.join(__dirname, 'world', 'check-corpus.json'), 'utf8'))) {
+    let t; try { t = parse(src, 'main.eg'); } catch (e) { continue; }
+    srcs.push(src); trees.push(JSON.stringify(t, rep));
+  }
+  const data = path.join(TMP, 'front-cases.json');
+  fs.writeFileSync(data, JSON.stringify({ srcs }));
+  const dump = path.join(TMP, 'front-dump.eg');
+  fs.writeFileSync(dump, [`use ${JSON.stringify(path.join(LANG, 'native', 'front.eg'))} as F`, 'let data = parse_json(read_file(args()[0]))',
+    'for s in data.srcs { print(json(F.parse(s, "main.eg"))) }'].join('\n') + '\n');
+  const got = spawnSync(process.execPath, [EG, 'run', dump, data], { encoding: 'utf8', maxBuffer: 1 << 27 });
+  const lines = got.stdout.split('\n').filter(Boolean);
+  const same = lines.filter((l, i) => JSON.stringify(JSON.parse(l)) === JSON.stringify(JSON.parse(trees[i]))).length;
+  if (got.status === 0 && lines.length === trees.length && same === trees.length) { pass++; console.log(`✓ front.eg builds lang/parser.js's tree, field for field (${same} programs)`); }
+  else { fail++; console.log(`✗ front.eg's tree — ${same}/${trees.length} equal ${got.stderr.slice(0, 200)}`); }
+
+  const arity = {}; for (const [k, v] of builtinArity()) arity[k] = v;
+  const env = JSON.stringify({ arity, primitives: build.primitives(), signals: runtimeSignals() }) + '\n';
+  // the environment is carried as Emerge text only (his 2026-11-01 rule for Emerge: "no .json files. only nodes"); read back through Emerge
+  const envRead = path.join(TMP, 'env-read.eg');
+  fs.writeFileSync(envRead, `use ${JSON.stringify(path.join(LANG, 'native', 'check_env_text.eg'))} as E\nprint(E.TEXT)\n`);
+  const carried = spawnSync(process.execPath, [EG, 'run', envRead], { encoding: 'utf8' }).stdout;
+  if (carried === env + '\n') { pass++; console.log('✓ the compiler\'s check environment is lang/runtime.js\'s'); }
+  else { fail++; console.log('✗ native/check_env_text.eg drifted from lang/runtime.js — write this test\'s env to a temporary file, then: eg run native/embed.eg <file> native/check_env_text.eg, and rebuild native/bin/emerge'); }
+
+  const dir = path.join(TMP, 'refuse'); fs.mkdirSync(dir, { recursive: true });
+  let n = 0, ok = 0; const bad = [];
+  for (const src of srcs) {
+    const r = check(parse(src, 'main.eg'));
+    if (!r.errors.length) continue;
+    n++;
+    const f = path.join(dir, 'main.eg'), exe = path.join(dir, 'main.bin');
+    fs.writeFileSync(f, src);
+    const want = r.errors.map(d => `main.eg:${d.line}:${d.col}: error: ${d.message}`).join('\n') + '\n';
+    const b = spawnSync(path.join(LANG, 'native', 'bin', 'emerge'), [f, '-o', exe], { encoding: 'utf8' });
+    if (b.status === 1 && b.stderr === want && !fs.existsSync(exe)) ok++; else bad.push(JSON.stringify(b.stderr.slice(0, 120)));
+    try { fs.unlinkSync(exe); } catch (e) { /* not written: the refusal */ }
+  }
+  if (n >= 70 && ok === n) { pass++; console.log(`✓ the compiler checks its input and refuses as eg native's check does (${n} programs with errors, no executable written)`); }
+  else { fail++; console.log(`✗ the compiler's own check — ${ok}/${n}: ${bad.slice(0, 3).join(' · ')}`); }
+}
+
+// exit(n) and eprint (2026-11-07, built for the compiler's refusal): the same stdout, stderr and status from both backends; no try catches exit
+{
+  const dir = path.join(TMP, 'exit'); fs.mkdirSync(dir, { recursive: true });
+  const progs = {
+    'exit.eg': 'print("out")\neprint("to stderr", 2)\nexit(3)\nprint("never")\n',
+    'exit-try.eg': 'try { exit(4) } else e { print("caught") }\nprint("never")\n',
+    'exit-bad.eg': 'try { exit(300) } else e { eprint(e.message) }\nexit(0)\n',
+  };
+  const bad = [];
+  for (const [name, src] of Object.entries(progs)) {
+    const f = path.join(dir, name), exe = f + '.bin';
+    fs.writeFileSync(f, src);
+    const i = spawnSync(process.execPath, [EG, 'run', f], { encoding: 'utf8' });
+    const b = spawnSync(path.join(LANG, 'native', 'bin', 'emerge'), [f, '-o', exe], { encoding: 'utf8' });
+    const r = b.status === 0 ? spawnSync(exe, [], { encoding: 'utf8' }) : null;
+    if (!r || r.stdout !== i.stdout || r.stderr !== i.stderr || r.status !== i.status) bad.push(`${name}: interp ${JSON.stringify([i.stdout, i.stderr, i.status])} native ${r ? JSON.stringify([r.stdout, r.stderr, r.status]) : b.stderr}`);
+  }
+  if (!bad.length) { pass++; console.log('✓ exit and eprint, the same from both backends (status, stdout, stderr; try does not catch exit)'); }
+  else { fail++; console.log('✗ exit and eprint — ' + bad.join(' · ')); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');
