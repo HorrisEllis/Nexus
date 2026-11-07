@@ -5,6 +5,25 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+
+## 2026-11-07 — the spec compiler asks Emerge by its command line (CIE8 slice a, 0.60.444)
+- **Measured:** Emerge coding, the first cut toward his CIE_D7 ("as long as its removed from emerge.").
+- **Framework:** end state first. The old in-process answers are the oracle: the new check must give the same message for the same source.
+- **Method:** four probes compared, old against new; then target.test and build-spec.test, before and after.
+- **Result:**
+  - the same messages, word for word;
+  - target 11/11 and build-spec 18/18, as before;
+  - the first cut failed 5 tests (Emerge's command line not found, unchecked code emitted), and was fixed before merge.
+- **Speed (a loss, logged):**
+  - build-spec.test: 0.7 s → 27 s;
+  - target.test: 0.1 s → 7 s;
+  - 74 checks at about 95 ms each.
+
+  Slice b's fix is named: the running door over HTTP, and the probes batched.
+- **Lines:** JavaScript 22,951 → 22,993 (+42, the adapter; it moves to Idearium with the compiler). .eg +0.
+- **Tension meter, session 1 of 20 (continued):** 22,993 JS lines left (+42); 19 sessions left. The compiler's move (slice d) will take about 7,000
+  out of Emerge's count. That is code moved, not removed.
+
 ## 2026-11-07 — the debugger in Emerge, judged by Emerge (CIE7 slice b, 0.60.443)
 - **Measured:** Emerge coding. 180 lines of the JS debugger (`observe/debug.js`) written again in Emerge, under his rule: no new JS unless it
   replaces JS.

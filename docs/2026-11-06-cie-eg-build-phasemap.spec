@@ -233,6 +233,15 @@ phases:
         d: "Emerge's copy archived (_archive, §0.3), its door's /compiler/* answering where it moved; the tension meter counts it as moved, not removed"
       proof: "every registered spec compiles to the same files through Idearium as through Emerge before the move (test-substrate-spec, kg/tier/target/build-spec suites moved); Emerge's suites green without compiler/"
     files_added_2026_11_07: [idearium/spec-engine/compiler/, emerge/emerge/lib/compiler.js, emerge/emerge/chunk/index.js, emerge/emerge/events-compiler.js, emerge/emerge/registry-components.js, emerge/emerge/verify.js, emerge/emerge/build-spec.js, idearium/compiler-bridge.js, idearium/api/index.js, guardian/server.js, copilot/module-builder.js, lib/build-pipeline.js, lib/spec-collect.js, cortex/boot.js]
+    # ── 2026-11-07, slice a BUILT 0.60.444, his "as long as its removed from emerge." ──
+    # Done: the compiler no longer requires Emerge's language (emit-emerge.js, t2-gate.js). It asks Emerge's command line through
+    # compiler/emerge-check.js, with the same messages word for word. Corrected: the chunk/ "cycle" named above was a comment only
+    # (chunk/index.js never requires compiler/), so chunk/ is simply part of the compiler's family and moves with it. Left for slice b: ../siso,
+    # ../version, and Emerge's own users (lib/compiler.js, verify.js, build-spec.js, events-compiler.js, the tests).
+    # Cost, said: each check now boots Emerge and starts lang-check. build-spec.test went from 0.7 s to 27 s, target.test from 0.1 s to 7 s
+    # (74 checks at about 95 ms). Slice b removes most of it: Emerge's running door over HTTP (no boot per check), and the builtin probes
+    # batched into one program (the checker reports every error with its line).
+    slice_a_built: "0.60.444"
 
   CIE9_tests_in_emerge:
     status: OPEN
