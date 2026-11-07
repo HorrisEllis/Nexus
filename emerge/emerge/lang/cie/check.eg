@@ -1,0 +1,865 @@
+// lang/cie/check.eg — the checker in Emerge (Nexus phase CIE6): every name resolved, every compile-time axiom enforced, the same diagnostics
+// as lang/checker.js, rule for rule and word for word. James, 2026-11-06: "yes. get emerge complete. js removed completely."
+//
+//   check(program, env) → { errors: [{ message, line, col }], warnings: [...] }   sorted by line, then column
+//   env: { arity: { builtin: n | [fewest, most] }, primitives: { diagnostics, gaps, components }, signals: [the runtime's signal names] }
+//
+// It reads the tree lang/parser.js builds (slice a, judged against checker.js on the tree as JSON); front.eg builds the same tree in slice b.
+
+var _errors = []
+var _warnings = []
+var _P = {}
+var _arity = {}
+var _signals = []
+var _emits = []
+var _components = {}
+var _templates = {}
+var _kinds = {}
+var _fed = {}
+var _wired_out = {}
+var _wire_keys = {}
+var _flat_cache = {}
+var _patterns = []
+var _comp_ids = {}
+var _top = null
+var _top_ctx = {}
+
+let KIND_WORD = { let: "a let", param: "a parameter", loop: "a loop variable", fn: "a fn", comp: "a compartment", module: "a module",
+  compfn: "a compartment fn", err: "an error binding" }
+
+fn _E(node, message) { _errors = push(_errors, { message: message, line: node.line, col: node.col }) }
+fn _W(node, message) { _warnings = push(_warnings, { message: message, line: node.line, col: node.col }) }
+fn _D(rule, node, message) {
+  let sev = get(_P.diagnostics, rule, null)
+  if sev == "error" { _E(node, message) }
+  else if sev == "warning" { _W(node, message) }
+  else if sev != "off" { _E(node, "primitives.diagnostics.{rule} is {repr(sev)} — it must be \"error\", \"warning\" or \"off\"") }
+}
+
+fn _arity_text(a) {
+  if type_of(a) == "list" {
+    if a[1] == -1 { return "at least {a[0]}" }
+    if a[0] == a[1] { return str(a[0]) }
+    return "{a[0]} to {a[1]}"
+  }
+  return str(a)
+}
+fn _arity_ok(a, n) {
+  if type_of(a) == "list" { return n >= a[0] and (a[1] == -1 or n <= a[1]) }
+  return n == a
+}
+fn _arity_of(params) {
+  var req = 0
+  for p in params { if get(p, "default", null) == null { req += 1 } }
+  if req == len(params) { return req }
+  return [req, len(params)]
+}
+fn _with(ctx, changes) {
+  var c = {}
+  for k, v in ctx { c[k] = v }
+  for k, v in changes { c[k] = v }
+  return c
+}
+fn _ctx(ctx, k) = get(ctx, k, null)
+fn _flag(ctx, k) = get(ctx, k, null) == true
+
+// ── scopes ───────────────────────────────────────────────────────────────────
+fn _scope(parent, boundary) = { parent: parent, vars: {}, boundary: boundary }
+fn _declare(scope, name, binding, node) {
+  var s = scope
+  if has(s.vars, name) {
+    _E(node, "\"{name}\" is already declared in this scope (line {s.vars[name].line})")
+    return null
+  }
+  var b = { name: name, line: node.line }
+  for k, v in binding { b[k] = v }
+  var vars = s.vars
+  vars[name] = b
+}
+fn _resolve(scope, name) {
+  var s = scope
+  while s != null {
+    if has(s.vars, name) { return { b: s.vars[name], scope: s } }
+    s = s.parent
+  }
+  return null
+}
+fn _crosses(from, to) {
+  var s = from
+  while s != null and s != to {
+    if s.boundary { return true }
+    s = s.parent
+  }
+  return false
+}
+
+// ── shapes (lang/components.js shapeMismatches) ──────────────────────────────
+fn _is_num_type(n) = n == "num" or n == "float"
+fn _accepts(to, from) {
+  if from.nullable and not to.nullable and to.name != "any" { return false }
+  if to.name == "any" { return true }
+  if _is_num_type(to.name) { return _is_num_type(from.name) }
+  return to.name == from.name
+}
+fn _tname(t) {
+  var q = ""
+  if t.nullable { q = "?" }
+  return t.name + q
+}
+fn _shape_mismatches(out_shape, in_shape) {
+  if out_shape == null or in_shape == null { return [] }
+  var msgs = []
+  var outf = {}
+  for f in out_shape.fields { outf[f.name] = f.type }
+  var inf = {}
+  for f in in_shape.fields { inf[f.name] = f.type }
+  for f in in_shape.fields {
+    let t = f.type
+    if not has(outf, f.name) {
+      if not t.nullable and t.name != "any" { msgs = push(msgs, "the in hook needs \"{f.name}\", the out hook never sends it") }
+    } else {
+      let o = outf[f.name]
+      if not _accepts(t, o) { msgs = push(msgs, "\"{f.name}\" is {_tname(o)} on the out side but {_tname(t)} on the in side") }
+    }
+  }
+  for f in out_shape.fields { if not has(inf, f.name) { msgs = push(msgs, "the out hook sends \"{f.name}\", which the in hook does not accept") } }
+  return msgs
+}
+
+// ── expressions ──────────────────────────────────────────────────────────────
+fn _expr(e, scope, ctx) {
+  let t = e.type
+  if t == "Num" or t == "Int" or t == "Bool" or t == "Null" { return null }
+  if t == "Str" {
+    for p in e.parts { if type_of(p) != "string" { _expr(p, scope, ctx) } }
+    return null
+  }
+  if t == "List" {
+    for x in e.items { _expr(x, scope, ctx) }
+    return null
+  }
+  if t == "Map" {
+    for x in e.entries { _expr(x.value, scope, ctx) }
+    return null
+  }
+  if t == "Ident" {
+    let r = _resolve(scope, e.name)
+    if r != null {
+      let k = r.b.kind
+      if k == "template" { _E(e, "{e.name} is a template — make an instance with spawn {e.name}(\"an.id\", …)") }
+      else if k == "kind" { _E(e, "{e.name} is a kind, not a value — test it with is_kind(x, \"{e.name}\")") }
+      return null
+    }
+    if has(_arity, e.name) { return null }
+    _E(e, "\"{e.name}\" is not defined")
+    return null
+  }
+  if t == "State" {
+    if _ctx(ctx, "stateMode") == null { _E(e, "state is only available inside a compartment's handlers, fns and constraints") }
+    return null
+  }
+  if t == "Member" {
+    if e.obj.type == "State" {
+      _expr(e.obj, scope, ctx)
+      let comp = _ctx(ctx, "comp")
+      if comp != null and not _has_field(comp, e.name) { _E(e, "compartment {comp.name} has no state field \"{e.name}\"") }
+      return null
+    }
+    _expr(e.obj, scope, ctx)
+    return null
+  }
+  if t == "Index" {
+    if e.obj.type == "State" { _E(e, "state fields are named — write state.field, not state[...]") }
+    _expr(e.obj, scope, ctx)
+    _expr(e.index, scope, ctx)
+    return null
+  }
+  if t == "Unary" {
+    _expr(e.expr, scope, ctx)
+    return null
+  }
+  if t == "Binary" or t == "Logical" or t == "Coalesce" {
+    _expr(e.l, scope, ctx)
+    _expr(e.r, scope, ctx)
+    return null
+  }
+  if t == "Call" {
+    _expr(e.callee, scope, ctx)
+    for a in e.args { _expr(a, scope, ctx) }
+    let c = e.callee
+    if c.type == "Ident" {
+      var a = null
+      let r = _resolve(scope, c.name)
+      if r != null {
+        if r.b.kind == "fn" or r.b.kind == "compfn" { a = r.b.arity }
+      } else if has(_arity, c.name) {
+        a = _arity[c.name]
+      }
+      if a != null and not _arity_ok(a, len(e.args)) { _E(e, "{c.name} takes {_arity_text(a)} argument(s), got {len(e.args)}") }
+    }
+    return null
+  }
+  if t == "Lambda" {
+    _fn_body(e, scope, ctx, "lambda")
+    return null
+  }
+  if t == "Spawn" {
+    if _flag(ctx, "lens") or _flag(ctx, "inHandler") { _E(e, "spawn changes the world, not a transition — it is not allowed in handlers, in hooks or lenses") }
+    let r = _resolve(scope, e.template)
+    let tp = get(_templates, e.template, null)
+    if tp == null or r == null or r.b.kind != "template" {
+      if r != null { _E(e, "{e.template} is not a template") } else { _E(e, "\"{e.template}\" is not defined") }
+    } else if len(e.args) != len(tp.params) + 1 {
+      _E(e, "spawn {e.template} takes an id and {len(tp.params)} argument(s) — got {len(e.args)} in all")
+    }
+    for a in e.args { _expr(a, scope, ctx) }
+    return null
+  }
+  if t == "Whatif" {
+    _stmts(e.body.body, _scope(scope, true), _with(ctx, { whatifDirect: true, loop: false }))
+    return null
+  }
+  _E(e, "internal: unknown expression {t}")
+}
+fn _has_field(comp, name) {
+  for f in comp.state { if f.name == name { return true } }
+  return false
+}
+
+fn _fn_body(f, scope, ctx, kind) {
+  let s = _scope(scope, false)
+  for p in f.params {
+    if get(p, "default", null) != null { _expr(p.default, s, ctx) }
+    _declare(s, p.name, { kind: "param" }, p)
+  }
+  _stmts(f.body.body, s, _with(ctx, { fn: kind, loop: false, whatifDirect: false }))
+}
+
+// ── assignment targets ───────────────────────────────────────────────────────
+fn _target(tg, scope, ctx) {
+  if tg.type == "Ident" {
+    _expr(tg, scope, ctx)
+    let r = _resolve(scope, tg.name)
+    if r == null { return null }
+    if r.b.kind != "var" {
+      _E(tg, "\"{tg.name}\" is {get(KIND_WORD, r.b.kind, r.b.kind)} — only a var can be assigned")
+      return null
+    }
+    if _crosses(scope, r.scope) { _E(tg, "\"{tg.name}\" is declared outside this whatif/test — a branch cannot write outside itself") }
+    return null
+  }
+  var root = tg
+  while root.type == "Member" or root.type == "Index" {
+    if root.type == "Index" { _expr(root.index, scope, ctx) }
+    root = root.obj
+  }
+  if root.type == "State" {
+    if _ctx(ctx, "stateMode") != "rw" or _flag(ctx, "lens") {
+      if _ctx(ctx, "stateMode") != null { _E(tg, "state is read-only here — only on handlers change state") } else { _E(tg, "state is only available inside a compartment") }
+      return null
+    }
+    if _flag(ctx, "inWhatifTree") {
+      _E(tg, "a whatif branch cannot write state outside itself")
+      return null
+    }
+    var first = tg
+    while first.obj.type != "State" { first = first.obj }
+    if first.type == "Index" {
+      _E(first, "state fields are named — write state.field, not state[...]")
+      return null
+    }
+    let comp = _ctx(ctx, "comp")
+    if not _has_field(comp, first.name) { _E(first, "compartment {comp.name} has no state field \"{first.name}\"") }
+    return null
+  }
+  if root.type == "Ident" {
+    _expr(root, scope, ctx)
+    let r = _resolve(scope, root.name)
+    if r == null { return null }
+    if r.b.kind != "var" {
+      _E(root, "\"{root.name}\" is {get(KIND_WORD, r.b.kind, r.b.kind)} — change contents through a var")
+      return null
+    }
+    if _crosses(scope, r.scope) { _E(root, "\"{root.name}\" is declared outside this whatif/test — a branch cannot write outside itself") }
+    return null
+  }
+  _E(tg, "assignment needs a variable, a field of a var, or state.field")
+}
+
+// ── statements ───────────────────────────────────────────────────────────────
+fn _hoist(list, scope) {
+  for s in list { if s.type == "FnDecl" { _declare(scope, s.name, { kind: "fn", arity: _arity_of(s.params) }, s) } }
+}
+fn _stmts(list, scope, ctx) {
+  _hoist(list, scope)
+  var deferred = []
+  for s in list { deferred = _stmt(s, scope, ctx, deferred) }
+  for d in deferred { d() }
+}
+/** one statement; returns the deferred list, grown by what must wait (fn bodies see names declared after them) */
+fn _stmt(s, scope, ctx, deferred) {
+  var dl = deferred
+  let t = s.type
+  if t == "Let" {
+    _expr(s.expr, scope, ctx)
+    var tp = null
+    if s.kind == "let" and s.expr.type == "Spawn" { tp = get(_templates, s.expr.template, null) }
+    _declare(scope, s.name, { kind: s.kind, vtype: get(s, "vtype", null), template: tp }, s)
+    return dl
+  }
+  if t == "FnDecl" {
+    let c = _with(ctx, {})
+    dl = push(dl, fn() = _fn_body(s, scope, c, "fn"))
+    return dl
+  }
+  if t == "Assign" {
+    _expr(s.expr, scope, ctx)
+    _target(s.target, scope, _with(ctx, { inWhatifTree: _flag(ctx, "inWhatifTree") or _flag(ctx, "whatifDirect") }))
+    return dl
+  }
+  if t == "If" {
+    _expr(s.cond, scope, ctx)
+    _stmts(s.then.body, _scope(scope, false), ctx)
+    let other = get(s, "otherwise", null)
+    if other != null {
+      if other.type == "If" { dl = _stmt(other, scope, ctx, dl) } else { _stmts(other.body, _scope(scope, false), ctx) }
+    }
+    return dl
+  }
+  if t == "While" {
+    _expr(s.cond, scope, ctx)
+    _stmts(s.body.body, _scope(scope, false), _with(ctx, { loop: true }))
+    return dl
+  }
+  if t == "For" {
+    _expr(s.iter, scope, ctx)
+    let fs = _scope(scope, false)
+    _declare(fs, s.a, { kind: "loop" }, s)
+    if get(s, "b", null) != null { _declare(fs, s.b, { kind: "loop" }, s) }
+    _stmts(s.body.body, fs, _with(ctx, { loop: true }))
+    return dl
+  }
+  if t == "Break" or t == "Skip" {
+    if not _flag(ctx, "loop") {
+      var w = "skip"
+      if t == "Break" { w = "break" }
+      _E(s, "{w} outside a loop")
+    }
+    return dl
+  }
+  if t == "Return" {
+    let ex = get(s, "expr", null)
+    if _flag(ctx, "whatifDirect") {
+      _E(s, "return cannot leave a whatif branch — its value is its last expression")
+      return dl
+    }
+    let f = _ctx(ctx, "fn")
+    if f == "fn" or f == "lambda" or f == "lens" {
+      if ex != null { _expr(ex, scope, ctx) }
+      return dl
+    }
+    if f == "handler" or f == "test" {
+      if ex != null { _E(s, "a {f} returns nothing — use a bare return") }
+      return dl
+    }
+    _E(s, "return outside a function")
+    return dl
+  }
+  if t == "EmitOut" {
+    let comp = _ctx(ctx, "comp")
+    if _flag(ctx, "lens") { _E(s, "emit out is not allowed in a lens") }
+    else if not (comp != null and get(comp, "isComponent", false) and _ctx(ctx, "stateMode") == "rw") { _E(s, "emit out is only possible inside a component's in hook") }
+    else if not _hook_in(comp.outs, s.hook) { _E(s, "component {comp.name} has no out hook \"{s.hook}\" — declare out {s.hook}") }
+    if get(s, "payload", null) != null { _expr(s.payload, scope, ctx) }
+    return dl
+  }
+  if t == "Send" {
+    if _flag(ctx, "lens") { _E(s, "send is not allowed in a lens") }
+    var ep = { comp: get(s, "comp", null), expr: get(s, "expr", null), hook: s.hook, line: s.line, col: s.col, dyn: false }
+    let h = _endpoint(ep, "in", scope, "send", ctx)
+    if h.ok and not h.dyn { _fed["{s.comp}.{s.hook}"] = true }
+    if get(s, "payload", null) != null { _expr(s.payload, scope, ctx) }
+    return dl
+  }
+  if t == "Wire" {
+    if _flag(ctx, "lens") or _flag(ctx, "inHandler") { _E(s, "wire changes the world, not a transition — it is not allowed in handlers, in hooks or lenses") }
+    _wire(s, scope, ctx)
+    return dl
+  }
+  if t == "Despawn" {
+    if _flag(ctx, "lens") or _flag(ctx, "inHandler") { _E(s, "despawn changes the world, not a transition — it is not allowed in handlers, in hooks or lenses") }
+    _expr(s.expr, scope, ctx)
+    return dl
+  }
+  if t == "Emit" or t == "Record" {
+    if _flag(ctx, "lens") { _E(s, "{lower(t)} is not allowed in a lens — compartment fns and constraints only read") }
+    let comp = _ctx(ctx, "comp")
+    if t == "Emit" and comp != null and get(comp, "isComponent", false) { _E(s, "a component speaks through its out hooks — write emit out <hook> \{ … \} and wire it") }
+    _expr(s.name, scope, ctx)
+    if get(s, "payload", null) != null { _expr(s.payload, scope, ctx) }
+    if t == "Emit" and s.name.type == "Str" and len(s.name.parts) == 1 and type_of(s.name.parts[0]) == "string" { _emits = push(_emits, { name: s.name.parts[0], node: s }) }
+    return dl
+  }
+  if t == "Gap" {
+    if _flag(ctx, "lens") { _E(s, "gap is not allowed in a lens — compartment fns and constraints only read") }
+    _expr(s.msg, scope, ctx)
+    _expr(s.pressure, scope, ctx)
+    let G = _P.gaps
+    if s.pressure.type == "Num" and (s.pressure.value < G.pressure_min or s.pressure.value > G.pressure_max) { _D("GAP_IS_FIRST_CLASS", s.pressure, "GAP_IS_FIRST_CLASS: pressure is in [{G.pressure_min}, {G.pressure_max}]") }
+    let gt = get(s, "gtype", null)
+    if gt != null and not (G.types contains gt) {
+      let types = join(G.types, ", ")
+      _D("GAP_IS_FIRST_CLASS", s.gtypeTok, "gap type \"{gt}\" is not one of {types}")
+    }
+    return dl
+  }
+  if t == "Promote" {
+    if _flag(ctx, "lens") { _E(s, "promote is not allowed in a lens") }
+    _expr(s.value, scope, ctx)
+    _expr(s.proof, scope, ctx)
+    return dl
+  }
+  if t == "Try" {
+    _stmts(s.body.body, _scope(scope, false), ctx)
+    if len(s.handler.body) == 0 { _D("NO_SILENT_DROP", s, "NO_SILENT_DROP: try's else block is empty — handle the failure, log it, or let it propagate") }
+    let hs = _scope(scope, false)
+    if get(s, "errName", null) != null { _declare(hs, s.errName, { kind: "err" }, s) }
+    _stmts(s.handler.body, hs, ctx)
+    return dl
+  }
+  if t == "Expect" {
+    _expr(s.cond, scope, ctx)
+    if get(s, "msg", null) != null { _expr(s.msg, scope, ctx) }
+    return dl
+  }
+  if t == "ExprStmt" {
+    _expr(s.expr, scope, ctx)
+    return dl
+  }
+  _E(s, "internal: unknown statement {t}")
+  return dl
+}
+fn _hook_in(list, name) {
+  for h in list { if h.name == name { return true } }
+  return false
+}
+fn _hook_find(list, name) {
+  for h in list { if h.name == name { return h } }
+  return null
+}
+
+// ── wires and sends ──────────────────────────────────────────────────────────
+/** a wire or send end → { ok, dyn, hook }: ok false is an error already said; hook null is a signal or an instance only known at run time */
+fn _endpoint(ep, want, scope, verb, ctx) {
+  var e = ep
+  if get(e, "signal", null) != null { return { ok: true, dyn: false, hook: null } }
+  if get(e, "expr", null) != null {
+    _expr(e.expr, scope, ctx)
+    return { ok: true, dyn: true, hook: null }
+  }
+  let r = _resolve(scope, e.comp)
+  if r == null {
+    _E(e, "\"{e.comp}\" is not defined")
+    return { ok: false, dyn: false, hook: null }
+  }
+  var c = null
+  var dyn = false
+  let k = r.b.kind
+  if k == "comp" {
+    c = get(_components, e.comp, null)
+    if c == null {
+      _E(e, "{e.comp} is not a component — only components have hooks")
+      return { ok: false, dyn: false, hook: null }
+    }
+  } else if k == "template" or k == "kind" or k == "fn" or k == "module" {
+    if k == "template" { _E(e, "{e.comp} is a template — wire an instance: let x = spawn {e.comp}(…)") } else { _E(e, "{e.comp} is not a component — only components have hooks") }
+    return { ok: false, dyn: false, hook: null }
+  } else {
+    dyn = true
+    if get(r.b, "template", null) == null { return { ok: true, dyn: true, hook: null } }
+    c = r.b.template
+  }
+  var list = c.ins
+  var others = c.outs
+  if want == "out" {
+    list = c.outs
+    others = c.ins
+  }
+  let h = _hook_find(list, e.hook)
+  if h == null {
+    var what = "component"
+    if get(c, "isTemplate", false) { what = "template" }
+    if _hook_in(others, e.hook) {
+      var side = "out"
+      if want == "out" { side = "in" }
+      var how = "a wire runs out → in"
+      if verb == "send" { how = "send feeds in hooks" }
+      _E(e, "{e.comp}.{e.hook} is an {side} hook — {how}")
+    } else {
+      _E(e, "{what} {c.name} has no {want} hook \"{e.hook}\"")
+    }
+    return { ok: false, dyn: dyn, hook: null }
+  }
+  return { ok: true, dyn: dyn, hook: h }
+}
+fn _end_key(e) {
+  if get(e, "signal", null) != null { return "\"{e.signal}\"" }
+  return "{e.comp}.{e.hook}"
+}
+fn _wire(w, scope, ctx) {
+  let fs = get(w.from, "signal", null)
+  let ts = get(w.to, "signal", null)
+  if fs != null and ts != null {
+    _E(w, "a wire joins at least one hook — signal to signal is an on handler")
+    return null
+  }
+  let from = _endpoint(w.from, "out", scope, "wire", ctx)
+  let to = _endpoint(w.to, "in", scope, "wire", ctx)
+  if not from.ok or not to.ok { return null }
+  let key = _end_key(w.from) + "->" + _end_key(w.to)
+  if not from.dyn and not to.dyn {
+    if has(_wire_keys, key) {
+      _E(w, "wire {key} is declared twice")
+      return null
+    }
+    _wire_keys[key] = true
+  }
+  if from.hook != null and to.hook != null {
+    let bad = _shape_mismatches(get(from.hook, "shape", null), get(to.hook, "shape", null))
+    if len(bad) > 0 {
+      let why = join(bad, "; ")
+      _E(w, "seam mismatch on {key}: {why}")
+    }
+  }
+  if fs == null {
+    if not from.dyn { _wired_out["{w.from.comp}.{w.from.hook}"] = true }
+  } else {
+    _patterns = push(_patterns, fs)
+  }
+  if ts == null and not to.dyn { _fed["{w.to.comp}.{w.to.hook}"] = true }
+}
+
+// ── kinds ────────────────────────────────────────────────────────────────────
+fn _flat_kind(name, stack) {
+  if has(_flat_cache, name) { return _flat_cache[name] }
+  if not has(_kinds, name) { return null }
+  let k = _kinds[name]
+  if stack contains name {
+    let path = join(push(stack, name), " → ")
+    _E(k, "kind {name} inherits from itself: {path}")
+    return null
+  }
+  var flat = { names: [name], requires: [], ins: {}, ins_order: [], outs: {}, outs_order: [], state: {}, state_order: [], boundaryCount: null, fns: {}, fns_order: [] }
+  for p in k.parents {
+    if not has(_kinds, p.name) {
+      _E(p, "kind {name} is {p.name}, which is not a kind")
+    } else {
+      let pf = _flat_kind(p.name, push(stack, name))
+      if pf != null {
+        for n in pf.names { if not (flat.names contains n) { flat.names = push(flat.names, n) } }
+        for x in pf.requires { if not (flat.requires contains x) { flat.requires = push(flat.requires, x) } }
+        flat = _merge_map(flat, "ins", pf)
+        flat = _merge_map(flat, "outs", pf)
+        flat = _merge_map(flat, "state", pf)
+        flat = _merge_map(flat, "fns", pf)
+        if pf.boundaryCount != null { flat.boundaryCount = pf.boundaryCount }
+      }
+    }
+  }
+  var seen = {}
+  for x in k.requires { if not (flat.requires contains x) { flat.requires = push(flat.requires, x) } }
+  for h in k.ins {
+    if has(seen, h.name) { _E(h, "kind {name} declares \"{h.name}\" twice") }
+    seen[h.name] = true
+    flat = _put(flat, "ins", h.name, { name: h.name, shape: get(h, "shape", null), kind: name })
+  }
+  for h in k.outs {
+    if has(seen, h.name) { _E(h, "kind {name} declares \"{h.name}\" twice") }
+    seen[h.name] = true
+    flat = _put(flat, "outs", h.name, { name: h.name, shape: get(h, "shape", null), kind: name })
+  }
+  for f in k.state { flat = _put(flat, "state", f.name, { type: f.type, kind: name }) }
+  for f in k.fns { flat = _put(flat, "fns", f.name, { arity: f.arity, kind: name }) }
+  if get(k, "boundaryCount", null) != null { flat.boundaryCount = k.boundaryCount }
+  for n in flat.ins_order { if has(flat.outs, n) { _E(k, "kind {name} requires \"{n}\" as both an in and an out hook") } }
+  _flat_cache[name] = flat
+  return flat
+}
+fn _put(f, which, key, v) {
+  var flat = f
+  let order = which + "_order"
+  if not (flat[order] contains key) { flat[order] = push(flat[order], key) }
+  var m = flat[which]
+  m[key] = v
+  return flat
+}
+fn _merge_map(f, which, pf) {
+  var flat = f
+  for key in pf[which + "_order"] { flat = _put(flat, which, key, pf[which][key]) }
+  return flat
+}
+
+fn _conform(c) {
+  var what = "component"
+  if get(c, "isTemplate", false) { what = "template" }
+  for ref in c.kinds {
+    if not has(_kinds, ref.name) {
+      _E(ref, "{ref.name} is not a kind")
+    } else {
+      let flat = _flat_kind(ref.name, [])
+      if flat != null {
+        let pre = "{what} {c.name} does not conform to kind {ref.name}: "
+        for f in flat.requires {
+          if get(c, "isTemplate", false) and f == "id" {
+          } else if get(c, "isTemplate", false) and f == "uuid" {
+            _E(ref, pre + "it requires uuid, and a template cannot declare one (each instance derives its own)")
+          } else if get(c, f, null) == null or get(c, f, null) == "" {
+            _E(ref, pre + "it requires {f}")
+          }
+        }
+        for n in flat.ins_order {
+          let req = flat.ins[n]
+          let h = _hook_find(c.ins, n)
+          if h == null {
+            if _hook_in(c.outs, n) { _E(ref, pre + "\"{n}\" must be an in hook, not out") } else { _E(ref, pre + "missing in hook \"{n}\"") }
+          } else if req.shape != null and get(h, "shape", null) != null {
+            let m = _shape_mismatches(req.shape, h.shape)
+            if len(m) > 0 {
+              let why = join(m, "; ")
+              _E(ref, pre + "in hook \"{n}\" does not accept the kind's shape: {why}")
+            }
+          }
+        }
+        for n in flat.outs_order {
+          let req = flat.outs[n]
+          let h = _hook_find(c.outs, n)
+          if h == null {
+            if _hook_in(c.ins, n) { _E(ref, pre + "\"{n}\" must be an out hook, not in") } else { _E(ref, pre + "missing out hook \"{n}\"") }
+          } else if req.shape != null {
+            if get(h, "shape", null) == null {
+              _E(ref, pre + "out hook \"{n}\" must declare a shape the kind can check")
+            } else {
+              let m = _shape_mismatches(h.shape, req.shape)
+              if len(m) > 0 {
+                let why = join(m, "; ")
+                _E(ref, pre + "out hook \"{n}\" does not fit the kind's shape: {why}")
+              }
+            }
+          }
+        }
+        for n in flat.state_order {
+          let req = flat.state[n]
+          if not _has_field(c, n) { _E(ref, pre + "missing state field \"{n}\" ({_tname(req.type)})") }
+        }
+        if flat.boundaryCount != null {
+          var nb = 0
+          for k in c.constraints { if get(k, "boundary", false) { nb += 1 } }
+          let bc = flat.boundaryCount
+          if nb < bc.lo or nb > bc.hi {
+            var span = "{bc.lo} to {bc.hi}"
+            if bc.lo == bc.hi { span = str(bc.lo) }
+            _E(ref, pre + "it needs {span} boundary invariant(s), has {nb}")
+          }
+        }
+        for n in flat.fns_order {
+          let req = flat.fns[n]
+          let f = _hook_find(c.fns, n)
+          if f == null { _E(ref, pre + "missing fn {n}") }
+          else if len(f.params) != req.arity { _E(ref, pre + "fn {n} takes {len(f.params)} argument(s), the kind says {req.arity}") }
+        }
+      }
+    }
+  }
+}
+
+// ── compartments, components, templates ──────────────────────────────────────
+fn _is_semver(v) = v matches "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+fn _walk_needs(n, acc) {
+  var out = acc
+  if type_of(n) == "list" {
+    for x in n { out = _walk_needs(x, out) }
+    return out
+  }
+  if type_of(n) != "map" { return out }
+  if get(n, "type", null) == "Member" and get(n.obj, "type", null) == "State" and not (out contains n.name) { out = push(out, n.name) }
+  for k, v in n { if k != "binding" { out = _walk_needs(v, out) } }
+  return out
+}
+fn _reads_param(n, names) {
+  if type_of(n) == "list" {
+    for x in n { if _reads_param(x, names) { return true } }
+    return false
+  }
+  if type_of(n) != "map" { return false }
+  if get(n, "type", null) == "Ident" and names contains n.name { return true }
+  for k, v in n { if k != "binding" and _reads_param(v, names) { return true } }
+  return false
+}
+fn _compartment(c, deferred) {
+  var dl = deferred
+  var kind = "compartment"
+  if get(c, "isComponent", false) { kind = "component" }
+  if get(c, "isTemplate", false) { kind = "template" }
+  if not get(c, "isTemplate", false) {
+    if get(c, "id", null) == null { _D("EXECUTION_IS_TRACEABLE", c, "EXECUTION_IS_TRACEABLE: {kind} {c.name} declares no id — add id = \"...\"") }
+    else if has(_comp_ids, c.id) { _E(c.idTok, "{kind} id \"{c.id}\" is already used by {_comp_ids[c.id]}") }
+    else { _comp_ids[c.id] = c.name }
+  }
+  if get(c, "isComponent", false) {
+    if get(c, "namespace", null) == null { _D("EXECUTION_IS_TRACEABLE", c, "EXECUTION_IS_TRACEABLE: {kind} {c.name} declares no namespace — add namespace = \"...\"") }
+    if get(c, "version", null) == null { _D("EXECUTION_IS_TRACEABLE", c, "EXECUTION_IS_TRACEABLE: {kind} {c.name} declares no version — add version = \"1.0.0\"") }
+    else if not _is_semver(c.version) { _E(c, "{kind} {c.name}: version \"{c.version}\" is not semver (major.minor.patch)") }
+    _conform(c)
+    var nb = 0
+    for k in c.constraints { if get(k, "boundary", false) { nb += 1 } }
+    let bmax = _P.components.boundary_max
+    if nb > bmax { _E(c, "component {c.name} declares {nb} boundary invariants — a boundary is 1 to {bmax} identity-defining invariants") }
+    var hooks = {}
+    for h in c.ins + c.outs {
+      if has(hooks, h.name) { _E(h, "hook \"{h.name}\" is declared twice in {c.name}") }
+      hooks[h.name] = true
+    }
+  }
+  let tscope = _scope(_top, false)
+  var pnames = []
+  for p in c.params {
+    _declare(tscope, p.name, { kind: "param" }, p)
+    pnames = push(pnames, p.name)
+  }
+  var seen = {}
+  for f in c.state {
+    if has(seen, f.name) { _E(f, "state field \"{f.name}\" is declared twice") }
+    seen[f.name] = true
+    _expr(f.expr, tscope, _top_ctx)
+  }
+  let cscope = _scope(tscope, false)
+  for f in c.fns { _declare(cscope, f.name, { kind: "compfn", comp: c.name, arity: _arity_of(f.params) }, f) }
+  var cnames = {}
+  for k in c.constraints {
+    if has(cnames, k.name) { _E(k, "constraint \"{k.name}\" is declared twice in {c.name}") }
+    cnames[k.name] = true
+    _expr(k.expr, cscope, _with(_top_ctx, { fn: "constraint", comp: c, stateMode: "r", lens: true }))
+    let needs = _walk_needs(k.expr, [])
+    let rp = len(pnames) > 0 and _reads_param(k.expr, pnames)
+    if len(needs) == 0 and not rp { _D("unused_constraint", k, "constraint {k.name} reads no state field — it constrains nothing") }
+  }
+  var sigs = {}
+  for h in c.handlers {
+    if has(sigs, h.signal) { _E(h, "{c.name} already handles \"{h.signal}\"") }
+    sigs[h.signal] = true
+    _patterns = push(_patterns, h.signal)
+    dl = push(dl, fn() = _handler(h, cscope, c))
+  }
+  for f in c.fns { dl = push(dl, fn() = _fn_body(f, cscope, _with(_top_ctx, { comp: c, stateMode: "r", lens: true }), "lens")) }
+  for h in c.ins { dl = push(dl, fn() = _handler(h, cscope, c)) }
+  return dl
+}
+fn _handler(h, cscope, c) {
+  let s = _scope(cscope, false)
+  if get(h, "param", null) != null { _declare(s, h.param, { kind: "param" }, h) }
+  _stmts(h.body.body, s, _with(_top_ctx, { fn: "handler", comp: c, stateMode: "rw", inHandler: true }))
+}
+
+// ── the program ──────────────────────────────────────────────────────────────
+fn check(program, env) {
+  _errors = []
+  _warnings = []
+  _P = env.primitives
+  _arity = env.arity
+  _signals = env.signals
+  _emits = []
+  _components = {}
+  _templates = {}
+  _kinds = {}
+  _fed = {}
+  _wired_out = {}
+  _wire_keys = {}
+  _flat_cache = {}
+  _patterns = []
+  _comp_ids = {}
+  for it in program.items {
+    if it.type == "Compartment" and get(it, "isComponent", false) and not get(it, "isTemplate", false) { _components[it.name] = it }
+    if it.type == "Compartment" and get(it, "isTemplate", false) { _templates[it.name] = it }
+  }
+  _top = _scope(null, false)
+  _top_ctx = { fn: null, comp: null, stateMode: null, lens: false, loop: false, whatifDirect: false }
+  var has_use = false
+  for it in program.items { if it.type == "Use" { has_use = true } }
+  for it in program.items {
+    if it.type == "FnDecl" { _declare(_top, it.name, { kind: "fn", arity: _arity_of(it.params) }, it) }
+    else if it.type == "Compartment" {
+      var k = "comp"
+      if get(it, "isTemplate", false) { k = "template" }
+      _declare(_top, it.name, { kind: k }, it)
+    } else if it.type == "Kind" {
+      _declare(_top, it.name, { kind: "kind" }, it)
+      _kinds[it.name] = it
+    } else if it.type == "Use" {
+      _declare(_top, it.alias, { kind: "module" }, it)
+    }
+  }
+  var deferred = []
+  var tests = []
+  for it in program.items {
+    let t = it.type
+    if t == "Use" {
+    } else if t == "FnDecl" {
+      deferred = push(deferred, fn() = _fn_body(it, _top, _top_ctx, "fn"))
+    } else if t == "Compartment" {
+      deferred = _compartment(it, deferred)
+    } else if t == "Kind" {
+      _flat_kind(it.name, [])
+    } else if t == "Contract" {
+      deferred = push(deferred, fn() = _roads(it))
+    } else if t == "On" {
+      _patterns = push(_patterns, it.signal)
+      deferred = push(deferred, fn() = _on(it))
+    } else if t == "Axiom" {
+      _expr(it.expr, _top, _with(_top_ctx, { fn: "axiom", lens: true }))
+    } else if t == "Test" {
+      tests = push(tests, it)
+    } else {
+      deferred = _stmt(it, _top, _top_ctx, deferred)
+    }
+  }
+  for d in deferred { d() }
+  for t in tests { _stmts(t.body.body, _scope(_top, true), _with(_top_ctx, { fn: "test" })) }
+  if not has_use {
+    for name, c in _components {
+      for h in c.outs { if not has(_wired_out, "{c.name}.{h.name}") { _D("SIGNAL_MUST_ROUTE_OR_LOG", h, "SIGNAL_MUST_ROUTE_OR_LOG: out hook {c.name}.{h.name} has no wire — what it sends will be logged as unrouted") } }
+      for h in c.ins { if not has(_fed, "{c.name}.{h.name}") { _D("SIGNAL_MUST_ROUTE_OR_LOG", { line: h.nameLine, col: h.nameCol }, "in hook {c.name}.{h.name} is never fed — no wire or send reaches it") } }
+    }
+    for em in _emits {
+      if not _matches_any(em.name) { _D("SIGNAL_MUST_ROUTE_OR_LOG", em.node, "SIGNAL_MUST_ROUTE_OR_LOG: no handler matches \"{em.name}\" — it will be logged as unrouted") }
+    }
+  }
+  return { errors: _sorted(_errors), warnings: _sorted(_warnings) }
+}
+fn _roads(it) {
+  var i = 0
+  for r in it.contract.roads {
+    var at = it
+    if get(it, "roadAt", null) != null and i < len(it.roadAt) and it.roadAt[i] != null { at = it.roadAt[i] }
+    let a = split(r.from, ".")
+    let b = split(r.to, ".")
+    _wire({ type: "Wire", from: { comp: a[0], hook: a[1], line: at.line, col: at.col }, to: { comp: b[0], hook: b[1], line: at.line, col: at.col }, line: at.line, col: at.col }, _top, _top_ctx)
+    i += 1
+  }
+}
+fn _on(it) {
+  let s = _scope(_top, false)
+  if get(it, "param", null) != null { _declare(s, it.param, { kind: "param" }, it) }
+  _stmts(it.body.body, s, _with(_top_ctx, { fn: "handler", inHandler: true }))
+}
+fn _matches_any(n) {
+  if _signals contains n { return true }
+  for p in _patterns {
+    if p ends_with "*" {
+      if n starts_with slice(p, 0, len(p) - 1) { return true }
+    } else if p == n {
+      return true
+    }
+  }
+  return false
+}
+fn _sorted(list) = sort_by(list, fn(d) = d.line * 100000 + d.col)

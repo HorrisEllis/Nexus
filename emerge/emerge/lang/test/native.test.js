@@ -482,6 +482,39 @@ for (const [label, file, withLedger] of [['components.eg as written, its ledger 
   else { fail++; console.log('✗ every example natively — ' + bad.join('; ')); }
 }
 
+// CIE6: the checker in Emerge (lang/cie/check.eg). Every program of test/world/check-corpus.json (harvested from lang.test.js and the examples) is
+// parsed by lang/parser.js; lang/checker.js gives the expected diagnostics; check.eg, interpreted and native, must give the same, every error and
+// warning with its line, column and message. A parse error is the parser's, so those programs are skipped here.
+{
+  const { parse } = require(path.join(LANG, 'parser.js'));
+  const { check } = require(path.join(LANG, 'checker.js'));
+  const { builtinArity, runtimeSignals } = require(path.join(LANG, 'runtime.js'));
+  const build = require(path.join(LANG, 'build-loader.js'));
+  const rep = (k, v) => (typeof v === 'bigint' ? { bigint: v.toString() } : v);
+  const cases = [], want = [];
+  for (const src of JSON.parse(fs.readFileSync(path.join(__dirname, 'world', 'check-corpus.json'), 'utf8'))) {
+    let tree; try { tree = parse(src, 'main.eg'); } catch (e) { continue; }
+    const r = check(parse(src, 'main.eg'));
+    cases.push(JSON.parse(JSON.stringify(tree, rep)));
+    want.push([...r.errors.map(d => `E ${d.line}:${d.col} ${d.message}`), ...r.warnings.map(d => `W ${d.line}:${d.col} ${d.message}`), '--'].join('\n'));
+  }
+  const arity = {}; for (const [k, v] of builtinArity()) arity[k] = v;
+  const data = path.join(TMP, 'check-cases.json');
+  fs.writeFileSync(data, JSON.stringify({ env: { arity, primitives: build.primitives(), signals: runtimeSignals() }, cases }, rep));
+  const src = path.join(TMP, 'check-judge.eg');
+  fs.writeFileSync(src, [`use ${JSON.stringify(path.join(LANG, 'cie', 'check.eg'))} as C`, 'let data = parse_json(read_file(args()[0]))',
+    'for p in data.cases {', '  let r = C.check(p, data.env)', '  for d in r.errors { print("E {d.line}:{d.col} {d.message}") }',
+    '  for d in r.warnings { print("W {d.line}:{d.col} {d.message}") }', '  print("--")', '}'].join('\n') + '\n');
+  const w = want.join('\n') + '\n';
+  const interp = spawnSync(process.execPath, [EG, 'run', src, data], { encoding: 'utf8', maxBuffer: 1 << 26 });
+  const exe = path.join(TMP, 'check-judge.bin');
+  const build2 = spawnSync(process.execPath, [EG, 'native', src, '-o', exe], { encoding: 'utf8' });
+  const run = build2.status === 0 ? spawnSync(exe, [data], { encoding: 'utf8', maxBuffer: 1 << 26 }) : null;
+  const nd = (w.match(/^[EW] /gm) || []).length;
+  if (run && cases.length >= 200 && interp.stdout === w && run.stdout === w) { pass++; console.log(`✓ the checker in Emerge: ${cases.length} programs, ${nd} diagnostics equal to checker.js, interpreted and native`); }
+  else { fail++; console.log('✗ the checker in Emerge — ' + (run ? `interp ${interp.stdout === w} native ${run.stdout === w} ${interp.stderr.slice(0, 200)}` : (build2.stderr || build2.stdout))); }
+}
+
 // modules: use across files, with globals and functions on both sides
 {
   const dir = path.join(TMP, 'mods');

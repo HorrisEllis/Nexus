@@ -18,6 +18,19 @@
 let W = "__world"
 let RX = "__regex"
 let REGEX_PATH = "<cie>/regex.eg"
+let JSONM = "__json"
+let JSON_PATH = "<cie>/json.eg"
+fn is_parse_json(n) = has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and n.callee.name == "parse_json" and len(n.args) == 1
+fn uses_parse_json(n) {
+  if type_of(n) == "list" {
+    for x in n { if uses_parse_json(x) { return true } }
+    return false
+  }
+  if type_of(n) != "map" { return false }
+  if is_parse_json(n) { return true }
+  for k, v in n { if uses_parse_json(v) { return true } }
+  return false
+}
 let SORT = "__sort"
 let SORT_PATH = "<cie>/sort.eg"
 /** a call to the builtin sort_by (not a fn the program defines itself) */
@@ -52,6 +65,8 @@ fn rx_only(n) {
     return out
   }
   if type_of(n) != "map" { return n }
+  // parse_json(text) → __json.parse(text): lang/native/json.eg, the JSON reader in Emerge (CIE6, found writing the checker's judge)
+  if is_parse_json(n) { return mk("Call", n, { callee: mk("Member", n, { obj: mk("Ident", n, { name: JSONM }), name: "parse" }), args: rx_only(n.args) }) }
   if is_sort_by(n, OWN_SORT_BY) {
     var args = rx_only(n.args)
     if len(args) == 2 { args = push(args, mk("Str", n, { parts: ["asc"] })) }
@@ -384,11 +399,13 @@ fn lower(ast, version, test_mode) {
   OWN_SORT_BY = false
   for it in ast.items { if it.type == "FnDecl" and it.name == "sort_by" { OWN_SORT_BY = true } }
   let rx = uses_matches(ast.items)
+  let pj = uses_parse_json(ast.items)
   // sort_by lives in the prelude since 2026-11-07 (optional parameters); the <cie>/sort.eg rewrite it replaced is archived
   let sb = false
   var src = ast
-  if rx or sb {
+  if rx or sb or pj {
     var uses = []
+    if pj { uses = push(uses, mk("Use", ast, { path: JSON_PATH, alias: JSONM })) }
     if rx { uses = push(uses, mk("Use", ast, { path: REGEX_PATH, alias: RX })) }
     if sb { uses = push(uses, mk("Use", ast, { path: SORT_PATH, alias: SORT })) }
     var with_rx = {}
@@ -409,6 +426,7 @@ fn lower_world(ast, version, test_mode) {
     if it.type == "Kind" { KINDS[it.name] = { parents: it.parents, state: it.state } }
     if it.type == "Use" { MODULES[it.alias] = true }
     MODULES[RX] = true
+    MODULES[JSONM] = true
     MODULES[SORT] = true
     if it.type == "Compartment" and it.isTemplate { HAS_TEMPLATES = true }
   }

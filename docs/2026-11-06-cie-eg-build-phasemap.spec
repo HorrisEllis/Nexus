@@ -381,3 +381,16 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # Not native yet, refused by name: a lambda with defaults (the dynamic calling convention), and a module fn with defaults called through its module
 # with fewer arguments (CIE14).
 # Proof: native.test 104/104, every example plus sort_by.eg and optional.eg natively equal eg run; selfhost 16/16; lang 166/166; differential 19/19.
+
+# ── ADDENDUM 2026-11-07 (0.60.440) — CIE6 slice a built: the checker in Emerge, equal to checker.js on 211 programs ──
+# James, 2026-11-07: "continue"
+# lang/cie/check.eg: lang/checker.js ported rule for rule (scopes, names, arity with optional parameters, assignment rules, whatif/test boundaries,
+# state rules, lenses, emits and records, gaps, try, wires and sends with their seams, kinds and conformance, compartments, components, templates,
+# the diagnostics' severities from primitives, SIGNAL_MUST_ROUTE_OR_LOG), its input the tree lang/parser.js builds and an environment (builtin
+# arities, primitives, the runtime's signals) given as data.
+# The judge: test/world/check-corpus.json, 227 programs harvested by running lang.test.js with its harness recorded, plus the examples; 211 parse
+# (the other 16 test the parser). check.eg gives the same 75 errors and 43 warnings as checker.js, line, column and message, interpreted and native
+# (native.test 105/105). Native: the 211 programs checked in 0.17 s.
+# parse_json lowered natively onto lang/native/json.eg (a gap found writing the judge, built).
+# Slice b, next: front.eg builds the same tree as lang/parser.js (State nodes, Kind and Contract in full), so the native compiler runs check.eg
+# itself, and the let-write gap (CIE14 c) closes natively.
