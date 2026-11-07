@@ -89,33 +89,33 @@ spec:
         scanner idea (declared ≠ served) applied to system boundaries."
       ui: "deferred to DB7, said: today the numbers are on the command and the route."
     DB2_the_registry_says_what_it_offers:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       does: >-
         Each system's registry-components.js gains, beside its route rows, what it offers other systems (capabilities: name,
         the file and export that serve it, the route and command that reach it), the events it emits and the events it hears.
         Seeded from DB1: every crossing today names a target file and export, which is a capability the target is already
         giving away undeclared. Loom reads it, so the registry is wired, not a list.
     DB3_the_drawbridge:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       does: >-
         lib/drawbridge.js: cross(from, to, capability, args). Looks the capability up in the target's registry (DB2), checks
         the handshake (DB5), records the crossing on the bus (DB4), then calls it (in-process or HTTP, per DB0b). A capability
         not declared is refused and said why. The archetype's lib/handoff.js is the file-moving form of the same door, for
         work that should be tangible (his words in it); cross() is the call form. Both write the same record.
     DB4_one_bus_per_system:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       does: >-
         Every crossing and every system event goes through the system's bus, archetype-style: ledger first, an undeclared
         event delivered but marked. Reuses idearium/event-taxonomy.cjs and cortex/core/raid/event-taxonomy.js as the declared
         events; nexus/nexus-bus.js carries them between systems.
     DB5_the_handshake_for_every_system:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       does: >-
         orchestrator/lib/contract-handshake.js extended from HTTP services to every system in the registry: its contract is
         its registry (routes, capabilities, events), hashed; the trust state is checked at boot and on change, and a crossing
         into a MISMATCH or UNREACHABLE system is refused with why.
     DB6_move_the_crossings:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       depends_on: [SV7_intelligence_cos_cortex]   # 2026-10-24: cut into SV0–SV7 (docs/2026-10-23-cos-spine-phasemap.spec addendum (b))
       does: >-
         The crossings move to the drawbridge one system pair at a time, largest first, each move lowering the DB1 baseline.
@@ -123,13 +123,13 @@ spec:
         tension) are offered as capabilities with routes and commands — this is GW23 (wire what exists) of
         docs/2026-10-15-gate-held-work-phasemap.spec, done through the drawbridge.
     DB7_the_ui_floats_on_top:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: "ui floats ontop"
       does: >-
         A drawbridge view reads only the routes: each system, its gate (trust state), what it offers, the crossings today and
         the ratchet's number going down. No logic in the UI.
     DB8_agents_have_it:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       does: "Every drawbridge route has a command row, so copilot and every agent reach it through nexus.command."
 
   build_order: [DB1, DB2, DB6 (debugging systems), DB3, DB4, DB5, DB7, DB8]
@@ -179,14 +179,14 @@ spec:
         bus: nexus/nexus-bus.js and the archetype's lib/bus.js. COS compartments: lib/cos-bridge.js, cos/compartment."
   phases_added:
     DB9_every_repo_generates_its_registry:
-      status: "PARTLY BUILT 0.60.127 — Nexus's own systems: lib/drawbridge-registry.js registryOf/graph (GET /api/system/registry[/:system], `system registry`). OPEN: a repo's registry generated by default on import or chunk (architecture.js runs only on request)."
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: PARTLY BUILT 0.60.127 — Nexus's own systems: lib/drawbridge-registry.js registryOf/graph (GET /api/system/registry[/:system], `system registry`). OPEN: a repo's registry generated by default on import or chunk (architecture.js runs only on request)."
       does: >-
         A repo's registry (architecture.js) is generated when it is imported or chunked, not only on request, and kept as
         nodes. Nexus's own systems get the same: each system's generated registry is its dependency graph (what it depends
         on, what it offers, who consumes it), seeded by DB1's crossings. The hand-kept registry-components.js stays as the
         declared half; the generated one is the observed half.
     DB10_shadow_and_negative_space_at_the_drawbridge:
-      status: "PARTLY BUILT 0.60.127 — from source: declared routes not served, dangling wires (absent), files reached past the drawbridge (extra); settle → gaps through lib/shadow.js. OPEN: the runtime half (events seen on the bus, handshakes answered, handoff receipts) waits on DB4/DB5. Said: lib/drawbridge-registry.js itself adds one upward crossing (into loom/scanners/capability-map.js), held in the baseline by name; it moves to loom's route when DB3 lands."
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: PARTLY BUILT 0.60.127 — from source: declared routes not served, dangling wires (absent), files reached past the drawbridge (extra); settle → gaps through lib/shadow.js. OPEN: the runtime half (events seen on the bus, handshakes answered, handoff receipts) waits on DB4/DB5. Said: lib/drawbridge-registry.js itself adds one upward crossing (into loom/scanners/capability-map.js), held in the baseline by name; it moves to loom's route when DB3 lands."
       does: >-
         The declared registry is the shadow; what is observed (DB1 crossings, served routes, events seen on the bus,
         handshakes answered, handoffs received) is what is present. The negative space is read as data through lib/shadow.js,
@@ -194,13 +194,13 @@ spec:
         no receipt), and used but never declared (a crossing, an undeclared event). Each absence is a gap and a liminal item,
         so intelligence (cfr, rfr2, sigma) reasons over what did not happen at a boundary. This is the debugging he asked for.
     DB11_cos_compartment_per_system:
-      status: "PARTLY BUILT 0.60.134 — James: \"and you know i mean cos compartment right? make a template for it now that loom holds\". loom/templates/cos-compartment.js: each system's compartment (the nexus-self-<system> his 0.39.261 made) with a checkable intent (end state: sovereign), mounts, drawbridge, stores, and a seal ready only when sovereign; served by loom (/api/compartments). OPEN: moving a sealed system in (its process run inside, its folder read-write) — nexus-healer first."
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: PARTLY BUILT 0.60.134 — James: /'and you know i mean cos compartment right? make a template for it now that loom holds/'. loom/templates/cos-compartment.js: each system's compartment (the nexus-self-<system> his 0.39.261 made) with a checkable intent (end state: sovereign), mounts, drawbridge, stores, and a seal ready only when sovereign; served by loom (/api/compartments). OPEN: moving a sealed system in (its process run inside, its folder read-write) — nexus-healer first."
       does: >-
         Each system runs in its own COS compartment (lib/cos-bridge.js), and its registry is its drawbridge: routes, CLI,
         handoffs. It comes after DB6, because a system cannot be isolated while other systems still require() its files.
         The ratchet's number reaching zero for a system is the proof that it can move into its compartment.
     DB12_the_ui_handshake:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       does: >-
         A UI declares the routes and events it uses; at load it shakes hands with the system's registry, and a call to
         anything the registry does not declare is refused and shown. The UI holds no state and no logic of its own, so it can
@@ -241,15 +241,14 @@ spec:
         (DB15) — and heartbeat(name): its health route called, with status (up, degraded, down), latency and why. GET
         /api/system/tunnel[/:name], `system tunnel [<name>]`. The read side only: a call THROUGH the tunnel is DB3.
     DB14_heartbeat_over_routes:
-      status: "PARTLY BUILT 0.60.128 — one probe per call through its health route. OPEN: lib/heartbeat.js beating every
-        system from the registry, its degraded/dead events on the bus, kept across restarts."
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: PARTLY BUILT 0.60.128 — one probe per call through its health route. OPEN: lib/heartbeat.js beating every system from the registry, its degraded/dead events on the bus, kept across restarts."
     DB15_toasts_declared:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       does: >-
         A system declares in its registry which of its events a person should see (toasts: [{ event, level, text }]). The UI
         toasts what the registry says instead of a list in app.js, so the UI holds no knowledge of its own (disposable).
     DB16_a_registry_for_each_system:
-      status: "PARTLY BUILT 0.60.229 — drafted for the systems with none (0.60.231, Idearium's 15 only: orchestrator, cos, components; lib/registry-draft.js; <system>/registry-components.draft.json); OPEN: his acceptance, system by system"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: PARTLY BUILT 0.60.229 — drafted for the systems with none (0.60.231, Idearium's 15 only: orchestrator, cos, components; lib/registry-draft.js; <system>/registry-components.draft.json); OPEN: his acceptance, system by system"
       does: >-
         A registry drafted for every system that has none (cos, nexus, warp, orchestrator, meta, siso, cli, cockpit,
         diagnostic, auth, mesh; then remote-desktop, emergence, jaa, erosmancer, sentinel, security) from its source: the
@@ -281,10 +280,7 @@ spec:
       node naming the systems its handler reaches). Only the first is built; the second needs DB4's bus. To confirm.
   phases_added_c:
     DB17_files_stay_with_their_system:
-      status: "PARTLY BUILT 0.60.129 — the census: lib/system-boundary.js homes(), GET /api/system/homes, `system homes
-        [<system>]`. OPEN: the moves, one system at a time, each a proposal: the file moves into its system and leaves a
-        one-line re-export at the old path, so nothing that requires it breaks, then the re-export goes when the ratchet
-        shows no one uses it."
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: PARTLY BUILT 0.60.129 — the census: lib/system-boundary.js homes(), GET /api/system/homes, `system homes [<system>]`. OPEN: the moves, one system at a time, each a proposal: the file moves into its system and leaves a one-line re-export at the old path, so nothing that requires it breaks, then the re-export goes when the ratchet shows no one uses it."
       measured: "0.60.129: 495 files in the shared folders (lib, hooks, service, contracts, components, architecture-spec,
         seams). 93 belong to one system: used only by it, or named for it in hooks/ or service/ (idearium 34, copilot 14,
         guardian 9, cortex 9, nexus 5, clear-glass 4, orchestrator 4, cli 3, others 1-2). 58 are required by nothing through a
@@ -397,7 +393,7 @@ spec:
       - "genesis's lib/handoff.js, contracts/handshake.js, interaction-contract.json + GET /contract, lib/commands.js."
   phases_added_f:
     DB19_genesis_sandboxed_fork:
-      status: "PARKED — built 2026-10-21 as a delta (fork_of genesis 1.5.0), test-genesis-sandboxed GSB-01..04 passing; he then said \"i asked for a fork\": a full copy or this delta is his to confirm, and he turned to Idearium building any project"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: PARKED — built 2026-10-21 as a delta (fork_of genesis 1.5.0), test-genesis-sandboxed GSB-01..04 passing; he then said /'i asked for a fork/': a full copy or this delta is his to confirm, and he turned to Idearium building any project"
       depends_on: [DB13_the_tunnel]
       files: [idearium/spec-engine/templates/genesis-sandboxed.spec, idearium/spec-engine/templates.js]
       does: >-
@@ -407,7 +403,7 @@ spec:
         Registered as template 'genesis-sandboxed'; seeded as genesis + fork.
       proof: "manifest check clean (6 files, 5 layers); GSB-01..04"
     DB20_sealed_archetype:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       depends_on: [DB19_genesis_sandboxed_fork]
       files: [cos/archetype/nexus-system.js, cos/archetype/genesis-catalog.js]
       does: >-
@@ -455,7 +451,7 @@ spec:
         load balancing beyond the spec's spawn-and-balance."
   phases_added_g:
     DB21_one_registry_schema_every_level:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       depends_on: [DB16_a_registry_for_each_system, DB9_every_repo_generates_its_registry]
       files: [loom/templates/registry-level.spec, lib/registry-level.js, tests/modules/test-registry-level.test.js]
       does: >-
@@ -465,13 +461,13 @@ spec:
         the tree. The existing registry-components.js files are read as the system level unchanged (§8.6).
       proof: "the 11 existing system registries validate as level 'system'; a component registry validates as 'component'; one walk from the root reaches every system"
     DB22_the_root_and_the_missing_four:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       depends_on: [DB21_one_registry_schema_every_level]
       files: [registry-components.js, orchestrator/registry-components.js, components/registry-components.js, cos/registry-components.js, lib/registry-components.js]
       does: "Nexus's root registry (its children are the 15 systems) and registries for orchestrator, components, cos and core, written from what each does today (§0.1)."
       proof: "the walk from the root reaches all 15; each new registry's routes are served (loom's declared ≠ served scanners)"
     DB23_autopilot_to_the_orchestrator:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       depends_on: []
       files: [orchestrator/autopilot.js, lib/nexus/autopilot.js, package.json, cos/app/runtime.js, lib/nexus-self/systems.js]
       does: >-
@@ -479,7 +475,7 @@ spec:
         process. package.json scripts and COS's entryOf learn the new path, keeping the old ones for installed releases.
       proof: "npm run start:all boots every system from orchestrator/autopilot.js; a COS release with the old path still starts"
     DB24_cos_reads_only_the_registry:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       depends_on: [DB22_the_root_and_the_missing_four, DB11_cos_compartment_per_system]
       files: [cos/manager.js, cos/kernel.js, cos/compartment/process-runner.js]
       does: >-
@@ -487,7 +483,7 @@ spec:
         compartment, its lifecycle verbs are what COS may do to it. A registry COS has never seen runs the same way (agnostic).
       proof: "a fixture registry tree with a fake system COS has never seen is spawned, health-checked and despawned"
     DB25_the_lifecycle_verbs:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       depends_on: [DB24_cos_reads_only_the_registry]
       files: [cos/manager.js, cos/workspace/vm-control.js, cos/compartment/process-runner.js, idearium/cli/route-commands.js]
       does: >-
@@ -496,7 +492,7 @@ spec:
         instance behind its registry). Each act is a person's or a rule he set (cos-spine.spec), on the event ledger.
       proof: "each verb on a fixture system: the act, its ledger row, and the state after; an agent's call is a proposal, not the act"
     DB26_the_ui_floats_on_the_registry:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       depends_on: [DB25_the_lifecycle_verbs, DB12_the_ui_handshake]
       files: [idearium/ui/desktop.html, idearium/ui/js/registry-view.js]
       does: "A view built only from the registry walk and the event ledger: every level, its state, its verbs. It shakes hands first (DB12)."

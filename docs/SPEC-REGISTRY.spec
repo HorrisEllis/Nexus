@@ -2073,3 +2073,6 @@ spec:
 # packs and tools?" · "Yes. Like cos becomes the hub for the nexus ego system". ERV5 (the visual coding and debug environment) waits on CIE11,
 # EM2, RF1, CF1 and CP11 (his order). And registered late: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec (EO0–EO5), written
 # 2026-11-01 and never registered.
+# ADDENDUM 2026-11-07 — registered: docs/2026-11-07-phases-are-ideas-phasemap.spec (PIC_D0–PIC_D2, PIC0–PIC2): his "Look at the phases. Those
+# are all top of my head ideas" · "Yes. Anything that can give proof needs to be archived and logged in the proof of compentency". PIC0 built:
+# the door's 143 open phases in 10 maps shelved as ideas; 56 of 65 tests that cite the door's built phases pass (docs/cleaning/2026-11-07-the-door.md).

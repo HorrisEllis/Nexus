@@ -116,7 +116,7 @@ spec:
       proof: "a .contract submitted to RAID: its bricks run, the row PASSes with the audit; a constitution-refused one is BLOCKED and never runs; an exhausted one emits HEAL_REQUESTED naming its bricks and their classes; a legacy contract still runs"
 
     RD1_every_build_goes_through_raid:
-      status: "PARTLY DONE 0.60.37 (RD1a) — the phase build runs through RAID's runContract (a v2 row, RAID's gates, the verdict, self-heal); spec-chunk builds and compile pass RAID's gates (gateBefore) before they run. RD1b open: the spec engine's chunks as bricks of a contract (their completion arrives later through Guardian's job callback, so the chunk loop must become the scheduler's)"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: PARTLY DONE 0.60.37 (RD1a) — the phase build runs through RAID's runContract (a v2 row, RAID's gates, the verdict, self-heal); spec-chunk builds and compile pass RAID's gates (gateBefore) before they run. RD1b open: the spec engine's chunks as bricks of a contract (their completion arrives later through Guardian's job callback, so the chunk loop must become the scheduler's)"
       depends_on: [RD0_raid_runs_the_contract]
       files: [idearium/api/index.js, lib/repo-agent.js]
       does: >-
@@ -179,7 +179,7 @@ spec:
       proof: "Clear Glass: Nexus's Releases lists the backfill and the newest; opening one shows its commits and diff"
 
     AT1_atlases_and_specs_from_releases:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       depends_on: [RN2_changelog_from_the_commits]
       files: [lib/atlas-generate.js, scripts/generate-atlases.js]
       does: >-
@@ -189,7 +189,7 @@ spec:
       proof: "every atlas names its system's newest release; the registry and the releases agree; a release regenerates the atlases it touched"
 
     FR1_failure_reports:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       depends_on: [RD0_raid_runs_the_contract]
       files: [lib/contract-failures.js, lib/fault-log.js, cortex/self-heal/failure-mode-forensics.js, lib/reflection.js]
       does: >-
@@ -201,7 +201,7 @@ spec:
       proof: "a run with planted failures of three classes: three fault rows, one failure_mode for the recurring one with its macro, a report naming each with a next step, reflection's score written"
 
     ST1_stability_checks:
-      status: OPEN
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       depends_on: [FR1_failure_reports]
       files: [lib/checks/]
       does: "QA1's next runners where they guard this work: CK-231 half-states (bricks or rows left RUNNING past their timeout), CK-245 a retry changes something (consecutive identical attempts), CK-247 bounded decomposition, CK-239 every edge has two ends (contract depends_on, loom wires)."

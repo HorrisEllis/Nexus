@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PIC1_the_rest:bf4de5b205e47561
+type: graph
+id: phase:PIC1_the_rest:bf4de5b205e47561
+context: dependency graph of phase PIC1_the_rest
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1794052536755
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794052536755
+lastSeenAt: 1794052536755
+fingerprint: null
+payload:
+  for: PIC1_the_rest
+  kind: phase
+  repo: null
+  hash: bf4de5b205e47561
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC0_the_door_maps
+    dependents: []
+    upstream:
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC0_the_door_maps
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC_D0_an_idea_owes_nothing
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC_D1_proof_is_kept_and_logged
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC_D2_the_shelf_not_a_new_status
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (1): PIC0_the_door_maps · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC0_the_door_maps
+        kind: declared

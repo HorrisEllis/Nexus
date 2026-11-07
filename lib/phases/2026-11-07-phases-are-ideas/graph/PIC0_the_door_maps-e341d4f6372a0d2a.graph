@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PIC0_the_door_maps:e341d4f6372a0d2a
+type: graph
+id: phase:PIC0_the_door_maps:e341d4f6372a0d2a
+context: dependency graph of phase PIC0_the_door_maps
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794052536751
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794052536751
+lastSeenAt: 1794052536751
+fingerprint: null
+payload:
+  for: PIC0_the_door_maps
+  kind: phase
+  repo: null
+  hash: e341d4f6372a0d2a
+  nodes:
+    - path: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: docs/2026-10-12-request-spine-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC_D0_an_idea_owes_nothing
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC_D1_proof_is_kept_and_logged
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC_D2_the_shelf_not_a_new_status
+    dependents:
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC1_the_rest
+    upstream:
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC_D0_an_idea_owes_nothing
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC_D1_proof_is_kept_and_logged
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC_D2_the_shelf_not_a_new_status
+    downstream:
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC1_the_rest
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC1_the_rest
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - >-
+        depends on (3): PIC_D0_an_idea_owes_nothing, PIC_D1_proof_is_kept_and_logged,
+        PIC_D2_the_shelf_not_a_new_status
+      - 'needed by (1): PIC1_the_rest · finishing it unlocks PIC1_the_rest'
+    edges:
+      - from: docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC_D0_an_idea_owes_nothing
+        kind: declared
+      - from: docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC_D1_proof_is_kept_and_logged
+        kind: declared
+      - from: docs/2026-11-07-phases-are-ideas-phasemap.spec::PIC_D2_the_shelf_not_a_new_status
+        kind: declared

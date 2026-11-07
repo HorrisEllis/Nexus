@@ -29,7 +29,7 @@ phases:
 
   IN0_baseline:
     layer: foundation
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: []
     files: [scripts/tree-census.js]
     does: >-
@@ -40,7 +40,7 @@ phases:
 
   IN1_old_files_out:
     layer: foundation
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [IN0_baseline]
     files: [scripts/tree-census.js, _archive/]
     does: >-
@@ -51,7 +51,7 @@ phases:
 
   IN2_quotes_ledger:
     layer: foundation
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [IN0_baseline]
     files: [docs/quotes/, scripts/extract-quotes.js, scripts/generate-atlases.js]
     does: >-
@@ -63,7 +63,7 @@ phases:
 
   IN3_registry_is_the_spine:
     layer: library
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [IN0_baseline]
     files: [lib/component-registry.js, lib/project-registry.js, lib/component-store.js, loom/bootstrap.js]
     does: >-
@@ -75,7 +75,7 @@ phases:
 
   IN4_retire_hand_maps:
     layer: library
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [IN3_registry_is_the_spine]
     files: [loom/maps/, loom/bootstrap.js]
     does: >-
@@ -85,7 +85,7 @@ phases:
 
   IN5_architect_mirrors_the_registry:
     layer: interface
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [IN3_registry_is_the_spine]
     files: [architect/service.js, architect/src/ui/]
     does: >-
@@ -95,7 +95,7 @@ phases:
 
   IN6_systems_onto_the_spine:
     layer: integration
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [IN4_retire_hand_maps]
     files: [orchestrator/, guardian/, idearium/, copilot/, intelligence/, loom/, versionium/, diagnostic/, architect/, cortex/, ollama/, clear-glass/]
     does: >-
@@ -106,7 +106,7 @@ phases:
 
   IN7_every_phase_and_spec_on_the_spine:
     layer: library
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [IN3_registry_is_the_spine]
     files: [lib/phase-dag.js, lib/phase-plan.js, idearium/repo/phase-mapping.js, idearium/spec-engine/]
     does: >-
@@ -118,7 +118,7 @@ phases:
 
   IN8_any_size:
     layer: foundation
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [IN0_baseline]
     files: [idearium/repo/nexus-self.js, loom/bootstrap.js, lib/jaa-store.js, idearium/repo/import-pipeline.js]
     does: >-
@@ -149,7 +149,7 @@ phases:
 
   NC1_neutral_core_boundary:
     layer: foundation
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [IN3_registry_is_the_spine]
     files: [lib/core/manifest.js, lib/core/proof.js, lib/phase-dag.js, lib/project-registry.js]
     does: >-
@@ -160,7 +160,7 @@ phases:
 
   AD1_adapter_contract:
     layer: foundation
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [NC1_neutral_core_boundary]
     files: [lib/adapters/contract.js]
     does: >-
@@ -171,7 +171,7 @@ phases:
 
   AD2_javascript_adapter:
     layer: library
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [AD1_adapter_contract]
     files: [lib/adapters/javascript.js, lib/verify-first.js, lib/coder-brief.js, lib/phase-plan.js, loom/scanners/source-map.js]
     does: >-
@@ -181,7 +181,7 @@ phases:
 
   AD3_python_adapter:
     layer: library
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [AD1_adapter_contract]
     files: [lib/adapters/python.js]
     does: >-
@@ -191,7 +191,7 @@ phases:
 
   AD4_documents_adapter:
     layer: library
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [AD1_adapter_contract]
     files: [lib/adapters/documents.js]
     does: >-
@@ -201,7 +201,7 @@ phases:
 
   NT1_neutrality_test:
     layer: integration
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [AD2_javascript_adapter, AD3_python_adapter, AD4_documents_adapter]
     files: [tests/modules/test-neutrality.test.js]
     does: >-
@@ -212,7 +212,7 @@ phases:
 
   FP1_feature_pilot:
     layer: integration
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [NC1_neutral_core_boundary, AD2_javascript_adapter]
     files: [features/verify-first.feature.json, features/phase-dag.feature.json, features/file-manager.feature.json]
     does: >-
@@ -223,7 +223,7 @@ phases:
 
   SC1_scaling_limits_named:
     layer: foundation
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [IN8_any_size]
     files: [lib/phase-dag.js, lib/jaa-store.js, loom/bootstrap.js, idearium/repo/nexus-self.js]
     does: >-
@@ -235,7 +235,7 @@ phases:
 
   ST1_schema_for_everything_reusable:
     layer: foundation
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [IN0_baseline]
     files: [lib/node-schemas/, loom/templates/, architecture-spec/, idearium/spec-engine/templates/genesis.spec]
     does: >-
@@ -264,7 +264,7 @@ phases:
 
   PN1_phases_to_nodes:
     layer: foundation
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [ST1_schema_for_everything_reusable]
     files: [scripts/phasemaps-to-nodes.js, lib/node-schemas/schema.phase, lib/node-schemas/schema.phasemap]
     does: >-
@@ -281,7 +281,7 @@ phases:
 
   PN2_dual_read:
     layer: library
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [PN1_phases_to_nodes]
     files: [lib/phase-dag.js, idearium/repo/phases.js, loom/scanners/phasemap-map.js]
     does: >-
@@ -291,7 +291,7 @@ phases:
 
   PN3_maps_rendered_from_nodes:
     layer: library
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [PN2_dual_read]
     files: [scripts/render-phasemaps.js, idearium/spec-engine/]
     does: >-
@@ -302,7 +302,7 @@ phases:
 
   PRC1_phase_reality_check:
     layer: library
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: []
     files: [lib/phase-reality.js, lib/phase-dag.js, lib/verify-first.js, lib/project-registry.js, idearium/api/index.js]
     does: >-
@@ -315,7 +315,7 @@ phases:
 
   VC1_a_change_entry_for_every_event:
     layer: library
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: []
     files: [lib/change-entry.js, lib/node-schemas/schema.change, lib/repo-versions.js, cortex/core/raid/contract-gates.js, idearium/api/index.js]
     does: >-
@@ -328,7 +328,7 @@ phases:
 
   VC2_changelogs_rendered:
     layer: interface
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [VC1_a_change_entry_for_every_event, IN2_quotes_ledger]
     files: [scripts/render-changelog.js, idearium/ui/js/repo-versions.js]
     does: >-

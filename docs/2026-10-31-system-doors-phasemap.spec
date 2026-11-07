@@ -46,7 +46,7 @@ decisions:
     by: "his, 2026-11-05: \"the cli commands for each server.js is meant to be how each ui and copilot interact with the system through the interaction contract.\""
 phases:
   DO6_every_door_on_its_registry_and_walled_by_cos:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     spec: docs/system-doors.spec
     blocks: [MOD-DOOR-WALLED]
     depends_on: [DO_D9_registry_then_cos_through_the_door, DO1_idearium_door, DO2_architect_door, DO3_cortex_door, DO5_clear_glass_door]
@@ -65,7 +65,7 @@ phases:
     does: "the 0-routes defect: count routes, channels or components with a route, and say which"
     proof: "Clear Glass's contract reports its routes with shape components"
   DO1_idearium_door:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [DO_D0_server_floats_on_the_registry, DO0_the_handshake_counts_real_routes]
     files: [idearium/server.js, idearium/api/index.js, idearium/compartment.json, lib/nexus/autopilot.js]
     spec: docs/system-doors.spec
@@ -73,7 +73,7 @@ phases:
     does: "idearium/server.js: the API's listen moves here; contract from the registry; launchers switched"
     proof: "Idearium's suite green through server.js; /contract hash = registry's"
   DO2a_architect_boots_from_the_core:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [DO_D2_a_boot_core_under_server_js]
     files: [architect/lib/system.js, architect/lib/bus.js, architect/lib/ledger.js, architect/lib/node-index.js, architect/lib/heartbeat.js, architect/lib/listener.js, architect/config.js]
     spec: docs/system-doors.spec
@@ -81,7 +81,7 @@ phases:
     does: "TO CONFIRM (DO_D2): the skeleton's core laid out under Architect's server.js, filled from its config"
     proof: "architect's server.js boots through lib/system.js"
   DO2_architect_door:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [DO_D0_server_floats_on_the_registry, SE_D3_the_origin_is_server_js, DO_D3_architect_into_idearium_and_loom]
     files: [architect/server.js, architect/compartment.json, architect/cli.js, architect/event-taxonomy.js, architect/service.js]
     spec: docs/system-doors.spec
@@ -89,7 +89,7 @@ phases:
     does: "architect/server.js on its config and the registry, with its missing slots: Architect gets its origin"
     proof: "the origin trace shows Architect with no missing slot"
   DO3_cortex_door:
-    status: "DO3a BUILT 0.60.392 (the door: cortex/server.js is the process, its registry, handshake and CLI; launchers switched); DO3b OPEN (boot.js's handlers into cortex/routes, one registry entry at a time)"
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: DO3a BUILT 0.60.392 (the door: cortex/server.js is the process, its registry, handshake and CLI; launchers switched); DO3b OPEN (boot.js's handlers into cortex/routes, one registry entry at a time)"
     depends_on: [DO_D0_server_floats_on_the_registry, DO0_the_handshake_counts_real_routes]
     files: [cortex/server.js, cortex/routes, cortex/registry-components.js, cortex/compartment.json, lib/nexus/autopilot.js, cortex/boot.js, cortex/cortex-v2.js]
     spec: docs/system-doors.spec
@@ -97,7 +97,7 @@ phases:
     does: "boot.js's routes become registry components with handlers in cortex/routes; server.js mounts them; launchers switched"
     proof: "a route table recorded before, replayed after: the same"
   DO4_boot_js_retired:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [DO3_cortex_door]
     files: [_archive/cortex/boot.js, cortex/boot.js]
     spec: docs/system-doors.spec
@@ -105,7 +105,7 @@ phases:
     does: "boot.js archived; a one-release stub that starts server.js"
     proof: "no launcher names boot.js but the stub"
   DO5_clear_glass_door:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [DO_D1_clear_glass_door, DO0_the_handshake_counts_real_routes]
     files: [clear-glass/server.js, clear-glass/src/ipc/bridge.js, clear-glass/src/main/index.js, clear-glass/cli.js, clear-glass/config.js, clear-glass/event-taxonomy.js]
     spec: docs/system-doors.spec
@@ -114,7 +114,7 @@ phases:
     proof: "every /cli/* route answers the same; contract from the registry"
 
   DO7_orchestrator_door:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     origin: "James, 2026-11-05: \"they all need the door build\" — found the same day: Orchestrator had no door phase in any map"
     depends_on: [DO_D9_registry_then_cos_through_the_door, DO0_the_handshake_counts_real_routes]
     files: [orchestrator/server.js, orchestrator/orchestrator.js, orchestrator/registry-components.draft.json, orchestrator/compartment.json, lib/cli/compartments.js]
@@ -123,7 +123,7 @@ phases:
     does: "orchestrator/server.js in front of orchestrator.js the way DO3a put cortex/server.js in front of boot.js: registry, handshake, CLI from its own registry (its draft accepted first), every other route unchanged; COS starts the door"
     proof: "its route table recorded through orchestrator.js alone and replayed through the door: the same"
   DO8_cos_door:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up as ERV0 or the door spec, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     origin: "James, 2026-11-05: \"they all need the door build\" — found the same day: COS had no door phase; cos/manager/server.js serves COS's routes but names no registry"
     depends_on: [DO_D9_registry_then_cos_through_the_door, DO0_the_handshake_counts_real_routes]
     files: [cos/server.js, cos/manager/server.js, cos/registry-components.draft.json, cos/compartment.json]

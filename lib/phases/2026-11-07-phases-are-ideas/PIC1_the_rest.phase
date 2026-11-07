@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-07-phases-are-ideas-phasemap.spec::PIC1_the_rest
+type: phase
+id: docs_2026-11-07-phases-are-ideas-phasemap.spec::PIC1_the_rest
+context: pipeline phase PIC1_the_rest of docs/2026-11-07-phases-are-ideas-phasemap.spec
+intent: null
+summary: PIC1_the_rest (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794052536755
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794052536755
+lastSeenAt: 1794052536755
+fingerprint: null
+payload:
+  id: PIC1_the_rest
+  map: docs/2026-11-07-phases-are-ideas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/*-phasemap.spec
+    - docs/cleaning/
+  depends_on:
+    - PIC0_the_door_maps
+  blocks: []
+  spec: null
+  graph: bf4de5b205e47561

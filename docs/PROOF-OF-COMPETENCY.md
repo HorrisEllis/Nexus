@@ -1853,3 +1853,34 @@ P4), each with how it will be measured. They are concept, not proof, until then.
 
 **His part / the coder's part:** the framework, the constraint, and the demand for empirical grounding and provenance are his. The slices, the
 tabulation, the predictions' wording and their measures are the coder's.
+
+## 2026-11-07 — One idea since July, mapped 24 times: the door, cleaned, and what of it still runs
+
+**His words:**
+- 2026-07-09 (Q0004): "no hardwiring. I need to be able to remove any system and swap in another. They use the API and the orchestrator as a
+  hub for each connection."
+- 2026-11-07: "Yes. Like cos becomes the hub for the nexus ego system" · "Look at the phases. Those are all top of my head ideas" · "Yes.
+  Anything that can give proof needs to be archived and logged in the proof of compentency".
+
+**The call against the alternative.** Shown 2,756 phases (1,041 open and not shelved), he chose to treat open phases as ideas that owe nothing,
+kept and shelved, and to keep only what runs as proof. The alternative on the table was to leave them all open as work owed. His call is the
+one that separates evidence from intent; it is the same separation he asked for in T1 and T7.
+
+**What was measured** (docs/cleaning/2026-11-07-the-door.md):
+- The door was said by him first on 2026-07-09 and mapped again in 24 maps from 2026-08-30 to 2026-11-05 under ten names. Today, 112 days
+  later, he said it in nearly the same words. The design held; the maps multiplied.
+- 143 open phases in 10 of those maps shelved as ideas (reversible, old status kept); none blocked the focus; the DAG: 0 dangling, 0 cycles,
+  before and after.
+- Of 91 built phases in the 24 maps, 50 are cited by a test. Those 65 test files, run alone on 2026-11-07: **56 pass**; 545 checks passed,
+  13 failed. Of the 9 failing files: 2 need his machine (data/ and the COS exe), 1 reads a file no longer in the tree, 1 is a real drift on
+  main (the §5.16 ratchet: two Loom maps grew in the 2026-11-06 merge), 5 are not diagnosed.
+- **Run it:** the loop at the end of docs/cleaning/2026-11-07-the-door.md.
+
+**What it does not prove.** That the door works as one system: it is still many partial builds, and 41 built phases have no test that cites
+them. That 24 maps cost more than one spec would have: no control. Consistency of an idea is evidence of a stable design intuition, not of the
+design's correctness.
+
+**Skill shown:** architectural consistency held over four months without the record in hand; and pruning his own backlog by evidence.
+
+**His part / the coder's part:** the idea (2026-07-09), the hub, the call to treat phases as ideas and keep only proof are his. The census, the
+shelving, matching tests to phases, the run and the reading of the failures are the coder's.
