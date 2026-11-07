@@ -83,6 +83,7 @@ then they are written by hand.
   - Emerge observes itself natively.
   - The observer CF1 needs is in Emerge, and it already measures sigma as he decided.
 - **Tension meter, session 1 of 20 (continued):** 22,951 JS lines left (+3); 19 sessions left.
+- **Tension meter, session 1 of 20 (continued, 2026-11-07 14:31Z, the evidence matrix):** 22,951 JS lines left (+0); 19 sessions left. No code changed; measured for `docs/EVIDENCE-MATRIX.md` E10.
 
 ## 2026-11-07 — Emerge checks its own code when it compiles (CIE6 slice b, 0.60.441)
 - **Measured:** Emerge coding. The native compiler made to run the checker written in Emerge, so Emerge debugs its own code when compiling.
