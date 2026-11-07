@@ -1,0 +1,71 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ERV0_the_full_spec:951e4e041d71ade0
+type: graph
+id: phase:ERV0_the_full_spec:951e4e041d71ade0
+context: dependency graph of phase ERV0_the_full_spec
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794051110075
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794051110075
+lastSeenAt: 1794051110075
+fingerprint: null
+payload:
+  for: ERV0_the_full_spec
+  kind: phase
+  repo: null
+  hash: 951e4e041d71ade0
+  nodes:
+    - path: cos/spec/eravos-in-the-hub.spec
+      role: changes
+      exists: false
+      system: cos
+    - path: docs/SPEC-REGISTRY.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D0_cos_is_the_hub
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D1_registered_not_copied
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D2_the_schemas_have_one_source
+    dependents:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV1_eravos_in_the_system_registry
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV4_the_kind_contract_schema
+    upstream:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D0_cos_is_the_hub
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D1_registered_not_copied
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D2_the_schemas_have_one_source
+    downstream:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV1_eravos_in_the_system_registry
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV2_eravos_own_registry
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV4_the_kind_contract_schema
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+    blockedBy:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D1_registered_not_copied
+    unlocks:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV1_eravos_in_the_system_registry
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by ERV_D1_registered_not_copied
+      - >-
+        depends on (3): ERV_D0_cos_is_the_hub, ERV_D1_registered_not_copied,
+        ERV_D2_the_schemas_have_one_source
+      - >-
+        needed by (2): ERV1_eravos_in_the_system_registry, ERV4_the_kind_contract_schema · all
+        downstream 4 · finishing it unlocks ERV1_eravos_in_the_system_registry
+    edges:
+      - from: docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D0_cos_is_the_hub
+        kind: declared
+      - from: docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D1_registered_not_copied
+        kind: declared
+      - from: docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D2_the_schemas_have_one_source
+        kind: declared

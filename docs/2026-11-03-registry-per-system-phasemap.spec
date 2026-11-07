@@ -214,3 +214,8 @@ decisions_in_planning:
     still_his:
       - "merge this branch to main (renumbered above main's 0.60.380) so Add system and the rest reach his machine?"
       - "through RAID: acts only (start, stop, writes — reads still work with RAID down) or reads too (one rule; RAID down blinds COS)?"
+
+# ── ADDENDUM 2026-11-07 — an answer, read, to the open question "where the system registry lives and whose it is" ──
+# James, 2026-11-07, mapping ERAVOS as a system: "Yes. Like cos becomes the hub for the nexus ego system". The coder reads it as: the system
+# registry is COS's, and every system (ERAVOS among them) is known to COS and reached through it — to confirm before anything is built on it
+# (docs/2026-11-07-eravos-as-a-system-phasemap.spec ERV_D0, ERV1). The question stays open until he confirms.

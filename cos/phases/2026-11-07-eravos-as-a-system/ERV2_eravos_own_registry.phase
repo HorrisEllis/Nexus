@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-07-eravos-as-a-system-phasemap.spec::ERV2_eravos_own_registry
+type: phase
+id: docs_2026-11-07-eravos-as-a-system-phasemap.spec::ERV2_eravos_own_registry
+context: pipeline phase ERV2_eravos_own_registry of docs/2026-11-07-eravos-as-a-system-phasemap.spec
+intent: null
+summary: ERV2_eravos_own_registry (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794051110082
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794051110082
+lastSeenAt: 1794051110082
+fingerprint: null
+payload:
+  id: ERV2_eravos_own_registry
+  map: docs/2026-11-07-eravos-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/spec/eravos-in-the-hub.spec
+  depends_on:
+    - ERV1_eravos_in_the_system_registry
+    - RG_D0_the_registry_is_per_system
+  blocks: []
+  spec: null
+  graph: a62e3e9ec7085bce

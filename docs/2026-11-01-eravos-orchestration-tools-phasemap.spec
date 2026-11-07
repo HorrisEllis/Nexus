@@ -100,3 +100,9 @@ phases:
     proof: "driven in Clear Glass: a compartment tool and a delay wired, started, seen running"
 
 build_order: "EO0 → EO1 and EO2 → EO3, EO4 → EO5."
+
+# ── ADDENDUM 2026-11-07 — ERAVOS is a system of Nexus, by registration; COS is the hub (docs/2026-11-07-eravos-as-a-system-phasemap.spec) ──
+# James, 2026-11-07: "im saying should we import it as a new system?" · "Yes. Like cos becomes the hub for the nexus ego system" (read as
+# "ecosystem", to confirm). ERAVOS lives on in its own repository (HorrisEllis/Eravos-Canvas); cos/archetype/eravos-canvas is a copy, older
+# than it. When ERV_D1 is confirmed, these tools are built in ERAVOS's repository and reach COS's door from there; until then this map's
+# files: name the archetype as written. Registered in docs/SPEC-REGISTRY.spec today (it had not been).

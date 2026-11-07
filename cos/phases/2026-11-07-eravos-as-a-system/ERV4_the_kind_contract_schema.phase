@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-07-eravos-as-a-system-phasemap.spec::ERV4_the_kind_contract_schema
+type: phase
+id: docs_2026-11-07-eravos-as-a-system-phasemap.spec::ERV4_the_kind_contract_schema
+context: pipeline phase ERV4_the_kind_contract_schema of docs/2026-11-07-eravos-as-a-system-phasemap.spec
+intent: null
+summary: ERV4_the_kind_contract_schema (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794051110088
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794051110088
+lastSeenAt: 1794051110088
+fingerprint: null
+payload:
+  id: ERV4_the_kind_contract_schema
+  map: docs/2026-11-07-eravos-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/archetype/eravos-canvas/schemas/workshop-kind.schema.json
+  depends_on:
+    - ERV0_the_full_spec
+    - ERV3_one_schema_source
+  blocks: []
+  spec: null
+  graph: 16f7645021c62a59

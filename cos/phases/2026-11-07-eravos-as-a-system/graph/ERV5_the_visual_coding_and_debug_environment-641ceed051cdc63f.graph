@@ -1,0 +1,155 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ERV5_the_visual_coding_and_debug_environment:641ceed051cdc63f
+type: graph
+id: phase:ERV5_the_visual_coding_and_debug_environment:641ceed051cdc63f
+context: dependency graph of phase ERV5_the_visual_coding_and_debug_environment
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794051110090
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794051110090
+lastSeenAt: 1794051110090
+fingerprint: null
+payload:
+  for: ERV5_the_visual_coding_and_debug_environment
+  kind: phase
+  repo: null
+  hash: 641ceed051cdc63f
+  nodes:
+    - path: cos/spec/eravos-in-the-hub.spec
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 11
+    deps:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D3_order
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV2_eravos_own_registry
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV4_the_kind_contract_schema
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
+    dependents: []
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17b_registry_reads_the_declarations
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI1_one_feed
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI3_the_measures_chained
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D0_interconnected
+      - docs/2026-10-31-causal-interconnect-phasemap.spec::CI_D1_one_graph_cfr_builds_rfr2_reads
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D4_the_diagnostic_map_on_the_eravos_canvas
+      - docs/2026-11-03-registry-per-system-phasemap.spec::RG_D0_the_registry_is_per_system
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE7_native_observe
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D2_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+      - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV0_the_full_spec
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV1_eravos_in_the_system_registry
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV2_eravos_own_registry
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV3_one_schema_source
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV4_the_kind_contract_schema
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D0_cos_is_the_hub
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D1_registered_not_copied
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D2_the_schemas_have_one_source
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D3_order
+    downstream: []
+    blockedBy:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV2_eravos_own_registry
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV4_the_kind_contract_schema
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 11 · blocked by ERV2_eravos_own_registry, ERV4_the_kind_contract_schema,
+        CIE11_retire_the_interpreter, EM2_warp_his_own, RF1_relational_field,
+        CF1_cfr_improved_with_rfr2, CP11_the_diagnostic_map
+      - >-
+        depends on (8): ERV_D3_order, ERV2_eravos_own_registry, ERV4_the_kind_contract_schema,
+        CIE11_retire_the_interpreter, EM2_warp_his_own, RF1_relational_field,
+        CF1_cfr_improved_with_rfr2, CP11_the_diagnostic_map · all upstream 75
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D3_order
+        kind: declared
+      - from: docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV2_eravos_own_registry
+        kind: declared
+      - from: docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV4_the_kind_contract_schema
+        kind: declared
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+        kind: declared
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
+        kind: declared

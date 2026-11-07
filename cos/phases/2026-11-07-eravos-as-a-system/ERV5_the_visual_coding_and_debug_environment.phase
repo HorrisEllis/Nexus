@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+type: phase
+id: docs_2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+context: >-
+  pipeline phase ERV5_the_visual_coding_and_debug_environment of
+  docs/2026-11-07-eravos-as-a-system-phasemap.spec
+intent: null
+summary: ERV5_the_visual_coding_and_debug_environment (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794051110090
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794051110090
+lastSeenAt: 1794051110090
+fingerprint: null
+payload:
+  id: ERV5_the_visual_coding_and_debug_environment
+  map: docs/2026-11-07-eravos-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/spec/eravos-in-the-hub.spec
+  depends_on:
+    - ERV_D3_order
+    - ERV2_eravos_own_registry
+    - ERV4_the_kind_contract_schema
+    - CIE11_retire_the_interpreter
+    - EM2_warp_his_own
+    - RF1_relational_field
+    - CF1_cfr_improved_with_rfr2
+    - CP11_the_diagnostic_map
+  blocks: []
+  spec: null
+  graph: 641ceed051cdc63f

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-07-eravos-as-a-system-phasemap.spec::ERV0_the_full_spec
+type: phase
+id: docs_2026-11-07-eravos-as-a-system-phasemap.spec::ERV0_the_full_spec
+context: pipeline phase ERV0_the_full_spec of docs/2026-11-07-eravos-as-a-system-phasemap.spec
+intent: null
+summary: ERV0_the_full_spec (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794051110075
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794051110075
+lastSeenAt: 1794051110075
+fingerprint: null
+payload:
+  id: ERV0_the_full_spec
+  map: docs/2026-11-07-eravos-as-a-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/spec/eravos-in-the-hub.spec
+    - docs/SPEC-REGISTRY.spec
+  depends_on:
+    - ERV_D0_cos_is_the_hub
+    - ERV_D1_registered_not_copied
+    - ERV_D2_the_schemas_have_one_source
+  blocks: []
+  spec: null
+  graph: 951e4e041d71ade0

@@ -2068,3 +2068,8 @@ spec:
 # · "No non-emerge code, unless specified in the contract or project. lack of capability is an opportunity to build it." (AXIOMS §17.13). Its
 # phases add modules to emerge/emerge/spec/cie-eg.spec when each is specced: the crystal memory, the benchmark ledger, reference nodes, the guide
 # and atlas tool for any LLM.
+# ADDENDUM 2026-11-07 — registered: docs/2026-11-07-eravos-as-a-system-phasemap.spec (ERV_D0–ERV_D4, ERV0–ERV5): ERAVOS joins Nexus as a system by
+# registration, its own repository kept; COS is the hub. James: "im saying should we import it as a new system? make schemas and templates for
+# packs and tools?" · "Yes. Like cos becomes the hub for the nexus ego system". ERV5 (the visual coding and debug environment) waits on CIE11,
+# EM2, RF1, CF1 and CP11 (his order). And registered late: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec (EO0–EO5), written
+# 2026-11-01 and never registered.

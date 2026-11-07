@@ -1,0 +1,69 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ERV2_eravos_own_registry:a62e3e9ec7085bce
+type: graph
+id: phase:ERV2_eravos_own_registry:a62e3e9ec7085bce
+context: dependency graph of phase ERV2_eravos_own_registry
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794051110082
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794051110082
+lastSeenAt: 1794051110082
+fingerprint: null
+payload:
+  for: ERV2_eravos_own_registry
+  kind: phase
+  repo: null
+  hash: a62e3e9ec7085bce
+  nodes:
+    - path: cos/spec/eravos-in-the-hub.spec
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV1_eravos_in_the_system_registry
+      - docs/2026-11-03-registry-per-system-phasemap.spec::RG_D0_the_registry_is_per_system
+    dependents:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+    upstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17b_registry_reads_the_declarations
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+      - docs/2026-11-03-registry-per-system-phasemap.spec::RG_D0_the_registry_is_per_system
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV0_the_full_spec
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV1_eravos_in_the_system_registry
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D0_cos_is_the_hub
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D1_registered_not_copied
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D2_the_schemas_have_one_source
+    downstream:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+    blockedBy:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV1_eravos_in_the_system_registry
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 8 · blocked by ERV1_eravos_in_the_system_registry
+      - >-
+        depends on (2): ERV1_eravos_in_the_system_registry, RG_D0_the_registry_is_per_system · all
+        upstream 15
+      - 'needed by (1): ERV5_the_visual_coding_and_debug_environment'
+    edges:
+      - from: docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV1_eravos_in_the_system_registry
+        kind: declared
+      - from: docs/2026-11-03-registry-per-system-phasemap.spec::RG_D0_the_registry_is_per_system
+        kind: declared
