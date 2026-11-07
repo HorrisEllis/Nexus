@@ -373,6 +373,13 @@ spec:
         name, its own direction and its own peaks, and every scale is learned from them. A constant stays only where it earns its place, said
         and justified (his 2026-10-05 rule, idearium/spec-engine/templates/architecture-spec.template.yaml). Built in .eg as a primitive with its
         contract (AXIOMS §17.13), which makes it reusable by any system through Emerge rather than through intelligence's files (§5.15). Thread T4.
+      expanded_2026_11_07_addendum: >-
+        James, 2026-11-07, in his toolkit's addendum (docs/innovation-toolkit-addendum.md, verbatim): "Invariants in this scenario are two or
+        more points in deviation, the deviation can be measured using sigmas. The gaps inbetween can be measured using deltas." · "One gap is
+        an anomaly / Two gaps a coincidence / Three gaps = A invariant, not fact." The instrument's ladder, his: a pattern of gaps is an anomaly
+        at one, a coincidence at two, an invariant at three, and never a fact. The coder's reading, to confirm: each pattern carries that state,
+        and an invariant joins the boundary of the constraint field (RF1; his "using deterministic variables, invariants, principles, or
+        primitives as a boundary for the constraint field"). Thread T4, prediction T4-P4.
 
     RF1_relational_field:
       layer: foundation

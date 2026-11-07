@@ -62,6 +62,10 @@ Time Box Constraint).
   2026-10-31). Personal material is included only where it is evidence of the method, with identity stripped, by his
   rule: "If they’re proof or evidence for competency or validity, yes but strip identity if not, no." Three personal
   poems are held back under that rule and marked in place; his authorship of them stands.
+- **The addendum, verbatim:** [`docs/innovation-toolkit-addendum.md`](innovation-toolkit-addendum.md) (received
+  2026-11-07): the feedback loop, the creative space, flow, synthesis, vectors, tension as fuel, signal to noise,
+  priority and weighting, interstitial reasoning, the leverage equation and f(slope), hostile verification, somatic
+  validation, the maxims. The same rule for personal material applies; one name is withheld.
 - **The earlier method-only version:** [`docs/innovation-toolkit.framework`](innovation-toolkit.framework)
   (committed 2026-10-24, `14ae68dc`).
 
