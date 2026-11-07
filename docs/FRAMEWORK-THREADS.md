@@ -59,6 +59,12 @@ contract is a fixed expected output, and the work is done when it holds.
   The idea is not unique to it. The claim is that his framework made it the default for every slice, and that it caught every semantic
   mismatch here, not that it invented the technique.
 
+**T1, executed evidence, 2026-11-07 (0.60.443, CIE7 slice b).** The debugger ported with the end state fixed first, twice over: the JS's own answers
+(`ledger_why()` on every entry of 7 real runs; `observe()` read at 21 points mid-run) and the expected answers already written against the JS
+(11 cases of `test/debug.test.js`). The port matched on its first full run, 18/18. The hostile check found the end state's own blind spot: a
+consequences cap of 4 instead of 5 passed, because no scenario reached 5; one scenario added, now caught. Of 13 plants, 10 caught and 3 shown
+unobservable. *The contract held, and checking the contract found where it was thin.*
+
 ## T2 — "constrain it to 20 sessions … find a way around the constraint", 2026-11-07
 
 **His words.** "what if we constrain it to 20 sessions, and then you use the framework to try to find a way around the contraint. like

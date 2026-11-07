@@ -1,0 +1,376 @@
+// lang/cie/debug.eg — the debugger in Emerge (CIE7 slice b, CIE-EG §13.7): a run debugged from its ledger. Written again from
+// observe/debug.js, rule for rule; its end state is that file's answers: the interpreter's ledger_why() builtin (why) and observe() read
+// mid-run (at), and the expected answers of test/debug.test.js, carried over (follow, diff, blame, clip). The judge is
+// lang/test/world/debug.eg, Emerge only.
+//
+//   summary(e)            one line saying what an entry is
+//   edges(entries)        the inferred causal edges of every entry: { "<seq>": [{ from, via, weight }] }, a parent always an earlier seq
+//   why(entries, seq)     the chain from an entry back to the entry that explains it
+//   at(entries, seq, P)   the world as it was after that entry: each compartment's state, the open gaps, the field and sigma readings
+//   follow(entries, f)    every entry about one compartment, signal or kind (f: compartment, signal, kind, from, to; any combination narrows)
+//   diff(a, b, P)         where two runs part ways: the first entry whose hash differs (equal hashes prove an equal past)
+//   blame(entries, P)     the first thing that went wrong, and why: the debugger's "start here"
+//   clip(entries, from, to, P)   a bounded slice anchored to the chain at both ends, re-verifiable alone (RFR2 clip)
+//   verify_clip(c, whole) a clip stands on its own; optionally also against a whole ledger (pass null for none)
+//
+// Emerge's entries carry no causal parent yet (CIE-EG §13.6), so causality here is INFERRED from structure and every edge says so (via).
+// Nothing is guessed silently, and nothing is written to the ledger. P is lang/core/primitives.eg, as observe.eg takes it.
+use "./ledger.eg" as L
+use "./observe.eg" as OB
+
+// ── reading an entry the way debug.js does ───────────────────────────────────────────────────────────────
+/** a body field as a JavaScript template literal shows it: absent → "undefined", null → "null", a string as itself, else its text */
+fn _t(b, k) {
+  if not has(b, k) { return "undefined" }
+  let v = b[k]
+  if v == null { return "null" }
+  if type_of(v) == "string" { return v }
+  return str(v)
+}
+fn _defined(b, k) = has(b, k)
+fn _present(b, k) = has(b, k) and b[k] != null
+/** debug.js short(): a string as itself, anything else as JSON; past n characters cut to n - 1 and an ellipsis */
+fn _short(x, n = 60) {
+  var s = x
+  if type_of(x) != "string" { s = json(x) }
+  if len(s) > n { return slice(s, 0, n - 1) + "…" }
+  return s
+}
+/** JavaScript truthiness for the values a body holds */
+fn _truthy(v) {
+  if v == null or v == false or v == 0 or v == "" { return false }
+  return true
+}
+fn _keys_of(b) {
+  if has(b, "changes") and type_of(b.changes) == "map" { return keys(b.changes) }
+  return []
+}
+/** a map key for any value (debug.js keys its maps by the value itself) */
+fn _k(v) = json(v)
+
+fn summary(e) {
+  let b = OB.body_of(e)
+  let c = _t(b, "compartment")
+  let kind = e.kind
+  if kind == "transition" {
+    let ks = _keys_of(b)
+    var s = "{c} accepted {_t(b, "signal")}"
+    if len(ks) > 0 { s = s + " (set {join(ks, ", ")})" }
+    if has(b, "violations") and type_of(b.violations) == "list" and len(b.violations) > 0 {
+      var cost = 0
+      for v in b.violations { cost = cost + v.cost }
+      s = s + " at cost {cost}"
+    }
+    return s
+  }
+  if kind == "rejected" {
+    var s = "{c} refused {_t(b, "signal")}: {_t(b, "constraint")}"
+    if has(b, "reason") and _truthy(b.reason) { s = s + " — " + _short(b.reason, 80) }
+    return s
+  }
+  if kind == "gap" {
+    if _defined(b, "missing") { return "{c}.{_t(b, "constraint")} could not be evaluated: state.{_t(b, "missing")} is null" }
+    var m = ""
+    if _present(b, "message") { m = b.message }
+    var s = "gap: " + _short(m, 90)
+    if get(b, "source", null) == "observe" { s = s + " (opened by observe)" }
+    return s
+  }
+  if kind == "gap.close" { return "gap {_t(b, "gap")} closed" }
+  if kind == "unrouted" { return "nobody handles {_t(b, "signal")}" }
+  if kind == "aborted" {
+    var m = ""
+    if _present(b, "error") { m = b.error }
+    return "aborted: " + _short(m, 80)
+  }
+  if kind == "compartment" or kind == "register" { return "{_t(b, "name")} declared" }
+  if kind == "promotion_refused" { return "promotion refused" }
+  if kind == "genesis" {
+    if not has(b, "seed") { return "genesis (seed undefined)" }
+    return "genesis (seed {_short(b.seed)})"
+  }
+  if has(b, "name") and _truthy(b.name) { return "{kind} {_t(b, "name")}" }
+  if has(b, "path") and _truthy(b.path) { return "{kind} {_t(b, "path")}" }
+  return kind
+}
+
+/** an inferred edge to an earlier entry; a parent that is absent, null or not earlier adds nothing */
+fn _add(es, seq, from, via, weight) {
+  if from != null and from < seq { return push(es, { from: from, via: via, weight: weight }) }
+  return es
+}
+
+// ── the causal edges ─────────────────────────────────────────────────────────────────────────────────────
+fn edges(entries) {
+  var out = {}
+  var decl = {}
+  var last_state = {}
+  var by_field = {}
+  var last_signal = {}
+  var gap_at = {}
+  for e in entries {
+    let b = OB.body_of(e)
+    let has_c = _defined(b, "compartment")
+    var es = []
+    if e.kind == "gap" and has_c and _defined(b, "missing") {
+      let ck = _k(b.compartment)
+      var set_at = null
+      if has(by_field, ck) and has(by_field[ck], _k(b.missing)) { set_at = by_field[ck][_k(b.missing)] }
+      if set_at != null { es = _add(es, e.seq, set_at, "state.{_t(b, "missing")} was last set here", 0.95) }
+      else { es = _add(es, e.seq, get(decl, ck, null), "state.{_t(b, "missing")} has been null since {_t(b, "compartment")} was declared", 0.95) }
+    } else if (e.kind == "rejected" or e.kind == "transition") and has_c {
+      let ck = _k(b.compartment)
+      es = _add(es, e.seq, get(last_state, ck, null) ?? get(decl, ck, null), "{_t(b, "compartment")}'s state as it stood", 0.8)
+    }
+    if e.kind == "gap" and get(b, "source", null) == "observe" and _truthy(get(b, "evidence", null)) {
+      let ev = b.evidence
+      es = _add(es, e.seq, get(ev, "to", null) ?? get(ev, "since", null) ?? get(ev, "from", null), "the reading this gap was opened from", 1)
+    }
+    if e.kind == "gap.close" { es = _add(es, e.seq, get(gap_at, _k(get(b, "gap", null)), null), "closes this gap", 1) }
+    if _defined(b, "signal") and has(last_signal, _k(b.signal)) { es = _add(es, e.seq, last_signal[_k(b.signal)], "the previous {_t(b, "signal")}", 0.6) }
+    // the strongest edge per parent; the first of equal weight kept (debug.js: replaced only by a strictly heavier one)
+    var best = {}
+    var order = []
+    for x in es {
+      let fk = str(x.from)
+      if not has(best, fk) { best[fk] = x; order = push(order, fk) }
+      else if best[fk].weight < x.weight { best[fk] = x }
+    }
+    var list = []
+    for fk in order { list = push(list, best[fk]) }
+    out[str(e.seq)] = OB.sort_with(list, fn(p, q) = p.weight > q.weight or (p.weight == q.weight and p.from < q.from))
+    if (e.kind == "compartment" or e.kind == "register") and _defined(b, "name") { decl[_k(b.name)] = e.seq }
+    if e.kind == "transition" and has_c {
+      let ck = _k(b.compartment)
+      last_state[ck] = e.seq
+      if not has(by_field, ck) { by_field[ck] = {} }
+      var fields = by_field[ck]
+      for k in _keys_of(b) { fields[_k(k)] = e.seq }
+      by_field[ck] = fields
+    }
+    if _defined(b, "signal") { last_signal[_k(b.signal)] = e.seq }
+    if e.kind == "gap" and _defined(b, "gap") { gap_at[_k(b.gap)] = e.seq }
+  }
+  return out
+}
+
+fn _edges_of(ed, seq) = get(ed, str(seq), [])
+
+/** the entry with this seq (entries are 1-based and in order; a search when they are not) */
+fn _at1(entries, seq) {
+  if type_of(seq) == "num" and seq >= 1 and seq <= len(entries) and entries[seq - 1].seq == seq { return entries[seq - 1] }
+  return find(entries, fn(x) = x.seq == seq)
+}
+fn _brief(e) = { seq: e.seq, kind: e.kind, summary: summary(e) }
+
+// ── why ──────────────────────────────────────────────────────────────────────────────────────────────────
+fn why(entries, seq, depth = 24) {
+  let e = _at1(entries, seq)
+  if e == null { return { ok: false, reason: "no entry {seq}" } }
+  let ed = edges(entries)
+  var chain = [{ seq: e.seq, kind: e.kind, summary: summary(e), via: null }]
+  var seen = {}
+  seen[str(e.seq)] = true
+  var cur = e.seq
+  var going = true
+  while going and len(chain) < depth {
+    let next = find(_edges_of(ed, cur), fn(x) = not has(seen, str(x.from)))
+    if next == null { going = false }
+    else {
+      let p = _at1(entries, next.from)
+      chain = push(chain, { seq: p.seq, kind: p.kind, summary: summary(p), via: next.via, inferred: true })
+      seen[str(p.seq)] = true
+      cur = p.seq
+    }
+  }
+  var earlier = []
+  for x in entries {
+    if x.seq < seq { earlier = push(earlier, _brief(x)) }
+  }
+  let before = slice(earlier, max(0, len(earlier) - 3))
+  var after = []
+  for x in entries {
+    if len(after) < 5 and x.seq > seq and any(_edges_of(ed, x.seq), fn(y) = y.from == seq and y.weight >= 0.8) { after = push(after, _brief(x)) }
+  }
+  var root = null
+  if len(chain) > 1 { root = chain[len(chain) - 1] }
+  return { ok: true, seq: seq, chain: chain, root: root, before: before, consequences: after,
+    note: "causal edges are inferred from state lineage, signal names and observe evidence — entries do not yet carry a causal parent" }
+}
+
+// ── at: the world after an entry ─────────────────────────────────────────────────────────────────────────
+fn _unverified(rep) = "the ledger does not verify at {rep.verify.seq}: {rep.verify.reason}"
+
+fn at(entries, seq, P) {
+  let e = _at1(entries, seq)
+  if e == null { return { ok: false, reason: "no entry {seq}" } }
+  let prefix = slice(entries, 0, index_of(entries, e) + 1)
+  var states = {}
+  var names = {}
+  var order = []
+  for x in prefix {
+    let b = OB.body_of(x)
+    if (x.kind == "compartment" or x.kind == "register") and _defined(b, "name") {
+      var s = {}
+      if has(b, "state") and type_of(b.state) == "map" {
+        for k, v in b.state { s[k] = v }
+      }
+      let nk = _t(b, "name")
+      if not has(states, nk) { order = push(order, nk) }
+      states[nk] = s
+      names[nk] = x.seq
+    } else if x.kind == "transition" and has(states, _t(b, "compartment")) {
+      let nk = _t(b, "compartment")
+      var s = states[nk]
+      if has(b, "changes") and type_of(b.changes) == "map" {
+        for k, v in b.changes { s[k] = v }
+      }
+      states[nk] = s
+    } else if x.kind == "despawn" and _defined(b, "name") {
+      let nk = _t(b, "name")
+      if has(states, nk) {
+        states = without(states, nk)
+        order = filter(order, fn(o) = o != nk)
+      }
+    }
+  }
+  let rep = OB.observe(prefix, P)
+  if not rep.ok { return { ok: false, reason: _unverified(rep) } }
+  var compartments = {}
+  for n in order { compartments[n] = { state: states[n], declared: names[n] } }
+  return { ok: true, seq: seq, entry: { kind: e.kind, summary: summary(e) }, compartments: compartments,
+    open_gaps: map(rep.gaps.open, fn(g) = { seq: g.seq, gap: g.gap, type: g.type, pressure: g.pressure, occurrences: g.occurrences }),
+    field: rep.field.now, field_regime_since: rep.field.hold.since,
+    sigma: { regime: rep.sigma.regime, cause: get(rep.sigma, "dominant_cause", null), confidence: get(rep.sigma, "confidence", null) },
+    velocity: rep.liminal.velocity.now }
+}
+
+// ── follow ───────────────────────────────────────────────────────────────────────────────────────────────
+fn _hit(e, f) {
+  let b = OB.body_of(e)
+  if has(f, "compartment") and not (get(b, "compartment", null) == f.compartment or get(b, "name", null) == f.compartment) { return false }
+  if has(f, "signal") and get(b, "signal", null) != f.signal { return false }
+  if has(f, "kind") and e.kind != f.kind { return false }
+  if has(f, "from") and e.seq < f.from { return false }
+  if has(f, "to") and e.seq > f.to { return false }
+  return true
+}
+fn follow(entries, f) {
+  let hit = filter(entries, fn(e) = _hit(e, f))
+  return { ok: true, count: len(hit), entries: map(hit, _brief) }
+}
+
+fn _side(es, i) {
+  if i < len(es) { return { seq: es[i].seq, kind: es[i].kind, summary: summary(es[i]), body: es[i].body } }
+  return null
+}
+
+// ── diff ─────────────────────────────────────────────────────────────────────────────────────────────────
+fn diff(a, b, P) {
+  let n = min(len(a), len(b))
+  var i = 0
+  while i < n and a[i].hash == b[i].hash { i += 1 }
+  if i == len(a) and i == len(b) { return { ok: true, identical: true, entries: n } }
+  var wa = null
+  var wb = null
+  if i > 0 {
+    wa = at(a, i, P)
+    wb = at(b, i, P)
+  }
+  var changed = {}
+  if wa != null and wb != null and wa.ok and wb.ok {
+    var names = keys(wa.compartments)
+    for c in keys(wb.compartments) {
+      if not (names contains c) { names = push(names, c) }
+    }
+    for c in names {
+      var sa = null
+      var sb = null
+      if has(wa.compartments, c) { sa = wa.compartments[c].state }
+      if has(wb.compartments, c) { sb = wb.compartments[c].state }
+      if json(sa) != json(sb) { changed[c] = { a: sa, b: sb } }
+    }
+  }
+  var note = "the runs share every entry before this one (hash-chained), so everything after it can differ"
+  if i == n { note = "one run is a prefix of the other" }
+  return { ok: true, identical: false, common: i, first: i + 1, a: _side(a, i), b: _side(b, i), a_longer_by: len(a) - len(b), note: note,
+    state_before_diverging_differs: changed }
+}
+
+// ── blame ────────────────────────────────────────────────────────────────────────────────────────────────
+fn blame(entries, P) {
+  let rep = OB.observe(entries, P)
+  if not rep.ok { return { ok: false, reason: _unverified(rep) } }
+  let first = find(entries, fn(e) = (OB.STRESS contains e.kind) and not OB.is_derived(e, P))
+  var field_regime = null
+  if rep.field.now != null { field_regime = rep.field.now.regime }
+  var out = { ok: true, entries: len(entries), field: field_regime, sigma: rep.sigma.regime, first_stress: null, first_unhealthy: null }
+  if first != null { out.first_stress = why(entries, first.seq) }
+  // the first entry after which the field was turbulent or chaotic (one pass over the series observe already computed)
+  let hit = find(rep.series, fn(r) = r.regime == "turbulent" or r.regime == "chaotic")
+  if hit != null { out.first_unhealthy = { seq: hit.seq, regime: hit.regime, why: why(entries, hit.seq) } }
+  out.open_gaps = len(rep.gaps.open)
+  out.proposals = map(rep.gaps.proposals, fn(p) = { type: p.type, pressure: p.pressure, message: p.message })
+  out.clean = first == null and hit == null
+  return out
+}
+
+// ── clip ─────────────────────────────────────────────────────────────────────────────────────────────────
+fn _index_of_seq(entries, seq) {
+  var i = 0
+  for e in entries {
+    if e.seq == seq { return i }
+    i += 1
+  }
+  return -1
+}
+fn clip(entries, from, to, P) {
+  let a = _index_of_seq(entries, from)
+  let b = _index_of_seq(entries, to)
+  if a < 0 or b < 0 or a > b { return { ok: false, reason: "no range {from}..{to}" } }
+  let piece = slice(entries, a, b + 1)
+  let rep = OB.observe(slice(entries, 0, b + 1), P)
+  if not rep.ok { return { ok: false, reason: "the ledger does not verify at {rep.verify.seq}" } }
+  return { ok: true, magic: "EG-CLIP", fmt: 1, seqRange: [from, to], count: len(piece),
+    anchor: { prev: piece[0].prev, head: piece[len(piece) - 1].hash },
+    profile: { field: rep.field.now, field_regime_since: rep.field.hold.since, sigma: rep.sigma.regime, velocity: rep.liminal.velocity.now,
+      open_gaps: len(rep.gaps.open) },
+    entries: piece }
+}
+
+fn _rehash(e) {
+  try { return { h: L.hash_entry(e) } } else err { return { err: err.message } }
+}
+fn verify_clip(c, whole) {
+  if c == null or type_of(c) != "map" or get(c, "magic", null) != "EG-CLIP" or type_of(get(c, "entries", null)) != "list" or len(c.entries) == 0 {
+    return { ok: false, reason: "not a clip" }
+  }
+  var prev = c.anchor.prev
+  var i = 0
+  for e in c.entries {
+    if e.prev != prev { return { ok: false, seq: e.seq, reason: "prev does not link to the previous entry" } }
+    let r = _rehash(e)
+    if has(r, "err") { return { ok: false, seq: e.seq, reason: r.err } }
+    if r.h != e.hash { return { ok: false, seq: e.seq, reason: "hash does not match the entry" } }
+    if i > 0 and e.seq != c.entries[i - 1].seq + 1 { return { ok: false, seq: e.seq, reason: "seq out of order" } }
+    prev = e.hash
+    i += 1
+  }
+  if prev != c.anchor.head { return { ok: false, reason: "the last entry is not the anchored head" } }
+  if whole != null {
+    let m = find(whole, fn(e) = e.seq == c.seqRange[1])
+    if m == null or m.hash != c.anchor.head { return { ok: false, reason: "the clip does not belong to that ledger" } }
+  }
+  return { ok: true }
+}
+
+// ── the ledger_why() builtin, natively (lower.eg rewrites ledger_why(n) to this): the answer frozen, a missing entry refused, as
+// lang/runtime.js does ("ledger_why: <reason>")
+fn why_builtin(entries, n) {
+  var seq = n
+  if type_of(n) == "int" { seq = num(n) }
+  else if type_of(n) != "num" { raise("ledger_why needs a seq (num or int), got {type_of(n)}") }
+  let w = why(entries, seq)
+  if not w.ok { raise("ledger_why: {w.reason}") }
+  return freeze(w)
+}

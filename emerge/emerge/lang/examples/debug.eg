@@ -1,0 +1,31 @@
+// debug.eg — a program debugging itself from its own ledger (CIE-EG §13.7). Run with: eg run debug.eg
+// ledger_why(n) walks back from entry n to what explains it. Entries carry no causal parent yet, so every link is inferred from structure
+// and says how (via): a field that was last set here, a state as it stood, the previous signal of the same name. Nothing is guessed silently,
+// and nothing is written. Natively, ledger_why is lang/cie/debug.eg, the debugger in Emerge (CIE7 slice b).
+compartment Vault {
+  id = "co-example-vault"
+  intent = "opens only once its code is set"
+  state { code: null, opened: 0 }
+  constraint needs_code hard { state.code > 0 or state.opened < 1 }
+  on "open" { state.opened = state.opened + 1 }
+  on "code" (ev) { state.code = ev.code }
+}
+
+emit "open"                // refused: the code has never been set
+emit "code" { code: 42 }
+emit "open"                // accepted
+emit "code" { code: null } // the code is cleared
+emit "open"                // the constraint cannot be evaluated: code is null again
+
+for e in ledger() {
+  if e.kind == "gap" or e.kind == "rejected" {
+    let w = ledger_why(e.seq)
+    print("why #{e.seq}: {w.chain[0].summary}")
+    for link in slice(w.chain, 1) { print("  ← #{link.seq} {link.summary}   ({link.via})") }
+  }
+}
+
+// the whole answer is data: the root cause of the last gap, as JSON
+let gaps = ledger() |> filter(fn(e) = e.kind == "gap")
+print(json(ledger_why(gaps[len(gaps) - 1].seq).root))
+try { ledger_why(999) } else e { print("refused:", e.message) }

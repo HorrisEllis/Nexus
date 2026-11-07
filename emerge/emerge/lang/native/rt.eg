@@ -510,6 +510,65 @@ fn rt_show_into(b, v, nested) {
   }
   return rt_sb_str(b, "<?>")
 }
+// json(v) natively (2026-11-07, CIE7 slice b: the debugger in Emerge keys its maps and writes short text with it): JSON.stringify's text, as
+// lang/runtime.js gives it. Lists and maps without spaces, every key quoted, strings by rt_sb_json, numbers as str() writes them (ECMAScript's
+// shortest round-trip form), bytes as their hex in quotes (the interpreter's toData); a function is not data and is refused by name.
+fn rt_json_into(b, v) {
+  let t = v & 7
+  if t == 1 or t == 3 { return rt_sb_dec(b, v >> 3) }
+  if v == NULL { return rt_sb_str(b, "null") }
+  if v == TRUE { return rt_sb_str(b, "true") }
+  if v == FALSE { return rt_sb_str(b, "false") }
+  let k = mem_get(v) & 255
+  if k == K_INT { return rt_sb_dec(b, mem_get(v + 8)) }
+  if k == K_FLT { return rt_sb_double(b, mem_get(v + 8)) }
+  if k == K_STR { return rt_sb_json(b, v) }
+  if k == K_LIST {
+    rt_sb_byte(b, 91)
+    let n = mem_get(v + 8)
+    let items = mem_get(v + 24)
+    var i = 0
+    while i < n {
+      if i > 0 { rt_sb_byte(b, 44) }
+      rt_json_into(b, mem_get(items + i * 8))
+      i = i + 1
+    }
+    return rt_sb_byte(b, 93)
+  }
+  if k == K_MAP {
+    rt_sb_byte(b, 123)
+    let n = mem_get(v + 8)
+    let keys = mem_get(v + 24)
+    let vals = mem_get(v + 32)
+    var i = 0
+    while i < n {
+      if i > 0 { rt_sb_byte(b, 44) }
+      rt_sb_json(b, mem_get(keys + i * 8))
+      rt_sb_byte(b, 58)
+      rt_json_into(b, mem_get(vals + i * 8))
+      i = i + 1
+    }
+    return rt_sb_byte(b, 125)
+  }
+  if k == K_BYTES {
+    let n = mem_get(v + 8)
+    rt_sb_byte(b, 34)
+    var i = 0
+    while i < n {
+      let c = mem_get8(v + 16 + i)
+      rt_sb_byte(b, rt_hex(c >> 4))
+      rt_sb_byte(b, rt_hex(c & 15))
+      i = i + 1
+    }
+    return rt_sb_byte(b, 34)
+  }
+  return rt_die_lit(rt_concat(rt_concat("json must be data — ", rt_type_name(v)), " cannot be recorded"))
+}
+fn rt_b_json(x) {
+  let b = rt_sb_new()
+  rt_json_into(b, x)
+  return rt_sb_done(b)
+}
 fn rt_show(v, nested) {
   if rt_kind(v) == K_STR and not nested { return v }
   let b = rt_sb_new()

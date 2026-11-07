@@ -618,6 +618,7 @@ payload:
       emerge/lang/checker.js: 9e5aa8a022ed6f0e636e2d93a7eef186b05adf699e74d6c357db3d3006a65028
       emerge/lang/cie/check.eg: c6a3f519d642eec9238447ae66def0d1d10dc31ec01d24a31e97c6969d99c5b0
       emerge/lang/cie/contract.eg: 937b8f23b46bbdcaddc1a393942a18b5f7d6abaabd8a973e9c6b9f21255d994d
+      emerge/lang/cie/debug.eg: b398dd69ae5b781ebfab8f3362372ed50242f5c1d6137ccad00fd18ff4528c31
       emerge/lang/cie/ledger.eg: 566f4ec093a298a722ed2eadb084b555adb5760bb12ab91ec5f633b694ccf06d
       emerge/lang/cie/observe.eg: b1d48d02771e0664478610288b130c83fe6a1548f240dadee39e521b7f3748bc
       emerge/lang/cie/regex.eg: 70a31b3689ebd2f7f15e405ea9c2bb66549edfbb8f62b91fcad265382b30c6c3
@@ -635,6 +636,7 @@ payload:
       emerge/lang/examples/axioms.eg: e370cf919e398d0b9a22b8790750c17ad895330c65e13f213a19c7b77e015323
       emerge/lang/examples/components.eg: 2bd0ad4897c62f8e33486fc6a2c3f42840722c1bb5d203845e2c23ec7f532378
       emerge/lang/examples/counter.eg: 14d22aaee1dc46740523963f19db6319718ceb2477e0deb8fd3bc7ceb73ac592
+      emerge/lang/examples/debug.eg: 264faf3615f3ff5042b2bb805f150462fe7588ca258921f07da035176e31af5d
       emerge/lang/examples/fail/runtime-error.eg: e94807fb180d975dd5d4e996e4e6814ba8d6de87b85d3670641ba1c2dad016b1
       emerge/lang/examples/fail/unrouted.eg: 03dc2ab714a55da141d005b5c76dd94d93bfb357a37df730d71ae6d69ede85be
       emerge/lang/examples/hello.eg: 85fa40987ab647d517b158680fabedd97a719b694ad26aafdb3b9541d96de1df
@@ -653,30 +655,31 @@ payload:
       emerge/lang/ledger.js: 258c7a45d0af50be69449d8a2c8c6eb5c762065cb382a7297c24b6a603711e7b
       emerge/lang/lexer.js: a5175f00c4e8daae4c23dac25b28451b935f17d45526cbfec006b31b18e452e7
       emerge/lang/map.js: 0814f101854c4806637104248a4bfdfc1de99021b8377db416d627cc15e931b0
-      emerge/lang/native/bin/emerge: 6c306caa0868205fa41f08a3ef0550ad15276b672309a019de00bf1423309e73
-      emerge/lang/native/bin/emerge.sha256: 2d4391c6dd8e8ad68180b7504508de0559e6a8fa48c1a03993a16f826d92be85
+      emerge/lang/native/bin/emerge: 745c1c8ab6e1dfe1ece1f94166633cb8630cc2dc83c4300822c6b07c554a7e81
+      emerge/lang/native/bin/emerge.sha256: 2472deed27a5dc61e2ef4274ed1c15d2b33e90505e40835dc374a642cbd8e9e7
       emerge/lang/native/check_env_text.eg: 76c3883cc96fab2c754f48beda02293c24f5d202584904d0c0b14f413ed1fab4
-      emerge/lang/native/codegen.eg: 39394ce57c6ea40aba247ae886bf591e9c6db8bb587fbd614bc0df374a7ce807
+      emerge/lang/native/codegen.eg: a0659953a2704534b79ba414a6a053003138604fac5b206cf07e1e2ec285a7e4
       emerge/lang/native/contract_text.eg: 622fca918dddbd8e09c6536e8ad6b9469f825e62db887688ef6ee83a56de7737
+      emerge/lang/native/debug_text.eg: ef120bd428b0e4450f07beb7e0c7bc4bf3e96d19261dd066ea2fe813470c1b98
       emerge/lang/native/defaults.eg: bb215117129c2155851f9d81ed6f226f9510e79570d83124654db31f0b3e81f7
       emerge/lang/native/elf.eg: 6cde0b848c06618474392eb5638d599082fdbbdf617b172c57562a2124c18516
       emerge/lang/native/embed.eg: d5d91204dbb3796042e6a5bd5a47ab46a6e994c7c6815da2488205e762aeebac
-      emerge/lang/native/emerge.eg: bb21a687be75a120b87515c94a701df7f273b3800a2e987d7a09a907369e991b
+      emerge/lang/native/emerge.eg: c7e88a10121f8166ef0fddf7bb729288a452c1d5ef201506a88c0a0e84439c5f
       emerge/lang/native/front.eg: 1daece47a38511226990d14a8b93afe1fb9dd63428d78e0fbce6cc694b128da2
       emerge/lang/native/hello: ee9b52b8c13131c2a6221baca663c0006960b348aa40bebea3a03f6f29e1fe73
       emerge/lang/native/hello.exe: 40ebae4595da614a1ab436968d2adb136ca5015415b0b9da7853bdb33a01ed3c
       emerge/lang/native/json.eg: 87a715c3099af633c4851973e655741cd6416fbbd5a995123315fbb0461b9efc
       emerge/lang/native/json_text.eg: 81527daa0561579fd71f64090ebf5e68c096a2da95f5401e6c42a7a15602ea37
       emerge/lang/native/ledger_text.eg: eb2ea70f445d98b8941a19632c4e9eb5259d244260d52c77b40c3d1c0be4644b
-      emerge/lang/native/lower.eg: 831227d58843fb16e345aa1cfccff4d76390b51f26e78154e47ae0c81285c42c
+      emerge/lang/native/lower.eg: 26da4d1e273bb87d9086137debeee3507c5da9898f8a7bf78d7113ddc8900bfd
       emerge/lang/native/milestone.eg: 9adeb1a116cd66794300242ce23c56affdf2bdbaa72a8aa4f6aaf1cb73af92d8
       emerge/lang/native/observe_text.eg: 4ac45757eafc17dab60d0f6a082ffd7ccedb397ffb6ef8a47d9e37677a8ff28e
       emerge/lang/native/pe.eg: 6155fc55918e79f62f0a513a122c1ddca7ef9b37ced1b6ad31ebfc1c71e95ccd
       emerge/lang/native/prelude_text.eg: f26369aeb3715a82610a2a262db38534ba411f75a1a62f5c2879fda72089e1d0
       emerge/lang/native/primitives_text.eg: 205e254a31030398b052e077a0ea7afe9da42f377379a90dad0e6b31c89a8d81
       emerge/lang/native/regex_text.eg: 15f52c11a77a2368525c2f7fbae0a38aeb783966e5e3e3c2dde241e3c3e53ff5
-      emerge/lang/native/rt.eg: 70c34f3ce4dfca5ad6748ce06a76462e342ba45b84d1bbaacf112d677a232b08
-      emerge/lang/native/rt_text.eg: d0cff82605d9acef0b66afe4319ba3dfd389e20c58b68125a7a0925246c1581b
+      emerge/lang/native/rt.eg: 8a7d5dcf75f670eff9b5e28e543d01430d84501c0c31d6d2cace6faf59f75a60
+      emerge/lang/native/rt_text.eg: 0df4a37069623a46eb9bd2dc2a7dd8dcd38869e177398a18050176d72e1a1eef
       emerge/lang/native/world_text.eg: 6711eea1607e79b29c83450a78e82c77a7df6d570507bd8bcb9cadf27a00a4f6
       emerge/lang/native/x64.eg: e0ab26508f708c05cb4c27bed288db92e9a4802c99618f52f745e5a7e6044e17
       emerge/lang/parser.js: 3e2f3348d2ffe45042c187974256aa8bcdad43b18958ca12e1341ecbec7e7634
@@ -701,6 +704,7 @@ payload:
       emerge/lang/test/world/counter.eg: 1987eac7e4c640f2c0af567c75fefdf310eb546dd58c78c9074b5214def45c0c
       emerge/lang/test/world/counter.world.eg: f3035709d9c88ef60b30fc8bd47894125a8b5137781698154412467efa072cdb
       emerge/lang/test/world/counter_ledger.eg: 2517cb264f3bbdda11088cb0db260a43730854c3a443e033c0683aede6fd328f
+      emerge/lang/test/world/debug.eg: 1cefc6dc42bbbbab2be9d2c54850e586274b80c900a750548d07d1ddadc88b53
       emerge/lang/test/world/language.eg: 6228d452c3ea3fbc750e6a06aebe218681b5baab736288e504008ef1c131dc06
       emerge/lang/test/world/observe.eg: 70c11720603ca6476564d0aa1d8bdda732f6b6ba5fb6ae594af4d592ad733da7
       emerge/lang/test/world/optional.eg: 5b4bf12b0018d8977f2cc7167546ad2eb61fb041bff2484a75127d609dea8939
@@ -733,7 +737,7 @@ payload:
       emerge/observe/sigma.js: 1fc3a9a941aa6ee02df37b8a6aff2047b45c73b63b0b8c370e97cb00e3aa51d4
       emerge/output/.gitkeep: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
       emerge/package-lock.json: 3d5e459a0c4bb8882e4bf388a1d45e0b860ec369acc17af13311817713cfdd2e
-      emerge/package.json: 1d2f8bf4eae89d50c83db521b05673d875811c113717ad67143beb0e11c1db09
+      emerge/package.json: 7051641e46ba2b5ae6c654046e4783502277d08cb7c3245fe68927926c507678
       emerge/processing/.gitkeep: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
       emerge/registry-components.js: 8a4b446a0f2ac40b2ef1f8375afe5c48fba4b89f2d4f17a11c833b1aad458470
       emerge/schemas/index.js: 8535730671771d90dfd515fc21c22b7a26dd148f264a109443f1fbe983573c1e
@@ -761,7 +765,7 @@ payload:
       emerge/siso/StreamLog.js: 69b5eac796b87662dc84e3d36a7fc84847b644c059fd61a138c03917e72a7a2d
       emerge/siso/index.js: 67844385ebccdcbb60b09efcef466fc6b6034e46dc00131cb18884ade72a590a
       emerge/spec/_archive/emerge-1.1.0.spec: 7305e91dbb425c6c0889ee5f83df513ac9d8d13f55f63cc642ab1e0e46fdc5fe
-      emerge/spec/cie-eg.spec: b47001361a715abaf85d1c8ebdafc2a052bbdab6a1733d14b973a1086a7d5107
+      emerge/spec/cie-eg.spec: 12e397b6cabde565de6878e6418e718be1d26d6d342203eec9eda0c467636e25
       emerge/spec/emerge-core.spec: 1b4186d99a342384a105a85e160d4677464a30f80dba28bf472c7ce718c0b653
       emerge/spec/emerge.node-taxonomy.md: 2e832b0ed0f51b9e6620b4d4a5f57b366c188d2ec9f7a6eddcc300dff6acb621
       emerge/spec/emerge.node-taxonomy.spec: 7b9334ef66b7f42f69390de813ffd2191e102a968d147b267f4cb72725c4420c

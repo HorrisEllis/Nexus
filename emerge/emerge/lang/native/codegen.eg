@@ -725,6 +725,7 @@ fn gen_lambda(n) {
 // builtin name → [runtime function, fewest arguments, most arguments]
 let BUILTINS = {
   len: ["rt_b_len", 1, 1], str: ["rt_b_str", 1, 1], repr: ["rt_b_repr", 1, 1], type_of: ["rt_b_type_of", 1, 1],
+  json: ["rt_b_json", 1, 1],
   int: ["rt_b_int", 1, 1], num: ["rt_b_num", 1, 1], has: ["rt_b_has", 2, 2], get: ["rt_b_get", 2, 3],
   keys: ["rt_b_keys", 1, 1], values: ["rt_b_values", 1, 1], slice: ["rt_b_slice", 2, 3], push: ["rt_b_push", 2, 2],
   byte_len: ["rt_b_byte_len", 1, 1], bytes: ["rt_b_bytes", 1, 1], range: ["rt_b_range", 1, 3], join: ["rt_b_join", 1, 2],

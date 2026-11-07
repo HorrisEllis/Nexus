@@ -1,0 +1,306 @@
+// lang/test/world/debug.eg — CIE7 slice b's judge, in Emerge: run with  eg test lang/test/world/debug.eg
+// Two kinds of end state, neither new JavaScript:
+//   1. the oracle, on real runs: the interpreter's ledger_why(n) (observe/debug.js why) for every entry, compared with the port in canonical
+//      form; and at(k) compared with observe() and each compartment's state read mid-run, when the ledger stood at entry k;
+//   2. the expected answers of test/debug.test.js (written against debug.js), carried over case for case for follow, diff, blame and clip,
+//      on ledgers built entry by entry and hashed here.
+// Not carried over: the file loader and the command line (observe/cli.js), which wait on CIE13 (files and processes natively).
+use "../../cie/debug.eg" as D
+use "../../cie/ledger.eg" as L
+use "../../core/primitives.eg" as P
+
+compartment Door {
+  id = "co-debug-door"
+  state { key: null, opened: 0 }
+  constraint needs_key hard { state.key != null or state.opened < 1 }
+  on "open" { state.opened = state.opened + 1 }
+  on "cut" (ev) { state.key = ev.key }
+}
+compartment Lamp {
+  id = "co-debug-lamp"
+  state { lit: false, flips: 0 }
+  constraint calm soft cost 2 { state.flips < 3 }
+  on "flip" {
+    state.lit = not state.lit
+    state.flips = state.flips + 1
+  }
+}
+compartment Gate {
+  id = "co-debug-gate"
+  state { n: 0 }
+  constraint shut hard { state.n < 1 }
+  on "push" { state.n = state.n + 1 }
+}
+
+compartment Vault {
+  id = "co-debug-vault"
+  state { code: null, tries: 0 }
+  constraint needs_code hard { state.code > 0 or state.tries < 1 }
+  on "try" { state.tries = state.tries + 1 }
+  on "code" (ev) { state.code = ev.code }
+}
+
+// ── 1. the oracle ─────────────────────────────────────────────────────────────────────────────────────────
+/** the port's why equals ledger_why for every entry of the ledger as it stands; each disagreement printed */
+fn why_agrees() {
+  let es = ledger()
+  var ok = true
+  for e in es {
+    let want = L.ecf(ledger_why(e.seq))
+    let got = L.ecf(D.why(es, e.seq))
+    if want != got {
+      print("why #{e.seq} builtin: {want}")
+      print("why #{e.seq} port:    {got}")
+      ok = false
+    }
+  }
+  return ok
+}
+/** a reading of the world as it stands now, from the builtins: what at(k) must say later */
+fn reading() {
+  let r = observe()
+  return { seq: len(ledger()),
+    states: { Door: clone(Door.state), Lamp: clone(Lamp.state), Gate: clone(Gate.state), Vault: clone(Vault.state) },
+    open_gaps: map(r.gaps.open, fn(g) = { seq: g.seq, gap: g.gap, type: g.type, pressure: g.pressure, occurrences: g.occurrences }),
+    field: r.field.now, field_regime_since: r.field.hold.since,
+    sigma: { regime: r.sigma.regime, cause: get(r.sigma, "dominant_cause", null), confidence: get(r.sigma, "confidence", null) },
+    velocity: r.liminal.velocity.now }
+}
+/** at(k) on the final ledger says what the builtins said when the ledger stood at k */
+fn at_agrees(readings) {
+  let es = ledger()
+  var ok = true
+  for want in readings {
+    let w = D.at(es, want.seq, P)
+    var got = { seq: want.seq, states: {}, open_gaps: w.open_gaps, field: w.field, field_regime_since: w.field_regime_since, sigma: w.sigma,
+      velocity: w.velocity }
+    for n, c in w.compartments { got.states[n] = c.state }
+    if L.ecf(want) != L.ecf(got) {
+      print("at #{want.seq} builtin: {L.ecf(want)}")
+      print("at #{want.seq} port:    {L.ecf(got)}")
+      ok = false
+    }
+  }
+  return ok
+}
+
+test "the ledger with nothing but its compartments: why and at agree" {
+  let r = [reading()]
+  expect why_agrees()
+  expect at_agrees(r)
+}
+test "a refused open walks back through the gap to the declaration" {
+  var r = [reading()]
+  emit "open"
+  r = push(r, reading())
+  emit "cut" { key: "k" }
+  r = push(r, reading())
+  emit "open"
+  r = push(r, reading())
+  expect why_agrees()
+  expect at_agrees(r)
+}
+test "a soft constraint absorbed at its cost, and the same signal again and again" {
+  var r = []
+  for i in 0..5 {
+    emit "flip"
+    r = push(r, reading())
+  }
+  expect why_agrees()
+  expect at_agrees(r)
+}
+test "hard refusals, unrouted signals and gaps together" {
+  var r = []
+  for i in 0..3 { emit "push" }
+  r = push(r, reading())
+  for i in 0..6 { emit "lost{i % 2}" }
+  r = push(r, reading())
+  gap "nobody set the key" pressure 0.4 type logical
+  r = push(r, reading())
+  emit "cut" { key: "z" }
+  emit "open"
+  r = push(r, reading())
+  expect why_agrees()
+  expect at_agrees(r)
+}
+test "the hunter's own gaps lead back to the readings they were opened from" {
+  var r = []
+  for i in 0..8 { gap "m{i}" pressure 0.3 type logical }
+  r = push(r, reading())
+  observe_gaps()
+  r = push(r, reading())
+  for i in 0..4 { emit "flip" }
+  r = push(r, reading())
+  expect why_agrees()
+  expect at_agrees(r)
+}
+
+test "a hard constraint refused seven times: the declaration explains each, and its consequences stop at five" {
+  var r = []
+  for i in 0..7 { emit "push" }
+  r = push(r, reading())
+  let w = D.why(ledger(), 4)
+  expect len(w.consequences) == 5
+  expect why_agrees()
+  expect at_agrees(r)
+}
+test "a constraint that reads a null field: the gap walks back to the declaration, then to the entry that set it" {
+  var r = []
+  emit "try"
+  r = push(r, reading())
+  emit "code" { code: 7 }
+  emit "try"
+  r = push(r, reading())
+  emit "code" { code: null }
+  emit "try"
+  r = push(r, reading())
+  expect any(ledger(), fn(e) = e.kind == "gap" and has(e.body, "missing"))
+  expect why_agrees()
+  expect at_agrees(r)
+}
+
+// ── 2. test/debug.test.js's expected answers, carried over ────────────────────────────────────────────────
+/** a ledger built entry by entry and hashed (debug.test.js chain()): genesis first */
+fn chain(items) {
+  var out = []
+  var prev = L.ZERO
+  var all = [["genesis", { seed: 0 }]]
+  for it in items { all = push(all, it) }
+  for it in all {
+    var e = { seq: len(out) + 1, kind: it[0], body: it[1], prev: prev }
+    e.hash = L.hash_entry(e)
+    out = push(out, e)
+    prev = e.hash
+  }
+  return out
+}
+fn decl(name = "Door", st = null) {
+  var s = st
+  if s == null { s = { key: null, opened: 0 } }
+  return ["compartment", { name: name, id: "co-1", state: s }]
+}
+fn set(c, changes, sig = "cut") = ["transition", { compartment: c, signal: sig, changes: changes, violations: [], spent: 0 }]
+let NEEDS_KEY = ["gap", { compartment: "Door", signal: "open", constraint: "needs_key", missing: "key", gap: "g1", discarded: [] }]
+fn seqs(xs) = map(xs, fn(x) = x.seq)
+fn has_text(s, t) = find_text(s, t) >= 0
+fn with_body(e, body) {
+  var x = {}
+  for k, v in e { x[k] = v }
+  x.body = body
+  return x
+}
+
+test "why: a null field walks back to the declaration, and says so" {
+  let w = D.why(chain([decl(), NEEDS_KEY]), 3)
+  expect seqs(w.chain) == [3, 2]
+  expect has_text(w.chain[1].via, "null since Door was declared")
+  expect w.root.seq == 2
+  expect w.chain[1].inferred == true
+}
+test "why: a field that was set walks back to the entry that set it, not to the declaration" {
+  let w = D.why(chain([decl(), set("Door", { key: "k" }), set("Door", { opened: 1 }, "open"), NEEDS_KEY]), 5)
+  expect w.chain[1].seq == 3
+  expect has_text(w.chain[1].via, "last set here")
+}
+test "why: an observe gap leads to the reading it was opened from; a gap.close leads to its gap" {
+  let es = chain([decl(), set("Door", { opened: 1 }, "open"),
+    ["gap", { gap: "go", message: "sigma: degraded", pressure: 0.5, type: "temporal", line: 1, source: "observe",
+      dedup_key: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", evidence: { pattern: "sigma", from: 2, to: 3 } }],
+    ["gap.close", { gap: "go" }]])
+  expect D.why(es, 4).chain[1].seq == 3
+  expect D.why(es, 5).chain[1].seq == 4
+}
+test "why: refuses a missing entry; never follows a cycle; a chain stops at the root" {
+  let es = chain([decl(), NEEDS_KEY])
+  expect D.why(es, 99).ok == false
+  let ed = D.edges(es)
+  for e in es {
+    for x in get(ed, str(e.seq), []) { expect x.from < e.seq }
+  }
+  expect len(D.why(es, 1).chain) == 1
+  expect D.why(es, 1).root == null
+}
+test "at: the world after an entry — state folded from transitions, open gaps, field and sigma" {
+  let es = chain([decl(), NEEDS_KEY, set("Door", { key: "k" }), set("Door", { opened: 1 }, "open")])
+  let early = D.at(es, 3, P)
+  let late = D.at(es, 5, P)
+  expect L.ecf(early.compartments.Door.state) == L.ecf({ key: null, opened: 0 })
+  expect len(early.open_gaps) == 1
+  expect L.ecf(late.compartments.Door.state) == L.ecf({ key: "k", opened: 1 })
+  expect len(late.open_gaps) == 0
+  expect late.field.regime != null and late.sigma.regime != null
+  expect D.at(es, 99, P).ok == false
+}
+test "at: a despawned compartment is gone; a tampered ledger is refused, not read" {
+  expect len(keys(D.at(chain([decl(), ["despawn", { name: "Door" }]]), 3, P).compartments)) == 0
+  var bad = chain([decl(), set("Door", { key: "k" })])
+  bad[2] = with_body(bad[2], { tampered: 1 })
+  expect D.at(bad, 3, P).ok == false
+}
+test "follow: every entry about one compartment, signal or kind, in a range" {
+  let es = chain([decl(), decl("Lamp", { "on": false }), set("Door", { key: "k" }), set("Lamp", { "on": true }, "flip"), NEEDS_KEY])
+  expect seqs(D.follow(es, { compartment: "Door" }).entries) == [2, 4, 6]
+  expect seqs(D.follow(es, { signal: "flip" }).entries) == [5]
+  expect seqs(D.follow(es, { kind: "transition", from: 5 }).entries) == [5]
+}
+test "diff: identical runs, a prefix, and the first entry where two runs part ways with state either side" {
+  let a = chain([decl(), set("Door", { key: "k" }), set("Door", { opened: 1 }, "open")])
+  expect D.diff(a, a, P).identical == true
+  let pre = D.diff(a, slice(a, 0, 3), P)
+  expect pre.identical == false
+  expect pre.common == 3
+  expect pre.b == null
+  let b = chain([decl(), set("Door", { key: "z" }), set("Door", { opened: 1 }, "open")])
+  let d = D.diff(a, b, P)
+  expect d.first == 3
+  expect d.common == 2
+  expect d.a.seq == 3
+  let c = chain([decl(), set("Door", { opened: 5 }, "open"), set("Door", { key: "k" })])
+  expect D.diff(a, c, P).first == 3
+  let e = chain([decl(), set("Door", { key: "k" }), set("Door", { opened: 2 }, "open")])
+  expect len(keys(D.diff(a, e, P).state_before_diverging_differs)) == 0
+}
+test "blame: a clean ledger says so; a struggling one names the first struggle and why" {
+  expect D.blame(chain([decl(), set("Door", { key: "k" })]), P).clean == true
+  var items = [decl(), NEEDS_KEY]
+  for i in 0..12 { items = push(items, ["unrouted", { signal: "s{i}", payload: null }]) }
+  let b = D.blame(chain(items), P)
+  expect b.clean == false
+  expect b.first_stress.seq == 3
+  expect b.first_stress.root.seq == 2
+  expect b.first_unhealthy != null and (["turbulent", "chaotic"] contains b.first_unhealthy.regime)
+  var bad = chain([decl()])
+  bad[1] = with_body(bad[1], { x: 1 })
+  expect D.blame(bad, P).ok == false
+}
+test "clip: a slice verifies alone, anchors at both ends, and fails when anything in it is touched" {
+  let es = chain([decl(), NEEDS_KEY, set("Door", { key: "k" }), set("Door", { opened: 1 }, "open"), set("Door", { opened: 2 }, "open")])
+  let c = D.clip(es, 3, 5, P)
+  expect c.count == 3
+  expect D.verify_clip(c, null).ok == true
+  expect D.verify_clip(c, es).ok == true
+  expect c.anchor.prev == es[1].hash
+  expect c.profile.field != null and c.profile.sigma != null
+  var forged = clone(c)
+  forged.entries[1] = with_body(forged.entries[1], { tampered: 1 })
+  expect D.verify_clip(forged, null).ok == false
+  let other = chain([decl(), NEEDS_KEY, set("Door", { key: "z" }), set("Door", { opened: 1 }, "open"), set("Door", { opened: 2 }, "open")])
+  expect D.verify_clip(c, other).ok == false
+  var cut = clone(c)
+  cut.entries = slice(c.entries, 0, 2)
+  expect D.verify_clip(cut, null).ok == false
+  expect D.clip(es, 5, 3, P).ok == false
+}
+test "debugging reads only: a real run's ledger is unchanged by every command" {
+  emit "x"
+  emit "y"
+  let es = ledger()
+  let before = L.ecf(map(es, fn(e) = e.hash))
+  D.blame(es, P)
+  D.why(es, 2)
+  D.at(es, 2, P)
+  D.clip(es, 1, 2, P)
+  D.follow(es, {})
+  expect L.ecf(map(ledger(), fn(e) = e.hash)) == before
+  expect ledger_verify()
+}
