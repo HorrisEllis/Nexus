@@ -16,6 +16,54 @@
 //   first: use "<cie>/world.eg" as __world and __world.start(0, version); last: __world.finish() (the closing checkpoint)
 
 let W = "__world"
+let RX = "__regex"
+let REGEX_PATH = "<cie>/regex.eg"
+let SORT = "__sort"
+let SORT_PATH = "<cie>/sort.eg"
+/** a call to the builtin sort_by (not a fn the program defines itself) */
+fn is_sort_by(n, own) = has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and n.callee.name == "sort_by" and not own and (len(n.args) == 2 or len(n.args) == 3)
+fn uses_sort_by(n, own) {
+  if type_of(n) == "list" {
+    for x in n { if uses_sort_by(x, own) { return true } }
+    return false
+  }
+  if type_of(n) != "map" { return false }
+  if is_sort_by(n, own) { return true }
+  for k, v in n { if uses_sort_by(v, own) { return true } }
+  return false
+}
+/** does any node below n use the matches operator? */
+fn uses_matches(n) {
+  if type_of(n) == "list" {
+    for x in n { if uses_matches(x) { return true } }
+    return false
+  }
+  if type_of(n) != "map" { return false }
+  if has(n, "type") and n.type == "Binary" and n.op == "matches" { return true }
+  for k, v in n { if uses_matches(v) { return true } }
+  return false
+}
+/** text matches pattern → __regex.search(text, pattern): lang/cie/regex.eg, JavaScript's RegExp semantics in Emerge (CIE15) */
+var OWN_SORT_BY = false
+fn rx_only(n) {
+  if type_of(n) == "list" {
+    var out = []
+    for x in n { out[len(out)] = rx_only(x) }
+    return out
+  }
+  if type_of(n) != "map" { return n }
+  if is_sort_by(n, OWN_SORT_BY) {
+    var args = rx_only(n.args)
+    if len(args) == 2 { args = push(args, mk("Str", n, { parts: ["asc"] })) }
+    return mk("Call", n, { callee: mk("Member", n, { obj: mk("Ident", n, { name: SORT }), name: "by" }), args: args })
+  }
+  if has(n, "type") and n.type == "Binary" and n.op == "matches" {
+    return mk("Call", n, { callee: mk("Member", n, { obj: mk("Ident", n, { name: RX }), name: "search" }), args: [rx_only(n.l), rx_only(n.r)] })
+  }
+  var out = {}
+  for k, v in n { out[k] = rx_only(v) }
+  return out
+}
 let WORLD_PATH = "<cie>/world.eg"
 
 fn mk(type, at, fields) {
@@ -333,7 +381,24 @@ fn lower_on(o) {
 }
 
 fn lower(ast, version, test_mode) {
-  if not uses_world(ast.items) and not test_mode { return ast }
+  OWN_SORT_BY = false
+  for it in ast.items { if it.type == "FnDecl" and it.name == "sort_by" { OWN_SORT_BY = true } }
+  let rx = uses_matches(ast.items)
+  let sb = uses_sort_by(ast.items, OWN_SORT_BY)
+  var src = ast
+  if rx or sb {
+    var uses = []
+    if rx { uses = push(uses, mk("Use", ast, { path: REGEX_PATH, alias: RX })) }
+    if sb { uses = push(uses, mk("Use", ast, { path: SORT_PATH, alias: SORT })) }
+    var with_rx = {}
+    for k, v in ast { with_rx[k] = v }
+    with_rx.items = push_all(uses, rx_only(ast.items))
+    src = with_rx
+  }
+  if not uses_world(src.items) and not test_mode { return src }
+  return lower_world(src, version, test_mode)
+}
+fn lower_world(ast, version, test_mode) {
   comps = {}
   KINDS = {}
   MODULES = {}
@@ -342,6 +407,8 @@ fn lower(ast, version, test_mode) {
   for it in ast.items {
     if it.type == "Kind" { KINDS[it.name] = { parents: it.parents, state: it.state } }
     if it.type == "Use" { MODULES[it.alias] = true }
+    MODULES[RX] = true
+    MODULES[SORT] = true
     if it.type == "Compartment" and it.isTemplate { HAS_TEMPLATES = true }
   }
   for it in ast.items { if it.type == "Compartment" and not it.isTemplate { comps[it.name] = true } }

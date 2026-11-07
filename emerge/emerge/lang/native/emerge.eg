@@ -11,11 +11,13 @@ use "./lower.eg" as lower
 use "./world_text.eg" as world_text
 use "./ledger_text.eg" as ledger_text
 use "./contract_text.eg" as contract_text
+use "./regex_text.eg" as regex_text
+use "./sort_text.eg" as sort_text
 
 // CIE4 slice b: lang/cie/world.eg and lang/cie/ledger.eg carried inside the compiler, as the runtime and the prelude are (regenerate:
 // eg run embed.eg ../cie/world.eg world_text.eg; the same for ledger.eg and contract.eg). A program with a compartment, a component, a contract,
 // an on handler, an emit, a send or a wire is lowered to world.eg calls (lower.eg).
-let EMBEDDED = { "<cie>/world.eg": world_text.TEXT, "<cie>/ledger.eg": ledger_text.TEXT, "<cie>/contract.eg": contract_text.TEXT }
+let EMBEDDED = { "<cie>/world.eg": world_text.TEXT, "<cie>/ledger.eg": ledger_text.TEXT, "<cie>/contract.eg": contract_text.TEXT, "<cie>/regex.eg": regex_text.TEXT, "<cie>/sort.eg": sort_text.TEXT }
 // The genesis entry names the build, as lang/runtime.js does (package.json "version"); native.test 'world' fails if the two drift.
 let VERSION = "1.13.0"
 // emerge prog.eg --test: the program's test blocks run after it, as eg test does (CIE5); only the main file's tests, as eg test
@@ -72,6 +74,15 @@ fn resolve_path(base, rel) {
   return normalize(base + "/" + rel)
 }
 
+// the file name errors carry: a module's path relative to the main file's folder, as the interpreter names it (lib/stats.eg), else its basename
+fn shown_name(path) {
+  if MAIN_PATH != "" and not (path starts_with "<") {
+    let base = dirname(MAIN_PATH) + "/"
+    if path starts_with base { return slice(path, len(base)) }
+  }
+  return basename(path)
+}
+
 var modules = []
 var ids = {}
 var visiting = {}
@@ -85,7 +96,7 @@ fn load_as(path, raw, text, want_id) {
   var src = text
   if src == null and has(EMBEDDED, path) { src = EMBEDDED[path] }
   if src == null { src = read_file(path) }
-  var ast = front.parse(src, basename(path))
+  var ast = front.parse(src, shown_name(path))
   // the world itself (<cie>/…) is never lowered: it is what the lowering calls
   if not raw and want_id == null and not (path starts_with "<") { ast = lower.lower(ast, VERSION, TEST_MODE and path == MAIN_PATH) }
   var uses = {}

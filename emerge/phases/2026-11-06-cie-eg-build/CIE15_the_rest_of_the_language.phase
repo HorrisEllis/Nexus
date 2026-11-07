@@ -7,18 +7,18 @@ intent: null
 summary: CIE15_the_rest_of_the_language (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1793999607834
+exported_at: 1794009913543
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793999607834
-lastSeenAt: 1793999607834
+firstSeenAt: 1794009913543
+lastSeenAt: 1794009913543
 fingerprint: null
 payload:
   id: CIE15_the_rest_of_the_language
   map: docs/2026-11-06-cie-eg-build-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: BUILT 0.60.438
   files:
     - emerge/emerge/lang/native/front.eg
     - emerge/emerge/lang/native/lower.eg

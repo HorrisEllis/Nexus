@@ -1,0 +1,7 @@
+// sort_by.eg — CIE15: sort_by natively (lang/cie/sort.eg), keys once, stable in both directions, the interpreter's errors; native.test holds it to eg run.
+let xs = [{ n: 2, s: "b" }, { n: 1, s: "a" }, { n: 2, s: "a" }, { n: 3, s: "c" }]
+print(sort_by(xs, fn(x) = x.n) |> map(fn(x) = x.s))
+print(sort_by(xs, fn(x) = x.n, "desc") |> map(fn(x) = x.s))
+print(sort_by(["b", "é", "a", "B"], fn(x) = x))
+try { sort_by([1, "a"], fn(x) = x) } else e { print(e.message) }
+try { sort_by([1], fn(x) = x, "up") } else e { print(e.message) }

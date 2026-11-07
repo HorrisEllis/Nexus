@@ -1,0 +1,66 @@
+// lang/cie/sort.eg — sort_by in Emerge (Nexus phase CIE15), for the native compiler: lower.eg rewrites sort_by(xs, f[, dir]) to by(xs, f, dir),
+// the direction "asc" when it is not given, so no program sees a new name and the language needs no optional parameters for it.
+// The interpreter's meaning (lang/runtime.js): each element keyed once by f, nums compared with nums and strings with strings by code point,
+// stable: equal keys keep their order, in "desc" too.
+// James, 2026-11-06: "lack of capability is an opportunity to build it."
+
+fn _cmp(a, b) {
+  let ta = type_of(a)
+  let tb = type_of(b)
+  if ta == "num" and tb == "num" { return a - b }
+  if ta == "string" and tb == "string" {
+    if a < b { return -1 }
+    if a > b { return 1 }
+    return 0
+  }
+  raise("sort_by compares nums with nums or strings with strings, got {ta} and {tb}")
+}
+fn _before(p, q, sign) {
+  let c = sign * _cmp(p.k, q.k)
+  if c != 0 { return c < 0 }
+  return p.i < q.i
+}
+fn _merge(xs, sign) {
+  let n = len(xs)
+  if n < 2 { return xs }
+  let h = idiv(n, 2)
+  let a = _merge(slice(xs, 0, h), sign)
+  let b = _merge(slice(xs, h), sign)
+  var out = []
+  var i = 0
+  var j = 0
+  while i < len(a) and j < len(b) {
+    if _before(b[j], a[i], sign) {
+      out = push(out, b[j])
+      j += 1
+    } else {
+      out = push(out, a[i])
+      i += 1
+    }
+  }
+  while i < len(a) {
+    out = push(out, a[i])
+    i += 1
+  }
+  while j < len(b) {
+    out = push(out, b[j])
+    j += 1
+  }
+  return out
+}
+fn by(xs, f, dir) {
+  if type_of(xs) != "list" { raise("sort_by needs a list, got {type_of(xs)}") }
+  if type_of(f) != "fn" { raise("sort_by needs a fn, got {type_of(f)}") }
+  if dir != "asc" and dir != "desc" { raise("sort_by direction is \"asc\" or \"desc\"") }
+  var sign = 1
+  if dir == "desc" { sign = -1 }
+  var keyed = []
+  var i = 0
+  for x in xs {
+    keyed = push(keyed, { x: x, i: i, k: f(x) })
+    i += 1
+  }
+  var out = []
+  for p in _merge(keyed, sign) { out = push(out, p.x) }
+  return out
+}

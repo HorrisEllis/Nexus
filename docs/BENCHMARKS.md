@@ -5,6 +5,32 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-07 — every example natively: a regex engine and sort_by in Emerge (CIE15 built, 0.60.438)
+- **Measured:** Emerge coding. A regular-expression engine and `sort_by` written in Emerge.
+- **His words:** "continue" · "Please continue from where you left off."
+- **Framework:** contract first. The judge for the regex engine is JavaScript's own RegExp on 92 cases. For everything else it is `eg run`.
+- **Method:**
+  1. Generate the cases, with each answer computed by JavaScript.
+  2. Run `regex.eg` on them, interpreted and native.
+  3. Run every example and `sort_by.eg` natively against `eg run`.
+- **Result:**
+  - 92 of 92 regex cases equal, interpreted and native.
+  - All 10 programs (8 examples, `modules/main`, `sort_by.eg`) natively equal `eg run`.
+  - native 104/104, selfhost 16/16 (b523adc4…), lang 166/166, differential 19/19.
+  - The census went 2 → 3 → 4 → 5 → 6 → 7 → 9 of 9 over two days.
+- **Speed:** stage 0 took 18.2 s; stage 1 (native) took 1.03 s. The compiler grew by the regex and sort modules it carries. native.test took
+  50 s.
+- **Lines:** .eg +~330 (`regex.eg`), +~70 (`sort.eg`), plus the lowering. JS 0 removed.
+- **Failed runs before the pass:** 2.
+  1. `test` is a keyword, so the engine's entry point is `search`.
+  2. The coder's test generator didn't escape braces in Emerge strings.
+
+  The engine itself matched JavaScript on its first run.
+- **Gaps found:** modules were named by basename natively (fixed, now relative to the main file).
+- **What came of it:** CIE15 is built. Every program in the language's examples compiles to a native executable and behaves exactly as the
+  interpreter does. The road to deleting the interpreter (CIE11) now runs through the checker (CIE6), observe (CIE7), the spec compiler (CIE8),
+  the tests in .eg (CIE9) and the system primitives (CIE13, CIE10).
+
 ## 2026-11-06 — kinds, templates, spawn and despawn natively (CIE15 fifth slice, 0.60.437)
 - **Measured:** Emerge coding. His dynamic primitives natively: kinds, templates, spawn, despawn, and instances wired at run time.
 - **His words:** "Please continue from where you left off." · "continue"

@@ -101,7 +101,7 @@ phases:
     # entry, checkpoints), and the proof becomes "a native run's ledger equals the interpreter's, hash for hash".
 
   CIE15_the_rest_of_the_language:
-    status: OPEN
+    status: BUILT 0.60.438
     depends_on: [CIE4_native_components]
     spec: emerge/emerge/spec/cie-eg.spec
     blocks: [MOD-NATIVE-SYSTEM]
@@ -348,3 +348,15 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # examples/primitives.eg natively equals the interpreter line for line and its 22 ledger entries hash for hash, on the first native run.
 # Census: 7 of 9. Left: hello (matches: a regular-expression engine in Emerge) and modules/main (sort_by: his call on optional parameters).
 # Found: a field read on a non-map is worded differently by the two backends ("num has no member .x" vs "a num has no fields"); CIE14.
+
+# ── ADDENDUM 2026-11-07 (0.60.438) — CIE15 built: regular expressions and sort_by in Emerge; every example natively ──
+# James, 2026-11-06: "continue" · "Please continue from where you left off."
+# lang/cie/regex.eg: a backtracking regular-expression engine in Emerge with JavaScript's u-flag grammar (alternation, groups, classes with ranges and
+# negation, \d \w \s \b and their negations, every quantifier and its lazy form, anchors, the escapes); lookaround, named groups and backreferences
+# refused by name. 92 cases (test/world/regex-cases.json, among them the five patterns the tree uses) judged by JavaScript's own RegExp: equal,
+# interpreted and native. lower.eg rewrites text matches pattern to it in every program, world or not.
+# lang/cie/sort.eg: sort_by in Emerge (keyed once, stable in both directions, the interpreter's errors); lower.eg rewrites sort_by(xs, f[, dir]) to
+# it with "asc" filled in, so native needs no optional parameters. His question (optional parameters in the language) still decides whether the
+# interpreter's JavaScript sort_by can be deleted; it no longer blocks native.
+# emerge.eg: a module's file is named relative to the main file (lib/stats.eg), as the interpreter names it.
+# Proof: native.test 'every example natively': all 8 examples, modules/main and test/world/sort_by.eg natively equal eg run (native.test 104/104).
