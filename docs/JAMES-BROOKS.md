@@ -66,6 +66,8 @@ Time Box Constraint).
   2026-11-07): the feedback loop, the creative space, flow, synthesis, vectors, tension as fuel, signal to noise,
   priority and weighting, interstitial reasoning, the leverage equation and f(slope), hostile verification, somatic
   validation, the maxims. The same rule for personal material applies; one name is withheld.
+- **Toolkit 2, Novelty, verbatim:** [`docs/innovation-toolkit-2-novelty.md`](innovation-toolkit-2-novelty.md) (received
+  2026-11-07, Section 1 so far): invert normal for ideas only; compartments for constraints; counterfactual construction.
 - **The earlier method-only version:** [`docs/innovation-toolkit.framework`](innovation-toolkit.framework)
   (committed 2026-10-24, `14ae68dc`).
 
