@@ -119,3 +119,11 @@ own peaks.
   false gap is one that a known-good run raised.
 
 **Evidence:** the measured cap of 0.234 (ledger note on CF1, 2026-11-07) is the before. The after is open.
+
+**Confirmed and widened, 2026-11-07, his.** "Yes though. Hardcoded needs to earn its place. Nexus is meant to be non-linear, agnostic. Sigmas and
+deltas are how nexus finds gaps, measures tension or friction. It’s meant to be an agnostic way to systems think."
+- Rhythm and Polarity are confirmed, and so is each signal declaring the direction of its gap.
+- Sigma and delta are Nexus's one domain-agnostic instrument for systems thinking. Four sigmas and two deltas become one primitive.
+- **T4-P3 (open):** the one instrument, with no domain knowledge, reproduces RFR2's regime calls (stable, degraded, collapsing, oscillatory)
+  and CFR's delta gaps on their own recorded data, with no per-domain constants. Measured by running both on the same windows and counting
+  agreement.
