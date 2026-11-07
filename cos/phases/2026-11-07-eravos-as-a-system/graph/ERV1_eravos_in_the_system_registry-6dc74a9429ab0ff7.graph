@@ -1,0 +1,244 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ERV1_eravos_in_the_system_registry:6dc74a9429ab0ff7
+type: graph
+id: phase:ERV1_eravos_in_the_system_registry:6dc74a9429ab0ff7
+context: dependency graph of phase ERV1_eravos_in_the_system_registry
+intent: null
+summary: 26 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794051110079
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794051110079
+lastSeenAt: 1794051110079
+fingerprint: null
+payload:
+  for: ERV1_eravos_in_the_system_registry
+  kind: phase
+  repo: null
+  hash: 6dc74a9429ab0ff7
+  nodes:
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/spec/eravos-in-the-hub.spec
+      role: changes
+      exists: false
+      system: cos
+    - path: lib/system-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: diagnostic/healer/api/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/diagnostic/nexus-heal.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-status.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cli/compartments.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-registry.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-tunnel.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/cli.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/cli.js
+      kind: requires
+    - from: diagnostic/healer/api/index.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/nexus-heal.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-status.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/cli/compartments.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-system-registry.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-system-tunnel.test.js
+      to: lib/system-registry.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV0_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17b_registry_reads_the_declarations
+      - docs/2026-11-03-registry-per-system-phasemap.spec::RG_D0_the_registry_is_per_system
+    dependents:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV2_eravos_own_registry
+    upstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17b_registry_reads_the_declarations
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+      - docs/2026-11-03-registry-per-system-phasemap.spec::RG_D0_the_registry_is_per_system
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV0_the_full_spec
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D0_cos_is_the_hub
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D1_registered_not_copied
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV_D2_the_schemas_have_one_source
+    downstream:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV2_eravos_own_registry
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+    blockedBy:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV0_the_full_spec
+    unlocks:
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV2_eravos_own_registry
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 7 · blocked by ERV0_the_full_spec
+      - >-
+        depends on (3): ERV0_the_full_spec, MG17b_registry_reads_the_declarations,
+        RG_D0_the_registry_is_per_system · all upstream 14
+      - >-
+        needed by (1): ERV2_eravos_own_registry · all downstream 2 · finishing it unlocks
+        ERV2_eravos_own_registry
+    edges:
+      - from: docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV0_the_full_spec
+        kind: declared
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG17b_registry_reads_the_declarations
+        kind: declared
+      - from: docs/2026-11-03-registry-per-system-phasemap.spec::RG_D0_the_registry_is_per_system
+        kind: declared

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-07-phases-are-ideas-phasemap.spec::PIC2_the_ledger_counts_the_shelf
+type: phase
+id: docs_2026-11-07-phases-are-ideas-phasemap.spec::PIC2_the_ledger_counts_the_shelf
+context: pipeline phase PIC2_the_ledger_counts_the_shelf of docs/2026-11-07-phases-are-ideas-phasemap.spec
+intent: null
+summary: PIC2_the_ledger_counts_the_shelf (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794052536757
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794052536757
+lastSeenAt: 1794052536757
+fingerprint: null
+payload:
+  id: PIC2_the_ledger_counts_the_shelf
+  map: docs/2026-11-07-phases-are-ideas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/phase-dag.js
+    - idearium/spec-engine/phase-ledger.cjs
+    - tests/modules/test-phase-ledger.test.js
+  depends_on:
+    - PIC_D2_the_shelf_not_a_new_status
+  blocks: []
+  spec: null
+  graph: 87126b34fe551961

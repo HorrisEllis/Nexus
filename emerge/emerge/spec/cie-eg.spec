@@ -1727,3 +1727,9 @@ spec:
       - { id: AT-09, name: gcm-position,         description: "Move a sealed entry → GCM authentication fails.",                    severity: fatal, spec_ref: s11_acceptance_tests }
       - { id: AT-10, name: duplicate-id,         description: "Register two components with one id → second refused with a gap.",  severity: fatal, spec_ref: s11_acceptance_tests }
       - { id: AT-11, name: self-host,            description: "Rebuild the compiler with itself → byte-identical output.",         severity: fatal, spec_ref: s11_acceptance_tests }
+# ADDENDUM 2026-11-07 — CIE-EG is the foundation each system's door slots onto (his)
+# James, 2026-11-07: "Cie-eg. Component registry, interaction contract, and event bus with handshake verification and event ledger." · "The door
+# is the interaction contract, also called the draw bridge. Cie-eg is meant to slot in to it. It's the foundation. Look at the architecture and
+# genesis spec." Read with s00 (the runtime that hosts every system) and P1 (systems reached only through the registry and the gate): the
+# door of every system in genesis (idearium/spec-engine/templates/genesis.spec, REGISTRY_IS_THE_DRAWBRIDGE) is CIE-EG at system scale. CIE10
+# (the door in Emerge) is the first: Emerge's own door, on CIE-EG. Readings to confirm: genesis.spec addendum 2026-11-07.

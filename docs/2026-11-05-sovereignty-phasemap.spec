@@ -39,13 +39,13 @@ decisions:
 
 phases:
   SV1_the_tables_and_their_writers:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [SV_D0_each_system_keeps_its_own_tables]
     files: [lib/system-boundary.js, scripts/jaa-table-owners.js, docs/2026-11-05-sovereignty-phasemap.spec]
     does: "For every JAA table: which files insert or update it, and so which system owns it. Printed per system; a table with writers in two systems listed for him."
     proof: "every table in data/cortex/memory has an owner or is listed as shared"
   SV2_versionium_sovereign:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [SV1_the_tables_and_their_writers]
     files: [versionium/lib/store.js, versionium/lib/causality.js, versionium/lib/engine.js, versionium/lib/snapshot.js, versionium/routes, intelligence/routes.js, lib/change-record.js, lib/repo-inject.js, cortex/snapshot/index.js]
     does: >-
@@ -54,13 +54,13 @@ phases:
       text diff and merge3, and Cortex's snapshot asks its route.
     proof: "sovereign versionium → 0 and 0; its suites unchanged; with Cortex stopped, Versionium still answers"
   SV3_diagnostic_and_ollama:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [SV1_the_tables_and_their_writers]
     files: [diagnostic, ollama, lib]
     does: "Diagnostic (10 out, 1 in) and Ollama (0 out, 11 in): the same, one system at a time."
     proof: "sovereign diagnostic and sovereign ollama → 0 and 0"
   SV4_cortex_sovereign:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [SV1_the_tables_and_their_writers, DO3_cortex_door]
     files: [cortex/server.js, cortex/routes, cortex/memory/jaa-db.js]
     does: >-
@@ -68,7 +68,7 @@ phases:
       — DO3b moves the handlers it needs into cortex/routes). Its 15 out the same way.
     proof: "sovereign cortex → 0 and 0; every system's suite unchanged; Cortex stopped, the others run"
   SV5_the_rest_one_at_a_time:
-    status: OPEN
+    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
     depends_on: [SV4_cortex_sovereign]
     files: [intelligence, cos, copilot, idearium, orchestrator, guardian, clear-glass, architect, lib]
     does: "Intelligence, COS, Copilot, Idearium, Orchestrator, Guardian, Clear Glass, Architect: each its door (DO1, DO5, DO7, DO8 where missing), then its crossings; lib/'s 250 move home to the systems they serve."

@@ -268,3 +268,53 @@ first.
 decided. It is a z-score of each delta (the tick gap for a key) against that key's rolling baseline, and the 16-scenario judge holds the Emerge
 port equal to it. What it doesn't have yet is the waveform baseline learned from peaks: its thresholds are fixed values in `primitives.eg`.
 This changes no prediction (T4-P1..P4 stay open). It gives CF1 its starting point in Emerge.
+---
+
+## T8 — "The door for each system is a systems version of cie-eg": one pattern at every scale, 2026-11-07
+
+**His words, 2026-11-07,** said as they came ("All of what I say to you is what's immediately on my mind. Emerges"), kept as ideas, not
+decisions:
+1. **The process.** "Like idea, spec, phases, build. Idea, dag(end state conditions, then, spec from those, then a dag for the primitives, then
+   the primitives get chunked. Each with a contract that sets the end state intent per gate/compartment the dag and test for the conditions.
+   In idearium. Dynamic chunking using primitives." · "the specs are meant to be the map. Like Eravos does."
+2. **The door.** "Cie-eg would use the door. The door for each system is a systems version of cie-eg. I'm trying to reduce as much complexity
+   for the agents as possible."
+3. **A ledger per primitive.** "What if we even do event ledger per primitive in cie-eg. It's meant to click seemlessly into nexus." · "That's
+   what I meant by event ledger per primitive but it was just an idea."
+4. **Where it comes from.** "That's why spacial void is supposed to be a brainstorming tool. I use synthesis to form ideas I think.
+   Convergence, divergence, synthesis, antithesis, recursive fractal analysis. Is an intuition I had once."
+
+**The intuition is older than the code.** It is on page 1 of his notebook (docs/notebook-pages-2025-12-to-2026-06.md, "Variable.zoom
+(Incremental) — Recursive fractal analysis", undated, before the repository's first commit of 2026-09-25), and in his Innovation Toolkit
+addendum Part 3 (docs/innovation-toolkit-addendum.md): "Recursive fractal analysis to find gaps." · "synthesis ↔ antithesis (Analysis) =
+emergence." The same shape shows up in ERAVOS's Workshop (eravos-canvas/specs/eravos.workshop.spec, 2026-11-06): "the same surface at every
+scale (the fractal)".
+
+**What the coder did (conceptual).** Read idea 2 as one pattern at three scales: register, contract, gate, ledger. Inside a system (CIE-EG:
+components, roads, the event gate, the event ledger); at a system's door (its registry, interaction contract, the door's check, its ledger);
+across the ecosystem (COS, the hub: the system registry, each door, COS's routing, its ledger). A ledger per primitive (idea 3) is the same
+pattern's smallest scale. Nothing is built from it; ERV0's spec (docs/2026-11-07-eravos-as-a-system-phasemap.spec) is where it would be
+written, when he says.
+
+**Prediction, written before any result.** If the door is CIE-EG at system scale, one conformance test written against the four parts
+passes, unchanged, against a CIE-EG component and against a system's door. Measured when CIE10 (Emerge's door) and ERV1 (ERAVOS in COS) are
+built. And an agent's brief for wiring a component carries one pattern instead of one per system: measured as the brief's size before and
+after, in tokens.
+
+**Evidence.** Open.
+
+**T8, his correction, 2026-11-07:** "The door was supposed to be that. The spine for each system". His word "spine" for the same idea, in the
+record: 2026-07-09 (Q0006) "warp is the spine for each system, supposed to be."; 2026-10-19 the infrastructure-spine map ("migrate each system to
+the component registry as a spine"); 2026-11-03 the component registry as the spine; 2026-11-07 the door. At ecosystem scale the word was COS's
+(2026-10-23, "COS would be the spine"). How WARP, his first spine, relates to the door is his to say (asked 2026-11-07).
+
+**T8, his second correction, 2026-11-07:** "Each system is sovereign. Each is responsible for their own door". There is no central door spec:
+the coder had written "the door spec" as if one spec built every door. Each system writes, owns and serves its own; shared are only genesis's
+template and the entry schema (his PL_D9, 2026-11-03). So the prediction above stands as written, read per system: one conformance test of the
+four parts, run by each system against its own door.
+
+**T8, his answer, 2026-11-07:** "Cie-eg. Component registry, interaction contract, and event bus with handshake verification and event ledger."
+· "The door is the interaction contract, also called the draw bridge. Cie-eg is meant to slot in to it. It's the foundation." Found on reading
+genesis (his ask): its own 1.6.0 note says "CIE-EG's roads, gate and typed gaps (DB21, his) are not in the catalog yet". The door was specced in
+genesis and the architecture template, its foundation in CIE-EG, and the two never named each other. Recorded in all three (addenda
+2026-11-07). The prediction stands: each system's door, built on CIE-EG, passes one conformance test of the four parts.

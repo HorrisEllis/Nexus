@@ -69,7 +69,7 @@ spec:
       blocks: []
 
     P2_per_system_interaction_contracts:
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       description: |
         Build the 8 missing interaction-contract.json files (copilot,
         ollama, clear-glass, diagnostic, loom, versionium, eravos,
@@ -80,7 +80,7 @@ spec:
       blocks: []
 
     P3_per_system_node_schemas:
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       description: |
         The real, hard architectural decision this phase requires:
         does lib/node-schemas/ stay ONE, shared, generic set (simpler,
@@ -93,7 +93,7 @@ spec:
       blocks: [P4_full_node_type_coverage_per_system]
 
     P4_full_node_type_coverage_per_system:
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       description: |
         Generalize the one real, proven pattern (data/nodes/'s 86 real
         .tool files + node-index-watcher.js) to every real node type
@@ -105,7 +105,7 @@ spec:
       blocks: []
 
     P5_data_folder_completion:
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       description: |
         The real, measured finding from earlier this session: data/
         folders are near-empty (3-13 files each) while cortex's JAA
@@ -125,7 +125,7 @@ spec:
       blocks: []
 
     P6_per_system_contract_schemas:
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       description: |
         James: "each system needs contract schemas if applicable.
         everything has to be a tangible file. that way the system
@@ -162,7 +162,7 @@ spec:
       blocks: []
 
     P8_per_system_component_registry:
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       description: |
         James, verbatim (real, exact field list, not paraphrased —
         preserve this precisely, nothing lost): "comp, hook and wire,
@@ -255,7 +255,7 @@ spec:
       blocks: []
 
     P13_interaction_contract_plus_handshake_for_every_cross_system_call:
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       description: |
         James, verbatim, real and precise: "every interaction between
         systems has to use the interaction contract, and verify handoff
@@ -307,7 +307,7 @@ spec:
       blocks: []
 
     P19_dynamic_nodes_via_causal_graph:
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       description: |
         James: "make nodes dynamic." Real, NOT new — intelligence/cfr/
         graph.js's CausalGraph already does exactly this for ledger
@@ -325,7 +325,7 @@ spec:
       blocks: []
 
     P20_intelligence_reflexive_cfr_field:
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       description: |
         James: "a causal field for the intelligence system." Real,
         confirmed gap — intelligence/cfr/field.js's createCFRField()
@@ -341,7 +341,7 @@ spec:
       blocks: []
 
     P21_versionium_causal_field:
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       description: |
         James: "a causal field for... versionium." Real, partial
         already — versionium/lib/causality.js already uses CausalGraph
@@ -359,7 +359,7 @@ spec:
       blocks: [P19_dynamic_nodes_via_causal_graph]
 
     P22_ledger_data_integrity_checker:
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       description: |
         James: "cortex has tools for checking data integrity, comparing
         ledger to data folder to find gaps" — describing a real,
@@ -1015,7 +1015,7 @@ spec:
   phases_added_2026_10_10:
     P33_every_system_runs_its_node_registry:
       systems: [core, cortex, guardian, idearium, copilot, intelligence, versionium, cos, loom, orchestrator, architect, diagnostic, eravos, clear-glass, ollama, emerge, warp]
-      status: "PARTLY BUILT 0.60.131 — P33a (0.60.130) lib/node-registry.js; P33b (0.60.131) every system with its own process starts its own listener at boot (orchestrator, cortex, guardian, idearium, architect, diagnostic, intelligence, ollama, versionium, copilot, loom, clear-glass), guardian onto the shared registry and its own store, one writer per database (the boot sync indexes only cos, emerge, nexus-healer, sentinel, warp). OPEN: the .store node; the systems with no data/nodes (they need a registry first, P8)."
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: PARTLY BUILT 0.60.131 — P33a (0.60.130) lib/node-registry.js; P33b (0.60.131) every system with its own process starts its own listener at boot (orchestrator, cortex, guardian, idearium, architect, diagnostic, intelligence, ollama, versionium, copilot, loom, clear-glass), guardian onto the shared registry and its own store, one writer per database (the boot sync indexes only cos, emerge, nexus-healer, sentinel, warp). OPEN: the .store node; the systems with no data/nodes (they need a registry first, P8)."
       addendum_2026_10_17: >-
         James, 2026-10-17: "each system, reads, writes, and manages its nodes. each system has a database for each index of
         nodes with all the history. listener, schemas for all the  node types, the database. nodes for all persistant data.
@@ -1035,7 +1035,7 @@ spec:
         (.store: owner, tables, counts, hash, location), so cortex's catalog (DS1) is a list of store nodes, not a copy.
     P34_nodes_in_the_lattice:
       systems: [intelligence, cortex]
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       depends_on: [P33_every_system_runs_its_node_registry, P19_dynamic_nodes_via_causal_graph]
       description: |
         Every node (not only system pairs) is a lattice node: its relations to other nodes carry a field, so a node grows
@@ -1043,7 +1043,7 @@ spec:
         owner's store, re-entered when touched.
     P35_copilot_reads_edits_creates_nodes:
       systems: [copilot, core]
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       depends_on: [P33_every_system_runs_its_node_registry]
       description: |
         Through each system's contract, never its files: copilot (and any agent, through nexus.command) lists, reads,
@@ -1051,7 +1051,7 @@ spec:
         ledgers. A new node type is proposed the same way (its schema a node too), so the taxonomy can expand and contract.
     P36_an_event_ledger_per_registry:
       systems: [core, cortex, guardian, idearium, copilot, intelligence, versionium, cos, loom, orchestrator, architect, diagnostic, eravos, clear-glass, ollama, emerge, warp]
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       depends_on: [P8_per_system_component_registry]
       description: |
         Each system's registry (components sorted by module — P8's "core components, then each module with each
@@ -1060,7 +1060,7 @@ spec:
         registry's ledger rather than a shared one, and the event taxonomy exists for every system (8 of 16 have one).
     P37_the_ui_floats_on_the_registry:
       systems: [idearium, clear-glass, orchestrator]
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       depends_on: [P8_per_system_component_registry, P36_an_event_ledger_per_registry]
       description: |
         A system's screens are drawn from its registry and its event ledger — the components, their state, their events —
@@ -1069,7 +1069,7 @@ spec:
         hand off to each other only through the contract (P13).
     P38_every_graph_has_its_route_command_and_node:
       systems: [idearium, intelligence, cortex, loom, core]
-      status: open
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: open"
       depends_on: [P2_per_system_interaction_contracts]
       description: |
         James, 2026-10-10: "also the idearium graphs. should the graphs abnd everything have routes?" Yes — through

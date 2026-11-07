@@ -1121,3 +1121,23 @@ catalog GENESIS_FILE_TREE {
 // Still his, not decided (do not build on a guess): whether .nex names a snapshot in Versionium or drops out; the TV shell (its own thing, or
 // gone); one source for registry, contract and events (the template lists three files); the template's "what every system uses is the kernel's"
 // against "lib is not a directory …"; where the .cos sits in the tree; network isolation; the qcow2 virtual disk's future.
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ADDENDUM 2026-11-07 — the door is the interaction contract; CIE-EG slots into it, and is the foundation (his; recorded, not yet built)
+// James, 2026-11-07, asked how WARP 2 and the door relate: "That's the problem. Cie-eg. Component registry, interaction contract, and event
+// bus with handshake verification and event ledger." · "The door is the interaction contract, also called the draw bridge. Cie-eg is meant
+// to slot in to it. It's the foundation. Look at the architecture and genesis spec." · the turn before: "Each system is sovereign. Each is
+// responsible for their own door".
+// What it settles against this file: the 1.6.0 note above, "CIE-EG's roads, gate and typed gaps (DB21, his) are not in the catalog yet", is
+// the gap. Every system scaffolded from genesis has one door, its interaction contract (the drawbridge, REGISTRY_IS_THE_DRAWBRIDGE), and
+// CIE-EG is what fills it: the component registry, the contract's roads, the event gate with handshake verification, the event ledger
+// (emerge/emerge/spec/cie-eg.spec, s00 "The component registry, the interaction contract and the event gate become the runtime that hosts
+// every system"). Each system owns its own door (§5.16); shared are this template and the entry schema (PL_D9).
+// Readings, the coder's, to confirm with him:
+//   - "slot in to it" read as: the door is the socket each system exposes (its contract, served by its server.js over the API and CLI), and
+//     CIE-EG is the engine behind it in every system — not a separate layer beside it.
+//   - this answers, in part, the 11-03 open question "one source for registry, contract and events (the template lists three files)": one
+//     door, CIE-EG's, with the registry, contract, bus and ledger as its parts. Whether the three files become one is still his.
+//   - DB21 ("one registry schema every level", his, docs/2026-10-17-system-drawbridge-phasemap.spec) is this at every scale; shelved as an idea
+//     the same day (PIC0), named here so it is not lost.
+// Thread: docs/FRAMEWORK-THREADS.md T8. Nothing in the catalog changes until it is phased.

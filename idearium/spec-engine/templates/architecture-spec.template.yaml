@@ -133,3 +133,9 @@ rules:
 #   - its tunnel and heartbeat: lib/system-registry.js tunnel() / heartbeat()
 #   docs/architecture-spec/architecture-spec.spec addendum 2026-10-17 has the census; docs/2026-10-17-system-drawbridge-
 #   phasemap.spec and sovereign-node P33 have the phases.
+# ADDENDUM 2026-11-07 — the door is the interaction contract (the drawbridge); CIE-EG slots into it and is the foundation (his)
+# James, 2026-11-07: "Cie-eg. Component registry, interaction contract, and event bus with handshake verification and event ledger." · "The door
+# is the interaction contract, also called the draw bridge. Cie-eg is meant to slot in to it. It's the foundation." · "Each system is sovereign.
+# Each is responsible for their own door". The three files above (interaction-contract.json, the registry, contracts/handshake.js) are the
+# parts of one door, and CIE-EG (emerge/emerge/spec/cie-eg.spec) is what each system's door is built on. Readings to confirm: genesis.spec,
+# addendum 2026-11-07.

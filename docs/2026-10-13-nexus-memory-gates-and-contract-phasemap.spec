@@ -71,7 +71,7 @@ spec:
         sub-gates — one per required ref, action or file — each with its own pass_when, the parent passing only when all its
         children pass. The split is recorded in the contract (nothing lost), so the next run starts from the smaller gates.
     GT0_every_interaction_gated:
-      status: "OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"each interaction gated, that way each gate can be a different agent, using the ledgers or previous conversations"'
       builds_on: "the model door (one route per kind) · RAID decideForContract · the ledgers · lib/repo-agent.js conversationFor"
       does: >-
@@ -79,7 +79,7 @@ spec:
         agent (IM0 decides which). What the gate saw and decided is written to the ledger — the next gate (and any agent,
         any provider) reads that, not a re-sent conversation.
     MEM0_nexus_holds_everything:
-      status: "OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"i want to make nexus hold as much as possible, as much data, and checkpoints that can save our progress … all data in the repo needs to persist"'
       builds_on: "versionium (snapshots, history import, 0.60.7) · repo notes · the ledgers · nodes"
       does: "A checkpoint per passed gate (a Versionium snapshot + the contract's state), so work resumes from the last passed block after any crash, restart or provider switch. A census of what a repo keeps where, and what does not persist yet."
@@ -89,14 +89,14 @@ spec:
       builds_on: "lib/component-store.js closure · loom wires · lib/project-decompose.js"
       does: "A block's context is its dependencies' contracts (exports, signatures) from the component store and loom — not their files."
     TD0_today_and_yesterday_working:
-      status: "OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"all the phases from today and yesterday that will idearium working"'
       does: "The open phases of 2026-10-12/13 that make Idearium work end to end, in order — request spine (RQ), projects (PL1, PL5), identities (ID1, TB1), then CT0 → GT0 → MEM0 — run as a contract through the pipeline itself."
     PF0_profiles_linked_to_hats:
       status: "FOLDED into ID1 (one phase, not two) — the gating census 2026-10-18. Was: OPEN — mapped as ID1 in docs/2026-10-13-identities-tabs-and-automation-phasemap.spec; his 0.60.13 session hub is its base"
       james: '"profiles in clearlgas that can link to hats. multiaccunt setup in clearglass, using porofiles?"'
     CT2_ingestion_as_contracts:
-      status: "OPEN"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"like this is meant to be agent tools. like the chunking. for data ingestion. like this could be immensly powerful to intake data. like think clearglass. etc. also learns better boundaries overtime, nuance, uses nexus to hold the complexity, models or compartments."'
       depends_on: [CT1_dynamic_chunking]
       builds_on: "contract-gates (split, packet, Boundaries) · Clear Glass readPage / the interaction field · lib/import-checks.js · the component store · idearium spec-engine chunking"
@@ -119,7 +119,7 @@ spec:
       proof: "test-contract-gates CC-19 (two independent bricks overlap in time; outputs recorded; complete by the evaluator; a no-executor brick reported)"
     EX0_executors_he_already_built:
       depends_on: [SC0_scheduler]   # mapped from the files they share: SC0_scheduler (cortex/core/raid/contract-gates.js)
-      status: "agent + phase adapters and the Build integration DONE — 0.60.18 (EX0a–f); glass and pipeline executors OPEN; the live update-system run with Ollama is his (CHANGELOG-0.60.18)"
+      status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: agent + phase adapters and the Build integration DONE — 0.60.18 (EX0a–f); glass and pipeline executors OPEN; the live update-system run with Ollama is his (CHANGELOG-0.60.18)"
       builds_on: "lib/agent-tools/tools/* (registered) · BrainOS workflows · Clear Glass automation nodes + macros (clear-glass/src/automation/*, src/macros) · the phase pipeline (plan → code) · the model door (agent work by kind)"
       does: "One executor kind per thing that exists: tool (done), agent (the door: a brick's kind picks the model — 0.60.9 routing), glass (a Clear Glass automation or macro on a named tab), pipeline (a BrainOS / Idearium workflow), phase (an Idearium phase build). No new runner: each is an adapter onto what is already there."
       james: '"Yes. Build the agent and phase adapters next, then wire Idearium''s phase build through the contract scheduler... build and test the adapters independently first, then connect the phase-build action." · "the scheduler must distinguish a failed task from a task that has no available executor. The latter should be reported as blocked or unsupported, not repeatedly retried or incorrectly marked complete." · "Keep the existing tool registry as the execution boundary, avoid duplicating routing logic and make the first real phase build produce an auditable record of every brick, dependency, checkpoint and gate."'
