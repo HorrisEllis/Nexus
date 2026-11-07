@@ -333,6 +333,18 @@ spec:
       proof: "a recorded 2s-adjacent pair no longer appears in traceToRoot; a seeded field replays identically; rewind to entry N reproduces the field at N; the verifier names the missing link on a broken sequence; CFR's existing consumers (idearium, guardian, cortex, orchestrator) pass unchanged"
       expanded_2026_11_06_field: >-
         James, 2026-11-06: "Let’s spec out the constrain field … Constrained relational field. Or emergence also. Replacing warp. Let’s get it all specced." · "build it as a layer of emerge like compounding". Expanded (his rule: phases expand): this phase builds MOD-CRF-CAUSAL of emerge/emerge/spec/field.spec, the constrained relational field (a layer of Emerge over Pillar, written in .eg): CFR on RFR2 in .eg, over the field: typed causal relations, time order never causal, sigma and delta.
+      expanded_2026_11_07_sigma_delta: >-
+        James, 2026-11-07, shown that CFR's computeSigma opens 'sigma.spike' gaps at 0.70 and that an ordinary event tops out at 0.234
+        (the coder offered (a) sigma as a pure statistical deviation or (b) a weighted anomaly score, recommending (a)): "Its gaps. Deltas
+        measure gaps and sigmas measure deviation". His decision, as the coder reads it: (1) a gap is measured by delta, not by sigma, so
+        the 'sigma.spike' gap at SIGMA_GAP_THRESHOLD is the wrong instrument and goes; gaps are delta's (delta.tension today). (2) Sigma is
+        deviation only: a z-score against a learned baseline, his (a); the keyword-on-the-name "structural" axis and the invented
+        30%-of-mean stddev go. Part (c) of does: ("one sigma and one delta") now carries these meanings. Found with it, against his
+        2026-08-23 "I want to use delta to measure the tension gaps... no hardcoded. dynamic updating over time": delta.js is itself
+        hardcoded (payload bytes / 2000, friction 500 ms to 30 s, keyword type tensions, DELTA_TENSION_THRESHOLD 0.75), so the delta that
+        measures gaps learns its scale over time too. To confirm with him: whether sigma then measures how far a delta deviates from its
+        own baseline (a gap opened when the change is N sigma unusual), or the two stay independent. Measured evidence: the ledger note
+        on CF1, 2026-11-07. Built in .eg with the field (AXIOMS §17.13), not in JS.
 
     RF1_relational_field:
       layer: foundation
