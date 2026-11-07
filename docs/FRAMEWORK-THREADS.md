@@ -260,3 +260,38 @@ to a post-hoc signal (PROOF-OF-COMPETENCY.md).
 
 **State:** registered. Nothing in the hash list yet. The task set needs Pillar's contracts (PIL2, PIL3), and the focus orders the JavaScript removal
 first.
+
+---
+
+## T8 — "The door for each system is a systems version of cie-eg": one pattern at every scale, 2026-11-07
+
+**His words, 2026-11-07,** said as they came ("All of what I say to you is what's immediately on my mind. Emerges"), kept as ideas, not
+decisions:
+1. **The process.** "Like idea, spec, phases, build. Idea, dag(end state conditions, then, spec from those, then a dag for the primitives, then
+   the primitives get chunked. Each with a contract that sets the end state intent per gate/compartment the dag and test for the conditions.
+   In idearium. Dynamic chunking using primitives." · "the specs are meant to be the map. Like Eravos does."
+2. **The door.** "Cie-eg would use the door. The door for each system is a systems version of cie-eg. I'm trying to reduce as much complexity
+   for the agents as possible."
+3. **A ledger per primitive.** "What if we even do event ledger per primitive in cie-eg. It's meant to click seemlessly into nexus." · "That's
+   what I meant by event ledger per primitive but it was just an idea."
+4. **Where it comes from.** "That's why spacial void is supposed to be a brainstorming tool. I use synthesis to form ideas I think.
+   Convergence, divergence, synthesis, antithesis, recursive fractal analysis. Is an intuition I had once."
+
+**The intuition is older than the code.** It is on page 1 of his notebook (docs/notebook-pages-2025-12-to-2026-06.md, "Variable.zoom
+(Incremental) — Recursive fractal analysis", undated, before the repository's first commit of 2026-09-25), and in his Innovation Toolkit
+addendum Part 3 (docs/innovation-toolkit-addendum.md): "Recursive fractal analysis to find gaps." · "synthesis ↔ antithesis (Analysis) =
+emergence." The same shape shows up in ERAVOS's Workshop (eravos-canvas/specs/eravos.workshop.spec, 2026-11-06): "the same surface at every
+scale (the fractal)".
+
+**What the coder did (conceptual).** Read idea 2 as one pattern at three scales: register, contract, gate, ledger. Inside a system (CIE-EG:
+components, roads, the event gate, the event ledger); at a system's door (its registry, interaction contract, the door's check, its ledger);
+across the ecosystem (COS, the hub: the system registry, each door, COS's routing, its ledger). A ledger per primitive (idea 3) is the same
+pattern's smallest scale. Nothing is built from it; ERV0's spec (docs/2026-11-07-eravos-as-a-system-phasemap.spec) is where it would be
+written, when he says.
+
+**Prediction, written before any result.** If the door is CIE-EG at system scale, one conformance test written against the four parts
+passes, unchanged, against a CIE-EG component and against a system's door. Measured when CIE10 (Emerge's door) and ERV1 (ERAVOS in COS) are
+built. And an agent's brief for wiring a component carries one pattern instead of one per system: measured as the brief's size before and
+after, in tokens.
+
+**Evidence.** Open.
