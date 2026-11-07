@@ -1040,11 +1040,6 @@ function createRuntime(opts = {}) {
   const needNum = (v, who) => { if (typeof v !== 'number') err(`${who} needs a num, got ${typeOf(v)}`); return v; };
   const needFn = (v, who) => { if (!isFn(v)) err(`${who} needs a fn, got ${typeOf(v)}`); return v; };
   const needMap = (v, who) => { if (!isMap(v)) err(`${who} needs a map, got ${typeOf(v)}`); return v; };
-  const cmpSort = (a, b, who) => {
-    if (typeof a === 'number' && typeof b === 'number') return a - b;
-    if (typeof a === 'string' && typeof b === 'string') return cpCmp(a, b);
-    err(`${who} compares nums with nums or strings with strings, got ${typeOf(a)} and ${typeOf(b)}`);
-  };
 
   def('print', [0, -1], (...xs) => { out(xs.map(x => show(x)).join(' ') + '\n'); return null; });
   def('str', 1, v => show(v));
@@ -1103,13 +1098,7 @@ function createRuntime(opts = {}) {
     const end = b === undefined || b === null ? undefined : b;
     return typeof v === 'string' && astral(v) ? Array.from(v).slice(a, end).join('') : v.slice(a, end);
   });
-  def('sort_by', [2, 3], (xs, f, dir = 'asc') => {
-    needList(xs, 'sort_by'); needFn(f, 'sort_by');
-    if (dir !== 'asc' && dir !== 'desc') err('sort_by direction is "asc" or "desc"');
-    const keyed = xs.map((x, i) => ({ x, i, k: rt.call(f, [x]) }));
-    keyed.sort((p, q) => (dir === 'desc' ? -1 : 1) * cmpSort(p.k, q.k, 'sort_by') || p.i - q.i);
-    return keyed.map(p => p.x);
-  });
+  // sort_by: moved to lang/core/prelude.eg, in Emerge, 2026-11-07, once the language had optional parameters (James: "I feel optional parameter's is always good.")
   def('range', [1, 3], (a, b, step) => {
     if (b === undefined) { b = a; a = 0; }
     step = step === undefined ? 1 : step;

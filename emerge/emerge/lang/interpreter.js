@@ -123,7 +123,9 @@ function createInterpreter(rt, file) {
       const env = new Env(closure);
       if (lensOf) env.define(STATE, stateView);
       f.params.forEach((p, i) => {
-        const v = p.type ? $.ty(args[i], p.type.name, p.type.nullable, `parameter ${p.name} of ${name}`) : args[i];
+        // a missing argument takes its default, evaluated now, after the parameters before it
+        const given = i < args.length ? args[i] : (p.default ? ev(p.default, env) : null);
+        const v = p.type ? $.ty(given, p.type.name, p.type.nullable, `parameter ${p.name} of ${name}`) : given;
         env.define(p.name, v);
       });
       let result = null;
@@ -136,8 +138,10 @@ function createInterpreter(rt, file) {
       if (f.ret) result = $.ty(result, f.ret.name, f.ret.nullable, `return value of ${name}`);
       return result;
     };
-    if (lensOf) return { arity: f.params.length, impl: (view, ...args) => impl(view, args) };
-    return $.fn(name, f.params.length, (...args) => impl(null, args));
+    const req = f.params.filter(p => !p.default).length;
+    const arity = req === f.params.length ? req : [req, f.params.length];
+    if (lensOf) return { arity, impl: (view, ...args) => impl(view, args) };
+    return $.fn(name, arity, (...args) => impl(null, args));
   }
 
   // ── statements ─────────────────────────────────────────────────────────────

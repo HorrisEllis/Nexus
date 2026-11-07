@@ -1,0 +1,92 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CIE12_windows:d22c13d31c33ea24
+type: graph
+id: phase:CIE12_windows:d22c13d31c33ea24
+context: dependency graph of phase CIE12_windows
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794023236625
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794023236625
+lastSeenAt: 1794023236625
+fingerprint: null
+payload:
+  for: CIE12_windows
+  kind: phase
+  repo: null
+  hash: d22c13d31c33ea24
+  nodes:
+    - path: emerge/emerge/lang/native/codegen.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/pe.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/native/rt.eg
+      role: changes
+      exists: true
+      system: emerge
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 11
+    deps:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+    dependents: []
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE2_native_sha256
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE3_native_ledger
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE5_native_test
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE7_native_observe
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D1_remove_the_javascript_now
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D2_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE_D3_sha256_from_the_cpu
+    downstream: []
+    blockedBy:
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
+        files:
+          - emerge/emerge/lang/native/rt.eg
+          - emerge/emerge/lang/native/codegen.eg
+      - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE14_the_gaps_found_while_coding
+        files:
+          - emerge/emerge/lang/native/codegen.eg
+          - emerge/emerge/lang/native/rt.eg
+    dangling: []
+    lines:
+      - layer 11 · blocked by CIE11_retire_the_interpreter
+      - 'depends on (1): CIE11_retire_the_interpreter · all upstream 23'
+      - 'needed by (0): —'
+      - >-
+        same files as CIE13_native_system_primitives with no order between them:
+        emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg
+      - >-
+        same files as CIE14_the_gaps_found_while_coding with no order between them:
+        emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/rt.eg
+    edges:
+      - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE11_retire_the_interpreter
+        kind: declared

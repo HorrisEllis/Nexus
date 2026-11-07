@@ -1,14 +1,14 @@
 {
   "emerge": "1.13.0",
-  "build": 13,
+  "build": 16,
   "sources": {
     "core/primitives.eg": "89375c0d376ddbafff5b82056d27391de6457d225d79d8afbf4b618be3706b8e",
-    "core/prelude.eg": "05b9fde22b65bc9f2f6b92df21b9775fdffede613b59d267c15bdea11a02e750",
+    "core/prelude.eg": "420c65596910108d71702040d8972d83646ddf81df7a66e07f94947e577576b9",
     "core/selftest.eg": "7a1b4f60fde76fb51565a73b189279bd4d1f3f8312e0a17d4a30b53f0c9bb56b"
   },
   "outputs": {
     "primitives.json": "36040565b786191466300e03bfc99e643cf5d3686e2220bd1f46fdb44fa7b041",
-    "prelude.js": "51f8cc51881fe27d0c0d236772d65f18129a35f50161b4bd38bb1776d8ee4767"
+    "prelude.js": "d9a7cd35a884b372cac4cce3c258cad4ec39f7041470df13aaa24246e87560fb"
   },
   "prelude_builtins": [
     "map",
@@ -33,6 +33,7 @@
     "round",
     "abs",
     "sort",
+    "sort_by",
     "clone",
     "trim",
     "replace",
@@ -55,7 +56,7 @@
   "replaces_natives": [],
   "checks": [
     "primitives: schema ok",
-    "prelude: 40 builtins (0 replace natives)",
+    "prelude: 41 builtins (0 replace natives)",
     "selftest: 5 passed, 0 failed in both backends",
     "examples: 11 identical in both backends"
   ]

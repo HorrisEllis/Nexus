@@ -570,7 +570,8 @@ EQ2 (expanded), EQ5, EQ_D1.
   - keywords (state, on, emit, compartment) cannot be names;
   - native lets a map change through a let or a parameter, where the checker refuses it;
   - no stderr natively;
-  - no optional parameters (sort_by's third argument), and send and wire are keywords too (found 0.60.431).
+  - no optional parameters (sort_by's third argument), and send and wire are keywords too (found 0.60.431). Optional parameters CLOSED 0.60.439:
+    James, 2026-11-07, "I feel optional parameter's is always good." (CIE_D4); natively a lambda with defaults is still refused by name.
 - **Every extension defined, with a ledger (EQ5).** No new file extension without its definition:
   - what a file of it is;
   - its schema;

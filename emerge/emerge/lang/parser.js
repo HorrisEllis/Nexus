@@ -461,7 +461,12 @@ class Parser {
       seen.add(p.v);
       let type = null;
       if (this.isOp(':')) { this.next(); type = this.parseType(); }
-      params.push({ name: p.v, type, line: p.line, col: p.col });
+      // an optional parameter: name = default (James, 2026-11-07: "I feel optional parameter's is always good."), evaluated at call time when the
+      // argument is missing, after the parameters before it; a required parameter cannot follow an optional one
+      let dflt = null;
+      if (this.isOp('=')) { this.next(); dflt = this.parseExpr(); }
+      else if (params.some(q => q.default)) this.err(`parameter "${p.v}" follows an optional parameter — give it a default too`, p);
+      params.push({ name: p.v, type, line: p.line, col: p.col, ...(dflt ? { default: dflt } : {}) });
       if (this.isOp(',')) this.next(); else break;
     }
     this.expectOp(')', 'to close the parameter list');

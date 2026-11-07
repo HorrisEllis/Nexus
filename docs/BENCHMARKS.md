@@ -5,6 +5,31 @@ from it, method, code, speed." One row per measured run. Every number names its 
 The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, docs/2026-11-06-emerge-is-the-replacement-phasemap.spec). Until
 then they are written by hand.
 
+## 2026-11-07 — optional parameters; sort_by into the Emerge prelude; the first JavaScript deleted (0.60.439)
+- **Measured:** Emerge coding, and his framework: a decision of his built through every backend the same day.
+- **His words:** "I feel optional parameter's is always good."
+- **Method:**
+  1. A default-parameter program run through `eg run`, `eg build` and native.
+  2. `sort_by` moved into the prelude.
+  3. The JS `sort_by` deleted.
+  4. The language rebuilt (bootstrap, build 16), and every suite run.
+- **Result:**
+  - `eg build` equals `eg run`, and native equals `eg run`, including a default that uses an earlier parameter (`fn area(w, h = w)`).
+  - native 104/104, selfhost 16/16 (2b88c78e…), lang 166/166, differential 19/19. The bootstrap is identical in both backends.
+- **Speed:** stage 0 took 15.8 s; stage 1 took 0.76 s.
+- **Lines, honestly:**
+  - JavaScript deleted for good: 12 lines (`def('sort_by')` and `cmpSort`).
+  - JavaScript added: 30 lines, teaching the parser, checker, interpreter and emitter optional parameters. Those go with the interpreter at
+    CIE11.
+  - Emerge's JS total is 22,832.
+  - .eg added: the prelude's `sort_by` (+~55), `native/defaults.eg` (~95), `front.eg` (+~15).
+  - Archived: `cie/sort.eg` and its embedded copy, now duplicates.
+- **Failed runs before the pass:** 2.
+  1. The test had a lambda with a default, which native refuses by name.
+  2. The emitter's top-level functions used a second arity path.
+- **Gaps found:** natively, lambdas with defaults, and module functions with defaults called through their module with fewer arguments.
+- **What came of it:** the first JavaScript removed from Emerge, made possible by his decision.
+
 ## 2026-11-07 — every example natively: a regex engine and sort_by in Emerge (CIE15 built, 0.60.438)
 - **Measured:** Emerge coding. A regular-expression engine and `sort_by` written in Emerge.
 - **His words:** "continue" · "Please continue from where you left off."

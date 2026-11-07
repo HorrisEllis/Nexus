@@ -1,0 +1,95 @@
+// lang/native/defaults.eg — optional parameters for the native compiler (James, 2026-11-07: "I feel optional parameter's is always good.").
+// A fn with defaults, fn f(a, b = B, c = C), is kept whole (every parameter required) and gains one entry per shorter arity:
+//   fn _f__1(a) { let b = B  let c = C  return f(a, b, c) }      fn _f__2(a, b) { let c = C  return f(a, b, c) }
+// so a default is evaluated at call time, in the fn's own scope, after the parameters before it, as the interpreter does. A call with fewer
+// arguments goes to its entry. It runs on every module, the prelude first, so a program's call to a prelude fn finds the prelude's entries.
+// Not native yet, refused by name: a lambda with defaults, and a module fn with defaults called through its module with fewer arguments.
+//
+//   desugar(ast, known) → ast        known: { name: { req, total } } of the prelude's fns with defaults, added to as each module is read
+
+fn mk(type, at, fields) {
+  var m = { type: type, line: at.line, col: at.col }
+  for k, v in fields { m[k] = v }
+  return m
+}
+fn entry_name(name, n) = "_{name}__{n}"
+fn req_of(params) {
+  var n = 0
+  for p in params { if p.default == null { n += 1 } }
+  return n
+}
+
+var table = {}
+
+fn rewrite(n) {
+  if type_of(n) == "list" {
+    var out = []
+    for x in n { out[len(out)] = rewrite(x) }
+    return out
+  }
+  if type_of(n) != "map" { return n }
+  if has(n, "type") and n.type == "Lambda" {
+    for p in n.params { if p.default != null { raise("native: a lambda with default parameters is not in the native subset yet (optional parameters)") } }
+  }
+  if has(n, "type") and n.type == "Call" and n.callee.type == "Ident" and has(table, n.callee.name) {
+    let t = table[n.callee.name]
+    let k = len(n.args)
+    if k >= t.req and k < t.total {
+      return mk("Call", n, { callee: mk("Ident", n.callee, { name: entry_name(n.callee.name, k) }), args: rewrite(n.args) })
+    }
+  }
+  var out = {}
+  for k, v in n { out[k] = rewrite(v) }
+  return out
+}
+
+fn desugar(ast, known) {
+  table = known
+  var extra = []
+  for it in ast.items {
+    if it.type == "FnDecl" {
+      let req = req_of(it.params)
+      if req < len(it.params) { table[it.name] = { req: req, total: len(it.params) } }
+    }
+  }
+  var items = []
+  for it in ast.items {
+    if it.type == "FnDecl" and has(table, it.name) and req_of(it.params) < len(it.params) {
+      // the whole fn: every parameter required, its defaults dropped
+      var whole = []
+      for p in it.params { whole[len(whole)] = { name: p.name, type: p.type, line: p.line, col: p.col, default: null } }
+      var f = {}
+      for k, v in it { f[k] = v }
+      f.params = whole
+      f.body = rewrite(it.body)
+      items[len(items)] = f
+      // an entry per shorter arity
+      let total = len(it.params)
+      var k = req_of(it.params)
+      while k < total {
+        var params = []
+        var body = []
+        var args = []
+        var i = 0
+        for p in it.params {
+          if i < k {
+            params[len(params)] = { name: p.name, type: p.type, line: p.line, col: p.col, default: null }
+          } else {
+            body[len(body)] = mk("Let", p, { kind: "let", name: p.name, vtype: null, expr: rewrite(p.default) })
+          }
+          args[len(args)] = mk("Ident", it, { name: p.name })
+          i += 1
+        }
+        body[len(body)] = mk("Return", it, { expr: mk("Call", it, { callee: mk("Ident", it, { name: it.name }), args: args }) })
+        items[len(items)] = mk("FnDecl", it, { name: entry_name(it.name, k), params: params, ret: null, body: mk("Block", it, { body: body }) })
+        k += 1
+      }
+    } else {
+      items[len(items)] = rewrite(it)
+    }
+  }
+  var out = {}
+  for k, v in ast { out[k] = v }
+  out.items = items
+  return out
+}

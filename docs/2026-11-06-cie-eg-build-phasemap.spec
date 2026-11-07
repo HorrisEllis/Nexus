@@ -39,6 +39,18 @@ decisions:
     cost_to_say: "Intel desktop CPUs before Ice Lake / Rocket Lake (e.g. 8th–10th generation Core) have no SHA-NI; on those the native ledger refuses until the OS source is added (CIE12)."
     chosen: "SHA-NI first (CIE2), the OS library second (CIE12)"
 
+  CIE_D4_optional_parameters:
+    status: "DECIDED 2026-11-07 (his)"
+    james: '"I feel optional parameter's is always good."'
+    context: >-
+      sort_by(xs, f, "desc") was the one builtin with an optional argument, and Emerge had no optional parameters, so sort_by could not move from
+      the interpreter's JavaScript into the Emerge prelude. Offered: (1) optional parameters in the language, the coder's recommendation; (2) a
+      second name for the descending sort. He chose (1), and said it as a rule: optional parameters are always good.
+    chosen: >-
+      fn f(a, b = default): a missing argument takes its default, evaluated at call time after the parameters before it; a required parameter
+      cannot follow an optional one. In the parser, checker, interpreter and emitter (JavaScript, until CIE11) and natively (front.eg,
+      native/defaults.eg: an entry per shorter arity). sort_by moves into lang/core/prelude.eg as fn sort_by(xs, f, dir = "asc"); the interpreter's
+      JavaScript sort_by and its comparer are deleted; lang/cie/sort.eg, the native stopgap, is archived as a duplicate.
 phases:
 
   CIE1_the_contract_block:
@@ -360,3 +372,12 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # interpreter's JavaScript sort_by can be deleted; it no longer blocks native.
 # emerge.eg: a module's file is named relative to the main file (lib/stats.eg), as the interpreter names it.
 # Proof: native.test 'every example natively': all 8 examples, modules/main and test/world/sort_by.eg natively equal eg run (native.test 104/104).
+
+# ── ADDENDUM 2026-11-07 (0.60.439) — optional parameters, his (CIE_D4); sort_by into the Emerge prelude; the first JavaScript deleted ──
+# James, 2026-11-07, asked whether Emerge should get optional parameters (the coder recommended yes; the alternative was a second name for the descending sort): "I feel optional parameter's is always good."
+# Built: optional parameters in both parsers, the checker (arity ranges; a default sees the parameters before it), the interpreter, the emitter
+# (eg build) and natively (native/defaults.eg). sort_by written in lang/core/prelude.eg; bootstrap build 16; the interpreter's def('sort_by') and its
+# cmpSort deleted (12 lines). lang/cie/sort.eg and native/sort_text.eg archived (_archive/2026-11-07-sort-eg/, a reported duplicate).
+# Not native yet, refused by name: a lambda with defaults (the dynamic calling convention), and a module fn with defaults called through its module
+# with fewer arguments (CIE14).
+# Proof: native.test 104/104, every example plus sort_by.eg and optional.eg natively equal eg run; selfhost 16/16; lang 166/166; differential 19/19.

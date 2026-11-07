@@ -1,0 +1,7 @@
+// optional.eg — optional parameters (James, 2026-11-07: "I feel optional parameter's is always good."): defaults evaluated at call time, after the parameters before them; native.test holds it to eg run.
+fn greet(name, greeting = "hello", mark = greeting + "!") = "{greeting} {name}{mark}"
+print(greet("james"))
+print(greet("james", "hey"))
+print(greet("james", "hey", "?"))
+fn area(w, h = w) = w * h
+print(area(3), area(3, 4), [1, 2] |> map(fn(x) = area(x)))

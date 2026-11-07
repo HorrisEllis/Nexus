@@ -7,11 +7,11 @@ intent: null
 summary: CIE3_native_ledger (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1793997643476
+exported_at: 1794023236605
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997643476
-lastSeenAt: 1793997643476
+firstSeenAt: 1794023236605
+lastSeenAt: 1794023236605
 fingerprint: null
 payload:
   id: CIE3_native_ledger
@@ -31,4 +31,4 @@ payload:
   blocks:
     - MOD-NATIVE-SYSTEM
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: 26721ad34cdda479
+  graph: 8aa76af19da5f286
