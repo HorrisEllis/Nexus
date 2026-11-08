@@ -883,6 +883,12 @@ export const SPEC = [
   // 0.60.445 OC4a — James, 2026-11-08: "Also the automation is to deploy agents to systems." A person's deploy is taken at once; an agent's waits for him.
   { key: 'cos.deployments', repo: false, usage: 'cos deployments [system]', about: 'every deployment to a system: what (task, agent, pipeline), where, its state (taken, running, done, failed, stopped) and its result',
     req: (a) => ({ system: 'cos', method: 'GET', path: `/api/cos/deployments${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }) },
+  { key: 'cos.pipelines', repo: false, usage: 'cos pipelines', about: 'every pipeline COS\'s automation engine holds (id, name, tasks), and Idearium\'s procedures beside them (PC1)',
+    req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/automation/pipelines' }) },
+  { key: 'cos.procedures', repo: false, usage: 'cos procedures', about: 'Idearium\'s procedures, read through COS (its route), each a step a pipeline can hold (PC1, PC2)',
+    req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/procedures' }) },
+  { key: 'cos.boxes', repo: false, usage: 'cos boxes <pipeline-id> | cos boxes --procedure <id>', about: 'a pipeline or a procedure as boxes and wires (Emerge\'s box shape, PC1): each box\'s kind, ref, hooks and gate, the wires from its DAG, and every fault named',
+    req: (a) => ({ system: 'cos', method: 'GET', path: a.flags.procedure ? `/api/cos/boxes?procedure=${encodeURIComponent(String(a.flags.procedure))}` : `/api/cos/boxes?pipeline=${encodeURIComponent(String((a.args || [])[0] || ''))}` }) },
   { key: 'cos.hub', repo: false, usage: 'cos hub', about: 'COS as the hub of all automation (OC8a): each slot (automation, pipelines, tasks, queues, raid, contracts, dag, and the ones still waiting) with its owner and its state, read live: wired, waiting (the phase that wires it), down or refused',
     req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/hub' }) },
   { key: 'cos.deploy', repo: false, usage: 'cos deploy <system> <METHOD> <path> | cos deploy <system> agent|pipeline <ref>', about: 'deploy to a system through a COS proposal: a route call it runs there (e.g. cos deploy idearium GET /health), or an agent hat or pipeline (their runners: OC4b)',

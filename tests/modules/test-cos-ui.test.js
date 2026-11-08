@@ -56,9 +56,11 @@ const until = async (fn, ms = 8000) => { const t = Date.now() + ms; while (Date.
 
     await test('CU-02', 'the contract: every page\'s routes are the manager\'s or the door\'s, every event declared, every page folder there', async () => {
       const c = JSON.parse(fs.readFileSync(path.join(ROOT, 'cos/manager/contract.json'), 'utf8'));
-      const routes = new Set([...c.routes.map(r => `${r.method} ${r.path}`), ...c.door.routes.map(r => `${r.method} ${r.path}`)]);
+      // PC1 0.60.454: a contract route may list several methods ("GET|POST") and end in /* (AE6's automation door), as the cockpit reads it
+      const A = require(path.join(ROOT, 'cos/ui/serve.js')).allowlist(c);   // the cockpit's own reading of the contract
+      const serves = (line) => { const [m, ...rest] = line.split(' '); const pp = rest.join(' ').replace(/:[a-zA-Z]+/g, 'x'); return [...A.api, ...A.door].some(r => r.methods.includes(m) && r.re.test(pp)); };
       for (const p of c.pages) {
-        for (const r of p.routes) assert.ok(routes.has(r), `${p.id} names ${r}, which the contract does not serve`);
+        for (const r of p.routes) assert.ok(serves(r), `${p.id} names ${r}, which the contract does not serve`);
         for (const e of [...p.listens, ...p.emits]) assert.ok(c.events[e], `${p.id} names the event ${e}, which the contract does not declare`);
         for (const f of ['index.html', ...(p.id === 'shell' ? ['page.css', 'page.js', 'bus.js'] : ['page.css', 'page.js'])]) assert.ok(fs.existsSync(path.join(ROOT, 'cos/ui', p.path, f)), `${p.path}${f}`);
         for (const s of p.sections || []) for (const f of ['section.html', 'section.css', 'section.js']) assert.ok(fs.existsSync(path.join(ROOT, 'cos/ui', p.path, 'sections', s, f)), `${p.id}/${s}/${f}`);

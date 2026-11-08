@@ -16,7 +16,15 @@ fn input(): map {
 }
 
 if cmd == "version" { print(box.BoxShape.version) }
-else if cmd == "boxes" { send box.BoxShape.boxes { pipeline: input() } ; print(json(last)) }
+else if cmd == "boxes" {
+  // a pipeline (it has tasks) or a procedure (it has steps) → { kind, graph, ok, problems, unchecked }
+  let p = input()
+  var kind = "procedure"
+  if has(p, "tasks") { kind = "pipeline" ; send box.BoxShape.boxes { pipeline: p } } else { send box.BoxShape.procedure { procedure: p } }
+  let g = last.value
+  send box.BoxShape.validate { graph: g, known: {} }
+  print(json({ kind: kind, graph: g, ok: last.ok, problems: last.value.problems, unchecked: last.value.unchecked }))
+}
 else if cmd == "roundtrip" {
   // a pipeline: tasks → boxes → tasks; a procedure: steps → boxes → steps. Prints { kind, same, boxes, wires, problems }.
   let p = input()

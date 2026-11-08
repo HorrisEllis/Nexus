@@ -6,6 +6,18 @@ The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, doc
 then they are written by hand.
 
 
+## 2026-11-08 — the box shape reached through COS (PC1, 0.60.454)
+- **Measured:** Emerge coding. The box shape (`box.eg`) is now used by COS for real: its route, its command rows, and the cockpit's page.
+- **His words:** "cli commands, agent tools, copilot commands, inject nodes to agents. keep going. i want this built and added to cos ui."
+- **Code:** `cos/automation/cli.eg`, where `boxes` now reads both kinds (+8 lines of .eg). The JavaScript is COS's door and page, by COS's
+  contract: `cos/manager/boxes.js` (45 lines) and `cos/ui/pipelines/` (page.js 87 lines). 0 lines of Emerge's JavaScript removed.
+- **Speed:** test-pipeline-box 5/5. Each box shape that COS asks for spawns one Emerge run. Per-call time is still to be measured, which is PC6's sigma, his "measure the time it takes pipeliness".
+- **Failed runs before the pass:** 3.
+  1. The fixture's step settings belonged under `config`.
+  2. The cockpit refused the automation route. It was a real bug from AE6: a `|` method list matched as one word.
+  3. CU-02 had the same exact match.
+- **Gaps found in Emerge:** none new.
+
 ## 2026-11-08 — Pillar's contracts, in Emerge (PIL2, 0.60.453)
 - **Measured:** Emerge coding. The one kernel's contracts, written as Emerge data with an Emerge validator and test.
 - **His words:** "Focus on primitives. Build using emerge right? And any tools or my framework to reduce tokens. Own."
