@@ -438,3 +438,11 @@ by the focus.
   and is blocked on Emerge's missing time/process/socket primitives (CIE13, CIE10). Reading 1b (each slot working) adds 2–3; 2b (RAID into COS)
   adds 2 and a migration risk. Measured by: sessions counted on the phase ledger lines of AE6, OC8 and the slot phases, against these numbers.
 - **Evidence:** open.
+- **Compared with the pass before it (his question, 2026-11-08: "how does that compare to before"):** the same coder, the same morning, the same
+  facts, once without the framework and once with it. Without it, the answer gave no time estimate, recommended "AE6 first, built in Emerge", and
+  named no risks. With it, the answer gave 3 sessions (2–5) with a cost for each of his options, and found two things the first pass missed. First,
+  AE6 in .eg is blocked on Emerge's missing time/process/socket primitives (CIE13, CIE10), so the first pass's order would have stalled in its first
+  session. Second, Clear Glass's pipelines, Fiverr's included, run on lib/automation, so a careless move could break his second focus silently.
+  Both came from Section 10 (hostile verification). Cost: about eight extra reads. Counter-evidence kept: on a small, measured job the plain
+  estimate already held (OC4: estimated one session, built in one, 0.60.445). So the framework's added value showed on the large job with
+  hidden constraints, not the small one. Whether its 3-session number is more accurate is still **open** until the sessions are counted.
