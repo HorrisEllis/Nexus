@@ -167,6 +167,14 @@ phases:
 phases_addendum_2026_11_02_sc7:
   SC7_the_updates_section:
     layer: ui
+    expanded_2026_11_08_settings: >-
+      James, 2026-11-08: "also in cos ui, network should move to the settings under a network tab. startup and services tab. none of cos ui should be hardcoded when it comes to compartments.  updates should move to a update tab."
+      A Settings page in COS's UI with tabs: Network (CA3's page moves here), Startup and services (BT1's Start at boot and the service options,
+      CA4/MG37, move here), Update (this phase's updates section and the Updates page move here). Every list in it is read from COS's routes
+      (/api/cos/systems, /api/cos/network, /api/cos/update/*) — no compartment named in the UI's code; the example text that names systems
+      (network's "e.g. orchestrator, idearium", the shell's command placeholder) becomes generic. Found 2026-11-08: the UI's logic already reads
+      its systems from routes (the updates page's restart asks come from pending.systems); only examples and comments name them. Backend first
+      (AE_D6): any route or command a tab needs is added before the tab. Shown to him as a preview before it is built (his rule).
     status: "DONE 0.60.381 — test-cos-console CC-10, CC-11 (Clear Glass); found: a page opened while the shell loaded its contract never showed (the stage cleared, its frame kept) — fixed in cos/ui/shell/page.js"
     depends_on: [SC1_the_bell, SC5_the_console_ui]
     spec: cos/spec/cos-console.spec

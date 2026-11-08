@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- PREVIEW ONLY (SC7 expanded 2026-11-08) — COS's Settings: Network · Startup and services · Update. James, 2026-11-08: "also in cos ui, network should
+     move to the settings under a network tab. startup and services tab. none of cos ui should be hardcoded when it comes to compartments. updates
+     should move to a update tab." Illustrative data: built, every row is read from COS's routes (/api/cos/systems, /api/cos/network, /api/cos/update/*). -->
+<html lang="en" data-theme="nexus" data-accent="cycle"><head><meta charset="utf-8"><title>Settings · COS (preview)</title>
+<link rel="stylesheet" href="../core/theme.css"><link rel="stylesheet" href="../core/core.css">
+<style>
+.tabs { display: flex; gap: 4px; margin: 6px 0 14px; } .tab { padding: 7px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,.08); font-size: 13px; opacity: .75; } .tab.on { opacity: 1; border-color: rgba(120,200,255,.5); background: rgba(120,200,255,.08); }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.row { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 10px 4px; border-top: 1px solid rgba(255,255,255,.06); font-size: 13px; align-items: center; } .row:first-child { border-top: 0; }
+.row small { grid-column: 1 / 3; opacity: .55; font-size: 11.5px; } .sw { width: 36px; height: 20px; border-radius: 10px; background: rgba(255,255,255,.12); position: relative; } .sw.on { background: #0ea5e9; }
+.sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; } .sw.on::after { left: 19px; }
+.pill { font: 11px ui-monospace, monospace; padding: 2px 7px; border-radius: 10px; border: 1px solid rgba(255,255,255,.15); opacity: .8; } .ok { color: #34d399; } .note { font-size: 12px; opacity: .55; margin-top: 10px; }
+select { background: transparent; color: inherit; border: 1px solid rgba(255,255,255,.15); border-radius: 6px; padding: 3px 6px; }
+</style></head><body class="cos-page">
+<header class="page-head"><div><span class="eyebrow">Compartment OS · settings</span><h1 class="title">Settings</h1>
+<p class="lede">How COS starts, what it starts, how it reaches out, and how it updates. Every system listed here is read from COS — none is written into this page.</p></div></header>
+<div class="tabs"><span class="tab">Network</span><span class="tab on">Startup and services</span><span class="tab">Update</span></div>
+<div class="grid">
+ <section class="panel"><div class="panel-head"><h2>COS itself</h2><span class="tag">this machine</span></div><div class="panel-body">
+  <div class="row"><span>Start COS with Windows</span><span class="sw on"></span><small>a logon task with admin rights, to the tray — or the login item if you decline the approval</small></div>
+  <div class="row"><span>Run the supervisor as a Windows service</span><span class="sw on"></span><small>NexusCOS: keeps systems up with no one signed in; windowed systems start when you sign in</small></div>
+  <div class="row"><span>Close to the tray</span><span class="sw on"></span><small>closing the window keeps COS running</small></div>
+  <div class="row"><span>Boot set</span><select><option>All</option><option>Core</option></select><small>what starts when COS boots</small></div>
+ </div></section>
+ <section class="panel"><div class="panel-head"><h2>Systems</h2><span class="tag">from COS · 13</span></div><div class="panel-body">
+  <div class="row"><span>system one</span><span class="sw on"></span><small>starts at boot · <span class="ok">up</span> · on demand: no</small></div>
+  <div class="row"><span>system two</span><span class="sw on"></span><small>starts at boot · <span class="ok">up</span> · on demand: no</small></div>
+  <div class="row"><span>system three</span><span class="sw"></span><small>skipped at boot · stopped · start by hand from Systems</small></div>
+  <div class="row"><span>system four</span><span class="sw on"></span><small>starts at boot · <span class="ok">up</span> · a window of its own (starts when you sign in)</small></div>
+  <p class="note">The names here are placeholders for the preview: built, each row is a system COS declares, read from /api/cos/systems.</p>
+ </div></section>
+</div>
+</body></html>

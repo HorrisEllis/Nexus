@@ -279,6 +279,20 @@ phases:
   # The UI (AE5, COS's Workflows page) waits on his critique of the preview shown 2026-11-08 (edit here or on ERAVOS's canvas; the page's name;
   # whether the Pipelines page merges into it).
   # ── ADDENDUM 2026-11-08 — the architecture of COS's automation, his ──
+  AE_D6_the_supervisor_is_the_orchestrator:
+    status: "DECIDED 2026-11-08 by James — supersedes AE_D5's \"Cos ui is the orchestrator. Is nexus.\" (kept below, §0.3)"
+    his_words: >-
+      James, 2026-11-08: "no, the cos backend, or the supervisor is the orchastrator. ui is only ever supposed to use the cli and api routes while floating on the interaction contract. like always backend first, with commands, events, and updated maps."
+    context: >-
+      Said while COS's Automation tab (AE5 slice a, 0.60.461) was being built: its page called itself "the orchestrator", and its pipeline routes
+      had no command and their events were not declared.
+    chosen: >-
+      The orchestrator is COS's backend, its supervisor. COS's UI is a projection: it only ever uses COS's command line and API routes, floating on
+      the interaction contract (cos/manager/contract.json). Every capability lands backend first: the route, the command (cos/manager/cli.js and its
+      row), the events declared in the contract, the maps updated; the UI last. 0.60.462: the pipeline commands (pipelines, pipeline, pipeline-run,
+      runs, stop, pipeline-export, import of .pipeline) and the four automation.pipeline.* events declared; the page's words no longer claim to be
+      the orchestrator.
+    by_the_axioms: "§5.15 (reached by its routes only), §5.16 (the contract is COS's registry), his order of delivery (2026-10-07: backend, route, command, UI)"
   AE_D5_cos_is_the_engine_the_canvas_a_projection:
     status: "DECIDED 2026-11-08 by James"
     his_words: >-
