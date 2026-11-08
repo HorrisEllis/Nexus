@@ -90,9 +90,9 @@ test('PB-04', 'the box shape is Emerge: no .js in cos/automation/', () => {
     // .erv for ERAVOS (James, 2026-11-08: "eravos is the build surface for nexus"): one Box tool per step, the wires as dataflow wires
     const ev = await req(mp, 'GET', `/api/cos/boxes?as=erv&pipeline=${encodeURIComponent(pid)}`); assert.strictEqual(ev.status, 200, JSON.stringify(ev.body));
     const tl = ev.body.erv.layers.find(l => l.id === 'tools').layers, wl = ev.body.erv.layers.find(l => l.id === 'wires').data;
-    assert.strictEqual(ev.body.erv.erv, 1); assert.ok(tl.every(t => t.tool === 'eravos.agents.box'), 'every step is ERAVOS\'s Box tool');
+    assert.strictEqual(ev.body.erv.erv, 1); assert.ok(tl.every(t => t.tool === 'eravos.agents.step'), 'every step is ERAVOS\'s Box tool');
     assert.deepStrictEqual(tl.map(t => t.state.params.kind), ['tool', 'pipeline', 'tool', 'tool']); assert.strictEqual(wl.length, 4);
-    assert.ok(wl.every(w => w.type === 'dataflow' && w.from[1] === 'box.hook.out' && w.to[1] === 'box.hook.in'));
+    assert.ok(wl.every(w => w.type === 'dataflow' && w.from[1] === 'step.hook.out' && w.to[1] === 'step.hook.in'));
     assert.deepStrictEqual(tl.find(t => t.id === 'done').at.x > tl.find(t => t.id === 'pick').at.x, true, 'laid out by the DAG');
     const pr = await req(mp, 'GET', '/api/cos/boxes?procedure=tidy'); assert.strictEqual(pr.status, 200, JSON.stringify(pr.body));
     assert.deepStrictEqual(pr.body.graph.boxes.map(x => x.kind), ['tool', 'gate', 'gate']);

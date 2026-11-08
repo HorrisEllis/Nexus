@@ -139,7 +139,7 @@ fn problems(g: map, known: map): map {
 
 // ── the graph as an ERAVOS project (.erv, its own format: specs/eravos.erv-format.spec in HorrisEllis/Eravos-Canvas) ──
 // James, 2026-11-08: "i want the tools compatable with eravos independantly. eravos is the build surface for nexus." Each box becomes a layer
-// of ERAVOS's own Box tool (eravos.agents.box), its whole step in the tool's extra; the wires become ERAVOS dataflow wires. JSON is
+// of ERAVOS's own Box tool (eravos.agents.step), its whole step in the tool's extra; the wires become ERAVOS dataflow wires. JSON is
 // YAML, so ERAVOS opens this with its own Open, and nothing in its canvas changes. Laid out by the DAG: a box's column is one past the
 // deepest box it waits on.
 fn depth_of(g: map, id: string, seen: list): num {
@@ -162,11 +162,11 @@ fn to_erv(g: map, name: string): map {
     var r = 0
     for x in rows { if x == c { r = r + 1 } }
     rows = push(rows, c)
-    tools = push(tools, { id: b.id, kind: "tool", tool: "eravos.agents.box", label: get(b, "label", b.ref), on: true, locked: false,
+    tools = push(tools, { id: b.id, kind: "tool", tool: "eravos.agents.step", label: get(b, "label", b.ref), on: true, locked: false,
       at: { x: 40 + c * 320, y: 40 + r * 230, w: 260, h: 190 },
       state: { params: { kind: b.kind, ref: b.ref, step: b.id, state: "" }, extra: { box: b, kinds: KINDS, last: null } } })
   }
-  let wires = map(g.wires, fn(w) = { from: [split(w.from, ".")[0], "box.hook.out"], to: [split(w.to, ".")[0], "box.hook.in"], type: "dataflow" })
+  let wires = map(g.wires, fn(w) = { from: [split(w.from, ".")[0], "step.hook.out"], to: [split(w.to, ".")[0], "step.hook.in"], type: "dataflow" })
   return { erv: 1, name: name, app: "Nexus (cos/automation/box.eg)", workspace: "1.0.0", layers: [
     { id: "view", kind: "canvas", label: "Canvas view", on: true, locked: false, data: { x: 0, y: 0, z: 1 } },
     { id: "tools", kind: "group", label: "Tools", on: true, locked: false, layers: tools },
