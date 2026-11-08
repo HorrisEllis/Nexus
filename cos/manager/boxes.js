@@ -15,26 +15,28 @@ const fs = require('fs'), os = require('os'), path = require('path'), { execFile
 
 function createBoxes({ automation, idearium, root = path.join(__dirname, '..', '..') } = {}) {
   const EG = path.join(root, 'emerge/emerge/lang/eg.js'), CLI = path.join(root, 'cos/automation/cli.eg');
-  const run = (obj) => new Promise((resolve) => {
+  const run = (obj, cmd = 'boxes') => new Promise((resolve) => {
     const f = path.join(os.tmpdir(), `cos-boxes-${process.pid}-${Date.now().toString(36)}.json`);
     fs.writeFileSync(f, JSON.stringify(obj));
-    execFile(process.execPath, [EG, 'run', CLI, 'boxes', f], { cwd: root, timeout: 30000, maxBuffer: 8 << 20 }, (err, out, errOut) => {
+    execFile(process.execPath, [EG, 'run', CLI, cmd, f], { cwd: root, timeout: 30000, maxBuffer: 8 << 20 }, (err, out, errOut) => {
       try { fs.unlinkSync(f); } catch (_) {}
       if (err) return resolve({ ok: false, code: 500, error: `Emerge's box shape did not answer: ${(errOut || err.message).trim().split('\n').pop()}` });
       try { resolve({ ok: true, ...JSON.parse(String(out).trim().split('\n').pop()) }); } catch (e) { resolve({ ok: false, code: 500, error: `Emerge answered what is not JSON: ${e.message}` }); }
     });
   });
-  async function of({ pipeline = null, procedure = null } = {}) {
+  // as: 'boxes' (the graph) or 'erv' (an ERAVOS project: one Box tool per step and the wires, which ERAVOS opens with its own Open)
+  async function of({ pipeline = null, procedure = null, as = 'boxes' } = {}) {
+    const cmd = as === 'erv' ? 'erv' : 'boxes';
     if (pipeline) {
       const r = await automation.handle({ method: 'GET', url: `/automation/pipelines/${encodeURIComponent(pipeline)}`, body: {}, headers: {} });
       const p = r && r.body && (r.body.pipeline || r.body);
       if (!r || r.status >= 400 || !p || !Array.isArray(p.tasks)) return { ok: false, code: 404, error: `no pipeline "${pipeline}"` };
-      return { ...(await run(p)), source: { pipeline, name: p.name || pipeline } };
+      return cmd === 'erv' ? { ok: true, erv: (await run(p, 'erv')), name: p.name || pipeline } : { ...(await run(p)), source: { pipeline, name: p.name || pipeline } };
     }
     if (procedure) {
       let p = null; try { const r = await idearium(`/api/procedures/${encodeURIComponent(procedure)}`); p = r && (r.procedure || r); } catch (e) { return { ok: false, code: 502, error: `Idearium did not answer for procedure "${procedure}": ${e.message}` }; }
       if (!p || !Array.isArray(p.steps)) return { ok: false, code: 404, error: `no procedure "${procedure}"` };
-      return { ...(await run(p)), source: { procedure, name: p.name || procedure } };
+      return cmd === 'erv' ? { ok: true, erv: (await run(p, 'erv')), name: p.name || procedure } : { ...(await run(p)), source: { procedure, name: p.name || procedure } };
     }
     return { ok: false, code: 400, error: 'name one: ?pipeline=<id> or ?procedure=<id>' };
   }

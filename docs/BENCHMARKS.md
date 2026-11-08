@@ -6,6 +6,23 @@ The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, doc
 then they are written by hand.
 
 
+## 2026-11-08 — a Nexus pipeline on ERAVOS's own canvas (PC4 slice a, 0.60.456)
+- **Measured:** Emerge coding, and ERAVOS as Nexus's build surface.
+- **His words:** "eravos is the build surface for nexus. that way if something needs to be built, we can make a tool for eravos. not rebuild it."
+- **Code:**
+  - Nexus: `box.eg` gains `to_erv` and `depth_of`, and `cli.eg` gains the `erv` command. That is +50 lines of .eg, and 0 lines of Emerge's
+    JavaScript removed.
+  - ERAVOS: the Orchestration domain and its Box tool, in ERAVOS's own JavaScript (its v1 contract).
+- **Result:**
+  - eg test 9/9 and test-pipeline-box 5/5.
+  - ERAVOS's real canvas opens Nexus's `fiverr-gig.erv` as 3 boxes and 2 wires, with no faults.
+  - In ERAVOS: Box tool contract 4/4, its own tests 3/3, boundary 10/10, and 259 manifests valid.
+- **Failed runs before the pass:** 3.
+  1. My first preview was a hand-made canvas. He said "not rebuild it", and it was thrown away.
+  2. The template's sample presets named settings a box has none of; the validator caught it.
+  3. The registry test's list of hooks had to gain `erv`.
+- **Gaps found in Emerge:** none. JSON is YAML, so no YAML writer was needed for `.erv`.
+
 ## 2026-11-08 — the box shape reached through COS (PC1, 0.60.454)
 - **Measured:** Emerge coding. The box shape (`box.eg`) is now used by COS for real: its route, its command rows, and the cockpit's page.
 - **His words:** "cli commands, agent tools, copilot commands, inject nodes to agents. keep going. i want this built and added to cos ui."

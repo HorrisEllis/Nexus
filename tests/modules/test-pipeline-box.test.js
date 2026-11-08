@@ -87,6 +87,13 @@ test('PB-04', 'the box shape is Emerge: no .js in cos/automation/', () => {
     const b = await req(mp, 'GET', `/api/cos/boxes?pipeline=${encodeURIComponent(pid)}`); assert.strictEqual(b.status, 200, JSON.stringify(b.body));
     assert.strictEqual(b.body.kind, 'pipeline'); assert.deepStrictEqual(b.body.graph.boxes.map(x => x.kind), ['tool', 'pipeline', 'tool', 'tool']);
     assert.strictEqual(b.body.graph.wires.length, 4); assert.deepStrictEqual(b.body.problems, []);
+    // .erv for ERAVOS (James, 2026-11-08: "eravos is the build surface for nexus"): one Box tool per step, the wires as dataflow wires
+    const ev = await req(mp, 'GET', `/api/cos/boxes?as=erv&pipeline=${encodeURIComponent(pid)}`); assert.strictEqual(ev.status, 200, JSON.stringify(ev.body));
+    const tl = ev.body.erv.layers.find(l => l.id === 'tools').layers, wl = ev.body.erv.layers.find(l => l.id === 'wires').data;
+    assert.strictEqual(ev.body.erv.erv, 1); assert.ok(tl.every(t => t.tool === 'eravos.orchestration.box'), 'every step is ERAVOS\'s Box tool');
+    assert.deepStrictEqual(tl.map(t => t.state.params.kind), ['tool', 'pipeline', 'tool', 'tool']); assert.strictEqual(wl.length, 4);
+    assert.ok(wl.every(w => w.type === 'dataflow' && w.from[1] === 'box.hook.out' && w.to[1] === 'box.hook.in'));
+    assert.deepStrictEqual(tl.find(t => t.id === 'done').at.x > tl.find(t => t.id === 'pick').at.x, true, 'laid out by the DAG');
     const pr = await req(mp, 'GET', '/api/cos/boxes?procedure=tidy'); assert.strictEqual(pr.status, 200, JSON.stringify(pr.body));
     assert.deepStrictEqual(pr.body.graph.boxes.map(x => x.kind), ['tool', 'gate', 'gate']);
     assert.strictEqual((await req(mp, 'GET', '/api/cos/boxes?pipeline=nope')).status, 404);
@@ -94,7 +101,7 @@ test('PB-04', 'the box shape is Emerge: no .js in cos/automation/', () => {
     assert.strictEqual((await req(cp, 'GET', `/api/cos/boxes?procedure=tidy`)).status, 200, 'the cockpit forwards it (in the contract)');
     const SPEC = (await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href)).SPEC;
     assert.deepStrictEqual(b.body.kinds, ['gate', 'system', 'agent', 'macro', 'pipeline', 'procedure', 'tool', 'build'], 'the kinds come from the box shape');
-    for (const k of ['cos.boxes', 'cos.pipelines', 'cos.procedures']) { const row = SPEC.find(r => r.key === k); assert.ok(row && !row.personOnly, `${k}: a row agents and copilot reach`); }
+    for (const k of ['cos.boxes', 'cos.erv', 'cos.pipelines', 'cos.procedures']) { const row = SPEC.find(r => r.key === k); assert.ok(row && !row.personOnly, `${k}: a row agents and copilot reach`); }
     assert.strictEqual(SPEC.find(r => r.key === 'cos.boxes').req({ args: [], flags: { procedure: 'tidy' } }).path, '/api/cos/boxes?procedure=tidy');
     const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));
     let browser; try { browser = await glass.chromium.launch(); } catch (e) { console.log(`  - PB-05 page part SKIPPED: the engine could not start (${e.message.split('\n')[0]})`); return; }

@@ -25,6 +25,14 @@ else if cmd == "boxes" {
   send box.BoxShape.validate { graph: g, known: {} }
   print(json({ kind: kind, kinds: box.KINDS, graph: g, ok: last.ok, problems: last.value.problems, unchecked: last.value.unchecked }))
 }
+else if cmd == "erv" {
+  // a pipeline or a procedure → an ERAVOS project (.erv as JSON, which is YAML): one Box tool per step, the wires between them
+  let p = input()
+  if has(p, "tasks") { send box.BoxShape.boxes { pipeline: p } } else { send box.BoxShape.procedure { procedure: p } }
+  let g = last.value
+  send box.BoxShape.erv { graph: g, name: get(p, "name", get(p, "id", "pipeline")) }
+  print(json(last.value))
+}
 else if cmd == "roundtrip" {
   // a pipeline: tasks → boxes → tasks; a procedure: steps → boxes → steps. Prints { kind, same, boxes, wires, problems }.
   let p = input()
@@ -45,6 +53,6 @@ else if cmd == "roundtrip" {
   }
 }
 else {
-  eprint("unknown command \"" + cmd + "\": the commands are version, boxes <file.json>, roundtrip <file.json>")
+  eprint("unknown command \"" + cmd + "\": the commands are version, boxes <file.json>, erv <file.json>, roundtrip <file.json>")
   exit(1)
 }

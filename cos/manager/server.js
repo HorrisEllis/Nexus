@@ -179,7 +179,7 @@ function createServer(sup, opts = {}) {
       // OC4a (docs/orchestration-console.spec MOD-OC-DEPLOY) — James, 2026-11-08: "Also the automation is to deploy agents to systems."
       // OC8a — James, 2026-11-08: "a hub for the automation pipeline, workflows, tasks ... queues, contracts, dag, it should all be there, waiting to be wired in."
       // PC1 — James, 2026-11-08: "cli commands, agent tools, copilot commands, inject nodes to agents. keep going. i want this built and added to cos ui."
-      if (m === 'GET' && p === '/api/cos/boxes') { const r = await boxes.of({ pipeline: u.searchParams.get('pipeline'), procedure: u.searchParams.get('procedure') }); return send(res, r.ok ? 200 : (r.code || 500), r); }
+      if (m === 'GET' && p === '/api/cos/boxes') { const r = await boxes.of({ pipeline: u.searchParams.get('pipeline'), procedure: u.searchParams.get('procedure'), as: u.searchParams.get('as') }); return send(res, r.ok ? 200 : (r.code || 500), r); }
       if (m === 'GET' && p === '/api/cos/procedures') { const r = await boxes.procedures(); return send(res, r.ok ? 200 : (r.code || 500), r); }
       if (m === 'GET' && p === '/api/cos/hub') return send(res, 200, { ok: true, ...(await hub.read()) });
       // AE6 slice a — the automation engine's door: workflows, runs, log, pipelines, macros, triggers, webhooks (lib/automation/routes.js)

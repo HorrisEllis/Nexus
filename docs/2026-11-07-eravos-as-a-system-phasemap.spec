@@ -140,3 +140,14 @@ phases:
 # is written there; it is kept until ERV3 reconciles its two differing schemas against the repo, then archived (§0.3, a reported drop, not silent).
 # The pipeline boxes are ERAVOS tools, made in ERAVOS's repository (an orchestration domain beside dataflow, agents and coding), which needs push
 # access to it (ERV2's requirement). A tool the canvas lacks is a build request (docs/2026-11-08-pipeline-canvas-phasemap.spec PC3, PC_D10).
+
+# ── ADDENDUM 2026-11-08 (0.60.456) — ERAVOS, the whole visual surface for Nexus ──
+# James, 2026-11-08: "no i meant the entire canvas. i want nothing about the canvas changed. i want the tools compatable with eravos independantly. eravos is the build surface for nexus. that way if something needs to be built, we can make a tool for eravos. not rebuild it."
+# James, 2026-11-08: "then it can be the entire visual surface for nexus. architect, the wire harness for a visual debugging ui, code generation ui for emerge, debugging, endless possiblies. already a domain for the automation, eventually i want ot add eravos as a system or a compartment at least. it should slot right in"
+# - Built (ERAVOS branch claude/orchestration-domain, commit bd353ec): the Orchestration domain and its Box tool (eravos.orchestration.box), in
+#   ERAVOS's own tool format; nothing in canvas/ changed (its boundary test 10/10). Nexus hands a pipeline over as an ordinary .erv (COS
+#   GET /api/cos/boxes?as=erv, `cos erv`), which ERAVOS opens with its own Open: fiverr-gig.pipeline → 3 boxes, 2 wires, no faults.
+# - His list, each a domain of ERAVOS tools when asked (not mapped as phases yet, his order first): Architect; the wiring harness as a visual
+#   debugging UI (docs/2026-11-07-wiring-harness-phasemap.spec); a code-generation UI for Emerge; debugging.
+# - "add eravos as a system or a compartment at least. it should slot right in": ERV1 (COS knows ERAVOS's process, port and health) is the
+#   phase; its open reading (where the system registry lives) still stands.

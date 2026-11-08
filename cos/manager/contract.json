@@ -307,8 +307,8 @@
     {
       "method": "GET",
       "path": "/api/cos/boxes",
-      "in": "?pipeline=<id> | ?procedure=<id>",
-      "out": "{ kind, graph: { boxes: Box[], wires: Wire[] }, ok, problems, unchecked, source } \u2014 the step as boxes, from Emerge's box shape (cos/automation/box.eg); PC1"
+      "in": "?pipeline=<id> | ?procedure=<id> [&as=erv]",
+      "out": "{ kind, graph: { boxes: Box[], wires: Wire[] }, ok, problems, unchecked, source } \u2014 the step as boxes, from Emerge's box shape (cos/automation/box.eg); PC1; with as=erv: { erv, name } \u2014 an ERAVOS project (one eravos.orchestration.box per step, dataflow wires), opened by ERAVOS\u2019s own Open"
     },
     {
       "method": "GET",
