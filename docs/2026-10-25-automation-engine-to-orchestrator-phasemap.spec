@@ -302,6 +302,27 @@ phases:
         reading: Idearium's .pipeline nodes (PN2)."
     by_the_axioms: "§5.9 and §5.15 (ERAVOS reached by its address, never its files; it holds no backend), §5.10 (contracts only), §5.2 and §9.1 (routing through RAID), §5.12 (the UI is disposable: a projection), §3.1 (the engine first, then the projection)"
     phases: "AE8 (each step a COS compartment, routed through RAID by contract), AE9 (each tool's DAG), AE10 (the Automation tab: ERAVOS as the projection, Idearium's pipeline on it); to be written with their graphs once the two readings are confirmed"
+    answered_2026_11_08: >-
+      James, 2026-11-08, to the two readings: "Yes." (the step container) and "First one. Like pipelines. Which can use the .frameworks for
+      procedures. Look for the phases for this" (the pipeline). The second reading is settled: Idearium's build pipeline (PC_D6 (a)). The first
+      stays open: "Yes." answers a question that offered two readings, so which one is his is asked again, side by side, before AE8 is written
+      (his rule: ambiguity is reconciled by him). AE10 is not written: EO5 and PC4 already cover it and are expanded (SL_D11). AE9 is written below:
+      nothing covered it.
+  AE9_each_tool_carries_its_dag:
+    status: OPEN
+    origin: >-
+      James, 2026-11-08 (AE_D5): "Then make sure the tools have the dag for the canvas to understand what it needs."
+    layer: library
+    depends_on: [AE_D5_cos_is_the_engine_the_canvas_a_projection, AE7_eravos_reaches_the_engine, PC1_one_box_shape]
+    files: [lib/automation/steps.js, cos/manager/contract.json, cos/manager/automation-door.js, tests/modules/test-orchestrator-automation.test.js]
+    requires: [node]
+    does: >-
+      Every step kind in the catalogue (GET /api/cos/automation/catalogue) declares its DAG: takes (the inputs it needs, each named with its kind),
+      gives (what it hands the next box), needs (the systems it reaches, by name, resolved by COS) and requires (a service up, a setting on). A
+      workflow's DAG is the composition: for each step, which earlier step gives each thing it takes, and what is unmet. Served at
+      GET /api/cos/automation/workflows/:id/dag, so the canvas (ERAVOS, a projection) shows what a box is waiting on without knowing the engine.
+      A step kind without a DAG is reported, never guessed.
+    proof: "OA-10: every catalogue kind has takes/gives/needs; a workflow whose step takes what no earlier step gives shows it unmet, by name; the route answers through COS's door"
   AE5_ui_and_cleanup:
     status: OPEN
     layer: ui

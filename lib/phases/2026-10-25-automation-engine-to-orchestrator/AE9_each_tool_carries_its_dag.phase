@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE9_each_tool_carries_its_dag
+type: phase
+id: docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE9_each_tool_carries_its_dag
+context: >-
+  pipeline phase AE9_each_tool_carries_its_dag of
+  docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+intent: null
+summary: AE9_each_tool_carries_its_dag (library) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794164926281
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794164926281
+lastSeenAt: 1794164926281
+fingerprint: null
+payload:
+  id: AE9_each_tool_carries_its_dag
+  map: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/automation/steps.js
+    - cos/manager/contract.json
+    - cos/manager/automation-door.js
+    - tests/modules/test-orchestrator-automation.test.js
+  depends_on:
+    - AE7_eravos_reaches_the_engine
+    - PC1_one_box_shape
+  blocks: []
+  spec: null
+  graph: 88037e5717004183

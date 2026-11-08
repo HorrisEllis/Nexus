@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793991934237
+exported_at: 1794164937090
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793991934237
-lastSeenAt: 1793991934237
+firstSeenAt: 1794164937090
+lastSeenAt: 1794164937090
 fingerprint: null
 payload:
   for: OC1_task_nodes
@@ -64,6 +64,7 @@ payload:
     upstream:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
     downstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE9_each_tool_carries_its_dag
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC10_pipelines_on_the_canvas
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC2_scheduler_on_nodes
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC3_the_calendar
@@ -77,6 +78,13 @@ payload:
       - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
       - docs/2026-11-01-procedures-phasemap.spec::PD5_procedures_on_screen
       - docs/2026-11-01-the-compartment-phasemap.spec::CP3a_the_agent_cli
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy: []
     unlocks:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC7_the_taxonomy_expanded
@@ -91,7 +99,7 @@ payload:
       - 'depends on (1): OC_D0_one_console_in_cos'
       - >-
         needed by (5): OC7_the_taxonomy_expanded, OC2_scheduler_on_nodes, OC4_deploy_to_any_system,
-        OC5_every_agent_tool, PD1_procedure_nodes_and_commands · all downstream 13 · finishing it
+        OC5_every_agent_tool, PD1_procedure_nodes_and_commands · all downstream 21 · finishing it
         unlocks OC7_the_taxonomy_expanded, OC2_scheduler_on_nodes, OC4_deploy_to_any_system,
         OC5_every_agent_tool, PD1_procedure_nodes_and_commands
     edges:

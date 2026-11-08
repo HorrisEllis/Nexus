@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793995351296
+exported_at: 1794164926283
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793995351296
-lastSeenAt: 1793995351296
+firstSeenAt: 1794164926283
+lastSeenAt: 1794164926283
 fingerprint: null
 payload:
   for: AE5_ui_and_cleanup
@@ -66,13 +66,12 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
       - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream: []
-    blockedBy:
-      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 7 · blocked by AE6_the_engine_moves_into_cos
+      - layer 7 · ready
       - 'depends on (2): AE4_repoint_the_registry, AE6_the_engine_moves_into_cos · all upstream 24'
       - 'needed by (0): —'
     edges:

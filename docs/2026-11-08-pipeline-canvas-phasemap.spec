@@ -64,6 +64,12 @@ decisions:
       first consumer of Emerge's code generation and the focus (Emerge first) and this map meet there. Pipelines are agnostic: the box shape names no
       domain; build, automation, debug and coding are templates (OC9).
   PC_D6_idearium_has_a_pipeline:
+    answered_2026_11_08_b: >-
+      James, 2026-11-08, asked between "Idearium's build pipeline (idea, spec, phases, build)" and "Idearium's .pipeline nodes (PN2)": "First one.
+      Like pipelines. Which can use the .frameworks for procedures. Look for the phases for this". Reading (a) is now his: Idearium's own build
+      pipeline is the first real pipeline drawn and run on the canvas, and its steps can be procedures, a .framework among them (PC_D2, PC2). The
+      phases that carry it, found by reading (the ledger's covers found none by intent): PC2 (procedures and .frameworks as steps, slice b below),
+      OC9_templates (the build pipeline as the first template, expanded there), PC4 and EO5 (it shows on the canvas in COS's Automation tab).
     status: >-
       ANSWERED 2026-11-08 by James: "idearium is for project management." The coder's reading, to confirm: Idearium holds the project, its end state
       and its phases (what is managed); a pipeline is a project's artifact, kept with the project in Idearium, and COS runs it (closest to b). His
@@ -164,7 +170,16 @@ phases:
     proof: "every existing .pipeline and .procedure in the tree round-trips through toBox/fromBox unchanged; a cycle, a dangling hook and an unknown ref are each refused and named"
 
   PC2_procedures_and_frameworks_as_steps:
-    status: OPEN
+    status: "OPEN — slice a BUILT 0.60.45x (the engine's 'procedure' step, AE7, OA-08); slice b, the .framework as a procedure, open"
+    expanded_2026_11_08_c: >-
+      James, 2026-11-08: "First one. Like pipelines. Which can use the .frameworks for procedures." Slice b: a .framework runs as a procedure inside
+      Idearium's build pipeline. Read first, found: docs/innovation-toolkit.framework is today a document (Parts 1 to 8 and Section 0 as prose); it
+      declares no inputs, outputs or checks. By his own PC2 rule ("A .framework shouldn't just be a document describing what to do") it is refused
+      as a step until it declares them, and the refusal names what is missing (§1.2). So slice b is: (1) the .framework's executable form, its
+      sections each a step with takes, gives and the check of what that section must produce, written beside the prose and never replacing it
+      (§0.3; the prose is his); (2) Idearium reads it as a procedure through its own route (POST /api/procedures/:id/run, kind framework); (3) the
+      engine's 'procedure' step runs it unchanged. Which sections become steps, and what each must produce, are his to say (his method, his words):
+      the coder drafts from the Parts' own headings and he corrects.
     expanded_2026_11_08_b: >-
       James, 2026-11-08: "I'd pay particular attention to PC2. A .framework shouldn't just be a document describing what to do. It should be an
       executable, composable procedure with defined inputs, outputs, contracts and execution behavior. That creates a common foundation for macros,

@@ -9,18 +9,20 @@ intent: null
 summary: AE6_the_engine_moves_into_cos (library) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793997641729
+exported_at: 1794164926277
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997641729
-lastSeenAt: 1793997641729
+firstSeenAt: 1794164926277
+lastSeenAt: 1794164926277
 fingerprint: null
 payload:
   id: AE6_the_engine_moves_into_cos
   map: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
   repo: null
   layer: library
-  status: OPEN
+  status: >-
+    BUILT   # 2026-11-08: slice a 0.60.449 (COS runs the engine), slice b 0.60.450 (it starts with
+    COS); the files stay the shared kernel (his: Clear Glass keeps its own)
   files:
     - cos/automation/engine.eg
     - cos/automation/pipeline.eg

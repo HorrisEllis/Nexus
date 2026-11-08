@@ -95,6 +95,11 @@ phases:
     proof: "readings from a running intelligence; with intelligence down, the tool says so"
   EO5_opened_from_cos:
     status: OPEN
+    expanded_2026_11_08_ae: >-
+      James, 2026-11-08 (AE_D5): "Like then the idearium pipeline should show in the automation tab in cos ui. Cos ui is the orchestrator. Is nexus.
+      Eravos is only the visual ui." · "No. Eravos is the ui, for the cos automation engine. For the cos ui, automation tab." The canvas opens in COS's
+      Automation tab (framed by its address, the projection only; ERAVOS holds no backend), and Idearium's build pipeline (OC9's first template) is
+      on it. This is what AE_D5 named AE10; it is not written again (his SL_D11 rule), it expands here and in PC4. Preview to him before any UI.
     depends_on: [EO1_flow_tools, EO2_cos_tools]
     files: [cos/ui, Eravos-Canvas:serve.js]
     interface: [html]

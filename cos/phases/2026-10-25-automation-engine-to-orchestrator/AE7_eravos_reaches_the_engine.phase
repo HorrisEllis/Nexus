@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE7_eravos_reaches_the_engine
+type: phase
+id: docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE7_eravos_reaches_the_engine
+context: >-
+  pipeline phase AE7_eravos_reaches_the_engine of
+  docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+intent: null
+summary: AE7_eravos_reaches_the_engine (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794164926279
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794164926279
+lastSeenAt: 1794164926279
+fingerprint: null
+payload:
+  id: AE7_eravos_reaches_the_engine
+  map: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+  repo: null
+  layer: null
+  status: 'BUILT   # 0.60.458'
+  files:
+    - cos/manager/cli.js
+    - cos/manager/contract.json
+    - idearium/cli/route-commands.js
+    - tests/modules/test-cos-hub.test.js
+  depends_on:
+    - AE6_the_engine_moves_into_cos
+    - AE_D3_the_home_is_cos
+  blocks: []
+  spec: null
+  graph: e4fdcfa3cad1fb11
