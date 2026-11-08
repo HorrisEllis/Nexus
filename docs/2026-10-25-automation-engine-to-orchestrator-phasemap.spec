@@ -167,6 +167,11 @@ phases:
 
   AE6_the_engine_moves_into_cos:
     status: OPEN
+    expanded_2026_11_08: >-
+      James, 2026-11-08: "basically i want it to be the main subrate for all automation like a hub for the automation pipeline, workflows, tasks, including or using raid as the authentication and tracking system. queues, contracts, dag, it should all be there, waiting to be wired in." · "look at existing phases and ideas. cos is meant to be nexus entirely," (asked after OC4a, with "i wanted to have an editor for pipelines, like every pipeline in nexus is editable, managable, uses cos for gates, like in clearglass, gated steps, macros, etc") Expanded, not rewritten (his SL_D11): this phase is where his hub lives — every pipeline, workflow and task in COS, editable and gated
+      in one place, with RAID, queues, contracts and the DAG as its slots. Readings to settle with him before code (do not guess): (1) "waiting to be
+      wired in" = named slots in COS's contract that answer "not wired yet" until connected, or each one working now; (2) RAID used through
+      Cortex's routes, or RAID moved into COS (CS11, shelved 2026-11-07 as "top of my head ideas").
     layer: library
     depends_on: [AE_D3_the_home_is_cos, AE4_repoint_the_registry, PIL2_contracts]   # PIL2 added 2026-11-06 (b)
     files: [cos/automation/engine.eg, cos/automation/pipeline.eg, cos/automation/steps.eg, cos/automation/cron.eg, cos/automation/routes.eg,

@@ -145,6 +145,11 @@ phases:
     proof: "MOD-OC-HISTORY's acceptance"
   OC8_the_console:
     status: OPEN
+    expanded_2026_11_08: >-
+      James, 2026-11-08: "basically i want it to be the main subrate for all automation like a hub for the automation pipeline, workflows, tasks, including or using raid as the authentication and tracking system. queues, contracts, dag, it should all be there, waiting to be wired in." · "look at existing phases and ideas. cos is meant to be nexus entirely," (asked after OC4a, with "i wanted to have an editor for pipelines, like every pipeline in nexus is editable, managable, uses cos for gates, like in clearglass, gated steps, macros, etc") Expanded, not rewritten (his SL_D11): this phase is where his hub lives — every pipeline, workflow and task in COS, editable and gated
+      in one place, with RAID, queues, contracts and the DAG as its slots. Readings to settle with him before code (do not guess): (1) "waiting to be
+      wired in" = named slots in COS's contract that answer "not wired yet" until connected, or each one working now; (2) RAID used through
+      Cortex's routes, or RAID moved into COS (CS11, shelved 2026-11-07 as "top of my head ideas").
     depends_on: [OC3_the_calendar, OC4_deploy_to_any_system, OC5_every_agent_tool, OC6_history_and_replay, OC7_the_taxonomy_expanded, MG33_cos_ui_has_a_way_in]
     spec: docs/orchestration-console.spec
     blocks: [MOD-OC-CONSOLE]
