@@ -194,3 +194,18 @@ order: "PIL1 → PIL2 → (PIL3, PIL4) → PIL5; PIL6 after PIL3. PIL_D2 settled
 #     test-pillar 5/5.
 # - Found and said: the ledger's text subset refused "≥" in a contract (CIE-EG D5), so it is written ">=".
 # - PI-02 narrowed: a `use` line in pillar.eg is not counted, because it defines nothing.
+
+# ADDENDUM 2026-11-08 (0.60.454) — PIL3 slice a: conformance, and its first finding
+# James, 2026-11-08: "Continue." · "Focus on primitives. Build using emerge right?"
+# - pillar/conformance/conform.eg: cases_of(id) and conform(id, answers). A case without provenance is refused (GATE-PIL3-002). Nothing conforms
+#   until every case passes and the contract has a boundary and an adversarial case (GATE-PIL-CONFORMS). A failing case is a finding.
+# - pillar/conformance/constraint.eg: 7 cases for pillar:constraint (ordinary 2, boundary 1, adversarial 3, regression 1), derived from the contract,
+#   never from the implementation. Each case's provenance names its source and derivation; signed_off_by is "awaiting James", said.
+# - The foreign harness, tests/modules/test-pillar-conform.test.js: Emerge's JS core answers through its own harness. It is JavaScript only because
+#   it calls the JS core, and it is the implementation's harness, not Pillar's. Pillar judges.
+# - FINDING: 6 of 7 cases pass. constraint.null_field_is_a_gap fails: evaluate() in emerge/emerge/core/constraint.js treats a needed field holding
+#   null as present and runs the check, while the contract ("missing information required to evaluate a constraint") and Emerge's language
+#   (lang/cie/world.eg opens a gap on a null field) say it is a gap. Recorded and not fixed here (the spec: "an implementation is never edited to
+#   pass"). Which one is right is his call, or the fix goes to the JS core in its own phase.
+# - Proof: eg test pillar/test/conform.test.eg 5/5; test-pillar-conform 3/3 (PC-03 asserts the finding); registered in run-all.js.
+# Slice b: pillar:history, run against Emerge's History and WARP's Ledger, the differences named (the phase's second acceptance).
