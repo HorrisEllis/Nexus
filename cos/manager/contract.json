@@ -13,9 +13,14 @@
       "automation.notify",
       "automation.condition.evaluated",
       "automation.workflow.created",
-      "automation.workflow.removed"
+      "automation.workflow.removed",
+      "automation.pipeline.created",
+      "automation.pipeline.start",
+      "automation.pipeline.task",
+      "automation.pipeline.done"
     ],
-    "origin": "AE7 (2026-11-08), James: \"Then an api that eravos can use for the step. So needs full cli commands, events, nodes.\""
+    "origin": "AE7 (2026-11-08), James: \"Then an api that eravos can use for the step. So needs full cli commands, events, nodes.\"",
+    "pipelines": "AE5 (0.60.462): automation.pipeline.start { pipelineId, runId } \u00b7 automation.pipeline.task { pipelineId, runId, task, label, status, ms?, error? } \u00b7 automation.pipeline.done { pipelineId, runId, status } \u00b7 automation.pipeline.created { pipelineId, name }"
   },
   "for_eravos": {
     "about": "How ERAVOS (or any system) uses COS's automation engine as a step, by route only (\u00a75.10): never its files.",
@@ -711,7 +716,7 @@
       "emits": [
         "cos.ui.notice"
       ],
-      "about": "the automation engine (AE5): pipelines (run, live state, export / import .pipeline, open on ERAVOS as .erv), workflows, runs, the log; and the supervisor\u2019s rules and Start at boot (Supervision)"
+      "about": "a projection of COS\u2019s automation engine (the supervisor is the orchestrator): pipelines (run, live state, export / import .pipeline, open on ERAVOS as .erv), workflows, runs, the log; and the supervisor\u2019s rules and Start at boot (Supervision). Every action is a route the command line also has."
     },
     {
       "id": "resources",

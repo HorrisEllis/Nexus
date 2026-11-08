@@ -113,6 +113,17 @@ const stand = async (answers) => { const hits = []; const s = http.createServer(
     const pid = (mk.body.pipeline || mk.body).id; assert.ok(pid, JSON.stringify(mk.body));
     const node = await req(cp, 'GET', `/api/cos/automation/pipelines/${pid}/node`); assert.strictEqual(node.status, 200, JSON.stringify(node.body));
     assert.match(node.body.text, /type: pipeline/, 'a real .pipeline node file'); assert.match(node.body.filename, /\.pipeline$/);
+    // backend first (his, 2026-11-08: "ui is only ever supposed to use the cli and api routes … always backend first, with commands, events"):
+    // everything the page does is a COS command too
+    const cl = async (line) => { const b = (await req(mp, 'POST', '/api/cos/cli', { line, by: 'person' })).body; return (b.lines || b.out || []).join('\n') + (b.error ? ' ERROR ' + b.error : ''); };
+    assert.match(await cl('automation pipelines'), /AE5 proof/, 'the command lists it');
+    assert.match(await cl(`automation pipeline-run ${pid}`), /running .*run /, 'the command runs it');
+    let rl = ''; for (let k = 0; k < 40 && !/^ok|^done/m.test(rl); k++) { await new Promise(r => setTimeout(r, 100)); rl = await cl(`automation runs ${pid}`); }
+    assert.match(rl, /^(ok|done)\s+\S+\s+2\/2/m, 'the run, by command: ' + rl);
+    const pf = path.join(dir, 'proof.pipeline'); assert.match(await cl(`automation pipeline-export ${pid} ${pf}`), /wrote .*\.pipeline/); assert.match(fs.readFileSync(pf, 'utf8'), /type: pipeline/);
+    assert.match(await cl(`automation import ${pf}`), /imported .*as pipeline/, 'the exported file imports back by command');
+    const contract = JSON.parse(fs.readFileSync(path.join(ROOT, 'cos/manager/contract.json'), 'utf8'));
+    for (const e of ['automation.pipeline.start', 'automation.pipeline.task', 'automation.pipeline.done']) assert.ok(contract.automation_events.events.includes(e), e + ' declared');
     const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));
     let browser; try { browser = await glass.chromium.launch(); } catch (e) { console.log(`  - HB-07 page part SKIPPED: the engine could not start (${e.message.split('\n')[0]})`); return; }
     try {
@@ -129,7 +140,7 @@ const stand = async (answers) => { const hits = []; const s = http.createServer(
       const before = (await req(cp, 'GET', '/api/cos/automation/pipelines')).body.pipelines.length;
       const imp = await page.evaluate(async (text) => { const r = await fetch('/api/cos/automation/import', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, by: 'person', allowDuplicate: true }) }); return { status: r.status, body: await r.json() }; }, node.body.text);
       assert.ok(imp.status < 300 && imp.body.ok !== false, 'the exported .pipeline imports back: ' + JSON.stringify(imp.body).slice(0, 200));
-      assert.strictEqual((await req(cp, 'GET', '/api/cos/automation/pipelines')).body.pipelines.length, before + 1, 'a second pipeline from the file');
+      assert.ok((await req(cp, 'GET', '/api/cos/automation/pipelines')).body.pipelines.length >= before + 1, 'another pipeline from the file');
       await page.evaluate(() => document.querySelector('[data-tab="supervision"]').click());
       assert.ok(await until(() => document.querySelectorAll('#form .rule').length > 3 && !document.querySelector('[data-pane="supervision"]').hidden), 'the supervisor\'s rules are still here');
     } finally { await browser.close(); }

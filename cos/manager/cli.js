@@ -28,7 +28,7 @@ const TABLE = [
   ['disk', 'disk <system> [make] [state] | disk verify <file>', 'a system\'s disks (its spec as metadata, its files in one compressed file); make one, with its data if you say state; verify one'],
   ['disks', 'disks', 'every disk COS holds'],
   // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes."
-  ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file>', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
+  ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file> | pipelines | pipeline <id> | pipeline-run <id> | runs [pipeline-id] | stop <run-id> | pipeline-export <id> [file]', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
   ['vdisk', 'vdisk <system> [make|refresh|verify] | vdisk <system> snapshot|revert|drop <tag>', 'its virtual disk (qcow2): metadata, files and all its data in one file, its snapshots inside'],
 ];
 
@@ -105,7 +105,21 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
           else if (sub === 'catalogue') { const r = await call('GET', '/catalogue'); for (const s of r.catalogue) L.push(`${pad(s.type, 18)}${s.label}`); }
           else if (sub === 'nodes') { const r = await call('GET', '/nodes'); L.push(`nodes in ${r.dir}`); for (const n of (r.nodes || r.files || [])) L.push(`  ${n.file || n.name || JSON.stringify(n)}`); }
           else if (sub === 'export') { need(2, row[1]); const r = await call('GET', `/workflows/${encodeURIComponent(a[1])}/export`); L.push(JSON.stringify(r)); }
-          else if (sub === 'import') { need(2, row[1]); const text = require('fs').readFileSync(a[1], 'utf8'); const r = await call('POST', '/import', JSON.parse(text)); L.push(r.ok === false ? `refused: ${r.error}` : `imported ${a[1]}`); }
+          // AE5 (0.60.462) — James, 2026-11-08: "ui is only ever supposed to use the cli and api routes while floating on the interaction contract. like always
+          // backend first, with commands, events, and updated maps." · "has to be real .pipeline files. it must be exportable and importable."
+          else if (sub === 'import') { need(2, row[1]); const text = require('fs').readFileSync(a[1], 'utf8');
+            const r = /\.(pipeline|workflow|macro)$/i.test(a[1]) ? await call('POST', '/import', { text, by }) : await call('POST', '/import', JSON.parse(text));
+            L.push(r.ok === false ? `refused: ${r.error}` : `imported ${a[1]}${r.pipeline ? ' as pipeline ' + (r.pipeline.name || r.pipeline.id) : ''}`); }
+          else if (sub === 'pipelines') { const r = await call('GET', '/pipelines'); if (!r.pipelines.length) L.push('no pipelines yet'); for (const p of r.pipelines) L.push(`${pad(p.id.slice(0, 8), 10)}${pad(String((p.tasks || []).length) + ' steps', 10)}${p.name}`); }
+          else if (sub === 'pipeline') { need(2, row[1]); const r = await call('GET', `/pipelines/${encodeURIComponent(a[1])}`); const p = r.pipeline; L.push(`${p.name} · ${(p.tasks || []).length} steps`);
+            const runs = (await call('GET', `/pipeline-runs?pipelineId=${encodeURIComponent(p.id)}&limit=1`)).runs || []; const last = runs[0] || null; if (last) L.push(`last run ${last.id.slice(0, 8)} · ${last.status}`);
+            for (const t of p.tasks || []) L.push(`  ${pad(last && last.tasks[t.id] ? last.tasks[t.id].status : '', 9)}${t.label || t.id}${(t.depends_on || []).length ? ' (after ' + t.depends_on.join(', ') + ')' : ''}`); }
+          else if (sub === 'pipeline-run') { need(2, row[1]); const r = await call('POST', `/pipelines/${encodeURIComponent(a[1])}/run`, { by }); L.push(r.ok === false ? `refused: ${r.error}` : `running ${a[1]}: run ${r.runId || (r.run && r.run.id) || '?'}`); }
+          else if (sub === 'runs') { const r = await call('GET', `/pipeline-runs?limit=20${a[1] ? '&pipelineId=' + encodeURIComponent(a[1]) : ''}`); if (!r.runs.length) L.push('no runs yet');
+            for (const x of r.runs) { const t = Object.values(x.tasks || {}); L.push(`${pad(x.status, 9)}${pad(x.id.slice(0, 8), 10)}${pad(t.filter(y => y.status === 'done').length + '/' + t.length, 7)}${x.pipelineName || x.pipelineId}`); } }
+          else if (sub === 'stop') { need(2, row[1]); const r = await call('POST', `/pipeline-runs/${encodeURIComponent(a[1])}/cancel`, { by }); L.push(r.ok === false ? `refused: ${r.error}` : `stopped ${a[1]}`); }
+          else if (sub === 'pipeline-export') { need(2, row[1]); const r = await call('GET', `/pipelines/${encodeURIComponent(a[1])}/node`);
+            if (a[2]) { require('fs').writeFileSync(a[2], r.text); L.push(`wrote ${a[2]} (${r.filename})${(r.missing || []).length ? ' — not bundled: ' + r.missing.join(', ') : ''}`); } else L.push(r.text); }
           else throw new Error(`automation ${sub}: not a subcommand — ${row[1]}`);
           break;
         }
