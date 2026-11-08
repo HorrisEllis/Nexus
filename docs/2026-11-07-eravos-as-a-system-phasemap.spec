@@ -151,3 +151,12 @@ phases:
 #   debugging UI (docs/2026-11-07-wiring-harness-phasemap.spec); a code-generation UI for Emerge; debugging.
 # - "add eravos as a system or a compartment at least. it should slot right in": ERV1 (COS knows ERAVOS's process, port and health) is the
 #   phase; its open reading (where the system registry lives) still stands.
+
+# ── ADDENDUM 2026-11-08 — ERAVOS imported into Idearium as a project (his), and the command that does it ──
+# James, 2026-11-08: "No. Import eravos into idearium." Asked earlier whether to import Nexus as a container; his correction: ERAVOS, into Idearium.
+# Consistent with ERV_D1 (registered, never copied into the Nexus tree): an Idearium import clones the repository into Idearium's repo library
+# (its own compartment), which is not the Nexus tree. Idearium's route was there (POST /api/git/clone); no command row reached it. Added: the row
+# git.clone (person's: a clone makes a project; an agent proposes). The import itself runs on his machine, where Idearium and its library live:
+#   idearium git clone https://github.com/HorrisEllis/Eravos-Canvas
+# Two ERAVOS repositories are visible: HorrisEllis/Eravos-Canvas (public, the one this map names) and HorrisEllis/Eravos (private, older,
+# possibly holding ERAVOS.kernel.spec, which Pillar's Relation contract waits on). Which to import is asked of him.
