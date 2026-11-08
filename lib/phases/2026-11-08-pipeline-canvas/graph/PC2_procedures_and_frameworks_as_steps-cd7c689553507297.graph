@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794147480622
+exported_at: 1794147711194
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794147480622
-lastSeenAt: 1794147480622
+firstSeenAt: 1794147711194
+lastSeenAt: 1794147711194
 fingerprint: null
 payload:
   for: PC2_procedures_and_frameworks_as_steps
@@ -231,15 +231,12 @@ payload:
     downstream: []
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
-      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D2_frameworks_as_procedures
       - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - >-
-        layer 4 · blocked by PC1_one_box_shape, PC_D2_frameworks_as_procedures,
-        PD4_the_procedure_library
+      - layer 4 · blocked by PC1_one_box_shape, PD4_the_procedure_library
       - >-
         depends on (3): PC1_one_box_shape, PC_D2_frameworks_as_procedures, PD4_the_procedure_library
         · all upstream 14
