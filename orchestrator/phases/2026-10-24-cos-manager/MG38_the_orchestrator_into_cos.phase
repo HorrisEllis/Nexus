@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG38_the_orchestrator_into_cos
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG38_the_orchestrator_into_cos
+context: pipeline phase MG38_the_orchestrator_into_cos of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG38_the_orchestrator_into_cos (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794155256033
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794155256033
+lastSeenAt: 1794155256033
+fingerprint: null
+payload:
+  id: MG38_the_orchestrator_into_cos
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/orchestrator.js
+    - orchestrator/orchestrator.config.json
+    - orchestrator/compartment.json
+    - cos/manager/server.js
+  depends_on:
+    - MG_D5_cos_is_the_orchestrator
+    - AE6_the_engine_moves_into_cos
+  blocks: []
+  spec: null
+  graph: eaed274762f829e4

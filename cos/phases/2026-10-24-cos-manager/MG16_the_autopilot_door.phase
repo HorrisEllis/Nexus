@@ -7,11 +7,11 @@ intent: null
 summary: MG16_the_autopilot_door (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1793860899390
+exported_at: 1794155255979
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793860899390
-lastSeenAt: 1793860899390
+firstSeenAt: 1794155255979
+lastSeenAt: 1794155255979
 fingerprint: null
 payload:
   id: MG16_the_autopilot_door
@@ -32,4 +32,4 @@ payload:
   blocks:
     - MOD-MG-AUTOPILOT-DOOR
   spec: cos/spec/cos-manager.spec
-  graph: 2017e5aa785cf8aa
+  graph: 8b9bc23a4c52f977

@@ -7,11 +7,11 @@ intent: null
 summary: MG10_categories (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793577139973
+exported_at: 1794155255955
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577139973
-lastSeenAt: 1793577139973
+firstSeenAt: 1794155255955
+lastSeenAt: 1794155255955
 fingerprint: null
 payload:
   id: MG10_categories
@@ -33,4 +33,4 @@ payload:
   blocks:
     - MOD-MG-CATEGORIES
   spec: cos/spec/cos-manager.spec
-  graph: 7266e74ccd9a0b1e
+  graph: f518f2e1e45b6249
