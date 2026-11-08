@@ -115,6 +115,35 @@ await t('OA-08', 'a procedure is a step: it runs through Idearium\'s route, wait
   const noport = await none.run(w.id); assert.strictEqual(noport.ok, false); assert.match(noport.error, /need Idearium/);
 });
 
+// 2026-11-08 — James: "API for anything. Agnostic remeber. Nexus systems, APIs from web services. Etc. http sockets etc"
+await t('OA-09', 'one api step reaches http, ws, tcp and nexus://<system> (its address from the host), and names every failure', async () => {
+  const http = require('http'), net = require('net'), { WebSocketServer } = require('ws');
+  const listen = (srv) => new Promise(r => srv.listen(0, '127.0.0.1', () => r(srv.address().port)));
+  const web = http.createServer((q, r) => { let b = ''; q.on('data', c => b += c); q.on('end', () => { r.setHeader('Content-Type', 'application/json'); r.end(JSON.stringify({ path: q.url, method: q.method, got: b })); }); });
+  const wp = await listen(web);
+  const wsHttp = http.createServer(); const wss = new WebSocketServer({ server: wsHttp }); wss.on('connection', (c) => c.on('message', (m) => { c.send(JSON.stringify({ echo: String(m) })); c.send('second'); }));
+  const sp = await listen(wsHttp);
+  const silentHttp = http.createServer(); const silent = new WebSocketServer({ server: silentHttp }); const qp = await listen(silentHttp);
+  const tcp = net.createServer((c) => c.on('data', (d) => { c.end('echo:' + d); })); const tp = await listen(tcp);
+  const { AutomationEngine } = require('../../lib/automation/engine.js');
+  const E = new AutomationEngine({ resolveSystemFn: (name) => (name === 'idearium' ? `http://127.0.0.1:${wp}` : null) });
+  const one = async (config) => { const w = E.create({ name: 'oa09-' + Math.random(), status: 'active', steps: [{ type: 'trigger', config: { kind: 'manual' } }, { type: 'api', config }] }).workflow;
+    const r = await E.run(w.id); const run = r.run || {}; const steps = run.steps || run.results || []; return { r, out: (steps.find && steps.find(x => x.type === 'api') || {}).output, vars: r.vars }; };
+  const h = await E._apiStep({ url: `http://127.0.0.1:${wp}/x`, method: 'POST', body: { a: 1 } });
+  assert.strictEqual(h.output.body.path, '/x'); assert.strictEqual(h.output.body.method, 'POST');
+  const n = await E._apiStep({ url: 'nexus://idearium/api/phases/next' });
+  assert.strictEqual(n.output.body.path, '/api/phases/next', 'nexus:// resolved by the host');
+  await assert.rejects(E._apiStep({ url: 'nexus://nowhere/x' }), /no address for that system/);
+  const w = await E._apiStep({ url: `ws://127.0.0.1:${sp}`, body: 'hello', expect: 2 });
+  assert.deepStrictEqual(w.output.messages, [{ echo: 'hello' }, 'second']);
+  await assert.rejects(E._apiStep({ url: `ws://127.0.0.1:${qp}`, body: 'x', timeoutMs: 300 }), /no reply within 300 ms/);
+  const c = await E._apiStep({ url: `tcp://127.0.0.1:${tp}`, body: 'ping' });
+  assert.strictEqual(c.output.data, 'echo:ping');
+  await assert.rejects(E._apiStep({ url: 'ftp://x' }), /takes http\(s\):\/\/, ws\(s\):\/\/, tcp/);
+  const whole = await one({ url: `nexus://idearium/run-in-a-workflow` }); assert.strictEqual(whole.r.ok, true, JSON.stringify(whole.r).slice(0, 300));
+  web.close(); wss.close(); wsHttp.close(); silent.close(); silentHttp.close(); tcp.close();
+});
+
   console.log(`\n  ${p} passed, ${f} failed`);
   process.exitCode = f ? 1 : 0;
 })();

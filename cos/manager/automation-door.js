@@ -96,11 +96,15 @@ function buildHooks({ guardianFn = _guardian, raidDecideFn = _raidDecide, cgFn =
   };
 }
 
+// the api step's nexus://<system>: COS's manager gives the address of each system it declares (setResolver at boot)
+let _resolver = null;
+function setResolver(fn) { _resolver = typeof fn === 'function' ? fn : null; return _resolver; }
+
 let _engine = null;
 /** engine() — the one engine instance, built with COS's real hooks. Lazy, so a bare import does not start the tick. */
 function engine() {
   if (_engine) return _engine;
-  _engine = new AutomationEngine(buildHooks());
+  _engine = new AutomationEngine({ ...buildHooks(), resolveSystemFn: (name) => (_resolver ? _resolver(name) : null) });
   _engine.start();
   return _engine;
 }
@@ -110,4 +114,4 @@ async function handle({ method, url, body = {}, headers = {}, rawBody = '' } = {
   return require('../../lib/automation/routes.js').handle(engine(), { method, url, body, headers, rawBody }, {});
 }
 
-module.exports = { engine, handle, buildHooks, setBus, _dispatchAgent, _cg, _guardian, _raidDecide, CG_PORT, GUARDIAN_PORT };
+module.exports = { engine, handle, buildHooks, setBus, setResolver, _dispatchAgent, _cg, _guardian, _raidDecide, CG_PORT, GUARDIAN_PORT };
