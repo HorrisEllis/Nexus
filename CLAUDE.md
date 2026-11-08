@@ -26,7 +26,7 @@ Money matters now ("I need to be paid, at all."). The Fiverr autofill is built (
 ## Sovereignty (§5.9–§5.16)
 - Each system owns its data, modules and commands, inside its own folder. It reaches another system only through that system's API routes and
   the CLI server, so the other can be swapped. `lib/` is not a home for what a system uses.
-- **The component registry is per system,** sovereign, never central, and never Loom. His words: "No component registry is the spine." · "The
+- **Every system's component registry is its own: per system, sovereign, never central, and Loom is NOT it (AXIOMS §5.16).** His words: "No component registry is the spine." · "The
   drawbridge is the the component registry, which is also the event bus, and interaction contract and bridge into the compartment." · "the
   server.js is the process for each system. It’s what cos manages." The system registry connects the component registries; COS uses it to
   orchestrate.

@@ -202,6 +202,40 @@ phases:
       /api/cos/automation/* (workflows, runs, pipelines, macros, triggers) on its own registry; agent steps still go RAID → Guardian, browser
       steps to Clear Glass's driver, each by route. lib/automation/ is archived with a pointer (§0.3); the orchestrator stops running the engine.
     proof: "a workflow and a pipeline run through COS's route (test-cos-automation); the existing automation and pipeline tests pass against cos/automation/; the boundary census shows no new crossing"
+  # ── ADDENDUM 2026-11-08 — AE6's two readings settled (his) ──
+  # James, 2026-11-08, asked (1) whether RAID, queues, contracts and the DAG are named slots first or all working at once, and (2) where RAID lives:
+  #   (1) "Named slots first" (the coder's recommendation, chosen): COS's contract names each slot; a slot answers "not wired yet" until it is
+  #       connected, then they are wired one by one.
+  #   (2) "The routes and event ledgers. This will replace BrainOS, and do what idearium can do. RAID should probably move to cos. Since it has
+  #       signal to noise, load balancing etc. I feel like. What do you think)". The coder's answer, by the axioms: yes, RAID's decision engine
+  #       and its ledgers move into COS (§9.1 and §10.1, one write authority for requests, beside the queue it feeds; §9.2, the ledger written
+  #       before dispatch in one place); Cortex keeps memory and cognition (§5.7, COS must not become a blob). The RAID slot is first wired to
+  #       Cortex's routes, then re-pointed when RAID moves: §5.14 proven, nothing breaks between. The move is its own phase (CS11 un-shelved by
+  #       these words, to confirm). "This will replace BrainOS, and do what idearium can do" is recorded as his direction; what it covers is his
+  #       to say before any phase is written for it.
+  # Found mapping AE6's callers (34, grep): Clear Glass runs its own engine instance (clear-glass/src/main/index.js, mesh/agent-mesh.js), on the
+  # shared lib/automation/. Under his 2026-11-03 rule ("lib/ is not a directory for anything that a system uses") and AE_D3, COS owns the engine
+  # and Clear Glass is its browser driver (AE2, built): Clear Glass stops running an engine and calls COS's route, with AE5.
+  # ── ADDENDUM 2026-11-08 (0.60.449) — AE6 slice a built: COS runs the automation engine ──
+  # James, 2026-11-08: "Automation needs done, orchastrator as the engine, which need to be cos now." · 2026-11-06: "Have cos be the orchastrator complelelt."
+  # The three ways, side by side, before code: (1) move lib/automation/ into cos/ now, which makes Clear Glass reach into COS's folder (§5.9 broken);
+  # (2) port it to .eg now, which is blocked (no timers, processes or files natively, CIE13; no sockets, CIE10); (3) COS runs the engine and serves
+  # its door, and the orchestrator stops. (3) was taken, bottom-up:
+  #   - orchestrator/automation/index.js moved (git mv) to cos/manager/automation-door.js;
+  #   - COS's manager serves /api/cos/automation/* and streams the engine's run events on /api/cos/events;
+  #   - the orchestrator's /automation/* forwards to COS by route (no dead route; COS down is said, 503);
+  #   - the hub's new slot 'engine' is COS's own;
+  #   - the route is in cos/manager/contract.json.
+  # The store keeps the namespace 'orchestrator-automation', so no workflow is lost (§0.3).
+  # The engine still starts on its first request, as it did in the orchestrator. Starting it with COS, so schedules fire without a first call, is
+  # slice b's.
+  # Proof: test-cos-hub HB-05 (COS's real manager answers workflows and catalogue; an unknown route is 404; the engine slot is wired; the forwarder
+  # reaches COS, and says so when COS is down), 5/5; test-orchestrator-automation 7/7 and test-automation-driver-port 3/3 against the moved door;
+  # system-boundary 10/10, sovereign-systems 10/10, boundary-code-only 5/5.
+  # Slice b: the engine starts with COS; Clear Glass stops running its own copy and calls COS's route (with AE5); lib/automation/ moves into
+  # cos/automation/; the .eg port waits on CIE10 and CIE13. Then RAID into COS (its own phase).
+  # Pre-existing, not this slice: test-registry-sovereign RS-01 fails on two Loom maps grown on main (cos-testenv-map, economy-map; in the canvas
+  # handoff). The root CLAUDE.md lost RS-01's required law sentence when it was distilled; this release restores it.
   AE5_ui_and_cleanup:
     status: OPEN
     layer: ui

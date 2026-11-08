@@ -42,7 +42,7 @@ function createServer(sup, opts = {}) {
   const addSystem = require('./add-system.js').createAddSystem(sup, proposals, { root });
   const deploy = require('./deploy.js').createDeploy(sup, proposals);   // OC4a 0.60.445: deploy a task, agent or pipeline to any system, through a proposal
   // OC8a — the hub: every automation slot, read live from its owner (docs/orchestration-console.spec MOD-OC-HUB)
-  const hub = require('./hub.js').createHub(sup, { own: async (m, p) => { try { if (p.startsWith('/api/cos/deployments')) deploy.deployments(); else proposals.list({}); return { status: 200 }; } catch (_) { return { status: 500 }; } } });
+  const hub = require('./hub.js').createHub(sup, { own: async (m, p) => { try { if (p.startsWith('/api/cos/automation/')) { const r = await automation.handle({ method: m, url: '/automation' + p.slice('/api/cos/automation'.length) }); return { status: (r && r.status) || 500 }; } if (p.startsWith('/api/cos/deployments')) deploy.deployments(); else proposals.list({}); return { status: 200 }; } catch (_) { return { status: 500 }; } } });
   // DK2 0.60.382 (docs/2026-11-02-cos-disk-phasemap.spec) — James, 2026-11-02: "Use the spec as metadata then have the actual file be a compressed or
   // virtual disk or envirement." Each system's disk: its spec as metadata, its files in one compressed file, in COS's own data
   const disks = require('../disk/disk.js').createDisks({ root });
@@ -58,6 +58,10 @@ function createServer(sup, opts = {}) {
   // second from the supervisor's own view, so a state reached without a ledger line, 'up' after health, is heard too).
   const streams = new Set(); let last = new Map();
   const broadcast = (event, data) => { const f = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`; for (const r of streams) { try { r.write(f); } catch (_) { streams.delete(r); } } };
+  // AE6 slice a (docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec) — James, 2026-11-06: "Have cos be the orchastrator complelelt."
+  // COS runs the automation engine (moved from the orchestrator) and streams its run events on /api/cos/events
+  const automation = require('./automation-door.js');
+  automation.setBus((type, data) => broadcast(type, data));
   sup.on('ledger', (entry) => broadcast('cos.ledger', { entry }));
   // 2026-11-05 SC11 — James: "cos needs the console from the autopilot. like a console tab". Every line a system prints, on the stream as
   // cos.console, in batches every 200 ms; a burst past 500 lines in one batch says how many it dropped (never silently).
@@ -72,8 +76,8 @@ function createServer(sup, opts = {}) {
   const beat = setInterval(() => { for (const r of streams) { try { r.write(': beat\n\n'); } catch (_) {} } }, 15000); if (beat.unref) beat.unref();
   return http.createServer(async (req, res) => {
     const u = new URL(req.url, 'http://x'), p = u.pathname.replace(/\/+$/, ''), m = req.method;
-    let body = {};
-    if ((m === 'POST' || m === 'PATCH') && p.startsWith('/api/cos')) { let raw = ''; for await (const c of req) raw += c; try { body = raw ? JSON.parse(raw) : {}; } catch (_) { return send(res, 400, { ok: false, error: 'the body is not JSON' }); } }
+    let body = {}, rawBody = '';
+    if ((m === 'POST' || m === 'PATCH') && p.startsWith('/api/cos')) { let raw = ''; for await (const c of req) raw += c; rawBody = raw; try { body = raw ? JSON.parse(raw) : {}; } catch (_) { return send(res, 400, { ok: false, error: 'the body is not JSON' }); } }
     try {
       if (m === 'GET' && p === '/api/cos/health') return send(res, 200, { ok: true, service: 'cos-manager', pid: process.pid, systems: sup.list().length, ledger: sup.ledgerFile });   // MG17: pid, so a launcher can prove it is the one it started
       if (m === 'GET' && p === '/api/cos/systems') return send(res, 200, { ok: true, systems: sup.list() });
@@ -168,6 +172,12 @@ function createServer(sup, opts = {}) {
       // OC4a (docs/orchestration-console.spec MOD-OC-DEPLOY) — James, 2026-11-08: "Also the automation is to deploy agents to systems."
       // OC8a — James, 2026-11-08: "a hub for the automation pipeline, workflows, tasks ... queues, contracts, dag, it should all be there, waiting to be wired in."
       if (m === 'GET' && p === '/api/cos/hub') return send(res, 200, { ok: true, ...(await hub.read()) });
+      // AE6 slice a — the automation engine's door: workflows, runs, log, pipelines, macros, triggers, webhooks (lib/automation/routes.js)
+      if (p.startsWith('/api/cos/automation/')) {
+        let out; try { out = await automation.handle({ method: m, url: '/automation' + req.url.slice('/api/cos/automation'.length), body, headers: req.headers, rawBody }); }
+        catch (e) { out = { status: 500, body: { ok: false, error: e.message } }; }
+        return send(res, (out && out.status) || 404, (out && out.body) || { ok: false, error: `no automation route ${m} ${p}` });
+      }
       if (m === 'GET' && p === '/api/cos/deployments') return send(res, 200, { ok: true, deployments: deploy.deployments({ system: u.searchParams.get('system') || null }) });
       if (m === 'POST' && p === '/api/cos/deploy') { try { return send(res, 200, { ok: true, ...deploy.propose(body) }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
       { const rc = /^\/api\/cos\/deployments\/([^/]+)\/recall$/.exec(p); if (m === 'POST' && rc) { try { return send(res, 200, { ok: true, deployment: deploy.recall(decodeURIComponent(rc[1]), { by: body.by }) }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } } }
