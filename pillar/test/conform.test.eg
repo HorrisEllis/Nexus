@@ -1,0 +1,42 @@
+// pillar/test/conform.test.eg — the judge's own proof (PIL3), in Emerge: run with  eg test pillar/test/conform.test.eg
+use "../conformance/conform.eg" as P
+
+fn right_answers() {
+  var out = []
+  for c in P.cases_of("pillar:constraint") {
+    var got = get(c, "expect", {})
+    if has(got, "fails") { got = { error: "constraint: {got.fails} is required" } }
+    out = push(out, { id: c.id, got: got })
+  }
+  return out
+}
+test "an implementation that gives every expected answer conforms" {
+  let r = P.conform("pillar:constraint", right_answers())
+  for c in r.cases { if not c.ok { print(c.id, c.why) } }
+  expect r.conforming
+}
+test "a missing answer fails its case, named" {
+  let r = P.conform("pillar:constraint", slice(right_answers(), 1))
+  expect not r.conforming
+  expect r.cases[0].why == "no answer from the implementation"
+}
+test "a wrong answer is a finding, with what was expected and what came back" {
+  var a = right_answers()
+  a[0] = { id: a[0].id, got: { ok: false, constraint: "k" } }
+  let r = P.conform("pillar:constraint", a)
+  expect not r.conforming
+  expect r.cases[0].why contains "expected"
+}
+test "a contract with no cases conforms to nothing" {
+  let r = P.conform("pillar:nothing", [])
+  expect not r.conforming
+  expect r.why contains "no cases"
+}
+test "every case carries provenance, and the contract has a boundary and an adversarial case" {
+  var kinds = {}
+  for c in P.cases_of("pillar:constraint") {
+    expect has(c, "provenance")
+    kinds[c.kind] = true
+  }
+  expect has(kinds, "boundary") and has(kinds, "adversarial")
+}

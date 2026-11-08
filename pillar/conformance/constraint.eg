@@ -1,0 +1,16 @@
+// pillar/conformance/constraint.eg — known answers for pillar:constraint (PIL3). Data only: a check is declarative ({ field, below }), each harness
+// turns it into its own check. Derived from the contract (pillar/contracts/contracts.eg), never from the implementation it judges.
+let PROV = { source: "pillar/contracts/contracts.eg pillar:constraint 1.0.0", version: "1.0.0", derivation: "from the contract's meaning, takes and fails",
+  signed_off_by: "awaiting James (not the author of any implementation): independent authorship is recorded, not taken as proof" }
+let K = { id: "k", name: "n stays small", type: "hard", needs: ["n"], check: { field: "n", below: 3 } }
+
+let CASES = [
+  { id: "constraint.holds", contract: "pillar:constraint", kind: "ordinary", input: { constraint: K, next: { n: 1 } }, expect: { ok: true }, provenance: PROV },
+  { id: "constraint.violated", contract: "pillar:constraint", kind: "ordinary", input: { constraint: K, next: { n: 5 } }, expect: { ok: false, constraint: "k" }, provenance: PROV },
+  { id: "constraint.at_the_edge", contract: "pillar:constraint", kind: "boundary", input: { constraint: K, next: { n: 3 } }, expect: { ok: false, constraint: "k" }, provenance: PROV },
+  { id: "constraint.missing_field_is_a_gap", contract: "pillar:constraint", kind: "adversarial", input: { constraint: K, next: {} }, expect: { gap: "n" }, provenance: PROV },
+  { id: "constraint.null_field_is_a_gap", contract: "pillar:constraint", kind: "adversarial", input: { constraint: K, next: { n: null } }, expect: { gap: "n" }, provenance: PROV },
+  { id: "constraint.no_id_refused", contract: "pillar:constraint", kind: "regression", input: { define: { name: "x", type: "hard", needs: [], check: { field: "n", below: 1 } } }, expect: { fails: "id" }, provenance: PROV },
+  { id: "constraint.unknown_type_refused", contract: "pillar:constraint", kind: "adversarial", input: { define: { id: "z", name: "x", type: "vibes", needs: [], check: { field: "n", below: 1 } } }, expect: { fails: "type" }, provenance: PROV },
+]
+fn cases() = CASES
