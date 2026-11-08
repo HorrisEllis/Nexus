@@ -82,7 +82,7 @@ import), the credential scan in `lib/repo-history.js`, and the dependency graphs
 >
 > Send me your idea, however rough. Voice notes are fine.
 
-**Tags:** software specification · project plan · ai development · technical architecture · product requirements
+**Tags:** software spec · project plan · ai development · tech architecture · product requirements
 
 **Packages (suggested):**
 
@@ -121,7 +121,7 @@ the DAG every phase needs (`lib/phase-dag.js`), and the decisions recorded with 
 >
 > AI-assisted, human-directed. Every claim in my reports points at your code.
 
-**Tags:** software architecture · system design · microservices · design review · scalability
+**Tags:** architecture review · system design · microservices · design review · scalability
 
 **Packages (suggested):**
 
