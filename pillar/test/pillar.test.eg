@@ -18,10 +18,14 @@ test "what Pillar offers is its hooks" {
   expect pillar.Pillar.hooks.out == ["answer"]
 }
 
-test "no contracts yet, said, not pretended" {
+// 2026-11-08 PIL2: the contracts are served; the one primitive not grounded (Relation) is named, not pretended. (Before PIL2 this test was
+// "no contracts yet, said, not pretended"; that truth ended with PIL2.)
+test "the contracts are served, and an open primitive is said" {
   send pillar.Pillar.contracts {}
-  expect last.ok and len(last.value) == 0 and last.why != null
+  expect last.ok and len(last.value) == 15 and last.why contains "Relation"
   send pillar.Pillar.contract { id: "pillar:constraint" }
+  expect last.ok and last.value.meaning == "reduces valid future states"
+  send pillar.Pillar.contract { id: "pillar:nothing" }
   expect not last.ok
   send pillar.Pillar.check { id: "pillar:constraint", impl: "x" }
   expect not last.ok

@@ -37,7 +37,8 @@ test('PI-02', 'Pillar is a component in Emerge\'s registry; its hooks are what i
   assert.deepStrictEqual([reg.record.id, reg.record.namespace, reg.record.version], ['pillar.kernel', 'pillar', '0.1.0']);
   assert.match(reg.record.uuid, /^emerge-component-/);
   const ins = reg.hooks.filter(h => h.direction === 'in').map(h => h.name).sort();
-  const pil = top(path.join(PIL, 'pillar.eg')); assert.deepStrictEqual(pil.map(s => [s.type, s.name]), [['Compartment', 'Pillar']], 'pillar.eg is one component and nothing else');
+  // 2026-11-08 PIL2: a `use` defines nothing (the contracts are composed in from pillar/contracts/, as PIL2's files: name them), so it is not counted
+  const pil = top(path.join(PIL, 'pillar.eg')).filter(s => s.type !== 'Use'); assert.deepStrictEqual(pil.map(s => [s.type, s.name]), [['Compartment', 'Pillar']], 'pillar.eg is one component and nothing else');
   const cli = fs.readFileSync(path.join(PIL, 'cli.eg'), 'utf8');
   const cmds = [...cli.matchAll(/cmd == "([a-z_]+)"/g)].map(m => m[1]).filter(c => !['help', 'version', 'registry', 'conform'].includes(c)).sort();
   assert.deepStrictEqual(cmds, ins, 'every in hook has a command, every command sends to a hook');

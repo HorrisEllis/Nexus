@@ -1,0 +1,38 @@
+// pillar/test/contracts.test.eg — PIL2's proof, in Emerge: run with  eg test pillar/test/contracts.test.eg
+use "../contracts/contracts.eg" as C
+
+let CENSUS = ["Constraint", "Transition", "Observation", "Gap", "Lens", "Seed", "History", "Level", "Budget", "Field", "Relation", "Identity",
+  "Expectation", "Link", "Event", "Gate"]
+
+test "every contract is valid, and each concept exists once (PIL-001)" {
+  let r = C.check_all()
+  for e in r.errors { print(e) }
+  expect r.ok
+}
+test "the census is covered: every primitive has its contract or is an open gap that names what is missing" {
+  var covered = []
+  for c in C.contracts() { covered = push(covered, lower(slice(c.id, 7))) }
+  for g in C.gaps() { covered = push(covered, lower(g.primitive)) }
+  for name in CENSUS { expect covered contains lower(name) }
+  expect len(C.contracts()) + len(C.gaps()) == len(CENSUS)
+}
+test "a second contract with one meaning is refused, both named" {
+  let one = C.contract("pillar:gap")
+  var copy = {}
+  for k, v in one { copy[k] = v }
+  copy.id = "pillar:gap2"
+  let r = C.check_all(push(C.contracts(), copy))
+  expect not r.ok
+  var named = false
+  for e in r.errors { if e contains "pillar:gap2 and pillar:gap" { named = true } }
+  expect named
+}
+test "a missing field is refused, named" {
+  let r = C.validate({ id: "pillar:x", meaning: "m", takes: {}, gives: { a: "b" }, fails: ["f"], from: [{ set: "emerge" }] })
+  expect not r.ok
+  expect r.errors[0] contains "version is missing"
+}
+test "a set Pillar does not merge from is refused" {
+  let r = C.validate({ id: "pillar:x", meaning: "m", takes: {}, gives: { a: "b" }, fails: ["f"], from: [{ set: "elsewhere" }], version: "1.0.0" })
+  expect not r.ok
+}
