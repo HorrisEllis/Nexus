@@ -36,8 +36,8 @@
       const grp = sv('g', { class: 'pl-box', transform: `translate(${p.x},${p.y})`, style: `--k:${k}`, 'data-box': b.id, 'data-kind': b.kind });
       grp.appendChild(sv('rect', { class: 'body', width: W, height: H, rx: 9 }));
       grp.appendChild(sv('rect', { class: 'chip', x: 10, y: 13, width: 28, height: 28, rx: 7 }));
-      const t = sv('text', { class: 't', x: 48, y: 24 }); t.textContent = String(b.ref).slice(0, 22); grp.appendChild(t);
-      const s = sv('text', { class: 's', x: 48, y: 40 }); s.textContent = `${b.kind} · ${b.id}${b.gate ? ' · gated' : ''}`; grp.appendChild(s);
+      const t = sv('text', { class: 't', x: 48, y: 24 }); t.textContent = String(b.label || b.ref).slice(0, 22); grp.appendChild(t);
+      const s = sv('text', { class: 's', x: 48, y: 40 }); s.textContent = `${b.id}${b.gate ? ' · gated' : ''}`;   // no kind shown (his, 2026-11-08: "no need to show kinds in the ui"); the kind is the colour grp.appendChild(s);
       grp.appendChild(sv('circle', { class: 'port', cx: 0, cy: H / 2, r: 5 })); grp.appendChild(sv('circle', { class: 'port', cx: W, cy: H / 2, r: 5 }));
       grp.addEventListener('click', () => { svg.querySelectorAll('.pl-box.sel').forEach(x => x.classList.remove('sel')); grp.classList.add('sel');
         $('pl-detail').textContent = JSON.stringify({ id: b.id, kind: b.kind, ref: b.ref, hooks: b.hooks, contract: b.contract, gate: b.gate, args: b.args }, null, 2); });

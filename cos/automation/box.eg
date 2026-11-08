@@ -29,7 +29,8 @@ fn ref_of(step: map): string {
 fn to_box(t: map): map {
   var g = null
   if has(t, "gate") { g = t.gate }
-  return { id: t.id, kind: kind_of(t.step.type), ref: ref_of(t.step), hooks: { in: ["in"], out: ["out"] },
+  // the step's own words when it has them (his pipelines label every task: "Scope & Pricing: each package"); the ref when it has none
+  return { id: t.id, kind: kind_of(t.step.type), ref: ref_of(t.step), label: get(t, "label", ref_of(t.step)), hooks: { in: ["in"], out: ["out"] },
     contract: { requires: get(t, "depends_on", []), gives: ["output"] }, gate: g, args: { task: t } }
 }
 
@@ -161,7 +162,7 @@ fn to_erv(g: map, name: string): map {
     var r = 0
     for x in rows { if x == c { r = r + 1 } }
     rows = push(rows, c)
-    tools = push(tools, { id: b.id, kind: "tool", tool: "eravos.orchestration.box", label: b.ref, on: true, locked: false,
+    tools = push(tools, { id: b.id, kind: "tool", tool: "eravos.orchestration.box", label: get(b, "label", b.ref), on: true, locked: false,
       at: { x: 40 + c * 320, y: 40 + r * 230, w: 260, h: 190 },
       state: { params: { kind: b.kind, ref: b.ref, step: b.id, state: "" }, extra: { box: b, kinds: KINDS, last: null } } })
   }

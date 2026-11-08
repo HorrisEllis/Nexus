@@ -19,6 +19,7 @@ test "every kind of step becomes a box with in and out hooks; wires come from de
   expect map(g.boxes, fn(b) = b.ref) == ["Fiverr gig - choose category", "pricing-table", "update check", "extract"]
   expect g.boxes[0].hooks.in == ["in"] and g.boxes[0].hooks.out == ["out"]
   expect g.boxes[0].gate == { notEmpty: true }
+  expect g.boxes[0].label == "Overview" and g.boxes[1].label == "pricing-table", "its own words, or the ref when it has none"
   expect len(g.wires) == 4 and g.wires[0] == { from: "overview.out", to: "pricing.in" }
 }
 
