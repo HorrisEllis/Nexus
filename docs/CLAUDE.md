@@ -597,3 +597,17 @@ more and log it in proof of componetency and concept"
   entry is written when a thread has evidence. Until then it's listed as concept, with its open predictions.
 - **The tension meter** (his open loop, CIE_D6) is a thread's measure too. Each session adds one line to `BENCHMARKS.md`: JS lines left
   against sessions left.
+
+## ADDENDUM 2026-11-08 — the order changes: automation with COS as the engine, then Emerge, then WARP 2 and the field (his); this file stops loading by itself
+James, 2026-11-08: "Synthesize the Claude.md with the most important parts to save your context window. The automation. Find the handoff doc.
+This will be huge. It’s all heading towards something massive. Ripples, waves, tidal waves of change if I can help it. Automation needs done,
+orchastrator as the engine, which need to be cos now. Then emerge needs to get done. Than warp 2 with the constraint relational field"
+- **The order (his):**
+  1. automation, with COS as the engine (the Orchestrator's engine, docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec, goes to COS);
+  2. Emerge done (the JavaScript removed);
+  3. WARP 2 and the constraint relational field.
+
+  This supersedes the 2026-11-06 focus ("Emerge first then fiverr"), which stays above (§0.3).
+- **The handoff** is `handoff_2026_11_08` in docs/2026-11-08-pipeline-canvas-phasemap.spec.
+- **The root CLAUDE.md is now the distillation, and this file is no longer imported into every session.** It stays whole, the full contract, and
+  sessions open the part they need. The previous root file is docs/_archive/CLAUDE.root.before-2026-11-08.md.
