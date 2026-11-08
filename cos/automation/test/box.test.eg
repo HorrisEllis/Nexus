@@ -96,7 +96,7 @@ test "an ERAVOS project (.erv): one Box tool per step, laid out by the DAG, the 
   expect e.erv == 1 and e.name == "Gig"
   let tl = find(e.layers, fn(l) = l.id == "tools").layers
   let wl = find(e.layers, fn(l) = l.id == "wires").data
-  expect all(tl, fn(t) = t.tool == "eravos.orchestration.box")
+  expect all(tl, fn(t) = t.tool == "eravos.agents.box")
   expect map(tl, fn(t) = t.state.params.kind) == ["macro", "pipeline", "system", "tool"]
   expect map(tl, fn(t) = t.at.x) == [40, 360, 680, 1000]
   expect len(wl) == 4 and wl[0] == { from: ["overview", "box.hook.out"], to: ["pricing", "box.hook.in"], type: "dataflow" }

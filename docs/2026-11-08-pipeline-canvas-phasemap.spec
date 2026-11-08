@@ -393,3 +393,14 @@ handoff_2026_11_08: >-
 #   typed), contract, last value (emergent). Every edit, undo and redo reaches the tool live. P153 2/2; boundary 10/10.
 # - His rule, kept for every UI from here: a preview first, his feedback, then build (ERAVOS HIS-WORDS-MAP N7).
 # - Still his: the name (Step or Compartment).
+
+# ── ADDENDUM 2026-11-08 (0.60.457) — the Box in AI Automation; the Workshop reshapes to the step; no kinds shown ──
+# James, 2026-11-08: "also no need to show kinds in the ui. stop doing that. adding noise to the ui" · "also pricing?" · "Also isn’t ai automation a
+# domain already." · "The ui is meant to dynamically change in relation to the kind. Show me the ui for the workshop" · "I liked the uploaded
+# screenshot. 3d. Is it like that? So why not use that domain? Yes. Follow the spec."
+# - ERAVOS PR #140 (merge d9c2798): the Box is eravos.agents.box in AI Automation (category Steps); the Orchestration domain removed; the step's
+#   Workshop kind is agents.step and reshapes to the step (IN PLAY / NOT IN PLAY from its data, as ERAVOS's UI field); no kind shown anywhere.
+# - Nexus: box.eg writes eravos.agents.box; each box carries the step's own label (his pipelines label every task, e.g. "Scope & Pricing: each
+#   package"); COS's Pipelines page shows no kind word.
+# - The 3D studio layout he liked is the Workshop spec's later phases (ERAVOS specs/eravos.workshop.spec); the flat W1 is what is built.
+# - Still his: the name (Step or Compartment; he said "eravos already uses compartments … thats find actually").
