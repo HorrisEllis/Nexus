@@ -33,6 +33,15 @@ const DEFAULTS = Object.freeze({   // autopilot's constants (the test reads both
 /** every process the systems declare (runtime.process / runtime.processes, lib/cli/compartments.js MG15a), {{root}} filled */
 // CA4 — the Windows service (cos/app/service.js) runs this supervisor in session 0, which has no desktop
 const serviceMode = () => process.env.COS_SERVICE === '1';
+// SC16 (expanded 2026-11-08) — James: "also can we have cos.exe run the command prompts in the background?" Electron reached through its
+// node_modules/.bin launcher is a .cmd on Windows that runs `node …\electron\cli.js` in a console of its own (the empty
+// "C:\Program Files\nodejs\node" window he saw). Electron's own program sits beside it (electron/dist/electron.exe), a windowed app with no
+// console: use it when it is there; otherwise the launcher, as before.
+function realElectron(cmd, platform = process.platform, exists = fs.existsSync) {
+  const m = /^(.*)[\\/]\.bin[\\/]electron(\.cmd)?$/i.exec(String(cmd || '')); if (!m) return cmd;
+  const exe = path.join(m[1], 'electron', 'dist', platform === 'win32' ? 'electron.exe' : platform === 'darwin' ? 'Electron.app/Contents/MacOS/Electron' : 'electron');
+  return exists(exe) ? exe : cmd;
+}
 const isWindowed = (d, c) => /electron/i.test(path.basename(String((c && c.cmd) || (d.process && d.process.cmd) || d.cmd || ''))) || d.window === true;
 
 function readDeclarations(root) {
@@ -94,6 +103,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       const ext = process.platform === 'win32' ? '.cmd' : '';
       const hit = d.cmdCandidates.map(c => c + ext).find(c => fs.existsSync(c));
       if (hit) cmd = hit; else if (ext) cmd += ext;
+      cmd = realElectron(cmd);
     } else if (d.cwd && !path.isAbsolute(cmd) && /[\\/]/.test(cmd)) cmd = path.join(cwd, cmd);
     let args = [...(d.args || [])]; let env = null, via = null;
     const BOUNDARY = path.join(__dirname, '..', 'compartment', 'boundary.js');
@@ -274,4 +284,4 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   return api;
 }
 
-module.exports = { createSupervisor, readDeclarations, DEFAULTS, httpOk, isWindowed };
+module.exports = { createSupervisor, readDeclarations, DEFAULTS, httpOk, isWindowed, realElectron };

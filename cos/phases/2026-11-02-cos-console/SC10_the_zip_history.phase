@@ -7,11 +7,11 @@ intent: null
 summary: SC10_the_zip_history (ui) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793873415702
+exported_at: 1794177105677
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793873415702
-lastSeenAt: 1793873415702
+firstSeenAt: 1794177105677
+lastSeenAt: 1794177105677
 fingerprint: null
 payload:
   id: SC10_the_zip_history
@@ -28,4 +28,4 @@ payload:
     - N27_history_import_from_700_zips
   blocks: []
   spec: cos/spec/cos-console.spec
-  graph: 27fa9927151e981f
+  graph: aa3ba31f42ab0b6f
