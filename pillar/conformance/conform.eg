@@ -1,0 +1,66 @@
+// pillar/conformance/conform.eg — the judge (MOD-PIL-CONFORMANCE, phase PIL3_conformance). Pillar never runs foreign code: an implementation's own
+// harness runs cases_of(id) and hands back its answers; conform judges them. An implementation is conforming only when every case passes and the
+// contract has at least one boundary and one adversarial case (GATE-PIL-CONFORMS); a case without provenance is refused (GATE-PIL3-002).
+// A failing case is a finding, recorded; the implementation is never edited to pass.
+//
+//   cases_of(contract_id) → [ConformanceCase]      conform(contract_id, answers: [{ id, got }]) → { contract, cases, conforming, why }
+use "./constraint.eg" as K_CASES
+
+let BY_CONTRACT = { "pillar:constraint": K_CASES.cases() }
+let KINDS = ["ordinary", "boundary", "adversarial", "regression"]
+
+fn cases_of(id) = get(BY_CONTRACT, id, [])
+
+fn _case_ok(c) {
+  if not (KINDS contains get(c, "kind", "")) { return "{get(c, "id", "?")}: kind is ordinary, boundary, adversarial or regression" }
+  let p = get(c, "provenance", null)
+  if type_of(p) != "map" or not has(p, "source") or not has(p, "signed_off_by") { return "{get(c, "id", "?")}: a case without provenance is refused" }
+  return null
+}
+/** does what came back meet what the case expects: each expected field equal, or a failure whose message names the expected word */
+fn _meets(want, got) {
+  if type_of(got) != "map" { return false }
+  if has(want, "fails") {
+    let e = get(got, "error", null)
+    return e != null and (lower(str(e)) contains lower(want.fails))
+  }
+  if has(got, "error") { return false }
+  for k, v in want {
+    if get(got, k, null) != v { return false }
+  }
+  return true
+}
+
+fn conform(id, answers) {
+  let cs = cases_of(id)
+  if len(cs) == 0 { return { contract: id, cases: [], conforming: false, why: "no cases for {id}" } }
+  var by_id = {}
+  for a in answers { by_id[a.id] = a.got }
+  var out = []
+  var all_ok = true
+  var kinds = {}
+  for c in cs {
+    let bad = _case_ok(c)
+    kinds[c.kind] = true
+    if bad != null {
+      out = push(out, { id: c.id, kind: c.kind, ok: false, got: null, why: bad })
+      all_ok = false
+    } else if not has(by_id, c.id) {
+      out = push(out, { id: c.id, kind: c.kind, ok: false, got: null, why: "no answer from the implementation" })
+      all_ok = false
+    } else {
+      let got = by_id[c.id]
+      let ok = _meets(get(c, "expect", {}), got)
+      if not ok { all_ok = false }
+      var why = null
+      if not ok { why = "expected {get(c, "expect", {})}, got {got}" }
+      out = push(out, { id: c.id, kind: c.kind, ok: ok, got: got, why: why })
+    }
+  }
+  var why = null
+  if not (has(kinds, "boundary") and has(kinds, "adversarial")) {
+    all_ok = false
+    why = "a contract needs a boundary and an adversarial case before anything conforms to it"
+  }
+  return { contract: id, cases: out, conforming: all_ok, why: why }
+}
