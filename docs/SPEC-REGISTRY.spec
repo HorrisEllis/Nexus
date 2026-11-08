@@ -2080,3 +2080,7 @@ spec:
 # and docs/2026-11-07-wiring-harness-phasemap.spec (WH_D0, WH1, WH2). James: "The wiring harness" · "spec it. then lets continue emerge". The
 # template every system's door is built from, beside genesis: each system's .spec carries its harness, its door serves only that, on CIE-EG.
 # Its other four modules are built by phases expanded the same day: DB21, CIE10, CS3, IN5 (the first three taken off the morning's shelf).
+
+# ADDENDUM 2026-11-08 — registered: cos/spec/pipeline-canvas.spec + docs/2026-11-08-pipeline-canvas-phasemap.spec (PC_D0–PC_D4; PC1–PC4).
+# James, 2026-11-08: "steps as boxes, with wires as the flow into the hooks of gates as compartments." One box shape over every kind, procedures and
+# frameworks as steps, the build-request step, the boxes on the ERAVOS canvas. Owner: COS. Compiles in SS-01. PC_D1–PC_D3 asked, his.

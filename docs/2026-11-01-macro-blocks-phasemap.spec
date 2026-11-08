@@ -48,6 +48,10 @@ phases:
     proof: "driven in Clear Glass: a gate added between two blocks, saved, read back from the node, run"
   MB3_one_shape_with_pipelines:
     status: OPEN
+    expanded_2026_11_08_gate_types: >-
+      James, 2026-11-08: "Gates need to be programmable. Maybe compartment types like that cos has." · "Hard corded has to earn its place and a node or api call is better than static." The one gate shape is an instance of a gate type (docs/2026-11-08-pipeline-canvas-phasemap.spec PC5, schema GateType): its check and its actions per outcome are nodes or route calls, and it can offer options.
+    expanded_2026_11_08_pc: >-
+      James, 2026-11-08: "like i want a beautiful visual, steps as boxes, with wires as the flow into the hooks of gates as compartments. boxes can  be gates, systems, agents, macros, pipelines, tools, like a node based canvas for pipelines" · "build pipeline, automation pipeline, debug pipeline, coding pipeline, agnostic pipelines, using dag, contracts, gaps, stepwise, automations, compartments." The one gate shape is also the gate box on the canvas (PC1 Box.gate; PC4). Under PC_D1 reading (a), a gate is the door of a compartment and its hooks are the door's inputs and outputs; under (b), a gate box runs in its own COS compartment. His to settle.
     depends_on: [MB2_the_blocks_ui, OC12_the_survey]   # OC12 added 2026-11-06 (expanded, addendum below)
     files: [cos/spec/gate.spec, cos/gate/gate.js, cos/gate/schema.gate, cos/manager/server.js, cos/manager/contract.json, lib/automation/pipeline.js, clear-glass/renderer/settings/sections/pipelines.js, tests/modules/test-cos-gate.test.js]
     interface: [html]

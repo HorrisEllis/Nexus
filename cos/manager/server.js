@@ -41,6 +41,8 @@ function createServer(sup, opts = {}) {
   sup.setHooks({ adjust: config.adjust });
   const addSystem = require('./add-system.js').createAddSystem(sup, proposals, { root });
   const deploy = require('./deploy.js').createDeploy(sup, proposals);   // OC4a 0.60.445: deploy a task, agent or pipeline to any system, through a proposal
+  // OC8a — the hub: every automation slot, read live from its owner (docs/orchestration-console.spec MOD-OC-HUB)
+  const hub = require('./hub.js').createHub(sup, { own: async (m, p) => { try { if (p.startsWith('/api/cos/deployments')) deploy.deployments(); else proposals.list({}); return { status: 200 }; } catch (_) { return { status: 500 }; } } });
   // DK2 0.60.382 (docs/2026-11-02-cos-disk-phasemap.spec) — James, 2026-11-02: "Use the spec as metadata then have the actual file be a compressed or
   // virtual disk or envirement." Each system's disk: its spec as metadata, its files in one compressed file, in COS's own data
   const disks = require('../disk/disk.js').createDisks({ root });
@@ -164,6 +166,8 @@ function createServer(sup, opts = {}) {
         } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
       // SC4 — add a system: a proposal; his own is taken at once
       // OC4a (docs/orchestration-console.spec MOD-OC-DEPLOY) — James, 2026-11-08: "Also the automation is to deploy agents to systems."
+      // OC8a — James, 2026-11-08: "a hub for the automation pipeline, workflows, tasks ... queues, contracts, dag, it should all be there, waiting to be wired in."
+      if (m === 'GET' && p === '/api/cos/hub') return send(res, 200, { ok: true, ...(await hub.read()) });
       if (m === 'GET' && p === '/api/cos/deployments') return send(res, 200, { ok: true, deployments: deploy.deployments({ system: u.searchParams.get('system') || null }) });
       if (m === 'POST' && p === '/api/cos/deploy') { try { return send(res, 200, { ok: true, ...deploy.propose(body) }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
       { const rc = /^\/api\/cos\/deployments\/([^/]+)\/recall$/.exec(p); if (m === 'POST' && rc) { try { return send(res, 200, { ok: true, deployment: deploy.recall(decodeURIComponent(rc[1]), { by: body.by }) }); } catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } } }

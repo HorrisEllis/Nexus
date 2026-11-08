@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+type: phase
+id: docs_2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+context: pipeline phase EO1_flow_tools of docs/2026-11-01-eravos-orchestration-tools-phasemap.spec
+intent: null
+summary: EO1_flow_tools (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794149069333
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794149069333
+lastSeenAt: 1794149069333
+fingerprint: null
+payload:
+  id: EO1_flow_tools
+  map: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - Eravos-Canvas:tools/orchestration/flow
+    - lib/agent-tools/tools/clear-glass/gate-eval.js
+  depends_on:
+    - EO0_the_domain_and_its_door
+  blocks: []
+  spec: null
+  graph: 5f9514e74b555502

@@ -7,18 +7,20 @@ intent: null
 summary: OC4_deploy_to_any_system (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1794138688718
+exported_at: 1794147147544
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794138688718
-lastSeenAt: 1794138688718
+firstSeenAt: 1794147147544
+lastSeenAt: 1794147147544
 fingerprint: null
 payload:
   id: OC4_deploy_to_any_system
   map: docs/2026-11-01-orchestration-console-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "OC4a DONE 0.60.445 — test-cos-deploy 5/5 (the page in Clear Glass through the real cockpit);
+    OC4b OPEN: agent and pipeline runners"
   files:
     - cos/manager/deploy.js
     - cos/manager/server.js
@@ -34,4 +36,4 @@ payload:
     - MOD-OC-DEPLOY
     - MOD-OC-DEPLOY-PAGE
   spec: docs/orchestration-console.spec
-  graph: 19655cf2e50ec653
+  graph: 79ebab18fbd3fde4

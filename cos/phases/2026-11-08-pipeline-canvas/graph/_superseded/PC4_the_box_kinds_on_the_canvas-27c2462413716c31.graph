@@ -1,0 +1,86 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC4_the_box_kinds_on_the_canvas:27c2462413716c31
+type: graph
+id: phase:PC4_the_box_kinds_on_the_canvas:27c2462413716c31
+context: dependency graph of phase PC4_the_box_kinds_on_the_canvas
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794147443597
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794147443597
+lastSeenAt: 1794147443597
+fingerprint: null
+payload:
+  for: PC4_the_box_kinds_on_the_canvas
+  kind: phase
+  repo: null
+  hash: 27c2462413716c31
+  nodes:
+    - path: tests/modules/test-pipeline-canvas.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO3_work_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+    dependents: []
+    upstream:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO3_work_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO_D0_one_door
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB_D0_blocks_and_gates
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
+    downstream: []
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO3_work_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 4 · blocked by PC1_one_box_shape, EO3_work_tools, EO5_opened_from_cos,
+        MB3_one_shape_with_pipelines
+      - >-
+        depends on (4): PC1_one_box_shape, EO3_work_tools, EO5_opened_from_cos,
+        MB3_one_shape_with_pipelines · all upstream 23
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+        kind: declared
+      - from: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO3_work_tools
+        kind: declared
+      - from: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
+        kind: declared
+      - from: docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+        kind: declared

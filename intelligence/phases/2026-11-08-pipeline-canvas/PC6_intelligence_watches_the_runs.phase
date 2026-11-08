@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
+context: pipeline phase PC6_intelligence_watches_the_runs of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC6_intelligence_watches_the_runs (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794148716169
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794148716169
+lastSeenAt: 1794148716169
+fingerprint: null
+payload:
+  id: PC6_intelligence_watches_the_runs
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - intelligence/pipeline-watch.eg
+    - intelligence/routes.js
+    - intelligence/registry-components.js
+    - tests/modules/test-pipeline-watch.test.js
+  depends_on:
+    - PC1_one_box_shape
+    - PC5_programmable_gate_types
+    - PC_D9_meta_autonomous_agnostic_nonlinear
+  blocks:
+    - MOD-PC-WATCH
+  spec: cos/spec/pipeline-canvas.spec
+  graph: 8b67497714cdf27d

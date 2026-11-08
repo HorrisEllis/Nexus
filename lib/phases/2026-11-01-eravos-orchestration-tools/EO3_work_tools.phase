@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-eravos-orchestration-tools-phasemap.spec::EO3_work_tools
+type: phase
+id: docs_2026-11-01-eravos-orchestration-tools-phasemap.spec::EO3_work_tools
+context: pipeline phase EO3_work_tools of docs/2026-11-01-eravos-orchestration-tools-phasemap.spec
+intent: null
+summary: EO3_work_tools (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794149069337
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794149069337
+lastSeenAt: 1794149069337
+fingerprint: null
+payload:
+  id: EO3_work_tools
+  map: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - Eravos-Canvas:tools/orchestration/work
+    - docs/2026-11-08-pipeline-canvas-phasemap.spec
+  depends_on:
+    - EO2_cos_tools
+    - MB1_the_gate_between
+  blocks: []
+  spec: null
+  graph: f0eeb9303f5d5a61

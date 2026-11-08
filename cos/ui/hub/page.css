@@ -1,0 +1,8 @@
+/* the Hub page (OC8a) — COS's theme */
+.hub-row { display: grid; grid-template-columns: 90px 130px 1fr; gap: 6px 12px; padding: 8px 0; border-top: 1px solid rgba(255,255,255,.06); align-items: center; font-size: 13px; }
+.hub-row:first-child { border-top: 0; }
+.hub-state { font: 11px ui-monospace, monospace; text-transform: uppercase; letter-spacing: .06em; }
+.hub-state.s-wired { color: #34d399; } .hub-state.s-down, .hub-state.s-refused { color: #f87171; } .hub-state.s-waiting { opacity: .6; }
+.hub-owner { font: 12px ui-monospace, monospace; opacity: .8; word-break: break-all; }
+.hub-detail { grid-column: 2 / 4; font-size: 12px; opacity: .65; }
+@media (max-width: 640px) { .hub-row { grid-template-columns: 1fr 1fr; } .hub-owner, .hub-detail { grid-column: 1 / 3; } }

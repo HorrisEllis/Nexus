@@ -94,6 +94,8 @@ phases:
 
   PD4_the_procedure_library:
     status: OPEN
+    expanded_2026_11_08_pc: >-
+      James, 2026-11-08: "we need editable proceedures/frameworks to use as a step by step proceedure. like a macro but i want those to be able to be a step, recursive automation pipelines." A procedure is a step of a pipeline (PC2), editable on the canvas as a box that opens into its own steps (PC4). Under PC_D2 reading (a), his .framework files are read as procedures too, each section a step with a check.
     depends_on: [PD1_procedure_nodes_and_commands]
     files: [procedures/]
     does: >-

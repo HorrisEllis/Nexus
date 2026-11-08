@@ -462,6 +462,8 @@ const SUITES = [
   'test-cg-idle-tray.test.js',
   'test-cos-network.test.js',
   'test-cos-deploy.test.js',
+  'test-cos-hub.test.js',
+  'test-pipeline-box.test.js',
   'test-update-menu.test.js',
   'test-friction-home.test.js',
   'test-cos-ui-starts.test.js',

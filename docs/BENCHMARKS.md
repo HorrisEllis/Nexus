@@ -6,6 +6,31 @@ The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, doc
 then they are written by hand.
 
 
+## 2026-11-08 — one box shape, in Emerge (PC1, 0.60.448)
+- **Measured:** Emerge coding, with his framework's pipeline canvas. The box shape for every step is written in Emerge, and every real
+  `.pipeline` and `.procedure` node in the tree is round-tripped through it.
+- **His words:** "steps as boxes, with wires as the flow into the hooks of gates as compartments" · "using emerge as the language" · "also show me
+  the preview for the ui before building it but bottom up, first."
+- **Method:** Emerge's own `test` blocks, plus test-pipeline-box in the Nexus suite. The suite test is a temporary JavaScript harness that converts
+  the tree's YAML nodes to JSON, because Emerge has no YAML reader yet (CIE14).
+- **Code:** `cos/automation/box.eg` (170 lines), `cos/automation/cli.eg` (42), `cos/automation/test/box.test.eg` (89). That is 301 lines of .eg
+  added and 0 lines of Emerge's JavaScript removed. The suite harness is 55 lines of JavaScript.
+- **Speed:** eg test 8/8 in 0.12 s wall; test-pipeline-box 4/4 in 0.54 s wall.
+- **Result:** both real nodes round-trip unchanged:
+  - fiverr-gig.pipeline: 3 boxes, 2 wires;
+  - update-nexus.procedure: 5 boxes, 4 wires.
+
+  Refused and named: an unknown kind, an id used twice, a ref that names nothing, a wire to a missing hook, and a cycle.
+- **Failed runs before the pass:** 2.
+  1. `state` cannot be a variable name. This is the known keyword gap (CIE14).
+  2. A hook's payload is read-only, a lens. Changing it needs `clone()`. That is by design, not a gap.
+- **Gaps found in Emerge:**
+  - no YAML reader (every node file is YAML);
+  - no folder listing (CIE13's sys_file).
+
+  Both are logged on CIE14.
+- **What came of it:** the canvas and the engine share one file. A wire drawn on a canvas is a `depends_on` in the `.pipeline`.
+
 ## 2026-11-07 — the spec compiler asks Emerge by its command line (CIE8 slice a, 0.60.444)
 - **Measured:** Emerge coding, the first cut toward his CIE_D7 ("as long as its removed from emerge.").
 - **Framework:** end state first. The old in-process answers are the oracle: the new check must give the same message for the same source.
