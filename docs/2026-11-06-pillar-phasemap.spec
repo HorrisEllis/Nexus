@@ -75,7 +75,7 @@ phases:
     proof: "eg run pillar/cli.eg contracts answers; eg check and eg test pass on every pillar/*.eg; no .js in pillar/; test-pillar PI-01 runs them for the Nexus suite"
 
   PIL2_contracts:
-    status: OPEN
+    status: BUILT   # 0.60.453, 2026-11-08: 15 contracts; Relation open (its source is ERAVOS's spec, not in this repository)
     depends_on: [PIL1_pillar_stands, CIE1_the_contract_block]
     spec: pillar/spec/pillar.spec
     blocks: [MOD-PIL-CONTRACTS]
@@ -176,3 +176,21 @@ order: "PIL1 → PIL2 → (PIL3, PIL4) → PIL5; PIL6 after PIL3. PIL_D2 settled
 # supervises), Clock (now, monotonic, sleep, timer, every: what the scheduler and the gate's timing stand on), File (read, write, list,
 # stat, watch). PIL2's proof grows by: each has its contract with its failures named (a refused port, a process that will not die, a
 # clock that goes back).
+
+# ADDENDUM 2026-11-08 (0.60.453) — PIL2_contracts BUILT
+# James, 2026-11-08: "Focus on primitives. Build using emerge right? And any tools or my framework to reduce tokens. Own."
+# - pillar/contracts/contracts.eg: one PrimitiveContract per primitive. Each was read from the code that implements it, never from memory: its
+#   meaning is that code's header line, takes and gives are its signature, and fails are the refusals it already makes. `from` names where each
+#   came from. 15 are grounded: Constraint, Transition, Observation, Gap, Lens, Seed, History, Level, Budget, Field and Identity (emerge/emerge/core),
+#   Link and Expectation (lib/warp/core), Event and Gate (lib/siso).
+# - Relation is an open gap: ERAVOS.kernel.spec is not in this repository, so its meaning is not invented (his "do not guess if you do not know").
+#   Pillar's contracts hook names it. To close: attach the ERAVOS repository or its spec.
+# - Written as Emerge data with validate() enforcing every field of PrimitiveContract, until the schema construct (MOD-STORE) exists to carry it;
+#   PIL-001 enforced by check_all (no two contracts with one id or one meaning).
+# - Proof:
+#     eg test pillar/test/contracts.test.eg 5/5 (every contract valid; the census covered; a duplicate meaning refused with both named; a missing
+#     field refused; an unknown set refused);
+#     pillar.test.eg 4/4 ("no contracts yet" became "the contracts are served, and an open primitive is said");
+#     test-pillar 5/5.
+# - Found and said: the ledger's text subset refused "≥" in a contract (CIE-EG D5), so it is written ">=".
+# - PI-02 narrowed: a `use` line in pillar.eg is not counted, because it defines nothing.

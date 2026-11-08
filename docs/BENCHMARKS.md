@@ -6,6 +6,22 @@ The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, doc
 then they are written by hand.
 
 
+## 2026-11-08 — Pillar's contracts, in Emerge (PIL2, 0.60.453)
+- **Measured:** Emerge coding. The one kernel's contracts, written as Emerge data with an Emerge validator and test.
+- **His words:** "Focus on primitives. Build using emerge right? And any tools or my framework to reduce tokens. Own."
+- **Framework:** end state first; the code as the oracle. Each contract's meaning, inputs, outputs and failures are extracted from the file that
+  implements it: header lines, signatures and throw messages, read by grep, not by reading whole files.
+- **Result:**
+  - 15 contracts and 1 open gap (Relation: ERAVOS's spec is not here);
+  - contracts.test.eg 5/5 on its first run;
+  - pillar.test.eg 4/4 and test-pillar 5/5 after two fixes.
+- **Lines:** .eg +~190 (contracts.eg ~150, the test ~40, pillar.eg +10). JS: +1 line (PI-02's filter), 0 removed.
+- **Failed runs, and what each taught:**
+  1. Emerge's ledger refused "≥" in a contract (D5). The ledger's subset holds the kernel's own text too.
+  2. PI-02 counted a `use` line as a second definition. A module import is composition, not a definition.
+  3. PIL1's test "no contracts yet" ended with PIL2. The test followed the new truth, and its old name is kept in a comment.
+- **What came of it:** Pillar answers with real contracts. PIL3 (conformance cases) and the blind bench (T7) have something to stand on.
+
 ## 2026-11-08 — one box shape, in Emerge (PC1, 0.60.448)
 - **Measured:** Emerge coding, with his framework's pipeline canvas. The box shape for every step is written in Emerge, and every real
   `.pipeline` and `.procedure` node in the tree is round-tripped through it.
