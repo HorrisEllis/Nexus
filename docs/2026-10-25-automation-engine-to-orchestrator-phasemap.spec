@@ -263,6 +263,19 @@ phases:
       step, active, log, catalogue, nodes, export, import), through the same door as the routes, so the two cannot drift. Agents get the row
       cos.automation: reading is any agent's; run, step and import act, so they are the person's, or an agent proposes.
     proof: "test-cos-hub HB-06: the command line answers workflows and catalogue (the procedure step a box kind); one step runs by route; a workflow made by route and run by command puts automation.run.start and automation.run.complete on COS's stream; the contract carries for_eravos and the events. 6/6"
+  expanded_2026_11_08_api_step: >-
+    James, 2026-11-08, asked what "Then step can add the api" means: "API for anything. Agnostic remeber. Nexus systems, APIs from web services.
+    Etc. http sockets etc". Built in 0.60.459, the engine's step 'api' (lib/automation/steps.js, engine.js _apiStep), chosen by the address:
+    http(s):// (a web service, through the http step's own code), ws(s):// (a socket: send, then collect replies to a count or a time limit),
+    tcp://host:port (a raw socket), and nexus://<system>/<path>. The last one's address is given by the host (COS's declarations, setResolver),
+    never by the engine's fixed SYSTEM_PORTS, which stays only as a fallback. Every failure is named. Proof: test-orchestrator-automation OA-09,
+    against a real http, ws and tcp server (9/9). The engine's suites are green.
+  # His answers to the preview's questions, the same day:
+  #   "They need to work completely independent of each other. Like add support to drag .pipeline nodes into Eravos. I want them to stay separate
+  #   projects. But they fit so well." COS's Workflows page is whole on its own: Edit is in COS, not a jump to ERAVOS's canvas. The two meet
+  #   through files: the node format (.pipeline, .workflow), which COS writes and ERAVOS reads. Dragging a .pipeline into ERAVOS is ERAVOS's own
+  #   feature, built in its repository, not here.
+  #   On importing Nexus through Idearium: "What? They’re already in idearium". Nothing to build: the coder's question had misread his words.
   # The UI (AE5, COS's Workflows page) waits on his critique of the preview shown 2026-11-08 (edit here or on ERAVOS's canvas; the page's name;
   # whether the Pipelines page merges into it).
   AE5_ui_and_cleanup:

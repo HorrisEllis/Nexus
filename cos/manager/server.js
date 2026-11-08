@@ -62,6 +62,8 @@ function createServer(sup, opts = {}) {
   // COS runs the automation engine (moved from the orchestrator) and streams its run events on /api/cos/events
   const automation = require('./automation-door.js');
   automation.setBus((type, data) => broadcast(type, data));
+  // the api step's nexus://<system>: the address of a system COS declares, from its health URL (never a fixed port)
+  automation.setResolver((name) => { const d = sup.declarations().find(x => x.name === name || x.system === name); try { return d && d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) { return null; } });
   // PC1 — the box shape, through COS's door (cos/manager/boxes.js → Emerge's cos/automation/box.eg); Idearium's procedures by its route
   const _ideariumGet = (pth) => new Promise((resolve, reject) => {
     const d = sup.declarations().find(x => x.name === 'idearium'); let o; try { o = new URL(d && d.healthUrl).origin; } catch (_) { return reject(new Error('idearium declares no address')); }
