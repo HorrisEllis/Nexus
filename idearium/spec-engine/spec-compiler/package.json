@@ -1,0 +1,7 @@
+{
+  "name": "idearium-spec-compiler",
+  "version": "1.13.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "The spec compiler, moved from Emerge to Idearium on 2026-11-07 (his CIE_D7: \"yeah move it, until we have something to slot in the gap it will leave\"). CommonJS inside Idearium's ES-module package. Its version starts at Emerge's at the move, so its output is byte-identical."
+}
