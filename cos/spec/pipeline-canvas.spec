@@ -25,7 +25,7 @@ spec:
       a gate, a system, an agent, a macro, a pipeline, a procedure, a tool or a build request. A pipeline or procedure box nests its own canvas. A
       step Nexus cannot do becomes a build request that gets the capability built, then lets the run go on.
     target_runtime: [node, browser]
-    language_stack: [javascript, html, css]
+    language_stack: [emerge, javascript, html, css]
     paradigm: [one-shape, dag, owner-serves-by-route, held-acts, recursive-composition]
     axioms: ["§8.6: the engine, the .pipeline node, the .procedure, the gate and the ERAVOS canvas reused, not rebuilt",
       "§10.3: one box shape and one gate shape; the canvas file is the file the engine runs",
@@ -250,6 +250,40 @@ spec:
       error_paths: ["an invalid type → refused, named", "an action's owner down → said, the next action runs"]
       acceptance: ["a gate type runs a stand-in test route, logs a fault by route, offers options; a pick branches the run; an agent's type held; the old words unchanged"]
 
+    - id: MOD-PC-WATCH
+      name: pipeline-watch
+      uuid: cos-pipeline-canvas-watch-v1-0000-2026-1108-001
+      path: intelligence/pipeline-watch.eg
+      phase: PC6_intelligence_watches_the_runs
+      description: >-
+        Intelligence's watch over pipeline runs (James, 2026-11-08: "the intelligence system can find anomolies, bottlenecks, gaps"): anomalies against a
+        box's own history, bottlenecks against its budget and the wait it causes, gaps from the gates. Each finding has its evidence and offers a build
+        box (MOD-PC-BUILD-STEP), held. Reads runs by COS's route (IF-COS-DOOR-PC); written in Emerge.
+      deps: [{ name: box }, { name: build-step }, { name: cos-door-pc }]
+      schema_refs: [Box, BuildRequest]
+      exports: ["findings(runs) → [{ kind: anomaly|bottleneck|gap, box, evidence, offer }]", "GET /api/intelligence/pipelines/findings"]
+      gate_pipeline: ["GATE-PC6-001: every finding names its evidence", "GATE-PC6-002: an offer is held, never filed by itself"]
+      behavioral_contracts: ["no finding without a reading behind it; no history is said as none, never zero"]
+      error_paths: ["COS not answering → no findings, said"]
+      acceptance: ["stand-in runs: the slow box an anomaly, the most-waited box the bottleneck, a gap answer a gap; each offers a held build box"]
+
+    - id: MOD-PC-LOOP
+      name: end-state-loop
+      uuid: cos-pipeline-canvas-loop-v1-0000-2026-1108-001
+      path: cos/automation/loop.eg
+      phase: PC7_iterate_to_the_end_state
+      description: >-
+        The loop toward a project's end state (James, 2026-11-08: "build anything it doesn't have, iterate until it reaches the end state"): run, find
+        what is missing (gates, MOD-PC-WATCH), build it (MOD-PC-BUILD-STEP, Emerge writing the code, COS testing it), run again; stop on the end-state
+        test's pass, a spent budget, or two iterations that change nothing, each said. Written in Emerge.
+      deps: [{ name: build-step }, { name: pipeline-watch }, { name: box }]
+      schema_refs: [BuildRequest, Box]
+      exports: ["iterate({ project, pipeline, budget }) → { reached, iterations[], missing[] }", "POST /api/cos/loops", "row `cos loop`"]
+      gate_pipeline: ["GATE-PC7-001: done only on the end-state test's pass", "GATE-PC7-002: a budget always bounds it", "GATE-PC7-003: a snapshot before each build, a Versionium record after"]
+      behavioral_contracts: ["every iteration is a record", "it never claims the end state without the test"]
+      error_paths: ["budget spent → stops, said, with what is missing", "no change twice → stops, said"]
+      acceptance: ["a stand-in project needing two pieces passes on iteration 3; an unreachable one stops on its budget with what is missing"]
+
     - id: MOD-PC-CANVAS
       name: canvas-boxes
       uuid: cos-pipeline-canvas-canvas-v1-0000-2026-1108-001
@@ -296,3 +330,9 @@ spec:
 # James, 2026-11-08: "Gates need to be programmable. Maybe compartment types like that cos has. Cos and agents can make more types by using schemas
 # or building them from the chunking tool, work surface, etc." · "options are better than neat boxes. Programmable. Hard corded has to earn its place
 # and a node or api call is better than static." Schemas GateType and GateAction, module MOD-PC-GATE-TYPES (PC5). PC_D1 and PC_D8 decided.
+
+# ── ADDENDUM 2026-11-08 — Emerge the language; Intelligence watches; iterate to the end state ──
+# James, 2026-11-08: "meta, autonmous, agsnotic, and nonlinear, is the goal, using emerge as the language. build anything it doesn't have, iterate
+# until it reaches the end state. cos for tests, emerge should build stable code" · "yes .framework. idearium is for project management." Modules are
+# written in Emerge (PC_D4 superseded); JavaScript stays only for the UI and for COS's manager until CIE10/CIE13, said per phase. MOD-PC-WATCH (PC6)
+# and MOD-PC-LOOP (PC7) added. Gaps in Emerge found: no YAML reader, no folder listing (CIE14, CIE13).

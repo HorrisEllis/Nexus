@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794148260956
+exported_at: 1794148716162
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794148260956
-lastSeenAt: 1794148260956
+firstSeenAt: 1794148716162
+lastSeenAt: 1794148716162
 fingerprint: null
 payload:
   for: PC4_the_box_kinds_on_the_canvas
@@ -87,7 +87,6 @@ payload:
     downstream: []
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
-      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
       - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO3_work_tools
       - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
@@ -97,9 +96,8 @@ payload:
     dangling: []
     lines:
       - >-
-        layer 15 · blocked by PC1_one_box_shape, PC_D1_gates_as_compartments,
-        PC5_programmable_gate_types, EO3_work_tools, EO5_opened_from_cos,
-        MB3_one_shape_with_pipelines
+        layer 15 · blocked by PC1_one_box_shape, PC5_programmable_gate_types, EO3_work_tools,
+        EO5_opened_from_cos, MB3_one_shape_with_pipelines
       - >-
         depends on (6): PC1_one_box_shape, PC_D1_gates_as_compartments, PC5_programmable_gate_types,
         EO3_work_tools, EO5_opened_from_cos, MB3_one_shape_with_pipelines · all upstream 47

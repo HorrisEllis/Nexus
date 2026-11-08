@@ -41,7 +41,7 @@ decisions:
       b: "Each gate box runs as a COS compartment of its own, sandboxed. Its check runs in there, and its hooks are that compartment's ports."
     coders_recommendation: "(a). It is the drawbridge he already named, and it adds no process per gate. (b) is possible later for a gate that runs code (a script check)."
   PC_D2_frameworks_as_procedures:
-    status: "ASKED 2026-11-08 — his"
+    status: "DECIDED 2026-11-08 by James — \"yes .framework\": reading (a), his .framework files run as procedures, each section a checked step"
     his_words: "editable proceedures/frameworks to use as a step by step proceedure"
     readings:
       a: "A .framework file of his (docs/innovation-toolkit.framework) can be run as a procedure. Its sections become steps, each with a check of what that section must produce. So 'use my framework' becomes a step a pipeline can hold."
@@ -64,7 +64,10 @@ decisions:
       first consumer of Emerge's code generation and the focus (Emerge first) and this map meet there. Pipelines are agnostic: the box shape names no
       domain; build, automation, debug and coding are templates (OC9).
   PC_D6_idearium_has_a_pipeline:
-    status: "ASKED 2026-11-08 — his"
+    status: >-
+      ANSWERED 2026-11-08 by James: "idearium is for project management." The coder's reading, to confirm: Idearium holds the project, its end state
+      and its phases (what is managed); a pipeline is a project's artifact, kept with the project in Idearium, and COS runs it (closest to b). His
+      self-building loop as the first pipeline on the canvas (a) is not ruled out by it; not assumed either.
     his_words: "idearium has a pipeline"
     readings:
       a: "Idearium's own pipeline (spec → phases → each phase specced → build, the self-building loop) is one of the pipelines drawn and run on the canvas, its first real one."
@@ -94,6 +97,19 @@ decisions:
       better than neat boxes"). stop, skip and retry stay as the first shipped actions, now data (§0.3). The flow is non-linear: an action can wire to
       any box, not only the next.
     by_the_axioms: "his 'hardcoded has to earn its place' (idearium/spec-engine/templates/architecture-spec.template.yaml); §5.15 (an action is a route call); NC0 (a schema for everything reusable); USER_AUTONOMY (options are his to pick)"
+  PC_D9_meta_autonomous_agnostic_nonlinear:
+    status: "DECIDED 2026-11-08 by James"
+    his_words: >-
+      "yes then the intelligence system can find anomolies, bottlenecks, gaps, etc. meta, autonmous, agsnotic, and nonlinear, is the goal, using
+      emerge as the language. build anything it doesn't have, iterate until it reaches the end state. cos for tests, emerge should build stable code,
+      agents. like this is huge." · "gate types, can also use the snapshot engine, versionium and cos. its all connected. agents and copilot and all
+      the agent tools." · "also show me the preview for the ui before building it but bottom up, first."
+    chosen: >-
+      The roles: Intelligence watches every run and finds anomalies, bottlenecks and gaps (PC6); Emerge is the language and writes the code a build
+      needs (PC_D5); COS runs the tests and holds the compartments; Idearium manages the project and its end state (PC_D6); agents, copilot and every
+      agent tool are boxes and gate actions. The loop iterates until the end-state contract passes (PC7). Gate types can act through the snapshot
+      engine, Versionium and COS (PC5). The order is bottom up (PC1 first); the canvas UI is shown to him as a preview before it is built (PC4's
+      prerequisite) — the coder's reading of "show me the preview for the ui before building it but bottom up, first", to confirm.
   PC_D0_reuse_first:
     status: "DECIDED 2026-11-08 by his axioms"
     chosen: >-
@@ -104,7 +120,13 @@ decisions:
       separate engines.
     by_the_axioms: "§8.6 reuse before build; §10.3 one truth per type (one box shape, one gate shape); §5.15 each box reaches its owner by route; §3.3; his 2026-11-03 rule (phases expand)"
   PC_D4_language:
-    status: "DECIDED 2026-11-08 by his axioms; to confirm"
+    status: >-
+      SUPERSEDED 2026-11-08 by James (the text below kept, §0.3): "using emerge as the language" · "emerge should build stable code". PC1–PC7 are
+      written in Emerge (.eg), each a component with hooks in Emerge's own registry (CIE-EG §5, as pillar/). What Emerge lacks is built into Emerge,
+      not worked around (§17.13): found 2026-11-08, Emerge has read_file and parse_json but no YAML reader and no folder listing, and the .pipeline
+      and .procedure nodes are YAML; so the box tests feed JSON, and a test harness in JS converts the tree's YAML for the round-trip, named as
+      temporary until CIE14 (parse_yaml) and CIE13 (sys_file listing) land. Route serving and processes in .eg wait on CIE10 and CIE13; until then
+      COS's manager (JS by its contract) calls the .eg components by eg build output, said on each phase.
     chosen: >-
       COS's manager code is JavaScript by its contract (cos/spec/cos-manager.spec language_stack), and the engine moves into COS as it is (AE_D4). So
       PC1–PC3 land as JavaScript in cos/automation/, and their .eg port follows the engine's (CIE13, CIE10, thread T10). The box shape is written as a
@@ -168,6 +190,7 @@ phases:
     depends_on: [PC1_one_box_shape, PC_D1_gates_as_compartments, PC5_programmable_gate_types, EO3_work_tools, EO5_opened_from_cos, MB3_one_shape_with_pipelines]
     spec: cos/spec/pipeline-canvas.spec
     blocks: [MOD-PC-CANVAS]
+    prerequisites: ["a preview of the canvas shown to him and his go, before the UI is built (his 2026-11-08: 'show me the preview for the ui before building it')"]
     files: [cos/archetype/eravos-canvas/tools/orchestration/work, cos/archetype/eravos-canvas/tools/orchestration/flow, cos/ui/orchestration, tests/modules/test-pipeline-canvas.test.js]
     interface: [html]
     does: >-
@@ -180,6 +203,7 @@ phases:
 
   PC5_programmable_gate_types:
     status: OPEN
+    expanded_2026_11_08: "his 'gate types, can also use the snapshot engine, versionium and cos. its all connected. agents and copilot and all the agent tools.': shipped actions gain snapshot (Idearium's /api/snapshots, before a risky box) and rollback to it, record (Versionium, by lib/versionium-record.js's contract), cos-test (COS runs a test in a compartment), agent-tool (any agent tool through copilot's one door), and watch (PC6)"
     layer: library
     depends_on: [PC1_one_box_shape, PC_D1_gates_as_compartments, PC_D8_options_not_neat_boxes, MB3_one_shape_with_pipelines, PA4_a_gate_after_every_step]
     spec: cos/spec/pipeline-canvas.spec
@@ -198,6 +222,37 @@ phases:
       /api/cos/gate-types, row `cos gate-types`.
     proof: "a step whose gate type runs a stand-in test route closes, logs a fault through a route and offers his options; picking one branches the run; an agent's new type is held until taken; a type that fails the schema is refused, named; the three old onClosed words still run unchanged"
 
+  PC6_intelligence_watches_the_runs:
+    status: OPEN
+    layer: integration
+    depends_on: [PC1_one_box_shape, PC5_programmable_gate_types, PC_D9_meta_autonomous_agnostic_nonlinear]
+    spec: cos/spec/pipeline-canvas.spec
+    blocks: [MOD-PC-WATCH]
+    files: [intelligence/pipeline-watch.eg, intelligence/routes.js, intelligence/registry-components.js, cos/gate/types/, tests/modules/test-pipeline-watch.test.js]
+    requires: [node, "Intelligence answering its route", "COS's ledger and the engine's runs readable by COS's route"]
+    does: >-
+      His "the intelligence system can find anomolies, bottlenecks, gaps". Intelligence reads every pipeline run (by COS's route, never its files) and
+      finds: anomalies (a box whose time, output size or failure rate leaves its own history: CFR's sigma, intelligence/cfr/sigma.js), bottlenecks (a
+      box over its budget, or the box the most time waits on: RFR2's friction), and gaps (a gate that answered gap; a box whose ref names nothing).
+      Each finding is a record with its evidence and offers a build box (PC3) in its place, held for him. A gate type "watch" (PC5) asks Intelligence
+      at any box. Its own route: GET /api/intelligence/pipelines/findings.
+    proof: "on stand-in runs: a box 5× slower than its history is an anomaly; the box most waited on is the bottleneck; a gap answer is a gap; each offers a build box, held"
+  PC7_iterate_to_the_end_state:
+    status: OPEN
+    layer: integration
+    depends_on: [PC3_the_build_request_step, PC6_intelligence_watches_the_runs, RQ15_cells_in_parallel, PC_D9_meta_autonomous_agnostic_nonlinear]
+    spec: cos/spec/pipeline-canvas.spec
+    blocks: [MOD-PC-LOOP]
+    files: [cos/automation/loop.eg, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, tests/modules/test-pipeline-loop.test.js]
+    requires: [node, "Idearium answering the project's end state by route", "Emerge answering its build route"]
+    does: >-
+      His "build anything it doesn't have, iterate until it reaches the end state." A loop pipeline: read the project's end state from Idearium (its
+      contract and its test), run the pipeline, let the gates and Intelligence name what is missing, build each missing piece (PC3, Emerge writing the
+      code, COS running its tests in a compartment, a snapshot before and Versionium recording after), and run again. It stops when the end-state test
+      passes, when a budget (iterations, time, tokens) is spent, or when two iterations in a row change nothing (said, with what is still missing).
+      Every iteration is a record; nothing is claimed done without the end-state test's pass.
+    proof: "a stand-in project whose end state needs two missing pieces: the loop finds both, builds each (stand-in Emerge), passes on iteration 3; a project it cannot reach stops on its budget, said, with what is missing"
+
 expands:
   # the phases that own the rest of the ask, each expanded in its own map with his words (2026-11-08), not rewritten here
   - "EO3_work_tools (docs/2026-11-01-eravos-orchestration-tools-phasemap.spec): the procedure, tool, system and build boxes beside macro, pipeline, workflow and agent"
@@ -209,4 +264,4 @@ expands:
 order: >-
   His readings first (PC_D1, PC_D2, PC_D3). Then PC1, the shape every other piece stands on. Then PC2 and PC3 side by side (different files). EO0 →
   EO2 → EO3 and MB3 run beside them. PC4 comes last, because the canvas draws what PC1–PC3 and the EO tools already run. The coder's estimate,
-  checked against the work and not promised: PC1 one session, PC2 one, PC3 one to two, PC4 two to three with EO0–EO3 (EO is about 2 more). PC5 one to two, beside PC2 and PC3; PC4 draws the gate types PC5 makes.
+  checked against the work and not promised (PC6 and PC7 added the same day, about one session each, after PC3 and PC5): PC1 one session, PC2 one, PC3 one to two, PC4 two to three with EO0–EO3 (EO is about 2 more). PC5 one to two, beside PC2 and PC3; PC4 draws the gate types PC5 makes.

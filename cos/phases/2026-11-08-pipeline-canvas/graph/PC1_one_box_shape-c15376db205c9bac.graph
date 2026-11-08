@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794148260946
+exported_at: 1794148716150
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794148260946
-lastSeenAt: 1794148260946
+firstSeenAt: 1794148716150
+lastSeenAt: 1794148716150
 fingerprint: null
 payload:
   for: PC1_one_box_shape
@@ -58,6 +58,7 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
     upstream:
       - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
       - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
@@ -75,19 +76,23 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 3 · blocked by OC4_deploy_to_any_system
+      - layer 3 · blocked by PC_D4_language, OC4_deploy_to_any_system
       - >-
         depends on (5): PC_D0_reuse_first, PC_D4_language, PL1_pipeline_core,
         PD1_procedure_nodes_and_commands, OC4_deploy_to_any_system · all upstream 11
       - >-
-        needed by (4): PC2_procedures_and_frameworks_as_steps, PC3_the_build_request_step,
-        PC4_the_box_kinds_on_the_canvas, PC5_programmable_gate_types
+        needed by (5): PC2_procedures_and_frameworks_as_steps, PC3_the_build_request_step,
+        PC4_the_box_kinds_on_the_canvas, PC5_programmable_gate_types,
+        PC6_intelligence_watches_the_runs · all downstream 6
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
         kind: declared
