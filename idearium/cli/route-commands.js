@@ -930,6 +930,12 @@ export const SPEC = [
   { key: 'cos.notices', repo: false, usage: 'cos notices [all]', about: 'COS\'s bell: updates, system status and notices kept until read',
     req: (a) => ({ system: 'cos', method: 'GET', path: `/api/cos/notices${a.args[0] === 'all' ? '' : '?unread=1'}` }),
     print: (d, a, h) => { h.header(`${d.counts.unread} unread (${d.counts.update} updates, ${d.counts.system} systems, ${d.counts.notice} notices)`); for (const n of d.notices) console.log(`  ${n.read ? ' ' : '•'} ${n.level.padEnd(5)} ${n.kind.padEnd(7)} ${n.title}${n.body ? ` — ${n.body.slice(0, 100)}` : ''}`); } },
+  // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes." Reading is any agent's;
+  // running a workflow, one step or an import acts, so it is the person's (an agent proposes), as cos cli is.
+  { key: 'cos.automation', repo: false, personOnly: (a) => (['run', 'step', 'import'].includes(a.args[0]) ? 'running the automation engine acts: the person\'s, or an agent proposes (POST /api/cos/proposals)' : null),
+    usage: 'cos automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file>',
+    about: 'the automation engine COS runs: workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, nodes',
+    req: (a) => ({ system: 'cos', method: 'POST', path: '/api/cos/cli', body: { line: ['automation', ...a.args].join(' '), by: 'person' } }) },
   { key: 'cos.cli', repo: false, personOnly: () => 'COS\'s command line acts as you; an agent proposes (POST /api/cos/proposals) or reads (cos config, cos notices)', usage: 'cos cli <line>  (e.g. cos cli add my-service my-service port=3790)', about: 'run a line of COS\'s own command line in its manager (help lists its table)',
     req: (a) => ({ system: 'cos', method: 'POST', path: '/api/cos/cli', body: { line: a.args.join(' '), by: 'person' } }),
     print: (d) => { for (const l of d.lines || []) console.log(l); } },

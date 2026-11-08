@@ -3,11 +3,91 @@
   "version": "1.0.0",
   "about": "COS's manager: every route, event and page it serves. The UI and agents read this, not the code (\u00a75.10). Spec: cos/spec/cos-manager.spec MOD-MG-CONTRACT. Map: docs/2026-10-24-cos-manager-phasemap.spec MG18, MG_D16.",
   "origin": "James, 2026-10-31: \"okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered, cheap, or lazy\"",
+  "automation_events": {
+    "stream": "GET /api/cos/events (text/event-stream); an automation event's name starts with automation.",
+    "events": ["automation.run.start", "automation.run.complete", "automation.run.error", "automation.log", "automation.notify", "automation.condition.evaluated", "automation.workflow.created", "automation.workflow.removed"],
+    "origin": "AE7 (2026-11-08), James: \"Then an api that eravos can use for the step. So needs full cli commands, events, nodes.\""
+  },
+  "for_eravos": {
+    "about": "How ERAVOS (or any system) uses COS's automation engine as a step, by route only (\u00a75.10): never its files.",
+    "box_kinds": "GET /api/cos/automation/catalogue",
+    "run_one_step": "POST /api/cos/automation/step { step: { type, config }, vars? }",
+    "run_a_workflow": "POST /api/cos/automation/workflows/:id/run",
+    "watch": "GET /api/cos/events, the automation.* events",
+    "nodes": "GET /api/cos/automation/nodes; GET /workflows/:id/export; POST /import",
+    "command_line": "cos automation workflows | run <id> | step <type> [key=value ...] | active | log [n] | catalogue | nodes | export <id> | import <file>",
+    "agents": "the row cos.automation: reading is any agent's; run, step and import act, so they are the person's, or an agent proposes"
+  },
   "routes": [
     {
-      "method": "GET|POST|PATCH|DELETE",
-      "path": "/api/cos/automation/*",
-      "out": "the automation engine's door (AE6 slice a, moved from the orchestrator): /workflows, /log, /scripts, /catalogue, /templates, /active, /pipelines, /hook/<id> (lib/automation/routes.js)"
+      "method": "GET",
+      "path": "/api/cos/automation/workflows",
+      "out": "{ workflows: Workflow[] } (each with nextRunAt)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/automation/workflows",
+      "out": "{ name, steps, status? } → { ok, workflow }"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/automation/workflows/:id/export",
+      "out": "the workflow as a node"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/automation/workflows/:id/run",
+      "out": "{ vars? } → the run"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/automation/step",
+      "out": "{ step: { type, config }, vars? } → one step run on its own: what an ERAVOS box calls"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/automation/catalogue",
+      "out": "{ catalogue, trigger, common, ops }: the step kinds (an ERAVOS box's kinds)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/automation/templates",
+      "out": "{ templates }"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/automation/active",
+      "out": "{ runs }: runs in progress"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/automation/runs",
+      "out": "the run history; POST /runs/:id/cancel stops one"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/automation/log",
+      "out": "{ log } (?limit=, ?workflowId=)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/automation/nodes",
+      "out": "{ dir, nodes }: workflows, macros and pipelines as node files"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/automation/import",
+      "out": "a node (workflow) → { ok, workflow }"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/automation/pipelines",
+      "out": "{ pipelines }; POST creates; /pipelines/:id/run runs"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/automation/hook/:id",
+      "out": "a webhook (?token=); the one route another machine may call"
     },
     {
       "method": "GET",

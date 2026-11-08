@@ -27,6 +27,8 @@ const TABLE = [
   ['add', 'add <name> <folder> [cmd=node] [args=server.js] [port=<n>] [health=/health]', 'add a system: a proposal, taken by you'],
   ['disk', 'disk <system> [make] [state] | disk verify <file>', 'a system\'s disks (its spec as metadata, its files in one compressed file); make one, with its data if you say state; verify one'],
   ['disks', 'disks', 'every disk COS holds'],
+  // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes."
+  ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file>', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
   ['vdisk', 'vdisk <system> [make|refresh|verify] | vdisk <system> snapshot|revert|drop <tag>', 'its virtual disk (qcow2): metadata, files and all its data in one file, its snapshots inside'],
 ];
 
@@ -89,6 +91,23 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
           if (op === 'snapshot' || op === 'revert' || op === 'drop') { need(3, row[1]); sup.note('vdisk', `${op} ${tag}`, { by, system: name }); const r = op === 'snapshot' ? vdisks.snapshot(name, tag, { by }) : op === 'revert' ? vdisks.revert(name, tag, { by }) : vdisks.dropSnapshot(name, tag, { by }); L.push(`${name}: ${op} ${tag} done${r.snapshots ? ` · snapshots: ${r.snapshots.map(s => s.tag).join(', ') || 'none'}` : ''}`); break; }
           const i = vdisks.info(name); L.push(`${i.file}: ${i.format}, ${mb(i.actualSize)} on disk of ${mb(i.virtualSize)} · ${i.metadata.fileCount} files · made ${i.metadata.created.slice(0, 16).replace('T', ' ')} by ${i.metadata.by}`);
           for (const s of i.snapshots) L.push(`  snapshot ${pad(s.tag, 20)}${s.at ? s.at.slice(0, 16).replace('T', ' ') : ''}${s.vmState ? ' · with its memory' : ''}`); break;
+        }
+        case 'automation': {
+          // the same door as /api/cos/automation/*, so the command line and the routes never drift (cos/manager/automation-door.js)
+          const door = require('./automation-door.js');
+          const call = async (method, url, body) => { const r = await door.handle({ method, url: '/automation' + url, body: body || {} }); if (!r || r.status >= 400) throw new Error((r && r.body && r.body.error) || `${method} ${url}: ${r ? r.status : 'no answer'}`); return r.body; };
+          const sub = a[0] || 'workflows';
+          if (sub === 'workflows') { const r = await call('GET', '/workflows'); if (!r.workflows.length) L.push('no workflows yet'); for (const w of r.workflows) L.push(`${pad(w.status, 9)}${pad(w.id.slice(0, 8), 10)}${w.name}${w.nextRunAt ? ' · next ' + new Date(w.nextRunAt).toISOString().slice(0, 16).replace('T', ' ') : ''}`); }
+          else if (sub === 'run') { need(2, row[1]); const r = await call('POST', `/workflows/${encodeURIComponent(a[1])}/run`, { by }); L.push(r.ok === false ? `refused: ${r.error}` : `ran ${a[1]}: ${r.status || 'started'}`); }
+          else if (sub === 'step') { need(2, row[1]); const cfg = {}; for (const kv of a.slice(2)) { const i = kv.indexOf('='); if (i > 0) cfg[kv.slice(0, i)] = kv.slice(i + 1); } const r = await call('POST', '/step', { step: { type: a[1], config: cfg } }); L.push(JSON.stringify(r)); }
+          else if (sub === 'active') { const r = await call('GET', '/active'); if (!r.runs.length) L.push('nothing running'); for (const x of r.runs) L.push(`${x.workflowName || x.workflowId} · step ${x.step || '?'}`); }
+          else if (sub === 'log') { const r = await call('GET', `/log?limit=${Number(a[1]) || 20}`); for (const e of r.log) L.push(`${new Date(e.ts || e.at || Date.now()).toISOString().slice(11, 19)} ${e.msg || e.message || JSON.stringify(e)}`); if (!r.log.length) L.push('the log is empty'); }
+          else if (sub === 'catalogue') { const r = await call('GET', '/catalogue'); for (const s of r.catalogue) L.push(`${pad(s.type, 18)}${s.label}`); }
+          else if (sub === 'nodes') { const r = await call('GET', '/nodes'); L.push(`nodes in ${r.dir}`); for (const n of (r.nodes || r.files || [])) L.push(`  ${n.file || n.name || JSON.stringify(n)}`); }
+          else if (sub === 'export') { need(2, row[1]); const r = await call('GET', `/workflows/${encodeURIComponent(a[1])}/export`); L.push(JSON.stringify(r)); }
+          else if (sub === 'import') { need(2, row[1]); const text = require('fs').readFileSync(a[1], 'utf8'); const r = await call('POST', '/import', JSON.parse(text)); L.push(r.ok === false ? `refused: ${r.error}` : `imported ${a[1]}`); }
+          else throw new Error(`automation ${sub}: not a subcommand — ${row[1]}`);
+          break;
         }
         case 'disks': { if (!disks) throw new Error('no disks in this manager'); const ds = disks.list(); if (!ds.length) L.push(`no disks yet (${disks.dir})`); for (const d of ds) L.push(`${pad(d.file, 52)}${pad(Math.round(d.bytes / 1024) + ' KB', 10)}${pad(d.files + ' files', 12)}${d.created.slice(0, 16).replace('T', ' ')} · ${d.by}`); break; }
         case 'disk': {
