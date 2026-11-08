@@ -108,12 +108,21 @@ phases:
     does: "occurrences in a window from records and schedules; reschedule edits the task file"
     proof: "MOD-OC-CALENDAR's acceptance"
   OC4_deploy_to_any_system:
-    status: OPEN
+    status: "OC4a DONE 0.60.445 — test-cos-deploy 5/5 (the page in Clear Glass through the real cockpit); OC4b OPEN: agent and pipeline runners"
     depends_on: [OC1_task_nodes]
     spec: docs/orchestration-console.spec
-    blocks: [MOD-OC-DEPLOY]
-    files: [cos/manager/deploy.js, cos/manager/server.js, cos/manager/contract.json, tests/modules/test-cos-deploy.test.js]
-    interface: [route, cli]
+    blocks: [MOD-OC-DEPLOY, MOD-OC-DEPLOY-PAGE]
+    files: [cos/manager/deploy.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/deployments/index.html, cos/ui/deployments/page.js, cos/ui/deployments/page.css, idearium/cli/route-commands.js, tests/modules/test-cos-deploy.test.js]
+    requires: [COS's manager running; the target system declared to COS with a healthUrl (its own address) for a task to run there]
+    prerequisites: [OC1_task_nodes built (lib/automation/task-node.js validateTask)]
+    expanded_2026_11_08: >-
+      James, 2026-11-08, choosing OC4 before going back to Emerge: "can we do that? 0c4? then back to emerge. how long will that take?" (the coder
+      estimated one session). Sliced by what runs today, said: OC4a — the deployment's whole lifecycle (proposed through COS's proposals, his own
+      taken in the same click, an agent's held for him; recalled; every step on COS's ledger; GET/POST routes; `cos deploy` rows; the cockpit's
+      Deployments page) and a TASK run on its target system (do.kind command, ref "<METHOD> <path>", called on that system's own address).
+      OC4b — agent and pipeline runners (a hat handed to copilot, a pipeline to Clear Glass, each through its routes); until then such a
+      deployment is recorded and says "no runner yet (OC4b)". Reuses proposals.register (SC4's add-system pattern), not a second mechanism.
+    interface: [route, cli, html]
     does: "an agent, task or pipeline deployed to any system's compartment through a COS proposal"
     proof: "MOD-OC-DEPLOY's acceptance"
   OC5_every_agent_tool:

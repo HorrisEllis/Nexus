@@ -1,0 +1,12 @@
+/* the Deployments page (OC4a) — COS's theme */
+.dp-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.dp-form label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; opacity: .85; }
+.dp-form label.grow { flex: 1; min-width: 200px; } .dp-form input, .dp-form select { min-width: 120px; }
+.dp-msg:empty { display: none; } .dp-msg { margin-top: 10px; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.12); }
+.dp-msg.bad { border-color: #f87171; color: #f87171; } .dp-msg.ok { border-color: #34d399; color: #34d399; }
+.dp-row { display: grid; grid-template-columns: 110px 120px 1fr 90px; gap: 6px 12px; padding: 8px 0; border-top: 1px solid rgba(255,255,255,.06); align-items: center; font-size: 13px; }
+.dp-row:first-child { border-top: 0; }
+.dp-state { font: 11px ui-monospace, monospace; text-transform: uppercase; letter-spacing: .06em; }
+.dp-state.done { color: #34d399; } .dp-state.failed { color: #f87171; } .dp-state.running { color: #38bdf8; } .dp-state.stopped, .dp-state.taken { opacity: .7; }
+.dp-detail { grid-column: 3 / 5; font: 11px ui-monospace, monospace; opacity: .65; word-break: break-all; }
+@media (max-width: 640px) { .dp-row { grid-template-columns: 1fr 1fr; } .dp-detail { grid-column: 1 / 3; } }
