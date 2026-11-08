@@ -1,7 +1,7 @@
 {
   "schema": "nexus.cos.manager-contract/1",
   "version": "1.0.0",
-  "about": "COS's manager: every route, event and page it serves. The UI and agents read this, not the code (§5.10). Spec: cos/spec/cos-manager.spec MOD-MG-CONTRACT. Map: docs/2026-10-24-cos-manager-phasemap.spec MG18, MG_D16.",
+  "about": "COS's manager: every route, event and page it serves. The UI and agents read this, not the code (\u00a75.10). Spec: cos/spec/cos-manager.spec MOD-MG-CONTRACT. Map: docs/2026-10-24-cos-manager-phasemap.spec MG18, MG_D16.",
   "origin": "James, 2026-10-31: \"okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered, cheap, or lazy\"",
   "routes": [
     {
@@ -68,12 +68,12 @@
     {
       "method": "GET",
       "path": "/api/cos/walls",
-      "out": "{ walls: CompartmentWall[] (cos/spec/compartment.spec), counts: { enforce, audit, bare, enforceReady } } — CP1a, 2026-11-01"
+      "out": "{ walls: CompartmentWall[] (cos/spec/compartment.spec), counts: { enforce, audit, bare, enforceReady } } \u2014 CP1a, 2026-11-01"
     },
     {
       "method": "GET",
       "path": "/api/cos/resources",
-      "out": "{ resources: { host, reader, incident, systems: [{ caps, now, account }] } } — CP6a; ?fresh=1 samples first"
+      "out": "{ resources: { host, reader, incident, systems: [{ caps, now, account }] } } \u2014 CP6a; ?fresh=1 samples first"
     },
     {
       "method": "GET",
@@ -125,12 +125,12 @@
     {
       "method": "GET",
       "path": "/api/cos/emergence/:what",
-      "out": "patterns → Intelligence's crystallised patterns (each with said, self); liminal → { status, items }; sessions → his emergence runs (lib/emergence.js). 503 names a silent Intelligence. TV3, 2026-11-01."
+      "out": "patterns \u2192 Intelligence's crystallised patterns (each with said, self); liminal \u2192 { status, items }; sessions \u2192 his emergence runs (lib/emergence.js). 503 names a silent Intelligence. TV3, 2026-11-01."
     },
     {
       "method": "GET",
       "path": "/api/cos/update/notice",
-      "out": "{ show, kind: available|blocked|error|updated|none, title, text, current, latest, at, updatesPage } — what the last automatic update check means (UP9, 2026-11-01)"
+      "out": "{ show, kind: available|blocked|error|updated|none, title, text, current, latest, at, updatesPage } \u2014 what the last automatic update check means (UP9, 2026-11-01)"
     },
     {
       "method": "GET",
@@ -168,7 +168,7 @@
     {
       "method": "PATCH",
       "path": "/api/cos/systems/:name/config",
-      "in": "{ patch: { 'memory.limit': '25%', 'cpu.limit': '2 cores', 'network.port': 3760, 'env.FOO': 'bar', … }, by }",
+      "in": "{ patch: { 'memory.limit': '25%', 'cpu.limit': '2 cores', 'network.port': 3760, 'env.FOO': 'bar', \u2026 }, by }",
       "out": "the configuration after; refused 400 with the unit or setting it wants, 403 for an agent (SC2)"
     },
     {
@@ -181,7 +181,7 @@
       "method": "POST",
       "path": "/api/cos/systems",
       "in": "{ name, dir, cmd?, args?, port?, health?, by, why? }",
-      "out": "{ proposal, taken?, system? } — a proposal (add-system); his own is taken at once: <dir>/compartment.json written, declared live (SC4)"
+      "out": "{ proposal, taken?, system? } \u2014 a proposal (add-system); his own is taken at once: <dir>/compartment.json written, declared live (SC4)"
     },
     {
       "method": "GET",
@@ -192,7 +192,7 @@
       "method": "POST",
       "path": "/api/cos/cli",
       "in": "{ line, by }",
-      "out": "{ ok, lines[] } — COS's own command line over its own functions (SC3)"
+      "out": "{ ok, lines[] } \u2014 COS's own command line over its own functions (SC3)"
     },
     {
       "method": "GET",
@@ -208,7 +208,7 @@
     {
       "method": "GET",
       "path": "/api/cos/update/history",
-      "out": "{ history[] } — every update, keep-local and rollback, newest first (SC7)"
+      "out": "{ history[] } \u2014 every update, keep-local and rollback, newest first (SC7)"
     },
     {
       "method": "POST",
@@ -224,12 +224,12 @@
     {
       "method": "GET",
       "path": "/api/cos/disks/:file",
-      "out": "{ disk } — its metadata (disk.json without the file list): system, declaration, spec, coverage, base, layers (DK2)"
+      "out": "{ disk } \u2014 its metadata (disk.json without the file list): system, declaration, spec, coverage, base, layers (DK2)"
     },
     {
       "method": "GET",
       "path": "/api/cos/disks/:file/verify",
-      "out": "{ verify { ok, files, changed[], missing[], extra[] } } — every entry re-hashed against its metadata (DK2)"
+      "out": "{ verify { ok, files, changed[], missing[], extra[] } } \u2014 every entry re-hashed against its metadata (DK2)"
     },
     {
       "method": "GET",
@@ -250,30 +250,49 @@
     {
       "method": "GET",
       "path": "/api/cos/systems/:name/vdisk/verify",
-      "out": "{ verify { ok, files, changed[], missing[] } } — every file re-hashed from inside the qcow2 (?snapshot=<tag>) (DK8)"
+      "out": "{ verify { ok, files, changed[], missing[] } } \u2014 every file re-hashed from inside the qcow2 (?snapshot=<tag>) (DK8)"
     },
     {
       "method": "POST",
       "path": "/api/cos/systems/:name/vdisk/:op",
-      "in": "{ by, tag?, withState? } — op: make | refresh | snapshot | revert | drop-snapshot",
+      "in": "{ by, tag?, withState? } \u2014 op: make | refresh | snapshot | revert | drop-snapshot",
       "out": "the disk after; 403 for an agent; 501 when this host lacks qemu-img or e2fsprogs, saying which (DK8)"
     },
     {
       "method": "GET",
       "path": "/api/cos/network",
-      "out": "{ settings (secrets as { set }), gates: { tunnel|relay|upnp|ddns|ssh: { ok, why } } } — CA3"
+      "out": "{ settings (secrets as { set }), gates: { tunnel|relay|upnp|ddns|ssh: { ok, why } } } \u2014 CA3"
     },
     {
       "method": "PATCH",
       "path": "/api/cos/network",
       "in": "{ patch, by }",
       "personAct": true,
-      "out": "{ settings, changed, gates } | 400 naming the field | 403 for an agent — CA3"
+      "out": "{ settings, changed, gates } | 400 naming the field | 403 for an agent \u2014 CA3"
     },
     {
       "method": "GET",
       "path": "/api/cos/console",
-      "out": "{ lines: [{ system, ts, stream, line }], systems } — every system's last lines (limit, default 500, max 5000; ?system= one), merged in time order (SC11)"
+      "out": "{ lines: [{ system, ts, stream, line }], systems } \u2014 every system's last lines (limit, default 500, max 5000; ?system= one), merged in time order (SC11)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/deployments",
+      "out": "{ deployments: Deployment[] } \u2014 ?system=<name> for one system; OC4a"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/deploy",
+      "in": "{ what: { kind: task|agent|pipeline, ref, task? }, system, by, why }",
+      "personAct": true,
+      "out": "{ proposal, deployment? } \u2014 his own taken in the same click; an agent's held; OC4a"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/deployments/:id/recall",
+      "in": "{ by }",
+      "personAct": true,
+      "out": "{ deployment } \u2014 OC4a"
     }
   ],
   "door": {
@@ -331,14 +350,14 @@
     ]
   },
   "events": {
-    "cos.ledger": "{ entry: SupervisorLedgerEntry } — every line the supervisor writes, as it is written",
-    "cos.system.state": "{ name, state, pid } — a system's state changed",
-    "cos.ui.navigate": "{ to } — a page asks the shell to open a route",
-    "cos.ui.notice": "{ level, text } — a page asks the shell to say something",
-    "cos.ui.tab": "{ tab } — the shell tells a cockpit which tab the address names",
-    "cos.update": "{ phase: started | refused | none | restarted | restart-failed | updated, mode, ... } — the update's steps, as they happen (CE2, 2026-11-02)",
-    "cos.notice": "{ notice, counts } | { read, counts } — the bell: a notice kept, or notices read (SC1, 2026-11-02)",
-    "cos.console": "{ lines: [{ system, ts, stream: out | err, line }], dropped? } — what the systems print, in batches every 200 ms (SC11, 2026-11-05)"
+    "cos.ledger": "{ entry: SupervisorLedgerEntry } \u2014 every line the supervisor writes, as it is written",
+    "cos.system.state": "{ name, state, pid } \u2014 a system's state changed",
+    "cos.ui.navigate": "{ to } \u2014 a page asks the shell to open a route",
+    "cos.ui.notice": "{ level, text } \u2014 a page asks the shell to say something",
+    "cos.ui.tab": "{ tab } \u2014 the shell tells a cockpit which tab the address names",
+    "cos.update": "{ phase: started | refused | none | restarted | restart-failed | updated, mode, ... } \u2014 the update's steps, as they happen (CE2, 2026-11-02)",
+    "cos.notice": "{ notice, counts } | { read, counts } \u2014 the bell: a notice kept, or notices read (SC1, 2026-11-02)",
+    "cos.console": "{ lines: [{ system, ts, stream: out | err, line }], dropped? } \u2014 what the systems print, in batches every 200 ms (SC11, 2026-11-05)"
   },
   "pages": [
     {
@@ -532,7 +551,7 @@
       "route": "#/automation",
       "nav": "main",
       "built": true,
-      "phase": "MG9_the_console_ui (the policy form) · BT1 (Start at boot, each system)",
+      "phase": "MG9_the_console_ui (the policy form) \u00b7 BT1 (Start at boot, each system)",
       "routes": [
         "GET /api/cos/policy",
         "PATCH /api/cos/policy",
@@ -639,7 +658,7 @@
       ],
       "listens": [],
       "emits": [],
-      "about": "what emerges: Intelligence's crystallised patterns, the liminal spaces where they form, and his emergence runs (axioms → end state; innovate the method). One page with the TV's channel: the same script, served read-only from lib/ui/tv-shell/channels/emergence/."
+      "about": "what emerges: Intelligence's crystallised patterns, the liminal spaces where they form, and his emergence runs (axioms \u2192 end state; innovate the method). One page with the TV's channel: the same script, served read-only from lib/ui/tv-shell/channels/emergence/."
     },
     {
       "id": "network",
@@ -655,7 +674,25 @@
       ],
       "listens": [],
       "emits": [],
-      "about": "every way Nexus reaches or is reached from outside — outbound tunnel and rendezvous, inbound UPnP/PCP/NAT-PMP mapping, DDNS, SSH (keys only), TLS, each compartment's switch and throttle — all off until he opens them; each engine's gate shown"
+      "about": "every way Nexus reaches or is reached from outside \u2014 outbound tunnel and rendezvous, inbound UPnP/PCP/NAT-PMP mapping, DDNS, SSH (keys only), TLS, each compartment's switch and throttle \u2014 all off until he opens them; each engine's gate shown"
+    },
+    {
+      "id": "deployments",
+      "title": "Deployments",
+      "path": "deployments/",
+      "route": "#/deployments",
+      "nav": "main",
+      "built": true,
+      "phase": "OC4_deploy_to_any_system",
+      "routes": [
+        "GET /api/cos/deployments",
+        "POST /api/cos/deploy",
+        "POST /api/cos/deployments/:id/recall",
+        "GET /api/cos/systems"
+      ],
+      "listens": [],
+      "emits": [],
+      "about": "deploy a task, an agent or a pipeline to any system, through a COS proposal: every deployment, its state and result, and Recall. Tasks run on their target system today; agent and pipeline runners are OC4b."
     }
   ],
   "planned": [

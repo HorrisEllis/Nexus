@@ -276,6 +276,22 @@ spec:
       error_paths: ["the system down → the proposal says so; nothing runs"]
       acceptance: ["a task deployed to a fixture system: held, taken by a person, run there, in the ledger"]
 
+    - id: MOD-OC-DEPLOY-PAGE
+      name: deploy-page
+      uuid: nexus-orchestration-deploy-page-v1-0000-2026-1108-001
+      path: cos/ui/deployments/page.js
+      phase: OC4_deploy_to_any_system
+      description: >-
+        The cockpit's Deployments page: every deployment (what, which system, state, the proposal it went through, the result), a form to deploy a
+        route call to any system (his act, taken in the same click), and Recall. Reads and writes only COS's own routes.
+      deps: [{ name: deploy-anywhere }]
+      schema_refs: [Deployment]
+      exports: ["#/deployments"]
+      gate_pipeline: ["GATE-OC4-020: the form names the system, the method and the path", "GATE-OC4-021: a refused deploy shows its reason"]
+      behavioral_contracts: ["the page reads and writes only /api/cos/deploy*", "every state is shown, a failed run with its error"]
+      error_paths: ["COS's manager down → said on the page"]
+      acceptance: ["in Clear Glass through the real cockpit: a route call deployed to a fixture system shows running, then done with its status"]
+
     - id: MOD-OC-TOOLS
       name: tools-from-the-index
       uuid: nexus-orchestration-tools-v1-0000-2026-1101-001
@@ -366,3 +382,9 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node, invariants valid"
     - "per module: its acceptance lines, each a named test in the phase that builds it"
+
+# ── ADDENDUM 2026-11-08 — OC4 sliced (OC4a now, OC4b next) ─────────────────────────────────────────────────────────────────────────────
+# James, 2026-11-08: "can we do that? 0c4? then back to emerge. how long will that take?" MOD-OC-DEPLOY is built as OC4a: the lifecycle and a TASK
+# run on its target (do.kind command, ref "<METHOD> <path>" called on the system's own address from its healthUrl). An agent or pipeline deployment
+# is recorded with "no runner yet (OC4b)" until their runners exist. MOD-OC-DEPLOY-PAGE added (the rule: a phase is not done without its screen).
+
