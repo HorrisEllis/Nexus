@@ -1,0 +1,59 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EO1_flow_tools:5f9514e74b555502
+type: graph
+id: phase:EO1_flow_tools:5f9514e74b555502
+context: dependency graph of phase EO1_flow_tools
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794149069333
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794149069333
+lastSeenAt: 1794149069333
+fingerprint: null
+payload:
+  for: EO1_flow_tools
+  kind: phase
+  repo: null
+  hash: 5f9514e74b555502
+  nodes:
+    - path: lib/agent-tools/tools/clear-glass/gate-eval.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/clear-glass/macro.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: lib/agent-tools/tools/clear-glass/gate-eval.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+    dependents:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
+    upstream:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO_D0_one_door
+    downstream:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+    blockedBy:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by EO0_the_domain_and_its_door
+      - 'depends on (1): EO0_the_domain_and_its_door · all upstream 2'
+      - 'needed by (1): EO5_opened_from_cos · all downstream 2'
+    edges:
+      - from: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+        kind: declared

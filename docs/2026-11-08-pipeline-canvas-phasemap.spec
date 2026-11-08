@@ -110,6 +110,17 @@ decisions:
       agent tool are boxes and gate actions. The loop iterates until the end-state contract passes (PC7). Gate types can act through the snapshot
       engine, Versionium and COS (PC5). The order is bottom up (PC1 first); the canvas UI is shown to him as a preview before it is built (PC4's
       prerequisite) — the coder's reading of "show me the preview for the ui before building it but bottom up, first", to confirm.
+  PC_D10_the_canvas_is_the_surface_tools_are_made:
+    status: "DECIDED 2026-11-08 by James"
+    his_words: >-
+      "It's all connecting. No, okay. Well, don't. I don't need a copy. It's going to be the same. I don't need a copy. Right, the canvas is what the visual surface is, and then the tools are what to make for it. So that way, if it needs a tool, it can be made. If it's missing something, it can be built."
+    context: >-
+      Asked which ERAVOS PC4 builds on, after HorrisEllis/Eravos-Canvas was cloned (3.48.3: dataflow, agents and coding domains): (a) the repo,
+      (b) Nexus's copy (cos/archetype/eravos-canvas), (c) the repo as the source.
+    chosen: >-
+      One canvas, ERAVOS, in its own repository; no copy in Nexus (ERV_D1, ERV_D2). The canvas is the visual surface; every box kind is an ERAVOS
+      tool, made for it (an orchestration domain beside dataflow, agents and coding). A tool the canvas lacks is not worked around: it is a build
+      request (PC3) whose output is an ERAVOS tool from ERAVOS's own tool template, tested, then registered in ERAVOS's registry (ERV2).
   PC_D0_reuse_first:
     status: "DECIDED 2026-11-08 by his axioms"
     chosen: >-
@@ -170,7 +181,7 @@ phases:
   PC3_the_build_request_step:
     status: OPEN
     layer: integration
-    depends_on: [PC1_one_box_shape, PC_D3_when_a_step_becomes_a_build_request, PC_D5_emerge_writes_the_code, AE_D4_the_hub_structural, OC8_the_console]
+    depends_on: [PC1_one_box_shape, PC_D3_when_a_step_becomes_a_build_request, PC_D5_emerge_writes_the_code, PC_D10_the_canvas_is_the_surface_tools_are_made, AE_D4_the_hub_structural, OC8_the_console]
     spec: cos/spec/pipeline-canvas.spec
     blocks: [MOD-PC-BUILD-STEP]
     files: [cos/automation/build-request.js, cos/manager/server.js, cos/manager/contract.json, cos/manager/hub.js, idearium/cli/route-commands.js, tests/modules/test-pipeline-build-step.test.js, tests/modules/run-all.js]
@@ -187,11 +198,11 @@ phases:
   PC4_the_box_kinds_on_the_canvas:
     status: OPEN
     layer: ui
-    depends_on: [PC1_one_box_shape, PC_D1_gates_as_compartments, PC5_programmable_gate_types, EO3_work_tools, EO5_opened_from_cos, MB3_one_shape_with_pipelines]
+    depends_on: [PC1_one_box_shape, PC_D1_gates_as_compartments, PC5_programmable_gate_types, PC_D10_the_canvas_is_the_surface_tools_are_made, EO3_work_tools, EO5_opened_from_cos, MB3_one_shape_with_pipelines]
     spec: cos/spec/pipeline-canvas.spec
     blocks: [MOD-PC-CANVAS]
     prerequisites: ["a preview of the canvas shown to him and his go, before the UI is built (his 2026-11-08: 'show me the preview for the ui before building it')"]
-    files: [cos/archetype/eravos-canvas/tools/orchestration/work, cos/archetype/eravos-canvas/tools/orchestration/flow, cos/ui/orchestration, tests/modules/test-pipeline-canvas.test.js]
+    files: [Eravos-Canvas:tools/orchestration/work, Eravos-Canvas:tools/orchestration/flow, cos/ui/orchestration, tests/modules/test-pipeline-canvas.test.js]
     interface: [html]
     does: >-
       His "a beautiful visual, steps as boxes, with wires as the flow into the hooks of gates". Each kind is an ERAVOS tool with its own face (gate,

@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EO5_opened_from_cos:6ff6f2ff163f5f9a
+type: graph
+id: phase:EO5_opened_from_cos:6ff6f2ff163f5f9a
+context: dependency graph of phase EO5_opened_from_cos
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794149069341
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794149069341
+lastSeenAt: 1794149069341
+fingerprint: null
+payload:
+  for: EO5_opened_from_cos
+  kind: phase
+  repo: null
+  hash: 6ff6f2ff163f5f9a
+  nodes:
+    - path: docs/2026-11-07-eravos-as-a-system-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: docs/SPEC-REGISTRY.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+    upstream:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO_D0_one_door
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+    blockedBy:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by EO1_flow_tools, EO2_cos_tools
+      - 'depends on (2): EO1_flow_tools, EO2_cos_tools · all upstream 4'
+      - 'needed by (1): PC4_the_box_kinds_on_the_canvas'
+    edges:
+      - from: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+        kind: declared
+      - from: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+        kind: declared

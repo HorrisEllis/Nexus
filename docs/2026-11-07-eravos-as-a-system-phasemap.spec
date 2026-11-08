@@ -42,14 +42,14 @@ decisions:
     by_the_axioms: "§5.9, §5.15 (one door), §5.16 (each system's registry is its own; the system registry connects them)"
 
   ERV_D1_registered_not_copied:
-    status: "PROPOSED 2026-11-07 (the coder's, by the axioms) — his to confirm (question 1)"
+    status: "DECIDED 2026-11-08 by James (proposed 2026-11-07): \"I don't need a copy. It's going to be the same.\""
     chosen: >-
       ERAVOS is a system of Nexus by registration: COS knows its door (process, port, health, its component registry) and reaches it there.
       Its code stays in its own repository and is never copied into the Nexus tree, so it can be swapped and run alone (its v1 ships on its own).
     by_the_axioms: "§5.9 (one system down breaks no other), §5.15 (reached by its routes, never its files), §17.13 (ERAVOS v1 is a project in its own language, JS until its v2)"
 
   ERV_D2_the_schemas_have_one_source:
-    status: "OPEN — his (question 2); the coder recommends (a)"
+    status: "DECIDED 2026-11-08 by James, reading (a) — \"I don't need a copy. It's going to be the same.\" The coder reads 'the same' as one source, the ERAVOS repository; to confirm."
     options: "(a) the ERAVOS repository is the source; COS's archetype is refreshed from it and checked against it · (b) COS's archetype is the source"
     why_a: "ERAVOS owns tools, packs and suites (§5.15); its copy is the newer one (suite.schema, the current tool.schema)"
 
@@ -131,3 +131,12 @@ phases:
       workshop at code scale (zoom path: field, system, module, file, function — the coder's reading, to confirm), debugged on CP11's map of
       the same field. Built in ERAVOS; Nexus reaches it through COS. Its own phases are written when it is reached, by expanding this one.
     proof: "to be written with its spec; at least: a .eg module opened as a workshop kind, edited, saved through its gate, and its run seen on the map"
+
+# ── ADDENDUM 2026-11-08 — no copy; the canvas is the surface, the tools are what is made for it ──
+# James, 2026-11-08: "It's all connecting. No, okay. Well, don't. I don't need a copy. It's going to be the same. I don't need a copy. Right, the canvas is what the visual surface is, and then the tools are what to make for it. So that way, if it needs a tool, it can be made. If it's missing something, it can be built."
+# Said after he had the coder clone HorrisEllis/Eravos-Canvas into the session (main ca78aef, version 3.48.3: a dataflow domain with shared
+# ports, agents and coding domains) and was asked which ERAVOS the pipeline canvas builds on: (a) the repo, (b) Nexus's copy, (c) the repo as the
+# source. ERV_D1 and ERV_D2 decided. Nexus's cos/archetype/eravos-canvas (588 KB, older, two schemas differ) is superseded as a canvas: nothing new
+# is written there; it is kept until ERV3 reconciles its two differing schemas against the repo, then archived (§0.3, a reported drop, not silent).
+# The pipeline boxes are ERAVOS tools, made in ERAVOS's repository (an orchestration domain beside dataflow, agents and coding), which needs push
+# access to it (ERV2's requirement). A tool the canvas lacks is a build request (docs/2026-11-08-pipeline-canvas-phasemap.spec PC3, PC_D10).

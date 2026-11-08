@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794148716172
+exported_at: 1794149067845
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794148716172
-lastSeenAt: 1794148716172
+firstSeenAt: 1794149067845
+lastSeenAt: 1794149067845
 fingerprint: null
 payload:
   for: PC7_iterate_to_the_end_state
@@ -277,6 +277,7 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D10_the_canvas_is_the_surface_tools_are_made
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D3_when_a_step_becomes_a_build_request
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
@@ -297,7 +298,7 @@ payload:
         RQ15_cells_in_parallel
       - >-
         depends on (4): PC3_the_build_request_step, PC6_intelligence_watches_the_runs,
-        RQ15_cells_in_parallel, PC_D9_meta_autonomous_agnostic_nonlinear · all upstream 64
+        RQ15_cells_in_parallel, PC_D9_meta_autonomous_agnostic_nonlinear · all upstream 65
       - 'needed by (0): —'
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step

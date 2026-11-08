@@ -59,21 +59,21 @@ phases:
   EO0_the_domain_and_its_door:
     status: OPEN
     depends_on: [EO_D0_one_door]
-    files: [cos/archetype/eravos-canvas/tools/orchestration, cos/archetype/eravos-canvas/canvas/runtime/organism-sdk.js]
+    files: [Eravos-Canvas:tools/orchestration, Eravos-Canvas:canvas/runtime/organism-sdk.js]
     interface: [html]
     does: "the orchestration domain: OrganismSDK.extend gives ctx.cos (call and on, COS's door only, by: canvas:<tool>); a call outside /api/cos/* or /contract-map/* is refused and said"
     proof: "a tool calls GET /api/cos/systems and gets the list; a call to another port is refused; validate.mjs passes"
   EO1_flow_tools:
     status: OPEN
     depends_on: [EO0_the_domain_and_its_door]
-    files: [cos/archetype/eravos-canvas/tools/orchestration/flow]
+    files: [Eravos-Canvas:tools/orchestration/flow]
     interface: [html]
     does: "delay (fixed, range, human: gate-eval's delayMs), gate, merge, split and schedule, each an eravos.tool/1 with its spec, ui and test"
     proof: "each tool's own test; a chain delay → gate on the canvas passes an event after the pause and only when the gate holds"
   EO2_cos_tools:
     status: OPEN
     depends_on: [EO0_the_domain_and_its_door]
-    files: [cos/archetype/eravos-canvas/tools/orchestration/cos]
+    files: [Eravos-Canvas:tools/orchestration/cos]
     interface: [html]
     does: "compartment (state, start/stop/restart with by, its contract's ports), events (COS's SSE), ledger, proposal (take/drop)"
     proof: "against a real COS manager in a test: a compartment tool starts and stops a fixture system and the ledger tool shows it, by canvas:<tool>"
@@ -82,21 +82,21 @@ phases:
     expanded_2026_11_08_pc: >-
       James, 2026-11-08: "like i want a beautiful visual, steps as boxes, with wires as the flow into the hooks of gates as compartments. boxes can  be gates, systems, agents, macros, pipelines, tools, like a node based canvas for pipelines" · "build pipeline, automation pipeline, debug pipeline, coding pipeline, agnostic pipelines, using dag, contracts, gaps, stepwise, automations, compartments." The work tools grow to every box kind of the one box shape (docs/2026-11-08-pipeline-canvas-phasemap.spec PC1): procedure, tool, system and build beside macro, pipeline, workflow and agent. Each is a box with in/out hooks and its contract; the canvas side is PC4.
     depends_on: [EO2_cos_tools, MB1_the_gate_between]
-    files: [cos/archetype/eravos-canvas/tools/orchestration/work]
+    files: [Eravos-Canvas:tools/orchestration/work]
     interface: [html]
     does: "macro, pipeline, workflow and agent, each calling its system's route as COS's contract map names it; a route a system does not serve is said, never faked"
     proof: "a macro run from the canvas through its system's route, its result on the out port"
   EO4_measure_tools:
     status: OPEN
     depends_on: [EO2_cos_tools, CP11_the_diagnostic_map]
-    files: [cos/archetype/eravos-canvas/tools/orchestration/measure]
+    files: [Eravos-Canvas:tools/orchestration/measure]
     interface: [html]
     does: "tension (CFR) and friction (RFR2) on a compartment or a wire, from real readings; no reading is said as none, never zero"
     proof: "readings from a running intelligence; with intelligence down, the tool says so"
   EO5_opened_from_cos:
     status: OPEN
     depends_on: [EO1_flow_tools, EO2_cos_tools]
-    files: [cos/ui, cos/archetype/eravos-canvas/serve.js]
+    files: [cos/ui, Eravos-Canvas:serve.js]
     interface: [html]
     does: "the canvas opened from COS's UI as a compartment window, with the orchestration tools in its add menu"
     proof: "driven in Clear Glass: a compartment tool and a delay wired, started, seen running"
@@ -108,3 +108,9 @@ build_order: "EO0 → EO1 and EO2 → EO3, EO4 → EO5."
 # "ecosystem", to confirm). ERAVOS lives on in its own repository (HorrisEllis/Eravos-Canvas); cos/archetype/eravos-canvas is a copy, older
 # than it. When ERV_D1 is confirmed, these tools are built in ERAVOS's repository and reach COS's door from there; until then this map's
 # files: name the archetype as written. Registered in docs/SPEC-REGISTRY.spec today (it had not been).
+
+# ── ADDENDUM 2026-11-08 — the tools are made in ERAVOS's repository ──
+# James, 2026-11-08: "It's all connecting. No, okay. Well, don't. I don't need a copy. It's going to be the same. I don't need a copy. Right, the canvas is what the visual surface is, and then the tools are what to make for it. So that way, if it needs a tool, it can be made. If it's missing something, it can be built."
+# Every files: path here moved from Nexus's copy (cos/archetype/eravos-canvas/…) to ERAVOS's own repository, written Eravos-Canvas:<path>
+# (HorrisEllis/Eravos-Canvas). The orchestration domain sits beside ERAVOS's dataflow, agents and coding domains and is built to its own schemas
+# and templates (tool, domain). Building there needs push access (docs/2026-11-07-eravos-as-a-system-phasemap.spec ERV2).

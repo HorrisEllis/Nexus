@@ -7,11 +7,11 @@ intent: null
 summary: PC3_the_build_request_step (integration) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1794147711197
+exported_at: 1794149067825
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794147711197
-lastSeenAt: 1794147711197
+firstSeenAt: 1794149067825
+lastSeenAt: 1794149067825
 fingerprint: null
 payload:
   id: PC3_the_build_request_step
@@ -31,9 +31,10 @@ payload:
     - PC1_one_box_shape
     - PC_D3_when_a_step_becomes_a_build_request
     - PC_D5_emerge_writes_the_code
+    - PC_D10_the_canvas_is_the_surface_tools_are_made
     - AE_D4_the_hub_structural
     - OC8_the_console
   blocks:
     - MOD-PC-BUILD-STEP
   spec: cos/spec/pipeline-canvas.spec
-  graph: c50ea65b80e84ce1
+  graph: 22d8d9864ef4e450

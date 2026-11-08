@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
+type: phase
+id: docs_2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
+context: pipeline phase EO5_opened_from_cos of docs/2026-11-01-eravos-orchestration-tools-phasemap.spec
+intent: null
+summary: EO5_opened_from_cos (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794149069341
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794149069341
+lastSeenAt: 1794149069341
+fingerprint: null
+payload:
+  id: EO5_opened_from_cos
+  map: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/ui
+    - Eravos-Canvas:serve.js
+    - docs/2026-11-07-eravos-as-a-system-phasemap.spec
+    - docs/SPEC-REGISTRY.spec
+  depends_on:
+    - EO1_flow_tools
+    - EO2_cos_tools
+  blocks: []
+  spec: null
+  graph: 6ff6f2ff163f5f9a

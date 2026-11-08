@@ -171,7 +171,7 @@ spec:
 
     - id: IF-ERAVOS-SDK
       name: eravos-sdk
-      path: cos/archetype/eravos-canvas/canvas/runtime/organism-sdk.js
+      path: Eravos-Canvas:canvas/runtime/organism-sdk.js
       description: "The ERAVOS canvas's tool SDK: a tool is eravos.tool/1 with its spec, ui and test; ctx.cos reaches COS's door only (EO0)."
       exports: ["OrganismSDK.extend(domain, { tools })", "ctx.cos.call(method, path, body)"]
       behavioral_contracts: ["a call outside /api/cos/* is refused (EO0)"]
@@ -287,7 +287,7 @@ spec:
     - id: MOD-PC-CANVAS
       name: canvas-boxes
       uuid: cos-pipeline-canvas-canvas-v1-0000-2026-1108-001
-      path: cos/archetype/eravos-canvas/tools/orchestration/work
+      path: Eravos-Canvas:tools/orchestration/work
       phase: PC4_the_box_kinds_on_the_canvas
       description: >-
         Each kind an ERAVOS tool (IF-ERAVOS-SDK) with its own face; wires from out-hooks into the next box's gate; a pipeline or procedure box opens
@@ -336,3 +336,8 @@ spec:
 # until it reaches the end state. cos for tests, emerge should build stable code" · "yes .framework. idearium is for project management." Modules are
 # written in Emerge (PC_D4 superseded); JavaScript stays only for the UI and for COS's manager until CIE10/CIE13, said per phase. MOD-PC-WATCH (PC6)
 # and MOD-PC-LOOP (PC7) added. Gaps in Emerge found: no YAML reader, no folder listing (CIE14, CIE13).
+
+# ── ADDENDUM 2026-11-08 — the canvas is ERAVOS's repository; no copy ──
+# James, 2026-11-08: "I don't need a copy. It's going to be the same." · "the canvas is what the visual surface is, and then the tools are what to
+# make for it. So that way, if it needs a tool, it can be made. If it's missing something, it can be built." IF-ERAVOS-SDK and MOD-PC-CANVAS now
+# name ERAVOS's own repository (Eravos-Canvas:<path>). A missing tool is a build request (MOD-PC-BUILD-STEP) whose output is an ERAVOS tool.
