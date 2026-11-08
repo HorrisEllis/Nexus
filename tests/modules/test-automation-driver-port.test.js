@@ -17,7 +17,7 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
 (async () => {
   console.log('\n⬡  the automation engine drives Clear Glass\'s browser through the port (AE2)\n');
   const P = await port(); process.env.WIRE_PORT = String(P);   // the orchestrator reads it when its module loads
-  const A = require(path.join(ROOT, 'orchestrator/automation/index.js'));
+  const A = require(path.join(ROOT, 'cos/manager/automation-door.js'));
   const DP = require(path.join(ROOT, 'clear-glass/src/automation/driver-port.js'));
   const hooks = A.buildHooks({ guardianFn: async () => ({}), raidDecideFn: async () => null });
   let browser = null, pg = null; const macros = [];

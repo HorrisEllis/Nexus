@@ -70,6 +70,20 @@ const stand = async (answers) => { const hits = []; const s = http.createServer(
       assert.match(await page.evaluate(() => document.getElementById('hub-sum').textContent), /wired · \d+ waiting · \d+ down/);
     } finally { await browser.close(); }
   });
+  // AE6 slice a (2026-11-08) — James: "Have cos be the orchastrator complelelt." · "orchastrator as the engine, which need to be cos now."
+  await test('HB-05', 'COS runs the automation engine: its route answers, the engine slot is wired, the orchestrator\'s old door forwards to it', async () => {
+    const wf = await req(mp, 'GET', '/api/cos/automation/workflows'); assert.strictEqual(wf.status, 200, JSON.stringify(wf.body)); assert.ok(Array.isArray(wf.body.workflows));
+    const cat = await req(mp, 'GET', '/api/cos/automation/catalogue'); assert.strictEqual(cat.status, 200); assert.ok(cat.body.catalogue);
+    const none = await req(mp, 'GET', '/api/cos/automation/nothing-here'); assert.strictEqual(none.status, 404, 'an unknown route is said, not pretended');
+    const g = await req(mp, 'GET', '/api/cos/hub'); assert.strictEqual(g.body.slots.find(s => s.id === 'engine').state, 'wired');
+    process.env.COS_MANAGER_PORT = String(mp);
+    delete require.cache[require.resolve(path.join(ROOT, 'orchestrator/automation/index.js'))];
+    const fwd = require(path.join(ROOT, 'orchestrator/automation/index.js'));
+    const via = await fwd.handle({ method: 'GET', url: '/automation/workflows' }); assert.strictEqual(via.status, 200); assert.ok(Array.isArray(via.body.workflows));
+    process.env.COS_MANAGER_PORT = String(await freePort()); delete require.cache[require.resolve(path.join(ROOT, 'orchestrator/automation/index.js'))];
+    const down = await require(path.join(ROOT, 'orchestrator/automation/index.js')).handle({ method: 'GET', url: '/automation/workflows' });
+    assert.strictEqual(down.status, 503); assert.match(down.body.error, /COS did not answer/);
+  });
   cockpit.close(); mgr.close(); cortex.s.close(); idearium.s.close(); sup.shutdown({ by: 'test' }); fs.rmSync(dir, { recursive: true, force: true });
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exit(failed ? 1 : 0);
 })();

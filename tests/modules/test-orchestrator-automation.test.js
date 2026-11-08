@@ -15,7 +15,7 @@ require('../../lib/test-sandbox.js').ensure();
  *   OA-07  setBus wires the default bus used when no busFn is injected
  */
 const assert = require('assert');
-const A = require('../../orchestrator/automation/index.js');
+const A = require('../../cos/manager/automation-door.js');
 
 let p = 0, f = 0;
 const t = (id, d, fn) => Promise.resolve().then(fn).then(() => { console.log(`  ✓ ${id} ${d}`); p++; }).catch(e => { console.error(`  ✗ ${id} ${d}\n    ${e.stack || e.message}`); f++; });
