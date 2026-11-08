@@ -34,6 +34,22 @@ then they are written by hand.
   2. The cockpit refused the automation route. It was a real bug from AE6: a `|` method list matched as one word.
   3. CU-02 had the same exact match.
 - **Gaps found in Emerge:** none new.
+## 2026-11-08 — Pillar's conformance: the first finding (PIL3 slice a, 0.60.454)
+- **Measured:** Emerge coding and his framework. The contract becomes the end state, and an implementation is held to it from outside.
+- **His words:** "Continue." · "Focus on primitives. Build using emerge right?"
+- **Method:**
+  - 7 cases derived from pillar:constraint's contract, as Emerge data;
+  - Emerge's JS core answered them through its own harness;
+  - Pillar's judge, in Emerge, decided.
+- **Result:**
+  - 6 of 7 pass;
+  - one finding: the JS core treats a null field as present, where the contract and Emerge's language say it is a gap;
+  - conform.test.eg 5/5, test-pillar-conform 3/3.
+- **Lines:** .eg +~110 (conform.eg ~70, constraint.eg ~20, the test ~40). JS: one harness (~50), which the phase names. It is the only code that can
+  call the JS core. Run-all: +1 line.
+- **Failed runs:** `expect` is a keyword and can't be a parameter name (the known keyword gap). It still works as a map key, so the case schema's
+  field name was kept.
+- **What came of it:** the contract caught a disagreement between Emerge's two implementations of one primitive. It is said, not hidden.
 
 ## 2026-11-08 — Pillar's contracts, in Emerge (PIL2, 0.60.453)
 - **Measured:** Emerge coding. The one kernel's contracts, written as Emerge data with an Emerge validator and test.
