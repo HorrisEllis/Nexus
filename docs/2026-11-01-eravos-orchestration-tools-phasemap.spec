@@ -95,6 +95,22 @@ phases:
     proof: "readings from a running intelligence; with intelligence down, the tool says so"
   EO5_opened_from_cos:
     status: OPEN
+    expanded_2026_11_08_ae: >-
+      James, 2026-11-08 (AE_D5): "Like then the idearium pipeline should show in the automation tab in cos ui. Cos ui is the orchestrator. Is nexus.
+      Eravos is only the visual ui." · "No. Eravos is the ui, for the cos automation engine. For the cos ui, automation tab." The canvas opens in COS's
+      Automation tab (framed by its address, the projection only; ERAVOS holds no backend), and Idearium's build pipeline (OC9's first template) is
+      on it. This is what AE_D5 named AE10; it is not written again (his SL_D11 rule), it expands here and in PC4. Preview to him before any UI.
+    expanded_2026_11_08_blank: >-
+      James, 2026-11-08: "Okay but when no tools are added. Needs to be completely blank." Read in ERAVOS-Canvas (main, read-only clone): its Catalog
+      (canvas/runtime/catalog.js) already installs nothing on a fresh profile ("Sovereign by default"), but the page still opens the start screen
+      (canvas/index.html bootScreen): the ERAVOS title, recipes, and a card for every domain offered but not installed (P38), each one click from
+      installing its starter tools. Under his rule, in COS's Automation tab with no tools added there is none of that: no start screen, no recipes,
+      no offered domains, an empty Add palette, only the empty canvas. A tool appears only when a tool pack (an eravos.tool/1 zip, the automation
+      pack among them) is imported. This settles the open question "start screen or straight to the automation domain": neither; blank. Two traps
+      found, to design out: (1) the Catalog turns on every tool when any other 'eravos*' key is in localStorage (rec.all = used), so an ERAVOS
+      used standalone on the same origin would fill the tab; the tab needs its own profile. (2) The change belongs in ERAVOS's repository (a
+      blank-embed option of its own), never patched from Nexus (§5.9). ERAVOS-Canvas is not yet attached for writing in this session.
+    proof_added: "in Clear Glass: the tab opened with no pack shows no start screen, no cards, an empty palette; after importing the automation pack its tools appear, and only those"
     depends_on: [EO1_flow_tools, EO2_cos_tools]
     files: [cos/ui, Eravos-Canvas:serve.js]
     interface: [html]

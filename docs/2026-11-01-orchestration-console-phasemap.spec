@@ -169,6 +169,11 @@ phases:
 
   OC9_templates:
     status: OPEN
+    expanded_2026_11_08_ip: >-
+      James, 2026-11-08: "First one. Like pipelines. Which can use the .frameworks for procedures." (PC_D6 answered (a), docs/2026-11-08-pipeline-
+      canvas-phasemap.spec.) The first template is Idearium's build pipeline: idea → spec → phases → each phase specced → build, as a .pipeline whose
+      boxes are the routes the self-building loop already runs (SL1 to SL10, test-pipeline-sim 25/25), each reached by Idearium's own route (§5.15),
+      with an optional procedure box (a .framework, PC2 slice b) before spec. Its phase DAG is what the canvas shows on the build box (AE9).
     expanded_2026_11_08_pc: >-
       James, 2026-11-08: "like i want a beautiful visual, steps as boxes, with wires as the flow into the hooks of gates as compartments. boxes can  be gates, systems, agents, macros, pipelines, tools, like a node based canvas for pipelines" · "build pipeline, automation pipeline, debug pipeline, coding pipeline, agnostic pipelines, using dag, contracts, gaps, stepwise, automations, compartments." The pipeline kinds he named (build, automation, debug, coding, agnostic) are templates over the one box shape (PC1), not separate engines (PC_D0). Each template ships as a .pipeline with its boxes, gates and contracts.
     depends_on: [OC_D1_templates_and_schemas, OC7_the_taxonomy_expanded]

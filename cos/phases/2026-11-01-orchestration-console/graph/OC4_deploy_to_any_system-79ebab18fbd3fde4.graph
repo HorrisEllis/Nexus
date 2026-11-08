@@ -7,11 +7,11 @@ intent: null
 summary: 32 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794147147544
+exported_at: 1794164937107
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794147147544
-lastSeenAt: 1794147147544
+firstSeenAt: 1794164937107
+lastSeenAt: 1794164937107
 fingerprint: null
 payload:
   for: OC4_deploy_to_any_system
@@ -228,11 +228,20 @@ payload:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
     dependents:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
     upstream:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
     downstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE9_each_tool_carries_its_dag
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy: []
     unlocks:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
@@ -241,7 +250,9 @@ payload:
     lines:
       - layer 2 · ready
       - 'depends on (1): OC1_task_nodes · all upstream 2'
-      - 'needed by (1): OC8_the_console · finishing it unlocks OC8_the_console'
+      - >-
+        needed by (2): OC8_the_console, PC1_one_box_shape · all downstream 9 · finishing it unlocks
+        OC8_the_console
     edges:
       - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
         kind: declared

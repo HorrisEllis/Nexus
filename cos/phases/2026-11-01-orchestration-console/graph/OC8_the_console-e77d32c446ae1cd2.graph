@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794147147553
+exported_at: 1794164937114
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794147147553
-lastSeenAt: 1794147147553
+firstSeenAt: 1794164937114
+lastSeenAt: 1794164937114
 fingerprint: null
 payload:
   for: OC8_the_console
@@ -85,16 +85,20 @@ payload:
     deps:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D4_the_hub_structural
-    dependents: []
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
     upstream:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D4_the_hub_structural
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
-    downstream: []
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
-    unlocks: []
+    unlocks:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
     conflicts:
       - with: docs/2026-11-01-orchestration-console-phasemap.spec::OC10_pipelines_on_the_canvas
         files:
@@ -103,7 +107,9 @@ payload:
     lines:
       - layer 3 · blocked by OC4_deploy_to_any_system
       - 'depends on (2): OC4_deploy_to_any_system, AE_D4_the_hub_structural · all upstream 4'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): PC3_the_build_request_step · all downstream 2 · finishing it unlocks
+        PC3_the_build_request_step
       - >-
         same files as OC10_pipelines_on_the_canvas with no order between them:
         lib/ui/brainos/index.html

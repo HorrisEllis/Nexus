@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793995351292
+exported_at: 1794164926274
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793995351292
-lastSeenAt: 1793995351292
+firstSeenAt: 1794164926274
+lastSeenAt: 1794164926274
 fingerprint: null
 payload:
   for: AE4_repoint_the_registry
@@ -52,16 +52,23 @@ payload:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
     downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG38_the_orchestrator_into_cos
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE7_eravos_reaches_the_engine
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE9_each_tool_carries_its_dag
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
     conflicts: []
     dangling: []
     lines:
       - layer 3
       - 'depends on (2): AE2_browser_driver_port, AE3_the_engine_door · all upstream 5'
-      - 'needed by (2): AE6_the_engine_moves_into_cos, AE5_ui_and_cleanup'
+      - >-
+        needed by (2): AE6_the_engine_moves_into_cos, AE5_ui_and_cleanup · all downstream 5 ·
+        finishing it unlocks AE6_the_engine_moves_into_cos, AE5_ui_and_cleanup
     edges:
       - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
         kind: declared

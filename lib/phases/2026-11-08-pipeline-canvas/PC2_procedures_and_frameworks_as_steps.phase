@@ -9,18 +9,20 @@ intent: null
 summary: PC2_procedures_and_frameworks_as_steps (library) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1794157585140
+exported_at: 1794164927777
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794157585140
-lastSeenAt: 1794157585140
+firstSeenAt: 1794164927777
+lastSeenAt: 1794164927777
 fingerprint: null
 payload:
   id: PC2_procedures_and_frameworks_as_steps
   map: docs/2026-11-08-pipeline-canvas-phasemap.spec
   repo: null
   layer: library
-  status: OPEN
+  status: >-
+    "OPEN — slice a BUILT 0.60.45x (the engine's 'procedure' step, AE7, OA-08); slice b, the
+    .framework as a procedure, open"
   files:
     - lib/automation/steps.js
     - lib/automation/engine.js

@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794157585136
+exported_at: 1794164927772
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794157585136
-lastSeenAt: 1794157585136
+firstSeenAt: 1794164927772
+lastSeenAt: 1794164927772
 fingerprint: null
 payload:
   for: PC1_one_box_shape
@@ -62,6 +62,7 @@ payload:
       - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
     dependents:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE9_each_tool_carries_its_dag
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
@@ -80,6 +81,7 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
     downstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE9_each_tool_carries_its_dag
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
@@ -89,7 +91,8 @@ payload:
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
-    unlocks: []
+    unlocks:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE9_each_tool_carries_its_dag
     conflicts: []
     dangling: []
     lines:
@@ -98,9 +101,10 @@ payload:
         depends on (5): PC_D0_reuse_first, PC_D4_language, PL1_pipeline_core,
         PD1_procedure_nodes_and_commands, OC4_deploy_to_any_system · all upstream 11
       - >-
-        needed by (5): PC2_procedures_and_frameworks_as_steps, PC3_the_build_request_step,
-        PC4_the_box_kinds_on_the_canvas, PC5_programmable_gate_types,
-        PC6_intelligence_watches_the_runs · all downstream 6
+        needed by (6): AE9_each_tool_carries_its_dag, PC2_procedures_and_frameworks_as_steps,
+        PC3_the_build_request_step, PC4_the_box_kinds_on_the_canvas, PC5_programmable_gate_types,
+        PC6_intelligence_watches_the_runs · all downstream 7 · finishing it unlocks
+        AE9_each_tool_carries_its_dag
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
         kind: declared
