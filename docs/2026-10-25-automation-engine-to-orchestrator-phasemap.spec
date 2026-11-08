@@ -325,6 +325,13 @@ phases:
     proof: "OA-10: every catalogue kind has takes/gives/needs; a workflow whose step takes what no earlier step gives shows it unmet, by name; the route answers through COS's door"
   AE5_ui_and_cleanup:
     status: OPEN
+    expanded_2026_11_08: >-
+      James, 2026-11-08: "just need the automation engine fully built and in the automation tab" · "cos is the orchastrator". AE5 is COS's
+      Automation tab (PL_D13): today it holds only the supervisor's rules and start-at-boot, and says "Macros and rules … not built"; the engine
+      (AE6 slice a) already answers /api/cos/automation/* (workflows, runs, log, scripts, catalogue, templates, pipelines, macros, triggers,
+      webhooks). The tab becomes the engine's: Workflows · Pipelines · Runs (live, from /api/cos/events) · Triggers · Macros · Webhooks · Steps
+      (the engine's catalogue) · Log · Supervision (today's page, kept as a section). A pipeline opens on ERAVOS's canvas as Steps (cos erv). His
+      rule first: the preview, cos/ui/automation/preview/ (preview.png), shown 2026-11-08 before any of it is built.
     layer: ui
     depends_on: [AE4_repoint_the_registry, AE6_the_engine_moves_into_cos]   # AE6 added 2026-11-06: AE5 is COS's Automation page (PL_D13)
     files:
