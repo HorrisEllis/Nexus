@@ -8,6 +8,7 @@ require('../../lib/test-sandbox.js').ensure();
  *   HB-01 a slot is wired only when its owner answered just now (stand-in Cortex, Idearium, Clear Glass on their own addresses)
  *   HB-02 an owner down is said (down, with the reason); a route the owner refuses is said (refused, with the status); never wired
  *   HB-03 the slots with no route yet are waiting and name the phase that wires them; COS's own slots answer in process
+ *   HB-07 AE5: the Automation tab — a pipeline listed, run live to done, exported as a .pipeline, imported back; the supervisor's rules kept
  *   HB-04 GET /api/cos/hub through the manager; the Hub page in Clear Glass through the real cockpit shows each slot and its state
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http'), net = require('net');
@@ -102,6 +103,36 @@ const stand = async (answers) => { const hits = []; const s = http.createServer(
     assert.ok(seen.includes('automation.run.start') && seen.includes('automation.run.complete'), `events seen: ${seen.join(', ')}`);
     const c = (await req(mp, 'GET', '/api/cos/contract')).body;
     const con = c.contract || c; assert.ok(con.for_eravos && con.for_eravos.run_one_step && con.automation_events.events.includes('automation.run.complete'), 'the contract says how ERAVOS uses it');
+  });
+  // AE5 (0.60.461) — James, 2026-11-08: "just need the automation engine fully built and in the automation tab" · "has to be real .pipeline files.
+  // it must be exportable and importable."
+  await test('HB-07', 'the Automation tab: a pipeline listed, run live to done, exported as its real .pipeline, imported back; Supervision kept', async () => {
+    const mk = await req(mp, 'POST', '/api/cos/automation/pipelines', { name: 'AE5 proof', tasks: [
+      { id: 'one', label: 'Say one', depends_on: [], step: { type: 'log', config: { message: 'one' } } },
+      { id: 'two', label: 'Say two', depends_on: ['one'], step: { type: 'log', config: { message: 'two' } } }] });
+    const pid = (mk.body.pipeline || mk.body).id; assert.ok(pid, JSON.stringify(mk.body));
+    const node = await req(cp, 'GET', `/api/cos/automation/pipelines/${pid}/node`); assert.strictEqual(node.status, 200, JSON.stringify(node.body));
+    assert.match(node.body.text, /type: pipeline/, 'a real .pipeline node file'); assert.match(node.body.filename, /\.pipeline$/);
+    const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));
+    let browser; try { browser = await glass.chromium.launch(); } catch (e) { console.log(`  - HB-07 page part SKIPPED: the engine could not start (${e.message.split('\n')[0]})`); return; }
+    try {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 860 } });
+      await page.goto(`http://127.0.0.1:${cp}/automation/index.html`);
+      const until = async (fn, ms = 10000) => { const t = Date.now() + ms; while (Date.now() < t) { const v = await page.evaluate(fn); if (v) return v; await new Promise(r => setTimeout(r, 150)); } return null; };
+      assert.ok(await until(() => !!document.querySelector('[data-pipeline]')), 'pipelines listed');
+      await page.evaluate((id) => document.querySelector(`[data-pipeline="${id}"]`).click(), pid);
+      assert.ok(await until(() => document.querySelectorAll('.ae-step').length === 2), 'its steps shown, in its own words');
+      await page.evaluate(() => document.querySelector('[data-act="run"]').click());
+      const done = await until(() => [...document.querySelectorAll('.ae-step')].every(e => e.dataset.state === 'done') && document.querySelectorAll('.ae-step').length === 2, 15000);
+      if (process.env.HB_SHOTS) await page.screenshot({ path: path.join(process.env.HB_SHOTS, 'cos-automation.png'), fullPage: true });
+      assert.ok(done, 'the run shown live to done: ' + await page.evaluate(() => [...document.querySelectorAll('.ae-step')].map(e => e.dataset.state).join(',')));
+      const before = (await req(cp, 'GET', '/api/cos/automation/pipelines')).body.pipelines.length;
+      const imp = await page.evaluate(async (text) => { const r = await fetch('/api/cos/automation/import', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, by: 'person', allowDuplicate: true }) }); return { status: r.status, body: await r.json() }; }, node.body.text);
+      assert.ok(imp.status < 300 && imp.body.ok !== false, 'the exported .pipeline imports back: ' + JSON.stringify(imp.body).slice(0, 200));
+      assert.strictEqual((await req(cp, 'GET', '/api/cos/automation/pipelines')).body.pipelines.length, before + 1, 'a second pipeline from the file');
+      await page.evaluate(() => document.querySelector('[data-tab="supervision"]').click());
+      assert.ok(await until(() => document.querySelectorAll('#form .rule').length > 3 && !document.querySelector('[data-pane="supervision"]').hidden), 'the supervisor\'s rules are still here');
+    } finally { await browser.close(); }
   });
   cockpit.close(); mgr.close(); cortex.s.close(); idearium.s.close(); sup.shutdown({ by: 'test' }); fs.rmSync(dir, { recursive: true, force: true });
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exit(failed ? 1 : 0);
