@@ -616,3 +616,19 @@ phases_addendum_2026_11_01:
     files: [clear-glass/src/autofill/gig-fields.js, clear-glass/src/ipc/bridge.js, tests/modules/test-gig-metadata-glass.test.js]
     does: "metaPanelScript also finds a dropdown in the open tab (a <select>, a combobox, or what shows CHOOSE / SELECT), marked data-cg-meta-dd; _gigMetadata picks a value the boxes do not offer through the driver's own choose (the one Service type uses), one value at a time, each read back in the panel (GATE-GT6-003)"
     proof: "MD-07: a tab with a CHOOSE dropdown and an Other radio, as on his screen — two engines chosen and read back; one not offered, said with the dropdown's list"
+
+## ADDENDUM 2026-11-08 (0.60.446) — FG5 expanded: the userscript form, for a machine without Clear Glass
+James, 2026-11-08: "I need the automation. I’ve gone to do the fiverr post over and over. I need help with this. I have no one." · "Nexus is to
+remove as much effort, beyond thinking as possible." · "Im fighting avoidance and a fear of failure. That’s the point of automating the gig
+posting or removing as much of the effort as possible." His PC is down; he has an all-in-one with 8 GB of RAM.
+Expanded, not a new phase (his rule, phases expand): FG5's gig flow, in a form that runs in any browser with Tampermonkey and needs no Clear Glass,
+no Nexus and no local model: clear-glass/userscripts/fiverr-gig-autofill.user.js. The same rules as Clear Glass's autofill: a page is known by its
+words and ?tab= (gig-pages.js SIGNS), a box by the words of its section (gig-fields.js fieldScript), the pricing boxes by their placeholders in column
+order (gig-pricing.js PRICING_LABELS). One button fills the page; what is not found, and every dropdown, is a chip (click a box, then the chip).
+It never presses Save, Continue or Publish (FG_D3, his 0.39.301 "Not automate talking or posting"). The three gigs of docs/fiverr/gig-drafts.md
+are carried in it.
+Checked in Clear Glass's engine (Electron, through clear-glass/src/driver/glass.js, his rule: never Playwright), on mock pages built from the
+recorded facts: the title, 5 tags (each typed and Enter pressed), 3 package names, descriptions and prices, and the description in a rich editor
+all filled; a box clicked and then a chip filled it. Fiverr itself answers this sandbox 403, so the live check is on his machine: the selectors
+are readings of his screenshots, and a box it cannot find falls to its chip.
+The coder's reading of "Software Development" as the subcategory is a placeholder: the category chip says what to pick, and the pick is his.
