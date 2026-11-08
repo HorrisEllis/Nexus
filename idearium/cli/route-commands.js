@@ -934,6 +934,16 @@ export const SPEC = [
   // running a workflow, one step or an import acts, so it is the person's (an agent proposes), as cos cli is.
   // 2026-11-08 — James: "No. Import eravos into idearium." Idearium clones a repository as a project by its route (POST /api/git/clone); no row
   // reached it, so neither he nor an agent could do it in one line. A clone makes a project, so it is the person's (an agent proposes).
+  // 2026-11-08 — James: "Stop. Pull it from github. Then we can manage the repo in idearium and GitHub." Idearium's per-project git routes were
+  // there (status, pull, commit, push); no row reached them. Reading is anyone's; pull, commit and push change the project or GitHub: the person's.
+  { key: 'repo.git', repo: true, usage: 'repo git <repo>', about: 'the project\'s git state: branch, remote, ahead and behind, changed files',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/git` }) },
+  { key: 'repo.pull', repo: true, personOnly: () => 'pulling changes the project: the person\'s, or an agent proposes', usage: 'repo pull <repo>',
+    about: 'pull the project from its remote (GitHub)', req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/git/pull`, body: {} }) },
+  { key: 'repo.commit', repo: true, personOnly: () => 'a commit is the person\'s, or an agent proposes', usage: 'repo commit <repo> <message …>',
+    about: 'commit the project\'s changes in Idearium', req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/git/commit`, body: { message: a.args.join(' ') } }) },
+  { key: 'repo.push', repo: true, personOnly: () => 'pushing reaches GitHub: the person\'s, or an agent proposes', usage: 'repo push <repo>',
+    about: 'push the project to its remote (GitHub)', req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/git/push`, body: {} }) },
   { key: 'git.clone', repo: false, personOnly: () => 'cloning makes a project in Idearium: the person\'s, or an agent proposes', usage: 'git clone <url> [--name <name>]',
     about: 'import a repository into Idearium as a project (its own compartment), e.g. git clone https://github.com/HorrisEllis/Eravos-Canvas',
     req: (a) => ({ system: 'idearium', method: 'POST', path: '/api/git/clone', body: { url: a.args[0], ...(a.flags.name ? { name: String(a.flags.name) } : {}) } }) },
