@@ -70,6 +70,30 @@ spec:
         "a nested pipeline or procedure runs in its own run context: the parent passes only the wired hooks in, and gets only the out-hooks back"]
       error_paths: ["unknown kind → refused with the kinds"]
 
+    - id: GateType
+      name: GateType
+      description: "A kind of gate, as an archetype is a kind of compartment (PC5). Programmable: its check and its actions are nodes or route calls."
+      fields:
+        id:       "string — check | test | diagnose | fault-log | notify | retry | hold | options | gap | any made later"
+        check:    "object — { kind: condition | route | node | test, ref, holds? }: what decides open, closed or gap"
+        on:       "object — { open: GateAction[], closed: GateAction[], gap: GateAction[] }"
+        options:  "object[]? — [{ label, actions: GateAction[] }]: offered to the person to choose, instead of one path"
+        madeBy:   "string — shipped | person | agent:<name> (an agent's held until taken)"
+        from:     "string? — what drafted it: a schema, the chunker, the work surface (by their routes)"
+      behavioral_contracts: ["valid against this schema or refused, named", "no type is code in the engine; shipped types are files"]
+      error_paths: ["an action naming a route its owner does not serve → refused when made, said when run"]
+
+    - id: GateAction
+      name: GateAction
+      description: "One thing a gate does on an outcome."
+      fields:
+        do:     "string — route | node | stop | skip | retry | hold | branch | notify"
+        ref:    "string? — '<METHOD> <path>' on its owner, a node id, or a box id to branch to (any box, not only the next: non-linear)"
+        owner:  "string? — the system serving the route"
+        policy: "object? — retry: { times, backoffMs }"
+      behavioral_contracts: ["a route action reaches its owner by route only (§5.15)"]
+      error_paths: ["the owner does not answer → the action fails, said; the gate's next action still runs"]
+
     - id: Wire
       name: Wire
       description: "The flow from one box's out-hook into another box's in-hook (into its gate)."
@@ -208,6 +232,24 @@ spec:
       error_paths: ["Cortex down → held, said", "the end test fails → the box stays waiting, said", "Emerge down → the build waits, said"]
       acceptance: ["a failing step offers a build box; taken, a contract is filed on a stand-in Cortex; fulfilled, the run finishes; refused, the box fails with the reason"]
 
+    - id: MOD-PC-GATE-TYPES
+      name: gate-types
+      uuid: cos-pipeline-canvas-gate-types-v1-0000-2026-1108-001
+      path: cos/gate/types.js
+      phase: PC5_programmable_gate_types
+      description: >-
+        Gate types as COS has compartment types: list, get, propose (an agent's held), validate against GateType; the starter types are files in
+        cos/gate/types/. run(type, output, ctx) evaluates the check and runs the outcome's GateActions in order, or returns the options for the person.
+        The engine's gate after every step reads its type (stop, skip and retry kept as shipped actions). James, 2026-11-08: "Gates need to be
+        programmable." · "options are better than neat boxes."
+      deps: [{ name: box }, { name: cos-door-pc }, { name: engine }]
+      schema_refs: [GateType, GateAction]
+      exports: ["list() · get(id) · propose(type, { by }) · validate(type) · run(type, output, ctx) → { outcome, actions[], options? }", "GET /api/cos/gate-types", "POST /api/cos/gate-types", "row `cos gate-types`"]
+      gate_pipeline: ["GATE-PC5-001: a type valid against GateType", "GATE-PC5-002: an agent's type held until taken", "GATE-PC5-003: every route action by route"]
+      behavioral_contracts: ["the old onClosed words still run unchanged", "options are shown, never picked for him"]
+      error_paths: ["an invalid type → refused, named", "an action's owner down → said, the next action runs"]
+      acceptance: ["a gate type runs a stand-in test route, logs a fault by route, offers options; a pick branches the run; an agent's type held; the old words unchanged"]
+
     - id: MOD-PC-CANVAS
       name: canvas-boxes
       uuid: cos-pipeline-canvas-canvas-v1-0000-2026-1108-001
@@ -249,3 +291,8 @@ spec:
 # "Using the gates to determine gaps after each step. Eravos for the visual canvas, emerge for the code generation, idearium has a pipeline, all
 # programmable and manageable. Agnostic. Eravos is perfect for this." Box gains budget, recovery and deterministic; the gate after every box answers
 # open, closed or gap; a nested run has its own context; the build step's code comes from Emerge, by its route. Map: PC_D3 decided, PC_D5, PC_D6.
+
+# ── ADDENDUM 2026-11-08 — gates are programmable types ──
+# James, 2026-11-08: "Gates need to be programmable. Maybe compartment types like that cos has. Cos and agents can make more types by using schemas
+# or building them from the chunking tool, work surface, etc." · "options are better than neat boxes. Programmable. Hard corded has to earn its place
+# and a node or api call is better than static." Schemas GateType and GateAction, module MOD-PC-GATE-TYPES (PC5). PC_D1 and PC_D8 decided.

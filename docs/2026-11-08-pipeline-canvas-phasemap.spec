@@ -31,7 +31,10 @@ found_while_mapping:
 decisions:
   # PC_D1–PC_D3 are his to reconcile (CLAUDE.md, 2026-11-03: "Ambiguity must be reconciled by me"). Side by side; the coder's recommendation is named as the coder's.
   PC_D1_gates_as_compartments:
-    status: "ASKED 2026-11-08 — his"
+    status: >-
+      DECIDED 2026-11-08 by James, superseding both readings below (kept, §0.3): "Gates need to be programmable. Maybe compartment types like that
+      cos has. Cos and agents can make more types by using schemas or building them from the chunking tool, work surface, etc." A gate is an instance
+      of a gate TYPE, as a compartment is an instance of an archetype (cos/archetype: built-ins plus custom, checked by its schema). PC5 builds it.
     his_words: "with wires as the flow into the hooks of gates as compartments"
     readings:
       a: "Each gate is the door of a compartment. Wires go into a box through its gate, and the hooks are the gate's inputs and outputs. This fits his words on the registry: 'The drawbridge is the the component registry, which is also the event bus, and interaction contract and bridge into the compartment.'"
@@ -75,6 +78,22 @@ decisions:
       that honours it. COS is one runtime, and Emerge's port is another (PC_D4). Asked of him by an assistant he quoted; answered here by his NC0 rule
       ("the components in the component registry can be any language") and §5.15 (swappable).
     by_the_axioms: "NC0 (neutral core, a schema for everything reusable), §5.15, §10.3"
+  PC_D8_options_not_neat_boxes:
+    status: "DECIDED 2026-11-08 by James"
+    his_words: >-
+      "Like run tests, notify failure, run diagnostics or log failures or faults, retry logic gate to prevent from continueing or have options. Like
+      options are better than neat boxes. Programmable. Hard corded has to earn its place and a node or api call is better than static." · "nexus is
+      meant to be agnostic and non linear."
+    context: >-
+      Said after PC_D1's two readings (a gate as a compartment's door, or a gate in its own sandbox). Found when mapping: today a gate's outcome is one
+      of three hard-coded words (lib/automation/steps.js AFTER_CLOSED = stop | skip | retry, PA4).
+    chosen: >-
+      A gate's check and everything it does on each outcome are programmable: each is a node or a route call, not code in the engine. Outcomes are
+      open, closed and gap (PC_D3). Each outcome holds a list of actions (run tests, notify, run diagnostics, log a fault, retry with a policy, hold the
+      run, branch to another box), and a gate can offer the person a set of options to choose from instead of one fixed path (his "options are
+      better than neat boxes"). stop, skip and retry stay as the first shipped actions, now data (§0.3). The flow is non-linear: an action can wire to
+      any box, not only the next.
+    by_the_axioms: "his 'hardcoded has to earn its place' (idearium/spec-engine/templates/architecture-spec.template.yaml); §5.15 (an action is a route call); NC0 (a schema for everything reusable); USER_AUTONOMY (options are his to pick)"
   PC_D0_reuse_first:
     status: "DECIDED 2026-11-08 by his axioms"
     chosen: >-
@@ -146,7 +165,7 @@ phases:
   PC4_the_box_kinds_on_the_canvas:
     status: OPEN
     layer: ui
-    depends_on: [PC1_one_box_shape, PC_D1_gates_as_compartments, EO3_work_tools, EO5_opened_from_cos, MB3_one_shape_with_pipelines]
+    depends_on: [PC1_one_box_shape, PC_D1_gates_as_compartments, PC5_programmable_gate_types, EO3_work_tools, EO5_opened_from_cos, MB3_one_shape_with_pipelines]
     spec: cos/spec/pipeline-canvas.spec
     blocks: [MOD-PC-CANVAS]
     files: [cos/archetype/eravos-canvas/tools/orchestration/work, cos/archetype/eravos-canvas/tools/orchestration/flow, cos/ui/orchestration, tests/modules/test-pipeline-canvas.test.js]
@@ -159,15 +178,35 @@ phases:
       run.
     proof: "in Clear Glass (glass.js): a pipeline drawn with a gate, a procedure and a nested pipeline is saved, reopened the same, run, and each box shows its real state; the nested box opens its own canvas"
 
+  PC5_programmable_gate_types:
+    status: OPEN
+    layer: library
+    depends_on: [PC1_one_box_shape, PC_D1_gates_as_compartments, PC_D8_options_not_neat_boxes, MB3_one_shape_with_pipelines, PA4_a_gate_after_every_step]
+    spec: cos/spec/pipeline-canvas.spec
+    blocks: [MOD-PC-GATE-TYPES]
+    files: [cos/gate/types.js, cos/gate/types/, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, lib/automation/steps.js, lib/automation/engine.js, tests/modules/test-gate-types.test.js, tests/modules/run-all.js]
+    requires: [node]
+    prerequisites: ["the .gate extension defined in COS's own registry (EQ5: what it is, its schema, owner, writers, readers, kind) before the first type file is written"]
+    does: >-
+      Gate types, as COS has compartment types (cos/archetype). A GateType is a node file in COS's folder (cos/gate/types/<id>.gate): its check
+      (a condition, a test run, a route call or a node), and for each outcome (open, closed, gap) a list of GateActions or a set of options for
+      the person. A GateAction is a route call "<METHOD> <path>" on its owner (Diagnostic's diagnostics, the failure-mode index, a notify, a test
+      runner), a node (a procedure, a pipeline) or one of the shipped actions (stop, skip, retry with a policy, hold, branch to a box). The starter
+      types ship as files, not code: check, test, diagnose, fault-log, notify, retry, hold, options, gap. COS and agents make more: a new type is
+      checked against the GateType schema and held as a COS proposal (an agent's waits for him); a type can be drafted from Idearium's tools (the
+      chunker, the work surface) by their routes. The engine's gate after every step (PA4) reads its type instead of AFTER_CLOSED. GET/POST
+      /api/cos/gate-types, row `cos gate-types`.
+    proof: "a step whose gate type runs a stand-in test route closes, logs a fault through a route and offers his options; picking one branches the run; an agent's new type is held until taken; a type that fails the schema is refused, named; the three old onClosed words still run unchanged"
+
 expands:
   # the phases that own the rest of the ask, each expanded in its own map with his words (2026-11-08), not rewritten here
   - "EO3_work_tools (docs/2026-11-01-eravos-orchestration-tools-phasemap.spec): the procedure, tool, system and build boxes beside macro, pipeline, workflow and agent"
   - "OC10_pipelines_on_the_canvas (docs/2026-11-01-orchestration-console-phasemap.spec): the canvas is PC4's; boxes open recursively; runs shown on the boxes"
   - "OC9_templates (same map): build, automation, debug, coding and agnostic pipelines as templates over the one box shape"
-  - "MB3_one_shape_with_pipelines (docs/2026-11-01-macro-blocks-phasemap.spec): the gate box is the one gate shape"
+  - "MB3_one_shape_with_pipelines (docs/2026-11-01-macro-blocks-phasemap.spec): the gate box is the one gate shape, and that shape is an instance of a gate type (PC5)"
   - "PD4_the_procedure_library (docs/2026-11-01-procedures-phasemap.spec): procedures editable on the canvas; frameworks as procedures if PC_D2 (a)"
 
 order: >-
   His readings first (PC_D1, PC_D2, PC_D3). Then PC1, the shape every other piece stands on. Then PC2 and PC3 side by side (different files). EO0 →
   EO2 → EO3 and MB3 run beside them. PC4 comes last, because the canvas draws what PC1–PC3 and the EO tools already run. The coder's estimate,
-  checked against the work and not promised: PC1 one session, PC2 one, PC3 one to two, PC4 two to three with EO0–EO3 (EO is about 2 more).
+  checked against the work and not promised: PC1 one session, PC2 one, PC3 one to two, PC4 two to three with EO0–EO3 (EO is about 2 more). PC5 one to two, beside PC2 and PC3; PC4 draws the gate types PC5 makes.

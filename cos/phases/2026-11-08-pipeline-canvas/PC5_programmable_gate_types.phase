@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+context: pipeline phase PC5_programmable_gate_types of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC5_programmable_gate_types (library) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1794148260959
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794148260959
+lastSeenAt: 1794148260959
+fingerprint: null
+payload:
+  id: PC5_programmable_gate_types
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - cos/gate/types.js
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - idearium/cli/route-commands.js
+    - lib/automation/steps.js
+    - lib/automation/engine.js
+    - tests/modules/test-gate-types.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - PC1_one_box_shape
+    - PC_D1_gates_as_compartments
+    - PC_D8_options_not_neat_boxes
+    - MB3_one_shape_with_pipelines
+    - PA4_a_gate_after_every_step
+  blocks:
+    - MOD-PC-GATE-TYPES
+  spec: cos/spec/pipeline-canvas.spec
+  graph: df7176179c9b24d2

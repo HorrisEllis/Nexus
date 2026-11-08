@@ -7,11 +7,11 @@ intent: null
 summary: PC4_the_box_kinds_on_the_canvas (ui) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1794147480630
+exported_at: 1794148260956
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794147480630
-lastSeenAt: 1794147480630
+firstSeenAt: 1794148260956
+lastSeenAt: 1794148260956
 fingerprint: null
 payload:
   id: PC4_the_box_kinds_on_the_canvas
@@ -24,10 +24,11 @@ payload:
   depends_on:
     - PC1_one_box_shape
     - PC_D1_gates_as_compartments
+    - PC5_programmable_gate_types
     - EO3_work_tools
     - EO5_opened_from_cos
     - MB3_one_shape_with_pipelines
   blocks:
     - MOD-PC-CANVAS
   spec: cos/spec/pipeline-canvas.spec
-  graph: e3ea0c63be4b086a
+  graph: b3a812d67b987380
