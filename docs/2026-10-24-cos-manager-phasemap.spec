@@ -587,6 +587,30 @@ phases:
     does: "every page and section declared in COS's accepted registry; the bus checks against it"
     proof: "an undeclared event refused and shown, in Clear Glass"
 
+  # ── ADDENDUM 2026-11-08 — MG_D5's open question answered (his): the orchestrator merges into COS ──
+  # James, 2026-11-08: "And the orchastrator needs to be migrated to the cos supervisor." Asked: (a) the orchestrator merges into COS and its
+  # process retires, :9000 a forwarder (the coder's recommendation, §10.3: two orchestrators are competing truth layers); or (b) only the
+  # orchestration jobs move and :9000 stays a thin router. His answer: "Cos is meant to be the orchastrator." Read as (a).
+  # The same message, recorded where they belong: "Eravos tools are meant to have a template or schema for building tools" (ERAVOS tools map) ·
+  # "It’s running poorly on my pc." (a cost to measure: no number yet) · "Going to be running low on pro account tokens so I need nexus to
+  # replace you asap. Continue to get the automation done."
+  MG38_the_orchestrator_into_cos:
+    status: OPEN
+    depends_on: [MG_D5_cos_is_the_orchestrator, AE6_the_engine_moves_into_cos]
+    files: [orchestrator/orchestrator.js, orchestrator/orchestrator.config.json, orchestrator/compartment.json, cos/manager/server.js,
+            cos/manager/contract.json, cos/manager/supervisor.js, docs/atlases/orchestrator-atlas.md]
+    requires: [node]
+    prerequisites: ["the census first: every route of orchestrator.js sorted by kind, each caller of :9000 listed (grep), so none breaks"]
+    does: >-
+      His "Cos is meant to be the orchastrator": the orchestrator's process retires into COS, in slices, :9000 forwarding behind each one so no
+      caller breaks (AE6 slice a is the pattern). (1) The census: every route of orchestrator.js (3,688 lines; about 200 branches) sorted by
+      what it is: orchestration (the bus and its SSE, request dispatch, the event ledger, autopilot's remains), a page of the UI shell, a
+      forward to another system, or another system's own data served from here (ideas, memory, gaps, CFR, SNR, snapshots). (2) Orchestration
+      moves into COS's manager. (3) Forwards are retired: callers go to the owner's route. (4) Another system's data goes home to its owner
+      (§5.15, one owner per kind of data). (5) :9000 becomes a forwarder to COS, then its compartment is archived with a pointer (§0.3).
+    proof: "per slice: the moved routes answer from COS and through :9000's forwarder; the boundary census shows no new crossing; the orchestrator's
+      tests pass against their new owners; at the end the supervisor runs no orchestrator process and every :9000 caller still gets its answer"
+
 build_order: "MG0b → MG1 → MG2 → MG3 → MG4 → MG5 → MG6 → MG7 → MG8 → MG9. Backend → route → command → UI in each, and MG9 (the UI) last, as he said. Sovereignty of Nexus's own systems (SV1–SV7) goes on alongside; COS opening a Nexus system waits on it (CS_D7)."
 
 # ── ADDENDUM 2026-10-29 — categories, and cos.exe as the full compartment manager (his) ─────────────────────────────────────────────

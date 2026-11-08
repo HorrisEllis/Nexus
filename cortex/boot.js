@@ -580,6 +580,26 @@ const server = http.createServer(async (req, res) => {
   // intake.js) — real data exists (raid_contract_queue table, confirmed
   // real rows in the live store) but had no GET/list endpoint anywhere,
   // same real gap class as chat-log above.
+  // PC3 (docs/2026-11-08-pipeline-canvas-phasemap.spec) — James, 2026-11-08: "a step can also be a build request, like a gap, or error or
+  // bottleneck". RAID is the only write authority for requests (§9.1), so a build request is filed here, by route: before this, RAID's contract
+  // queue could be read (GET /api/raid/queue) but nothing outside Cortex could submit to it. POST files one; GET reads it back.
+  if (p === '/api/raid/contracts' && method === 'POST') {
+    const b = await readBody(req);
+    try {
+      const intake = require('./core/raid/contract-intake.js');
+      const r = intake.submitContract(b.contract || {}, { source: b.source || 'cos', intention: b.intention || null, dependsOn: Array.isArray(b.dependsOn) ? b.dependsOn : [], onFail: b.onFail || null });
+      json(res, 200, { ok: true, ...r });
+    } catch (e) { json(res, 400, { ok: false, error: e.message }); }
+    return;
+  }
+  { const cm = /^\/api\/raid\/contracts\/([^/]+)$/.exec(p);
+    if (cm && method === 'GET') {
+      const id = decodeURIComponent(cm[1]);
+      let row = null; try { row = jaaDB.get('raid_contract_queue', id); } catch (_) {}
+      if (!row) { try { row = (jaaDB.tail('raid_contract_queue', 500) || []).find(r => r.uuid === id || r.queueId === id) || null; } catch (_) {} }
+      json(res, row ? 200 : 404, row ? { ok: true, contract: row } : { ok: false, error: `no contract ${id}` });
+      return;
+    } }
   if (p === '/api/raid/queue') {
     const n = parseInt(url.searchParams.get('n') || url.searchParams.get('limit') || '50');
     const rows = jaaDB.tail('raid_contract_queue', n);

@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793577139966
+exported_at: 1794155255948
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577139966
-lastSeenAt: 1793577139966
+firstSeenAt: 1794155255948
+lastSeenAt: 1794155255948
 fingerprint: null
 payload:
   for: MG8_the_factory
@@ -72,6 +72,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG22_template_and_archetype_builder
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC5_open_loops_imported
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
       - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
@@ -90,7 +91,7 @@ payload:
         upstream 24
       - >-
         needed by (3): MG9_the_console_ui, MG20_add_deploy_connect,
-        MG22_template_and_archetype_builder · all downstream 8
+        MG22_template_and_archetype_builder · all downstream 9
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
         kind: declared

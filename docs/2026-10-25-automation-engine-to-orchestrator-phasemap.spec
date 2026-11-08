@@ -184,7 +184,7 @@ phases:
       records under its source; the orchestrator down is named, not thrown; clear-glass down names only browser steps
 
   AE6_the_engine_moves_into_cos:
-    status: OPEN
+    status: BUILT   # 2026-11-08: slice a 0.60.449 (COS runs the engine), slice b 0.60.450 (it starts with COS); the files stay the shared kernel (his: Clear Glass keeps its own)
     expanded_2026_11_08: >-
       James, 2026-11-08: "basically i want it to be the main subrate for all automation like a hub for the automation pipeline, workflows, tasks, including or using raid as the authentication and tracking system. queues, contracts, dag, it should all be there, waiting to be wired in." · "look at existing phases and ideas. cos is meant to be nexus entirely," (asked after OC4a, with "i wanted to have an editor for pipelines, like every pipeline in nexus is editable, managable, uses cos for gates, like in clearglass, gated steps, macros, etc") Expanded, not rewritten (his SL_D11): this phase is where his hub lives — every pipeline, workflow and task in COS, editable and gated
       in one place, with RAID, queues, contracts and the DAG as its slots. Readings to settle with him before code (do not guess): (1) "waiting to be
@@ -202,6 +202,52 @@ phases:
       /api/cos/automation/* (workflows, runs, pipelines, macros, triggers) on its own registry; agent steps still go RAID → Guardian, browser
       steps to Clear Glass's driver, each by route. lib/automation/ is archived with a pointer (§0.3); the orchestrator stops running the engine.
     proof: "a workflow and a pipeline run through COS's route (test-cos-automation); the existing automation and pipeline tests pass against cos/automation/; the boundary census shows no new crossing"
+  # ── ADDENDUM 2026-11-08 — AE6's two readings settled (his) ──
+  # James, 2026-11-08, asked (1) whether RAID, queues, contracts and the DAG are named slots first or all working at once, and (2) where RAID lives:
+  #   (1) "Named slots first" (the coder's recommendation, chosen): COS's contract names each slot; a slot answers "not wired yet" until it is
+  #       connected, then they are wired one by one.
+  #   (2) "The routes and event ledgers. This will replace BrainOS, and do what idearium can do. RAID should probably move to cos. Since it has
+  #       signal to noise, load balancing etc. I feel like. What do you think)". The coder's answer, by the axioms: yes, RAID's decision engine
+  #       and its ledgers move into COS (§9.1 and §10.1, one write authority for requests, beside the queue it feeds; §9.2, the ledger written
+  #       before dispatch in one place); Cortex keeps memory and cognition (§5.7, COS must not become a blob). The RAID slot is first wired to
+  #       Cortex's routes, then re-pointed when RAID moves: §5.14 proven, nothing breaks between. The move is its own phase (CS11 un-shelved by
+  #       these words, to confirm). "This will replace BrainOS, and do what idearium can do" is recorded as his direction; what it covers is his
+  #       to say before any phase is written for it.
+  # Found mapping AE6's callers (34, grep): Clear Glass runs its own engine instance (clear-glass/src/main/index.js, mesh/agent-mesh.js), on the
+  # shared lib/automation/. Under his 2026-11-03 rule ("lib/ is not a directory for anything that a system uses") and AE_D3, COS owns the engine
+  # and Clear Glass is its browser driver (AE2, built): Clear Glass stops running an engine and calls COS's route, with AE5.
+  # ── ADDENDUM 2026-11-08 (0.60.449) — AE6 slice a built: COS runs the automation engine ──
+  # James, 2026-11-08: "Automation needs done, orchastrator as the engine, which need to be cos now." · 2026-11-06: "Have cos be the orchastrator complelelt."
+  # The three ways, side by side, before code: (1) move lib/automation/ into cos/ now, which makes Clear Glass reach into COS's folder (§5.9 broken);
+  # (2) port it to .eg now, which is blocked (no timers, processes or files natively, CIE13; no sockets, CIE10); (3) COS runs the engine and serves
+  # its door, and the orchestrator stops. (3) was taken, bottom-up:
+  #   - orchestrator/automation/index.js moved (git mv) to cos/manager/automation-door.js;
+  #   - COS's manager serves /api/cos/automation/* and streams the engine's run events on /api/cos/events;
+  #   - the orchestrator's /automation/* forwards to COS by route (no dead route; COS down is said, 503);
+  #   - the hub's new slot 'engine' is COS's own;
+  #   - the route is in cos/manager/contract.json.
+  # The store keeps the namespace 'orchestrator-automation', so no workflow is lost (§0.3).
+  # The engine still starts on its first request, as it did in the orchestrator. Starting it with COS, so schedules fire without a first call, is
+  # slice b's.
+  # Proof: test-cos-hub HB-05 (COS's real manager answers workflows and catalogue; an unknown route is 404; the engine slot is wired; the forwarder
+  # reaches COS, and says so when COS is down), 5/5; test-orchestrator-automation 7/7 and test-automation-driver-port 3/3 against the moved door;
+  # system-boundary 10/10, sovereign-systems 10/10, boundary-code-only 5/5.
+  # Slice b: the engine starts with COS; Clear Glass stops running its own copy and calls COS's route (with AE5); lib/automation/ moves into
+  # cos/automation/; the .eg port waits on CIE10 and CIE13. Then RAID into COS (its own phase).
+  # Pre-existing, not this slice: test-registry-sovereign RS-01 fails on two Loom maps grown on main (cos-testenv-map, economy-map; in the canvas
+  # handoff). The root CLAUDE.md lost RS-01's required law sentence when it was distilled; this release restores it.
+  # ── ADDENDUM 2026-11-08 (0.60.450) — AE6 slice b, first part: the engine starts with COS ──
+  # James, 2026-11-08: "Continue to get the automation done." The engine starts at COS's boot (cos/manager/server.js), so a scheduled or triggered
+  # workflow fires without a first request; --no-automation leaves it off; the start, or its failure, is a ledger line. Proven on a real boot in the
+  # sandbox: the manager up, the ledger line "the automation engine started with COS: 0 workflow(s)", /api/cos/automation/active answered, no
+  # process left behind. Found for the next part: Clear Glass's own instance holds his workflows in its own store (namespace 'brainos': the
+  # Fiverr pipelines, macros). Turning it off is a migration first (§0.3), and AE_D2 (Clear Glass keeps its own instance, to run with nothing
+  # else up) stands against AE_D3 until he chooses: asked 2026-11-08.
+  # ── ADDENDUM 2026-11-08 — Clear Glass keeps its own engine (his); AE6 closed ──
+  # Asked: migrate his workflows into COS and switch Clear Glass's engine off (the coder's recommendation: one engine, lighter on his PC), or keep
+  # both (AE_D2). James, 2026-11-08: "No clearglass keeps its". AE_D2 stands beside AE_D3: COS runs the platform's engine and is the hub; Clear
+  # Glass runs its own instance for its browser workflows, in its own store ('brainos'), which runs with nothing else up. The engine's code is
+  # used by both, so it stays the shared kernel in lib/automation/: moving it into cos/ would make Clear Glass reach into COS's folder (§5.9).
   AE5_ui_and_cleanup:
     status: OPEN
     layer: ui

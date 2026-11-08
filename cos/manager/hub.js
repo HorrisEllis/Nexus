@@ -18,7 +18,9 @@ const http = require('http');
 
 // owner 'cos' = COS's own route, answered in process. route null = not wired yet; phase names what wires it.
 const SLOTS = Object.freeze([
-  { id: 'automation', does: 'workflows and automations, the union of every source (AU1)', owner: 'idearium', route: 'GET /api/automation', moves: 'AE6 moves the engine into COS' },
+  { id: 'automation', does: 'workflows and automations, the union of every source (AU1)', owner: 'idearium', route: 'GET /api/automation' },
+  // AE6 slice a (2026-11-08): the engine itself is COS's now, served in process
+  { id: 'engine', does: 'the automation engine: workflows, runs, triggers, webhooks (moved from the orchestrator)', owner: 'cos', route: 'GET /api/cos/automation/workflows' },
   { id: 'pipelines', does: 'Clear Glass\'s gated pipelines and macros (PL1–PL11)', owner: 'clear-glass', route: 'GET /automation/pipelines' },
   { id: 'tasks', does: 'tasks deployed to any system (OC4a)', owner: 'cos', route: 'GET /api/cos/deployments' },
   { id: 'queues', does: 'held acts waiting for a take (COS proposals)', owner: 'cos', route: 'GET /api/cos/proposals' },

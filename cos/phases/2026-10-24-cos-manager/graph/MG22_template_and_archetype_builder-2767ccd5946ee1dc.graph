@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793577140008
+exported_at: 1794155256004
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577140008
-lastSeenAt: 1793577140008
+firstSeenAt: 1794155256004
+lastSeenAt: 1794155256004
 fingerprint: null
 payload:
   for: MG22_template_and_archetype_builder
@@ -40,7 +40,8 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
       - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
       - docs/2026-10-24-cos-manager-phasemap.spec::MG18_the_supervisor_screen
-    dependents: []
+    dependents:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
     upstream:
       - docs/2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
       - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
@@ -73,7 +74,8 @@ payload:
       - docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
       - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
       - docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
-    downstream: []
+    downstream:
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
       - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
@@ -85,15 +87,21 @@ payload:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG21_the_add_screen
         files:
           - cos/manager/contract.json
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG38_the_orchestrator_into_cos
+        files:
+          - cos/manager/contract.json
     dangling: []
     lines:
       - layer 7 · blocked by MG5_browsers_and_editors, MG8_the_factory
       - >-
         depends on (3): MG5_browsers_and_editors, MG8_the_factory, MG18_the_supervisor_screen · all
         upstream 31
-      - 'needed by (0): —'
+      - 'needed by (1): BC6_the_universal_compiler'
       - 'same files as MG20_add_deploy_connect with no order between them: cos/manager/contract.json'
       - 'same files as MG21_the_add_screen with no order between them: cos/manager/contract.json'
+      - >-
+        same files as MG38_the_orchestrator_into_cos with no order between them:
+        cos/manager/contract.json
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
         kind: declared

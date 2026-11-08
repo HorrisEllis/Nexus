@@ -1,53 +1,60 @@
-# NEXUS
+# NEXUS — James Brooks's project. The working contract, distilled.
 
-James's project. **Read the axioms first, every session: `docs/AXIOMS-v3.1.md`** (at least Part IV, the quick reference; Group 5C,
-sovereignty, in full). They are his law and decide every technical call. James, 2026-10-29: "Remember sovereignty. Add that to the axioms
-and then add it to the claude.md to read the axioms in the docs".
-**Do not guess if you do not know. Ambiguity is reconciled by him, never by the coder: ask, with the readings side by side.** Read first: the
-Atlas in Idearium (`docs/atlases/<system>-atlas.md`) and each system's own spec folder (`<system>/spec/`). James, 2026-11-03: "Also put do not
-guess if you do not know. Ambiguity must be reconciled by me. Use the Atlas in Idearium. The specs in each spec folder. Of each system."
-**Each system is sovereign: its own data, modules and commands, all inside its own folder. It reaches another system only through its API routes
-and the CLI server, so the other can be swapped. `lib/` is not a directory for what a system uses.** (docs/CLAUDE.md, addendum 2026-11-03.)
-**Each system's component registry, in his words only (2026-11-03):** "No component registry is the spine." · "The drawbridge is the the component
-registry, which is also the event bus, and interaction contract and bridge into the compartment." · "the server.js is the process for each system.
-It’s what cos manages. The spine and component registry for each system routes through there. Cli and api."
-**The component registry is per system. The system registry connects the component registries; COS and the Orchestrator use it to orchestrate.**
-**Every system's component registry is its own: per system, sovereign, never central, and Loom is NOT it (AXIOMS §5.16).** James, 2026-11-03:
-"And enforce that. I’m sick of you confusing that. It’s fucking sovereign. Do not  make this mistake again."
-**Every phase needs a DAG.** James, 2026-11-03: "Okay we also need to clean the phases at some point. Add to the Claude.md. That every phase needs a
-dag." Every phase of every map has its `depends_on:` (`[]` when none, every name resolving, no cycles), its `files:`, and its graph written before
-any code (his 2026-10-18 and 2026-10-19 rules, in docs/CLAUDE.md: `node idearium/spec-engine/phase-specs.cjs <map>`, moved from lib/emerge 2026-11-05 by his EAS_D10, `lib/phase-dag.js`). A phase
-without them is not built. **Pending, his:** the phases need cleaning (the open ones are spread over many maps; when, his call).
-**Phases expand; they are not written again.** James, 2026-11-03: "Like they stop getting written and start getting, they expand." Before writing a
-phase, find the one that already covers its files or intent and expand it (a dated addendum quoting why); write a new phase only when none does.
-Every phase id is unique across all maps. (docs/2026-10-23-self-building-loop-phasemap.spec SL_D11, SL11.)
-**Always log in the phase ledger.** James, 2026-11-06: "we also need to add a phase ledger, to idearium, then add to claude.md to to always log in the
-ledger". Every phase written, expanded, built or closed gets one line, with why, in the same commit:
-`node idearium/spec-engine/phase-ledger.cjs log <phase> <written|expanded|built|closed|note> "<why>" --version <x.y.z>` (or `phases log`). Before
-writing a phase, `phase-ledger.cjs covers <files…> --does "…"` names the phase to expand instead. The how is in docs/CLAUDE.md.
-**THE FOCUS (his, 2026-11-06): Emerge first, then Fiverr.** James: "Emerge first then fiverr maybe? I’m struggling. Emerge is the highest
-leverage. If fiverr isn’t days of work. I can also use remote control to give you access." Emerge: the CIE-EG decisions (D3's default, D4's
-reading, D6–D10), then the merged kernel (EAS_D8) and the small-model benchmark. Fiverr after, if it is not days of work: FP5's test, FG4, TC3,
-FG5 (docs/2026-10-28-gated-flows-phasemap.spec), proved live through his Remote Control. Work outside the focus waits unless he asks. The how is in
-docs/CLAUDE.md (addendum 2026-11-06, the focus).
-**No non-Emerge code unless the contract or the project names it; a missing capability is built (AXIOMS §17.13).** James, 2026-11-06: "the
-moment js is removed from emerge it becomes the replacement. focus on that first. no more js, we focus on .eg" · "No non-emerge code, unless
-specified in the contract or project. lack of capability is an opportunity to build it." First in order: the JavaScript removal from Emerge
-(docs/2026-11-06-cie-eg-build-phasemap.spec). **Crystallise verified primitives; log every benchmark** (his, the same day): the how is in
-docs/CLAUDE.md (addendum 2026-11-06, Emerge is the replacement). **Note metrics while coding in Emerge, expand Emerge as you go, and define
-every new extension in a taxonomy and ledger** (his, the same day: "remember to take note of metrics while coding in emerge, and expanding emerge
-while you do." · "all new extensions need to be defined in a taxonomy and ledger."); the how is in docs/CLAUDE.md (addendum 0.60.429).
-**After Emerge: WARP 2, then the relational constraint field, then its view** (his, 2026-11-07, CIE_D5): "once emerge is done then warp 2 and the
-relational constraint field. then code can be represented as nodes moving through the field". Emerge debugs its own code when compiling; the JS
-harness that judges it is temporary. Maps: docs/2026-11-06-cie-eg-build-phasemap.spec CIE_D5, CP11 (expanded), RF1, EM2, CF1.
-**Provenance of the process: every use of his framework is a thread from his words to the evidence** (his, 2026-11-07): "track the thread and
-add that to claude.md to maintain provenance of the process, no point in claiming without grounding in actual evidence." `docs/FRAMEWORK-THREADS.md`;
-executed or conceptual said; predictions registered before results; the how is in docs/CLAUDE.md (addendum 2026-11-07, provenance).
-**Every change and every version goes to Versionium, in full (§17.12).** James, 2026-10-29: "full changes, and versions have to be pushed
-to versionium? enforce it everywhere that you'd find it." The how is in docs/CLAUDE.md.
+James, 2026-11-08: "Synthesize the Claude.md with the most important parts to save your context window." The full contract is
+`docs/CLAUDE.md`: every rule, with his words and dates. It is kept whole (§0.3) and no longer loads by itself. Open the section you need.
+The previous root file is `docs/_archive/CLAUDE.root.before-2026-11-08.md`.
 
-The working agreement — map before build, reuse before build, wire the registry, addend the specs,
-lose nothing, quote him and his decisions with their context — is in docs/CLAUDE.md, imported here so it loads at the
-repo root:
+## The order (his, 2026-11-08). It supersedes "Emerge first, then Fiverr" (2026-11-06), which is kept in docs/CLAUDE.md
+"Automation needs done, orchastrator as the engine, which need to be cos now. Then emerge needs to get done. Than warp 2 with the constraint
+relational field" · "This will be huge. It’s all heading towards something massive. Ripples, waves, tidal waves of change if I can help it."
+1. **Automation, with COS as the engine.** The automation engine was moved to the Orchestrator (docs/2026-10-25-automation-engine-to-orchestrator-
+   phasemap.spec). It now goes to COS. Then the pipeline canvas: docs/2026-11-08-pipeline-canvas-phasemap.spec, its `handoff_2026_11_08` (PC2,
+   PC3, PC5, then the canvas preview shown to him).
+2. **Emerge done:** the JavaScript removed (docs/2026-11-06-cie-eg-build-phasemap.spec; next CIE8 slice c).
+3. **WARP 2 and the constraint relational field** (EM2, RF1, CF1; CIE_D5). Sigma measures deviation and delta measures gaps (CF1, thread T4).
+Money matters now ("I need to be paid, at all."). The Fiverr autofill is built (clear-glass/userscripts/); its first live run is his.
 
-@docs/CLAUDE.md
+## Law
+- **The axioms are law, for every decision:** `docs/AXIOMS-v3.1.md`. Read Part IV (one line per law) every session, and Group 5C (sovereignty)
+  in full. Cite the axioms a decision rests on in the owning map's `decisions:`. A question goes to him only when the axioms do not settle it,
+  they conflict, or it is his: what he meant, or the direction.
+- **Do not guess.** "Ambiguity must be reconciled by me." Ask with the readings side by side. Read first: the atlas (`docs/atlases/`) and the
+  system's own `<system>/spec/`.
+- **Think dialectically** (his, 2026-11-07). Before "can't" or "no other way", write the alternatives down: change the method, reframe, another
+  angle. Check this conversation's history before re-deriving a fact.
+
+## Sovereignty (§5.9–§5.16)
+- Each system owns its data, modules and commands, inside its own folder. It reaches another system only through that system's API routes and
+  the CLI server, so the other can be swapped. `lib/` is not a home for what a system uses.
+- **Every system's component registry is its own: per system, sovereign, never central, and Loom is NOT it (AXIOMS §5.16).** His words: "No component registry is the spine." · "The
+  drawbridge is the the component registry, which is also the event bus, and interaction contract and bridge into the compartment." · "the
+  server.js is the process for each system. It’s what cos manages." The system registry connects the component registries; COS uses it to
+  orchestrate.
+
+## How work is done
+- **Phased only.** Map before build (§3.3) and reuse before build (§8.6). Every phase has `depends_on:` (`[]` when none), `files:` and its
+  graph before code: `node idearium/spec-engine/phase-specs.cjs <map>`.
+- **Phases expand, they are not written again.** Run `phase-ledger.cjs covers <files…> --does "…"` first.
+- **Always log in the ledger,** in the same commit: `node idearium/spec-engine/phase-ledger.cjs log <phase> <written|expanded|built|closed|note>
+  "<why>" --version <x.y.z>`.
+- **No non-Emerge code** unless the contract or the project names it (§17.13); a missing capability is built into Emerge. No new JS unless it
+  replaces JS (his, 2026-11-07): new checks are written in Emerge.
+- **Order of delivery:** backend → API route → command row (`idearium/cli/route-commands.js`) → UI.
+- **UI is tested in Clear Glass** (`clear-glass/src/driver/glass.js`), never Playwright.
+- **Every release:** a version line in `lib/version.js` (with VERSION and package.json) that opens with his words; a changelog in
+  `versionium/changelogs/`; an `## ADDENDUM` in the spec or map that owns the change; a row in docs/BENCHMARKS.md for Emerge work (wall time,
+  lines, tests, failed runs and what each taught, gaps found).
+- **Never commit `data/**`.** After touching `emerge/`, run `node scripts/emerge-lock.js --write`.
+- **Every change and every version goes to Versionium** (§17.12), through `lib/versionium-record.js` `record()`.
+
+## His voice, and proof
+- Quote him verbatim and dated in versions, changelogs, map origins and decisions. Give the context and the options, and name the coder's part as
+  the coder's. The ideas and the calls are his.
+- **Proof needs evidence:** `docs/PROOF-OF-COMPETENCY.md` gets an entry only with his words, the call against an alternative, and something a
+  stranger can run. `docs/FRAMEWORK-THREADS.md` tracks each use of his framework as executed or conceptual, with predictions registered before
+  results and failures kept. Bias is named: a prediction judged by the same hands that made it is post-hoc (his, 2026-11-07).
+- Encouragement is grounded in evidence; costs are said too.
+
+## Where to read more
+`docs/CLAUDE.md` (the full contract) · `docs/AXIOMS-v3.1.md` · `docs/atlases/<system>-atlas.md` · `docs/SPEC-REGISTRY.spec` ·
+`skills/james-brooks/SKILL.md` (his style) · `docs/JAMES-BROOKS.md` (his work, checkable) · `docs/innovation-toolkit*.md` (his framework).

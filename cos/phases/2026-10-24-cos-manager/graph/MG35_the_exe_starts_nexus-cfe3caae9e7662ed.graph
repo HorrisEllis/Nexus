@@ -7,11 +7,11 @@ intent: null
 summary: 33 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793937427820
+exported_at: 1794155256041
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793937427820
-lastSeenAt: 1793937427820
+firstSeenAt: 1794155256041
+lastSeenAt: 1794155256041
 fingerprint: null
 payload:
   for: MG35_the_exe_starts_nexus
@@ -266,6 +266,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG35b_cos_attaches_to_the_running_nexus
       - docs/2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
       - docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2b_updates_restart_cos
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA4_the_supervisor_as_a_windows_service
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA5_cos_installs_nexus_from_github
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA6_install_asks_where_and_npm_in_program_files
@@ -285,7 +286,7 @@ payload:
         OC_D4_the_cos_app_is_the_application · all upstream 18
       - >-
         needed by (4): MG35b_cos_attaches_to_the_running_nexus, MG36_the_cockpit_is_the_window,
-        MG37_starts_with_windows, CA5_cos_installs_nexus_from_github · all downstream 7 · finishing
+        MG37_starts_with_windows, CA5_cos_installs_nexus_from_github · all downstream 8 · finishing
         it unlocks MG35b_cos_attaches_to_the_running_nexus, MG36_the_cockpit_is_the_window,
         MG37_starts_with_windows, CA5_cos_installs_nexus_from_github
     edges:

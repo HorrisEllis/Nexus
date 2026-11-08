@@ -1,0 +1,143 @@
+// pillar/contracts/contracts.eg — one contract per primitive, each concept once (MOD-PIL-CONTRACTS, phase PIL2_contracts).
+// James, 2026-11-06 (EAS_D8): "One kernel, merged" · 2026-11-08: "Focus on primitives. Build using emerge right?"
+// Each contract is read from the code that implements it today (the `from:` names it), never written from memory: its meaning is that code's own
+// header line, its takes and gives are its signature, its fails are the refusals it already makes. A primitive whose source is not in this
+// repository is not invented: it is an open gap, said (§1.2), until its source is read.
+// The fields are PrimitiveContract's (pillar/spec/pillar.spec): id, meaning, takes, gives, fails, from, version. Written as Emerge data with
+// validate() enforcing every field, until Emerge's schema construct (CIE-EG MOD-STORE) exists to carry them; nothing here changes when it does.
+//
+//   contracts() → [PrimitiveContract]    contract(id) → PrimitiveContract | null    validate(c) → { ok, errors }    check_all(list?) → { ok, errors }
+//   gaps() → [{ primitive, missing, why }]   the primitives of the census not yet grounded
+
+let FIELDS = ["id", "meaning", "takes", "gives", "fails", "from", "version"]
+let SETS = ["emerge", "eravos", "nexus"]
+
+let CONTRACTS = [
+  { id: "pillar:constraint", meaning: "reduces valid future states",
+    takes: { id: "string", type: "hard|soft|probabilistic|temporal|causal|relational", needs: "list of state fields", check: "fn(next, ctx) → bool", violationCost: "num", strength: "num" },
+    gives: { verdict: "admitted, violated at a cost, or a gap when a needed field is missing" },
+    fails: ["no id: a rejection names its constraint", "an unknown type", "no check(next, ctx)"],
+    from: [{ set: "emerge", name: "Constraint", at: "emerge/emerge/core/constraint.js" }, { set: "eravos", name: "Constraint", at: "ERAVOS.kernel.spec (outside this repository)" }], version: "1.0.0" },
+  { id: "pillar:transition", meaning: "movement between states: a proposal until the constraints let it through",
+    takes: { id: "string", source: "who proposed it: a model, a rule, James", changes: "map of key → value", cost: "num >= 0", causedBy: "an earlier transition, or null" },
+    gives: { transition: "a proposal the field admits or refuses" },
+    fails: ["no source", "changes not a map of key → value", "a cost below 0"],
+    from: [{ set: "emerge", name: "Transition", at: "emerge/emerge/core/transition.js" }, { set: "eravos", name: "Mutation", at: "ERAVOS.kernel.spec (outside this repository)" }], version: "1.0.0" },
+  { id: "pillar:observation", meaning: "evidence about states or transitions, with confidence, source and cost",
+    takes: { id: "string", subject: "what the evidence is about", value: "any", confidence: "num in [0..1]", source: "where it came from", cost: "num" },
+    gives: { observation: "evidence, never a fact by itself" },
+    fails: ["a confidence outside [0..1]", "no subject: evidence is about something", "no source: evidence says where it came from"],
+    from: [{ set: "emerge", name: "Observation", at: "emerge/emerge/core/observation.js" }], version: "1.0.0" },
+  { id: "pillar:gap", meaning: "missing information required to evaluate a constraint",
+    takes: { id: "string", missingVariable: "what is missing", affectedConstraint: "the constraint it blocks", source: "string", severity: "string", causedBy: "an entry, or null" },
+    gives: { gap: "an open question that blocks its constraint until filled" },
+    fails: ["no missingVariable: a gap names what is missing", "no affectedConstraint: a gap names the constraint it blocks"],
+    from: [{ set: "emerge", name: "Gap", at: "emerge/emerge/core/gap.js" }], version: "1.0.0" },
+  { id: "pillar:lens", meaning: "a projection of the field, read-only by construction",
+    takes: { name: "string", project: "fn(view) → any, handed a deep-frozen copy" },
+    gives: { view: "what the projection shows; writing through it is refused" },
+    fails: ["no name", "no project(view)"],
+    from: [{ set: "emerge", name: "Lens", at: "emerge/emerge/core/lens.js" }, { set: "eravos", name: "Projection", at: "ERAVOS.kernel.spec (outside this repository)" }], version: "1.0.0" },
+  { id: "pillar:seed", meaning: "one recorded seed per run; every random draw comes from it",
+    takes: { seed: "int" },
+    gives: { draws: "a replayable sequence: the same seed, the same draws" },
+    fails: ["not an integer: a run without a recorded seed cannot be replayed"],
+    from: [{ set: "emerge", name: "Seed", at: "emerge/emerge/core/seed.js" }], version: "1.0.0" },
+  { id: "pillar:history", meaning: "constraint-consistent transition paths, append-only and hash-chained",
+    takes: {},
+    gives: { history: "entries in order, each hash-chained to the one before" },
+    fails: ["a broken chain shows at the entry where it breaks"],
+    from: [{ set: "emerge", name: "History", at: "emerge/emerge/core/history.js" }, { set: "nexus", name: "Ledger", at: "lib/warp/core/Ledger.js" }], version: "1.0.0" },
+  { id: "pillar:level", meaning: "every node sits at a level with its parent and children; its hash is its summary plus its children's hashes",
+    takes: { id: "string", level: "int >= 0", parent: "a placed node, or none" },
+    gives: { hash: "a change anywhere below shows at every level above" },
+    fails: ["no id or a level that is not an integer >= 0", "a node already placed", "a parent not placed"],
+    from: [{ set: "emerge", name: "Level", at: "emerge/emerge/core/level.js" }], version: "1.0.0" },
+  { id: "pillar:budget", meaning: "the cost of every transition is counted, and a constraint can bound it",
+    takes: { limit: "num", id: "string" },
+    gives: { spent: "the running total", constraint: "a budget constraint that refuses past the limit" },
+    fails: ["a transition past the limit is refused by its budget constraint"],
+    from: [{ set: "emerge", name: "Budget", at: "emerge/emerge/core/budget.js" }], version: "1.0.0" },
+  { id: "pillar:field", meaning: "the collection of possible states, and the one place a transition becomes real",
+    takes: { seed: "int", state: "map", constraints: "list of constraints" },
+    gives: { field: "state changed only by admitted transitions, each in its history" },
+    fails: ["a constraint already in the field"],
+    from: [{ set: "emerge", name: "Field", at: "emerge/emerge/core/field.js" }, { set: "eravos", name: "Space", at: "ERAVOS.kernel.spec (outside this repository)" }], version: "1.0.0" },
+  { id: "pillar:identity", meaning: "the canonical form of a value and its hash: the same meaning, the same bytes, the same hash",
+    takes: { value: "any" },
+    gives: { canonical: "the canonical form", hash: "its hash" },
+    fails: ["a value with no canonical form is refused, never hashed loosely"],
+    from: [{ set: "emerge", name: "Identity", at: "emerge/emerge/core/identity.js" }, { set: "eravos", name: "Identity", at: "ERAVOS.kernel.spec (outside this repository): identity through change, PIL4" }], version: "1.0.0" },
+  { id: "pillar:link", meaning: "cause → effect, carrying its field values; not a message",
+    takes: { id: "string", type: "string", data: "map", causedBy: "a link, or root with a reason", field: "map", tick: "int" },
+    gives: { link: "an edge of the causal graph" },
+    fails: ["no type", "neither a cause (causedBy) nor marked root with its reason"],
+    from: [{ set: "nexus", name: "Link", at: "lib/warp/core/Link.js" }, { set: "eravos", name: "Wire", at: "ERAVOS.kernel.spec (outside this repository)" }], version: "1.0.0" },
+  { id: "pillar:expectation", meaning: "declared before anything happens: this must cause that within N ticks",
+    takes: { id: "string", cause: "a link id, or a type", effect: "a link type", within: "ticks", declaredAt: "tick", step: "any" },
+    gives: { state: "open until fulfilled by a caused link, or broken when the window passes: a broken expectation is a gap" },
+    fails: ["no cause", "no effect (a link type)"],
+    from: [{ set: "nexus", name: "Expectation", at: "lib/warp/core/Expectation.js" }], version: "1.0.0" },
+  { id: "pillar:event", meaning: "a datum flowing through the stream: its type is its signature, its data anything",
+    takes: { type: "string (the signature)", data: "map" },
+    gives: { event: "what a gate recognises by its type" },
+    fails: ["an event no gate recognises is unrouted, said, never dropped"],
+    from: [{ set: "nexus", name: "Event", at: "lib/siso/Event.js" }, { set: "eravos", name: "Event", at: "ERAVOS.kernel.spec (outside this repository)" }], version: "1.0.0" },
+  { id: "pillar:gate", meaning: "a shape that recognises one type of event and transforms it into another; its signature is a unique key",
+    takes: { signature: "string, unique among gates" },
+    gives: { event: "the transformed event" },
+    fails: ["a second gate with the same signature is a hard error (AXIOMS §14.3)"],
+    from: [{ set: "nexus", name: "Gate", at: "lib/siso/Gate.js" }, { set: "eravos", name: "Hook", at: "ERAVOS.kernel.spec (outside this repository)" }], version: "1.0.0" },
+]
+
+// the census's primitives with no source in this repository to read: open, never invented (§1.2, his "do not guess if you do not know")
+let GAPS = [
+  { primitive: "Relation", missing: "ERAVOS.kernel.spec (outside this repository)", why: "Relation is ERAVOS's: what it means, takes, gives and refuses is read from its spec, which is not here. Attach the ERAVOS repository (or the spec) and it is written from it." },
+]
+
+fn contracts() = CONTRACTS
+fn gaps() = GAPS
+fn contract(id) {
+  for c in CONTRACTS {
+    if c.id == id { return c }
+  }
+  return null
+}
+
+/** every field present and of its kind; from names a known set; a refusal names what is wrong */
+fn validate(c) {
+  var errors = []
+  if type_of(c) != "map" { return { ok: false, errors: ["a contract is a map"] } }
+  for f in FIELDS {
+    if not has(c, f) or c[f] == null { errors = push(errors, "{get(c, "id", "?")}: {f} is missing") }
+  }
+  if len(errors) > 0 { return { ok: false, errors: errors } }
+  if not (c.id starts_with "pillar:") { errors = push(errors, "{c.id}: the id is pillar:<name>") }
+  if type_of(c.meaning) != "string" or len(c.meaning) == 0 { errors = push(errors, "{c.id}: meaning is one sentence") }
+  if type_of(c.takes) != "map" { errors = push(errors, "{c.id}: takes is a map of named inputs") }
+  if type_of(c.gives) != "map" or len(keys(c.gives)) == 0 { errors = push(errors, "{c.id}: gives names at least one output") }
+  if type_of(c.fails) != "list" or len(c.fails) == 0 { errors = push(errors, "{c.id}: fails names at least one failure (a failure is a value or a gap, never a silent pass)") }
+  if type_of(c.from) != "list" or len(c.from) == 0 { errors = push(errors, "{c.id}: from names the sets it was merged from") } else {
+    for x in c.from {
+      if not (SETS contains get(x, "set", "")) { errors = push(errors, "{c.id}: from names an unknown set {get(x, "set", "?")}") }
+    }
+  }
+  if len(split(c.version, ".")) != 3 { errors = push(errors, "{c.id}: version is semver") }
+  return { ok: len(errors) == 0, errors: errors }
+}
+
+/** PIL-001: each concept once (no two contracts with one id or one meaning), and every contract valid */
+fn check_all(list = CONTRACTS) {
+  var errors = []
+  var ids = {}
+  var meanings = {}
+  for c in list {
+    let v = validate(c)
+    for e in v.errors { errors = push(errors, e) }
+    if has(ids, c.id) { errors = push(errors, "{c.id} is written twice") }
+    ids[c.id] = true
+    if has(meanings, c.meaning) { errors = push(errors, "{c.id} and {meanings[c.meaning]} have one meaning: each concept exists once (PIL-001)") }
+    meanings[c.meaning] = c.id
+  }
+  return { ok: len(errors) == 0, errors: errors }
+}

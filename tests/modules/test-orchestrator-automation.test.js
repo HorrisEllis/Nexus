@@ -15,7 +15,7 @@ require('../../lib/test-sandbox.js').ensure();
  *   OA-07  setBus wires the default bus used when no busFn is injected
  */
 const assert = require('assert');
-const A = require('../../orchestrator/automation/index.js');
+const A = require('../../cos/manager/automation-door.js');
 
 let p = 0, f = 0;
 const t = (id, d, fn) => Promise.resolve().then(fn).then(() => { console.log(`  ✓ ${id} ${d}`); p++; }).catch(e => { console.error(`  ✗ ${id} ${d}\n    ${e.stack || e.message}`); f++; });
@@ -89,6 +89,30 @@ await t('OA-07', 'setBus wires the default bus', async () => {
   hooks.busEmit('automation.log', { msg: 'hi' });
   assert.deepStrictEqual(seen, ['automation.log']);
   A.setBus(null);
+});
+
+// PC2 (docs/2026-11-08-pipeline-canvas-phasemap.spec) — James, 2026-11-08: "A .framework shouldn't just be a document describing what to do. It
+// should be an executable, composable procedure with defined inputs, outputs, contracts and execution behavior."
+await t('OA-08', 'a procedure is a step: it runs through Idearium\'s route, waits on its confirm, refuses a loop and the depth limit across kinds', async () => {
+  const { AutomationEngine } = require('../../lib/automation/engine.js');
+  const calls = [];
+  const idFn = async (path, body) => { calls.push({ path, body }); if (/hold/.test(path)) return { ok: false, waiting: true, run: { results: [{ confirm: 'send the gig', waiting: true }] } };
+    return { ok: true, run: { ok: true, results: [{ tool: 'grep', ok: true }, { tool: 'read', ok: true }] } }; };
+  const E = new AutomationEngine(A.buildHooks({ guardianFn: fakeGuardian(), raidDecideFn: raidDown, idFn }));
+  const step = (procedure, extra = {}) => ({ type: 'procedure', config: { procedure, ...extra } });
+  const run = async (steps, vars) => { const w = E.create({ name: 'pc2-' + Math.random(), status: 'active', steps: [{ type: 'trigger', config: { kind: 'manual' } }, ...steps] }).workflow; return E.run(w.id, 'manual', vars ? { vars } : {}); };
+  const ok = await run([step('audit')]);
+  assert.strictEqual(ok.ok, true, JSON.stringify(ok));
+  assert.strictEqual(calls[0].path, '/api/procedures/audit/run'); assert.deepStrictEqual(calls[0].body.chain, ['procedure:audit']); assert.strictEqual(calls[0].body.yes, false);
+  const held = await run([step('hold')]);
+  assert.strictEqual(held.ok, false); assert.match(held.error, /waits for your yes at: send the gig/);
+  const loop = await run([step('audit')], { __pipelineChain: ['pipeline:x', 'procedure:audit'] });
+  assert.strictEqual(loop.ok, false); assert.match(loop.error, /already running in this chain/);
+  const deep = await run([step('audit')], { __pipelineChain: ['a', 'b', 'c', 'd', 'e'] });
+  assert.strictEqual(deep.ok, false); assert.match(deep.error, /at most 5 deep/);
+  const none = new AutomationEngine({});
+  const w = none.create({ name: 'pc2-noport', status: 'active', steps: [{ type: 'trigger', config: { kind: 'manual' } }, step('audit')] }).workflow;
+  const noport = await none.run(w.id); assert.strictEqual(noport.ok, false); assert.match(noport.error, /need Idearium/);
 });
 
   console.log(`\n  ${p} passed, ${f} failed`);
