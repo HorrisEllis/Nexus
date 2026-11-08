@@ -278,6 +278,30 @@ phases:
   #   On importing Nexus through Idearium: "What? They’re already in idearium". Nothing to build: the coder's question had misread his words.
   # The UI (AE5, COS's Workflows page) waits on his critique of the preview shown 2026-11-08 (edit here or on ERAVOS's canvas; the page's name;
   # whether the Pipelines page merges into it).
+  # ── ADDENDUM 2026-11-08 — the architecture of COS's automation, his ──
+  AE_D5_cos_is_the_engine_the_canvas_a_projection:
+    status: "DECIDED 2026-11-08 by James"
+    his_words: >-
+      "Cos is the automation engine. The canvas a projection. Each step is a cos contiainer. Which can use the actual cos superviser to route through
+      raid to each system using contracts for interacting with each system. Then make sure the tools have the dag for the canvas to understand what
+      it needs. Like then the idearium pipeline should show in the automation tab in cos ui. Cos ui is the orchestrator. Is nexus. Eravos is only the
+      visual ui. All backend is nexus b" · earlier the same day: "No. Eravos is the ui, for the cos automation engine. For the cos ui, automation tab."
+    context: >-
+      Shown a preview: COS's cockpit Automation tab framing ERAVOS from its own server, unchanged. ERAVOS already has an "Automation and Cybernetics"
+      domain waiting for tools.
+    chosen: >-
+      COS is the engine and COS's UI is the orchestrator: it is Nexus, and all the backend is Nexus. ERAVOS is only the visual UI, a projection of COS's
+      engine (Pillar's Lens: read-only by construction, it holds no state of its own). Each step is a COS container: it runs through COS's supervisor
+      and is routed through RAID to the system that does it, by that system's contract (interaction-contract.json; §5.10). Each tool carries its DAG:
+      what it needs and what it gives, so the canvas can see what a step is waiting on. Idearium's pipeline shows in COS's Automation tab, projected
+      on the same canvas.
+    readings_to_confirm:
+      - "'each step is a cos container' read as: a step runs in its own COS compartment (the hub's 'experiments' slot: RAID makes a compartment from a
+        contract, the test and the DAG). The other reading: a step is run by a system COS supervises, without a compartment of its own."
+      - "'the idearium pipeline' read as Idearium's build pipeline (idea, spec, phases, build), projected as boxes with its phase DAG. The other
+        reading: Idearium's .pipeline nodes (PN2)."
+    by_the_axioms: "§5.9 and §5.15 (ERAVOS reached by its address, never its files; it holds no backend), §5.10 (contracts only), §5.2 and §9.1 (routing through RAID), §5.12 (the UI is disposable: a projection), §3.1 (the engine first, then the projection)"
+    phases: "AE8 (each step a COS compartment, routed through RAID by contract), AE9 (each tool's DAG), AE10 (the Automation tab: ERAVOS as the projection, Idearium's pipeline on it); to be written with their graphs once the two readings are confirmed"
   AE5_ui_and_cleanup:
     status: OPEN
     layer: ui
