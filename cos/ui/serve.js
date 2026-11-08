@@ -26,8 +26,8 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=
 function allowlist(contract) {
   const toRe = (p) => new RegExp('^' + p.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\/\*$/, '(?:/.+)?').replace(/:[a-zA-Z]+/g, '[^/]+') + '$');
   return {
-    api: (contract.routes || []).map(r => ({ method: r.method, re: toRe(r.path) })),
-    door: ((contract.door && contract.door.routes) || []).map(r => ({ method: r.method, re: toRe(r.path) })),
+    api: (contract.routes || []).map(r => ({ methods: String(r.method).split('|'), re: toRe(r.path) })),   // PC1 0.60.454: "GET|POST" lists several (AE6's automation route)
+    door: ((contract.door && contract.door.routes) || []).map(r => ({ methods: String(r.method).split('|'), re: toRe(r.path) })),
   };
 }
 
@@ -72,12 +72,12 @@ function createServer({ port = 7797, manager = 'http://127.0.0.1:7799', contract
     }
     let allow; try { allow = loadAllow(); } catch (e) { return send(res, 500, { ok: false, error: `the manager's contract is unreadable: ${e.message}` }); }
     if (p.startsWith('/api/cos/')) {
-      if (!allow.api.some(r => r.method === m && r.re.test(p))) return send(res, 404, { ok: false, error: `${m} ${p} is not in the manager's contract` });
+      if (!allow.api.some(r => r.methods.includes(m) && r.re.test(p))) return send(res, 404, { ok: false, error: `${m} ${p} is not in the manager's contract` });
       return forward(req, res, p + u.search);
     }
     if (p.startsWith('/ap/')) {
       const dp = p.slice(3);
-      if (!allow.door.some(r => r.method === m && r.re.test(dp))) return send(res, 404, { ok: false, error: `${m} ${dp} is not a door route in the contract` });
+      if (!allow.door.some(r => r.methods.includes(m) && r.re.test(dp))) return send(res, 404, { ok: false, error: `${m} ${dp} is not a door route in the contract` });
       return forward(req, res, dp + u.search);
     }
     if (m !== 'GET' && m !== 'HEAD') return send(res, 405, { ok: false, error: `${m} ${p}` });

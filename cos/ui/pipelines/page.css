@@ -1,0 +1,18 @@
+/* the Pipelines page (PC1) — COS's theme; boxes and wires on a dotted field */
+.pl-wrap { display: grid; grid-template-columns: 240px 1fr; gap: 14px; align-items: start; }
+.pl-lib h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; opacity: .6; margin: 14px 0 6px; } .pl-lib h2:first-child { margin-top: 0; }
+.pl-list { display: flex; flex-direction: column; gap: 2px; max-height: 260px; overflow: auto; }
+.pl-item { text-align: left; background: transparent; border: 1px solid transparent; border-radius: 6px; padding: 6px 8px; color: inherit; font-size: 13px; cursor: pointer; }
+.pl-item:hover { background: rgba(255,255,255,.05); } .pl-item[aria-current="true"] { border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.06); }
+.pl-item small { display: block; opacity: .55; font-size: 11px; }
+.pl-legend { display: flex; flex-wrap: wrap; gap: 6px 10px; font-size: 12px; } .pl-legend span::before { content: ''; display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; background: var(--k); }
+.pl-bar { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 8px; } #pl-sum { font: 12px ui-monospace, monospace; opacity: .7; }
+.pl-faults:empty { display: none; } .pl-faults { border: 1px solid #f87171; color: #f87171; border-radius: 8px; padding: 8px 12px; margin-bottom: 8px; font-size: 12px; }
+.pl-canvas { overflow: auto; border-radius: 10px; min-height: 360px; background-color: #0b0d14; background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px); background-size: 18px 18px; }
+#pl-svg { display: block; }
+.pl-box rect.body { fill: #151826; stroke: rgba(255,255,255,.12); stroke-width: 1; } .pl-box:hover rect.body, .pl-box.sel rect.body { stroke: var(--k); stroke-width: 1.5; }
+.pl-box text.t { fill: #e7e9f1; font: 600 12px system-ui, sans-serif; } .pl-box text.s { fill: #8b90a6; font: 11px system-ui, sans-serif; }
+.pl-box .chip { fill: var(--k); opacity: .18; } .pl-box .port { fill: #0b0d14; stroke: var(--k); stroke-width: 2; } .pl-box { cursor: pointer; }
+.pl-wire { fill: none; stroke-width: 1.8; opacity: .8; }
+.pl-detail:empty { display: none; } .pl-detail { margin-top: 10px; font: 11px ui-monospace, monospace; opacity: .8; max-height: 220px; overflow: auto; white-space: pre-wrap; }
+@media (max-width: 760px) { .pl-wrap { grid-template-columns: 1fr; } }

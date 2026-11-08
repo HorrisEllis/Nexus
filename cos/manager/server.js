@@ -62,6 +62,13 @@ function createServer(sup, opts = {}) {
   // COS runs the automation engine (moved from the orchestrator) and streams its run events on /api/cos/events
   const automation = require('./automation-door.js');
   automation.setBus((type, data) => broadcast(type, data));
+  // PC1 — the box shape, through COS's door (cos/manager/boxes.js → Emerge's cos/automation/box.eg); Idearium's procedures by its route
+  const _ideariumGet = (pth) => new Promise((resolve, reject) => {
+    const d = sup.declarations().find(x => x.name === 'idearium'); let o; try { o = new URL(d && d.healthUrl).origin; } catch (_) { return reject(new Error('idearium declares no address')); }
+    const q = http.get(o + pth, { timeout: 10000 }, (r) => { let t = ''; r.on('data', c => t += c); r.on('end', () => { try { const j = JSON.parse(t || '{}'); r.statusCode >= 400 ? resolve(null) : resolve(j); } catch (e) { reject(e); } }); });
+    q.on('timeout', () => q.destroy(new Error('no answer in 10 s'))); q.on('error', reject);
+  });
+  const boxes = require('./boxes.js').createBoxes({ automation, idearium: _ideariumGet });
   sup.on('ledger', (entry) => broadcast('cos.ledger', { entry }));
   // 2026-11-05 SC11 — James: "cos needs the console from the autopilot. like a console tab". Every line a system prints, on the stream as
   // cos.console, in batches every 200 ms; a burst past 500 lines in one batch says how many it dropped (never silently).
@@ -171,6 +178,9 @@ function createServer(sup, opts = {}) {
       // SC4 — add a system: a proposal; his own is taken at once
       // OC4a (docs/orchestration-console.spec MOD-OC-DEPLOY) — James, 2026-11-08: "Also the automation is to deploy agents to systems."
       // OC8a — James, 2026-11-08: "a hub for the automation pipeline, workflows, tasks ... queues, contracts, dag, it should all be there, waiting to be wired in."
+      // PC1 — James, 2026-11-08: "cli commands, agent tools, copilot commands, inject nodes to agents. keep going. i want this built and added to cos ui."
+      if (m === 'GET' && p === '/api/cos/boxes') { const r = await boxes.of({ pipeline: u.searchParams.get('pipeline'), procedure: u.searchParams.get('procedure'), as: u.searchParams.get('as') }); return send(res, r.ok ? 200 : (r.code || 500), r); }
+      if (m === 'GET' && p === '/api/cos/procedures') { const r = await boxes.procedures(); return send(res, r.ok ? 200 : (r.code || 500), r); }
       if (m === 'GET' && p === '/api/cos/hub') return send(res, 200, { ok: true, ...(await hub.read()) });
       // AE6 slice a — the automation engine's door: workflows, runs, log, pipelines, macros, triggers, webhooks (lib/automation/routes.js)
       if (p.startsWith('/api/cos/automation/')) {

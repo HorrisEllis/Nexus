@@ -303,6 +303,17 @@
       "method": "GET",
       "path": "/api/cos/hub",
       "out": "{ slots: HubSlot[], wired, waiting, down } \u2014 every automation slot read live from its owner: wired, waiting (the phase that wires it), down or refused; OC8a"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/boxes",
+      "in": "?pipeline=<id> | ?procedure=<id> [&as=erv]",
+      "out": "{ kind, graph: { boxes: Box[], wires: Wire[] }, ok, problems, unchecked, source } \u2014 the step as boxes, from Emerge's box shape (cos/automation/box.eg); PC1; with as=erv: { erv, name } \u2014 an ERAVOS project (one eravos.orchestration.box per step, dataflow wires), opened by ERAVOS\u2019s own Open"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/procedures",
+      "out": "{ procedures } \u2014 Idearium's procedures, read by its route (GET /api/procedures); PC1"
     }
   ],
   "door": {
@@ -718,6 +729,23 @@
       "listens": [],
       "emits": [],
       "about": "COS as the hub of all automation: workflows, pipelines, tasks, queues, RAID, contracts, the DAG, and the slots still waiting (agents, a DAG per input, context, gaps, hypotheses, experiments), each with its owner and the phase that wires it"
+    },
+    {
+      "id": "pipelines",
+      "title": "Pipelines",
+      "path": "pipelines/",
+      "route": "#/pipelines",
+      "nav": "main",
+      "built": true,
+      "phase": "PC1_one_box_shape",
+      "routes": [
+        "GET /api/cos/automation/pipelines",
+        "GET /api/cos/procedures",
+        "GET /api/cos/boxes"
+      ],
+      "listens": [],
+      "emits": [],
+      "about": "every pipeline and procedure as boxes and wires, drawn from the DAG: each box's kind, ref and gate, every fault named. Read-only: the editing canvas is ERAVOS's (PC4), shown to him as a preview first"
     }
   ],
   "planned": [

@@ -136,6 +136,42 @@ fn problems(g: map, known: map): map {
   return { ok: len(ps) == 0, problems: ps, unchecked: unchecked }
 }
 
+// ── the graph as an ERAVOS project (.erv, its own format: specs/eravos.erv-format.spec in HorrisEllis/Eravos-Canvas) ──
+// James, 2026-11-08: "i want the tools compatable with eravos independantly. eravos is the build surface for nexus." Each box becomes a layer
+// of ERAVOS's own Box tool (eravos.orchestration.box), its whole step in the tool's extra; the wires become ERAVOS dataflow wires. JSON is
+// YAML, so ERAVOS opens this with its own Open, and nothing in its canvas changes. Laid out by the DAG: a box's column is one past the
+// deepest box it waits on.
+fn depth_of(g: map, id: string, seen: list): num {
+  if index_of(seen, id) >= 0 { return 0 }
+  var d = 0
+  for w in g.wires {
+    if split(w.to, ".")[0] == id {
+      let n = depth_of(g, split(w.from, ".")[0], push(seen, id)) + 1
+      if n > d { d = n }
+    }
+  }
+  return d
+}
+
+fn to_erv(g: map, name: string): map {
+  var tools = []
+  var rows = []
+  for b in g.boxes {
+    let c = depth_of(g, b.id, [])
+    var r = 0
+    for x in rows { if x == c { r = r + 1 } }
+    rows = push(rows, c)
+    tools = push(tools, { id: b.id, kind: "tool", tool: "eravos.orchestration.box", label: b.ref, on: true, locked: false,
+      at: { x: 40 + c * 320, y: 40 + r * 230, w: 260, h: 190 },
+      state: { params: { kind: b.kind, ref: b.ref, step: b.id, state: "" }, extra: { box: b, kinds: KINDS, last: null } } })
+  }
+  let wires = map(g.wires, fn(w) = { from: [split(w.from, ".")[0], "box.hook.out"], to: [split(w.to, ".")[0], "box.hook.in"], type: "dataflow" })
+  return { erv: 1, name: name, app: "Nexus (cos/automation/box.eg)", workspace: "1.0.0", layers: [
+    { id: "view", kind: "canvas", label: "Canvas view", on: true, locked: false, data: { x: 0, y: 0, z: 1 } },
+    { id: "tools", kind: "group", label: "Tools", on: true, locked: false, layers: tools },
+    { id: "wires", kind: "wires", label: "Wires", on: true, locked: false, data: wires } ] }
+}
+
 component BoxShape {
   id = "cos.automation.box"
   namespace = "cos"
@@ -157,6 +193,10 @@ component BoxShape {
 
   in steps(q: { graph: map }) {
     emit out answer { hook: "steps", ok: true, value: boxes_to_steps(q.graph), why: null }
+  }
+
+  in erv(q: { graph: map, name: string }) {
+    emit out answer { hook: "erv", ok: true, value: to_erv(q.graph, q.name), why: null }
   }
 
   in validate(q: { graph: map, known: map }) {
