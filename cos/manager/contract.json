@@ -293,6 +293,11 @@
       "in": "{ by }",
       "personAct": true,
       "out": "{ deployment } \u2014 OC4a"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/hub",
+      "out": "{ slots: HubSlot[], wired, waiting, down } \u2014 every automation slot read live from its owner: wired, waiting (the phase that wires it), down or refused; OC8a"
     }
   ],
   "door": {
@@ -693,6 +698,21 @@
       "listens": [],
       "emits": [],
       "about": "deploy a task, an agent or a pipeline to any system, through a COS proposal: every deployment, its state and result, and Recall. Tasks run on their target system today; agent and pipeline runners are OC4b."
+    },
+    {
+      "id": "hub",
+      "title": "Hub",
+      "path": "hub/",
+      "route": "#/hub",
+      "nav": "main",
+      "built": true,
+      "phase": "OC8_the_console",
+      "routes": [
+        "GET /api/cos/hub"
+      ],
+      "listens": [],
+      "emits": [],
+      "about": "COS as the hub of all automation: workflows, pipelines, tasks, queues, RAID, contracts, the DAG, and the slots still waiting (agents, a DAG per input, context, gaps, hypotheses, experiments), each with its owner and the phase that wires it"
     }
   ],
   "planned": [

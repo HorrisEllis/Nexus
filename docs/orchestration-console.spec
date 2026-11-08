@@ -122,6 +122,20 @@ spec:
       behavioral_contracts: ["a deploy is a COS proposal: held, then taken by a person or a rule; never applied directly"]
       error_paths: ["an unknown system → refused naming COS's systems"]
 
+    - id: HubSlot
+      name: HubSlot
+      description: "One piece of automation in COS's hub, read live from the system that owns it (OC8a)."
+      fields:
+        id:     "string — automation | pipelines | tasks | queues | raid | contracts | dag | agents | dag-per-input | context | gaps | hypotheses | experiments"
+        does:   "string — what the slot is for"
+        owner:  "string|null — the system that serves it (cos for COS's own); null while no system owns it yet"
+        route:  "string|null — '<METHOD> <path>' on the owner; null = not wired yet"
+        phase:  "string — the phase that wires it, when route is null"
+        state:  "string — wired (the owner answered just now) | waiting | down (no answer) | refused (answered >= 400)"
+        why:    "string — who answered and how, or the phase that wires it"
+      behavioral_contracts: ["wired only when the owner answered on this read; never cached as wired"]
+      error_paths: ["an undeclared owner → down, said"]
+
     - id: RunHistory
       name: RunHistory
       description: "A run's durable event history, for its timeline and replay."
@@ -292,6 +306,38 @@ spec:
       error_paths: ["COS's manager down → said on the page"]
       acceptance: ["in Clear Glass through the real cockpit: a route call deployed to a fixture system shows running, then done with its status"]
 
+    - id: MOD-OC-HUB
+      name: hub
+      uuid: nexus-orchestration-hub-v1-0000-2026-1108-001
+      path: cos/manager/hub.js
+      phase: OC8_the_console
+      description: >-
+        COS as the hub of all automation (James, 2026-11-08: "queues, contracts, dag, it should all be there, waiting to be wired in"). One table of
+        slots; read() asks each owner's own route on its declared address (healthUrl's origin) and answers HubSlot[] with wired, waiting and down
+        counts. RAID is Cortex's, reached by its route (AE_D4, 2a). Slots with no route say the phase that wires them (1a). GET /api/cos/hub; row
+        `cos hub`.
+      deps: [{ name: cos-door }]
+      schema_refs: [HubSlot]
+      exports: ["createHub(sup, { fetch, own, timeoutMs }) → { slots(), read() }", "GET /api/cos/hub", "row `cos hub`"]
+      gate_pipeline: ["GATE-OC8-001: a slot is wired only when its owner answered on this read", "GATE-OC8-002: a slot with no route names its phase"]
+      behavioral_contracts: ["reads only: never writes another system's data", "every owner reached through its route, never its files (§5.15)"]
+      error_paths: ["owner undeclared or silent → down with the reason", "owner answers >= 400 → refused with the status"]
+      acceptance: ["stand-in owners: answered → wired; silent → down; 404 → refused; route-less slots waiting with their phase"]
+
+    - id: MOD-OC-HUB-PAGE
+      name: hub-page
+      uuid: nexus-orchestration-hub-page-v1-0000-2026-1108-001
+      path: cos/ui/hub/page.js
+      phase: OC8_the_console
+      description: "The cockpit's Hub page: every slot, its state, owner, route and why; the counts on top. Reads only GET /api/cos/hub."
+      deps: [{ name: hub }]
+      schema_refs: [HubSlot]
+      exports: ["#/hub"]
+      gate_pipeline: ["GATE-OC8-020: every slot shown with its state"]
+      behavioral_contracts: ["the page reads only /api/cos/hub"]
+      error_paths: ["COS's manager down → said on the page"]
+      acceptance: ["in Clear Glass through the real cockpit: each slot's row carries its state"]
+
     - id: MOD-OC-TOOLS
       name: tools-from-the-index
       uuid: nexus-orchestration-tools-v1-0000-2026-1101-001
@@ -388,3 +434,8 @@ spec:
 # run on its target (do.kind command, ref "<METHOD> <path>" called on the system's own address from its healthUrl). An agent or pipeline deployment
 # is recorded with "no runner yet (OC4b)" until their runners exist. MOD-OC-DEPLOY-PAGE added (the rule: a phase is not done without its screen).
 
+
+# ── ADDENDUM 2026-11-08 (0.60.447) — the hub (OC8a) ──
+# James, 2026-11-08: "basically i want it to be the main subrate for all automation like a hub ... queues, contracts, dag, it should all be there,
+# waiting to be wired in." · "yes, pick the structural solution." MOD-OC-HUB and MOD-OC-HUB-PAGE added, schema HubSlot. Decided by his axioms
+# (docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec AE_D4): slots now, each wired as its phase lands; RAID stays Cortex's, by route.

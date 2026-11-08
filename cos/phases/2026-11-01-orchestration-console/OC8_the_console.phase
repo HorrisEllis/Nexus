@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
 context: pipeline phase OC8_the_console of docs/2026-11-01-orchestration-console-phasemap.spec
 intent: null
-summary: OC8_the_console (?) — 6 file(s)
+summary: OC8_the_console (?) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1793556958993
+exported_at: 1794147147553
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793556958993
-lastSeenAt: 1793556958993
+firstSeenAt: 1794147147553
+lastSeenAt: 1794147147553
 fingerprint: null
 payload:
   id: OC8_the_console
@@ -20,6 +20,11 @@ payload:
   layer: null
   status: OPEN
   files:
+    - cos/manager/hub.js
+    - cos/ui/hub/index.html
+    - cos/ui/hub/page.js
+    - cos/ui/hub/page.css
+    - tests/modules/test-cos-hub.test.js
     - cos/ui/orchestration/index.html
     - cos/ui/orchestration/page.css
     - cos/ui/orchestration/page.js
@@ -27,13 +32,11 @@ payload:
     - lib/ui/brainos/index.html
     - tests/modules/test-orchestration-console.test.js
   depends_on:
-    - OC3_the_calendar
     - OC4_deploy_to_any_system
-    - OC5_every_agent_tool
-    - OC6_history_and_replay
-    - OC7_the_taxonomy_expanded
-    - MG33_cos_ui_has_a_way_in
+    - AE_D4_the_hub_structural
   blocks:
     - MOD-OC-CONSOLE
+    - MOD-OC-HUB
+    - MOD-OC-HUB-PAGE
   spec: docs/orchestration-console.spec
-  graph: b219e48cb6a6e0cb
+  graph: e77d32c446ae1cd2

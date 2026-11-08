@@ -51,6 +51,24 @@ decisions:
       routes move into cos/automation/, served by COS's manager on its own registry; callers reach it by COS's route. Clear Glass keeps its
       browser driver (AE2) and is reached by its route. The old orchestrator/ is archived when nothing calls it (PL_D11 step 4).
     by_the_axioms: "§5.9/§5.15 (each thing in its owner's folder), his 2026-11-03 rule (lib/ is not for what a system uses), §5.16, §0.3"
+  AE_D4_the_hub_structural:
+    status: "DECIDED 2026-11-08 by James's axioms, on his word"
+    his_words: "yes, pick the structural solution. just some context. i want idearium to be used to build capability towards an endstate if nexus cant do it, build it. like synthesizing into a compartment."
+    context: >-
+      Asked after his hub message ("a hub for the automation pipeline, workflows, tasks, including or using raid as the authentication and tracking
+      system. queues, contracts, dag, it should all be there, waiting to be wired in.") with four readings side by side: (1a) slots now, each
+      wired as its phase lands, or (1b) each slot working now; (2a) RAID through Cortex's routes, or (2b) RAID moved into COS; when the request
+      spine (RQ7, RQ8, RQ14–RQ16) comes back: now, after the hub, or after Emerge; who answers a gap: his rule or his axioms. The coder recommended
+      1a, 2a, after the hub, the axioms. His "yes" takes the recommendation; "the structural solution" is read as the one the axioms pick, to confirm.
+    chosen: >-
+      1a: COS's hub is a table of slots (cos/manager/hub.js, OC8a), each read live from its owner; a slot with no route names the phase that wires
+      it. 2a: RAID stays Cortex's, reached by its route, so it can be swapped (§5.15). The request spine returns after the hub, as slots already
+      waiting in it. A gap goes free sources first, then a model or another agent (lifeline), then the web (Clear Glass), and him last (CG_D3's
+      order, his 2026-10-24 "ask user last"). The engine moves into COS as it is (AE6); its .eg port waits on CIE13/CIE10 (thread T10).
+    his_context: >-
+      Idearium is used to build capability toward an end state: what Nexus cannot do, it builds, synthesized into a compartment. Read with RQ15 (a
+      compartment from a contract, the test and the DAG) and GM5's build row (what no source covers is returned as what a build would be asked).
+    by_the_axioms: "§5.15 (reached by route, swappable), §1.1/§1.2 (a slot never pretends; a missing owner is said), §3.3 (slots mapped before wired), §8.6 (AU1, RD0, OC4a reused), §0.3"
   AE_D2_state_stays:
     status: DECIDED 2026-10-25 by James — "yes, state stays"
     asked: "the engine's saved workflows/runs/macros (NEXUS_DATA_ROOT/brainos/*) — move the data, or leave it where it is?"

@@ -1,0 +1,114 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OC8_the_console:e77d32c446ae1cd2
+type: graph
+id: phase:OC8_the_console:e77d32c446ae1cd2
+context: dependency graph of phase OC8_the_console
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794147147553
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794147147553
+lastSeenAt: 1794147147553
+fingerprint: null
+payload:
+  for: OC8_the_console
+  kind: phase
+  repo: null
+  hash: e77d32c446ae1cd2
+  nodes:
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/hub.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/hub/index.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/hub/page.css
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/hub/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/orchestration/index.html
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/ui/orchestration/page.css
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/ui/orchestration/page.js
+      role: changes
+      exists: false
+      system: cos
+    - path: lib/ui/brainos/index.html
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-hub.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-orchestration-console.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-cos-hub.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/hub.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D4_the_hub_structural
+    dependents: []
+    upstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D4_the_hub_structural
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+    downstream: []
+    blockedBy:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-01-orchestration-console-phasemap.spec::OC10_pipelines_on_the_canvas
+        files:
+          - lib/ui/brainos/index.html
+    dangling: []
+    lines:
+      - layer 3 · blocked by OC4_deploy_to_any_system
+      - 'depends on (2): OC4_deploy_to_any_system, AE_D4_the_hub_structural · all upstream 4'
+      - 'needed by (0): —'
+      - >-
+        same files as OC10_pipelines_on_the_canvas with no order between them:
+        lib/ui/brainos/index.html
+    edges:
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+        kind: declared
+      - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D4_the_hub_structural
+        kind: declared

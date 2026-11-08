@@ -150,10 +150,18 @@ phases:
       in one place, with RAID, queues, contracts and the DAG as its slots. Readings to settle with him before code (do not guess): (1) "waiting to be
       wired in" = named slots in COS's contract that answer "not wired yet" until connected, or each one working now; (2) RAID used through
       Cortex's routes, or RAID moved into COS (CS11, shelved 2026-11-07 as "top of my head ideas").
+    expanded_2026_11_08_oc8a: >-
+      OC8a DONE 0.60.447, the hub's backend, route, command and page, sliced ahead of the console (his "waiting to be wired in", AE_D4 1a/2a):
+      cos/manager/hub.js reads each slot from its owner's route (automation AU1 on Idearium, pipelines on Clear Glass, tasks and queues COS's own,
+      RAID and its contract queue on Cortex, the phase DAG on Idearium) and lists the slots still waiting with the phase that wires each (OC4b,
+      RQ14, RQ7, RQ8, RQ16, RQ15). GET /api/cos/hub, row `cos hub`, cockpit page #/hub. Proof: tests/modules/test-cos-hub.test.js 4/4 (HB-01..04,
+      the page in Clear Glass). The console itself (MOD-OC-CONSOLE) stays open on its depends_on.
+    oc8a_depends_on: [OC4_deploy_to_any_system, AE_D4_the_hub_structural]
+    oc8a_files: [cos/manager/hub.js, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, cos/ui/hub/index.html, cos/ui/hub/page.js, cos/ui/hub/page.css, tests/modules/test-cos-hub.test.js, tests/modules/run-all.js]
     depends_on: [OC3_the_calendar, OC4_deploy_to_any_system, OC5_every_agent_tool, OC6_history_and_replay, OC7_the_taxonomy_expanded, MG33_cos_ui_has_a_way_in]
     spec: docs/orchestration-console.spec
-    blocks: [MOD-OC-CONSOLE]
-    files: [cos/ui/orchestration/index.html, cos/ui/orchestration/page.css, cos/ui/orchestration/page.js, cos/manager/contract.json, lib/ui/brainos/index.html, tests/modules/test-orchestration-console.test.js]
+    blocks: [MOD-OC-CONSOLE, MOD-OC-HUB, MOD-OC-HUB-PAGE]
+    files: [cos/manager/hub.js, cos/ui/hub/index.html, cos/ui/hub/page.js, cos/ui/hub/page.css, tests/modules/test-cos-hub.test.js, cos/ui/orchestration/index.html, cos/ui/orchestration/page.css, cos/ui/orchestration/page.js, cos/manager/contract.json, lib/ui/brainos/index.html, tests/modules/test-orchestration-console.test.js]
     interface: [html]
     does: "the console in COS's UI: overview, pipelines, tasks, calendar, agents, tools, history, triggers; BrainOS archived and linking here"
     expanded_2026_11_06: "his \"like autonmous should be a rebuild of brain os. cos is the hub\" (OC_D5): this console is where COS manages every compartment autonomously, beside the Console tab he likes (SC11, kept as it is)"
