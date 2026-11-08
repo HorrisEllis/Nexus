@@ -324,7 +324,24 @@ phases:
       A step kind without a DAG is reported, never guessed.
     proof: "OA-10: every catalogue kind has takes/gives/needs; a workflow whose step takes what no earlier step gives shows it unmet, by name; the route answers through COS's door"
   AE5_ui_and_cleanup:
-    status: OPEN
+    status: "OPEN — slice a BUILT 0.60.461 (COS's Automation tab is the engine's; test-cos-hub HB-07). Open: Triggers, Macros, Webhooks tabs; Idearium's pipeline as a bundled .pipeline (OC9); BrainOS migrated and archived; Clear Glass's Settings › Automation pointed at COS"
+    expanded_2026_11_08_b: >-
+      James, 2026-11-08: "idearium pipeline. also has to be real .pipeline files. it must be exportable and importable." · "what about brainos, like
+      migrating that over.?" · "i need this building already. like i want to eventually migrate the automation from the lib folder and brainos."
+      Slice a, built: cos/ui/automation/index.html (tabs), engine.js, engine.css — Pipelines (list; a pipeline's steps in its own words; Run, live to
+      done by its run record; Stop; Export: GET …/pipelines/:id/node, the real .pipeline node file, what it runs bundled (PN2); Import: POST
+      …/import with the file's text; Open on canvas: the .erv from GET /api/cos/boxes?as=erv), Workflows (Run), Runs, Log. The supervisor's rules
+      and Start at boot are the Supervision tab, unchanged. COS's contract (its registry) gains POST …/pipelines/:id/run, GET …/pipelines/:id/node,
+      GET …/pipeline-runs, GET …/pipeline-runs/:id, POST …/pipeline-runs/:id/cancel (AE7 had listed 14 routes, none of the pipeline runs).
+      Next slices: Idearium's build pipeline as a bundled .pipeline (OC9, his "First one"); BrainOS (lib/ui/brainos, 6 files, 1,932 lines) read,
+      what it does mapped to this tab, then archived (§0.3); lib/automation moved into cos/automation (AE6 slice b).
+    expanded_2026_11_08: >-
+      James, 2026-11-08: "just need the automation engine fully built and in the automation tab" · "cos is the orchastrator". AE5 is COS's
+      Automation tab (PL_D13): today it holds only the supervisor's rules and start-at-boot, and says "Macros and rules … not built"; the engine
+      (AE6 slice a) already answers /api/cos/automation/* (workflows, runs, log, scripts, catalogue, templates, pipelines, macros, triggers,
+      webhooks). The tab becomes the engine's: Workflows · Pipelines · Runs (live, from /api/cos/events) · Triggers · Macros · Webhooks · Steps
+      (the engine's catalogue) · Log · Supervision (today's page, kept as a section). A pipeline opens on ERAVOS's canvas as Steps (cos erv). His
+      rule first: the preview, cos/ui/automation/preview/ (preview.png), shown 2026-11-08 before any of it is built.
     layer: ui
     depends_on: [AE4_repoint_the_registry, AE6_the_engine_moves_into_cos]   # AE6 added 2026-11-06: AE5 is COS's Automation page (PL_D13)
     files:

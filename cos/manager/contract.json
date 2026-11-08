@@ -5,7 +5,16 @@
   "origin": "James, 2026-10-31: \"okay. lets build cos ui. floating, above the event bus. all of the phases, build it. do not make this ugly, cluttered, cheap, or lazy\"",
   "automation_events": {
     "stream": "GET /api/cos/events (text/event-stream); an automation event's name starts with automation.",
-    "events": ["automation.run.start", "automation.run.complete", "automation.run.error", "automation.log", "automation.notify", "automation.condition.evaluated", "automation.workflow.created", "automation.workflow.removed"],
+    "events": [
+      "automation.run.start",
+      "automation.run.complete",
+      "automation.run.error",
+      "automation.log",
+      "automation.notify",
+      "automation.condition.evaluated",
+      "automation.workflow.created",
+      "automation.workflow.removed"
+    ],
     "origin": "AE7 (2026-11-08), James: \"Then an api that eravos can use for the step. So needs full cli commands, events, nodes.\""
   },
   "for_eravos": {
@@ -27,7 +36,7 @@
     {
       "method": "POST",
       "path": "/api/cos/automation/workflows",
-      "out": "{ name, steps, status? } → { ok, workflow }"
+      "out": "{ name, steps, status? } \u2192 { ok, workflow }"
     },
     {
       "method": "GET",
@@ -37,12 +46,12 @@
     {
       "method": "POST",
       "path": "/api/cos/automation/workflows/:id/run",
-      "out": "{ vars? } → the run"
+      "out": "{ vars? } \u2192 the run"
     },
     {
       "method": "POST",
       "path": "/api/cos/automation/step",
-      "out": "{ step: { type, config }, vars? } → one step run on its own: what an ERAVOS box calls"
+      "out": "{ step: { type, config }, vars? } \u2192 one step run on its own: what an ERAVOS box calls"
     },
     {
       "method": "GET",
@@ -77,7 +86,7 @@
     {
       "method": "POST",
       "path": "/api/cos/automation/import",
-      "out": "a node (workflow) → { ok, workflow }"
+      "out": "a node (workflow) \u2192 { ok, workflow }"
     },
     {
       "method": "GET",
@@ -88,6 +97,31 @@
       "method": "POST",
       "path": "/api/cos/automation/hook/:id",
       "out": "a webhook (?token=); the one route another machine may call"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/automation/pipelines/:id/run",
+      "out": "{ by } \u2192 { runId, status } \u2014 a pipeline run (AE5)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/automation/pipelines/:id/node",
+      "out": "\u2192 { filename, text, missing } \u2014 the pipeline as its real .pipeline node file, what it runs bundled (PN2; AE5 export)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/automation/pipeline-runs",
+      "out": "?pipelineId&limit \u2192 { runs } \u2014 pipeline runs, newest first (AE5)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/automation/pipeline-runs/:id",
+      "out": "\u2192 { run } \u2014 one run: each step\u2019s status, time, error (AE5, live)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/automation/pipeline-runs/:id/cancel",
+      "out": "\u2192 { run } \u2014 stop a run (AE5)"
     },
     {
       "method": "GET",
@@ -652,20 +686,32 @@
       "route": "#/automation",
       "nav": "main",
       "built": true,
-      "phase": "MG9_the_console_ui (the policy form) \u00b7 BT1 (Start at boot, each system)",
+      "phase": "AE5_ui_and_cleanup (the engine) \u00b7 MG9_the_console_ui (the policy form) \u00b7 BT1 (Start at boot, each system)",
       "routes": [
         "GET /api/cos/policy",
         "PATCH /api/cos/policy",
         "GET /api/cos/systems",
         "GET /api/cos/systems/:name/config",
-        "PATCH /api/cos/systems/:name/config"
+        "PATCH /api/cos/systems/:name/config",
+        "GET /api/cos/automation/pipelines",
+        "POST /api/cos/automation/pipelines/:id/run",
+        "GET /api/cos/automation/pipelines/:id/node",
+        "GET /api/cos/automation/pipeline-runs",
+        "GET /api/cos/automation/pipeline-runs/:id",
+        "POST /api/cos/automation/pipeline-runs/:id/cancel",
+        "POST /api/cos/automation/import",
+        "GET /api/cos/automation/workflows",
+        "POST /api/cos/automation/workflows/:id/run",
+        "GET /api/cos/automation/log",
+        "GET /api/cos/boxes"
       ],
       "listens": [
         "cos.ledger"
       ],
       "emits": [
         "cos.ui.notice"
-      ]
+      ],
+      "about": "the automation engine (AE5): pipelines (run, live state, export / import .pipeline, open on ERAVOS as .erv), workflows, runs, the log; and the supervisor\u2019s rules and Start at boot (Supervision)"
     },
     {
       "id": "resources",

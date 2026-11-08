@@ -1,0 +1,19 @@
+/* cos/ui/automation/engine.css — the automation engine in COS's Automation tab (AE5, 0.60.461). */
+.ae-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin: 0 0 var(--s4); }
+.ae-tab { padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.08); background: transparent; color: inherit; font-size: 13px; opacity: .75; cursor: pointer; }
+.ae-tab.on { opacity: 1; border-color: var(--ac-border-hi, rgba(120,200,255,.5)); background: var(--ac-ghost, rgba(120,200,255,.08)); } .ae-tab b { font-weight: 600; margin-left: 6px; opacity: .6; font-size: 11px; }
+.ae-grid { display: grid; grid-template-columns: 340px 1fr; gap: var(--s4); align-items: start; }
+.ae-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; padding: 9px 8px; border-radius: 8px; font-size: 13px; cursor: pointer; border-top: 1px solid rgba(255,255,255,.05); }
+.ae-row:first-child { border-top: 0; } .ae-row:hover { background: rgba(255,255,255,.04); } .ae-row.sel { background: rgba(120,200,255,.07); }
+.ae-row small { grid-column: 1 / 3; opacity: .55; font-size: 11px; }
+.st { font: 11px ui-monospace, monospace; text-transform: uppercase; letter-spacing: .06em; opacity: .7; }
+.st.done, .st.ok { color: #34d399; opacity: 1; } .st.running { color: #38bdf8; opacity: 1; } .st.failed, .st.error, .st.blocked { color: #f87171; opacity: 1; } .st.waiting { opacity: .55; }
+.ae-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: var(--s3); }
+.ae-steps { display: grid; gap: 6px; }
+.ae-step { display: grid; grid-template-columns: 1fr 70px 90px; gap: 4px 10px; align-items: center; padding: 8px 10px; border: 1px solid rgba(255,255,255,.07); border-radius: 8px; font-size: 13px; }
+.ae-step .mono, .mono { font: 11px ui-monospace, monospace; opacity: .7; } .ae-step .why { grid-column: 1 / 4; font-size: 11.5px; opacity: .65; }
+.ae-msg:empty { display: none; } .ae-msg { margin: 0 0 var(--s3); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.12); font-size: 13px; }
+.ae-msg.bad { border-color: #f87171; color: #f87171; } .ae-msg.ok { border-color: #34d399; color: #34d399; }
+.ae-log { font: 11.5px/1.6 ui-monospace, monospace; white-space: pre-wrap; opacity: .85; max-height: 520px; overflow: auto; }
+.page-head.sub { margin-top: 0; } .title.sm { font-size: 20px; }
+@media (max-width: 860px) { .ae-grid { grid-template-columns: 1fr; } }

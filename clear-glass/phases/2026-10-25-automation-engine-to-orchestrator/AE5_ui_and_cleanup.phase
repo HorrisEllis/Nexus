@@ -9,18 +9,21 @@ intent: null
 summary: AE5_ui_and_cleanup (ui) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793992129887
+exported_at: 1794177587731
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793992129887
-lastSeenAt: 1793992129887
+firstSeenAt: 1794177587731
+lastSeenAt: 1794177587731
 fingerprint: null
 payload:
   id: AE5_ui_and_cleanup
   map: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
   repo: null
   layer: ui
-  status: OPEN
+  status: >-
+    "OPEN — slice a BUILT 0.60.461 (COS's Automation tab is the engine's; test-cos-hub HB-07). Open:
+    Triggers, Macros, Webhooks tabs; Idearium's pipeline as a bundled .pipeline (OC9); BrainOS
+    migrated and archived; Clear Glass's Settings › Automation pointed at COS"
   files:
     - clear-glass/src/automation/routes.js
     - clear-glass/renderer/settings/sections/automation.js
