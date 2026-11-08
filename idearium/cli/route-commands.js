@@ -932,6 +932,11 @@ export const SPEC = [
     print: (d, a, h) => { h.header(`${d.counts.unread} unread (${d.counts.update} updates, ${d.counts.system} systems, ${d.counts.notice} notices)`); for (const n of d.notices) console.log(`  ${n.read ? ' ' : '•'} ${n.level.padEnd(5)} ${n.kind.padEnd(7)} ${n.title}${n.body ? ` — ${n.body.slice(0, 100)}` : ''}`); } },
   // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes." Reading is any agent's;
   // running a workflow, one step or an import acts, so it is the person's (an agent proposes), as cos cli is.
+  // 2026-11-08 — James: "No. Import eravos into idearium." Idearium clones a repository as a project by its route (POST /api/git/clone); no row
+  // reached it, so neither he nor an agent could do it in one line. A clone makes a project, so it is the person's (an agent proposes).
+  { key: 'git.clone', repo: false, personOnly: () => 'cloning makes a project in Idearium: the person\'s, or an agent proposes', usage: 'git clone <url> [--name <name>]',
+    about: 'import a repository into Idearium as a project (its own compartment), e.g. git clone https://github.com/HorrisEllis/Eravos-Canvas',
+    req: (a) => ({ system: 'idearium', method: 'POST', path: '/api/git/clone', body: { url: a.args[0], ...(a.flags.name ? { name: String(a.flags.name) } : {}) } }) },
   { key: 'cos.automation', repo: false, personOnly: (a) => (['run', 'step', 'import'].includes(a.args[0]) ? 'running the automation engine acts: the person\'s, or an agent proposes (POST /api/cos/proposals)' : null),
     usage: 'cos automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file>',
     about: 'the automation engine COS runs: workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, nodes',
