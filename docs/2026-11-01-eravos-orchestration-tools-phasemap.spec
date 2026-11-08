@@ -79,6 +79,8 @@ phases:
     proof: "against a real COS manager in a test: a compartment tool starts and stops a fixture system and the ledger tool shows it, by canvas:<tool>"
   EO3_work_tools:
     status: OPEN
+    expanded_2026_11_08_pc: >-
+      James, 2026-11-08: "like i want a beautiful visual, steps as boxes, with wires as the flow into the hooks of gates as compartments. boxes can  be gates, systems, agents, macros, pipelines, tools, like a node based canvas for pipelines" · "build pipeline, automation pipeline, debug pipeline, coding pipeline, agnostic pipelines, using dag, contracts, gaps, stepwise, automations, compartments." The work tools grow to every box kind of the one box shape (docs/2026-11-08-pipeline-canvas-phasemap.spec PC1): procedure, tool, system and build beside macro, pipeline, workflow and agent. Each is a box with in/out hooks and its contract; the canvas side is PC4.
     depends_on: [EO2_cos_tools, MB1_the_gate_between]
     files: [cos/archetype/eravos-canvas/tools/orchestration/work]
     interface: [html]

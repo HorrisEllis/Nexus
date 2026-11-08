@@ -169,6 +169,8 @@ phases:
 
   OC9_templates:
     status: OPEN
+    expanded_2026_11_08_pc: >-
+      James, 2026-11-08: "like i want a beautiful visual, steps as boxes, with wires as the flow into the hooks of gates as compartments. boxes can  be gates, systems, agents, macros, pipelines, tools, like a node based canvas for pipelines" · "build pipeline, automation pipeline, debug pipeline, coding pipeline, agnostic pipelines, using dag, contracts, gaps, stepwise, automations, compartments." The pipeline kinds he named (build, automation, debug, coding, agnostic) are templates over the one box shape (PC1), not separate engines (PC_D0). Each template ships as a .pipeline with its boxes, gates and contracts.
     depends_on: [OC_D1_templates_and_schemas, OC7_the_taxonomy_expanded]
     spec: docs/orchestration-console.spec
     blocks: [MOD-OC-TAXONOMY]
@@ -178,6 +180,8 @@ phases:
     proof: "each template makes a valid node (validateTask); each schema parses"
   OC10_pipelines_on_the_canvas:
     status: OPEN
+    expanded_2026_11_08_pc: >-
+      James, 2026-11-08: "like i want a beautiful visual, steps as boxes, with wires as the flow into the hooks of gates as compartments. boxes can  be gates, systems, agents, macros, pipelines, tools, like a node based canvas for pipelines" · "build pipeline, automation pipeline, debug pipeline, coding pipeline, agnostic pipelines, using dag, contracts, gaps, stepwise, automations, compartments." The canvas is PC4 (docs/2026-11-08-pipeline-canvas-phasemap.spec): boxes of every kind, wires into the next box's gate (PC_D1), a pipeline or procedure box opening into its own canvas (recursive), and each box showing its real run state. Saved as the engine's .pipeline (PC1, no second store).
     depends_on: [OC_D2_the_eravos_canvas_replaces_brainos, EO2_cos_tools, OC2_scheduler_on_nodes]
     spec: docs/orchestration-console.spec
     blocks: [MOD-OC-CONSOLE]

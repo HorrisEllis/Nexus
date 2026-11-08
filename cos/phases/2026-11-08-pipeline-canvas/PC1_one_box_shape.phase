@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+context: pipeline phase PC1_one_box_shape of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC1_one_box_shape (library) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794147443588
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794147443588
+lastSeenAt: 1794147443588
+fingerprint: null
+payload:
+  id: PC1_one_box_shape
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - cos/automation/box.js
+    - cos/spec/pipeline-canvas.spec
+    - tests/modules/test-pipeline-box.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - PC_D0_reuse_first
+    - PC_D4_language
+    - PL1_pipeline_core
+    - PD1_procedure_nodes_and_commands
+    - OC4_deploy_to_any_system
+  blocks:
+    - MOD-PC-BOX
+  spec: cos/spec/pipeline-canvas.spec
+  graph: c15376db205c9bac

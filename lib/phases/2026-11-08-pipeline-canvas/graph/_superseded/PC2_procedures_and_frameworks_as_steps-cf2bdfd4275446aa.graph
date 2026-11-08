@@ -1,0 +1,246 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC2_procedures_and_frameworks_as_steps:cf2bdfd4275446aa
+type: graph
+id: phase:PC2_procedures_and_frameworks_as_steps:cf2bdfd4275446aa
+context: dependency graph of phase PC2_procedures_and_frameworks_as_steps
+intent: null
+summary: 28 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794147443592
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794147443592
+lastSeenAt: 1794147443592
+fingerprint: null
+payload:
+  for: PC2_procedures_and_frameworks_as_steps
+  kind: phase
+  repo: null
+  hash: cf2bdfd4275446aa
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/automation/engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/steps.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-pipeline-box.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/automation/pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/automation/index.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/automation-engine.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/automation/cron.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/dom.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/scripts.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/template.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/automation/steps.js
+      to: lib/automation/cron.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/template.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/dom.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/scripts.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: lib/automation/steps.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: lib/automation/steps.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: orchestrator/automation/index.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: tests/modules/automation-engine.test.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
+    dependents: []
+    upstream:
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
+    downstream: []
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
+    unlocks: []
+    conflicts: []
+    dangling:
+      - PC_D2_frameworks_as_procedures
+    lines:
+      - layer 4 · blocked by PC1_one_box_shape, PD4_the_procedure_library
+      - 'depends on (2): PC1_one_box_shape, PD4_the_procedure_library · all upstream 13'
+      - 'needed by (0): —'
+      - 'DANGLING depends_on: PC_D2_frameworks_as_procedures'
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+        kind: declared
+      - from: docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
+        kind: declared

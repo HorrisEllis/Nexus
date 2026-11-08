@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+context: pipeline phase PC4_the_box_kinds_on_the_canvas of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC4_the_box_kinds_on_the_canvas (ui) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794147480630
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794147480630
+lastSeenAt: 1794147480630
+fingerprint: null
+payload:
+  id: PC4_the_box_kinds_on_the_canvas
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - tests/modules/test-pipeline-canvas.test.js
+  depends_on:
+    - PC1_one_box_shape
+    - PC_D1_gates_as_compartments
+    - EO3_work_tools
+    - EO5_opened_from_cos
+    - MB3_one_shape_with_pipelines
+  blocks:
+    - MOD-PC-CANVAS
+  spec: cos/spec/pipeline-canvas.spec
+  graph: e3ea0c63be4b086a
