@@ -50,6 +50,9 @@ function _port(port, path, body, timeoutMs = 20000) {
 const _cg       = (path, body, ms) => _port(CG_PORT, path, body, ms).then(r => (r && r.error && /ECONN|ENOTFOUND|no answer/.test(r.error)) ? { ok: false, error: `browser steps need Clear Glass running (:${CG_PORT} ${r.error})` } : r);
 const _guardian = (path, body, ms) => _port(GUARDIAN_PORT, path, body, ms).then(r => (r && r.error && /ECONN|ENOTFOUND|no answer/.test(r.error)) ? { ok: false, error: `agent steps need Guardian running (:${GUARDIAN_PORT} ${r.error})` } : r);
 
+const IDEARIUM_PORT = parseInt(process.env.IDEARIUM_PORT || '4800', 10); // Idearium — the procedures' library (PC2)
+const _idearium = (path, body, ms) => _port(IDEARIUM_PORT, path, body, ms).then(r => (r && r.error && /ECONN|ENOTFOUND|no answer/.test(r.error)) ? { ok: false, error: `procedure steps need Idearium running (${r.error})` } : r);
+
 // RAID keeps the routing decision (§5.2); a down RAID is not an error here — the step's own agentKey stands in.
 async function _raidDecide(intent) {
   try { const raid = require('../../lib/raid-port.js'); return await raid.decide(intent); } catch (_) { return null; }
@@ -73,7 +76,7 @@ let _busFn = null;
 function setBus(fn) { _busFn = typeof fn === 'function' ? fn : null; return _busFn; }
 
 /** buildHooks(deps) — the engine's hook set, from COS's side. deps injectable for tests. */
-function buildHooks({ guardianFn = _guardian, raidDecideFn = _raidDecide, cgFn = _cg, busFn = null } = {}) {
+function buildHooks({ guardianFn = _guardian, raidDecideFn = _raidDecide, cgFn = _cg, idFn = _idearium, busFn = null } = {}) {
   const bus = busFn || ((type, data) => { try { if (_busFn) _busFn(type, data); } catch (_) {} });
   return {
     // agent step, fire-and-forget: dispatch in the background, return at once so the engine does not block
@@ -88,6 +91,8 @@ function buildHooks({ guardianFn = _guardian, raidDecideFn = _raidDecide, cgFn =
     meshViewFn:() => [],          // a condition's live mesh view is Clear Glass's; down → sees nothing, not a crash
     statsFn:   () => ({}),
     notifyFn:  () => {},          // a desktop Notification is Clear Glass's, reached by the port (AE2)
+    // PC2 — a procedure step runs in Idearium, by its route (POST /api/procedures/:id/run); Idearium down → the step says so
+    procedureFn: ({ id, yes, chain }) => idFn(`/api/procedures/${encodeURIComponent(id)}/run`, { yes: !!yes, chain }, 120000),
   };
 }
 

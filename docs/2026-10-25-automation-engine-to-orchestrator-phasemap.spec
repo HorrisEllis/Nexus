@@ -184,7 +184,7 @@ phases:
       records under its source; the orchestrator down is named, not thrown; clear-glass down names only browser steps
 
   AE6_the_engine_moves_into_cos:
-    status: OPEN
+    status: BUILT   # 2026-11-08: slice a 0.60.449 (COS runs the engine), slice b 0.60.450 (it starts with COS); the files stay the shared kernel (his: Clear Glass keeps its own)
     expanded_2026_11_08: >-
       James, 2026-11-08: "basically i want it to be the main subrate for all automation like a hub for the automation pipeline, workflows, tasks, including or using raid as the authentication and tracking system. queues, contracts, dag, it should all be there, waiting to be wired in." · "look at existing phases and ideas. cos is meant to be nexus entirely," (asked after OC4a, with "i wanted to have an editor for pipelines, like every pipeline in nexus is editable, managable, uses cos for gates, like in clearglass, gated steps, macros, etc") Expanded, not rewritten (his SL_D11): this phase is where his hub lives — every pipeline, workflow and task in COS, editable and gated
       in one place, with RAID, queues, contracts and the DAG as its slots. Readings to settle with him before code (do not guess): (1) "waiting to be
@@ -243,6 +243,11 @@ phases:
   # process left behind. Found for the next part: Clear Glass's own instance holds his workflows in its own store (namespace 'brainos': the
   # Fiverr pipelines, macros). Turning it off is a migration first (§0.3), and AE_D2 (Clear Glass keeps its own instance, to run with nothing
   # else up) stands against AE_D3 until he chooses: asked 2026-11-08.
+  # ── ADDENDUM 2026-11-08 — Clear Glass keeps its own engine (his); AE6 closed ──
+  # Asked: migrate his workflows into COS and switch Clear Glass's engine off (the coder's recommendation: one engine, lighter on his PC), or keep
+  # both (AE_D2). James, 2026-11-08: "No clearglass keeps its". AE_D2 stands beside AE_D3: COS runs the platform's engine and is the hub; Clear
+  # Glass runs its own instance for its browser workflows, in its own store ('brainos'), which runs with nothing else up. The engine's code is
+  # used by both, so it stays the shared kernel in lib/automation/: moving it into cos/ would make Clear Glass reach into COS's folder (§5.9).
   AE5_ui_and_cleanup:
     status: OPEN
     layer: ui
