@@ -8,6 +8,9 @@ experience, clients or credentials that the record doesn't show.
 Fiverr's limits are respected: a title of at most 80 characters starting "I will", a description of at most 1,200 characters, 5 tags, and 3
 packages.
 
+**Prices lowered 2026-11-08, his call:** "I need to be paid, at all. Reviews and integrity, over profit until I gain confidence and self respect."
+The first prices (Gig 1 $45/$120/$280, Gig 2 $60/$180/$400, Gig 3 $70/$220/$450) are kept here (§0.3), as where to go once the reviews come in.
+
 **Yours to decide before posting:**
 - **Prices:** they are the coder's suggestions for a new seller account. Lower prices win the first reviews; raise them after 3–5 reviews.
 - **Portfolio link:** only if `github.com/HorrisEllis/Nexus` is public. If it is private, use the portfolio page instead, or leave the link out.
@@ -50,7 +53,7 @@ packages.
 | What | Up to 50 files: the findings list | Up to 300 files: findings and the dependency map | Up to 1,000 files: findings, map, and a phased fix plan with tests for each step |
 | Delivery | 2 days | 3 days | 5 days |
 | Revisions | 1 | 2 | 3 |
-| Price | $45 | $120 | $280 |
+| Price | $15 | $40 | $90 |
 
 **Backed by:** `lib/import-checks.js` (broken imports, undeclared packages, duplicate files and credentials, written into a project's notes on
 import), the credential scan in `lib/repo-history.js`, and the dependency graphs in `lib/phase-graph.js`.
@@ -89,7 +92,7 @@ import), the credential scan in `lib/repo-history.js`, and the dependency graphs
 | What | One feature: end state, spec, phases | An MVP: every component specced, phased and graphed | The full plan plus the system architecture: components, boundaries, data, and how they talk |
 | Delivery | 2 days | 4 days | 7 days |
 | Revisions | 1 | 2 | 3 |
-| Price | $60 | $180 | $400 |
+| Price | $20 | $60 | $130 |
 
 **Backed by:** the phasemaps in `docs/*-phasemap.spec`, the specs that must compile at full depth (`tests/modules/test-substrate-spec.test.js`),
 the DAG every phase needs (`lib/phase-dag.js`), and the decisions recorded with options (`docs/CLAUDE.md`).
@@ -128,7 +131,7 @@ the DAG every phase needs (`lib/phase-dag.js`), and the decisions recorded with 
 | What | One service or module: boundaries and failure modes | The whole system: map, boundary violations, failure modes, fix plan | A new architecture, or a redesign: document, interfaces, phased build plan |
 | Delivery | 2 days | 5 days | 7 days |
 | Revisions | 1 | 2 | 3 |
-| Price | $70 | $220 | $450 |
+| Price | $25 | $75 | $150 |
 
 **Backed by:** sovereignty (AXIOMS §5.9–§5.16), the boundary census and its ratchet (`lib/system-boundary.js`), and the one command table
 (`idearium/cli/route-commands.js`).
@@ -142,3 +145,20 @@ the DAG every phase needs (`lib/phase-dag.js`), and the decisions recorded with 
 - **Will you change my code?** Only if you ask. The deliverable is a report or a plan.
 - **What languages?** JavaScript and TypeScript, Node, Python and web front ends are best. For anything else, ask first.
 - **Is my code safe?** It's used only for your order, never shared, and deleted after delivery on request.
+
+---
+
+## The posting card: one gig, in about ten minutes, nothing to decide
+
+Start with Gig 1 only. Fiverr › Selling › Gigs › Create a new gig. Each step is a paste; the choices are already made.
+
+1. **Overview:** paste the title. Pick the category written under it. Paste the 5 tags. Save & continue.
+2. **Pricing:** switch on 3 packages. Paste each column: name, what's included (as the description), delivery days, revisions, price.
+   Save & continue.
+3. **Description & FAQ:** paste the description, then the four FAQ entries. Save & continue.
+4. **Requirements:** add one question: "Send the repo (GitHub link or zip) and one sentence on what worries you most." Mark it required.
+5. **Gallery:** one image is required. A screenshot of a finished report, or a plain card with the gig title on it, is enough for now.
+6. **Publish.**
+
+If a step stalls, stop there. Saving keeps it as a draft, and next time starts from that step, not from the top. One gig live is the whole
+goal; the other two can wait for the first review.
