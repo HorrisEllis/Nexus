@@ -292,6 +292,12 @@ phases_addendum_2026_11_04:
       Systems still without a door are listed with what is missing (the doors: DO1, DO2, DO5, DO7, DO8).
   SC16_no_console_windows:
     layer: backend
+    expanded_2026_11_08: >-
+      James, 2026-11-08: "also can we have cos.exe run the command prompts in the background?" (a screenshot of an empty "C:\Program
+      Files\nodejs\node" window). Found: Clear Glass is declared with cmdCandidates node_modules/.bin/electron; on Windows the supervisor and
+      the COS app's desktop starter (cos/app/desktop-systems.js, CA4) took .bin/electron.cmd, which runs `node …\electron\cli.js` in a console
+      of its own beside Clear Glass's window. Both now start Electron's own program (electron/dist/electron.exe) when it is there: no shell, no
+      console; the launcher only when it is missing. 0.60.460, test-cos-hidden-windows HW-04.
     status: "BUILT 0.60.400 — test-cos-hidden-windows"
     origin: "James, 2026-11-05: \"keeps spamming my screen. any way to have those node.exe windows open in the background?\""
     found: >-
@@ -300,7 +306,7 @@ phases_addendum_2026_11_04:
       own spawns already pass windowsHide (runtime, install, service, shell); the supervisor, its test runner and core-duties did not.
     depends_on: [SC11_the_console_tab]
     spec: cos/spec/cos-manager.spec
-    files: [cos/manager/supervisor.js, cos/manager/autopilot-door.js, lib/nexus/core-duties.js, tests/modules/test-cos-hidden-windows.test.js, tests/modules/run-all.js]
+    files: [cos/manager/supervisor.js, cos/manager/autopilot-door.js, lib/nexus/core-duties.js, cos/app/desktop-systems.js, tests/modules/test-cos-hidden-windows.test.js, tests/modules/run-all.js]
     does: "Every process COS starts hides its console window (windowsHide); a windowed system (Electron: Clear Glass) is the one left as it was, so its own window shows. Their output is read in the Console tab (SC11), not in a window."
     proof: "the supervisor passes windowsHide: true for a node system and false for an Electron one; every spawn in the supervisor, the door's test runner and core-duties hides its window"
   SC9_the_zip_dropzone_updater:

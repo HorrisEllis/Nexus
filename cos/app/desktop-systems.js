@@ -16,6 +16,15 @@ const path = require('path');
 const fill = (v, root) => (typeof v === 'string' ? v.replace(/\{\{root\}\}/g, root) : Array.isArray(v) ? v.map(x => fill(x, root))
   : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, fill(x, root)])) : v);
 
+// SC16 (expanded 2026-11-08) — James: "also can we have cos.exe run the command prompts in the background?" Electron reached through its
+// node_modules/.bin launcher is a .cmd on Windows that runs `node …\electron\cli.js` in a console of its own (the empty
+// "C:\Program Files\nodejs\node" window he saw). Electron's own program sits beside it (electron/dist/electron.exe), a windowed app with no
+// console: use it when it is there; otherwise the launcher, as before.
+function realElectron(cmd, platform = process.platform, exists = fs.existsSync) {
+  const m = /^(.*)[\\/]\.bin[\\/]electron(\.cmd)?$/i.exec(String(cmd || '')); if (!m) return cmd;
+  const exe = path.join(m[1], 'electron', 'dist', platform === 'win32' ? 'electron.exe' : platform === 'darwin' ? 'Electron.app/Contents/MacOS/Electron' : 'electron');
+  return exists(exe) ? exe : cmd;
+}
 function windowed(dir, { readdir = (d) => fs.readdirSync(d, { withFileTypes: true }), readJson = (f) => JSON.parse(fs.readFileSync(f, 'utf8')), exists = fs.existsSync } = {}) {
   const out = [];
   let entries = []; try { entries = readdir(dir); } catch (_) { return out; }
@@ -27,7 +36,7 @@ function windowed(dir, { readdir = (d) => fs.readdirSync(d, { withFileTypes: tru
     for (const p0 of procs) {
       const p = fill(p0, dir);
       if (!p || !/electron/i.test(path.basename(String(p.cmd || '')))) continue;
-      const cmd = (p.cmdCandidates || []).find(x => exists(x)) || p.cmd;
+      const cmd = realElectron((p.cmdCandidates || []).find(x => exists(x)) || p.cmd, process.platform, exists);
       out.push({ name: p.name || e.name, cmd, args: p.args || [], cwd: path.resolve(dir, p.cwd || e.name), env: p.env || {}, healthUrl: p.healthUrl || rt.healthUrl || null });
     }
   }
@@ -56,4 +65,4 @@ async function startAll(dir, { spawn = require('child_process').spawn, healthy =
   return res;
 }
 
-module.exports = { windowed, startAll, httpHealthy, MODULE_ID: 'cos.app.desktop-systems', VERSION: '1.0.0' };
+module.exports = { windowed, startAll, httpHealthy, realElectron, MODULE_ID: 'cos.app.desktop-systems', VERSION: '1.0.0' };

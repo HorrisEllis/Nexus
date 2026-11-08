@@ -7,11 +7,11 @@ intent: null
 summary: SC11_the_console_tab (ui) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1793873415697
+exported_at: 1794177105663
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793873415697
-lastSeenAt: 1793873415697
+firstSeenAt: 1794177105663
+lastSeenAt: 1794177105663
 fingerprint: null
 payload:
   id: SC11_the_console_tab
@@ -34,4 +34,4 @@ payload:
     - SC5_the_console_ui
   blocks: []
   spec: cos/spec/cos-manager.spec
-  graph: 56ef0ec62dfc1792
+  graph: a55208b24b6ef72e

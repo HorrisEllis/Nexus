@@ -7,11 +7,11 @@ intent: null
 summary: SC15_nexus_cli_in_the_console (backend) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793940675911
+exported_at: 1794177105671
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793940675911
-lastSeenAt: 1793940675911
+firstSeenAt: 1794177105671
+lastSeenAt: 1794177105671
 fingerprint: null
 payload:
   id: SC15_nexus_cli_in_the_console
@@ -28,4 +28,4 @@ payload:
     - DO_D10_the_cli_is_the_way_in_for_every_ui_and_copilot
   blocks: []
   spec: cos/spec/cos-manager.spec
-  graph: 65a5aed2c191c46b
+  graph: 47a4cb4b1f291c58
