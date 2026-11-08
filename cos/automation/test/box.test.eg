@@ -19,6 +19,7 @@ test "every kind of step becomes a box with in and out hooks; wires come from de
   expect map(g.boxes, fn(b) = b.ref) == ["Fiverr gig - choose category", "pricing-table", "update check", "extract"]
   expect g.boxes[0].hooks.in == ["in"] and g.boxes[0].hooks.out == ["out"]
   expect g.boxes[0].gate == { notEmpty: true }
+  expect g.boxes[0].label == "Overview" and g.boxes[1].label == "pricing-table", "its own words, or the ref when it has none"
   expect len(g.wires) == 4 and g.wires[0] == { from: "overview.out", to: "pricing.in" }
 }
 
@@ -95,9 +96,9 @@ test "an ERAVOS project (.erv): one Box tool per step, laid out by the DAG, the 
   expect e.erv == 1 and e.name == "Gig"
   let tl = find(e.layers, fn(l) = l.id == "tools").layers
   let wl = find(e.layers, fn(l) = l.id == "wires").data
-  expect all(tl, fn(t) = t.tool == "eravos.orchestration.box")
+  expect all(tl, fn(t) = t.tool == "eravos.agents.step")
   expect map(tl, fn(t) = t.state.params.kind) == ["macro", "pipeline", "system", "tool"]
   expect map(tl, fn(t) = t.at.x) == [40, 360, 680, 1000]
-  expect len(wl) == 4 and wl[0] == { from: ["overview", "box.hook.out"], to: ["pricing", "box.hook.in"], type: "dataflow" }
+  expect len(wl) == 4 and wl[0] == { from: ["overview", "step.hook.out"], to: ["pricing", "step.hook.in"], type: "dataflow" }
   expect tl[1].state.extra.box.id == "pricing" and tl[1].state.extra.kinds == box.KINDS
 }
