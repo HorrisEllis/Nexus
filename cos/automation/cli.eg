@@ -23,7 +23,7 @@ else if cmd == "boxes" {
   if has(p, "tasks") { kind = "pipeline" ; send box.BoxShape.boxes { pipeline: p } } else { send box.BoxShape.procedure { procedure: p } }
   let g = last.value
   send box.BoxShape.validate { graph: g, known: {} }
-  print(json({ kind: kind, graph: g, ok: last.ok, problems: last.value.problems, unchecked: last.value.unchecked }))
+  print(json({ kind: kind, kinds: box.KINDS, graph: g, ok: last.ok, problems: last.value.problems, unchecked: last.value.unchecked }))
 }
 else if cmd == "roundtrip" {
   // a pipeline: tasks → boxes → tasks; a procedure: steps → boxes → steps. Prints { kind, same, boxes, wires, problems }.

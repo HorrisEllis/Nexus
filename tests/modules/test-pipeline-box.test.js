@@ -93,6 +93,7 @@ test('PB-04', 'the box shape is Emerge: no .js in cos/automation/', () => {
     assert.strictEqual((await req(mp, 'GET', '/api/cos/boxes')).status, 400);
     assert.strictEqual((await req(cp, 'GET', `/api/cos/boxes?procedure=tidy`)).status, 200, 'the cockpit forwards it (in the contract)');
     const SPEC = (await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href)).SPEC;
+    assert.deepStrictEqual(b.body.kinds, ['gate', 'system', 'agent', 'macro', 'pipeline', 'procedure', 'tool', 'build'], 'the kinds come from the box shape');
     for (const k of ['cos.boxes', 'cos.pipelines', 'cos.procedures']) { const row = SPEC.find(r => r.key === k); assert.ok(row && !row.personOnly, `${k}: a row agents and copilot reach`); }
     assert.strictEqual(SPEC.find(r => r.key === 'cos.boxes').req({ args: [], flags: { procedure: 'tidy' } }).path, '/api/cos/boxes?procedure=tidy');
     const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));

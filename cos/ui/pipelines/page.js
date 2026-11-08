@@ -5,11 +5,13 @@
   'use strict';
   const $ = (id) => document.getElementById(id);
   const NS = 'http://www.w3.org/2000/svg';
-  const KIND = { gate: '#f5b84a', system: '#5aa9ff', agent: '#38d6c5', macro: '#b48cff', pipeline: '#ff7ab6', procedure: '#7ee081', tool: '#9aa3b8', build: '#ff8a5c' };
+  // nothing hard-coded (his, 2026-11-08): the kinds are the box shape's (Emerge, box.KINDS, served with every graph); each kind's colour is
+  // its place in that list, spread round the colour wheel, so a kind added to the shape gets a colour without this page changing
+  let KIND = {};
+  const colours = (kinds) => { KIND = Object.fromEntries(kinds.map((k, i) => [k, `hsl(${Math.round(i * 360 / kinds.length + 30) % 360} 78% 64%)`])); };
   const el = (t, a = {}, kids = []) => { const e = document.createElement(t); for (const [k, v] of Object.entries(a)) { if (k === 'text') e.textContent = v; else if (v != null) e.setAttribute(k, v); } for (const c of [].concat(kids)) if (c) e.appendChild(c); return e; };
   const sv = (t, a = {}) => { const e = document.createElementNS(NS, t); for (const [k, v] of Object.entries(a)) e.setAttribute(k, v); return e; };
   const api = async (p) => { const r = await fetch(p); const d = await r.json(); if (!r.ok || d.ok === false) throw new Error(d.error || `refused (${r.status})`); return d; };
-  $('pl-legend').replaceChildren(...Object.entries(KIND).map(([k, c]) => el('span', { style: `--k:${c}`, text: k })));
 
   function layers(g) {   // the column of each box: one past the deepest box it waits on (layout only; the DAG's faults are Emerge's)
     const from = {}; for (const w of g.wires) { const [a] = w.from.split('.'), [b] = w.to.split('.'); (from[b] = from[b] || []).push(a); }
@@ -47,6 +49,7 @@
     $('pl-title').textContent = name; $('pl-sum').textContent = 'reading…'; $('pl-faults').textContent = ''; $('pl-detail').textContent = '';
     try {
       const d = await api(`/api/cos/boxes?${q}`);
+      colours(d.kinds || []);
       $('pl-sum').textContent = `${d.kind} · ${d.graph.boxes.length} boxes · ${d.graph.wires.length} wires${d.unchecked && d.unchecked.length ? ` · refs not checked here: ${d.unchecked.join(', ')}` : ''}`;
       $('pl-faults').textContent = d.problems && d.problems.length ? d.problems.join(' · ') : '';
       draw(d.graph);

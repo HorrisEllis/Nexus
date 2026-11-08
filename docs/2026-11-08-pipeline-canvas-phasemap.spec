@@ -350,3 +350,8 @@ handoff_2026_11_08: >-
 # reported. What 0.60.454 built beneath it stays and is what the tools call: GET /api/cos/boxes, GET /api/cos/procedures, the cos boxes / cos
 # pipelines / cos procedures rows, Emerge's box.eg. HorrisEllis/Eravos-Canvas is attached to the session with push (2026-11-08), so the tools are
 # built in its repository by its own rules (its CLAUDE.md, axioms, specs/).
+
+# ── ADDENDUM 2026-11-08 (0.60.455) — nothing hard-coded on the page ──
+# James, 2026-11-08: "yes. I need this done today. nothing is hardcoded. or integrate the canvas into the cos ui for now. but dont change anything,
+# unless the tool needs more from the ui." · "i like that though. except for listing the kinds under it. show me a new preview"
+# The kinds list is gone; GET /api/cos/boxes carries kinds (Emerge's box.KINDS); colours are computed from a kind's place in that list. Preview sent.
