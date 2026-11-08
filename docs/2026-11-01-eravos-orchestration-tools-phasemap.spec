@@ -114,3 +114,9 @@ build_order: "EO0 → EO1 and EO2 → EO3, EO4 → EO5."
 # Every files: path here moved from Nexus's copy (cos/archetype/eravos-canvas/…) to ERAVOS's own repository, written Eravos-Canvas:<path>
 # (HorrisEllis/Eravos-Canvas). The orchestration domain sits beside ERAVOS's dataflow, agents and coding domains and is built to its own schemas
 # and templates (tool, domain). Building there needs push access (docs/2026-11-07-eravos-as-a-system-phasemap.spec ERV2).
+
+# ── ADDENDUM 2026-11-08 — his, recorded (not yet a phase): a template or schema for building tools ──
+# James, 2026-11-08: "Eravos tools are meant to have a template or schema for building tools. It’s running poorly on my pc."
+# Recorded where ERAVOS's tools are mapped. Before a phase: what a tool template carries (inputs, outputs, contract, the canvas box it becomes,
+# PC1's box shape) is read from this map and the canvas map (PC_D10), and asked of him where they do not settle it. "Running poorly" is a cost
+# with no measurement yet: the first step is a number from his machine (startup time, memory), never a guess.

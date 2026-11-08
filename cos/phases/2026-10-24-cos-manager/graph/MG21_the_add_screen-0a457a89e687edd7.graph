@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793577140006
+exported_at: 1794155256001
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577140006
-lastSeenAt: 1793577140006
+firstSeenAt: 1794155256001
+lastSeenAt: 1794155256001
 fingerprint: null
 payload:
   for: MG21_the_add_screen
@@ -118,6 +118,9 @@ payload:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG22_template_and_archetype_builder
         files:
           - cos/manager/contract.json
+      - with: docs/2026-10-24-cos-manager-phasemap.spec::MG38_the_orchestrator_into_cos
+        files:
+          - cos/manager/contract.json
     dangling: []
     lines:
       - layer 11 · blocked by MG20_add_deploy_connect
@@ -125,6 +128,9 @@ payload:
       - 'needed by (0): —'
       - >-
         same files as MG22_template_and_archetype_builder with no order between them:
+        cos/manager/contract.json
+      - >-
+        same files as MG38_the_orchestrator_into_cos with no order between them:
         cos/manager/contract.json
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect

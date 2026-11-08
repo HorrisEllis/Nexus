@@ -1,0 +1,2 @@
+{"id":"mw81qgqb0","ts":1794155288627,"kind":"automation","system":null,"pid":null,"code":null,"why":"the automation engine started with COS: 0 workflow(s)","by":"boot"}
+{"id":"mw81qmto1","ts":1794155296524,"kind":"stop","system":null,"pid":null,"code":null,"why":"supervisor shutdown","by":"boot"}

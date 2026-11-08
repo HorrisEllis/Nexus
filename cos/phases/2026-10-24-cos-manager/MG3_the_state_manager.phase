@@ -7,11 +7,11 @@ intent: null
 summary: MG3_the_state_manager (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793577139954
+exported_at: 1794155255931
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577139954
-lastSeenAt: 1793577139954
+firstSeenAt: 1794155255931
+lastSeenAt: 1794155255931
 fingerprint: null
 payload:
   id: MG3_the_state_manager
@@ -35,4 +35,4 @@ payload:
   blocks:
     - MOD-MG-STATE
   spec: cos/spec/cos-manager.spec
-  graph: e95685576f546937
+  graph: c80330bc669dab7a

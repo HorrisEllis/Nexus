@@ -253,6 +253,12 @@ if (require.main === module) {
   };
   listen(sup, undefined, { root, restartCos }).then(async (srv) => { srvRef = srv;
     console.log(`[cos] manager on 127.0.0.1:${srv.address().port} — ${sup.list().length} systems declared`);
+    // AE6 slice b (2026-11-08) — James: "basically i want it to be the main subrate for all automation". The engine starts with COS, so a
+    // scheduled or triggered workflow fires without waiting for a first request (in the orchestrator it woke only on one). --no-automation leaves it off.
+    if (!process.argv.includes('--no-automation')) {
+      try { const E = require('./automation-door.js').engine(); sup.note('automation', `the automation engine started with COS: ${E.list().length} workflow(s)`, { by: 'boot' }); }
+      catch (e) { sup.note('automation', `the automation engine did not start: ${e.message}`, { by: 'boot' }); }
+    }
     if (arg('handover')) sup.note('handover', `autopilot ${arg('handover')} handed supervision to COS's manager (MG17); its body is archived`, { by: 'boot' });
     // 2026-11-01 MG33 — James: "where is cos ui?". Nothing started the cockpit (cos/ui/serve.js) or linked to it: a screen with no way in. The
     // manager now starts it beside itself (COS_UI_PORT, default 7797; --no-ui to leave it off). Its port held → said once, the manager runs on.

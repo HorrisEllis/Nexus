@@ -236,6 +236,13 @@ phases:
   # cos/automation/; the .eg port waits on CIE10 and CIE13. Then RAID into COS (its own phase).
   # Pre-existing, not this slice: test-registry-sovereign RS-01 fails on two Loom maps grown on main (cos-testenv-map, economy-map; in the canvas
   # handoff). The root CLAUDE.md lost RS-01's required law sentence when it was distilled; this release restores it.
+  # ── ADDENDUM 2026-11-08 (0.60.450) — AE6 slice b, first part: the engine starts with COS ──
+  # James, 2026-11-08: "Continue to get the automation done." The engine starts at COS's boot (cos/manager/server.js), so a scheduled or triggered
+  # workflow fires without a first request; --no-automation leaves it off; the start, or its failure, is a ledger line. Proven on a real boot in the
+  # sandbox: the manager up, the ledger line "the automation engine started with COS: 0 workflow(s)", /api/cos/automation/active answered, no
+  # process left behind. Found for the next part: Clear Glass's own instance holds his workflows in its own store (namespace 'brainos': the
+  # Fiverr pipelines, macros). Turning it off is a migration first (§0.3), and AE_D2 (Clear Glass keeps its own instance, to run with nothing
+  # else up) stands against AE_D3 until he chooses: asked 2026-11-08.
   AE5_ui_and_cleanup:
     status: OPEN
     layer: ui
