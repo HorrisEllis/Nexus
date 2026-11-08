@@ -160,3 +160,12 @@ phases:
 #   idearium git clone https://github.com/HorrisEllis/Eravos-Canvas
 # Two ERAVOS repositories are visible: HorrisEllis/Eravos-Canvas (public, the one this map names) and HorrisEllis/Eravos (private, older,
 # possibly holding ERAVOS.kernel.spec, which Pillar's Relation contract waits on). Which to import is asked of him.
+# ── ADDENDUM 2026-11-08 — ERAVOS is pulled from GitHub into Idearium and managed there and on GitHub (his) ──
+# James, 2026-11-08: "Like I want a eravos for the automation. But only the canvas. Since zips import tools we can just add the automation. Nothing
+# in the ui changes." · then, before anything was built: "Stop. Pull it from github. Then we can manage the repo in idearium and GitHub."
+# Stopped: no tool pack was built and nothing was written to ERAVOS (a read-only checkout was read for its tool template, eravos.tool/1).
+# Idearium's per-project git routes already exist (status, remote, commit, push, pull, keygen); no command row reached them. Added rows:
+# repo.git (anyone's), repo.pull, repo.commit, repo.push (the person's; an agent proposes). With git.clone, on his machine:
+#   idearium git clone https://github.com/HorrisEllis/Eravos-Canvas      import (pulled from GitHub)
+#   idearium repo pull <repo> · repo commit <repo> <message> · repo push <repo>    managed in Idearium and on GitHub
+# The automation tool pack for ERAVOS (his "a eravos for the automation", tools from a .zip, nothing in its UI changed) waits on his word to go on.
