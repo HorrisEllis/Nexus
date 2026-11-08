@@ -16,7 +16,7 @@ if (!process.env.GLASS_CHROMIUM) { const c = '/opt/pw-browsers/chromium-1243/chr
 let passed = 0, failed = 0;
 async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${d}\n    ${(e.stack || e.message).split('\n').slice(0, 4).join('\n    ')}`); failed++; } }
 const freePort = () => new Promise(r => { const s = net.createServer(); s.listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => r(p)); }); });
-const req = (port, method, p) => new Promise((res) => { const q = http.request({ host: '127.0.0.1', port, path: p, method }, (x) => { let t = ''; x.on('data', c => t += c); x.on('end', () => res({ status: x.statusCode, body: JSON.parse(t || '{}') })); }); q.end(); });
+const req = (port, method, p, body) => new Promise((res) => { const data = body === undefined ? null : Buffer.from(JSON.stringify(body)); const q = http.request({ host: '127.0.0.1', port, path: p, method, headers: data ? { 'Content-Type': 'application/json', 'Content-Length': data.length } : {} }, (x) => { let t = ''; x.on('data', c => t += c); x.on('end', () => res({ status: x.statusCode, body: JSON.parse(t || '{}') })); }); if (data) q.write(data); q.end(); });
 const stand = async (answers) => { const hits = []; const s = http.createServer((q, r) => { hits.push(`${q.method} ${q.url}`); const code = answers[q.url.split('?')[0]] || 404; r.statusCode = code; r.end('{}'); });
   await new Promise(r => s.listen(0, '127.0.0.1', r)); return { s, hits, url: `http://127.0.0.1:${s.address().port}/health` }; };
 
@@ -83,6 +83,25 @@ const stand = async (answers) => { const hits = []; const s = http.createServer(
     process.env.COS_MANAGER_PORT = String(await freePort()); delete require.cache[require.resolve(path.join(ROOT, 'orchestrator/automation/index.js'))];
     const down = await require(path.join(ROOT, 'orchestrator/automation/index.js')).handle({ method: 'GET', url: '/automation/workflows' });
     assert.strictEqual(down.status, 503); assert.match(down.body.error, /COS did not answer/);
+  });
+  // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes."
+  await test('HB-06', 'ERAVOS\'s way in: the command line, one step by route, the engine\'s events on COS\'s stream, the contract that says it', async () => {
+    const cli = async (line) => (await req(mp, 'POST', '/api/cos/cli', { line, by: 'test' })).body;
+    const wfs = await cli('automation workflows'); assert.ok(wfs.ok, JSON.stringify(wfs));
+    const cat = await cli('automation catalogue'); assert.ok(cat.ok && cat.lines.some(l => /procedure/.test(l)), 'the procedure step is a box kind');
+    const step = await req(mp, 'POST', '/api/cos/automation/step', { step: { type: 'log', config: { message: 'from an ERAVOS box' } } });
+    assert.strictEqual(step.status, 200, JSON.stringify(step.body));
+    const seen = []; const http = require('http');
+    const sse = http.get({ host: '127.0.0.1', port: mp, path: '/api/cos/events' }, (r) => { r.setEncoding('utf8'); r.on('data', (c) => { for (const m of c.matchAll(/event: (automation\.[a-z.]+)/g)) seen.push(m[1]); }); });
+    await new Promise(x => setTimeout(x, 300));
+    const made = await req(mp, 'POST', '/api/cos/automation/workflows', { name: 'hb06', status: 'active', steps: [{ type: 'trigger', config: { kind: 'manual' } }, { type: 'log', config: { message: 'hi' } }] });
+    assert.ok(made.body.workflow, JSON.stringify(made.body));
+    const ran = await cli(`automation run ${made.body.workflow.id}`); assert.ok(ran.ok, JSON.stringify(ran));
+    for (let k = 0; k < 30 && !seen.includes('automation.run.complete'); k++) await new Promise(x => setTimeout(x, 100));
+    sse.destroy();
+    assert.ok(seen.includes('automation.run.start') && seen.includes('automation.run.complete'), `events seen: ${seen.join(', ')}`);
+    const c = (await req(mp, 'GET', '/api/cos/contract')).body;
+    const con = c.contract || c; assert.ok(con.for_eravos && con.for_eravos.run_one_step && con.automation_events.events.includes('automation.run.complete'), 'the contract says how ERAVOS uses it');
   });
   cockpit.close(); mgr.close(); cortex.s.close(); idearium.s.close(); sup.shutdown({ by: 'test' }); fs.rmSync(dir, { recursive: true, force: true });
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exit(failed ? 1 : 0);

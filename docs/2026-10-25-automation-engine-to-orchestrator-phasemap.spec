@@ -248,6 +248,23 @@ phases:
   # both (AE_D2). James, 2026-11-08: "No clearglass keeps its". AE_D2 stands beside AE_D3: COS runs the platform's engine and is the hub; Clear
   # Glass runs its own instance for its browser workflows, in its own store ('brainos'), which runs with nothing else up. The engine's code is
   # used by both, so it stays the shared kernel in lib/automation/: moving it into cos/ would make Clear Glass reach into COS's folder (§5.9).
+  # ── ADDENDUM 2026-11-08 (0.60.458) — AE7 written and built: ERAVOS's way into COS's engine ──
+  AE7_eravos_reaches_the_engine:
+    status: BUILT   # 0.60.458
+    depends_on: [AE6_the_engine_moves_into_cos, AE_D3_the_home_is_cos]
+    files: [cos/manager/cli.js, cos/manager/contract.json, idearium/cli/route-commands.js, tests/modules/test-cos-hub.test.js]
+    requires: [node]
+    prerequisites: ["COS runs the engine (AE6)"]
+    does: >-
+      James, 2026-11-08: "I want cos to have the automation engine. With a ui for this." · "Then an api that eravos can use for the step. So needs
+      full cli commands, events, nodes." ERAVOS, or any system, uses COS's engine as a step by route only (§5.10). COS's contract spells out the
+      engine's routes (14), its events (automation.*, 8, streamed on /api/cos/events), its nodes, and a for_eravos section: box kinds from
+      /catalogue, one step via POST /step, a workflow run, the watch and the node routes. COS's command line gets `automation` (workflows, run,
+      step, active, log, catalogue, nodes, export, import), through the same door as the routes, so the two cannot drift. Agents get the row
+      cos.automation: reading is any agent's; run, step and import act, so they are the person's, or an agent proposes.
+    proof: "test-cos-hub HB-06: the command line answers workflows and catalogue (the procedure step a box kind); one step runs by route; a workflow made by route and run by command puts automation.run.start and automation.run.complete on COS's stream; the contract carries for_eravos and the events. 6/6"
+  # The UI (AE5, COS's Workflows page) waits on his critique of the preview shown 2026-11-08 (edit here or on ERAVOS's canvas; the page's name;
+  # whether the Pipelines page merges into it).
   AE5_ui_and_cleanup:
     status: OPEN
     layer: ui
