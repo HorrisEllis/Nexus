@@ -4,23 +4,29 @@ type: phase
 id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
 context: pipeline phase PC1_one_box_shape of docs/2026-11-08-pipeline-canvas-phasemap.spec
 intent: null
-summary: PC1_one_box_shape (library) — 4 file(s)
+summary: PC1_one_box_shape (library) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1794147443588
+exported_at: 1794148904492
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794147443588
-lastSeenAt: 1794147443588
+firstSeenAt: 1794148904492
+lastSeenAt: 1794148904492
 fingerprint: null
 payload:
   id: PC1_one_box_shape
   map: docs/2026-11-08-pipeline-canvas-phasemap.spec
   repo: null
   layer: library
-  status: OPEN
+  status: >-
+    "BUILT 0.60.448 — in Emerge: cos/automation/box.eg, cli.eg, test/box.test.eg 8/8;
+    test-pipeline-box 4/4 (fiverr-gig.pipeline and update-nexus.procedure round-trip unchanged).
+    Built: the shape, both conversions, problems(). Left for PC2–PC5: refs checked against live
+    owners (known is passed in; unchecked kinds are said)."
   files:
-    - cos/automation/box.js
+    - cos/automation/box.eg
+    - cos/automation/cli.eg
+    - cos/automation/test/box.test.eg
     - cos/spec/pipeline-canvas.spec
     - tests/modules/test-pipeline-box.test.js
     - tests/modules/run-all.js
@@ -33,4 +39,4 @@ payload:
   blocks:
     - MOD-PC-BOX
   spec: cos/spec/pipeline-canvas.spec
-  graph: c15376db205c9bac
+  graph: 1fc26f549c2d2fe7

@@ -1,0 +1,89 @@
+// cos/automation/test/box.test.eg — PC1_one_box_shape (MOD-PC-BOX). eg test cos/automation/test/box.test.eg
+// James, 2026-11-08: "steps as boxes, with wires as the flow into the hooks of gates" · "using emerge as the language".
+use "../box.eg" as box
+
+wire box.BoxShape.answer -> "box.answer"
+var last = null
+on "box.answer" (a) { last = a }
+
+let P = { id: "gig", name: "Gig", tasks: [
+  { id: "overview", label: "Overview", depends_on: [], step: { type: "macro", config: { name: "Fiverr gig - choose category" } }, gate: { notEmpty: true } },
+  { id: "pricing", depends_on: ["overview"], step: { type: "pipeline", pipeline: "pricing-table" }, retries: 2 },
+  { id: "check", depends_on: ["overview", "pricing"], step: { type: "command", config: { name: "update check" } } },
+  { id: "read", depends_on: ["check"], step: { type: "extract", mode: "text", selector: "h1" } } ] }
+
+test "every kind of step becomes a box with in and out hooks; wires come from depends_on" {
+  send box.BoxShape.boxes { pipeline: P }
+  let g = last.value
+  expect map(g.boxes, fn(b) = b.kind) == ["macro", "pipeline", "system", "tool"]
+  expect map(g.boxes, fn(b) = b.ref) == ["Fiverr gig - choose category", "pricing-table", "update check", "extract"]
+  expect g.boxes[0].hooks.in == ["in"] and g.boxes[0].hooks.out == ["out"]
+  expect g.boxes[0].gate == { notEmpty: true }
+  expect len(g.wires) == 4 and g.wires[0] == { from: "overview.out", to: "pricing.in" }
+}
+
+test "the round trip loses nothing: boxes back to the engine's tasks give the same tasks" {
+  send box.BoxShape.boxes { pipeline: P }
+  send box.BoxShape.tasks { graph: last.value }
+  expect last.value == P.tasks
+}
+
+test "a wire drawn on the canvas is a dependency in the file" {
+  send box.BoxShape.boxes { pipeline: P }
+  var g = clone(last.value)
+  g.wires = push(g.wires, { from: "pricing.out", to: "read.in" })
+  send box.BoxShape.tasks { graph: g }
+  expect last.value[3].depends_on == ["check", "pricing"]
+}
+
+test "a valid graph passes; the kinds whose refs cannot be checked here are said" {
+  send box.BoxShape.boxes { pipeline: P }
+  send box.BoxShape.validate { graph: last.value, known: { macro: ["Fiverr gig - choose category"], pipeline: ["pricing-table"] } }
+  expect last.ok, last.why
+  expect last.value.unchecked == ["system", "tool"]
+}
+
+test "refused and named: an unknown kind, an id twice, a ref that names nothing, a wire to a missing hook" {
+  let bad = { boxes: [
+    { id: "a", kind: "wizard", ref: "x", hooks: { in: ["in"], out: ["out"] } },
+    { id: "b", kind: "pipeline", ref: "nowhere", hooks: { in: ["in"], out: ["out"] } },
+    { id: "b", kind: "tool", ref: "t", hooks: { in: ["in"], out: ["out"] } } ],
+    wires: [{ from: "a.out", to: "b.side" }, { from: "ghost.out", to: "a.in" }] }
+  send box.BoxShape.validate { graph: bad, known: { pipeline: ["pricing-table"] } }
+  expect not last.ok
+  let ps = last.value.problems
+  expect any(ps, fn(p) = find_text(p, "the kind \"wizard\" is not one of") >= 0), json(ps)
+  expect any(ps, fn(p) = find_text(p, "box b: the id is used twice") >= 0), json(ps)
+  expect any(ps, fn(p) = find_text(p, "pipeline \"nowhere\" names nothing known") >= 0), json(ps)
+  expect any(ps, fn(p) = find_text(p, "b.side is not an in hook") >= 0), json(ps)
+  expect any(ps, fn(p) = find_text(p, "ghost.out is not an out hook") >= 0), json(ps)
+}
+
+test "a cycle is refused, with the ids around it" {
+  let h = { in: ["in"], out: ["out"] }
+  let g = { boxes: [{ id: "a", kind: "tool", ref: "a", hooks: h }, { id: "b", kind: "tool", ref: "b", hooks: h }, { id: "c", kind: "tool", ref: "c", hooks: h }],
+    wires: [{ from: "a.out", to: "b.in" }, { from: "b.out", to: "c.in" }, { from: "c.out", to: "a.in" }] }
+  send box.BoxShape.validate { graph: g, known: {} }
+  expect not last.ok
+  expect find_text(last.why, "a cycle: ") >= 0, last.why
+}
+
+test "BoxShape is in Emerge's component registry, and its hooks are what it offers" {
+  var rec = null
+  for c in components().components { if c.id == "cos.automation.box" { rec = c } }
+  expect rec != null and rec.namespace == "cos"
+  expect box.BoxShape.hooks.in == ["boxes", "tasks", "procedure", "steps", "validate"]
+  expect box.BoxShape.hooks.out == ["answer"]
+  expect box.KINDS == ["gate", "system", "agent", "macro", "pipeline", "procedure", "tool", "build"]
+}
+
+test "a procedure's steps become boxes in order (confirm and check are gates) and come back unchanged" {
+  let pr = { id: "update-nexus", steps: [{ tool: "nexus.command", args: { command: "update" } }, { confirm: "apply the update" }, { check: { of: 1, contains: "ok" } }] }
+  send box.BoxShape.procedure { procedure: pr }
+  let g = last.value
+  expect map(g.boxes, fn(b) = b.kind) == ["tool", "gate", "gate"]
+  expect map(g.boxes, fn(b) = b.ref) == ["nexus.command", "confirm", "check"]
+  expect g.wires == [{ from: "s1.out", to: "s2.in" }, { from: "s2.out", to: "s3.in" }]
+  send box.BoxShape.steps { graph: g }
+  expect last.value == pr.steps
+}

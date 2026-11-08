@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794148716159
+exported_at: 1794148904504
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794148716159
-lastSeenAt: 1794148716159
+firstSeenAt: 1794148904504
+lastSeenAt: 1794148904504
 fingerprint: null
 payload:
   for: PC3_the_build_request_step
@@ -248,7 +248,6 @@ payload:
     downstream:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
-      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
     unlocks: []
     conflicts:
@@ -260,7 +259,7 @@ payload:
           - tests/modules/run-all.js
     dangling: []
     lines:
-      - layer 4 · blocked by PC1_one_box_shape, OC8_the_console
+      - layer 4 · blocked by OC8_the_console
       - >-
         depends on (5): PC1_one_box_shape, PC_D3_when_a_step_becomes_a_build_request,
         PC_D5_emerge_writes_the_code, AE_D4_the_hub_structural, OC8_the_console · all upstream 16

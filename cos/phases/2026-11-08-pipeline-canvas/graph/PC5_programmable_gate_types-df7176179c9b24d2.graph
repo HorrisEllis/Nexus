@@ -7,11 +7,11 @@ intent: null
 summary: 32 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794148716165
+exported_at: 1794148904513
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794148716165
-lastSeenAt: 1794148716165
+firstSeenAt: 1794148904513
+lastSeenAt: 1794148904513
 fingerprint: null
 payload:
   for: PC5_programmable_gate_types
@@ -279,9 +279,9 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
-      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
       - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
-    unlocks: []
+    unlocks:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
     conflicts:
       - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
         files:
@@ -295,14 +295,14 @@ payload:
           - tests/modules/run-all.js
     dangling: []
     lines:
-      - layer 14 · blocked by PC1_one_box_shape, MB3_one_shape_with_pipelines
+      - layer 14 · blocked by MB3_one_shape_with_pipelines
       - >-
         depends on (5): PC1_one_box_shape, PC_D1_gates_as_compartments,
         PC_D8_options_not_neat_boxes, MB3_one_shape_with_pipelines, PA4_a_gate_after_every_step ·
         all upstream 40
       - >-
         needed by (2): PC4_the_box_kinds_on_the_canvas, PC6_intelligence_watches_the_runs · all
-        downstream 3
+        downstream 3 · finishing it unlocks PC6_intelligence_watches_the_runs
       - >-
         same files as PC2_procedures_and_frameworks_as_steps with no order between them:
         lib/automation/steps.js, lib/automation/engine.js

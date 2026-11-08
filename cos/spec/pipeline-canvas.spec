@@ -182,7 +182,7 @@ spec:
     - id: MOD-PC-BOX
       name: box
       uuid: cos-pipeline-canvas-box-v1-0000-2026-1108-001
-      path: cos/automation/box.js
+      path: cos/automation/box.eg
       phase: PC1_one_box_shape
       description: >-
         One Box and Wire shape over every kind. toBox/fromBox convert an engine pipeline task (IF-PIPELINE-CORE, IF-STEP-TYPES), a procedure step

@@ -1,0 +1,42 @@
+// cos/automation/cli.eg — the box shape's CLI (MOD-PC-BOX, PC1_one_box_shape): eg run cos/automation/cli.eg <command> <file.json>
+// It reaches BoxShape only through its hooks (CIE-EG §5.2). Emerge reads JSON; the tree's node files are YAML, so a caller converts them first
+// (Emerge has no YAML reader yet: CIE14, found 2026-11-08). An unknown command is refused and the commands named (§1.2).
+use "./box.eg" as box
+
+wire box.BoxShape.answer -> "box.answer"
+var last = null
+on "box.answer" (a) { last = a }
+
+let a = args()
+var cmd = "help"
+if len(a) > 0 { cmd = a[0] }
+fn input(): map {
+  if len(a) < 2 { raise("usage: eg run cos/automation/cli.eg " + cmd + " <file.json>") }
+  return parse_json(read_file(a[1]))
+}
+
+if cmd == "version" { print(box.BoxShape.version) }
+else if cmd == "boxes" { send box.BoxShape.boxes { pipeline: input() } ; print(json(last)) }
+else if cmd == "roundtrip" {
+  // a pipeline: tasks → boxes → tasks; a procedure: steps → boxes → steps. Prints { kind, same, boxes, wires, problems }.
+  let p = input()
+  if has(p, "tasks") {
+    send box.BoxShape.boxes { pipeline: p }
+    let g = last.value
+    send box.BoxShape.validate { graph: g, known: {} }
+    let v = last.value
+    send box.BoxShape.tasks { graph: g }
+    print(json({ kind: "pipeline", same: last.value == p.tasks, boxes: len(g.boxes), wires: len(g.wires), problems: v.problems }))
+  } else {
+    send box.BoxShape.procedure { procedure: p }
+    let g = last.value
+    send box.BoxShape.validate { graph: g, known: {} }
+    let v = last.value
+    send box.BoxShape.steps { graph: g }
+    print(json({ kind: "procedure", same: last.value == get(p, "steps", []), boxes: len(g.boxes), wires: len(g.wires), problems: v.problems }))
+  }
+}
+else {
+  eprint("unknown command \"" + cmd + "\": the commands are version, boxes <file.json>, roundtrip <file.json>")
+  exit(1)
+}

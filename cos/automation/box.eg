@@ -1,0 +1,170 @@
+// cos/automation/box.eg — one box shape for every step on the canvas (MOD-PC-BOX, phase PC1_one_box_shape; cos/spec/pipeline-canvas.spec).
+// James, 2026-11-08: "steps as boxes, with wires as the flow into the hooks of gates as compartments. boxes can  be gates, systems, agents, macros,
+// pipelines, tools" · "using emerge as the language" · "Hard corded has to earn its place and a node or api call is better than static."
+// A Box is { id, kind, ref, hooks: { in, out }, contract: { requires, gives }, gate, args }; a Wire is { from: "<box>.<hook>", to: "<box>.<hook>" }.
+// The engine's pipeline (lib/automation/pipeline.js, PL1) is the file; to_boxes/to_tasks convert both ways and lose nothing (PCS-002: no second
+// store). problems() names every fault: an unknown kind, an id used twice, a wire to a hook that does not exist, a cycle, a ref that names nothing.
+// Reached only through its in hooks (CIE-EG §5.2); every answer leaves by the one out hook, answer.
+
+let KINDS = ["gate", "system", "agent", "macro", "pipeline", "procedure", "tool", "build"]
+
+// the engine's step type → the box kind; any other engine step is a tool (it still runs as the engine's own step)
+fn kind_of(step_type: string): string {
+  if step_type == "macro" or step_type == "pipeline" or step_type == "agent" or step_type == "gate" or step_type == "procedure" { return step_type }
+  if step_type == "workflow" { return "pipeline" }
+  if step_type == "command" { return "system" }
+  return "tool"
+}
+
+fn ref_of(step: map): string {
+  var c = get(step, "config", {})
+  for k in ["name", "pipeline", "procedure", "hat", "ref", "url", "path"] {
+    if has(step, k) and type_of(step[k]) == "string" { return step[k] }
+    if type_of(c) == "map" and has(c, k) and type_of(c[k]) == "string" { return c[k] }
+  }
+  return step.type
+}
+
+// one engine task → one box; the whole task rides in args.task, so to_tasks gives it back unchanged
+fn to_box(t: map): map {
+  var g = null
+  if has(t, "gate") { g = t.gate }
+  return { id: t.id, kind: kind_of(t.step.type), ref: ref_of(t.step), hooks: { in: ["in"], out: ["out"] },
+    contract: { requires: get(t, "depends_on", []), gives: ["output"] }, gate: g, args: { task: t } }
+}
+
+fn to_boxes(p: map): map {
+  var boxes = []
+  var wires = []
+  for t in get(p, "tasks", []) {
+    boxes = push(boxes, to_box(t))
+    for d in get(t, "depends_on", []) { wires = push(wires, { from: d + ".out", to: t.id + ".in" }) }
+  }
+  return { boxes: boxes, wires: wires }
+}
+
+// the boxes and wires → the engine's tasks; depends_on comes from the wires, so a wire drawn on the canvas is a dependency in the file
+fn to_tasks(g: map): list {
+  var out = []
+  for b in g.boxes {
+    var deps = []
+    for w in g.wires { if split(w.to, ".")[0] == b.id { deps = push(deps, split(w.from, ".")[0]) } }
+    var t = clone(b.args.task)
+    t.depends_on = deps
+    out = push(out, t)
+  }
+  return out
+}
+
+// a procedure (his .procedure, lib/repo-procedures.js PD1): steps in order, { tool, args } | { confirm } | { check }. Each step a box, wired in
+// order; confirm is a gate (his yes), check is a gate on an earlier step's output. The whole step rides in args.step.
+fn procedure_box(s: map, i: num): map {
+  var k = "tool"
+  var r = "step"
+  if has(s, "tool") { r = s.tool }
+  if has(s, "confirm") { k = "gate"; r = "confirm" }
+  if has(s, "check") { k = "gate"; r = "check" }
+  return { id: "s" + str(i + 1), kind: k, ref: r, hooks: { in: ["in"], out: ["out"] }, contract: { requires: [], gives: ["output"] }, gate: null, args: { step: s } }
+}
+
+fn procedure_to_boxes(p: map): map {
+  var boxes = []
+  var wires = []
+  var i = 0
+  for s in get(p, "steps", []) {
+    boxes = push(boxes, procedure_box(s, i))
+    if i > 0 { wires = push(wires, { from: "s" + str(i) + ".out", to: "s" + str(i + 1) + ".in" }) }
+    i = i + 1
+  }
+  return { boxes: boxes, wires: wires }
+}
+
+fn boxes_to_steps(g: map): list = map(g.boxes, fn(b) = b.args.step)
+
+fn box_ids(g: map): list = map(g.boxes, fn(b) = b.id)
+
+fn find_box(g: map, id: string): any = find(g.boxes, fn(b) = b.id == id)
+
+fn hook_ok(g: map, end: string, side: string): bool {
+  let parts = split(end, ".")
+  if len(parts) != 2 { return false }
+  let b = find_box(g, parts[0])
+  if b == null { return false }
+  return index_of(b.hooks[side], parts[1]) >= 0
+}
+
+// a cycle among the wires, as the list of ids around it, or null
+fn cycle(g: map): any {
+  var done_ids = []
+  var path = []
+  var found = null
+  fn deps_of(id) = map(filter(g.wires, fn(w) = split(w.to, ".")[0] == id), fn(w) = split(w.from, ".")[0])
+  fn visit(id) {
+    if found != null { return null }
+    if index_of(path, id) >= 0 { found = push(drop(path, index_of(path, id)), id); return null }
+    if index_of(done_ids, id) >= 0 { return null }
+    path = push(path, id)
+    for d in deps_of(id) { visit(d) }
+    path = take(path, len(path) - 1)
+    done_ids = push(done_ids, id)
+  }
+  for id in box_ids(g) { visit(id) }
+  return found
+}
+
+// known: { <kind>: [refs] } for the kinds whose refs can be checked here; a kind not in it is not checked, and that is said
+fn problems(g: map, known: map): map {
+  var ps = []
+  var unchecked = []
+  var seen = []
+  for b in g.boxes {
+    if index_of(KINDS, b.kind) < 0 { ps = push(ps, "box " + b.id + ": the kind \"" + b.kind + "\" is not one of " + join(KINDS, ", ")) }
+    if index_of(seen, b.id) >= 0 { ps = push(ps, "box " + b.id + ": the id is used twice") }
+    seen = push(seen, b.id)
+    if has(known, b.kind) {
+      if index_of(known[b.kind], b.ref) < 0 { ps = push(ps, "box " + b.id + ": " + b.kind + " \"" + b.ref + "\" names nothing known") }
+    } else if index_of(unchecked, b.kind) < 0 { unchecked = push(unchecked, b.kind) }
+  }
+  for w in g.wires {
+    if not hook_ok(g, w.from, "out") { ps = push(ps, "wire " + w.from + " -> " + w.to + ": " + w.from + " is not an out hook of a box here") }
+    if not hook_ok(g, w.to, "in") { ps = push(ps, "wire " + w.from + " -> " + w.to + ": " + w.to + " is not an in hook of a box here") }
+  }
+  if len(ps) == 0 {
+    let c = cycle(g)
+    if c != null { ps = push(ps, "a cycle: " + join(c, " -> ")) }
+  }
+  return { ok: len(ps) == 0, problems: ps, unchecked: unchecked }
+}
+
+component BoxShape {
+  id = "cos.automation.box"
+  namespace = "cos"
+  version = "1.0.0"
+  intent = "one box shape for every step on the canvas; the engine's pipeline file both ways, nothing lost"
+  state { kinds: KINDS }
+
+  in boxes(q: { pipeline: map }) {
+    emit out answer { hook: "boxes", ok: true, value: to_boxes(q.pipeline), why: null }
+  }
+
+  in tasks(q: { graph: map }) {
+    emit out answer { hook: "tasks", ok: true, value: to_tasks(q.graph), why: null }
+  }
+
+  in procedure(q: { procedure: map }) {
+    emit out answer { hook: "procedure", ok: true, value: procedure_to_boxes(q.procedure), why: null }
+  }
+
+  in steps(q: { graph: map }) {
+    emit out answer { hook: "steps", ok: true, value: boxes_to_steps(q.graph), why: null }
+  }
+
+  in validate(q: { graph: map, known: map }) {
+    let r = problems(q.graph, q.known)
+    var why = null
+    if not r.ok { why = join(r.problems, "; ") }
+    emit out answer { hook: "validate", ok: r.ok, value: r, why: why }
+  }
+
+  out answer: { hook: string, ok: bool, value: any, why: any }
+}

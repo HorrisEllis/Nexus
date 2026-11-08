@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794148716169
+exported_at: 1794148904519
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794148716169
-lastSeenAt: 1794148716169
+firstSeenAt: 1794148904519
+lastSeenAt: 1794148904519
 fingerprint: null
 payload:
   for: PC6_intelligence_watches_the_runs
@@ -217,13 +217,12 @@ payload:
     downstream:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
-      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 15 · blocked by PC1_one_box_shape, PC5_programmable_gate_types
+      - layer 15 · blocked by PC5_programmable_gate_types
       - >-
         depends on (3): PC1_one_box_shape, PC5_programmable_gate_types,
         PC_D9_meta_autonomous_agnostic_nonlinear · all upstream 42
