@@ -422,3 +422,27 @@ A failed prediction is kept, and the claim is narrowed to what held.
 **State:** registered, conceptual. It runs after T7's runner exists (it reuses its arms and its isolation), so after the JavaScript removal,
 by the focus.
 
+
+## T10 — the automation hub estimated through his framework (2026-11-08)
+- **His words:** James, 2026-11-08: "how long will that take. run that again using my framework the .framework" (about COS as the hub for all
+  automation: "queues, contracts, dag, it should all be there, waiting to be wired in" · "cos is meant to be nexus entirely").
+- **What the coder did:** **executed** as an estimate, conceptual as a build. docs/innovation-toolkit.framework run in order: Section 0 (a
+  framework problem? yes, a planning one), Section 3 (frame the end-state), Section 4 (constraints, invariants, good enough), Part 6
+  (priority and weighting, fidelity as the filter), Section 10 (hostile verification of the estimate), Section 12 (calibrate: optimistic and
+  pessimistic bounds).
+- **Inputs (measured, this repo):** lib/automation is 3,337 JS lines (engine.js 1,365); the hub's other pieces already built (PL1–PL11, PN1–PN4,
+  OC1, OC4a, RD0, CG1–CG3, lib/phase-dag.js); recent COS phases of this size took one session each (CA3 0.60.379, OC4a 0.60.445). Low fidelity:
+  no measured JS→.eg porting rate exists (BENCHMARKS holds only the plan, ~23,000 lines over 20 sessions ≈ 1,150 lines a session).
+- **Prediction (before the result):** with his readings 1a (slots now) and 2a (RAID through Cortex's routes) and the engine moved behind COS's
+  door as it is: 3 sessions (optimistic 2, pessimistic 5). Porting the engine itself to .eg adds 3 sessions at the planned rate (pessimistic 6+)
+  and is blocked on Emerge's missing time/process/socket primitives (CIE13, CIE10). Reading 1b (each slot working) adds 2–3; 2b (RAID into COS)
+  adds 2 and a migration risk. Measured by: sessions counted on the phase ledger lines of AE6, OC8 and the slot phases, against these numbers.
+- **Evidence:** open.
+- **Compared with the pass before it (his question, 2026-11-08: "how does that compare to before"):** the same coder, the same morning, the same
+  facts, once without the framework and once with it. Without it, the answer gave no time estimate, recommended "AE6 first, built in Emerge", and
+  named no risks. With it, the answer gave 3 sessions (2–5) with a cost for each of his options, and found two things the first pass missed. First,
+  AE6 in .eg is blocked on Emerge's missing time/process/socket primitives (CIE13, CIE10), so the first pass's order would have stalled in its first
+  session. Second, Clear Glass's pipelines, Fiverr's included, run on lib/automation, so a careless move could break his second focus silently.
+  Both came from Section 10 (hostile verification). Cost: about eight extra reads. Counter-evidence kept: on a small, measured job the plain
+  estimate already held (OC4: estimated one session, built in one, 0.60.445). So the framework's added value showed on the large job with
+  hidden constraints, not the small one. Whether its 3-session number is more accurate is still **open** until the sessions are counted.

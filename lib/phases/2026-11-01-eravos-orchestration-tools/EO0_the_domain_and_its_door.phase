@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+type: phase
+id: docs_2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+context: >-
+  pipeline phase EO0_the_domain_and_its_door of
+  docs/2026-11-01-eravos-orchestration-tools-phasemap.spec
+intent: null
+summary: EO0_the_domain_and_its_door (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794149069323
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794149069323
+lastSeenAt: 1794149069323
+fingerprint: null
+payload:
+  id: EO0_the_domain_and_its_door
+  map: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - Eravos-Canvas:tools/orchestration
+    - Eravos-Canvas:canvas/runtime/organism-sdk.js
+    - cos/archetype/eravos-canvas/canvas/runtime/organism-sdk.js
+  depends_on:
+    - EO_D0_one_door
+  blocks: []
+  spec: null
+  graph: 3f09ac13f4c945e6

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-01-eravos-orchestration-tools-phasemap.spec::EO4_measure_tools
+type: phase
+id: docs_2026-11-01-eravos-orchestration-tools-phasemap.spec::EO4_measure_tools
+context: pipeline phase EO4_measure_tools of docs/2026-11-01-eravos-orchestration-tools-phasemap.spec
+intent: null
+summary: EO4_measure_tools (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794149069339
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794149069339
+lastSeenAt: 1794149069339
+fingerprint: null
+payload:
+  id: EO4_measure_tools
+  map: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - Eravos-Canvas:tools/orchestration/measure
+  depends_on:
+    - EO2_cos_tools
+    - CP11_the_diagnostic_map
+  blocks: []
+  spec: null
+  graph: dcbd1d64f930e7ad

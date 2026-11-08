@@ -291,6 +291,11 @@ phases:
     proof: "a native program spawns a child, reads its exit code, kills one that hangs; times a 50 ms timer; lists and watches a folder; each case from its Pillar contract"
   CIE14_the_gaps_found_while_coding:
     status: OPEN
+    expanded_2026_11_08_pc: >-
+      Found mapping the pipeline canvas (docs/2026-11-08-pipeline-canvas-phasemap.spec PC_D4; James, 2026-11-08: "using emerge as the language"):
+      Emerge has read_file and parse_json but no YAML reader, and every node file (.pipeline, .procedure, .task, .gate) is YAML in the shared
+      envelope; and no folder listing (CIE13's sys_file). Gap: parse_yaml (and the envelope's reader) as an Emerge builtin; until then PC1's tests feed
+      JSON and a JS harness converts the tree's YAML, named as temporary.
     depends_on: [CIE_D1_remove_the_javascript_now, CIE4_native_components]
     spec: emerge/emerge/spec/cie-eg.spec
     blocks: [MOD-NATIVE-SYSTEM]

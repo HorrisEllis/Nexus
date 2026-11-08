@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EO0_the_domain_and_its_door:3f09ac13f4c945e6
+type: graph
+id: phase:EO0_the_domain_and_its_door:3f09ac13f4c945e6
+context: dependency graph of phase EO0_the_domain_and_its_door
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794149069323
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794149069323
+lastSeenAt: 1794149069323
+fingerprint: null
+payload:
+  for: EO0_the_domain_and_its_door
+  kind: phase
+  repo: null
+  hash: 3f09ac13f4c945e6
+  nodes:
+    - path: cos/archetype/eravos-canvas/canvas/runtime/organism-sdk.js
+      role: changes
+      exists: true
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO_D0_one_door
+    dependents:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+    upstream:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO_D0_one_door
+    downstream:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO3_work_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO4_measure_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC10_pipelines_on_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+    blockedBy:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO_D0_one_door
+    unlocks:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by EO_D0_one_door
+      - 'depends on (1): EO_D0_one_door'
+      - >-
+        needed by (2): EO1_flow_tools, EO2_cos_tools · all downstream 7 · finishing it unlocks
+        EO1_flow_tools, EO2_cos_tools
+    edges:
+      - from: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO_D0_one_door
+        kind: declared

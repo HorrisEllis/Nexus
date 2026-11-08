@@ -880,6 +880,14 @@ export const SPEC = [
       for (const w of d.walls || []) console.log(`  ${w.name.padEnd(22)} ${w.mode.padEnd(8)} ${String(w.via).padEnd(13)} ${w.said}${w.crossings.length ? `\n      ${w.crossings.slice(0, 5).map(x => `${x.file} (from ${x.from})`).join('\n      ')}` : ''}`); } },
   // 2026-11-01 CP6a — James: "then i want resource management for each cos compartment". Caps by layer, read back from the OS; the account
   // 0.60.367 CA3 — James: "Gate behind settings to open. Make a full detailed settings for network." Reading is anyone's; changing it is his.
+  // 0.60.445 OC4a — James, 2026-11-08: "Also the automation is to deploy agents to systems." A person's deploy is taken at once; an agent's waits for him.
+  { key: 'cos.deployments', repo: false, usage: 'cos deployments [system]', about: 'every deployment to a system: what (task, agent, pipeline), where, its state (taken, running, done, failed, stopped) and its result',
+    req: (a) => ({ system: 'cos', method: 'GET', path: `/api/cos/deployments${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }) },
+  { key: 'cos.hub', repo: false, usage: 'cos hub', about: 'COS as the hub of all automation (OC8a): each slot (automation, pipelines, tasks, queues, raid, contracts, dag, and the ones still waiting) with its owner and its state, read live: wired, waiting (the phase that wires it), down or refused',
+    req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/hub' }) },
+  { key: 'cos.deploy', repo: false, usage: 'cos deploy <system> <METHOD> <path> | cos deploy <system> agent|pipeline <ref>', about: 'deploy to a system through a COS proposal: a route call it runs there (e.g. cos deploy idearium GET /health), or an agent hat or pipeline (their runners: OC4b)',
+    req: (a) => { const [system, k, ...rest] = a.args; const what = /^(agent|pipeline)$/.test(k || '') ? { kind: k, ref: rest.join(' ') } : { kind: 'task', task: { do: { kind: 'command', ref: `${String(k || '').toUpperCase()} ${rest[0] || ''}` } } };
+      return { system: 'cos', method: 'POST', path: '/api/cos/deploy', body: { what, system, by: 'person', why: a.flags.why || 'deployed from the command line' } }; } },
   { key: 'cos.network', repo: false, usage: 'cos network', about: 'COS\'s network settings (outbound tunnel and rendezvous, inbound port mapping, DDNS, SSH, TLS, compartment switches) and whether each reach engine\'s gate is open; tokens shown only as set or not',
     req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/network' }) },
   { key: 'cos.network.set', repo: false, usage: 'cos network set <path> <value>', personOnly: () => 'opening the network is the person\'s: the Network page in COS, or ask them', about: 'change one network setting, e.g. cos network set inbound.ddns.enabled true',

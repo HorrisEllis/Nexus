@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EO3_work_tools:f0eeb9303f5d5a61
+type: graph
+id: phase:EO3_work_tools:f0eeb9303f5d5a61
+context: dependency graph of phase EO3_work_tools
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794149069337
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794149069337
+lastSeenAt: 1794149069337
+fingerprint: null
+payload:
+  for: EO3_work_tools
+  kind: phase
+  repo: null
+  hash: f0eeb9303f5d5a61
+  nodes:
+    - path: docs/2026-11-08-pipeline-canvas-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+    upstream:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO_D0_one_door
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB_D0_blocks_and_gates
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+    blockedBy:
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by EO2_cos_tools
+      - 'depends on (2): EO2_cos_tools, MB1_the_gate_between · all upstream 5'
+      - 'needed by (1): PC4_the_box_kinds_on_the_canvas'
+    edges:
+      - from: docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+        kind: declared
+      - from: docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+        kind: declared

@@ -1,0 +1,236 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC6_intelligence_watches_the_runs:8b67497714cdf27d
+type: graph
+id: phase:PC6_intelligence_watches_the_runs:8b67497714cdf27d
+context: dependency graph of phase PC6_intelligence_watches_the_runs
+intent: null
+summary: 21 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794148904519
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794148904519
+lastSeenAt: 1794148904519
+fingerprint: null
+payload:
+  for: PC6_intelligence_watches_the_runs
+  kind: phase
+  repo: null
+  hash: 8b67497714cdf27d
+  nodes:
+    - path: intelligence/pipeline-watch.eg
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/registry-components.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: tests/modules/test-pipeline-watch.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/coordination/intelligence-query.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/intuition-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mastermind-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/adversarial.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk-perception/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/anomaly.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/compound.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/config.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/intuition.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/mastermind.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: intelligence/routes.js
+      to: intelligence/intuition.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/mastermind.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/gap/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/anomaly.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/compound.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk-perception/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/config.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/intuition-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/mastermind-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/registry-components.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/registry-components.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 15
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D9_meta_autonomous_agnostic_nonlinear
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+      - docs/2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D4_a_gate_is_a_pipeline_block
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB_D0_blocks_and_gates
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D9_meta_autonomous_agnostic_nonlinear
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 15 · blocked by PC5_programmable_gate_types
+      - >-
+        depends on (3): PC1_one_box_shape, PC5_programmable_gate_types,
+        PC_D9_meta_autonomous_agnostic_nonlinear · all upstream 42
+      - 'needed by (1): PC7_iterate_to_the_end_state'
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D9_meta_autonomous_agnostic_nonlinear
+        kind: declared

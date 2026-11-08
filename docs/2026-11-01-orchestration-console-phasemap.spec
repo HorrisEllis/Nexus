@@ -108,12 +108,21 @@ phases:
     does: "occurrences in a window from records and schedules; reschedule edits the task file"
     proof: "MOD-OC-CALENDAR's acceptance"
   OC4_deploy_to_any_system:
-    status: OPEN
+    status: "OC4a DONE 0.60.445 — test-cos-deploy 5/5 (the page in Clear Glass through the real cockpit); OC4b OPEN: agent and pipeline runners"
     depends_on: [OC1_task_nodes]
     spec: docs/orchestration-console.spec
-    blocks: [MOD-OC-DEPLOY]
-    files: [cos/manager/deploy.js, cos/manager/server.js, cos/manager/contract.json, tests/modules/test-cos-deploy.test.js]
-    interface: [route, cli]
+    blocks: [MOD-OC-DEPLOY, MOD-OC-DEPLOY-PAGE]
+    files: [cos/manager/deploy.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/deployments/index.html, cos/ui/deployments/page.js, cos/ui/deployments/page.css, idearium/cli/route-commands.js, tests/modules/test-cos-deploy.test.js]
+    requires: [COS's manager running; the target system declared to COS with a healthUrl (its own address) for a task to run there]
+    prerequisites: [OC1_task_nodes built (lib/automation/task-node.js validateTask)]
+    expanded_2026_11_08: >-
+      James, 2026-11-08, choosing OC4 before going back to Emerge: "can we do that? 0c4? then back to emerge. how long will that take?" (the coder
+      estimated one session). Sliced by what runs today, said: OC4a — the deployment's whole lifecycle (proposed through COS's proposals, his own
+      taken in the same click, an agent's held for him; recalled; every step on COS's ledger; GET/POST routes; `cos deploy` rows; the cockpit's
+      Deployments page) and a TASK run on its target system (do.kind command, ref "<METHOD> <path>", called on that system's own address).
+      OC4b — agent and pipeline runners (a hat handed to copilot, a pipeline to Clear Glass, each through its routes); until then such a
+      deployment is recorded and says "no runner yet (OC4b)". Reuses proposals.register (SC4's add-system pattern), not a second mechanism.
+    interface: [route, cli, html]
     does: "an agent, task or pipeline deployed to any system's compartment through a COS proposal"
     proof: "MOD-OC-DEPLOY's acceptance"
   OC5_every_agent_tool:
@@ -136,10 +145,23 @@ phases:
     proof: "MOD-OC-HISTORY's acceptance"
   OC8_the_console:
     status: OPEN
+    expanded_2026_11_08: >-
+      James, 2026-11-08: "basically i want it to be the main subrate for all automation like a hub for the automation pipeline, workflows, tasks, including or using raid as the authentication and tracking system. queues, contracts, dag, it should all be there, waiting to be wired in." · "look at existing phases and ideas. cos is meant to be nexus entirely," (asked after OC4a, with "i wanted to have an editor for pipelines, like every pipeline in nexus is editable, managable, uses cos for gates, like in clearglass, gated steps, macros, etc") Expanded, not rewritten (his SL_D11): this phase is where his hub lives — every pipeline, workflow and task in COS, editable and gated
+      in one place, with RAID, queues, contracts and the DAG as its slots. Readings to settle with him before code (do not guess): (1) "waiting to be
+      wired in" = named slots in COS's contract that answer "not wired yet" until connected, or each one working now; (2) RAID used through
+      Cortex's routes, or RAID moved into COS (CS11, shelved 2026-11-07 as "top of my head ideas").
+    expanded_2026_11_08_oc8a: >-
+      OC8a DONE 0.60.447, the hub's backend, route, command and page, sliced ahead of the console (his "waiting to be wired in", AE_D4 1a/2a):
+      cos/manager/hub.js reads each slot from its owner's route (automation AU1 on Idearium, pipelines on Clear Glass, tasks and queues COS's own,
+      RAID and its contract queue on Cortex, the phase DAG on Idearium) and lists the slots still waiting with the phase that wires each (OC4b,
+      RQ14, RQ7, RQ8, RQ16, RQ15). GET /api/cos/hub, row `cos hub`, cockpit page #/hub. Proof: tests/modules/test-cos-hub.test.js 4/4 (HB-01..04,
+      the page in Clear Glass). The console itself (MOD-OC-CONSOLE) stays open on its depends_on.
+    oc8a_depends_on: [OC4_deploy_to_any_system, AE_D4_the_hub_structural]
+    oc8a_files: [cos/manager/hub.js, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, cos/ui/hub/index.html, cos/ui/hub/page.js, cos/ui/hub/page.css, tests/modules/test-cos-hub.test.js, tests/modules/run-all.js]
     depends_on: [OC3_the_calendar, OC4_deploy_to_any_system, OC5_every_agent_tool, OC6_history_and_replay, OC7_the_taxonomy_expanded, MG33_cos_ui_has_a_way_in]
     spec: docs/orchestration-console.spec
-    blocks: [MOD-OC-CONSOLE]
-    files: [cos/ui/orchestration/index.html, cos/ui/orchestration/page.css, cos/ui/orchestration/page.js, cos/manager/contract.json, lib/ui/brainos/index.html, tests/modules/test-orchestration-console.test.js]
+    blocks: [MOD-OC-CONSOLE, MOD-OC-HUB, MOD-OC-HUB-PAGE]
+    files: [cos/manager/hub.js, cos/ui/hub/index.html, cos/ui/hub/page.js, cos/ui/hub/page.css, tests/modules/test-cos-hub.test.js, cos/ui/orchestration/index.html, cos/ui/orchestration/page.css, cos/ui/orchestration/page.js, cos/manager/contract.json, lib/ui/brainos/index.html, tests/modules/test-orchestration-console.test.js]
     interface: [html]
     does: "the console in COS's UI: overview, pipelines, tasks, calendar, agents, tools, history, triggers; BrainOS archived and linking here"
     expanded_2026_11_06: "his \"like autonmous should be a rebuild of brain os. cos is the hub\" (OC_D5): this console is where COS manages every compartment autonomously, beside the Console tab he likes (SC11, kept as it is)"
@@ -147,6 +169,8 @@ phases:
 
   OC9_templates:
     status: OPEN
+    expanded_2026_11_08_pc: >-
+      James, 2026-11-08: "like i want a beautiful visual, steps as boxes, with wires as the flow into the hooks of gates as compartments. boxes can  be gates, systems, agents, macros, pipelines, tools, like a node based canvas for pipelines" · "build pipeline, automation pipeline, debug pipeline, coding pipeline, agnostic pipelines, using dag, contracts, gaps, stepwise, automations, compartments." The pipeline kinds he named (build, automation, debug, coding, agnostic) are templates over the one box shape (PC1), not separate engines (PC_D0). Each template ships as a .pipeline with its boxes, gates and contracts.
     depends_on: [OC_D1_templates_and_schemas, OC7_the_taxonomy_expanded]
     spec: docs/orchestration-console.spec
     blocks: [MOD-OC-TAXONOMY]
@@ -156,6 +180,8 @@ phases:
     proof: "each template makes a valid node (validateTask); each schema parses"
   OC10_pipelines_on_the_canvas:
     status: OPEN
+    expanded_2026_11_08_pc: >-
+      James, 2026-11-08: "like i want a beautiful visual, steps as boxes, with wires as the flow into the hooks of gates as compartments. boxes can  be gates, systems, agents, macros, pipelines, tools, like a node based canvas for pipelines" · "build pipeline, automation pipeline, debug pipeline, coding pipeline, agnostic pipelines, using dag, contracts, gaps, stepwise, automations, compartments." The canvas is PC4 (docs/2026-11-08-pipeline-canvas-phasemap.spec): boxes of every kind, wires into the next box's gate (PC_D1), a pipeline or procedure box opening into its own canvas (recursive), and each box showing its real run state. Saved as the engine's .pipeline (PC1, no second store).
     depends_on: [OC_D2_the_eravos_canvas_replaces_brainos, EO2_cos_tools, OC2_scheduler_on_nodes]
     spec: docs/orchestration-console.spec
     blocks: [MOD-OC-CONSOLE]

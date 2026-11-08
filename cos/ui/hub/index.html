@@ -1,0 +1,24 @@
+<!doctype html>
+<!-- cos/ui/hub/index.html — COS as the hub of all automation (OC8a, 0.60.446). Spec: docs/orchestration-console.spec MOD-OC-HUB-PAGE.
+     James, 2026-11-08: "basically i want it to be the main subrate for all automation like a hub for the automation pipeline, workflows, tasks,
+     including or using raid as the authentication and tracking system. queues, contracts, dag, it should all be there, waiting to be wired in."
+     Reads only COS's own door: GET /api/cos/hub. -->
+<html lang="en" data-theme="nexus" data-accent="cycle">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Hub · COS</title>
+  <link rel="stylesheet" href="../core/theme.css"><link rel="stylesheet" href="../core/core.css"><link rel="stylesheet" href="page.css">
+</head>
+<body class="cos-page">
+  <div data-refusals></div>
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">Compartment OS · orchestration</span>
+      <h1 class="title">Hub</h1>
+      <p class="lede">Every piece of automation in one place, each read just now from the system that owns it. Wired means its owner answered. Waiting names the phase that wires it. Nothing here is shown as working unless it answered.</p>
+    </div>
+  </header>
+  <section class="panel"><h2 id="hub-sum">reading…</h2><div id="hub-list"></div></section>
+  <script src="../core/core.js"></script>
+  <script src="page.js"></script>
+</body>
+</html>
