@@ -7,11 +7,11 @@ intent: null
 summary: 35 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794234103537
+exported_at: 1794234861419
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794234103537
-lastSeenAt: 1794234103537
+firstSeenAt: 1794234861419
+lastSeenAt: 1794234861419
 fingerprint: null
 payload:
   for: PC2_procedures_and_frameworks_as_steps
@@ -242,7 +242,8 @@ payload:
       - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
-    dependents: []
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     upstream:
       - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
       - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
@@ -295,7 +296,8 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D2_frameworks_as_procedures
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
-    downstream: []
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
       - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
@@ -303,9 +305,6 @@ payload:
     unlocks: []
     conflicts:
       - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
-        files:
-          - cos/manager/server.js
-      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
         files:
           - cos/manager/server.js
     dangling: []
@@ -317,9 +316,8 @@ payload:
         depends on (5): PC1_one_box_shape, PC_D2_frameworks_as_procedures,
         PD4_the_procedure_library, PC4_the_box_kinds_on_the_canvas, PC5_programmable_gate_types ·
         all upstream 51
-      - 'needed by (0): —'
+      - 'needed by (1): PC7_iterate_to_the_end_state'
       - 'same files as PC3_the_build_request_step with no order between them: cos/manager/server.js'
-      - 'same files as PC7_iterate_to_the_end_state with no order between them: cos/manager/server.js'
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
         kind: declared

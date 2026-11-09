@@ -1,0 +1,61 @@
+// cos/pipeline/plan.eg — a request planned into a .pipeline, end state first, on the engine we built (PC7; cos/spec/pipeline-canvas.spec).
+// James, 2026-11-09: "Like we need this pipeline able to build nexus." · "It's end state first reasoning. My framework at every level" · "Okay just
+// needs to use the pipeline automation engine we built. Using a .pipeline. They build upon request, dynamically".
+//
+// A phase of Nexus (Idearium's GET /api/phases/one) becomes its own .pipeline, planned from what the phase is — not one fixed pipeline for all:
+//   endState   its proof (what done is), first — the request's contract (RAID's) is booked from it before any step runs
+//   context    what Nexus already holds for what the phase does (Idearium's context finder): gives a .context
+//   framework  his framework's steps, when asked (a framework step, recursive): gives a .synthesis
+//   dag        its DAG is whole (it is buildable)
+//   build      the build: one step per planned file when asked (one chunk at a time), else the phase whole (Idearium chunks it by file)
+//   evidence   closed on evidence (its tests run; missing proof is never a pass)
+//   ledger     logged in the phase ledger
+// Each step is an Idearium route (nexus://idearium, COS routes it) with a gate after it; a gate that closes is a gap, and the request waits there.
+
+fn ok_gate(): map = { contains: "\"ok\":true" }
+fn api(url: string, method: string, body: any): map {
+  var c = { url: url, method: method }
+  if body != null { c.body = json(body) }
+  return { type: "api", config: c }
+}
+
+fn phase_pipeline(ph: map, opts: map): map {
+  let id = ph.id
+  var end = get(ph, "proof", null)
+  if end == null { end = "the phase does what it says: " + str(get(ph, "does", id)) }
+  var tasks = []
+  tasks = push(tasks, { id: "context", label: "What Nexus already holds for it", depends_on: [], gives: ["context"],
+    step: api("nexus://idearium/api/context/find", "POST", { text: get(ph, "does", id) }), gate: ok_gate() })
+  var before_build = "context"
+  if get(opts, "framework", null) != null {
+    tasks = push(tasks, { id: "framework", label: "His framework on it", depends_on: ["context"], takes: ["context"], gives: ["synthesis"],
+      step: { type: "framework", config: { framework: opts.framework } } })
+    before_build = "framework"
+  }
+  tasks = push(tasks, { id: "dag", label: "Its DAG is whole", depends_on: [before_build],
+    step: api("nexus://idearium/api/repos/\{\{vars.repo\}\}/phases/dag?phase=" + id, "GET", null), gate: ok_gate() })
+  var built = []
+  if get(opts, "chunks", false) and len(get(ph, "files", [])) > 0 {
+    // one chunk at a time: a build step per planned file, in order
+    var prev = "dag"
+    var i = 0
+    for f in ph.files {
+      i = i + 1
+      let tid = "build-" + str(i)
+      tasks = push(tasks, { id: tid, label: "Build " + f, depends_on: [prev], takes: ["context"],
+        step: api("nexus://idearium/api/repos/\{\{vars.repo\}\}/phases/build", "POST", { phase: id, map: ph.map, files: [f] }), gate: ok_gate() })
+      built = push(built, tid)
+      prev = tid
+    }
+  } else {
+    tasks = push(tasks, { id: "build", label: "Build it", depends_on: ["dag"], takes: ["context"],
+      step: api("nexus://idearium/api/repos/\{\{vars.repo\}\}/phases/build", "POST", { phase: id, map: ph.map }), gate: ok_gate() })
+    built = ["build"]
+  }
+  tasks = push(tasks, { id: "evidence", label: "Closed on evidence", depends_on: [built[len(built) - 1]],
+    step: api("nexus://idearium/api/repos/\{\{vars.repo\}\}/phases/evidence", "POST", { phase: id, map: ph.map }), gate: ok_gate() })
+  tasks = push(tasks, { id: "ledger", label: "In the phase ledger", depends_on: ["evidence"],
+    step: api("nexus://idearium/api/phases/ledger/log", "POST", { phase: id, map: ph.map, event: "built", why: "built by its own planned pipeline (COS)", by: "pipeline" }), gate: ok_gate() })
+  return { name: "build: " + id, description: "planned from " + ph.map + "::" + id + ", end state first (cos/pipeline/plan.eg)",
+    endState: { says: end, from: ph.map + "::" + id }, vars: { repo: get(opts, "repo", ""), phase: id }, tasks: tasks }
+}

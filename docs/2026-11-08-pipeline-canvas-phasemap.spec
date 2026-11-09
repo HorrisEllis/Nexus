@@ -535,3 +535,18 @@ built_2026_11_09_raid:
 next_in_order:
   - "a step's agent is handed RAID's packet for its gate (the smallest context); a gate too big for its agent is split by RAID (split, budget): one chunk, one primitive at a time — reuse first (a verified primitive: crystal, Pillar)"
   - "the input-to-end-state framework for copilot: input → intent → context.find → the contract drafted → split → each gate's writer (the free web agents through Guardian) → eg check / eg test gates → evidence → RAID's status → the loop (PC7) until the end state holds; a failure becomes a gap (PC3)"
+
+# ── ADDENDUM 2026-11-09 (0.60.475) — PC7 slice a: a request planned into its own .pipeline, end state first; the pipeline building Nexus (his) ──────
+# James, 2026-11-09: "Like we need this pipeline able to build nexus." · "It's end state first reasoning. My framework at every level" · "Okay just
+# needs to use the pipeline automation engine we built. Using a .pipeline. They build upon request, dynamically".
+built_2026_11_09_plan:
+  PC7_iterate_to_the_end_state:
+    status: "slice a BUILT 0.60.475 — test-cos-pipeline 16/16 (CP-15). Open: the loop over build-next until nothing is ready; counting it (SL6); the live run on his machine"
+    built: >-
+      Idearium serves one Nexus phase whole (GET /api/phases/one?key=<map>::<id>: does, files, depends_on, proof, its block; row phases one).
+      cos/pipeline/plan.eg (Emerge) plans the phase into its own .pipeline, end state first: its proof is the pipeline's endState, which is the
+      RAID contract's outcome, booked before any step runs; then context (Idearium's context finder: a .context), his framework when asked (a
+      framework step), the DAG, the build (one step per planned file with chunks: one chunk at a time), closed on evidence, the ledger — each an
+      Idearium route with a gate. COS: POST /api/cos/pipeline/plan (plan, and run with run) and POST /api/cos/pipeline/build-next (the next phase
+      Nexus can build, planned and run); rows cos plan, cos build-next (running is his; an agent proposes). The engine keeps a pipeline's endState.
+    files: [cos/pipeline/plan.eg (new), cos/pipeline/cli.eg, cos/pipeline/index.js, cos/pipeline/runs.eg, cos/manager/server.js, cos/manager/contract.json (config), idearium/api/index.js, idearium/cli/route-commands.js, lib/automation/pipeline.js, tests/modules/test-cos-pipeline.test.js]

@@ -160,9 +160,32 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
       return frameworks.tree(c.framework.id);
     },
   };
+  // ── a request planned into its own .pipeline, end state first (plan.eg) — his "They build upon request, dynamically" ──
+  const ideariumRoute = async (method, p, body) => { const a = await ask('idearium', `${method} ${p}`, body); if (a.error) return { ok: false, why: `Idearium did not answer: ${a.error}` }; let j = {}; try { j = JSON.parse(a.body || '{}'); } catch (_) {} return a.status < 400 ? { ok: true, ...j } : { ok: false, why: `Idearium answered ${a.status}${j.error ? `: ${j.error}` : ''}` }; };
+  async function planPhase({ key, repo = '', chunks = false, framework = null, run = false, by } = {}) {
+    if (!by) return { ok: false, code: 400, error: 'say who asks: { "by": "person" }' };
+    const ph = await ideariumRoute('GET', `/api/phases/one?key=${encodeURIComponent(String(key || ''))}`);
+    if (!ph.ok) return { ok: false, code: 404, error: ph.why };
+    const out = await eg('plan-phase', { phase: ph, opts: { repo, chunks: !!chunks, ...(framework ? { framework } : {}) } });
+    if (!out.ok) return { ok: false, code: 500, error: out.error || 'Emerge did not plan it' };
+    const P = await engineP(); const have = P.list().find(x => x.name === out.pipeline.name);
+    const made = have ? P.update(have.id, out.pipeline) : P.create(out.pipeline);
+    if (!made || made.ok === false) return { ok: false, code: 400, error: (made && made.error) || 'the engine refused the planned pipeline', problems: made && made.problems };
+    const pipeline = { id: (made.pipeline || made).id || (have && have.id), name: out.pipeline.name, endState: out.pipeline.endState, steps: out.pipeline.tasks.map(t => t.id) };
+    if (!run) return { ok: true, phase: ph.key, pipeline };
+    const r = await request({ pipeline: pipeline.id, vars: { repo }, by });
+    return r.ok ? { ok: true, phase: ph.key, pipeline, request: r.request, engineRun: r.engineRun } : { ...r, phase: ph.key, pipeline };
+  }
+  // the next phase Nexus can build (Idearium's queue), planned and run: the pipeline building Nexus, one request at a time
+  async function buildNext({ repo = '', chunks = false, framework = null, by } = {}) {
+    const q = await ideariumRoute('GET', '/api/phases/next?limit=1');
+    if (!q.ok) return { ok: false, code: 502, error: q.why };
+    const next = (q.queue || [])[0]; if (!next) return { ok: false, code: 409, error: 'nothing can be built now', blocked: (q.counts || {}).byGroup || null };
+    return planPhase({ key: next.key, repo, chunks, framework, run: true, by });
+  }
   // the engine's framework step: compile the tree, name the pipeline to run
   const frameworkStep = async ({ id }) => { const r = await frameworks.tree(id); return r.ok ? { ok: true, pipeline: r.pipeline.name } : { ok: false, error: r.error }; };
-  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume };
+  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, planPhase, buildNext };
 }
 
 module.exports = { createPipeline, MODULE_ID: 'cos.pipeline', VERSION: '1.0.0' };

@@ -227,6 +227,14 @@ function createServer(sup, opts = {}) {
       if (m === 'GET' && p === '/api/cos/frameworks') return send(res, 200, { ok: true, frameworks: await pipeline.frameworks.list() });
       { const fm = /^\/api\/cos\/frameworks\/([\w.-]+)\/pipeline$/.exec(p);
         if (fm && m === 'POST') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; compiling a framework into the engine is a person\'s' }); const r = await pipeline.frameworks.compile(fm[1], { by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); } }
+      // 2026-11-09 — James: "They build upon request, dynamically" · "It's end state first reasoning." A phase planned into its own .pipeline (end state
+      // first), kept in the engine; with run, a request through it. build-next: the next phase Nexus can build, planned and run.
+      if (m === 'POST' && (p === '/api/cos/pipeline/plan' || p === '/api/cos/pipeline/build-next')) {
+        if (/^agent:/.test(String(body.by || '')) && (body.run || p.endsWith('build-next'))) return send(res, 403, { ok: false, error: 'an agent proposes; running a build is a person\'s or a rule\'s' });
+        const opts = { key: body.key, repo: body.repo || '', chunks: !!body.chunks, framework: body.framework || null, run: !!body.run, by: body.by };
+        const r = p.endsWith('build-next') ? await pipeline.buildNext(opts) : await pipeline.planPhase(opts);
+        return send(res, r.ok ? 200 : (r.code || 400), r);
+      }
       // 2026-11-09 — a request through a pipeline, kept as files until its contract is met (cos/pipeline/runs.js): ask, list, read, resume
       if (m === 'POST' && p === '/api/cos/pipeline/requests') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes a request; running one is a person\'s or a rule\'s' }); const r = await pipeline.request({ pipeline: body.pipeline, vars: body.vars || {}, by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); }
       if (m === 'GET' && p === '/api/cos/pipeline/requests') return send(res, 200, { ok: true, state: u.searchParams.get('state') || 'active', requests: await pipeline.runs.list({ state: u.searchParams.get('state') || 'active' }) });

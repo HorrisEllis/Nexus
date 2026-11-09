@@ -112,7 +112,13 @@ fn carries(p: map, w: map): list {
 fn contract_of(id: string, p: map, by: any): map {
   let gates = map(p.tasks, fn(t) = { id: safe(t.id), type: "task", depends_on: map(get(t, "depends_on", []), fn(x) = safe(x)), requires: [],
     pass_when: [{ evidence: "step:" + t.id }], actions: [] })
-  return { v: 2, outcome: { what: get(p, "name", p.id) + ": request " + id, why: "asked by " + str(by), done_when: [] }, refs: {}, invariants: [], gaps: [],
+  // end state first: a pipeline planned from a phase carries its end state (the phase's proof); it is the contract's outcome
+  var what = get(p, "name", p.id) + ": request " + id
+  let es = get(p, "endState", null)
+  if es != null { what = get(es, "says", what) }
+  var outcome = { what: what, why: "asked by " + str(by), done_when: [] }
+  if es != null and get(es, "from", null) != null { outcome.from = es.from }
+  return { v: 2, outcome: outcome, refs: {}, invariants: [], gaps: [],
     gates: gates, failure: { retry_limit: 3 } }
 }
 // what Cortex answered when the contract was booked
