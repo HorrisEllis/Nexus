@@ -348,3 +348,17 @@ build_order_addendum_2026_11_04: "SC9 → SC10; the console through RAID when PL
 # — 13 systems, 13 console windows a tick, and 13 PowerShell starts of CPU. SC16 hid the systems' own windows, not this. Now one hidden
 # PowerShell reads every process, cached 2 s (test-cos-hidden-windows HW-03). Also hidden: cos/services/anonymous/nexus.js's command-line read.
 # SC16 files expanded: cos/watchdog/proc-stats.js, cos/services/anonymous/nexus.js.
+
+# ── ADDENDUM 2026-11-09 (0.60.464) — SC7's Settings built (his "I like the settings") ────────────────────────────────────────────────────────
+# James, 2026-11-08, to the Settings preview (cos/ui/settings-preview/): "I like the settings."
+phases_addendum_2026_11_09_sc7:
+  SC7_the_updates_section:
+    status_2026_11_09: "BUILT 0.60.464 (the Settings expansion) — test-cos-settings 3/3 (Clear Glass), test-cos-console 11/11 (CC-11: the gear opens Settings › Update), test-cos-app-window 9/9 (CW-05: the door's seven calls)"
+    files_2026_11_09: [cos/ui/settings/index.html (new), cos/ui/settings/page.js (new), cos/ui/settings/page.css (new), cos/ui/startup/index.html (new), cos/ui/startup/page.js (new), cos/ui/startup/page.css (new), cos/ui/core/core.js, cos/ui/updates/page.js, cos/ui/shell/index.html, cos/ui/shell/page.js, cos/manager/contract.json (config), cos/app/window.js, cos/app/desktop/main.js, cos/app/desktop/starting-preload.js, cos/spec/cos-console.spec, tests/modules/test-cos-settings.test.js (new), tests/modules/test-cos-console.test.js, tests/modules/test-cos-app-window.test.js, tests/modules/run-all.js]
+    built: >-
+      Backend first: the exe names its own startup options (cos/app/window.js STARTUP, its tray menu's words) and its window's door gains startup /
+      setStartup, which changes only an option the exe names and re-applies the logon task or the service as the tray does. The contract marks
+      Network, Startup and services, Update as nav settings with a tab order; Settings frames them, whole, each keeping its own route. Startup and
+      services reads every system from GET /api/cos/systems with its Start at boot. No tab, option or system is named in the pages' code (ST-01).
+      core.js now speaks to window.top, so a page inside a Settings tab is answered by the shell itself.
+    not_built: "the preview's Boot set row: no such setting exists (what starts at boot is each system's Start at boot); said, not invented. Asked of him if he wants one."

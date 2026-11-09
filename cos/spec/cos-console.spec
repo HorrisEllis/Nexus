@@ -154,3 +154,40 @@ spec:
       error_paths: ["a bad value → 400 naming the range; an agent → 403", "nothing to roll back → 409 with the kernel's reason"]
       acceptance: ["test-cos-console CC-10, CC-11"]
 
+    - id: MOD-MG-UI-SETTINGS
+      name: ui-settings
+      uuid: nexus-cos-manager-ui-settings-v1-0000-2026-1108-001
+      path: cos/ui/settings/page.js
+      phase: SC7_the_updates_section
+      description: "COS's Settings (SC7 expanded 2026-11-08; his 'I like the settings' to the preview): one tab per page the contract marks nav settings, in its tab order, titled by tabTitle; each tab is that page, whole, in a frame that grows to its height. #/settings/<page> opens a tab (the shell's gear opens #/settings/updates/settings). Names no tab, no option and no system."
+      deps: [{ name: ui-shell }, { name: ui-updates }, { name: ui-startup }]
+      schema_refs: [SupervisedSystem]
+      exports: ["page settings (#/settings, #/settings/<page>[/<more>])"]
+      gate_pipeline: ["GATE-SC7-003: the tabs are the contract's (nav settings); a page not in the contract is never framed"]
+      behavioral_contracts: ["a tab's page speaks to the shell (the top frame) itself: core.js posts to window.top, so its confirms, notices and events are the shell's", "a page moved into Settings keeps its own route"]
+      error_paths: ["no page marked nav settings → said, nothing framed"]
+      acceptance: ["test-cos-settings ST-01, ST-03", "test-cos-console CC-11"]
+
+    - id: MOD-MG-UI-STARTUP
+      name: ui-startup
+      uuid: nexus-cos-manager-ui-startup-v1-0000-2026-1108-001
+      path: cos/ui/startup/page.js
+      phase: SC7_the_updates_section
+      description: "Settings › Startup and services: COS itself (the options the exe names, cos/app/window.js startupOptions, through its window's door cosStart.startup / setStartup; the exe applies a change as its tray menu does) and each declared system's Start at boot (start.autostart, BT1), read from GET /api/cos/systems."
+      deps: [{ name: ui-shell }, { name: supervisor }, { name: system-config }]
+      schema_refs: [SupervisedSystem]
+      exports: ["page startup (#/startup, and Settings' tab)", "the exe's door: cosStart.startup() → { owner, options[{ key, label, about, kind, choices?, applies, value }], applied }, cosStart.setStartup(key, value)"]
+      gate_pipeline: ["GATE-SC7-004: setStartup changes only an option the exe itself names (else refused, named)", "GATE-SC7-005: Start at boot is a PATCH by = person, read back"]
+      behavioral_contracts: ["a browser with no exe: COS itself says it is set in the COS window (and its tray menu)", "no option and no system is named in the page's code"]
+      error_paths: ["the exe refuses a value → the owner's reason on a notice", "a system's settings do not read → said on its row"]
+      acceptance: ["test-cos-settings ST-01, ST-02, ST-03", "test-cos-app-window CW-05"]
+
+## ADDENDUM 2026-11-08 (0.60.464) — Settings: Network, Startup and services, Update (SC7 expanded)
+James, 2026-11-08: "also in cos ui, network should move to the settings under a network tab. startup and services tab. none of cos ui should be
+hardcoded when it comes to compartments.  updates should move to a update tab." To the preview (cos/ui/settings-preview/): "I like the settings."
+Built: MOD-MG-UI-SETTINGS and MOD-MG-UI-STARTUP. The tabs are the contract's pages with nav settings (network 1, startup 2, updates 3); each
+page is kept whole and keeps its own route (§0.3). Backend first: the exe's door gains startup / setStartup, its options named by the exe
+(cos/app/window.js STARTUP, with its tray menu's words), so the page names none. core.js now speaks to window.top, so a page one frame deeper
+is answered by the shell directly (for every page in the shell's own frame, top is its parent: nothing changes). The preview's "Boot set"
+row is not built: no such setting exists (what starts at boot is each system's Start at boot), said rather than invented.
+

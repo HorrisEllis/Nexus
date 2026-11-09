@@ -165,6 +165,11 @@ function ipc() {
   // the command line: one console, one command at a time; it returns at once and streams output as events (sh.data), then sh.exit with the code
   h('shRun', (line) => { if (typeof line !== 'string' || line.length > 2000) return { ok: false, error: 'not a command line' }; if (sh.running) return { ok: false, error: 'a command is still running: press Stop first' }; sh.run(line).then((code) => send({ type: 'sh.exit', code }), (e) => { send({ type: 'sh.data', text: `✗ ${e.message}\n` }); send({ type: 'sh.exit', code: 1 }); }); return { ok: true }; });
   h('shCancel', () => ({ ok: true, cancelled: sh.cancel() }));
+  // SC7 (expanded 2026-11-08) — Settings › Startup and services, from the cockpit: the exe's own options, named here by their owner (§5.15), the
+  // same switches as the tray menu, applied the same way (the logon task, the service). The page names none of them.
+  h('startup', () => W.startupOptions(ctl.settings().settings));
+  h('setStartup', async (k, v) => { const o = W.startupOptions(ctl.settings().settings).options.find(x => x.key === k); if (!o) return { ok: false, error: `"${k}" is not one of COS's startup options` };
+    const r = ctl.setSetting(k, v); if (!r.ok) return r; if (o.applies === 'logon') await applyLogon(true); if (o.applies === 'service') await applyService(true); return { ok: true, ...W.startupOptions(ctl.settings().settings) }; });
   h('getSettings', () => ctl.settings()); h('setSetting', (k, v) => ctl.setSetting(String(k), v));
   h('switchTo', (project, v) => ctl.switchTo(String(project), String(v))); h('rollback', (project, o) => ctl.rollback(String(project), o || {}));
   // MG35 — "need the exe for cos. its how were going to start nexus from now on": his own Nexus folder linked, and started when COS opens

@@ -12,8 +12,9 @@
   $('gear').innerHTML = icon('gear');
   const open = (on) => { $('settings').hidden = !on; $('gear').setAttribute('aria-expanded', String(on)); if (on) $('settings').scrollIntoView({ block: 'nearest' }); };
   $('gear').onclick = () => open($('settings').hidden);
-  const fromHash = () => { try { if (/^#\/updates\/settings/.test(window.parent.location.hash)) open(true); } catch (_) {} };
-  fromHash(); try { window.parent.addEventListener('hashchange', fromHash); } catch (_) {}
+  // SC7 (2026-11-08): the top frame is the shell, also when this page is a tab of Settings (#/settings/updates/settings)
+  const fromHash = () => { try { if (/^#\/(settings\/)?updates\/settings/.test(window.top.location.hash)) open(true); } catch (_) {} };
+  fromHash(); try { window.top.addEventListener('hashchange', fromHash); } catch (_) {}
 
   // ── the gear's settings ──
   const LABEL = { auto: 'Auto', notify: 'Notify', off: 'Off', ask: 'Ask' };

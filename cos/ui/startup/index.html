@@ -1,0 +1,20 @@
+<!doctype html>
+<!-- cos/ui/startup/index.html — Settings › Startup and services (SC7, expanded 2026-11-08). Spec: cos/spec/cos-console.spec MOD-MG-UI-STARTUP.
+     James, 2026-11-08: "startup and services tab. none of cos ui should be hardcoded when it comes to compartments." · "I like the settings."
+     COS itself: the exe's own options, through its window's door (cosStart.startup), as its tray menu has them. Systems: GET /api/cos/systems and
+     each system's start.autostart (BT1, SC2). The page names no option and no system. -->
+<html lang="en" data-theme="nexus" data-accent="cycle">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Startup and services · COS</title>
+  <link rel="stylesheet" href="../core/theme.css"><link rel="stylesheet" href="../core/core.css"><link rel="stylesheet" href="page.css">
+</head>
+<body class="cos-page su-page">
+  <div data-refusals></div>
+  <div class="su-grid">
+    <section class="panel"><div class="panel-head"><h2>COS itself</h2><span class="tag" id="self-tag">this machine</span></div><div class="panel-body" id="self">reading…</div></section>
+    <section class="panel"><div class="panel-head"><h2>Systems</h2><span class="tag" id="sys-tag">from COS</span></div><div class="panel-body" id="systems">reading…</div></section>
+  </div>
+  <script src="../core/core.js"></script>
+  <script src="page.js"></script>
+</body>
+</html>

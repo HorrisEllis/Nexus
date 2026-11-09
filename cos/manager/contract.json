@@ -753,11 +753,47 @@
       }
     },
     {
+      "id": "settings",
+      "title": "Settings",
+      "path": "settings/",
+      "route": "#/settings",
+      "nav": "foot",
+      "built": true,
+      "phase": "SC7_the_updates_section (expanded 2026-11-08: Settings)",
+      "routes": [],
+      "listens": [],
+      "emits": [],
+      "about": "COS\u2019s Settings: one tab per page the contract marks nav settings, in their tab order; each tab is that page, whole. The page names no tab and no system."
+    },
+    {
+      "id": "startup",
+      "title": "Startup and services",
+      "path": "startup/",
+      "route": "#/startup",
+      "nav": "settings",
+      "tab": 2,
+      "tabTitle": "Startup and services",
+      "built": true,
+      "phase": "SC7_the_updates_section (expanded 2026-11-08) \u00b7 MG37 / CA4 (COS itself, the exe\u2019s options) \u00b7 BT1 (Start at boot, each system)",
+      "routes": [
+        "GET /api/cos/systems",
+        "GET /api/cos/systems/:name/config",
+        "PATCH /api/cos/systems/:name/config"
+      ],
+      "listens": [
+        "cos.system.state"
+      ],
+      "emits": [
+        "cos.ui.notice"
+      ],
+      "about": "how COS starts and what it starts: COS itself (the exe\u2019s own options, through its window\u2019s door, as its tray menu has them) and each declared system\u2019s Start at boot (start.autostart), read from COS\u2019s routes"
+    },
+    {
       "id": "updates",
       "title": "Updates",
       "path": "updates/",
       "route": "#/updates",
-      "nav": "main",
+      "nav": "settings",
       "built": true,
       "phase": "SC7_the_updates_section",
       "routes": [
@@ -779,7 +815,10 @@
         "cos.ui.notice",
         "cos.ui.navigate"
       ],
-      "about": "Nexus against GitHub, per system; Update now, Keep mine and update; the history and roll back; the gear holds the update settings (SC7, 2026-11-02)"
+      "about": "Nexus against GitHub, per system; Update now, Keep mine and update; the history and roll back; the gear holds the update settings (SC7, 2026-11-02)",
+      "tab": 3,
+      "tabTitle": "Update",
+      "movedTo": "SC7 expanded 2026-11-08 \u2014 James: \"network should move to the settings under a network tab. startup and services tab. \u2026 updates should move to a update tab.\" A tab of Settings now (nav settings); its own route still opens it alone."
     },
     {
       "id": "planned",
@@ -817,7 +856,7 @@
       "title": "Network",
       "path": "network/",
       "route": "#/network",
-      "nav": "main",
+      "nav": "settings",
       "built": true,
       "phase": "CA3_network_settings",
       "routes": [
@@ -826,7 +865,10 @@
       ],
       "listens": [],
       "emits": [],
-      "about": "every way Nexus reaches or is reached from outside \u2014 outbound tunnel and rendezvous, inbound UPnP/PCP/NAT-PMP mapping, DDNS, SSH (keys only), TLS, each compartment's switch and throttle \u2014 all off until he opens them; each engine's gate shown"
+      "about": "every way Nexus reaches or is reached from outside \u2014 outbound tunnel and rendezvous, inbound UPnP/PCP/NAT-PMP mapping, DDNS, SSH (keys only), TLS, each compartment's switch and throttle \u2014 all off until he opens them; each engine's gate shown",
+      "tab": 1,
+      "tabTitle": "Network",
+      "movedTo": "SC7 expanded 2026-11-08 \u2014 James: \"network should move to the settings under a network tab. startup and services tab. \u2026 updates should move to a update tab.\" A tab of Settings now (nav settings); its own route still opens it alone."
     },
     {
       "id": "deployments",

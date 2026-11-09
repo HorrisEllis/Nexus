@@ -424,3 +424,30 @@ handoff_2026_11_08: >-
 # James: "Gates are inbetween steps. So compartment, gate, compartment, gate." box.eg with_gates: a step's gate becomes its own box after it; the
 # step's wires out leave from its gate. Idearium's build pipeline opens as 16 tools (8 steps, 8 gates) and 15 wires, no faults
 # (cos/ui/automation/preview/idearium-on-canvas.png). eg test 9/9, test-pipeline-box 6/6 (PB-06).
+
+# ── ADDENDUM 2026-11-09 (0.60.464) — "steps are compartments from cos", gates as compartments, wires that track the request (his) ────────────────
+# James, 2026-11-08, after Idearium's pipeline opened on ERAVOS's canvas with gate boxes between the steps: "Okay. So steps are compartments from
+# cos. That way is can use the cos ui. Also need to show the programmable gates in between as a compartment themselves. I want the wires to track
+# the actual request running through the pipeline. Check the phases. It’s agnostic. This can map anything. Can use the gates to build one step at
+# a time, discover gaps. Like look at idearium. Like the code tab. Like I want it all programmable, manageable, explicit, automatic when it comes
+# to requests. Use it to build macros, frameworks, pipelines, stepwise procedures or repeatable systems. I like the settings."
+# Checked against the phases (his "Check the phases"; phase-ledger covers): nothing new is written; each part expands the phase that owns it.
+expanded_2026_11_09:
+  PC_D1_gates_as_compartments: >-
+    Widened by his "steps are compartments from cos. That way is can use the cos ui": a step is a COS compartment too, not only a gate, so each box
+    has COS's page for a compartment (its state, its log, its config, its resources) rather than a page of its own. Reading TO CONFIRM (his, §5.9):
+    (a) each step IS a compartment COS declares (a long-lived entry in the system registry, with the cockpit page), or (b) each step RUNS in a
+    compartment COS makes for the run (RQ15's cell, gone when the run ends), shown with COS's cockpit while it lives. Not built until he says.
+  PC5_programmable_gate_types: >-
+    His "need to show the programmable gates in between as a compartment themselves" · "programmable, manageable, explicit, automatic when it comes
+    to requests": a gate is drawn and managed as its own compartment (box.eg with_gates, built 0.60.463, puts one between steps on the canvas); its
+    type is the programmable part (cos/gate/types/<id>.gate), editable from the gate's box. Unchanged order: PC5 is built before PC4.
+  PC4_the_box_kinds_on_the_canvas: >-
+    His "I want the wires to track the actual request running through the pipeline": a wire shows the request itself as it passes (what left the
+    step, what the gate saw and decided, how long), from the engine's run (automation.pipeline.task, AE5 0.60.462) by COS's route, never a picture.
+    Backend first: the run record carries each task's output summary and each gate's verdict, then the event, then the canvas.
+  PC7_iterate_to_the_end_state: >-
+    His "Can use the gates to build one step at a time, discover gaps. Like look at idearium. Like the code tab" · "Use it to build macros,
+    frameworks, pipelines, stepwise procedures or repeatable systems": the loop runs one step, its gate names the gap, the gap becomes a build
+    request (PC3), and the next step is built only when the gate opens — as Idearium builds a project phase by phase. Agnostic (PC_D9): the same
+    loop over a macro, a .framework (PC2 slice b), a pipeline, a procedure (OC9 templates).
