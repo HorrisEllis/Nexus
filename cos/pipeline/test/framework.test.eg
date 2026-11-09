@@ -86,3 +86,21 @@ test "fully programmable: a step runs one thing; execution defaults from the fra
     expect any(bad.problems, fn(p) = find_text(p, want) >= 0), want + " in " + json(bad.problems)
   }
 }
+
+test "every kind of process by name: a macro (Clear Glass's page actions), a procedure, a workflow, a pipeline, a framework" {
+  // James, 2026-11-09: "Also .pipelines and .macros. Is it done?"
+  let c = framework.compile(fw(json({ id: "k", steps: [
+    { id: "m", macro: "Fiverr gig - choose category", params: { tier: "basic" }, gives: ["output"] },
+    { id: "p", procedure: "update-nexus", gives: ["output"] },
+    { id: "w", workflow: "morning", gives: ["output"] },
+    { id: "l", pipeline: "idearium-build", gives: ["output"] },
+    { id: "f", framework: "other", gives: ["output"] } ] })))
+  expect c.ok, json(c)
+  expect map(c.pipeline.tasks, fn(t) = t.step) == [
+    { type: "macro", config: { name: "Fiverr gig - choose category", params: { tier: "basic" } } },
+    { type: "procedure", config: { procedure: "update-nexus" } },
+    { type: "workflow", config: { workflow: "morning" } },
+    { type: "pipeline", config: { pipeline: "idearium-build" } },
+    { type: "framework", config: { framework: "other" } } ]
+  expect all(c.pipeline.tasks, fn(t) = not has(t, "gate")), "each is checked by what it runs (or its own check)"
+}

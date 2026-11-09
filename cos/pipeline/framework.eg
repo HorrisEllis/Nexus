@@ -15,6 +15,9 @@
 // A step with no run asks an agent to do its section, given what it takes; the agent's reply is what it gives.
 
 let OPEN = "```json framework-steps"
+// what a step can run, each by name (2026-11-09, his "Also .pipelines and .macros"): any engine step (run), a framework (recursive), a pipeline,
+// a Clear Glass macro (its page actions), a procedure (Idearium's), a workflow
+let RUNS = ["run", "framework", "pipeline", "macro", "procedure", "workflow"]
 
 fn block_of(text: string): any {
   let at = find_text(text, OPEN)
@@ -40,8 +43,8 @@ fn problems_of(fw: any): list {
       if len(get(s, "gives", [])) == 0 { ps = push(ps, "step " + id + ": it gives nothing (an output: a node type)") }
       for a in get(s, "after", []) { if index_of(map(steps, fn(x) = get(x, "id", "")), a) < 0 { ps = push(ps, "step " + id + ": waits on " + a + ", which is not a step") } }
       var runs = 0
-      for k in ["run", "framework", "pipeline"] { if get(s, k, null) != null { runs = runs + 1 } }
-      if runs > 1 { ps = push(ps, "step " + id + ": it names more than one of run, framework, pipeline — a step runs one thing") }
+      for k in RUNS { if get(s, k, null) != null { runs = runs + 1 } }
+      if runs > 1 { ps = push(ps, "step " + id + ": it names more than one of " + join(RUNS, ", ") + " — a step runs one thing") }
       if runs == 0 and get(s, "agent", get(fw, "agent", null)) == null { ps = push(ps, "step " + id + ": an agent does it, but none is named (agent, on the framework or the step)") }
       if get(s, "framework", null) != null and s.framework == get(fw, "id", "") { ps = push(ps, "step " + id + ": the framework runs itself") }
       let of = get(s, "onFail", get(get(fw, "execution", {}), "onFail", "stop"))
@@ -61,13 +64,16 @@ fn task_of_step(fw: map, s: map, prev: any): map {
   var run = get(s, "run", null)
   if run == null and get(s, "framework", null) != null { run = { type: "framework", config: { framework: s.framework } } }   // recursive: a framework as a step
   if run == null and get(s, "pipeline", null) != null { run = { type: "pipeline", config: { pipeline: s.pipeline } } }
+  if run == null and get(s, "macro", null) != null { run = { type: "macro", config: { name: s.macro, params: get(s, "params", {}) } } }
+  if run == null and get(s, "procedure", null) != null { run = { type: "procedure", config: { procedure: s.procedure } } }
+  if run == null and get(s, "workflow", null) != null { run = { type: "workflow", config: { workflow: s.workflow } } }
   if run == null {
     let given = join(map(after, fn(a) = "\{\{tasks." + a + ".output\}\}"), "\n\n")
     run = { type: "agent", config: { agentKey: get(s, "agent", get(fw, "agent", null)), await: true, prompt: "Framework: " + get(fw, "name", fw.id) + ". " + get(s, "section", s.id) + ".\n" + get(s, "does", "") + "\n\nWhat you are given:\n" + given + "\n\nGive: " + join(s.gives, ", ") + ", as one JSON object: a node envelope \{ envelope: 1, type, id, payload \} whose payload has the fields its schema (lib/node-schemas/schema.<type>) requires." } }
   }
   // the default gate: an agent's reply must be a node of the type the step gives. A step that runs an engine step, a framework or a pipeline is
   // checked by what it runs (a framework's own steps are gated); it can name its own check
-  let by_agent = get(s, "run", null) == null and get(s, "framework", null) == null and get(s, "pipeline", null) == null
+  let by_agent = not any(RUNS, fn(k) = get(s, k, null) != null)
   var check = get(s, "check", null)
   if check == null and by_agent { check = { type: "node", with: { type: s.gives[0] } } }
   let ex = get(fw, "execution", {})
