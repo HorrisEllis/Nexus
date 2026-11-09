@@ -671,3 +671,16 @@ spec:
 # with no popup of its own (§0.3). Proof: test-cg-attention-focus AF-02c (7/7). If it still closes, his Clear Glass log shows one of
 # "[attention] chatgpt — on a sign-in page, but ChatGPT works signed out" or "left the sign-in page"; neither means it was not
 # this path (a normal tab), and that is the next thing to read.
+
+# ── ADDENDUM 2026-11-09 (0.60.467) — the ChatGPT Google sign-in loop ─────────────────────────────────────────────────────────────────────────
+# James, 2026-11-09: "clearglass is having a login loop with chatgpt, like when i click log in with google, it loops back to the login page. over
+# and over, when i use the guardian agents menu in clearglass to open chatgpt." He also pasted a replacement for providers/attention.js written by
+# another assistant: recognize chatgpt.com/auth/login_with and skip the send-back there.
+# Reproduced first (§0.1): with the window shown but not focused (opened from the Guardian agents menu, focus still there), attend() sent the tab
+# back to chatgpt.com from chatgpt.com/auth/login_with, auth.openai.com/authorize and accounts.google.com alike — every step of Continue with
+# Google — and the chat sent it to its login page: the loop. The pasted fix covered only the first of those, so it would still have looped.
+# Fixed: a sign-in in progress is never navigated: Google's, Microsoft's or Apple's own pages, the provider's OAuth handoff and callback
+# (/auth/login_with, /api/auth/callback), and the provider's sign-in service past its landing (auth.openai.com/authorize, /u/…). A login landing
+# (chatgpt.com/auth/login, auth.openai.com/log-in) is still sent back once and then left for him (§0.60.2, 0.60.321 unchanged).
+# Proof: test-cg-attention-focus AF-02e (fails on the old code: 4 of 5 sign-in steps sent back), 9/9; AF-02..02d unchanged.
+# Found, not mine, said: test-accounts-picker-cos fails AT-02, AT-03, AT-04, WR-01 on main before this change too.

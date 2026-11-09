@@ -10,6 +10,8 @@
  *   AF-02  while the person is using the tab (their input in the last 2 min): no focus taken, and a sign-in page is NOT
  *          sent back to the chat (the person is signing in); untouched, a loginOptional tab still goes back to its chat
  *   AF-02d a provider that bounces a signed-out visitor to sign-in is sent back once, then left for the person (0.60.321)
+ *   AF-02e a sign-in in progress (ChatGPT's Google handoff, auth.openai.com, Google's own page, the callback) is never sent back, even with
+ *          the window unfocused (opened from the Guardian agents menu); ChatGPT's own login landing still is (0.60.467)
  *   AF-03  "Save sign-in to vault" refuses a signed-out tab (no sign-in cookie on the site) and saves a signed-in one
  *   AF-04  the picker always has a way out: Escape on window in the capture phase, right-click, a click on the banner
  *   AF-05  the provider window: no menu bar, dark before the first paint
@@ -124,6 +126,20 @@ function fakeWin(id, url) {
     assert.deepStrictEqual(w2.loaded, ['https://chatgpt.com'], 'no popup of its own, unfocused, untouched: back to the chat, as before');
     const src = fs.readFileSync(path.join(ROOT, 'clear-glass/src/providers/attention.js'), 'utf8');
     assert.ok(/!_onSignin\(win\.webContents\.getURL\(\)\) && !_openedPopup\(win\)/.test(src), 'the panel loop does not hide the tab while its popup is up');
+  });
+
+  await test('AF-02e', 'a sign-in in progress is never sent back, unfocused or not; the provider\'s own login landing still is (0.60.467)', async () => {
+    // James, 2026-11-09: "when i click log in with google, it loops back to the login page. over and over, when i use the guardian agents menu"
+    const def = { name: 'ChatGPT', url: 'https://chatgpt.com', hosts: ['chatgpt.com', 'chat.openai.com'], loginOptional: true };
+    const at = async (url) => {
+      const w = fakeWin(9, url); w.visible = true; w.isFocused = () => false;   // shown, but focus stayed on the menu that opened it
+      const H = CA.createAttentionHandler({ providerHost: { windows: new Map([['chatgpt', w]]), agentTabs: new Map() }, assign: async () => ({ ok: true }), checkerSource: null, getProvider: () => def, signedOutWaitMs: 1, allWindows: () => [] });
+      await H.attend('chatgpt', { reason: 'signin' }); return w.loaded;
+    };
+    for (const u of ['https://chatgpt.com/auth/login_with?provider=google', 'https://auth.openai.com/authorize?client_id=x', 'https://auth.openai.com/u/continue?x=1', 'https://accounts.google.com/o/oauth2/v2/auth?client_id=x', 'https://chatgpt.com/api/auth/callback/google?code=x']) {
+      assert.deepStrictEqual(await at(u), [], `left alone mid-sign-in: ${u}`);
+    }
+    assert.deepStrictEqual(await at('https://chatgpt.com/auth/login'), ['https://chatgpt.com'], 'its own signed-out landing still goes back to the chat');
   });
 
   await test('AF-03', 'the vault refuses a signed-out tab and saves a signed-in one', async () => {
