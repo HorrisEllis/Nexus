@@ -154,7 +154,30 @@ fn depth_of(g: map, id: string, seen: list): num {
   return d
 }
 
-fn to_erv(g: map, name: string): map {
+// James, 2026-11-08: "Gates are inbetween steps. So compartment, gate, compartment, gate." A step's gate becomes its own box after it, on the
+// canvas as on the run: the step's wires out leave from its gate. The gate box carries the gate as its settings; a step with no gate wires on as it is.
+fn with_gates(g: map): map {
+  var boxes = []
+  var gated = []
+  for b in g.boxes {
+    boxes = push(boxes, b)
+    if get(b, "gate", null) != null {
+      gated = push(gated, b.id)
+      boxes = push(boxes, { id: b.id + "-gate", kind: "gate", ref: "gate", label: "gate · " + join(keys(b.gate), " · "), hooks: { in: ["in"], out: ["out"] },
+        contract: { requires: [b.id], gives: ["output"] }, gate: null, args: { gate: b.gate, after: b.id } })
+    }
+  }
+  var wires = []
+  for id in gated { wires = push(wires, { from: id + ".out", to: id + "-gate.in" }) }
+  for w in g.wires {
+    let src = split(w.from, ".")[0]
+    if index_of(gated, src) >= 0 { wires = push(wires, { from: src + "-gate.out", to: w.to }) } else { wires = push(wires, w) }
+  }
+  return { boxes: boxes, wires: wires }
+}
+
+fn to_erv(g0: map, name: string): map {
+  let g = with_gates(g0)
   var tools = []
   var rows = []
   for b in g.boxes {

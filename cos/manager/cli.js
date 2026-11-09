@@ -28,7 +28,7 @@ const TABLE = [
   ['disk', 'disk <system> [make] [state] | disk verify <file>', 'a system\'s disks (its spec as metadata, its files in one compressed file); make one, with its data if you say state; verify one'],
   ['disks', 'disks', 'every disk COS holds'],
   // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes."
-  ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file> | pipelines | pipeline <id> | pipeline-run <id> | runs [pipeline-id] | stop <run-id> | pipeline-export <id> [file]', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
+  ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file> | pipelines | pipeline <id> | pipeline-run <id> | runs [pipeline-id] | stop <run-id> | pipeline-export <id> [file] | systems-pipelines <system> | import-from <system> <id>', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
   ['vdisk', 'vdisk <system> [make|refresh|verify] | vdisk <system> snapshot|revert|drop <tag>', 'its virtual disk (qcow2): metadata, files and all its data in one file, its snapshots inside'],
 ];
 
@@ -118,6 +118,14 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
           else if (sub === 'runs') { const r = await call('GET', `/pipeline-runs?limit=20${a[1] ? '&pipelineId=' + encodeURIComponent(a[1]) : ''}`); if (!r.runs.length) L.push('no runs yet');
             for (const x of r.runs) { const t = Object.values(x.tasks || {}); L.push(`${pad(x.status, 9)}${pad(x.id.slice(0, 8), 10)}${pad(t.filter(y => y.status === 'done').length + '/' + t.length, 7)}${x.pipelineName || x.pipelineId}`); } }
           else if (sub === 'stop') { need(2, row[1]); const r = await call('POST', `/pipeline-runs/${encodeURIComponent(a[1])}/cancel`, { by }); L.push(r.ok === false ? `refused: ${r.error}` : `stopped ${a[1]}`); }
+          // 0.60.463 — James, 2026-11-08: "hooking in idearium. The pipeline in idearium is meant to be shown on the canvas." A system's own .pipeline files,
+          // read by that system's route (GET /api/pipelines, /api/pipelines/:id — Idearium's first), never its folder (§5.15); imported into the engine.
+          else if (sub === 'systems-pipelines' || sub === 'import-from') { need(2, row[1]);
+            const d = sup.declarations().find(x => x.name === a[1] || x.system === a[1]); let o; try { o = new URL(d && d.healthUrl).origin; } catch (_) { throw new Error(`${a[1]} declares no address COS can reach`); }
+            const get = (p) => new Promise((ok, no) => { const q = require('http').get(o + p, { timeout: 10000 }, (r) => { let t = ''; r.on('data', c => t += c); r.on('end', () => { let j; try { j = JSON.parse(t || '{}'); } catch (e) { return no(e); } r.statusCode >= 400 || j.ok === false ? no(new Error(j.error || `${a[1]} answered ${r.statusCode}`)) : ok(j); }); }); q.on('timeout', () => q.destroy(new Error(`${a[1]} did not answer in 10 s`))); q.on('error', no); });
+            if (sub === 'systems-pipelines') { const j = await get('/api/pipelines'); if (!(j.pipelines || []).length) L.push(`${a[1]} has no pipelines`); for (const p of j.pipelines || []) L.push(`${pad(p.id, 22)}${pad(String(p.steps) + ' steps', 10)}${p.name}${p.bad ? ' — unreadable: ' + p.bad : ''}`); }
+            else { need(3, row[1]); const j = await get(`/api/pipelines/${encodeURIComponent(a[2])}`); const r = await call('POST', '/import', { text: j.pipeline.text, by, allowDuplicate: false });
+              L.push(r.ok === false ? `refused: ${r.error}` : `imported ${a[1]}'s ${j.pipeline.name}${r.pipeline ? ' as pipeline ' + r.pipeline.id : ''}`); } }
           else if (sub === 'pipeline-export') { need(2, row[1]); const r = await call('GET', `/pipelines/${encodeURIComponent(a[1])}/node`);
             if (a[2]) { require('fs').writeFileSync(a[2], r.text); L.push(`wrote ${a[2]} (${r.filename})${(r.missing || []).length ? ' — not bundled: ' + r.missing.join(', ') : ''}`); } else L.push(r.text); }
           else throw new Error(`automation ${sub}: not a subcommand — ${row[1]}`);

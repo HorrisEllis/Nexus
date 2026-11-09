@@ -11,6 +11,7 @@ require('../../lib/test-sandbox.js').ensure();
  *   PB-02  every .pipeline and .procedure node in the tree round-trips through the box shape unchanged (PCS-002: no second store)
  *   PB-03  §1.2: an unknown command is refused (exit 1) and the commands named
  *   PB-04  §17.13: the box shape is .eg; no .js in cos/automation/
+ *   PB-06  Idearium's own pipeline (idearium/pipelines): its real route, COS's import-from command, the .erv as compartment, gate, compartment, gate
  *   PB-05  through COS (James, 2026-11-08: "i want this built and added to cos ui"): GET /api/cos/boxes for a pipeline made in COS's engine and
  *          for a procedure read from Idearium by its route; the command rows; the Pipelines page in Clear Glass through the real cockpit
  */
@@ -91,7 +92,9 @@ test('PB-04', 'the box shape is Emerge: no .js in cos/automation/', () => {
     const ev = await req(mp, 'GET', `/api/cos/boxes?as=erv&pipeline=${encodeURIComponent(pid)}`); assert.strictEqual(ev.status, 200, JSON.stringify(ev.body));
     const tl = ev.body.erv.layers.find(l => l.id === 'tools').layers, wl = ev.body.erv.layers.find(l => l.id === 'wires').data;
     assert.strictEqual(ev.body.erv.erv, 1); assert.ok(tl.every(t => t.tool === 'eravos.agents.step'), 'every step is ERAVOS\'s Box tool');
-    assert.deepStrictEqual(tl.map(t => t.state.params.kind), ['tool', 'pipeline', 'tool', 'tool']); assert.strictEqual(wl.length, 4);
+    // the gated step (build) has its gate as a box between it and what follows (his, 2026-11-08: "compartment, gate, compartment, gate")
+    assert.deepStrictEqual(tl.map(t => t.state.params.kind), ['tool', 'pipeline', 'gate', 'tool', 'tool']); assert.strictEqual(wl.length, 5);
+    assert.ok(wl.some(w => w.from[0] === 'build-gate' && w.to[0] === 'done') && !wl.some(w => w.from[0] === 'build' && w.to[0] === 'done'), 'the gate stands between');
     assert.ok(wl.every(w => w.type === 'dataflow' && w.from[1] === 'step.hook.out' && w.to[1] === 'step.hook.in'));
     assert.deepStrictEqual(tl.find(t => t.id === 'done').at.x > tl.find(t => t.id === 'pick').at.x, true, 'laid out by the DAG');
     const pr = await req(mp, 'GET', '/api/cos/boxes?procedure=tidy'); assert.strictEqual(pr.status, 200, JSON.stringify(pr.body));
@@ -121,6 +124,36 @@ test('PB-04', 'the box shape is Emerge: no .js in cos/automation/', () => {
       assert.deepStrictEqual(pk, ['tool', 'gate', 'gate']);
       if (process.env.PB_SHOTS) await page.screenshot({ path: path.join(process.env.PB_SHOTS, 'cos-procedure.png'), fullPage: true });
     } finally { await browser.close(); }
+  });
+  // 0.60.463 — James, 2026-11-08: "Into cos backend. One agnostic automation engine." · "hooking in idearium. The pipeline in idearium is meant to
+  // be shown on the canvas. Gates are inbetween steps. So compartment, gate, compartment, gate."
+  await T('PB-06', 'Idearium\'s own pipeline: served by Idearium\'s real route, imported by COS\'s command, on the canvas as compartment, gate, compartment, gate', async () => {
+    const { pathToFileURL } = require('url');
+    const quiet = async (fn) => { const o = [console.log, console.warn, console.error]; console.log = console.warn = console.error = () => {}; try { return await fn(); } finally { [console.log, console.warn, console.error] = o; } };
+    const api = await quiet(() => import(pathToFileURL(path.join(ROOT, 'idearium/api/index.js')).href));
+    const real = await new Promise((res) => { const sv = http.createServer(async (q, r) => { const o = await quiet(() => api._route(q.method, q.url, {})); r.statusCode = o.status || 200; r.setHeader('content-type', 'application/json'); r.end(JSON.stringify(o.json || {})); }); sv.listen(0, '127.0.0.1', () => res(sv)); });
+    try {
+      const list = await req(real.address().port, 'GET', '/api/pipelines'); assert.strictEqual(list.status, 200, JSON.stringify(list.body));
+      const ib = list.body.pipelines.find(p => p.id === 'idearium-build'); assert.ok(ib && ib.steps === 8 && !ib.bad, JSON.stringify(list.body.pipelines));
+      const one = await req(real.address().port, 'GET', '/api/pipelines/idearium-build'); assert.match(one.body.pipeline.text, /type: pipeline/);
+      assert.strictEqual((await req(real.address().port, 'GET', '/api/pipelines/nope')).status, 404);
+      const sup2 = createSupervisor({ root: dir, ledgerFile: path.join(dir, 'ledger2.jsonl'), log: () => {}, declarations: [
+        { name: 'idearium', system: 'idearium', cmd: process.execPath, args: ['-e', ''], healthUrl: `http://127.0.0.1:${real.address().port}/health` }] });
+      const mgr2 = await require(path.join(ROOT, 'cos/manager/server.js')).listen(sup2, 0, { root: dir }); const m2 = mgr2.address().port;
+      try {
+        const cl = async (line) => { const b = (await req(m2, 'POST', '/api/cos/cli', { line, by: 'person' })).body; return (b.lines || []).join('\n') + (b.error ? ' ERROR ' + b.error : ''); };
+        assert.match(await cl('automation systems-pipelines idearium'), /idearium-build\s+8 steps\s+Idearium build pipeline/);
+        assert.match(await cl('automation import-from idearium idearium-build'), /imported idearium's Idearium build pipeline as pipeline /);
+        const p = (await req(m2, 'GET', '/api/cos/automation/pipelines')).body.pipelines.find(x => x.name === 'Idearium build pipeline'); assert.ok(p, 'in COS\'s engine');
+        assert.ok(p.tasks.every(t => t.step.type === 'api' && /^nexus:\/\/idearium\//.test(t.step.config.url)), 'every step reaches Idearium by its route, through COS');
+        const erv = (await req(m2, 'GET', `/api/cos/boxes?as=erv&pipeline=${encodeURIComponent(p.id)}`)).body.erv;
+        const tl = erv.layers.find(l => l.id === 'tools').layers;
+        assert.strictEqual(tl.length, 16, '8 steps, a gate after each');
+        assert.deepStrictEqual(tl.map(t => t.state.params.kind === 'gate' ? 'gate' : 'step'), Array.from({ length: 16 }, (_, i) => i % 2 ? 'gate' : 'step'), 'compartment, gate, compartment, gate');
+        assert.ok(tl.every((t, i) => i === 0 || t.at.x > tl[i - 1].at.x), 'left to right, in order');
+        fs.writeFileSync(path.join(process.env.PB_SHOTS || dir, 'idearium-build.erv'), JSON.stringify(erv, null, 1));
+      } finally { mgr2.close(); sup2.shutdown({ by: 'test' }); }
+    } finally { real.close(); }
   });
   cockpit.close(); mgr.close(); idearium.close(); sup.shutdown({ by: 'test' }); fs.rmSync(dir, { recursive: true, force: true });
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exit(failed ? 1 : 0);

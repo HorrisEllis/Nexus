@@ -89,7 +89,7 @@ test "a procedure's steps become boxes in order (confirm and check are gates) an
   expect last.value == pr.steps
 }
 
-test "an ERAVOS project (.erv): one Box tool per step, laid out by the DAG, the wires as dataflow wires" {
+test "an ERAVOS project (.erv): one Step per step and a gate box after each gated step, laid out by the DAG, the wires as dataflow wires" {
   send box.BoxShape.boxes { pipeline: P }
   send box.BoxShape.erv { graph: last.value, name: "Gig" }
   let e = last.value
@@ -97,8 +97,13 @@ test "an ERAVOS project (.erv): one Box tool per step, laid out by the DAG, the 
   let tl = find(e.layers, fn(l) = l.id == "tools").layers
   let wl = find(e.layers, fn(l) = l.id == "wires").data
   expect all(tl, fn(t) = t.tool == "eravos.agents.step")
-  expect map(tl, fn(t) = t.state.params.kind) == ["macro", "pipeline", "system", "tool"]
-  expect map(tl, fn(t) = t.at.x) == [40, 360, 680, 1000]
-  expect len(wl) == 4 and wl[0] == { from: ["overview", "step.hook.out"], to: ["pricing", "step.hook.in"], type: "dataflow" }
-  expect tl[1].state.extra.box.id == "pricing" and tl[1].state.extra.kinds == box.KINDS
+  // his, 2026-11-08: "Gates are inbetween steps. So compartment, gate, compartment, gate." overview has a gate: it stands between overview and
+  // what follows it
+  expect map(tl, fn(t) = t.id) == ["overview", "overview-gate", "pricing", "check", "read"]
+  expect map(tl, fn(t) = t.state.params.kind) == ["macro", "gate", "pipeline", "system", "tool"]
+  expect map(tl, fn(t) = t.at.x) == [40, 360, 680, 1000, 1320]
+  expect wl[0] == { from: ["overview", "step.hook.out"], to: ["overview-gate", "step.hook.in"], type: "dataflow" }
+  expect any(wl, fn(w) = w.from[0] == "overview-gate" and w.to[0] == "pricing") and not any(wl, fn(w) = w.from[0] == "overview" and w.to[0] == "pricing")
+  expect len(wl) == 5
+  expect tl[1].state.extra.box.args.gate == { notEmpty: true } and tl[2].state.extra.kinds == box.KINDS
 }
