@@ -28,6 +28,9 @@
  *          the step fails and says so, and onFail continue goes on); schema.pipeline, schema.macro say where they sit
  *   CP-14  one contract, RAID's: each request's contract is a .contract v2 booked with Cortex by route; each step met is its evidence; met is
  *          RAID's answer; with Cortex down the request still runs, said whose verdict it is and that the books wait
+ *   CP-15  a phase planned into its own .pipeline, end state first (its proof is the contract's outcome): context, dag, build, evidence, ledger,
+ *          each an Idearium route with a gate; with chunks, a build step per file; build-next plans and runs the next ready phase to met;
+ *          Idearium's real phases/one serves a real phase whole
  *   CP-07  an engine with no gate host refuses a typed gate, said; command rows for agents and copilot
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -57,11 +60,19 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
   let cortexUp = true;
   const cortex = await stand(async (q, r, t) => { if (!cortexUp) { r.statusCode = 503; return r.end('{"ok":false,"error":"down"}'); } let b = {}; try { b = JSON.parse(t || '{}'); } catch (_) {}
     const o = await DOOR.handle(q.method, q.url, b, { dir: RAIDDIR }); r.statusCode = o ? o.status : 404; r.end(JSON.stringify(o ? o.json : { ok: false })); });
+  // Idearium, stood in: one phase whole, the queue, and the routes a planned pipeline calls (each answers ok, and is recorded)
+  const PH = { key: 'docs/x-phasemap.spec::XY1_a_phase', id: 'XY1_a_phase', map: 'docs/x-phasemap.spec', does: 'make the parser', files: ['lib/a.js', 'lib/b.js'], depends_on: [], proof: 'test-parser 3/3' };
+  const idCalls = [];
+  const ideariumStand = await stand((q, r, t) => { idCalls.push(`${q.method} ${q.url}`); r.setHeader('content-type', 'application/json');
+    if (q.url.startsWith('/api/phases/one')) return r.end(JSON.stringify({ ok: true, ...PH }));
+    if (q.url.startsWith('/api/phases/next')) return r.end(JSON.stringify({ ok: true, queue: [{ key: PH.key, id: PH.id }] }));
+    r.end('{"ok":true}'); });
   const emerge = await stand((q, r, t) => { if (q.url === '/handoff') { handed.push(JSON.parse(t)); r.end('{"ok":true,"state":"queued"}'); } else r.end('{"ok":true}'); });
   const { createSupervisor } = require(path.join(ROOT, 'cos/manager/supervisor.js'));
   const sup = createSupervisor({ root: tmp, ledgerFile: path.join(tmp, 'ledger.jsonl'), log: () => {}, declarations: [
     { name: 'tester', system: 'tester', cmd: process.execPath, args: ['-e', ''], healthUrl: `http://127.0.0.1:${tester.address().port}/health` },
     { name: 'emerge', system: 'emerge', cmd: process.execPath, args: ['-e', ''], healthUrl: `http://127.0.0.1:${emerge.address().port}/health` },
+    { name: 'idearium', system: 'idearium', cmd: process.execPath, args: ['-e', ''], healthUrl: `http://127.0.0.1:${ideariumStand.address().port}/health` },
     { name: 'cortex', system: 'cortex', cmd: process.execPath, args: ['-e', ''], healthUrl: `http://127.0.0.1:${cortex.address().port}/health` }] });
   const mgr = await require(path.join(ROOT, 'cos/manager/server.js')).listen(sup, 0, { root: ROOT }); const M = mgr.address().port;
   const events = []; const es = http.get({ host: '127.0.0.1', port: M, path: '/api/cos/events' }, (r) => { let buf = ''; r.on('data', (c) => { buf += c; let i; while ((i = buf.indexOf('\n\n')) >= 0) { const blk = buf.slice(0, i); buf = buf.slice(i + 2);
@@ -309,6 +320,30 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       cortexUp = true;
     });
 
+    await T('CP-15', 'a phase planned into its own .pipeline, end state first; one chunk per file when asked; build-next runs the next ready one', async () => {
+      // James, 2026-11-09: "Okay just needs to use the pipeline automation engine we built. Using a .pipeline. They build upon request, dynamically" · "It's end state first reasoning."
+      const a = (await req(M, 'POST', '/api/cos/pipeline/plan', { key: PH.key, repo: 'nx', by: 'person' })).body;
+      assert.ok(a.ok, JSON.stringify(a));
+      assert.deepStrictEqual([a.pipeline.name, a.pipeline.endState.says, a.pipeline.steps], ['build: XY1_a_phase', 'test-parser 3/3', ['context', 'dag', 'build', 'evidence', 'ledger']]);
+      const b = (await req(M, 'POST', '/api/cos/pipeline/plan', { key: PH.key, repo: 'nx', chunks: true, by: 'person' })).body;
+      assert.deepStrictEqual(b.pipeline.steps, ['context', 'dag', 'build-1', 'build-2', 'evidence', 'ledger'], 'one chunk at a time: a build step per file');
+      idCalls.length = 0;
+      const n = (await req(M, 'POST', '/api/cos/pipeline/build-next', { repo: 'nx', by: 'person' })).body;
+      assert.ok(n.ok && n.request, JSON.stringify(n));
+      const x = await ended(n.request);
+      assert.deepStrictEqual([x.where, x.run.payload.phase], ['done', 'met'], JSON.stringify(x.steps.map(s => [s.payload.task, s.payload.status, s.payload.error])));
+      assert.ok(idCalls.some(c => c === 'POST /api/repos/nx/phases/build') && idCalls.some(c => c === 'POST /api/phases/ledger/log'), idCalls.join(' · '));
+      const raidFile = require('js-yaml').load(fs.readFileSync(path.join(RAIDDIR, `${n.request}.contract`), 'utf8'));
+      assert.strictEqual(raidFile.payload.outcome.what, 'test-parser 3/3', 'the end state first: the phase\'s proof is the contract\'s outcome');
+      assert.strictEqual(raidFile.payload.outcome.from, PH.key);
+      assert.strictEqual((await req(M, 'POST', '/api/cos/pipeline/build-next', { repo: 'nx', by: 'agent:copilot' })).status, 403);
+      // Idearium's real route: a real phase, whole
+      const api = await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/api/index.js')).href);
+      const o = await api._route('GET', '/api/phases/one?key=' + encodeURIComponent('docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state'), {});
+      const body = o.json || o.body || o; assert.ok(body.ok !== false, JSON.stringify(body).slice(0, 300));
+      assert.strictEqual(body.id, 'PC7_iterate_to_the_end_state'); assert.match(String(body.proof), /stand-in project/); assert.ok(body.files.length > 0);
+    });
+
     await T('CP-07', 'an engine with no gate host refuses a typed gate, said; command rows for agents and copilot', async () => {
       const { AutomationEngine } = require(path.join(ROOT, 'lib/automation/engine.js')); const { Pipelines } = require(path.join(ROOT, 'lib/automation/pipeline.js'));
       const P = new Pipelines(new AutomationEngine({}), { dir: path.join(tmp, 'bare') });
@@ -319,7 +354,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       assert.ok(SPEC.find(s => s.key === 'cos.request').personOnly() && SPEC.find(s => s.key === 'cos.request-resume').personOnly(), 'an agent proposes; running is his');
     });
   } finally {
-    es.destroy(); mgr.close(); sup.shutdown({ by: 'test' }); tester.close(); emerge.close(); cortex.close();
+    es.destroy(); mgr.close(); sup.shutdown({ by: 'test' }); tester.close(); emerge.close(); cortex.close(); ideariumStand.close();
     fs.rmSync(tmp, { recursive: true, force: true });
   }
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exit(failed ? 1 : 0);

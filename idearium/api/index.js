@@ -3516,7 +3516,7 @@ const ROUTE_CAP = {
   'repo.agent.feed': CAPS.READ_IDEAS,   // §0.60.143 TL1b
   'repo.tasks': CAPS.READ_IDEAS,   // §0.39.366
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
-  'phases.next': CAPS.READ_IDEAS, 'repo.phases.next': CAPS.READ_IDEAS,   // §SL0 — reads only
+  'phases.next': CAPS.READ_IDEAS, 'repo.phases.next': CAPS.READ_IDEAS, 'phases.one': CAPS.READ_IDEAS,   // §SL0 — reads only
   'repo.phases.closes': CAPS.READ_IDEAS,   // §SL1 — reads only
   'repo.loop': CAPS.READ_IDEAS, 'trust.get': CAPS.READ_IDEAS,
   'repo.phases.verdict': CAPS.WRITE_IDEAS,   // §GV2 0.60.257 his verdict   // §SL4/SL5 — reads only
@@ -3931,7 +3931,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','phases','ledger','history'],                    'phases.ledger.history'],    // ?phase=
     ['POST',   ['api','phases','ledger','covers'],                     'phases.ledger.covers'],     // { files, does } → the phases to expand instead
     ['POST',   ['api','phases','ledger','log'],                        'phases.ledger.log'],        // { phase, event, why, by, version?, map? }
-    ['GET',    ['api','phases','next'],                                'phases.next'],              // §SL0 0.60.222 what can be built now, and why the rest cannot (lib/build-queue.js)
+    ['GET',    ['api','phases','next'],                                'phases.next'],
+    ['GET',    ['api','phases','one'],                                 'phases.one'],               // 2026-11-09 one phase whole (does, files, proof, its block): what a pipeline is planned from              // §SL0 0.60.222 what can be built now, and why the rest cannot (lib/build-queue.js)
     ['GET',    ['api','repos',':uuid','phases','next'],                'repo.phases.next'],            // §SL0 0.60.222 the same, over one repo's maps
     ['GET',    ['api','releases'],                                     'releases.list'],            // ?repository=nexus (default)
     ['POST',   ['api','releases','sync'],                              'releases.sync'],             // { all: true } → every release's commits
@@ -6186,6 +6187,24 @@ async function handle(req, res, route, query, body) {
       return ok(res, { ..._ledgerOut, target: 'orchestrator POST /api/ledger' });
     // §SL0 0.60.222 — James, 2026-10-23: "we need this to work so it can start building itself." What can be built now, in order, and
     // why every other open phase cannot (lib/build-queue.js over the DAG, the census and the flights). Nexus's own maps, or a repo's.
+    // 2026-11-09 — James: "Okay just needs to use the pipeline automation engine we built. Using a .pipeline. They build upon request, dynamically" ·
+    // "It's end state first reasoning." One Nexus phase whole, so COS can plan its .pipeline end state first: does, files, depends_on, its proof (the
+    // end state), its block as written. ?key=<map>::<id>
+    case 'phases.one': {
+      const key = String(query.key || ''); const at = key.lastIndexOf('::');
+      if (at < 0) return err(res, 400, 'name the phase: ?key=<map path>::<phase id>');
+      const mapPath = key.slice(0, at), id = key.slice(at + 2);
+      if (!/^docs\/[\w.-]+-phasemap\.spec$/.test(mapPath)) return err(res, 400, `not a Nexus phasemap: ${mapPath}`);
+      const root = _require('../../lib/nexus-self/systems.js').ROOT;
+      let text; try { text = fs.readFileSync(path.join(root, mapPath), 'utf8'); } catch (e) { return err(res, 404, `no map ${mapPath}`); }
+      const parsed = _require('../../lib/phase-dag.js').parsePhasemap(text, mapPath);
+      const all = Array.isArray(parsed) ? parsed : (parsed.phases || Object.values(parsed));
+      const ph = all.find(x => x && x.id === id); if (!ph) return err(res, 404, `no phase ${id} in ${mapPath}`);
+      const block = text.split('\n').slice(ph.line || 0, ph.bodyEnd || ((ph.line || 0) + 1)).join('\n');   // line is 0-based (lib/phase-dag.js)
+      const field = (k) => { const m = new RegExp(`^\\s+${k}:\\s*(.+)$`, 'm').exec(block); return m ? m[1].replace(/^["']|["']$/g, '').trim() : null; };
+      return ok(res, { key, id, map: mapPath, title: ph.title, status: ph.status, does: ph.name || field('does'), files: ph.files || [], depends_on: ph.dependsOn || [],
+        proof: field('proof'), systems: ph.systems || [], block });
+    }
     case 'phases.next':
     case 'repo.phases.next': {
       let repo = null;

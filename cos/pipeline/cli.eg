@@ -7,6 +7,7 @@ use "./box.eg" as box
 use "./gate.eg" as gate
 use "./runs.eg" as runs
 use "./framework.eg" as framework
+use "./plan.eg" as plan
 
 wire box.BoxShape.answer -> "box.answer"
 var last = null
@@ -126,6 +127,10 @@ else if cmd == "framework-tree" {
   let q = input()
   print(json(framework.compile_tree(q.dir, q.id)))
 }
+else if cmd == "plan-phase" {
+  let q = input()
+  print(json({ ok: true, pipeline: plan.phase_pipeline(q.phase, get(q, "opts", {})) }))
+}
 else if cmd == "request" {
   let q = input()
   let id = runs.request(q.base, q.pipeline, get(q, "vars", {}), get(q, "by", null), q.at, null)
@@ -158,6 +163,6 @@ else if cmd == "resume-of" {
   print(json(runs.resume_of(q.base, q.id)))
 }
 else {
-  eprint("unknown command \"" + cmd + "\": the commands are version, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, frameworks, framework, framework-tree, request, booked, read-id, event, list, read, resume-of (each <file.json>)")
+  eprint("unknown command \"" + cmd + "\": the commands are version, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, frameworks, framework, framework-tree, plan-phase, request, booked, read-id, event, list, read, resume-of (each <file.json>)")
   exit(1)
 }

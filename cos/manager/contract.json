@@ -479,6 +479,20 @@
     },
     {
       "method": "POST",
+      "path": "/api/cos/pipeline/plan",
+      "in": "{ key: <map>::<phase>, repo?, chunks?, framework?, run?, by }",
+      "out": "{ phase, pipeline: { id, name, endState, steps }, request? } \u2014 a phase planned into its own .pipeline, end state first; run: a request through it (an agent\u2019s run refused)",
+      "personAct": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/pipeline/build-next",
+      "in": "{ repo?, chunks?, framework?, by }",
+      "out": "{ phase, pipeline, request } \u2014 the next phase Nexus can build, planned and run (an agent\u2019s refused)",
+      "personAct": true
+    },
+    {
+      "method": "POST",
       "path": "/api/cos/pipeline/requests",
       "in": "{ pipeline, vars?, by }",
       "out": "{ request, engineRun } \u2014 the request as files first (run.run, dag.dag, steps/*.step, gates/*.gate), then the engine runs it; an agent\u2019s refused (403)",

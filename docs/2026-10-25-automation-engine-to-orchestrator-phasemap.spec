@@ -474,3 +474,18 @@ expanded_2026_11_09_brainos:
     His: "Data is stored in the relevant systems data folder. Cortex is the book keeper." COS's requests are kept in COS's own data folder
     (COS_MANAGER_DATA, cos/data/manager/pipeline/); reading TO CONFIRM: what each request did is booked with Cortex (its ledger, by route) as well —
     not built yet.
+
+# ── ADDENDUM 2026-11-09 (0.60.475) — AE_D8: RAID the hub of what and whether; COS of how and where; Idearium builds (his direction, read) ──────────
+# James, 2026-11-09: "Should we make raid the hub. Map and read atlas first. Raid. Cos. Idearium compartment end state intents." Read first (the
+# atlases, cortex/core/raid/envelope.js and router.js, cos/foundation/intent.js, lib/charter.js, AE_D4): RAID as the way in was his principle
+# already, 2026-07-21: "the request comes from co-pilot or one of the UIs, but goes to RAID — that way the start point doesn't matter, as long as
+# it goes to RAID." Offered: RAID the hub of what and whether (every input a RAID envelope → a contract, end state first; RAID routes, keeps the
+# books, says met), COS of how and where (it runs the contract in a compartment whose intent is the contract's end state and conditions), Idearium
+# what builds when nothing can (a gap → a build request, a RAID contract); one end-state definition (a contract's outcome and invariants are the
+# compartment's end state and conditions). His answer: "Like we need this pipeline able to build nexus. It's end state first reasoning. My framework
+# at every level" · "Okay just needs to use the pipeline automation engine we built. Using a .pipeline. They build upon request, dynamically".
+decisions_2026_11_09:
+  AE_D8_raid_the_hub_of_what_cos_of_how:
+    status: "DIRECTION 2026-11-09 — read from his answer as a yes to the split, TO CONFIRM (he answered with the goal, not a pick)"
+    supersedes_in_part: "AE_D4's 'COS's hub is the hub of all automation': COS's hub page becomes a view of RAID's books and COS's runs (kept, §0.3)"
+    built_toward_it: "0.60.474 (each request's contract is RAID's), 0.60.475 (a request planned into its own .pipeline, end state first)"
