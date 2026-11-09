@@ -490,6 +490,7 @@ const SUITES = [
   'test-pipelines.test.js',                // 0.60.284 PL1–PL4 — pipelines: tasks in a dependency graph (macros, workflows, agents, commands), gated, a checklist
   'test-automate-steps.test.js',          // 0.60.408 PA1–PA4 — his .js/.ts scripts as steps, autofill, "if" on an element or a script, a gate after every step
   'test-eros-options.test.js',            // 0.60.409 ES1/ES3 — ErosmancerOS's options and threats in plain words; a bot check hands the page to him
+  'test-raid-contract-door.test.js',      // 0.60.474 — RAID's .contract v2 by Cortex's route: booked, evidence, packet, split; Cortex keeps the books
   'test-cos-pipeline.test.js',            // 0.60.466 PC5 — COS's pipeline module: gates decided in Emerge that learn; every request kept as files until met
   'test-cos-settings.test.js',            // 0.60.464 SC7 expanded — COS's Settings: Network, Startup and services, Update; tabs from the contract
   'test-cos-resources-page.test.js',      // 0.60.411 CP6a expanded — COS's Resources page: priority (applied, read back), memory limit, restart above, start at boot

@@ -14,10 +14,11 @@ test "a request is files before it runs: its contract from the DAG, a step per s
   let id = runs.request(base, P, { v: 1 }, "person", 100, "e1")
   let d = base + "/pipeline/runs/active/" + id
   let r = parse_json(read_file(d + "/run.run"))
-  expect r.type == "run" and r.payload.request.vars == { v: 1 } and r.payload.contract == "contract.contract"
-  let k = parse_json(read_file(d + "/contract.contract"))
-  expect k.type == "contract" and k.payload.uuid == id and k.payload.forAgent == "cos.pipeline" and not k.payload.met
-  expect map(k.payload.conditions, fn(c) = c.step) == ["a", "b"] and k.payload.conditions[1].after == ["a"]
+  expect r.type == "run" and r.payload.request.vars == { v: 1 } and r.payload.contract.raid == id
+  expect map(r.payload.conditions, fn(c) = c.step) == ["a", "b"] and r.payload.conditions[1].after == ["a"]
+  // its contract is RAID's: one task gate per step, passing on the evidence step:<id>, a gate waiting on the gates of the steps it waits on
+  let k = runs.contract_of(id, P, "person")
+  expect k.v == 2 and map(k.gates, fn(g) = g.id) == ["a", "b"] and k.gates[1].depends_on == ["a"] and k.gates[0].pass_when == [{ evidence: "step:a" }]
   expect path_exists(d + "/steps/a.step") and path_exists(d + "/steps/b.step") and path_exists(d + "/gates/a.gate") and not path_exists(d + "/gates/b.gate")
   expect map(parse_json(read_file(d + "/dag.dag")).payload.boxes, fn(b) = b.id) == ["a", "a-gate", "b"]
   remove_path(base)
@@ -48,8 +49,8 @@ test "not met: it stays in active/ with its gates; a resume names what is met; w
   let d = base + "/pipeline/runs/active/" + id
   expect path_exists(d + "/gates/a.gate")
   let run = parse_json(read_file(d + "/run.run")).payload
-  let k = parse_json(read_file(d + "/contract.contract")).payload
-  expect run.phase == "not met" and find_text(k.why, "b (failed: boom)") >= 0, k.why
+  expect run.phase == "not met" and find_text(run.contract.verdict.why, "b (failed: boom)") >= 0, json(run.contract)
+  expect find_text(run.contract.verdict.by, "COS's own steps") == 0, "no RAID verdict given: said whose it is"
   let q = runs.resume_of(base, id)
   expect q.ok and q.done == { a: "ok" } and q.vars == { v: 2 }
   let id2 = runs.request(base, P, {}, "person", 200, "e2")
@@ -93,6 +94,19 @@ test "the wires carry nodes: a step's output is a node file of its type; the nex
   expect plan.took == ["nodes/ask/out.context"] and plan.gave == ["nodes/plan/out.contract"]
   expect parse_json(read_file(d + "/steps/cut.step")).payload.took == ["nodes/plan/out.contract"]
   let rr = runs.read_request(base, id)
-  expect len(rr.nodes) == 2 and rr.contract.type == "contract"
+  expect len(rr.nodes) == 2 and rr.contract.raid == id, "the request names its contract, RAID's"
+  remove_path(base)
+}
+
+test "met is RAID's answer when it is given; the booking is recorded" {
+  let base = fresh()
+  let id = runs.request(base, P, {}, "person", 100, "e1")
+  runs.booked(base, id, true, "booked with Cortex (RAID)")
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "a", status: "done", output: "ok", gate: { type: "check", outcome: "open" } })
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "b", status: "done", output: "x" })
+  let r = runs.on_event(base, "automation.pipeline.done", { runId: "e1", status: "ok", raid: { complete: false, why: ["gate b is READY"] } }, null, 1000)
+  expect not r.met, "every step met in COS, but RAID says not complete: RAID's answer stands"
+  let run = parse_json(read_file(base + "/pipeline/runs/active/" + id + "/run.run")).payload
+  expect run.contract.booked and run.contract.verdict.by == "RAID's contract (Cortex)" and run.contract.verdict.why == "gate b is READY"
   remove_path(base)
 }

@@ -830,3 +830,10 @@ spec:
 # RQ3, RQ4 and RQ24 fold into GT1, and RQ6 into RT1, in docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
 # (James: "each gate can route, diagnose, and retry also, failure modes and fault taxonomy to help nexus learn").
 
+
+# ── ADDENDUM 2026-11-09 (0.60.474) — RQ21 expanded: the executable .contract v2 by Cortex's route; COS's requests book it (his) ───────────────────────
+# James, 2026-11-09: "Yes. This makes nexus programmable. Every point of failure can be mapped. Bottle neck made explicit. Every. Thing nexus does, end
+# state first, step by step, each gate checks, if it fails becomes a gap to fix to get the pipeline moving again." (his yes to one contract, RAID's —
+# docs/2026-11-08-pipeline-canvas-phasemap.spec PC_D11). cortex/core/raid/contract-v2-door.js serves contract-gates.js by route: book, read (gates,
+# complete, why), evidence (the contract moves as far as its evidence takes it; a gate is checked only once its evidence is recorded), check, split,
+# packet. COS's pipeline books one per request. Proof: test-raid-contract-door 3/3, test-cos-pipeline CP-14.

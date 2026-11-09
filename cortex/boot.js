@@ -600,6 +600,13 @@ const server = http.createServer(async (req, res) => {
       json(res, row ? 200 : 404, row ? { ok: true, contract: row } : { ok: false, error: `no contract ${id}` });
       return;
     } }
+  // 2026-11-09 — RAID's executable .contract v2, by route (core/raid/contract-v2-door.js): his "This makes nexus programmable … each gate checks, if
+  // it fails becomes a gap to fix to get the pipeline moving again." Cortex keeps the books.
+  if (p.startsWith('/api/raid/contracts/v2')) {
+    const body = method === 'GET' ? {} : await readBody(req);
+    const r = await require('./core/raid/contract-v2-door.js').handle(method, p, body || {});
+    if (r) return json(res, r.status, r.json);
+  }
   if (p === '/api/raid/queue') {
     const n = parseInt(url.searchParams.get('n') || url.searchParams.get('limit') || '50');
     const rows = jaaDB.tail('raid_contract_queue', n);
